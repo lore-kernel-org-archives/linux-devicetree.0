@@ -1,48 +1,43 @@
-From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 0/2] Update device tree binding document for
-	pwm-tiehrpwm & pwm-tiecap
-Date: Mon, 8 Apr 2013 05:56:39 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EAA8DDE@DBDE01.ent.ti.com>
-References: <1364195093-1357-1-git-send-email-avinashphilip@ti.com>
+From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [Fwd: Re: [U-Boot-Users] using a flat device tree to drive u-boot
+	config]
+Date: Tue, 29 Jul 2008 09:27:11 -0500
+Message-ID: <488F28BF.6030902@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1364195093-1357-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry,
 
-On Mon, Mar 25, 2013 at 12:34:51, Philip, Avinash wrote:
-> Update device tree document of pwm-tiehrpwm & pwm-tiecap in order to reflect the
-> usage of similar modules in both da850 and am33xx platforms.
 
-Can you accept both documentation update patches with Peter Korsgaard's Ack.
+-------- Original Message --------
+Subject: Re: [U-Boot-Users] using a flat device tree to drive u-boot config
+Date: Mon, 28 Jul 2008 13:59:21 -0500
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Ben Warren <biggerbadderben-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: u-boot-users-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org Users <u-boot-users-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-Thanks
-Avinash
-> 
-> Philip Avinash (2):
->   pwm: pwm-tiecap: Update device-tree binding document
->   pwm: pwm-tiehrpwm: Update device-tree binding document
-> 
->  .../devicetree/bindings/pwm/pwm-tiecap.txt         |   12 ++++++++++--
->  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   12 ++++++++++--
->  2 files changed, 20 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
+Ben Warren wrote:
+> Uh, yeah.  I like the idea of a central repo for hardware info, and
+> the device tree concept is good.  My point is that the syntax, while
+> concise and exact, can be intimidating.  Just look at the amount of
+> traffic on the mailing lists of people that don't understand what all
+> the fields mean when specifying IRQs etc.  Anything we can do to make
+> it less so for noobies is a good thing for everybody.
+
+Sure, no argument there -- enhancing the dts syntax with symbolic 
+constants, computational expressions, and macros should make things like 
+interrupt specifiers and maps a lot clearer.
+
+-Scott
