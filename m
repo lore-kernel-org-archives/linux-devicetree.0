@@ -1,35 +1,51 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: removing -S option from dtc?
-Date: Wed, 30 Jul 2008 08:42:32 -0500
-Message-ID: <E1KOBwm-0002vc-CT@jdl.com>
-References: <9E2D1AC5-F98F-431B-9361-9EA4765785F9@kernel.crashing.org>
-	<E1KOBRr-0002ku-UK@jdl.com> <E1KOBTw-0002lU-LL@jdl.com>
-	<7EE6D71E-3074-4DCF-A279-15E91825B0A7@kernel.crashing.org>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH] dtc: give advance warning that "-S" is going away.
+Date: Wed, 30 Jul 2008 09:59:16 -0400
+Message-ID: <1217426356-1248-1-git-send-email-paul.gortmaker@windriver.com>
+References: <E1KOBwm-0002vc-CT@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-reply-to: <7EE6D71E-3074-4DCF-A279-15E91825B0A7-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> 
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+In-Reply-To: <E1KOBwm-0002vc-CT@jdl.com>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: devicetree-discuss@ozlabs.org
+Cc: linuxppc-dev@ozlabs.org, jdl@jdl.com, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> I was thinking we'd keep -p (for padding) but remove -S (pad to a  
-> fixed size).
+The "-S" option allowed the specification of a minimum size for
+the blob, however the main reason for caring about the size is
+so there is enough padding to add a chosen node by u-boot or
+whoever.  In which case, folks don't really care about the absolute
+size, but rather the size of the padding added for this -- which
+is what the "-p" option does.  Having the "-S" just confuses people.
 
-Oh, we can deprecate it and start beating people over
-the head with removal and upgrade avice tell we are blue.
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+ dtc.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-Start by telling Stuart H to remove it.  I already tried.
-
-jdl
+diff --git a/dtc.c b/dtc.c
+index d8fd43b..84bee2d 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -182,6 +182,9 @@ int main(int argc, char *argv[])
+ 	if (minsize && padsize)
+ 		die("Can't set both -p and -S\n");
+ 
++	if (minsize)
++		fprintf(stderr, "DTC: Use of \"-S\" is deprecated; it will be removed soon, use \"-p\" instead\n");
++
+ 	fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
+ 		inform, outform, arg);
+ 
+-- 
+1.5.6.2
