@@ -1,17 +1,18 @@
-From: "Grant Likely" <grant.likely@secretlab.ca>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: Re: Board level compatibility matching
-Date: Fri, 1 Aug 2008 10:24:58 -0600
-Message-ID: <fa686aa40808010924p48191472gdf51eab11f4e4d30@mail.gmail.com>
-References: <1217564739.11188.482.camel@pasglop>
-	<fa686aa40808010727v53fe3580q2813a12cb66f8f68@mail.gmail.com>
-	<20080801111141.3543e23b@zod.rchland.ibm.com>
-	<20080801.100107.-1666252871.imp@bsdimp.com>
+Date: Sat, 02 Aug 2008 08:48:23 +1000
+Message-ID: <1217630903.11188.537.camel@pasglop>
+References: <fa686aa40807311319k44d270b0t4fa9cb0e6523339@mail.gmail.com>
+	<20080801025439.GB5008@yookeroo.seuss>
+	<20080801032533.GB6595@secretlab.ca>
+	<1217564739.11188.482.camel@pasglop>
+	<20080801080632.35edcb04@zod.rchland.ibm.com>
+Reply-To: benh@kernel.crashing.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-Reply-To: <20080801.100107.-1666252871.imp@bsdimp.com>
-Content-Disposition: inline
+In-Reply-To: <20080801080632.35edcb04@zod.rchland.ibm.com>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -21,36 +22,39 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: "M. Warner Losh" <imp@bsdimp.com>
-Cc: devicetree-discuss@ozlabs.org, linuxppc-dev@ozlabs.org
+To: Josh Boyer <jwboyer@linux.vnet.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@ozlabs.org>, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 1, 2008 at 10:01 AM, M. Warner Losh <imp@bsdimp.com> wrote:
-> I'd float a radical definition of 'compatible' here.
->
-> If the generic code can handle it with just changes to the device
-> tree, then it is compatible.  And by generic code, I wouldn't suggest
-> a twisty maze of ifdefs or special case hacks.  I'm talking truly
-> generic code that is table driven entirely from the dtc.  If you need
-> special C code to initialize the board, then it isn't compatible.
 
-When doing the initial board port, you don't *know* if you're going to
-need special cases.  Or, you don't know if the special case code
-belongs in the platform code, or belongs somewhere else
-(implementation detail).  Or, the special code could get refactored in
-the future and be moved into or out of the platform code.
+> This is sort of the part that sucks.  Look at 44x.  There are 10
+> board.c files there.  There really only needs to be 3 or 4 (sam440ep,
+> warp, virtex, and "generic") because the board files are identical in
+> everything except name. By doing the library code approach, one still
+> has to create a board.c file for a new board and plug in the library
+> functions to ppc_md.
 
-Claiming one board is compatible with another tends to just encode a
-Linux implementation detail into the device tree.
+And ? How is that a big deal ? Real products (ie not eval boards, and
+even those ...) will probably end up needing that due to subtle
+differences anyway.
 
-> This is exactly analogous to the pc-net driver supporting dozens of
-> different cards that differ only in their ID.  Are all these cards
-> 100% the same: no.  There's plenty of differences between them.
-> However, the pc-net driver copes with the small differences so that
-> one driver can handle most of the ne2000 class of network cards.
+> Alternatively, you could do the:
+> 
+> compatible = "specific-board", "similar-board"
+> 
+> approach that has been done for e.g. Bamboo and Yosemite.  Again, the
+> issue is that is that OK?  Is it OK for a board to claim compatibility
+> with another board when it might not have all the devices of that
+> board, or might have additional devices, etc.  I was of the opinion
+> it is, and the device tree handles this just fine, as does the platform
+> code. But it can be confusing, hence the discussion here.
 
-Yes, and we use lists of compatible values for devices.  However, the
-board level has much higher complexity.  The likelyhood of getting it
-wrong is much greater.
+Well, as I said. If it stops being ok, just create your own board
+and it will take over provided you put it before the other one in
+the link order.
 
-g.
+If we generalize that approach, we might want to change the board
+probing code a bit to first do a full pass based on the first
+entry in compatible, then another full pass based on the second, etc...
+
+Ben.
