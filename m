@@ -1,42 +1,47 @@
-From: John Rigby <jrigby@freescale.com>
-Subject: Re: [PATCH add immr alias 2/4] powerpc: 5121: Add immr alias
-	to	MPC5121 ADS device tree.
-Date: Tue, 05 Aug 2008 15:38:13 -0600
-Message-ID: <4898C845.3080606@freescale.com>
-References: <1217967220-30557-1-git-send-email-jrigby@freescale.com>		<1217967220-30557-2-git-send-email-jrigby@freescale.com>		<fa686aa40808051405j7268c216j8e5b526d6ad526c9@mail.gmail.com>	<fa686aa40808051405j7ea96957t9242e007c93d8e74@mail.gmail.com>
-	<4898C34C.5000305@freescale.com> <4898C434.4040408@freescale.com>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: dtc: Return code of fdt_get_path()
+Date: Wed, 6 Aug 2008 15:33:10 +1000
+Message-ID: <20080806053310.GF6690@yookeroo.seuss>
+References: <4898C236.5030305@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-Reply-To: <4898C434.4040408@freescale.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4898C236.5030305-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Scott Wood wrote:
-> John Rigby wrote:
->>    I would like to use mpc83xx_add_bridge for 5121.  This is why I
->>    moved it to fsl_pci.c.  It currently uses get_immrbase and adds
->>    0x8300 and 0x8304 to it to pass to setup_indirect_pci as the
->>    cfg_addr, and cfg_data addresses.
->>
->>    I'm more than willing to change mpc83xx_add_bridge to not use
->>    get_immrbase.  One simple solution is to pass the cfg_addr and
->>    cfg_data addresses in.  If that seems ok then thats what I will do.
->
-> We should really be putting those addresses in the "reg" property of 
-> the PCI node.
->
-> -Scott
->
-Yes, which is what fsl_add_bridge does it.
+On Tue, Aug 05, 2008 at 04:12:22PM -0500, Scott Wood wrote:
+> The documentation for fdt_get_path() says it returns zero on success,  
+> but it actually returns the length of the string.  Is there any  
+> preference on which one to fix?
+
+The documentation I think.  There may be existing users, and the
+length of the path is potentially useful.
+
+Although.. I think the confusion came because at one stage I planned
+to have it return the full length of the path, even if the buffer was
+smaller.  That would let the caller allocate a buffer of exactly the
+right size on a second call.  Which is potentially useful, but not
+compatible with returning NOSPACE as we do now.
+
+Plus.. looking over that code again, I think there may be more
+problems there - I think there may be cases where it runs out of space
+but returns BADOFFSET or some error code instead of NOSPACE.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
