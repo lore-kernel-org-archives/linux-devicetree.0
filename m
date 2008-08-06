@@ -1,47 +1,59 @@
-From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: dtc: Return code of fdt_get_path()
-Date: Wed, 6 Aug 2008 15:33:10 +1000
-Message-ID: <20080806053310.GF6690@yookeroo.seuss>
-References: <4898C236.5030305@freescale.com>
+From: "Grant Likely" <grant.likely@secretlab.ca>
+Subject: Re: [RFC/PATCH 2/3] of: add of_lookup_stdout() utility function
+Date: Wed, 6 Aug 2008 07:31:55 -0600
+Message-ID: <fa686aa40808060631k278e187ej965f0ac08c837937@mail.gmail.com>
+References: <20080806055214.30717.86092.stgit@trillian.secretlab.ca>
+	<20080806060239.30717.79273.stgit@trillian.secretlab.ca>
+	<20080805.233205.201125898.davem@davemloft.net>
+	<18585.31504.836857.829592@cargo.ozlabs.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+In-Reply-To: <18585.31504.836857.829592@cargo.ozlabs.ibm.com>
 Content-Disposition: inline
-In-Reply-To: <4898C236.5030305-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: Paul Mackerras <paulus@samba.org>
+Cc: devicetree-discuss@ozlabs.org, miltonm@bga.com, linuxppc-dev@ozlabs.org, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 05, 2008 at 04:12:22PM -0500, Scott Wood wrote:
-> The documentation for fdt_get_path() says it returns zero on success,  
-> but it actually returns the length of the string.  Is there any  
-> preference on which one to fix?
+On Wed, Aug 6, 2008 at 4:21 AM, Paul Mackerras <paulus@samba.org> wrote:
+> David Miller writes:
+>
+>> On sparc platforms this is obtained differently.  We obtain the 32-bit
+>> instance value of "/chosen/stdout" and convert that into a prom device
+>> node path using "instance-to-path".
+>
+> That's actually exactly what we do too, the linux,stdout-path property
+> is just a cache of the result of that process.  The difference is that
+> we have to do it early on while we still have OF around, while you can
+> do it later.
 
-The documentation I think.  There may be existing users, and the
-length of the path is potentially useful.
+It's not what we do with flattened device trees blobs though.  In the
+flattened tree we're not using a /chosen/stdout property, just the
+linux,stdout-path one.
 
-Although.. I think the confusion came because at one stage I planned
-to have it return the full length of the path, even if the buffer was
-smaller.  That would let the caller allocate a buffer of exactly the
-right size on a second call.  Which is potentially useful, but not
-compatible with returning NOSPACE as we do now.
+The question that remains is; should there be?  Should the dt blobs
+use /chosen/stdout also?  (I'm not familiar enough with real OF to
+know the answer.  I'm assuming that an instance value is not the same
+as a phandle).
 
-Plus.. looking over that code again, I think there may be more
-problems there - I think there may be cases where it runs out of space
-but returns BADOFFSET or some error code instead of NOSPACE.
+g.
+
+>
+> Paul.
+>
+
+
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
