@@ -1,50 +1,71 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [RFC/PATCH 2/3] of: add of_lookup_stdout() utility function
-Date: Thu, 7 Aug 2008 10:40:22 +1000
-Message-ID: <20080807004022.GA24443@yookeroo.seuss>
-References: <20080806055214.30717.86092.stgit@trillian.secretlab.ca>
-	<20080806060239.30717.79273.stgit@trillian.secretlab.ca>
-	<20080805.233205.201125898.davem@davemloft.net>
-	<18585.31504.836857.829592@cargo.ozlabs.ibm.com>
-	<fa686aa40808060631k278e187ej965f0ac08c837937@mail.gmail.com>
-	<C5C0AA60-C45F-4467-AC76-AA24A00CA4AC@kernel.crashing.org>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: dtc: Return code of fdt_get_path()
+Date: Thu, 7 Aug 2008 16:08:20 +1000
+Message-ID: <20080807060820.GA12571@yookeroo.seuss>
+References: <4898C236.5030305@freescale.com>
+	<20080806053310.GF6690@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <C5C0AA60-C45F-4467-AC76-AA24A00CA4AC@kernel.crashing.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, David Miller <davem@davemloft.net>, miltonm@bga.com
+In-Reply-To: <20080806053310.GF6690-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 06, 2008 at 06:25:48PM +0200, Segher Boessenkool wrote:
->> It's not what we do with flattened device trees blobs though.  In the
->> flattened tree we're not using a /chosen/stdout property, just the
->> linux,stdout-path one.
->>
->> The question that remains is; should there be?  Should the dt blobs
->> use /chosen/stdout also?  (I'm not familiar enough with real OF to
->> know the answer.  I'm assuming that an instance value is not the same
->> as a phandle).
->
-> ihandles and phandles are not the same thing in OF.  Since in the
-> "flat world" we cannot have instances, we should use phandles instead
-> of ihandles for the things in /chosen.  I thought we agreed on that
-> already, perhaps I am wrong?
+On Wed, Aug 06, 2008 at 03:33:10PM +1000, David Gibson wrote:
+> On Tue, Aug 05, 2008 at 04:12:22PM -0500, Scott Wood wrote:
+> > The documentation for fdt_get_path() says it returns zero on success,  
+> > but it actually returns the length of the string.  Is there any  
+> > preference on which one to fix?
+> 
+> The documentation I think.  There may be existing users, and the
+> length of the path is potentially useful.
+> 
+> Although.. I think the confusion came because at one stage I planned
+> to have it return the full length of the path, even if the buffer was
+> smaller.  That would let the caller allocate a buffer of exactly the
+> right size on a second call.  Which is potentially useful, but not
+> compatible with returning NOSPACE as we do now.
+> 
+> Plus.. looking over that code again, I think there may be more
+> problems there - I think there may be cases where it runs out of space
+> but returns BADOFFSET or some error code instead of NOSPACE.
 
-Not that I recall.  In general we've been avoiding using anything that
-traditionally contains an ihandle; hence the direct use of
-linux,stdout-path when using a flat tree.
+Ugh, yes, confirmed that it is buggy.  Not sure of the best way to fix
+this, I can see three ways to go here.
+
+	1. Minimally fix the error code bug, make sure NOSPACE is
+returned when the buffer is too small, length of path otherwise,
+update documentation to match.
+	2. Make the code match the documentation: return 0 on success,
+NOSPACE if the buffer is too small.
+	3. Update both code and documentation to match the semantics I
+think I must have intended at some point: always return the path
+length, even if it exceeds the buffer length; caller is responsible
+for checking if the path in the buffer is truncated.
+
+(3) has the possibly useful property that you can use the call with a
+small buffer and if it fails the caller now knows how big a buffer it
+must allocate.  With (1) and (2) the caller's only way to deal with
+NOSPACE is to keep allocating bigger buffers until the call succeeds.
+However it makes it more complex for the caller to check the return
+value - not just that it's non-negative put also that it's less than
+the buffer size.  Plus its arguably stylistically inconsistent with
+the read-write functions which return NOSPACE when the buffer is
+exceeded with no indication of how much space is needed.
+
+Any views, Jon?
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
