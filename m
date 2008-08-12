@@ -1,16 +1,15 @@
-From: =?ISO-8859-1?Q?S=E9bastien_Chr=E9tien?=
-	<sebastien.chretien.enseirb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: dtc
-Date: Sat, 09 Aug 2008 12:00:57 +0200
-Message-ID: <489D6AD9.1070501@gmail.com>
-References: <319b0ac50808080546w7bda0293ub9fb4a4160cfd17f@mail.gmail.com>
-	<20080808125430.GA4243@pengutronix.de>
-	<489C45AC.9080504@grandegger.com>
+From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: dtc: Return code of fdt_get_path()
+Date: Tue, 12 Aug 2008 10:57:17 -0500
+Message-ID: <1218556637.26153.0.camel@ld0161-tx32>
+References: <4898C236.5030305@freescale.com>
+	<20080806053310.GF6690@yookeroo.seuss>
+	<20080807060820.GA12571@yookeroo.seuss>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <489C45AC.9080504-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+In-Reply-To: <20080807060820.GA12571-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -20,38 +19,39 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Cc: =?ISO-8859-1?Q?S=E9bastien_Ch?=@ozlabs.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you. It works fine
+On Thu, 2008-08-07 at 16:08 +1000, David Gibson wrote:
 
-Wolfgang Grandegger a =E9crit :
-> Wolfram Sang wrote:
->> Hello Sebastien,
->>
->> On Fri, Aug 08, 2008 at 02:46:54PM +0200, S=E9bastien Chr=E9tien wrote:
->>> I would like to download dtc for linux 2.6.26 (powerpc). But the =
+> Ugh, yes, confirmed that it is buggy.  Not sure of the best way to fix
+> this, I can see three ways to go here.
+> 
+> 	1. Minimally fix the error code bug, make sure NOSPACE is
+> returned when the buffer is too small, length of path otherwise,
+> update documentation to match.
+> 	2. Make the code match the documentation: return 0 on success,
+> NOSPACE if the buffer is too small.
+> 	3. Update both code and documentation to match the semantics I
+> think I must have intended at some point: always return the path
+> length, even if it exceeds the buffer length; caller is responsible
+> for checking if the path in the buffer is truncated.
+> 
+> (3) has the possibly useful property that you can use the call with a
+> small buffer and if it fails the caller now knows how big a buffer it
+> must allocate.  With (1) and (2) the caller's only way to deal with
+> NOSPACE is to keep allocating bigger buffers until the call succeeds.
+> However it makes it more complex for the caller to check the return
+> value - not just that it's non-negative put also that it's less than
+> the buffer size.  Plus its arguably stylistically inconsistent with
+> the read-write functions which return NOSPACE when the buffer is
+> exceeded with no indication of how much space is needed.
+> 
+> Any views, Jon?
 
->>> link on the
->>> ozlab homepage is dead.
->>> Where can I download it ?
->> Get it here:
->>
->> http://www.jdl.com/software/
->
-> Recent kernel versions have dtc included:
->
-> http://lxr.linux.no/linux+v2.6.25/arch/powerpc/boot/dtc-src/
->
-> If you want to make my-board.dtb, just type:
->
-> $ make my-board.dtb
->
-> You may need to specific DTS_FLAGS though, e.g.:
->
-> $ export DTS_FLAGS=3D"-p 0x1000"
-> $ make my-board.dtb
->
-> Wolfgang.
->
+Just rolling back into town and catching up some....
+
+Has this issue been resolved yet?
+
+jdl
