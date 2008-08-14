@@ -1,13 +1,11 @@
-From: Jon Loeliger <jdl@jdl.com>
-Subject: Re: dtc: Make many functions 'static'
-Date: Wed, 13 Aug 2008 13:09:07 -0500
-Message-ID: <E1KTKmR-0000JM-Cb@jdl.com>
-References: <20080804053013.GC7086@yookeroo.seuss>
+From: Kumar Gala <galak@kernel.crashing.org>
+Subject: [PATCH] libfdt: Add support for using aliases in fdt_path_offset()
+Date: Wed, 13 Aug 2008 22:52:26 -0500 (CDT)
+Message-ID: <Pine.LNX.4.64.0808132251340.29599@blarg.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-reply-to: <20080804053013.GC7086@yookeroo.seuss> 
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -17,21 +15,54 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+To: devicetree-discuss@ozlabs.org
+Cc: linuxppc-dev@ozlabs.org, Jon Loeliger <jdl@jdl.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-> This patch marks various functions not shared between c files
-> 'static', as they should be.  There are a couple of functions in dtc,
-> and many in the testsuite.
-> 
-> This is *almost* enough to enable the -Wmissing-prototypes warning.
-> It's not quite enough, because there's a mess of junk in the flex
-> generated code which triggers that warning which I'm not yet sure how
-> to deal with.
-> 
-> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+If the path doesn't start with '/' check to see if it matches some alias
+under "/aliases" and substitute the matching alias value in the path
+and retry the lookup.
 
-Applied.
+Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
+---
+ libfdt/fdt_ro.c |   25 +++++++++++++++++++++++--
+ 1 files changed, 23 insertions(+), 2 deletions(-)
 
-jdl
+diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
+index ebd1260..74b8153 100644
+--- a/libfdt/fdt_ro.c
++++ b/libfdt/fdt_ro.c
+@@ -139,8 +139,29 @@ int fdt_path_offset(const void *fdt, const char *path)
+
+ 	FDT_CHECK_HEADER(fdt);
+
+-	if (*path != '/')
+-		return -FDT_ERR_BADPATH;
++	/* see if we have an alias */
++	if (*path != '/') {
++		const char *q;
++		int aliasoffset = fdt_path_offset(fdt, "/aliases");
++
++		if (aliasoffset < 0)
++			return -FDT_ERR_BADPATH;
++
++		q = strchr(path, '/');
++		if (!q)
++			q = end;
++
++		p = fdt_getprop_namelen(fdt, aliasoffset, path, q - p, NULL);
++		if (!p)
++			return -FDT_ERR_BADPATH;
++
++		aliasoffset = fdt_path_offset(fdt, p);
++		if (*q == '\0')
++			return aliasoffset;
++
++		q++;
++		return fdt_subnode_offset(fdt, aliasoffset, q);
++	}
+
+ 	while (*p) {
+ 		const char *q;
+-- 
+1.5.5.1
