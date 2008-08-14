@@ -1,16 +1,14 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] port ndfc driver to of platform
-Date: Thu, 14 Aug 2008 12:08:56 +0200
-Message-ID: <200808141208.57345.arnd@arndb.de>
-References: <20080801233000.3574434f@lappy.seanm.ca>
-	<20080804132459.3fc12f59@lappy.seanm.ca>
-	<20080813174536.677187f5@lappy.seanm.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Kumar Gala <galak@kernel.crashing.org>
+Subject: Re: [PATCH] libfdt: Add support for using aliases in fdt_path_offset()
+Date: Thu, 14 Aug 2008 07:02:54 -0500
+Message-ID: <5DCA3107-7574-4E1F-9160-B2257BFE3F81@kernel.crashing.org>
+References: <Pine.LNX.4.64.0808132251340.29599@blarg.am.freescale.net>
+	<20080814041557.GE18344@yookeroo.seuss>
+Mime-Version: 1.0 (Apple Message framework v926)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-Reply-To: <20080813174536.677187f5@lappy.seanm.ca>
-Content-Disposition: inline
+In-Reply-To: <20080814041557.GE18344@yookeroo.seuss>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -20,26 +18,23 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Sean MacLennan <smaclennan@pikatech.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: linuxppc-dev@ozlabs.org, Jon Loeliger <jdl@jdl.com>, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 August 2008, Sean MacLennan wrote:
-> Changes to the warp platform with the ndfc as an of platform device.
-> The main changes are:
-> 
-> * moving the NAND information to the DTS
-> * removing warp-nand.c
-> * moving the NAND fixups to cuboot-warp.c
 
-The device tree stuff looks good, but the significant fixups you still
-need to for the old hw do look like an indication that we should really
-have a different way of producing almost-identical dts files.
-The cleanest solution for now would be to have two dts files for warp,
-but I can understand that you don't want to do that.
+On Aug 13, 2008, at 11:15 PM, David Gibson wrote:
 
-Did we ever come to a conclusion on how this could be done, e.g. with
-preprocessed dts files or simpler dynamic patching of binary device
-trees?
+> On Wed, Aug 13, 2008 at 10:52:26PM -0500, Kumar Gala wrote:
+>> If the path doesn't start with '/' check to see if it matches some  
+>> alias
+>> under "/aliases" and substitute the matching alias value in the path
+>> and retry the lookup.
+>
+> Kumar, this is broken.  If you match an alias you only follow the path
+> one level down from there.  i.e. you will correctly resolve
+> 'somealias' and 'somealias/foo', but not 'somealias/foo/bar'.
 
-	Arnd <><
+I'm not clear on what cases you are suggesting fail.
+
+- k
