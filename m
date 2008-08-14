@@ -1,24 +1,23 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: [PATCH] DTC: Remove support for the legacy DTS source file format.
-Date: Thu, 14 Aug 2008 17:25:56 -0500
-Message-ID: <E1KTlGW-00043s-8u@jdl.com>
+From: Jon Loeliger <jdl@jdl.com>
+Subject: [PATCH V2] DTC: Remove support for the legacy DTS source file format.
+Date: Thu, 14 Aug 2008 18:02:43 -0500
+Message-ID: <E1KTlq7-0005Gh-Co@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: devicetree-discuss@ozlabs.org
+Cc: linuxppc-dev@ozlabs.org
 List-Id: devicetree@vger.kernel.org
-
 
 Now that all in-kernel-tree DTS files are properly /dts-v1/,
 remove direct support for the older, un-numbered DTS
@@ -29,25 +28,33 @@ for the conversion tests themselves.
 
 For now, though, the conversion tool still exists.
 
-Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jon Loeliger <jdl@freescale.com>
+
 ---
- dtc-lexer.l               |   15 ---------------
- dtc-parser.y              |   28 ----------------------------
- tests/base01.dts          |   24 +++++++++++++-----------
- tests/empty.dts           |    2 ++
- tests/escapes.dts         |    2 ++
- tests/label01.dts         |   38 ++++++++++++++++++++------------------
- tests/references_dts0.dts |   12 +++++++-----
- tests/run_tests.sh        |   27 +--------------------------
- tests/test01.dts          |   38 ++++++++++++++++++++------------------
- tests/test_tree1_dts0.dts |   18 ++++++++++--------
- 10 files changed, 75 insertions(+), 129 deletions(-)
+
+Bah.  Forgot to eliminate the legacy BASE and
+LITERAL tokens in the first version of this patch.
+
+There's still a bit more improvement possible WRT
+the initial dts_versio value and lexer state.  Later.
+
+ dtc-lexer.l               |   23 ----------------------
+ dtc-parser.y              |   46 ---------------------------------------------
+ tests/base01.dts          |   24 ++++++++++++----------
+ tests/empty.dts           |    2 +
+ tests/escapes.dts         |    2 +
+ tests/label01.dts         |   38 +++++++++++++++++++-----------------
+ tests/references_dts0.dts |   12 ++++++----
+ tests/run_tests.sh        |   27 +-------------------------
+ tests/test01.dts          |   38 +++++++++++++++++++-----------------
+ tests/test_tree1_dts0.dts |   18 +++++++++-------
+ 10 files changed, 75 insertions(+), 155 deletions(-)
 
 diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 6f8b7dd..87380be 100644
+index 6f8b7dd..e12a4ef 100644
 --- a/dtc-lexer.l
 +++ b/dtc-lexer.l
-@@ -110,21 +110,6 @@ static int pop_input_file(void);
+@@ -110,29 +110,6 @@ static int pop_input_file(void);
  			return DT_LABEL;
  		}
  
@@ -66,14 +73,30 @@ index 6f8b7dd..87380be 100644
 -			return DT_BASE;
 -		}
 -
- <INITIAL>[0-9a-fA-F]+	{
+-<INITIAL>[0-9a-fA-F]+	{
+-			yylloc.file = srcpos_file;
+-			yylloc.first_line = yylineno;
+-			yylval.literal = strdup(yytext);
+-			DPRINT("Literal: '%s'\n", yylval.literal);
+-			return DT_LEGACYLITERAL;
+-		}
+-
+ <V1>[0-9]+|0[xX][0-9a-fA-F]+      {
  			yylloc.file = srcpos_file;
  			yylloc.first_line = yylineno;
 diff --git a/dtc-parser.y b/dtc-parser.y
-index b2ab562..7f2e00a 100644
+index b2ab562..3762181 100644
 --- a/dtc-parser.y
 +++ b/dtc-parser.y
-@@ -67,8 +67,6 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+@@ -55,7 +55,6 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+ %token DT_MEMRESERVE
+ %token <propnodename> DT_PROPNODENAME
+ %token <literal> DT_LITERAL
+-%token <literal> DT_LEGACYLITERAL
+ %token <cbase> DT_BASE
+ %token <byte> DT_BYTE
+ %token <data> DT_STRING
+@@ -67,11 +66,8 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
  %type <data> propdataprefix
  %type <re> memreserve
  %type <re> memreserves
@@ -81,8 +104,11 @@ index b2ab562..7f2e00a 100644
 -%type <re> v0_memreserves
  %type <addr> addr
  %type <data> celllist
- %type <cbase> cellbase
-@@ -90,10 +88,6 @@ sourcefile:
+-%type <cbase> cellbase
+ %type <cell> cellval
+ %type <data> bytestring
+ %type <prop> propdef
+@@ -90,10 +86,6 @@ sourcefile:
  		{
  			the_boot_info = build_boot_info($3, $4, 0);
  		}
@@ -93,7 +119,7 @@ index b2ab562..7f2e00a 100644
  	;
  
  memreserves:
-@@ -114,28 +108,6 @@ memreserve:
+@@ -114,37 +106,11 @@ memreserve:
  		}
  	;
  
@@ -122,6 +148,39 @@ index b2ab562..7f2e00a 100644
  addr:
  	  DT_LITERAL
  		{
+ 			$$ = eval_literal($1, 0, 64);
+ 		}
+-	| DT_LEGACYLITERAL
+-		{
+-			$$ = eval_literal($1, 16, 64);
+-		}
+ 	  ;
+ 
+ devicetree:
+@@ -269,23 +235,11 @@ celllist:
+ 		}
+ 	;
+ 
+-cellbase:
+-	  /* empty */
+-		{
+-			$$ = 16;
+-		}
+-	| DT_BASE
+-	;
+-
+ cellval:
+ 	  DT_LITERAL
+ 		{
+ 			$$ = eval_literal($1, 0, 32);
+ 		}
+-	| cellbase DT_LEGACYLITERAL
+-		{
+-			$$ = eval_literal($2, $1, 32);
+-		}
+ 	;
+ 
+ bytestring:
 diff --git a/tests/base01.dts b/tests/base01.dts
 index f84bc49..97a5dd5 100644
 --- a/tests/base01.dts
