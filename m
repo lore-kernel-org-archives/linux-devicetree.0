@@ -1,14 +1,16 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] libfdt: Add support for using aliases in fdt_path_offset()
-Date: Thu, 14 Aug 2008 14:15:57 +1000
-Message-ID: <20080814041557.GE18344@yookeroo.seuss>
-References: <Pine.LNX.4.64.0808132251340.29599@blarg.am.freescale.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] port ndfc driver to of platform
+Date: Thu, 14 Aug 2008 12:08:56 +0200
+Message-ID: <200808141208.57345.arnd@arndb.de>
+References: <20080801233000.3574434f@lappy.seanm.ca>
+	<20080804132459.3fc12f59@lappy.seanm.ca>
+	<20080813174536.677187f5@lappy.seanm.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+In-Reply-To: <20080813174536.677187f5@lappy.seanm.ca>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.0808132251340.29599@blarg.am.freescale.net>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -18,68 +20,26 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Kumar Gala <galak@kernel.crashing.org>
-Cc: linuxppc-dev@ozlabs.org, Jon Loeliger <jdl@jdl.com>, devicetree-discuss@ozlabs.org
+To: Sean MacLennan <smaclennan@pikatech.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2008 at 10:52:26PM -0500, Kumar Gala wrote:
-> If the path doesn't start with '/' check to see if it matches some alias
-> under "/aliases" and substitute the matching alias value in the path
-> and retry the lookup.
-
-Kumar, this is broken.  If you match an alias you only follow the path
-one level down from there.  i.e. you will correctly resolve
-'somealias' and 'somealias/foo', but not 'somealias/foo/bar'.  
-
-> diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
-> index ebd1260..74b8153 100644
-> --- a/libfdt/fdt_ro.c
-> +++ b/libfdt/fdt_ro.c
-> @@ -139,8 +139,29 @@ int fdt_path_offset(const void *fdt, const char *path)
+On Wednesday 13 August 2008, Sean MacLennan wrote:
+> Changes to the warp platform with the ndfc as an of platform device.
+> The main changes are:
 > 
->  	FDT_CHECK_HEADER(fdt);
-> 
-> -	if (*path != '/')
-> -		return -FDT_ERR_BADPATH;
-> +	/* see if we have an alias */
-> +	if (*path != '/') {
-> +		const char *q;
-> +		int aliasoffset = fdt_path_offset(fdt, "/aliases");
-> +
-> +		if (aliasoffset < 0)
-> +			return -FDT_ERR_BADPATH;
-> +
-> +		q = strchr(path, '/');
-> +		if (!q)
-> +			q = end;
-> +
-> +		p = fdt_getprop_namelen(fdt, aliasoffset, path, q - p, NULL);
-> +		if (!p)
-> +			return -FDT_ERR_BADPATH;
-> +
-> +		aliasoffset = fdt_path_offset(fdt, p);
+> * moving the NAND information to the DTS
+> * removing warp-nand.c
+> * moving the NAND fixups to cuboot-warp.c
 
-You should set 'offset' here instead of 'aliasoffset'..
+The device tree stuff looks good, but the significant fixups you still
+need to for the old hw do look like an indication that we should really
+have a different way of producing almost-identical dts files.
+The cleanest solution for now would be to have two dts files for warp,
+but I can understand that you don't want to do that.
 
-> +		if (*q == '\0')
-> +			return aliasoffset;
-> +
-> +		q++;
-> +		return fdt_subnode_offset(fdt, aliasoffset, q);
-> +	}
+Did we ever come to a conclusion on how this could be done, e.g. with
+preprocessed dts files or simpler dynamic patching of binary device
+trees?
 
-..drop the rest of this if block..
-> 
->  	while (*p) {
->  		const char *q;
-
-..and then the loop that's already here will follow the remaining path
-components starting from the node that's the target of the alias.
-
-Plus you need a testcase or three.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+	Arnd <><
