@@ -1,126 +1,48 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: libfdt: Fix bugs in fdt_get_path()
-Date: Fri, 29 Aug 2008 14:19:13 +1000
-Message-ID: <20080829041913.GC30197@yookeroo.seuss>
+From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Subject: Re: dtc
+Date: Fri, 29 Aug 2008 02:26:23 -0500
+Message-ID: <200808290226.24367.rob@landley.net>
+References: <319b0ac50808080546w7bda0293ub9fb4a4160cfd17f@mail.gmail.com>
+	<20080808125430.GA4243@pengutronix.de>
+	<489C45AC.9080504@grandegger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <489C45AC.9080504-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Jon Loeliger <jdl@freescale.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The current implementation of fdt_get_path() has a couple of bugs,
-fixed by this patch.
+On Friday 08 August 2008 08:10:04 Wolfgang Grandegger wrote:
+> If you want to make my-board.dtb, just type:
+>
+> $ make my-board.dtb
+>
+> You may need to specific DTS_FLAGS though, e.g.:
+>
+> $ export DTS_FLAGS="-p 0x1000"
+> $ make my-board.dtb
 
-First, contrary to its documentation, on success it returns the length
-of the node's path, rather than 0.  The testcase is correspondingly
-wrong, and the patch fixes this as well.
+What do those flags do, by the way?  (Is there documentation I should read on 
+this?)
 
-Second, in some circumstances, it will return -FDT_ERR_BADOFFSET
-instead of -FDT_ERR_NOSPACE when given insufficient buffer space.
-Specifically this happens when there is insufficient space even to
-hold the path's second last component.  This behaviour is corrected,
-and the testcase updated to check it.
+I've skimmed Documentation/powerpc/booting-without-of.txt a bit, but I don't 
+recall it mentioning much about flags?  (A quick grep showed gpio flags and 
+address allocation flags, but not what any of them actually _were_...)
 
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+> Wolfgang.
 
-Index: dtc/tests/get_path.c
-===================================================================
---- dtc.orig/tests/get_path.c	2008-08-29 14:11:09.000000000 +1000
-+++ dtc/tests/get_path.c	2008-08-29 14:11:11.000000000 +1000
-@@ -43,6 +43,8 @@ static void check_path_buf(void *fdt, co
- 	memset(buf, POISON, sizeof(buf)); /* poison the buffer */
- 
- 	len = fdt_get_path(fdt, offset, buf, buflen);
-+	verbose_printf("get_path() %s -> %d -> %s\n", path, offset, buf);
-+
- 	if (buflen <= pathlen) {
- 		if (len != -FDT_ERR_NOSPACE)
- 			FAIL("fdt_get_path([%d bytes]) returns %d with "
-@@ -51,9 +53,9 @@ static void check_path_buf(void *fdt, co
- 		if (len < 0)
- 			FAIL("fdt_get_path([%d bytes]): %s", buflen,
- 			     fdt_strerror(len));
--		if (len != pathlen)
--			FAIL("fdt_get_path([%d bytes]) reports length %d "
--			     "instead of %d", buflen, len, pathlen);
-+		if (len != 0)
-+			FAIL("fdt_get_path([%d bytes]) returns %d "
-+			     "instead of 0", buflen, len);
- 		if (strcmp(buf, path) != 0)
- 			FAIL("fdt_get_path([%d bytes]) returns \"%s\" "
- 			     "instead of \"%s\"", buflen, buf, path);
-@@ -70,6 +72,8 @@ static void check_path(void *fdt, const 
- 	check_path_buf(fdt, path, pathlen, 1024);
- 	check_path_buf(fdt, path, pathlen, pathlen+1);
- 	check_path_buf(fdt, path, pathlen, pathlen);
-+	check_path_buf(fdt, path, pathlen, 0);
-+	check_path_buf(fdt, path, pathlen, 2);
- }
- 
- int main(int argc, char *argv[])
-Index: dtc/libfdt/fdt_ro.c
-===================================================================
---- dtc.orig/libfdt/fdt_ro.c	2008-08-29 14:11:11.000000000 +1000
-+++ dtc/libfdt/fdt_ro.c	2008-08-29 14:11:11.000000000 +1000
-@@ -328,9 +328,6 @@ int fdt_get_path(const void *fdt, int no
- 	for (offset = 0, depth = 0;
- 	     (offset >= 0) && (offset <= nodeoffset);
- 	     offset = fdt_next_node(fdt, offset, &depth)) {
--		if (pdepth < depth)
--			continue; /* overflowed buffer */
--
- 		while (pdepth > depth) {
- 			do {
- 				p--;
-@@ -338,14 +335,16 @@ int fdt_get_path(const void *fdt, int no
- 			pdepth--;
- 		}
- 
--		name = fdt_get_name(fdt, offset, &namelen);
--		if (!name)
--			return namelen;
--		if ((p + namelen + 1) <= buflen) {
--			memcpy(buf + p, name, namelen);
--			p += namelen;
--			buf[p++] = '/';
--			pdepth++;
-+		if (pdepth >= depth) {
-+			name = fdt_get_name(fdt, offset, &namelen);
-+			if (!name)
-+				return namelen;
-+			if ((p + namelen + 1) <= buflen) {
-+				memcpy(buf + p, name, namelen);
-+				p += namelen;
-+				buf[p++] = '/';
-+				pdepth++;
-+			}
- 		}
- 
- 		if (offset == nodeoffset) {
-@@ -355,7 +354,7 @@ int fdt_get_path(const void *fdt, int no
- 			if (p > 1) /* special case so that root path is "/", not "" */
- 				p--;
- 			buf[p] = '\0';
--			return p;
-+			return 0;
- 		}
- 	}
- 
-
+Rob
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+"One of my most productive days was throwing away 1000 lines of code."
+  - Ken Thompson.
