@@ -1,11 +1,14 @@
 From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 7/8 v2] Introduce new DTS language.
-Date: Wed, 24 Sep 2008 11:31:07 -0500
-Message-ID: <1222273867-11819-1-git-send-email-jdl@freescale.com>
+Subject: Re: [PATCH 0/8] Implement a new DTS Source Language
+Date: Wed, 24 Sep 2008 11:51:45 -0500
+Message-ID: <1222275105.11692.9.camel@ld0161-tx32>
+References: <1222196652-13811-1-git-send-email-jdl@jdl.com>
+	<097BFF8D-317F-4E85-AC2A-4C0A8D6C608B@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <097BFF8D-317F-4E85-AC2A-4C0A8D6C608B-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -15,1884 +18,520 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+On Tue, 2008-09-23 at 21:34 -0500, Kumar Gala wrote:
 
-Introduce function defs and statements.
-Added support for expressions.
-Added if, for, assign and return statements.
-Added support for BUILTIN functions.
-Added support for /const/ definitions.
-Added support for command line defines, eg: -D x=1
-Unified /memreserve/ into declaration list.
-Add lexical support for column source position information.
-    Notably, this involved identifying all the newline
-    characters to reset the column count.  Had to rewrite
-    the C comment rules, and break \n out of the {WS} set.
-Add lexical source positions to all IR nodes.
-Change error reporting to use IR source positions.
+> Any examples/tests of all the cool new features?
+> 
+> - k
 
-Passes test suite.
+Here is a QAD example based on the MPC8641 DTS file
+as found in the arch/powerpc/boot/dts directory today.
+It is maybe not the best example, but it shows the
+flavor of what can be done.
 
-Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
+Enjoy,
+jdl
 
-Bah.  Sent wrong version of this patch in V1.
-This version is the same, except it also has
-memreserves unified into declaration lists.
 
- Makefile     |    2 +-
- Makefile.dtc |   18 ++-
- dtc-lexer.l  |  259 +++++++++++++++++----
- dtc-parser.y |  711 ++++++++++++++++++++++++++++++++++++++++++++++------------
- dtc.c        |    7 +-
- dtc.h        |    1 +
- ir.h         |    1 -
- ir_dump.c    |    9 -
- ir_emit.c    |   67 +++---
- ir_eval.c    |    2 -
- ir_scope.c   |    3 +-
- livetree.c   |   16 ++
- nv.c         |  108 +++++++++
- nv.h         |   34 +++
- srcpos.c     |   47 ++++-
- srcpos.h     |   10 +-
- treesource.c |    3 +
- 17 files changed, 1039 insertions(+), 259 deletions(-)
- create mode 100644 nv.c
- create mode 100644 nv.h
+/*
+ * MPC8641 HPCN Device Tree Source
+ *
+ * Copyright 2006 Freescale Semiconductor Inc.
+ *
+ * This program is free software; you can redistribute  it and/or modify it
+ * under  the terms of  the GNU General  Public License as published by the
+ * Free Software Foundation;  either version 2 of the  License, or (at your
+ * option) any later version.
+ */
 
-diff --git a/Makefile b/Makefile
-index 5ad0189..1ae5577 100644
---- a/Makefile
-+++ b/Makefile
-@@ -18,7 +18,7 @@ CONFIG_LOCALVERSION =
- CPPFLAGS = -I libfdt
- CFLAGS = -Wall -g -Os -Wpointer-arith -Wcast-qual
- 
--BISON = bison
-+BISON = bison -v
- LEX = flex
- 
- INSTALL = /usr/bin/install
-diff --git a/Makefile.dtc b/Makefile.dtc
-index 6ddf9ec..dd53276 100644
---- a/Makefile.dtc
-+++ b/Makefile.dtc
-@@ -3,7 +3,21 @@
- # This is not a complete Makefile of itself.  Instead, it is designed to
- # be easily embeddable into other systems of Makefiles.
- #
--DTC_SRCS = dtc.c flattree.c fstree.c data.c livetree.c treesource.c srcpos.c \
--	checks.c
-+DTC_SRCS = \
-+	checks.c \
-+	data.c \
-+	dtc.c \
-+	flattree.c \
-+	fstree.c \
-+	ir.c \
-+	ir_builtin.c \
-+	ir_dump.c \
-+	ir_emit.c \
-+	ir_eval.c \
-+	ir_scope.c \
-+	livetree.c \
-+	nv.c \
-+	srcpos.c \
-+	treesource.c
- DTC_GEN_SRCS = dtc-lexer.lex.c dtc-parser.tab.c
- DTC_OBJS = $(DTC_SRCS:%.c=%.o) $(DTC_GEN_SRCS:%.c=%.o)
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 6b862d2..e35d895 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -18,19 +18,19 @@
-  *                                                                   USA
-  */
- 
--%option noyywrap nounput noinput yylineno
-+%option noyywrap nounput noinput yylineno stack
- 
--%x INCLUDE
- %x BYTESTRING
- %x PROPNODENAME
-+%x COMMENT
- %s V1
- 
- PROPNODECHAR	[a-zA-Z0-9,._+*#?@-]
- PATHCHAR	({PROPNODECHAR}|[/])
- LABEL		[a-zA-Z_][a-zA-Z0-9_]*
-+ID		\\[a-zA-Z_][a-zA-Z0-9_]*
- STRING		\"([^\\"]|\\.)*\"
--WS		[[:space:]]
--COMMENT		"/*"([^*]|\*+[^*/])*\*+"/"
-+WS		[[:blank:]]
- LINECOMMENT	"//".*\n
- 
- %{
-@@ -49,6 +49,22 @@ LINECOMMENT	"//".*\n
- 
- static int dts_version = 1;
- 
-+/*
-+ * Track column positions too.  Brute force.
-+ */
-+int yycolno = 1;
-+
-+#define SET_SRCPOS(yylloc)	do { \
-+					yylloc.file = srcpos_file; \
-+					yylloc.first_line = yylineno; \
-+					yylloc.last_line = yylineno; \
-+					yylloc.first_column = yycolno; \
-+					yycolno += yyleng; \
-+					yylloc.last_column = yycolno - 1; \
-+					DPRINT("Set srcpos: %s\n", \
-+						srcpos_string(&yylloc)); \
-+				} while (0)
-+
- #define BEGIN_DEFAULT()		DPRINT("<V1>\n"); \
- 				BEGIN(V1); \
- 
-@@ -59,29 +75,27 @@ static int pop_input_file(void);
- %%
- <*>"/include/"{WS}*{STRING} {
- 			char *name = strchr(yytext, '\"') + 1;
-+			SET_SRCPOS(yylloc);
- 			yytext[yyleng-1] = '\0';
- 			push_input_file(name);
- 		}
- 
--<*><<EOF>>		{
-+<*><<EOF>>	{
- 			if (!pop_input_file()) {
- 				yyterminate();
- 			}
- 		}
- 
- <*>{STRING}	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("String: %s\n", yytext);
--			yylval.data = data_copy_escape_string(yytext+1,
--					yyleng-2);
--			yylloc.first_line = yylineno;
-+			yytext[yyleng-1] = 0; /* remove close quote */
-+			yylval.litstr = strdup(yytext + 1);
- 			return DT_STRING;
- 		}
- 
- <*>"/dts-v1/"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("Keyword: /dts-v1/\n");
- 			dts_version = 1;
- 			BEGIN_DEFAULT();
-@@ -89,41 +103,31 @@ static int pop_input_file(void);
- 		}
- 
- <*>"/memreserve/"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("Keyword: /memreserve/\n");
- 			BEGIN_DEFAULT();
- 			return DT_MEMRESERVE;
- 		}
- 
- <*>{LABEL}:	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("Label: %s\n", yytext);
- 			yylval.labelref = strdup(yytext);
- 			yylval.labelref[yyleng-1] = '\0';
- 			return DT_LABEL;
- 		}
- 
--<V1>[0-9]+|0[xX][0-9a-fA-F]+      {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
--			yylval.literal = strdup(yytext);
--			DPRINT("Literal: '%s'\n", yylval.literal);
--			return DT_LITERAL;
--		}
--
--\&{LABEL}	{	/* label reference */
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+<*>\&{LABEL}	{
-+			/* label reference */
-+			SET_SRCPOS(yylloc);
- 			DPRINT("Ref: %s\n", yytext+1);
- 			yylval.labelref = strdup(yytext+1);
- 			return DT_REF;
- 		}
- 
--"&{/"{PATHCHAR}+\}	{	/* new-style path reference */
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+<*>"&{/"{PATHCHAR}+\}	{
-+			/* new-style path reference */
-+			SET_SRCPOS(yylloc);
- 			yytext[yyleng-1] = '\0';
- 			DPRINT("Ref: %s\n", yytext+2);
- 			yylval.labelref = strdup(yytext+2);
-@@ -131,44 +135,199 @@ static int pop_input_file(void);
- 		}
- 
- <BYTESTRING>[0-9a-fA-F]{2} {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			yylval.byte = strtol(yytext, NULL, 16);
- 			DPRINT("Byte: %02x\n", (int)yylval.byte);
- 			return DT_BYTE;
- 		}
- 
- <BYTESTRING>"]"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("/BYTESTRING\n");
- 			BEGIN_DEFAULT();
- 			return ']';
- 		}
- 
-+<*>[0-9]+|0[xX][0-9a-fA-F]+      {
-+			SET_SRCPOS(yylloc);
-+			yylval.literal = strdup(yytext);
-+			DPRINT("Literal: '%s'\n", yylval.literal);
-+			return DT_LITERAL;
-+		}
-+
-+<*>"for"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: for\n");
-+			BEGIN_DEFAULT();
-+			return DT_FOR;
-+		}
-+
-+<*>"if"		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: if\n");
-+			BEGIN_DEFAULT();
-+			return DT_IF;
-+		}
-+
-+<*>"void"		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: void\n");
-+			return DT_VOID;
-+		}
-+
-+<*>"in"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: in\n");
-+			BEGIN_DEFAULT();
-+			return DT_IN;
-+		}
-+
-+<*>"else"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: else\n");
-+			BEGIN_DEFAULT();
-+			return DT_ELSE;
-+		}
-+
-+<*>"return"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: return\n");
-+			return DT_RETURN;
-+		}
-+
-+<*>"/define/"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: define\n");
-+			return DT_DEFINE;
-+		}
-+
-+<*>"/const/"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: const\n");
-+			return DT_CONST;
-+}
-+
-+<*>"/incbin/"	{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("Binary Include\n");
-+			return DT_INCBIN;
-+		}
-+
-+<*>{ID}		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("Id: %s\n", yytext);
-+			yylval.id = strdup(yytext + 1); /* drop \ */
-+			BEGIN_DEFAULT();
-+			return DT_ID;
-+		}
-+
- <PROPNODENAME>{PROPNODECHAR}+ {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("PropNodeName: %s\n", yytext);
- 			yylval.propnodename = strdup(yytext);
- 			BEGIN_DEFAULT();
- 			return DT_PROPNODENAME;
- 		}
- 
--"/incbin/"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
--			DPRINT("Binary Include\n");
--			return DT_INCBIN;
-+
-+<*>{WS}+	{
-+			/* eat whitespace, but not newline */
-+			SET_SRCPOS(yylloc);
-+		}
-+
-+<*>"/*"		{
-+			SET_SRCPOS(yylloc);
-+			yy_push_state(COMMENT);
- 		}
- 
--<*>{WS}+	/* eat whitespace */
--<*>{COMMENT}+	/* eat C-style comments */
--<*>{LINECOMMENT}+ /* eat C++-style comments */
-+<COMMENT>{
-+[^*\n]*		{
-+			/* munch */
-+			SET_SRCPOS(yylloc);
-+		}
-+
-+[^*\n]*\n	{
-+			yycolno = 1;
-+		}
-+
-+"*"+[^*/\n]*	{
-+			/* munch */
-+			SET_SRCPOS(yylloc);
-+		}
-+
-+"*"+[^*/\n]*\n {
-+			yycolno = 1;
-+		}
-+
-+"*"+"/"		{
-+			SET_SRCPOS(yylloc);
-+			yy_pop_state();
-+		}
-+}
-+
-+
-+<*>{LINECOMMENT}+ {
-+			/* eat C++-style comments including newline */
-+			yycolno = 1;
-+		}
-+
-+<*>":="		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: <<\n");
-+			return DT_ASSIGN;
-+		}
-+<*>"<<"		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: <<\n");
-+			return DT_LSHIFT;
-+		}
-+<*>">>"		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: >>\n");
-+			return DT_RSHIFT;
-+		}
-+<*>"<="		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: <=\n");
-+			return DT_LE;
-+		}
-+<*>">="		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: >=\n");
-+			return DT_GE;
-+		}
-+<*>"=="		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: ==\n");
-+			return DT_EQ;
-+		}
-+<*>"!="		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: !=\n");
-+			return DT_NE;
-+		}
-+<*>"&&"		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: &&\n");
-+			return DT_AND;
-+		}
-+<*>"||"		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: ||\n");
-+			return DT_OR;
-+		}
-+<*>".."		{
-+			SET_SRCPOS(yylloc);
-+			DPRINT("token: ..\n");
-+			return DT_RANGE;
-+		}
-+
-+<*>\n		{
-+			yycolno = 1;
-+		}
- 
- <*>.		{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
-+			SET_SRCPOS(yylloc);
- 			DPRINT("Char: %c (\\x%02x)\n", yytext[0],
- 				(unsigned)yytext[0]);
- 			if (yytext[0] == '[') {
-@@ -176,7 +335,9 @@ static int pop_input_file(void);
- 				BEGIN(BYTESTRING);
- 			}
- 			if ((yytext[0] == '{')
--			    || (yytext[0] == ';')) {
-+			    || (yytext[0] == ';')
-+			    || (yytext[0] == ':')
-+			) {
- 				DPRINT("<PROPNODENAME>\n");
- 				BEGIN(PROPNODENAME);
- 			}
-@@ -194,6 +355,7 @@ struct incl_file {
- 	struct dtc_file *file;
- 	YY_BUFFER_STATE yy_prev_buf;
- 	int yy_prev_lineno;
-+	int yy_prev_colno;
- 	struct incl_file *prev;
- };
- 
-@@ -235,6 +397,7 @@ static void push_input_file(const char *filename)
- 	 */
- 	incl_file->yy_prev_buf = YY_CURRENT_BUFFER;
- 	incl_file->yy_prev_lineno = yylineno;
-+	incl_file->yy_prev_lineno = yycolno;
- 	incl_file->file = srcpos_file;
- 	incl_file->prev = incl_file_stack;
- 
-@@ -245,6 +408,7 @@ static void push_input_file(const char *filename)
- 	 */
- 	srcpos_file = newfile;
- 	yylineno = 1;
-+	yycolno = 1;
- 	yyin = newfile->file;
- 	yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
- }
-@@ -272,6 +436,7 @@ static int pop_input_file(void)
- 	yy_delete_buffer(YY_CURRENT_BUFFER);
- 	yy_switch_to_buffer(incl_file->yy_prev_buf);
- 	yylineno = incl_file->yy_prev_lineno;
-+	yycolno = incl_file->yy_prev_colno;
- 	srcpos_file = incl_file->file;
- 	yyin = incl_file->file ? incl_file->file->file : NULL;
- 
-diff --git a/dtc-parser.y b/dtc-parser.y
-index 3762181..f976623 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -25,309 +25,722 @@
- 
- #include "dtc.h"
- #include "srcpos.h"
-+#include "ir.h"
- 
- extern int yylex(void);
-+extern void yyerror(char const *s);
- 
--extern struct boot_info *the_boot_info;
- extern int treesource_error;
- 
--static unsigned long long eval_literal(const char *s, int base, int bits);
-+#define YYERROR_VERBOSE
-+
- %}
- 
- %union {
-+	struct ir *ir;
- 	char *propnodename;
-+	char *id;
-+	char *litstr;
- 	char *literal;
- 	char *labelref;
--	unsigned int cbase;
- 	uint8_t byte;
--	struct data data;
--
--	uint64_t addr;
--	cell_t cell;
--	struct property *prop;
--	struct property *proplist;
--	struct node *node;
--	struct node *nodelist;
--	struct reserve_info *re;
- }
- 
- %token DT_V1
- %token DT_MEMRESERVE
-+%token DT_INCBIN
-+%token DT_DEFINE
-+%token DT_CONST
-+%token DT_FOR
-+%token DT_IN
-+%token DT_RANGE
-+%token DT_VOID
-+%token DT_IF
-+%token DT_ELSE
-+%token DT_RETURN
-+
- %token <propnodename> DT_PROPNODENAME
-+%token <id> DT_ID
- %token <literal> DT_LITERAL
--%token <cbase> DT_BASE
- %token <byte> DT_BYTE
--%token <data> DT_STRING
-+%token <litstr> DT_STRING
- %token <labelref> DT_LABEL
- %token <labelref> DT_REF
--%token DT_INCBIN
- 
--%type <data> propdata
--%type <data> propdataprefix
--%type <re> memreserve
--%type <re> memreserves
--%type <addr> addr
--%type <data> celllist
--%type <cell> cellval
--%type <data> bytestring
--%type <prop> propdef
--%type <proplist> proplist
--
--%type <node> devicetree
--%type <node> nodedef
--%type <node> subnode
--%type <nodelist> subnodes
--%type <labelref> label
-+%token DT_OR
-+%token DT_AND
-+%token DT_EQ DT_NE
-+%token DT_LE DT_GE
-+%token DT_LSHIFT DT_RSHIFT
-+%token DT_ASSIGN
-+
-+%type <ir> sourcefile
-+%type <ir> memreserve
-+%type <ir> devicetree
-+%type <ir> declaration_list
-+%type <ir> declaration
-+%type <ir> funcdef
-+%type <ir> constdef
-+%type <ir> errordef
-+%type <ir> subnode
-+%type <ir> paramdecl_list
-+%type <ir> paramdecls
-+%type <ir> paramdecl
-+
-+%type <ir> statement_block
-+%type <ir> statement_list
-+%type <ir> statement
-+%type <ir> for_statement
-+%type <ir> if_statement
-+%type <ir> return_statement
-+%type <ir> assign_statement
-+%type <ir> trivial_statement
-+%type <ir> error_statement
-+
-+%type <ir> propdef
-+%type <ir> celllist
-+%type <ir> cellval
-+%type <ir> literal
-+%type <ir> string
-+%type <ir> addr
-+%type <ir> byte
-+%type <ir> propnodename
-+%type <ir> label
-+%type <ir> opt_label
-+%type <ir> node_label
-+%type <ir> propdata
-+%type <ir> propdataitem
-+%type <ir> propdataprefix
-+%type <ir> bytestring
-+
-+%type <ir> param_list
-+
-+%type <ir> expr
-+%type <ir> expr_primary
-+%type <ir> expr_postfix
-+%type <ir> expr_unary
-+%type <ir> expr_mul
-+%type <ir> expr_add
-+%type <ir> expr_shift
-+%type <ir> expr_rela
-+%type <ir> expr_eq
-+%type <ir> expr_bitand
-+%type <ir> expr_bitxor
-+%type <ir> expr_bitor
-+%type <ir> expr_and
-+%type <ir> expr_or
-+%type <ir> expr_conditional
-+
-+%type <ir> range
-+%type <ir> identifier
- 
- %%
- 
- sourcefile:
--	  DT_V1 ';' memreserves devicetree
-+	  DT_V1 ';' declaration_list devicetree
- 		{
--			the_boot_info = build_boot_info($3, $4, 0);
-+			the_ir_tree = ir_alloc(IR_ROOT, &@4);
-+			the_ir_tree->ir_declarations = $3;
-+			the_ir_tree->ir_statements = $4;
- 		}
- 	;
- 
--memreserves:
-+declaration_list:
- 	  /* empty */
- 		{
- 			$$ = NULL;
- 		}
--	| memreserve memreserves
-+	| declaration_list declaration
- 		{
--			$$ = chain_reserve_entry($1, $2);
-+			$$ = ir_list_append($1, $2);
- 		}
- 	;
- 
-+declaration:
-+	  memreserve
-+	| constdef
-+	| funcdef
-+	| errordef
-+	;
-+
- memreserve:
--	  label DT_MEMRESERVE addr addr ';'
-+	  opt_label DT_MEMRESERVE addr addr ';'
- 		{
--			$$ = build_reserve_entry($3, $4, $1);
-+			$$ = ir_alloc_binop(IR_MEM_RESERVE, $3, $4, &@2);
-+			$$->ir_label = $1;
- 		}
- 	;
- 
--addr:
--	  DT_LITERAL
-+
-+constdef:
-+	  DT_CONST identifier '=' expr ';'
- 		{
--			$$ = eval_literal($1, 0, 64);
-+			$$ = ir_alloc_binop(IR_CONST_DEF, $2, $4, &@1);
- 		}
--	  ;
-+	;
- 
--devicetree:
--	  '/' nodedef
-+funcdef:
-+	  DT_DEFINE propnodename paramdecls statement_block
-+		{
-+			$$ = ir_alloc(IR_FUNC_DEF, &@1);
-+			$$->ir_name = $2;
-+			$$->ir_declarations = $3;
-+			$$->ir_statements = $4;
-+		}
-+	;
-+
-+errordef:
-+	  error
- 		{
--			$$ = name_node($2, "", NULL);
-+			$$ = NULL
- 		}
- 	;
- 
--nodedef:
--	  '{' proplist subnodes '}' ';'
-+paramdecls:
-+	  '(' paramdecl_list ')'
- 		{
--			$$ = build_node($2, $3);
-+			$$ = $2;
- 		}
- 	;
- 
--proplist:
-+paramdecl_list:
- 	  /* empty */
- 		{
- 			$$ = NULL;
- 		}
--	| proplist propdef
-+	| paramdecl
-+		{
-+			$$ = ir_list_append(NULL, $1);
-+		}
-+	| paramdecl_list ',' paramdecl
- 		{
--			$$ = chain_property($2, $1);
-+			$$ = ir_list_append($1, $3);
- 		}
- 	;
- 
--propdef:
--	  label DT_PROPNODENAME '=' propdata ';'
-+paramdecl:
-+	  identifier
-+	;
-+
-+
-+devicetree:
-+	  '/' statement_block ';'
- 		{
--			$$ = build_property($2, $4, $1);
-+			$$ = ir_alloc(IR_NODE, &@2);
-+			$$->ir_statements = $2;
-+			$$->ir_name = ir_alloc(IR_PROPNODENAME, &@1);
-+			$$->ir_name->ir_lit_str = "";
-+			$$->ir_label = NULL;
- 		}
--	| label DT_PROPNODENAME ';'
-+	;
-+
-+
-+statement_block:
-+	  '{' statement_list '}'
- 		{
--			$$ = build_property($2, empty_data, $1);
-+			$$ = $2;
- 		}
- 	;
- 
--propdata:
--	  propdataprefix DT_STRING
-+statement_list:
-+	  /* empty */
- 		{
--			$$ = data_merge($1, $2);
-+			$$ = NULL;
- 		}
--	| propdataprefix '<' celllist '>'
-+	| statement_list statement
- 		{
--			$$ = data_merge($1, $3);
-+			$$ = ir_list_append($1, $2);
- 		}
--	| propdataprefix '[' bytestring ']'
-+	;
-+
-+statement:
-+	  for_statement
-+	| if_statement
-+	| return_statement
-+	| assign_statement
-+	| propdef
-+	| subnode
-+	| statement_block
-+	| trivial_statement
-+	| error_statement
-+	;
-+
-+
-+subnode:
-+	  node_label expr statement_block ';'
- 		{
--			$$ = data_merge($1, $3);
-+			$$ = ir_alloc(IR_NODE, &@3);
-+			$$->ir_statements = $3;
-+			$$->ir_label = $1;
-+			$$->ir_name = $2;
- 		}
--	| propdataprefix DT_REF
-+	| label expr statement_block ';'
- 		{
--			$$ = data_add_marker($1, REF_PATH, $2);
-+			$$ = ir_alloc(IR_NODE, &@3);
-+			$$->ir_statements = $3;
-+			$$->ir_label = $1;
-+			$$->ir_name = $2;
- 		}
--	| propdataprefix DT_INCBIN '(' DT_STRING ',' addr ',' addr ')'
-+	| expr statement_block ';'
- 		{
--			struct search_path path = { srcpos_file->dir, NULL, NULL };
--			struct dtc_file *file = dtc_open_file($4.val, &path);
--			struct data d = empty_data;
-+			$$ = ir_alloc(IR_NODE, &@2);
-+			$$->ir_statements = $2;
-+			$$->ir_label = NULL;
-+			$$->ir_name = $1;
-+		}
-+	;
- 
--			if ($6 != 0)
--				if (fseek(file->file, $6, SEEK_SET) != 0)
--					yyerrorf("Couldn't seek to offset %llu in \"%s\": %s",
--						 (unsigned long long)$6,
--						 $4.val, strerror(errno));
-+for_statement:
-+	  DT_FOR identifier DT_IN range statement_block
-+		{
-+			$$ = ir_alloc_binop(IR_FOR, $2, $4, &@1);
-+			$$->ir_statements = $5;
-+		}
-+	;
- 
--			d = data_copy_file(file->file, $8);
-+range:
-+	  expr DT_RANGE expr
-+		{
-+			$$ = ir_alloc_binop(IR_RANGE, $1, $3, &@2);
-+		}
-+	;
- 
--			$$ = data_merge($1, d);
--			dtc_close_file(file);
-+if_statement:
-+	  DT_IF '(' expr ')' statement_block
-+		{
-+			$$ = ir_alloc_unop(IR_IF, $3, &@1);
-+			$$->ir_statements = $5;
- 		}
--	| propdataprefix DT_INCBIN '(' DT_STRING ')'
-+	| DT_IF '(' expr ')' statement_block DT_ELSE statement_block
- 		{
--			struct search_path path = { srcpos_file->dir, NULL, NULL };
--			struct dtc_file *file = dtc_open_file($4.val, &path);
--			struct data d = empty_data;
-+			$$ = ir_alloc_unop(IR_IF, $3, &@1);
-+			$$->ir_statements = $5;
-+			$$->ir_statements2 = $7;
-+		}
-+	;
- 
--			d = data_copy_file(file->file, -1);
-+return_statement:
-+	  DT_RETURN expr ';'
-+		{
-+			$$ = ir_alloc_unop(IR_RETURN, $2, &@1);
-+		}
-+	;
- 
--			$$ = data_merge($1, d);
--			dtc_close_file(file);
-+assign_statement:
-+	  identifier DT_ASSIGN expr ';'
-+		{
-+			$$ = ir_alloc_binop(IR_ASSIGN, $1, $3, &@2);
- 		}
--	| propdata DT_LABEL
-+	;
-+
-+trivial_statement:
-+	  ';'
- 		{
--			$$ = data_add_marker($1, LABEL, $2);
-+			$$ = NULL;
-+		}
-+	;
-+
-+error_statement:
-+	  error
-+		{
-+			$$ = NULL;
-+		}
-+	;
-+
-+propdef:
-+	  expr ';'
-+		{
-+			$$ = ir_alloc_unop(IR_PROP_DEF,
-+					   ir_alloc_unop(IR_CVT_PROPNODENAME,
-+							 $1,
-+							 &@1),
-+					   &@1);
-+			$$->ir_label = NULL;
-+		}
-+	| expr '=' propdata ';'
-+		{
-+			$$ = ir_alloc_binop(IR_PROP_DEF,
-+					    ir_alloc_unop(IR_CVT_PROPNODENAME,
-+							  $1,
-+							  &@1),
-+					    $3,
-+					    &@2);
-+			$$->ir_label = NULL;
-+		}
-+	| label expr ';'
-+		{
-+			$$ = ir_alloc_unop(IR_PROP_DEF,
-+					   ir_alloc_unop(IR_CVT_PROPNODENAME,
-+							 $2,
-+							 &@2),
-+					   &@2);
-+			$$->ir_label = $1;
-+		}
-+	| label expr '=' propdata ';'
-+		{
-+			$$ = ir_alloc_binop(IR_PROP_DEF,
-+					    ir_alloc_unop(IR_CVT_PROPNODENAME,
-+							  $2,
-+							  &@2),
-+					    $4,
-+					    &@3);
-+			$$->ir_label = $1;
-+		}
-+	;
-+
-+propdata:
-+	  propdataprefix propdataitem
-+		{
-+			$$ = ir_list_append($1, $2);
-+		}
-+	| propdata label
-+		{
-+			$$ = ir_list_append($1, $2);
-+		}
-+	;
-+
-+propdataitem:
-+	  string
-+		{
-+			$$ = $1;
-+		}
-+	| '<' celllist '>'
-+		{
-+			$$ = $2;
-+		}
-+	| '[' bytestring ']'
-+		{
-+			$$ = $2;
-+		}
-+	| DT_REF
-+		{
-+			$$ = ir_alloc(IR_REF_PATH, &@1);
-+			$$->ir_label_name = $1;
-+		}
-+	| DT_INCBIN '(' expr ')'
-+		{
-+			$$ = ir_alloc_unop(IR_INCBIN, $3, &@1);
-+		}
-+	| DT_INCBIN '(' expr ',' expr ',' expr ')'
-+		{
-+			$$ = ir_alloc_triop(IR_INCBIN, $3, $5, $7, &@1);
- 		}
- 	;
- 
- propdataprefix:
- 	  /* empty */
- 		{
--			$$ = empty_data;
-+			$$ = NULL;
- 		}
- 	| propdata ','
- 		{
- 			$$ = $1;
- 		}
--	| propdataprefix DT_LABEL
-+	| propdataprefix label
- 		{
--			$$ = data_add_marker($1, LABEL, $2);
-+			$$ = ir_list_append($1, $2);
- 		}
- 	;
- 
- celllist:
- 	  /* empty */
- 		{
--			$$ = empty_data;
-+			$$ = NULL;
- 		}
- 	| celllist cellval
- 		{
--			$$ = data_append_cell($1, $2);
-+			$$ = ir_list_append($1, $2);
-+		}
-+	| celllist '&' '(' expr ')'
-+		{
-+			$$ = ir_alloc(IR_REF_PHANDLE, &@2);
-+			$$->ir_label = $4;
-+			$$ = ir_list_append($1, $$);
-+
- 		}
- 	| celllist DT_REF
- 		{
--			$$ = data_append_cell(data_add_marker($1, REF_PHANDLE,
--							      $2), -1);
-+			$$ = ir_alloc(IR_REF_PHANDLE, &@2);
-+			$$->ir_label_name = $2;
-+			$$ = ir_list_append($1, $$);
- 		}
--	| celllist DT_LABEL
-+	| celllist label
- 		{
--			$$ = data_add_marker($1, LABEL, $2);
-+			$$ = ir_list_append($1, $2);
- 		}
- 	;
- 
- cellval:
--	  DT_LITERAL
-+	  expr_primary
- 		{
--			$$ = eval_literal($1, 0, 32);
-+			$$ = ir_alloc_unop(IR_CELL, $1, &@1);
- 		}
- 	;
- 
--bytestring:
--	  /* empty */
-+
-+expr:
-+	  expr_conditional
-+	;
-+
-+expr_conditional:
-+	  expr_or
-+	| expr_or '?' expr_or ':' expr_conditional
- 		{
--			$$ = empty_data;
-+			$$ = ir_alloc_triop(IR_SELECT, $1, $3, $5, &@2);
- 		}
--	| bytestring DT_BYTE
-+	;
-+
-+expr_or:
-+	  expr_and
-+	| expr_or DT_OR expr_and
-+		{
-+			$$ = ir_alloc_binop(IR_OR, $1, $3, &@2);
-+		};
-+
-+expr_and:
-+	  expr_bitor
-+	| expr_and DT_AND expr_bitor
-+		{
-+			$$ = ir_alloc_binop(IR_AND, $1, $3, &@2);
-+		};
-+	;
-+
-+expr_bitor:
-+	  expr_bitxor
-+	| expr_bitor '|' expr_bitxor
- 		{
--			$$ = data_append_byte($1, $2);
-+			$$ = ir_alloc_binop(IR_BIT_OR, $1, $3, &@2);
-+		};
-+	;
-+
-+expr_bitxor:
-+	  expr_bitand
-+	| expr_bitxor '^' expr_bitand
-+		{
-+			$$ = ir_alloc_binop(IR_BIT_XOR, $1, $3, &@2);
-+		};
-+	;
-+
-+expr_bitand:
-+	  expr_eq
-+	| expr_bitand '&' expr_eq
-+		{
-+			$$ = ir_alloc_binop(IR_BIT_AND, $1, $3, &@2);
-+		};
-+	;
-+
-+expr_eq:
-+	  expr_rela
-+	| expr_eq DT_EQ expr_rela
-+		{
-+			$$ = ir_alloc_binop(IR_EQ, $1, $3, &@2);
-+		}
-+	| expr_eq DT_NE expr_rela
-+		{
-+			$$ = ir_alloc_binop(IR_NE, $1, $3, &@2);
-+		}
-+	;
-+
-+expr_rela:
-+	  expr_shift
-+	| expr_rela '<' expr_shift
-+		{
-+			$$ = ir_alloc_binop(IR_LT, $1, $3, &@2);
-+		}
-+	| expr_rela '>' expr_shift
-+		{
-+			$$ = ir_alloc_binop(IR_GT, $1, $3, &@2);
-+		}
-+	| expr_rela DT_LE expr_shift
-+		{
-+			$$ = ir_alloc_binop(IR_LE, $1, $3, &@2);
-+		}
-+	| expr_rela DT_GE expr_shift
-+		{
-+			$$ = ir_alloc_binop(IR_GE, $1, $3, &@2);
-+		}
-+	;
-+
-+expr_shift:
-+	  expr_add
-+	| expr_shift DT_LSHIFT expr_add
-+		{
-+			$$ = ir_alloc_binop(IR_LSHIFT, $1, $3, &@2);
-+		}
-+	| expr_shift DT_RSHIFT expr_add
-+		{
-+			$$ = ir_alloc_binop(IR_RSHIFT, $1, $3, &@2);
-+		}
-+	;
-+
-+expr_add:
-+	  expr_mul
-+	| expr_add '+' expr_mul
-+		{
-+			$$ = ir_alloc_binop(IR_ADD, $1, $3, &@2);
-+		}
-+	| expr_add '-' expr_mul
-+		{
-+			$$ = ir_alloc_binop(IR_MINUS, $1, $3, &@2);
-+		}
-+	;
-+
-+expr_mul:
-+	  expr_unary
-+	| expr_mul '*' expr_unary
-+		{
-+			$$ = ir_alloc_binop(IR_MULT, $1, $3, &@2);
-+		}
-+	| expr_mul '/' expr_unary
-+		{
-+			$$ = ir_alloc_binop(IR_DIV, $1, $3, &@2);
-+		}
-+	| expr_mul '%' expr_unary
-+		{
-+			$$ = ir_alloc_binop(IR_MOD, $1, $3, &@2);
-+		}
-+	;
-+
-+expr_unary:
-+	  expr_postfix
-+	| '-' expr_unary
-+		{
-+			$$ = ir_alloc_unop(IR_UMINUS, $2, &@1);
-+		}
-+	| '~' expr_unary
-+		{
-+			$$ = ir_alloc_unop(IR_BIT_COMPL, $2, &@1);
-+		}
-+	| '!' expr_unary
-+		{
-+			$$ = ir_alloc_unop(IR_NOT, $2, &@1);
-+		}
-+	;
-+
-+expr_postfix:
-+	  expr_primary
-+	| expr_postfix '(' ')'
-+		{
-+			$$ = ir_alloc_binop(IR_FUNC_CALL, $1, NULL, &@2);
- 		}
--	| bytestring DT_LABEL
-+	| expr_postfix '(' param_list ')'
- 		{
--			$$ = data_add_marker($1, LABEL, $2);
-+			$$ = ir_alloc_binop(IR_FUNC_CALL, $1, $3, &@2);
- 		}
- 	;
- 
--subnodes:
-+param_list:
-+	  expr
-+		{
-+			$$ = ir_list_append(NULL, $1);
-+		}
-+	| param_list ',' expr
-+		{
-+			$$ = ir_list_append($1, $3);
-+		}
-+	;
-+
-+
-+
-+expr_primary:
-+	  literal
-+	| string
-+	| propnodename
-+	| identifier
-+	| '(' expr ')'
-+		{
-+			$$ = $2;
-+		}
-+	;
-+
-+addr:
-+	  expr_primary
-+	;
-+
-+
-+bytestring:
- 	  /* empty */
- 		{
- 			$$ = NULL;
- 		}
--	|  subnode subnodes
-+	| bytestring byte
- 		{
--			$$ = chain_node($1, $2);
-+			$$ = ir_list_append($1, $2);
- 		}
--	| subnode propdef
-+	| bytestring label
- 		{
--			yyerror("syntax error: properties must precede subnodes");
--			YYERROR;
-+			$$ = ir_list_append($1, $2);
- 		}
- 	;
- 
--subnode:
--	  label DT_PROPNODENAME nodedef
-+propnodename:
-+	  DT_PROPNODENAME
- 		{
--			$$ = name_node($3, $2, $1);
-+			$$ = ir_alloc(IR_PROPNODENAME, &@1);
-+			$$->ir_lit_str = $1;
- 		}
- 	;
- 
--label:
-+identifier:
-+	  DT_ID
-+		{
-+			$$ = ir_alloc(IR_ID, &@1);
-+			$$->ir_lit_str = $1;
-+		}
-+	;
-+
-+literal:
-+	  DT_LITERAL
-+		{
-+			$$ = ir_alloc(IR_LITERAL, &@1);
-+			$$->ir_lit_str = $1;
-+		}
-+	;
-+
-+byte:
-+	  DT_BYTE
-+		{
-+			$$ = ir_alloc(IR_LIT_BYTE, &@1);
-+			$$->ir_literal = $1;
-+		}
-+	;
-+
-+string:
-+	  DT_STRING
-+		{
-+			$$ = ir_alloc(IR_LIT_STR, &@1);
-+			$$->ir_lit_str = $1;
-+		}
-+	;
-+
-+opt_label:
- 	  /* empty */
- 		{
- 			$$ = NULL;
- 		}
--	| DT_LABEL
-+	| label
- 		{
- 			$$ = $1;
- 		}
- 	;
- 
--%%
--
--void yyerrorf(char const *s, ...)
--{
--	const char *fname = srcpos_file ? srcpos_file->name : "<no-file>";
--	va_list va;
--	va_start(va, s);
--
--	if (strcmp(fname, "-") == 0)
--		fname = "stdin";
-+label:
-+	  DT_LABEL
-+		{
-+			$$ = ir_alloc(IR_LABEL, &@1);
-+			$$->ir_label_name = $1;
-+		}
-+	;
- 
--	fprintf(stderr, "%s:%d ", fname, yylloc.first_line);
--	vfprintf(stderr, s, va);
--	fprintf(stderr, "\n");
-+node_label:
-+	  expr ':'
-+	;
- 
--	treesource_error = 1;
--	va_end(va);
--}
- 
--void yyerror (char const *s)
--{
--	yyerrorf("%s", s);
--}
-+%%
- 
--static unsigned long long eval_literal(const char *s, int base, int bits)
-+void yyerror(char const *s)
- {
--	unsigned long long val;
--	char *e;
--
--	errno = 0;
--	val = strtoull(s, &e, base);
--	if (*e)
--		yyerror("bad characters in literal");
--	else if ((errno == ERANGE)
--		 || ((bits < 64) && (val >= (1ULL << bits))))
--		yyerror("literal out of range");
--	else if (errno != 0)
--		yyerror("bad literal");
--	return val;
-+	srcpos_error(&yylloc, "%s", s);
-+	treesource_error = 1;
- }
-diff --git a/dtc.c b/dtc.c
-index 84bee2d..ccaf89c 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -20,6 +20,7 @@
- 
- #include "dtc.h"
- #include "srcpos.h"
-+#include "nv.h"
- 
- #include "version_gen.h"
- 
-@@ -127,7 +128,7 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fcqb:v")) != EOF) {
-+	while ((opt = getopt(argc, argv, "hD:I:O:o:V:R:S:p:fcqb:v")) != EOF) {
- 		switch (opt) {
- 		case 'I':
- 			inform = optarg;
-@@ -162,6 +163,9 @@ int main(int argc, char *argv[])
- 		case 'b':
- 			cmdline_boot_cpuid = strtoll(optarg, NULL, 0);
- 			break;
-+		case 'D':
-+			nv_note_define(optarg);
-+			break;
- 		case 'v':
- 			printf("Version: %s\n", DTC_VERSION);
- 			exit(0);
-@@ -203,7 +207,6 @@ int main(int argc, char *argv[])
- 	fill_fullpaths(bi->dt, "");
- 	process_checks(force, bi);
- 
--
- 	if (streq(outname, "-")) {
- 		outf = stdout;
- 	} else {
-diff --git a/dtc.h b/dtc.h
-index ec636f8..327fc15 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -187,6 +187,7 @@ struct property *reverse_properties(struct property *first);
- struct node *build_node(struct property *proplist, struct node *children);
- struct node *name_node(struct node *node, char *name, char *label);
- struct node *chain_node(struct node *first, struct node *list);
-+struct node *reverse_nodes(struct node *first);
- 
- void add_property(struct node *node, struct property *prop);
- void add_child(struct node *parent, struct node *child);
-diff --git a/ir.h b/ir.h
-index 7d27fe7..4bb342c 100644
---- a/ir.h
-+++ b/ir.h
-@@ -100,7 +100,6 @@ struct ir {
- 	struct ir *ir_expr2;
- 	struct ir *ir_expr3;
- 
--	struct ir *ir_mem_reserves;
- 	struct ir *ir_statements;
- 	struct ir *ir_statements2;
- 	struct ir *ir_declarations;
-diff --git a/ir_dump.c b/ir_dump.c
-index f949423..edf11a7 100644
---- a/ir_dump.c
-+++ b/ir_dump.c
-@@ -152,15 +152,6 @@ ir_dump_node(struct ir *ir, unsigned int level)
- 		       indent, "", ir->ir_prev);
- 
- 	/*
--	 * Dump mem-reserves.
--	 */
--	if (ir->ir_mem_reserves) {
--		printf("%*sir_mem_reserves: %p\n",
--		       indent, "", ir->ir_mem_reserves);
--		ir_dump_node(ir->ir_mem_reserves, level + 1);
--	}
--
--	/*
- 	 * Dump sub-expressions
- 	 */
- 	if (ir->ir_expr1) {
-diff --git a/ir_emit.c b/ir_emit.c
-index 55b7e61..66144f3 100644
---- a/ir_emit.c
-+++ b/ir_emit.c
-@@ -324,6 +324,34 @@ ir_emit_const_def(struct ir *ir_const_def)
- 
- 
- void
-+ir_emit_mem_reserve(struct ir *ir_mem)
-+{
-+	struct reserve_info *ri;
-+	uint64_t addr;
-+	uint64_t size;
-+	char *lab;
-+
-+	if (ir_mem == NULL)
-+		return;
-+
-+	addr = ir_eval_for_addr(ir_mem->ir_expr1);
-+	size = ir_eval_for_addr(ir_mem->ir_expr2);
-+	lab = ir_eval_for_label(ir_mem->ir_label);
-+
-+	debug("ir_emit_mem_reserve(0x%llx, 0x%llx, ",
-+	      (unsigned long long)addr, (unsigned long long)size);
-+	if (lab) {
-+		debug("%s)\n", lab);
-+	} else {
-+		debug("<no-label>)\n");
-+	}
-+
-+	ri = build_reserve_entry(addr, size, lab);
-+	irs_append_reserve(ri);
-+}
-+
-+
-+void
- ir_emit_declaration_list(struct ir *ir_list)
- {
- 	struct ir *ir;
-@@ -344,9 +372,13 @@ ir_emit_declaration_list(struct ir *ir_list)
- 			ir_emit_func_def(ir);
- 			break;
- 
-+		case IR_MEM_RESERVE:
-+			ir_emit_mem_reserve(ir);
-+			break;
-+
- 		default:
- 			ir_error(ir,
--				 "Unknown devlaration type %s\n",
-+				 "Unknown declaration type %s\n",
- 				 ir_type_string(ir->ir_type));
- 			break;
- 		}
-@@ -392,37 +424,6 @@ ir_emit_node(struct ir *ir)
- 
- 
- void
--ir_emit_mem_reserves(struct ir *ir_mem)
--{
--	struct ir *ir;
--	struct reserve_info *ri;
--	uint64_t addr;
--	uint64_t size;
--	char *lab;
--
--	if (ir_mem == NULL)
--		return;
--
--	for (ir = ir_mem->ir_first; ir != NULL; ir = ir->ir_next) {
--		addr = ir_eval_for_addr(ir->ir_expr1);
--		size = ir_eval_for_addr(ir->ir_expr2);
--		lab = ir_eval_for_label(ir->ir_label);
--
--		debug("emit: build_reserve_entry(0x%llx, 0x%llx, ",
--		      (unsigned long long)addr, (unsigned long long)size);
--		if (lab) {
--			debug("%s)\n", lab);
--		} else {
--			debug("<no-label>)\n");
--		}
--
--		ri = build_reserve_entry(addr, size, lab);
--		irs_append_reserve(ri);
--	}
--}
--
--
--void
- ir_add_cmd_line_constant_defs(void)
- {
- 	struct nv_pair *nv;
-@@ -461,8 +462,6 @@ ir_emit_root(struct ir *ir)
- 	 */
- 	ir_add_cmd_line_constant_defs();
- 
--	ir_emit_mem_reserves(ir->ir_mem_reserves);
--
- 	/*
- 	 * Fast-and-loose... These are definitions, not declarations!
- 	 */
-diff --git a/ir_eval.c b/ir_eval.c
-index bd667cb..ba6da6a 100644
---- a/ir_eval.c
-+++ b/ir_eval.c
-@@ -1461,8 +1461,6 @@ ir_simplify(struct ir *ir, unsigned int ctxt)
- 
- 	case IR_ROOT:
- 		ir_new = ir_copy(ir);
--		ir_new->ir_mem_reserves =
--			ir_simplify(ir->ir_mem_reserves, ctxt);
- 		ir_new->ir_declarations =
- 			ir_simplify(ir->ir_declarations, ctxt);
- 		ir_new->ir_statements =
-diff --git a/ir_scope.c b/ir_scope.c
-index c9a52e8..20d784d 100644
---- a/ir_scope.c
-+++ b/ir_scope.c
-@@ -97,8 +97,7 @@ irs_append_reserve(struct reserve_info *ri)
- 	struct ir_scope *irs;
- 
- 	irs = irs_find_scope(IRS_ROOT);
--	irs->irs_reserve_list = chain_reserve_entry(ri,
--						    irs->irs_reserve_list);
-+	irs->irs_reserve_list = add_reserve_entry(irs->irs_reserve_list, ri);
- }
- 
- 
-diff --git a/livetree.c b/livetree.c
-index 0ca3de5..fec33b4 100644
---- a/livetree.c
-+++ b/livetree.c
-@@ -97,6 +97,22 @@ struct node *chain_node(struct node *first, struct node *list)
- 	return first;
- }
- 
-+struct node *reverse_nodes(struct node *first)
-+{
-+	struct node *p = first;
-+	struct node *head = NULL;
-+	struct node *next;
-+
-+	while (p) {
-+		next = p->next_sibling;
-+		p->next_sibling = head;
-+		head = p;
-+		p = next;
-+	}
-+	return head;
-+}
-+
-+
- void add_property(struct node *node, struct property *prop)
- {
- 	struct property **p;
-diff --git a/nv.c b/nv.c
-new file mode 100644
-index 0000000..f02b8bc
---- /dev/null
-+++ b/nv.c
-@@ -0,0 +1,108 @@
-+/*
-+ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ *  General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-+ *                                                                   USA
-+ */
-+
-+#include "dtc.h"
-+#include "nv.h"
-+
-+struct nv_pair *nv_list;
-+
-+
-+struct nv_pair *
-+nv_alloc(void)
-+{
-+	struct nv_pair *nv;
-+
-+	nv = xmalloc(sizeof(struct nv_pair));
-+	memset(nv, 0, sizeof(struct nv_pair));
-+
-+	return nv;
-+}
-+
-+
-+int
-+nv_is_present(char *name)
-+{
-+	struct nv_pair *nv;
-+
-+	for (nv = nv_list; nv != NULL; nv = nv->nv_next) {
-+		if (strcmp(nv->nv_name, name) == 0) {
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
-+
-+void
-+nv_dump(void)
-+{
-+	struct nv_pair *nv;
-+
-+	for (nv = nv_list; nv != NULL; nv = nv->nv_next) {
-+		printf("NV: %s = \"%s\"\n", nv->nv_name, nv->nv_value);
-+	}
-+}
-+
-+
-+/*
-+ * Accept a string like "foo=123", or "cpu=mpc8548".
-+ * Split it on the = for name and value parts.
-+ * Record it in a name-value pairing list for later
-+ * use when setting up the IR evaluation environment.
-+ */
-+
-+void
-+nv_note_define(char *defstr)
-+{
-+	struct nv_pair *nv;
-+	char *name;
-+	char *value;
-+
-+	if (!defstr || ! *defstr)
-+		return;
-+
-+	name = strdup(defstr);
-+
-+	/*
-+	 * Separate name and value at equal sign.
-+	 */
-+	value = strchr(name, '=');
-+	if (value) {
-+		*value = 0;
-+		value++;
-+		if (! *value) {
-+			value = NULL;
-+		}
-+	}
-+
-+	if (nv_is_present(name)) {
-+		printf("Warning: Ignored duplicate value %s for %s\n",
-+		       value, name);
-+		return;
-+	}
-+
-+	debug("nv_note_define(): %s = \"%s\"\n", name, value);
-+
-+	nv = nv_alloc();
-+	nv->nv_name = name;
-+	nv->nv_value = value;
-+
-+	nv->nv_next = nv_list;
-+	nv_list = nv;
-+}
-diff --git a/nv.h b/nv.h
-new file mode 100644
-index 0000000..70ed718
---- /dev/null
-+++ b/nv.h
-@@ -0,0 +1,34 @@
-+/*
-+ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ *  General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-+ *                                                                   USA
-+ */
-+
-+#ifndef _NV_H_
-+#define _NV_H_
-+
-+
-+struct nv_pair {
-+	char *nv_name;
-+	char *nv_value;
-+	struct nv_pair *nv_next;
-+};
-+
-+extern struct nv_pair *nv_list;
-+
-+extern void nv_note_define(char *defstr);
-+
-+#endif /* _NV_H_ */
-diff --git a/srcpos.c b/srcpos.c
-index 59d1835..c69487e 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -20,6 +20,7 @@
- #include "dtc.h"
- #include "srcpos.h"
- 
-+
- /*
-  * Like yylineno, this is the current open file pos.
-  */
-@@ -129,9 +130,6 @@ dtc_close_file(struct dtc_file *file)
- {
- 	if (fclose(file->file))
- 		die("Error closing \"%s\": %s\n", file->name, strerror(errno));
--
--	free(file->dir);
--	free(file);
- }
- 
- 
-@@ -169,10 +167,15 @@ srcpos_string(srcpos *pos)
- 	const char *fname;
- 	char buf[POS_BUF_SIZE];
- 
--	if (pos->file && pos->file->name)
-+	if (!pos) {
-+		fname = "<no-file>";
-+	} else if (pos->file->name) {
- 		fname = pos->file->name;
--	else
-+		if (strcmp(fname, "-") == 0)
-+			fname = "stdin";
-+	} else {
- 		fname = "<no-file>";
-+	}
- 
- 	if (pos->first_line == pos->last_line) {
- 		if (pos->first_column == pos->last_column) {
-@@ -195,3 +198,37 @@ srcpos_string(srcpos *pos)
- 
- #	undef POS_BUF_SIZE
- }
-+
-+
-+void
-+srcpos_error(srcpos *pos, char const *fmt, ...)
-+{
-+	const char *srcstr;
-+	va_list va;
-+	va_start(va, fmt);
-+
-+	srcstr = srcpos_string(pos);
-+
-+	fprintf(stderr, "Error: %s ", srcstr);
-+	vfprintf(stderr, fmt, va);
-+	fprintf(stderr, "\n");
-+
-+	va_end(va);
-+}
-+
-+
-+void
-+srcpos_warn(srcpos *pos, char const *fmt, ...)
-+{
-+	const char *srcstr;
-+	va_list va;
-+	va_start(va, fmt);
-+
-+	srcstr = srcpos_string(pos);
-+
-+	fprintf(stderr, "Warning: %s ", srcstr);
-+	vfprintf(stderr, fmt, va);
-+	fprintf(stderr, "\n");
-+
-+	va_end(va);
-+}
-diff --git a/srcpos.h b/srcpos.h
-index 3c39dd0..a6d0077 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -81,11 +81,6 @@ typedef YYLTYPE srcpos;
-  */
- extern srcpos srcpos_empty;
- 
--
--
--extern void yyerror(char const *);
--extern void yyerrorf(char const *, ...) __attribute__((format(printf, 1, 2)));
--
- extern struct dtc_file *srcpos_file;
- 
- struct search_path {
-@@ -101,4 +96,9 @@ extern srcpos *srcpos_copy(srcpos *pos);
- extern char *srcpos_string(srcpos *pos);
- extern void srcpos_dump(srcpos *pos);
- 
-+extern void srcpos_error(srcpos *pos, char const *, ...)
-+     __attribute__((format(printf, 2, 3)));
-+extern void srcpos_warn(srcpos *pos, char const *, ...)
-+     __attribute__((format(printf, 2, 3)));
-+
- #endif /* _SRCPOS_H_ */
-diff --git a/treesource.c b/treesource.c
-index 1521ff1..5d69878 100644
---- a/treesource.c
-+++ b/treesource.c
-@@ -20,6 +20,7 @@
- 
- #include "dtc.h"
- #include "srcpos.h"
-+#include "ir.h"
- 
- extern FILE *yyin;
- extern int yyparse(void);
-@@ -41,6 +42,8 @@ struct boot_info *dt_from_source(const char *fname)
- 	if (treesource_error)
- 		die("Syntax error parsing input tree\n");
- 
-+	ir_process();
-+
- 	return the_boot_info;
- }
- 
--- 
-1.6.0.2.g2ebc0
+/dts-v1/;
+
+/define/ make_cpu(\cpu)
+{
+	"PowerPC,8641@" % \cpu {
+		device_type = "cpu";
+		reg = < (\cpu) >;
+		d-cache-line-size = <32>;
+		i-cache-line-size = <32>;
+		d-cache-size = <32768>;		// L1
+		i-cache-size = <32768>;		// L1
+		timebase-frequency = <0>;	// From uboot
+		bus-frequency = <0>;		// From uboot
+		clock-frequency = <0>;		// From uboot
+	};
+}
+
+/define/ make_i2c(\id, \addr)
+{
+	"i2c@" % \hexstr(\addr) {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		cell-index = <\id>;
+		compatible = "fsl-i2c";
+		reg = < (\addr) 0x100>;
+		interrupts = <43 2>;
+		interrupt-parent = <&mpic>;
+		dfsrr;
+	};
+}
+
+/define/ make_ethernet(\id, \addr)
+{
+	"enet" % \id : "ethernet@" % \hexstr(\addr) {
+		cell-index = <\id>;
+		device_type = "network";
+		model = "TSEC";
+		compatible = "gianfar";
+		reg = < (\addr) 0x1000>;
+		local-mac-address = [ 00 00 00 00 00 00 ];
+		if (\id == 0) {
+			interrupts = <29 2 30 2 34 2>;
+		}
+		if (\id == 1) {
+			interrupts = <35 2 36 2 40 2>;
+		}
+		if (\id == 2) {
+			interrupts = <31 2 32 2 33 2>;
+		}
+		if (\id == 3) {
+			interrupts = <37 2 38 2 39 2>;
+		}
+		interrupt-parent = <&mpic>;
+		phy-handle = <&("phy" % \id)>;
+		phy-connection-type = "rgmii-id";
+	};
+}
+
+/define/ make_ethernet_phy(\id)
+{
+	"phy" % \id : "ethernet-phy@" % \id {
+		interrupt-parent = <&mpic>;
+		interrupts = <10 1>;
+		reg = < (\id) >;
+		device_type = "ethernet-phy";
+	};
+}
+
+
+/define/ make_dma_channel(\id)
+{
+	"dma-channel@" % hexstr(\id * 0x80) {
+		compatible = "fsl,mpc8641-dma-channel",
+				"fsl,eloplus-dma-channel";
+		reg = < (0x80 * \id) 0x80>;
+		cell-index = < (\id) >;
+		interrupt-parent = <&mpic>;
+		interrupts = < (20 + \id) 2>;
+	};
+}
+
+/define/ make_serial(\id, \addr)
+{
+	"serial" % \id : "serial@" % hexstr(\addr) {
+		cell-index = < (\id) >;
+		device_type = "serial";
+		compatible = "ns16550";
+		reg = < (\addr) 0x100>;
+		clock-frequency = <0>;
+		if (\id == 0) {
+			interrupts = <42 2>;
+		} else {
+			interrupts = <28 2>;
+		}
+		interrupt-parent = <&mpic>;
+	};
+}
+
+
+/ {
+	model = "MPC8641HPCN";
+	compatible = "fsl,mpc8641hpcn";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	aliases {
+		ethernet0 = &enet0;
+		ethernet1 = &enet1;
+		ethernet2 = &enet2;
+		ethernet3 = &enet3;
+		serial0 = &serial0;
+		serial1 = &serial1;
+		pci0 = &pci0;
+		pci1 = &pci1;
+		rapidio0 = &rapidio0;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		make_cpu(0);
+		make_cpu(1);
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x00000000 0x40000000>;	// 1G at 0x0
+	};
+
+	localbus@f8005000 {
+		#address-cells = <2>;
+		#size-cells = <1>;
+		compatible = "fsl,mpc8641-localbus", "simple-bus";
+		reg = <0xf8005000 0x1000>;
+		interrupts = <19 2>;
+		interrupt-parent = <&mpic>;
+
+		ranges = <0 0 0xff800000 0x00800000
+			  1 0 0xfe000000 0x01000000
+			  2 0 0xf8200000 0x00100000
+			  3 0 0xf8100000 0x00100000>;
+
+		flash@0,0 {
+			compatible = "cfi-flash";
+			reg = <0 0 0x00800000>;
+			bank-width = <2>;
+			device-width = <2>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+			partition@0 {
+				label = "kernel";
+				reg = <0x00000000 0x00300000>;
+			};
+			partition@300000 {
+				label = "firmware b";
+				reg = <0x00300000 0x00100000>;
+				read-only;
+			};
+			partition@400000 {
+				label = "fs";
+				reg = <0x00400000 0x00300000>;
+			};
+			partition@700000 {
+				label = "firmware a";
+				reg = <0x00700000 0x00100000>;
+				read-only;
+			};
+		};
+	};
+
+	soc8641@f8000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		device_type = "soc";
+		compatible = "simple-bus";
+		ranges = <0x00000000 0xf8000000 0x00100000>;
+		reg = <0xf8000000 0x00001000>;	// CCSRBAR
+		bus-frequency = <0>;
+
+		make_i2c(0, 0x3000);
+		make_i2c(1, 0x3100);
+
+		dma@21300 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "fsl,mpc8641-dma", "fsl,eloplus-dma";
+			reg = <0x21300 0x4>;
+			ranges = <0x0 0x21100 0x200>;
+			cell-index = <0>;
+
+			for \i in 0 .. 3 {
+				make_dma_channel(\i);
+			}
+		};
+
+		mdio@24520 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,gianfar-mdio";
+			reg = <0x24520 0x20>;
+
+			for \i in 0 .. 3 {
+				make_ethernet_phy(\i);
+			}
+		};
+
+		for \i in 0 .. 3 {
+			make_ethernet(\i, 0x24000 + \i * 0x1000);
+		}
+
+		make_serial(0, 0x4500);
+		make_serial(1, 0x4600);
+
+		mpic: pic@40000 {
+			interrupt-controller;
+			#address-cells = <0>;
+			#interrupt-cells = <2>;
+			reg = <0x40000 0x40000>;
+			compatible = "chrp,open-pic";
+			device_type = "open-pic";
+		};
+
+		global-utilities@e0000 {
+			compatible = "fsl,mpc8641-guts";
+			reg = <0xe0000 0x1000>;
+			fsl,has-rstcr;
+		};
+	};
+
+	pci0: pcie@f8008000 {
+		cell-index = <0>;
+		compatible = "fsl,mpc8641-pcie";
+		device_type = "pci";
+		#interrupt-cells = <1>;
+		#size-cells = <2>;
+		#address-cells = <3>;
+		reg = <0xf8008000 0x1000>;
+		bus-range = <0x0 0xff>;
+		ranges = <0x02000000 0x0 0x80000000 0x80000000 0x0 0x20000000
+			  0x01000000 0x0 0x00000000 0xe2000000 0x0 0x00100000>;
+		clock-frequency = <33333333>;
+		interrupt-parent = <&mpic>;
+		interrupts = <24 2>;
+		interrupt-map-mask = <0xff00 0 0 7>;
+		interrupt-map = <
+			/* IDSEL 0x11 func 0 - PCI slot 1 */
+			0x8800 0 0 1 &mpic 2 1
+			0x8800 0 0 2 &mpic 3 1
+			0x8800 0 0 3 &mpic 4 1
+			0x8800 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 1 - PCI slot 1 */
+			0x8900 0 0 1 &mpic 2 1
+			0x8900 0 0 2 &mpic 3 1
+			0x8900 0 0 3 &mpic 4 1
+			0x8900 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 2 - PCI slot 1 */
+			0x8a00 0 0 1 &mpic 2 1
+			0x8a00 0 0 2 &mpic 3 1
+			0x8a00 0 0 3 &mpic 4 1
+			0x8a00 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 3 - PCI slot 1 */
+			0x8b00 0 0 1 &mpic 2 1
+			0x8b00 0 0 2 &mpic 3 1
+			0x8b00 0 0 3 &mpic 4 1
+			0x8b00 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 4 - PCI slot 1 */
+			0x8c00 0 0 1 &mpic 2 1
+			0x8c00 0 0 2 &mpic 3 1
+			0x8c00 0 0 3 &mpic 4 1
+			0x8c00 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 5 - PCI slot 1 */
+			0x8d00 0 0 1 &mpic 2 1
+			0x8d00 0 0 2 &mpic 3 1
+			0x8d00 0 0 3 &mpic 4 1
+			0x8d00 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 6 - PCI slot 1 */
+			0x8e00 0 0 1 &mpic 2 1
+			0x8e00 0 0 2 &mpic 3 1
+			0x8e00 0 0 3 &mpic 4 1
+			0x8e00 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x11 func 7 - PCI slot 1 */
+			0x8f00 0 0 1 &mpic 2 1
+			0x8f00 0 0 2 &mpic 3 1
+			0x8f00 0 0 3 &mpic 4 1
+			0x8f00 0 0 4 &mpic 1 1
+
+			/* IDSEL 0x12 func 0 - PCI slot 2 */
+			0x9000 0 0 1 &mpic 3 1
+			0x9000 0 0 2 &mpic 4 1
+			0x9000 0 0 3 &mpic 1 1
+			0x9000 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 1 - PCI slot 2 */
+			0x9100 0 0 1 &mpic 3 1
+			0x9100 0 0 2 &mpic 4 1
+			0x9100 0 0 3 &mpic 1 1
+			0x9100 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 2 - PCI slot 2 */
+			0x9200 0 0 1 &mpic 3 1
+			0x9200 0 0 2 &mpic 4 1
+			0x9200 0 0 3 &mpic 1 1
+			0x9200 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 3 - PCI slot 2 */
+			0x9300 0 0 1 &mpic 3 1
+			0x9300 0 0 2 &mpic 4 1
+			0x9300 0 0 3 &mpic 1 1
+			0x9300 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 4 - PCI slot 2 */
+			0x9400 0 0 1 &mpic 3 1
+			0x9400 0 0 2 &mpic 4 1
+			0x9400 0 0 3 &mpic 1 1
+			0x9400 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 5 - PCI slot 2 */
+			0x9500 0 0 1 &mpic 3 1
+			0x9500 0 0 2 &mpic 4 1
+			0x9500 0 0 3 &mpic 1 1
+			0x9500 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 6 - PCI slot 2 */
+			0x9600 0 0 1 &mpic 3 1
+			0x9600 0 0 2 &mpic 4 1
+			0x9600 0 0 3 &mpic 1 1
+			0x9600 0 0 4 &mpic 2 1
+
+			/* IDSEL 0x12 func 7 - PCI slot 2 */
+			0x9700 0 0 1 &mpic 3 1
+			0x9700 0 0 2 &mpic 4 1
+			0x9700 0 0 3 &mpic 1 1
+			0x9700 0 0 4 &mpic 2 1
+
+			// IDSEL 0x1c  USB
+			0xe000 0 0 1 &i8259 12 2
+			0xe100 0 0 2 &i8259 9 2
+			0xe200 0 0 3 &i8259 10 2
+			0xe300 0 0 4 &i8259 11 2
+
+			// IDSEL 0x1d  Audio
+			0xe800 0 0 1 &i8259 6 2
+
+			// IDSEL 0x1e Legacy
+			0xf000 0 0 1 &i8259 7 2
+			0xf100 0 0 1 &i8259 7 2
+
+			// IDSEL 0x1f IDE/SATA
+			0xf800 0 0 1 &i8259 14 2
+			0xf900 0 0 1 &i8259 5 2
+			>;
+
+		pcie@0 {
+			reg = <0 0 0 0 0>;
+			#size-cells = <2>;
+			#address-cells = <3>;
+			device_type = "pci";
+			ranges = <0x02000000 0x0 0x80000000
+				  0x02000000 0x0 0x80000000
+				  0x0 0x20000000
+
+				  0x01000000 0x0 0x00000000
+				  0x01000000 0x0 0x00000000
+				  0x0 0x00100000>;
+			uli1575@0 {
+				reg = <0 0 0 0 0>;
+				#size-cells = <2>;
+				#address-cells = <3>;
+				ranges = <0x02000000 0x0 0x80000000
+					  0x02000000 0x0 0x80000000
+					  0x0 0x20000000
+					  0x01000000 0x0 0x00000000
+					  0x01000000 0x0 0x00000000
+					  0x0 0x00100000>;
+				isa@1e {
+					device_type = "isa";
+					#interrupt-cells = <2>;
+					#size-cells = <1>;
+					#address-cells = <2>;
+					reg = <0xf000 0 0 0 0>;
+					ranges = <1 0 0x01000000 0 0
+						  0x00001000>;
+					interrupt-parent = <&i8259>;
+
+					i8259: interrupt-controller@20 {
+						reg = <1 0x20 2
+						       1 0xa0 2
+						       1 0x4d0 2>;
+						interrupt-controller;
+						device_type = "interrupt-controller";
+						#address-cells = <0>;
+						#interrupt-cells = <2>;
+						compatible = "chrp,iic";
+						interrupts = <9 2>;
+						interrupt-parent = <&mpic>;
+					};
+
+					i8042@60 {
+						#size-cells = <0>;
+						#address-cells = <1>;
+						reg = <1 0x60 1 1 0x64 1>;
+						interrupts = <1 3 12 3>;
+						interrupt-parent =
+							<&i8259>;
+
+						keyboard@0 {
+							reg = <0>;
+							compatible = "pnpPNP,303";
+						};
+
+						mouse@1 {
+							reg = <1>;
+							compatible = "pnpPNP,f03";
+						};
+					};
+
+					rtc@70 {
+						compatible =
+							"pnpPNP,b00";
+						reg = <1 0x70 2>;
+					};
+
+					gpio@400 {
+						reg = <1 0x400 0x80>;
+					};
+				};
+			};
+		};
+
+	};
+
+	pci1: pcie@f8009000 {
+		cell-index = <1>;
+		compatible = "fsl,mpc8641-pcie";
+		device_type = "pci";
+		#interrupt-cells = <1>;
+		#size-cells = <2>;
+		#address-cells = <3>;
+		reg = <0xf8009000 0x1000>;
+		bus-range = <0 0xff>;
+		ranges = <0x02000000 0x0 0xa0000000 0xa0000000 0x0 0x20000000
+			  0x01000000 0x0 0x00000000 0xe3000000 0x0 0x00100000>;
+		clock-frequency = <33333333>;
+		interrupt-parent = <&mpic>;
+		interrupts = <25 2>;
+		interrupt-map-mask = <0xf800 0 0 7>;
+		interrupt-map = <
+			/* IDSEL 0x0 */
+			0x0000 0 0 1 &mpic 4 1
+			0x0000 0 0 2 &mpic 5 1
+			0x0000 0 0 3 &mpic 6 1
+			0x0000 0 0 4 &mpic 7 1
+			>;
+		pcie@0 {
+			reg = <0 0 0 0 0>;
+			#size-cells = <2>;
+			#address-cells = <3>;
+			device_type = "pci";
+			ranges = <0x02000000 0x0 0xa0000000
+				  0x02000000 0x0 0xa0000000
+				  0x0 0x20000000
+
+				  0x01000000 0x0 0x00000000
+				  0x01000000 0x0 0x00000000
+				  0x0 0x00100000>;
+		};
+	};
+	rapidio0: rapidio@f80c0000 {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		compatible = "fsl,rapidio-delta";
+		reg = <0xf80c0000 0x20000>;
+		ranges = <0 0 0xc0000000 0 0x20000000>;
+		interrupt-parent = <&mpic>;
+		/* err_irq bell_outb_irq bell_inb_irq
+			msg1_tx_irq msg1_rx_irq	msg2_tx_irq msg2_rx_irq */
+		interrupts = <48 2 49 2 50 2 53 2 54 2 55 2 56 2>;
+	};
+};
