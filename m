@@ -1,17 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [PATCH 0/8] Implement a new DTS Source Language
-Date: Thu, 25 Sep 2008 14:31:11 +1000
-Message-ID: <20080925043111.GK15169@yookeroo.seuss>
+Date: Thu, 25 Sep 2008 14:26:13 +1000
+Message-ID: <20080925042613.GJ15169@yookeroo.seuss>
 References: <1222196652-13811-1-git-send-email-jdl@jdl.com>
 	<097BFF8D-317F-4E85-AC2A-4C0A8D6C608B@kernel.crashing.org>
 	<1222275105.11692.9.camel@ld0161-tx32>
-	<1222282135.12705.4.camel@ld0161-tx32>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1222282135.12705.4.camel@ld0161-tx32>
+In-Reply-To: <1222275105.11692.9.camel@ld0161-tx32>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -25,56 +24,566 @@ To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2008 at 01:48:55PM -0500, Jon Loeliger wrote:
-> On Wed, 2008-09-24 at 11:51 -0500, Jon Loeliger wrote:
-> > On Tue, 2008-09-23 at 21:34 -0500, Kumar Gala wrote:
+On Wed, Sep 24, 2008 at 11:51:45AM -0500, Jon Loeliger wrote:
+> On Tue, 2008-09-23 at 21:34 -0500, Kumar Gala wrote:
+> 
+> > Any examples/tests of all the cool new features?
 > > 
-> > > Any examples/tests of all the cool new features?
-> > > 
-> > > - k
-> > 
-> > Here is a QAD example based on the MPC8641 DTS file
-> > as found in the arch/powerpc/boot/dts directory today.
-> > It is maybe not the best example, but it shows the
-> > flavor of what can be done.
-> > 
-> > Enjoy,
-> > jdl
+> > - k
+> 
+> Here is a QAD example based on the MPC8641 DTS file
+> as found in the arch/powerpc/boot/dts directory today.
+> It is maybe not the best example, but it shows the
+> flavor of what can be done.
+> 
+> Enjoy,
+> jdl
 > 
 > 
-> Also, here is the same refactoring done on the
-> mpc8572ds.dts file too.
+> /*
+>  * MPC8641 HPCN Device Tree Source
+>  *
+>  * Copyright 2006 Freescale Semiconductor Inc.
+>  *
+>  * This program is free software; you can redistribute  it and/or modify it
+>  * under  the terms of  the GNU General  Public License as published by the
+>  * Free Software Foundation;  either version 2 of the  License, or (at your
+>  * option) any later version.
+>  */
 > 
-> And, perhaps more important than doing this work
-> on this one file, it shows that the first section
-> of both this 8572 DTS file and the 8641 DTS file
-> are almost identical throughout the /define/ section.
-> Minor refactoring needed in the 8641 variant.
-> The only "real" difference is 8641 says "TSEC" and
-> the 8572 says "eTSEC", and one weird interrupt thing
-> in the serial node.  Dunno.
+> /dts-v1/;
+> 
+> /define/ make_cpu(\cpu)
 
-[snip]
-> /define/ make_i2c(\id)
+Eck.  The \identified parameters certainly seem to violate the
+look-like-C principle.
+
 > {
-> 	\addr := 0x3000 + \id * 0x100;
+> 	"PowerPC,8641@" % \cpu {
 
-Hrm.  Again, not very C-like.  Plus it bothers me that there are 3
-somewhat different definition constructs: /define/, /const/ and :=.
-At least /define/ and /const/ should be mergeable, with /const/
-becoming a zero-parameter /define/.  Maybe local defines need
-something different, but the distinction seems dangerously ad-hoc to
-me at the moment.
+You use quotes for the node name here in the macro.  Is that always
+required, or only needed if you're defining the node name with an
+expression.  If the latter, how are the two cases lexically
+distinguished?
 
-[snip]
-> /define/ make_dma_channel(\part, \id, \intr_base)
+> 		device_type = "cpu";
+> 		reg = < (\cpu) >;
+
+So.. in the node name the \cpu parameter is treated as a string, here
+it's treated as a number.  What makes the difference?  Does the %
+operator implicitly convert?
+
+> 		d-cache-line-size = <32>;
+> 		i-cache-line-size = <32>;
+> 		d-cache-size = <32768>;		// L1
+> 		i-cache-size = <32768>;		// L1
+> 		timebase-frequency = <0>;	// From uboot
+> 		bus-frequency = <0>;		// From uboot
+> 		clock-frequency = <0>;		// From uboot
+> 	};
+> }
+> 
+> /define/ make_i2c(\id, \addr)
+> {
+> 	"i2c@" % \hexstr(\addr) {
+
+Ok, so you have built-in functions as well.
+
+How does "typing" work on these functions?  Each of the examples you
+have here defines exactly one node.  Does that have to be the case, or
+are there other options?  Can you define multiple nodes with one
+function.  Can you define properties only with a function?
+
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 		cell-index = <\id>;
+> 		compatible = "fsl-i2c";
+> 		reg = < (\addr) 0x100>;
+> 		interrupts = <43 2>;
+> 		interrupt-parent = <&mpic>;
+> 		dfsrr;
+> 	};
+> }
+> 
+> /define/ make_ethernet(\id, \addr)
+> {
+> 	"enet" % \id : "ethernet@" % \hexstr(\addr) {
+
+Here labels too are defined with quotes.  Again, what distinguishes
+this from the non-quoted case?  This form also means the : no longer
+lexically distinguishes a label, which makes life interesting.
+
+> 		cell-index = <\id>;
+> 		device_type = "network";
+> 		model = "TSEC";
+> 		compatible = "gianfar";
+> 		reg = < (\addr) 0x1000>;
+> 		local-mac-address = [ 00 00 00 00 00 00 ];
+> 		if (\id == 0) {
+> 			interrupts = <29 2 30 2 34 2>;
+> 		}
+
+This isn't a language problem, per se, but this looks like a bad way
+of doing a make_ethernet() function:  having these individual cases
+for the interrupts means board knowledge is built into the function
+which is what we're trying to avoid.  Better to pass in the interrupt
+numbers to the function, I think.
+
+> 		if (\id == 1) {
+> 			interrupts = <35 2 36 2 40 2>;
+> 		}
+> 		if (\id == 2) {
+> 			interrupts = <31 2 32 2 33 2>;
+> 		}
+> 		if (\id == 3) {
+> 			interrupts = <37 2 38 2 39 2>;
+> 		}
+> 		interrupt-parent = <&mpic>;
+> 		phy-handle = <&("phy" % \id)>;
+> 		phy-connection-type = "rgmii-id";
+> 	};
+> }
+> 
+> /define/ make_ethernet_phy(\id)
+> {
+> 	"phy" % \id : "ethernet-phy@" % \id {
+> 		interrupt-parent = <&mpic>;
+> 		interrupts = <10 1>;
+> 		reg = < (\id) >;
+> 		device_type = "ethernet-phy";
+> 	};
+> }
+> 
+> 
+> /define/ make_dma_channel(\id)
 > {
 > 	"dma-channel@" % hexstr(\id * 0x80) {
-> 		compatible = < ("fsl,mpc" % \part % "-dma-channel")
-> 				("fsl,eloplus-dma-channel") >;
+> 		compatible = "fsl,mpc8641-dma-channel",
+> 				"fsl,eloplus-dma-channel";
+> 		reg = < (0x80 * \id) 0x80>;
+> 		cell-index = < (\id) >;
+> 		interrupt-parent = <&mpic>;
+> 		interrupts = < (20 + \id) 2>;
+> 	};
+> }
+> 
+> /define/ make_serial(\id, \addr)
+> {
+> 	"serial" % \id : "serial@" % hexstr(\addr) {
+> 		cell-index = < (\id) >;
+> 		device_type = "serial";
+> 		compatible = "ns16550";
+> 		reg = < (\addr) 0x100>;
+> 		clock-frequency = <0>;
+> 		if (\id == 0) {
+> 			interrupts = <42 2>;
+> 		} else {
+> 			interrupts = <28 2>;
+> 		}
+> 		interrupt-parent = <&mpic>;
+> 	};
+> }
+> 
+> 
+> / {
+> 	model = "MPC8641HPCN";
+> 	compatible = "fsl,mpc8641hpcn";
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 
+> 	aliases {
+> 		ethernet0 = &enet0;
+> 		ethernet1 = &enet1;
+> 		ethernet2 = &enet2;
+> 		ethernet3 = &enet3;
+> 		serial0 = &serial0;
+> 		serial1 = &serial1;
+> 		pci0 = &pci0;
+> 		pci1 = &pci1;
+> 		rapidio0 = &rapidio0;
+> 	};
+> 
+> 	cpus {
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		make_cpu(0);
+> 		make_cpu(1);
+> 	};
+> 
+> 	memory {
+> 		device_type = "memory";
+> 		reg = <0x00000000 0x40000000>;	// 1G at 0x0
+> 	};
+> 
+> 	localbus@f8005000 {
+> 		#address-cells = <2>;
+> 		#size-cells = <1>;
+> 		compatible = "fsl,mpc8641-localbus", "simple-bus";
+> 		reg = <0xf8005000 0x1000>;
+> 		interrupts = <19 2>;
+> 		interrupt-parent = <&mpic>;
+> 
+> 		ranges = <0 0 0xff800000 0x00800000
+> 			  1 0 0xfe000000 0x01000000
+> 			  2 0 0xf8200000 0x00100000
+> 			  3 0 0xf8100000 0x00100000>;
+> 
+> 		flash@0,0 {
+> 			compatible = "cfi-flash";
+> 			reg = <0 0 0x00800000>;
+> 			bank-width = <2>;
+> 			device-width = <2>;
+> 			#address-cells = <1>;
+> 			#size-cells = <1>;
+> 			partition@0 {
+> 				label = "kernel";
+> 				reg = <0x00000000 0x00300000>;
+> 			};
+> 			partition@300000 {
+> 				label = "firmware b";
+> 				reg = <0x00300000 0x00100000>;
+> 				read-only;
+> 			};
+> 			partition@400000 {
+> 				label = "fs";
+> 				reg = <0x00400000 0x00300000>;
+> 			};
+> 			partition@700000 {
+> 				label = "firmware a";
+> 				reg = <0x00700000 0x00100000>;
+> 				read-only;
+> 			};
+> 		};
+> 	};
+> 
+> 	soc8641@f8000000 {
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		device_type = "soc";
+> 		compatible = "simple-bus";
+> 		ranges = <0x00000000 0xf8000000 0x00100000>;
+> 		reg = <0xf8000000 0x00001000>;	// CCSRBAR
+> 		bus-frequency = <0>;
+> 
+> 		make_i2c(0, 0x3000);
+> 		make_i2c(1, 0x3100);
+> 
+> 		dma@21300 {
+> 			#address-cells = <1>;
+> 			#size-cells = <1>;
+> 			compatible = "fsl,mpc8641-dma", "fsl,eloplus-dma";
+> 			reg = <0x21300 0x4>;
+> 			ranges = <0x0 0x21100 0x200>;
+> 			cell-index = <0>;
+> 
+> 			for \i in 0 .. 3 {
 
-WTF!?  What is a < > construct doing containing strings rather than
-cells.
+This would seem to be another violation of the look-like-C principle.
+This for syntax is pretty much unprecedented.
+
+> 				make_dma_channel(\i);
+> 			}
+> 		};
+> 
+> 		mdio@24520 {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 			compatible = "fsl,gianfar-mdio";
+> 			reg = <0x24520 0x20>;
+> 
+> 			for \i in 0 .. 3 {
+> 				make_ethernet_phy(\i);
+> 			}
+> 		};
+> 
+> 		for \i in 0 .. 3 {
+> 			make_ethernet(\i, 0x24000 + \i * 0x1000);
+> 		}
+> 
+> 		make_serial(0, 0x4500);
+> 		make_serial(1, 0x4600);
+> 
+> 		mpic: pic@40000 {
+> 			interrupt-controller;
+> 			#address-cells = <0>;
+> 			#interrupt-cells = <2>;
+> 			reg = <0x40000 0x40000>;
+> 			compatible = "chrp,open-pic";
+> 			device_type = "open-pic";
+> 		};
+> 
+> 		global-utilities@e0000 {
+> 			compatible = "fsl,mpc8641-guts";
+> 			reg = <0xe0000 0x1000>;
+> 			fsl,has-rstcr;
+> 		};
+> 	};
+> 
+> 	pci0: pcie@f8008000 {
+> 		cell-index = <0>;
+> 		compatible = "fsl,mpc8641-pcie";
+> 		device_type = "pci";
+> 		#interrupt-cells = <1>;
+> 		#size-cells = <2>;
+> 		#address-cells = <3>;
+> 		reg = <0xf8008000 0x1000>;
+> 		bus-range = <0x0 0xff>;
+> 		ranges = <0x02000000 0x0 0x80000000 0x80000000 0x0 0x20000000
+> 			  0x01000000 0x0 0x00000000 0xe2000000 0x0 0x00100000>;
+> 		clock-frequency = <33333333>;
+> 		interrupt-parent = <&mpic>;
+> 		interrupts = <24 2>;
+> 		interrupt-map-mask = <0xff00 0 0 7>;
+> 		interrupt-map = <
+> 			/* IDSEL 0x11 func 0 - PCI slot 1 */
+> 			0x8800 0 0 1 &mpic 2 1
+> 			0x8800 0 0 2 &mpic 3 1
+> 			0x8800 0 0 3 &mpic 4 1
+> 			0x8800 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 1 - PCI slot 1 */
+> 			0x8900 0 0 1 &mpic 2 1
+> 			0x8900 0 0 2 &mpic 3 1
+> 			0x8900 0 0 3 &mpic 4 1
+> 			0x8900 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 2 - PCI slot 1 */
+> 			0x8a00 0 0 1 &mpic 2 1
+> 			0x8a00 0 0 2 &mpic 3 1
+> 			0x8a00 0 0 3 &mpic 4 1
+> 			0x8a00 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 3 - PCI slot 1 */
+> 			0x8b00 0 0 1 &mpic 2 1
+> 			0x8b00 0 0 2 &mpic 3 1
+> 			0x8b00 0 0 3 &mpic 4 1
+> 			0x8b00 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 4 - PCI slot 1 */
+> 			0x8c00 0 0 1 &mpic 2 1
+> 			0x8c00 0 0 2 &mpic 3 1
+> 			0x8c00 0 0 3 &mpic 4 1
+> 			0x8c00 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 5 - PCI slot 1 */
+> 			0x8d00 0 0 1 &mpic 2 1
+> 			0x8d00 0 0 2 &mpic 3 1
+> 			0x8d00 0 0 3 &mpic 4 1
+> 			0x8d00 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 6 - PCI slot 1 */
+> 			0x8e00 0 0 1 &mpic 2 1
+> 			0x8e00 0 0 2 &mpic 3 1
+> 			0x8e00 0 0 3 &mpic 4 1
+> 			0x8e00 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x11 func 7 - PCI slot 1 */
+> 			0x8f00 0 0 1 &mpic 2 1
+> 			0x8f00 0 0 2 &mpic 3 1
+> 			0x8f00 0 0 3 &mpic 4 1
+> 			0x8f00 0 0 4 &mpic 1 1
+> 
+> 			/* IDSEL 0x12 func 0 - PCI slot 2 */
+> 			0x9000 0 0 1 &mpic 3 1
+> 			0x9000 0 0 2 &mpic 4 1
+> 			0x9000 0 0 3 &mpic 1 1
+> 			0x9000 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 1 - PCI slot 2 */
+> 			0x9100 0 0 1 &mpic 3 1
+> 			0x9100 0 0 2 &mpic 4 1
+> 			0x9100 0 0 3 &mpic 1 1
+> 			0x9100 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 2 - PCI slot 2 */
+> 			0x9200 0 0 1 &mpic 3 1
+> 			0x9200 0 0 2 &mpic 4 1
+> 			0x9200 0 0 3 &mpic 1 1
+> 			0x9200 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 3 - PCI slot 2 */
+> 			0x9300 0 0 1 &mpic 3 1
+> 			0x9300 0 0 2 &mpic 4 1
+> 			0x9300 0 0 3 &mpic 1 1
+> 			0x9300 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 4 - PCI slot 2 */
+> 			0x9400 0 0 1 &mpic 3 1
+> 			0x9400 0 0 2 &mpic 4 1
+> 			0x9400 0 0 3 &mpic 1 1
+> 			0x9400 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 5 - PCI slot 2 */
+> 			0x9500 0 0 1 &mpic 3 1
+> 			0x9500 0 0 2 &mpic 4 1
+> 			0x9500 0 0 3 &mpic 1 1
+> 			0x9500 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 6 - PCI slot 2 */
+> 			0x9600 0 0 1 &mpic 3 1
+> 			0x9600 0 0 2 &mpic 4 1
+> 			0x9600 0 0 3 &mpic 1 1
+> 			0x9600 0 0 4 &mpic 2 1
+> 
+> 			/* IDSEL 0x12 func 7 - PCI slot 2 */
+> 			0x9700 0 0 1 &mpic 3 1
+> 			0x9700 0 0 2 &mpic 4 1
+> 			0x9700 0 0 3 &mpic 1 1
+> 			0x9700 0 0 4 &mpic 2 1
+> 
+> 			// IDSEL 0x1c  USB
+> 			0xe000 0 0 1 &i8259 12 2
+> 			0xe100 0 0 2 &i8259 9 2
+> 			0xe200 0 0 3 &i8259 10 2
+> 			0xe300 0 0 4 &i8259 11 2
+> 
+> 			// IDSEL 0x1d  Audio
+> 			0xe800 0 0 1 &i8259 6 2
+> 
+> 			// IDSEL 0x1e Legacy
+> 			0xf000 0 0 1 &i8259 7 2
+> 			0xf100 0 0 1 &i8259 7 2
+> 
+> 			// IDSEL 0x1f IDE/SATA
+> 			0xf800 0 0 1 &i8259 14 2
+> 			0xf900 0 0 1 &i8259 5 2
+> 			>;
+> 
+> 		pcie@0 {
+> 			reg = <0 0 0 0 0>;
+> 			#size-cells = <2>;
+> 			#address-cells = <3>;
+> 			device_type = "pci";
+> 			ranges = <0x02000000 0x0 0x80000000
+> 				  0x02000000 0x0 0x80000000
+> 				  0x0 0x20000000
+> 
+> 				  0x01000000 0x0 0x00000000
+> 				  0x01000000 0x0 0x00000000
+> 				  0x0 0x00100000>;
+> 			uli1575@0 {
+> 				reg = <0 0 0 0 0>;
+> 				#size-cells = <2>;
+> 				#address-cells = <3>;
+> 				ranges = <0x02000000 0x0 0x80000000
+> 					  0x02000000 0x0 0x80000000
+> 					  0x0 0x20000000
+> 					  0x01000000 0x0 0x00000000
+> 					  0x01000000 0x0 0x00000000
+> 					  0x0 0x00100000>;
+> 				isa@1e {
+> 					device_type = "isa";
+> 					#interrupt-cells = <2>;
+> 					#size-cells = <1>;
+> 					#address-cells = <2>;
+> 					reg = <0xf000 0 0 0 0>;
+> 					ranges = <1 0 0x01000000 0 0
+> 						  0x00001000>;
+> 					interrupt-parent = <&i8259>;
+> 
+> 					i8259: interrupt-controller@20 {
+> 						reg = <1 0x20 2
+> 						       1 0xa0 2
+> 						       1 0x4d0 2>;
+> 						interrupt-controller;
+> 						device_type = "interrupt-controller";
+> 						#address-cells = <0>;
+> 						#interrupt-cells = <2>;
+> 						compatible = "chrp,iic";
+> 						interrupts = <9 2>;
+> 						interrupt-parent = <&mpic>;
+> 					};
+> 
+> 					i8042@60 {
+> 						#size-cells = <0>;
+> 						#address-cells = <1>;
+> 						reg = <1 0x60 1 1 0x64 1>;
+> 						interrupts = <1 3 12 3>;
+> 						interrupt-parent =
+> 							<&i8259>;
+> 
+> 						keyboard@0 {
+> 							reg = <0>;
+> 							compatible = "pnpPNP,303";
+> 						};
+> 
+> 						mouse@1 {
+> 							reg = <1>;
+> 							compatible = "pnpPNP,f03";
+> 						};
+> 					};
+> 
+> 					rtc@70 {
+> 						compatible =
+> 							"pnpPNP,b00";
+> 						reg = <1 0x70 2>;
+> 					};
+> 
+> 					gpio@400 {
+> 						reg = <1 0x400 0x80>;
+> 					};
+> 				};
+> 			};
+> 		};
+> 
+> 	};
+> 
+> 	pci1: pcie@f8009000 {
+> 		cell-index = <1>;
+> 		compatible = "fsl,mpc8641-pcie";
+> 		device_type = "pci";
+> 		#interrupt-cells = <1>;
+> 		#size-cells = <2>;
+> 		#address-cells = <3>;
+> 		reg = <0xf8009000 0x1000>;
+> 		bus-range = <0 0xff>;
+> 		ranges = <0x02000000 0x0 0xa0000000 0xa0000000 0x0 0x20000000
+> 			  0x01000000 0x0 0x00000000 0xe3000000 0x0 0x00100000>;
+> 		clock-frequency = <33333333>;
+> 		interrupt-parent = <&mpic>;
+> 		interrupts = <25 2>;
+> 		interrupt-map-mask = <0xf800 0 0 7>;
+> 		interrupt-map = <
+> 			/* IDSEL 0x0 */
+> 			0x0000 0 0 1 &mpic 4 1
+> 			0x0000 0 0 2 &mpic 5 1
+> 			0x0000 0 0 3 &mpic 6 1
+> 			0x0000 0 0 4 &mpic 7 1
+> 			>;
+> 		pcie@0 {
+> 			reg = <0 0 0 0 0>;
+> 			#size-cells = <2>;
+> 			#address-cells = <3>;
+> 			device_type = "pci";
+> 			ranges = <0x02000000 0x0 0xa0000000
+> 				  0x02000000 0x0 0xa0000000
+> 				  0x0 0x20000000
+> 
+> 				  0x01000000 0x0 0x00000000
+> 				  0x01000000 0x0 0x00000000
+> 				  0x0 0x00100000>;
+> 		};
+> 	};
+> 	rapidio0: rapidio@f80c0000 {
+> 		#address-cells = <2>;
+> 		#size-cells = <2>;
+> 		compatible = "fsl,rapidio-delta";
+> 		reg = <0xf80c0000 0x20000>;
+> 		ranges = <0 0 0xc0000000 0 0x20000000>;
+> 		interrupt-parent = <&mpic>;
+> 		/* err_irq bell_outb_irq bell_inb_irq
+> 			msg1_tx_irq msg1_rx_irq	msg2_tx_irq msg2_rx_irq */
+> 		interrupts = <48 2 49 2 50 2 53 2 54 2 55 2 56 2>;
+> 	};
+> };
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> https://ozlabs.org/mailman/listinfo/devicetree-discuss
+> 
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
