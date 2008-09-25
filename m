@@ -1,15 +1,21 @@
 From: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/8] Add conditionalized debug() print macro.
-Date: Thu, 25 Sep 2008 08:42:44 -0400
-Message-ID: <20080925084244.27191e11@zod.rchland.ibm.com>
+Subject: Re: [PATCH 8/8] Add documentation for the new DTS language.
+Date: Thu, 25 Sep 2008 09:00:02 -0400
+Message-ID: <20080925090002.61c38b13@zod.rchland.ibm.com>
 References: <1222196652-13811-1-git-send-email-jdl@jdl.com>
 	<1222196652-13811-2-git-send-email-jdl@jdl.com>
 	<1222196652-13811-3-git-send-email-jdl@jdl.com>
+	<1222196652-13811-4-git-send-email-jdl@jdl.com>
+	<1222196652-13811-5-git-send-email-jdl@jdl.com>
+	<1222196652-13811-6-git-send-email-jdl@jdl.com>
+	<1222196652-13811-7-git-send-email-jdl@jdl.com>
+	<1222196652-13811-8-git-send-email-jdl@jdl.com>
+	<1222196652-13811-9-git-send-email-jdl@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <1222196652-13811-3-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
+In-Reply-To: <1222196652-13811-9-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -23,38 +29,57 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Sep 2008 14:04:06 -0500
+On Tue, 23 Sep 2008 14:04:12 -0500
 Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org> wrote:
 
-> From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  dtc.h |    8 ++++++++
->  1 files changed, 8 insertions(+), 0 deletions(-)
-> 
-> diff --git a/dtc.h b/dtc.h
-> index 08d54c8..ec636f8 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -34,7 +34,15 @@
->  #include <libfdt_env.h>
->  #include <fdt.h>
-> 
-> +#ifdef DEBUG
-> +#define debug(fmt,args...)	printf(fmt, ##args)
-> +#else
-> +#define debug(fmt,args...)
-> +#endif
+> +4.1) DTS Lexical Components
 > +
+> +Property and node names		[a-zA-Z0-9,._+*#?@-]+
+> +Identifiers			\\[a-zA-Z_][a-zA-Z0-9_]*
+> +Labels				[a-zA-Z_][a-zA-Z0-9_]*
+> +Strings				<C-style-double-quoted-strings>
+> +Comments			Both /* ... */ and // style are supported
+> +Numeric literals		<C-style-integer-numbers>
+> +Bytes				[0-9a-fA-F][0-9a-fA-F]
+> +
+> +Keywords:
+> +	else
+> +	for
+> +	if
+> +	in
+> +	return
+> +	void
+> +	/const/
+> +	/define/
+> +	/incbin/
+> +
+> +C-style expression operators:
+> +	<<
+> +	>>
+> +	<=
+> +	>=
+> +	==
+> +	!=
+> +	&&
+> +	||
+> +	+
+> +	-
+> +	*
+> +	/
+> +	%
+> +
+> +Additional tokens:
+> +	..
+> +	:=
+> +	{
+> +	}
+> +	,
+> +	&
 > +
 
-So, not to be nitpicky, but this requires a rebuild of dtc with -DDEBUG
-(or similar) to get the debug output.
+You have ^, &, |, <, >, ~, (, and ) listed in the "expr_oper:" part of
+the DTS grammar below this, but none of those are included here.
 
-Would it be better to have it just take a --debug option on the command
-line and conditionalize on a global variable?  dtc isn't exactly a
-performance crazy application, so the if checks shouldn't matter too
-much.
+Which list is complete/correct?
 
 josh
