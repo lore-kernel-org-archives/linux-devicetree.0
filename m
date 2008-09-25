@@ -1,14 +1,11 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 0/8] Implement a new DTS Source Language
-Date: Thu, 25 Sep 2008 10:25:07 -0500
-Message-ID: <48DBAD53.7090201@freescale.com>
-References: <1222196652-13811-1-git-send-email-jdl@jdl.com>	<097BFF8D-317F-4E85-AC2A-4C0A8D6C608B@kernel.crashing.org>	<1222275105.11692.9.camel@ld0161-tx32>
-	<20080925042613.GJ15169@yookeroo.seuss>
+From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] Fix an overflow case in fdt_offset_ptr() detected by GCC 4.3.
+Date: Thu, 25 Sep 2008 11:02:17 -0500
+Message-ID: <1222358537.25112.7.camel@ld0161-tx32>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20080925042613.GJ15169-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -18,44 +15,53 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Papacharalambous <SteveP-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-David Gibson wrote:
->> /define/ make_cpu(\cpu)
-> 
-> Eck.  The \identified parameters certainly seem to violate the
-> look-like-C principle.
 
-It's to disambiguate from existing doesn't-look-like-C constructs 
-(property and node definitions), though it's not really needed in this 
-context.
+Using Gcc 4.3 detected this problem:
 
->> {
->> 		device_type = "cpu";
->> 		reg = < (\cpu) >;
-> 
-> So.. in the node name the \cpu parameter is treated as a string, here
-> it's treated as a number.  What makes the difference?  Does the %
-> operator implicitly convert?
+    ../dtc/libfdt/fdt.c: In function 'fdt_next_tag':
+    ../dtc/libfdt/fdt.c:82: error: assuming signed overflow does not
+    occur when assuming that (X + c) < X is always false
 
-Yes, it implicitly converts.
+To fix the problem, treat the offset as an unsigned int.
 
-> Can you define multiple nodes with one
-> function.  Can you define properties only with a function?
+The problem report and proposed fix were provided
+by Steve Papacharalambous <stevep-KZfg59tc24xl57MIdRCFDg@public.gmane.org>.
 
-Yes to both.
+Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ libfdt/fdt.c    |    2 +-
+ libfdt/libfdt.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
->> 			for \i in 0 .. 3 {
-> 
-> This would seem to be another violation of the look-like-C principle.
-
-I don't think we particularly need to inherit C's warts.
-
-> This for syntax is pretty much unprecedented.
-
-It's similar to Python, albeit with less flexibility (I suggested to Jon 
-that we introduce a "set" construct to remedy this).
-
--Scott
+diff --git a/libfdt/fdt.c b/libfdt/fdt.c
+index 2acaec5..37085c1 100644
+--- a/libfdt/fdt.c
++++ b/libfdt/fdt.c
+@@ -74,7 +74,7 @@ int fdt_check_header(const void *fdt)
+ 	return 0;
+ }
+ 
+-const void *fdt_offset_ptr(const void *fdt, int offset, int len)
++const void *fdt_offset_ptr(const void *fdt, int offset, unsigned int len)
+ {
+ 	const char *p;
+ 
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 9e4f990..60dd4a1 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -122,7 +122,7 @@
+ /* Low-level functions (you probably don't need these)                */
+ /**********************************************************************/
+ 
+-const void *fdt_offset_ptr(const void *fdt, int offset, int checklen);
++const void *fdt_offset_ptr(const void *fdt, int offset, unsigned int checklen);
+ static inline void *fdt_offset_ptr_w(void *fdt, int offset, int checklen)
+ {
+ 	return (void *)(uintptr_t)fdt_offset_ptr(fdt, offset, checklen);
+-- 
+1.6.0.2.g2ebc0
