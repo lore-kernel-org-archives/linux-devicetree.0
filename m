@@ -1,20 +1,17 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: [PATCH 8/9 V3] Add documentation for the new DTS language.
-Date: Fri, 26 Sep 2008 15:25:47 -0500
-Message-ID: <1222460748-20127-9-git-send-email-jdl@jdl.com>
+Subject: [PATCH 5/9 V3] Add most of the new IR implementation files.
+Date: Fri, 26 Sep 2008 15:25:44 -0500
+Message-ID: <1222460748-20127-6-git-send-email-jdl@jdl.com>
 References: <1222460748-20127-1-git-send-email-jdl@jdl.com>
 	<1222460748-20127-2-git-send-email-jdl@jdl.com>
 	<1222460748-20127-3-git-send-email-jdl@jdl.com>
 	<1222460748-20127-4-git-send-email-jdl@jdl.com>
 	<1222460748-20127-5-git-send-email-jdl@jdl.com>
-	<1222460748-20127-6-git-send-email-jdl@jdl.com>
-	<1222460748-20127-7-git-send-email-jdl@jdl.com>
-	<1222460748-20127-8-git-send-email-jdl@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <1222460748-20127-8-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
+In-Reply-To: <1222460748-20127-5-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -27,576 +24,1449 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaUR
 To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
 Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- Documentation/manual.txt |  500 ++++++++++++++++++++++++++++++++++++++++++----
- 1 files changed, 463 insertions(+), 37 deletions(-)
+ ir.c         |  190 ++++++++++++++++++++++
+ ir_builtin.c |  180 +++++++++++++++++++++
+ ir_dump.c    |  220 ++++++++++++++++++++++++++
+ ir_emit.c    |  491 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ir_scope.c   |  319 +++++++++++++++++++++++++++++++++++++
+ 5 files changed, 1400 insertions(+), 0 deletions(-)
+ create mode 100644 ir.c
+ create mode 100644 ir_builtin.c
+ create mode 100644 ir_dump.c
+ create mode 100644 ir_emit.c
+ create mode 100644 ir_scope.c
 
-diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index b957662..ac56309 100644
---- a/Documentation/manual.txt
-+++ b/Documentation/manual.txt
-@@ -105,13 +105,21 @@ Options:
-     -q
- 	Quiet: -q suppress warnings, -qq errors, -qqq all
- 
-+    -D <id>
-+    -D <id>=<value>
-+	Introduce a constant definition for symbol <id> with
-+	possible initial value given by <value>.  The RHS
-+	should be a literal number or string value.
+diff --git a/ir.c b/ir.c
+new file mode 100644
+index 0000000..7ebe806
+--- /dev/null
++++ b/ir.c
+@@ -0,0 +1,190 @@
++/*
++ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
 +
-+    -p <padsize>
-+	Add at least <padsize> additional space to the DTB image.
++#include "dtc.h"
++#include "ir.h"
 +
-     -R <number>
- 	Make space for <number> reserve map entries
- 	Relevant for dtb and asm output only.
- 
-     -S <bytes>
--	Ensure the blob at least <bytes> long, adding additional
--	space if needed.
-+	Deprecated option.
- 
-     -v
- 	Print DTC version and exit.
-@@ -131,47 +139,338 @@ Additionally, dtc performs various sanity checks on the tree.
- 
- 4) Device Tree Source file
- 
--4.1) Overview
- 
--Here is a very rough overview of the layout of a DTS source file:
-+4.1) DTS Lexical Components
++extern int treesource_error;
 +
-+Property and node names		[a-zA-Z0-9,._+*#?@-]+
-+Identifiers			\\[a-zA-Z_][a-zA-Z0-9_]*
-+Labels				[a-zA-Z_][a-zA-Z0-9_]*
-+Strings				<C-style-double-quoted-strings>
-+Comments			Both /* ... */ and // style are supported
-+Numeric literals		<C-style-integer-numbers>
-+Bytes				[0-9a-fA-F][0-9a-fA-F]
 +
-+Keywords:
-+	else
-+	for
-+	if
-+	in
-+	return
-+	void
-+	/const/
-+	/define/
-+	/incbin/
++struct ir *the_ir_tree;
 +
-+C-style expression operators:
-+	<<
-+	>>
-+	<=
-+	>=
-+	==
-+	!=
-+	&&
-+	||
-+	+
-+	-
-+	*
-+	/
-+	%
 +
-+Additional tokens:
-+	..
-+	:=
-+	{
++extern struct ir *
++ir_alloc(ir_type ir_type, srcpos *pos)
++{
++	struct ir *ir;
++
++	ir = xmalloc(sizeof(struct ir));
++	memset(ir, 0, sizeof(struct ir));
++
++	ir->ir_type = ir_type;
++	ir->ir_srcpos = srcpos_copy(pos);
++
++	return ir;
++}
++
++
++/*
++ * Shallow copy, mostly.
++ *
++ * Note that things like the immediate strings and source position
++ * are copied, but the sub-IR-expressions are not.
++ */
++extern struct ir *
++ir_copy(struct ir *ir)
++{
++	struct ir *ir_new;
++
++	if (!ir)
++		return NULL;
++
++	ir_new = ir_alloc(ir->ir_type, ir->ir_srcpos);
++	ir_new->ir_literal = ir->ir_literal;
++	if (ir->ir_lit_str)
++		ir_new->ir_lit_str = strdup(ir->ir_lit_str);
++	if (ir->ir_label_name)
++		ir_new->ir_label_name = strdup(ir->ir_label_name);
++
++	return ir_new;
++}
++
++
++void
++ir_free(struct ir *ir)
++{
++}
++
++
++void
++ir_free_all(struct ir *ir)
++{
++}
++
++
++extern struct ir *
++ir_alloc_unop(ir_type ir_type, struct ir *ir1, srcpos *pos)
++{
++    struct ir *ir;
++
++    ir = ir_alloc(ir_type, pos);
++    ir->ir_expr1 = ir1;
++
++    return ir;
++}
++
++
++extern struct ir *
++ir_alloc_binop(ir_type ir_type,
++	       struct ir *ir1, struct ir *ir2,
++	       srcpos *pos)
++{
++    struct ir *ir;
++
++    ir = ir_alloc(ir_type, pos);
++    ir->ir_expr1 = ir1;
++    ir->ir_expr2 = ir2;
++
++    return ir;
++}
++
++
++extern struct ir *
++ir_alloc_triop(ir_type ir_type,
++	       struct ir *ir1, struct ir *ir2, struct ir *ir3,
++	       srcpos *pos)
++{
++    struct ir *ir;
++
++    ir = ir_alloc(ir_type, pos);
++    ir->ir_expr1 = ir1;
++    ir->ir_expr2 = ir2;
++    ir->ir_expr3 = ir3;
++
++    return ir;
++}
++
++
++extern struct ir *
++ir_list_append(struct ir *ir_list, struct ir *ir_node)
++{
++	if (ir_node == NULL) {
++		return ir_list;
 +	}
-+	,
-+	&
 +
++	if (ir_list == NULL) {
++		ir_list = ir_alloc(IR_LIST, ir_node->ir_srcpos);
++	}
++
++	ir_node->ir_prev = ir_list->ir_last;
++
++	if (ir_list->ir_last) {
++		ir_list->ir_last->ir_next = ir_node;
++	} else {
++		ir_list->ir_first = ir_node;
++	}
 +
-+These constructs are handled and eliminated purely at the
-+lexical level and do not appear in the grammar proper:
++	ir_list->ir_last = ir_node;
++
++	return ir_list;
++}
++
++
++void
++ir_process(void)
++{
++	/*
++	 * FIXME: Fix leaking the whole orginal IR tree here.
++	 */
++	the_ir_tree = ir_simplify(the_ir_tree, IR_EVAL_CTXT_ANY);
 +
-+    - Source files included using the syntax:
++	ir_emit(the_ir_tree);
++}
++
++
++static const char *ir_severity_str[] = {
++        "Info",
++	"Warning",
++	"Error",
++};
 +
-+        /include/ "filename"
++#define IR_NUM_SEV	ARRAY_SIZE(ir_severity_str)
 +
-+    - Both classic C style and C++ style comments are supported.
-+      Comments don't nest.
-+      For example, given:
 +
-+	1    /*
-+	2     *  asdasdasd  // asdasdad
-+	3     //   */
-+	4    asasd
-+	5     */
-+      The // comment on line 3 is not effective and is ignored.
-+      The original /* comment ends on line 3.  Line 5 is in error.
-+
-+      And given:
-+
-+	1    // /*
-+	2     *  asdasdasd  // asdasdad
-+	3     */
-+
-+      The // comment on line 1 hides the opening /*.
-+      Line 2 is in error.
-+
-+
-+4.2) DTS Grammar
-+
-+Here is a very rough overview of the grammar of a DTS source file:
-+
-+
-+    sourcefile:
-+		'/dts-v1/' ';' possibly_empty_list_of_declarations devicetree
-+
-+    declaration:
-+		  memreserve
-+		| constdef
-+		| funcdef
-+
-+    memreserve:	label '/memreserve/' addr addr ';'
-+
-+    constdef:	'/const/' identifier '=' expr ';'
-+
-+    funcdef:	'/define/' propnodename paramdecls statement_block
-+
-+    paramdecls:	'(' possibly_empty_paramdecl_list ')'
-+
-+    paramdecl: identifier
-+
-+    devicetree:   '/' statement_block
-+
-+    statement_block: '{' possibly_empty_list_of_statements '}'
-+
-+    statement:
-+		  subnode
-+		| for_statement
-+		| if_statement
-+		| return_statement
-+		| assign_statement
-+		| property_definition
-+		| statement_block
-+		| ';'
-+
-+    subnode:
-+		  node_label expr statement_block ';'
-+		|      label expr statement_block ';'
-+		|            expr statement_block ';'
-+
-+    for_statement:
-+		'for' identifier 'in' expr '..' expr statement_block
-+
-+    if_statement:
-+		  'if' '(' expr ')' statement_block
-+		| 'if' '(' expr ')' statement_block 'else' statement_block
-+
-+    return_statement: 'return' expr ';'
-+
-+    assign_statement: identifier ':=' expr ';'
-+
-+    property_definition:
-+		  optional_label expr ';'
-+		| optional_label expr '=' list_of_property_data_and_labels ';'
- 
-+    list_of_property_data_and_labels:
-+		  STRING
-+		| '<' possibly_empty_list_of_cell_values_and_labels '>'
-+		| '[' possibly_empty_list_of_byte_values_and_labels ']'
-+		| label
-+		| '/incbin/' '(' expr ')'
-+		| '/incbin/' '(' expr ',' expr ',' expr ')'
- 
--    sourcefile:   list_of_memreserve devicetree
-+    cell_value:
-+		  expr_primary
-+		| '&' '(' expr ')'
-+		| '&' phandle_reference
-+		| label
- 
--    memreserve:   label 'memreserve' ADDR ADDR ';'
--		| label 'memreserve' ADDR '-' ADDR ';'
- 
--    devicetree:   '/' nodedef
-+    expr:
-+          expr_primary
-+	| expr '?' expr ':' expr
-+	| expr expr_oper expr
- 
--    nodedef:      '{' list_of_property list_of_subnode '}' ';'
-+    expr_oper:
-+	||
-+        &&
-+	|
-+	^
-+	&
-+	==
-+	< | > | <= | >=
-+	<< | >>
-+	+ | -
-+	* | / | %
-+	- | ~ | !
-+        '(' ')' | '(' non_empty_list_of_param_exprs ')'
- 
--    property:     label PROPNAME '=' propdata ';'
-+    expr_primary:
-+	  literal
-+	| string
-+	| propnodename
-+	| identifier
-+	| '(' expr ')'
- 
--    propdata:     STRING
--		| '<' list_of_cells '>'
--		| '[' list_of_bytes ']'
-+    addr:	expr
- 
--    subnode:      label nodename nodedef
-+    node_label:	expr ':'
- 
--That structure forms a hierarchical layout of nodes and properties
--rooted at an initial node as:
-+    propnodename: <1275-property-name>
-+
-+    identifier:	'\'-<C style name>
-+
-+    literal:	<C style number>
-+    byte:	<exactly two hex digits>
-+    string:	<C style string>
-+    label:	'&'-<label name>-':'
-+
-+
-+4.2) Overview
-+
-+The DTS source file begins with the '/dts-v1/' token to state
-+that it is using "Version 1" style source files.
-+
-+Any declarations are executed in order, and can use the
-+effects of earlier declarations.
-+
-+All declarations must precede the required root node definition,
-+which is introduced with the '/'-named node:
- 
-     / {
-+	...
-     }
- 
--Both classic C style and C++ style comments are supported.
-+The statement-block structure forms a hierarchical layout of nodes
-+and properties along with some control-statements that allow for
-+repeated and alternate statement blocks.
-+
-+
-+4.3) Declarations
-+
-+An arbitrary list of declarations can be made between '/dts-v1/'
-+and the beginning of the root node.  These declarations are
-+introduced in order.
-+
-+
-+4.3.1) Memory Reservations
-+
-+A memory reservation is a declaration that a block of memory
-+from the first address expression, with a size given by the
-+second address expression, is to be "reserved" and not used
-+by the kernel.  These address ranges are passed through to
-+the DTB to the kernel.
-+
-+
-+4.3.2) Function Definitions
-+
-+A function definition can be introduced using /define/.
-+These definitions are just "stored" and then later invoked as
-+either a subroutine in a statement context, or as a function
-+with a return value in an expression context.
- 
--Source files may be directly included using the syntax:
-+Functions declare the number of formal parameters which will
-+be passed in at the call site, and must match one-to-one.
- 
--    /include/ "filename"
-+Any property definitions generated by the function are emitted
-+into the caller's context at the point of the call.
- 
-+Any node definitions generated by the function are emitted
-+into the caller's context at the point of the call.
- 
--4.2) Properties
- 
--Properties are named, possibly labeled, values.  Each value
--is one of:
-+4.3.3) Constant Definitions
- 
--    - A null-teminated C-like string,
-+Constant definitions introduce a named identifier into the outer-most
-+symbol scope.  The constants can not be changed by later assignment
-+statements, though they can be hidden.  (Be careful.)
-+
-+Constants may be expressions yielding constant numeric or strings
-+values.  It is an error for them not to be evaluatable at their
-+point of definition.
-+
-+Constant definitions may also be introduced from the command line
-+using the '-D var=value" options.  They will be placed into the
-+same outer-most scope.  Constant definitions from the command line
-+override the definitions within the source file, but with a warning.
-+
-+
-+4.4) Statements
-+
-+A statement block is simply a list of sequentially executed
-+statements introduced with a required opening brace and terminated
-+with a required closing brace.
-+
-+4.4.1) Subnodes
-+
-+Node may contain sub-nodes to obtain a hierarchical structure.
-+
-+For example:
-+
-+    - A child node named "childnode" whose unit name is
-+      "childnode at address".  It it turn has a string property
-+      called "childprop".
-+
-+	childnode@address {
-+	    childprop = "hello\n";
-+	};
-+
-+
-+4.4.2) 'for' Statement
-+
-+The 'for' statement provides iterative execution of a
-+block of statements.
-+
-+The lower bound of the range is evaluated once, and the
-+upper bound is evaluated once.
-+
-+A new scope that contains the loop variable is created
-+and pushed onto the symbol table scope stack.  The loop
-+variable is initialized with the lower bound value.
-+
-+The statement block is executed once for each inclusive value
-+in the given range in increasing order.
-+
-+After the loop terminates, the loop variable scope is popped.
-+
-+
-+4.4.3) 'if' Statement
-+
-+The 'if' statement provides alternate execution flow paths.
-+The expression is evaluated once, and if non-zero, the fist
-+statement block is executed, otherwise the 'else' block of
-+statements is executed if present.
-+
-+
-+4.4.4) 'return' Statement
-+
-+Inside a function definition, the 'return' statement allows
-+a value to be passed back to the caller.  The return expression
-+is evaluated once, in the context of the function's scope,
-+and its resultant value is made available as the function's
-+return result.
-+
-+
-+4.4.5) Assign Statement
-+
-+The ':=' operator allows assignment to non-constant identifiers.
-+
-+The identifiers can be either formal parameters or variable as
-+found by the searching using the dynamic symbol table scoping rules.
-+
-+An assignment to an otherwise unknown identifier causes that
-+identifier to be introduced into the current scope.
-+
-+You can't assign to /constant/ identifiers (except in the initial
-+definition of them).
-+
-+
-+4.4.6) Property Definition
-+
-+Properties are named, possibly labeled, values.
-+Each value within a property is one of:
-+
-+    - A null-terminated C-like string,
-     - A numeric value fitting in 32 bits,
-     - A list of 32-bit values
-     - A byte sequence
-@@ -195,27 +494,126 @@ Here are some example property definitions:
- 	property4 = [0a 0b 0c 0d de ea ad be ef];
- 
- 
--Node may contain sub-nodes to obtain a hierarchical structure.
--For example:
-+4.4.7) Subroutine calls
- 
--    - A child node named "childnode" whose unit name is
--      "childnode at address".  It it turn has a string property
--      called "childprop".
-+An expression at the statement level should be a function call,
-+though it might be considered as just a "subroutine call" as
-+any return value is thrown away.
- 
--	childnode@addresss {
--	    childprop = "hello\n";
--	};
-+Invocation of the function introduces a symbol table scope
-+in which the formal paramters are introduced and bound.
-+Initial values for the formals are obtained by evaluating
-+the actual parameters, in order, and using a copy-in binding.
-+
-+Any incidental (dynamically occurring) assignment to an
-+otherwise unknown identifier will cause the introduction of
-+a new variable in the function's execution scope.
-+
-+Any property definitions generated by the function are emitted
-+into the caller's context at the point of the subroutine call.
-+
-+Any node definitions generated by the function are emitted
-+into the caller's context at the point of the subroutine call.
-+
-+Any return value from a return statement is thrown away.
- 
-+Execution control is returned to the point of the call.
- 
--By default, all numeric values are hexadecimal.  Alternate bases
--may be specified using a prefix "d#" for decimal, "b#" for binary,
--and "o#" for octal.
- 
--Strings support common escape sequences from C: "\n", "\t", "\r",
--"\(octal value)", "\x(hex value)".
-+4.5) Expressions
- 
-+Basically, expressions follow C conventions.  However, there
-+are no assignment operations such as +=, or pre-/post-
-+increment/decrement.
- 
--4.3) Labels and References
-+The '%' operation is a modulus operation for integers, and
-+a string concatenation operation if at least one of the operands
-+is determined to be a string value.
-+
-+
-+4.5.1) Expressions
-+
-+Pretend it is C and see how close we get.
-+
-+
-+4.5.2) Function Invocations
-+
-+A previously defined function may be invoked from within an
-+expression.  A "return" statement should be used to return
-+a resulting expression value to the caller's context.
-+
-+Invocation of the function introduces a symbol table scope
-+in which the formal parameters are introduced and bound.
-+Initial values for the formals are obtained by evaluating
-+the actual parameters, in order, and using a copy-in binding.
-+
-+Any incidental (dynamically occurring) assignment to an
-+otherwise unknown identifier will cause the introduciton of
-+a new variable in the function's execution scope.
-+
-+Any property definitions generated by the function are emitted
-+into the caller's context at the point of the subroutine call.
-+
-+Any node definitions generated by the function are emitted
-+into the caller's context at the point of the subroutine call.
-+
-+Any return value from a return statement is used as the result
-+of the function call within the context of the original expression.
-+
-+Execution control is returned to the point of the call.
-+
-+
-+4.5.3) Builtin Functions
-+
-+There are a few builtin function names;
-+
-+    join()	Concatenate and return a list of expression
-+		as a string.  Non-string arguments are coerced
-+		into being a string.
-+
-+    hexstr()	Format and return a hex string representation
-+		of the one parameter without a leading '0x'.
-+
-+While not here yet, /incbin/ should be converted into a builtin.
-+
-+
-+4.5.4) Literal Numbers
-+
-+Literal numbers follow C conventions.  Specifically, they are
-+base-ten by default, but can be hexadecimal, binary or octal
-+with a leading 0x or 0X, 0b or OB, or a simple leading zero,
-+respectively.
-+
-+There is no support for floating point representations at all.
-+
-+Most math and expression handling is assumed to be 64-bit, but
-+a cell-context may force a 32-bit container instead.
-+
-+
-+4.5.5) Literal Strings
-+
-+Strings support common escape sequences from C:
-+    "\n", "\t", "\r"
-+    "\(octal value)"
-+    "\x(hex value)"
-+
-+
-+4.5.6) Identifiers
-+
-+Identifiers references are resolved using dynamic symbol table
-+scoping rules.  An identifier referenced on the right-hand-side
-+of an expression must be resolvable or else it is an error.
-+
-+An identifier occurring on the left-hand-side of a ':=' assignment
-+is first sought and used if found.  If it is not found, it is
-+introduced dynamically in the innermost, current scope.
-+
-+Sometimes identifiers can be used without the leading slash,
-+other times they are required, especially if to disambiguate
-+from property names.  It's not ideal yet at all.
-+
-+
-+4.6) Labels and References
- 
- Labels may be applied to nodes or properties.  Labels appear
- before a node name, and are referenced using an ampersand: &label.
-@@ -239,6 +637,34 @@ And used in properties, lables may appear before or after any value:
- 	...
-     };
- 
-+The names of some labels can be constructed in an expression
-+context using the representation "&( <string_expr> )".
-+
-+
-+4.7) Symbol Table
-+
-+During the execution of the program, the evaluation context for
-+both statements and expressions is performed in the context of
-+a dynamic scoping environment.  That is, as each function,
-+subroutine or for-loop is encountered, a new symbol table scope
-+is pushed onto a dynamic run-time stack.  When an identifier's
-+name needs to be resolved and a value for it determined, a
-+search is performed from the inner-most, current top of the
-+scope-stack back through the dynamic scope stack towards the
-+outer-most and earliest scope.
-+
-+At each scope, an attempt is made to locate the symbol.  If it
-+is found, that is the symbol that is used.  If the symbol can not
-+be found at any level, it may be an error, or it may be cause to
-+introduce the symbol, as determined by the context in which the
-+identifier occurs.
-+
-+Constants from the command line using the "-D id=value" construct
-+are introduced into the outermost scope prior to beginning to
-+execute the source file proper.  This is the same outer-most scope
-+into which the /const/ and /define/ function symbols are also
-+introduced.
-+
- 
- 
- II - The DT block format
++void
++ir_msg(ir_severity_t severity, struct ir *ir, char const *fmt, ...)
++{
++	srcpos *pos;
++	const char *srcstr;
++	va_list va;
++	va_start(va, fmt);
++
++	pos = ir ? ir->ir_srcpos : &srcpos_empty;
++	srcstr = srcpos_string(pos);
++
++	if (severity >= IR_NUM_SEV)
++		severity = IR_SEV_INFO;
++
++	fprintf(stderr, "%s: %s ", ir_severity_str[severity], srcstr);
++
++	vfprintf(stderr, fmt, va);
++	fprintf(stderr, "\n");
++
++	va_end(va);
++}
+diff --git a/ir_builtin.c b/ir_builtin.c
+new file mode 100644
+index 0000000..c448502
+--- /dev/null
++++ b/ir_builtin.c
+@@ -0,0 +1,180 @@
++/*
++ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
++
++#include <stdio.h>
++
++#include "dtc.h"
++#include "ir.h"
++
++
++typedef struct ir * (*irb_impl_func)(struct ir *ir_params);
++
++struct builtin_func {
++	char *name;
++	irb_impl_func implementation;
++};
++
++struct ir *ir_builtin_join(struct ir *ir_params);
++struct ir *ir_builtin_hexstr(struct ir *ir_params);
++
++static const struct builtin_func builtin_table[] = {
++	{ "join", ir_builtin_join },
++	{ "hexstr", ir_builtin_hexstr },
++};
++
++#define IRB_NUM_BUILTINS	ARRAY_SIZE(builtin_table)
++
++
++irb_id
++ir_lookup_builtin_by_name(char *str_name)
++{
++	irb_id irb;
++
++	for (irb = 0; irb < IRB_NUM_BUILTINS; irb++) {
++		if (strcmp(builtin_table[irb].name, str_name) == 0) {
++			return irb;
++		}
++	}
++
++	return IRB_UNDEF;
++}
++
++
++struct ir *
++ir_eval_builtin(struct ir *ir)
++{
++	irb_id irb;
++	const struct builtin_func *bf;
++
++	if (ir == NULL)
++		return NULL;
++
++	if (ir->ir_type != IR_BUILTIN)
++		return NULL;
++
++	irb = ir->ir_builtin_id;
++
++	if (irb <= IRB_UNDEF || irb >= IRB_NUM_BUILTINS)
++		return NULL;
++
++	bf = &builtin_table[irb];
++
++	return (*bf->implementation)(ir);
++}
++
++
++struct ir *
++ir_builtin_join(struct ir *ir_builtin)
++{
++	struct ir *ir_new;
++	struct ir *irp;
++	struct ir *ir;
++	char *s;
++	char *str;
++	int len;
++	char buf[30];
++
++	debug("ir_builtin_impl_join():\n");
++
++	irp = ir_builtin->ir_expr1;
++	if (irp->ir_type == IR_LIST)
++		irp = irp->ir_first;
++
++	len = 1;
++	str = xmalloc(1);
++	*str  = 0;
++
++	while (irp != NULL) {
++		ir = ir_eval(irp);
++
++		if (ir_is_string(ir)) {
++			s = ir_eval_for_c_string(ir);
++		} else if (ir_is_constant(ir)) {
++			unsigned long long a;
++			a = ir_eval_for_addr(ir);
++			snprintf(buf, sizeof(buf), "%llu", a);
++			s = buf;
++		} else {
++			ir_error(ir,
++				 "Can't handle %s in join()\n",
++				 ir_type_string(ir->ir_type));
++			s = 0;
++		}
++
++		len += strlen(s);
++
++		str = xrealloc(str, len);
++		strcat(str, s);
++
++		irp = irp->ir_next;
++	}
++
++	ir_new = ir_alloc(IR_LIT_STR, ir_builtin->ir_srcpos);
++	ir_new->ir_lit_str = str;
++
++	return ir_new;
++}
++
++
++
++struct ir *
++ir_builtin_hexstr(struct ir *ir_builtin)
++{
++	struct ir *ir_new;
++	struct ir *irp;
++	struct ir *ir;
++	char *s;
++	char *str;
++	int len;
++	char buf[30];
++
++	irp = ir_builtin->ir_expr1;
++	if (irp->ir_type == IR_LIST)
++		irp = irp->ir_first;
++
++	len = 1;
++	str = xmalloc(1);
++	*str  = 0;
++
++	while (irp != NULL) {
++		ir = ir_eval(irp);
++		if (ir_is_constant(ir)) {
++			unsigned long long a;
++			a = ir_eval_for_addr(ir);
++			snprintf(buf, 30, "%llx", a);
++			s = buf;
++		} else {
++			ir_error(ir,
++				 "Can't handle %s in hexstr()\n",
++				 ir_type_string(ir->ir_type));
++			s = 0;
++		}
++		len += strlen(s);
++
++		str = xrealloc(str, len);
++		strcat(str, s);
++
++		irp = irp->ir_next;
++	}
++
++	ir_new = ir_alloc(IR_LIT_STR, ir_builtin->ir_srcpos);
++	ir_new->ir_lit_str = str;
++
++	return ir_new;
++}
+diff --git a/ir_dump.c b/ir_dump.c
+new file mode 100644
+index 0000000..f949423
+--- /dev/null
++++ b/ir_dump.c
+@@ -0,0 +1,220 @@
++/*
++ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
++
++#include <stdio.h>
++
++#include "dtc.h"
++#include "ir.h"
++
++
++static const char *ir_type_str[IR_NUM_TYPES] = {
++	"IR_UNDEF",
++	"IR_ROOT",
++	"IR_MEM_RESERVE",
++	"IR_ASSIGN",
++	"IR_PROP_DEF",
++	"IR_REF_PHANDLE",
++	"IR_REF_PATH",
++	"IR_CELL",
++	"IR_LITERAL",
++	"IR_LIT_STR",
++	"IR_LIT_BYTE",
++	"IR_LABEL",
++	"IR_LIST",
++	"IR_INCBIN",
++	"IR_BUILTIN",
++	"IR_SELECT",
++	"IR_OR",
++	"IR_AND",
++	"IR_BIT_OR",
++	"IR_BIT_XOR",
++	"IR_BIT_AND",
++	"IR_EQ",
++	"IR_LT",
++	"IR_LE",
++	"IR_GT",
++	"IR_GE",
++	"IR_NE",
++	"IR_LSHIFT",
++	"IR_RSHIFT",
++	"IR_ADD",
++	"IR_MINUS",
++	"IR_MULT",
++	"IR_DIV",
++	"IR_MOD",
++	"IR_UMINUS",
++	"IR_BIT_COMPL",
++	"IR_NOT",
++	"IR_FUNC_DEF",
++	"IR_FOR",
++	"IR_RETURN",
++	"IR_RANGE",
++	"IR_ID",
++	"IR_IF",
++	"IR_PARAMDECL",
++	"IR_FUNC_CALL",
++	"IR_NODE",
++	"IR_PROPNODENAME",
++	"IR_LIT_CELL",
++	"IR_LIT_ADDR",
++	"IR_CVT_PROPNODENAME",
++	"IR_CVT_STRING",
++	"IR_CONST_DEF",
++};
++
++
++const char *
++ir_type_string(ir_type ir_type)
++{
++	if (0 <= ir_type && ir_type < IR_NUM_TYPES)
++		return ir_type_str[ir_type];
++	else
++		return "<unknown>";
++}
++
++
++static void
++ir_dump_node(struct ir *ir, unsigned int level)
++{
++	int indent = 4 * level;
++	struct ir *iri;
++
++	if (ir == NULL)
++		return;
++
++	/*
++	 * Print node values
++	 */
++	printf("%*sNODE       : %p\n",
++	       indent, "", ir);
++
++	printf("%*sir_type    : %s\n",
++	       indent, "", ir_type_string(ir->ir_type));
++
++	printf("%*sir_srcpos : %s\n",
++	       indent, "", srcpos_string(ir->ir_srcpos));
++
++
++	printf("%*sir_literal : %lld\n", indent, "", ir->ir_literal);
++
++	if (ir->ir_builtin_id != IRB_UNDEF) {
++		printf("%*sir_builtin_id : %d\n",
++		       indent, "", ir->ir_builtin_id);
++	}
++	if (ir->ir_lit_str) {
++		printf("%*sir_lit_str : %s\n",
++		       indent, "", ir->ir_lit_str);
++	}
++	if (ir->ir_label_name) {
++		printf("%*sir_label_name : %s\n",
++		       indent, "", ir->ir_label_name);
++	}
++
++	if (ir->ir_name) {
++		printf("%*sir_name   : %p\n",
++		       indent, "", ir->ir_name);
++		ir_dump_node(ir->ir_name, level + 1);
++	}
++
++	if (ir->ir_label) {
++		printf("%*sir_label   : %p\n",
++		       indent, "", ir->ir_label);
++		ir_dump_node(ir->ir_label, level + 1);
++	}
++
++	if (ir->ir_first)
++		printf("%*sir_first   : %p\n",
++		       indent, "", ir->ir_first);
++	if (ir->ir_last)
++		printf("%*sir_last    : %p\n",
++		       indent, "", ir->ir_last);
++	if (ir->ir_next)
++		printf("%*sir_next    : %p\n",
++		       indent, "", ir->ir_next);
++	if (ir->ir_prev)
++		printf("%*sir_prev    : %p\n",
++		       indent, "", ir->ir_prev);
++
++	/*
++	 * Dump mem-reserves.
++	 */
++	if (ir->ir_mem_reserves) {
++		printf("%*sir_mem_reserves: %p\n",
++		       indent, "", ir->ir_mem_reserves);
++		ir_dump_node(ir->ir_mem_reserves, level + 1);
++	}
++
++	/*
++	 * Dump sub-expressions
++	 */
++	if (ir->ir_expr1) {
++		printf("%*sir_expr1   : %p\n",
++		       indent, "", ir->ir_expr1);
++		ir_dump_node(ir->ir_expr1, level + 1);
++	}
++
++	if (ir->ir_expr2) {
++		printf("%*sir_expr2   : %p\n",
++		       indent, "", ir->ir_expr2);
++		ir_dump_node(ir->ir_expr2, level + 1);
++	}
++
++	if (ir->ir_expr3) {
++		printf("%*sir_expr3   : %p\n",
++		       indent, "", ir->ir_expr3);
++		ir_dump_node(ir->ir_expr3, level + 1);
++	}
++
++	/*
++	 * Recursively dump declarations.
++	 */
++	if (ir->ir_declarations) {
++		printf("%*sir_declarations: %p\n",
++		       indent, "", ir->ir_declarations);
++		ir_dump_node(ir->ir_declarations, level + 1);
++	}
++
++	/*
++	 * Recursively dump statements.
++	 */
++	if (ir->ir_statements) {
++		printf("%*sir_statements: %p\n",
++		       indent, "", ir->ir_statements);
++		ir_dump_node(ir->ir_statements, level + 1);
++	}
++	if (ir->ir_statements2) {
++		printf("%*sir_statements2: %p\n",
++		       indent, "", ir->ir_statements2);
++		ir_dump_node(ir->ir_statements2, level + 1);
++	}
++
++	/*
++	 * Recursively dump LIST chain.
++	 */
++	for (iri = ir->ir_first; iri != NULL; iri = iri->ir_next) {
++		ir_dump_node(iri, level + 1);
++	}
++}
++
++
++extern void
++ir_dump(struct ir *ir)
++{
++	ir_dump_node(ir, 0);
++}
+diff --git a/ir_emit.c b/ir_emit.c
+new file mode 100644
+index 0000000..31005ca
+--- /dev/null
++++ b/ir_emit.c
+@@ -0,0 +1,491 @@
++/*
++ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
++
++#include <stdio.h>
++
++#include "dtc.h"
++#include "ir.h"
++#include "ir_scope.h"
++#include "nv.h"
++
++extern struct boot_info *the_boot_info;
++
++
++void ir_emit_node(struct ir *ir);
++
++
++void
++ir_emit_prop_def(struct ir *irp)
++{
++	struct ir *ir_lhs;
++	struct property *p;
++	char *prop_name;
++	char *lab;
++	struct data d;
++
++	debug("ir_emit_prop_def(");
++
++	lab = ir_eval_for_label(irp->ir_label);
++	if (lab) {
++		debug("%s : ", lab);
++	}
++
++	ir_lhs = ir_eval(irp->ir_expr1);
++	prop_name = ir_eval_for_name(ir_lhs);
++	debug("%s = <expr>)\n", prop_name);
++
++	if (prop_name) {
++		d = empty_data;
++		ir_eval_for_data(irp->ir_expr2, &d);
++		p =  build_property(prop_name, d, lab);
++		irs_append_property(p);
++	}
++
++	debug("ir_emit_prop_def(): Done\n");
++}
++
++
++void
++ir_emit_assign(struct ir *ir_assign)
++{
++	char *var_name;
++	struct ir_symbol *irsym;
++	struct ir *ir_val;
++	struct ir *ir_pos;
++
++	ir_pos = ir_assign->ir_expr1 ? ir_assign->ir_expr1 : ir_assign;
++
++	var_name = ir_eval_for_name(ir_assign->ir_expr1);
++
++	debug("ir_emit_assign(%s)\n", var_name);
++
++	if (!var_name) {
++		ir_error(ir_pos, "Can't determine LHS name\n");
++		return;
++	}
++
++	irsym = irs_lookup_local(var_name);
++	if (irsym != NULL) {
++		if (irsym->irsym_type == IRSYM_CONST) {
++			ir_error(ir_pos,
++				 "Can't assign to constant \"%s\"\n",
++				 var_name);
++		}
++	} else {
++		/*
++		 * FIXME: Debate on-the-fly creation or pre-declaration.
++		 */
++		irsym = irs_create_local(var_name, IRSYM_VAR);
++	}
++
++	ir_val = ir_eval(ir_assign->ir_expr2);
++	irsym->irsym_value = ir_val;
++}
++
++
++void
++ir_emit_for(struct ir *ir_for)
++{
++	char *var_name;
++	struct ir_symbol *irsym;
++	struct ir *ir_id;
++	struct ir *ir_val;
++	struct ir *ir_range;
++	unsigned long long var;
++	unsigned long long start;
++	unsigned long long stop;
++
++	irs_push_scope(IRS_FOR_LOOP);
++
++	/*
++	 * Introduce for-loop variable into FOR_LOOP scope.
++	 */
++	ir_id = ir_for->ir_expr1;
++	var_name = ir_eval_for_name(ir_id);
++	irsym = irs_create_local(var_name, IRSYM_VAR);
++
++	ir_val = ir_alloc(IR_LIT_ADDR, ir_id->ir_srcpos);
++	irsym->irsym_value = ir_val;
++
++	ir_range = ir_for->ir_expr2;
++	start = ir_eval_for_addr(ir_range->ir_expr1);
++	stop = ir_eval_for_addr(ir_range->ir_expr2);
++
++	debug("Range appears to be %llu to %llu\n", start, stop);
++
++	var = start;
++	while (var <= stop ) {
++	    ir_val->ir_literal = var;
++	    ir_emit_statement_list(ir_for->ir_statements);
++	    var++;
++	}
++
++	irs_pop_scope();
++}
++
++
++void
++ir_emit_if(struct ir *ir_if)
++{
++	uint64_t lit;
++
++	debug("ir_if()\n");
++	lit = ir_eval_for_addr(ir_if->ir_expr1);
++	if (lit) {
++		ir_emit_statement_list(ir_if->ir_statements);
++	} else {
++		ir_emit_statement_list(ir_if->ir_statements2);
++	}
++}
++
++
++void
++ir_emit_return(struct ir *ir_return)
++{
++	struct ir *ir_ret_expr;
++
++	ir_ret_expr = ir_eval(ir_return->ir_expr1);
++	irs_set_return_value(ir_ret_expr);
++}
++
++
++void
++ir_emit_func_call(struct ir *ir_func)
++{
++	struct ir_scope *irs_scope;
++
++	/*
++	 * Perform function body.
++	 *
++	 * Returned scope has node and property "side effects".
++	 * Function return value is thrown to /dev/null.
++	 */
++	irs_scope = ir_eval_func_body(ir_func);
++
++	/*
++	 * Propagate any nodes or properties into parent scope.
++	 */
++	irs_scope_append_property_list(irs_scope->irs_prop_list);
++	irs_scope_append_node_list(irs_scope->irs_node_list);
++}
++
++
++void
++ir_emit_statement(struct ir *ir)
++{
++	if (ir == NULL)
++		return;
++
++	switch (ir->ir_type) {
++	case IR_NODE:
++		ir_emit_node(ir);
++		break;
++
++	case IR_PROP_DEF:
++		ir_emit_prop_def(ir);
++		break;
++
++	case IR_FOR:
++		ir_emit_for(ir);
++		break;
++
++	case IR_IF:
++		ir_emit_if(ir);
++		break;
++
++	case IR_RETURN:
++		ir_emit_return(ir);
++		break;
++
++	case IR_ASSIGN:
++		ir_emit_assign(ir);
++		break;
++
++	case IR_FUNC_CALL:
++		ir_emit_func_call(ir);
++		break;
++
++	case IR_LIST:
++		/*
++		 * FIXME: LIST within a LIST.  Optimize out earlier?
++		 */
++		ir_emit_statement_list(ir);
++		break;
++
++	default:
++		ir_error(ir, "Unknown statement with ir_type %s\n",
++			 ir_type_string(ir->ir_type));
++	}
++}
++
++
++void
++ir_emit_statement_list(struct ir *ir_list)
++{
++	struct ir *ir;
++
++	if (ir_list == NULL)
++		return;
++
++	if (ir_list->ir_type != IR_LIST)
++		return;
++
++	for (ir = ir_list->ir_first; ir != NULL; ir = ir->ir_next) {
++		ir_emit_statement(ir);
++	}
++}
++
++
++/*
++ * Enter a /define/ function definitin into IRS_ROOT symtab.
++ */
++void
++ir_emit_func_def(struct ir *ir_func_def)
++{
++	char *func_name;
++	struct ir_symbol *irsym;
++	struct ir *ir_pos;
++
++	ir_pos = ir_func_def->ir_expr1
++		? ir_func_def->ir_expr1 : ir_func_def;
++
++	func_name = ir_eval_for_name(ir_func_def->ir_name);
++
++
++	irsym = irs_lookup(func_name, IRS_ROOT);
++	if (irsym != NULL) {
++		ir_error(ir_pos,
++			 "Redefinintion of \"%s\" ignored\n",
++			 func_name);
++		return;
++	}
++
++	irsym = irs_create_symbol(IRS_ROOT, func_name, IRSYM_FUNCDEF);
++
++	irsym->irsym_value = ir_func_def;
++
++	debug("ir_emit_func_def(): Defined %s\n", func_name);
++}
++
++
++/*
++ * Enter a /define/ function definitin into IRS_ROOT symtab.
++ */
++void
++ir_emit_const_def(struct ir *ir_const_def)
++{
++	char *const_name;
++	struct ir_symbol *irsym;
++	struct ir *ir_val;
++	struct ir *ir_pos;
++
++	ir_pos = ir_const_def->ir_expr1
++		? ir_const_def->ir_expr1 : ir_const_def;
++
++	const_name = ir_eval_for_name(ir_const_def->ir_expr1);
++
++	debug("ir_const_def(%s)\n", const_name);
++
++	if (!const_name) {
++		ir_error(ir_pos, "Can't determine LHS constant name\n");
++		return;
++	}
++
++	irsym = irs_lookup(const_name, IRS_ANY);
++	if (irsym != NULL) {
++		ir_warn(ir_pos,
++			"Redefinintion of \"%s\" ignored\n",
++		        const_name);
++		return;
++	}
++
++	irsym = irs_create_symbol(IRS_ROOT, const_name, IRSYM_CONST);
++
++	ir_val = ir_eval(ir_const_def->ir_expr2);
++	irsym->irsym_value = ir_val;
++}
++
++
++void
++ir_emit_declaration_list(struct ir *ir_list)
++{
++	struct ir *ir;
++
++	if (ir_list == NULL)
++		return;
++
++	if (ir_list->ir_type != IR_LIST)
++		return;
++
++	for (ir = ir_list->ir_first; ir != NULL; ir = ir->ir_next) {
++		switch (ir->ir_type) {
++		case IR_CONST_DEF:
++			ir_emit_const_def(ir);
++			break;
++
++		case IR_FUNC_DEF:
++			ir_emit_func_def(ir);
++			break;
++
++		default:
++			ir_error(ir,
++				 "Unknown devlaration type %s\n",
++				 ir_type_string(ir->ir_type));
++			break;
++		}
++	}
++}
++
++
++void
++ir_emit_node(struct ir *ir)
++{
++	struct ir *ir_name;
++	struct ir *ir_label;
++	char *name;
++	char *label;
++	struct node *node;
++	struct node *node_list;
++	struct ir_scope *irs_scope;
++
++	if (ir == NULL)
++		return;
++
++	if (ir->ir_type != IR_NODE)
++		return;
++
++	ir_name = ir_eval(ir->ir_name);
++	name = ir_eval_for_name(ir_name);
++
++	ir_label = ir_eval(ir->ir_label);
++	label = ir_eval_for_label(ir_label);
++
++	debug("ir_emit_node(): Making node %s : %s\n", label, name);
++
++	irs_push_scope(IRS_NODE);
++	ir_emit_statement_list(ir->ir_statements);
++	irs_scope = irs_pop_scope();
++
++	node_list = reverse_nodes(irs_scope->irs_node_list);
++	node = build_node(irs_scope->irs_prop_list, node_list);
++	name_node(node, name, label);
++
++	irs_append_node(node);
++}
++
++
++void
++ir_emit_mem_reserves(struct ir *ir_mem)
++{
++	struct ir *ir;
++	struct reserve_info *ri;
++	uint64_t addr;
++	uint64_t size;
++	char *lab;
++
++	if (ir_mem == NULL)
++		return;
++
++	for (ir = ir_mem->ir_first; ir != NULL; ir = ir->ir_next) {
++		addr = ir_eval_for_addr(ir->ir_expr1);
++		size = ir_eval_for_addr(ir->ir_expr2);
++		lab = ir_eval_for_label(ir->ir_label);
++
++		debug("emit: build_reserve_entry(0x%llx, 0x%llx, ",
++		      (unsigned long long)addr, (unsigned long long)size);
++		if (lab) {
++			debug("%s)\n", lab);
++		} else {
++			debug("<no-label>)\n");
++		}
++
++		ri = build_reserve_entry(addr, size, lab);
++		irs_append_reserve(ri);
++	}
++}
++
++
++void
++ir_add_cmd_line_constant_defs(void)
++{
++	struct nv_pair *nv;
++	struct ir_symbol *irsym;
++	struct ir *ir_const;
++
++	for (nv = nv_list; nv != NULL; nv = nv->nv_next) {
++		irsym = irs_create_symbol(IRS_ROOT, nv->nv_name, IRSYM_CONST);
++		if (nv->nv_value) {
++			ir_const = ir_alloc(IR_LITERAL, &srcpos_empty);
++			ir_const->ir_lit_str = strdup(nv->nv_value);
++			irsym->irsym_value = ir_const;
++		}
++	}
++}
++
++
++void
++ir_emit_root(struct ir *ir)
++{
++	struct reserve_info *ri_list;
++	struct node *node_list;
++
++	if (ir == NULL)
++		return;
++
++	if (ir->ir_type != IR_ROOT) {
++		ir_error(ir, "Bad root node\n");
++		return;
++	}
++
++	irs_push_scope(IRS_ROOT);
++
++	/*
++	 * Establish constant definitions from command line.
++	 */
++	ir_add_cmd_line_constant_defs();
++
++	ir_emit_mem_reserves(ir->ir_mem_reserves);
++
++	/*
++	 * Fast-and-loose... These are definitions, not declarations!
++	 */
++	ir_emit_declaration_list(ir->ir_declarations);
++
++	/*
++	 * Emit the root IR_NODE.
++	 */
++	ir_emit_node(ir->ir_statements);
++
++	/*
++	 * Build the_boot_info.
++	 */
++	ri_list = irs_scope_stack->irs_reserve_list;
++	node_list = irs_scope_stack->irs_node_list;
++	the_boot_info = build_boot_info(ri_list, node_list, 0);
++
++	irs_pop_scope();
++}
++
++
++extern void
++ir_emit(struct ir *ir)
++{
++	ir_emit_root(ir);
++	fflush(stdout);
++}
+diff --git a/ir_scope.c b/ir_scope.c
+new file mode 100644
+index 0000000..c9a52e8
+--- /dev/null
++++ b/ir_scope.c
+@@ -0,0 +1,319 @@
++/*
++ * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
++
++#include <stdio.h>
++
++#include "dtc.h"
++#include "srcpos.h"
++#include "ir.h"
++#include "ir_scope.h"
++
++
++struct ir_scope *irs_scope_stack;
++
++static const char *irs_scope_bits_str[] = {
++	"ROOT",
++	"NODE",
++	"FOR_LOOP",
++	"FUNC_CALL",
++};
++
++
++static const char *irsym_type_str[IRSYM_NUM_TYPES] = {
++	"NONE",
++	"VAR",
++	"FUNCDEF",
++	"PARAM",
++	"CONST",
++};
++
++
++void
++irs_push_scope(irs_type irs_type)
++{
++	struct ir_scope *irs_new;
++
++	irs_new = xmalloc(sizeof(struct ir_scope));
++	memset(irs_new, 0, sizeof(struct ir_scope));
++
++	irs_new->irs_type = irs_type;
++	irs_new->irs_next = irs_scope_stack;
++
++	irs_scope_stack = irs_new;
++}
++
++
++struct ir_scope *
++irs_pop_scope()
++{
++	struct ir_scope *irs_top = irs_scope_stack;
++
++	irs_scope_stack = irs_top->irs_next;
++	irs_top->irs_next = NULL;
++
++	return irs_top;
++}
++
++
++void
++irs_free_scope(struct ir_scope *irs)
++{
++	free(irs);
++}
++
++
++struct ir_scope *
++irs_find_scope(irs_type irs_match)
++{
++	struct ir_scope *irs;
++
++	for (irs = irs_scope_stack; irs != NULL; irs = irs->irs_next) {
++		if (irs->irs_type & irs_match)
++			return irs;
++	}
++	return NULL;
++}
++
++
++void
++irs_append_reserve(struct reserve_info *ri)
++{
++	struct ir_scope *irs;
++
++	irs = irs_find_scope(IRS_ROOT);
++	irs->irs_reserve_list = chain_reserve_entry(ri,
++						    irs->irs_reserve_list);
++}
++
++
++void
++irs_scope_append_property_list(struct property *pl)
++{
++	struct ir_scope *irs;
++	struct property *p;
++
++	irs = irs_find_scope(IRS_NODE);
++	for (p = pl; p != NULL; p = p->next) {
++		irs->irs_prop_list = chain_property(p, irs->irs_prop_list);
++	}
++}
++
++void
++irs_scope_append_node_list(struct node *nl)
++{
++	struct ir_scope *irs;
++	struct node *n;
++
++	irs = irs_find_scope(IRS_NODE);
++	for (n = nl; n != NULL; n = n->parent) {
++		irs->irs_node_list = chain_node(n, irs->irs_node_list);
++	}
++}
++
++
++void
++irs_append_property(struct property *p)
++{
++	struct ir_scope *irs;
++
++	irs = irs_find_scope(IRS_NODE);
++	irs->irs_prop_list = chain_property(p, irs->irs_prop_list);
++}
++
++
++void
++irs_append_node(struct node *n)
++{
++	struct ir_scope *irs;
++
++	irs = irs_find_scope(IRS_NODE | IRS_ROOT);
++	irs->irs_node_list = chain_node(n, irs->irs_node_list);
++}
++
++
++void
++irs_set_return_value(struct ir *ir_ret)
++{
++	struct ir_scope *irs;
++
++	/*
++	 * FIXME: If a  previous irs_expr existed, it just leaked.
++	 */
++	irs = irs_find_scope(IRS_FUNC_CALL);
++	irs->irs_expr = ir_ret;
++}
++
++
++
++struct ir_symbol *
++irs_alloc_symbol(char *name, irsym_type irsym_type)
++{
++	struct ir_symbol *irsym;
++
++	irsym = xmalloc(sizeof(struct ir_symbol));
++	memset(irsym, 0, sizeof(struct ir_symbol));
++
++	irsym->irsym_type = irsym_type;
++	irsym->irsym_name = strdup(name);
++
++	return irsym;
++}
++
++
++void
++irs_add_symbol(struct ir_scope *irs, struct ir_symbol *irsym)
++{
++	irsym->irsym_next = irs->irs_symtab;
++	irs->irs_symtab = irsym;
++}
++
++
++struct ir_symbol *
++irs_lookup_in_scope(struct ir_scope *irs, char *name)
++{
++	struct ir_symbol *irsym;
++
++	for (irsym = irs->irs_symtab; irsym; irsym = irsym->irsym_next)
++		if (strcmp(irsym->irsym_name, name) == 0)
++			return irsym;
++
++	return NULL;
++}
++
++
++struct ir_symbol *
++irs_lookup(char *name, irs_type irs_type)
++{
++	struct ir_scope *irs;
++	struct ir_symbol *irsym;
++
++	/*
++	 * Look through scope stack finding matching scopes.
++	 */
++	for (irs = irs_scope_stack; irs != NULL; irs = irs->irs_next)
++		if (irs->irs_type & irs_type) {
++			irsym = irs_lookup_in_scope(irs, name);
++			if (irsym != NULL)
++				return irsym;
++		}
++
++	return NULL;
++}
++
++
++/*
++ * Try to find a symbol that is local to the innermost function.
++ *
++ * Look through scope stack finding matching scopes.
++ * Peer into FUNC_CALL, FOR_LOOP and IR_ROOT symbol tables,
++ * but bail at first FUNC_CALL to make them be "local".
++ */
++struct ir_symbol *
++irs_lookup_local(char *name)
++{
++	struct ir_scope *irs;
++	struct ir_symbol *irsym;
++
++	for (irs = irs_scope_stack; irs != NULL; irs = irs->irs_next) {
++		if (irs->irs_type & (IRS_FUNC_CALL|IRS_FOR_LOOP|IRS_ROOT)) {
++			irsym = irs_lookup_in_scope(irs, name);
++			if (irsym != NULL)
++				return irsym;
++			if (irs->irs_type & IRS_FUNC_CALL)
++				return NULL;
++		}
++	}
++
++	return NULL;
++}
++
++
++struct ir_symbol *
++irs_create_local(char *name, irsym_type irsym_type)
++{
++	struct ir_scope *irs;
++	struct ir_symbol *irsym;
++
++	for (irs = irs_scope_stack; irs != NULL; irs = irs->irs_next) {
++		if (irs->irs_type & (IRS_FUNC_CALL|IRS_ROOT)) {
++			break;
++		}
++	}
++
++	irsym = irs_alloc_symbol(name, irsym_type);
++	irs_add_symbol(irs_scope_stack, irsym);
++
++	return irsym;
++}
++
++
++struct ir_symbol *
++irs_create_symbol(irs_type irs_type, char *name, irsym_type irsym_type)
++{
++	struct ir_scope *irs;
++	struct ir_symbol *irsym;
++
++	/*
++	 * Check for prior existence of symbol first.
++	 */
++	irsym = irs_lookup(name, irs_type);
++	if (irsym != NULL)
++		return irsym;
++
++	/*
++	 * Create the symbol.
++	 */
++	irsym = irs_alloc_symbol(name, irsym_type);
++
++	/*
++	 * Locate the right scope and add symbol.
++	 */
++	irs = irs_find_scope(irs_type);
++	irs_add_symbol(irs, irsym);
++
++	return irsym;
++}
++
++
++void
++irs_dump_symbols(void)
++{
++	struct ir_scope *irs;
++	struct ir_symbol *irsym;
++	int i;
++
++	/*
++	 * Look through scope stack.
++	 */
++	for (irs = irs_scope_stack; irs != NULL; irs = irs->irs_next) {
++		printf("Type: 0x%02x : ", irs->irs_type);
++		for (i = 0; i < IRS_MAX_BIT; i++) {
++			if (irs->irs_type & (1 << i))
++				printf("%s ", irs_scope_bits_str[i]);
++		}
++		printf("\n");
++		for (irsym = irs->irs_symtab;
++		     irsym != NULL;
++		     irsym = irsym->irsym_next) {
++			printf("    %s : %s\n",
++			       irsym_type_str[irsym->irsym_type],
++			       irsym->irsym_name);
++		}
++	}
++}
 -- 
 1.6.0.90.g436ed
