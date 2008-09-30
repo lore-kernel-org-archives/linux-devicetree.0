@@ -1,19 +1,23 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 4/9 V3] Add header files for new Internal
-	Representation form.
-Date: Tue, 30 Sep 2008 16:03:00 +1000
-Message-ID: <20080930060300.GC18695@yookeroo.seuss>
+Subject: Re: [PATCH 9/9 V3] Test constant expressions in cell contexts.
+Date: Tue, 30 Sep 2008 16:04:18 +1000
+Message-ID: <20080930060418.GD18695@yookeroo.seuss>
 References: <1222460748-20127-1-git-send-email-jdl@jdl.com>
 	<1222460748-20127-2-git-send-email-jdl@jdl.com>
 	<1222460748-20127-3-git-send-email-jdl@jdl.com>
 	<1222460748-20127-4-git-send-email-jdl@jdl.com>
 	<1222460748-20127-5-git-send-email-jdl@jdl.com>
+	<1222460748-20127-6-git-send-email-jdl@jdl.com>
+	<1222460748-20127-7-git-send-email-jdl@jdl.com>
+	<1222460748-20127-8-git-send-email-jdl@jdl.com>
+	<1222460748-20127-9-git-send-email-jdl@jdl.com>
+	<1222460748-20127-10-git-send-email-jdl@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1222460748-20127-5-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
+In-Reply-To: <1222460748-20127-10-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -27,14 +31,25 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 26, 2008 at 03:25:43PM -0500, Jon Loeliger wrote:
-> Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Fri, Sep 26, 2008 at 03:25:48PM -0500, Jon Loeliger wrote:
+> From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> This code is derived from code posted by David Gibson.
 
-I think patches 4, 5, 6 and 7 should be merged together.  Splitting
-patches into logical sections is ok, but these are all basically
-interdependent.  Sure, the ordering you have doesn't actually break
-bisect, but the earlier patches don't *do* anything until the later
-ones activate them, so there's really no point separating them out.
+[snip]
+> +		for (i = 0; i < ARRAY_SIZE(expr_table); i++)
+> +			if (fdt32_to_cpu(res[i]) != expr_table[i].result)
+
+Hrm.. when you fixed the endian bug here (I found it myself the other
+day), you might have thought to fix it...
+
+
+> +				FAIL("Incorrect result for expression \"%s\","
+> +				     " 0x%x instead of 0x%x\n",
+> +				     expr_table[i].expr, res[i],
+                                                         ^^^^^^
+
+...here, too.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
