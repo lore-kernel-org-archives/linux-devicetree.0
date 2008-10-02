@@ -1,17 +1,17 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
-Date: Fri, 3 Oct 2008 10:23:37 +1000
-Message-ID: <20081003002337.GB3002@yookeroo.seuss>
-References: <48E396A3.809@freescale.com>
-	<20081002011800.GI25598@yookeroo.seuss>
-	<20081002152242.GB22258@ld0162-tx32.am.freescale.net>
-	<20081002.135004.1723231860.imp@bsdimp.com>
+From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: The new DTS language enhancements
+Date: Thu, 02 Oct 2008 11:23:11 -0500
+Message-ID: <1222964591.9242.9.camel@ld0161-tx32>
+References: <1222889827.28471.3.camel@ld0161-tx32>
+	<3643ED8C-2AED-405A-8C7E-432FB311DE6A@kernel.crashing.org>
+	<fa686aa40810011551w7250a5cdoc0d928456ea34d3b@mail.gmail.com>
+	<11973616-0AA9-4CA4-BC12-7B896DDF533C@kernel.crashing.org>
+	<20081002143648.GJ11662@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20081002.135004.1723231860.imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20081002143648.GJ11662-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,36 +21,24 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: "M. Warner Losh" <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2008 at 01:50:04PM -0600, M. Warner Losh wrote:
-> In message: <20081002152242.GB22258-VKaLA/mbEU932VTgPCOETVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
->             Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> : On Thu, Oct 02, 2008 at 11:18:00AM +1000, David Gibson wrote:
-> : > > I vote against anything similar to the C preprocessor.
-> : > 
-> : > Why?
-> : 
-> : It's not nearly as powerful as the semantic approach, and it is
-> : syntactically clumsy (I do *not* want to have to put a backslash at the
-> : end of every line within a macro, for example).
-> 
-> And there are no looping constructs at all in CPP.  You flat out can't
-> do a generalized for loop with the macro language, for example.  Its
+On Fri, 2008-10-03 at 00:36 +1000, David Gibson wrote:
+>  Although, the one bit I did
+> post - the integer expressions support - was met with deafening
+> silence, which is a bit frustrating.
 
-But we can put looping constructs into the expression support which
-macros can then use.
+On the contrary, by the time you had posted your patch,
+I had a complete run-time evaluation environment running
+in my development tree and it seemed a dramatic step backwards
+to apply your patch and then work around it.
 
-> symbols also do not map 1-1/onto symbols used by the dts files.  It
-> can only grok macros you define for it, so it has no way of knowing
-> many useful things that dts just knows.
+In fact, I did take the portion of your patch that was
+very relevant and applied it.  It was the complete basis
+for the beginnings of testing expression functionality.
 
-Uh.. I'm not sure what you mean by this.
+Very useful, as it turned out.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+jdl
