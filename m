@@ -1,15 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [2/5] dtc: Use flex's YY_USER_ACTION feature to avoid code duplication
-Date: Fri, 3 Oct 2008 00:05:56 +1000
-Message-ID: <20081002140556.GF11662@yookeroo.seuss>
+Subject: [3/5] dtc: Cleanup yyerrorf() function
+Date: Fri, 3 Oct 2008 00:06:52 +1000
+Message-ID: <20081002140652.GG11662@yookeroo.seuss>
 References: <20081002140427.GD11662@yookeroo.seuss>
 	<20081002140512.GE11662@yookeroo.seuss>
+	<20081002140556.GF11662@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20081002140512.GE11662-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+In-Reply-To: <20081002140556.GF11662-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -23,164 +24,129 @@ To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Current, every lexer rule starts with some boiler plate to update the
-yylloc value for use by the parser.  One of the rules, even mistakenly
-has a redundant allocation to one of the members.
+Currently, we put the source file name into the yylloc variable, but
+never use the stored value.  Instead the yyerrorf() function directly
+accesses srcpos_file to get the input file name.
 
-This patch uses the flex YY_USER_ACTION macro hook, which is executed
-before every rule to avoid this duplication.
+That works in practice, but is likely not to always be correct if we
+ever re-enable the glr-parser option.  Even now, its correctness
+relies on the exact point in time bison executes the semantic rules
+w.r.t. to the lexing rules, which is probably correct but not
+obviously correct, which is far from ideal.
+
+So, this patch replaces yyerrorf() with a srcpos_error() function
+which pulls the filename information out of the yylloc variable, which
+bison is explicitly supposed to get right for us.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
 ---
- dtc-lexer.l |   36 +++++-------------------------------
- 1 file changed, 5 insertions(+), 31 deletions(-)
+ dtc-parser.y |   32 ++++++++++----------------------
+ srcpos.c     |   13 +++++++++++++
+ srcpos.h     |    6 ++----
+ 3 files changed, 25 insertions(+), 26 deletions(-)
 
-Index: dtc/dtc-lexer.l
+Index: dtc/dtc-parser.y
 ===================================================================
---- dtc.orig/dtc-lexer.l	2008-10-03 00:03:38.000000000 +1000
-+++ dtc/dtc-lexer.l	2008-10-03 00:03:48.000000000 +1000
-@@ -37,6 +37,11 @@ LINECOMMENT	"//".*\n
- #include "dtc.h"
- #include "dtc-parser.tab.h"
+--- dtc.orig/dtc-parser.y	2008-10-03 00:03:38.000000000 +1000
++++ dtc/dtc-parser.y	2008-10-03 00:03:57.000000000 +1000
+@@ -30,6 +30,7 @@ extern int yylex(void);
+ extern struct boot_info *the_boot_info;
+ extern int treesource_error;
  
-+#define	YY_USER_ACTION \
-+	{ \
-+		yylloc.file = srcpos_file; \
-+		yylloc.first_line = yylineno; \
-+	}
++static void yyerror(char const *s);
+ static unsigned long long eval_literal(const char *s, int base, int bits);
+ %}
  
- /*#define LEXDEBUG	1*/
+@@ -206,10 +207,13 @@ propdata:
+ 			struct data d = empty_data;
  
-@@ -74,18 +79,13 @@ static int pop_input_file(void);
- 		}
+ 			if ($6 != 0)
+-				if (fseek(file->file, $6, SEEK_SET) != 0)
+-					yyerrorf("Couldn't seek to offset %llu in \"%s\": %s",
+-						 (unsigned long long)$6,
+-						 $4.val, strerror(errno));
++				if (fseek(file->file, $6, SEEK_SET) != 0) {
++					srcpos_error(&yylloc, "Couldn't seek to"
++						     " offset %llu in \"%s\": %s",
++						     (unsigned long long)$6,
++						     $4.val, strerror(errno));
++					treesource_error = 1;
++				}
  
- <*>{STRING}	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("String: %s\n", yytext);
- 			yylval.data = data_copy_escape_string(yytext+1,
- 					yyleng-2);
--			yylloc.first_line = yylineno;
- 			return DT_STRING;
- 		}
+ 			d = data_copy_file(file->file, $8);
  
- <*>"/dts-v1/"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Keyword: /dts-v1/\n");
- 			dts_version = 1;
- 			BEGIN_DEFAULT();
-@@ -93,16 +93,12 @@ static int pop_input_file(void);
- 		}
+@@ -338,26 +342,10 @@ label:
  
- <*>"/memreserve/"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Keyword: /memreserve/\n");
- 			BEGIN_DEFAULT();
- 			return DT_MEMRESERVE;
- 		}
+ %%
  
- <*>{LABEL}:	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Label: %s\n", yytext);
- 			yylval.labelref = xstrdup(yytext);
- 			yylval.labelref[yyleng-1] = '\0';
-@@ -110,8 +106,6 @@ static int pop_input_file(void);
- 		}
+-void yyerrorf(char const *s, ...)
++static void yyerror(char const *s)
+ {
+-	const char *fname = srcpos_file ? srcpos_file->name : "<no-file>";
+-	va_list va;
+-	va_start(va, s);
+-
+-	if (strcmp(fname, "-") == 0)
+-		fname = "stdin";
+-
+-	fprintf(stderr, "%s:%d ", fname, yylloc.first_line);
+-	vfprintf(stderr, s, va);
+-	fprintf(stderr, "\n");
+-
++	srcpos_error(&yylloc, "%s", s);
+ 	treesource_error = 1;
+-	va_end(va);
+-}
+-
+-void yyerror (char const *s)
+-{
+-	yyerrorf("%s", s);
+ }
  
- <INITIAL>[bodh]# {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			if (*yytext == 'b')
- 				yylval.cbase = 2;
- 			else if (*yytext == 'o')
-@@ -125,32 +119,24 @@ static int pop_input_file(void);
- 		}
+ static unsigned long long eval_literal(const char *s, int base, int bits)
+Index: dtc/srcpos.c
+===================================================================
+--- dtc.orig/srcpos.c	2008-10-03 00:03:38.000000000 +1000
++++ dtc/srcpos.c	2008-10-03 00:03:57.000000000 +1000
+@@ -29,6 +29,19 @@ char *xstrdup(const char *s)
+ 	return dup;
+ }
  
- <INITIAL>[0-9a-fA-F]+	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			yylval.literal = xstrdup(yytext);
- 			DPRINT("Literal: '%s'\n", yylval.literal);
- 			return DT_LEGACYLITERAL;
- 		}
++void srcpos_error(YYLTYPE *loc, char const *fmt, ...)
++{
++	va_list va;
++	va_start(va, fmt);
++
++	fprintf(stderr, "%s:%d ", loc->file->name, loc->first_line);
++
++	vfprintf(stderr, fmt, va);
++	fprintf(stderr, "\n");
++
++	va_end(va);
++}
++
+ /*
+  * Like yylineno, this is the current open file pos.
+  */
+Index: dtc/srcpos.h
+===================================================================
+--- dtc.orig/srcpos.h	2008-10-03 00:03:38.000000000 +1000
++++ dtc/srcpos.h	2008-10-03 00:03:57.000000000 +1000
+@@ -72,10 +72,8 @@ typedef struct YYLTYPE {
+ 	}								\
+     while (YYID (0))
  
- <V1>[0-9]+|0[xX][0-9a-fA-F]+      {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			yylval.literal = xstrdup(yytext);
- 			DPRINT("Literal: '%s'\n", yylval.literal);
- 			return DT_LITERAL;
- 		}
+-
+-
+-extern void yyerror(char const *);
+-extern void yyerrorf(char const *, ...) __attribute__((format(printf, 1, 2)));
++void srcpos_error(YYLTYPE *loc, char const *fmt, ...)
++	__attribute__((format(printf, 2, 3)));
  
- \&{LABEL}	{	/* label reference */
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Ref: %s\n", yytext+1);
- 			yylval.labelref = xstrdup(yytext+1);
- 			return DT_REF;
- 		}
+ extern struct dtc_file *srcpos_file;
  
- "&{/"{PATHCHAR}+\}	{	/* new-style path reference */
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			yytext[yyleng-1] = '\0';
- 			DPRINT("Ref: %s\n", yytext+2);
- 			yylval.labelref = xstrdup(yytext+2);
-@@ -158,32 +144,24 @@ static int pop_input_file(void);
- 		}
- 
- <INITIAL>"&/"{PATHCHAR}+ {	/* old-style path reference */
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Ref: %s\n", yytext+1);
- 			yylval.labelref = xstrdup(yytext+1);
- 			return DT_REF;
- 		}
- 
- <BYTESTRING>[0-9a-fA-F]{2} {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			yylval.byte = strtol(yytext, NULL, 16);
- 			DPRINT("Byte: %02x\n", (int)yylval.byte);
- 			return DT_BYTE;
- 		}
- 
- <BYTESTRING>"]"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("/BYTESTRING\n");
- 			BEGIN_DEFAULT();
- 			return ']';
- 		}
- 
- <PROPNODENAME>{PROPNODECHAR}+ {
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("PropNodeName: %s\n", yytext);
- 			yylval.propnodename = xstrdup(yytext);
- 			BEGIN_DEFAULT();
-@@ -191,8 +169,6 @@ static int pop_input_file(void);
- 		}
- 
- "/incbin/"	{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Binary Include\n");
- 			return DT_INCBIN;
- 		}
-@@ -202,8 +178,6 @@ static int pop_input_file(void);
- <*>{LINECOMMENT}+ /* eat C++-style comments */
- 
- <*>.		{
--			yylloc.file = srcpos_file;
--			yylloc.first_line = yylineno;
- 			DPRINT("Char: %c (\\x%02x)\n", yytext[0],
- 				(unsigned)yytext[0]);
- 			if (yytext[0] == '[') {
+
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
