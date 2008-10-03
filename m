@@ -1,17 +1,13 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
-Date: Fri, 3 Oct 2008 14:38:43 +1000
-Message-ID: <20081003043843.GI3002@yookeroo.seuss>
-References: <20081002152242.GB22258@ld0162-tx32.am.freescale.net>
-	<20081002.135004.1723231860.imp@bsdimp.com>
-	<20081003002337.GB3002@yookeroo.seuss>
-	<20081002.191705.-108805802.imp@bsdimp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: DTS language enhancements
+Date: Fri, 3 Oct 2008 00:08:54 -0500
+Message-ID: <FB6717CF-EF47-40E1-B972-1E642066D5C6@kernel.crashing.org>
+References: <20081003043710.GH3002@yookeroo.seuss>
+Mime-Version: 1.0 (Apple Message framework v929.2)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20081002.191705.-108805802.imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20081003043710.GH3002-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,46 +17,50 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: "M. Warner Losh" <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2008 at 07:17:05PM -0600, M. Warner Losh wrote:
-> In message: <20081003002337.GB3002-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
->             David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> writes:
-> : On Thu, Oct 02, 2008 at 01:50:04PM -0600, M. Warner Losh wrote:
-> : > In message: <20081002152242.GB22258-VKaLA/mbEU932VTgPCOETVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
-> : >             Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> : > : On Thu, Oct 02, 2008 at 11:18:00AM +1000, David Gibson wrote:
-> : > : > > I vote against anything similar to the C preprocessor.
-> : > : > 
-> : > : > Why?
-> : > : 
-> : > : It's not nearly as powerful as the semantic approach, and it is
-> : > : syntactically clumsy (I do *not* want to have to put a backslash at the
-> : > : end of every line within a macro, for example).
-> : > 
-> : > And there are no looping constructs at all in CPP.  You flat out can't
-> : > do a generalized for loop with the macro language, for example.  Its
-> : 
-> : But we can put looping constructs into the expression support which
-> : macros can then use.
-> : 
-> : > symbols also do not map 1-1/onto symbols used by the dts files.  It
-> : > can only grok macros you define for it, so it has no way of knowing
-> : > many useful things that dts just knows.
-> : 
-> : Uh.. I'm not sure what you mean by this.
-> 
-> I mean that identifiers have # in them in the dts language.  cpp deals
-> with identifiers that are similar to, but not the same thing as dts.
 
-No.  Property and node names can have # in them in the dts.  I don't
-think of those as identifiers - bare propnodenames are only recognized
-in limited contexts.
+On Oct 2, 2008, at 11:37 PM, David Gibson wrote:
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> Node-content expressions
+> ------------------------
+>
+> Literals are node definitions in the current format:
+> 	{
+> 		prop = <bytestring expression>;
+> 		somesubnode@whatever <node content expression>;
+> 	}
+>
+> ?: would also be supported here (again, first argument integer, second
+> and third are node-content).
+>
+> I'm less sure what other operators we'll need here - probably need to
+> build these based on actual usage examples.  Likely candidates,
+> however are:
+> 	- set property
+> e.g. /setprop/({ }, "reg", < 17 >) == { reg = < 17 >; }
+> 	- remove property
+> e.g. /delprop({ reg = <17>; }, "reg") == { }
+> 	- add subnode
+> e.g. /addnode/({ }, "subnode@17", {reg = <17>;}) ==
+> 	{ subnode@17 { reg = <17>; }; }
+> 	- merge
+
+should we have /delnode/
+
+> e.g. /merge/({foo = "abc";}, {bar = <17>;}) == {foo = "abc";  
+> bar=<17>;}
+> (this would recurse down subnodes with identical names)
+> 	- get subnode
+> e.g. /getnode/({ subnode { foo = "bar"; }; }, "subnode") ==
+> 	{ foo = "bar"; }
+> 	- get property (result of this is a bytestring, not a
+> node-content expression)
+> e.g. /getprop/({ foo = "bar"; }, "foo") = "bar"
+
+This is very interesting and seems to address some functionality I've  
+talked to Jon about us needing to modify and update nodes.
+
+- k
