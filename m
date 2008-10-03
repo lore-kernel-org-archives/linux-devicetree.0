@@ -1,7 +1,7 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: [PATCH] Remove support for the legacy DTS source file format.
-Date: Fri,  3 Oct 2008 16:17:09 -0500
-Message-ID: <1223068629-6771-1-git-send-email-jdl@jdl.com>
+Subject: New language branch
+Date: Fri, 03 Oct 2008 16:36:01 -0500
+Message-ID: <E1KlsJd-0002Vf-Ui@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -18,18 +18,13 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaUR
 To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that all in-kernel-tree DTS files are properly /dts-v1/,
-remove direct support for the older, un-numbered DTS
-source file format.
 
-Convert existing tests to /dts-v1/ and remove support
-for the conversion tests themselves.
+Folks,
 
-For now, though, the conversion tool still exists.
+I have pushed a temporary branch named "testing" to the
+DTC repository that contains the patches for my proposed
+new DTS language.  I may rebase or delete this branch,
+but feel free to test it out in the meantime.
 
-Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-
-I've decided to apply this patch.  It may not be popular,
-but we're going to move forward here.   Several folks at
-Freescale agree with me here.
+Thanks,
+jdl
