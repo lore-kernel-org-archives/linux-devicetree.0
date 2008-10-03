@@ -1,7 +1,7 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: [PATCH] Some Documentation fixes and generalizations.
-Date: Fri,  3 Oct 2008 12:12:43 -0500
-Message-ID: <1223053963-22251-1-git-send-email-jdl@jdl.com>
+Subject: [PATCH] Rearrange ftdump and convert-dtsv0 into sub-Makefiles.
+Date: Fri,  3 Oct 2008 12:13:36 -0500
+Message-ID: <1223054016-22290-1-git-send-email-jdl@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -18,82 +18,183 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaUR
 To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Updated a jdl.com URL reference.
+Follows the model of the existing sub-Makefiles for dtc.
 
-Generalized the new section IV to be "Utility Tools"
-and added a small blurb about ftdump as well.
+Adjust $(BIN) definition to represent installable bin programs
+and use it as the list of installed programs rather than using
+an enumerated list in the install target.
 
-Signed-off-by: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Adjust the tests/Makefile to clean up properly still.
+
+Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- Documentation/manual.txt |   26 ++++++++++++++++++++------
- 1 files changed, 20 insertions(+), 6 deletions(-)
+ Makefile               |   70 +++++++++++++++++++++++++----------------------
+ Makefile.convert-dtsv0 |   12 ++++++++
+ Makefile.ftdump        |   12 ++++++++
+ tests/Makefile.tests   |    5 +--
+ 4 files changed, 63 insertions(+), 36 deletions(-)
+ create mode 100644 Makefile.convert-dtsv0
+ create mode 100644 Makefile.ftdump
 
-diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index 0674384..f8a8a7b 100644
---- a/Documentation/manual.txt
-+++ b/Documentation/manual.txt
-@@ -19,7 +19,9 @@ II - The DT block format
+diff --git a/Makefile b/Makefile
+index 558e10c..b3b85a5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -46,18 +46,6 @@ else
+ DEPTARGETS = $(filter-out $(NODEPTARGETS),$(MAKECMDGOALS))
+ endif
  
- III - libfdt
+-all: dtc ftdump convert-dtsv0 libfdt
+-
+-install: all
+-	@$(VECHO) INSTALL
+-	$(INSTALL) -d $(DESTDIR)$(BINDIR)
+-	$(INSTALL) -m 755 dtc $(DESTDIR)$(BINDIR)
+-	$(INSTALL) -m 755 convert-dtsv0 $(DESTDIR)$(BINDIR)
+-	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
+-	$(INSTALL) -m 644 $(LIBFDT_lib) $(DESTDIR)$(LIBDIR)
+-	$(INSTALL) -d $(DESTDIR)$(INCLUDEDIR)
+-	$(INSTALL) -m 644 $(LIBFDT_include) $(DESTDIR)$(INCLUDEDIR)
+-
+ #
+ # Rules for versioning
+ #
+@@ -101,40 +89,27 @@ define filechk
+ 	fi;
+ endef
  
--IV - Conversion to Version 1
-+IV - Utility Tools
-+    1) convert-dtsv0 -- Conversion to Version 1
-+    1) ftdump
+-$(VERSION_FILE): Makefile FORCE
+-	$(call filechk,version)
  
+-#
+-# Rules for dtc proper
+-#
++include Makefile.convert-dtsv0
+ include Makefile.dtc
++include Makefile.ftdump
  
- I - "dtc", the device tree compiler
-@@ -30,7 +32,7 @@ I - "dtc", the device tree compiler
- Source code for the Device Tree Compiler can be found at jdl.com.
- The gitweb interface is:
++BIN += convert-dtsv0
+ BIN += dtc
++BIN += ftdump
  
--    http://www.jdl.com/git_repos/
-+    http://git.jdl.com/gitweb/
+-# This stops make from generating the lex and bison output during
+-# auto-dependency computation, but throwing them away as an
+-# intermediate target and building them again "for real"
+-.SECONDARY: $(DTC_GEN_SRCS)
  
- The repository is here:
- 
-@@ -39,7 +41,7 @@ The repository is here:
- 
- Tarballs of the 1.0.0 and latest releases are here:
- 
--    http://www.jdl.com/software/dtc-1.0.0.tgz
-+    http://www.jdl.com/software/dtc-v1.2.0.tgz
-     http://www.jdl.com/software/dtc-latest.tgz
- 
- 
-@@ -620,8 +622,11 @@ III - libfdt
- This library should be merged into dtc proper.
- This library should likely be worked into U-Boot and the kernel.
- 
--IV - Conversion to Version 1
--============================
+-dtc: $(DTC_OBJS)
++all: $(BIN) libfdt
 +
-+IV - Utility Tools
-+==================
-+
-+1) convert-dtsv0 -- Conversion to Version 1
  
- convert-dtsv0 is a small utility program which converts (DTS)
- Device Tree Source from the obsolete version 0 to version 1.
-@@ -630,9 +635,18 @@ Version 1 DTS files are marked by line "/dts-v1/;" at the top of the file.
+ ifneq ($(DEPTARGETS),)
+ -include $(DTC_OBJS:%.o=%.d)
++-include $(CONVERT_OBJS:%.o=%.d)
++-include $(FTDUMP_OBJS:%.o=%.d)
+ endif
+-#
+-# Rules for ftdump & convert-dtsv0
+-#
+-BIN += ftdump convert-dtsv0
  
- The syntax of the convert-dtsv0 command line is:
+-ftdump:	ftdump.o
  
--convert-dtsv0 [<input_filename ... >]
-+    convert-dtsv0 [<input_filename ... >]
+-convert-dtsv0: convert-dtsv0-lexer.lex.o srcpos.o
+-	@$(VECHO) LD $@
+-	$(LINK.c) -o $@ $^
  
- Each file passed will be converted to the new /dts-v1/ version by creating
- a new file with a "v1" appended the filename.
+-ifneq ($(DEPTARGETS),)
+--include ftdump.d
+-endif
+ #
+ # Rules for libfdt
+ #
+@@ -158,6 +133,35 @@ ifneq ($(DEPTARGETS),)
+ -include $(LIBFDT_OBJS:%.o=$(LIBFDT_objdir)/%.d)
+ endif
  
- Comments, empty lines, etc. are preserved.
++# This stops make from generating the lex and bison output during
++# auto-dependency computation, but throwing them away as an
++# intermediate target and building them again "for real"
++.SECONDARY: $(DTC_GEN_SRCS) $(CONVERT_GEN_SRCS)
 +
 +
-+2) ftdump -- Flat Tree dumping utility
 +
-+The ftdump program prints a readable version of a flat device tree file.
++install: all
++	@$(VECHO) INSTALL
++	$(INSTALL) -d $(DESTDIR)$(BINDIR)
++	$(INSTALL) -m 755 $(BIN) $(DESTDIR)$(BINDIR)
++	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
++	$(INSTALL) -m 644 $(LIBFDT_lib) $(DESTDIR)$(LIBDIR)
++	$(INSTALL) -d $(DESTDIR)$(INCLUDEDIR)
++	$(INSTALL) -m 644 $(LIBFDT_include) $(DESTDIR)$(INCLUDEDIR)
 +
-+The syntax of the ftdump command line is:
++$(VERSION_FILE): Makefile FORCE
++	$(call filechk,version)
 +
-+    ftdump <DTB-file-name>
++
++dtc: $(DTC_OBJS)
++
++convert-dtsv0: $(CONVERT_OBJS)
++	@$(VECHO) LD $@
++	$(LINK.c) -o $@ $^
++
++ftdump:	$(FTDUMP_OBJS)
++
++
+ #
+ # Testsuite rules
+ #
+diff --git a/Makefile.convert-dtsv0 b/Makefile.convert-dtsv0
+new file mode 100644
+index 0000000..a3f74c9
+--- /dev/null
++++ b/Makefile.convert-dtsv0
+@@ -0,0 +1,12 @@
++#
++# This is not a complete Makefile of itself.
++# Instead, it is designed to be easily embeddable
++# into other systems of Makefiles.
++#
++
++CONVERT_SRCS = \
++	srcpos.c
++
++CONVERT_GEN_SRCS = convert-dtsv0-lexer.lex.c
++
++CONVERT_OBJS = $(CONVERT_SRCS:%.c=%.o) $(CONVERT_GEN_SRCS:%.c=%.o)
+diff --git a/Makefile.ftdump b/Makefile.ftdump
+new file mode 100644
+index 0000000..b70905a
+--- /dev/null
++++ b/Makefile.ftdump
+@@ -0,0 +1,12 @@
++#
++# This is not a complete Makefile of itself.
++# Instead, it is designed to be easily embeddable
++# into other systems of Makefiles.
++#
++
++FTDUMP_SRCS = \
++	ftdump.c
++
++FTDUMP_GEN_SRCS =
++
++FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o) $(FTDUMP_GEN_SRCS:%.c=%.o)
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index 5fd4d28..21a311e 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -29,9 +29,8 @@ TESTS_DEPFILES = $(TESTS:%=%.d) \
+ 	$(addprefix $(TESTS_PREFIX),testutils.d trees.d dumptrees.d)
+ 
+ TESTS_CLEANFILES_L =  *.output vglog.* vgcore.* *.dtb *.test.dts *.dtsv1 tmp.*
+-TESTS_CLEANFILES = $(TESTS_CLEANFILES_L:%=$(TESTS_PREFIX)%)
+-
+-BIN += $(TESTS) $(TESTS_PREFIX)dumptrees
++TESTS_CLEANFILES_L += dumptrees
++TESTS_CLEANFILES = $(TESTS) $(TESTS_CLEANFILES_L:%=$(TESTS_PREFIX)%)
+ 
+ .PHONY: tests
+ tests:	$(TESTS) $(TESTS_TREES)
 -- 
 1.6.0.90.g436ed
