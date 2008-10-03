@@ -1,15 +1,18 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: DTS language enhancements
-Date: Fri, 3 Oct 2008 15:29:42 +1000
-Message-ID: <20081003052942.GJ3002@yookeroo.seuss>
-References: <20081003043710.GH3002@yookeroo.seuss>
-	<FB6717CF-EF47-40E1-B972-1E642066D5C6@kernel.crashing.org>
+From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [2/5] dtc: Use flex's YY_USER_ACTION feature to avoid
+	code	duplication
+Date: Fri, 03 Oct 2008 09:17:53 -0500
+Message-ID: <48E62991.6010102@freescale.com>
+References: <20081002140427.GD11662@yookeroo.seuss>
+	<20081002140512.GE11662@yookeroo.seuss>
+	<20081002140556.GF11662@yookeroo.seuss>
+	<1222964727.9242.10.camel@ld0161-tx32>
+	<20081003010531.GE3002@yookeroo.seuss>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <FB6717CF-EF47-40E1-B972-1E642066D5C6-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20081003010531.GE3002-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -19,64 +22,57 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2008 at 12:08:54AM -0500, Kumar Gala wrote:
->
-> On Oct 2, 2008, at 11:37 PM, David Gibson wrote:
->
->> Node-content expressions
->> ------------------------
->>
->> Literals are node definitions in the current format:
->> 	{
->> 		prop = <bytestring expression>;
->> 		somesubnode@whatever <node content expression>;
->> 	}
->>
->> ?: would also be supported here (again, first argument integer, second
->> and third are node-content).
->>
->> I'm less sure what other operators we'll need here - probably need to
->> build these based on actual usage examples.  Likely candidates,
->> however are:
->> 	- set property
->> e.g. /setprop/({ }, "reg", < 17 >) == { reg = < 17 >; }
->> 	- remove property
->> e.g. /delprop({ reg = <17>; }, "reg") == { }
->> 	- add subnode
->> e.g. /addnode/({ }, "subnode@17", {reg = <17>;}) ==
->> 	{ subnode@17 { reg = <17>; }; }
->> 	- merge
->
-> should we have /delnode/
+David Gibson wrote:
+> On Thu, Oct 02, 2008 at 11:25:27AM -0500, Jon Loeliger wrote:
+>> On Fri, 2008-10-03 at 00:05 +1000, David Gibson wrote:
+>>> Current, every lexer rule starts with some boiler plate to update the
+>>> yylloc value for use by the parser.  One of the rules, even mistakenly
+>>> has a redundant allocation to one of the members.
+>>>
+>>> This patch uses the flex YY_USER_ACTION macro hook, which is executed
+>>> before every rule to avoid this duplication.
+>>>
+>>> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>>>
+>>> ---
+>> This, and the xstrdup() change are both excellent suggestions.
+> 
+> Ok, so lets apply them, clearing a bit more muck out of the way to
+> focus on the new language stuff.
+> 
+> But does this imply you don't like the rest of the series?
+> 
 
-Ah, yeah, I guess so, if we've got the rest.  Possibly they should be
-called /graft/ and /prune/ instead of /addnode/ and /delnode/ to
-emphasise the fact that they may be handling whole subtrees.
+Dave,
 
->> e.g. /merge/({foo = "abc";}, {bar = <17>;}) == {foo = "abc";  
->> bar=<17>;}
->> (this would recurse down subnodes with identical names)
->> 	- get subnode
->> e.g. /getnode/({ subnode { foo = "bar"; }; }, "subnode") ==
->> 	{ foo = "bar"; }
->> 	- get property (result of this is a bytestring, not a
->> node-content expression)
->> e.g. /getprop/({ foo = "bar"; }, "foo") = "bar"
->
-> This is very interesting and seems to address some functionality I've  
-> talked to Jon about us needing to modify and update nodes.
+You need to interpret less and quit trying to out-guess people.
+I for one just don't like it.
 
-Yeah, well, this is kind of my point.  I'm pretty sure we'll need this
-stuff regardless of whether we use preprocessing or post-evaluation;
-and once we have these sorts of operators, I'm not sure that
-post-evaluation will actually buy us much.
+Here's what I'm doing right now.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+First, I buy the YY_USER_ACTION patch entirely.  I've refactored
+it to apply to my branch to verify that it works with my code as well.
+
+So I am going to apply it to the *current* master branch and
+rebase my stuff on to it to bring it forward through my patches.
+Then, as you say, we'll clear some muck.
+
+Second, I buy the desire for strdup() -> xstrdup().  However, I
+am not going to put xstrdup() into srcpos.c.  No way, not no how.
+So I am going to introduce utiil.[ch] or so.  And to get it into
+the convert tool, I am first going to refactor the Makfile.
+
+Finally, I've not entirely read through and understood some of
+the parts of the rest of your series yet.  There are definitely
+parts that I'd like to pick up, and yet there are parts that I
+am not sure about yet.  I need to re-read and understand it more.
+
+In the meantime, I'm going to make further progress on cleaning
+up "the muck".
+
+Thanks,
+jdl
