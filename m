@@ -1,16 +1,23 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: DTS language enhancements
-Date: Sat, 4 Oct 2008 14:18:41 +1000
-Message-ID: <20081004041841.GI30184@yookeroo.seuss>
-References: <20081003043710.GH3002@yookeroo.seuss>
-	<FB6717CF-EF47-40E1-B972-1E642066D5C6@kernel.crashing.org>
-	<48E62739.8090109@freescale.com>
+Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
+Date: Sat, 4 Oct 2008 14:52:20 +1000
+Message-ID: <20081004045220.GM30184@yookeroo.seuss>
+References: <1222460748-20127-9-git-send-email-jdl@jdl.com>
+	<20080930145537.GJ18313@secretlab.ca>
+	<20081001034656.GF30810@yookeroo.seuss>
+	<48E396A3.809@freescale.com>
+	<20081002011800.GI25598@yookeroo.seuss>
+	<20081002152242.GB22258@ld0162-tx32.am.freescale.net>
+	<20081002161150.GA14351@yookeroo.seuss>
+	<48E5036D.9040509@freescale.com>
+	<20081003022424.GG3002@yookeroo.seuss>
+	<20081003152700.GA9115@ld0162-tx32.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <48E62739.8090109-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20081003152700.GA9115-VKaLA/mbEU932VTgPCOETVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -20,54 +27,31 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2008 at 09:07:53AM -0500, Jon Loeliger wrote:
-> Kumar Gala wrote:
->
->>> e.g. /merge/({foo = "abc";}, {bar = <17>;}) == {foo = "abc"; bar=<17>;}
->>> (this would recurse down subnodes with identical names)
->>>     - get subnode
->>> e.g. /getnode/({ subnode { foo = "bar"; }; }, "subnode") ==
->>>     { foo = "bar"; }
->>>     - get property (result of this is a bytestring, not a
->>> node-content expression)
->>> e.g. /getprop/({ foo = "bar"; }, "foo") = "bar"
->>
->> This is very interesting and seems to address some functionality I've  
->> talked to Jon about us needing to modify and update nodes.
->>
->> - k
->
-> And Kumar, to be fair finish our conversation some more:
-> I *agreed* that we should get to that level of functionality as well,
-> and even said we'd work towards having it over time.  But, that we
-> wanted to make a first step towards a framework with something usable.
->
-> Feh.
->
-> I am *not* the bad-guy here.  For 3 years folks have been saying
-> "We need _something_...." and for three years no one did jack shit.
+On Fri, Oct 03, 2008 at 10:27:01AM -0500, Scott Wood wrote:
+> On Fri, Oct 03, 2008 at 12:24:24PM +1000, David Gibson wrote:
+> > > And if you want the number of somethings to be easily tweakable, you may  
+> > > need to do #include/#ifdef recursion.
+> > 
+> > Yes, we'd certainly need some sort of iteration operator in the
+> > expressions for this sort of thing.
+> 
+> OK, but now we're talking about something more complex than running it
+> through CPP with some character conversion.
+> 
+> A more powerful macro language is certainly an option, though I have a
+> personal preference for the semantic approach.
 
-That's not entirely true.  I certainly should have been more public
-about what I had, but I'm no guiltier than you.
+Ugh.. actually.  What I had in mind was not macro features to do
+iteration, but iteration constructs in expressions that macros could
+expand to.  But I just realised that might not suffice.  It's a fairly
+limited number of use cases that that will work for, although I think
+they will be common ones.
 
-> In the Open Source development world, the motto right behing
-> "post early, post often" is most assuredly "Show me the code".
->
-> Well, talk is cheap and proposing a vacuous and arguable something
-> has always been just that -- arguable.  So I am showing you the code
-> and giving you something to shoot at.
->
-> It's more than anyone else has done on this front.
-
-Bear in mind that when I posted my expression support patch, I thought
-*that* was more than anyone else had done at the time.  And since I
-got no response, not even a "I have something else in my tree I've
-been working on" I continued to think so for some weeks until you
-posted your series.
+But you do have a point here.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
