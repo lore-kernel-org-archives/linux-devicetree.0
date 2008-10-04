@@ -1,17 +1,20 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [3/5] dtc: Cleanup yyerrorf() function
-Date: Sat, 4 Oct 2008 12:56:41 +1000
-Message-ID: <20081004025641.GF30184@yookeroo.seuss>
+Subject: Re: [2/5] dtc: Use flex's YY_USER_ACTION feature to avoid code
+	duplication
+Date: Sat, 4 Oct 2008 14:13:07 +1000
+Message-ID: <20081004041307.GH30184@yookeroo.seuss>
 References: <20081002140427.GD11662@yookeroo.seuss>
 	<20081002140512.GE11662@yookeroo.seuss>
 	<20081002140556.GF11662@yookeroo.seuss>
-	<20081002140652.GG11662@yookeroo.seuss> <E1KlqEb-0006Io-Sc@jdl.com>
+	<1222964727.9242.10.camel@ld0161-tx32>
+	<20081003010531.GE3002@yookeroo.seuss>
+	<48E62991.6010102@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <E1KlqEb-0006Io-Sc-CYoMK+44s/E@public.gmane.org>
+In-Reply-To: <48E62991.6010102-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,67 +24,44 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2008 at 02:22:41PM -0500, Jon Loeliger wrote:
-> > Currently, we put the source file name into the yylloc variable, but
-> > never use the stored value.  Instead the yyerrorf() function directly
-> > accesses srcpos_file to get the input file name.
-> > 
-> > That works in practice, but is likely not to always be correct if we
-> > ever re-enable the glr-parser option.  Even now, its correctness
-> > relies on the exact point in time bison executes the semantic rules
-> > w.r.t. to the lexing rules, which is probably correct but not
-> > obviously correct, which is far from ideal.
-> > 
-> > So, this patch replaces yyerrorf() with a srcpos_error() function
-> > which pulls the filename information out of the yylloc variable, which
-> > bison is explicitly supposed to get right for us.
-> > 
-> > Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> 
-> This isn't how I'd like to see this work at all.
-> 
-> The original intent goes like this:
-> 
-> - As a file is referenced, it is put on a list (or array) of files.
->   This list is essentially write-only so that any file ever
->   referenced accumulates into this list.
-> 
-> - The source positions maintain a pointer (or index) into that
->   table of file names.
+On Fri, Oct 03, 2008 at 09:17:53AM -0500, Jon Loeliger wrote:
+> David Gibson wrote:
+>> On Thu, Oct 02, 2008 at 11:25:27AM -0500, Jon Loeliger wrote:
+>>> On Fri, 2008-10-03 at 00:05 +1000, David Gibson wrote:
+>>>> Current, every lexer rule starts with some boiler plate to update the
+>>>> yylloc value for use by the parser.  One of the rules, even mistakenly
+>>>> has a redundant allocation to one of the members.
+>>>>
+>>>> This patch uses the flex YY_USER_ACTION macro hook, which is executed
+>>>> before every rule to avoid this duplication.
+>>>>
+>>>> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>>>>
+>>>> ---
+>>> This, and the xstrdup() change are both excellent suggestions.
+>>
+>> Ok, so lets apply them, clearing a bit more muck out of the way to
+>> focus on the new language stuff.
+>>
+>> But does this imply you don't like the rest of the series?
+>
+> Dave,
+>
+> You need to interpret less and quit trying to out-guess people.
+> I for one just don't like it.
 
-Ok, this is not a bad idea.  But there's no sign of this "original
-intent" either in what we had before, or in what's there after your
-new language series.  dtc_file structures are just allocated bare,
-free()ed on dtc_file_close() and pointers to them are handed around
-unsafely.
+Ok, my apologies.  I'm aware that I've been impatient and rude.
 
-> - The table of files is *always* available, even long after
->   parsing has finished.
-
-Again, not a bad idea - it certainly fixes the lifetime issue.  But
-orthogonal certainly from this patch, and really from 4/5 too.
-
-> - There is an entirely different stack of directories that
->   tracks where file references are resolved.
-
-Again, orthogonal.  The stack could easily reference a table of files
-rather than containing the file information directly.
-
-> Thus, a routine like srcpos_error() should take a srcpos
-> for its basis information.  Yes, that is the same type
-> as the YYLTYPE during parsing, but my point is that the
-> srcpos type is conceptually longer lasting than just parsing
-> and will be available by later semantic processing passes too.
-
-Huh!?  This makes no sense to me.  AFAICT the discussion above is
-talking about the lifetime and allocation of dtc_file structures, or
-something of similar intent.  Now you're talking about the srcpos
-structures.  I don't see how either this patch of mine, or the next
-makes the srcpos/YYLTYPE structure *not* potentially longer lasting.
+But, this language thing has become urgent with very little notice;
+you're not the only one with other things to work on too.  I think
+both in implementation and especially in language design your current
+patch series had not had sufficient thought and polish yet, and seeing
+people gung-ho about merging ugliness into a project I have such a
+stake in makes me quite upset.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
