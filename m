@@ -1,14 +1,14 @@
-From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: DTS language enhancements
-Date: Fri, 03 Oct 2008 09:07:53 -0500
-Message-ID: <48E62739.8090109@freescale.com>
-References: <20081003043710.GH3002@yookeroo.seuss>
-	<FB6717CF-EF47-40E1-B972-1E642066D5C6@kernel.crashing.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Rearrange ftdump and convert-dtsv0 into sub-Makefiles.
+Date: Sat, 4 Oct 2008 12:40:09 +1000
+Message-ID: <20081004024009.GB30184@yookeroo.seuss>
+References: <1223054016-22290-1-git-send-email-jdl@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <FB6717CF-EF47-40E1-B972-1E642066D5C6-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1223054016-22290-1-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -18,42 +18,32 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Kumar Gala wrote:
-
->> e.g. /merge/({foo = "abc";}, {bar = <17>;}) == {foo = "abc"; bar=<17>;}
->> (this would recurse down subnodes with identical names)
->>     - get subnode
->> e.g. /getnode/({ subnode { foo = "bar"; }; }, "subnode") ==
->>     { foo = "bar"; }
->>     - get property (result of this is a bytestring, not a
->> node-content expression)
->> e.g. /getprop/({ foo = "bar"; }, "foo") = "bar"
+On Fri, Oct 03, 2008 at 12:13:36PM -0500, Jon Loeliger wrote:
+> Follows the model of the existing sub-Makefiles for dtc.
 > 
-> This is very interesting and seems to address some functionality I've 
-> talked to Jon about us needing to modify and update nodes.
+> Adjust $(BIN) definition to represent installable bin programs
+> and use it as the list of installed programs rather than using
+> an enumerated list in the install target.
 > 
-> - k
+> Adjust the tests/Makefile to clean up properly still.
+> 
+> Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-And Kumar, to be fair finish our conversation some more:
-I *agreed* that we should get to that level of functionality as well,
-and even said we'd work towards having it over time.  But, that we
-wanted to make a first step towards a framework with something usable.
+Well.. the sub-Makefiles were originally implemented that way because
+I thought it might be useful for people embedding dtc or libfdt.  At
+least for the kernel this turned out not really to be the case, and
+even so it seems like overkill for the little utilities.
 
-Feh.
+But, whatever, I have no strong opinion on it.
 
-I am *not* the bad-guy here.  For 3 years folks have been saying
-"We need _something_...." and for three years no one did jack shit.
-In the Open Source development world, the motto right behing
-"post early, post often" is most assuredly "Show me the code".
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Well, talk is cheap and proposing a vacuous and arguable something
-has always been just that -- arguable.  So I am showing you the code
-and giving you something to shoot at.
-
-It's more than anyone else has done on this front.
-
-jdl
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
