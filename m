@@ -1,20 +1,14 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [2/5] dtc: Use flex's YY_USER_ACTION feature to avoid code
-	duplication
-Date: Sat, 4 Oct 2008 14:13:07 +1000
-Message-ID: <20081004041307.GH30184@yookeroo.seuss>
-References: <20081002140427.GD11662@yookeroo.seuss>
-	<20081002140512.GE11662@yookeroo.seuss>
-	<20081002140556.GF11662@yookeroo.seuss>
-	<1222964727.9242.10.camel@ld0161-tx32>
-	<20081003010531.GE3002@yookeroo.seuss>
-	<48E62991.6010102@freescale.com>
+Subject: Re: [PATCH] Enhance source position implementation.
+Date: Sat, 4 Oct 2008 13:53:20 +1000
+Message-ID: <20081004035320.GG30184@yookeroo.seuss>
+References: <1223066853-5978-1-git-send-email-jdl@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <48E62991.6010102-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1223066853-5978-1-git-send-email-jdl-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -24,44 +18,67 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2008 at 09:17:53AM -0500, Jon Loeliger wrote:
-> David Gibson wrote:
->> On Thu, Oct 02, 2008 at 11:25:27AM -0500, Jon Loeliger wrote:
->>> On Fri, 2008-10-03 at 00:05 +1000, David Gibson wrote:
->>>> Current, every lexer rule starts with some boiler plate to update the
->>>> yylloc value for use by the parser.  One of the rules, even mistakenly
->>>> has a redundant allocation to one of the members.
->>>>
->>>> This patch uses the flex YY_USER_ACTION macro hook, which is executed
->>>> before every rule to avoid this duplication.
->>>>
->>>> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
->>>>
->>>> ---
->>> This, and the xstrdup() change are both excellent suggestions.
->>
->> Ok, so lets apply them, clearing a bit more muck out of the way to
->> focus on the new language stuff.
->>
->> But does this imply you don't like the rest of the series?
->
-> Dave,
->
-> You need to interpret less and quit trying to out-guess people.
-> I for one just don't like it.
+On Fri, Oct 03, 2008 at 03:47:33PM -0500, Jon Loeliger wrote:
+> Implemented some print and copy routines.
+> Made empty srcpos objects that will be used later.
+> Protected .h file from multiple #include's.
+> Added srcpos_error() and srcpos_warn().
+> 
+> Signed-off-by: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> 
+> This patch is a refactoring of the yyerror() and yyerrorf(()
+> changes out of my proposed IR patch set back to the current
+> master branch.  It should be pretty close to one Gibson's [3/5]
+> patch where he was headed in the same direction.  This one
+> anticipates srcpos_warn() too.
+> 
+> BTW, I realize my earlier reply to his [3/5] patch was sort
+> of meant to be in response to his following patch as well.
+> Oh well.
+> 
+> As he was also in favor of this change with his patch set,
+> I'm just going to apply this one straight up.
 
-Ok, my apologies.  I'm aware that I've been impatient and rude.
+Unfortunately, it differs from my 3/5 in exactly the aspects that
+prompted me to refactor your srcpos stuff into my series in the first
+place.
 
-But, this language thing has become urgent with very little notice;
-you're not the only one with other things to work on too.  I think
-both in implementation and especially in language design your current
-patch series had not had sufficient thought and polish yet, and seeing
-people gung-ho about merging ugliness into a project I have such a
-stake in makes me quite upset.
+Your srcpos_empty variable and srcpos_copy() and srcpos_dump()
+routines are not used here, which means they don't belong in this
+patch - they belong in the patch that actually does something with
+them.
+
+In fact, srcpos_copy() isn't needed at all.  In your IR stuff, the
+ir_srcpos has exactly the same lifetime as the surrounding ir
+structure, if you make it an embedded structure rather than a pointer
+srcpos_copy() disappears.
+
+[snip]
+>  extern int yylex(void);
+> +extern void yyerror(char const *s);
+
+This should be static, not extern, now.
+
+[snip]
+> diff --git a/srcpos.c b/srcpos.c
+> index d5a4b2a..8bb0c02 100644
+> --- a/srcpos.c
+> +++ b/srcpos.c
+> @@ -17,18 +17,40 @@
+>   *                                                                   USA
+>   */
+>  
+> +#define _GNU_SOURCE
+
+Sigh.  asprintf() is really handy, but dtc is supposed to be portable.
+
+
+Anyway, it's applied now, so I'll rebase my series on top of this.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
