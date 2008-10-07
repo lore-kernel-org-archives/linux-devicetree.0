@@ -1,7 +1,7 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [1/2] dtc: Make asm output more portable and add testcases
+Subject: [2/2] dtc: Add testcases for labels within values
 Date: Tue,  7 Oct 2008 16:56:26 +1100 (EST)
-Message-ID: <20081007055626.1E1FEDDDEE@ozlabs.org>
+Message-ID: <20081007055626.2863EDDDEF@ozlabs.org>
 References: <20081007055407.GE19037@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,286 +21,76 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds some testcases for dtc's -Oasm mode.  Specifically it
-checks that building the asm will result in the same device tree blob
-in memory as -Odtb mode would produce, for a variety of trees.  This
-test uncovered two difficulties with our current -Oasm output, both of
-which are addressed in this patch as well.
-
-First, -Oasm output would only be correct if assembled for a
-big-endian target.  Usually that would be the case, when building
-device trees into a firmware or similar.  However this makes life
-inconvenient for testing on a little-endian target, and one can think
-up use cases where a program running on a little endian host might
-want to embed a device tree for a big-endian target.  This patch
-therefore changes -Oasm output to use .byte directives instead of
-.long throughout in order to generate byte-for-byte identical trees
-regardless of the endianness of the assembler target.
-
-Second, -Oasm output emitted several #define statements which were
-then used in the innards of the output - i.e. it assumed the output
-would be processed by cpp before being assembled.  That may not be
-convenient in all build environments, and in any case doesn't work
-well with the above fix.  So, -Oasm output no longer needs to be
-preprocessed before assembling.
+This patch adds a testcase using asm output mode to check that labels
+within property values are correctly processed.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
 ---
- Makefile              |    2 -
- flattree.c            |   90 ++++++++++++++++++++++++++++++--------------------
- tests/Makefile.tests  |    7 +++
- tests/asm_tree_dump.c |   62 ++++++++++++++++++++++++++++++++++
- tests/data.S          |    3 +
- tests/run_tests.sh    |   19 ++++++++++
- 6 files changed, 145 insertions(+), 38 deletions(-)
+ tests/Makefile.tests   |    2 
+ tests/run_tests.sh     |    5 +
+ tests/tests.h          |    1 
+ tests/value-labels.c   |  128 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/value-labels.dts |    8 +++
+ 5 files changed, 142 insertions(+), 2 deletions(-)
 
 Index: dtc/tests/run_tests.sh
 ===================================================================
---- dtc.orig/tests/run_tests.sh	2008-10-07 16:55:00.000000000 +1100
-+++ dtc/tests/run_tests.sh	2008-10-07 16:55:05.000000000 +1100
-@@ -71,6 +71,15 @@ run_dtc_test () {
-     base_run_test wrap_test $VALGRIND $DTC "$@"
- }
+--- dtc.orig/tests/run_tests.sh	2008-10-07 16:55:05.000000000 +1100
++++ dtc/tests/run_tests.sh	2008-10-07 16:55:08.000000000 +1100
+@@ -239,7 +239,8 @@ dtc_tests () {
  
-+asm_to_so () {
-+    as -o $1.test.o data.S $1.test.s && \
-+	ld -shared -o $1.test.so $1.test.o
-+}
-+
-+asm_to_so_test () {
-+    run_wrap_test asm_to_so "$@"
-+}
-+
- tree1_tests () {
-     TREE=$1
+     # Check -Oasm mode
+     for tree in test_tree1.dts escapes.dts references.dts path-references.dts \
+-	comments.dts aliases.dts include0.dts incbin.dts ; do
++	comments.dts aliases.dts include0.dts incbin.dts \
++	value-labels.dts ; do
+ 	run_dtc_test -I dts -O asm -o oasm_$tree.test.s $tree
+ 	asm_to_so_test oasm_$tree
+ 	run_dtc_test -I dts -O dtb -o $tree.test.dtb $tree
+@@ -247,6 +248,8 @@ dtc_tests () {
+ 	run_wrap_test cmp oasm_$tree.test.dtb $tree.test.dtb
+     done
  
-@@ -228,6 +237,16 @@ dtc_tests () {
-     run_dtc_test -I dtb -O dtb -o boot_cpuid_preserved_test_tree1.test.dtb boot_cpuid_test_tree1.test.dtb
-     run_test dtbs_equal_ordered boot_cpuid_preserved_test_tree1.test.dtb boot_cpuid_test_tree1.test.dtb
- 
-+    # Check -Oasm mode
-+    for tree in test_tree1.dts escapes.dts references.dts path-references.dts \
-+	comments.dts aliases.dts include0.dts incbin.dts ; do
-+	run_dtc_test -I dts -O asm -o oasm_$tree.test.s $tree
-+	asm_to_so_test oasm_$tree
-+	run_dtc_test -I dts -O dtb -o $tree.test.dtb $tree
-+	run_test asm_tree_dump ./oasm_$tree.test.so oasm_$tree.test.dtb
-+	run_wrap_test cmp oasm_$tree.test.dtb $tree.test.dtb
-+    done
++    run_test value-labels ./oasm_value-labels.dts.test.so
 +
      # Check -Odts mode preserve all dtb information
      for tree in test_tree1.dtb dtc_tree1.test.dtb dtc_escapes.test.dtb ; do
  	run_dtc_test -I dtb -O dts -o odts_$tree.test.dts $tree
-Index: dtc/Makefile
+Index: dtc/tests/value-labels.dts
 ===================================================================
---- dtc.orig/Makefile	2008-10-07 16:55:00.000000000 +1100
-+++ dtc/Makefile	2008-10-07 16:55:05.000000000 +1100
-@@ -171,7 +171,7 @@ include tests/Makefile.tests
- #
- # Clean rules
- #
--STD_CLEANFILES = *~ *.o *.d *.a *.i *.s core a.out vgcore.* \
-+STD_CLEANFILES = *~ *.o *.so *.d *.a *.i *.s core a.out vgcore.* \
- 	*.tab.[ch] *.lex.c *.output
- 
- clean: libfdt_clean tests_clean
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ dtc/tests/value-labels.dts	2008-10-07 16:55:08.000000000 +1100
+@@ -0,0 +1,8 @@
++/dts-v1/;
++
++/ {
++	prop1: prop1 = start1: "a", mid1: "b" end1:;
++	prop2: prop2 = start2: < innerstart2: 0xdeadbeef innermid2: 0xabcd1234 innerend2: > end2:;
++	prop3: prop3 = start3: [ innerstart3: ab innermid3: cd innerend3: ] end3:;
++};
++
 Index: dtc/tests/Makefile.tests
 ===================================================================
---- dtc.orig/tests/Makefile.tests	2008-10-07 16:54:59.000000000 +1100
-+++ dtc/tests/Makefile.tests	2008-10-07 16:55:05.000000000 +1100
-@@ -18,7 +18,10 @@ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREF
+--- dtc.orig/tests/Makefile.tests	2008-10-07 16:55:05.000000000 +1100
++++ dtc/tests/Makefile.tests	2008-10-07 16:55:08.000000000 +1100
+@@ -18,7 +18,7 @@ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREF
  LIBTREE_TESTS_L = truncated_property
  LIBTREE_TESTS = $(LIBTREE_TESTS_L:%=$(TESTS_PREFIX)%)
  
--TESTS = $(LIB_TESTS) $(LIBTREE_TESTS)
-+DL_LIB_TESTS_L = asm_tree_dump
-+DL_LIB_TESTS = $(DL_LIB_TESTS_L:%=$(TESTS_PREFIX)%)
-+
-+TESTS = $(LIB_TESTS) $(LIBTREE_TESTS) $(DL_LIB_TESTS)
+-DL_LIB_TESTS_L = asm_tree_dump
++DL_LIB_TESTS_L = asm_tree_dump value-labels
+ DL_LIB_TESTS = $(DL_LIB_TESTS_L:%=$(TESTS_PREFIX)%)
  
- TESTS_TREES_L = test_tree1.dtb
- TESTS_TREES = $(TESTS_TREES_L:%=$(TESTS_PREFIX)%)
-@@ -37,6 +40,8 @@ tests:	$(TESTS) $(TESTS_TREES)
- 
- $(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_lib)
- 
-+$(DL_LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_lib) -ldl
-+
- $(LIBTREE_TESTS): %: $(TESTS_PREFIX)testutils.o $(TESTS_PREFIX)trees.o $(LIBFDT_lib)
- 
- $(TESTS_PREFIX)dumptrees: $(TESTS_PREFIX)trees.o
-Index: dtc/flattree.c
-===================================================================
---- dtc.orig/flattree.c	2008-10-07 16:55:01.000000000 +1100
-+++ dtc/flattree.c	2008-10-07 16:55:05.000000000 +1100
-@@ -127,11 +127,21 @@ static void emit_offset_label(FILE *f, c
- 	fprintf(f, "%s\t= . + %d\n", label, offset);
- }
- 
-+#define ASM_EMIT_BELONG(f, fmt, ...) \
-+	{ \
-+		fprintf((f), "\t.byte\t((" fmt ") >> 24) & 0xff\n", __VA_ARGS__); \
-+		fprintf((f), "\t.byte\t((" fmt ") >> 16) & 0xff\n", __VA_ARGS__); \
-+		fprintf((f), "\t.byte\t((" fmt ") >> 8) & 0xff\n", __VA_ARGS__); \
-+		fprintf((f), "\t.byte\t(" fmt ") & 0xff\n", __VA_ARGS__); \
-+	}
-+
- static void asm_emit_cell(void *e, cell_t val)
- {
- 	FILE *f = e;
- 
--	fprintf(f, "\t.long\t0x%x\n", val);
-+	fprintf(f, "\t.byte 0x%02x; .byte 0x%02x; .byte 0x%02x; .byte 0x%02x\n",
-+		(val >> 24) & 0xff, (val >> 16) & 0xff,
-+		(val >> 8) & 0xff, val & 0xff);
- }
- 
- static void asm_emit_string(void *e, char *str, int len)
-@@ -169,8 +179,7 @@ static void asm_emit_data(void *e, struc
- 		emit_offset_label(f, m->ref, m->offset);
- 
- 	while ((d.len - off) >= sizeof(uint32_t)) {
--		fprintf(f, "\t.long\t0x%x\n",
--			fdt32_to_cpu(*((uint32_t *)(d.val+off))));
-+		asm_emit_cell(e, fdt32_to_cpu(*((uint32_t *)(d.val+off))));
- 		off += sizeof(uint32_t);
- 	}
- 
-@@ -190,14 +199,16 @@ static void asm_emit_beginnode(void *e, 
- 		fprintf(f, "\t.globl\t%s\n", label);
- 		fprintf(f, "%s:\n", label);
- 	}
--	fprintf(f, "\t.long\tFDT_BEGIN_NODE\n");
-+	fprintf(f, "\t/* FDT_BEGIN_NODE */\n");
-+	asm_emit_cell(e, FDT_BEGIN_NODE);
- }
- 
- static void asm_emit_endnode(void *e, const char *label)
- {
- 	FILE *f = e;
- 
--	fprintf(f, "\t.long\tFDT_END_NODE\n");
-+	fprintf(f, "\t/* FDT_END_NODE */\n");
-+	asm_emit_cell(e, FDT_END_NODE);
- 	if (label) {
- 		fprintf(f, "\t.globl\t%s_end\n", label);
- 		fprintf(f, "%s_end:\n", label);
-@@ -212,7 +223,8 @@ static void asm_emit_property(void *e, c
- 		fprintf(f, "\t.globl\t%s\n", label);
- 		fprintf(f, "%s:\n", label);
- 	}
--	fprintf(f, "\t.long\tFDT_PROP\n");
-+	fprintf(f, "\t/* FDT_PROP */\n");
-+	asm_emit_cell(e, FDT_PROP);
- }
- 
- static struct emitter asm_emitter = {
-@@ -455,39 +467,44 @@ void dt_to_asm(FILE *f, struct boot_info
- 		die("Unknown device tree blob version %d\n", version);
- 
- 	fprintf(f, "/* autogenerated by dtc, do not edit */\n\n");
--	fprintf(f, "#define FDT_MAGIC 0x%x\n", FDT_MAGIC);
--	fprintf(f, "#define FDT_BEGIN_NODE 0x%x\n", FDT_BEGIN_NODE);
--	fprintf(f, "#define FDT_END_NODE 0x%x\n", FDT_END_NODE);
--	fprintf(f, "#define FDT_PROP 0x%x\n", FDT_PROP);
--	fprintf(f, "#define FDT_END 0x%x\n", FDT_END);
--	fprintf(f, "\n");
- 
- 	emit_label(f, symprefix, "blob_start");
- 	emit_label(f, symprefix, "header");
--	fprintf(f, "\t.long\tFDT_MAGIC\t\t\t\t/* magic */\n");
--	fprintf(f, "\t.long\t_%s_blob_abs_end - _%s_blob_start\t/* totalsize */\n",
--		symprefix, symprefix);
--	fprintf(f, "\t.long\t_%s_struct_start - _%s_blob_start\t/* off_dt_struct */\n",
-+	fprintf(f, "\t/* magic */\n");
-+	asm_emit_cell(f, FDT_MAGIC);
-+	fprintf(f, "\t/* totalsize */\n");
-+	ASM_EMIT_BELONG(f, "_%s_blob_abs_end - _%s_blob_start",
-+			symprefix, symprefix);
-+	fprintf(f, "\t/* off_dt_struct */\n");
-+	ASM_EMIT_BELONG(f, "_%s_struct_start - _%s_blob_start",
- 		symprefix, symprefix);
--	fprintf(f, "\t.long\t_%s_strings_start - _%s_blob_start\t/* off_dt_strings */\n",
-+	fprintf(f, "\t/* off_dt_strings */\n");
-+	ASM_EMIT_BELONG(f, "_%s_strings_start - _%s_blob_start",
- 		symprefix, symprefix);
--	fprintf(f, "\t.long\t_%s_reserve_map - _%s_blob_start\t/* off_dt_strings */\n",
-+	fprintf(f, "\t/* off_mem_rsvmap */\n");
-+	ASM_EMIT_BELONG(f, "_%s_reserve_map - _%s_blob_start",
- 		symprefix, symprefix);
--	fprintf(f, "\t.long\t%d\t\t\t\t\t/* version */\n", vi->version);
--	fprintf(f, "\t.long\t%d\t\t\t\t\t/* last_comp_version */\n",
--		vi->last_comp_version);
-+	fprintf(f, "\t/* version */\n");
-+	asm_emit_cell(f, vi->version);
-+	fprintf(f, "\t/* last_comp_version */\n");
-+	asm_emit_cell(f, vi->last_comp_version);
- 
--	if (vi->flags & FTF_BOOTCPUID)
--		fprintf(f, "\t.long\t%i\t\t\t\t\t/* boot_cpuid_phys */\n",
--			bi->boot_cpuid_phys);
-+	if (vi->flags & FTF_BOOTCPUID) {
-+		fprintf(f, "\t/* boot_cpuid_phys */\n");
-+		asm_emit_cell(f, bi->boot_cpuid_phys);
-+	}
- 
--	if (vi->flags & FTF_STRTABSIZE)
--		fprintf(f, "\t.long\t_%s_strings_end - _%s_strings_start\t/* size_dt_strings */\n",
--			symprefix, symprefix);
-+	if (vi->flags & FTF_STRTABSIZE) {
-+		fprintf(f, "\t/* size_dt_strings */\n");
-+		ASM_EMIT_BELONG(f, "_%s_strings_end - _%s_strings_start",
-+				symprefix, symprefix);
-+	}
- 
--	if (vi->flags & FTF_STRUCTSIZE)
--		fprintf(f, "\t.long\t_%s_struct_end - _%s_struct_start\t/* size_dt_struct */\n",
-+	if (vi->flags & FTF_STRUCTSIZE) {
-+		fprintf(f, "\t/* size_dt_struct */\n");
-+		ASM_EMIT_BELONG(f, "_%s_struct_end - _%s_struct_start",
- 			symprefix, symprefix);
-+	}
- 
- 	/*
- 	 * Reserve map entries.
-@@ -509,12 +526,11 @@ void dt_to_asm(FILE *f, struct boot_info
- 			fprintf(f, "\t.globl\t%s\n", re->label);
- 			fprintf(f, "%s:\n", re->label);
- 		}
--		fprintf(f, "\t.long\t0x%08x, 0x%08x\n",
--			(unsigned int)(re->re.address >> 32),
--			(unsigned int)(re->re.address & 0xffffffff));
--		fprintf(f, "\t.long\t0x%08x, 0x%08x\n",
--			(unsigned int)(re->re.size >> 32),
--			(unsigned int)(re->re.size & 0xffffffff));
-+		ASM_EMIT_BELONG(f, "0x%08x", (unsigned int)(re->re.address >> 32));
-+		ASM_EMIT_BELONG(f, "0x%08x",
-+				(unsigned int)(re->re.address & 0xffffffff));
-+		ASM_EMIT_BELONG(f, "0x%08x", (unsigned int)(re->re.size >> 32));
-+		ASM_EMIT_BELONG(f, "0x%08x", (unsigned int)(re->re.size & 0xffffffff));
- 	}
- 	for (i = 0; i < reservenum; i++) {
- 		fprintf(f, "\t.long\t0, 0\n\t.long\t0, 0\n");
-@@ -524,7 +540,9 @@ void dt_to_asm(FILE *f, struct boot_info
- 
- 	emit_label(f, symprefix, "struct_start");
- 	flatten_tree(bi->dt, &asm_emitter, f, &strbuf, vi);
--	fprintf(f, "\t.long\tFDT_END\n");
-+
-+	fprintf(f, "\t/* FDT_END */\n");
-+	asm_emit_cell(f, FDT_END);
- 	emit_label(f, symprefix, "struct_end");
- 
- 	emit_label(f, symprefix, "strings_start");
-Index: dtc/tests/asm_tree_dump.c
+ TESTS = $(LIB_TESTS) $(LIBTREE_TESTS) $(DL_LIB_TESTS)
+Index: dtc/tests/value-labels.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ dtc/tests/asm_tree_dump.c	2008-10-07 16:55:05.000000000 +1100
-@@ -0,0 +1,62 @@
++++ dtc/tests/value-labels.c	2008-10-07 16:55:08.000000000 +1100
+@@ -0,0 +1,128 @@
 +/*
 + * libfdt - Flat Device Tree manipulation
-+ *	Tests if an asm tree built into a shared object matches a given dtb
++ *	Test labels within values
 + * Copyright (C) 2008 David Gibson, IBM Corporation.
 + *
 + * This library is free software; you can redistribute it and/or
@@ -332,6 +122,69 @@ Index: dtc/tests/asm_tree_dump.c
 +#include "tests.h"
 +#include "testdata.h"
 +
++struct val_label {
++	const char *labelname;
++	int propoff;
++};
++
++struct val_label labels1[] = {
++	{ "start1", 0 },
++	{ "mid1", 2 },
++	{ "end1", -1 },
++};
++
++struct val_label labels2[] = {
++	{ "start2", 0 },
++	{ "innerstart2", 0 },
++	{ "innermid2", 4 },
++	{ "innerend2", -1 },
++	{ "end2", -1 },
++};
++
++struct val_label labels3[] = {
++	{ "start3", 0 },
++	{ "innerstart3", 0 },
++	{ "innermid3", 1 },
++	{ "innerend3", -1 },
++	{ "end3", -1 },
++};
++
++void check_prop_labels(void *sohandle, void *fdt, const char *name,
++		       const struct val_label* labels, int n)
++{
++	const struct fdt_property *prop;
++	const char *p;
++	int len;
++	int i;
++
++	prop = fdt_get_property(fdt, 0, name, &len);
++	if (!prop)
++		FAIL("Couldn't locate property \"%s\"", name);
++
++	p = dlsym(sohandle, name);
++	if (!p)
++		FAIL("Couldn't locate label symbol \"%s\"", name);
++
++	if (p != (const char *)prop)
++		FAIL("Label \"%s\" does not point to correct property", name);
++
++	for (i = 0; i < n; i++) {
++		int off = labels[i].propoff;
++
++		if (off == -1)
++			off = len;
++
++		p = dlsym(sohandle, labels[i].labelname);
++		if (!p)
++			FAIL("Couldn't locate label symbol \"%s\"", name);
++
++		if ((p - prop->data) != off)
++			FAIL("Label \"%s\" points to offset %d instead of %d"
++			     "in property \"%s\"", labels[i].labelname,
++			     p - prop->data, off, name);
++	}
++}
++
 +int main(int argc, char *argv[])
 +{
 +	void *sohandle;
@@ -339,8 +192,8 @@ Index: dtc/tests/asm_tree_dump.c
 +	int err;
 +
 +	test_init(argc, argv);
-+	if (argc != 3)
-+		CONFIG("Usage: %s <so file> <dtb file>", argv[0]);
++	if (argc != 2)
++		CONFIG("Usage: %s <so file>", argv[0]);
 +
 +	sohandle = dlopen(argv[1], RTLD_NOW);
 +	if (!sohandle)
@@ -356,15 +209,21 @@ Index: dtc/tests/asm_tree_dump.c
 +		FAIL("%s contains invalid tree: %s", argv[1],
 +		     fdt_strerror(err));
 +
-+	save_blob(argv[2], fdt);
++
++	check_prop_labels(sohandle, fdt, "prop1", labels1, ARRAY_SIZE(labels1));
++	check_prop_labels(sohandle, fdt, "prop2", labels2, ARRAY_SIZE(labels2));
++	check_prop_labels(sohandle, fdt, "prop3", labels3, ARRAY_SIZE(labels3));
 +
 +	PASS();
 +}
-Index: dtc/tests/data.S
+Index: dtc/tests/tests.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ dtc/tests/data.S	2008-10-07 16:55:05.000000000 +1100
-@@ -0,0 +1,3 @@
-+/* Used in combination with dtc -Oasm output to embed
-+ * a device tree in the data section of a .o */
-+	.data
+--- dtc.orig/tests/tests.h	2008-10-07 16:54:59.000000000 +1100
++++ dtc/tests/tests.h	2008-10-07 16:55:08.000000000 +1100
+@@ -34,6 +34,7 @@ void test_init(int argc, char *argv[]);
+ 
+ #define ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
+ #define PALIGN(p, a)	((void *)ALIGN((unsigned long)(p), (a)))
++#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+ 
+ #define streq(s1, s2)	(strcmp((s1),(s2)) == 0)
