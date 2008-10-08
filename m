@@ -1,83 +1,34 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH] of-bindings: Don't support linux, <modalias> compatible values
-Date: Wed, 08 Oct 2008 09:05:29 -0600
-Message-ID: <20081008150529.21059.52235.stgit@localhost.localdomain>
+From: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [0/5] Input file and srcpos rework (v2)
+Date: Wed, 08 Oct 2008 14:52:52 -0500
+Message-ID: <48ED0F94.1040204@freescale.com>
+References: <20081004122157.GT30184@yookeroo.seuss>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20081004122157.GT30184-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely@secretlab.ca>
+David Gibson wrote:
+> Here's a rebased and revised version of my series of source file
+> handling and srcpos tracking cleanups.  I've also included my patch to
+> move existing utility functions into util.c; sorry for the repeat
+> send, but it seemed clearer since I think one of the later patches
+> will conflict without it.
+> 
 
-Compatible property values in the form linux,<modalias> is not documented
-anywhere and using it leaks Linux implementation details into the device
-tree data (which is bad).  Remove support for compatible values of this
-form.
+FYI, I'm not ignoring you or these.  I'm still catching up some...
 
-If any platforms exist which depended on this code (and I don't know of
-any), then they can be fixed up by adding legacy translations to the
-lookup table in this file.
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
----
-
- drivers/of/base.c |   25 +++++--------------------
- 1 files changed, 5 insertions(+), 20 deletions(-)
-
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ad8ac1a..cd1ce7a 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -420,13 +420,12 @@ static struct of_modalias_table of_modalias_table[] = {
-  * @len:	Length of modalias value
-  *
-  * Based on the value of the compatible property, this routine will determine
-- * an appropriate modalias value for a particular device tree node.  Three
-- * separate methods are used to derive a modalias value.
-+ * an appropriate modalias value for a particular device tree node.  Two
-+ * separate methods are attempted to derive a modalias value.
-  *
-  * First method is to lookup the compatible value in of_modalias_table.
-- * Second is to look for a "linux,<modalias>" entry in the compatible list
-- * and used that for modalias.  Third is to strip off the manufacturer
-- * prefix from the first compatible entry and use the remainder as modalias
-+ * Second is to strip off the manufacturer prefix from the first
-+ * compatible entry and use the remainder as modalias
-  *
-  * This routine returns 0 on success
-  */
-@@ -449,21 +448,7 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
- 	if (!compatible)
- 		return -ENODEV;
- 
--	/* 2. search for linux,<modalias> entry */
--	p = compatible;
--	while (cplen > 0) {
--		if (!strncmp(p, "linux,", 6)) {
--			p += 6;
--			strlcpy(modalias, p, len);
--			return 0;
--		}
--
--		i = strlen(p) + 1;
--		p += i;
--		cplen -= i;
--	}
--
--	/* 3. take first compatible entry and strip manufacturer */
-+	/* 2. take first compatible entry and strip manufacturer */
- 	p = strchr(compatible, ',');
- 	if (!p)
- 		return -ENODEV;
+jdl
