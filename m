@@ -1,43 +1,83 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: DTS language enhancements
-Date: Tue, 07 Oct 2008 11:46:41 -0500
-Message-ID: <48EB9271.2010801@freescale.com>
-References: <20081003043710.GH3002@yookeroo.seuss>
-	<20081006170601.GA31967@ld0162-tx32.am.freescale.net>
-	<20081007014103.GA23135@yookeroo.seuss>
-	<20081007041725.GD19037@yookeroo.seuss>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] of-bindings: Don't support linux, <modalias> compatible values
+Date: Wed, 08 Oct 2008 09:05:29 -0600
+Message-ID: <20081008150529.21059.52235.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20081007041725.GD19037-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-David Gibson wrote:
-> Oh, just remembered the more precise reason why this is the case.  By
-> the time we get to the parser, whitespace and comments have
-> disappeared entirely, which means they'd be ignored *in the midst* of
-> node property names under this proposal, which is just not nice.
-> 
-> It's technically possible to recognize whitespace at the parser level
-> instead, but it makes the grammar hideous.
+From: Grant Likely <grant.likely@secretlab.ca>
 
-Ah, right, that'd be unpleasant.  I think it could be done with a little 
-less ugliness than fully recognizing whitespace in the parser (have the 
-lexer set a flag on relevant tokens if the previous character was 
-whitespace or a comment, and have the parser rule that glues the 
-propnodename together check the flag and raise an error if set), but 
-that's still uglier than the propnodename-after-opening-brace approach.
+Compatible property values in the form linux,<modalias> is not documented
+anywhere and using it leaks Linux implementation details into the device
+tree data (which is bad).  Remove support for compatible values of this
+form.
 
--Scott
+If any platforms exist which depended on this code (and I don't know of
+any), then they can be fixed up by adding legacy translations to the
+lookup table in this file.
+
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
+
+ drivers/of/base.c |   25 +++++--------------------
+ 1 files changed, 5 insertions(+), 20 deletions(-)
+
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ad8ac1a..cd1ce7a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -420,13 +420,12 @@ static struct of_modalias_table of_modalias_table[] = {
+  * @len:	Length of modalias value
+  *
+  * Based on the value of the compatible property, this routine will determine
+- * an appropriate modalias value for a particular device tree node.  Three
+- * separate methods are used to derive a modalias value.
++ * an appropriate modalias value for a particular device tree node.  Two
++ * separate methods are attempted to derive a modalias value.
+  *
+  * First method is to lookup the compatible value in of_modalias_table.
+- * Second is to look for a "linux,<modalias>" entry in the compatible list
+- * and used that for modalias.  Third is to strip off the manufacturer
+- * prefix from the first compatible entry and use the remainder as modalias
++ * Second is to strip off the manufacturer prefix from the first
++ * compatible entry and use the remainder as modalias
+  *
+  * This routine returns 0 on success
+  */
+@@ -449,21 +448,7 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
+ 	if (!compatible)
+ 		return -ENODEV;
+ 
+-	/* 2. search for linux,<modalias> entry */
+-	p = compatible;
+-	while (cplen > 0) {
+-		if (!strncmp(p, "linux,", 6)) {
+-			p += 6;
+-			strlcpy(modalias, p, len);
+-			return 0;
+-		}
+-
+-		i = strlen(p) + 1;
+-		p += i;
+-		cplen -= i;
+-	}
+-
+-	/* 3. take first compatible entry and strip manufacturer */
++	/* 2. take first compatible entry and strip manufacturer */
+ 	p = strchr(compatible, ',');
+ 	if (!p)
+ 		return -ENODEV;
