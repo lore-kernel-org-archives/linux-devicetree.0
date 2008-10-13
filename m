@@ -1,67 +1,140 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: DTS language enhancements
-Date: Thu, 9 Oct 2008 10:08:50 -0500
-Message-ID: <20081009150850.GA30900@ld0162-tx32.am.freescale.net>
-References: <20081003043710.GH3002@yookeroo.seuss>
-	<20081006170601.GA31967@ld0162-tx32.am.freescale.net>
-	<20081007014103.GA23135@yookeroo.seuss>
-	<20081007165038.GA17126@ld0162-tx32.am.freescale.net>
-	<20081009022722.GC7997@yookeroo.seuss>
+From: "Hollis Blanchard" <hollis@penguinppc.org>
+Subject: Re: Fabrice Bellard 's QEMU configuration files
+Date: Mon, 13 Oct 2008 11:19:32 -0500
+Message-ID: <fb412d760810130919g1c22596es5aafa0ba0b32f117@mail.gmail.com>
+References: <20081011104423.38beecf8.mle+tools@mega-nerd.com>
+	<200810112356.39698.rob@landley.net>
+Reply-To: qemu-devel@nongnu.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20081009022722.GC7997-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/alternative;
+	boundary="----=_Part_21085_16514310.1223914772595"
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+In-Reply-To: <200810112356.39698.rob@landley.net>
+List-Unsubscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.gnu.org/pipermail/qemu-devel>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+To: qemu-devel@nongnu.org
+Cc: devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 09, 2008 at 01:27:22PM +1100, David Gibson wrote:
-> On Tue, Oct 07, 2008 at 11:50:38AM -0500, Scott Wood wrote:
-> > On Tue, Oct 07, 2008 at 12:41:03PM +1100, David Gibson wrote:
-> > > > Instead of /addnode/, how about an alternate version of (or option to)
-> > > > /merge/ that merges the second tree with the contents of the first,
-> > > 
-> > > Um.. I don't entirely see how this variant of /merge/ would differ
-> > > from /addnode/.
-> > 
-> > /addnode/ can only add one node at a time, and has an different syntax
-> > than normal for representing the node to be added (name is split from
-> > body).  /mergeunder/ could add any number of nodes and/or properties,
-> > and would use more normal syntax.
-> 
-> Um.. in that case I don't see how this differs from the original
-> /merge/.
+------=_Part_21085_16514310.1223914772595
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-I guess the issue is that /merge/ is incompletely specified.  The example
-showed it taking anonymous trees as parameters; are the parameters always
-wrapped as such, or can named nodes be passed directly?  In the latter
-case, /mergeunder/ was intended as a way of dereferencing the former
-argument so as to place things inside it rather than create a new
-anonymous node containing both, without needing to know the
-name/unit-address of the named node.
+On Sat, Oct 11, 2008 at 11:56 PM, Rob Landley <rob@landley.net> wrote:
 
-An alternative would be a function to extract the name of non-anonymous
-nodes, which could be used to build a matching subnode in the second
-/merge/ argument.
+> On Friday 10 October 2008 18:44:23 Erik de Castro Lopo wrote:
+> > Hi all,
+> >
+> > Back in June, Fabrice Bellard posted a patch against SVN 4734:
+> >
+> >
+> http://www.archivum.info/qemu-devel@nongnu.org/2008-06/msg00513.html
+> >
+> > to add configuration files to qemu.
+> >
+> > It seems that this work was never merged into SVN and that patchset
+> > does not apply to current SVN head.
+> >
+> > Does anyone have an updated version of that patch or something similar?
+> >
+> > Is there any interest in pushing this kind of functionality into
+> > qemu mainline?
+>
+> I point out that device trees are becoming standard in the Linux kernel,
+> and
+> being spread from powerpc and sparc to arm, mips, and so on.  I attented a
+> BOF about them at OLS, and there's even a mailing list for them now:
+>
+> https://ozlabs.org/mailman/listinfo/devicetree-discuss
+>
+> This means the Linux kernel already has data files which describe boards on
+> architectures that don't have big defacto standard hardware layouts already
+> implemented in C, and lots of 'em are yanking the C implementation in favor
+> of using the device tree parser.
+>
+> Teaching qemu to parse a device tree means you get a ton of free board
+> layouts
+> from the linux kernel.  (It also simplifies "-kernel" since lots of
+> platforms
+> need the flattened device tree passed in from the firmware...)
+>
 
-> > We probably should have added comma-delimiting when we switched to
-> > decimal-by-default.
-> 
-> Maybe, but its done now.  I really don't think requiring parens aroud
-> expressions is that big an imposition.
+FWIW, I've already had to teach qemu how to load and manipulate device trees
+for my work with KVM on PPC440. Basically, rather than trying to run uboot
+inside qemu, I have qemu replicate the post-uboot environment. That means
+qemu is responsible for providing the device tree to the booted kernel.
 
-Agreed; I may find it as ugly as you find identifier prefixes, but we
-don't have much of a choice if we want to retain compatibility.
+There really wasn't a whole lot to it, really: just have the qemu board code
+load a binary <board.dtb> file from the "pc-bios" (*ahem* ;) directory, and
+use some libfdt calls to provide runtime information (e.g. memory layout).
 
--Scott
+Of course, the more complete solution would be to have qemu actually load
+devices based on the contents of the device tree, so that you wouldn't need
+to specify commandline options. (Erik, I have no idea why you think that's
+orthogonal -- it's exactly what you're asking about.)
+
+-Hollis
+
+------=_Part_21085_16514310.1223914772595
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div dir="ltr">On Sat, Oct 11, 2008 at 11:56 PM, Rob Landley <span dir="ltr">&lt;<a href="mailto:rob@landley.net">rob@landley.net</a>&gt;</span> wrote:<br><div class="gmail_quote"><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+<div class="Ih2E3d">On Friday 10 October 2008 18:44:23 Erik de Castro Lopo wrote:<br>
+&gt; Hi all,<br>
+&gt;<br>
+&gt; Back in June, Fabrice Bellard posted a patch against SVN 4734:<br>
+&gt;<br>
+&gt; &nbsp; &nbsp; &nbsp;<a href="http://www.archivum.info/qemu-devel@nongnu.org/2008-06/msg00513.html" target="_blank">http://www.archivum.info/qemu-devel@nongnu.org/2008-06/msg00513.html</a><br>
+&gt;<br>
+&gt; to add configuration files to qemu.<br>
+&gt;<br>
+&gt; It seems that this work was never merged into SVN and that patchset<br>
+&gt; does not apply to current SVN head.<br>
+&gt;<br>
+&gt; Does anyone have an updated version of that patch or something similar?<br>
+&gt;<br>
+&gt; Is there any interest in pushing this kind of functionality into<br>
+&gt; qemu mainline?<br>
+<br>
+</div>I point out that device trees are becoming standard in the Linux kernel, and<br>
+being spread from powerpc and sparc to arm, mips, and so on. &nbsp;I attented a<br>
+BOF about them at OLS, and there&#39;s even a mailing list for them now:<br>
+<br>
+<a href="https://ozlabs.org/mailman/listinfo/devicetree-discuss" target="_blank">https://ozlabs.org/mailman/listinfo/devicetree-discuss</a><br>
+<br>
+This means the Linux kernel already has data files which describe boards on<br>
+architectures that don&#39;t have big defacto standard hardware layouts already<br>
+implemented in C, and lots of &#39;em are yanking the C implementation in favor<br>
+of using the device tree parser.<br>
+<br>
+Teaching qemu to parse a device tree means you get a ton of free board layouts<br>
+from the linux kernel. &nbsp;(It also simplifies &quot;-kernel&quot; since lots of platforms<br>
+need the flattened device tree passed in from the firmware...)<br></blockquote></div><br>FWIW, I&#39;ve already had to teach qemu how to load and manipulate device
+trees for my work with KVM on PPC440. Basically, rather than trying to
+run uboot inside qemu, I have qemu replicate the post-uboot
+environment. That means qemu is responsible for providing the device
+tree to the booted kernel.<br>
+<br>
+There really wasn&#39;t a whole lot to it, really: just have the qemu board
+code load a binary &lt;board.dtb&gt; file from the &quot;pc-bios&quot; (*ahem* ;)
+directory, and use some libfdt calls to provide runtime information
+(e.g. memory layout).<br>
+<br>
+Of course, the more complete solution would be to have qemu actually
+load devices based on the contents of the device tree, so that you
+wouldn&#39;t need to specify commandline options. (Erik, I have no idea why
+you think that&#39;s orthogonal -- it&#39;s exactly what you&#39;re asking about.)<br>
+<br>
+-Hollis<br></div>
+
+------=_Part_21085_16514310.1223914772595--
