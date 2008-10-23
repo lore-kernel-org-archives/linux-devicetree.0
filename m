@@ -1,79 +1,82 @@
-From: Anton Vorontsov <avorontsov@ru.mvista.com>
-Subject: Re: [PATCH] powerpc: Remove device_type = "rtc" properties in .dts
-	files
-Date: Wed, 22 Oct 2008 23:28:05 +0400
-Message-ID: <20081022192805.GA8937@oksana.dev.rtsoft.ru>
-References: <20081021185844.GA31070@oksana.dev.rtsoft.ru>
-	<48FF2CBB.7060605@genesi-usa.com>
-	<20081022135046.GA30347@oksana.dev.rtsoft.ru>
-	<48FF73B2.8040600@genesi-usa.com>
-	<20081022185913.GA1828@oksana.dev.rtsoft.ru>
-	<48FF7A4D.4000506@genesi-usa.com>
-Reply-To: avorontsov@ru.mvista.com
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: GPIO - marking individual pins (not) available in device tree
+Date: Thu, 23 Oct 2008 16:32:49 -0500
+Message-ID: <4900ED81.3040202@genesi-usa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <48FF7A4D.4000506@genesi-usa.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Matt Sealey <matt@genesi-usa.com>
-Cc: Scott Wood <scottwood@freescale.com>, linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2008 at 02:09:01PM -0500, Matt Sealey wrote:
-> Anton Vorontsov wrote:
->> On Wed, Oct 22, 2008 at 01:40:50PM -0500, Matt Sealey wrote:
->>
->> I think I got it. ;-) You think that I'm not aware of that we _can_
->> use the device_type for matching the nodes. Well, I'm aware of it,
->> sure we can. ;-)
->
-> I'm sure you are aware, I am just a little jumpy regarding this as the 
-> whole ePAPR-is-official thing and the direction Linux is taking with 
-> regards to redefining part of the device tree specs, that this could have 
-> been something a little more serious :)
->
->> But we don't use it for the rtc nodes, and we don't want to encourage
->> the usage for the flat trees. And that's the point of this patch.
->
-> Would it not be prudent to, while not actively encouraging it, at least 
-> mention device_type in any specifications as a legacy item (for real Open 
-> Firmware only) and for if a device should be in the tree as a generic, 
-> IEEE 1275-style device (i.e. there would be a set of well-defined client 
-> interface methods for it in a real OF)?
->
-> My basic concerns are for input/output as reported by /chosen - in case 
-> it is important exactly what is being used, there is at least one 
-> out-of-driver code snippet which checks if stdin and stdout are of type 
-> "serial" (or "failsafe") and auto-directs console to that - it would be 
-> nice to keep this clean and not dump a million serial-device-compatibles 
-> in another list here if someone wants to automatically choose between 
-> console output on the DIU or PSC for MPC5121e/MPC8610 for example, or 
-> wants to restrict the amount of fancy stuff it does on a terminal if it's 
-> a slow serial device, or perhaps even automatically invoke netconsole if 
-> it's set to "network"?
->
-> I know U-Boot doesn't have the intelligence to output to anything but a 
-> serial port these days on those devices, but as they say, there is no 
-> fate but what we make .. we should make sure it doesn't turn up that code 
-> is never suggested or attempted because supporting it in Linux would be 
-> too big a jump or too messy a patch :)
+Hi guys,
 
-I don't feel competent to comment on "embedded-OF"/FDT design
-decisions...
+I'm a little perplexed as to how I would define a GPIO 
+controller in a device tree but mark off pins as available or 
+not, so users can geek around in their own drivers without 
+defining in a device tree exactly what they intend to use it 
+for (especially if it's something really weird).
 
-Let's Cc devicetree-discuss@ozlabs.org ?
+Easiest example - the Efika runs an MPC5200B has 3 GPIO pins 
+on the board. It's not much, but they're there for use. All 
+the other GPIOs are absolutely out of bounds, off limits and 
+probably dangerous to touch, but since each GPIO block has a 
+32-bit register to handle them, you can twiddle any bit you 
+like with impunity and cause all the damage you want. A simple 
+thought comes to mind in that the gpiolib should not allow a 
+request for one of these "bad" GPIO pins to succeed.
+
+So, how do we define in a bank of GPIOs, which ones are free 
+for use, without them being attached to a device and given as 
+a "gpios" property?
+
+Would we suggest a node;
+
+gpio-header {
+	compatible = "bplan,efika-gpio";
+	gpios = <&gpio-standard 16 0 17 0>;
+};
+
+gpio-header2 {
+	compatible = "bplan,efika-gpio-wkup";
+	gpios = <&gpio-wkup 18 0>;
+};
+
+Which a driver can then look for? I would much rather I did 
+not have to come up with a special compatible property though, 
+after all, MPC5200B GPIO are not special and the Efika does 
+not do fancy magic with them :)
+
+My goal is basically to give an entry in the device tree 
+whereby (using a forth script) you can pick between IrDA, 
+GPIO, a Sleep Switch (for Sylvain's patch for Lite5200 and 
+Efika from a year or two ago..), or whatever else you like. 
+But a generic GPIO "geek port" is basically then undefined and 
+left hanging.
+
+By the way I did notice that none of the GPT timer entries in 
+the lite5200b.dts have GPIO references and the GPT GPIO block 
+is not defined. Is this because the timers are not exposed on 
+the board for GPIO or just no need for it? Each timer has a 
+pin it can sample, drive and do PWM on.. this leads me to 
+wonder how the PWM driver framework as announced/proposed last 
+week would work here, and if the device tree should 
+specifically pick which operation works on which timer (after 
+all if you have a PWM fan controller on a timer pin, you would 
+want to advertise the fact, but having the full 8 timers as a 
+"gpio-controller" and "pwm-controller" both at the same time, 
+sharing the same reg property but supporting only a subset of 
+that controller, needs addressing.
 
 -- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Genesi, Manager, Developer Relations
