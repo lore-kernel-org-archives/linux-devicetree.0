@@ -1,51 +1,56 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: David Gibson <david@gibson.dropbear.id.au>
 Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Fri, 24 Oct 2008 15:45:11 +1100
-Message-ID: <20081024044511.GI4267@yookeroo.seuss>
+Date: Fri, 24 Oct 2008 15:58:24 +1100
+Message-ID: <20081024045824.GJ4267@yookeroo.seuss>
 References: <4900ED81.3040202@genesi-usa.com> <4900F90B.80703@firmworks.com>
-	<4901032F.3090805@genesi-usa.com> <49011C42.2020101@firmworks.com>
-	<20081024032944.GE4267@yookeroo.seuss>
-	<49014C69.8020408@firmworks.com>
+	<4901032F.3090805@genesi-usa.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <49014C69.8020408-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <4901032F.3090805@genesi-usa.com>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: Mitch Bradley <wmb@firmworks.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2008 at 06:17:45PM -1000, Mitch Bradley wrote:
->>
->> No, no, no, no, no.  Making complex multi-level representations of
->> nested things for gpios is just insanity. 
+On Thu, Oct 23, 2008 at 06:05:19PM -0500, Matt Sealey wrote:
 >
 >
-> You know, I don't find this "argument" particularly compelling.  But it  
-> certainly is strongly worded.
+> Mitch Bradley wrote:
+> [snip]
 >
->>  Just use the same encoded
->> format as we already use for gpio descriptors in 'gpios' properties
->> (which is gpio controller specific, with length defined by
->> #gpio-cells).
->
-> http://en.wikipedia.org/wiki/Proof_by_assertion
+>> You could adopt the convention that preassigned GPIOs must be  
+>> represented by subordinate nodes, and any GPIO that is not covered by a 
+>> subordinate node's "reg" property is implicitly available.  That's the  
+>> way it works for other address spaces.
 
-Don't be patronising.
+[snip]
+> At the moment it's encoded as:
+>
+> 	gpios = <&controller-phandle pin-number pin-flags>
 
-There is an existing address space defined by the gpio binding.
-Defining another one is pointless redundancy.  This is standard good
-ideas in computer science, no further argument necessary.
+Actually, it's not.  The gpios property is:
+	<controller-phandle gpio-descriptor ...>
+
+The "gpio-descriptor" (like an interrupt descriptor from IEEE1275) is
+a blob with number of cells equal to #gpio-cells from the controller.
+The internal layout of the descriptor is specific to the gpio
+controller.  Typically it includes a pin number and flags/mode.
+However, it could be, and sometimes is, encoded as bank-number /
+pin-number / flags.  Or even something more involved still, if that's
+useful for the specific gpio controller in question.  Or it could
+simply be pin number if it's associated with a really simple gpio
+controller where all pins have the same behaviour.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
