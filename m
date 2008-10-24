@@ -1,59 +1,70 @@
-From: "Yoder Stuart" <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: generating a phandle w/libfdt?
-Date: Fri, 24 Oct 2008 09:29:21 -0700
-Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA3047947A3@az33exm25.fsl.freescale.net>
-References: <4BE3ADDA-362B-43AE-8D05-11260B94CD13@kernel.crashing.org>
-	<DEE70934-6A37-4439-B27E-FC3ABF75BF24@kernel.crashing.org>
+From: Anton Vorontsov <avorontsov@ru.mvista.com>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Fri, 24 Oct 2008 20:41:20 +0400
+Message-ID: <20081024164120.GA14350@oksana.dev.rtsoft.ru>
+References: <4900ED81.3040202@genesi-usa.com>
+Reply-To: avorontsov@ru.mvista.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <DEE70934-6A37-4439-B27E-FC3ABF75BF24-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <4900ED81.3040202@genesi-usa.com>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
- 
+On Thu, Oct 23, 2008 at 04:32:49PM -0500, Matt Sealey wrote:
+> Hi guys,
+>
+> I'm a little perplexed as to how I would define a GPIO controller in a 
+> device tree but mark off pins as available or not, so users can geek 
+> around in their own drivers without defining in a device tree exactly 
+> what they intend to use it for (especially if it's something really 
+> weird).
+>
+> Easiest example - the Efika runs an MPC5200B has 3 GPIO pins on the 
+> board. It's not much, but they're there for use. All the other GPIOs are 
+> absolutely out of bounds, off limits and probably dangerous to touch, but 
+> since each GPIO block has a 32-bit register to handle them, you can 
+> twiddle any bit you like with impunity and cause all the damage you want. 
+> A simple thought comes to mind in that the gpiolib should not allow a  
+> request for one of these "bad" GPIO pins to succeed.
 
-> -----Original Message-----
-> From: 
-> devicetree-discuss-bounces+stuart.yoder=freescale.com@ozlabs.o
-> rg 
-> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com@
-ozlabs.org] On Behalf Of Kumar Gala
-> Sent: Friday, October 24, 2008 9:19 AM
-> To: devicetree-discuss
-> Subject: Re: generating a phandle w/libfdt?
-> 
-> 
-> On Oct 24, 2008, at 8:11 AM, Kumar Gala wrote:
-> 
-> > In some work I'm doing I noticed we don't have any APIs to 
-> generate  
-> > a phandle via libfdt.
-> >
-> > was wondering if anyone had ideas on this.
-> >
-> > In first thought it seems we have to scan through the whole blob  
-> > looking for the largest phandle id and than +1 it to generate the  
-> > next "valid" id.  Any other ideas on how to do this more 
-> efficiently?
-> 
-> The other question is there a way today to create a phandle even if  
-> there isn't a reference to it elsewhere in a .dts?
+Well, the same applies to the IRQ controllers. I bet you can request a
+reserved IRQ on some particular board/CPU, but results would be
+unpredictable (the driver would touch reserved bits etc). The device
+tree should be sane for this particular platform and not specify bogus
+gpios/irqs/regs/sizes/etc.
 
-We had this issue and the 'hack' was to create a phandle property
-in the node itself, so it was self-referenced.  That caused DTC
-to allocate a phandle.   We then could reference the node from
-dynamically generated nodes.
+> So, how do we define in a bank of GPIOs, which ones are free for use, 
+> without them being attached to a device and given as a "gpios" property?
+>
+> Would we suggest a node;
+>
+> gpio-header {
+> 	compatible = "bplan,efika-gpio";
+> 	gpios = <&gpio-standard 16 0 17 0>;
+> };
+>
+> gpio-header2 {
+> 	compatible = "bplan,efika-gpio-wkup";
+> 	gpios = <&gpio-wkup 18 0>;
+> };
 
-Stuart
+IMO this looks very reasonable. You properly describe the hardware:
+physical device (header) and its resources.
+
+-- 
+Anton Vorontsov
+email: cbouatmailru@gmail.com
+irc://irc.freenode.net/bd2
