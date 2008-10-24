@@ -1,18 +1,15 @@
-From: Anton Vorontsov <avorontsov@ru.mvista.com>
+From: Mitch Bradley <wmb@firmworks.com>
 Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Sat, 25 Oct 2008 02:37:48 +0400
-Message-ID: <20081024223748.GA30499@oksana.dev.rtsoft.ru>
-References: <4900ED81.3040202@genesi-usa.com>
-	<20081024164120.GA14350@oksana.dev.rtsoft.ru>
-	<20081024170128.GA20577@oksana.dev.rtsoft.ru>
-	<49024986.5030406@genesi-usa.com>
-Reply-To: avorontsov@ru.mvista.com
+Date: Fri, 24 Oct 2008 13:44:32 -1000
+Message-ID: <49025DE0.6070403@firmworks.com>
+References: <4900ED81.3040202@genesi-usa.com> <4900F90B.80703@firmworks.com>
+	<4901032F.3090805@genesi-usa.com> <49011C42.2020101@firmworks.com>
+	<49024646.3050300@genesi-usa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <49024986.5030406@genesi-usa.com>
+In-Reply-To: <49024646.3050300@genesi-usa.com>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -23,101 +20,29 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 To: Matt Sealey <matt@genesi-usa.com>
-Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>, David Gibson <david@gibson.dropbear.id.au>
+Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2008 at 05:17:42PM -0500, Matt Sealey wrote:
-> Anton Vorontsov wrote:
->> On Fri, Oct 24, 2008 at 08:41:20PM +0400, Anton Vorontsov wrote:
->> [...]
->>>> Would we suggest a node;
->>>>
->>>> gpio-header {
->>>> 	compatible = "bplan,efika-gpio";
->>>> 	gpios = <&gpio-standard 16 0 17 0>;
->>>> };
->>>>
->>>> gpio-header2 {
->>>> 	compatible = "bplan,efika-gpio-wkup";
->>>> 	gpios = <&gpio-wkup 18 0>;
->>>> };
->>> IMO this looks very reasonable. You properly describe the hardware:
->>> physical device (header) and its resources.
->>
->> If there are actually two headers, that is. If you use two nodes
->> just to specify which gpio is wkup, that is's a bit ugly... Why not
->>
->> gpio-header {
->> 	compatible = "bplan,<board>-gpio-header";
->> 	gpios = <&standard 16 0
->> 		 &standard 17 0
->> 		 &wakeup 18 0>;
->> }
->>
->> And the driver whould know that on this particular <board>
->> third gpio is the wakeup one?
->
-> Good point, I concede to your much better plan :D
+> Right. I had a similar discussion about this the other day with Anton (I
+> think he forwarded it here but I wasn't subscribed at that point..). The
+> current ideology for device trees is to get rid of device_type for new
+> trees that aren't OF-based. I think it's relevant to give nodes fancy
+> names (i.e. not "timer" or even "ethernet") since the name property is
+> entirely descriptive in nature. I also think it's relevant that 
+> device_type
+> still exists because since the name is totally irrelevant except from a
+> user-friendliness point of view, marking a device as a generic type is
+> quite important (device_type = serial, ethernet, rtc, keyboard) where
+> compatible properties are usually wildly over-specific.
 
-;-)
+I don't use device_type much, if at all, anymore.  Generic name + compatible
+just works better than device_type + specific name.  When I write code that
+has to find a node that is suitable for a given purpose, I look for the 
+existence
+of suitable methods and perhaps other properties.  I was just too hard to
+keep the list of device_type values properly synchronized with all the 
+possible
+things that you might want to infer from that set of names.
 
-> Back to the other discussion, where we give individual GPIOs some
-> names so they are detectable and not just programmable as a bank,
-> do you have any ideas about that? :/
-
-Pure GPIOs don't have names. But when you use bindings they
-automatically translate to names. For example FHCI bindings:
-
-                usb@6c0 {
-                        compatible = "fsl,mpc8360-qe-usb",
-                                     "fsl,mpc8323-qe-usb";
-                        reg = <0x6c0 0x40 0x8b00 0x100>;
-                        interrupts = <11>;
-                        interrupt-parent = <&qeic>;
-                        fsl,fullspeed-clock = "clk21";
-                        fsl,lowspeed-clock = "brg9";
-                        gpios = <&qe_pio_b  2 0   /* USBOE */
-                                 &qe_pio_b  3 0   /* USBTP */
-                                 &qe_pio_b  8 0   /* USBTN */
-                                 &qe_pio_b  9 0   /* USBRP */
-                                 &qe_pio_b 11 0   /* USBRN */
-                                 &bcsr13    5 0   /* SPEED */
-                                 &bcsr13    4 1>; /* POWER */
-                };
-
-The bindings specify that gpios[0] (here qe_pio_b 2) is USBOE,
-gpios[1] (here qe_pin_b 3) is USBTP, and so on.
-
-There is nothing new in this. You can see the reg = <> property in
-these bindings. It specify two regions: 0x6c0 0x40 - USB Regs
-and 0x8b00 0x100 - USB parameter ram. Pure addresses don't have
-names until bindings applied.
-
-The same is for interrupts. Device may specify several interrupts:
-
-                enet0: ethernet@24000 {
-                        cell-index = <0>;
-                        device_type = "network";
-                        model = "TSEC";
-                        compatible = "gianfar";
-                        reg = <0x24000 0x1000>;
-                        local-mac-address = [ 00 00 00 00 00 00 ];
-                        interrupts = <32 0x8 33 0x8 34 0x8>;
-                        interrupt-parent = <&ipic>;
-                        phy-handle = <&phy1c>;
-                        linux,network-index = <0>;
-                };
-
-IRQ 32 is tx interrupt, IRQ33 is rx interrupt, and IRQ34 is
-error-reporting interrupt.
-
-But w/o any bindings nobody can tell what does IRQ33 mean (well,
-actually we can tell it for ipic on this particular processor,
-since it has hard-coded "SOC device<->irq" mapping. But it might
-be not true for other controllers, or even ipic's external
-interrupts).
-
--- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+device_type is one of those things that seemed like a good idea at the time,
+but didn't work out as well as I had hoped.
