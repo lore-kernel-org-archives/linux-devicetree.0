@@ -1,48 +1,67 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: generating a phandle w/libfdt?
-Date: Mon, 27 Oct 2008 10:44:41 +1100
-Message-ID: <20081026234441.GC22339@yookeroo.seuss>
-References: <4BE3ADDA-362B-43AE-8D05-11260B94CD13@kernel.crashing.org>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Mon, 27 Oct 2008 10:53:03 +1100
+Message-ID: <20081026235303.GE22339@yookeroo.seuss>
+References: <4900ED81.3040202@genesi-usa.com> <4900F90B.80703@firmworks.com>
+	<4901032F.3090805@genesi-usa.com> <49011C42.2020101@firmworks.com>
+	<49024646.3050300@genesi-usa.com> <49025DE0.6070403@firmworks.com>
+	<4904DD76.7070706@genesi-usa.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <4BE3ADDA-362B-43AE-8D05-11260B94CD13-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <4904DD76.7070706@genesi-usa.com>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: Mitch Bradley <wmb@firmworks.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2008 at 08:11:33AM -0500, Kumar Gala wrote:
-> In some work I'm doing I noticed we don't have any APIs to generate a  
-> phandle via libfdt.
+On Sun, Oct 26, 2008 at 04:13:26PM -0500, Matt Sealey wrote:
 >
-> was wondering if anyone had ideas on this.
 >
-> In first thought it seems we have to scan through the whole blob looking 
-> for the largest phandle id and than +1 it to generate the next "valid" 
-> id.  Any other ideas on how to do this more efficiently?
+> Mitch Bradley wrote:
+>>
+>> I don't use device_type much, if at all, anymore.  Generic name +  
+>> compatible just works better than device_type + specific name.  When
+> > I write code that has to find a node that is suitable for a given purpose,
+> > I look for the existence of suitable methods and perhaps other properties.
+> > I was just too hard to keep the list of device_type values properly
+> > synchronized with all the possible things that you might want to infer
+> > from that set of names.
+>
+> The simple problem comes when you define a device_type for everything,
+> I do agree it's best not to add any *MORE* that aren't in the IEEE1275
+> or CHRP etc. bindings, but for those that still exist and are well
+> defined (serial port probably the best, but network devices too) I
+> think we should keep using them where possible and where relevant.
 
-I don't think it can be done more efficiently, without assuming things
-about how any existing phandles are allocated, which I don't think is
-wise.
+device_type in 1275 defines the runtime method interface.  It's *not*
+for declaring the general class of the device, although it often
+matches that in practice.  Drivers which attempt to use it this way
+are buggy.
 
-Heck, even that's more efficient (theoretically, anyway) than the
-method used internally in dtc.  There, we have a "next phandle"
-counter which starts at one.  When we want to allocate a phandle we
-try counter values, testing them with find_node_by_phandle() one by
-one until we reach an unused one.  Of course, because all the phandles
-are usually allocated by dtc, in practice that usually only results in
-one pass through the tree, although it can be many in principle.
+So, in the  case of a real OF implementation,  yes, you should include
+device_type values as specified by 1275.  Assuming of course that your
+implementation  really  does  implement  the OF  method  binding  that
+matches the stated device_type.  However, flattened trees clearly
+can't provide the method interface, and so shouldn't declare the
+device_type.
+
+In practice, we do suggest including device_type in certain, limited,
+circumstances precisely because there are a whole bunch of buggy
+drivers out there which match (at least partly) on device_type.  We
+don't want to break these gratuitously, but neither do we want to
+encourage any further spread of using device_type incorrectly for
+driver matching.  Hence the current policy.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
