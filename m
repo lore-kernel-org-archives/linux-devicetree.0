@@ -1,110 +1,70 @@
-From: Matt Sealey <matt@genesi-usa.com>
-Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Sun, 26 Oct 2008 16:39:22 -0500
-Message-ID: <4904E38A.9070005@genesi-usa.com>
-References: <4900ED81.3040202@genesi-usa.com>
-	<4900F90B.80703@firmworks.com><4901032F.3090805@genesi-usa.com>
-	<49011C42.2020101@firmworks.com> <49024646.3050300@genesi-usa.com>
-	<20081024222059.1835015F004D@mail181-va3.bigfish.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: generating a phandle w/libfdt?
+Date: Mon, 27 Oct 2008 10:40:52 +1100
+Message-ID: <20081026234052.GB22339@yookeroo.seuss>
+References: <4BE3ADDA-362B-43AE-8D05-11260B94CD13@kernel.crashing.org>
+	<DEE70934-6A37-4439-B27E-FC3ABF75BF24@kernel.crashing.org>
+	<9696D7A991D0824DBA8DFAC74A9C5FA3047947A3@az33exm25.fsl.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-Reply-To: <20081024222059.1835015F004D@mail181-va3.bigfish.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
-Cc: Mitch Bradley <wmb@firmworks.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9696D7A991D0824DBA8DFAC74A9C5FA3047947A3-ofAVchDyotYzzZk0BCvKg5jmvxFtTJ+o0e7PPNI6Mm0@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Yoder Stuart <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-Stephen Neuendorffer wrote:
->> One thing I had a crazy dream about was a GUI-based device tree
->> builder for platforms.
+On Fri, Oct 24, 2008 at 09:29:21AM -0700, Yoder Stuart wrote:
+>  
 > 
-> Why is this crazy?  This is essentially what we do today with PowerPC
-> and Microblaze processors in Xilinx FPGAs.  Even for ASIC SOCs, there
-> are several commercial 'connect-your-IP on the bus' tools that could (if
-> SOC providers thought it was important) generate the 'canonical' device
-> tree automagically.
+> > -----Original Message-----
+> > From: 
+> > devicetree-discuss-bounces+stuart.yoder=freescale.com@ozlabs.o
+> > rg 
+> > [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com@
+> ozlabs.org] On Behalf Of Kumar Gala
+> > Sent: Friday, October 24, 2008 9:19 AM
+> > To: devicetree-discuss
+> > Subject: Re: generating a phandle w/libfdt?
+> > 
+> > 
+> > On Oct 24, 2008, at 8:11 AM, Kumar Gala wrote:
+> > 
+> > > In some work I'm doing I noticed we don't have any APIs to 
+> > generate  
+> > > a phandle via libfdt.
+> > >
+> > > was wondering if anyone had ideas on this.
+> > >
+> > > In first thought it seems we have to scan through the whole blob  
+> > > looking for the largest phandle id and than +1 it to generate the  
+> > > next "valid" id.  Any other ideas on how to do this more 
+> > efficiently?
+> > 
+> > The other question is there a way today to create a phandle even if  
+> > there isn't a reference to it elsewhere in a .dts?
+> 
+> We had this issue and the 'hack' was to create a phandle property
+> in the node itself, so it was self-referenced.  That caused DTC
+> to allocate a phandle.   We then could reference the node from
+> dynamically generated nodes.
 
-Indeed I have to sit in front of Quartus all day at the moment and the
-BDF window, pin planner etc. and the constraints scripts for the megacores
-just seemed to me to be a great way to spit out a device tree without
-doing any real work.
-
-> I think the real question is: if part of the device tree describes
-> 'hardware' (either in the SOC or on the board that, more or less,
-> doesn't change) and part represents 'hardware configuration' (e.g. My
-> board has my one-off hardware hanging off the gpio bank connected to the
-> 40 pin header), then how do we separate the two so that the hardware can
-> be in a canonical form separate from the configuration.
-
-Personally, I think that goes against the whole point of the device
-tree specification anyway. Or at least the greatest benefit - which is
-to allow hardware designers to present to software developers a
-reasonable description of what can and usually is an esoteric design
-decision (which port goes where and what undetectable hardware is
-used for X and Y) without exposing the software developer to the
-programming model of each individual device (contrast any other system
-where you might have a huge list of registers and positions, and use
-a rom monitor to manually poke at certain registers, and need the
-board schematics to get anywhere you can't read a chip name off the
-board to use)
-
-The definition of the binding defines what every peripheral should
-look like if it's present - if the peripheral is multiplexed inside
-the chip, then you can just copy-paste one feature and not use the
-other. A difference in PHY for something is one thing you just can't
-detect sometimes; on different boards, this will be different, but
-it is all part of the hardware configuration, and not much to do with
-the hardware itself (if you have 12 serial controllers but USB and
-ethernet usage means you lose 5 of them to multiplexing, or a SerDes
-shared between PCI Express, SATA or RapidIO but only one can be
-active.. or a configurable clock module for internal devices which
-would have the same quirks as an interrupt controller.. or even an
-interrupt controller configured to cascade or slaved to something
-else)
-
-> there are even three device tree fragments: one provided by an SOC
-> provider, one by a board provider, and one by the user, which can all be
-> nicely separated once the great device tree update happens... :)
-
-If you have an SoC provider device tree fragment does it entertain
-every possibility in the chip, or just the most common? Does the
-board provider dt fragment then allow "disable" certain features in
-the previous fragments? See examples above where defining 12 serial ports
-on the SoC dts AND usb and ethernet functionality, just can't work,
-and the board configuration of these devices is entirely relevant.
-
-Updating a device tree at the user end is very useful but I do not
-think that there is any fundamental difference between the hardware
-itself and the board configuration from a DT point of view, except
-that you need a binding or an example (but not a canonical device
-tree excerpt) to base your final tree from. What is inside the SoC
-rarely matches what is escaped from the chip, so a premade
-fragment you could just load becomes rather redundant. Just a
-useful reference would be better and that's what we have already.
-
-As for user fragments we have that on OpenFirmware already* and
-the idea that we may actually standardize on this kind of stuff
-sort of excites me as it validates the point to remove all the
-device tree fixups from Pegasos and Efika in prom_init.c and use
-something a little less of the order of "you have to recompile
-your kernel every time". Be it a dtb fragment for U-Boot or a
-Forth script for real OF, this is such a great idea, I don't
-know why it's not already there :)
-
-* http://www.powerdeveloper.org/platforms/efika/devicetree
+That's nasty.  I should add a way to make dtc generate a phandle for a
+node, even if it's not referenced from elsewhere.  Just need to think
+of a decent syntax.
 
 -- 
-Matt Sealey <matt@genesi-usa.com>
-Genesi, Manager, Developer Relations
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
