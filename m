@@ -1,17 +1,17 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Mon, 27 Oct 2008 11:12:07 -0500
-Message-ID: <4905E857.6040206@genesi-usa.com>
-References: <4900ED81.3040202@genesi-usa.com> <4900F90B.80703@firmworks.com>
-	<4901032F.3090805@genesi-usa.com> <49011C42.2020101@firmworks.com>
-	<49024646.3050300@genesi-usa.com> <49025DE0.6070403@firmworks.com>
-	<4904DD76.7070706@genesi-usa.com>
-	<20081026235303.GE22339@yookeroo.seuss>
+Date: Mon, 27 Oct 2008 11:35:10 -0500
+Message-ID: <4905EDBE.8020105@freescale.com>
+References: <4900ED81.3040202@genesi-usa.com>
+	<4900F90B.80703@firmworks.com>	<4901032F.3090805@genesi-usa.com>
+	<49011C42.2020101@firmworks.com>	<49024646.3050300@genesi-usa.com>
+	<49025DE0.6070403@firmworks.com>	<4904DD76.7070706@genesi-usa.com>	<20081026235303.GE22339@yookeroo.seuss>
+	<4905E857.6040206@genesi-usa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20081026235303.GE22339-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+In-Reply-To: <4905E857.6040206-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,95 +21,65 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Matt Sealey wrote:
+> I'm all for it being legacy and optional but marking ethernet ports as
+> network, and serial ports as serial, is a wonderfully good idea especially
+> if they were used in ANY firmware environment to bring up the console,
+> drag in the boot files, or provide a framebuffer display.
 
+Nobody is saying that device_type should not be used in real OF when an 
+appropriate method interface exists.  What we're saying is that flat 
+device trees, which are incapable of providing a method interface, 
+should not lie and claim that they have one.
 
-David Gibson wrote:
-> On Sun, Oct 26, 2008 at 04:13:26PM -0500, Matt Sealey wrote:
->>
->> Mitch Bradley wrote:
-> =
+As for "ANY firmware environment", I'd suggest that any new method 
+interfaces, where backwards compatibility isn't an issue, use some 
+relevant compatible rather than device_type, so that multiple supported 
+interfaces can be listed.  What do you have against vendor namespaces 
+(don't make the device binding guess which firmware type it's on) and 
+multiple interfaces per node?
 
-> device_type in 1275 defines the runtime method interface.  It's *not*
-> for declaring the general class of the device, although it often
-> matches that in practice.
+>> matches the stated device_type.  However, flattened trees clearly
+>> can't provide the method interface, and so shouldn't declare the
+>> device_type.
+> 
+> Even if they are used in the firmware environment for console, booting
+> or probing? :D
 
-It *is* for declaring the general class of the device, even if it's
-purpose is to make it known that it implements all the required
-methods and therefore acts in a certain predefined way when those
-methods are used; it's not a necessary property but it is a USEFUL
-property:
+Define "they", "used", and "firmware environment".  Obviously u-boot may 
+use the serial port for its console, but there's no method interface 
+defined by the device tree, nor is there any firmware resident at all 
+after starting the kernel.
 
-~~
-It is not necessary for every node to have a =93device_type=94 property. If=
- a
-particular device is not useful for any Open Firmware function (e.g., booti=
-ng,
-console, probing) then it need not have a device type. For example, Open
-Firmware has no use for a FAX modem, so such a device does not need a device
-type. However, there is no restriction preventing it from having a device t=
-ype
-so long as its device type is not the same as one of the standard types
-(i.e., a device should not claim to be something that it is not).
-~~
+>> In practice, we do suggest including device_type in certain, limited,
+>> circumstances precisely because there are a whole bunch of buggy
+>> drivers out there which match (at least partly) on device_type.
+>  > We don't want to break these gratuitously,
+> 
+> Oh that's rich. If you were that concerned you'd rip the device_type
+> out and fix all the drivers in a huge patch, like everyone else does
+> when they change the ABI.
 
-I'm all for it being legacy and optional but marking ethernet ports as
-network, and serial ports as serial, is a wonderfully good idea especially
-if they were used in ANY firmware environment to bring up the console,
-drag in the boot files, or provide a framebuffer display.
+This isn't internal ABI, it's an external interface with firmware.
 
-It's quite possible that a generic framebuffer driver be written that
-only needs to know that it is a "display", read a property to find out
-where the memory starts, and gain some rudimentary information about
-the dimensions. Oh, wait, it already exists, it's offb.c (if you strip
-out the ATI hacks, it'll work on *a n y* framebuffer that is defined
-as such, and needn't have any specific compatible to do it)
+>> driver matching.  Hence the current policy.
+> 
+> I might say that the policy on device trees has changed by the month
+> for the last 2 years and ePAPR didn't fix down a single concern that
+> wasn't already documented in the original IEEE 1275 specification.
 
-> Drivers which attempt to use it this way are buggy.
+It fixes three primary concerns:
 
-I'm more concerned about code that lives specifically outside of the
-driver itself - examples;
+1. The 1275 documentation is scattered in many places, some of which are 
+not easily accessible to the general public (just look at the i2c mess).
 
-http://www.mail-archive.com/linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org/msg11772.html
-http://www.mail-archive.com/linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org/msg11773.html
+2. 1275 did not appear to be actively maintained and updated.
 
-When you're about to take control of the system and do your board
-setup, it is usually a great idea to use what the firmware was
-using, you do not want to go through and find out that you were
-using a serial console but Linux has inited a display and expects
-a keyboard on a framebuffer console, because that is what "most
-people get" when they boot Linux.
+3. It standardized the flattened device tree interface, which did not 
+exist in 1275.
 
-(I will concede that using "serial" as the VGA textmode console
-is, while a semi-accurate abstraction of an ANSI-capable terminal
-with no framebuffer, is kind of braindead when it comes to giving
-the OS accurate information about which devices are in use)
-
-> matches the stated device_type.  However, flattened trees clearly
-> can't provide the method interface, and so shouldn't declare the
-> device_type.
-
-Even if they are used in the firmware environment for console, booting
-or probing? :D
-
-> In practice, we do suggest including device_type in certain, limited,
-> circumstances precisely because there are a whole bunch of buggy
-> drivers out there which match (at least partly) on device_type.
- > We don't want to break these gratuitously,
-
-Oh that's rich. If you were that concerned you'd rip the device_type
-out and fix all the drivers in a huge patch, like everyone else does
-when they change the ABI.
-
-> driver matching.  Hence the current policy.
-
-I might say that the policy on device trees has changed by the month
-for the last 2 years and ePAPR didn't fix down a single concern that
-wasn't already documented in the original IEEE 1275 specification.
-
--- =
-
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Genesi, Manager, Developer Relations
+-Scott
