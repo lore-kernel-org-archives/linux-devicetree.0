@@ -1,16 +1,15 @@
 From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: generating a phandle w/libfdt?
-Date: Mon, 27 Oct 2008 09:15:38 -0500
-Message-ID: <76BF0CED-6848-43B9-8035-FC9C1F1DD981@kernel.crashing.org>
+Date: Mon, 27 Oct 2008 09:16:16 -0500
+Message-ID: <6D8EC3EA-A3E8-4D35-A43D-2C8DC7E3095D@kernel.crashing.org>
 References: <4BE3ADDA-362B-43AE-8D05-11260B94CD13@kernel.crashing.org>
 	<DEE70934-6A37-4439-B27E-FC3ABF75BF24@kernel.crashing.org>
-	<9696D7A991D0824DBA8DFAC74A9C5FA3047947A3@az33exm25.fsl.freescale.net>
-	<20081026234052.GB22339@yookeroo.seuss>
+	<2D630F2F-4AA2-4537-89FE-80B2DDFADDEE@watson.ibm.com>
 Mime-Version: 1.0 (Apple Message framework v929.2)
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20081026234052.GB22339-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+In-Reply-To: <2D630F2F-4AA2-4537-89FE-80B2DDFADDEE-aZOuKsOsJu3MbYB6QlFGEg@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -20,53 +19,48 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: Jimi Xenidis <jimix-aZOuKsOsJu3MbYB6QlFGEg@public.gmane.org>
 Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 26, 2008, at 6:40 PM, David Gibson wrote:
+On Oct 24, 2008, at 10:15 AM, Jimi Xenidis wrote:
 
-> On Fri, Oct 24, 2008 at 09:29:21AM -0700, Yoder Stuart wrote:
->>
->>
->>> -----Original Message-----
->>> From:
->>> devicetree-discuss-bounces+stuart.yoder=freescale.com@ozlabs.o
->>> rg
->>> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com@
->> ozlabs.org] On Behalf Of Kumar Gala
->>> Sent: Friday, October 24, 2008 9:19 AM
->>> To: devicetree-discuss
->>> Subject: Re: generating a phandle w/libfdt?
->>>
->>>
->>> On Oct 24, 2008, at 8:11 AM, Kumar Gala wrote:
->>>
->>>> In some work I'm doing I noticed we don't have any APIs to
->>> generate
->>>> a phandle via libfdt.
->>>>
->>>> was wondering if anyone had ideas on this.
->>>>
->>>> In first thought it seems we have to scan through the whole blob
->>>> looking for the largest phandle id and than +1 it to generate the
->>>> next "valid" id.  Any other ideas on how to do this more
->>> efficiently?
->>>
->>> The other question is there a way today to create a phandle even if
->>> there isn't a reference to it elsewhere in a .dts?
->>
->> We had this issue and the 'hack' was to create a phandle property
->> in the node itself, so it was self-referenced.  That caused DTC
->> to allocate a phandle.   We then could reference the node from
->> dynamically generated nodes.
 >
-> That's nasty.  I should add a way to make dtc generate a phandle for a
-> node, even if it's not referenced from elsewhere.  Just need to think
-> of a decent syntax.
+> On Oct 24, 2008, at 9:18 AM, Kumar Gala wrote:
+>
+>>
+>> On Oct 24, 2008, at 8:11 AM, Kumar Gala wrote:
+>>
+>>> In some work I'm doing I noticed we don't have any APIs to  
+>>> generate a phandle via libfdt.
+>>>
+>>> was wondering if anyone had ideas on this.
+>>>
+>>> In first thought it seems we have to scan through the whole blob  
+>>> looking for the largest phandle id and than +1 it to generate the  
+>>> next "valid" id.  Any other ideas on how to do this more  
+>>> efficiently?
+>>
+>> The other question is there a way today to create a phandle even if  
+>> there isn't a reference to it elsewhere in a .dts?
+>>
+>
+> Well, then by definition, it is not a phandle, right?
+> If nothing references it then I'm not sure how you can reconcile the  
+> number when some SW layer builds the next version of it to pass on up.
+>
+> It sounds like you need a separate numerical space.
+>
+> Just a shot in that dark to see if your actual problem is similar...
+>
+> I'm expecting us to hit something like this _hard_ when we try to  
+> fit runtime FW into ePAPR, like IBM's RTAS layer, where the devtree  
+> can go through several generations but we need to hang on to the  
+> _original_ phandle for a node from the time that the RTAS was  
+> instantiated.  In server we use "ibm,phandle" for this.
 
-What if we just have it do that if we have a "linux,phandle" property  
-w/o a value in the .dts?
+Its more because I need firmware to do some fixups after the fact that  
+need phandles.  Its a bit of a pain to "generate" phandles on the fly.
 
 - k
