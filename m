@@ -1,7 +1,7 @@
-From: Anton Vorontsov <avorontsov@ru.mvista.com>
+From: Matt Sealey <matt@genesi-usa.com>
 Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Mon, 27 Oct 2008 21:34:21 +0300
-Message-ID: <20081027183421.GA1009@oksana.dev.rtsoft.ru>
+Date: Mon, 27 Oct 2008 13:56:03 -0500
+Message-ID: <49060EC3.1070704@genesi-usa.com>
 References: <4900ED81.3040202@genesi-usa.com> <4900F90B.80703@firmworks.com>
 	<4901032F.3090805@genesi-usa.com> <49011C42.2020101@firmworks.com>
 	<20081024032944.GE4267@yookeroo.seuss>
@@ -10,13 +10,12 @@ References: <4900ED81.3040202@genesi-usa.com> <4900F90B.80703@firmworks.com>
 	<490248C2.9020104@genesi-usa.com>
 	<20081026234747.GD22339@yookeroo.seuss>
 	<4905E0DC.104@genesi-usa.com>
-Reply-To: avorontsov@ru.mvista.com
+	<20081027183421.GA1009@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <4905E0DC.104@genesi-usa.com>
+In-Reply-To: <20081027183421.GA1009@oksana.dev.rtsoft.ru>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -26,60 +25,78 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Matt Sealey <matt@genesi-usa.com>
+To: avorontsov@ru.mvista.com
 Cc: Mitch Bradley <wmb@firmworks.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss list <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2008 at 10:40:12AM -0500, Matt Sealey wrote:
->
->
-> David Gibson wrote:
->
->> Um.. I can't actually follow what you're getting at there, sorry.
->
-> Imagine in your head that you have a GPIO controller that has a
-> 32-bit register potentially controlling 32 pins on the chip.
->
-> Imagine that rather than being able to allocate 6 GPIO pins
-> *right next to each other* in the register and saying that
-> you start at "pin" 15 and use the next 6 "pins", you have to
-> spread it around and use pin 1, pin 8, pin 9, pin 11, pin 15,
-> pin 30, to make up this peripheral.
 
-Isn't this some implementation detail of a gpio controller?
 
-gpio: gpio-controller@... {
-	#gpio-cells = <2>;
-	compatible = "gpio-bank-with-funny-mapping"; <- notice this
-	reg = <123 4>;
-	gpio-controller;
-}
+Anton Vorontsov wrote:
+> The GPIO spec doesn't specify a controller bank. It says
+> 
+> - - - -
+> gpio-specifier may encode: bank, pin position inside the bank,
+> whether pin is open-drain and whether pin is logically inverted.
+> - - - -
+> 
+> May encode. Or may not encode. FYI, for most (all) SOC GPIO
+> controllers we don't use "bank" encoding in the gpio-specifier.
 
-device {
-	gpios = <&gpio 0 0 &gpio 1 0 &gpio 2 0>;
-}
+This is exactly 100% precisely why I asked about it, there should at
+least be a binding for each specific controller where this is
+relevant, but since there is very little variation on "use pin 15
+please with these flags" (only what "pin 15" means is undefined
+so far, and left to the driver/controller variation) there must
+be a generic way to specify groups of IO pins which may not be
+consecutive.
 
-^^ Three gpios, 0, 1, 2. Based on a compatible entry Linux can
-   translate them in any way.
+I don't get your example;
 
-   For example GPIO0 - bit 15, GPIO1 - bit 20, GPIO2 - bit 1.
+ > device {
+ >	gpios = <&gpio 0 0 &gpio 1 0 &gpio 2 0>;
+ > }
+ >
+ > ^^ Three gpios, 0, 1, 2. Based on a compatible entry Linux can
+ >   translate them in any way.
+ >
+ >   For example GPIO0 - bit 15, GPIO1 - bit 20, GPIO2 - bit 1.
 
-> As far as I can tell there is no way at all to specify a set of
-> GPIO pins which are NOT consecutive because the current GPIO
-> spec stops after specifying a controller bank (the 32-bit
-> register).
+This kind of defeats the object. While the pin numbering may well
+be board-specific, it makes sense to maintain it as it relates to
+offsets into a register or offsets into a bank of registers the
+same way that interrupt mappings on the MPC5200B are ripped out of a
+table in the MPC5200B documentation.
 
-The GPIO spec doesn't specify a controller bank. It says
+What the above example does is give a completely arbitrary
+number which only maps to a real pin or offset *inside the driver*
+meaning 10 boards with the same chip all have to have different
+drivers, gpio_chip libraries to allocate the pins - the driver
+to note which pin is for which purpose, and gpiolib to make sure
+some driver accessing them has not been loaded twice.
 
-- - - -
-gpio-specifier may encode: bank, pin position inside the bank,
-whether pin is open-drain and whether pin is logically inverted.
-- - - -
+Right?
 
-May encode. Or may not encode. FYI, for most (all) SOC GPIO
-controllers we don't use "bank" encoding in the gpio-specifier.
+Even if I have my Efika sitting here I want to share my GPIO
+library code between it and the lite5200b - be that making the
+"sleep switch" code look for a certain gpio pin marker in the
+device tree so it knows what to allocate (so the number isn't
+hardcoded into the driver as a compile-time switch or a check
+for the /soc node model)
+
+The current model seems to me like it is not getting any benefit
+whatsoever from being defined in a device tree, in fact it is
+making certain GPIO functionality go back to the hardcoded-per-board
+stuff we used to have in arch/ppc.
+
+This is just proving the point that nobody is forward-thinking
+about this stuff, and is just implementing hack over hack over
+hack to get something to work, and refining it later. We're
+already running kernels which need to be specially built for
+specially built U-Boot versions, special options for the dtc,
+and device trees which change every other week. Specifying the
+bare minimum here for the functionality a single user uses
+defeats the object of having a descriptive device tree.
 
 -- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+Matt Sealey <matt@genesi-usa.com>
+Genesi, Manager, Developer Relations
