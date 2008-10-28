@@ -1,77 +1,62 @@
-From: "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Device tree binding documentation
-Date: Tue, 28 Oct 2008 00:23:27 -0600
-Message-ID: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>
+From: Konstantinos Margaritis <markos@codex.gr>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Tue, 28 Oct 2008 14:31:29 +0100
+Message-ID: <7b6eafc46f644dea59fbf0af17dbc005@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7sXa4x6EXUF0@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Mitch Bradley <wmb@firmworks.com>, devicetree-discuss list <devicetree-discuss@ozlabs.org>, linuxppc-dev list <linuxppc-dev@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-I've been thinking a lot more about how to handle documenting new
-bindings for the device tree and getting them up onto a web site of
-some sort.  When this idea originally came up, my first impression was
-to just throw up a wiki somewhere and make it available for everyone
-to use.
 
-But thinking about it more, it seems like a typical wiki wouldn't
-really encourage a workflow suitable for hammering out new bindings.
-For instance, before a new bindings is published as complete it needs
-to be reviewed and agreed to by the development community, but a
-typical wiki tends toward ad-hoc editing and continual
-update/refinement of the text on-line.  If not careful, a wiki could
-easily lead to unreviewed bindings being added or established bindings
-getting modified in poorly designed or incompatible ways.  It could
-also end up forcing everyone to do their bindings work from within a
-web browser which isn't always the most efficient tool.  We would need
-to come up with new processes for how to manage, review and approve
-content on the wiki so that users can be confident that the
-information on the web site is reliable.
+Pardon my intrusion in the conversation, but I just couldn't not comment on
+this:
 
-It seems to me though that we *already* have a process for reviewing
-and accepting changes to a large collective work.  We work together
-every day on the Linux kernel and have established policies about how
-to make changes.  What if we follow the Linux lead and depend on the
-devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org and distributed revision control to
-develop and maintain documentation of new bindings?
+On Tue, 28 Oct 2008 12:50:03 +1100, David Gibson
+<david@gibson.dropbear.id.au> wrote:
+>> So now my qualm is back to the beginning of the discussion. How do
+>> we encode the purpose of those pins reliably and within some
+>> standard framework, without getting *driver* specific?
+>
+> Um.. I fail to see how the purpose of a pin can be not driver
+> specific.
 
-Here is my thought:
-1. Set up a wiki site to publish the documentation.  Use something
-like ikiwiki which uses git as the back end
-2. Allow anyone to clone the backend repo
-3. Binding authors would post patches to the devicetree-discuss
-mailing list for all changes
-4. Review/discussion/arguments would proceed in the normal way
-5. Assign a few people to be binding maintainers
-6. Binding maintainers pick up, commit, (and probably sign) changes
-when there appears to be concensus
-7. Picked up changes get pushed out to the wiki server which updates the pages
+GPIO stands for _General_ Purpose IO. The driver should just expose that
+info to user space and it should be up to the userspace application to
+decide what to do with that. The programmer should require absolutely
+no other intervention to the driver whatsoever.
+Anyone that has worked on data mining scientific equipment -eg.
+particle/photon scanners on VME boards with lots of GPIO pins- will tell
+you that meddling with kernel coding is totally unneeded, in fact it's
+stupid to require the student to do so. Usually some Windows API is given
+and the students write the programs on Windows to collect the data and
+control the device. I guess GPIOLIB and the new framework would have
+similar application in Linux -ie, requiring the programmer to write only
+a userspace to access the GPIO pins. From my understanding of the
+conversation, there are some people who fail to see the necessity of
+doing extra work to abstract this information away from the driver. A walk
+to a nearby experimental physicists lab with students working on such
+devices will convince you of the right way to do it actually.
 
-Also it would allow people to edit bindings on-line:
-2b. Setup a 'working' site that uses a side branch in the repo.
-2c. Allow edits in the side branch directly from the web page, but
-still require the binding diff to be posted to the mailing list for
-discussion before being merged into mainline.  The wiki software could
-be modified to automate patch posting without having to resort to the
-command line.
+PS. I am of physics background myself, though a theoritical one and not 
+experimental. But I did have many friends experimentalists, in
+particular I remember two that did exactly what I described. Neither did
+have any particular kernel/driver knowledge and neither did have to do
+anything extremely low-level to acquire the data. Both used windows 
+user-level programming, though that was ~8years ago so don't expect me
+to remember the exact VME boards or APIs used...
 
-I'm going to experiment with ikiwiki a bit tomorrow to see if it is
-workable.  I'd also appreciate any feedback on this.
-
-Cheers,
-g.
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Konstantinos Margaritis
+Codex
+http://www.codex.gr
