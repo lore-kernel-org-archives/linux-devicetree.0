@@ -1,14 +1,23 @@
-From: "Yoder Stuart" <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: Device tree binding documentation
-Date: Tue, 28 Oct 2008 09:07:39 -0700
-Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA3047E572F@az33exm25.fsl.freescale.net>
-References: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Tue, 28 Oct 2008 11:53:01 -0500
+Message-ID: <4907436D.2060209@genesi-usa.com>
+References: <20081024044511.GI4267@yookeroo.seuss>
+	<490248C2.9020104@genesi-usa.com>
+	<20081026234747.GD22339@yookeroo.seuss>
+	<4905E0DC.104@genesi-usa.com>
+	<20081027183421.GA1009@oksana.dev.rtsoft.ru>
+	<49060EC3.1070704@genesi-usa.com>
+	<20081027201023.GA18642@oksana.dev.rtsoft.ru>
+	<49063929.3060900@genesi-usa.com>
+	<20081027231221.GA22008@oksana.dev.rtsoft.ru>
+	<490666B0.2010500@genesi-usa.com>
+	<20081028023722.GA30057@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20081028023722.GA30057-wnGakbxT3iijyJ0x5qLZdcN33GVbZNy3@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -18,113 +27,249 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>, Benja
+To: avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
+Cc: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- 
 
-> -----Original Message-----
-> From: 
-> devicetree-discuss-bounces+stuart.yoder=freescale.com@ozlabs.o
-> rg 
-> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com@
-ozlabs.org] On Behalf Of Grant Likely
-> Sent: Tuesday, October 28, 2008 1:23 AM
-> To: devicetree-discuss list; Mitch Bradley; Matt Sealey; 
-> Benjamin Herrenschmidt; Anton Vorontsov; Loeliger 
-> Jon-LOELIGER; Kumar Gala; David Gibson; Hugh Blemings
-> Subject: Device tree binding documentation
+
+Anton Vorontsov wrote:
+> On Mon, Oct 27, 2008 at 08:11:12PM -0500, Matt Sealey wrote:
+>> Anton Vorontsov wrote:
+>>> On Mon, Oct 27, 2008 at 04:56:57PM -0500, Matt Sealey wrote:
+>>>> A bunch of things spring to mind:
+>>>>
+>>>> *   How do you define a GPIO bank in a device tree, not a controller
+>>> Not a controller? What do you mean by "bank"? There is no such
+>>> thing. There are GPIO controllers, and _maybe_ _their_ banks of
+>>> GPIOs.
+>> I don't know what you want to call it, I don't know what the official
+>> Linux term might be for a grouped bunch of GPIO used for a peripheral.
 > 
-> I've been thinking a lot more about how to handle documenting new
-> bindings for the device tree and getting them up onto a web site of
-> some sort.  When this idea originally came up, my first impression was
-> to just throw up a wiki somewhere and make it available for everyone
-> to use.
+> You don't know this term because there isn't any. There is no term
+> for "bunch of GPIO used for a peripheral".
+
+There should be so we didn't have that conversation just now about
+what a "bank" is supposed to mean :)
+
+> But there are:
 > 
-> But thinking about it more, it seems like a typical wiki wouldn't
-> really encourage a workflow suitable for hammering out new bindings.
-> For instance, before a new bindings is published as complete it needs
-> to be reviewed and agreed to by the development community, but a
-> typical wiki tends toward ad-hoc editing and continual
-> update/refinement of the text on-line.  If not careful, a wiki could
-> easily lead to unreviewed bindings being added or established bindings
-> getting modified in poorly designed or incompatible ways.  It could
-> also end up forcing everyone to do their bindings work from within a
-> web browser which isn't always the most efficient tool.  We would need
-> to come up with new processes for how to manage, review and approve
-> content on the wiki so that users can be confident that the
-> information on the web site is reliable.
+> - gpio controllers;
+> - devices that use some gpios;
+> - gpios = <>; property that is used to denote which gpios the device
+>   is using.
 > 
-> It seems to me though that we *already* have a process for reviewing
-> and accepting changes to a large collective work.  We work together
-> every day on the Linux kernel and have established policies about how
-> to make changes.  What if we follow the Linux lead and depend on the
-> devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org and distributed revision control to
-> develop and maintain documentation of new bindings?
+> What's so hard about that?
+
+*shrug*
+
+> You don't specify the SOC's peripheral memory in the /memory node,
+> do you? I bet you don't. Can you? Yes. Bad things will happen? Sure.
+
+You could put SRAM in there and that wouldn't cause any problems. I
+don't figure why SRAM is treated differently except that it would
+be unlikely and unfortunate for Linux to use it as a generic pool of
+RAM. There was a big discussion about whether the device_type should
+be "memory" or "sram"... I personally prefer the latter.
+
+>> Comments don't get compiled..
 > 
-> Here is my thought:
-> 1. Set up a wiki site to publish the documentation.  Use something
-> like ikiwiki which uses git as the back end
-> 2. Allow anyone to clone the backend repo
-> 3. Binding authors would post patches to the devicetree-discuss
-> mailing list for all changes
-> 4. Review/discussion/arguments would proceed in the normal way
-> 5. Assign a few people to be binding maintainers
-> 6. Binding maintainers pick up, commit, (and probably sign) changes
-> when there appears to be concensus
-> 7. Picked up changes get pushed out to the wiki server which 
-> updates the pages
+> If you _really_ want to complicate things, you can write gpios for
+> devices like this:
 > 
-> Also it would allow people to edit bindings on-line:
-> 2b. Setup a 'working' site that uses a side branch in the repo.
-> 2c. Allow edits in the side branch directly from the web page, but
-> still require the binding diff to be posted to the mailing list for
-> discussion before being merged into mainline.  The wiki software could
-> be modified to automate patch posting without having to resort to the
-> command line.
+> device {
+> 	data0-gpio = <&controller1 1 1>;
+> 	...
+> 	rw-gpio = <&controller1 2 1>;
+> }
 > 
-> I'm going to experiment with ikiwiki a bit tomorrow to see if it is
-> workable.  I'd also appreciate any feedback on this.
+> This _will_ get compiled in. This is insane, but this is more friendly
+> to a device tree reader, if you like.
 
-I like the general idea and have been thinking along the
-same lines.  Here at Freescale I've set up an internal site
-for some of our bindings in development.  The bindings themselves
-are text files in a git repo.  Then we have a wiki that links
-to them via git web.
+Is it still possible to perhaps create a node under lcd-controller which
+describes the pin groupings? Maybe we should call it a gpio-group.
 
-The nice thing about the above approach is that you can clone
-the git repo, grep through the text bindings, and use your
-normal user space tools to look for things like how a
-particular property is used and what bindings use it.  But
-you also have the convenience of a web interface to get at
-the bindings too.
+That way lcd-controller looks like
 
-So my vote is to maintain bindings as plain text files.
+lcd-controller {
+	compatible = "crystalfontz,something-gpio";
+	data-bus {
+		compatible - "gpio-group";
+		gpios = <gpioc 1 gpioc 8 gpioc 42 ... >
+	}
+	rw-ctrl {
+		compatible = "gpio-group";
+		gpios = <gpioc 2>
+	}
+	cmd-ctrl {
+		...
+	}
+};
 
-Some other thoughts:
+At least a driver for a particular lcd display geared for GPIO
+output can then simply check the device tree for some known
+compatibles. With a user header this is not required, just list
+out the GPIOs ready for use. With a device where the function is
+literally too obvious (it has 8 pins on an 8-bit data bus so how
+hard can it be, and the order would be implicit in the gpios
+property?) it is also kind of useless.
 
-   -you're going to have generic bindings (e.g. i2c, flash)
-    and very specific company specific/proprietary bindings
-    (e.g. Freescale security device) and so the structure 
-    should accomodate this.   As far as maintainers go, it
-    probably makes sense for a Freescale person to maintain
-    the Freescale bindings.
+I definitely think that while possibly overly verbose for some
+or even most functionality it would come in handy. The driver
+would be able to detect which pins are for which purpose, rather
+than what could be a very generic driver for multiple bus types
+and platforms being hardcoded to work only on a specific board
+(imagine 10 boards with the same LCD controller, all having a
+list of which GPIO pins are which, when they are configured ever
+so slightly differently).
 
-   -I'd also like to see the wiki site be broader than just
-    bindings and include other device tree related stuff-- e.g.
-    documentation on DTC and libfdt.  It could include howtos
-    on topics, and links to the ePAPR or any relevant 1275
-    documents.
+>> and a driver will have
+>> to be written FROM the comments, hardcoding the pins into it, again.
+> 
+> What do you mean by "hardcoding"? Let's see: interrupts = <33 32>;
+> and then extracting them via
+> of_irq_to_resource(node, 0, &tx_irq),
+> of_irq_to_resource(node, 1, &rx_irq).
+> 
+> Does this mean "hard-coding"?
 
-   -one question:  where would this be hosted?   I have been
-    working with power.org on getting a wiki for essentially
-    the same purpose you've been describing, but it's still
-    not a done deal.   Other options would be IBM or 
-    Freescale.  I'd like to see the bindings hosted somewhere
-    where they have a fairly permanent home.
+No. If you have an array of GPIO pins (gpios property) then how do you
+determine which is for data and which is some control pin? Do you
+associate these numbers in the driver somehow? Maybe a matchlist or
+an array? Given pins A B C D E F G H I J where does the data bus
+start and the control pins live? A and B? A and J? I and J?
 
-    If we put the bindings as text docs in a git repo we could
-    separate the hosting of the git repo with that of the
-    wiki.
+It would be definitely frivolous to define a whole device tree binding
+for the *order in which you MUST specify the gpios for this particular
+device*. There is obviously an implicit ordering of the GPIOs to make
+up the data bus (you'd expect an order from MSB to LSB.. or perhaps
+LSB to MSB... that might be better defined than undefined)
 
-Stuart
+>> GPIOLIB excited me when I talked to the original author about
+>> it, now that there has to be a device tree behind it that is
+>> an absolutely undefined, gpio-controller-specific implementation
+>> for every chip
+> 
+> You seem to disagree with the whole device tree idea and the OF
+> in general.
+
+Actually I love Open Firmware, if I had a nickel for every time I had
+nagged the guys at bplan to port it to one of these Freescale dev
+boards so I didn't have to crawl through U-Boot every time I booted,
+I would be able to fund the port myself.
+
+The device tree, I guess I am a die-hard. I don't think shoehorning
+a device tree into U-Boot is a great idea (I don't see why you can't
+have a real OF!) and if Firmworks can port OF to OLPC and have it be
+a success, what on earth is the point of U-Boot?
+
+I love being able to "boot" anything that is bootable, and not have
+to use a specific filesystem load command (ext2load, tftp etc.)
+because the information and software to decode that booting process
+is contained in the device tree and client interface, and not some
+esoteric script command. I love the abstraction and the OPPORTUNITY
+for abstraction and not just description.
+
+What I don't so much agree with is the arbitrary definitions we had
+to deal with when we made the Efika. The MPC5200B binding was in
+flux (and for a chip Freescale do not encourage for new designs, the
+device tree is still moving around. In 5 years nobody fixed it down?)
+and we had arguments over "memory" or "sram" and stupid things like
+"the node with all the SoC peripherals in *MUST* be device_type "soc"
+and have name "soc"!!!! (we call it "builtin", it's compatible
+property has always been "mpc5200b" though, so how can you have a problem
+detecting that?)
+
+ > Interrupts are so controller-specific stuff that
+> we should reconsider using it, right?
+
+No, because while controller specific, interrupt controllers have
+well-defined layouts with interrupt-parent, cascading and the
+connection of certain pins to certain interrupt hosts (PCI INTA,
+B, C, D) is all explicit in the device tree. If you have an MPC5200B
+interrupt in a device tree node, you know the 3 numbers are
+encoded as TYPE NUMBER LEVEL (type being critital, main or
+peripheral or "bestcomm", number being encoded as an offset into
+a register, and the level being 0-3 for edge, blah blah) because
+the bindings say so. But when you allocate an IRQ using the device
+tree as input, you do not even need to know what these things mean,
+just hope that someone used the right one in the device tree. The
+binding does not affect the driver, it actually works to make the
+driver MUCH simpler here, and far more generic and maintainable
+and promotes shared code.
+
+GPIO does not have this explicit layout option, only a randomly
+ordered list of gpios which are hooked to a device which do not
+have any "purpose" assigned to them. Rather than specific ways
+to define a GPIO data it's not specific. So one device may encode
+the purpose of the pin as a flag. These flags change per-chip.
+And at the end of the day if you go down that route you risk
+being clobbered by a new standard which defines a new flag right
+over the one you wanted to use for your "this is a data pin and
+this is a control pin" flag.
+
+While I see a device binding that says that the encoding of the
+gpios field and the gpio-cells is arbitrary per controller and
+if flags are specified, these flags are controller-specific, I
+do not see any definition of what they are for a SPECIFIC
+CONTROLLER. What do I use for flags with the MPC5200B? Which
+ones are spare? :D
+
+>> or even every board with significant information
+>> hardcoded into drivers, I am considerably less enthused.
+> 
+> What's so bad about board-specific drivers for board-specific
+> devices?
+
+I doubt you will only see one LCD controller kind on one board
+any time soon.
+
+That LCD controller may be able to be driven over a couple of
+methods - be that one bus or another or a GPIO method, in the
+same way you can use MII or a 7-wire ethernet controller on
+the same chip. 99.9% of the driver is the same except the
+abstraction to how it communicates with the PHY.
+
+Without some purposeful definition in the device tree, the
+layout of the gpios property has to be defined, maintained
+and extracted by the driver using intimate knowledge of the
+board, extracted from a comment or a document, possibly
+extended from the one for the controller if you need "more
+flags".
+
+Let's be honest, using the flags field in "gpios" is not
+very human readable, and if we're using device tree examples
+as documentation, this just makes it harder on the developer
+as well as a user browsing the device tree on their device.
+
+> If a gpio-header is board-specific, then we have to
+> write a board-specific driver for it. To make things better
+> we can write the driver in a such way that the driver could be
+> easily adopted/extended for similar boards/setups.
+
+Indeed.
+
+> OR we can write bindings that could fully describe the gpio
+> header, and then just use the universal driver for it.
+
+Sure. This is what I mean.
+
+> Both solutions are doable.
+> 
+>> Okay. I think I am understanding this enough that I could write
+>> a bit more comprehensive documentation for it that would
+>> encompass the result of this discussion and some other things
+>> going on right now...
+>>
+>> As for implementation, since the only hardware I have here to
+>> test is a) broken b) only has 3 GPIO pins or b) working but
+>> such a horrid design I wouldn't use it as a doorstop, I don't
+>> think I am really qualified to put it into action..
+> 
+> Yeah, there are always excuses when it comes to send patches... ;-)
+
+That and I am busy, yes. I need to document it first though.
+
+-- 
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Genesi, Manager, Developer Relations
