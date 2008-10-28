@@ -1,17 +1,14 @@
-From: Nate Case <ncase-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Device tree binding documentation
-Date: Tue, 28 Oct 2008 15:54:10 -0500
-Message-ID: <1225227250.30047.151.camel@localhost.localdomain>
-References: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>
-	<9696D7A991D0824DBA8DFAC74A9C5FA3047E572F@az33exm25.fsl.freescale.net>
-	<490744B1.2000602@genesi-usa.com>
-	<fa686aa40810281027r64d4f78enfcb1c92c9ac6401e@mail.gmail.com>
-	<49076A8C.3010105@genesi-usa.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Wed, 29 Oct 2008 10:37:32 +1100
+Message-ID: <20081028233732.GB9124@yookeroo.seuss>
+References: <7b6eafc46f644dea59fbf0af17dbc005@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <49076A8C.3010105-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7b6eafc46f644dea59fbf0af17dbc005@localhost>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,20 +18,38 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Hugh Blemings <hab-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+To: Konstantinos Margaritis <markos-VYMTaqK72Q4@public.gmane.org>
+Cc: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2008-10-28 at 14:39 -0500, Matt Sealey wrote:
-> I guess we would need to decide how those documents are published
-> without using proprietary software, then, and easily committed to
-> another git repository (or the same one just in a published form).
-> I don't suppose office xml is a good choice? It should be flexible
-> enough and similar enough that sections and layout do not change a
-> great deal, and git can easily produce diffs?
+On Tue, Oct 28, 2008 at 02:31:29PM +0100, Konstantinos Margaritis wrote:
+> 
+> Pardon my intrusion in the conversation, but I just couldn't not comment on
+> this:
+> 
+> On Tue, 28 Oct 2008 12:50:03 +1100, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> >> So now my qualm is back to the beginning of the discussion. How do
+> >> we encode the purpose of those pins reliably and within some
+> >> standard framework, without getting *driver* specific?
+> >
+> > Um.. I fail to see how the purpose of a pin can be not driver
+> > specific.
+> 
+> GPIO stands for _General_ Purpose IO. The driver should just expose that
+> info to user space and it should be up to the userspace application to
+> decide what to do with that. The programmer should require absolutely
+> no other intervention to the driver whatsoever.
 
-I would suggest using DocBook if publishing PDFs is a goal.  It would
-also let you output text and HTML as an added bonus.
+Yes, which is exactly why the purpose of the pin is driver specific.
+That's the driver for the user of the pin, not the gpio controller.
+In some cases that's another kernel driver, where some device needs
+gpio access, in your case it's the userspace application.  But in
+either case it's this driver that must know what gpio line to use, and
+how to use it.
 
 -- 
-Nate Case <ncase-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
