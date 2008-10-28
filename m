@@ -1,20 +1,11 @@
 From: "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Mon, 27 Oct 2008 23:20:59 -0600
-Message-ID: <fa686aa40810272220w13dfbbadm7cda4ed2036ebc2b@mail.gmail.com>
-References: <4900ED81.3040202@genesi-usa.com> <49011C42.2020101@firmworks.com>
-	<20081024032944.GE4267@yookeroo.seuss>
-	<49014C69.8020408@firmworks.com>
-	<20081024044511.GI4267@yookeroo.seuss>
-	<490248C2.9020104@genesi-usa.com>
-	<20081026234747.GD22339@yookeroo.seuss> <4905E0DC.104@genesi-usa.com>
-	<20081028001511.GD26424@yookeroo.seuss>
-	<4906620B.7080308@genesi-usa.com>
+Subject: Device tree binding documentation
+Date: Tue, 28 Oct 2008 00:23:27 -0600
+Message-ID: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <4906620B.7080308-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
 Content-Disposition: inline
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
@@ -25,47 +16,60 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7sXa4x6EXUF0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2008 at 6:51 PM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
->
->
-> David Gibson wrote:
->>
->> On Mon, Oct 27, 2008 at 10:40:12AM -0500, Matt Sealey wrote:
->>
->> So, you use
->>        gpios = <&controller pin1-specifier &controller pin8-specifier
->>                 &controller pin9-specifier &controller pin11-specifier
->>                 &controller pin15-specifier &controller pin30-specifier>;
->
-> Okay that makes some more sense to me.
->
-> So now my qualm is back to the beginning of the discussion. How do
-> we encode the purpose of those pins reliably and within some
-> standard framework, without getting *driver* specific?
->
-> Take the example of an LCD controller with an 8-bit bus and two
-> control pins, if you put all 10 into a gpios property, explicit
-> knowledge of the purpose of those pins is lost. It must then be
-> encoded directly into the driver..
+I've been thinking a lot more about how to handle documenting new
+bindings for the device tree and getting them up onto a web site of
+some sort.  When this idea originally came up, my first impression was
+to just throw up a wiki somewhere and make it available for everyone
+to use.
 
-I disagree.  With the approach we've been following the meaning of
-those 10 gpio pins is not lost because we make a point of documenting
-it (granted in the Linux kernel tree at the moment which is far from
-ideal).  The knowledge of what those GPIOs are for is all bound up
-with the documented binding attached to the compatible value.
+But thinking about it more, it seems like a typical wiki wouldn't
+really encourage a workflow suitable for hammering out new bindings.
+For instance, before a new bindings is published as complete it needs
+to be reviewed and agreed to by the development community, but a
+typical wiki tends toward ad-hoc editing and continual
+update/refinement of the text on-line.  If not careful, a wiki could
+easily lead to unreviewed bindings being added or established bindings
+getting modified in poorly designed or incompatible ways.  It could
+also end up forcing everyone to do their bindings work from within a
+web browser which isn't always the most efficient tool.  We would need
+to come up with new processes for how to manage, review and approve
+content on the wiki so that users can be confident that the
+information on the web site is reliable.
 
-> I liked Anton's suggestion of grouping them and creating new nodes,
-> but you didn't like it when it was suggested before, so, I'm
-> wondering if there's a middle ground..
+It seems to me though that we *already* have a process for reviewing
+and accepting changes to a large collective work.  We work together
+every day on the Linux kernel and have established policies about how
+to make changes.  What if we follow the Linux lead and depend on the
+devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org and distributed revision control to
+develop and maintain documentation of new bindings?
 
-I've got no problem with this myself, but I don't think it really adds
-much in terms of additional information because users still need to
-refer to binding documentation to figure out what it actually means.
+Here is my thought:
+1. Set up a wiki site to publish the documentation.  Use something
+like ikiwiki which uses git as the back end
+2. Allow anyone to clone the backend repo
+3. Binding authors would post patches to the devicetree-discuss
+mailing list for all changes
+4. Review/discussion/arguments would proceed in the normal way
+5. Assign a few people to be binding maintainers
+6. Binding maintainers pick up, commit, (and probably sign) changes
+when there appears to be concensus
+7. Picked up changes get pushed out to the wiki server which updates the pages
 
+Also it would allow people to edit bindings on-line:
+2b. Setup a 'working' site that uses a side branch in the repo.
+2c. Allow edits in the side branch directly from the web page, but
+still require the binding diff to be posted to the mailing list for
+discussion before being merged into mainline.  The wiki software could
+be modified to automate patch posting without having to resort to the
+command line.
+
+I'm going to experiment with ikiwiki a bit tomorrow to see if it is
+workable.  I'd also appreciate any feedback on this.
+
+Cheers,
 g.
 
 -- 
