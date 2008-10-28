@@ -1,52 +1,51 @@
-From: "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device tree binding documentation
-Date: Tue, 28 Oct 2008 11:27:06 -0600
-Message-ID: <fa686aa40810281027r64d4f78enfcb1c92c9ac6401e@mail.gmail.com>
-References: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>
-	<9696D7A991D0824DBA8DFAC74A9C5FA3047E572F@az33exm25.fsl.freescale.net>
-	<490744B1.2000602@genesi-usa.com>
+From: "Grant Likely" <grant.likely@secretlab.ca>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Tue, 28 Oct 2008 11:32:13 -0600
+Message-ID: <fa686aa40810281032y6470d462ya8248e138c432583@mail.gmail.com>
+References: <7b6eafc46f644dea59fbf0af17dbc005@localhost>
+	<fa686aa40810280715m3275a302jd43ab517d2d455fc@mail.gmail.com>
+	<4907469B.6030506@genesi-usa.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <490744B1.2000602-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+In-Reply-To: <4907469B.6030506@genesi-usa.com>
 Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Hugh Blemings <hab-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, Konstantinos Margaritis <markos@codex.gr>, devicetree-discuss list <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2008 at 10:58 AM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
->
->
-> Yoder Stuart wrote:
->>
->>  So my vote is to maintain bindings as plain text files.
->
-> Just like the real elections I don't actually have a vote here,
+On Tue, Oct 28, 2008 at 11:06 AM, Matt Sealey <matt@genesi-usa.com> wrote:
+> The other problem was defining pins which most definitely ARE
+> connected to something (as GPIO) but could well be in an ill-defined
+> order or for no defined purpose with regards to the peripheral. A
+> lot of GPIO drivers right now (bitbang SPI, I2C) will just allocate
+> one pin as one thing and the other as another - if you say pin 15
+> and 16 for bitbang-i2c, then it may assumes pin 15 is clock and 16
+> is data. For SPI, you get another pin, which order is it (the
+> middle one may be correct but the outer ones could be swapped).
 
-If that were true you wouldn't have been in the 'to:' list.
+Yes, order is important, and yes it should be defined.  That is what
+the binding documentation must specify.  It is no different from the
+ordering of multiple ranges in the reg property or multiple
+interrupts.
 
-> but can I put my oar in that after a certain review process and
-> time has passed and the binding stabilizes, these get published
-> as PDF documents similar to an AppNote or the ePAPR specification
-> so that you get the advantages of bookmarks, pagination,
-> formatting (notes, examples and warnings) and printing it in a
-> reasonable fashion on a dead tree as if it were a book?
+> Is this even defined? Shouldn't it be? And therein lies the
+> question :)
 
-I think that is reasonable if it is something people find useful or
-more accessible.
+Yes and yes.  It all hangs off the value of compatible and the
+documentation of what the compatible value means.
 
 g.
-
 
 -- 
 Grant Likely, B.Sc., P.Eng.
