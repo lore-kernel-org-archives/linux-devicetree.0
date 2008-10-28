@@ -1,16 +1,23 @@
 From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: Device tree binding documentation
-Date: Tue, 28 Oct 2008 14:39:56 -0500
-Message-ID: <49076A8C.3010105@genesi-usa.com>
-References: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>	
-	<9696D7A991D0824DBA8DFAC74A9C5FA3047E572F@az33exm25.fsl.freescale.net>	
-	<490744B1.2000602@genesi-usa.com>
-	<fa686aa40810281027r64d4f78enfcb1c92c9ac6401e@mail.gmail.com>
+Subject: Re: GPIO - marking individual pins (not) available in device tree
+Date: Tue, 28 Oct 2008 14:46:38 -0500
+Message-ID: <49076C1E.8090501@genesi-usa.com>
+References: <20081024044511.GI4267@yookeroo.seuss>	
+	<4905E0DC.104@genesi-usa.com>	
+	<20081027183421.GA1009@oksana.dev.rtsoft.ru>	
+	<49060EC3.1070704@genesi-usa.com>	
+	<20081027201023.GA18642@oksana.dev.rtsoft.ru>	
+	<49063929.3060900@genesi-usa.com>	
+	<20081027231221.GA22008@oksana.dev.rtsoft.ru>	
+	<490666B0.2010500@genesi-usa.com>	
+	<20081028023722.GA30057@oksana.dev.rtsoft.ru>	
+	<4907436D.2060209@genesi-usa.com>
+	<fa686aa40810281039v4f22a464u3eb1d421e1226fc8@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <fa686aa40810281027r64d4f78enfcb1c92c9ac6401e-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <fa686aa40810281039v4f22a464u3eb1d421e1226fc8-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,60 +28,61 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Hugh Blemings <hab-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Cc: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
 Grant Likely wrote:
-> On Tue, Oct 28, 2008 at 10:58 AM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
->>
->> Yoder Stuart wrote:
->>>  So my vote is to maintain bindings as plain text files.
->> Just like the real elections I don't actually have a vote here,
+
+> At this level, the 'compatible = "gpio-group";' is completely
+> irrelevant.  The binding for "crystalfontz,something-gpio" must
+> specify that there are two subnodes; one named data-bus and one named
+> rw-ctrl.  The driver, which binds against compatible in the parent
+> node, would know to go looking for those child nodes and to use the
+> gpios property inside them.  Simple.
+
+Point taken.
+
+>>> Does this mean "hard-coding"?
+>> No. If you have an array of GPIO pins (gpios property) then how do you
+>> determine which is for data and which is some control pin? Do you
+>> associate these numbers in the driver somehow? Maybe a matchlist or
+>> an array? Given pins A B C D E F G H I J where does the data bus
+>> start and the control pins live? A and B? A and J? I and J?
 > 
-> If that were true you wouldn't have been in the 'to:' list.
+> You know because you document it in the binding.
 
-I got an Obama campaign leaflet through the door the other day, too :)
+I think having a working device tree and a seperate binding document
+sometimes slows things down. If it is not patently obvious what you
+mean from a device tree, in order to write a new driver, the device
+tree is not doing it's job..
 
->> but can I put my oar in that after a certain review process and
->> time has passed and the binding stabilizes, these get published
->> as PDF
+Where the binding must take it's cue from established documentation,
+and follows existing procedures and semantics, the binding is important
+(for instance there are a few ways to check an interrupt fired on
+MPC5200B, and Linux/dts encodes them per ONE table in the docs, this
+must be referenced somewhere at least)
+
+>> It would be definitely frivolous to define a whole device tree binding
+>> for the *order in which you MUST specify the gpios for this particular
+>> device*. There is obviously an implicit ordering of the GPIOs to make
+>> up the data bus (you'd expect an order from MSB to LSB.. or perhaps
+>> LSB to MSB... that might be better defined than undefined)
 > 
-> I think that is reasonable if it is something people find useful or
-> more accessible.
+> Why is it frivolous?  We do this all the time for reg and irqs.
 
-I guess we would need to decide how those documents are published
-without using proprietary software, then, and easily committed to
-another git repository (or the same one just in a published form).
-I don't suppose office xml is a good choice? It should be flexible
-enough and similar enough that sections and layout do not change a
-great deal, and git can easily produce diffs?
+See above. Does every driver require a ratified device tree binding
+which is collaborated and agreed upon even though it may be in use on
+one or two boards which actually may never see the light of day (I
+bet none of you will ever see the CPLD core I'm sitting in front of
+right now..)
 
-For another time maybe. Continue on the discussion. I really like
-the git repo/wiki idea. But I do not agree that a web browser is
-inefficient; a wiki for editing changes (for registered users
-assigned to a "project") in a collaborative way is probably far
-better in some respects than using Kate and xdiff (certainly
-less difficult in some other respects), if you want to quickly
-look at changes or so, or make an update to a section.
-
-If we didn't like web browsers that much then we wouldn't have
-patchwork, for example, which is an insanely useful tool..
-although the same care must be taken not to do what patchwork
-just did and go through a lovely rewrite or software update
-and suddenly lose years of patch reference URLs :D
-
-I understand not wanting to have to keep a browser open to read
-a forum instead of a mailing list, but this is something a
-little different. Wouldn't collaboratively editing a wiki allow
-multiple users to submit changes to a page (in "private"), yet
-ultimately have a Responsible Person collect those changes into
-a bundle and submit that as a patch to devicetree-discuss when
-development is complete? Branching and checkouts in git would
-work the same way but you wouldn't have to be sitting at your
-desk (with git) to make a tiny update or collaborate with your
-colleagues while out in the field or at a customer site.
+I think it should be obvious both from the tree and inside the driver
+what magical little sections of code do without cross-referencing, I
+do far too much cross-referencing in Linux as it is, and it's one thing
+I'm a little sore to see keep reoccurring, that I have to have 3 windows
+open to understand the intent of a 10 line snippet in a driver..
 
 -- 
 Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
