@@ -1,18 +1,18 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: generating a phandle w/libfdt?
-Date: Tue, 28 Oct 2008 22:47:39 -0500
-Message-ID: <33A5285E-F5BE-4109-9C29-59F23E6264A0@kernel.crashing.org>
-References: <4BE3ADDA-362B-43AE-8D05-11260B94CD13@kernel.crashing.org>
-	<DEE70934-6A37-4439-B27E-FC3ABF75BF24@kernel.crashing.org>
-	<9696D7A991D0824DBA8DFAC74A9C5FA3047947A3@az33exm25.fsl.freescale.net>
-	<20081026234052.GB22339@yookeroo.seuss>
-	<76BF0CED-6848-43B9-8035-FC9C1F1DD981@kernel.crashing.org>
-	<20081028000449.GB26424@yookeroo.seuss>
-Mime-Version: 1.0 (Apple Message framework v929.2)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: Device tree binding documentation
+Date: Wed, 29 Oct 2008 09:53:09 -0500
+Message-ID: <490878D5.2010607@genesi-usa.com>
+References: <fa686aa40810272323s4a5c2f50u8aa999952aaa6b2@mail.gmail.com>	
+	<9696D7A991D0824DBA8DFAC74A9C5FA3047E572F@az33exm25.fsl.freescale.net>	
+	<490744B1.2000602@genesi-usa.com>	
+	<fa686aa40810281027r64d4f78enfcb1c92c9ac6401e@mail.gmail.com>	
+	<49076A8C.3010105@genesi-usa.com>
+	<1225227250.30047.151.camel@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20081028000449.GB26424-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+In-Reply-To: <1225227250.30047.151.camel-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -22,66 +22,44 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Nate Case <ncase-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Hugh Blemings <hab-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 27, 2008, at 7:04 PM, David Gibson wrote:
 
-> On Mon, Oct 27, 2008 at 09:15:38AM -0500, Kumar Gala wrote:
->>
->> On Oct 26, 2008, at 6:40 PM, David Gibson wrote:
->>
->>> On Fri, Oct 24, 2008 at 09:29:21AM -0700, Yoder Stuart wrote:
->>>>
->>>>
->>>>> -----Original Message-----
->>>>> From:
->>>>> devicetree-discuss-bounces+stuart.yoder=freescale.com@ozlabs.o
->>>>> rg
->>>>> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com@
->>>> ozlabs.org] On Behalf Of Kumar Gala
->>>>> Sent: Friday, October 24, 2008 9:19 AM
->>>>> To: devicetree-discuss
->>>>> Subject: Re: generating a phandle w/libfdt?
->>>>>
->>>>>
->>>>> On Oct 24, 2008, at 8:11 AM, Kumar Gala wrote:
->>>>>
->>>>>> In some work I'm doing I noticed we don't have any APIs to
->>>>> generate
->>>>>> a phandle via libfdt.
->>>>>>
->>>>>> was wondering if anyone had ideas on this.
->>>>>>
->>>>>> In first thought it seems we have to scan through the whole blob
->>>>>> looking for the largest phandle id and than +1 it to generate the
->>>>>> next "valid" id.  Any other ideas on how to do this more
->>>>> efficiently?
->>>>>
->>>>> The other question is there a way today to create a phandle even  
->>>>> if
->>>>> there isn't a reference to it elsewhere in a .dts?
->>>>
->>>> We had this issue and the 'hack' was to create a phandle property
->>>> in the node itself, so it was self-referenced.  That caused DTC
->>>> to allocate a phandle.   We then could reference the node from
->>>> dynamically generated nodes.
->>>
->>> That's nasty.  I should add a way to make dtc generate a phandle  
->>> for a
->>> node, even if it's not referenced from elsewhere.  Just need to  
->>> think
->>> of a decent syntax.
->>
->> What if we just have it do that if we have a "linux,phandle" property
->> w/o a value in the .dts?
->
-> Hrm.  Normally that would create a property named "linux,phandle" with
-> a zero-length value.  I'm disinclined to special case this.
+Nate Case wrote:
+> On Tue, 2008-10-28 at 14:39 -0500, Matt Sealey wrote:
+>> I guess we would need to decide how those documents are published
+>> without using proprietary software, then, and easily committed to
+>> another git repository (or the same one just in a published form).
+>> I don't suppose office xml is a good choice? It should be flexible
+>> enough and similar enough that sections and layout do not change a
+>> great deal, and git can easily produce diffs?
+> 
+> I would suggest using DocBook if publishing PDFs is a goal.  It would
+> also let you output text and HTML as an added bonus.
 
-Why?  linux,phandle is already special.  What does it mean if a  
-linux,phandle has no value?
+The problem then is you can't edit the document outside of a special
+DocBook editor (not that there is one, which means you're stuck
+throwing XML around).
 
-- k
+The goal isn't to abstract the documentation and bindings so we can
+extract them as different types for different means, but to take what
+is in a wiki or a text document in git and purposefully organize it
+for later publishing. I wouldn't want to have the official ratified
+binding just generated from the DocBook source of some version, DocBook
+doesn't have the pizazz and features required.. or a GUI editor worth
+a shit.
+
+I've vote for anything OpenOffice can throw out. I guess if we're
+talking about taking the .txt binding and making a PDF out of it,
+the software used need only be usable by everyone involved, and it
+(any output such as PDF or Word or ODT) may as well be treated as
+a binary blob in the git tree (and would not be updated, as an
+official errata would be published, and then a new version, and
+let's not rely on git to make sure people can get the old version!).
+
+-- 
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Genesi, Manager, Developer Relations
