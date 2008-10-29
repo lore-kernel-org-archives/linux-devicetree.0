@@ -1,14 +1,18 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: GPIO - marking individual pins (not) available in device tree
-Date: Wed, 29 Oct 2008 10:37:32 +1100
-Message-ID: <20081028233732.GB9124@yookeroo.seuss>
-References: <7b6eafc46f644dea59fbf0af17dbc005@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: generating a phandle w/libfdt?
+Date: Tue, 28 Oct 2008 22:47:39 -0500
+Message-ID: <33A5285E-F5BE-4109-9C29-59F23E6264A0@kernel.crashing.org>
+References: <4BE3ADDA-362B-43AE-8D05-11260B94CD13@kernel.crashing.org>
+	<DEE70934-6A37-4439-B27E-FC3ABF75BF24@kernel.crashing.org>
+	<9696D7A991D0824DBA8DFAC74A9C5FA3047947A3@az33exm25.fsl.freescale.net>
+	<20081026234052.GB22339@yookeroo.seuss>
+	<76BF0CED-6848-43B9-8035-FC9C1F1DD981@kernel.crashing.org>
+	<20081028000449.GB26424@yookeroo.seuss>
+Mime-Version: 1.0 (Apple Message framework v929.2)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7b6eafc46f644dea59fbf0af17dbc005@localhost>
+In-Reply-To: <20081028000449.GB26424-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -18,38 +22,66 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Konstantinos Margaritis <markos-VYMTaqK72Q4@public.gmane.org>
-Cc: linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss list <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2008 at 02:31:29PM +0100, Konstantinos Margaritis wrote:
-> 
-> Pardon my intrusion in the conversation, but I just couldn't not comment on
-> this:
-> 
-> On Tue, 28 Oct 2008 12:50:03 +1100, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> >> So now my qualm is back to the beginning of the discussion. How do
-> >> we encode the purpose of those pins reliably and within some
-> >> standard framework, without getting *driver* specific?
-> >
-> > Um.. I fail to see how the purpose of a pin can be not driver
-> > specific.
-> 
-> GPIO stands for _General_ Purpose IO. The driver should just expose that
-> info to user space and it should be up to the userspace application to
-> decide what to do with that. The programmer should require absolutely
-> no other intervention to the driver whatsoever.
 
-Yes, which is exactly why the purpose of the pin is driver specific.
-That's the driver for the user of the pin, not the gpio controller.
-In some cases that's another kernel driver, where some device needs
-gpio access, in your case it's the userspace application.  But in
-either case it's this driver that must know what gpio line to use, and
-how to use it.
+On Oct 27, 2008, at 7:04 PM, David Gibson wrote:
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> On Mon, Oct 27, 2008 at 09:15:38AM -0500, Kumar Gala wrote:
+>>
+>> On Oct 26, 2008, at 6:40 PM, David Gibson wrote:
+>>
+>>> On Fri, Oct 24, 2008 at 09:29:21AM -0700, Yoder Stuart wrote:
+>>>>
+>>>>
+>>>>> -----Original Message-----
+>>>>> From:
+>>>>> devicetree-discuss-bounces+stuart.yoder=freescale.com@ozlabs.o
+>>>>> rg
+>>>>> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com@
+>>>> ozlabs.org] On Behalf Of Kumar Gala
+>>>>> Sent: Friday, October 24, 2008 9:19 AM
+>>>>> To: devicetree-discuss
+>>>>> Subject: Re: generating a phandle w/libfdt?
+>>>>>
+>>>>>
+>>>>> On Oct 24, 2008, at 8:11 AM, Kumar Gala wrote:
+>>>>>
+>>>>>> In some work I'm doing I noticed we don't have any APIs to
+>>>>> generate
+>>>>>> a phandle via libfdt.
+>>>>>>
+>>>>>> was wondering if anyone had ideas on this.
+>>>>>>
+>>>>>> In first thought it seems we have to scan through the whole blob
+>>>>>> looking for the largest phandle id and than +1 it to generate the
+>>>>>> next "valid" id.  Any other ideas on how to do this more
+>>>>> efficiently?
+>>>>>
+>>>>> The other question is there a way today to create a phandle even  
+>>>>> if
+>>>>> there isn't a reference to it elsewhere in a .dts?
+>>>>
+>>>> We had this issue and the 'hack' was to create a phandle property
+>>>> in the node itself, so it was self-referenced.  That caused DTC
+>>>> to allocate a phandle.   We then could reference the node from
+>>>> dynamically generated nodes.
+>>>
+>>> That's nasty.  I should add a way to make dtc generate a phandle  
+>>> for a
+>>> node, even if it's not referenced from elsewhere.  Just need to  
+>>> think
+>>> of a decent syntax.
+>>
+>> What if we just have it do that if we have a "linux,phandle" property
+>> w/o a value in the .dts?
+>
+> Hrm.  Normally that would create a property named "linux,phandle" with
+> a zero-length value.  I'm disinclined to special case this.
+
+Why?  linux,phandle is already special.  What does it mean if a  
+linux,phandle has no value?
+
+- k
