@@ -1,17 +1,18 @@
 From: "Grant Likely" <grant.likely@secretlab.ca>
 Subject: Re: Device tree configuration for I2C eeprom
-Date: Tue, 4 Nov 2008 09:28:16 -0700
-Message-ID: <fa686aa40811040828y23d0d65bsebc3f542c57291a@mail.gmail.com>
+Date: Tue, 4 Nov 2008 09:29:09 -0700
+Message-ID: <fa686aa40811040829r4b68fb4axde8612cc3d06cca@mail.gmail.com>
 References: <16691A8B34B5D9458EA3A1C37A11555A0137F7B6@tanisys-ex2.Tanisys.Local>
 	<20080918221335.GA6420@Chamillionaire.breakpoint.cc>
 	<9e4733910809181521r3cd74119tfedd36567e3b5394@mail.gmail.com>
 	<20080919050441.GD25528@secretlab.ca>
 	<20080919071238.GA8773@Chamillionaire.breakpoint.cc>
+	<fa686aa40811040828y23d0d65bsebc3f542c57291a@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-embedded-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <20080919071238.GA8773@Chamillionaire.breakpoint.cc>
+In-Reply-To: <fa686aa40811040828y23d0d65bsebc3f542c57291a@mail.gmail.com>
 Content-Disposition: inline
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-embedded>,
 	<mailto:linuxppc-embedded-request@ozlabs.org?subject=unsubscribe>
@@ -26,22 +27,25 @@ To: Sebastian Siewior <linuxppc-embedded@ml.breakpoint.cc>
 Cc: Ayman El-Khashab <AymanE@tanisys.com>, devicetree-discuss@ozlabs.org, Linuxppc-embedded@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 19, 2008 at 12:12 AM, Sebastian Siewior
-<linuxppc-embedded@ml.breakpoint.cc> wrote:
-> * Grant Likely | 2008-09-18 22:04:41 [-0700]:
+On Tue, Nov 4, 2008 at 9:28 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Fri, Sep 19, 2008 at 12:12 AM, Sebastian Siewior
+> <linuxppc-embedded@ml.breakpoint.cc> wrote:
+>> * Grant Likely | 2008-09-18 22:04:41 [-0700]:
+>>
+>>>No, don't use the generic chip names.  Device tree convention is to be
+>>>specific and prefix the part number with the vendor name.  ie. You should
+>>>be using "at,at24c64", not "24c64".
+>>
+>> What about the i2c drivers which don't have any prefix like the m41t80?
+>> Prior commit 0d1cde2 aka "powerpc/i2c: Convert i2c-mpc into an
+>> of_platform driver" the ids were converted.
 >
->>No, don't use the generic chip names.  Device tree convention is to be
->>specific and prefix the part number with the vendor name.  ie. You should
->>be using "at,at24c64", not "24c64".
->
-> What about the i2c drivers which don't have any prefix like the m41t80?
-> Prior commit 0d1cde2 aka "powerpc/i2c: Convert i2c-mpc into an
-> of_platform driver" the ids were converted.
+> That is the *driver* not the device tree description.  The OF i2c code
+> is still converts the name.  By default it does this by simply
+> stripping off the manufacturer prefix, but the match table does still
+> exist when the default behavior needs to be overridden.
 
-That is the *driver* not the device tree description.  The OF i2c code
-is still converts the name.  By default it does this by simply
-stripping off the manufacturer prefix, but the match table does still
-exist when the default behavior needs to be overridden.
+Oops, I already replied to this one.  Sorry for the duplicate response.
 
 g.
 
