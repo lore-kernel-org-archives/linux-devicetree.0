@@ -1,39 +1,38 @@
-From: Sebastian Andrzej Siewior <linuxppc-embedded@ml.breakpoint.cc>
-Subject: Re: Device tree configuration for I2C eeprom
-Date: Tue, 4 Nov 2008 18:17:01 +0100
-Message-ID: <20081104171701.GA8946@Chamillionaire.breakpoint.cc>
-References: <16691A8B34B5D9458EA3A1C37A11555A0137F7B6@tanisys-ex2.Tanisys.Local>
-	<20080918221335.GA6420@Chamillionaire.breakpoint.cc>
-	<9e4733910809181521r3cd74119tfedd36567e3b5394@mail.gmail.com>
-	<20080919050441.GD25528@secretlab.ca>
-	<20080919071238.GA8773@Chamillionaire.breakpoint.cc>
-	<fa686aa40811040828y23d0d65bsebc3f542c57291a@mail.gmail.com>
-	<fa686aa40811040829r4b68fb4axde8612cc3d06cca@mail.gmail.com>
+From: Jon Loeliger <jdl@jdl.com>
+Subject: Re: libfdt: Fix bug in fdt_subnode_offset_namelen()
+Date: Wed, 05 Nov 2008 08:15:38 -0600
+Message-ID: <E1KxjAZ-0006VP-0K@jdl.com>
+References: <20081030024108.GC17505@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-embedded-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <fa686aa40811040829r4b68fb4axde8612cc3d06cca@mail.gmail.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-embedded>,
-	<mailto:linuxppc-embedded-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-embedded>
-List-Post: <mailto:linuxppc-embedded@ozlabs.org>
-List-Help: <mailto:linuxppc-embedded-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-embedded>,
-	<mailto:linuxppc-embedded-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-embedded-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-embedded-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Ayman El-Khashab <AymanE@tanisys.com>, devicetree-discuss@ozlabs.org, Linuxppc-embedded@ozlabs.org
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+In-reply-to: <20081030024108.GC17505@yookeroo.seuss> 
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely | 2008-11-04 09:29:09 [-0700]:
+> There's currently an off-by-one bug in fdt_subnode_offset_namelen()
+> which causes it to keep searching after it's finished the subnodes of
+> the given parent, and into the subnodes of siblings of the original
+> node which come after it in the tree.
+> 
+> This patch fixes the bug.  It also extends the subnode_offset testcase
+> (updating all of the 'test_tree1' example trees in the process) to
+> catch it.
+> 
+> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
 
->Oops, I already replied to this one.  Sorry for the duplicate response.
+Applied.
 
-No worries. You haven't been that detailed like the last time :)
-
->g.
-
-Sebastian
+Thanks,
+jdl
