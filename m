@@ -1,236 +1,286 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: dtc: Add python source code output
-Date: Fri, 7 Nov 2008 13:31:40 +1100
-Message-ID: <20081107023140.GJ6692@yookeroo.seuss>
-References: <1225958144.25986.9.camel@localhost>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: libfdt: Property iteration
+Date: Fri, 7 Nov 2008 13:54:44 +1100
+Message-ID: <20081107025444.GK6692@yookeroo.seuss>
+References: <20081027221441.GA8763@ld0162-tx32.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1225958144.25986.9.camel@localhost>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Michael Ellerman <michael@ellerman.id.au>
-Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss@ozlabs.org
+In-Reply-To: <20081027221441.GA8763-VKaLA/mbEU932VTgPCOETVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2008 at 06:55:44PM +1100, Michael Ellerman wrote:
-> This commit adds an output format, which produces python
-> code. When run, the python produces a data structure that
-> can then be inspected in order to do various things.
-> 
-> Signed-off-by: Michael Ellerman <michael@ellerman.id.au>
-> ---
-> 
-> I'm not sure if this is generally useful (or sane) but it was for me so
-> I thought I'd post it.
+On Mon, Oct 27, 2008 at 05:14:41PM -0500, Scott Wood wrote:
+> A while back when discussing property iterators
+> (http://ozlabs.org/pipermail/linuxppc-dev/2008-January/049891.html), you
+> said that you'd prefer not to expose property offsets, because more
+> common uses would be affected by changing offsets.  I'm looking again at
+> this, and was wondering what alternative and would-be-broken use cases
+> you were thinking of?
 
-Hrm, well the idea of langauge source output seems reasonable.  But
-the actual data structure emitted, and the method of construction in
-Python both seem a bit odd to me.
+Hrm, well I didn't have things in mind all that precisely.  I was just
+thinking that it's fairly common to grab a node, then manipulate
+various properties within it in a more-or-less random-access sort of
+way.
 
-> I have a dts that I want to use to configure a simulator, and this
-> seemed like the nicest way to get there. dtc spits out the pythonised
-> device tree, and then I have a 10 line python script that does the
-> configuring.
+Whereas when finding nodes, ofetn one tends to work down the tree to a
+particular node, and the only things you're interested in keeping tabs
+on (for a little while at least) are some of the ancestors of this
+node - whose offsets are guaranteed not to be messed with by
+manipulations within the descendant.
 
-[snip]
-> diff --git a/python.c b/python.c
-> new file mode 100644
-> index 0000000..8ad0433
-> --- /dev/null
-> +++ b/python.c
+> We could operate on property indices or names at an efficiency cost. 
+> Most nodes should be small enough that the cost isn't too much, but I'd
+> like to know which use cases really need it.  The ones I'd use it for
+> involve reading from one tree and adding to another, so moving offsets
+> aren't an issue.
 
-AFAICT this is based roughly on the output side of treesource.c.  It
-would be kind of nice if the two could be combined, with the same
-basic structure looping over the device tree, and different emitters
-for either python or dts source.  This would be similar to what we do
-in flattree.c to emit either binary or asm versions of the flat tree.
+I don't think indices buy us much over offsets.  They can still change
+with node insertions or deletions.
 
-> @@ -0,0 +1,129 @@
-> +/*
-> + * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
-> + * (C) Copyright Michael Ellerman, IBM Corporation.  2008.
-> + *
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License, or (at your option) any later version.
-> + *
-> + *  This program is distributed in the hope that it will be useful,
-> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + *  General Public License for more details.
-> + *
-> + *  You should have received a copy of the GNU General Public License
-> + *  along with this program; if not, write to the Free Software
-> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-> + *                                                                   USA
-> + */
-> +
-> +#include "dtc.h"
-> +#include "srcpos.h"
-> +
-> +
-> +static void write_propval_cells(FILE *f, struct property *prop)
-> +{
-> +	cell_t *cp = (cell_t *)prop->val.val;
-> +	int i;
-> +
-> +	fprintf(f, "    p = Property('%s', [", prop->name);
-> +
-> +	for (i = 0; i < prop->val.len / sizeof(cell_t); i++)
-> +		fprintf(f, "0x%x, ", fdt32_to_cpu(cp[i]));
-> +
-> +	fprintf(f, "])\n");
-> +}
-> +
-> +static int isstring(char c)
-> +{
-> +	return (isprint(c)
-> +		|| (c == '\0')
-> +		|| strchr("\a\b\t\n\v\f\r", c));
-> +}
-> +
-> +static void write_property(FILE *f, struct property *prop)
-> +{
-> +	const char *p = prop->val.val;
-> +	int i, strtype, len = prop->val.len;
-> +
-> +	if (len == 0) {
-> +		fprintf(f, "    p = Property('%s', None)\n", prop->name);
-> +		goto out;
-> +	}
-> +
-> +	strtype = 1;
-> +	for (i = 0; i < len; i++) {
-> +		if (!isstring(p[i])) {
-> +			strtype = 0;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (strtype)
-> +		fprintf(f, "    p = Property('%s', '%s')\n", prop->name,
-> +			prop->val.val);
+> Even in a use case where one makes in-place changes while iterating over
+> properties, changes to the property currently being iterated over should
+> only move later properties -- the next call to fdt_next_prop would be
+> based on the start of the property that was modified, which did not
+> change.
 
-This isn't correct.  The property value could contain \0s or other
-control characters which won't be preserved properly if emitted
-directly into the python source.  You'd need to escape the string, as
-write_propval_string() does in treesource.c.
+That's true; unless you delete the property entirely.  Inserting an
+unrelated property is also potentially dangerous, though from the
+looks of it we always insert properties at the end in libfdt, so that
+should work ok.
 
-Uh.. there's also an interesting ambiguity here.  In OF and flat
-trees, strings are NUL-terminated and the final '\0' is included as
-part of the property length.  Python strings are not NUL-terminated,
-they're bytestrings that know their own length.  I think making sure
-all the conversions correctly preserve the presence/lack of a terminal
-NUL, requires a bit more care here..
+Fwiw, I (somewhat reluctantly) accepted the need for property offsets,
+in the prototype patch for property iteration I had.  I was going to
+polish it up and push it out, but got sidetracked by other things.
+I've included it below, maybe you'll get to the polishing before I do.
 
-> +	else if (len == 4)
-> +		fprintf(f, "    p = Property('%s', 0x%x)\n", prop->name,
-> +			fdt32_to_cpu(*(const cell_t *)p));
+Index: dtc/libfdt/fdt.c
+===================================================================
+--- dtc.orig/libfdt/fdt.c	2008-02-14 11:20:40.000000000 +1100
++++ dtc/libfdt/fdt.c	2008-02-14 14:17:19.000000000 +1100
+@@ -90,6 +90,31 @@
+ 	return p;
+ }
+ 
++const struct fdt_property *_fdt_offset_property(const void *fdt, int offset,
++					       int *lenp)
++{
++	const struct fdt_property *prop;
++	int len;
++
++	if (lenp)
++		*lenp = -FDT_ERR_BADSTRUCTURE;
++
++	prop = fdt_offset_ptr(fdt, offset, sizeof(*prop));
++	if (!prop)
++		return NULL;
++
++	len = fdt32_to_cpu(prop->len);
++
++	prop = fdt_offset_ptr(fdt, offset, sizeof(*prop)+len);
++	if (!prop)
++		return NULL;
++
++	if (lenp)
++		*lenp = len;
++
++	return prop;
++}
++
+ uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset)
+ {
+ 	const uint32_t *tagp, *lenp;
+@@ -170,6 +195,46 @@
+ 	return offset;
+ }
+ 
++int _fdt_next_property(const void *fdt, int offset)
++{
++	uint32_t tag;
++	int nextoffset;
++	int err;
++
++	if ((err = fdt_check_header(fdt)) != 0)
++		return err;
++
++	if (offset % FDT_TAGSIZE)
++		return -FDT_ERR_BADOFFSET;
++
++	tag = fdt_next_tag(fdt, offset, &nextoffset);
++	if ((tag != FDT_BEGIN_NODE) && (tag != FDT_PROP))
++		return -FDT_ERR_BADOFFSET;
++
++	do {
++		offset = nextoffset;
++
++		tag = fdt_next_tag(fdt, offset, &nextoffset);
++		switch (tag) {
++		case FDT_END:
++			return -FDT_ERR_TRUNCATED;
++
++		case FDT_BEGIN_NODE:
++		case FDT_END_NODE:
++		case FDT_NOP:
++			break;
++
++		case FDT_PROP:
++			return offset;
++
++		default:
++			return -FDT_ERR_BADSTRUCTURE;
++		}
++	} while (tag == FDT_NOP);
++
++	return -FDT_ERR_NOTFOUND;
++}
++
+ const char *_fdt_find_string(const char *strtab, int tabsize, const char *s)
+ {
+ 	int len = strlen(s) + 1;
+Index: dtc/libfdt/fdt_ro.c
+===================================================================
+--- dtc.orig/libfdt/fdt_ro.c	2008-02-14 11:20:40.000000000 +1100
++++ dtc/libfdt/fdt_ro.c	2008-02-14 13:18:21.000000000 +1100
+@@ -190,68 +190,22 @@
+ 					    int nodeoffset,
+ 					    const char *name, int *lenp)
+ {
+-	uint32_t tag;
+ 	const struct fdt_property *prop;
+-	int namestroff;
+-	int offset, nextoffset;
+-	int err;
++	const char *pname;
++	int offset = nodeoffset;
+ 
+-	if ((err = fdt_check_header(fdt)) != 0)
+-		goto fail;
+-
+-	err = -FDT_ERR_BADOFFSET;
+-	if (nodeoffset % FDT_TAGSIZE)
+-		goto fail;
+-
+-	tag = fdt_next_tag(fdt, nodeoffset, &nextoffset);
+-	if (tag != FDT_BEGIN_NODE)
+-		goto fail;
+-
+-	do {
+-		offset = nextoffset;
+-
+-		tag = fdt_next_tag(fdt, offset, &nextoffset);
+-		switch (tag) {
+-		case FDT_END:
+-			err = -FDT_ERR_TRUNCATED;
+-			goto fail;
+-
+-		case FDT_BEGIN_NODE:
+-		case FDT_END_NODE:
+-		case FDT_NOP:
+-			break;
+-
+-		case FDT_PROP:
+-			err = -FDT_ERR_BADSTRUCTURE;
+-			prop = fdt_offset_ptr(fdt, offset, sizeof(*prop));
+-			if (! prop)
+-				goto fail;
+-			namestroff = fdt32_to_cpu(prop->nameoff);
+-			if (streq(fdt_string(fdt, namestroff), name)) {
+-				/* Found it! */
+-				int len = fdt32_to_cpu(prop->len);
+-				prop = fdt_offset_ptr(fdt, offset,
+-						      sizeof(*prop)+len);
+-				if (! prop)
+-					goto fail;
+-
+-				if (lenp)
+-					*lenp = len;
+-
+-				return prop;
+-			}
+-			break;
+-
+-		default:
+-			err = -FDT_ERR_BADSTRUCTURE;
+-			goto fail;
+-		}
+-	} while ((tag != FDT_BEGIN_NODE) && (tag != FDT_END_NODE));
++	while ((offset = _fdt_next_property(fdt, offset)) >= 0) {
++		prop = fdt_offset_property(fdt, offset, lenp);
++		if (!prop)
++			return NULL;
++		pname = fdt_string(fdt, fdt32_to_cpu(prop->nameoff));
++		if (streq(pname, name))
++			/* Found it! */
++			return prop;
++	}
+ 
+-	err = -FDT_ERR_NOTFOUND;
+- fail:
+ 	if (lenp)
+-		*lenp = err;
++		*lenp = offset;
+ 	return NULL;
+ }
+ 
+Index: dtc/libfdt/libfdt_internal.h
+===================================================================
+--- dtc.orig/libfdt/libfdt_internal.h	2008-02-14 11:20:40.000000000 +1100
++++ dtc/libfdt/libfdt_internal.h	2008-02-14 13:18:21.000000000 +1100
+@@ -59,6 +59,7 @@
+ #define streq(p, q)	(strcmp((p), (q)) == 0)
+ 
+ uint32_t _fdt_next_tag(const void *fdt, int startoffset, int *nextoffset);
++int _fdt_next_property(const void *fdt, int offset);
+ const char *_fdt_find_string(const char *strtab, int tabsize, const char *s);
+ int _fdt_node_end_offset(void *fdt, int nodeoffset);
+ 
+Index: dtc/libfdt/libfdt.h
+===================================================================
+--- dtc.orig/libfdt/libfdt.h	2008-02-14 11:20:40.000000000 +1100
++++ dtc/libfdt/libfdt.h	2008-02-14 14:19:20.000000000 +1100
+@@ -128,6 +128,9 @@
+ 	return (void *)fdt_offset_ptr(fdt, offset, checklen);
+ }
+ 
++const struct fdt_property *_fdt_offset_property(const void *fdt, int offset,
++						int *lenp);
++
+ uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset);
+ 
+ /**********************************************************************/
+@@ -136,6 +139,11 @@
+ 
+ int fdt_next_node(const void *fdt, int offset, int *depth);
+ 
++#define for_each_property(fdt, node, prop, len) \
++	for (int _off = fdt_next_property((fdt), (node)); \
++	     (_off >= 0) && \
++		     (((prop) = fdt_offset_property((fdt), _off, &(len))) >= 0);)
++
+ /**********************************************************************/
+ /* General functions                                                  */
+ /**********************************************************************/
+@@ -256,6 +264,7 @@
+  */
+ int fdt_get_mem_rsv(const void *fdt, int n, uint64_t *address, uint64_t *size);
+ 
++
+ /**
+  * fdt_subnode_offset_namelen - find a subnode based on substring
+  * @fdt: pointer to the device tree blob
 
-There's a propval_cell() function in livetree.c you can use to
-simplify this.
-
-> +	else
-> +		write_propval_cells(f, prop);
-
-Uh.. this branch could be called in the case where prop is not a
-string, but also doesn't have length a multiple of 4, which
-write_propval_cells() won't correctly deal with.
-
-These branches also result in the value having different Python types
-depending on the context.  That's not necessarily a bad thing, but
-since which Python type is chosen depends on a heuristic only, it
-certainly needs some care.  You certainly need to be certain that you
-can always deduce the exact, byte-for-byte correct version of the
-property value from whatever you put into the Python data structure.
-
-> +	
-> +out:
-> +	fprintf(f, "    n.properties.append(p)\n");
-
-So, emitting Python procedural code to build up the data structure,
-rather than a great big Python literal that the Python parser will
-just turn into the right thing seems a bit of a roundabout way of
-doing this.
-
-> +}
-> +
-> +static void write_tree_source_node(FILE *f, struct node *tree, int level)
-> +{
-> +	char name[MAX_NODENAME_LEN + 1] = "root";
-
-Why not just have the root node's name be the empty string, as we do
-in the flat tree?
-
-> +	struct property *prop;
-> +	struct node *child;
-> +
-> +	if (tree->name && (*tree->name))
-> +		strncpy(name, tree->name, MAX_NODENAME_LEN);
-> +
-> +	fprintf(f, "    n = Node('%s', parents[-1])\n", name);
-> +
-> +	if (level > 0)
-> +		fprintf(f, "    parents[-1].children.append(n)\n");
-> +	else
-> +		fprintf(f, "    root = n\n");
-> +
-> +	for_each_property(tree, prop)
-> +		write_property(f, prop);
-> +
-> +	fprintf(f, "    parents.append(n)\n");
-> +
-> +	for_each_child(tree, child) {
-> +		write_tree_source_node(f, child, level + 1);
-> +	}
-> +
-> +	fprintf(f, "    parents.pop()\n");
-> +}
-> +
-> +
-> +static char *header = "#!/usr/bin/python\n\
-> +\n\
-> +class Node(object):\n\
-> +    def __init__(self, name, parent, unitaddr=None):\n\
-
-The unitaddr parameter is never used afaict.
-
-> +        self.__dict__.update(locals())\n\
-> +        self.children = []\n\
-> +        self.properties = []\n\
-> +\n\
-> +class Property(object):\n\
-> +    def __init__(self, name, value):\n\
-> +        self.__dict__.update(locals())\n\
-> +";
-> +
-> +void dt_to_python(FILE *f, struct boot_info *bi, int version)
-> +{
-> +	fprintf(f, "%s\n", header);
-> +	fprintf(f, "def generate_tree():\n");
-> +	fprintf(f, "    parents = [None]\n");
-> +
-> +	write_tree_source_node(f, bi->dt, 0);
-> +
-> +	fprintf(f, "    root.version = %d\n", version);
-
-Since you're not emitting a flat tree, the version is not relevant
-here, and should not be a parameter (again, like dt_to_source()).
-
-> +	fprintf(f, "    return root\n");
-> +}
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
