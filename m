@@ -1,14 +1,15 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: libfdt: Property iteration
-Date: Fri, 7 Nov 2008 13:54:44 +1100
-Message-ID: <20081107025444.GK6692@yookeroo.seuss>
+Date: Fri, 7 Nov 2008 14:39:25 +1100
+Message-ID: <20081107033925.GL6692@yookeroo.seuss>
 References: <20081027221441.GA8763@ld0162-tx32.am.freescale.net>
+	<20081107025444.GK6692@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20081027221441.GA8763-VKaLA/mbEU932VTgPCOETVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+In-Reply-To: <20081107025444.GK6692-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -22,55 +23,60 @@ To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2008 at 05:14:41PM -0500, Scott Wood wrote:
-> A while back when discussing property iterators
-> (http://ozlabs.org/pipermail/linuxppc-dev/2008-January/049891.html), you
-> said that you'd prefer not to expose property offsets, because more
-> common uses would be affected by changing offsets.  I'm looking again at
-> this, and was wondering what alternative and would-be-broken use cases
-> you were thinking of?
+On Fri, Nov 07, 2008 at 01:54:44PM +1100, David Gibson wrote:
+> On Mon, Oct 27, 2008 at 05:14:41PM -0500, Scott Wood wrote:
+> > A while back when discussing property iterators
+> > (http://ozlabs.org/pipermail/linuxppc-dev/2008-January/049891.html), you
+> > said that you'd prefer not to expose property offsets, because more
+> > common uses would be affected by changing offsets.  I'm looking again at
+> > this, and was wondering what alternative and would-be-broken use cases
+> > you were thinking of?
+> 
+> Hrm, well I didn't have things in mind all that precisely.  I was just
+> thinking that it's fairly common to grab a node, then manipulate
+> various properties within it in a more-or-less random-access sort of
+> way.
+> 
+> Whereas when finding nodes, ofetn one tends to work down the tree to a
+> particular node, and the only things you're interested in keeping tabs
+> on (for a little while at least) are some of the ancestors of this
+> node - whose offsets are guaranteed not to be messed with by
+> manipulations within the descendant.
+> 
+> > We could operate on property indices or names at an efficiency cost. 
+> > Most nodes should be small enough that the cost isn't too much, but I'd
+> > like to know which use cases really need it.  The ones I'd use it for
+> > involve reading from one tree and adding to another, so moving offsets
+> > aren't an issue.
+> 
+> I don't think indices buy us much over offsets.  They can still change
+> with node insertions or deletions.
+> 
+> > Even in a use case where one makes in-place changes while iterating over
+> > properties, changes to the property currently being iterated over should
+> > only move later properties -- the next call to fdt_next_prop would be
+> > based on the start of the property that was modified, which did not
+> > change.
+> 
+> That's true; unless you delete the property entirely.  Inserting an
+> unrelated property is also potentially dangerous, though from the
+> looks of it we always insert properties at the end in libfdt, so that
+> should work ok.
+> 
+> Fwiw, I (somewhat reluctantly) accepted the need for property offsets,
+> in the prototype patch for property iteration I had.  I was going to
+> polish it up and push it out, but got sidetracked by other things.
+> I've included it below, maybe you'll get to the polishing before I
+> do.
 
-Hrm, well I didn't have things in mind all that precisely.  I was just
-thinking that it's fairly common to grab a node, then manipulate
-various properties within it in a more-or-less random-access sort of
-way.
-
-Whereas when finding nodes, ofetn one tends to work down the tree to a
-particular node, and the only things you're interested in keeping tabs
-on (for a little while at least) are some of the ancestors of this
-node - whose offsets are guaranteed not to be messed with by
-manipulations within the descendant.
-
-> We could operate on property indices or names at an efficiency cost. 
-> Most nodes should be small enough that the cost isn't too much, but I'd
-> like to know which use cases really need it.  The ones I'd use it for
-> involve reading from one tree and adding to another, so moving offsets
-> aren't an issue.
-
-I don't think indices buy us much over offsets.  They can still change
-with node insertions or deletions.
-
-> Even in a use case where one makes in-place changes while iterating over
-> properties, changes to the property currently being iterated over should
-> only move later properties -- the next call to fdt_next_prop would be
-> based on the start of the property that was modified, which did not
-> change.
-
-That's true; unless you delete the property entirely.  Inserting an
-unrelated property is also potentially dangerous, though from the
-looks of it we always insert properties at the end in libfdt, so that
-should work ok.
-
-Fwiw, I (somewhat reluctantly) accepted the need for property offsets,
-in the prototype patch for property iteration I had.  I was going to
-polish it up and push it out, but got sidetracked by other things.
-I've included it below, maybe you'll get to the polishing before I do.
+Uh.. here's a version that's been fixed up to at least apply to the
+current tree.
 
 Index: dtc/libfdt/fdt.c
 ===================================================================
---- dtc.orig/libfdt/fdt.c	2008-02-14 11:20:40.000000000 +1100
-+++ dtc/libfdt/fdt.c	2008-02-14 14:17:19.000000000 +1100
-@@ -90,6 +90,31 @@
+--- dtc.orig/libfdt/fdt.c	2008-11-07 14:32:36.000000000 +1100
++++ dtc/libfdt/fdt.c	2008-11-07 14:32:48.000000000 +1100
+@@ -90,6 +90,31 @@ const void *fdt_offset_ptr(const void *f
  	return p;
  }
  
@@ -102,7 +108,7 @@ Index: dtc/libfdt/fdt.c
  uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset)
  {
  	const uint32_t *tagp, *lenp;
-@@ -170,6 +195,46 @@
+@@ -177,6 +202,46 @@ int fdt_next_node(const void *fdt, int o
  	return offset;
  }
  
@@ -151,31 +157,23 @@ Index: dtc/libfdt/fdt.c
  	int len = strlen(s) + 1;
 Index: dtc/libfdt/fdt_ro.c
 ===================================================================
---- dtc.orig/libfdt/fdt_ro.c	2008-02-14 11:20:40.000000000 +1100
-+++ dtc/libfdt/fdt_ro.c	2008-02-14 13:18:21.000000000 +1100
-@@ -190,68 +190,22 @@
- 					    int nodeoffset,
- 					    const char *name, int *lenp)
+--- dtc.orig/libfdt/fdt_ro.c	2008-11-07 14:32:36.000000000 +1100
++++ dtc/libfdt/fdt_ro.c	2008-11-07 14:38:59.000000000 +1100
+@@ -203,62 +203,20 @@ const struct fdt_property *fdt_get_prope
+ 						    const char *name,
+ 						    int namelen, int *lenp)
  {
 -	uint32_t tag;
  	const struct fdt_property *prop;
 -	int namestroff;
 -	int offset, nextoffset;
 -	int err;
-+	const char *pname;
-+	int offset = nodeoffset;
- 
--	if ((err = fdt_check_header(fdt)) != 0)
--		goto fail;
 -
--	err = -FDT_ERR_BADOFFSET;
--	if (nodeoffset % FDT_TAGSIZE)
--		goto fail;
+-	if (((err = fdt_check_header(fdt)) != 0)
+-	    || ((err = _fdt_check_node_offset(fdt, nodeoffset)) < 0))
+-			goto fail;
 -
--	tag = fdt_next_tag(fdt, nodeoffset, &nextoffset);
--	if (tag != FDT_BEGIN_NODE)
--		goto fail;
--
+-	nextoffset = err;
 -	do {
 -		offset = nextoffset;
 -
@@ -196,14 +194,15 @@ Index: dtc/libfdt/fdt_ro.c
 -			if (! prop)
 -				goto fail;
 -			namestroff = fdt32_to_cpu(prop->nameoff);
--			if (streq(fdt_string(fdt, namestroff), name)) {
+-			if (_fdt_string_eq(fdt, namestroff, name, namelen)) {
 -				/* Found it! */
 -				int len = fdt32_to_cpu(prop->len);
 -				prop = fdt_offset_ptr(fdt, offset,
 -						      sizeof(*prop)+len);
 -				if (! prop)
 -					goto fail;
--
++	int offset = nodeoffset;
+ 
 -				if (lenp)
 -					*lenp = len;
 -
@@ -217,11 +216,10 @@ Index: dtc/libfdt/fdt_ro.c
 -		}
 -	} while ((tag != FDT_BEGIN_NODE) && (tag != FDT_END_NODE));
 +	while ((offset = _fdt_next_property(fdt, offset)) >= 0) {
-+		prop = fdt_offset_property(fdt, offset, lenp);
++		prop = _fdt_offset_property(fdt, offset, lenp);
 +		if (!prop)
 +			return NULL;
-+		pname = fdt_string(fdt, fdt32_to_cpu(prop->nameoff));
-+		if (streq(pname, name))
++		if (_fdt_string_eq(fdt, fdt32_to_cpu(prop->nameoff), name, namelen))
 +			/* Found it! */
 +			return prop;
 +	}
@@ -236,22 +234,22 @@ Index: dtc/libfdt/fdt_ro.c
  
 Index: dtc/libfdt/libfdt_internal.h
 ===================================================================
---- dtc.orig/libfdt/libfdt_internal.h	2008-02-14 11:20:40.000000000 +1100
-+++ dtc/libfdt/libfdt_internal.h	2008-02-14 13:18:21.000000000 +1100
-@@ -59,6 +59,7 @@
- #define streq(p, q)	(strcmp((p), (q)) == 0)
+--- dtc.orig/libfdt/libfdt_internal.h	2008-11-07 14:32:36.000000000 +1100
++++ dtc/libfdt/libfdt_internal.h	2008-11-07 14:32:48.000000000 +1100
+@@ -63,6 +63,7 @@
+ 	}
  
  uint32_t _fdt_next_tag(const void *fdt, int startoffset, int *nextoffset);
 +int _fdt_next_property(const void *fdt, int offset);
+ int _fdt_check_node_offset(const void *fdt, int offset);
  const char *_fdt_find_string(const char *strtab, int tabsize, const char *s);
  int _fdt_node_end_offset(void *fdt, int nodeoffset);
- 
 Index: dtc/libfdt/libfdt.h
 ===================================================================
---- dtc.orig/libfdt/libfdt.h	2008-02-14 11:20:40.000000000 +1100
-+++ dtc/libfdt/libfdt.h	2008-02-14 14:19:20.000000000 +1100
-@@ -128,6 +128,9 @@
- 	return (void *)fdt_offset_ptr(fdt, offset, checklen);
+--- dtc.orig/libfdt/libfdt.h	2008-11-07 14:32:48.000000000 +1100
++++ dtc/libfdt/libfdt.h	2008-11-07 14:32:48.000000000 +1100
+@@ -128,6 +128,9 @@ static inline void *fdt_offset_ptr_w(voi
+ 	return (void *)(uintptr_t)fdt_offset_ptr(fdt, offset, checklen);
  }
  
 +const struct fdt_property *_fdt_offset_property(const void *fdt, int offset,
@@ -260,7 +258,7 @@ Index: dtc/libfdt/libfdt.h
  uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset);
  
  /**********************************************************************/
-@@ -136,6 +139,11 @@
+@@ -136,6 +139,11 @@ uint32_t fdt_next_tag(const void *fdt, i
  
  int fdt_next_node(const void *fdt, int offset, int *depth);
  
@@ -272,7 +270,7 @@ Index: dtc/libfdt/libfdt.h
  /**********************************************************************/
  /* General functions                                                  */
  /**********************************************************************/
-@@ -256,6 +264,7 @@
+@@ -256,6 +264,7 @@ int fdt_num_mem_rsv(const void *fdt);
   */
  int fdt_get_mem_rsv(const void *fdt, int n, uint64_t *address, uint64_t *size);
  
