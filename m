@@ -1,7 +1,7 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: dtc: Check return value from fwrite()
-Date: Fri, 7 Nov 2008 11:41:11 +1100
-Message-ID: <20081107004111.GG6692@yookeroo.seuss>
+Subject: dtc: Use noinput flex option for convert-dtsv0 to remove warning
+Date: Fri, 7 Nov 2008 11:45:48 +1100
+Message-ID: <20081107004548.GH6692@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,36 +20,26 @@ To: Jon Loeliger <jdl@freescale.com>
 Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-There's one place in flattree.c where we currently ignore the return
-value from fwrite().  On some gcc/glibc versions, where fwrite() is
-declared with attribute warn_unused_result, this causes a warning.
-
-This patch fixes the warning, by checking the fwrite() result.
+The convert-dtsv0 lexer doesn't use lex's input() macro/function.
+This can result in "defined but not used" warnings.  This patch uses
+flex's noinput option to prevent this warning (as we already do for
+dtc-lexer.l).
 
 Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
 
-Index: dtc/flattree.c
+Index: dtc/convert-dtsv0-lexer.l
 ===================================================================
---- dtc.orig/flattree.c	2008-11-07 11:40:02.000000000 +1100
-+++ dtc/flattree.c	2008-11-07 11:40:30.000000000 +1100
-@@ -413,10 +413,13 @@ void dt_to_blob(FILE *f, struct boot_inf
- 	if (padlen > 0)
- 		blob = data_append_zeroes(blob, padlen);
+--- dtc.orig/convert-dtsv0-lexer.l	2008-11-07 11:43:05.000000000 +1100
++++ dtc/convert-dtsv0-lexer.l	2008-11-07 11:43:20.000000000 +1100
+@@ -17,7 +17,7 @@
+  *                                                                   USA
+  */
  
--	fwrite(blob.val, blob.len, 1, f);
--
--	if (ferror(f))
--		die("Error writing device tree blob: %s\n", strerror(errno));
-+	if (fwrite(blob.val, blob.len, 1, f) != 1) {
-+		if (ferror(f))
-+			die("Error writing device tree blob: %s\n",
-+			    strerror(errno));
-+		else
-+			die("Short write on device tree blob\n");
-+	}
+-%option noyywrap nounput
++%option noyywrap nounput noinput
  
- 	/*
- 	 * data_merge() frees the right-hand element so only the blob
+ %x INCLUDE
+ %x BYTESTRING
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
