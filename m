@@ -1,208 +1,236 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: dtc: Handle linux,phandle properties which self-reference
-Date: Fri, 7 Nov 2008 12:49:44 +1100
-Message-ID: <20081107014944.GI6692@yookeroo.seuss>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: dtc: Add python source code output
+Date: Fri, 7 Nov 2008 13:31:40 +1100
+Message-ID: <20081107023140.GJ6692@yookeroo.seuss>
+References: <1225958144.25986.9.camel@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1225958144.25986.9.camel@localhost>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: Michael Ellerman <michael@ellerman.id.au>
+Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, dtc will generate phandles for nodes which are referenced
-elsewhere in the tree.  phandles can also be explicitly assigned by
-defining the linux,phandle property.  However, there is no way,
-currently to tell dtc to generate a phandle for a node if it is not
-referenced elsewhere.  This is inconvenient when it's expected that
-later processing on the flat tree might add nodes which _will_
-the node in question.
+On Thu, Nov 06, 2008 at 06:55:44PM +1100, Michael Ellerman wrote:
+> This commit adds an output format, which produces python
+> code. When run, the python produces a data structure that
+> can then be inspected in order to do various things.
+> 
+> Signed-off-by: Michael Ellerman <michael@ellerman.id.au>
+> ---
+> 
+> I'm not sure if this is generally useful (or sane) but it was for me so
+> I thought I'd post it.
 
-One way one might attempt to do this is with the construct:
-	mynode: mynode {
-		linux,phandle = <&mynode>;
-		/* ... */
-	};
-Though it's a trifle odd, there's really only one sensible meaning
-which can be assigned to this construct: allocate a unique phandle to
-"mynode" and put that in its linux,phandle property (as always).
+Hrm, well the idea of langauge source output seems reasonable.  But
+the actual data structure emitted, and the method of construction in
+Python both seem a bit odd to me.
 
-Currently, however, dtc will choke on this self-reference.  This patch
-corrects this, making the construct above give the expected results.
-It also ensures a more meaningful error message is given if you
-attempt to process the nonsensical construct:
-	mynode: mynode {
-		linux,phandle = <&someothernode>;
-		/* ... */
-	};
+> I have a dts that I want to use to configure a simulator, and this
+> seemed like the nicest way to get there. dtc spits out the pythonised
+> device tree, and then I have a 10 line python script that does the
+> configuring.
 
-The 'references' testcase is extended to cover this case, as well.
+[snip]
+> diff --git a/python.c b/python.c
+> new file mode 100644
+> index 0000000..8ad0433
+> --- /dev/null
+> +++ b/python.c
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+AFAICT this is based roughly on the output side of treesource.c.  It
+would be kind of nice if the two could be combined, with the same
+basic structure looping over the device tree, and different emitters
+for either python or dts source.  This would be similar to what we do
+in flattree.c to emit either binary or asm versions of the flat tree.
 
-Index: dtc/tests/references.dts
-===================================================================
---- dtc.orig/tests/references.dts	2008-11-07 12:47:24.000000000 +1100
-+++ dtc/tests/references.dts	2008-11-07 12:47:27.000000000 +1100
-@@ -20,4 +20,14 @@
- 	};
- 	n4: node4 {
- 	};
-+
-+	/* Explicit phandle with implicit value */
-+	/* This self-reference is the standard way to tag a node as requiring
-+	 * a phandle (perhaps for reference by nodes that will be dynamically
-+	 * added) without explicitly allocating it a phandle.
-+	 * The self-reference requires some special internal handling, though
-+	 * so check it actually works */
-+	n5: node5 {
-+		linux,phandle = <&n5>;
-+	};
- };
-Index: dtc/checks.c
-===================================================================
---- dtc.orig/checks.c	2008-11-07 12:47:24.000000000 +1100
-+++ dtc/checks.c	2008-11-07 12:47:27.000000000 +1100
-@@ -282,6 +282,7 @@ static void check_explicit_phandles(stru
- 					  struct node *node)
- {
- 	struct property *prop;
-+	struct marker *m;
- 	struct node *other;
- 	cell_t phandle;
- 
-@@ -295,6 +296,23 @@ static void check_explicit_phandles(stru
- 		return;
- 	}
- 
-+	m = prop->val.markers;
-+	for_each_marker_of_type(m, REF_PHANDLE) {
-+		assert(m->offset == 0);
-+		if (node != get_node_by_ref(root, m->ref))
-+			/* "Set this node's phandle equal to some
-+			 * other node's phandle".  That's nonsensical
-+			 * by construction. */
-+			FAIL(c, "linux,phandle in %s is a reference to another node",
-+			     node->fullpath);
-+		/* But setting this node's phandle equal to its own
-+		 * phandle is allowed - that means allocate a unique
-+		 * phandle for this node, even if it's not otherwise
-+		 * referenced.  The value will be filled in later, so
-+		 * no further checking for now. */
-+		return;
-+	}
-+
- 	phandle = propval_cell(prop);
- 	if ((phandle == 0) || (phandle == -1)) {
- 		FAIL(c, "%s has invalid linux,phandle value 0x%x",
-Index: dtc/livetree.c
-===================================================================
---- dtc.orig/livetree.c	2008-11-07 12:47:24.000000000 +1100
-+++ dtc/livetree.c	2008-11-07 12:47:27.000000000 +1100
-@@ -293,16 +293,18 @@ cell_t get_node_phandle(struct node *roo
- 	if ((node->phandle != 0) && (node->phandle != -1))
- 		return node->phandle;
- 
--	assert(! get_property(node, "linux,phandle"));
--
- 	while (get_node_by_phandle(root, phandle))
- 		phandle++;
- 
- 	node->phandle = phandle;
--	add_property(node,
--		     build_property("linux,phandle",
--				    data_append_cell(empty_data, phandle),
--				    NULL));
-+	if (!get_property(node, "linux,phandle"))
-+		add_property(node,
-+			     build_property("linux,phandle",
-+					    data_append_cell(empty_data, phandle),
-+					    NULL));
-+	/* If the node *does* have a linux,phandle property, we must
-+	 * be dealing with a self-referencing phandle, which will be
-+	 * fixed up momentarily in the caller */
- 
- 	return node->phandle;
- }
-Index: dtc/tests/references.c
-===================================================================
---- dtc.orig/tests/references.c	2008-11-07 12:47:24.000000000 +1100
-+++ dtc/tests/references.c	2008-11-07 12:47:27.000000000 +1100
-@@ -60,8 +60,8 @@ static void check_ref(const void *fdt, i
- int main(int argc, char *argv[])
- {
- 	void *fdt;
--	int n1, n2, n3, n4;
--	uint32_t h1, h2, h4;
-+	int n1, n2, n3, n4, n5;
-+	uint32_t h1, h2, h4, h5;
- 
- 	test_init(argc, argv);
- 	fdt = load_blob_arg(argc, argv);
-@@ -78,10 +78,14 @@ int main(int argc, char *argv[])
- 	n4 = fdt_path_offset(fdt, "/node4");
- 	if (n4 < 0)
- 		FAIL("fdt_path_offset(/node4): %s", fdt_strerror(n4));
-+	n5 = fdt_path_offset(fdt, "/node5");
-+	if (n5 < 0)
-+		FAIL("fdt_path_offset(/node5): %s", fdt_strerror(n5));
- 
- 	h1 = fdt_get_phandle(fdt, n1);
- 	h2 = fdt_get_phandle(fdt, n2);
- 	h4 = fdt_get_phandle(fdt, n4);
-+	h5 = fdt_get_phandle(fdt, n5);
- 
- 	if (h1 != 0x2000)
- 		FAIL("/node1 has wrong phandle, 0x%x instead of 0x%x",
-@@ -92,6 +96,11 @@ int main(int argc, char *argv[])
- 	if ((h4 == 0x2000) || (h4 == 0x1) || (h4 == 0))
- 		FAIL("/node4 has bad phandle, 0x%x", h4);
- 
-+	if ((h5 == 0) || (h5 == -1))
-+		FAIL("/node5 has bad phandle, 0x%x", h5);
-+	if ((h5 == h4) || (h5 == h2) || (h5 == h1))
-+		FAIL("/node5 has duplicate phandle, 0x%x", h5);
-+
- 	check_ref(fdt, n1, h2);
- 	check_ref(fdt, n2, h1);
- 	check_ref(fdt, n3, h4);
-Index: dtc/tests/references_dts0.dts
-===================================================================
---- dtc.orig/tests/references_dts0.dts	2008-11-07 12:47:24.000000000 +1100
-+++ dtc/tests/references_dts0.dts	2008-11-07 12:47:27.000000000 +1100
-@@ -20,4 +20,7 @@
- 	};
- 	n4: node4 {
- 	};
-+	n5: node5 {
-+		linux,phandle = <&n5>;
-+	};
- };
-Index: dtc/tests/run_tests.sh
-===================================================================
---- dtc.orig/tests/run_tests.sh	2008-11-07 12:47:25.000000000 +1100
-+++ dtc/tests/run_tests.sh	2008-11-07 12:47:27.000000000 +1100
-@@ -229,7 +229,8 @@ dtc_tests () {
-     run_test dtbs_equal_ordered boot_cpuid_preserved_test_tree1.test.dtb boot_cpuid_test_tree1.test.dtb
- 
-     # Check -Odts mode preserve all dtb information
--    for tree in test_tree1.dtb dtc_tree1.test.dtb dtc_escapes.test.dtb ; do
-+    for tree in test_tree1.dtb dtc_tree1.test.dtb dtc_escapes.test.dtb \
-+	dtc_references.test.dtb; do
- 	run_dtc_test -I dtb -O dts -o odts_$tree.test.dts $tree
- 	run_dtc_test -I dts -O dtb -o odts_$tree.test.dtb odts_$tree.test.dts
- 	run_test dtbs_equal_ordered $tree odts_$tree.test.dtb
+> @@ -0,0 +1,129 @@
+> +/*
+> + * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
+> + * (C) Copyright Michael Ellerman, IBM Corporation.  2008.
+> + *
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of the
+> + * License, or (at your option) any later version.
+> + *
+> + *  This program is distributed in the hope that it will be useful,
+> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + *  General Public License for more details.
+> + *
+> + *  You should have received a copy of the GNU General Public License
+> + *  along with this program; if not, write to the Free Software
+> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+> + *                                                                   USA
+> + */
+> +
+> +#include "dtc.h"
+> +#include "srcpos.h"
+> +
+> +
+> +static void write_propval_cells(FILE *f, struct property *prop)
+> +{
+> +	cell_t *cp = (cell_t *)prop->val.val;
+> +	int i;
+> +
+> +	fprintf(f, "    p = Property('%s', [", prop->name);
+> +
+> +	for (i = 0; i < prop->val.len / sizeof(cell_t); i++)
+> +		fprintf(f, "0x%x, ", fdt32_to_cpu(cp[i]));
+> +
+> +	fprintf(f, "])\n");
+> +}
+> +
+> +static int isstring(char c)
+> +{
+> +	return (isprint(c)
+> +		|| (c == '\0')
+> +		|| strchr("\a\b\t\n\v\f\r", c));
+> +}
+> +
+> +static void write_property(FILE *f, struct property *prop)
+> +{
+> +	const char *p = prop->val.val;
+> +	int i, strtype, len = prop->val.len;
+> +
+> +	if (len == 0) {
+> +		fprintf(f, "    p = Property('%s', None)\n", prop->name);
+> +		goto out;
+> +	}
+> +
+> +	strtype = 1;
+> +	for (i = 0; i < len; i++) {
+> +		if (!isstring(p[i])) {
+> +			strtype = 0;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (strtype)
+> +		fprintf(f, "    p = Property('%s', '%s')\n", prop->name,
+> +			prop->val.val);
 
+This isn't correct.  The property value could contain \0s or other
+control characters which won't be preserved properly if emitted
+directly into the python source.  You'd need to escape the string, as
+write_propval_string() does in treesource.c.
+
+Uh.. there's also an interesting ambiguity here.  In OF and flat
+trees, strings are NUL-terminated and the final '\0' is included as
+part of the property length.  Python strings are not NUL-terminated,
+they're bytestrings that know their own length.  I think making sure
+all the conversions correctly preserve the presence/lack of a terminal
+NUL, requires a bit more care here..
+
+> +	else if (len == 4)
+> +		fprintf(f, "    p = Property('%s', 0x%x)\n", prop->name,
+> +			fdt32_to_cpu(*(const cell_t *)p));
+
+There's a propval_cell() function in livetree.c you can use to
+simplify this.
+
+> +	else
+> +		write_propval_cells(f, prop);
+
+Uh.. this branch could be called in the case where prop is not a
+string, but also doesn't have length a multiple of 4, which
+write_propval_cells() won't correctly deal with.
+
+These branches also result in the value having different Python types
+depending on the context.  That's not necessarily a bad thing, but
+since which Python type is chosen depends on a heuristic only, it
+certainly needs some care.  You certainly need to be certain that you
+can always deduce the exact, byte-for-byte correct version of the
+property value from whatever you put into the Python data structure.
+
+> +	
+> +out:
+> +	fprintf(f, "    n.properties.append(p)\n");
+
+So, emitting Python procedural code to build up the data structure,
+rather than a great big Python literal that the Python parser will
+just turn into the right thing seems a bit of a roundabout way of
+doing this.
+
+> +}
+> +
+> +static void write_tree_source_node(FILE *f, struct node *tree, int level)
+> +{
+> +	char name[MAX_NODENAME_LEN + 1] = "root";
+
+Why not just have the root node's name be the empty string, as we do
+in the flat tree?
+
+> +	struct property *prop;
+> +	struct node *child;
+> +
+> +	if (tree->name && (*tree->name))
+> +		strncpy(name, tree->name, MAX_NODENAME_LEN);
+> +
+> +	fprintf(f, "    n = Node('%s', parents[-1])\n", name);
+> +
+> +	if (level > 0)
+> +		fprintf(f, "    parents[-1].children.append(n)\n");
+> +	else
+> +		fprintf(f, "    root = n\n");
+> +
+> +	for_each_property(tree, prop)
+> +		write_property(f, prop);
+> +
+> +	fprintf(f, "    parents.append(n)\n");
+> +
+> +	for_each_child(tree, child) {
+> +		write_tree_source_node(f, child, level + 1);
+> +	}
+> +
+> +	fprintf(f, "    parents.pop()\n");
+> +}
+> +
+> +
+> +static char *header = "#!/usr/bin/python\n\
+> +\n\
+> +class Node(object):\n\
+> +    def __init__(self, name, parent, unitaddr=None):\n\
+
+The unitaddr parameter is never used afaict.
+
+> +        self.__dict__.update(locals())\n\
+> +        self.children = []\n\
+> +        self.properties = []\n\
+> +\n\
+> +class Property(object):\n\
+> +    def __init__(self, name, value):\n\
+> +        self.__dict__.update(locals())\n\
+> +";
+> +
+> +void dt_to_python(FILE *f, struct boot_info *bi, int version)
+> +{
+> +	fprintf(f, "%s\n", header);
+> +	fprintf(f, "def generate_tree():\n");
+> +	fprintf(f, "    parents = [None]\n");
+> +
+> +	write_tree_source_node(f, bi->dt, 0);
+> +
+> +	fprintf(f, "    root.version = %d\n", version);
+
+Since you're not emitting a flat tree, the version is not relevant
+here, and should not be a parameter (again, like dt_to_source()).
+
+> +	fprintf(f, "    return root\n");
+> +}
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
