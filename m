@@ -1,17 +1,17 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [Qemu-devel] Machine config files
-Date: Sat, 15 Nov 2008 17:45:03 +1100
-Message-ID: <20081115064503.GE6629@yookeroo.seuss>
+Date: Sat, 15 Nov 2008 17:58:07 +1100
+Message-ID: <20081115065807.GG6629@yookeroo.seuss>
 References: <200811140332.14093.paul@codesourcery.com>
-	<200811141539.23408.hollisb@us.ibm.com>
-	<491DF47B.9000602@codemonkey.ws>
-	<200811150013.03865.paul@codesourcery.com>
+	<f43fc5580811141104v3b6296b0i575693ba944badbb@mail.gmail.com>
+	<491DD188.6000603@codemonkey.ws>
+	<200811141351.40613.hollisb@us.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <200811150013.03865.paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
+In-Reply-To: <200811141351.40613.hollisb-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,37 +21,74 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Paul Brook <paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
-Cc: Anthony Liguori <anthony-rdkfGonbjUSkNkDKm+mE6A@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, Hollis Blanchard <hollisb-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: Hollis Blanchard <hollisb-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, Anthony Liguori <anthony-rdkfGonbjUSkNkDKm+mE6A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 15, 2008 at 12:13:03AM +0000, Paul Brook wrote:
-> > > Some translation code would be required for compatibility. For example,
-> > > when the DTS has 128MB of memory, and the user invokes qemu with -m 256,
-> > > now you need to update the device tree in order to pass it into the
-> > > guest. That's pretty easy, but once you start talking about adding PCI
-> > > devices it gets a little more difficult. I seem to recall this
-> > > conversation was had on qemu-devel a little while back.
-> >...
-> > > Of course, *some* code would still be needed *somewhere* to load the
-> > > kernel, initrd, set initial register state to point to those memory
-> > > locations, etc. In the case of KVM on 440, we also need to override the
-> > > DTS with the real host clock frequency. (This probably isn't necessary
-> > > for qemu+TCG.)
+On Fri, Nov 14, 2008 at 01:51:40PM -0600, Hollis Blanchard wrote:
+> On Friday 14 November 2008 13:29:12 Anthony Liguori wrote:
+> > Blue Swirl wrote:
+> > > On 11/14/08, Paul Brook <paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org> wrote:
+> > >   
+> > >> It's come up in other contexts recently, so I think it's worth mentioning 
+> that
+> > >>  I am currently working on adding a machine config file support to qemu.
+> > >>
+> > >>  I am focusing on the board setup side of things, rather than the 
+> user-level
+> > >>  config side.  My goal is to come up with a system that will allow e.g. 
+> the
+> > >>  entirety of realview.c and gumstix.c to be eliminated.  Currently this 
+> is
+> > >>  based this round Flattened Device Trees (as used by ppc-linux).
+> > >>
+> > >>  I have looked at the bits that Fabrice did a while ago. While that 
+> contains
+> > >>  some good ideas (which I will probably steal!) it is approaching the 
+> problem
+> > >>  from a somewhat different direction.  FTDs are a much better fit for 
+> some of
+> > >>  my requirements (e.g. being able to pass the config through to the guest 
+> OS).
+> > >>     
 > > >
-> > > But yes, replacing all the pci_nic_init(), isa_mmio_init(),
-> > > cpu_register_physical_memory(), etc could be automated by walking the
-> > > device tree.
-> >
-> > Ok.  This is starting to look interesting.  Paul, what do you think of DTS?
+> > > libfdt looks like an excellent choice for both Sparc32 and Sparc64, I
+> > > think the whole OF tree can be represented with it.
+> > >
+> > > The config could be passed using the firmware configuration device.
+> > >   
+> > 
+> > I was looking through libfdt too.  I think it could also be used for 
+> > x86.  Hollis, I was looking through the Bamboo code, any reason you 
+> > don't describe the bus/device layouts in the DTS and then use that to 
+> > determine what bus/nic to add?
 > 
-> Things like kernel loading are easy, you just add a special device (which 
-> linux will ignore) specifying the relevant parameters. IMO it should be 
-> possible to use the same device tree for both linux and qemu, but it's ok to 
-> require some additional information on top of what linux currently requires.
+> We do; PLB, OPB, and EBC are all on-chip busses found on IBM PowerPC SoCs. For 
+> example, you can see devices representing the UARTs and PCI controller in our 
+> bamboo.dts file. Qemu only modifies the device tree at runtime with 
+> information not known until then (memory size, clock frequency, etc).
+> 
+> You may mean why don't we enumerate *PCI* devices in the device tree. Since 
+> libfdt is used for embedded systems, this is a tradeoff that allows us to 
+> keep the device tree smaller -- why put lots of PCI nodes in the device tree, 
+> when the OS can easily discover them itself? That said, PCI devices are 
+> indeed found in the device tree in IBM Power servers; Linux just doesn't 
+> require them.
 
-Depending on exactly what you want to pass through, it may be
-appropriate to use properties in /chosen for this.
+Yes, in general the rule is that devices on busses that can be runtime
+probed - PCI, USB and the like - don't typically need to appear in a
+flattened device tree (though they would traditionally appear in a
+full Open Firmware device tree).  Only the things the OS has to "just
+know" are there need appear - e.g. on-chip devices, hardwarired
+on-board devices, unprobeable legacy ISA devices, usually the PCI host
+bridge, and so forth.
+
+Nodes for probeable devices may optionally appear, and in certain
+cases they must appear to supply bits of information that can't be
+probed.  For example, on-board PCI devices often have interrupts
+routed directly to the system PIC, rather than going across the PCI
+bus.  In this case a device node would need to appear with the
+interrupt routing information.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
