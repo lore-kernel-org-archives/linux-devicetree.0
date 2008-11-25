@@ -1,7 +1,7 @@
 From: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/2] libfdt: Add version.lds file
-Date: Tue, 25 Nov 2008 09:21:49 -0500
-Message-ID: <20081125142149.GB2340@yoda.jdub.homelinux.org>
+Subject: [PATCH 2/2] libfdt: Introduce libfdt shared library
+Date: Tue, 25 Nov 2008 09:23:23 -0500
+Message-ID: <20081125142323.GC2340@yoda.jdub.homelinux.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,70 +17,69 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: hollisb-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the initial symbol versioning file as groundwork for creating
-a libfdt shared library
+Build a libfdt shared library in addition to the existing .a that is
+created.  Symbol versioning is used from the libfdt/version.lds script.
 
 Signed-off-by: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- libfdt/version.lds |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 48 insertions(+), 0 deletions(-)
- create mode 100644 libfdt/version.lds
+ Makefile               |   12 ++++++++++--
+ libfdt/Makefile.libfdt |    1 +
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/libfdt/version.lds b/libfdt/version.lds
-new file mode 100644
-index 0000000..7d90672
---- /dev/null
-+++ b/libfdt/version.lds
-@@ -0,0 +1,48 @@
-+LIBFDT_1.2 {
-+	global:
-+		fdt_next_node;
-+		fdt_check_header;
-+		fdt_move;
-+		fdt_string;
-+		fdt_num_mem_rsv;
-+		fdt_get_mem_rsv;
-+		fdt_subnode_offset_namelen;
-+		fdt_subnode_offset;
-+		fdt_path_offset;
-+		fdt_get_name;
-+		fdt_get_property_namelen;
-+		fdt_get_property;
-+		fdt_getprop_namelen;
-+		fdt_getprop;
-+		fdt_get_phandle;
-+		fdt_get_alias_namelen;
-+		fdt_get_alias;
-+		fdt_get_path;
-+		fdt_supernode_atdepth_offset;
-+		fdt_node_depth;
-+		fdt_parent_offset;
-+		fdt_node_offset_by_prop_value;
-+		fdt_node_offset_by_phandle;
-+		fdt_node_check_compatible;
-+		fdt_node_offset_by_compatible;
-+		fdt_setprop_inplace;
-+		fdt_nop_property;
-+		fdt_nop_node;
-+		fdt_create;
-+		fdt_add_reservemap_entry;
-+		fdt_finish_reservemap;
-+		fdt_begin_node;
-+		fdt_property;
-+		fdt_end_node;
-+		fdt_finish;
-+		fdt_open_into;
-+		fdt_pack;
-+		fdt_add_mem_rsv;
-+		fdt_del_mem_rsv;
-+		fdt_set_name;
-+		fdt_setprop;
-+		fdt_delprop;
-+		fdt_add_subnode_namelen;
-+		fdt_add_subnode;
-+		fdt_del_node;
-+};
+diff --git a/Makefile b/Makefile
+index b3b85a5..bc6058e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -115,19 +115,23 @@ endif
+ #
+ LIBFDT_objdir = libfdt
+ LIBFDT_srcdir = libfdt
+-LIBFDT_lib = $(LIBFDT_objdir)/libfdt.a
++LIBFDT_archive = $(LIBFDT_objdir)/libfdt.a
++LIBFDT_lib = $(LIBFDT_objdir)/libfdt.so
+ LIBFDT_include = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_INCLUDES))
++LIBFDT_version = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_VERSION))
+ 
+ include $(LIBFDT_srcdir)/Makefile.libfdt
+ 
+ .PHONY: libfdt
+-libfdt: $(LIBFDT_lib)
++libfdt: $(LIBFDT_archive) $(LIBFDT_lib)
+ 
++$(LIBFDT_archive): $(addprefix $(LIBFDT_objdir)/,$(LIBFDT_OBJS))
+ $(LIBFDT_lib): $(addprefix $(LIBFDT_objdir)/,$(LIBFDT_OBJS))
+ 
+ libfdt_clean:
+ 	@$(VECHO) CLEAN "(libfdt)"
+ 	rm -f $(addprefix $(LIBFDT_objdir)/,$(STD_CLEANFILES))
++	rm -f $(LIBFDT_objdir)/*.so
+ 
+ ifneq ($(DEPTARGETS),)
+ -include $(LIBFDT_OBJS:%.o=$(LIBFDT_objdir)/%.d)
+@@ -215,6 +219,10 @@ clean: libfdt_clean tests_clean
+ 	@$(VECHO) AR $@
+ 	$(AR) $(ARFLAGS) $@ $^
+ 
++$(LIBFDT_lib):
++	@$(VECHO) LD $@
++	$(CC) $(LDFLAGS) -Wl,--version-script=$(LIBFDT_version) -Wl,-soname,$(notdir $@) -shared -o $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).so $^
++
+ %.lex.c: %.l
+ 	@$(VECHO) LEX $@
+ 	$(LEX) -o$@ $<
+diff --git a/libfdt/Makefile.libfdt b/libfdt/Makefile.libfdt
+index 6c42acf..341c803 100644
+--- a/libfdt/Makefile.libfdt
++++ b/libfdt/Makefile.libfdt
+@@ -4,5 +4,6 @@
+ # be easily embeddable into other systems of Makefiles.
+ #
+ LIBFDT_INCLUDES = fdt.h libfdt.h
++LIBFDT_VERSION = version.lds
+ LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c
+ LIBFDT_OBJS = $(LIBFDT_SRCS:%.c=%.o)
 -- 
 1.5.6.5
