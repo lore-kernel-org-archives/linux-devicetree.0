@@ -1,533 +1,1035 @@
-From: Josh Boyer <jwboyer@linux.vnet.ibm.com>
-Subject: Re: [PATCH] ndfc driver
-Date: Wed, 17 Dec 2008 08:26:37 -0500
-Message-ID: <20081217132637.GA3049@localhost.localdomain>
-References: <20081203222832.3fc77d28@lappy.seanm.ca>
-	<20081204090107.20269571@zod.rchland.ibm.com>
-	<20081208193446.37e27e26@lappy.seanm.ca>
-	<200812090710.27781.sr@denx.de>
-	<20081210181634.2aac2023@lappy.seanm.ca>
+From: Christian Rund <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>
+Subject: Re: devicetree-discuss Digest, Vol 6, Issue 7
+Date: Thu, 18 Dec 2008 15:17:38 +0100
+Message-ID: <OF6B36395E.E0A4363C-ONC1257522.0035FA7C-C1257523.004E84FF@de.ibm.com>
+References: <mailman.11.1229475607.16627.devicetree-discuss@ozlabs.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <20081210181634.2aac2023@lappy.seanm.ca>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Sean MacLennan <smaclennan@pikatech.com>, dwmw2@infradead.org
-Cc: linuxppc-dev@ozlabs.org, linux-mtd@lists.infradead.org, Stefan Roese <sr@denx.de>, devicetree-discuss@ozlabs.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/mixed; boundary="===============0734390067=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <mailman.11.1229475607.16627.devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Mime-version: 1.0
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-bounces+christian.rund=de.ibm.com-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 10, 2008 at 06:16:34PM -0500, Sean MacLennan wrote:
->Here is an updated patch. Doc has been moved to 4xx and amcc changed to
->ibm.
->
->Arnd: I removed your acked-by just in case you don't approve of the new
->flash layout. Feel free to ack again.
->
->Cheers,
->   Sean
->
->Port of the ndfc driver to an OF platform driver.
->
->Signed-off-by: Sean MacLennan <smaclennan@pikatech.com>
+This is a multipart message in MIME format.
+--===============0734390067==
+Content-Type: multipart/alternative; boundary="=_alternative 004E84FCC1257523_="
 
-Acked-By: Josh Boyer <jwboyer@linux.vnet.ibm.com>
+This is a multipart message in MIME format.
+--=_alternative 004E84FCC1257523_=
+Content-Type: text/plain; charset="US-ASCII"
 
-David, if you have no objections I'd like to take this patch
-through my tree.  I'll fixup the subject and commit log when
-I do.
+devicetree-discuss-bounces+christian.rund=de.ibm.com-mnsaURCQ41sdnm+yROfE0A@public.gmane.org wrote on 
+17.12.2008 02:00:07:
 
-josh
+> Send devicetree-discuss mailing list submissions to
+>    devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> 
+> To subscribe or unsubscribe via the World Wide Web, visit
+>    https://ozlabs.org/mailman/listinfo/devicetree-discuss
+> or, via email, send a message with subject or body 'help' to
+>    devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> 
+> You can reach the person managing the list at
+>    devicetree-discuss-owner-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> 
+> When replying, please edit your Subject line so it is more specific
+> than "Re: Contents of devicetree-discuss digest..."
+> 
+> 
+> Today's Topics:
+> 
+>    1. Re: Reminder 1: Device Tree documentation discussion for
+>       Cell/B.E.   binding DRAFT - see Digest Vol 6, Issue 1 (Grant 
+Likely)
+> 
+> 
+> ----------------------------------------------------------------------
+> 
+> Message: 1
+> Date: Tue, 16 Dec 2008 15:08:17 -0700
+> From: "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Subject: Re: Reminder 1: Device Tree documentation discussion for
+>    Cell/B.E.   binding DRAFT - see Digest Vol 6, Issue 1
+> To: "Christian Rund" <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> Message-ID:
+>    <fa686aa40812161408j3672ba5cs7d8526cd643b69de-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+> Content-Type: text/plain; charset=ISO-8859-1
+> 
+> On Tue, Dec 16, 2008 at 7:03 AM, Christian Rund
+> <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org> wrote:
+> > this is a reminder for review. Feedback appreciated!
+> > For convenience I removed the disclaimer etc.
+> >
+> > On dec 5th I posted our (complete) draft version of the Cell/B.E. 
+device
+> > tree documentation.
+> >
+> > Goal of these review should be to finally establish the document as
+> > Power.org
+> > PAPR Binding for the Cell/B.E. processor.
+> >
+> > Please review and give us feedback.
+> 
+> First comments; This document is quite verbose.  Much time is spent
+> describing how standard properties work (ie; content of the 'reg' and
+> 'ranges' properties).  Reviewing takes more effort when there is a
+> large amount of boilerplate to filter.
+> 
+> Second, very few nodes have a 'compatible' value defined.  Currently,
+> the 'compatible' list is the preferred method for device drivers to
+> find supported devices in the tree.  Each distinct device should have
+> a unique compatible value defined.
+> 
+> More comments below
+> 
+> > 1 "be" node
+> [...]
+> > "device-type" property
+> >
+> >             Standard property name which specifies the type of the 
+node.
+> >
+> >             Encoded as with encode-string.
+> >
+> >             Default value is { "be" }.
+> 
+> Is a new OpenFirmware driver interface being defined for working with
+> 'be' devices? 
 
->---
->diff --git a/Documentation/powerpc/dts-bindings/4xx/ndfc.txt b/Documentation/powerpc/dts-bindings/4xx/ndfc.txt
->new file mode 100644
->index 0000000..869f0b5
->--- /dev/null
->+++ b/Documentation/powerpc/dts-bindings/4xx/ndfc.txt
->@@ -0,0 +1,39 @@
->+AMCC NDFC (NanD Flash Controller)
->+
->+Required properties:
->+- compatible : "ibm,ndfc".
->+- reg : should specify chip select and size used for the chip (0x2000).
->+
->+Optional properties:
->+- ccr : NDFC config and control register value (default 0).
->+- bank-settings : NDFC bank configuration register value (default 0).
->+
->+Notes:
->+- partition(s) - follows the OF MTD standard for partitions
->+
->+Example:
->+
->+ndfc@1,0 {
->+	compatible = "ibm,ndfc";
->+	reg = <0x00000001 0x00000000 0x00002000>;
->+	ccr = <0x00001000>;
->+	bank-settings = <0x80002222>;
->+	#address-cells = <1>;
->+	#size-cells = <1>;
->+
->+	nand {
->+		#address-cells = <1>;
->+		#size-cells = <1>;
->+
->+		partition@0 {
->+			label = "kernel";
->+			reg = <0x00000000 0x00200000>;
->+		};
->+		partition@200000 {
->+			label = "root";
->+			reg = <0x00200000 0x03E00000>;
->+		};
->+	};
->+};
->+
->+
->diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
->index 1c2e945..5705f85 100644
->--- a/drivers/mtd/nand/Kconfig
->+++ b/drivers/mtd/nand/Kconfig
->@@ -163,6 +163,13 @@ config MTD_NAND_S3C2410_HWECC
-> 	  incorrect ECC generation, and if using these, the default of
-> 	  software ECC is preferable.
+No
+
+> If not then the device-type property should not be
+> defined.
+
+The device-type property instances will be removed where not 
+necessary or no OpenFirmware binding recommendations exist
+respectively.
+
+> > "model" property
+> >             property name: Specifies model of node.
+> >             Encoded as with encode-string.
+> >             Default value is { "IBM,CBEA" }.
+> 
+> > "ibm,dt-version" property
+> 
+> I'm concerned about the usage model of this property.  It is not
+> common for driver to go looking for an additional version property
+> when interpreting node data.  Are all drivers expected to test the
+> value of this property?  What should they do when the major or minor
+> values do not match?
+
+This property is meant to be informational. Drivers could check whenever
+they require a certain level.
+ 
+> > 1 ioc node
+> >
+> >
+> > The Input/Output Controller (IOC) node contains among others the 
+properties
+> > specifying the address range of MMIO register space controlling the 
+IOC.
+> >
+> > "reg" property
+> >
+> > Default property name: Property to specify the MMIO offset of the IOC,
+> > which are two sets of registers each represented by an < offset, size 
 >
->+config MTD_NAND_NDFC
->+	tristate "NDFC NanD Flash Controller"
->+	depends on 4xx
->+	select MTD_NAND_ECC_SMC
->+	help
->+	 NDFC Nand Flash Controllers are integrated in IBM/AMCC's 4xx SoCs
->+
-> config MTD_NAND_S3C2410_CLKSTOP
-> 	bool "S3C2410 NAND IDLE clock stop"
-> 	depends on MTD_NAND_S3C2410
->diff --git a/drivers/mtd/nand/ndfc.c b/drivers/mtd/nand/ndfc.c
->index 955959e..582cf80 100644
->--- a/drivers/mtd/nand/ndfc.c
->+++ b/drivers/mtd/nand/ndfc.c
->@@ -2,12 +2,20 @@
->  *  drivers/mtd/ndfc.c
->  *
->  *  Overview:
->- *   Platform independend driver for NDFC (NanD Flash Controller)
->+ *   Platform independent driver for NDFC (NanD Flash Controller)
->  *   integrated into EP440 cores
->  *
->+ *   Ported to an OF platform driver by Sean MacLennan
->+ *
->+ *   The NDFC supports multiple chips, but this driver only supports a
->+ *   single chip since I do not have access to any boards with
->+ *   multiple chips.
->+ *
->  *  Author: Thomas Gleixner
->  *
->  *  Copyright 2006 IBM
->+ *  Copyright 2008 PIKA Technologies
->+ *    Sean MacLennan <smaclennan@pikatech.com>
->  *
->  *  This program is free software; you can redistribute	 it and/or modify it
->  *  under  the terms of	 the GNU General  Public License as published by the
->@@ -21,27 +29,20 @@
-> #include <linux/mtd/partitions.h>
-> #include <linux/mtd/ndfc.h>
-> #include <linux/mtd/mtd.h>
->-#include <linux/platform_device.h>
->-
->+#include <linux/of_platform.h>
-> #include <asm/io.h>
->-#ifdef CONFIG_40x
->-#include <asm/ibm405.h>
->-#else
->-#include <asm/ibm44x.h>
->-#endif
->-
->-struct ndfc_nand_mtd {
->-	struct mtd_info			mtd;
->-	struct nand_chip		chip;
->-	struct platform_nand_chip	*pl_chip;
->-};
->
->-static struct ndfc_nand_mtd ndfc_mtd[NDFC_MAX_BANKS];
->
-> struct ndfc_controller {
->-	void __iomem		*ndfcbase;
->-	struct nand_hw_control	ndfc_control;
->-	atomic_t		childs_active;
->+	struct of_device *ofdev;
->+	void __iomem *ndfcbase;
->+	struct mtd_info mtd;
->+	struct nand_chip chip;
->+	int chip_select;
->+	struct nand_hw_control ndfc_control;
->+#ifdef CONFIG_MTD_PARTITIONS
->+	struct mtd_partition *parts;
->+#endif
-> };
->
-> static struct ndfc_controller ndfc_ctrl;
->@@ -50,17 +51,14 @@ static void ndfc_select_chip(struct mtd_info *mtd, int chip)
-> {
-> 	uint32_t ccr;
-> 	struct ndfc_controller *ndfc = &ndfc_ctrl;
->-	struct nand_chip *nandchip = mtd->priv;
->-	struct ndfc_nand_mtd *nandmtd = nandchip->priv;
->-	struct platform_nand_chip *pchip = nandmtd->pl_chip;
->
->-	ccr = __raw_readl(ndfc->ndfcbase + NDFC_CCR);
->+	ccr = in_be32(ndfc->ndfcbase + NDFC_CCR);
-> 	if (chip >= 0) {
-> 		ccr &= ~NDFC_CCR_BS_MASK;
->-		ccr |= NDFC_CCR_BS(chip + pchip->chip_offset);
->+		ccr |= NDFC_CCR_BS(chip + ndfc->chip_select);
-> 	} else
-> 		ccr |= NDFC_CCR_RESET_CE;
->-	__raw_writel(ccr, ndfc->ndfcbase + NDFC_CCR);
->+	out_be32(ndfc->ndfcbase + NDFC_CCR, ccr);
-> }
->
-> static void ndfc_hwcontrol(struct mtd_info *mtd, int cmd, unsigned int ctrl)
->@@ -80,7 +78,7 @@ static int ndfc_ready(struct mtd_info *mtd)
-> {
-> 	struct ndfc_controller *ndfc = &ndfc_ctrl;
->
->-	return __raw_readl(ndfc->ndfcbase + NDFC_STAT) & NDFC_STAT_IS_READY;
->+	return in_be32(ndfc->ndfcbase + NDFC_STAT) & NDFC_STAT_IS_READY;
-> }
->
-> static void ndfc_enable_hwecc(struct mtd_info *mtd, int mode)
->@@ -88,9 +86,9 @@ static void ndfc_enable_hwecc(struct mtd_info *mtd, int mode)
-> 	uint32_t ccr;
-> 	struct ndfc_controller *ndfc = &ndfc_ctrl;
->
->-	ccr = __raw_readl(ndfc->ndfcbase + NDFC_CCR);
->+	ccr = in_be32(ndfc->ndfcbase + NDFC_CCR);
-> 	ccr |= NDFC_CCR_RESET_ECC;
->-	__raw_writel(ccr, ndfc->ndfcbase + NDFC_CCR);
->+	out_be32(ndfc->ndfcbase + NDFC_CCR, ccr);
-> 	wmb();
-> }
->
->@@ -102,9 +100,10 @@ static int ndfc_calculate_ecc(struct mtd_info *mtd,
-> 	uint8_t *p = (uint8_t *)&ecc;
->
-> 	wmb();
->-	ecc = __raw_readl(ndfc->ndfcbase + NDFC_ECC);
->-	ecc_code[0] = p[1];
->-	ecc_code[1] = p[2];
->+	ecc = in_be32(ndfc->ndfcbase + NDFC_ECC);
->+	/* The NDFC uses Smart Media (SMC) bytes order */
->+	ecc_code[0] = p[2];
->+	ecc_code[1] = p[1];
-> 	ecc_code[2] = p[3];
->
-> 	return 0;
->@@ -123,7 +122,7 @@ static void ndfc_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
-> 	uint32_t *p = (uint32_t *) buf;
->
-> 	for(;len > 0; len -= 4)
->-		*p++ = __raw_readl(ndfc->ndfcbase + NDFC_DATA);
->+		*p++ = in_be32(ndfc->ndfcbase + NDFC_DATA);
-> }
->
-> static void ndfc_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
->@@ -132,7 +131,7 @@ static void ndfc_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
-> 	uint32_t *p = (uint32_t *) buf;
->
-> 	for(;len > 0; len -= 4)
->-		__raw_writel(*p++, ndfc->ndfcbase + NDFC_DATA);
->+		out_be32(ndfc->ndfcbase + NDFC_DATA, *p++);
-> }
->
-> static int ndfc_verify_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
->@@ -141,7 +140,7 @@ static int ndfc_verify_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
-> 	uint32_t *p = (uint32_t *) buf;
->
-> 	for(;len > 0; len -= 4)
->-		if (*p++ != __raw_readl(ndfc->ndfcbase + NDFC_DATA))
->+		if (*p++ != in_be32(ndfc->ndfcbase + NDFC_DATA))
-> 			return -EFAULT;
-> 	return 0;
-> }
->@@ -149,10 +148,19 @@ static int ndfc_verify_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
-> /*
->  * Initialize chip structure
->  */
->-static void ndfc_chip_init(struct ndfc_nand_mtd *mtd)
->+static int ndfc_chip_init(struct ndfc_controller *ndfc,
->+			  struct device_node *node)
-> {
->-	struct ndfc_controller *ndfc = &ndfc_ctrl;
->-	struct nand_chip *chip = &mtd->chip;
->+#ifdef CONFIG_MTD_PARTITIONS
->+#ifdef CONFIG_MTD_CMDLINE_PARTS
->+	static const char *part_types[] = { "cmdlinepart", NULL };
->+#else
->+	static const char *part_types[] = { NULL };
->+#endif
->+#endif
->+	struct device_node *flash_np;
->+	struct nand_chip *chip = &ndfc->chip;
->+	int ret;
->
-> 	chip->IO_ADDR_R = ndfc->ndfcbase + NDFC_DATA;
-> 	chip->IO_ADDR_W = ndfc->ndfcbase + NDFC_DATA;
->@@ -160,8 +168,6 @@ static void ndfc_chip_init(struct ndfc_nand_mtd *mtd)
-> 	chip->dev_ready = ndfc_ready;
-> 	chip->select_chip = ndfc_select_chip;
-> 	chip->chip_delay = 50;
->-	chip->priv = mtd;
->-	chip->options = mtd->pl_chip->options;
-> 	chip->controller = &ndfc->ndfc_control;
-> 	chip->read_buf = ndfc_read_buf;
-> 	chip->write_buf = ndfc_write_buf;
->@@ -172,143 +178,136 @@ static void ndfc_chip_init(struct ndfc_nand_mtd *mtd)
-> 	chip->ecc.mode = NAND_ECC_HW;
-> 	chip->ecc.size = 256;
-> 	chip->ecc.bytes = 3;
->-	chip->ecclayout = chip->ecc.layout = mtd->pl_chip->ecclayout;
->-	mtd->mtd.priv = chip;
->-	mtd->mtd.owner = THIS_MODULE;
->-}
->-
->-static int ndfc_chip_probe(struct platform_device *pdev)
->-{
->-	struct platform_nand_chip *nc = pdev->dev.platform_data;
->-	struct ndfc_chip_settings *settings = nc->priv;
->-	struct ndfc_controller *ndfc = &ndfc_ctrl;
->-	struct ndfc_nand_mtd *nandmtd;
->-
->-	if (nc->chip_offset >= NDFC_MAX_BANKS || nc->nr_chips > NDFC_MAX_BANKS)
->-		return -EINVAL;
->-
->-	/* Set the bank settings */
->-	__raw_writel(settings->bank_settings,
->-		     ndfc->ndfcbase + NDFC_BCFG0 + (nc->chip_offset << 2));
->
->-	nandmtd = &ndfc_mtd[pdev->id];
->-	if (nandmtd->pl_chip)
->-		return -EBUSY;
->+	ndfc->mtd.priv = chip;
->+	ndfc->mtd.owner = THIS_MODULE;
->
->-	nandmtd->pl_chip = nc;
->-	ndfc_chip_init(nandmtd);
->-
->-	/* Scan for chips */
->-	if (nand_scan(&nandmtd->mtd, nc->nr_chips)) {
->-		nandmtd->pl_chip = NULL;
->+	flash_np = of_get_next_child(node, NULL);
->+	if (!flash_np)
-> 		return -ENODEV;
->+
->+	ndfc->mtd.name = kasprintf(GFP_KERNEL, "%s.%s",
->+				   ndfc->ofdev->dev.bus_id, flash_np->name);
->+	if (!ndfc->mtd.name) {
->+		ret = -ENOMEM;
->+		goto err;
-> 	}
->
->-#ifdef CONFIG_MTD_PARTITIONS
->-	printk("Number of partitions %d\n", nc->nr_partitions);
->-	if (nc->nr_partitions) {
->-		/* Add the full device, so complete dumps can be made */
->-		add_mtd_device(&nandmtd->mtd);
->-		add_mtd_partitions(&nandmtd->mtd, nc->partitions,
->-				   nc->nr_partitions);
->+	ret = nand_scan(&ndfc->mtd, 1);
->+	if (ret)
->+		goto err;
->
->-	} else
->-#else
->-		add_mtd_device(&nandmtd->mtd);
->+#ifdef CONFIG_MTD_PARTITIONS
->+	ret = parse_mtd_partitions(&ndfc->mtd, part_types, &ndfc->parts, 0);
->+	if (ret < 0)
->+		goto err;
->+
->+#ifdef CONFIG_MTD_OF_PARTS
->+	if (ret == 0) {
->+		ret = of_mtd_parse_partitions(&ndfc->ofdev->dev, flash_np,
->+					      &ndfc->parts);
->+		if (ret < 0)
->+			goto err;
->+	}
-> #endif
->
->-	atomic_inc(&ndfc->childs_active);
->-	return 0;
->-}
->+	if (ret > 0)
->+		ret = add_mtd_partitions(&ndfc->mtd, ndfc->parts, ret);
->+	else
->+#endif
->+		ret = add_mtd_device(&ndfc->mtd);
->
->-static int ndfc_chip_remove(struct platform_device *pdev)
->-{
->-	return 0;
->+err:
->+	of_node_put(flash_np);
->+	if (ret)
->+		kfree(ndfc->mtd.name);
->+	return ret;
-> }
->
->-static int ndfc_nand_probe(struct platform_device *pdev)
->+static int __devinit ndfc_probe(struct of_device *ofdev,
->+				const struct of_device_id *match)
-> {
->-	struct platform_nand_ctrl *nc = pdev->dev.platform_data;
->-	struct ndfc_controller_settings *settings = nc->priv;
->-	struct resource *res = pdev->resource;
-> 	struct ndfc_controller *ndfc = &ndfc_ctrl;
->-	unsigned long long phys = settings->ndfc_erpn | res->start;
->+	const u32 *reg;
->+	u32 ccr;
->+	int err, len;
->
->-#ifndef CONFIG_PHYS_64BIT
->-	ndfc->ndfcbase = ioremap((phys_addr_t)phys, res->end - res->start + 1);
->-#else
->-	ndfc->ndfcbase = ioremap64(phys, res->end - res->start + 1);
->-#endif
->+	spin_lock_init(&ndfc->ndfc_control.lock);
->+	init_waitqueue_head(&ndfc->ndfc_control.wq);
->+	ndfc->ofdev = ofdev;
->+	dev_set_drvdata(&ofdev->dev, ndfc);
->+
->+	/* Read the reg property to get the chip select */
->+	reg = of_get_property(ofdev->node, "reg", &len);
->+	if (reg == NULL || len != 12) {
->+		dev_err(&ofdev->dev, "unable read reg property (%d)\n", len);
->+		return -ENOENT;
->+	}
->+	ndfc->chip_select = reg[0];
->+
->+	ndfc->ndfcbase = of_iomap(ofdev->node, 0);
-> 	if (!ndfc->ndfcbase) {
->-		printk(KERN_ERR "NDFC: ioremap failed\n");
->+		dev_err(&ofdev->dev, "failed to get memory\n");
-> 		return -EIO;
-> 	}
->
->-	__raw_writel(settings->ccr_settings, ndfc->ndfcbase + NDFC_CCR);
->+	ccr = NDFC_CCR_BS(ndfc->chip_select);
->
->-	spin_lock_init(&ndfc->ndfc_control.lock);
->-	init_waitqueue_head(&ndfc->ndfc_control.wq);
->+	/* It is ok if ccr does not exist - just default to 0 */
->+	reg = of_get_property(ofdev->node, "ccr", NULL);
->+	if (reg)
->+		ccr |= *reg;
->
->-	platform_set_drvdata(pdev, ndfc);
->+	out_be32(ndfc->ndfcbase + NDFC_CCR, ccr);
->
->-	printk("NDFC NAND Driver initialized. Chip-Rev: 0x%08x\n",
->-	       __raw_readl(ndfc->ndfcbase + NDFC_REVID));
->+	/* Set the bank settings if given */
->+	reg = of_get_property(ofdev->node, "bank-settings", NULL);
->+	if (reg) {
->+		int offset = NDFC_BCFG0 + (ndfc->chip_select << 2);
->+		out_be32(ndfc->ndfcbase + offset, *reg);
->+	}
->+
->+	err = ndfc_chip_init(ndfc, ofdev->node);
->+	if (err) {
->+		iounmap(ndfc->ndfcbase);
->+		return err;
->+	}
->
-> 	return 0;
-> }
->
->-static int ndfc_nand_remove(struct platform_device *pdev)
->+static int __devexit ndfc_remove(struct of_device *ofdev)
-> {
->-	struct ndfc_controller *ndfc = platform_get_drvdata(pdev);
->+	struct ndfc_controller *ndfc = dev_get_drvdata(&ofdev->dev);
->
->-	if (atomic_read(&ndfc->childs_active))
->-		return -EBUSY;
->+	nand_release(&ndfc->mtd);
->
->-	if (ndfc) {
->-		platform_set_drvdata(pdev, NULL);
->-		iounmap(ndfc_ctrl.ndfcbase);
->-		ndfc_ctrl.ndfcbase = NULL;
->-	}
-> 	return 0;
-> }
->
->-/* driver device registration */
->-
->-static struct platform_driver ndfc_chip_driver = {
->-	.probe		= ndfc_chip_probe,
->-	.remove		= ndfc_chip_remove,
->-	.driver		= {
->-		.name	= "ndfc-chip",
->-		.owner	= THIS_MODULE,
->-	},
->+static const struct of_device_id ndfc_match[] = {
->+	{ .compatible = "ibm,ndfc", },
->+	{}
-> };
->+MODULE_DEVICE_TABLE(of, ndfc_match);
->
->-static struct platform_driver ndfc_nand_driver = {
->-	.probe		= ndfc_nand_probe,
->-	.remove		= ndfc_nand_remove,
->-	.driver		= {
->-		.name	= "ndfc-nand",
->-		.owner	= THIS_MODULE,
->+static struct of_platform_driver ndfc_driver = {
->+	.driver = {
->+		.name	= "ndfc",
-> 	},
->+	.match_table = ndfc_match,
->+	.probe = ndfc_probe,
->+	.remove = __devexit_p(ndfc_remove),
-> };
->
-> static int __init ndfc_nand_init(void)
-> {
->-	int ret;
->-
->-	spin_lock_init(&ndfc_ctrl.ndfc_control.lock);
->-	init_waitqueue_head(&ndfc_ctrl.ndfc_control.wq);
->-
->-	ret = platform_driver_register(&ndfc_nand_driver);
->-	if (!ret)
->-		ret = platform_driver_register(&ndfc_chip_driver);
->-	return ret;
->+	return of_register_platform_driver(&ndfc_driver);
-> }
->
-> static void __exit ndfc_nand_exit(void)
-> {
->-	platform_driver_unregister(&ndfc_chip_driver);
->-	platform_driver_unregister(&ndfc_nand_driver);
->+	of_unregister_platform_driver(&ndfc_driver);
-> }
->
-> module_init(ndfc_nand_init);
->@@ -316,6 +315,4 @@ module_exit(ndfc_nand_exit);
->
-> MODULE_LICENSE("GPL");
-> MODULE_AUTHOR("Thomas Gleixner <tglx@linutronix.de>");
->-MODULE_DESCRIPTION("Platform driver for NDFC");
->-MODULE_ALIAS("platform:ndfc-chip");
->-MODULE_ALIAS("platform:ndfc-nand");
->+MODULE_DESCRIPTION("OF Platform driver for NDFC");
+> > pair.
+> >
+> > prop-encoded-array: Encoded as with encode-phys for the offset values,
+> > encode-int for the size values.
+> >
+> > The array consists of four 32-bit values to represent two < offset, 
+size >
+> > pairs. Value one in this array corresponds to the first offset value 
+within
+> > the child address space, encoded as with encode-phys. Value two 
+corresponds
+> > to the size, encoded as with encode-int. Value three in this array
+> > corresponds to the second offset value, value four to the second size.
+> >
+> > Default value is { 0x00510000 0x00001000 0x00511000 0x00001000 }.
+> 
+> These spaces are contiguous; what is the reason for the two array 
+entries?
+
+The spaces are in fact contiguous, but belong to two different units.
+0x00510xxx covers the IOC Address Translation MMIO Registers, whereras
+0x00511xxx covers the I/O Command MMIO Registers.
+Despite, Linux is mapping the two ranges in one single step, which means
+the range can well be summarized to 
+        Default value is { 0x00510000 0x00002000 }.
+
+> 
+> > "device_type" property
+> >
+> > Standard property name: Specify the type of this node
+> >
+> > Encoded as with encode-string
+> >
+> > Default value is { "ioc" }
+> 
+> Again, if an OpenFirmware driver interface is not being defined, then
+> don't use the device-type property.
+
+see comment above.
+
+> > 2 "bic0" node
+> [...]
+> > "device_type" property
+> >
+> > Standard property name: Property to specify the type of this node.
+> >
+> > Encoded as with encode-string.
+> >
+> > Default value is { "bic0" }.
+> 
+> ditto on device_type
+
+see comment above
+
+> 
+> > 3 "bic1" node
+> 
+> This is identical to bic0
+> 
+> > 4 "mic-tm" node
+> > 6 "ppe-mmio" node
+> 
+> mic-tm, ppe-mmio, and the bic* node documentation just duplicates the
+> definition of standard node properties.  In this case is should be
+> sufficient to describe what device the node describes an that it uses
+> the standard properties.
+
+I will change the documentation to describe only one of a kind.
+
+> 
+> > 5 "pervasive" node
+> >
+> >
+> > The pervasive node node represents the  pervasive unit in the device 
+tree.
+> > T>he main property value is the address range of MMIO register space
+> > controlling the pervasive unit.
+> 
+> Umm, what is a "pervasive unit"?
+
+The pervasive node represents the 'Pervasive MMIO Registers' (i.e.
+Pervasive Monitor, Power Management and Thermal Management described
+in the Cell/B.E. public register spec.
+
+> 
+> > "device_type" property
+> >
+> > Standard property name: Property to specify the type of this node.
+> >
+> > Encoded as with encode-string.
+> >
+> > Default value is { "pervasive" }.
+> 
+> ditto on device_type
+
+See comment above.
+
+> > "ppe-throttle-temp" property
+> > "ppe-end-throttle-temp" property
+> > "ppe-full-throttle-temp" property
+> > "spe-throttle-temp" property
+> > "spe-end-throttle-temp" property
+> > "spe-full-throttle-temp" property
+> 
+> These properties look good.
+> 
+> > 7 "interrupt-controller" node
+> >
+> > The Cell Broadband Engine Architecture processor contains an Internal
+> > Interrupt Controller (IIC), which is handling all the interrupts from 
+the
+> > PPE, the SPE and the connected IO.
+> >
+> > "reg" property
+> >
+> > Standard property name: Property to specify the MMIO offset of the 
+IIC, one
+> > range for each of the two threads contained in each PPE and one range 
+for
+> > the common MMIO.
+> >
+> > prop-encoded-array: Consisting of six 32-bit values. The values form 
+three
+> > < offset,length > pairs of the denoted space encoded as with 
+encode-phys
+> > for the offsets and encode-int for the sizes
+> >
+> >   1. for MMIO space of thread one
+> >
+> >   2. for MMIO space of thread two
+> >
+> >   3. for MMIO space of the common PPE MMIO space.
+> >
+> > Default value is
+> > { 0x00508400 0x00000020 0x00508420 0x00000020 0x00508000 0x00001000 }.
+> >
+> >
+> >
+> > "device_type" property
+> >
+> > Standard property name: Property to specify the type of this node.
+> >
+> > Encoded as with encode-string.
+> >
+> > Default value is { "CBEA-Internal-Interrupt-Controller" }.
+> 
+> ditto on device_type.  In fact, you should not be inventing new values
+> for device_type at all.  Either use an already established
+> device_type, or don't assign the property at all.  And, if you do use
+> device_type, you are claiming that OpenFirmware has a driver interface
+> for the device.
+
+See comment above.
+
+> > 8 "spe" nodes
+> >
+> > The Cell Broadband Engine Architecture processor contains eight SPEs, 
+each
+> > consisting of an SPU, 256kB local store and a Memory Flow Controller 
+(MFC).
+> > The SPEs are connected to the EIB (Element Interconnect Bus) ring. The
+> > access to the internal devices is done via MMIO reads, with a fixed 
+offset
+> > to the Cell Broadband Engine processor base address.
+> >
+> > "reg" property
+> >
+> > Standard property name: Specifies the MMIO offset and size of the SPEs
+> > Local Storage, Problem-State, Privilege 2 Area and Privilege 1 Area.
+> >
+> > prop-encoded array: Encoded as four < offset, length > pairs per SPE
+> > encoded as with encode-phys for the offsets, encode-int for the size. 
+The
+> > pairs define the following SPE units:
+> >
+> >   1. Local Store (LS)
+> >
+> >   2. Problem State MMIO Registers
+> >
+> >   3. Privilege State 2 MMIO Registers
+> >
+> >   4. Privilege State 1 MMIO Registers
+> >
+> > The property exists once in each spe node.
+> 
+> I like the above description.  It provides good information about how
+> data is organized in the reg property.
+> 
+> > "device_type" property
+> >
+> > Standard property name: Specifies the type of this node.
+> >
+> > Encoded as with encode-string.
+> >
+> > Default value is  {"spe" }.
+> 
+> ditto on device_type
+
+See comment above.
+
+> > "interrupts" property
+> >
+> > Standard property name: Property to specify the interrupt numbers of 
+the
+> > interrupts issued by SPE.
+> >
+> > prop-encoded array: List of interrupt numbers issued by the SPE. Each 
+value
+> > in the list is encoded as with encode-int.
+> >
+> > The property exists once in each spe node.
+> >
+> > Default values for SPEs are
+> >
+> >
+> >
+> > |#          |Property Value                                |
+> > |spe@0      |{ 0x4, 0x104, 0x204 }                         |
+> > |spe@80000  |{ 0x7, 0x107, 0x207 }                         |
+> > |spe@100000 |{ 0x3, 0x103, 0x203 }                         |
+> > |spe@180000 |{ 0x8, 0x108, 0x208 }                         |
+> > |spe@200000 |{ 0x2, 0x102, 0x202 }                         |
+> > |spe@280000 |{ 0x9, 0x109, 0x209 }                         |
+> > |spe@300000 |{0x1, 0x101, 0x201 }                          |
+> > |spe@380000 |{0xa, 0x10a, 0x20a }                          |
+> >
+> >
+> > "vicinity" property
+> >
+> > property name: Specifies the direct neighbouring componentes on the 
+EIB
+> > ring related to each SPE.
+> >
+> > prop-encoded array: Pairs of phandles ( < phandle, phandle >) of the
+> > neighbouring nodes, each phandle is encoded as with encode-int.
+> >
+> > The property exists once in each spe node.
+> >
+> > Default values for SPEs
+> >
+> >
+> >
+> > |#          |Property Value                                |
+> > |spe@0      |{ phandle(mic-tm, SPE 3) }                    |
+> > |spe@80000  |{ phandle(mic-tm, SPE 2) }                    |
+> > |spe@100000 |{ phandle(SPE 0, SPE 4) }                     |
+> > |spe@180000 |{ phandle(SPE 1, SPE 5) }                     |
+> > |spe@200000 |{ phandle(SPE 2, SPE 6) }                     |
+> > |spe@280000 |{ phandle(SPE 3, SPE 7) }                     |
+> > |spe@300000 |{ phandle(SPE 4, BIC0) }                      |
+> > |spe@380000 |{ phandle(SPE 5, BIC0) }                      |
+> >
+> >
+> > "physical-id" property
+> >
+> > property name: Property to specify the physical id of an SPE.
+> >
+> > Default values for the physical id is encoded as with encode-int.
+> 
+> Unless there is some shared register set that needs the SPE physical
+> id to operate then I encourage you not to define this property.  If it
+> is just a logical number, the I think it is better to rely on the node
+> name instead of an arbitrarily defined logical number.  However, if
+> there is a register set shared between the SPEs that needs the SPE
+> number, then you should follow the lead of other existing bindings and
+> use the property name "cell-index" instead of physical-id.
+
+The "physical-id" property is used by Linux (see information on ppc-patch 
+below).
+
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Subject: spu_manage: fix spu_unit_number for celleb device tree
+
+From: Christian Krafft <krafft-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>
+
+New device trees provide "physical-id".
+Celleb device tree provide the "unit-id".
+Legacy device tree used the reg property for the physical id of an spe.
+This patch fixes find_spu_unit_number to look for the spu id in that 
+order.
+The length is checked to avoid misinterpretation in case the attributes
+unit-id or reg do not contain the id.
+
+Signed-off-by: Christian Krafft <krafft-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>
+
+Index: linux/arch/powerpc/platforms/cell/spu_manage.c
+===================================================================
+--- linux.orig/arch/powerpc/platforms/cell/spu_manage.c
++++ linux/arch/powerpc/platforms/cell/spu_manage.c
+@@ -48,10 +48,18 @@ static u64 __init find_spu_unit_number(s
+ {
+                 const unsigned int *prop;
+                 int proplen;
++
++                /* new device trees should provide the physical-id 
+attribute */
+                 prop = of_get_property(spe, "physical-id", &proplen);
+                 if (proplen == 4)
+                                 return (u64)*prop;
+ 
++                /* celleb device tree provides the unit-id */
++                prop = of_get_property(spe, "unit-id", &proplen);
++                if (proplen == 4)
++                                return (u64)*prop;
++
++                /* legacy device trees provide the id in the reg 
+attribute */
+                 prop = of_get_property(spe, "reg", &proplen);
+                 if (proplen == 4)
+                                 return (u64)*prop;
+
+> Cheers,
+> g.
+
+Thanks
+Chris
+
+> 
+> -- 
+> Grant Likely, B.Sc., P.Eng.
+> Secret Lab Technologies Ltd.
+> 
+> 
+> ------------------------------
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> https://ozlabs.org/mailman/listinfo/devicetree-discuss
+> 
+> 
+> End of devicetree-discuss Digest, Vol 6, Issue 7
+> ************************************************
+
+--=_alternative 004E84FCC1257523_=
+Content-Type: text/html; charset="US-ASCII"
+
+
+<br><tt><font size=2>devicetree-discuss-bounces+christian.rund=de.ibm.com-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+wrote on 17.12.2008 02:00:07:<br>
+<br>
+&gt; Send devicetree-discuss mailing list submissions to<br>
+&gt; &nbsp; &nbsp;devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org<br>
+&gt; <br>
+&gt; To subscribe or unsubscribe via the World Wide Web, visit<br>
+&gt; &nbsp; &nbsp;https://ozlabs.org/mailman/listinfo/devicetree-discuss<br>
+&gt; or, via email, send a message with subject or body 'help' to<br>
+&gt; &nbsp; &nbsp;devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org<br>
+&gt; <br>
+&gt; You can reach the person managing the list at<br>
+&gt; &nbsp; &nbsp;devicetree-discuss-owner-mnsaURCQ41sdnm+yROfE0A@public.gmane.org<br>
+&gt; <br>
+&gt; When replying, please edit your Subject line so it is more specific<br>
+&gt; than &quot;Re: Contents of devicetree-discuss digest...&quot;<br>
+&gt; <br>
+&gt; <br>
+&gt; Today's Topics:<br>
+&gt; <br>
+&gt; &nbsp; &nbsp;1. Re: Reminder 1: Device Tree documentation discussion
+for<br>
+&gt; &nbsp; &nbsp; &nbsp; Cell/B.E. &nbsp; binding DRAFT - see Digest Vol
+6, Issue 1 (Grant Likely)<br>
+&gt; <br>
+&gt; <br>
+&gt; ----------------------------------------------------------------------<br>
+&gt; <br>
+&gt; Message: 1<br>
+&gt; Date: Tue, 16 Dec 2008 15:08:17 -0700<br>
+&gt; From: &quot;Grant Likely&quot; &lt;grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org&gt;<br>
+&gt; Subject: Re: Reminder 1: Device Tree documentation discussion for<br>
+&gt; &nbsp; &nbsp;Cell/B.E. &nbsp; binding DRAFT - see Digest Vol 6, Issue
+1<br>
+&gt; To: &quot;Christian Rund&quot; &lt;Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org&gt;<br>
+&gt; Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org<br>
+&gt; Message-ID:<br>
+&gt; &nbsp; &nbsp;&lt;fa686aa40812161408j3672ba5cs7d8526cd643b69de-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org&gt;<br>
+&gt; Content-Type: text/plain; charset=ISO-8859-1<br>
+&gt; <br>
+&gt; On Tue, Dec 16, 2008 at 7:03 AM, Christian Rund<br>
+&gt; &lt;Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org&gt; wrote:<br>
+&gt; &gt; this is a reminder for review. Feedback appreciated!<br>
+&gt; &gt; For convenience I removed the disclaimer etc.<br>
+&gt; &gt;<br>
+&gt; &gt; On dec 5th I posted our (complete) draft version of the Cell/B.E.
+device<br>
+&gt; &gt; tree documentation.<br>
+&gt; &gt;<br>
+&gt; &gt; Goal of these review should be to finally establish the document
+as<br>
+&gt; &gt; Power.org<br>
+&gt; &gt; PAPR Binding for the Cell/B.E. processor.<br>
+&gt; &gt;<br>
+&gt; &gt; Please review and give us feedback.<br>
+&gt; <br>
+&gt; First comments; This document is quite verbose. &nbsp;Much time is
+spent<br>
+&gt; describing how standard properties work (ie; content of the 'reg'
+and<br>
+&gt; 'ranges' properties). &nbsp;Reviewing takes more effort when there
+is a<br>
+&gt; large amount of boilerplate to filter.<br>
+&gt; <br>
+&gt; Second, very few nodes have a 'compatible' value defined. &nbsp;Currently,<br>
+&gt; the 'compatible' list is the preferred method for device drivers to<br>
+&gt; find supported devices in the tree. &nbsp;Each distinct device should
+have<br>
+&gt; a unique compatible value defined.<br>
+&gt; <br>
+&gt; More comments below<br>
+&gt; <br>
+&gt; &gt; 1 &quot;be&quot; node<br>
+&gt; [...]<br>
+&gt; &gt; &quot;device-type&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Standard property name
+which specifies the type of the node.<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Encoded as with encode-string.<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Default value is {
+&quot;be&quot; }.<br>
+&gt; <br>
+&gt; Is a new OpenFirmware driver interface being defined for working with<br>
+&gt; 'be' devices? &nbsp;</font></tt>
+<br>
+<br><tt><font size=2>No</font></tt>
+<br>
+<br><tt><font size=2>&gt; If not then the device-type property should not
+be<br>
+&gt; defined.</font></tt>
+<br>
+<br><tt><font size=2>The device-type property instances will be removed
+where not </font></tt>
+<br><tt><font size=2>necessary or no OpenFirmware binding recommendations
+exist</font></tt>
+<br><tt><font size=2>respectively.</font></tt>
+<br><tt><font size=2><br>
+&gt; &gt; &quot;model&quot; property<br>
+&gt; &gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; property name: Specifies
+model of node.<br>
+&gt; &gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Encoded as with encode-string.<br>
+&gt; &gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Default value is {
+&quot;IBM,CBEA&quot; }.<br>
+&gt; <br>
+&gt; &gt; &quot;ibm,dt-version&quot; property<br>
+&gt; <br>
+&gt; I'm concerned about the usage model of this property. &nbsp;It is
+not<br>
+&gt; common for driver to go looking for an additional version property<br>
+&gt; when interpreting node data. &nbsp;Are all drivers expected to test
+the<br>
+&gt; value of this property? &nbsp;What should they do when the major or
+minor<br>
+&gt; values do not match?</font></tt>
+<br>
+<br><tt><font size=2>This property is meant to be informational. Drivers
+could check whenever</font></tt>
+<br><tt><font size=2>they require a certain level.</font></tt>
+<br><tt><font size=2>&nbsp;<br>
+&gt; &gt; 1 ioc node<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; The Input/Output Controller (IOC) node contains among others
+the properties<br>
+&gt; &gt; specifying the address range of MMIO register space controlling
+the IOC.<br>
+&gt; &gt;<br>
+&gt; &gt; &quot;reg&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Default property name: Property to specify the MMIO offset of
+the IOC,<br>
+&gt; &gt; which are two sets of registers each represented by an &lt; offset,
+size &gt;<br>
+&gt; &gt; pair.<br>
+&gt; &gt;<br>
+&gt; &gt; prop-encoded-array: Encoded as with encode-phys for the offset
+values,<br>
+&gt; &gt; encode-int for the size values.<br>
+&gt; &gt;<br>
+&gt; &gt; The array consists of four 32-bit values to represent two &lt;
+offset, size &gt;<br>
+&gt; &gt; pairs. Value one in this array corresponds to the first offset
+value within<br>
+&gt; &gt; the child address space, encoded as with encode-phys. Value two
+corresponds<br>
+&gt; &gt; to the size, encoded as with encode-int. Value three in this
+array<br>
+&gt; &gt; corresponds to the second offset value, value four to the second
+size.<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is { 0x00510000 0x00001000 0x00511000 0x00001000
+}.<br>
+&gt; <br>
+&gt; These spaces are contiguous; what is the reason for the two array
+entries?</font></tt>
+<br>
+<br><tt><font size=2>The spaces are in fact contiguous, but belong to two
+different units.</font></tt>
+<br><tt><font size=2>0x00510xxx covers the IOC Address Translation MMIO
+Registers, whereras</font></tt>
+<br><tt><font size=2>0x00511xxx covers the I/O Command MMIO Registers.</font></tt>
+<br><tt><font size=2>Despite, Linux is mapping the two ranges in one single
+step, which means</font></tt>
+<br><tt><font size=2>the range can well be summarized to </font></tt>
+<br><tt><font size=2>&nbsp; &nbsp; &nbsp; &nbsp; Default value
+is { 0x00510000 0x00002000 }.<br>
+</font></tt>
+<br><tt><font size=2>&gt; <br>
+&gt; &gt; &quot;device_type&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Specify the type of this node<br>
+&gt; &gt;<br>
+&gt; &gt; Encoded as with encode-string<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is { &quot;ioc&quot; }<br>
+&gt; <br>
+&gt; Again, if an OpenFirmware driver interface is not being defined, then<br>
+&gt; don't use the device-type property.<br>
+</font></tt>
+<br><tt><font size=2>see comment above.</font></tt>
+<br>
+<br><tt><font size=2>&gt; &gt; 2 &quot;bic0&quot; node<br>
+&gt; [...]<br>
+&gt; &gt; &quot;device_type&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Property to specify the type of this
+node.<br>
+&gt; &gt;<br>
+&gt; &gt; Encoded as with encode-string.<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is { &quot;bic0&quot; }.<br>
+&gt; <br>
+&gt; ditto on device_type</font></tt>
+<br>
+<br><tt><font size=2>see comment above</font></tt>
+<br><tt><font size=2><br>
+&gt; <br>
+&gt; &gt; 3 &quot;bic1&quot; node<br>
+&gt; <br>
+&gt; This is identical to bic0<br>
+&gt; <br>
+&gt; &gt; 4 &quot;mic-tm&quot; node<br>
+&gt; &gt; 6 &quot;ppe-mmio&quot; node<br>
+&gt; <br>
+&gt; mic-tm, ppe-mmio, and the bic* node documentation just duplicates
+the<br>
+&gt; definition of standard node properties. &nbsp;In this case is should
+be<br>
+&gt; sufficient to describe what device the node describes an that it uses<br>
+&gt; the standard properties.</font></tt>
+<br>
+<br><tt><font size=2>I will change the documentation to describe only one
+of a kind.</font></tt>
+<br><tt><font size=2><br>
+&gt; <br>
+&gt; &gt; 5 &quot;pervasive&quot; node<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; The pervasive node node represents the &nbsp;pervasive unit in
+the device tree.<br>
+&gt; &gt; T&gt;he main property value is the address range of MMIO register
+space<br>
+&gt; &gt; controlling the pervasive unit.<br>
+&gt; <br>
+&gt; Umm, what is a &quot;pervasive unit&quot;?</font></tt>
+<br>
+<br><tt><font size=2>The pervasive node represents the 'Pervasive MMIO
+Registers' (i.e.</font></tt>
+<br><tt><font size=2>Pervasive Monitor, Power Management and Thermal Management
+described</font></tt>
+<br><tt><font size=2>in the Cell/B.E. public register spec.</font></tt>
+<br><tt><font size=2><br>
+&gt; <br>
+&gt; &gt; &quot;device_type&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Property to specify the type of this
+node.<br>
+&gt; &gt;<br>
+&gt; &gt; Encoded as with encode-string.<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is { &quot;pervasive&quot; }.<br>
+&gt; <br>
+&gt; ditto on device_type</font></tt>
+<br>
+<br><tt><font size=2>See comment above.</font></tt>
+<br><tt><font size=2><br>
+&gt; &gt; &quot;ppe-throttle-temp&quot; property<br>
+&gt; &gt; &quot;ppe-end-throttle-temp&quot; property<br>
+&gt; &gt; &quot;ppe-full-throttle-temp&quot; property<br>
+&gt; &gt; &quot;spe-throttle-temp&quot; property<br>
+&gt; &gt; &quot;spe-end-throttle-temp&quot; property<br>
+&gt; &gt; &quot;spe-full-throttle-temp&quot; property<br>
+&gt; <br>
+&gt; These properties look good.<br>
+&gt; <br>
+&gt; &gt; 7 &quot;interrupt-controller&quot; node<br>
+&gt; &gt;<br>
+&gt; &gt; The Cell Broadband Engine Architecture processor contains an
+Internal<br>
+&gt; &gt; Interrupt Controller (IIC), which is handling all the interrupts
+from the<br>
+&gt; &gt; PPE, the SPE and the connected IO.<br>
+&gt; &gt;<br>
+&gt; &gt; &quot;reg&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Property to specify the MMIO offset of
+the IIC, one<br>
+&gt; &gt; range for each of the two threads contained in each PPE and one
+range for<br>
+&gt; &gt; the common MMIO.<br>
+&gt; &gt;<br>
+&gt; &gt; prop-encoded-array: Consisting of six 32-bit values. The values
+form three<br>
+&gt; &gt; &lt; offset,length &gt; pairs of the denoted space encoded as
+with encode-phys<br>
+&gt; &gt; for the offsets and encode-int for the sizes<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 1. for MMIO space of thread one<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 2. for MMIO space of thread two<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 3. for MMIO space of the common PPE MMIO space.<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is<br>
+&gt; &gt; { 0x00508400 0x00000020 0x00508420 0x00000020 0x00508000 0x00001000
+}.<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; &quot;device_type&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Property to specify the type of this
+node.<br>
+&gt; &gt;<br>
+&gt; &gt; Encoded as with encode-string.<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is { &quot;CBEA-Internal-Interrupt-Controller&quot;
+}.<br>
+&gt; <br>
+&gt; ditto on device_type. &nbsp;In fact, you should not be inventing new
+values<br>
+&gt; for device_type at all. &nbsp;Either use an already established<br>
+&gt; device_type, or don't assign the property at all. &nbsp;And, if you
+do use<br>
+&gt; device_type, you are claiming that OpenFirmware has a driver interface<br>
+&gt; for the device.</font></tt>
+<br>
+<br><tt><font size=2>See comment above.<br>
+<br>
+&gt; &gt; 8 &quot;spe&quot; nodes<br>
+&gt; &gt;<br>
+&gt; &gt; The Cell Broadband Engine Architecture processor contains eight
+SPEs, each<br>
+&gt; &gt; consisting of an SPU, 256kB local store and a Memory Flow Controller
+(MFC).<br>
+&gt; &gt; The SPEs are connected to the EIB (Element Interconnect Bus)
+ring. The<br>
+&gt; &gt; access to the internal devices is done via MMIO reads, with a
+fixed offset<br>
+&gt; &gt; to the Cell Broadband Engine processor base address.<br>
+&gt; &gt;<br>
+&gt; &gt; &quot;reg&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Specifies the MMIO offset and size of
+the SPEs<br>
+&gt; &gt; Local Storage, Problem-State, Privilege 2 Area and Privilege
+1 Area.<br>
+&gt; &gt;<br>
+&gt; &gt; prop-encoded array: Encoded as four &lt; offset, length &gt;
+pairs per SPE<br>
+&gt; &gt; encoded as with encode-phys for the offsets, encode-int for the
+size. The<br>
+&gt; &gt; pairs define the following SPE units:<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 1. Local Store (LS)<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 2. Problem State MMIO Registers<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 3. Privilege State 2 MMIO Registers<br>
+&gt; &gt;<br>
+&gt; &gt; &nbsp; 4. Privilege State 1 MMIO Registers<br>
+&gt; &gt;<br>
+&gt; &gt; The property exists once in each spe node.<br>
+&gt; <br>
+&gt; I like the above description. &nbsp;It provides good information about
+how<br>
+&gt; data is organized in the reg property.<br>
+&gt; <br>
+&gt; &gt; &quot;device_type&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Specifies the type of this node.<br>
+&gt; &gt;<br>
+&gt; &gt; Encoded as with encode-string.<br>
+&gt; &gt;<br>
+&gt; &gt; Default value is &nbsp;{&quot;spe&quot; }.<br>
+&gt; <br>
+&gt; ditto on device_type<br>
+</font></tt>
+<br><tt><font size=2>See comment above.</font></tt>
+<br><tt><font size=2><br>
+&gt; &gt; &quot;interrupts&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; Standard property name: Property to specify the interrupt numbers
+of the<br>
+&gt; &gt; interrupts issued by SPE.<br>
+&gt; &gt;<br>
+&gt; &gt; prop-encoded array: List of interrupt numbers issued by the SPE.
+Each value<br>
+&gt; &gt; in the list is encoded as with encode-int.<br>
+&gt; &gt;<br>
+&gt; &gt; The property exists once in each spe node.<br>
+&gt; &gt;<br>
+&gt; &gt; Default values for SPEs are<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; |# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|Property Value &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt; |spe@0 &nbsp; &nbsp; &nbsp;|{ 0x4, 0x104, 0x204 } &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@80000 &nbsp;|{ 0x7, 0x107, 0x207 } &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@100000 |{ 0x3, 0x103, 0x203 } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@180000 |{ 0x8, 0x108, 0x208 } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@200000 |{ 0x2, 0x102, 0x202 } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@280000 |{ 0x9, 0x109, 0x209 } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@300000 |{0x1, 0x101, 0x201 } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt; |spe@380000 |{0xa, 0x10a, 0x20a } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; &quot;vicinity&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; property name: Specifies the direct neighbouring componentes
+on the EIB<br>
+&gt; &gt; ring related to each SPE.<br>
+&gt; &gt;<br>
+&gt; &gt; prop-encoded array: Pairs of phandles ( &lt; phandle, phandle
+&gt;) of the<br>
+&gt; &gt; neighbouring nodes, each phandle is encoded as with encode-int.<br>
+&gt; &gt;<br>
+&gt; &gt; The property exists once in each spe node.<br>
+&gt; &gt;<br>
+&gt; &gt; Default values for SPEs<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; |# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|Property Value &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt; |spe@0 &nbsp; &nbsp; &nbsp;|{ phandle(mic-tm, SPE 3) } &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt; |spe@80000 &nbsp;|{ phandle(mic-tm, SPE 2) } &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt; |spe@100000 |{ phandle(SPE 0, SPE 4) } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@180000 |{ phandle(SPE 1, SPE 5) } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@200000 |{ phandle(SPE 2, SPE 6) } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@280000 |{ phandle(SPE 3, SPE 7) } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>
+&gt; &gt; |spe@300000 |{ phandle(SPE 4, BIC0) } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt; |spe@380000 |{ phandle(SPE 5, BIC0) } &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; &quot;physical-id&quot; property<br>
+&gt; &gt;<br>
+&gt; &gt; property name: Property to specify the physical id of an SPE.<br>
+&gt; &gt;<br>
+&gt; &gt; Default values for the physical id is encoded as with encode-int.<br>
+&gt; <br>
+&gt; Unless there is some shared register set that needs the SPE physical<br>
+&gt; id to operate then I encourage you not to define this property. &nbsp;If
+it<br>
+&gt; is just a logical number, the I think it is better to rely on the
+node<br>
+&gt; name instead of an arbitrarily defined logical number. &nbsp;However,
+if<br>
+&gt; there is a register set shared between the SPEs that needs the SPE<br>
+&gt; number, then you should follow the lead of other existing bindings
+and<br>
+&gt; use the property name &quot;cell-index&quot; instead of physical-id.<br>
+</font></tt>
+<br><tt><font size=2>The &quot;physical-id&quot; property is used by Linux
+(see information on ppc-patch below).</font></tt>
+<br>
+<br><tt><font size=2>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org</font></tt>
+<br><tt><font size=2>Subject: spu_manage: fix spu_unit_number for celleb
+device tree<br>
+<br>
+From: Christian Krafft &lt;krafft-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org&gt;<br>
+<br>
+New device trees provide &quot;physical-id&quot;.<br>
+Celleb device tree provide the &quot;unit-id&quot;.<br>
+Legacy device tree used the reg property for the physical id of an spe.<br>
+This patch fixes find_spu_unit_number to look for the spu id in that order.<br>
+The length is checked to avoid misinterpretation in case the attributes<br>
+unit-id or reg do not contain the id.<br>
+<br>
+Signed-off-by: Christian Krafft &lt;krafft-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org&gt;<br>
+</font></tt>
+<br><tt><font size=2>Index: linux/arch/powerpc/platforms/cell/spu_manage.c<br>
+===================================================================<br>
+--- linux.orig/arch/powerpc/platforms/cell/spu_manage.c<br>
++++ linux/arch/powerpc/platforms/cell/spu_manage.c<br>
+@@ -48,10 +48,18 @@ static u64 __init find_spu_unit_number(s<br>
+ {<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;const
+unsigned int *prop;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int
+proplen;<br>
++<br>
++ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+/* new device trees should provide the physical-id attribute */<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;prop
+= of_get_property(spe, &quot;physical-id&quot;, &amp;proplen);<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if
+(proplen == 4)<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+return (u64)*prop;<br>
+ <br>
++ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+/* celleb device tree provides the unit-id */<br>
++ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+prop = of_get_property(spe, &quot;unit-id&quot;, &amp;proplen);<br>
++ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+if (proplen == 4)<br>
++ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return
+(u64)*prop;<br>
++<br>
++ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+/* legacy device trees provide the id in the reg attribute */<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;prop
+= of_get_property(spe, &quot;reg&quot;, &amp;proplen);<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if
+(proplen == 4)<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+return (u64)*prop;</font></tt>
+<br><tt><font size=2><br>
+&gt; Cheers,<br>
+&gt; g.</font></tt>
+<br>
+<br><tt><font size=2>Thanks</font></tt>
+<br><tt><font size=2>Chris</font></tt>
+<br><tt><font size=2><br>
+&gt; <br>
+&gt; -- <br>
+&gt; Grant Likely, B.Sc., P.Eng.<br>
+&gt; Secret Lab Technologies Ltd.<br>
+&gt; <br>
+&gt; <br>
+&gt; ------------------------------<br>
+&gt; <br>
+&gt; _______________________________________________<br>
+&gt; devicetree-discuss mailing list<br>
+&gt; devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org<br>
+&gt; https://ozlabs.org/mailman/listinfo/devicetree-discuss<br>
+&gt; <br>
+&gt; <br>
+&gt; End of devicetree-discuss Digest, Vol 6, Issue 7<br>
+&gt; ************************************************<br>
+</font></tt>
+--=_alternative 004E84FCC1257523_=--
+
+--===============0734390067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+https://ozlabs.org/mailman/listinfo/devicetree-discuss
+
+--===============0734390067==--
