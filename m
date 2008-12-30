@@ -1,8 +1,8 @@
 From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
 Subject: Re: Reminder 1: Device Tree documentation discussion for Cell/B.E.
 	binding DRAFT - see Digest Vol 6, Issue 1
-Date: Tue, 30 Dec 2008 17:08:43 -0600
-Message-ID: <495AA9FB.40902@genesi-usa.com>
+Date: Tue, 30 Dec 2008 17:20:29 -0600
+Message-ID: <495AACBD.4080804@genesi-usa.com>
 References: <OF89278B7C.B7D060FF-ONC1257521.004C9E27-C1257521.004D3F55@de.ibm.com>
 	<fa686aa40812161408j3672ba5cs7d8526cd643b69de@mail.gmail.com>
 Mime-Version: 1.0
@@ -25,98 +25,54 @@ List-Id: devicetree@vger.kernel.org
 
 Grant Likely wrote:
 > On Tue, Dec 16, 2008 at 7:03 AM, Christian Rund
-> <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org> wrote:
-> 
->> 1 "be" node
-> [...]
->> "device-type" property
->>
->>             Standard property name which specifies the type of the node.
->>
+
+>> "model" property
+>>             property name: Specifies model of node.
 >>             Encoded as with encode-string.
->>
->>             Default value is { "be" }.
+>>             Default value is { "IBM,CBEA" }.
 > 
-> Is a new OpenFirmware driver interface being defined for working with
-> 'be' devices?  If not then the device-type property should not be
-> defined.
+>> "ibm,dt-version" property
+> 
+> I'm concerned about the usage model of this property.  It is not
+> common for driver to go looking for an additional version property
+> when interpreting node data.
 
-I think that while the distinction that it requires a driver interface 
-is moot (and probably overdiscussed and therefore after this, I will 
-drop it)..
+Then that sucks, because they SHOULD be checking the model property if 
+it is known that a device may have errata, quirks or other problems 
+which cannot be programmatically detected in other ways (for instance 
+via version registers in the chip itself).
 
-** more prudent in this case is that even if it is specified or not, the 
-property is named "device_type" with an underscore, not a hyphen **
+>  Are all drivers expected to test the value of this property?
 
- > First comments; This document is quite verbose.  Much time is spent
- > describing how standard properties work (ie; content of the 'reg' and
- > 'ranges' properties).  Reviewing takes more effort when there is a
- > large amount of boilerplate to filter.
+I would expect that once the model or version property is filled by the 
+device tree compiler or by the OF implementation, people will get used 
+to it being there. When it comes time that it may need to be checked 
+for, then it already exists; nobody will have to update their firmwares, 
+or device trees, or program any flash chips, just update their kernel or 
+recompile a module and unload/load it to get the changes and/or fixes.
 
-I would let this go through if only because getting access to the 
-original OpenFirmware specification is getting more and more "difficult" 
-these days (while it's available in many places, some of them are a 
-little obscure and most people won't find it in a portable, easily 
-readable format from a Google search. No, I don't consider PostScript an 
-easily readable format..)
+You never complained that we fill out the version of the firmware (and 
+the build-date integer) in the Pegasos or Efika device trees. And rather 
+than make any particular checks on them, code has been submitted which 
+makes blanket changes not dependant on version, but on the presence of 
+certain nodes (and also NOT on the lack of properties inside those 
+nodes, too, when creating new property data). I've always thought such 
+trashing of firmware data without proper checks is both intrusive and 
+also creates yet another moving target for software developers to take 
+heed of. It makes working with Linux far, far more frustrating from 
+board bring-up all the way up to end users installing a prebaked 
+distribution..
 
-Having the Cell/BE DT specification self-contained makes it harder to 
-review but far more useful as a document unto itself. Cross-referencing 
-is time consuming and there is already far, far too much to read up on 
-the subject for very little benefit.
+>  What should they do when the major or minor values do not match?
 
-Perhaps, though, the "boilerplate" could be whittled down slightly such 
-that it does not overshadow the real new specification in the document.
+I would expect that this is to be determined when the version number 
+becomes an actual, actionable item.
 
- > Second, very few nodes have a 'compatible' value defined.  Currently,
- > the 'compatible' list is the preferred method for device drivers to
- > find supported devices in the tree.  Each distinct device should have
- > a unique compatible value defined.
+One might stop booting if the firmware version is too old, or initiate 
+some fixups (such as using a compiled-in ACPI table as is done on many 
+older PC motherboards). Certain VIA EPIA boards have lots of weird 
+behaviours and the BIOS vendor string plus a few other heuristics are 
+employed to make sure they are worked around.
 
-Since Linux and every other OpenFirmware-supporting device implements 
-device_type (see below) and this is checked BEFORE compatible properties 
-when searching for compatible entries, this distinction is moot.
-
-As long as device_type exists in the node, compatible is not necessarily 
-required. This conforms to the OpenFirmware specification, and produces 
-completely acceptable behaviour within Linux and any other OS.
-
-The OF spec for device_type states is MEANT to supply information about 
-how to access the device programmatically, whether this be through a 
-client interface API such as "serial" or "network", I think while this 
-distinction may be "clever" from the point of view of redefining it for 
-Linux DTBs and reducing some redundancy, I prefer to think of this in 
-the same way as a PCI class code or similar - a device_type of 
-"fsl,mpc5200b-i2c" therefore specifies that it is a Freescale i2c bus on 
-the MPC5200B, and a compatible property would dictate that it is 
-compatible with generic "fsl,i2c" bus specification and register set.
-
-If there is no standard client interface methods defined for it then at 
-least it gives a fairly good hint as to the device in order to program 
-it by any other means.
-
-It also looks better when you're a human reading device trees. Chip 
-company's XX1234 controller is not "only" compatible, it *IS* a Chip 
-XX1234. Having device_type list the specific chip and compatible listing 
-register-compatible or API-compatible devices (for instance 
-chip,xx1233). There is no other place to reference this distinction of 
-which chip it actually is, and not which chips it is simply very similar 
-or identical to, apart from the OPTIONAL "model" property.
-
-Please let's not nitpick that "device_type" is obselete, because it 
-isn't, you could not remove the check for device_type from the device 
-tree code, nor any device tree on a real OF machine.
-
-It is still a useful and informative property which COULD be given 
-something of a new meaning (which implies or does not imply certain 
-attributes for hardware components). Anyone can put in device_type into 
-a DTS and it will not destroy the spacetime continuum or cause world 
-famine or wars to get worse. The mere fact that it goes from being 
-required to "completely optional and practically obselete" from OF 
-specification (which does not dictate that device_type MUST conform to a 
-CIF package or set of methods, only that it should if it could) to the 
-DTS specification is just makes the Linux spec contrary for the sake of 
-being contrary.
-
---
+-- 
 Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
