@@ -1,15 +1,12 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: Reminder 1: Device Tree documentation discussion for Cell/B.E.
-	binding DRAFT - see Digest Vol 6, Issue 1
-Date: Tue, 30 Dec 2008 14:09:47 -1000
-Message-ID: <495AB84B.1070602@firmworks.com>
-References: <OF89278B7C.B7D060FF-ONC1257521.004C9E27-C1257521.004D3F55@de.ibm.com>	<fa686aa40812161408j3672ba5cs7d8526cd643b69de@mail.gmail.com>
-	<495AA9FB.40902@genesi-usa.com>
+From: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] libfdt: Introduce libfdt shared library
+Date: Fri, 2 Jan 2009 08:20:34 -0500
+Message-ID: <20090102132034.GB8954@zod.rchland.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <495AA9FB.40902-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -19,62 +16,96 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Christian Rund <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> The OF spec for device_type states is MEANT to supply information 
-> about how to access the device programmatically, whether this be 
-> through a client interface API such as "serial" or "network", I think 
-> while this distinction may be "clever" from the point of view of 
-> redefining it for Linux DTBs and reducing some redundancy,
+Build a libfdt shared library in addition to the existing .a that is
+created.  Symbol versioning is used from the libfdt/version.lds script.
 
+Signed-off-by: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+---
+ Makefile               |   15 ++++++++++++---
+ libfdt/Makefile.libfdt |    1 +
+ tests/Makefile.tests   |    4 ++--
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-IEEE Std 1275-1994 page 132:
-
-"device_type"
-      Standard property name to specify the implemented interface       
-(Note: this is the brief description, which is a hint, not the normative 
-part)
-      ...
-      (Normative text:)
-      Specifies the "device type" of this package, thus implying a 
-specific set of package class methods implemented by the package.
-
-Note that it does not specify the programming model of the hardware - it 
-specifies the *package* interface.
-
-In the context of a device tree that is disconnected from a functional 
-Open Firmware implementation, device_type is meaningless and arguably 
-inaccurate, asserting the existence of a set of methods that is not in 
-fact present.
-
-For binding an OS driver to hardware, you need to know the hardware 
-programming model, as specified by "compatible".  "device_type" doesn't 
-specify the hardware programming model, so misusing it for driver 
-binding is a bad idea.  Please don't propagate such mistakes.
-
-The original use of device_name was for an Open Firmware implementation 
-to find nodes that might be candidates for specific internal uses, most 
-notably console devices.  The most compelling use case is when a plug-in 
-video card would automatically become the preferred console output 
-device.  But in a lot of real-world situations, automated device choice 
-of this ilk is a problem.   You often need to wire down a device list to 
-avoid user confusion and make it possible to write definitive 
-documentation.  (There were also some diagnostic-related uses such as 
-probe-scsi-all.)
-
-If I could redo history, device_type would not have been included in the 
-standard.  It was an OBP1-ism and, unfortunately, I didn't realize my 
-mistake until it was too late.
-
-> I prefer to think of this in the same way as a PCI class code or 
-> similar - a device_type of "fsl,mpc5200b-i2c" therefore specifies that 
-> it is a Freescale i2c bus on the MPC5200B, and a compatible property 
-> would dictate that it is compatible with generic "fsl,i2c" bus 
-> specification and register set. 
-
-There is a legitimate need for something like a "class code" to indicate 
-in a vague way what general kind of device it is.  That is accomplished 
-by the "name" property as reinterpreted by the "generic names" 
-recommended practice.
+diff --git a/Makefile b/Makefile
+index b3b85a5..8d5b929 100644
+--- a/Makefile
++++ b/Makefile
+@@ -16,7 +16,7 @@ LOCAL_VERSION =
+ CONFIG_LOCALVERSION =
+ 
+ CPPFLAGS = -I libfdt
+-CFLAGS = -Wall -g -Os -Wpointer-arith -Wcast-qual
++CFLAGS = -Wall -g -Os -fPIC -Wpointer-arith -Wcast-qual
+ 
+ BISON = bison
+ LEX = flex
+@@ -115,19 +115,23 @@ endif
+ #
+ LIBFDT_objdir = libfdt
+ LIBFDT_srcdir = libfdt
+-LIBFDT_lib = $(LIBFDT_objdir)/libfdt.a
++LIBFDT_archive = $(LIBFDT_objdir)/libfdt.a
++LIBFDT_lib = $(LIBFDT_objdir)/libfdt.so
+ LIBFDT_include = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_INCLUDES))
++LIBFDT_version = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_VERSION))
+ 
+ include $(LIBFDT_srcdir)/Makefile.libfdt
+ 
+ .PHONY: libfdt
+-libfdt: $(LIBFDT_lib)
++libfdt: $(LIBFDT_archive) $(LIBFDT_lib)
+ 
++$(LIBFDT_archive): $(addprefix $(LIBFDT_objdir)/,$(LIBFDT_OBJS))
+ $(LIBFDT_lib): $(addprefix $(LIBFDT_objdir)/,$(LIBFDT_OBJS))
+ 
+ libfdt_clean:
+ 	@$(VECHO) CLEAN "(libfdt)"
+ 	rm -f $(addprefix $(LIBFDT_objdir)/,$(STD_CLEANFILES))
++	rm -f $(LIBFDT_objdir)/*.so
+ 
+ ifneq ($(DEPTARGETS),)
+ -include $(LIBFDT_OBJS:%.o=$(LIBFDT_objdir)/%.d)
+@@ -215,6 +219,11 @@ clean: libfdt_clean tests_clean
+ 	@$(VECHO) AR $@
+ 	$(AR) $(ARFLAGS) $@ $^
+ 
++$(LIBFDT_lib):
++	@$(VECHO) LD $@
++	$(CC) $(LDFLAGS) -fPIC -Wl,--version-script=$(LIBFDT_version) -Wl,-soname,$(notdir $@) -shared -o $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).so $^
++	ln -s libfdt-$(DTC_VERSION).so $(LIBFDT_objdir)/libfdt.so
++
+ %.lex.c: %.l
+ 	@$(VECHO) LEX $@
+ 	$(LEX) -o$@ $<
+diff --git a/libfdt/Makefile.libfdt b/libfdt/Makefile.libfdt
+index 6c42acf..341c803 100644
+--- a/libfdt/Makefile.libfdt
++++ b/libfdt/Makefile.libfdt
+@@ -4,5 +4,6 @@
+ # be easily embeddable into other systems of Makefiles.
+ #
+ LIBFDT_INCLUDES = fdt.h libfdt.h
++LIBFDT_VERSION = version.lds
+ LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c
+ LIBFDT_OBJS = $(LIBFDT_SRCS:%.c=%.o)
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index 21a311e..3a041ff 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -35,9 +35,9 @@ TESTS_CLEANFILES = $(TESTS) $(TESTS_CLEANFILES_L:%=$(TESTS_PREFIX)%)
+ .PHONY: tests
+ tests:	$(TESTS) $(TESTS_TREES)
+ 
+-$(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_lib)
++$(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_archive)
+ 
+-$(LIBTREE_TESTS): %: $(TESTS_PREFIX)testutils.o $(TESTS_PREFIX)trees.o $(LIBFDT_lib)
++$(LIBTREE_TESTS): %: $(TESTS_PREFIX)testutils.o $(TESTS_PREFIX)trees.o $(LIBFDT_archive)
+ 
+ $(TESTS_PREFIX)dumptrees: $(TESTS_PREFIX)trees.o
+ 
+-- 
+1.6.0.6
