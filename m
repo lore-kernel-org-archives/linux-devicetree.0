@@ -1,37 +1,37 @@
-From: "Li Yang" <LeoLi@freescale.com>
+From: "Li Yang" <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: RE: The usage of compatible 'simple-bus'
 Date: Tue, 6 Jan 2009 13:46:21 +0800
-Message-ID: <3A45394FD742FA419B760BB8D398F9ED0B38C9__32566.0564507873$1231220919$gmane$org@zch01exm26.fsl.freescale.net>
+Message-ID: <3A45394FD742FA419B760BB8D398F9ED0B38C9__30523.1750746772$1231220964$gmane$org@zch01exm26.fsl.freescale.net>
 References: <3A45394FD742FA419B760BB8D398F9ED0B37E7@zch01exm26.fsl.freescale.net><20090105192053.GB23766@ld0162-tx32.am.freescale.net>
 	<20090106014323.GB29456@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-class: urn:content-classes:message
-In-Reply-To: <20090106014323.GB29456@yookeroo.seuss>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: David Gibson <david@gibson.dropbear.id.au>, Wood Scott-B07421 <scottwood@freescale.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+In-Reply-To: <20090106014323.GB29456-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Wood Scott-B07421 <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 > -----Original Message-----
 > From: 
-> devicetree-discuss-bounces+leoli=freescale.com@ozlabs.org 
+> devicetree-discuss-bounces+leoli=freescale.com-mnsaURCQ41sdnm+yROfE0A@public.gmane.org 
 > [mailto:devicetree-discuss-bounces+leoli=freescale.com@ozlabs.
 > org] On Behalf Of David Gibson
 > Sent: Tuesday, January 06, 2009 9:43 AM
 > To: Wood Scott-B07421
-> Cc: linuxppc-dev@ozlabs.org; Li Yang-R58472; 
-> devicetree-discuss@ozlabs.org
+> Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org; Li Yang-R58472; 
+> devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 > Subject: Re: The usage of compatible 'simple-bus'
 > 
 > On Mon, Jan 05, 2009 at 01:20:53PM -0600, Scott Wood wrote:
