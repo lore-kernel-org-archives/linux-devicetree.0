@@ -1,7 +1,7 @@
-From: "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: "Li Yang" <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: The usage of compatible 'simple-bus'
-Date: Tue, 6 Jan 2009 20:26:31 -0700
-Message-ID: <fa686aa40901061926o6858602em60281a1e39daa0c2__24635.9379882508$1231299356$gmane$org@mail.gmail.com>
+Date: Wed, 7 Jan 2009 11:51:12 +0800
+Message-ID: <2a27d3730901061951g333d10b6mf4dc0219570e521b@mail.gmail.com>
 References: <20090106014323.GB29456@yookeroo.seuss>
 	<3A45394FD742FA419B760BB8D398F9ED0B38C9@zch01exm26.fsl.freescale.net>
 	<20090107020006.GD13731@yookeroo.seuss>
@@ -23,8 +23,61 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaUR
 To: Li Yang <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Wood Scott-B07421 <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 6, 2009 at 7:00 PM, David Gibson
+On Wed, Jan 7, 2009 at 10:00 AM, David Gibson
 <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Tue, Jan 06, 2009 at 01:46:21PM +0800, Li Yang wrote:
+>> > -----Original Message-----
+>> > From:
+>> > devicetree-discuss-bounces+leoli=freescale.com-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+>> > [mailto:devicetree-discuss-bounces+leoli=freescale.com@ozlabs.
+>> > org] On Behalf Of David Gibson
+>> > Sent: Tuesday, January 06, 2009 9:43 AM
+>> > To: Wood Scott-B07421
+>> > Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org; Li Yang-R58472;
+>> > devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+>> > Subject: Re: The usage of compatible 'simple-bus'
+>> >
+>> > On Mon, Jan 05, 2009 at 01:20:53PM -0600, Scott Wood wrote:
+>> > > On Mon, Jan 05, 2009 at 06:27:39PM +0800, Li Yang wrote:
+>> > > > I got an assumption from the existing device trees that having
+>> > > > 'simple-bus' in the compatible property of a node means that all
+>> > > > child nodes should be added as of_platform_device in platform
+>> > > > initialization phase.  No matter it represents a bus in
+>> > common sense
+>> > > > or not.  Is this truly the case?
+>> > >
+>> > > Yes, simple-bus indicates that the children can be driven
+>> > standalone
+>> > > from any knowledge of the parent bus.
+>> >
+>> > Erm, well, sort of.  Strictly it indicates that the only way
+>> > to locate the child devices of this bus is by using the
+>> > address information in the device tree - there's no way to
+>> > dynamically probe the bus.
+>>
+>> So if I understand correctly, "simple-bus" is intended to be used for
+>> true buses.
+>
+> Generally, yes, although there may be some situations where it's
+> appropriate for other things.  So, for example, in some cases it's
+> used (correctly) for compound devices .  I don't think this particular
+> case is a sensible situation for it, though.
+>
+>> > The fact that this causes of_platform_devices to be
+>> > instantiated is a Linux implementation specific detail (and
+>> > one we might change in future).
+>>
+>> Here we have a common case for SoC that part of a device has its
+>> separate driver besides the driver for the main feature of the whole
+>> device.  The resources used by the sub-device is usually part of the
+>> resources of the parent device.  So it makes sense to put the node of
+>> sub-device beneathe the node of main device.  Shall we have a convention
+>> to mark such devices in device tree so that the sub-device can be
+>> scanned and probed as a standalone of_platform_device?
+>>
+>> If "simple-bus" may cause confusion to do this job as it's not a bus
+>> actually, I propose to use "has-subdevice".
+>
 > As Grant says, you're thinking about what drivers will do with things
 > rather than what the actual hardware setup is, which is what the
 > device tree should describe.
@@ -33,15 +86,17 @@ On Tue, Jan 6, 2009 at 7:00 PM, David Gibson
 >        - Move the MDIO node to outside the gianfar MAC node.  I think
 > this is already done on some boards with gianfar?
 
-mpc5200 FEC is another example of this.
+Yes, we can use good old way.  But as Scott has moved the MDIO into
+the gianfar node on MPC8313, maybe it's a better way to describe the
+relationship of the two parts.
 
 >        - Explicitly add the gianfar device to the list of things to
 > scan for of_platform subdevices.
 
-Ack.  I 100% agree.
+I'm not against this solution.  However, the situation is kind of
+common for SoC.  So I was just wondering if we can get to a new
+convention in device tree than maintain a list in the code.  It will
+be easier to figure the situation out by just reading the dts than
+combining with the code.
 
-g.
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+- Leo
