@@ -1,33 +1,33 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: [PATCH] powerpc/5200: update device tree binding documentation
 Date: Thu, 29 Jan 2009 16:59:21 -0700
-Message-ID: <20090129235921.7513.22130.stgit__36333.6323680871$1233273715$gmane$org@localhost.localdomain>
+Message-ID: <20090129235921.7513.22130.stgit__2526.01980832896$1233273771$gmane$org@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: linuxppc-dev@ozlabs.org
-Cc: devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
 This patch updates the mpc5200 binding documentation to match
 actual usage conventions, to remove incorrect information, and
 to remove topics which are more thoroughly described elsewhere.
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-CC: devicetree-discuss@ozlabs.org
-CC: Wolfram Sang <w.sang@pengutronix.de>
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+CC: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+CC: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
 
  Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |  180 +++++++++++++
@@ -47,7 +47,7 @@ index 0000000..b8b09d3
 +----------------------------
 +
 +(c) 2006-2009 Secret Lab Technologies Ltd
-+Grant Likely <grant.likely@secretlab.ca>
++Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 +
 +Naming conventions
 +------------------
