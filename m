@@ -1,28 +1,28 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH] powerpc/5200: update device tree binding documentation
 Date: Fri, 30 Jan 2009 07:12:29 +0100
-Message-ID: <20090130061229.GA9894__8693.32290390066$1233296191$gmane$org@pengutronix.de>
+Message-ID: <20090130061229.GA9894__17208.0231518068$1233296324$gmane$org@pengutronix.de>
 References: <20090129235921.7513.22130.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1271724010=="
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-Reply-To: <20090129235921.7513.22130.stgit@localhost.localdomain>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============0774615350=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20090129235921.7513.22130.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Mime-version: 1.0
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1271724010==
+--===============0774615350==
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
 Content-Disposition: inline
@@ -34,20 +34,20 @@ Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, Jan 29, 2009 at 04:59:21PM -0700, Grant Likely wrote:
-> From: Grant Likely <grant.likely@secretlab.ca>
+> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 >=20
 > This patch updates the mpc5200 binding documentation to match
 > actual usage conventions, to remove incorrect information, and
 > to remove topics which are more thoroughly described elsewhere.
 >=20
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
 One minor nit, then you can add
 
-Reviewed-by: Wolfram Sang <w.sang@pengutronix.de>
+Reviewed-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-> CC: devicetree-discuss@ozlabs.org
-> CC: Wolfram Sang <w.sang@pengutronix.de>
+> CC: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+> CC: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
 >=20
 >  Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |  180 +++++++++++++
@@ -69,7 +69,7 @@ tation/powerpc/dts-bindings/fsl/mpc5200.txt
 > +----------------------------
 > +
 > +(c) 2006-2009 Secret Lab Technologies Ltd
-> +Grant Likely <grant.likely@secretlab.ca>
+> +Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > +
 > +Naming conventions
 > +------------------
@@ -582,14 +582,15 @@ cpQAnAqWsLZjbbUXZJfKfDA4EsT96rkw
 
 --1yeeQ81UyVL57Vl7--
 
---===============1271724010==
+--===============0774615350==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
 _______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@ozlabs.org
-https://ozlabs.org/mailman/listinfo/linuxppc-dev
---===============1271724010==--
+devicetree-discuss mailing list
+devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+https://ozlabs.org/mailman/listinfo/devicetree-discuss
+
+--===============0774615350==--
