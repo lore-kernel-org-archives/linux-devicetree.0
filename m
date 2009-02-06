@@ -1,14 +1,15 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [1/2] libfdt: Rework fdt_next_node()
-Date: Fri, 06 Feb 2009 11:21:41 -0600
-Message-ID: <E1LVUOb-0000PN-Jp@jdl.com>
+Subject: Re: [2/2] libfdt: Rework/cleanup fdt_next_tag()
+Date: Fri, 06 Feb 2009 11:22:22 -0600
+Message-ID: <E1LVUPG-0000Pi-SK@jdl.com>
 References: <20090206024929.GC18397@yookeroo.seuss>
 	<20090206030156.GG18397@yookeroo.seuss>
+	<20090206030324.GH18397@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-reply-to: <20090206030156.GG18397-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org> 
+In-reply-to: <20090206030324.GH18397-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org> 
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -22,27 +23,41 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Currently fdt_next_node() will find the next node in the blob
-> regardless of whether it is above, below or at the same level in the
-> tree as the starting node - the depth parameter is updated to indicate
-> which is the case.  When a depth parameter is supplied, this patch
-> makes it instead terminate immediately when it finds the END_NODE tag
-> for a node at depth 0.  In this case it returns the offset immediately
-> past the END_NODE tag.
+> Currently, callers of fdt_next_tag() must usually follow the call with
+> some sort of call to fdt_offset_ptr() to verify that the blob isn't
+> truncated in the middle of the tag data they're going to process.
+> This is a bit silly, since fdt_next_tag() generally has to call
+> fdt_offset_ptr() on at least some of the data following the tag for
+> its own operation.
 > 
-> This has a couple of advantages.  First, this slightly simplifies
-> fdt_subnode_offset(), which no longer needs to explicitly check that
-> fdt_next_node()'s iteration hasn't left the starting node.  Second,
-> this allows fdt_next_node() to be used to implement
-> _fdt_node_end_offset() considerably simplifying the latter function.
+> This patch alters fdt_next_tag() to always use fdt_offset_ptr() to
+> verify the data between its starting offset and the offset it returns
+> in nextoffset.  This simplifies fdt_get_property() which no longer has
+> to verify itself that the property data is all present.
 > 
-> The other users of fdt_next_node() either don't need to iterate out of
-> the starting node, or don't pass a depth parameter at all.  Any
-> callers that really need to iterate out of the starting node, but keep
-> tracking depth can do so by biasing the initial depth value.
+> At the same time, I neaten and clarify the error handling for
+> fdt_next_tag().  Previously, fdt_next_tag() could return -1 instead of
+> a tag value in some circumstances - which almost none of the callers
+> checked for.  Also, fdt_next_tag() could return FDT_END either because
+> it encountered an FDT_END tag, or because it reached the end of the
+> structure block - no way was provided to tell between these cases.
 > 
-> This is a semantic change, but I think it's very unlikely to break any
-> existing library users.
+> With this patch, fdt_next_tag() always returns FDT_END with a negative
+> value in nextoffset for an error.  This means the several places which
+> loop looking for FDT_END will still work correctly - they only need to
+> check for errors at the end.  The errors which fdt_next_tag() can
+> report are:
+> 	- -FDT_ERR_TRUNCATED if it reached the end of the structure
+> 	   block instead of finding a tag.
+> 
+> 	- -FDT_BADSTRUCTURE if a bad tag was encountered, or if the
+>            tag data couldn't be verified with fdt_offset_ptr().
+> 
+> This patch also updates the callers of fdt_next_tag(), where
+> appropriate, to make use of the new error reporting.
+> 
+> Finally, the prototype for the long gone _fdt_next_tag() is removed
+> from libfdt_internal.h.
 > 
 > Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
