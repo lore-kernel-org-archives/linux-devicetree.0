@@ -1,12 +1,14 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [0/2] libfdt: Cleanups to iteration functions [resend]
-Date: Fri, 6 Feb 2009 13:49:29 +1100
-Message-ID: <20090206024929.GC18397@yookeroo.seuss>
+Subject: [1/2] libfdt: Rework fdt_next_node()
+Date: Fri, 6 Feb 2009 14:01:56 +1100
+Message-ID: <20090206030156.GG18397@yookeroo.seuss>
+References: <20090206024929.GC18397@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <20090206024929.GC18397-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -20,23 +22,140 @@ To: Jon Loeliger <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Yet more backlog clearing.
+Currently fdt_next_node() will find the next node in the blob
+regardless of whether it is above, below or at the same level in the
+tree as the starting node - the depth parameter is updated to indicate
+which is the case.  When a depth parameter is supplied, this patch
+makes it instead terminate immediately when it finds the END_NODE tag
+for a node at depth 0.  In this case it returns the offset immediately
+past the END_NODE tag.
 
-These two patches make some cleanups to the fdt_next_node() and
-fdt_next_tag() functions that I've been meaning to do for a while.
+This has a couple of advantages.  First, this slightly simplifies
+fdt_subnode_offset(), which no longer needs to explicitly check that
+fdt_next_node()'s iteration hasn't left the starting node.  Second,
+this allows fdt_next_node() to be used to implement
+_fdt_node_end_offset() considerably simplifying the latter function.
 
-These patches do introduce minor semantic changes, and those are
-exported functions.  I think they're still reasonable changes, because
-the behavioural changes are in corner cases which previously had
-somewhat fuzzily defined semantics anyway.  I would be very doubtful
-that anyone was relying on the altered behaviour; if I'm wrong about
-that these patches could need some rethinking.
+The other users of fdt_next_node() either don't need to iterate out of
+the starting node, or don't pass a depth parameter at all.  Any
+callers that really need to iterate out of the starting node, but keep
+tracking depth can do so by biasing the initial depth value.
 
-These cleanups make it easier to implement property iteration, which I
-have a draft patch for in the works.  I'm not posting that with this
-series, because I'm having second thoughts about the details of the
-interface, and I need to write some testcases.  I'll try to post that
-as an RFC / work-in-progress shortly.
+This is a semantic change, but I think it's very unlikely to break any
+existing library users.
+
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
+---
+ libfdt/fdt.c     |    4 ++--
+ libfdt/fdt_ro.c  |   20 ++++++++------------
+ libfdt/fdt_wip.c |   39 ++++++---------------------------------
+ 3 files changed, 16 insertions(+), 47 deletions(-)
+
+Index: dtc/libfdt/fdt.c
+===================================================================
+--- dtc.orig/libfdt/fdt.c	2009-02-06 13:47:08.000000000 +1100
++++ dtc/libfdt/fdt.c	2009-02-06 13:47:44.000000000 +1100
+@@ -162,8 +162,8 @@ int fdt_next_node(const void *fdt, int o
+ 			break;
+ 
+ 		case FDT_END_NODE:
+-			if (depth)
+-				(*depth)--;
++			if (depth && ((--(*depth)) < 0))
++				return nextoffset;
+ 			break;
+ 
+ 		case FDT_END:
+Index: dtc/libfdt/fdt_ro.c
+===================================================================
+--- dtc.orig/libfdt/fdt_ro.c	2009-02-06 13:47:08.000000000 +1100
++++ dtc/libfdt/fdt_ro.c	2009-02-06 13:47:44.000000000 +1100
+@@ -108,24 +108,20 @@ int fdt_num_mem_rsv(const void *fdt)
+ int fdt_subnode_offset_namelen(const void *fdt, int offset,
+ 			       const char *name, int namelen)
+ {
+-	int depth = 0;
++	int depth;
+ 
+ 	FDT_CHECK_HEADER(fdt);
+ 
+-	for (depth = 0, offset = fdt_next_node(fdt, offset, &depth);
+-	     (offset >= 0) && (depth > 0);
+-	     offset = fdt_next_node(fdt, offset, &depth)) {
+-		if (depth < 0)
+-			return -FDT_ERR_NOTFOUND;
+-		else if ((depth == 1)
+-			 && _fdt_nodename_eq(fdt, offset, name, namelen))
++	for (depth = 0;
++	     (offset >= 0) && (depth >= 0);
++	     offset = fdt_next_node(fdt, offset, &depth))
++		if ((depth == 1)
++		    && _fdt_nodename_eq(fdt, offset, name, namelen))
+ 			return offset;
+-	}
+ 
+-	if (offset < 0)
+-		return offset; /* error */
+-	else
++	if (depth < 0)
+ 		return -FDT_ERR_NOTFOUND;
++	return offset; /* error */
+ }
+ 
+ int fdt_subnode_offset(const void *fdt, int parentoffset,
+Index: dtc/libfdt/fdt_wip.c
+===================================================================
+--- dtc.orig/libfdt/fdt_wip.c	2009-02-06 13:47:08.000000000 +1100
++++ dtc/libfdt/fdt_wip.c	2009-02-06 13:47:11.000000000 +1100
+@@ -94,41 +94,14 @@ int fdt_nop_property(void *fdt, int node
+ 	return 0;
+ }
+ 
+-int _fdt_node_end_offset(void *fdt, int nodeoffset)
++int _fdt_node_end_offset(void *fdt, int offset)
+ {
+-	int level = 0;
+-	uint32_t tag;
+-	int offset, nextoffset;
+-
+-	tag = fdt_next_tag(fdt, nodeoffset, &nextoffset);
+-	if (tag != FDT_BEGIN_NODE)
+-		return -FDT_ERR_BADOFFSET;
+-	do {
+-		offset = nextoffset;
+-		tag = fdt_next_tag(fdt, offset, &nextoffset);
+-
+-		switch (tag) {
+-		case FDT_END:
+-			return offset;
+-
+-		case FDT_BEGIN_NODE:
+-			level++;
+-			break;
+-
+-		case FDT_END_NODE:
+-			level--;
+-			break;
+-
+-		case FDT_PROP:
+-		case FDT_NOP:
+-			break;
+-
+-		default:
+-			return -FDT_ERR_BADSTRUCTURE;
+-		}
+-	} while (level >= 0);
++	int depth = 0;
+ 
+-	return nextoffset;
++	while ((offset >= 0) && (depth >= 0))
++		offset = fdt_next_node(fdt, offset, &depth);
++
++	return offset;
+ }
+ 
+ int fdt_nop_node(void *fdt, int nodeoffset)
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
