@@ -1,68 +1,109 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [Qemu-devel] [RFC] Machine description as data
-Date: Thu, 12 Feb 2009 09:33:59 -1000
-Message-ID: <499479A7.5090902@firmworks.com>
-References: <87iqnh6kyv.fsf@pike.pond.sub.org>	<1234378228.28751.79.camel@slate.austin.ibm.com>	<20090212040138.GD31142@yookeroo.seuss>	<87iqng0x3t.fsf@pike.pond.sub.org>	<1234461162.20305.16.camel@slate.austin.ibm.com>
-	<87fxijwkpn.fsf@pike.pond.sub.org>
+From: Carl-Daniel Hailfinger <c-d.hailfinger.devel.2006@gmx.net>
+Subject: Re: [RFC] Machine description as data
+Date: Fri, 13 Feb 2009 00:35:10 +0100
+Message-ID: <4994B22E.6060608@gmx.net>
+References: <20090212040138.GD31142@yookeroo.seuss>
+	<20090212.094613.514366467.imp@bsdimp.com>
+Reply-To: qemu-devel@nongnu.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <87fxijwkpn.fsf-A7mx1g9ivIOttUaS3K59qNi2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Markus Armbruster <armbru-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, Hollis Blanchard <hollisb-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+In-Reply-To: <20090212.094613.514366467.imp@bsdimp.com>
+List-Unsubscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.gnu.org/pipermail/qemu-devel>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+To: qemu-devel@nongnu.org
+Cc: devicetree-discuss@ozlabs.org, hollisb@us.ibm.com
 List-Id: devicetree@vger.kernel.org
 
+On 12.02.2009 17:46, M. Warner Losh wrote:
+> <87iqng0x3t.fsf@pike.pond.sub.org>
+> <49941AE3.1000806@gmx.net>
+> X-Mailer: Mew version 5.2 on Emacs 21.3 / Mule 5.0 (SAKAKI)
+> Mime-Version: 1.0
+> Content-Type: Text/Plain; charset=us-ascii
+> Content-Transfer-Encoding: 7bit
 >
-> We want a machine configuration: a tree describing configurable devices
-> and their configurable properties.
+> In message: <49941AE3.1000806@gmx.net>
+> Carl-Daniel Hailfinger <c-d.hailfinger.devel.2006@gmx.net> writes:
+> : > I didn't mean to say they are a bad idea for FDTs, just that they're on
+> : > an awkward level of abstraction for QEMU configuration.  There, I'd
+> : > rather express a PCI address as "02:01.0" than as <0x00000220>.
+> : > Translating text to binary is the machine's job, not the user's.
+> : 
+> : Coreboot v3 is using some device tree variant which is IMHO a bit more
+> : user friendly. The tree below is incomplete (for example, it leaves out
+> : the PCI bus number and assumes that it is zero by default), but you
+> : surely get the idea.
+> : 
+> : /{
+> :     mainboard_vendor = "Gigabyte";
+> :     mainboard_name = "M57SLI";
+> :     cpus { };
+> :     apic@0 {
+> :     };
+> :     domain@0 {
+> :         pci@0,0 { /* MCP55 RAM? */ 
+> :         };
+> :         pci@1,0 {
+> :             /config/("southbridge/nvidia/mcp55/lpc.dts");
+> :             ioport@2e {
+>
+> <etc>
+>
+> I'd like to make a couple of comments here.
+>
+> One, I dislike the DTS syntax.  It is hard to learn to read, and I
+> always have to have the manual in my hands to read it.
+>
+> However, every board that's being produced for powerpc has the DTB at
+> least available.  It has to be, or (recent?) Linux kernels flat out
+> won't work.  This suggests that it might be a good idea to look at
+> this format.
 >   
 
+If this is true, I'd consider it to be a misfeature/bug in Linux for
+powerpc.
 
-Regarding configurable devices in Open Firmware:
+Unless I'm mistaken, Linux is able to probe most hardware properties.
+The exceptions on x86 are interrupt routing (at least on most machines)
+and memory area designations. Memory configuration can be given as a
+command line parameter and with polling enabled on all interrupts, a
+kernel should come up fine as well.
 
-The baseline usage model for configurable devices was that the firmware 
-is responsible for establishing a consistent system configuration, 
-possibly based on user-modifiable variables in non-volatile storage.  It 
-reports the actual configuration to the OS via the device tree.
 
-For cases where the choice needs to deferred until later, or perhaps 
-changed dynamically, a device tree property reports the set of 
-possibilities.  In cases where the firmware has already set up the 
-devices, it reports the current choice via another property.
-
-The device tree hierarchy serves as the "name space" framework for these 
-properties.  Obviously, you need to specify the device for which the 
-choice set applies.  The device tree is a coherent naming model for that 
-purpose.
-
-Obviously the hierarchical model has problems for highly-configurable 
-chipsets in which a setting can result in a wholesale rearrangement of 
-the overall connectivity, but it seems to me that board-design 
-constraints usually make that a non-problem. The wiring on a given board 
-generally forces the choice at that level, so the firmware for that 
-board need not report that as a configurable choice.
-> For PowerPC, we also want a machine description: a tree describing those
-> devices and properties that the kernel can't easily and safely probe.
+> There's DTS and DTB.  One is the source, the other is the binary
+> created from the source.  I'd recommend that qemu actually use the DTB
+> rather than the DTS to implement things.  This way one could have a
+> nicer syntax like the above and generate the DTB, or one could use the
+> DTS provided by a vendor if there was a more specific board they
+> wanted qemu to emulate.
+>
+> Carl-Daniel, how does coreboot v3 generate the data that's passed to
+> the kernel?
 >   
 
-The gist of the above sentence seems to presuppose that, if the kernel 
-can probe, it should.  That's not the only way of thinking about the 
-problem.  As a practical matter, the firmware usually needs to do a fair 
-amount of probing too, in order to locate the console display and the 
-boot devices.  In the process, the firmware usually discovers pretty 
-much the entire machine configuration.  If the OS has to repeat the 
-process from scratch, it slows down the boot process.  So the IEEE1275 
-design supports the model where the firmware can do all the probing, 
-handing off a complete system description to the OS.  The OS startup 
-code can walk the tree and attach device drivers for what it finds, then 
-arrange to handle insert/remove events from hot-pluggable buses.
+Coreboot v3 does not pass anything derived from the device tree to the
+kernel. It simply wouldn't make sense.
+
+Linux and Windows use a few legacy tables and ACPI on x86/x86_64
+platforms and if the device tree is any good for firmware purposes, it
+won't resemble the ACPI tables at all.
+
+Stuffing info usable for ACPI into the device tree is certainly
+possible, but due to topology and content mismatch it's a painful and
+pointless exercise.
+
+
+Regards,
+Carl-Daniel
+
+-- 
+http://www.hailfinger.org/
