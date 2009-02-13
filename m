@@ -1,54 +1,57 @@
-From: Paul Brook <paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
-Subject: Re: [Qemu-devel] [RFC] Machine description as data
-Date: Fri, 13 Feb 2009 14:25:52 +0000
-Message-ID: <200902131425.53137.paul@codesourcery.com>
-References: <87iqnh6kyv.fsf@pike.pond.sub.org>
-	<200902131333.47141.paul@codesourcery.com>
-	<871vu2pgq7.fsf@pike.pond.sub.org>
+From: lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+Subject: Re: [RFC] Machine description as data
+Date: Fri, 13 Feb 2009 09:32:45 -0500
+Message-ID: <20090213143244.GL15807@csclub.uwaterloo.ca>
+References: <20090212040138.GD31142@yookeroo.seuss>
+	<20090212.094613.514366467.imp@bsdimp.com>
+	<4994B22E.6060608@gmx.net>
+	<200902122358.25864.paul@codesourcery.com>
+	<4994BF93.2070409@gmx.net>
+Reply-To: qemu-devel@nongnu.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <871vu2pgq7.fsf-A7mx1g9ivIOttUaS3K59qNi2O/JbrIOy@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Markus Armbruster <armbru-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org
+In-Reply-To: <4994BF93.2070409@gmx.net>
+List-Unsubscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.gnu.org/pipermail/qemu-devel>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+To: qemu-devel@nongnu.org
+Cc: devicetree-discuss@ozlabs.org, Paul Brook <paul@codesourcery.com>, hollisb@us.ibm.com
 List-Id: devicetree@vger.kernel.org
 
-> Look, my goals are rather modest.  I want to start where we are, put
-> devices behind a nice abstract interface one by one, picking apart the
-> pc.c hairball on the way.  The idea is not to design the perfect,
-> all-encompassing abstract device interface, just to capture what we
-> need, and extend as we go.  The abstract device interface makes a simple
-> machine builder possible, driven by tree-structured configuration.  That
-> in turn makes it easier to make things configurable.  Which can be
-> expected to lead to more configurability, when and where there's a need
-> for it.
->
-> All this can be done in nice, safe baby steps.  I don't need to come up
-> with an all-singing machine description fit for a picky kernel before I
-> can start doing something useful.
->
-> Now, if you hand me such a configuration on a platter, I'd be a fool not
-> to take it.  The catch: I need one for a PC.
+On Fri, Feb 13, 2009 at 01:32:19AM +0100, Carl-Daniel Hailfinger wrote:
+> Point taken.
+> 
+> If the firmware doesn't set up the things which can't be probed, can it
+> even be called firmware or is it more like a glorified bootloader?
+> 
+> Ouch. I always thought turning on all the RAM was either a hardware (old
+> x86) or firmware (modern x86) task.
 
-I suspect these two goals may be contradictory. The PC machine is so hairy 
-that you need a singing, dancing machine description to be able to describe 
-it.
+Certainly a lot of embedded systems, the bootloader is the firmware and
+is responsible for a lot of hardwre configuration, although often the
+operating system also does a lot.  Most x86 systems configure devices on
+the PCI bus fairly sensible at power on before the OS starts.  On an arm
+system, the linux kernel has to do all the PCI bus enumeration and
+configuration since there is generally no PCI handling in the
+firmware/boot laoder on such a system.  Of course embedded x86 systems
+sometimes also don't do everything you want, in which case fixing it in
+the boot loader is handy to avoid messing too much with the kernel.
 
-OTOH if what you really want to do is configure the host binding side of 
-things, then as I've mentioned before, I see that as been somewhat separate 
-from the actual machine creation, and trying to combine the two is probably a 
-mistake. I really don't want users to have to hack the machine config just to 
-change the name of an image file.
+> I'm a bit surprised by the lack of automatically detectable features in
+> embedded systems. Wouldn't automatic detection allow reusing whole OS
+> images on slighly different systems and thus lower development cost?
 
-Paul
+There is the problem of detecting what a given GPIO line does.  Use of
+GPIO lines is very common on embedded systems, and the use is almost
+always custom to each device.
+
+-- 
+Len Sorensen
