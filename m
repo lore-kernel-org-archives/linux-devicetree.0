@@ -1,13 +1,14 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH] Fix a possible overflow case detected by gcc 4.3.2
-Date: Mon, 23 Feb 2009 13:34:12 -0600
-Message-ID: <E1LbgZA-00034S-PB@jdl.com>
-References: <1235407416-10005-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: Of the device tree binary format endianness on little-endian
+	platform
+Date: Tue, 24 Feb 2009 15:26:15 -0600
+Message-ID: <ed82fe3e0902241326g39a5c7fdj861aa37ebe821aee@mail.gmail.com>
+References: <1234975585.17001.131.camel@pc-laurentg.intra.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-reply-to: <1235407416-10005-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org> 
+In-Reply-To: <1234975585.17001.131.camel-AlTa8cHOufjkPJRI6LV1/EZjUo8kaGiB@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -17,17 +18,25 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+To: Laurent Gregoire <laurent.gregoire-Jdzig1fPfSTQT0dZR+AlfA@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> .../dtc/libfdt/fdt_sw.c: In function 'fdt_end_node':
-> .../dtc/libfdt/fdt_sw.c:81: error: assuming signed overflow does not occur when assuming that (X + c)
->  < X is always false
-> 
-> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+On Wed, Feb 18, 2009 at 10:46 AM, Laurent Gregoire
+<laurent.gregoire-Jdzig1fPfSTQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> We are currently investigating the use of a flattened device-tree for
+> configuring some boot parameters on a new ARM platform.
 
-Applied.
+Laurent,
 
-Thanks,
-jdl
+I'm very interested in the work you are planning on doing.  How are
+you planning on integrating device-tree support into the kernel?  That
+is, are you going to be adding the code so that's local to your ARM
+platforms, or are you looking to make the device tree API available
+for all ARM?
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
