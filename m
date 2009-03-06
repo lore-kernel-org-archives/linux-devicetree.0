@@ -1,13 +1,11 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [RFC] More compatibles or more quirk properties
-Date: Thu, 05 Mar 2009 21:32:38 -1000
-Message-ID: <49B0D196.7080207@firmworks.com>
-References: <3A45394FD742FA419B760BB8D398F9ED29E274@zch01exm26.fsl.freescale.net>
+From: Laurent Gregoire <laurent.gregoire-Jdzig1fPfSTQT0dZR+AlfA@public.gmane.org>
+Subject: cross-compiled dtc on arm-gnueabi with gcc 4.2.1 issue
+Date: Fri, 06 Mar 2009 14:54:31 +0100
+Message-ID: <1236347671.17001.524.camel@pc-laurentg.intra.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <3A45394FD742FA419B760BB8D398F9ED29E274-bKEhWGtIRUJ4Lp7cDGe+DVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -17,12 +15,24 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Li Yang-R58472 <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->
-> I'm running into a dilemma choosing between two approaches of defining device tree binding.  Let's say if we have several chips with a similar SoC block, but each of them have different quirks.  If I define different compatibles for each of the chips, the driver will have a longer match table and thus bloat the device matching process.  Or we can use a same compatible for all of them and  define properties for each of the quirks.  But it somewha
-Properties to describe quirks precisely are definitely better.  In fact, 
-that's fundamental principle - describe the situation, don't infer a 
-bunch of details from a name.
+
+FYI, we recently cross-compiled the dtc binary for ARM, using gcc 4.2.1
+(target arm-gnu-eabi). A bug appears in calling function
+write_tree_source_node(), the two last parameters are mangled. Latest
+gcc 4.3.3 does not exhibit the issue.
+
+The problem is due to gcc (a very small fragment of code exhibit the
+same problem), and is probably related to the bug described below:
+http://gcc.gnu.org/bugzilla/show_bug.cgi?id=36527
+(Fixed in gcc 4.3.1)
+
+As a workaround, using -O2 instead of -Os solves the issue on the
+specific dtc case.
+
+HTH,
+
+Laurent GREGOIRE
+Embedded Software Engineering | TomTom | www.tomtom.com
