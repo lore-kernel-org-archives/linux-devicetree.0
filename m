@@ -1,11 +1,11 @@
-From: Nicolas Lavocat <nicolas.lavocat-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org>
-Subject: mapping a PCI bus
-Date: Mon, 09 Mar 2009 11:42:04 +0100
-Message-ID: <49B4F27C.7040007@fr.thalesgroup.com>
+From: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Documentation for device tree API
+Date: Mon, 9 Mar 2009 09:10:50 -0600
+Message-ID: <20090309151053.AFECD8B8055@mail224-sin.bigfish.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============0879930748=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Class: urn:content-classes:message
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -13,65 +13,130 @@ List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
 List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Mime-version: 1.0
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Brian Hill <bhill-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hy everybody!
+--===============0879930748==
+Content-Class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C9A0C9.3BAD2FA3"
 
-I=92m working on a project:
+------_=_NextPart_001_01C9A0C9.3BAD2FA3
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On a proprietary board, (with a PowerPC 7448), a minimal Linux has been =
+Hi Grant and David,
+ =
 
-embedded. My first aim consist in using a graphic chipset on the board, =
+We have a number of customers trying to use device tree to write their
+own device drivers and they are asking a lot of API type questions.
+ =
 
-that is to say make work the PCI bus. For the address mapping, I try to =
+We haven't found any API type explanation/examples for using device tree
+other than to look at existing drivers which can be challenging.
+ =
 
-write a dts, using the dts of the mpc7448hpc2 board as a model. My =
+Is there some documentation that we're just missing that does exist?
+ =
 
-problem is that I don=92t understand how to fill the field =93range=94 of t=
-he =
+We realize there is the Documentation/powerpc/booting-without-of.txt
+file that describes the device tree, but it doesn't explain the API.
+ =
 
-PCI. The =93width=94 used and the number of range is different from on boar=
-d =
+Thanks,
+John
+ =
 
-to an other where PCI is used. I read the PCI specification, and don=92t =
 
-find anything about it.
 
-Here is an extract of my dts, where the field in question is indicated =
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
 
-thanks to commentaries:
 
-pci@70000000 { compatible =3D "abac-pci";
+------_=_NextPart_001_01C9A0C9.3BAD2FA3
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-device_type =3D "pci";
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dus-ascii">
+<META content=3D"MSHTML 6.00.2900.3492" name=3DGENERATOR></HEAD>
+<BODY>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial size=3D2>Hi Grant =
+and =
 
-#size-cells =3D <2>;
+David,</FONT></SPAN></DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
 
-#address-cells =3D <3>;
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial size=3D2>We have a=
+ number of =
 
-#interrupt-cells =3D <1>;
+customers trying to use device tree to write their own device drivers and t=
+hey =
 
-reg =3D <0x70000000 0x1000>;
+are asking a lot of API type questions.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
 
-bus-range =3D <0 0>;
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial size=3D2>We haven'=
+t found any =
 
-/* how can I know how to chose the number of range and their width?*/
+API type explanation/examples for using device tree other than to look at =
 
-ranges =3D <0x2000000 0x0 0xe0000000 0xe0000000 0x0 0x1a000000
+existing drivers which can be challenging.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
 
-0x1000000 0x0 0x0 0xfa000000 0x0 0x10000>;
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial size=3D2>Is there =
+some =
 
-=85
+documentation that we're just missing that does exist?</FONT></SPAN></DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
 
-};
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial size=3D2>We realiz=
+e there is =
 
-Then, I have a second question: why PCI=92s addresses seem to be =
+the Documentation/powerpc/booting-without-of.txt file that describes the de=
+vice =
 
-implemented on 96 bits, whereas the addressing is done on 32 bits?
+tree, but it doesn't explain the API.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
 
-Thanks for Your attention !
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
 
-Nicolas Lavocat
+size=3D2>Thanks,<BR>John</FONT></SPAN></DIV>
+<DIV><SPAN class=3D806070015-09032009><FONT face=3DArial =
+
+size=3D2></FONT></SPAN>&nbsp;</DIV><br clear=3Dall> This email and any atta=
+chments are intended for the sole use of the named recipient(s) and contain=
+(s) confidential information that may be proprietary, privileged or copyrig=
+hted under applicable law. If you are not the intended recipient, do not re=
+ad, copy, or forward this email message or any attachments. Delete this ema=
+il message and any attachments immediately.
+</BODY></HTML>
+
+
+------_=_NextPart_001_01C9A0C9.3BAD2FA3--
+
+--===============0879930748==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+https://ozlabs.org/mailman/listinfo/devicetree-discuss
+
+--===============0879930748==--
