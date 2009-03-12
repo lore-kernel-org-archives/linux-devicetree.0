@@ -1,10 +1,10 @@
-From: Nicolas Lavocat <nicolas.lavocat-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org>
-Subject: Re: mapping a PCI bus
-Date: Thu, 12 Mar 2009 11:35:47 +0100
-Message-ID: <49B8E583.3070108@fr.thalesgroup.com>
+From: Johns Daniel <johns.daniel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: I2C not working upon 2.6.24 to 2.6.28 kernel upgrade
+Date: Thu, 12 Mar 2009 12:37:38 -0500
+Message-ID: <ba5d9360903121037m6d5be5e9m4b164d56bd6b5f3@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
@@ -18,178 +18,46 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaUR
 To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-  Hello!
-Thanks a lot for all these explanations! they are very helpful! I have =
+We have had this device tree (a section shown below) working for a long time:
+	soc8343@e0000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		#interrupt-cells = <2>;
+		device_type = "soc";
+		ranges = <00000000 e0000000 00100000>;
+		reg = <e0000000 00000200>;
+		bus-frequency = <0>;
 
-understood the meaning of each fields of "ranges", but I don't know =
+		i2c@3000 {
+			device_type = "i2c";
+			compatible = "fsl-i2c";
+			reg = <3000 100>;
+			interrupts = <e 8>;
+			interrupt-parent = <700>;
+			dfsrr;
+		};
+...
+}
 
-where find informations to fill it... I don't find any reference about =
+With linux-2.6.24, it worked with this struct defined in the
+board-specific file:
+          static struct of_device_id __initdata of_bus_ids[] = {
+          	{ .compatible = "fsl,pq2pro-localbus", },
+          	{},
+          };
 
-memory space and iopace ranges in my datasheets. I have read in the PCI =
+With linux-2.6.28, it needs the following struct in the board-specific
+file for I2C to work:
+          static struct of_device_id __initdata of_bus_ids[] = {
+          	{ .type = "soc", },
+          	{ .name = "localbus", },
+          	{},
+          };
 
-specification that the base address register (BAR) permit to get the =
+Is this easily explained?
 
-memory range needed by each device on the PCI bus. Have I to get the =
+What is the right way to do this now? Ideally, I would like to keep
+the device tree unchanged since I need for it to work with older
+versions of the kernel!
 
-memory range of every device in order to fill the range property ? I =
-
-feel that I missed something...
-
-To finish, I have a question about the "reg" field. I have read in =
-
-documentations that it must contain the address of the PCI bridge's =
-
-configuration space: am I wrong?
-Thanks for Your attention !
-
-Nicolas Lavocat
-
-Mitch Bradley a =E9crit :
-> The reason why the ranges property for PCI is so complicated is =
-
-> because PCI addressing is complicated, so it's tricky to fit the PCI =
-
-> address information into a generic framework. I'll explain how it =
-
-> works in-line, below.
->
->> Hy everybody!
->>
->> I=92m working on a project:
->>
->> On a proprietary board, (with a PowerPC 7448), a minimal Linux has =
-
->> been embedded. My first aim consist in using a graphic chipset on the =
-
->> board, that is to say make work the PCI bus. For the address mapping, =
-
->> I try to write a dts, using the dts of the mpc7448hpc2 board as a =
-
->> model. My problem is that I don=92t understand how to fill the field =
-
->> =93range=94 of the PCI. The =93width=94 used and the number of range is =
-
->> different from on board to an other where PCI is used. I read the PCI =
-
->> specification, and don=92t find anything about it.
->>
->> Here is an extract of my dts, where the field in question is =
-
->> indicated thanks to commentaries:
->>
->> pci@70000000 { compatible =3D "abac-pci";
->> device_type =3D "pci";
->> #size-cells =3D <2>;
->> #address-cells =3D <3>;
->> #interrupt-cells =3D <1>;
->> reg =3D <0x70000000 0x1000>;
->> bus-range =3D <0 0>;
->> /* how can I know how to chose the number of range and their width?*/
-> The "ranges" property describes how the bus bridge translates between =
-
-> the "parent" address space (typically the main system bus) and the =
-
-> "child" address space (the PCI bus address space). For the full =
-
-> details of the generic "ranges" property, consult page 172 of =
-
-> ftp://playground.sun.com/pub/1275/coredoc/1275-1994/1275.ps.gz
->
-> The number of ranges entries is equal to the number of disjoint =
-
-> translation regions. Typically you need at least two for PCI bus, one =
-
-> for the PCI memory space and another for the PCI I/O space.
->
->>
->> Then, I have a second question: why PCI=92s addresses seem to be =
-
->> implemented on 96 bits, whereas the addressing is done on 32 bits?
->
-> I have moved this question up, as the answer is helpful for later.
->
-> PCI bus addressing can be either 32 bits or 64 bits, depending on the =
-
-> hardware implementation. The Open Firmware binding to PCI uses 64 bits =
-
-> so it can accommodate the full PCI spec. In addition to the 64 address =
-
-> bits, you need bits to indicate other information, such as which =
-
-> address space (I/O or memory) you are talking about, which Base =
-
-> Address Register is involved, and other information as described on =
-
-> page 4 (pdf page 9) of =
-
-> ftp://playground.sun.com/pub/1275/bindings/pci/pci2_1.pdf . Much of =
-
-> that other information is irrelevant in the context of the "ranges" =
-
-> property - but the address space identifier is relevant. Numeric =
-
-> values in the device tree are represented in units of 32 bits, so you =
-
-> need a total of 96 bits for the basic 64-bit address plus the extra info.
->
->>
->> ranges =3D <0x2000000 0x0 0xe0000000 0xe0000000 0x0 0x1a000000
->
-> Okay, now we can start to parse this ranges property. I added spaces =
-
-> above to show grouping.
->
-> 0x2000000 0x0 0xe0000000
->
-> is the base PCI address of one of the ranges entries. 0x2000000 is the =
-
-> "phys.hi" cell that contains the "extra" information - in particular =
-
-> the "2" is in the "ss" field that indicates the address space - 2 =
-
-> means "PCI memory space". The rest of the bits in that word are =
-
-> irrelevant to the ranges property. 0x0 0xe0000000 is a 64-bit offset, =
-
-> indicating that the mapped-through range begins at e0000000 in PCI =
-
-> memory address space.
->
-> 0xe0000000
->
-> is the entry's base address in the parent (system bus) address space. =
-
-> Apparently this bus bridge is a very simple one - probably just wires =
-
-> and a decoder - because the parent address and child address are =
-
-> identical. That's not always the case.
->
-> 0x0 0x1a000000
->
-> is the size of this range. It's a 64-bit number because PCI has =
-
-> #size-cells =3D 2. So the range goes from 0xe0000000 to 0xf9ffffff.
->
->
->>
->> 0x1000000 0x0 0x0 0xfa000000 0x0 0x10000>;
->
-> Similarly - 0x1000000 means I/O space, 0x0 0x0 means PCI I/O space =
-
-> beginning at 0, 0xfa000000 means that the PCI I/O space appears at =
-
-> 0xfa000000 in the system bus address space, and 0x0 0x10000 means the =
-
-> mapping is 64Kbytes long.
->
->
->>
->> =85
->>
->> };
->>
->> Thanks for Your attention !
->>
->> Nicolas Lavocat
->
+-- Johns
