@@ -1,7 +1,7 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: I2C not working upon 2.6.24 to 2.6.28 kernel upgrade
-Date: Thu, 12 Mar 2009 12:18:45 -1000
-Message-ID: <49B98A45.8020304@firmworks.com>
+Date: Tue, 17 Mar 2009 13:36:30 -0500
+Message-ID: <49BFEDAE.9000600@freescale.com>
 References: <ba5d9360903121037m6d5be5e9m4b164d56bd6b5f3@mail.gmail.com>	<fa686aa40903121108p50338218w18714686d1f8bdbf@mail.gmail.com>
 	<ba5d9360903121438p57e068b6n46e58868b814539c@mail.gmail.com>
 Mime-Version: 1.0
@@ -22,24 +22,14 @@ To: Johns Daniel <johns.daniel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->
-> Binding on device_type or name is strongly discouraged, so the above
-> > snippit isn't a good idea.
->   
->
-> Would you please explain why? I just want to weigh the risk of
-> changing the DTB vs. the risk of using a device_type binding.
->   
+Johns Daniel wrote:
+> But I can assure you that I have been using this with 2.6.20 and
+> 2.6.24 without any problems---and there has not been a compatible
+> value in the soc node. (There are compatible values in the subnodes of
+> soc.) Even with linux 2.6.28, everything but I2C works.
 
+Most likely, i2c was a platform-bus driver in 2.6.24 and was converted 
+to an of-platform-bus driver sometime between then and 2.6.28.  It 
+wasn't that of-platform worked before, but rather you weren't using it.
 
-This has been discussed to death, but ...
-
-The proper meaning of "device_type" is to tell Open Firmware that the 
-device node contains a specific set of methods that implements a 
-specific API that the firmware can for internal purposes like, for 
-example, a console.
-
-People have tried to co-opt it for other uses, but doing so just makes 
-its meaning ambiguous, thus making it difficult to use for any purpose.
-
-The "compatible" property is specifically intended for driver selection.
+-Scott
