@@ -1,14 +1,14 @@
 From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [RFC] powerpc: i2c-mpc: make I2C bus speed configurable
-Date: Wed, 25 Mar 2009 20:44:59 +0100
-Message-ID: <49CA89BB.9090600@grandegger.com>
-References: <49C151FF.1080604@grandegger.com>
-	<fa686aa40903251116n2b7e8326r6c7cb9de8e101c76@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] powerpc: NAND: FSL UPM: document new bindings
+Date: Wed, 25 Mar 2009 21:48:25 +0100
+Message-ID: <49CA9899.30604@grandegger.com>
+References: <1237975701-23201-1-git-send-email-wg@grandegger.com>	<1237975701-23201-2-git-send-email-wg@grandegger.com>	<1237975701-23201-3-git-send-email-wg@grandegger.com>	<1237975701-23201-4-git-send-email-wg@grandegger.com>
+	<fa686aa40903251048g479d63f8i5a715defdbfc33d4@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <fa686aa40903251116n2b7e8326r6c7cb9de8e101c76@mail.gmail.com>
+In-Reply-To: <fa686aa40903251048g479d63f8i5a715defdbfc33d4@mail.gmail.com>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -19,95 +19,82 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss list <devicetree-discuss@ozlabs.org>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss list <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Grant Likely wrote:
-> (cc'ing the devicetree-discuss mailing list)
+> (cc'ing devicetree-discuss)
 > 
-> On Wed, Mar 18, 2009 at 1:56 PM, Wolfgang Grandegger <wg@grandegger.com> wrote:
->> The I2C driver for the MPC still uses a fixed clock divider hard-coded
->> into the driver. This issue has already been discussed twice:
+> On Wed, Mar 25, 2009 at 4:08 AM, Wolfgang Grandegger <wg@grandegger.com> wrote:
+>> This patch adds documentation for the new NAND FSL UPM bindings for:
 >>
->>  http://www.mail-archive.com/linuxppc-dev@ozlabs.org/msg21933.html
->>  http://www.mail-archive.com/linuxppc-dev@ozlabs.org/msg26923.html
+>>  NAND: FSL-UPM: add multi chip support
+>>  NAND: FSL-UPM: Add wait flags to support board/chip specific delays
 >>
->> Let's code speak ;-). The attached RFC patch used the following approach:
+>> Signed-off-by: Wolfgang Grandegger <wg@grandegger.com>
+> 
+> Mostly looks good to me; but some comments below.
+> 
+>> ---
+>>  .../powerpc/dts-bindings/fsl/upm-nand.txt          |   39 +++++++++++++++++++-
+>>  1 files changed, 37 insertions(+), 2 deletions(-)
 >>
->> - the SOC property "i2c-clock-frequency" defines the frequency of the
->>  I2C source clock, which could be filled in by U-Boot. This avoids all
->>  the fiddling with getting the proper source clock frequency for the
->>  processor or board. I will provide a patch for U-Boot if this proposal
->>  gets accepted.
+>> diff --git a/Documentation/powerpc/dts-bindings/fsl/upm-nand.txt b/Documentation/powerpc/dts-bindings/fsl/upm-nand.txt
+>> index 84a04d5..0272e70 100644
+>> --- a/Documentation/powerpc/dts-bindings/fsl/upm-nand.txt
+>> +++ b/Documentation/powerpc/dts-bindings/fsl/upm-nand.txt
+>> @@ -5,9 +5,22 @@ Required properties:
+>>  - reg : should specify localbus chip select and size used for the chip.
+>>  - fsl,upm-addr-offset : UPM pattern offset for the address latch.
+>>  - fsl,upm-cmd-offset : UPM pattern offset for the command latch.
+>> -- gpios : may specify optional GPIO connected to the Ready-Not-Busy pin.
+>>
+>> -Example:
+>> +Optional properties:
+>> +- fsl,upm-wait-flags : add chip-dependent short delays after running the
+>> +                      UPM pattern (0x1), after writing a data byte (0x2)
+>> +                      or after writing out a buffer (0x4).
+>> +- gpios : may specify optional GPIOs connected to the Ready-Not-Busy pins
+>> +         (R/B#). For multi-chip devices, "num-chips" GPIO definitions are
+>> +         required.
+>> +- chip-delay : chip dependent delay for transfering data from array to
+>> +              read registers (tR). Required if property "gpios" is not
+>> +              used (R/B# pins not connected).
+>> +- num-chips : number of chips per device for multi-chip support.
+>> +- chip-offset : address offset between chips for multi-chip support. The
+>> +               corresponding address lines are used to select the chip.
 > 
-> I'm not thrilled with this since it depends on u-boot being upgraded
-> to work.  Actually, since this is an i2c only property, I don't think
-> it belongs in the parent node at all.  The 'clock-frequency' property
-> below is sufficient.  Having both seems to be two properties
-> describing the exact same thing.
+> Since these properties (chip-delay, num-chips and chip-offset) are
+> currently controller specific, it would probably be a good idea to
+> prefix 'fsl,' onto them.  That way when common NAND controller
+> properties start getting defined then there won't be any concern about
+> conflicting with existing meanings.  If you do see these as properties
+> that other NAND controllers will use, then maybe a 'nand-' prefix is
+> appropriate (like the SPI binding in booting-without-of).
 
-But it's not the same thing. The "i2c-clock-frequency" is the frequency
-of the source clock distributed to the I2C devices and pends on the
-processor type or even board. Deriving that frequency is tricky and
-awkwards, e.g. have a look to u-boot/cpu/mpc85xx/speed.c to understand
-what I mean. Maybe "i2c-source-clock-frequency" would be a more
-appropriate name, though. As an alternative, we also discussed using a
-divider property instead, e.g. "i2c-clock-divider" , which would not
-depend on an up-to-date U-Boot version.
+The chip-delay is NAND device specific. The proper value can be find in
+the data sheet. num-chip is also quite generic. A prefix 'nand-' would
+be fine for me. But fsl,upm-chip-offset would be more appropriate than
+just chip-offset, indeed.
 
->> - the I2C node uses the property "clock-frequency" to define the desired
->>  I2C bus frequency. If 0, the FDR/DFSRR register already set by the
->>  bootloader will not be touched.
-> 
-> I like the property, but I don't like overloading the definition.  A
-> value of 0 should be undefined and another property used
-> ("fsl,preserve-clocking" perhaps?) to say that the FDR/DFSRR is
-> already configured.
+> For the chip offset, it's not clear what the meaning is.  First, does
+> the UPM controller support access of multiple chips simultaneously?
 
-Fine for me. In fact, that's what we actually need ;-).
+The offset drives the corresponding address lines, which are used to
+select the chip. That's how it's done on the TQM8548 board. In
+principle, the chips could also be selected through dedicated GPIO pins.
+Well, I'm not a hardware guy.
 
->> - I use Timur's divider table approach from U-Boot as it's more
->>  efficient than an appropriate algorithm (less code).
-> 
-> As I commented in the previous thread, I don't like the table approach
-> and I'd rather see it done programmaticaly.  However, I'm not going to
-> oppose the patch over this issue.  If it works and it doesn't mess up
-> the dts binding then I'm happy.
+> If so, then can you elaborate in the description on how board design
+> translates to a chip-offset value.  If it cannot, then it might be
+> better to have multiple tuples in the 'reg' property for each discrete
+> chip.  Multiple reg tuples would also remove the need for the
+> num-chips property.
 
-Why should it mess up the dts binding? It's just the more efficient way
-to implement it (less code). The result is the same. I will send some
-figures tomorrow.
-
-> But, it is cleaner and less complex if you use the of_match table
-> .data element to select the correct setclock function.  Also makes it
-> easier to handle setclock special cases as needed.
-
-As you wrote in the a previous thread:
-
- http://www.mail-archive.com/linuxppc-dev@ozlabs.org/msg22368.html
-
-This will work for most processors. Unfortunately for a few of them some
-register setting must be checked as well, e.g. for the mpc8544 and the
-table needs to be updated for each new MPC processor showing up. A SOC
-property "i2c-clock-divider" would be more transparent and less
-confusing. I'm personally not a friend of this magic fsl,mpcNNNN-deivce
-compatibility property. It gets often added to the FDT nodes, but it's
-rarely used by the Linux code.
-
->> - If none of the above new properties are defined, the old hard-coded
->>  FDR/DFSRR register settings are used for backward compatibility.
-> 
-> good
-> 
->> What do you think? I'm still not happy that the tables and lookup
->> function are common code. But for the 82xx/85xx/86xx it's not obvious
->> to me where to put it.
-> 
-> I think it is just fine where it is.
-
-OK.
-
-Already the previous discussions showed that there are different
-opinions :-(.
+The node still describes one device mapping all relevant control
+registers. How about using fsl,upm-chip-offsets = <0x200 0x400>. It
+would be more generic and makes num-chips obsolete as well. And the
+property would be reserved for that way of implementing the chip select
+in hardware.
 
 Wolfgang.
