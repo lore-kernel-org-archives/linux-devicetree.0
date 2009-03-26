@@ -1,24 +1,14 @@
-From: Anton Vorontsov <avorontsov@ru.mvista.com>
+From: Wolfgang Grandegger <wg@grandegger.com>
 Subject: Re: [PATCH v3 3/4] powerpc: NAND: FSL UPM: document new bindings
-Date: Thu, 26 Mar 2009 20:33:02 +0300
-Message-ID: <20090326173302.GA23187@oksana.dev.rtsoft.ru>
-References: <1237975701-23201-4-git-send-email-wg@grandegger.com>
-	<fa686aa40903251048g479d63f8i5a715defdbfc33d4@mail.gmail.com>
-	<49CA9899.30604@grandegger.com>
-	<fa686aa40903252209r52a1bc1cn995a7da16bc3527f@mail.gmail.com>
-	<49CB31CB.2010704@grandegger.com>
-	<fa686aa40903260727y3266e394g5e574680fe70bbbf@mail.gmail.com>
-	<49CBA062.5050000@grandegger.com>
-	<fa686aa40903260904s67258fbbge3c87e06946c5f58@mail.gmail.com>
-	<49CBAED4.8030802@grandegger.com>
-	<fa686aa40903261002l2c8e0d41s6e5ad4bc049058bf@mail.gmail.com>
-Reply-To: avorontsov@ru.mvista.com
+Date: Thu, 26 Mar 2009 23:14:42 +0100
+Message-ID: <49CBFE52.6090706@grandegger.com>
+References: <1237975701-23201-4-git-send-email-wg@grandegger.com>	<fa686aa40903251048g479d63f8i5a715defdbfc33d4@mail.gmail.com>	<49CA9899.30604@grandegger.com>	<fa686aa40903252209r52a1bc1cn995a7da16bc3527f@mail.gmail.com>	<49CB31CB.2010704@grandegger.com>	<fa686aa40903260727y3266e394g5e574680fe70bbbf@mail.gmail.com>	<49CBA062.5050000@grandegger.com>	<fa686aa40903260904s67258fbbge3c87e06946c5f58@mail.gmail.com>	<49CBAED4.8030802@grandegger.com>	<fa686aa40903261002l2c8e0d41s6e5ad4bc049058bf@mail.gmail.com>
+	<20090326173302.GA23187@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <fa686aa40903261002l2c8e0d41s6e5ad4bc049058bf@mail.gmail.com>
+In-Reply-To: <20090326173302.GA23187@oksana.dev.rtsoft.ru>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -28,47 +18,53 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
+To: avorontsov@ru.mvista.com
 Cc: linuxppc-dev@ozlabs.org, devicetree-discuss list <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMjYsIDIwMDkgYXQgMTE6MDI6MDZBTSAtMDYwMCwgR3JhbnQgTGlrZWx5IHdy
-b3RlOgpbXQo+ID4+IEhlcmUgaXMgYW5vdGhlciB0aG91Z2h0LiDCoFRoZSBiaW5kaW5nIGlzIGRl
-c2NyaWJpbmcgdGhhdCBhZGRyZXNzIGxpbmVzCj4gPj4gYXJlIHVzZWQgdG8gYWN0aXZhdGUgQ1Mg
-bGluZXMuIMKgT2Zmc2V0IGZvciBjaGlwIGFjY2VzcyBwdXJwb3NlcyBpcwo+ID4+IGRlcml2ZWQg
-ZnJvbSB0aGUgYWRkcmVzcyBsaW5lLCBidXQgaXQgZG9lc24ndCBkaXJlY3RseSBkZXNjcmliZSB0
-aGUKPiA+PiBoYXJkd2FyZS4gwqBUaGUgZm9sbG93aW5nIG1heSBiZSBhIGJldHRlciBkZXNjcmlw
-dGlvbiBvZiB0aGUgaGFyZHdhcmUuCj4gPj4KPiA+PiBmc2wsdXBtLWFkZHItbGluZS1jcyA9IDw5
-IDEwPjsKPiA+Cj4gPiBUaGUgVFFNODU0OCBoYXJkd2FyZSBoYXMgc29tZSBsb2dpYyBjb25uZWN0
-ZWQgdG8gdGhlIHR3byBhZGRyZXNzIGxpbmVzCj4gPiBhbGxvd2luZyB0byBzZWxlY3QgdXAgdG8g
-NCBjaGlwcyB3aXRoIHR3byBhZGRyZXNzIGxpbmVzOgo+ID4KPiA+IMKgZnNsLHVwbS1hZGRyLWxp
-bmUtY3Mtb2Zmc2V0cyA9IDwweDAgMHgyMDAgMHg0MDAgMHg2MDA+Cj4gCj4gQWguICBJIHNlZS4g
-IFRoaXMgaXMgYm9hcmQgc3BlY2lmaWMgdGhlbi4gIEkgdGhpbmsgaXQgaXMgcHJlbWF0dXJlIHRv
-Cj4gdHJ5IGFuZCBkZWZpbmUgYSBnZW5lcmljIHNvbHV0aW9uIGhlcmUgYmVjYXVzZSBpdCBkZXBl
-bmRzIG9uIGN1c3RvbQo+IGJvYXJkIGhhcmR3YXJlIGFuZCBkaWZmZXJlbnQgYm9hcmRzIGNvdWxk
-IHVzZSB2ZXJ5IGRpZmZlcmVudCBsb2dpYy4KPiBUaGUgbmV4dCBib2FyZCBjb3VsZCBlbmQgdXAg
-ZG9pbmcgc29tZXRoaW5nIGNvbXBsZXRlbHkgZGlmZmVyZW50LiAgSSdkCj4gcmF0aGVyIHN0YXJ0
-IHRvIHNlZSB0cmVuZHMgaW4gbXVsdGlwbGUgYm9hcmRzIGltcGxlbWVudGluZyB0aGUgc2FtZQo+
-IHNjaGVtZSBiZWZvcmUgdHJ5aW5nIHRvIGNyYWZ0IGEgZ2VuZXJpYyBzY2hlbWUuCj4gCj4gSW4g
-b3RoZXIgd29yZHMsIHRoaXMgZGV2aWNlIGlzIG5vdCByZWdpc3Rlci1sZXZlbCBjb21wYXRpYmxl
-IHdpdGggdGhlCj4gZnNsLHVwbS1uYW5kIGRldmljZS4gIEdpdmUgdGhlIG5vZGUgYSBuZXcgY29t
-cGF0aWJsZSB2YWx1ZQo+ICh0cWMsdHFtODU0OC11cG0tbmFuZCkgYW5kIGFkZCBhbm90aGVyIGVu
-dHJ5IHRvIHRoZSBvZl9mdW5fbWF0Y2ggdGFibGUKPiBmb3IgdGhlIG5ldyBkZXZpY2UuICBVc2Ug
-dGhlIC5kYXRhIGVsZW1lbnQgaW4gdGhlIG1hdGNoIHRhYmxlIHRvCj4gc3VwcGx5IGFuIGFsdGVy
-bmF0ZSBmdW5fY21kX2N0cmwoKSBmdW5jdGlvbiBmb3IgdGhpcyBib2FyZCAoaW5zdGVhZCBvZgo+
-IHVzaW5nIGEgcHJvcGVydHkgdmFsdWUgZG8gZGVjaWRlIHdoaWNoIGZ1bl9jbWRfY3RybCgpIGJl
-aGF2aW91ciB0bwo+IHVzZSkuICBOZXcgYm9hcmRzIHRoYXQgKmRvKiB1c2UgdGhlIHNhbWUgYWRk
-cmVzc2luZyBzY2hlbWUgY2FuIGNsYWltCj4gY29tcGF0aWJpbGl0eSB3aXRoIHRxYyx0cW04NTQ4
-LXVwbS1uYW5kLgoKSSBkb24ndCBsaWtlIHRoaXMuIDotLwoKVVBNIGlzIGFuIHVuaXZlcnNhbCB0
-aGluZywgc28gdGhlcmUgYXJlIHRob3VzYW5kcyBvZiB3YXlzIHdlIGNhbgpjb25uZWN0IE5BTkQg
-dG8gdGhlIFVQTS4gT2Ygd2hpY2ggb25seSB+MTAgd291bGQgYmUgc2FuZSAob3RoZXJzIGFyZQpp
-bnNhbmUsIGFuZCBub2JvZHkgd291bGQgZG8gdGhpcy4gSWYgdGhleSBkbywgX3RoZW5fIHdlJ2xs
-IGZhbGwgYmFjawp0byA8Ym9hcmQ+LXVwbS1uYW5kIHNjaGVtZSBmb3IgYSBwYXJ0aWN1bGFyIGJv
-YXJkKS4KCkkgZG9uJ3Qgc2VlIGFueSBwcm9ibGVtIHdpdGggZnNsLHVwbS1hZGRyLWxpbmUtY3Mt
-b2Zmc2V0cy4gSXQgY2FuCmRlc2NyaWJlIGFueSBzY2hlbWUgaW4gImFkZHIgbGluZXMgYXJlIGNz
-IiBjb25uZWN0aW9uLCBpdCdzIGEgY29tbW9uCnNldHVwIGZvciBtdWx0aS1jaGlwIG1lbW9yeSwg
-d2Ugc2hvdWxkbid0IHRyZWF0IGl0IGlzIGFzIHNvbWV0aGluZwpleHRyYW9yZGluYXJ5LgoKLS0g
-CkFudG9uIFZvcm9udHNvdgplbWFpbDogY2JvdWF0bWFpbHJ1QGdtYWlsLmNvbQppcmM6Ly9pcmMu
-ZnJlZW5vZGUubmV0L2JkMgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBvemxhYnMub3Jn
-Cmh0dHBzOi8vb3psYWJzLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Anton Vorontsov wrote:
+> On Thu, Mar 26, 2009 at 11:02:06AM -0600, Grant Likely wrote:
+> []
+>>>> Here is another thought.  The binding is describing that address lines
+>>>> are used to activate CS lines.  Offset for chip access purposes is
+>>>> derived from the address line, but it doesn't directly describe the
+>>>> hardware.  The following may be a better description of the hardware.
+>>>>
+>>>> fsl,upm-addr-line-cs = <9 10>;
+>>> The TQM8548 hardware has some logic connected to the two address lines
+>>> allowing to select up to 4 chips with two address lines:
+>>>
+>>>  fsl,upm-addr-line-cs-offsets = <0x0 0x200 0x400 0x600>
+>> Ah.  I see.  This is board specific then.  I think it is premature to
+>> try and define a generic solution here because it depends on custom
+>> board hardware and different boards could use very different logic.
+>> The next board could end up doing something completely different.  I'd
+>> rather start to see trends in multiple boards implementing the same
+>> scheme before trying to craft a generic scheme.
+>>
+>> In other words, this device is not register-level compatible with the
+>> fsl,upm-nand device.  Give the node a new compatible value
+>> (tqc,tqm8548-upm-nand) and add another entry to the of_fun_match table
+>> for the new device.  Use the .data element in the match table to
+>> supply an alternate fun_cmd_ctrl() function for this board (instead of
+>> using a property value do decide which fun_cmd_ctrl() behaviour to
+>> use).  New boards that *do* use the same addressing scheme can claim
+>> compatibility with tqc,tqm8548-upm-nand.
+> 
+> I don't like this. :-/
+> 
+> UPM is an universal thing, so there are thousands of ways we can
+> connect NAND to the UPM. Of which only ~10 would be sane (others are
+> insane, and nobody would do this. If they do, _then_ we'll fall back
+> to <board>-upm-nand scheme for a particular board).
+
+Yep.
+
+> I don't see any problem with fsl,upm-addr-line-cs-offsets. It can
+> describe any scheme in "addr lines are cs" connection, it's a common
+> setup for multi-chip memory, we shouldn't treat it is as something
+> extraordinary.
+
+I fully agree. I'm going to provide a patch on monday.
+
+Wolfgang.
