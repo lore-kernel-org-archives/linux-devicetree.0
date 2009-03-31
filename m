@@ -1,14 +1,13 @@
 From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: Inconsistent fsl_get_sys_freq() implementation
-Date: Tue, 31 Mar 2009 09:48:32 +0200
-Message-ID: <49D1CAD0.9040100@grandegger.com>
-References: <49D1C624.2050502@grandegger.com>
-	<fa686aa40903310033n4284ab8l35147ee6f8b0db63@mail.gmail.com>
+Subject: [PATCH 4/8] powerpc: i2c-mpc: preserve I2C clocking
+Date: Tue, 31 Mar 2009 14:37:31 +0200
+Message-ID: <20090331124035.755987848@denx.de>
+References: <20090331123727.853787299@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <fa686aa40903310033n4284ab8l35147ee6f8b0db63@mail.gmail.com>
+Content-Disposition: inline; filename=i2c-mpc-preserver-clocking.patch
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -18,34 +17,61 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev <Linuxppc-dev@ozlabs.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>
+To: linuxppc-dev@ozlabs.org
+Cc: devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> On Tue, Mar 31, 2009 at 1:28 AM, Wolfgang Grandegger <wg@grandegger.com> wrote:
->> Hello,
->>
->> we realized an inconsistent implementation of fsl_get_sys_freq():
->>
->> http://lxr.linux.no/linux+v2.6.29/arch/powerpc/sysdev/fsl_soc.c#L80
->>
->> For 826x and 827x boards, the function is available but it cannot be
->> used because the "bus-frequency" property is not defined for the SOC and
->> U-Boot also does not try to do a fixup. I think that's a mistake, and
->> the DTS files and U-Boot should be fixed, right?
->> Furthermore, I find the name confusing. fsl_get_soc_bus_freq() would be
->> more appropriate also to distinguish from the frequencies of the CPU.
->> And why does the MPC52xx use a different name mpc52xx_find_ipb_freq()
->> for that frequency? It makes support for common hardware like I2C awkward.
-> 
-> I haven't looked at fsl_get_soc_bus_freq(), but if the functions are
-> duplicated, then I've got no problem changing the 52xx support to use
-> common code.
+The I2c node property "fsl,preserve-clocking" allows to overtake the
+clock settings from the boot loader and avoids the hard-coded setting.
 
-The name used for devices using CONFIG_FSL_SOC is fsl_get_sys_freq(),
-see the link above. Both functions return the bus frequency of the SOC
-but they are implemented differently and allow some variation (which
-needs some double-checking).
+Signed-off-by: Wolfgang Grandegger <wg@grandegger.com>
+---
+ drivers/i2c/busses/i2c-mpc.c |   24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-Wolfgang.
+Index: linux-2.6/drivers/i2c/busses/i2c-mpc.c
+===================================================================
+--- linux-2.6.orig/drivers/i2c/busses/i2c-mpc.c	2009-03-31 13:25:08.000000000 +0200
++++ linux-2.6/drivers/i2c/busses/i2c-mpc.c	2009-03-31 13:28:03.000000000 +0200
+@@ -318,17 +318,24 @@
+ {
+ 	int result = 0;
+ 	struct mpc_i2c *i2c;
++	int set_clock;
+ 
+ 	i2c = kzalloc(sizeof(*i2c), GFP_KERNEL);
+ 	if (!i2c)
+ 		return -ENOMEM;
+ 
+-	if (of_get_property(op->node, "dfsrr", NULL))
+-		i2c->flags |= FSL_I2C_DEV_SEPARATE_DFSRR;
+-
+-	if (of_device_is_compatible(op->node, "fsl,mpc5200-i2c") ||
+-			of_device_is_compatible(op->node, "mpc5200-i2c"))
+-		i2c->flags |= FSL_I2C_DEV_CLOCK_5200;
++	if (of_get_property(op->node, "fsl,preserve-clocking", NULL)) {
++		set_clock = 0;
++	} else {
++		set_clock = 1;
++
++		if (of_get_property(op->node, "dfsrr", NULL))
++			i2c->flags |= FSL_I2C_DEV_SEPARATE_DFSRR;
++
++		if (of_device_is_compatible(op->node, "fsl,mpc5200-i2c") ||
++		    of_device_is_compatible(op->node, "mpc5200-i2c"))
++			i2c->flags |= FSL_I2C_DEV_CLOCK_5200;
++	}
+ 
+ 	init_waitqueue_head(&i2c->queue);
+ 
+@@ -348,8 +355,9 @@
+ 			goto fail_request;
+ 		}
+ 	}
+-	
+-	mpc_i2c_setclock(i2c);
++
++	if (set_clock)
++		mpc_i2c_setclock(i2c);
+ 
+ 	dev_set_drvdata(&op->dev, i2c);
