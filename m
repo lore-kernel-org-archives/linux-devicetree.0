@@ -1,75 +1,75 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 Subject: Re: [PATCH 5/8] powerpc: i2c-mpc: make I2C bus speed configurable
-Date: Wed, 1 Apr 2009 07:30:42 -0600
-Message-ID: <fa686aa40904010630l798528efh465a7543a15f50e5@mail.gmail.com>
-References: <20090331123727.853787299@denx.de>
-	<20090331124035.908249543@denx.de>
-	<fa686aa40903310841x42876819rafe3e8bf24b8646e@mail.gmail.com>
+Date: Wed, 01 Apr 2009 15:41:51 +0200
+Message-ID: <49D36F1F.2050107@grandegger.com>
+References: <20090331123727.853787299@denx.de>	
+	<20090331124035.908249543@denx.de>	
+	<fa686aa40903310841x42876819rafe3e8bf24b8646e@mail.gmail.com>	
 	<49D31D1D.6020004@grandegger.com>
+	<fa686aa40904010630l798528efh465a7543a15f50e5@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <49D31D1D.6020004@grandegger.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Wolfgang Grandegger <wg@grandegger.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <fa686aa40904010630l798528efh465a7543a15f50e5-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2009 at 1:51 AM, Wolfgang Grandegger <wg@grandegger.com> wro=
-te:
-> Grant Likely wrote:
->> The table definition is more verbose this way, but I think it results
->> in more understandable and easier to extend code. =A0It also adds lets
->> the compiler do more type checking for you.
->
-> OK but I don't like the callback function to do the settings. We need
-> backward compatibility with old DTS files including the ugly "dfsrr"
-> property, right? Then it seems consequent to continue using i2c->flags
-> for that purpose and not to introduce another method. If we don't need
-> backward compatibility, we could drop the flags completely and just use
-> callback functions.
+Grant Likely wrote:
+> On Wed, Apr 1, 2009 at 1:51 AM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org> wrote:
+>> Grant Likely wrote:
+>>> The table definition is more verbose this way, but I think it results
+>>> in more understandable and easier to extend code.  It also adds lets
+>>> the compiler do more type checking for you.
+>> OK but I don't like the callback function to do the settings. We need
+>> backward compatibility with old DTS files including the ugly "dfsrr"
+>> property, right? Then it seems consequent to continue using i2c->flags
+>> for that purpose and not to introduce another method. If we don't need
+>> backward compatibility, we could drop the flags completely and just use
+>> callback functions.
+> 
+> I don't understand why you don't like it.  It's an elegant solution
+> and it simplifies the code somewhat.  After grabbing the callback
+> pointer the compatibility code can simply override it.  But I won't
+> belabor the point or oppose the patch if you stick with the flags
+> pointer.
 
-I don't understand why you don't like it.  It's an elegant solution
-and it simplifies the code somewhat.  After grabbing the callback
-pointer the compatibility code can simply override it.  But I won't
-belabor the point or oppose the patch if you stick with the flags
-pointer.
+I changed my mind ;-). Have a look to PATCH v2 I sent out a few minutes ago.
 
->>> --- linux-2.6.orig/arch/powerpc/platforms/52xx/mpc52xx_common.c 2009-03=
--31 13:25:08.000000000 +0200
->>> +++ linux-2.6/arch/powerpc/platforms/52xx/mpc52xx_common.c =A0 =A0 =A02=
-009-03-31 13:28:54.309718526 +0200
->>> +int fsl_i2c_get_fdr(struct device_node *node, u32 i2c_clock, u32 i2c_f=
-lags)
->>> +{
->>> [...]
->>> +}
->>> +EXPORT_SYMBOL(fsl_i2c_get_fdr);
->>
->> does not work on a multiplatform kernel. =A0Both 8xxx and 52xx support
->> can be selected at the same time.
->
-> OK, then we need different functions including stubs.
+>>>> --- linux-2.6.orig/arch/powerpc/platforms/52xx/mpc52xx_common.c 2009-03-31 13:25:08.000000000 +0200
+>>>> +++ linux-2.6/arch/powerpc/platforms/52xx/mpc52xx_common.c      2009-03-31 13:28:54.309718526 +0200
+>>>> +int fsl_i2c_get_fdr(struct device_node *node, u32 i2c_clock, u32 i2c_flags)
+>>>> +{
+>>>> [...]
+>>>> +}
+>>>> +EXPORT_SYMBOL(fsl_i2c_get_fdr);
+>>> does not work on a multiplatform kernel.  Both 8xxx and 52xx support
+>>> can be selected at the same time.
+>> OK, then we need different functions including stubs.
+> 
+> I've been thinking about this more.  These tables are only ever going
+> to be used by the i2c_mpc driver and so really they are a part of the
+> i2c_mpc driver itself.  Putting them into common code doesn't make any
+> sense because it is not common code.  I will not merge a patch that
+> puts them into mpc5200 common code.
 
-I've been thinking about this more.  These tables are only ever going
-to be used by the i2c_mpc driver and so really they are a part of the
-i2c_mpc driver itself.  Putting them into common code doesn't make any
-sense because it is not common code.  I will not merge a patch that
-puts them into mpc5200 common code.
+It's not common code, I agree. How about putting it into mpc52xx_i2c.c
+and use:
 
-g.
+  $ cat Makefile
+  obj-$(CONFIG_I2C_MPC) += mpc52xx_i2c.o
 
+Or it could be moved back to the i2c_mpc driver and we add stubs for the
+functions to get the bus frequency, or use #ifdef's.
 
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Wolfgang.
