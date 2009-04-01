@@ -1,132 +1,60 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH 5/8] powerpc: i2c-mpc: make I2C bus speed configurable
-Date: Wed, 01 Apr 2009 09:51:57 +0200
-Message-ID: <49D31D1D.6020004@grandegger.com>
-References: <20090331123727.853787299@denx.de>	
-	<20090331124035.908249543@denx.de>
-	<fa686aa40903310841x42876819rafe3e8bf24b8646e@mail.gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 6/8] --- arch/powerpc/boot/dts/socrates.dts | 9
+	+++++++-- 1 file changed, 7 insertions(+), 2 deletions(-)
+Date: Wed, 1 Apr 2009 22:09:55 +1100
+Message-ID: <20090401110955.GA7507@yookeroo.seuss>
+References: <20090331123727.853787299@denx.de>
+	<20090331124036.057237866@denx.de>
+	<20090331230451.GA23304@yookeroo.seuss>
+	<49D31856.9060808@grandegger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <fa686aa40903310841x42876819rafe3e8bf24b8646e@mail.gmail.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <49D31856.9060808-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> On Tue, Mar 31, 2009 at 6:37 AM, Wolfgang Grandegger <wg@grandegger.com> wrote:
->> This patch makes the I2C bus speed configurable by using the I2C node
->> property "clock-frequency". If the property is not defined, the old
->> fixed clock settings will be used for backward comptibility.
->>
->> The generic I2C clock properties, especially the CPU-specific source
->> clock pre-scaler are defined via the OF match table:
->>
->>  static const struct of_device_id mpc_i2c_of_match[] = {
->>        {.compatible = "fsl,mpc5200b-i2c",
->>         .data = (void *)FSL_I2C_DEV_CLOCK_5200, },
->>        {.compatible = "fsl,mpc5200-i2c",
->>         .data = (void *)FSL_I2C_DEV_CLOCK_5200, },
->>        {.compatible = "fsl,mpc8313-i2c",
->>         .data = (void *)FSL_I2C_DEV_SEPARATE_DFSRR, },
->>        {.compatible = "fsl,mpc8543-i2c",
->>         .data = (void *)(FSL_I2C_DEV_SEPARATE_DFSRR |
->>                          FSL_I2C_DEV_CLOCK_DIV2), },
->>        {.compatible = "fsl,mpc8544-i2c",
->>         .data = (void *)(FSL_I2C_DEV_SEPARATE_DFSRR |
->>                          FSL_I2C_DEV_CLOCK_DIV23), },
->>        /* Backward compatibility */
->>        {.compatible = "fsl-i2c", },
->>        {},
->>  };
+On Wed, Apr 01, 2009 at 09:31:34AM +0200, Wolfgang Grandegger wrote:
+> Hi David,
 > 
+> this patch went out by mistake, sorry.
 > 
-> Instead passing in a flag (and using an ugly cast to do it) which is
-> then checked inside the mpc_i2c_setclock(), you should do this
-> instead:
+> David Gibson wrote:
+> > On Tue, Mar 31, 2009 at 02:37:33PM +0200, Wolfgang Grandegger wrote:
+> >> Index: linux-2.6/arch/powerpc/boot/dts/socrates.dts
+> >> ===================================================================
+> >> --- linux-2.6.orig/arch/powerpc/boot/dts/socrates.dts	2009-03-31 13:24:38.078719288 +0200
+> >> +++ linux-2.6/arch/powerpc/boot/dts/socrates.dts	2009-03-31 13:47:56.986720719 +0200
+> >> @@ -52,6 +52,7 @@
+> >>  	soc8544@e0000000 {
+> >>  		#address-cells = <1>;
+> >>  		#size-cells = <1>;
+> >> +		device_type = "soc";
+> > 
+> > You should not be adding device_type to a new board's dts.  You
+> > *especially* shouldn't be doing that with no patch comment explaining
+> > why.
 > 
-> struct fsl_i2c_match_data {
->         int static void *(setclock)(struct device_node *node, struct
-> mpc_i2c *i2c, u32 clock);
->         int flags;
->         /* Other stuff can go here */
-> };
-> 
-> static const struct of_device_id mpc_i2c_of_match[] = {
->         {.compatible = "fsl,mpc5200b-i2c",
->          .data = (struct fsl_i2c_match_data[]) { .setclock =
-> mpc_i2c_setclock_mpc5200, },
->         },
->         {.compatible = "fsl,mpc5200-i2c",
->          .data = (struct fsl_i2c_match_data[]) { .setclock =
-> mpc_i2c_setclock_mpc5200, },
->         },
->         {.compatible = "fsl,mpc8313-i2c",
->          .data = (struct fsl_i2c_match_data[]) { .setclock =
-> mpc_i2c_setclock_separate_dfsrr, },
->         },
->         {.compatible = "fsl,mpc8543-i2c",
->          .data = (struct fsl_i2c_match_data[]) { .setclock =
-> mpc_i2c_setclock_separate_dfsrr, },
->          .flags = FSL_I2C_DEV_CLOCK_DIV2,
->         },
->         {.compatible = "fsl,mpc8544-i2c",
->          .data = (struct fsl_i2c_match_data[]) { .setclock =
-> mpc_i2c_setclock_separate_dfsrr, },
->          .flags = FSL_I2C_DEV_CLOCK_DIV23,
->         },
->         /* Backward compatibility */
->         {.compatible = "fsl-i2c",
->          .data = (struct fsl_i2c_match_data[]) { .setclock =
-> mpc_i2c_setclock, },
->         },
->         {},
->   };
-> 
-> The table definition is more verbose this way, but I think it results
-> in more understandable and easier to extend code.  It also adds lets
-> the compiler do more type checking for you.
+> In the final patch I have removed the device_type = "soc", but it makes
+> trouble as some mpc85xx rely on it.
 
-OK but I don't like the callback function to do the settings. We need
-backward compatibility with old DTS files including the ugly "dfsrr"
-property, right? Then it seems consequent to continue using i2c->flags
-for that purpose and not to introduce another method. If we don't need
-backward compatibility, we could drop the flags completely and just use
-callback functions.
+Um.. what?  Some mpc85xx?  This is the dts for *one specific board*, I
+don't see how something that affects "some mpc85xx" is relevant.
 
-> Also, this ...
-> 
->> --- linux-2.6.orig/arch/powerpc/sysdev/fsl_soc.c        2009-03-31 13:25:08.000000000 +0200
->> +++ linux-2.6/arch/powerpc/sysdev/fsl_soc.c     2009-03-31 13:34:40.531721011 +0200
->> +int fsl_i2c_get_fdr(struct device_node *node, u32 i2c_clock, u32 i2c_flags)
->> +{
->> [...]
->> +}
->> +EXPORT_SYMBOL(fsl_i2c_get_fdr);
-> 
-> ... and this ...
-> 
->> --- linux-2.6.orig/arch/powerpc/platforms/52xx/mpc52xx_common.c 2009-03-31 13:25:08.000000000 +0200
->> +++ linux-2.6/arch/powerpc/platforms/52xx/mpc52xx_common.c      2009-03-31 13:28:54.309718526 +0200
->> +int fsl_i2c_get_fdr(struct device_node *node, u32 i2c_clock, u32 i2c_flags)
->> +{
->> [...]
->> +}
->> +EXPORT_SYMBOL(fsl_i2c_get_fdr);
-> 
-> does not work on a multiplatform kernel.  Both 8xxx and 52xx support
-> can be selected at the same time.
-
-OK, then we need different functions including stubs.
-
-Wolfgang.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
