@@ -1,51 +1,39 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: [PATCH v3 5/5] powerpc/85xx: i2c-mpc: use new I2C bindings for the Socates board
-Date: Tue, 07 Apr 2009 10:20:57 +0200
-Message-ID: <20090407082231.803193635@denx.de>
-References: <20090407082052.477328750@denx.de>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=i2c-mpc-socrates-dts.patch
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+From: Stefan Roese <sr@denx.de>
+Subject: [PATCH 0/4 v2] mtd: physmap_of: Add multiple regions and
+	concatenation support
+Date: Tue, 7 Apr 2009 10:36:10 +0200
+Message-ID: <200904071036.11184.sr@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+To: linuxppc-dev@ozlabs.org, linux-mtd@lists.infradead.org
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Preserve I2C clock settings for the Socrates MPC8544 board.
+This patchset adds support to handle multiple non-identical chips in one
+flash device tree node. It also adds concat support to physmap_of. This
+makes it possible to support e.g. the Intel P30 48F4400 chip which
+internally consists of 2 non-identical NOR chips on one die. Additionally
+partitions now can span over multiple chips:
 
-Signed-off-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
----
- arch/powerpc/boot/dts/socrates.dts |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+    mtd: physmap_of: Add multiple regions and concatenation support
+    mtd/powerpc: Factor out MTD physmap bindings into mtd-physmap.txt
+    mtd/powerpc: Remove unused "device-width" property
+    mtd/powerpc: Describe multiple "reg" tuples usage
 
-Index: linux-2.6-galak/arch/powerpc/boot/dts/socrates.dts
-===================================================================
---- linux-2.6-galak.orig/arch/powerpc/boot/dts/socrates.dts	2009-04-07 10:09:07.161718915 +0200
-+++ linux-2.6-galak/arch/powerpc/boot/dts/socrates.dts	2009-04-07 10:09:16.207719258 +0200
-@@ -79,11 +79,11 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			cell-index = <0>;
--			compatible = "fsl-i2c";
-+			compatible = "fsl,mpc8544-i2c", "fsl-i2c";
- 			reg = <0x3000 0x100>;
- 			interrupts = <43 2>;
- 			interrupt-parent = <&mpic>;
--			dfsrr;
-+			fsl,preserve-clocking;
- 
- 			dtt@28 {
- 				compatible = "winbond,w83782d";
-@@ -111,11 +111,11 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			cell-index = <1>;
--			compatible = "fsl-i2c";
-+			compatible = "fsl,mpc8544-i2c", "fsl-i2c";
- 			reg = <0x3100 0x100>;
- 			interrupts = <43 2>;
- 			interrupt-parent = <&mpic>;
--			dfsrr;
-+			fsl,preserve-clocking;
- 		};
- 
- 		enet0: ethernet@24000 {
+v2 addresses all comments from Grant Likely, including factoring out the
+MTD dts bindings documentation into a separate file.
+
+Thanks,
+Stefan
