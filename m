@@ -1,54 +1,58 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] i2c: i2c-mpc: make I2C bus speed configurable
-Date: Wed, 08 Apr 2009 09:25:19 +0200
-Message-ID: <49DC515F.3040100@grandegger.com>
-References: <20090407082052.477328750@denx.de> <53B42D49-C040-442E-8448-7BC3190220A5@kernel.crashing.org> <F4E3E1FF-C544-460A-AC27-DB9501C13ED3@kernel.crashing.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 5/5] powerpc/85xx: i2c-mpc: use new I2C bindings for
+	the Socates board
+Date: Wed, 8 Apr 2009 07:53:22 -0700
+Message-ID: <fa686aa40904080753p2b282338r9ba463c47f897fb@mail.gmail.com>
+References: <20090407082052.477328750@denx.de>
+	<20090407082231.803193635@denx.de>
+	<fa686aa40904070843q248f3ae1l9c8ca0d5a65c8cc3@mail.gmail.com>
+	<49DC4F4D.10803@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <F4E3E1FF-C544-460A-AC27-DB9501C13ED3-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Linux/PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
+In-Reply-To: <49DC4F4D.10803@grandegger.com>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+To: Wolfgang Grandegger <wg@grandegger.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-i2c@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-Kumar Gala wrote:
-> 
-> On Apr 8, 2009, at 12:11 AM, Kumar Gala wrote:
-> 
+On Wed, Apr 8, 2009 at 12:16 AM, Wolfgang Grandegger <wg@grandegger.com> wr=
+ote:
+> Grant Likely wrote:
+>> On Tue, Apr 7, 2009 at 1:20 AM, Wolfgang Grandegger <wg@grandegger.com> =
+wrote:
+>>> Preserve I2C clock settings for the Socrates MPC8544 board.
 >>
->> On Apr 7, 2009, at 3:20 AM, Wolfgang Grandegger wrote:
->>
->>> This patch series makes the I2C bus speed configurable by using the
->>> I2C node property "clock-frequency". If the property is not defined,
->>> the old fixed clock settings will be used for backward compatibility.
->>> The property "fsl,preserve-clocking" allows to inherit the settings
->>> from the bootloader. Furthermore, it does some cleanup and uses the
->>> new bindings for the Socrates board:
->>>
->>> i2c: i2c-mpc: various coding style fixes
->>> i2c: i2c-mpc: use dev based printout function
->>> i2c: i2c-mpc: make I2C bus speed configurable
->>
->> It looks like Ben picked up these patches.
->>
->>> powerpc: i2c-mpc: document new FSL I2C bindings and cleanup
->>> powerpc/85xx: i2c-mpc: use new I2C bindings for the Socates board
->>
->> I would have preferred these two go via me, but it looks like the
->> board one got picked up by Ben.  I'll deal with the doc/binding update.
->>>
->>> Ben, could you please consider this patch series for inclusion into
->>> 2.6.30
-> 
-> So I'm a bit concerned with the output we now get:
-> 
-> mpc-i2c fffe03000.i2c: clock 0 Hz (dfsrr=16 fdr=49)
-> 
-> why 0? is that right?
+>> I had thought that the preserve-clocking property was intended for
+>> older boards that don't currently have any method of getting the clock
+>> setting out of u-boot. =A0Since Socrates is a new board, U-Boot should
+>> probably be made to fill in the real clock rate setting.
+>
+> I'm not sure if I understand what you mean. If an old version of U-Boot
+> on an old board sets the I2C clock, it can be used (inherited) by Linux
+> using the property "preserve-clocking".
+>
+> It is actually the customers choice to set the I2C clock in U-Boot and
+> re-use it by Linux.
 
-This is the backward compatibility mode using hard-coded FDR values. The
-output is missleading, I agree.
+Setting it in the register !=3D recording the value in the device tree.
+I'm saying that since Socrates is a new board it should not use the
+preserve-clocking dirty trick (and it is a dirty trick) because the
+correct clocking data can be passed via the device tree.
 
-Wolfgang.
+g.
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
