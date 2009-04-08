@@ -1,46 +1,41 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 3/4 v2] mtd/powerpc: Remove unused "device-width" property
-Date: Tue, 7 Apr 2009 18:54:16 +0200
-Message-ID: <200904071854.16818.sr@denx.de>
-References: <1239093575-12147-1-git-send-email-sr@denx.de>
-	<49DB8271.8050501@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] i2c: i2c-mpc: make I2C bus speed configurable
+Date: Wed, 8 Apr 2009 00:11:15 -0500
+Message-ID: <53B42D49-C040-442E-8448-7BC3190220A5@kernel.crashing.org>
+References: <20090407082052.477328750@denx.de>
+Mime-Version: 1.0 (Apple Message framework v930.3)
+Content-Type: text/plain; charset=US-ASCII; format=flowed; delsp=yes
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <49DB8271.8050501-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20090407082052.477328750-ynQEQJNshbs@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 April 2009, Scott Wood wrote:
-> Stefan Roese wrote:
-> > This property is unused. It's not handled as all by the physmap_of
-> > driver. So let's remove it from the documentation.
-> >
-> > Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-> > CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->
-> The device tree describes the hardware, not what Linux happens to do
-> with it at the moment.
->
-> I'd rather keep it.
 
-I find it rather confusing to "see" such bindings that are not supported. One 
-could expect something to happen/change after defining this property. So in 
-general I think adding unsupported properties to the Documentation is a bad 
-idea. But that's just my 2 cents. If the general opinion is to keep this 
-property, I'll keep it in of course.
+On Apr 7, 2009, at 3:20 AM, Wolfgang Grandegger wrote:
 
-Best regards,
-Stefan
+> This patch series makes the I2C bus speed configurable by using the
+> I2C node property "clock-frequency". If the property is not defined,
+> the old fixed clock settings will be used for backward compatibility.
+> The property "fsl,preserve-clocking" allows to inherit the settings
+> from the bootloader. Furthermore, it does some cleanup and uses the
+> new bindings for the Socrates board:
+>
+>  i2c: i2c-mpc: various coding style fixes
+>  i2c: i2c-mpc: use dev based printout function
+>  i2c: i2c-mpc: make I2C bus speed configurable
+
+It looks like Ben picked up these patches.
+
+>  powerpc: i2c-mpc: document new FSL I2C bindings and cleanup
+>  powerpc/85xx: i2c-mpc: use new I2C bindings for the Socates board
+
+I would have preferred these two go via me, but it looks like the  
+board one got picked up by Ben.  I'll deal with the doc/binding update.
+>
+> Ben, could you please consider this patch series for inclusion into
+> 2.6.30.
+
+- k
