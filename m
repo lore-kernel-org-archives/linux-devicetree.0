@@ -1,46 +1,56 @@
-From: Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCH v3 0/5] i2c: i2c-mpc: make I2C bus speed configurable
-Date: Wed, 8 Apr 2009 12:49:31 -0500
-Message-ID: <893E128E-46D6-4E8A-9F0C-5EF67F3818D8@kernel.crashing.org>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] powerpc/85xx: i2c-mpc: use new I2C bindings for
+	the Socates board
+Date: Wed, 08 Apr 2009 20:27:12 +0200
+Message-ID: <49DCEC80.2050507@grandegger.com>
 References: <20090407082052.477328750@denx.de>
-	<53B42D49-C040-442E-8448-7BC3190220A5@kernel.crashing.org>
-	<fa686aa40904072216m64b4fd83q9b52c89ae40cae11@mail.gmail.com>
-	<5FDB097C-7D71-41DF-A4F4-2DE34FD710C5@kernel.crashing.org>
-	<20090408170348.GA27578@ld0162-tx32.am.freescale.net>
-Mime-Version: 1.0 (Apple Message framework v930.3)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+	<20090407082231.803193635@denx.de>
+	<fa686aa40904070843q248f3ae1l9c8ca0d5a65c8cc3@mail.gmail.com>
+	<49DC4F4D.10803@grandegger.com>
+	<fa686aa40904080753p2b282338r9ba463c47f897fb@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <20090408170348.GA27578@ld0162-tx32.am.freescale.net>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-i2c@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <fa686aa40904080753p2b282338r9ba463c47f897fb-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Apr 8, 2009, at 12:03 PM, Scott Wood wrote:
-
-> On Wed, Apr 08, 2009 at 12:22:29AM -0500, Kumar Gala wrote:
->>> hrummm.  As I mentioned in my reply, I'm not convinced that the  
->>> board
->>> one is the right thing in this case.  I would have preferred it to  
->>> be
->>> deferred.
+Grant Likely wrote:
+> On Wed, Apr 8, 2009 at 12:16 AM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org> wrote:
+>> Grant Likely wrote:
+>>> On Tue, Apr 7, 2009 at 1:20 AM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org> wrote:
+>>>> Preserve I2C clock settings for the Socrates MPC8544 board.
+>>> I had thought that the preserve-clocking property was intended for
+>>> older boards that don't currently have any method of getting the clock
+>>> setting out of u-boot.  Since Socrates is a new board, U-Boot should
+>>> probably be made to fill in the real clock rate setting.
+>> I'm not sure if I understand what you mean. If an old version of U-Boot
+>> on an old board sets the I2C clock, it can be used (inherited) by Linux
+>> using the property "preserve-clocking".
 >>
->> which part?  I missed this whole thread as I had it forwarding to my
->> devicetree-discuss folder which I don't normally look at.
->
-> Can you reorder your filters to check for more frequently read lists
-> first?
+>> It is actually the customers choice to set the I2C clock in U-Boot and
+>> re-use it by Linux.
+> 
+> Setting it in the register != recording the value in the device tree.
+> I'm saying that since Socrates is a new board it should not use the
+> preserve-clocking dirty trick (and it is a dirty trick) because the
+> correct clocking data can be passed via the device tree.
 
-Yeah I did.
+Why should an old board then use it. "fsl, preserve-clocking" is a new
+feature, like using "clock-frequency" and you have the choice to
+explicitly set the clocking via device tree or inherit it from the boot
+loader. So far, a fixed FDR/DFRSS value (0x1031) was written to the
+registers by Linux.
 
-- k
+Wolfgang.
