@@ -1,13 +1,16 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: Where in dts file one should define IORESOURCES_(IO|MEM)?
-Date: Mon, 13 Apr 2009 13:59:25 -0500
-Message-ID: <49E38B8D.8040105@freescale.com>
-References: <003e01c9bc60$ab11c2c0$9e70150a@cisco.com>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/4 v2] mtd: physmap_of: Add multiple regions and
+	concatenation support
+Date: Tue, 14 Apr 2009 14:42:19 +0200
+Message-ID: <200904141442.19456.sr@denx.de>
+References: <1239093559-12043-1-git-send-email-sr@denx.de>
+	<fa686aa40904112258n1cc23b48t80b135b7016e9760@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <003e01c9bc60$ab11c2c0$9e70150a-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <fa686aa40904112258n1cc23b48t80b135b7016e9760-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -17,33 +20,36 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Subodh Nijsure <sunijsur-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Subodh Nijsure wrote:
-> in drivers/ide/legacy/ide_platform.c there is code that looks like this.
->  
->  
->         res_base = platform_get_resource(pdev, IORESOURCE_IO, 0);
->         res_alt = platform_get_resource(pdev, IORESOURCE_IO, 1);
->  
->         if (!res_base || !res_alt) {
->                 res_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->                 res_alt = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> If I want to specify IORESOURCE_MEM (0) and IORESOURCE_MEM ( 1) 
-> addresses in my board specific what statements do I need to include in 
-> my dts file?
+On Sunday 12 April 2009, Grant Likely wrote:
+> On Tue, Apr 7, 2009 at 2:39 AM, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org> wrote:
+> > This patch adds support to handle multiple non-identical chips in one
+> > flash device tree node. It also adds concat support to physmap_of. This
+> > makes it possible to support e.g. the Intel P30 48F4400 chips which
+> > internally consists of 2 non-identical NOR chips on one die. Additionally
+> > partitions now can span over multiple chips.
+>
+> [...]
+>
+> > Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+> > CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>
+> Looks good to me.  To comments below, but neither are enough to hold back
+> my:
+>
+> Reviewd-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-They would be the first and second "reg" resources of the relevant 
-device node.
+Thanks.
 
-For IDE, you probably want drivers/ata/pata_of_platform.c rather than 
-the above driver.
+> However, I have not tested this.  I'd like to hear of some larger
+> field testing before it is merged.
 
-> I have tried including them in memory {} section of dts and that doesn't 
-> work.
+OK, I'll address your latest comments and resend a (hopefully) last version of 
+this patchset.
 
-No, that's for *memory*, not device registers.
+Thanks.
 
--Scott
+Stefan
