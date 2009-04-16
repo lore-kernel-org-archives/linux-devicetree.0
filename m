@@ -1,14 +1,17 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/3 v3] mtd/powerpc: Factor out MTD physmap bindings into
-	mtd-physmap.txt
-Date: Thu, 16 Apr 2009 07:01:25 -0600
-Message-ID: <fa686aa40904160601v451113e3nb6b31f1680ac51d0@mail.gmail.com>
-References: <1239883857-17860-1-git-send-email-sr@denx.de>
+From: Artem Bityutskiy <dedekind@infradead.org>
+Subject: Re: [PATCH 0/3 v3] mtd: physmap_of: Add multiple regions and
+	concatenation support
+Date: Thu, 16 Apr 2009 16:09:24 +0300
+Message-ID: <1239887364.3390.215.camel@localhost.localdomain>
+References: <200904161405.04100.sr@denx.de>
+	<1239884344.3390.213.camel@localhost.localdomain>
+	<200904161452.25393.sr@denx.de>
+Reply-To: dedekind@infradead.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <1239883857-17860-1-git-send-email-sr@denx.de>
+In-Reply-To: <200904161452.25393.sr@denx.de>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -19,281 +22,41 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 To: Stefan Roese <sr@denx.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-mtd@lists.infradead.org
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Looks good, I'll pick this up
-
-g.
-
-On Thu, Apr 16, 2009 at 6:10 AM, Stefan Roese <sr@denx.de> wrote:
-> It's easier to find bindings descriptions in separate files. So let's fac=
-tor out
-> the MTD physmap bindings into Documentation/powerpc/dts-bindings/mtd-phys=
-map.txt
-> to not clutter booting-without-of.txt more.
->
-> Signed-off-by: Stefan Roese <sr@denx.de>
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
-> ---
-> Changes in ver3:
-> - Added short patch desciption to commit message.
->
-> =A0Documentation/powerpc/booting-without-of.txt =A0 =A0 =A0 | =A0 89 +++-=
-----------------
-> =A0Documentation/powerpc/dts-bindings/mtd-physmap.txt | =A0 63 ++++++++++=
-++++
-> =A02 files changed, 75 insertions(+), 77 deletions(-)
-> =A0create mode 100644 Documentation/powerpc/dts-bindings/mtd-physmap.txt
->
-> diff --git a/Documentation/powerpc/booting-without-of.txt b/Documentation=
-/powerpc/booting-without-of.txt
-> index 0ab0230..d16b7a1 100644
-> --- a/Documentation/powerpc/booting-without-of.txt
-> +++ b/Documentation/powerpc/booting-without-of.txt
-> @@ -43,12 +43,11 @@ Table of Contents
-> =A0 =A0 2) Representing devices without a current OF specification
-> =A0 =A0 =A0 a) PHY nodes
-> =A0 =A0 =A0 b) Interrupt controllers
-> - =A0 =A0 =A0c) CFI or JEDEC memory-mapped NOR flash
-> - =A0 =A0 =A0d) 4xx/Axon EMAC ethernet nodes
-> - =A0 =A0 =A0e) Xilinx IP cores
-> - =A0 =A0 =A0f) USB EHCI controllers
-> - =A0 =A0 =A0g) MDIO on GPIOs
-> - =A0 =A0 =A0h) SPI busses
-> + =A0 =A0 =A0c) 4xx/Axon EMAC ethernet nodes
-> + =A0 =A0 =A0d) Xilinx IP cores
-> + =A0 =A0 =A0e) USB EHCI controllers
-> + =A0 =A0 =A0f) MDIO on GPIOs
-> + =A0 =A0 =A0g) SPI busses
->
-> =A0 VII - Marvell Discovery mv64[345]6x System Controller chips
-> =A0 =A0 1) The /system-controller node
-> @@ -999,7 +998,7 @@ compatibility.
-> =A0 =A0 =A0 translation of SOC addresses for memory mapped SOC registers.
-> =A0 =A0 - bus-frequency: Contains the bus frequency for the SOC node.
-> =A0 =A0 =A0 Typically, the value of this field is filled in by the boot
-> - =A0 =A0 =A0loader.
-> + =A0 =A0 =A0loader.
->
->
-> =A0 Recommended properties:
-> @@ -1287,71 +1286,7 @@ platforms are moved over to use the flattened-devi=
-ce-tree model.
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device_type =3D "open-pic";
-> =A0 =A0 =A0 =A0};
->
-> - =A0 c) CFI or JEDEC memory-mapped NOR flash
-> -
-> - =A0 =A0Flash chips (Memory Technology Devices) are often used for solid=
- state
-> - =A0 =A0file systems on embedded devices.
-> -
-> - =A0 =A0 - compatible : should contain the specific model of flash chip(=
-s)
-> - =A0 =A0 =A0 used, if known, followed by either "cfi-flash" or "jedec-fl=
-ash"
-> - =A0 =A0 - reg : Address range of the flash chip
-> - =A0 =A0 - bank-width : Width (in bytes) of the flash bank. =A0Equal to =
-the
-> - =A0 =A0 =A0 device width times the number of interleaved chips.
-> - =A0 =A0 - device-width : (optional) Width of a single flash chip. =A0If
-> - =A0 =A0 =A0 omitted, assumed to be equal to 'bank-width'.
-> - =A0 =A0 - #address-cells, #size-cells : Must be present if the flash has
-> - =A0 =A0 =A0 sub-nodes representing partitions (see below). =A0In this c=
-ase
-> - =A0 =A0 =A0 both #address-cells and #size-cells must be equal to 1.
-> -
-> - =A0 =A0For JEDEC compatible devices, the following additional properties
-> - =A0 =A0are defined:
-> -
-> - =A0 =A0 - vendor-id : Contains the flash chip's vendor id (1 byte).
-> - =A0 =A0 - device-id : Contains the flash chip's device id (1 byte).
-> -
-> - =A0 =A0In addition to the information on the flash bank itself, the
-> - =A0 =A0device tree may optionally contain additional information
-> - =A0 =A0describing partitions of the flash address space. =A0This can be
-> - =A0 =A0used on platforms which have strong conventions about which
-> - =A0 =A0portions of the flash are used for what purposes, but which don't
-> - =A0 =A0use an on-flash partition table such as RedBoot.
-> -
-> - =A0 =A0Each partition is represented as a sub-node of the flash device.
-> - =A0 =A0Each node's name represents the name of the corresponding
-> - =A0 =A0partition of the flash device.
-> -
-> - =A0 =A0Flash partitions
-> - =A0 =A0 - reg : The partition's offset and size within the flash bank.
-> - =A0 =A0 - label : (optional) The label / name for this flash partition.
-> - =A0 =A0 =A0 If omitted, the label is taken from the node name (excluding
-> - =A0 =A0 =A0 the unit address).
-> - =A0 =A0 - read-only : (optional) This parameter, if present, is a hint =
-to
-> - =A0 =A0 =A0 Linux that this flash partition should only be mounted
-> - =A0 =A0 =A0 read-only. =A0This is usually used for flash partitions
-> - =A0 =A0 =A0 containing early-boot firmware images or data which should =
-not
-> - =A0 =A0 =A0 be clobbered.
-> -
-> - =A0 =A0Example:
-> -
-> - =A0 =A0 =A0 flash@ff000000 {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "amd,am29lv128ml", "cfi-flas=
-h";
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <ff000000 01000000>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 bank-width =3D <4>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 device-width =3D <1>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 fs@0 {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 label =3D "fs";
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0 f80000>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 firmware@f80000 {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 label =3D"firmware";
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <f80000 80000>;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 read-only;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> - =A0 =A0 =A0 };
-> -
-> - =A0 =A0d) 4xx/Axon EMAC ethernet nodes
-> + =A0 =A0c) 4xx/Axon EMAC ethernet nodes
->
-> =A0 =A0 The EMAC ethernet controller in IBM and AMCC 4xx chips, and also
-> =A0 =A0 the Axon bridge. =A0To operate this needs to interact with a ths
-> @@ -1499,7 +1434,7 @@ platforms are moved over to use the flattened-devic=
-e-tree model.
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 available.
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 For Axon: 0x0000012a
->
-> - =A0 e) Xilinx IP cores
-> + =A0 d) Xilinx IP cores
->
-> =A0 =A0The Xilinx EDK toolchain ships with a set of IP cores (devices) fo=
-r use
-> =A0 =A0in Xilinx Spartan and Virtex FPGAs. =A0The devices cover the whole=
- range
-> @@ -1761,7 +1696,7 @@ platforms are moved over to use the flattened-devic=
-e-tree model.
-> =A0 =A0 =A0 listed above, nodes for these devices should include a phy-ha=
-ndle
-> =A0 =A0 =A0 property, and may include other common network device propert=
-ies
-> =A0 =A0 =A0 like local-mac-address.
-> -
-> +
-> =A0 =A0 =A0 iv) Xilinx Uartlite
->
-> =A0 =A0 =A0 Xilinx uartlite devices are simple fixed speed serial ports.
-> @@ -1793,7 +1728,7 @@ platforms are moved over to use the flattened-devic=
-e-tree model.
-> =A0 =A0 =A0 =A0- reg-offset : A value of 3 is required
-> =A0 =A0 =A0 =A0- reg-shift : A value of 2 is required
->
-> - =A0 =A0f) USB EHCI controllers
-> + =A0 =A0e) USB EHCI controllers
->
-> =A0 =A0 Required properties:
-> =A0 =A0 =A0 - compatible : should be "usb-ehci".
-> @@ -1819,7 +1754,7 @@ platforms are moved over to use the flattened-devic=
-e-tree model.
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 big-endian;
-> =A0 =A0 =A0 =A0 =A0 };
->
-> - =A0 g) MDIO on GPIOs
-> + =A0 f) MDIO on GPIOs
->
-> =A0 =A0Currently defined compatibles:
-> =A0 =A0- virtual,gpio-mdio
-> @@ -1839,7 +1774,7 @@ platforms are moved over to use the flattened-devic=
-e-tree model.
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &qe_pio_c 6>;
-> =A0 =A0 =A0 =A0};
->
-> - =A0 =A0h) SPI (Serial Peripheral Interface) busses
-> + =A0 =A0g) SPI (Serial Peripheral Interface) busses
->
-> =A0 =A0 SPI busses can be described with a node for the SPI master device
-> =A0 =A0 and a set of child nodes for each SPI slave on the bus. =A0For th=
-is
-> diff --git a/Documentation/powerpc/dts-bindings/mtd-physmap.txt b/Documen=
-tation/powerpc/dts-bindings/mtd-physmap.txt
-> new file mode 100644
-> index 0000000..cd474f9
-> --- /dev/null
-> +++ b/Documentation/powerpc/dts-bindings/mtd-physmap.txt
-> @@ -0,0 +1,63 @@
-> +CFI or JEDEC memory-mapped NOR flash
-> +
-> +Flash chips (Memory Technology Devices) are often used for solid state
-> +file systems on embedded devices.
-> +
-> + - compatible : should contain the specific model of flash chip(s)
-> + =A0 used, if known, followed by either "cfi-flash" or "jedec-flash"
-> + - reg : Address range of the flash chip
-> + - bank-width : Width (in bytes) of the flash bank. =A0Equal to the
-> + =A0 device width times the number of interleaved chips.
-> + - device-width : (optional) Width of a single flash chip. =A0If
-> + =A0 omitted, assumed to be equal to 'bank-width'.
-> + - #address-cells, #size-cells : Must be present if the flash has
-> + =A0 sub-nodes representing partitions (see below). =A0In this case
-> + =A0 both #address-cells and #size-cells must be equal to 1.
-> +
-> +For JEDEC compatible devices, the following additional properties
-> +are defined:
-> +
-> + - vendor-id : Contains the flash chip's vendor id (1 byte).
-> + - device-id : Contains the flash chip's device id (1 byte).
-> +
-> +In addition to the information on the flash bank itself, the
-> +device tree may optionally contain additional information
-> +describing partitions of the flash address space. =A0This can be
-> +used on platforms which have strong conventions about which
-> +portions of the flash are used for what purposes, but which don't
-> +use an on-flash partition table such as RedBoot.
-> +
-> +Each partition is represented as a sub-node of the flash device.
-> +Each node's name represents the name of the corresponding
-> +partition of the flash device.
-> +
-> +Flash partitions
-> + - reg : The partition's offset and size within the flash bank.
-> + - label : (optional) The label / name for this flash partition.
-> + =A0 If omitted, the label is taken from the node name (excluding
-> + =A0 the unit address).
-> + - read-only : (optional) This parameter, if present, is a hint to
-> + =A0 Linux that this flash partition should only be mounted
-> + =A0 read-only. =A0This is usually used for flash partitions
-> + =A0 containing early-boot firmware images or data which should not
-> + =A0 be clobbered.
-> +
-> +Example:
-> +
-> + =A0 =A0 =A0 flash@ff000000 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "amd,am29lv128ml", "cfi-flas=
-h";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <ff000000 01000000>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bank-width =3D <4>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 device-width =3D <1>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 fs@0 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 label =3D "fs";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0 f80000>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 firmware@f80000 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 label =3D"firmware";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <f80000 80000>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 read-only;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> + =A0 =A0 =A0 };
-> --
-> 1.6.2.3
->
->
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+T24gVGh1LCAyMDA5LTA0LTE2IGF0IDE0OjUyICswMjAwLCBTdGVmYW4gUm9lc2Ugd3JvdGU6Cj4g
+T24gVGh1cnNkYXkgMTYgQXByaWwgMjAwOSwgQXJ0ZW0gQml0eXV0c2tpeSB3cm90ZToKPiA+IE9u
+IFRodSwgMjAwOS0wNC0xNiBhdCAxNDowNSArMDIwMCwgU3RlZmFuIFJvZXNlIHdyb3RlOgo+ID4g
+PiBUaGlzIHBhdGNoc2V0IGFkZHMgc3VwcG9ydCB0byBoYW5kbGUgbXVsdGlwbGUgbm9uLWlkZW50
+aWNhbCBjaGlwcyBpbiBvbmUKPiA+ID4gZmxhc2ggZGV2aWNlIHRyZWUgbm9kZS4gSXQgYWxzbyBh
+ZGRzIGNvbmNhdCBzdXBwb3J0IHRvIHBoeXNtYXBfb2YuIFRoaXMKPiA+ID4gbWFrZXMgaXQgcG9z
+c2libGUgdG8gc3VwcG9ydCBlLmcuIHRoZSBJbnRlbCBQMzAgNDhGNDQwMCBjaGlwIHdoaWNoCj4g
+PiA+IGludGVybmFsbHkgY29uc2lzdHMgb2YgMiBub24taWRlbnRpY2FsIE5PUiBjaGlwcyBvbiBv
+bmUgZGllLiBBZGRpdGlvbmFsbHkKPiA+ID4gcGFydGl0aW9ucyBub3cgY2FuIHNwYW4gb3ZlciBt
+dWx0aXBsZSBjaGlwczoKPiA+ID4KPiA+ID4gICAgIG10ZDogcGh5c21hcF9vZjogQWRkIG11bHRp
+cGxlIHJlZ2lvbnMgYW5kIGNvbmNhdGVuYXRpb24gc3VwcG9ydAo+ID4gPiAgICAgbXRkL3Bvd2Vy
+cGM6IEZhY3RvciBvdXQgTVREIHBoeXNtYXAgYmluZGluZ3MgaW50byBtdGQtcGh5c21hcC50eHQK
+PiA+ID4gICAgIG10ZC9wb3dlcnBjOiBEZXNjcmliZSBtdWx0aXBsZSAicmVnIiB0dXBsZXMgdXNh
+Z2UKPiA+ID4KPiA+ID4gdjIgYWRkcmVzc2VzIGFsbCBjb21tZW50cyBmcm9tIEdyYW50IExpa2Vs
+eSwgaW5jbHVkaW5nIGZhY3RvcmluZyBvdXQgdGhlCj4gPiA+IE1URCBkdHMgYmluZGluZ3MgZG9j
+dW1lbnRhdGlvbiBpbnRvIGEgc2VwYXJhdGUgZmlsZS4KPiA+ID4KPiA+ID4gdjMgYWRkcmVzc2Vz
+IGFsbCBjb21tZW50cyAoYWdhaW4gZnJvbSBHcmFudCkuCj4gPgo+ID4gU29ycnkgZm9yIG15IGln
+bm9yYW5jZSwgYnV0IGNvdWxkIHlvdSBwbGVhc2UgZXhwbGFpbiB3aHkgcmVnaW9ucwo+ID4gZXhp
+c3RzIGFzIGFuIE1URCBjb25jZXB0PyBXaHkgZGlmZmVyZW50IHJlZ2lvbnMgY291bGQgbm90IGJl
+Cj4gPiByZXByZXNlbnRlZCBhcyBkaWZmZXJlbnQgTVREIGRldmljZXM/IFRoZSBiZW5lZml0IGlz
+IC0gc2ltcGxpY2l0eS4KPiAKPiBUaGUgcmVzdWx0IG9mIHRoZXNlIG11bHRpcGxlICJyZWciIHR1
+cGxlcyAqaXMqIG11bHRpcGxlIE1URCBkZXZpY2VzLiBOb3Qgc3VyZSAKPiBpZiB0aGlzIGV4cGxh
+aW5zIHlvdXIgY29tbWVudC9xdWVzdGlvbi4gUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSBzdGls
+bCBoYXZlIAo+IHNvbWUgY29tbWVudHMuCgpPSywgSSB3YXMgY29uZnVzZWQuIEluIE1URCB0aGVy
+ZSBpcyBhIHdlaXJkIG5vdGlvbiBvZiAicmVnaW9uIi4KU2VlICdzdHJ1Y3QgbXRkX2luZm8nOgoK
+ICAgICAgICAvKiBEYXRhIGZvciB2YXJpYWJsZSBlcmFzZSByZWdpb25zLiBJZiBudW1lcmFzZXJl
+Z2lvbnMgaXMgemVybywKICAgICAgICAgKiBpdCBtZWFucyB0aGF0IHRoZSB3aG9sZSBkZXZpY2Ug
+aGFzIGVyYXNlc2l6ZSBhcyBnaXZlbiBhYm92ZS4KICAgICAgICAgKi8KICAgICAgICBpbnQgbnVt
+ZXJhc2VyZWdpb25zOwogICAgICAgIHN0cnVjdCBtdGRfZXJhc2VfcmVnaW9uX2luZm8gKmVyYXNl
+cmVnaW9uczsKCmluIGluY2x1ZGUvbGludXgvbXRkL210ZC5oCgpJIHRob3VnaHQgeW91IHVzZSB0
+aGF0LCBhbmQgd2FudGVkIHRvIHJlYWxpemUgd2h5IGlzIHRoYXQgInJlZ2lvbiIKbm90aW9uIG5l
+ZWRlZC4KCi0tIApCZXN0IHJlZ2FyZHMsCkFydGVtIEJpdHl1dHNraXkgKNCR0LjRgtGO0YbQutC4
+0Lkg0JDRgNGC0ZHQvCkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QG96bGFicy5vcmcK
+aHR0cHM6Ly9vemxhYnMub3JnL21haWxtYW4vbGlzdGluZm8vbGludXhwcGMtZGV2
