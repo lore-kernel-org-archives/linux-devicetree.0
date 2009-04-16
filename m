@@ -1,46 +1,55 @@
-From: Artem Bityutskiy <dedekind@infradead.org>
+From: Stefan Roese <sr@denx.de>
 Subject: Re: [PATCH 0/3 v3] mtd: physmap_of: Add multiple regions and
 	concatenation support
-Date: Thu, 16 Apr 2009 15:19:04 +0300
-Message-ID: <1239884344.3390.213.camel@localhost.localdomain>
+Date: Thu, 16 Apr 2009 14:52:25 +0200
+Message-ID: <200904161452.25393.sr@denx.de>
 References: <200904161405.04100.sr@denx.de>
-Reply-To: dedekind@infradead.org
+	<1239884344.3390.213.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <200904161405.04100.sr@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
-	<mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
-	<mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Stefan Roese <sr@denx.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
+In-Reply-To: <1239884344.3390.213.camel@localhost.localdomain>
+Content-Disposition: inline
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
+To: dedekind@infradead.org
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDA5LTA0LTE2IGF0IDE0OjA1ICswMjAwLCBTdGVmYW4gUm9lc2Ugd3JvdGU6Cj4g
-VGhpcyBwYXRjaHNldCBhZGRzIHN1cHBvcnQgdG8gaGFuZGxlIG11bHRpcGxlIG5vbi1pZGVudGlj
-YWwgY2hpcHMgaW4gb25lCj4gZmxhc2ggZGV2aWNlIHRyZWUgbm9kZS4gSXQgYWxzbyBhZGRzIGNv
-bmNhdCBzdXBwb3J0IHRvIHBoeXNtYXBfb2YuIFRoaXMKPiBtYWtlcyBpdCBwb3NzaWJsZSB0byBz
-dXBwb3J0IGUuZy4gdGhlIEludGVsIFAzMCA0OEY0NDAwIGNoaXAgd2hpY2gKPiBpbnRlcm5hbGx5
-IGNvbnNpc3RzIG9mIDIgbm9uLWlkZW50aWNhbCBOT1IgY2hpcHMgb24gb25lIGRpZS4gQWRkaXRp
-b25hbGx5Cj4gcGFydGl0aW9ucyBub3cgY2FuIHNwYW4gb3ZlciBtdWx0aXBsZSBjaGlwczoKPiAK
-PiAgICAgbXRkOiBwaHlzbWFwX29mOiBBZGQgbXVsdGlwbGUgcmVnaW9ucyBhbmQgY29uY2F0ZW5h
-dGlvbiBzdXBwb3J0Cj4gICAgIG10ZC9wb3dlcnBjOiBGYWN0b3Igb3V0IE1URCBwaHlzbWFwIGJp
-bmRpbmdzIGludG8gbXRkLXBoeXNtYXAudHh0Cj4gICAgIG10ZC9wb3dlcnBjOiBEZXNjcmliZSBt
-dWx0aXBsZSAicmVnIiB0dXBsZXMgdXNhZ2UKPiAKPiB2MiBhZGRyZXNzZXMgYWxsIGNvbW1lbnRz
-IGZyb20gR3JhbnQgTGlrZWx5LCBpbmNsdWRpbmcgZmFjdG9yaW5nIG91dCB0aGUKPiBNVEQgZHRz
-IGJpbmRpbmdzIGRvY3VtZW50YXRpb24gaW50byBhIHNlcGFyYXRlIGZpbGUuCj4gCj4gdjMgYWRk
-cmVzc2VzIGFsbCBjb21tZW50cyAoYWdhaW4gZnJvbSBHcmFudCkuCgpTb3JyeSBmb3IgbXkgaWdu
-b3JhbmNlLCBidXQgY291bGQgeW91IHBsZWFzZSBleHBsYWluIHdoeSByZWdpb25zCmV4aXN0cyBh
-cyBhbiBNVEQgY29uY2VwdD8gV2h5IGRpZmZlcmVudCByZWdpb25zIGNvdWxkIG5vdCBiZQpyZXBy
-ZXNlbnRlZCBhcyBkaWZmZXJlbnQgTVREIGRldmljZXM/IFRoZSBiZW5lZml0IGlzIC0gc2ltcGxp
-Y2l0eS4KClRoYW5rcy4KCi0tIApCZXN0IHJlZ2FyZHMsCkFydGVtIEJpdHl1dHNraXkgKNCR0LjR
-gtGO0YbQutC40Lkg0JDRgNGC0ZHQvCkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+On Thursday 16 April 2009, Artem Bityutskiy wrote:
+> On Thu, 2009-04-16 at 14:05 +0200, Stefan Roese wrote:
+> > This patchset adds support to handle multiple non-identical chips in one
+> > flash device tree node. It also adds concat support to physmap_of. This
+> > makes it possible to support e.g. the Intel P30 48F4400 chip which
+> > internally consists of 2 non-identical NOR chips on one die. Additionally
+> > partitions now can span over multiple chips:
+> >
+> >     mtd: physmap_of: Add multiple regions and concatenation support
+> >     mtd/powerpc: Factor out MTD physmap bindings into mtd-physmap.txt
+> >     mtd/powerpc: Describe multiple "reg" tuples usage
+> >
+> > v2 addresses all comments from Grant Likely, including factoring out the
+> > MTD dts bindings documentation into a separate file.
+> >
+> > v3 addresses all comments (again from Grant).
+>
+> Sorry for my ignorance, but could you please explain why regions
+> exists as an MTD concept? Why different regions could not be
+> represented as different MTD devices? The benefit is - simplicity.
+
+The result of these multiple "reg" tuples *is* multiple MTD devices. Not sure 
+if this explains your comment/question. Please let me know if you still have 
+some comments.
+
+Thanks.
+
+Best regards,
+Stefan
