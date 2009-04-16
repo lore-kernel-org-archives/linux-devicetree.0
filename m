@@ -1,55 +1,55 @@
-From: Stefan Roese <sr@denx.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 0/3 v3] mtd: physmap_of: Add multiple regions and
 	concatenation support
-Date: Thu, 16 Apr 2009 14:52:25 +0200
-Message-ID: <200904161452.25393.sr@denx.de>
+Date: Thu, 16 Apr 2009 06:58:22 -0600
+Message-ID: <fa686aa40904160558p613f43cbo361a500adee10d34@mail.gmail.com>
 References: <200904161405.04100.sr@denx.de>
 	<1239884344.3390.213.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org>
-In-Reply-To: <1239884344.3390.213.camel@localhost.localdomain>
-Content-Disposition: inline
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@ozlabs.org
-To: dedekind@infradead.org
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1239884344.3390.213.camel-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: dedekind-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 April 2009, Artem Bityutskiy wrote:
-> On Thu, 2009-04-16 at 14:05 +0200, Stefan Roese wrote:
-> > This patchset adds support to handle multiple non-identical chips in one
-> > flash device tree node. It also adds concat support to physmap_of. This
-> > makes it possible to support e.g. the Intel P30 48F4400 chip which
-> > internally consists of 2 non-identical NOR chips on one die. Additionally
-> > partitions now can span over multiple chips:
-> >
-> >     mtd: physmap_of: Add multiple regions and concatenation support
-> >     mtd/powerpc: Factor out MTD physmap bindings into mtd-physmap.txt
-> >     mtd/powerpc: Describe multiple "reg" tuples usage
-> >
-> > v2 addresses all comments from Grant Likely, including factoring out the
-> > MTD dts bindings documentation into a separate file.
-> >
-> > v3 addresses all comments (again from Grant).
->
-> Sorry for my ignorance, but could you please explain why regions
-> exists as an MTD concept? Why different regions could not be
-> represented as different MTD devices? The benefit is - simplicity.
-
-The result of these multiple "reg" tuples *is* multiple MTD devices. Not sure 
-if this explains your comment/question. Please let me know if you still have 
-some comments.
-
-Thanks.
-
-Best regards,
-Stefan
+T24gVGh1LCBBcHIgMTYsIDIwMDkgYXQgNjoxOSBBTSwgQXJ0ZW0gQml0eXV0c2tpeQo8ZGVkZWtp
+bmRAaW5mcmFkZWFkLm9yZz4gd3JvdGU6Cj4gT24gVGh1LCAyMDA5LTA0LTE2IGF0IDE0OjA1ICsw
+MjAwLCBTdGVmYW4gUm9lc2Ugd3JvdGU6Cj4+IFRoaXMgcGF0Y2hzZXQgYWRkcyBzdXBwb3J0IHRv
+IGhhbmRsZSBtdWx0aXBsZSBub24taWRlbnRpY2FsIGNoaXBzIGluIG9uZQo+PiBmbGFzaCBkZXZp
+Y2UgdHJlZSBub2RlLiBJdCBhbHNvIGFkZHMgY29uY2F0IHN1cHBvcnQgdG8gcGh5c21hcF9vZi4g
+VGhpcwo+PiBtYWtlcyBpdCBwb3NzaWJsZSB0byBzdXBwb3J0IGUuZy4gdGhlIEludGVsIFAzMCA0
+OEY0NDAwIGNoaXAgd2hpY2gKPj4gaW50ZXJuYWxseSBjb25zaXN0cyBvZiAyIG5vbi1pZGVudGlj
+YWwgTk9SIGNoaXBzIG9uIG9uZSBkaWUuIEFkZGl0aW9uYWxseQo+PiBwYXJ0aXRpb25zIG5vdyBj
+YW4gc3BhbiBvdmVyIG11bHRpcGxlIGNoaXBzOgo+Pgo+PiCaIJogbXRkOiBwaHlzbWFwX29mOiBB
+ZGQgbXVsdGlwbGUgcmVnaW9ucyBhbmQgY29uY2F0ZW5hdGlvbiBzdXBwb3J0Cj4+IJogmiBtdGQv
+cG93ZXJwYzogRmFjdG9yIG91dCBNVEQgcGh5c21hcCBiaW5kaW5ncyBpbnRvIG10ZC1waHlzbWFw
+LnR4dAo+PiCaIJogbXRkL3Bvd2VycGM6IERlc2NyaWJlIG11bHRpcGxlICJyZWciIHR1cGxlcyB1
+c2FnZQo+Pgo+PiB2MiBhZGRyZXNzZXMgYWxsIGNvbW1lbnRzIGZyb20gR3JhbnQgTGlrZWx5LCBp
+bmNsdWRpbmcgZmFjdG9yaW5nIG91dCB0aGUKPj4gTVREIGR0cyBiaW5kaW5ncyBkb2N1bWVudGF0
+aW9uIGludG8gYSBzZXBhcmF0ZSBmaWxlLgo+Pgo+PiB2MyBhZGRyZXNzZXMgYWxsIGNvbW1lbnRz
+IChhZ2FpbiBmcm9tIEdyYW50KS4KPgo+IFNvcnJ5IGZvciBteSBpZ25vcmFuY2UsIGJ1dCBjb3Vs
+ZCB5b3UgcGxlYXNlIGV4cGxhaW4gd2h5IHJlZ2lvbnMKPiBleGlzdHMgYXMgYW4gTVREIGNvbmNl
+cHQ/IFdoeSBkaWZmZXJlbnQgcmVnaW9ucyBjb3VsZCBub3QgYmUKPiByZXByZXNlbnRlZCBhcyBk
+aWZmZXJlbnQgTVREIGRldmljZXM/IFRoZSBiZW5lZml0IGlzIC0gc2ltcGxpY2l0eS4KClRyeWlu
+ZyB0byBkZXNjcmliZSBNVEQgcGFydGl0aW9ucyB0aGF0IHNwYW4gZGV2aWNlIGJvdW5kYXJpZXMg
+aW4gdGhlCmRldmljZSB0cmVlIGlzIGZhciBzaW1wbGVyIGlmIGEgc2luZ2xlIG5vZGUgaXMgdXNl
+ZC4gIEl0IGlzIGFsc28gYQpjb21tb24gY2FzZSBmb3IgaGFyZHdhcmUgZGVzaWduZXJzIHRvIGRy
+b3AgZG93biBtdWx0aXBsZSBOT1IgZGV2aWNlcwp0byBiZSB1c2VkIGFzIGEgc2luZ2xlIGZsYXNo
+IHJlZ2lvbiwgc28gaXQgbWFrZXMgc2Vuc2UgdG8gZGVzY3JpYmUgaXQKYXMgYSBzaW5nbGUgZGV2
+aWNlLgoKZy4KCj4KPiBUaGFua3MuCj4KPiAtLQo+IEJlc3QgcmVnYXJkcywKPiBBcnRlbSBCaXR5
+dXRza2l5ICjiydTAw8vJyiDh0tSjzSkKPgo+CgoKCi0tIApHcmFudCBMaWtlbHksIEIuU2MuLCBQ
+LkVuZy4KU2VjcmV0IExhYiBUZWNobm9sb2dpZXMgTHRkLgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
+CmRldmljZXRyZWUtZGlzY3Vzc0BvemxhYnMub3JnCmh0dHBzOi8vb3psYWJzLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
