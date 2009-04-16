@@ -1,62 +1,87 @@
-From: Artem Bityutskiy <dedekind@infradead.org>
-Subject: Re: [PATCH 0/3 v3] mtd: physmap_of: Add multiple regions and
-	concatenation support
-Date: Thu, 16 Apr 2009 16:09:24 +0300
-Message-ID: <1239887364.3390.215.camel@localhost.localdomain>
-References: <200904161405.04100.sr@denx.de>
-	<1239884344.3390.213.camel@localhost.localdomain>
-	<200904161452.25393.sr@denx.de>
-Reply-To: dedekind@infradead.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/3 v3] mtd/powerpc: Describe multiple "reg" tuples usage
+Date: Thu, 16 Apr 2009 07:23:10 -0600
+Message-ID: <fa686aa40904160623j1cc734a7qefe3c576f02f2042@mail.gmail.com>
+References: <1239883865-17915-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <200904161452.25393.sr@denx.de>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Stefan Roese <sr@denx.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1239883865-17915-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDA5LTA0LTE2IGF0IDE0OjUyICswMjAwLCBTdGVmYW4gUm9lc2Ugd3JvdGU6Cj4g
-T24gVGh1cnNkYXkgMTYgQXByaWwgMjAwOSwgQXJ0ZW0gQml0eXV0c2tpeSB3cm90ZToKPiA+IE9u
-IFRodSwgMjAwOS0wNC0xNiBhdCAxNDowNSArMDIwMCwgU3RlZmFuIFJvZXNlIHdyb3RlOgo+ID4g
-PiBUaGlzIHBhdGNoc2V0IGFkZHMgc3VwcG9ydCB0byBoYW5kbGUgbXVsdGlwbGUgbm9uLWlkZW50
-aWNhbCBjaGlwcyBpbiBvbmUKPiA+ID4gZmxhc2ggZGV2aWNlIHRyZWUgbm9kZS4gSXQgYWxzbyBh
-ZGRzIGNvbmNhdCBzdXBwb3J0IHRvIHBoeXNtYXBfb2YuIFRoaXMKPiA+ID4gbWFrZXMgaXQgcG9z
-c2libGUgdG8gc3VwcG9ydCBlLmcuIHRoZSBJbnRlbCBQMzAgNDhGNDQwMCBjaGlwIHdoaWNoCj4g
-PiA+IGludGVybmFsbHkgY29uc2lzdHMgb2YgMiBub24taWRlbnRpY2FsIE5PUiBjaGlwcyBvbiBv
-bmUgZGllLiBBZGRpdGlvbmFsbHkKPiA+ID4gcGFydGl0aW9ucyBub3cgY2FuIHNwYW4gb3ZlciBt
-dWx0aXBsZSBjaGlwczoKPiA+ID4KPiA+ID4gICAgIG10ZDogcGh5c21hcF9vZjogQWRkIG11bHRp
-cGxlIHJlZ2lvbnMgYW5kIGNvbmNhdGVuYXRpb24gc3VwcG9ydAo+ID4gPiAgICAgbXRkL3Bvd2Vy
-cGM6IEZhY3RvciBvdXQgTVREIHBoeXNtYXAgYmluZGluZ3MgaW50byBtdGQtcGh5c21hcC50eHQK
-PiA+ID4gICAgIG10ZC9wb3dlcnBjOiBEZXNjcmliZSBtdWx0aXBsZSAicmVnIiB0dXBsZXMgdXNh
-Z2UKPiA+ID4KPiA+ID4gdjIgYWRkcmVzc2VzIGFsbCBjb21tZW50cyBmcm9tIEdyYW50IExpa2Vs
-eSwgaW5jbHVkaW5nIGZhY3RvcmluZyBvdXQgdGhlCj4gPiA+IE1URCBkdHMgYmluZGluZ3MgZG9j
-dW1lbnRhdGlvbiBpbnRvIGEgc2VwYXJhdGUgZmlsZS4KPiA+ID4KPiA+ID4gdjMgYWRkcmVzc2Vz
-IGFsbCBjb21tZW50cyAoYWdhaW4gZnJvbSBHcmFudCkuCj4gPgo+ID4gU29ycnkgZm9yIG15IGln
-bm9yYW5jZSwgYnV0IGNvdWxkIHlvdSBwbGVhc2UgZXhwbGFpbiB3aHkgcmVnaW9ucwo+ID4gZXhp
-c3RzIGFzIGFuIE1URCBjb25jZXB0PyBXaHkgZGlmZmVyZW50IHJlZ2lvbnMgY291bGQgbm90IGJl
-Cj4gPiByZXByZXNlbnRlZCBhcyBkaWZmZXJlbnQgTVREIGRldmljZXM/IFRoZSBiZW5lZml0IGlz
-IC0gc2ltcGxpY2l0eS4KPiAKPiBUaGUgcmVzdWx0IG9mIHRoZXNlIG11bHRpcGxlICJyZWciIHR1
-cGxlcyAqaXMqIG11bHRpcGxlIE1URCBkZXZpY2VzLiBOb3Qgc3VyZSAKPiBpZiB0aGlzIGV4cGxh
-aW5zIHlvdXIgY29tbWVudC9xdWVzdGlvbi4gUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSBzdGls
-bCBoYXZlIAo+IHNvbWUgY29tbWVudHMuCgpPSywgSSB3YXMgY29uZnVzZWQuIEluIE1URCB0aGVy
-ZSBpcyBhIHdlaXJkIG5vdGlvbiBvZiAicmVnaW9uIi4KU2VlICdzdHJ1Y3QgbXRkX2luZm8nOgoK
-ICAgICAgICAvKiBEYXRhIGZvciB2YXJpYWJsZSBlcmFzZSByZWdpb25zLiBJZiBudW1lcmFzZXJl
-Z2lvbnMgaXMgemVybywKICAgICAgICAgKiBpdCBtZWFucyB0aGF0IHRoZSB3aG9sZSBkZXZpY2Ug
-aGFzIGVyYXNlc2l6ZSBhcyBnaXZlbiBhYm92ZS4KICAgICAgICAgKi8KICAgICAgICBpbnQgbnVt
-ZXJhc2VyZWdpb25zOwogICAgICAgIHN0cnVjdCBtdGRfZXJhc2VfcmVnaW9uX2luZm8gKmVyYXNl
-cmVnaW9uczsKCmluIGluY2x1ZGUvbGludXgvbXRkL210ZC5oCgpJIHRob3VnaHQgeW91IHVzZSB0
-aGF0LCBhbmQgd2FudGVkIHRvIHJlYWxpemUgd2h5IGlzIHRoYXQgInJlZ2lvbiIKbm90aW9uIG5l
-ZWRlZC4KCi0tIApCZXN0IHJlZ2FyZHMsCkFydGVtIEJpdHl1dHNraXkgKNCR0LjRgtGO0YbQutC4
-0Lkg0JDRgNGC0ZHQvCkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QG96bGFicy5vcmcK
-aHR0cHM6Ly9vemxhYnMub3JnL21haWxtYW4vbGlzdGluZm8vbGludXhwcGMtZGV2
+On Thu, Apr 16, 2009 at 6:11 AM, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org> wrote:
+> Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+I'll pick this one up too.
+
+> ---
+> Changes in ver3:
+> - Removed reference to Intel P30 parts
+> - Added exact chip compatible property for best practice.
+>
+> =A0Documentation/powerpc/dts-bindings/mtd-physmap.txt | =A0 19 ++++++++++=
+++++++++-
+> =A01 files changed, 18 insertions(+), 1 deletions(-)
+>
+> diff --git a/Documentation/powerpc/dts-bindings/mtd-physmap.txt b/Documen=
+tation/powerpc/dts-bindings/mtd-physmap.txt
+> index cd474f9..667c9bd 100644
+> --- a/Documentation/powerpc/dts-bindings/mtd-physmap.txt
+> +++ b/Documentation/powerpc/dts-bindings/mtd-physmap.txt
+> @@ -5,7 +5,9 @@ file systems on embedded devices.
+>
+> =A0- compatible : should contain the specific model of flash chip(s)
+> =A0 =A0used, if known, followed by either "cfi-flash" or "jedec-flash"
+> - - reg : Address range of the flash chip
+> + - reg : Address range(s) of the flash chip(s)
+> + =A0 It's possible to (optionally) define multiple "reg" tuples so that
+> + =A0 non-identical NOR chips can be described in one flash node.
+> =A0- bank-width : Width (in bytes) of the flash bank. =A0Equal to the
+> =A0 =A0device width times the number of interleaved chips.
+> =A0- device-width : (optional) Width of a single flash chip. =A0If
+> @@ -61,3 +63,18 @@ Example:
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0read-only;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+> =A0 =A0 =A0 =A0};
+> +
+> +Here an example with multiple "reg" tuples:
+> +
+> + =A0 =A0 =A0 flash@f0000000,0 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "intel,PC48F4400P0VB", "cfi-=
+flash";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0 0x00000000 0x02000000
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00 0x02000000 0x02000000>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bank-width =3D <2>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 partition@0 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 label =3D "test-part1";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0 0x04000000>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> + =A0 =A0 =A0 };
+> --
+> 1.6.2.3
+>
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
