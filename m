@@ -1,73 +1,58 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Interruption on PCI Bus
-Date: Thu, 16 Apr 2009 09:15:46 -0600
-Message-ID: <fa686aa40904160815y5eca6f5fn865762b645903c7a@mail.gmail.com>
-References: <49E6E542.5090504@fr.thalesgroup.com>
-	<49E6F14A.9010800@firmworks.com>
-	<fa686aa40904160720s77efa749u56392d7027467a4a@mail.gmail.com>
-	<49E74AC0.4000508@fr.thalesgroup.com>
+From: David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH 1/3 v3] mtd: physmap_of: Add multiple regions and
+	concatenation support
+Date: Thu, 16 Apr 2009 19:38:26 +0100 (BST)
+Message-ID: <alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
+References: <1239883845-17804-1-git-send-email-sr@denx.de>
+	<fa686aa40904160626k118cea3cvc0db38a2277e45b8@mail.gmail.com>
+	<200904161537.59048.sr@denx.de>
+	<fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
+	<1239889899.3390.216.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <49E74AC0.4000508-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Simon Desfarges <simon.desfarges-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
+In-Reply-To: <1239889899.3390.216.camel@localhost.localdomain>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+To: Artem Bityutskiy <dedekind@infradead.org>
+Cc: linuxppc-dev@ozlabs.org, Stefan Roese <sr@denx.de>, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2009 at 9:12 AM, Simon Desfarges
-<simon.desfarges-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org> wrote:
->
->
-> Grant Likely a =E9crit :
->>
->> On Thu, Apr 16, 2009 at 2:50 AM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
+On Thu, 16 Apr 2009, Artem Bityutskiy wrote:
+
+> On Thu, 2009-04-16 at 07:46 -0600, Grant Likely wrote:
+>> On Thu, Apr 16, 2009 at 7:37 AM, Stefan Roese <sr@denx.de> wrote:
+>>> On Thursday 16 April 2009, Grant Likely wrote:
+>>>>> Signed-off-by: Stefan Roese <sr@denx.de>
+>>>>> Reviewd-by: Grant Likely <grant.likely@secretlab.ca>
+>>>>
+>>>> Yup, still looks good to me.  What boards has this been tested on?
 >>>
->>> Sorry for being so vague. =A0As the person who originally devised this
->>> interrupt tree stuff, I'm pretty sure about the intention, but much less
->>> sure about what specific versions of Linux and U-Boot actually do.
->>> =A0Hopefully someone else can give you a definitive answer about that.
+>>> I tested this version on PPC405EX Kilauea equipped only one "standard"
+>>> Spansion S29GL512 NOR chip. And a slightly modified version on an MPC8360
+>>> board (kmeter1) which is equipped with the Intel P30 part mentioned in the
+>>> bindings description. Slightly modified since this board support is not yet
+>>> pushed upstream and currently using v2.6.28 (physmap_of.c has received minor
+>>> modifications after 2.6.28 release).
 >>
->> U-Boot doesn't really do anything with interrupts. =A0It usually just
->> polls everything.
->>
->> Linux arch/powerpc does walk the device tree to get irq routing and
->> resolve to a Linux-internal virtual IRQ number. =A0I'm pretty sure that
->> the IRQ registers are normally ignored unless something goes wrong
->> with parsing the tree. =A0See arch/powerpc/kernel/pci-common.c and
->> search for of_irq_map_pci().
->>
->> g.
->>
-> OK, thank you very much for your answers, you are very helpful for a newb=
-ie
-> like me.
+>> Okay.  It will be good to get this one into -next for some testing
+>> exposure.  Unless he asks me to do otherwise, I'll leave this one to
+>> David to pick up.
 >
-> So, if I understood well, of_irq_map_pci() maps the IRQs by reading the
-> device tree and doesn't use the irq_line register (if there is nothing
-> wrong) of the PCI device and doesn't initialize it. My problem is PCI dev=
-ice
-> drivers are using this field (I have read this in the ldd book). I think I
-> have missed something because it seems to work well like this.
+> David usually picks up stuff just before or during merge window,
+> so if you want linux-next exposure, you need to have some extra
+> care.
 
-LDDv3 is several years old now and tends to be x86 centric.  It is
-unlikely that PCI device drivers are reading the IRQ registers
-directly (instead of using the PCI API), and if they are it is
-probably a bug.  If you see code that does otherwise, then please let
-me know.
+I don't necessarily do that on purpose; it just works out that way when 
+I'm busy.
 
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-- 
+dwmw2
