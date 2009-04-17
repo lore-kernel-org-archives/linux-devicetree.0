@@ -1,80 +1,70 @@
-From: Simon Desfarges <simon.desfarges-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org>
-Subject: Re: Interruption on PCI Bus
-Date: Fri, 17 Apr 2009 10:24:25 +0200
-Message-ID: <49E83CB9.8070607@fr.thalesgroup.com>
-References: <49E6E542.5090504@fr.thalesgroup.com>
-	<49E6F14A.9010800@firmworks.com>
-	<fa686aa40904160720s77efa749u56392d7027467a4a@mail.gmail.com>
-	<49E74AC0.4000508@fr.thalesgroup.com>
-	<fa686aa40904160815y5eca6f5fn865762b645903c7a@mail.gmail.com>
+From: Artem Bityutskiy <dedekind@infradead.org>
+Subject: Re: [PATCH 1/3 v3] mtd: physmap_of: Add multiple regions and
+	concatenation support
+Date: Fri, 17 Apr 2009 11:26:18 +0300
+Message-ID: <1239956778.3390.262.camel@localhost.localdomain>
+References: <1239883845-17804-1-git-send-email-sr@denx.de>
+	<fa686aa40904160626k118cea3cvc0db38a2277e45b8@mail.gmail.com>
+	<200904161537.59048.sr@denx.de>
+	<fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
+	<1239889899.3390.216.camel@localhost.localdomain>
+	<alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
+Reply-To: dedekind@infradead.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <fa686aa40904160815y5eca6f5fn865762b645903c7a-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
+In-Reply-To: <alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: linuxppc-dev@ozlabs.org, Stefan Roese <sr@denx.de>, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely a =E9crit :
-> On Thu, Apr 16, 2009 at 9:12 AM, Simon Desfarges
-> <simon.desfarges-s/S/64wAxt+H1Tvi1vFFB9BPR1lH4CV8@public.gmane.org> wrote:
->>
->> Grant Likely a =E9crit :
->>> On Thu, Apr 16, 2009 at 2:50 AM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrot=
-e:
->>>> Sorry for being so vague.  As the person who originally devised this
->>>> interrupt tree stuff, I'm pretty sure about the intention, but much le=
-ss
->>>> sure about what specific versions of Linux and U-Boot actually do.
->>>>  Hopefully someone else can give you a definitive answer about that.
->>> U-Boot doesn't really do anything with interrupts.  It usually just
->>> polls everything.
->>>
->>> Linux arch/powerpc does walk the device tree to get irq routing and
->>> resolve to a Linux-internal virtual IRQ number.  I'm pretty sure that
->>> the IRQ registers are normally ignored unless something goes wrong
->>> with parsing the tree.  See arch/powerpc/kernel/pci-common.c and
->>> search for of_irq_map_pci().
->>>
->>> g.
->>>
->> OK, thank you very much for your answers, you are very helpful for a new=
-bie
->> like me.
->>
->> So, if I understood well, of_irq_map_pci() maps the IRQs by reading the
->> device tree and doesn't use the irq_line register (if there is nothing
->> wrong) of the PCI device and doesn't initialize it. My problem is PCI de=
-vice
->> drivers are using this field (I have read this in the ldd book). I think=
- I
->> have missed something because it seems to work well like this.
-> =
-
-> LDDv3 is several years old now and tends to be x86 centric.  It is
-> unlikely that PCI device drivers are reading the IRQ registers
-> directly (instead of using the PCI API), and if they are it is
-> probably a bug.  If you see code that does otherwise, then please let
-> me know.
-> =
-
-> g.
-> =
-
-
-I continue my investigations, it could be a little bit long because I'm =
-
-waiting for a new board...
-
-Thank you very much,
-Simon Desfarges
+T24gVGh1LCAyMDA5LTA0LTE2IGF0IDE5OjM4ICswMTAwLCBEYXZpZCBXb29kaG91c2Ugd3JvdGU6
+Cj4gT24gVGh1LCAxNiBBcHIgMjAwOSwgQXJ0ZW0gQml0eXV0c2tpeSB3cm90ZToKPiAKPiA+IE9u
+IFRodSwgMjAwOS0wNC0xNiBhdCAwNzo0NiAtMDYwMCwgR3JhbnQgTGlrZWx5IHdyb3RlOgo+ID4+
+IE9uIFRodSwgQXByIDE2LCAyMDA5IGF0IDc6MzcgQU0sIFN0ZWZhbiBSb2VzZSA8c3JAZGVueC5k
+ZT4gd3JvdGU6Cj4gPj4+IE9uIFRodXJzZGF5IDE2IEFwcmlsIDIwMDksIEdyYW50IExpa2VseSB3
+cm90ZToKPiA+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUm9lc2UgPHNyQGRlbnguZGU+Cj4g
+Pj4+Pj4gUmV2aWV3ZC1ieTogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNh
+Pgo+ID4+Pj4KPiA+Pj4+IFl1cCwgc3RpbGwgbG9va3MgZ29vZCB0byBtZS4gIFdoYXQgYm9hcmRz
+IGhhcyB0aGlzIGJlZW4gdGVzdGVkIG9uPwo+ID4+Pgo+ID4+PiBJIHRlc3RlZCB0aGlzIHZlcnNp
+b24gb24gUFBDNDA1RVggS2lsYXVlYSBlcXVpcHBlZCBvbmx5IG9uZSAic3RhbmRhcmQiCj4gPj4+
+IFNwYW5zaW9uIFMyOUdMNTEyIE5PUiBjaGlwLiBBbmQgYSBzbGlnaHRseSBtb2RpZmllZCB2ZXJz
+aW9uIG9uIGFuIE1QQzgzNjAKPiA+Pj4gYm9hcmQgKGttZXRlcjEpIHdoaWNoIGlzIGVxdWlwcGVk
+IHdpdGggdGhlIEludGVsIFAzMCBwYXJ0IG1lbnRpb25lZCBpbiB0aGUKPiA+Pj4gYmluZGluZ3Mg
+ZGVzY3JpcHRpb24uIFNsaWdodGx5IG1vZGlmaWVkIHNpbmNlIHRoaXMgYm9hcmQgc3VwcG9ydCBp
+cyBub3QgeWV0Cj4gPj4+IHB1c2hlZCB1cHN0cmVhbSBhbmQgY3VycmVudGx5IHVzaW5nIHYyLjYu
+MjggKHBoeXNtYXBfb2YuYyBoYXMgcmVjZWl2ZWQgbWlub3IKPiA+Pj4gbW9kaWZpY2F0aW9ucyBh
+ZnRlciAyLjYuMjggcmVsZWFzZSkuCj4gPj4KPiA+PiBPa2F5LiAgSXQgd2lsbCBiZSBnb29kIHRv
+IGdldCB0aGlzIG9uZSBpbnRvIC1uZXh0IGZvciBzb21lIHRlc3RpbmcKPiA+PiBleHBvc3VyZS4g
+IFVubGVzcyBoZSBhc2tzIG1lIHRvIGRvIG90aGVyd2lzZSwgSSdsbCBsZWF2ZSB0aGlzIG9uZSB0
+bwo+ID4+IERhdmlkIHRvIHBpY2sgdXAuCj4gPgo+ID4gRGF2aWQgdXN1YWxseSBwaWNrcyB1cCBz
+dHVmZiBqdXN0IGJlZm9yZSBvciBkdXJpbmcgbWVyZ2Ugd2luZG93LAo+ID4gc28gaWYgeW91IHdh
+bnQgbGludXgtbmV4dCBleHBvc3VyZSwgeW91IG5lZWQgdG8gaGF2ZSBzb21lIGV4dHJhCj4gPiBj
+YXJlLgo+IAo+IEkgZG9uJ3QgbmVjZXNzYXJpbHkgZG8gdGhhdCBvbiBwdXJwb3NlOyBpdCBqdXN0
+IHdvcmtzIG91dCB0aGF0IHdheSB3aGVuIAo+IEknbSBidXN5LgoKWWVhaCwgbm90IHRoYXQgSSB0
+cnkgdG8gYmxhbWUgeW91LCBidXQgSSB0aGluayB3ZSBuZWVkIHRvIGV4cG9zZSBzdHVmZgp0byBs
+aW51eC1uZXh0LiBBbmQgcGVvcGxlIHdobyBzZW5kIHBhdGNoZXMgYXJlIGZydXN0cmF0ZWQgd2hl
+biB0aGVpcgpzdHVmZiBnZXRzIG5vIGF0dGVudGlvbiBmb3IgdmVyeSBsb25nIHRpbWUuCgpJIHVu
+ZGVyc3RhbmQgdGhhdCBNVEQgdHJlZSBtYWludGVuYW5jZSBpcyBhIGJ1cmRlbiwgYW5kIHlvdSBh
+cmUgdmVyeQpidXN5LCBhbmQgbm8gb25lIHBheXMgeW91IGZvciB0aGlzIGpvYi4gVGhhbmtzIGZv
+ciBkb2luZyBpdCEKCkknbSBnb2luZyB0byB0cnkgdG8gaGVscCB5b3UuIEkndmUganVzdCBjcmVh
+dGVkIGEgZ2l0IHRyZWUgd2hlcmUKSSdsbCBwdXNoIHBhdGNoZXMgSSBjb25zaWRlciBPSyBhbmQg
+SSBhcHByb3ZlLiBIZXJlIGl0IGlzOgpnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy91c2Vycy9kZWRl
+a2luZC9sMi1tdGQtMi42LmdpdAoKTXkgaG9wZSBpcyB0aGF0IHlvdSB3b3VsZCBsb29rIGF0IHRo
+YXQgdHJlZSBmcm9tIHRpbWUgdG8gdGltZQphbmQgcHVsbCBpdC4gQXQgbGVhc3QgeW91IG1heSBi
+ZSBzdXJlIEkgbG9va2VkIGF0IHRoZSBwYXRjaGVzIGFuZApkaWQgc29tZSB2YWxpZGF0aW9uLiBU
+aGlzIHNob3VsZCBzYXZlIHlvdXIgdGltZSBhbmQgaGVscCBNVEQKdXNlcnMuCgpUaGFua3MuCgot
+LSAKQmVzdCByZWdhcmRzLApBcnRlbSBCaXR5dXRza2l5ICjQkdC40YLRjtGG0LrQuNC5INCQ0YDR
+gtGR0LwpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpM
+aW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBvemxhYnMub3JnCmh0dHBzOi8v
+b3psYWJzLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
