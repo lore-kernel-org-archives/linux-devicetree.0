@@ -1,18 +1,17 @@
-From: Artem Bityutskiy <dedekind@infradead.org>
+From: Josh Boyer <jwboyer@gmail.com>
 Subject: Re: [PATCH 1/3 v3] mtd: physmap_of: Add multiple regions and
 	concatenation support
-Date: Fri, 17 Apr 2009 11:26:18 +0300
-Message-ID: <1239956778.3390.262.camel@localhost.localdomain>
+Date: Fri, 17 Apr 2009 08:45:06 -0400
+Message-ID: <625fc13d0904170545i25929e98qeaa060b850c67955@mail.gmail.com>
 References: <1239883845-17804-1-git-send-email-sr@denx.de>
 	<fa686aa40904160626k118cea3cvc0db38a2277e45b8@mail.gmail.com>
 	<200904161537.59048.sr@denx.de>
 	<fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
 	<1239889899.3390.216.camel@localhost.localdomain>
 	<alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
-Reply-To: dedekind@infradead.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
 In-Reply-To: <alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
@@ -25,46 +24,26 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 To: David Woodhouse <dwmw2@infradead.org>
-Cc: linuxppc-dev@ozlabs.org, Stefan Roese <sr@denx.de>, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
+Cc: Artem Bityutskiy <dedekind@infradead.org>, linuxppc-dev@ozlabs.org, Stefan Roese <sr@denx.de>, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDA5LTA0LTE2IGF0IDE5OjM4ICswMTAwLCBEYXZpZCBXb29kaG91c2Ugd3JvdGU6
-Cj4gT24gVGh1LCAxNiBBcHIgMjAwOSwgQXJ0ZW0gQml0eXV0c2tpeSB3cm90ZToKPiAKPiA+IE9u
-IFRodSwgMjAwOS0wNC0xNiBhdCAwNzo0NiAtMDYwMCwgR3JhbnQgTGlrZWx5IHdyb3RlOgo+ID4+
-IE9uIFRodSwgQXByIDE2LCAyMDA5IGF0IDc6MzcgQU0sIFN0ZWZhbiBSb2VzZSA8c3JAZGVueC5k
-ZT4gd3JvdGU6Cj4gPj4+IE9uIFRodXJzZGF5IDE2IEFwcmlsIDIwMDksIEdyYW50IExpa2VseSB3
-cm90ZToKPiA+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUm9lc2UgPHNyQGRlbnguZGU+Cj4g
-Pj4+Pj4gUmV2aWV3ZC1ieTogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNh
-Pgo+ID4+Pj4KPiA+Pj4+IFl1cCwgc3RpbGwgbG9va3MgZ29vZCB0byBtZS4gIFdoYXQgYm9hcmRz
-IGhhcyB0aGlzIGJlZW4gdGVzdGVkIG9uPwo+ID4+Pgo+ID4+PiBJIHRlc3RlZCB0aGlzIHZlcnNp
-b24gb24gUFBDNDA1RVggS2lsYXVlYSBlcXVpcHBlZCBvbmx5IG9uZSAic3RhbmRhcmQiCj4gPj4+
-IFNwYW5zaW9uIFMyOUdMNTEyIE5PUiBjaGlwLiBBbmQgYSBzbGlnaHRseSBtb2RpZmllZCB2ZXJz
-aW9uIG9uIGFuIE1QQzgzNjAKPiA+Pj4gYm9hcmQgKGttZXRlcjEpIHdoaWNoIGlzIGVxdWlwcGVk
-IHdpdGggdGhlIEludGVsIFAzMCBwYXJ0IG1lbnRpb25lZCBpbiB0aGUKPiA+Pj4gYmluZGluZ3Mg
-ZGVzY3JpcHRpb24uIFNsaWdodGx5IG1vZGlmaWVkIHNpbmNlIHRoaXMgYm9hcmQgc3VwcG9ydCBp
-cyBub3QgeWV0Cj4gPj4+IHB1c2hlZCB1cHN0cmVhbSBhbmQgY3VycmVudGx5IHVzaW5nIHYyLjYu
-MjggKHBoeXNtYXBfb2YuYyBoYXMgcmVjZWl2ZWQgbWlub3IKPiA+Pj4gbW9kaWZpY2F0aW9ucyBh
-ZnRlciAyLjYuMjggcmVsZWFzZSkuCj4gPj4KPiA+PiBPa2F5LiAgSXQgd2lsbCBiZSBnb29kIHRv
-IGdldCB0aGlzIG9uZSBpbnRvIC1uZXh0IGZvciBzb21lIHRlc3RpbmcKPiA+PiBleHBvc3VyZS4g
-IFVubGVzcyBoZSBhc2tzIG1lIHRvIGRvIG90aGVyd2lzZSwgSSdsbCBsZWF2ZSB0aGlzIG9uZSB0
-bwo+ID4+IERhdmlkIHRvIHBpY2sgdXAuCj4gPgo+ID4gRGF2aWQgdXN1YWxseSBwaWNrcyB1cCBz
-dHVmZiBqdXN0IGJlZm9yZSBvciBkdXJpbmcgbWVyZ2Ugd2luZG93LAo+ID4gc28gaWYgeW91IHdh
-bnQgbGludXgtbmV4dCBleHBvc3VyZSwgeW91IG5lZWQgdG8gaGF2ZSBzb21lIGV4dHJhCj4gPiBj
-YXJlLgo+IAo+IEkgZG9uJ3QgbmVjZXNzYXJpbHkgZG8gdGhhdCBvbiBwdXJwb3NlOyBpdCBqdXN0
-IHdvcmtzIG91dCB0aGF0IHdheSB3aGVuIAo+IEknbSBidXN5LgoKWWVhaCwgbm90IHRoYXQgSSB0
-cnkgdG8gYmxhbWUgeW91LCBidXQgSSB0aGluayB3ZSBuZWVkIHRvIGV4cG9zZSBzdHVmZgp0byBs
-aW51eC1uZXh0LiBBbmQgcGVvcGxlIHdobyBzZW5kIHBhdGNoZXMgYXJlIGZydXN0cmF0ZWQgd2hl
-biB0aGVpcgpzdHVmZiBnZXRzIG5vIGF0dGVudGlvbiBmb3IgdmVyeSBsb25nIHRpbWUuCgpJIHVu
-ZGVyc3RhbmQgdGhhdCBNVEQgdHJlZSBtYWludGVuYW5jZSBpcyBhIGJ1cmRlbiwgYW5kIHlvdSBh
-cmUgdmVyeQpidXN5LCBhbmQgbm8gb25lIHBheXMgeW91IGZvciB0aGlzIGpvYi4gVGhhbmtzIGZv
-ciBkb2luZyBpdCEKCkknbSBnb2luZyB0byB0cnkgdG8gaGVscCB5b3UuIEkndmUganVzdCBjcmVh
-dGVkIGEgZ2l0IHRyZWUgd2hlcmUKSSdsbCBwdXNoIHBhdGNoZXMgSSBjb25zaWRlciBPSyBhbmQg
-SSBhcHByb3ZlLiBIZXJlIGl0IGlzOgpnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy91c2Vycy9kZWRl
-a2luZC9sMi1tdGQtMi42LmdpdAoKTXkgaG9wZSBpcyB0aGF0IHlvdSB3b3VsZCBsb29rIGF0IHRo
-YXQgdHJlZSBmcm9tIHRpbWUgdG8gdGltZQphbmQgcHVsbCBpdC4gQXQgbGVhc3QgeW91IG1heSBi
-ZSBzdXJlIEkgbG9va2VkIGF0IHRoZSBwYXRjaGVzIGFuZApkaWQgc29tZSB2YWxpZGF0aW9uLiBU
-aGlzIHNob3VsZCBzYXZlIHlvdXIgdGltZSBhbmQgaGVscCBNVEQKdXNlcnMuCgpUaGFua3MuCgot
-LSAKQmVzdCByZWdhcmRzLApBcnRlbSBCaXR5dXRza2l5ICjQkdC40YLRjtGG0LrQuNC5INCQ0YDR
-gtGR0LwpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpM
-aW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBvemxhYnMub3JnCmh0dHBzOi8v
-b3psYWJzLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On Thu, Apr 16, 2009 at 2:38 PM, David Woodhouse <dwmw2@infradead.org> wrot=
+e:
+> On Thu, 16 Apr 2009, Artem Bityutskiy wrote:
+>
+>> On Thu, 2009-04-16 at 07:46 -0600, Grant Likely wrote:
+>>> Okay. =A0It will be good to get this one into -next for some testing
+>>> exposure. =A0Unless he asks me to do otherwise, I'll leave this one to
+>>> David to pick up.
+>>
+>> David usually picks up stuff just before or during merge window,
+>> so if you want linux-next exposure, you need to have some extra
+>> care.
+>
+> I don't necessarily do that on purpose; it just works out that way when I=
+'m
+> busy.
+
+Are you ever _not_ busy? ;)
+
+josh
