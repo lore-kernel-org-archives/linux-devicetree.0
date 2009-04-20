@@ -1,19 +1,14 @@
-From: Josh Boyer <jwboyer@gmail.com>
-Subject: Re: [PATCH 1/3 v3] mtd: physmap_of: Add multiple regions and
-	concatenation support
-Date: Fri, 17 Apr 2009 08:45:06 -0400
-Message-ID: <625fc13d0904170545i25929e98qeaa060b850c67955@mail.gmail.com>
-References: <1239883845-17804-1-git-send-email-sr@denx.de>
-	<fa686aa40904160626k118cea3cvc0db38a2277e45b8@mail.gmail.com>
-	<200904161537.59048.sr@denx.de>
-	<fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
-	<1239889899.3390.216.camel@localhost.localdomain>
-	<alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v3 0/5] i2c: i2c-mpc: make I2C bus speed configurable
+Date: Mon, 20 Apr 2009 11:01:10 +0200
+Message-ID: <49EC39D6.8020404@grandegger.com>
+References: <20090407082052.477328750@denx.de>	<53B42D49-C040-442E-8448-7BC3190220A5@kernel.crashing.org>	<F4E3E1FF-C544-460A-AC27-DB9501C13ED3@kernel.crashing.org>	<49DC515F.3040100@grandegger.com>	<E9E24C93-F147-49F0-9FBE-FCE4883D11BF@kernel.crashing.org>
+	<49DD0144.7050902@grandegger.com> <49DDC718.8000706@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <alpine.LFD.2.00.0904161936090.12608@baythorne.infradead.org>
+In-Reply-To: <49DDC718.8000706@grandegger.com>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
@@ -23,27 +18,52 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Artem Bityutskiy <dedekind@infradead.org>, linuxppc-dev@ozlabs.org, Stefan Roese <sr@denx.de>, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
+To: Ben Dooks <ben-linux@fluff.org>
+Cc: Linux/PPC Development <linuxppc-dev@ozlabs.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2009 at 2:38 PM, David Woodhouse <dwmw2@infradead.org> wrot=
-e:
-> On Thu, 16 Apr 2009, Artem Bityutskiy wrote:
->
->> On Thu, 2009-04-16 at 07:46 -0600, Grant Likely wrote:
->>> Okay. =A0It will be good to get this one into -next for some testing
->>> exposure. =A0Unless he asks me to do otherwise, I'll leave this one to
->>> David to pick up.
->>
->> David usually picks up stuff just before or during merge window,
->> so if you want linux-next exposure, you need to have some extra
->> care.
->
-> I don't necessarily do that on purpose; it just works out that way when I=
-'m
-> busy.
+Hi Ben,
 
-Are you ever _not_ busy? ;)
+Wolfgang Grandegger wrote:
+> Wolfgang Grandegger wrote:
+>> Kumar Gala wrote:
+>>> On Apr 8, 2009, at 2:25 AM, Wolfgang Grandegger wrote:
+>>>
+>>>>> So I'm a bit concerned with the output we now get:
+>>>>>
+>>>>> mpc-i2c fffe03000.i2c: clock 0 Hz (dfsrr=16 fdr=49)
+>>>>>
+>>>>> why 0? is that right?
+>>>> This is the backward compatibility mode using hard-coded FDR values. The
+>>>> output is missleading, I agree.
+>>>>
+>>>> Wolfgang.
+>>> Can the output be fixed.  0 Hz seemed bad to me.
+>> Of course. No info message will be printed for the legacy case
+>> like it was with the old driver version. I just realized a bug in the
+>> MPC52xx part. Will send patches tomorrow, after some more thorough testing.
+> 
+> The patch below fixes both issues. Ben, could you please apply it. Sorry for
+> the inconvenience caused.
+> 
+> Thanks,
+> 
+> Wolfgang.
+> 
+> 
+> 
+> [PATCH] i2c: i2c-mpc: bug fix for MPC52xx clock setting and printout
+> 
+> The clock setting did not work for the MPC52xx due to a stupid bug.
+> Furthermore, the dev info output "clock=0" for old device trees was
+> misleading. This patch fixes both issues.
+> 
+> Signed-off-by: Wolfgang Grandegger <wg@grandegger.com>
 
-josh
+Could you please apply this bug-fix for the MPC driver for 2.6.30.
+
+  http://marc.info/?l=linux-i2c&m=123927120910293&w=2
+
+Thanks,
+
+Wolfgang.
