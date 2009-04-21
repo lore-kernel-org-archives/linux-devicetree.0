@@ -1,94 +1,56 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 0/5] i2c: i2c-mpc: make I2C bus speed configurable
-Date: Mon, 20 Apr 2009 07:26:14 -0600
-Message-ID: <fa686aa40904200626s71e2891u6148471c6682d08e@mail.gmail.com>
-References: <20090407082052.477328750@denx.de>
-	<53B42D49-C040-442E-8448-7BC3190220A5@kernel.crashing.org>
-	<F4E3E1FF-C544-460A-AC27-DB9501C13ED3@kernel.crashing.org>
-	<49DC515F.3040100@grandegger.com>
-	<E9E24C93-F147-49F0-9FBE-FCE4883D11BF@kernel.crashing.org>
-	<49DD0144.7050902@grandegger.com> <49DDC718.8000706@grandegger.com>
-	<49EC39D6.8020404@grandegger.com>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [Patch] MPC Adapter: read class attribute from device tree
+Date: Tue, 21 Apr 2009 13:26:02 +0200
+Message-ID: <49EDAD4A.4070200@grandegger.com>
+References: <49ED6AD3.2060808@gmx.de>	<49ED6F03.5050107@grandegger.com>	<49ED9132.9050806@gmx.de>	<49EDA185.7040206@grandegger.com> <20090421130134.1e82a078@hyperion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <49EC39D6.8020404@grandegger.com>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Linux/PPC Development <linuxppc-dev@ozlabs.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-i2c@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20090421130134.1e82a078-ig7AzVSIIG7kN2dkZ6Wm7A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Cc: Michael Lawnick <ml.lawnick-Mmb7MZpHnFY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Sang, Wolfram" <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2009 at 3:01 AM, Wolfgang Grandegger <wg@grandegger.com> wr=
-ote:
-> Hi Ben,
->
-> Wolfgang Grandegger wrote:
->> Wolfgang Grandegger wrote:
->>> Kumar Gala wrote:
->>>> On Apr 8, 2009, at 2:25 AM, Wolfgang Grandegger wrote:
->>>>
->>>>>> So I'm a bit concerned with the output we now get:
->>>>>>
->>>>>> mpc-i2c fffe03000.i2c: clock 0 Hz (dfsrr=3D16 fdr=3D49)
->>>>>>
->>>>>> why 0? is that right?
->>>>> This is the backward compatibility mode using hard-coded FDR values. =
-The
->>>>> output is missleading, I agree.
->>>>>
->>>>> Wolfgang.
->>>> Can the output be fixed. =A00 Hz seemed bad to me.
->>> Of course. No info message will be printed for the legacy case
->>> like it was with the old driver version. I just realized a bug in the
->>> MPC52xx part. Will send patches tomorrow, after some more thorough test=
-ing.
+Jean Delvare wrote:
+> On Tue, 21 Apr 2009 12:35:49 +0200, Wolfgang Grandegger wrote:
+>> Michael Lawnick wrote:
+>>> Wolfgang Grandegger said the following:
+>>>> Do we really need that? Probing is dangerous and not necessary. Does it
+>>>> not work with a proper DTS entry? But maybe I have missed something?
+>>> Our current and our next system consists of two flavors of the same
+>>> board with different devices. To minimize maintenance and testing we use
+>>> a reduced kernel and load the needed modules at runtime. Furthermore we
+>>> will have to handle hot-plugged I2C-devices. Whether this strategy is
+>>> best could be discussed in another thread but is rather OT in this
+>>> mailing list. Nevertheless loading modules at runtime is legal and
+>>> generally supported by LINUX.
+>>>
+>>> Defining all possible (I2C-)devices in DTS would give a mess. E.g. on
+>>> one board there will be ~30 temperature sensors, on the other none.
+>> The legacy device probing has it's limitations and I doubt that it will
+>> be able to find 30 DTT devices properly. E.g. the legacy probing
+>> algorithm is not able to distinguish between a LM75 and DS75. Let's
+>> first try to find out why it does not work as expected with the DTS entry.
 >>
->> The patch below fixes both issues. Ben, could you please apply it. Sorry=
- for
->> the inconvenience caused.
->>
->> Thanks,
->>
->> Wolfgang.
->>
->>
->>
->> [PATCH] i2c: i2c-mpc: bug fix for MPC52xx clock setting and printout
->>
->> The clock setting did not work for the MPC52xx due to a stupid bug.
->> Furthermore, the dev info output "clock=3D0" for old device trees was
->> misleading. This patch fixes both issues.
->>
->> Signed-off-by: Wolfgang Grandegger <wg@grandegger.com>
->
-> Could you please apply this bug-fix for the MPC driver for 2.6.30.
+>>> As every DTS entry will force a sysFs subdirectory there would be a
+>>> bunch of functionless directories - rather ugly.
+>> Hopefully not. They will be created when the probing was successful, I
+>> assume.
+> 
+> No, device creation is unconditional. It is assumed that the DTS file
+> author knew what he/she was doing.
+> 
+> There was a discussion about adding a flag to state the "may not be
+> present" nature of devices, which would result in a probe before
+> instantiating the device (on success), but it wasn't implemented yet. I
+> have no objection is this mechanism is deemed useful.
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Ah, I see. If the software can reliably find out if a device exists it
+should probe for it. It would be useful to limit the amount of required
+DTS files for the hardware variants. Often the RTC or other I2C devices
+are optional. I added the Deviceterr-disccuss ML to the CC to reach the
+the device-tree gurus.
 
->
-> =A0http://marc.info/?l=3Dlinux-i2c&m=3D123927120910293&w=3D2
->
-> Thanks,
->
-> Wolfgang.
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev@ozlabs.org
-> https://ozlabs.org/mailman/listinfo/linuxppc-dev
->
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Wolfgang.
