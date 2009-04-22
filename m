@@ -1,56 +1,134 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [Patch] MPC Adapter: read class attribute from device tree
-Date: Tue, 21 Apr 2009 13:26:02 +0200
-Message-ID: <49EDAD4A.4070200@grandegger.com>
-References: <49ED6AD3.2060808@gmx.de>	<49ED6F03.5050107@grandegger.com>	<49ED9132.9050806@gmx.de>	<49EDA185.7040206@grandegger.com> <20090421130134.1e82a078@hyperion.delvare>
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [RFC][PATCH] powerpc/86xx: Add binding for LAWs and MCM
+Date: Wed, 22 Apr 2009 13:15:53 -0500
+Message-ID: <1240424153-11339-1-git-send-email-galak@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20090421130134.1e82a078-ig7AzVSIIG7kN2dkZ6Wm7A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-Cc: Michael Lawnick <ml.lawnick-Mmb7MZpHnFY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Sang, Wolfram" <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jean Delvare wrote:
-> On Tue, 21 Apr 2009 12:35:49 +0200, Wolfgang Grandegger wrote:
->> Michael Lawnick wrote:
->>> Wolfgang Grandegger said the following:
->>>> Do we really need that? Probing is dangerous and not necessary. Does it
->>>> not work with a proper DTS entry? But maybe I have missed something?
->>> Our current and our next system consists of two flavors of the same
->>> board with different devices. To minimize maintenance and testing we use
->>> a reduced kernel and load the needed modules at runtime. Furthermore we
->>> will have to handle hot-plugged I2C-devices. Whether this strategy is
->>> best could be discussed in another thread but is rather OT in this
->>> mailing list. Nevertheless loading modules at runtime is legal and
->>> generally supported by LINUX.
->>>
->>> Defining all possible (I2C-)devices in DTS would give a mess. E.g. on
->>> one board there will be ~30 temperature sensors, on the other none.
->> The legacy device probing has it's limitations and I doubt that it will
->> be able to find 30 DTT devices properly. E.g. the legacy probing
->> algorithm is not able to distinguish between a LM75 and DS75. Let's
->> first try to find out why it does not work as expected with the DTS entry.
->>
->>> As every DTS entry will force a sysFs subdirectory there would be a
->>> bunch of functionless directories - rather ugly.
->> Hopefully not. They will be created when the probing was successful, I
->> assume.
-> 
-> No, device creation is unconditional. It is assumed that the DTS file
-> author knew what he/she was doing.
-> 
-> There was a discussion about adding a flag to state the "may not be
-> present" nature of devices, which would result in a probe before
-> instantiating the device (on success), but it wasn't implemented yet. I
-> have no objection is this mechanism is deemed useful.
+The first 4k region of CCSR space is well defined for local access
+windows, CCSRBAR, etc.  The second 4k region is well defined as
+register for configuring and getting errors for the MPX coherency
+module.
 
-Ah, I see. If the software can reliably find out if a device exists it
-should probe for it. It would be useful to limit the amount of required
-DTS files for the hardware variants. Often the RTC or other I2C devices
-are optional. I added the Deviceterr-disccuss ML to the CC to reach the
-the device-tree gurus.
+Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+Please review.  Once we close on this I intend to mimic this for the 85xx based
+chips.
 
-Wolfgang.
+- k
+
+ Documentation/powerpc/dts-bindings/fsl/mcm.txt |   64 ++++++++++++++++++++++++
+ arch/powerpc/boot/dts/mpc8641_hpcn.dts         |   13 +++++
+ 2 files changed, 77 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/fsl/mcm.txt
+
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mcm.txt b/Documentation/powerpc/dts-bindings/fsl/mcm.txt
+new file mode 100644
+index 0000000..4ceda9b
+--- /dev/null
++++ b/Documentation/powerpc/dts-bindings/fsl/mcm.txt
+@@ -0,0 +1,64 @@
++=====================================================================
++MPX LAW & Coherency Module Device Tree Binding
++Copyright (C) 2009 Freescale Semiconductor Inc.
++=====================================================================
++
++Local Access Window (LAW) Node
++
++The LAW node represents the region of CCSR space where local access
++windows are configured.  For MCM based devices this is the first 4k
++of CCSR space that includes CCSRBAR, ALTCBAR, ALTCAR, BPTR, and some
++number of local access windows as specified by fsl,num-laws.
++
++PROPERTIES
++
++  - compatible
++      Usage: required
++      Value type: <string>
++      Definition: Must include "fsl,mcm-law"
++
++  - reg
++      Usage: required
++      Value type: <prop-encoded-array>
++      Definition: A standard property.  The value specifies the
++          physical address offset and length of the CCSR space
++          registers.
++
++  - fsl,num-laws
++      Usage: required
++      Value type: <u32>
++      Definition: The value specifies the number of local access
++          windows for this device.
++
++=====================================================================
++
++MPX Coherency Module Node
++
++The MPX LAW node represents the region of CCSR space where MCM config
++and error reporting registers exist, this is the second 4k (0x1000)
++of CCSR space.
++
++PROPERTIES
++
++  - compatible
++      Usage: required
++      Value type: <string>
++      Definition: Must include "fsl,CHIP-mcm", "fsl,mcm" where
++      CHIP is the processor (mpc8641, mpc8610, etc.)
++
++  - reg
++      Usage: required
++      Value type: <prop-encoded-array>
++      Definition: A standard property.  The value specifies the
++          physical address offset and length of the CCSR space
++          registers.
++
++   - interrupts
++      Usage: required
++      Value type: <prop-encoded-array>
++
++   - interrupt-parent
++      Usage: required
++      Value type: <phandle>
++
++=====================================================================
+diff --git a/arch/powerpc/boot/dts/mpc8641_hpcn.dts b/arch/powerpc/boot/dts/mpc8641_hpcn.dts
+index 51852e6..8bcccd7 100644
+--- a/arch/powerpc/boot/dts/mpc8641_hpcn.dts
++++ b/arch/powerpc/boot/dts/mpc8641_hpcn.dts
+@@ -117,6 +117,19 @@
+ 		reg = <0xffe00000 0x00001000>;	// CCSRBAR
+ 		bus-frequency = <0>;
+ 
++		mcm-law@0 {
++			compatible = "fsl,mcm-law";
++			reg = <0x0 0x1000>;
++			fsl,num-laws = <10>;
++		};
++
++		mcm@1000 {
++			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
++			reg = <0x1000 0x1000>;
++			interrupts = <17 2>;
++			interrupt-parent = <&mpic>;
++		};
++
+ 		i2c@3000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-- 
+1.6.0.6
