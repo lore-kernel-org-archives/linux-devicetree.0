@@ -1,205 +1,104 @@
-From: Kumar Gala <galak@kernel.crashing.org>
-Subject: [PATCH 2/2] powerpc/86xx: Add new LAW & MCM device tree nodes for all
-	86xx systems
-Date: Mon, 27 Apr 2009 12:59:48 -0500
-Message-ID: <1240855188-24879-2-git-send-email-galak@kernel.crashing.org>
-References: <1240855188-24879-1-git-send-email-galak@kernel.crashing.org>
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [PATCH 1/2] powerpc/86xx: Add binding for LAWs and MCM
+Date: Mon, 27 Apr 2009 12:59:47 -0500
+Message-ID: <1240855188-24879-1-git-send-email-galak@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <1240855188-24879-1-git-send-email-galak@kernel.crashing.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: linuxppc-dev@ozlabs.org
-Cc: devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
----
- arch/powerpc/boot/dts/gef_ppc9a.dts        |   13 +++++++++++++
- arch/powerpc/boot/dts/gef_sbc310.dts       |   13 +++++++++++++
- arch/powerpc/boot/dts/gef_sbc610.dts       |   13 +++++++++++++
- arch/powerpc/boot/dts/mpc8610_hpcd.dts     |   13 +++++++++++++
- arch/powerpc/boot/dts/mpc8641_hpcn.dts     |   13 +++++++++++++
- arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts |   13 +++++++++++++
- arch/powerpc/boot/dts/sbc8641d.dts         |   13 +++++++++++++
- 7 files changed, 91 insertions(+), 0 deletions(-)
+The first 4k region of CCSR space is well defined for local access
+windows, CCSRBAR, etc.  The second 4k region is well defined as
+register for configuring and getting errors for the MPX coherency
+module.
 
-diff --git a/arch/powerpc/boot/dts/gef_ppc9a.dts b/arch/powerpc/boot/dts/gef_ppc9a.dts
-index d47ad07..cbf135c 100644
---- a/arch/powerpc/boot/dts/gef_ppc9a.dts
-+++ b/arch/powerpc/boot/dts/gef_ppc9a.dts
-@@ -166,6 +166,19 @@
- 		reg = <0xfef00000 0x100000>;	// CCSRBAR 1M
- 		bus-frequency = <33333333>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
+Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+ Documentation/powerpc/dts-bindings/fsl/mcm.txt |   64 ++++++++++++++++++++++++
+ 1 files changed, 64 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/fsl/mcm.txt
+
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mcm.txt b/Documentation/powerpc/dts-bindings/fsl/mcm.txt
+new file mode 100644
+index 0000000..4ceda9b
+--- /dev/null
++++ b/Documentation/powerpc/dts-bindings/fsl/mcm.txt
+@@ -0,0 +1,64 @@
++=====================================================================
++MPX LAW & Coherency Module Device Tree Binding
++Copyright (C) 2009 Freescale Semiconductor Inc.
++=====================================================================
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++Local Access Window (LAW) Node
 +
- 		i2c1: i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/gef_sbc310.dts b/arch/powerpc/boot/dts/gef_sbc310.dts
-index 1569117..155776c 100644
---- a/arch/powerpc/boot/dts/gef_sbc310.dts
-+++ b/arch/powerpc/boot/dts/gef_sbc310.dts
-@@ -166,6 +166,19 @@
- 		reg = <0xfef00000 0x100000>;	// CCSRBAR 1M
- 		bus-frequency = <33333333>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
++The LAW node represents the region of CCSR space where local access
++windows are configured.  For MCM based devices this is the first 4k
++of CCSR space that includes CCSRBAR, ALTCBAR, ALTCAR, BPTR, and some
++number of local access windows as specified by fsl,num-laws.
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++PROPERTIES
 +
- 		i2c1: i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/gef_sbc610.dts b/arch/powerpc/boot/dts/gef_sbc610.dts
-index 6582dbd..6898d7e 100644
---- a/arch/powerpc/boot/dts/gef_sbc610.dts
-+++ b/arch/powerpc/boot/dts/gef_sbc610.dts
-@@ -131,6 +131,19 @@
- 		reg = <0xfef00000 0x100000>;	// CCSRBAR 1M
- 		bus-frequency = <33333333>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
++  - compatible
++      Usage: required
++      Value type: <string>
++      Definition: Must include "fsl,mcm-law"
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++  - reg
++      Usage: required
++      Value type: <prop-encoded-array>
++      Definition: A standard property.  The value specifies the
++          physical address offset and length of the CCSR space
++          registers.
 +
- 		i2c1: i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/mpc8610_hpcd.dts b/arch/powerpc/boot/dts/mpc8610_hpcd.dts
-index 4f081bb..252db6e 100644
---- a/arch/powerpc/boot/dts/mpc8610_hpcd.dts
-+++ b/arch/powerpc/boot/dts/mpc8610_hpcd.dts
-@@ -115,6 +115,19 @@
- 		reg = <0xe0000000 0x1000>;
- 		bus-frequency = <0>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
++  - fsl,num-laws
++      Usage: required
++      Value type: <u32>
++      Definition: The value specifies the number of local access
++          windows for this device.
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8610-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++=====================================================================
 +
- 		i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/mpc8641_hpcn.dts b/arch/powerpc/boot/dts/mpc8641_hpcn.dts
-index 51852e6..8bcccd7 100644
---- a/arch/powerpc/boot/dts/mpc8641_hpcn.dts
-+++ b/arch/powerpc/boot/dts/mpc8641_hpcn.dts
-@@ -117,6 +117,19 @@
- 		reg = <0xffe00000 0x00001000>;	// CCSRBAR
- 		bus-frequency = <0>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
++MPX Coherency Module Node
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++The MPX LAW node represents the region of CCSR space where MCM config
++and error reporting registers exist, this is the second 4k (0x1000)
++of CCSR space.
 +
- 		i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts b/arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts
-index b5dc942..d4c909d 100644
---- a/arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts
-+++ b/arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts
-@@ -110,6 +110,19 @@
- 		reg = <0x0f 0xffe00000 0x0 0x00001000>;	// CCSRBAR
- 		bus-frequency = <0>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
++PROPERTIES
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++  - compatible
++      Usage: required
++      Value type: <string>
++      Definition: Must include "fsl,CHIP-mcm", "fsl,mcm" where
++      CHIP is the processor (mpc8641, mpc8610, etc.)
 +
- 		i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/sbc8641d.dts b/arch/powerpc/boot/dts/sbc8641d.dts
-index cfd5782..aa8f931 100644
---- a/arch/powerpc/boot/dts/sbc8641d.dts
-+++ b/arch/powerpc/boot/dts/sbc8641d.dts
-@@ -129,6 +129,19 @@
- 		reg = <0xf8000000 0x00001000>;	// CCSRBAR
- 		bus-frequency = <0>;
- 
-+		mcm-law@0 {
-+			compatible = "fsl,mcm-law";
-+			reg = <0x0 0x1000>;
-+			fsl,num-laws = <10>;
-+		};
++  - reg
++      Usage: required
++      Value type: <prop-encoded-array>
++      Definition: A standard property.  The value specifies the
++          physical address offset and length of the CCSR space
++          registers.
 +
-+		mcm@1000 {
-+			compatible = "fsl,mpc8641-mcm", "fsl,mcm";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <17 2>;
-+			interrupt-parent = <&mpic>;
-+		};
++   - interrupts
++      Usage: required
++      Value type: <prop-encoded-array>
 +
- 		i2c@3000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++   - interrupt-parent
++      Usage: required
++      Value type: <phandle>
++
++=====================================================================
 -- 
 1.6.0.6
