@@ -1,51 +1,37 @@
-From: Martyn Welch <martyn.welch@gefanuc.com>
-Subject: Re: [PATCH 2/2] powerpc/86xx: Add new LAW & MCM device tree nodes
-	for all	86xx systems
-Date: Tue, 28 Apr 2009 10:19:50 +0100
-Message-ID: <49F6CA36.3040403@gefanuc.com>
-References: <1240855188-24879-1-git-send-email-galak@kernel.crashing.org>
-	<1240855188-24879-2-git-send-email-galak@kernel.crashing.org>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 2/2] powerpc/85xx: Add new LAW & MCM device tree nodes for
+	all85xx systems
+Date: Tue, 28 Apr 2009 07:01:19 -0500
+Message-ID: <6AA46857-034B-4D2D-8194-DA8B6CF288C6@kernel.crashing.org>
+References: <1240864725-29003-1-git-send-email-galak@kernel.crashing.org>
+	<1240864725-29003-2-git-send-email-galak@kernel.crashing.org>
+	<D7CCA83BB0796C49BC0BB53B6AB1208928CBA5@zch01exm21.fsl.freescale.net>
+Mime-Version: 1.0 (Apple Message framework v930.3)
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <1240855188-24879-2-git-send-email-galak@kernel.crashing.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: Kumar Gala <galak@kernel.crashing.org>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <D7CCA83BB0796C49BC0BB53B6AB1208928CBA5-bKEhWGtIRULiD3AT8lUqWFjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Liu Dave-R63238 <DaveLiu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Kumar Gala wrote:
-> Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
-> ---
->  arch/powerpc/boot/dts/gef_ppc9a.dts        |   13 +++++++++++++
->  arch/powerpc/boot/dts/gef_sbc310.dts       |   13 +++++++++++++
->  arch/powerpc/boot/dts/gef_sbc610.dts       |   13 +++++++++++++
->  arch/powerpc/boot/dts/mpc8610_hpcd.dts     |   13 +++++++++++++
->  arch/powerpc/boot/dts/mpc8641_hpcn.dts     |   13 +++++++++++++
->  arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts |   13 +++++++++++++
->  arch/powerpc/boot/dts/sbc8641d.dts         |   13 +++++++++++++
->  7 files changed, 91 insertions(+), 0 deletions(-)
->   
-Am I right in thinking that this patch doesn't (as yet) enable any added 
-functionality, or have I missed something?
 
-I assume this is destined for next (as it relies on Becky's 
-"powerpc/86xx: Add 36-bit device tree for mpc8641hpcn"), assuming this, 
-fwiw, seems good to me.
+On Apr 28, 2009, at 1:41 AM, Liu Dave-R63238 wrote:
 
-Martyn
+>> Subject: [PATCH 2/2] powerpc/85xx: Add new LAW & MCM device
+>> tree nodes for all85xx systems
+>
+> One nit/typo, the tittle of the two patches should be "ECM"
 
--- 
-Martyn Welch MEng MPhil MIET (Principal Software Engineer)   T:+44(0)1327322748
-GE Fanuc Intelligent Platforms Ltd,        |Registered in England and Wales
-Tove Valley Business Park, Towcester,      |(3828642) at 100 Barbirolli Square,
-Northants, NN12 6PF, UK T:+44(0)1327359444 |Manchester,M2 3AB  VAT:GB 927559189
+oops, thanks for catching that ;)
+
+- k
