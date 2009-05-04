@@ -1,13 +1,9 @@
-From: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [Patch] MPC Adapter: read class attribute from device tree
-Date: Tue, 28 Apr 2009 18:21:19 +0200
-Message-ID: <m2hc08n400.fsf@ohwell.denx.de>
-References: <49ED6AD3.2060808@gmx.de> <49ED6F03.5050107@grandegger.com>
-	<49ED9132.9050806@gmx.de> <49EDA185.7040206@grandegger.com>
-	<20090421130134.1e82a078@hyperion.delvare>
-	<49EDAD4A.4070200@grandegger.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: esdhc binding compatiable
+Date: Mon, 4 May 2009 08:54:28 -0500
+Message-ID: <54E4E37F-460A-4BB4-9DE1-670360D649A6@kernel.crashing.org>
+Mime-Version: 1.0 (Apple Message framework v930.3)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
@@ -19,21 +15,29 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Phillips Kim-R1AAHA <Kim.Phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfgang,
+There has been some discussion on various lists about what the binding  
+doc says w/regards to compat binding for eSHDC on 83xx, 85xx, pxxxx.
 
-> I added the Deviceterr-disccuss ML to the CC to reach the the
-              ~~~~~~~~~~
-> device-tree gurus.
+My thinking is that we wanted to avoid "fsl,eshdc" as possibly being  
+to generic (some theory that esdhc might be same or similar controller  
+on iMX devices from FSL).  If that's the case I'm thinking something  
+like:
 
-Freud or "nickname among friends"? :)
+fsl,pq-eshdc	(covers 83xx, 85xx family)
+fsl,qoirq-esdhc (covers any new p2xxx, p4xxx, etc..)
 
-Cheers
-  Detlev
+and if imx needs it
 
---
-DENX Software Engineering GmbH,      MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich,  Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-40 Fax: (+49)-8142-66989-80 Email: dzu-ynQEQJNshbs@public.gmane.org
+fsl,imx-esdhc
+
+this would be the base compatible.  In addition to that we've  
+discussed having a fsl,pq-eshdc-vX.Y compat to match the IP version in  
+the specific SoC.
+
+thoughts?
+
+- k
