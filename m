@@ -1,286 +1,47 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: [net-next-2.6 PATCH] can: SJA1000: generic OF platform bus driver
-Date: Wed, 20 May 2009 19:06:30 +0200
-Message-ID: <4A143896.7050200@grandegger.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: dtc build failures on OS X
+Date: Thu, 21 May 2009 09:08:23 +1000
+Message-ID: <20090520230823.GB10487@yookeroo.seuss>
+References: <ed82fe3e0905191908v8c5fcdft953c4e1ba7969f2a@mail.gmail.com>
+	<C44AFDDE-9BB1-4914-8B26-5816D83B909A@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Linux Netdev List <netdev@vger.kernel.org>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, linuxppc-dev <Linuxppc-dev@ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <C44AFDDE-9BB1-4914-8B26-5816D83B909A-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a generic driver for SJA1000 chips on the OpenFirmware
-platform bus found on embedded PowerPC systems. You need a SJA1000 node
-definition in your flattened device tree source (DTS) file similar to:
+On Wed, May 20, 2009 at 02:38:49PM +0200, Segher Boessenkool wrote:
+>> I'm trying to build dtc on Mac OS X.  The compilation seems to go
+>> okay, but the linker dies.
+>
+> It doesn't die, it just complains ;-)
+>
+> You're trying to build a Linux shared library on OSX.  This won't
+> work.  Not only are the command line options not the same, the
+> semantics are totally different as well; importantly, the versioning
+> mechanism is very different.  Given that, you do not want to use
+> a shared library at all -- just use a normal (static) library.
+> IMNSHO that should be the default, on Linux as well...
 
-   can@3,100 {
-           compatible = "philips,sja1000";
-           reg = <3 0x100 0x80>;
-           clock-frequency = <8000000>;
-           cdr-reg = <0x48>;
-           ocr-reg = <0x0a>;
-           interrupts = <2 0>;
-           interrupt-parent = <&mpic>;
-   };
+It was, originally, but someone wanted a shared lib.
 
-Signed-off-by: Wolfgang Grandegger <wg@grandegger.com>
----
- drivers/net/can/Kconfig                       |    9 +
- drivers/net/can/sja1000/Makefile              |    1 
- drivers/net/can/sja1000/sja1000_of_platform.c |  215 ++++++++++++++++++++++++++
- 3 files changed, 225 insertions(+)
+Actually, the current Makefile builds both, by default.
 
-Index: net-next-2.6/drivers/net/can/Kconfig
-===================================================================
---- net-next-2.6.orig/drivers/net/can/Kconfig
-+++ net-next-2.6/drivers/net/can/Kconfig
-@@ -51,6 +51,15 @@ config CAN_SJA1000_PLATFORM
- 	  boards from Phytec (http://www.phytec.de) like the PCM027,
- 	  PCM038.
- 
-+config CAN_SJA1000_OF_PLATFORM
-+	depends on CAN_SJA1000 && PPC_OF
-+	tristate "Generic OF Platform Bus based SJA1000 driver"
-+	---help---
-+	  This driver adds support for the SJA1000 chips connected to
-+	  the OpenFirmware "platform bus" found on embedded systems with
-+	  OpenFirmware bindings, e.g. if you have a PowerPC based system
-+	  you may want to enable this option.
-+
- config CAN_EMS_PCI
- 	tristate "EMS CPC-PCI and CPC-PCIe Card"
- 	depends on PCI && CAN_SJA1000
-Index: net-next-2.6/drivers/net/can/sja1000/Makefile
-===================================================================
---- net-next-2.6.orig/drivers/net/can/sja1000/Makefile
-+++ net-next-2.6/drivers/net/can/sja1000/Makefile
-@@ -4,6 +4,7 @@
- 
- obj-$(CONFIG_CAN_SJA1000) += sja1000.o
- obj-$(CONFIG_CAN_SJA1000_PLATFORM) += sja1000_platform.o
-+obj-$(CONFIG_CAN_SJA1000_OF_PLATFORM) += sja1000_of_platform.o
- obj-$(CONFIG_CAN_EMS_PCI) += ems_pci.o
- obj-$(CONFIG_CAN_KVASER_PCI) += kvaser_pci.o
- 
-Index: net-next-2.6/drivers/net/can/sja1000/sja1000_of_platform.c
-===================================================================
---- /dev/null
-+++ net-next-2.6/drivers/net/can/sja1000/sja1000_of_platform.c
-@@ -0,0 +1,215 @@
-+/*
-+ * Driver for SJA1000 CAN controllers on the OpenFirmware platform bus
-+ *
-+ * Copyright (C) 2008-2009 Wolfgang Grandegger <wg@grandegger.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the version 2 of the GNU General Public License
-+ * as published by the Free Software Foundation
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software Foundation,
-+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-+ */
-+
-+/* This is a generic driver for SJA1000 chips on the OpenFirmware platform
-+ * bus found on embedded PowerPC systems. You need a SJA1000 CAN node
-+ * definition in your flattened device tree source (DTS) file similar to:
-+ *
-+ *   can@3,100 {
-+ *           compatible = "philips,sja1000";
-+ *           reg = <3 0x100 0x80>;
-+ *           clock-frequency = <8000000>;
-+ *           cdr-reg = <0x48>;
-+ *           ocr-reg = <0x0a>;
-+ *           interrupts = <2 0>;
-+ *           interrupt-parent = <&mpic>;
-+ *   };
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/netdevice.h>
-+#include <linux/delay.h>
-+#include <linux/can.h>
-+#include <linux/can/dev.h>
-+
-+#include <linux/of_platform.h>
-+#include <asm/prom.h>
-+
-+#include "sja1000.h"
-+
-+#define DRV_NAME "sja1000_of_platform"
-+
-+MODULE_AUTHOR("Wolfgang Grandegger <wg@grandegger.com>");
-+MODULE_DESCRIPTION("Socket-CAN driver for SJA1000 on the OF platform bus");
-+MODULE_LICENSE("GPL v2");
-+
-+#define SJA1000_OFP_CAN_CLOCK  (16000000 / 2)
-+
-+#define SJA1000_OFP_OCR        OCR_TX0_PULLDOWN
-+#define SJA1000_OFP_CDR        (CDR_CBP | CDR_CLK_OFF)
-+
-+static u8 sja1000_ofp_read_reg(const struct net_device *dev, int reg)
-+{
-+	return in_8((void __iomem *)(dev->base_addr + reg));
-+}
-+
-+static void sja1000_ofp_write_reg(const struct net_device *dev, int reg, u8 val)
-+{
-+	out_8((void __iomem *)(dev->base_addr + reg), val);
-+}
-+
-+static int __devexit sja1000_ofp_remove(struct of_device *ofdev)
-+{
-+	struct net_device *dev = dev_get_drvdata(&ofdev->dev);
-+	struct device_node *np = ofdev->node;
-+	struct resource res;
-+
-+	dev_set_drvdata(&ofdev->dev, NULL);
-+
-+	unregister_sja1000dev(dev);
-+	free_sja1000dev(dev);
-+	iounmap((void __iomem *)dev->base_addr);
-+	irq_dispose_mapping(dev->irq);
-+
-+	of_address_to_resource(np, 0, &res);
-+	release_mem_region(res.start, resource_size(res));
-+
-+	return 0;
-+}
-+
-+static int __devinit sja1000_ofp_probe(struct of_device *ofdev,
-+				       const struct of_device_id *id)
-+{
-+	struct device_node *np = ofdev->node;
-+	struct net_device *dev;
-+	struct sja1000_priv *priv;
-+	struct resource res;
-+	const u32 *prop;
-+	int err, irq, res_size, prop_size;
-+	void __iomem *base;
-+
-+	err = of_address_to_resource(np, 0, &res);
-+	if (err) {
-+		dev_err(&ofdev->dev, "invalid address\n");
-+		return err;
-+	}
-+
-+	res_size = resource_size(res);
-+
-+	if (!request_mem_region(res.start, res_size, DRV_NAME)) {
-+		dev_err(&ofdev->dev, "couldn't request %#x..%#x\n",
-+			res.start, res.end);
-+		return -EBUSY;
-+	}
-+
-+	base = ioremap_nocache(res.start, res_size);
-+	if (!base) {
-+		dev_err(&ofdev->dev, "couldn't ioremap %#x..%#x\n",
-+			res.start, res.end);
-+		err = -ENOMEM;
-+		goto exit_release_mem;
-+	}
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq == NO_IRQ) {
-+		dev_err(&ofdev->dev, "no irq found\n");
-+		err = -ENODEV;
-+		goto exit_unmap_mem;
-+	}
-+
-+	dev = alloc_sja1000dev(0);
-+	if (!dev) {
-+		err = -ENOMEM;
-+		goto exit_dispose_irq;
-+	}
-+
-+	priv = netdev_priv(dev);
-+
-+	priv->read_reg = sja1000_ofp_read_reg;
-+	priv->write_reg = sja1000_ofp_write_reg;
-+
-+	prop = of_get_property(np, "clock-frequency", &prop_size);
-+	if (prop && (prop_size ==  sizeof(u32)))
-+		priv->can.clock.freq = *prop;
-+	else
-+		priv->can.clock.freq = SJA1000_OFP_CAN_CLOCK;
-+
-+	prop = of_get_property(np, "ocr-reg", &prop_size);
-+	if (prop && (prop_size == sizeof(u32)))
-+		priv->ocr = (u8)*prop;
-+	else
-+		priv->ocr = SJA1000_OFP_OCR;
-+
-+	prop = of_get_property(np, "cdr-reg", &prop_size);
-+	if (prop && (prop_size == sizeof(u32)))
-+		priv->cdr = (u8)*prop;
-+	else
-+		priv->cdr = SJA1000_OFP_CDR;
-+
-+	priv->irq_flags = IRQF_SHARED;
-+
-+	dev->irq = irq;
-+	dev->base_addr = (unsigned long)base;
-+
-+	dev_info(&ofdev->dev,
-+		 "base=0x%lx irq=%d clock=%d ocr=0x%02x cdr=0x%02x\n",
-+		 dev->base_addr, dev->irq, priv->can.clock.freq,
-+		 priv->ocr, priv->cdr);
-+
-+	dev_set_drvdata(&ofdev->dev, dev);
-+	SET_NETDEV_DEV(dev, &ofdev->dev);
-+
-+	err = register_sja1000dev(dev);
-+	if (err) {
-+		dev_err(&ofdev->dev, "registering %s failed (err=%d)\n",
-+			DRV_NAME, err);
-+		goto exit_free_sja1000;
-+	}
-+
-+	return 0;
-+
-+exit_free_sja1000:
-+	free_sja1000dev(dev);
-+exit_dispose_irq:
-+	irq_dispose_mapping(irq);
-+exit_unmap_mem:
-+	iounmap(base);
-+exit_release_mem:
-+	release_mem_region(res.start, res_size);
-+
-+	return err;
-+}
-+
-+static struct of_device_id __devinitdata sja1000_ofp_table[] = {
-+	{.compatible = "philips,sja1000"},
-+	{.compatible = "nxp,sja1000"},
-+	{},
-+};
-+
-+static struct of_platform_driver sja1000_ofp_driver = {
-+	.owner = THIS_MODULE,
-+	.name = DRV_NAME,
-+	.probe = sja1000_ofp_probe,
-+	.remove = __devexit_p(sja1000_ofp_remove),
-+	.match_table = sja1000_ofp_table,
-+};
-+
-+static int __init sja1000_ofp_init(void)
-+{
-+	return of_register_platform_driver(&sja1000_ofp_driver);
-+}
-+module_init(sja1000_ofp_init);
-+
-+static void __exit sja1000_ofp_exit(void)
-+{
-+	return of_unregister_platform_driver(&sja1000_ofp_driver);
-+};
-+module_exit(sja1000_ofp_exit);
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
