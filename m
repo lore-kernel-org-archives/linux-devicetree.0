@@ -1,7 +1,7 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH] powerpc/fsl: Update FSL esdhc binding
-Date: Fri,  8 May 2009 08:51:05 -0500
-Message-ID: <1241790665-3680-1-git-send-email-galak@kernel.crashing.org>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: dtc build failures on OS X
+Date: Tue, 19 May 2009 21:08:14 -0500
+Message-ID: <ed82fe3e0905191908v8c5fcdft953c4e1ba7969f2a@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,40 +15,45 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Updated the binding spec to use "fsl,eshdc" as the base compatible
-rather than the first chip in the family.
+I'm trying to build dtc on Mac OS X.  The compilation seems to go
+okay, but the linker dies.  First, it says this:
 
-Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
----
- Documentation/powerpc/dts-bindings/fsl/esdhc.txt |    5 ++---
- 1 files changed, 2 insertions(+), 3 deletions(-)
+	 LD libfdt/libfdt.so
+ld: unknown option: --version-script=libfdt/version.lds
+collect2: ld returned 1 exit status
 
-diff --git a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
-index 6008465..421897d 100644
---- a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
-+++ b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
-@@ -5,8 +5,7 @@ for MMC, SD, and SDIO types of memory cards.
- 
- Required properties:
-   - compatible : should be
--    "fsl,<chip>-esdhc", "fsl,mpc8379-esdhc" for MPC83xx processors.
--    "fsl,<chip>-esdhc", "fsl,mpc8536-esdhc" for MPC85xx processors.
-+    "fsl,<chip>-esdhc", "fsl,esdhc"
-   - reg : should contain eSDHC registers location and length.
-   - interrupts : should contain eSDHC interrupt.
-   - interrupt-parent : interrupt source phandle.
-@@ -15,7 +14,7 @@ Required properties:
- Example:
- 
- sdhci@2e000 {
--	compatible = "fsl,mpc8378-esdhc", "fsl,mpc8379-esdhc";
-+	compatible = "fsl,mpc8378-esdhc", "fsl,mpc8379-esdhc", "fsl,esdhc";
- 	reg = <0x2e000 0x1000>;
- 	interrupts = <42 0x8>;
- 	interrupt-parent = <&ipic>;
+A Google search suggested that I can just delete the --version-script
+option.  I did that, and now I get this error:
+
+	 LD libfdt/libfdt.so
+ld: unknown option: -soname
+collect2: ld returned 1 exit status
+
+This web page: http://lists.apple.com/archives/unix-porting/2003/Oct/msg00032.html
+had some suggestions on how to fix that, so my Makefile now looks like
+this:
+
+$(LIBFDT_lib):
+        @$(VECHO) LD $@
+        $(CC) $(LDFLAGS) -fPIC -Wl,-dylib_install_name -Wl,$(notdir
+$@) -shared -o $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).so $^
+        ln -s libfdt-$(DTC_VERSION).so $(LIBFDT_objdir)/libfdt.so
+
+But now I get this error:
+
+	 LD libfdt/libfdt.so
+Undefined symbols:
+  "_main", referenced from:
+      start in crt1.10.5.o
+ld: symbol(s) not found
+collect2: ld returned 1 exit status
+
+So now I'm stuck.  Has anyone tried this before?  Can anyone tell me
+how to fix this?
+
 -- 
-1.6.0.6
+Timur Tabi
+Linux kernel developer at Freescale
