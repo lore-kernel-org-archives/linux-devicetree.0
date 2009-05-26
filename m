@@ -1,53 +1,80 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [net-next-2.6 PATCH v2] can: SJA1000: generic OF platform bus
-	driver
-Date: Tue, 26 May 2009 16:23:47 +0200
-Message-ID: <4A1BFB73.4020305@grandegger.com>
-References: <200905242327.15139.arnd@arndb.de>	<4A1A418D.3040207@grandegger.com>	<200905261010.31364.arnd@arndb.de>
-	<20090526.022508.238274281.davem@davemloft.net>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH V2] add Mac OS X support
+Date: Tue, 26 May 2009 20:07:26 +0200
+Message-ID: <1243361246-1743-1-git-send-email-plagnioj@jcrosoft.com>
+References: <ed82fe3e0905252037r574e56ecjd8689b800c74561f@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org>
-In-Reply-To: <20090526.022508.238274281.davem@davemloft.net>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@ozlabs.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@ozlabs.org
-To: David Miller <davem@davemloft.net>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, arnd@arndb.de, netdev@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <ed82fe3e0905252037r574e56ecjd8689b800c74561f-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-David Miller wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Tue, 26 May 2009 10:10:30 +0100
-> 
->> On Monday 25 May 2009, Wolfgang Grandegger wrote:
->>>> Right, that makes sense. However, most drivers use the field to store the
->>>> physical address, not the iomap token. Maybe there should be a new field
->>>> in struct sja1000_priv for the virtual address, but that would be a change
->>>> to the base driver, not just to the OF portion.
->>> Is that common practice? If yes, I will add a member to store the
->>> virtual address to struct sja1000_priv.
->> I grepped through the network driver for usage of ->base_addr, and
->> it's somewhat inconsistent. The majority of the users use it for
->> a physical address, but there are also a few that use it for the
->> __iomem token.
->>
->> Casts between unsigned long and qualified (__iomem, __user, const, ...)
->> pointers do not cause a warning, but can easily lead to bugs when
->> another user casts to an unqualified pointer.
-> 
-> It's such a baroque thing, there is no reason to set it at all if you
-> ask me.  It's only use is to allow ISA and similar primitive bus
-> devices to have their I/O ports changed via ifconfig.
+use dylib shared lib extention
+allow to specifiy os specific shared lib link option
+Mac OS use -dynamiclib instead of -shared, -install_name instead of -soname
+and does not support --version-script
 
-OK, I see, there are good reasons not to (mis-)use dev->base_addr. I
-will prepare a patch for the SJA1000 CAN drivers.
+add HOSTOS macro to detect the current os you are
 
-Wolfgang.
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+---
+V2
+detect dynamicly the host OS
+ Makefile |   17 ++++++++++++++---
+ 1 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index be0fc8b..d7549b2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -28,6 +28,17 @@ BINDIR = $(PREFIX)/bin
+ LIBDIR = $(PREFIX)/lib
+ INCLUDEDIR = $(PREFIX)/include
+ 
++HOSTOS := $(shell uname -s | tr '[:upper:]' '[:lower:]' | \
++	    sed -e 's/\(cygwin\).*/cygwin/')
++
++ifeq ($(HOSTOS),darwin)
++SHAREDLIB_EXT=dylib
++SHAREDLIB_LINK_OPTIONS=-dynamiclib -Wl,-install_name -Wl,
++else
++SHAREDLIB_EXT=so
++SHAREDLIB_LINK_OPTIONS=-shared -Wl,--version-script=$(LIBFDT_version) -Wl,-soname,
++endif
++
+ #
+ # Overall rules
+ #
+@@ -116,7 +127,7 @@ endif
+ LIBFDT_objdir = libfdt
+ LIBFDT_srcdir = libfdt
+ LIBFDT_archive = $(LIBFDT_objdir)/libfdt.a
+-LIBFDT_lib = $(LIBFDT_objdir)/libfdt.so
++LIBFDT_lib = $(LIBFDT_objdir)/libfdt.$(SHAREDLIB_EXT)
+ LIBFDT_include = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_INCLUDES))
+ LIBFDT_version = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_VERSION))
+ 
+@@ -220,8 +231,8 @@ clean: libfdt_clean tests_clean
+ 
+ $(LIBFDT_lib):
+ 	@$(VECHO) LD $@
+-	$(CC) $(LDFLAGS) -fPIC -Wl,--version-script=$(LIBFDT_version) -Wl,-soname,$(notdir $@) -shared -o $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).so $^
+-	ln -s libfdt-$(DTC_VERSION).so $(LIBFDT_objdir)/libfdt.so
++	$(CC) $(LDFLAGS) -fPIC $(SHAREDLIB_LINK_OPTIONS)$(notdir $@) -o $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).$(SHAREDLIB_EXT) $^
++	ln -sf libfdt-$(DTC_VERSION).$(SHAREDLIB_EXT) $(LIBFDT_objdir)/libfdt.$(SHAREDLIB_EXT)
+ 
+ %.lex.c: %.l
+ 	@$(VECHO) LEX $@
+-- 
+1.6.0.4
