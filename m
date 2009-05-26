@@ -1,37 +1,36 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: dtc build failures on OS X
-Date: Mon, 25 May 2009 22:37:16 -0500
-Message-ID: <ed82fe3e0905252037r574e56ecjd8689b800c74561f@mail.gmail.com>
-References: <ed82fe3e0905191908v8c5fcdft953c4e1ba7969f2a@mail.gmail.com>
-	<20090520074611.GW17539@game.jcrosoft.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [net-next-2.6 PATCH v2] can: SJA1000: generic OF platform bus driver
+Date: Tue, 26 May 2009 10:10:30 +0100
+Message-ID: <200905261010.31364.arnd@arndb.de>
+References: <4A16BAAE.3070401@grandegger.com> <200905242327.15139.arnd@arndb.de> <4A1A418D.3040207@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090520074611.GW17539-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4A1A418D.3040207@grandegger.com>
+Sender: netdev-owner@vger.kernel.org
+To: linuxppc-dev@ozlabs.org
+Cc: Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@ozlabs.org, Linux Netdev List <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2009 at 2:46 AM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+On Monday 25 May 2009, Wolfgang Grandegger wrote:
+> > Right, that makes sense. However, most drivers use the field to store the
+> > physical address, not the iomap token. Maybe there should be a new field
+> > in struct sja1000_priv for the virtual address, but that would be a change
+> > to the base driver, not just to the OF portion.
+> 
+> Is that common practice? If yes, I will add a member to store the
+> virtual address to struct sja1000_priv.
 
-> -shared is incorrect on mac os it's -dynamiclib
-> see attached patch
+I grepped through the network driver for usage of ->base_addr, and
+it's somewhat inconsistent. The majority of the users use it for
+a physical address, but there are also a few that use it for the
+__iomem token.
 
-Acked-by: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Casts between unsigned long and qualified (__iomem, __user, const, ...)
+pointers do not cause a warning, but can easily lead to bugs when
+another user casts to an unqualified pointer.
 
-It would be nice if it auto-detected OS X, but I'm glad it works.  Thanks.
+	Arnd <><
 
--- 
-Timur Tabi
-Linux kernel developer at Freescale
