@@ -1,22 +1,19 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 15:05:58 -0600
-Message-ID: <fa686aa40905271405pc2f1738gc8dd139f61a0e27@mail.gmail.com>
+Date: Wed, 27 May 2009 22:38:45 +0100
+Message-ID: <20090527213841.GB5591@sirena.org.uk>
 References: <1243408083.13460.14.camel@debian-nb>
 	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
 	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
 	<20090527150527.GK6805@pengutronix.de>
-	<87vdnm8sec.fsf@macbook.be.48ers.dk>
-	<4A1D6901.2090508@freescale.com>
-	<20090527175609.GB31861@flint.arm.linux.org.uk>
-	<4A1D8FBA.6040802@freescale.com>
-	<20090527192909.GA32398@flint.arm.linux.org.uk>
-	<20090527205218.GA5591@sirena.org.uk>
+	<20090527163223.GE1970@sirena.org.uk>
+	<fa686aa40905271342v5bc51665tb9b5d92950a43b82@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090527205218.GA5591-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fa686aa40905271342v5bc51665tb9b5d92950a43b82-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -26,62 +23,53 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 2:52 PM, Mark Brown
-<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On Wed, May 27, 2009 at 08:29:10PM +0100, Russell King wrote:
->> On Wed, May 27, 2009 at 02:08:42PM -0500, Scott Wood wrote:
->
->> > I'm not talking about platform specific code, I'm talking about code to
->> > retrieve information about a device from the device tree. =A0There wou=
-ld
->> > not be separate instances of this for "platforms X, Y and Z", just one
->> > of_platform binding in each driver. =A0It's no different than having a
->> > platform bus binding, except in the data structures used.
->
->> I really don't see what OF buys us then, apart from additional dependenc=
-ies
->> that have to be correct for the kernel to work. =A0I can only see disadv=
-antages
->> if all OF is, is a way to pass some file to the kernel to (effectively) =
-tell
->> it which drivers to use.
->
-> The main selling points of the device tree AFAICT are that some
-> platforms have to use it it anyway due to the native OS and firmware for
-> the platform use it, the possibility of using the same device tree with
-> more than one OS (modulo unrepresentable holes) and the fact that some
-> people find it more convenient to use than straight data tables
-> (personally I find the two approaches to be much of a muchness there).
-> Perhaps I'm missing something, though?
+On Wed, May 27, 2009 at 02:42:13PM -0600, Grant Likely wrote:
+> On Wed, May 27, 2009 at 10:32 AM, Mark Brown
 
-Here are some that I've find useful:
+> > The handling of platform data is my main concern as someone working
+> > primarily on platform independant drivers - function pointers are a
+> > particular problem but the possibility of having to write code to
+> > handle both OF and non-OF systems to cater for systems using both
+> > approaches is also a concern for me.
 
-There is the advantage that it decouples the machine description from
-the kernel code, which in turn seems to encourage code reuse.  There
-has been a significant decrease in the amount of platform specific
-code in powerpc since the switch to FDT booting.
+> Having a hook function which generates a pdata structure from a device
+> node on a per driver basis is a common approach.  Essentially, the
+> hook becomes an addon to the driver which doesn't impact the driver as
+> a whole.  i2c and SPI device tend to take this approach.
 
-There is the advantage of easy multiplatform support.  I regularly
-build a single kernel image which boots on all my MPC5200 boards, and
-on my MPC83xx boards.  Because the machine description is a separate
-image blob, and not hard compiled into the kernel, the kernel doesn't
-have to be explicitly told what boards it may possibly be booted on
-(other than turning on the appropriate drivers; handled with modules,
-just like on x86).  It may not be much of an advantage for current
-deployed systems, but it is a huge win during development and
-testing....
+Yes, this is what I mean about doing it twice - you have to have the
+regular platform data structure plus another function to map the
+OpenFirmware data into it.  The fact that quite a few of the devices I
+deal with want function pointers as platform data doesn't help here.
 
-That being said, I've been told that Motorola has shipped phones with
-FDT support in the kernel for exactly the reason of booting a single
-kernel image on multiple versions of the device.
+> > This worries me too, my experiences with OF device tree handling for
+> > ASoC have been pretty negative - but then audio is one of the worst
+> > cases for handling within the device tree.
 
-g.
+> First steps are hard.  I2C and SPI work had similar groans and pains,
+> and ASoC is considerably more complex.  In the end the stuff in
+> drivers/of/* was added to handle the creation of i2c, spi and phy
+> devices from data in the device tree.  It is a mechanism which seems
+> to be working well.
 
--- =
+Instantiating the devices is a solved problem - with the current code
+you can load the drivers for all the various parts of the audio
+subsystem via the standard device model with everything appearing on
+whatever bus it normally should.  The only exception to that is AC97
+(because it's a bit special and needs some general TLC).  Some more work
+is needed on the core to fully take advantage of what this bought us but
+as far as loading and initialising device drivers goes you should be
+there already.
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+What's a really crippling problem for what people seem to want to do
+with the device tree right now is expressing the clocking trees and
+requirements for a non-trivial audio subsystem.  The current clock API
+is quite a way off being able to cope with this at runtime and without
+that the benefits of trying to put the data into device trees are
+questionable - a plaform independant representation of this data most
+likely needs us to be able to automatically configure the clock tree
+based on a description of the interconnects and their constraints.
