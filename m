@@ -1,59 +1,44 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 11:23:29 -0500
-Message-ID: <4A1D6901.2090508@freescale.com>
-References: <1243408083.13460.14.camel@debian-nb>	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>	<20090527150527.GK6805@pengutronix.de>
-	<87vdnm8sec.fsf@macbook.be.48ers.dk>
+Date: Wed, 27 May 2009 17:32:24 +0100
+Message-ID: <20090527163223.GE1970@sirena.org.uk>
+References: <1243408083.13460.14.camel@debian-nb> <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com> <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com> <20090527150527.GK6805@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <87vdnm8sec.fsf-uXGAPMMVk8amE9MCos8gUmSdvHPH+/yF@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1762010AbZE0Qcs@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20090527150527.GK6805@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Schwebel <r.schwebel@pengutronix.de>
+Cc: Timur Tabi <timur@freescale.com>, Janboe Ye <yuan-bo.ye@motorola.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, rmk@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Peter Korsgaard wrote:
->>>>>> "Robert" == Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> 
-> Hi,
-> 
->  Robert> - The whole concept is based on the assumption that bindings
->  Robert> are defined *once*, then never to be changed again. As this
->  Robert> is not true (check MPC5200 to find out what I mean), oftree
->  Robert> wreckage is *the* main cause of new kernels not working on
->  Robert> old bootloaders any more. Is there a solution of this
->  Robert> problem? I have not seen a good idea how to avoid the
->  Robert> constant change in definitions.
-> 
-> Just bundle the .dtb with the kernel and they'll always be in sync. I
-> know this isn't really in the spirit of OF, but currently imho the
-> only realistic solution.
+On Wed, May 27, 2009 at 05:05:27PM +0200, Robert Schwebel wrote:
 
-That removes the ability to use the device tree to pass information from 
-the bootloader, such as MAC addresses and clock frequencies.  On the 
-u-boot list, you'll find people trying such hacks (which were rightly 
-NACKed) as passing the information in the device's volatile registers 
-(which the Linux driver must then not reset) to deal with ARM Linux's 
-lack of this ability.
+> I'm highly convinced that the existence of oftree-hell in ARM-land would
+> have been *the* key motivation for FSL to have worked on mainline
+> instead of inhouse-BSPs back in 2004 when we mainlined i.MX1 and in 2007
+> when we started the mainline work on MX27 and MX31.
 
->  Robert> - The oftree layering is fundamentally broken. We already
->  Robert> have a sane abstraction for arbitrary hardware in the kernel:
->  Robert> platform devices.  Why not instanciate platform devices from
->  Robert> a generic oftree core?
+I remain to be convinced about that but anyway..
 
-You can, if you want.  But you'll need extra glue code that understands 
-the individual bindings.  IMHO that logic is usually better off in the 
-driver itself, but if you really need platform code to involve itself in 
-some way (such as providing callbacks), then exceptions can be made.
+> Seriously: oftree in general is a good idea. Just that it doesn't work
+> in practise. The concept has some serious flaws:
 
--Scott
+> - Platform data makes it possible to store function pointers. There
+>   is no equivalent to this concept in oftree-land.
+
+The handling of platform data is my main concern as someone working
+primarily on platform independant drivers - function pointers are a
+particular problem but the possibility of having to write code to
+handle both OF and non-OF systems to cater for systems using both
+approaches is also a concern for me.
+
+> oftree could be a great tool if these things would be resolved.
+> Currently they are not, and in result, ARM just works and is easy,
+> whereas on PowerPC systems people often spend more time working on
+> binding stuff than on the actual functionality.
+
+This worries me too, my experiences with OF device tree handling for
+ASoC have been pretty negative - but then audio is one of the worst
+cases for handling within the device tree.
