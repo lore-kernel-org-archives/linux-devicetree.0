@@ -1,7 +1,7 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+From: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 20:21:16 +0100
-Message-ID: <20090527192116.GA31110@n2100.arm.linux.org.uk>
+Date: Wed, 27 May 2009 20:29:10 +0100
+Message-ID: <20090527192909.GA32398@flint.arm.linux.org.uk>
 References: <1243408083.13460.14.camel@debian-nb>
 	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
 	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
@@ -10,59 +10,87 @@ References: <1243408083.13460.14.camel@debian-nb>
 	<4A1D6901.2090508@freescale.com>
 	<20090527175609.GB31861@flint.arm.linux.org.uk>
 	<4A1D8FBA.6040802@freescale.com>
-	<9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.arm.linux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
-List-Unsubscribe: <http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=unsubscribe>
-List-Archive: <http://lists.arm.linux.org.uk/lurker/list/linux-arm-kernel.html>
-List-Post: <mailto:linux-arm-kernel@lists.arm.linux.org.uk>
-List-Help: <mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=help>
-List-Subscribe: <http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.arm.linux.org.uk
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.arm.linux.org.uk
-To: Jon Smirl <jonsmirl@gmail.com>
-Cc: Scott Wood <scottwood@freescale.com>, Peter Korsgaard <jacmet@sunsite.dk>, Robert Schwebel <r.schwebel@pengutronix.de>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, Janboe Ye <yuan-bo.ye@motorola.com>, Timur Tabi <timur@freescale.com>
+In-Reply-To: <4A1D8FBA.6040802-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 03:13:55PM -0400, Jon Smirl wrote:
-> On Wed, May 27, 2009 at 3:08 PM, Scott Wood <scottwood@freescale.com> wro=
-te:
-> > I'm not talking about platform specific code, I'm talking about code to
-> > retrieve information about a device from the device tree. =A0There woul=
-d not
-> > be separate instances of this for "platforms X, Y and Z", just one
-> > of_platform binding in each driver. =A0It's no different than having a
-> > platform bus binding, except in the data structures used.
-> >
-> > But to restate, having external glue to create platform devices from the
-> > device tree is fine if that's what you want to do. =A0We used to do tha=
-t, but
-> > it was a pain compared to keeping everything in one place. =A0Your expe=
-rience
-> > may differ.
-> =
+On Wed, May 27, 2009 at 02:08:42PM -0500, Scott Wood wrote:
+> Russell King wrote:
+>> No one has brought that up on the ARM mailing lists - so does this issue
+>> really exist?  All of the stuff I see on the ARM lists seems to be well
+>> behaved and following our existing model - even vendor stuff (supplied
+>> to me under NDA) seems to generally get this kind of stuff right.
+>
+> I'm just going by what I've seen on the u-boot list lately.  What is the  
+> existing ARM Linux model for passing MAC addresses, so that we can point  
+> people to that when they try to get u-boot to do silly things?
 
-> Could 'struct platform_device' and 'struct of_platform_device" be
-> unified into a single structure? It's personal preference whether the
-> internal representation of the hardware is done via a device tree or
-> snippets of platform code, but do we need to have to different device
-> types?
+To program them into the hardware registers, which is not what we in
+the ARM community say, but it's what the _network_ guys tell people
+they should be doing.
 
-That's a damned good question - platform devices have been around since
-the dawn of the device model, so the real question which needs to be
-asked is: what was the reason that of_platform_device created rather
-than unifying it with the already provided platform_device ?
+I've suggested in the past having a standard kernel parameter such
+that you can specify a mac address on a per-device basis in a totally
+platform independent way, but the network folk don't like that idea.
 
-BTW, I can find no such struct "of_platform_device" in include/linux.
-Is it specific to each and every OF implementation?
+>>> You can, if you want.  But you'll need extra glue code that 
+>>> understands  the individual bindings.  IMHO that logic is usually 
+>>> better off in the  driver itself, but if you really need platform 
+>>> code to involve itself in  some way (such as providing callbacks), 
+>>> then exceptions can be made.
+>>
+>> No it is not.  Device drivers are best written to support devices, and
+>> the platform specific code should not be anywhere near them.  Platform
+>> specific code to handle oddities of platforms should be totally separate
+>> from the device driver itself.
+>
+> I'm not talking about platform specific code, I'm talking about code to  
+> retrieve information about a device from the device tree.  There would  
+> not be separate instances of this for "platforms X, Y and Z", just one  
+> of_platform binding in each driver.  It's no different than having a  
+> platform bus binding, except in the data structures used.
 
--------------------------------------------------------------------
-List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
-FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
-Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
+I really don't see what OF buys us then, apart from additional dependencies
+that have to be correct for the kernel to work.  I can only see disadvantages
+if all OF is, is a way to pass some file to the kernel to (effectively) tell
+it which drivers to use.
+
+>> smc91x is a prime example of the kind of information drivers need - base
+>> address and irq are very much insufficient to describe how this device is
+>> connected.  There's much more information required to specify this device
+>> fully, and throwing it into the driver doesn't work.  We've been there
+>> and proven that point.
+>
+> The device tree is quite capable of expressing information beyond  
+> addresses and interrupts.
+
+Bus width?  Register offset spacing?  SMC LED configuration?  Whether
+to use the hardware wait signal from the SMC?
+
+If you're going to say yes to all that, I'm going to start asking how
+you cope with verifying that the data for ethernet driver A doesn't
+get accidentally used for ethernet driver B.
+
+I assume you have some kind of compiler, which needs a set of specification
+files to tell it what's required for each driver which is OF compatible.
+If not, I can see no way for OF trees to ever be safe and correct.
+
+-- 
+Russell King
+ Linux kernel    2.6 ARM Linux   - http://www.arm.linux.org.uk/
+ maintainer of:
