@@ -1,41 +1,103 @@
-From: "M. Warner Losh" <imp@bsdimp.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 14:35:16 -0600 (MDT)
-Message-ID: <20090527.143516.-1836205167.imp@bsdimp.com>
-References: <4A1D9A1E.80603@freescale.com>
-	<4A1D9A66.5020002@freescale.com>
-	<20090527.132553.40558501.davem@davemloft.net>
+Date: Wed, 27 May 2009 14:46:37 -0600
+Message-ID: <fa686aa40905271346l737cb0e5x7d62c581b40c2d4c@mail.gmail.com>
+References: <1243408083.13460.14.camel@debian-nb>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	<20090527150527.GK6805@pengutronix.de>
+	<fa686aa40905270839m375bbdacqb1acb1be0a2d2da0@mail.gmail.com>
+	<2ve0f6-8fn.ln1@woodchuck.wormnet.eu>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1758898AbZE0Uoh@vger.kernel.org>
-In-Reply-To: <20090527.132553.40558501.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: timur@freescale.com, rmk+lkml@arm.linux.org.uk, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, scottwood@freescale.com, yuan-bo.ye@motorola.com, linux-arm-kernel@lists.arm.linux.org.uk
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <2ve0f6-8fn.ln1-kuKQLpWnKMRB2HF5bZY0Orm56z/blAVA@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In message: <20090527.132553.40558501.davem@davemloft.net>
-            David Miller <davem@davemloft.net> writes:
-: From: Timur Tabi <timur@freescale.com>
-: Date: Wed, 27 May 2009 14:54:14 -0500
-: 
-: > How does a Linux driver normally get a MAC address if it's not
-: > passed via the device tree and it isn't already programmed in the
-: > hardware?  Is there some file in /etc that stores these things?
-: 
-: It depends.  Some devices have EEPROM's that store the permanently
-: assigned MAC address, some have NVRAM for this, and yet other's put it
-: into the PCI ROM.
+On Wed, May 27, 2009 at 12:56 PM, Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org> wr=
+ote:
+> In gmane.linux.kernel Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> On Wed, May 27, 2009 at 9:05 AM, Robert Schwebel
+>> <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>>> Seriously: oftree in general is a good idea. Just that it doesn't work
+>>> in practise. The concept has some serious flaws:
+>>>
+>>> - The whole concept is based on the assumption that bindings are defined
+>>> =A0*once*, then never to be changed again. As this is not true (check
+>>> =A0MPC5200 to find out what I mean), oftree wreckage is *the* main cause
+>>> =A0of new kernels not working on old bootloaders any more. Is there a
+>>> =A0solution of this problem? I have not seen a good idea how to avoid t=
+he
+>>> =A0constant change in definitions.
+>>
+>> This is a MPC5200 is the posterchild for device tree wreckage; mostly
+>> because of my own inexperience at the time. =A0A lot of mistakes were
+>> made and I freely admit that.
+>>
+>> However, my counter example is Xilinx Virtex support. =A0The Virtex is
+>> an FPGA with all the devices instantiated in the FPGA fabric. =A0It
+>> would be a nightmare to try and describe each different FPGA bitstream
+>> using hand coded platform devices, and the xparameters.h file exported
+>> by the Xilinx toolchain wasn't much better. =A0Encoding the machine
+>> layout in a data structure (the device tree) has decoupled FPGA
+>> changes from the kernel image. =A0Now FPGA engineers can make major
+>> changes to FPGA layouts without having to lockstep with changes in the
+>> kernel. =A0I regularly boot a single kernel image on multiple bitstream
+>> images.
+>>
+>> That being said, the problems we have had are the reason why it is
+>> *not* recommended to hard link the device tree image into firmware.
+>> We do commit to not breaking old trees, but the ability to update is
+>> important; particularly for enabling new features/drivers.
+>>
+> Although I have no input of value here, I'm hoping I do not become the
+> next posterchild for "pain++".
+>
+> I'm working through redo'ing the FPGA support in the TS-7800[1] into a
+> new bus rather than just continuing the messy direction I have been
+> going to date[2].
+>
+> My current approach is that the bus handles the 'hotplug'ing of the FPGA
+> bitstream by unregistering all the devices and then when it's informed
+> the new bitstream is ready it prods all the registered drivers if any
+> devices need bringing up (obviously drivers can be modprobe'd as and
+> when).
+>
+> The 'magic' is that the FPGA code has some special value[3] that what it
+> is and the drivers (outside the platform code) have a list of FPGA magic
+> values (with a mask) that they are willing to service. =A0The *bus*
+> (platform code) is what installs the devices effectively and only does
+> so if the loaded driver says it can drive a particular loaded bitstream
+> (in the bus driver struct is a array of ID's it checks).
+>
+> Does this sound sane? =A0Is it an approach that could be ACKed one day?
+> Currently the bit that might be considered sinful is there is for some
+> of the drivers (rtc-m48t86, timeriomem-rng and plat_nand) the FPGA bus
+> 'driver' is a light wrapper around the platform device driver. =A0This is
+> so that the hooks still exist so the bus know what to load and unload as
+> and when.
 
-Some also put it into their CIS for things like PC Card, CardBus and
-SDIO too.  It is the definition of device specific :).
+Personally, I'd not write a separate bus.  I'd write a platform driver
+which turns around and registers more platform devices with the
+original device as the parent in the _probe routine, and unregisters
+them in _remove.  Should have the same affect with less complex code.
+However, someone with more device-model-foo may have better advice.
 
-: Some platforms that have real OF device trees often do not put the
-: permanent MAC address into the EEPROM or NVRAM even if it is
-: customary to do so on a particular device.  The MAC has to be
-: obtained from the OF device tree.
+g.
 
-This is but one of many ways to get it...
+-- =
 
-Warner
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
