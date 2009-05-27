@@ -1,50 +1,72 @@
-From: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 23:47:21 +0400
-Message-ID: <4A1D98C9.9030908@ru.mvista.com>
-References: <1243408083.13460.14.camel@debian-nb>	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>	<20090527150527.GK6805@pengutronix.de>	<87vdnm8sec.fsf@macbook.be.48ers.dk>	<4A1D6901.2090508@freescale.com>	<20090527175609.GB31861@flint.arm.linux.org.uk>	<4A1D8FBA.6040802@freescale.com> <20090527192909.GA32398@flint.arm.linux.org.uk>
+Date: Wed, 27 May 2009 21:39:27 +0200
+Message-ID: <20090527193927.GD30039@game.jcrosoft.org>
+References: <1243408083.13460.14.camel@debian-nb>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	<20090527150527.GK6805@pengutronix.de>
+	<87vdnm8sec.fsf@macbook.be.48ers.dk>
+	<4A1D6901.2090508@freescale.com>
+	<20090527175609.GB31861@flint.arm.linux.org.uk>
+	<4A1D8FBA.6040802@freescale.com>
+	<9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
+	<20090527192116.GA31110@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S932848AbZE0Tq3@vger.kernel.org>
-In-Reply-To: <20090527192909.GA32398@flint.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <rmk+lkml@arm.linux.org.uk>
-Cc: Scott Wood <scottwood@freescale.com>, Peter Korsgaard <jacmet@sunsite.dk>, Robert Schwebel <r.schwebel@pengutronix.de>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, Janboe Ye <yuan-bo.ye@motorola.com>, Timur Tabi <timur@freescale.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20090527192116.GA31110-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jon Smirl <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 20:21 Wed 27 May     , Russell King - ARM Linux wrote:
+> On Wed, May 27, 2009 at 03:13:55PM -0400, Jon Smirl wrote:
+> > On Wed, May 27, 2009 at 3:08 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> w=
+rote:
+> > > I'm not talking about platform specific code, I'm talking about code =
+to
+> > > retrieve information about a device from the device tree. =A0There wo=
+uld not
+> > > be separate instances of this for "platforms X, Y and Z", just one
+> > > of_platform binding in each driver. =A0It's no different than having a
+> > > platform bus binding, except in the data structures used.
+> > >
+> > > But to restate, having external glue to create platform devices from =
+the
+> > > device tree is fine if that's what you want to do. =A0We used to do t=
+hat, but
+> > > it was a pain compared to keeping everything in one place. =A0Your ex=
+perience
+> > > may differ.
+> > =
 
-Russell King wrote:
+> > Could 'struct platform_device' and 'struct of_platform_device" be
+> > unified into a single structure? It's personal preference whether the
+> > internal representation of the hardware is done via a device tree or
+> > snippets of platform code, but do we need to have to different device
+> > types?
+> =
 
->>>smc91x is a prime example of the kind of information drivers need - base
->>>address and irq are very much insufficient to describe how this device is
->>>connected.  There's much more information required to specify this device
->>>fully, and throwing it into the driver doesn't work.  We've been there
->>>and proven that point.
+> That's a damned good question - platform devices have been around since
+> the dawn of the device model, so the real question which needs to be
+> asked is: what was the reason that of_platform_device created rather
+> than unifying it with the already provided platform_device ?
+I agree at 100%
 
->>The device tree is quite capable of expressing information beyond  
->>addresses and interrupts.
+when you have to support the same driver for non OF and OF platform it's
+really a pain in the ass
 
-> Bus width?  Register offset spacing?  SMC LED configuration?  Whether
-> to use the hardware wait signal from the SMC?
-
-    Yes, it's perefectly capable of all that. In fact, the first two items 
-have already been defined for MTD and serial devices (though I wasn't happy 
-about how the 2nd item was done IIRC).
-
-> If you're going to say yes to all that, I'm going to start asking how
-> you cope with verifying that the data for ethernet driver A doesn't
-> get accidentally used for ethernet driver B.
-
-    It's incorporated into the device node corresponding to Ethernet device 
-A, which driver B doesn't drive.
-
-> I assume you have some kind of compiler, which needs a set of specification
-> files to tell it what's required for each driver which is OF compatible.
-
-    The compiler is called (surprise :-) 'dtc'.
-
-> If not, I can see no way for OF trees to ever be safe and correct.
-
-WBR, Sergei
+Best Regards,
+J.
