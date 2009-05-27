@@ -1,18 +1,18 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Josh Boyer <jwboyer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 14:46:37 -0600
-Message-ID: <fa686aa40905271346l737cb0e5x7d62c581b40c2d4c@mail.gmail.com>
-References: <1243408083.13460.14.camel@debian-nb>
-	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
-	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
-	<20090527150527.GK6805@pengutronix.de>
-	<fa686aa40905270839m375bbdacqb1acb1be0a2d2da0@mail.gmail.com>
-	<2ve0f6-8fn.ln1@woodchuck.wormnet.eu>
+Date: Wed, 27 May 2009 16:48:34 -0400
+Message-ID: <20090527204834.GA3095@hansolo.jdub.homelinux.org>
+References: <20090527175609.GB31861@flint.arm.linux.org.uk>
+	<4A1D8FBA.6040802@freescale.com>
+	<20090527192909.GA32398@flint.arm.linux.org.uk>
+	<20090527.132328.78091350.davem@davemloft.net>
+	<20090527202701.GA16219@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <2ve0f6-8fn.ln1-kuKQLpWnKMRB2HF5bZY0Orm56z/blAVA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20090527202701.GA16219-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -22,82 +22,39 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 12:56 PM, Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org> wr=
-ote:
-> In gmane.linux.kernel Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Wed, May 27, 2009 at 9:05 AM, Robert Schwebel
->> <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->>> Seriously: oftree in general is a good idea. Just that it doesn't work
->>> in practise. The concept has some serious flaws:
->>>
->>> - The whole concept is based on the assumption that bindings are defined
->>> =A0*once*, then never to be changed again. As this is not true (check
->>> =A0MPC5200 to find out what I mean), oftree wreckage is *the* main cause
->>> =A0of new kernels not working on old bootloaders any more. Is there a
->>> =A0solution of this problem? I have not seen a good idea how to avoid t=
-he
->>> =A0constant change in definitions.
->>
->> This is a MPC5200 is the posterchild for device tree wreckage; mostly
->> because of my own inexperience at the time. =A0A lot of mistakes were
->> made and I freely admit that.
->>
->> However, my counter example is Xilinx Virtex support. =A0The Virtex is
->> an FPGA with all the devices instantiated in the FPGA fabric. =A0It
->> would be a nightmare to try and describe each different FPGA bitstream
->> using hand coded platform devices, and the xparameters.h file exported
->> by the Xilinx toolchain wasn't much better. =A0Encoding the machine
->> layout in a data structure (the device tree) has decoupled FPGA
->> changes from the kernel image. =A0Now FPGA engineers can make major
->> changes to FPGA layouts without having to lockstep with changes in the
->> kernel. =A0I regularly boot a single kernel image on multiple bitstream
->> images.
->>
->> That being said, the problems we have had are the reason why it is
->> *not* recommended to hard link the device tree image into firmware.
->> We do commit to not breaking old trees, but the ability to update is
->> important; particularly for enabling new features/drivers.
->>
-> Although I have no input of value here, I'm hoping I do not become the
-> next posterchild for "pain++".
->
-> I'm working through redo'ing the FPGA support in the TS-7800[1] into a
-> new bus rather than just continuing the messy direction I have been
-> going to date[2].
->
-> My current approach is that the bus handles the 'hotplug'ing of the FPGA
-> bitstream by unregistering all the devices and then when it's informed
-> the new bitstream is ready it prods all the registered drivers if any
-> devices need bringing up (obviously drivers can be modprobe'd as and
-> when).
->
-> The 'magic' is that the FPGA code has some special value[3] that what it
-> is and the drivers (outside the platform code) have a list of FPGA magic
-> values (with a mask) that they are willing to service. =A0The *bus*
-> (platform code) is what installs the devices effectively and only does
-> so if the loaded driver says it can drive a particular loaded bitstream
-> (in the bus driver struct is a array of ID's it checks).
->
-> Does this sound sane? =A0Is it an approach that could be ACKed one day?
-> Currently the bit that might be considered sinful is there is for some
-> of the drivers (rtc-m48t86, timeriomem-rng and plat_nand) the FPGA bus
-> 'driver' is a light wrapper around the platform device driver. =A0This is
-> so that the hooks still exist so the bus know what to load and unload as
-> and when.
+On Wed, May 27, 2009 at 10:27:01PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>On 13:23 Wed 27 May     , David Miller wrote:
+>> From: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Date: Wed, 27 May 2009 20:29:10 +0100
+>> 
+>> > To program them into the hardware registers, which is not what we in
+>> > the ARM community say, but it's what the _network_ guys tell people
+>> > they should be doing.
+>> > 
+>> > I've suggested in the past having a standard kernel parameter such
+>> > that you can specify a mac address on a per-device basis in a totally
+>> > platform independent way, but the network folk don't like that idea.
+>> 
+>> As a "network guy" I can tell you that when the system firmware
+>> provides a system-wide or device specific MAC address in it's device
+>> tree, that is what you should use.
+>> 
+>> And that's what I've been doing on sparc FOR 15 YEARS.
+>> 
+>> Device trees are the only systematic generic mechanism for
+>> describing device layouts on the myriad of embedded boards
+>> out there which you will ever find.
+>> 
+>> Two platforms, and now a third, have been using this scheme
+>> over a very proven period of time.  It's not a hack, there is
+>> infrastructure to get the boot loaders to do the right thing,
+>> and only ARM seems to resist it. :-)
+>The SH, avr32, mips, x86 does not support it too IIRC
 
-Personally, I'd not write a separate bus.  I'd write a platform driver
-which turns around and registers more platform devices with the
-original device as the parent in the _probe routine, and unregisters
-them in _remove.  Should have the same affect with less complex code.
-However, someone with more device-model-foo may have better advice.
+x86 has a variant.  The OLPC uses OF.
 
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+josh
