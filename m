@@ -1,39 +1,50 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
+From: Jon Smirl <jonsmirl@gmail.com>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 20:26:43 +0200
-Message-ID: <87r5ya8krg.fsf@macbook.be.48ers.dk>
+Date: Wed, 27 May 2009 14:50:27 -0400
+Message-ID: <9e4733910905271150q1d51538draa8d039c8b147c05@mail.gmail.com>
 References: <1243408083.13460.14.camel@debian-nb>
-	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
-	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
-	<20090527150527.GK6805@pengutronix.de>
-	<87vdnm8sec.fsf@macbook.be.48ers.dk> <4A1D6901.2090508@freescale.com>
+	 <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	 <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	 <20090527150527.GK6805@pengutronix.de>
+	 <20090527163223.GE1970@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S933869AbZE0S1Q@vger.kernel.org>
-In-Reply-To: <4A1D6901.2090508@freescale.com> (Scott Wood's message of "Wed\, 27 May 2009 11\:23\:29 -0500")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1762404AbZE0Sun@vger.kernel.org>
+In-Reply-To: <20090527163223.GE1970@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Robert Schwebel <r.schwebel@pengutronix.de>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, Janboe Ye <yuan-bo.ye@motorola.com>, Timur Tabi <timur@freescale.com>, rmk@arm.linux.org.uk
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Robert Schwebel <r.schwebel@pengutronix.de>, Timur Tabi <timur@freescale.com>, Janboe Ye <yuan-bo.ye@motorola.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, rmk@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Scott" == Scott Wood <scottwood@freescale.com> writes:
+On Wed, May 27, 2009 at 12:32 PM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Wed, May 27, 2009 at 05:05:27PM +0200, Robert Schwebel wrote:
 
-Hi,
+>> oftree could be a great tool if these things would be resolved.
+>> Currently they are not, and in result, ARM just works and is easy,
+>> whereas on PowerPC systems people often spend more time working on
+>> binding stuff than on the actual functionality.
+>
+> This worries me too, my experiences with OF device tree handling for
+> ASoC have been pretty negative - but then audio is one of the worst
+> cases for handling within the device tree.
 
- >> Just bundle the .dtb with the kernel and they'll always be in sync. I
- >> know this isn't really in the spirit of OF, but currently imho the
- >> only realistic solution.
+ASoC is where I2C was a year ago. I2C had it's own module loading
+conventions. OF assumes the subsystem is going to follow the standard
+kernel module loading conventions. I2C has now been fixed to use the
+standard conventions and it happily works with OF now.
 
- Scott> That removes the ability to use the device tree to pass information
- Scott> from the bootloader, such as MAC addresses and clock frequencies.  On
- Scott> the u-boot list, you'll find people trying such hacks (which were
- Scott> rightly NACKed) as passing the information in the device's volatile
- Scott> registers (which the Linux driver must then not reset) to deal with
- Scott> ARM Linux's lack of this ability.
+The fight with ASoC is that two different entities are trying to link
+the modules together - ASoC (machine drivers) and the device tree
+code. There should only be one system linking everything together.
+But you want these ASoC machine drivers on ARM because ARM doesn't
+have device trees.
 
-No, with the multi-image support U-Boot has full access to the device
-tree. E.G. I adjust the flash partition list defined in the .dtb in my
-board's ft_board_setup() routine.
+I2C had the same problem. I2C wanted everything loaded form machine
+drivers. The machine drivers are now optional. ASoC can be fixed in
+the same way.
 
 -- 
-Bye, Peter Korsgaard
+Jon Smirl
+jonsmirl@gmail.com
