@@ -1,17 +1,19 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 22:31:15 +0200
-Message-ID: <20090527203115.GB16219@game.jcrosoft.org>
-References: <9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
-	<20090527192116.GA31110@n2100.arm.linux.org.uk>
-	<20090527193927.GD30039@game.jcrosoft.org>
-	<20090527.132827.65331718.davem@davemloft.net>
+Date: Wed, 27 May 2009 14:43:12 -0600
+Message-ID: <fa686aa40905271343l66841a03k8985ab29008ca72a@mail.gmail.com>
+References: <1243408083.13460.14.camel@debian-nb>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	<20090527150527.GK6805@pengutronix.de>
+	<87vdnm8sec.fsf@macbook.be.48ers.dk>
+	<4A1D6901.2090508@freescale.com>
+	<20090527175609.GB31861@flint.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20090527.132827.65331718.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <20090527175609.GB31861-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,28 +23,20 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
+To: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13:28 Wed 27 May     , David Miller wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Date: Wed, 27 May 2009 21:39:27 +0200
-> 
-> > when you have to support the same driver for non OF and OF platform it's
-> > really a pain in the ass
-> 
-> We could embed the platform_device object into the of_platform_device
-> structure, it's just an implementation issue.
-> 
-> But more to the point, I can tell you that anything platform_device
-> does can be implemented in terms of of_platform_device but the
-> opposite is not true.
-This is one of the problem I face not so long ago when I want to the boot
-count limit functionnality which is only availlble for of platform
+On Wed, May 27, 2009 at 11:56 AM, Russell King
+<rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> So, repeat this mantra: device drivers should contain no platform specifics.
+> Platform specifics should be separated from the driver and implemented by
+> platform support code.
 
-That's why I think having a simplest way to have driver availlable on the
-twice platform is important. It will be a win-win at the end
+/me suspects we are having a violent agreement on this point.
 
-Best Regards,
-J.
+g.
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
