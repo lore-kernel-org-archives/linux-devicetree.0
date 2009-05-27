@@ -1,31 +1,84 @@
-From: Timur Tabi <timur@freescale.com>
+From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 09:39:30 -0500
-Message-ID: <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+Date: Wed, 27 May 2009 17:05:27 +0200
+Message-ID: <20090527150527.GK6805@pengutronix.de>
 References: <1243408083.13460.14.camel@debian-nb>
-	 <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1764333AbZE0Oji@vger.kernel.org>
-In-Reply-To: <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Janboe Ye <yuan-bo.ye@motorola.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, rmk@arm.linux.org.uk
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ed82fe3e0905270739k38018c87ka11f62c5977e45fb-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 9:27 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
-
->> Signed-off-by: janboe <yuan-bo.ye@motorola.com>
+On Wed, May 27, 2009 at 09:39:30AM -0500, Timur Tabi wrote:
+> > > Signed-off-by: janboe <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>
+> >
+> > Heeheehe, This is Fantastic.
 >
-> Heeheehe, This is Fantastic.
+> Yes, I agree. Thanks for working on this. I was hoping to work on it
+> myself later this year. Freescale develops both ARM-based and
+> PowerPC-based SOCs, and some devices are shared between them (e.g. the
+> SSI). Lack of device-tree support on ARM has been a real hindrance to
+> getting the ARM-based Linux support on par with PowerPC.
 
-Yes, I agree.  Thanks for working on this.  I was hoping to work on it
-myself later this year.  Freescale develops both ARM-based and
-PowerPC-based SOCs, and some devices are shared between them (e.g. the
-SSI).  Lack of device-tree support on ARM has been a real hindrance to
-getting the ARM-based Linux support on par with PowerPC.
+Another reason might be this:
 
+rsc@thebe:linux-2.6$ git log --pretty=short arch/arm/mach-mx? \
+	arch/arm/plat-mxc/ | grep -e "^Author." | grep freescale | wc -l
+1
+
+rsc@thebe:linux-2.6$ git log --pretty=short arch/arm/mach-mx? \
+	arch/arm/plat-mxc/ | grep -e "^Author." | grep pengutronix | wc -l
+97
+
+rsc@thebe:linux-2.6$ git log --pretty=short arch/arm/mach-mx? \
+	arch/arm/plat-mxc/ | grep -e "^Author." | wc -l
+195
+
+I'm highly convinced that the existence of oftree-hell in ARM-land would
+have been *the* key motivation for FSL to have worked on mainline
+instead of inhouse-BSPs back in 2004 when we mainlined i.MX1 and in 2007
+when we started the mainline work on MX27 and MX31.
+
+Seriously: oftree in general is a good idea. Just that it doesn't work
+in practise. The concept has some serious flaws:
+
+- The whole concept is based on the assumption that bindings are defined
+  *once*, then never to be changed again. As this is not true (check
+  MPC5200 to find out what I mean), oftree wreckage is *the* main cause
+  of new kernels not working on old bootloaders any more. Is there a
+  solution of this problem? I have not seen a good idea how to avoid the
+  constant change in definitions.
+
+- The oftree layering is fundamentally broken. We already have a sane
+  abstraction for arbitrary hardware in the kernel: platform devices.
+  Why not instanciate platform devices from a generic oftree core?
+
+- Platform data makes it possible to store function pointers. There
+  is no equivalent to this concept in oftree-land.
+
+oftree could be a great tool if these things would be resolved.
+Currently they are not, and in result, ARM just works and is easy,
+whereas on PowerPC systems people often spend more time working on
+binding stuff than on the actual functionality.
+
+rsc
 -- 
-Timur Tabi
-Linux kernel developer at Freescale
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
