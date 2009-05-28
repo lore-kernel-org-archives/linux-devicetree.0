@@ -1,23 +1,16 @@
-From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 12:13:40 +0200
-Message-ID: <20090528101339.GV6805@pengutronix.de>
-References: <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
-	<20090527150527.GK6805@pengutronix.de>
-	<fa686aa40905270839m375bbdacqb1acb1be0a2d2da0@mail.gmail.com>
-	<20090527162000.GM6805@pengutronix.de>
-	<fa686aa40905271335o1165419hda2334bef42aa3f@mail.gmail.com>
-	<20090527234801.GP6805@pengutronix.de>
-	<4A1DD3A0.3010501@freescale.com>
-	<20090528000707.GR6805@pengutronix.de>
-	<fa686aa40905272029n32aa5f1ds86d07f0de4894815@mail.gmail.com>
-	<20090528095126.99DB4832E416@gemini.denx.de>
+Date: Thu, 28 May 2009 20:11:33 +1000
+Message-ID: <1243505493.5573.29.camel@pasglop>
+References: <20090527175609.GB31861@flint.arm.linux.org.uk>
+	<1243496236.3171.140.camel@pasglop>
+	<20090528091513.GA14789@n2100.arm.linux.org.uk>
+	<20090528.025739.16559619.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20090528095126.99DB4832E416-C2Gvrrd9BC/j/ljBK/0BTg@public.gmane.org>
+In-Reply-To: <20090528.025739.16559619.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -27,36 +20,49 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org, timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2009 at 11:51:26AM +0200, Wolfgang Denk wrote:
-> True. From a commercial point of view this is a huge  problem  casued
-> by the device tree - custumers who used to oder a BSP from commercial
-> service providers (like Robert or me :-) now often find that all they
-> need  to  do is to tweak the device tree to get their system running.
-> Lost business. D*mn...  [Maybe this explains Robert's reluctance?]
+On Thu, 2009-05-28 at 02:57 -0700, David Miller wrote:
+> From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Date: Thu, 28 May 2009 10:15:13 +0100
+> 
+> > For example, how would an IrDA transceiver be expressed in OF?
+> 
+> As a child device node of the IRDA device, with associated
+> properties.
+> 
+> You can express _ANYTHING_ using the OF device tree.  It is
+> not even something to discuss, it's flexible enough.
 
-Wolfgang, you know me long enough to realize that this argument is
-*crap*.
+Well, that example is interesting because you may not want the
+transceiver to be a child of the UART :-) The tree hierachy is mostly
+about addressing, and addressing below a UART doesn't mean much.
 
-Talking about business cases, it has turned out to be extremely
-difficult to explain customers that the effort for the actual
-functionality is only a little percentage of the work necessary to do
-the oftree stuff right. The functionality has often worked after a few
-hours, and until all oftrees have been solved, it often takes weeks.
+So if the transceiver has a bunch of MMIO registers, it might be better
+off located elsewhere, and have the UART have a "fir-transceiver"
+property with a phandle to the actual device...
 
-In result, this has already led to customers concluding that
+But yes, I definitely agree, it's flexible enough for a lot of that
+stuff. Where things get tricky is to express "methods" rather than just
+relationships. This is where x86 loses big time with ACPI, Apple lost
+with their platform functions in OF properties, and appart from having a
+real OF implementation under the hood that is kept alive along with the
+kernel to call in, the tree doesn't provide a simple solution.
 
-- mainline is not worth the effort
-- linux is overkill and one should better use cortex-bare-metal
+However, it doesn't either invalidate existing solutions based on
+function pointers into the platform code... it might even make it nicer
+by naming those functions into some kind of directory where they can be
+registered by the platform code and "named" by a property in the node,
+though I tend to prefer the approach of having a property with a phandle
+to a node that is a pseudo-device ("power-control") or so, which has its
+own driver providing the methods.
 
-However, that is only our personal observation.
+The possibilities are endless. _BUT_ it does require some careful
+thinking to get things right. To that extent, I do agree with Russell
+that rather than a "violent" conversion, ARM should first try things out
+as an opt-in for a few platforms and see how it goes.
 
-rsc
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers,
+Ben.
