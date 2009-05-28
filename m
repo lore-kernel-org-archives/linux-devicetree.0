@@ -1,84 +1,53 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Ben Dooks <ben-linux@fluff.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 08:13:34 -0600
-Message-ID: <fa686aa40905280713u2b3ef5fvbe3d58ccdb629b60@mail.gmail.com>
-References: <20090527175609.GB31861@flint.arm.linux.org.uk>
-	<1243496236.3171.140.camel@pasglop>
-	<20090528091513.GA14789@n2100.arm.linux.org.uk>
-	<20090528.025739.16559619.davem@davemloft.net>
-	<gvlvcs$ub5$1@ger.gmane.org>
+Date: Thu, 28 May 2009 15:17:43 +0100
+Message-ID: <20090528141743.GA16199@trinity.fluff.org>
+References: <1243408083.13460.14.camel@debian-nb> <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com> <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com> <20090527150527.GK6805@pengutronix.de> <87vdnm8sec.fsf@macbook.be.48ers.dk> <4A1D6901.2090508@freescale.com> <20090527175609.GB31861@flint.arm.linux.org.uk> <4A1D8FBA.6040802@freescale.com> <9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <gvlvcs$ub5$1@ger.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1763111AbZE1OSU@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Smirl <jonsmirl@gmail.com>
+Cc: Scott Wood <scottwood@freescale.com>, Russell King <rmk+lkml@arm.linux.org.uk>, Peter Korsgaard <jacmet@sunsite.dk>, Robert Schwebel <r.schwebel@pengutronix.de>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, Janboe Ye <yuan-bo.ye@motorola.com>, Timur Tabi <timur@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2009 at 6:17 AM, Dmitry Eremin-Solenikov
-<dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> David Miller wrote:
->
->> From: Russell King - ARM Linux
->> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> Date: Thu, 28 May 2009
->> 10:15:13 +0100
->>
->>> For example, how would an IrDA transceiver be expressed in OF?
->>
->> As a child device node of the IRDA device, with associated properties.
->>
->> You can express _ANYTHING_ using the OF device tree. =A0It is not even
->> something to discuss, it's flexible enough.
->
-> Hmmm. How to express the following situation:
-> On one of my platforms (sharp tosa) the backlight controller
-> is separated into two parts: one sitting on SPI, one on the I2C.
-> The tricky part is that the I2C part is only available when some
-> of registers of SPI part are programmed in a specific way.
+On Wed, May 27, 2009 at 03:13:55PM -0400, Jon Smirl wrote:
+> On Wed, May 27, 2009 at 3:08 PM, Scott Wood <scottwood@freescale.com>=
+ wrote:
+> > I'm not talking about platform specific code, I'm talking about cod=
+e to
+> > retrieve information about a device from the device tree. =A0There =
+would not
+> > be separate instances of this for "platforms X, Y and Z", just one
+> > of_platform binding in each driver. =A0It's no different than havin=
+g a
+> > platform bus binding, except in the data structures used.
+> >
+> > But to restate, having external glue to create platform devices fro=
+m the
+> > device tree is fine if that's what you want to do. =A0We used to do=
+ that, but
+> > it was a pain compared to keeping everything in one place. =A0Your =
+experience
+> > may differ.
+>=20
+> Could 'struct platform_device' and 'struct of_platform_device" be
+> unified into a single structure? It's personal preference whether the
+> internal representation of the hardware is done via a device tree or
+> snippets of platform code, but do we need to have to different device
+> types?
 
-Perhaps something like this (in dts format):
+I was wondering what the pros/cons of having a system that takes a
+device tree and manufactures platform devices / etc from it? I think
+one of the cons is that if you change the platform device data, then
+you have not only the board definitions to change, but the of->platform
+code to modify as well...
 
-spi@[someaddress] {
-        #size-cells =3D <0>;
-        #address-cells =3D <1>;
-        compatible =3D "name-of-spi-bus-device";
-        reg =3D <[someaddress] [size]>;
-        backlight-spi: backlight@5 {
-                compatible =3D "sharp,backlight-spi";
-                reg =3D <5>;  /* CS line # 5 */
-        }
-}
+--=20
+Ben
 
-i2c@[anotheraddress] {
-        #size-cells =3D <0>;
-        #address-cells =3D <1>;
-        compatible =3D "name-of-i2c-bus-device";
-        reg =3D <[anotheraddress] [size]>;
-        backlight@30 {
-                compatible =3D "sharp,backlight-i2c";
-                reg =3D <30>;
-                spi-interface-phandle =3D < &backlight-spi >;
-        }
-}
-
-Two nodes are used to describe the device and a "phandle" is used to
-link them.  A device driver probe could be triggered (bind) against
-the i2c half of the device and follow the phandle to get the rest of
-the description.
-
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Q:      What's a light-year?
+A:      One-third less calories than a regular year.
