@@ -1,67 +1,51 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 22:55:58 +1000
-Message-ID: <20090528125558.GC4565@yookeroo.seuss>
-References: <20090527175609.GB31861@flint.arm.linux.org.uk>
-	<1243496236.3171.140.camel@pasglop>
-	<20090528091513.GA14789@n2100.arm.linux.org.uk>
-	<20090528.025739.16559619.davem@davemloft.net>
-	<gvlvcs$ub5$1@ger.gmane.org> <20090528124817.GB4565@yookeroo.seuss>
+Date: Thu, 28 May 2009 14:07:35 +0100
+Message-ID: <20090528130734.GB19523@sirena.org.uk>
+References: <1243408083.13460.14.camel@debian-nb> <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com> <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com> <20090527150527.GK6805@pengutronix.de> <20090527163223.GE1970@sirena.org.uk> <9e4733910905271150q1d51538draa8d039c8b147c05@mail.gmail.com> <20090527222420.GC5591@sirena.org.uk> <9e4733910905271704q14e98429x241bc91399ccc5d0@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1761912AbZE1NHv@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20090528124817.GB4565-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
+In-Reply-To: <9e4733910905271704q14e98429x241bc91399ccc5d0@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Smirl <jonsmirl@gmail.com>
+Cc: Robert Schwebel <r.schwebel@pengutronix.de>, Timur Tabi <timur@freescale.com>, Janboe Ye <yuan-bo.ye@motorola.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, rmk@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2009 at 10:48:17PM +1000, David Gibson wrote:
-> On Thu, May 28, 2009 at 12:17:32PM +0000, Dmitry Eremin-Solenikov wrote:
-> > David Miller wrote:
-> > 
-> > > From: Russell King - ARM Linux
-> > > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> Date: Thu, 28 May 2009
-> > > 10:15:13 +0100
-> > > 
-> > >> For example, how would an IrDA transceiver be expressed in OF?
-> > > 
-> > > As a child device node of the IRDA device, with associated properties.
-> > > 
-> > > You can express _ANYTHING_ using the OF device tree.  It is not even
-> > > something to discuss, it's flexible enough.
-> > 
-> > Hmmm. How to express the following situation:
-> > On one of my platforms (sharp tosa) the backlight controller
-> > is separated into two parts: one sitting on SPI, one on the I2C.
-> > The tricky part is that the I2C part is only available when some
-> > of registers of SPI part are programmed in a specific way.
-> 
-> Put nodes under both the SPI and I2C busses, they have properties with
-> phandles to refer to each other (could be one way or both depending on
-> needs).  Sprinkle with any additional information properties as
-> necessary.  Your driver (in the broad sense, rather than the "struct
-> device_driver" sense) binds both devices and does what it needs to do.
-> 
-> The I2C part should possibly have a status property with value
-> "disabled" to indicate that it's not usable, until something activates
-> it (in this case the other part of the driver frobbing the SPI side).
+On Wed, May 27, 2009 at 08:04:58PM -0400, Jon Smirl wrote:
+> On Wed, May 27, 2009 at 6:24 PM, Mark Brown
 
-I should add, that's only one way, though it is the most obvious to me
-from the information you've given.  Depending on the details of the
-device other possibilities might be appropriate.
+> > Please read back over the original soc-of-simple thread, it goes into
+> > the problems in a bit more detail.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+...
+
+> It's an evolutionary process, let's get ASoC loading all of the right
+> modules first. Then we can move on to clocking, etc. I2C went through
+
+As I have said a number of times with the exception of the AC97 the core
+is basically there.  Certainly as far as loading modules goes the work
+that needs doing is all at the driver level.  It'd be helpful if you'd
+take this on board more - as things stand ASoC isn't doing any device
+loading itself and relies on notifications from the individual drivers
+that they're ready to use.
+
+There's more stuff that needs doing in the core but I'm not going to
+stop and wait for the drivers to catch up except in so much as it stops
+other work - I only have the ability to test some devices and plenty of
+stuff to be getting on with.  The feature is there if people want to use
+it and I'm insisting on it for new CODEC drivers.
+
+> the same process.  For example, the new efika-audio-fabric and
+> pcm030-audio-fabric files should not be needed once the binding
+
+As I have repeatedly explained to you there are particular issues with
+AC97 which affect these drivers.
+
+> When I disabled soc-of-simple that stop the autoloading of codecs on
+> i2s. That needs to be fixed. Next kernel cycle I will be working on
+> mpc5200 i2s.
+
+This is going down to the individual drivers for your systems using old
+device instantiation methods.  Someone needs to update the drivers.
