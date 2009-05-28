@@ -1,31 +1,88 @@
-From: Robert Schwebel <robert@schwebel.de>
+From: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 16:24:20 +0200
-Message-ID: <20090528142420.GD6805@pengutronix.de>
-References: <1243408083.13460.14.camel@debian-nb> <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com> <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com> <20090527150527.GK6805@pengutronix.de> <87vdnm8sec.fsf@macbook.be.48ers.dk> <4A1D6901.2090508@freescale.com> <20090527175609.GB31861@flint.arm.linux.org.uk> <4A1D8FBA.6040802@freescale.com> <9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com> <20090528141743.GA16199@trinity.fluff.org>
+Date: Thu, 28 May 2009 14:29:03 +0000 (UTC)
+Message-ID: <gvm73f$ub5$2@ger.gmane.org>
+References: <1243408083.13460.14.camel@debian-nb>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	<20090527150527.GK6805@pengutronix.de>
+	<fa686aa40905270839m375bbdacqb1acb1be0a2d2da0@mail.gmail.com>
+	<2ve0f6-8fn.ln1@woodchuck.wormnet.eu>
+	<fa686aa40905271346l737cb0e5x7d62c581b40c2d4c@mail.gmail.com>
+	<h4o0f6-k5o.ln1@woodchuck.wormnet.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1763352AbZE1OYo@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20090528141743.GA16199@trinity.fluff.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Dooks <ben-linux@fluff.org>
-Cc: Jon Smirl <jonsmirl@gmail.com>, Scott Wood <scottwood@freescale.com>, Russell King <rmk+lkml@arm.linux.org.uk>, Peter Korsgaard <jacmet@sunsite.dk>, Robert Schwebel <r.schwebel@pengutronix.de>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, Janboe Ye <yuan-bo.ye@motorola.com>, Timur Tabi <timur@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2009 at 03:17:43PM +0100, Ben Dooks wrote:
-> I was wondering what the pros/cons of having a system that takes a
-> device tree and manufactures platform devices / etc from it? I think
-> one of the cons is that if you change the platform device data, then
-> you have not only the board definitions to change, but the of->platform
-> code to modify as well...
-
-I think a unification of both data structures would be much better than
-having two of them ontop of each other.
-
-rsc
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+QWxleGFuZGVyIENsb3V0ZXIgd3JvdGU6Cgo+IEluIGdtYW5lLmxpbnV4Lmtlcm5lbCBHcmFudCBM
+aWtlbHkKPiA8Z3JhbnQubGlrZWx5QHNlY3JldGxhYi5jYT4gd3JvdGU6Cj4+IE9uIFdlZCwgTWF5
+IDI3LCAyMDA5IGF0IDEyOjU2IFBNLCBBbGV4YW5kZXIgQ2xvdXRlcgo+PiA8YWxleEBkaWdyaXou
+b3JnLnVrPiB3cm90ZToKPj4+IEluIGdtYW5lLmxpbnV4Lmtlcm5lbCBHcmFudCBMaWtlbHkKPj4+
+IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNhPiB3cm90ZToKPj4+PiBPbiBXZWQsIE1heSAyNywg
+MjAwOSBhdCA5OjA1IEFNLCBSb2JlcnQgU2Nod2ViZWwKPj4+Pgo+Pj4+IFtzbmlwcGVkXQo+Pj4+
+Cj4+PiBBbHRob3VnaCBJIGhhdmUgbm8gaW5wdXQgb2YgdmFsdWUgaGVyZSwgSSdtIGhvcGluZyBJ
+IGRvIG5vdCBiZWNvbWUgdGhlCj4+PiBuZXh0IHBvc3RlcmNoaWxkIGZvciAicGFpbisrIi4KPj4+
+Cj4+PiBJJ20gd29ya2luZyB0aHJvdWdoIHJlZG8naW5nIHRoZSBGUEdBIHN1cHBvcnQgaW4gdGhl
+IFRTLTc4MDBbMV0gaW50byBhCj4+PiBuZXcgYnVzIHJhdGhlciB0aGFuIGp1c3QgY29udGludWlu
+ZyB0aGUgbWVzc3kgZGlyZWN0aW9uIEkgaGF2ZSBiZWVuCj4+PiBnb2luZyB0byBkYXRlWzJdLgo+
+Pj4KPj4+IE15IGN1cnJlbnQgYXBwcm9hY2ggaXMgdGhhdCB0aGUgYnVzIGhhbmRsZXMgdGhlICdo
+b3RwbHVnJ2luZyBvZiB0aGUKPj4+IEZQR0EgYml0c3RyZWFtIGJ5IHVucmVnaXN0ZXJpbmcgYWxs
+IHRoZSBkZXZpY2VzIGFuZCB0aGVuIHdoZW4gaXQncwo+Pj4gaW5mb3JtZWQgdGhlIG5ldyBiaXRz
+dHJlYW0gaXMgcmVhZHkgaXQgcHJvZHMgYWxsIHRoZSByZWdpc3RlcmVkCj4+PiBkcml2ZXJzIGlm
+IGFueSBkZXZpY2VzIG5lZWQgYnJpbmdpbmcgdXAgKG9idmlvdXNseSBkcml2ZXJzIGNhbiBiZQo+
+Pj4gbW9kcHJvYmUnZCBhcyBhbmQgd2hlbikuCj4+Pgo+Pj4gVGhlICdtYWdpYycgaXMgdGhhdCB0
+aGUgRlBHQSBjb2RlIGhhcyBzb21lIHNwZWNpYWwgdmFsdWVbM10gdGhhdCB3aGF0Cj4+PiBpdCBp
+cyBhbmQgdGhlIGRyaXZlcnMgKG91dHNpZGUgdGhlIHBsYXRmb3JtIGNvZGUpIGhhdmUgYSBsaXN0
+IG9mIEZQR0EKPj4+IG1hZ2ljIHZhbHVlcyAod2l0aCBhIG1hc2spIHRoYXQgdGhleSBhcmUgd2ls
+bGluZyB0byBzZXJ2aWNlLiDCoFRoZQo+Pj4gKmJ1cyogKHBsYXRmb3JtIGNvZGUpIGlzIHdoYXQg
+aW5zdGFsbHMgdGhlIGRldmljZXMgZWZmZWN0aXZlbHkgYW5kCj4+PiBvbmx5IGRvZXMgc28gaWYg
+dGhlIGxvYWRlZCBkcml2ZXIgc2F5cyBpdCBjYW4gZHJpdmUgYSBwYXJ0aWN1bGFyCj4+PiBsb2Fk
+ZWQgYml0c3RyZWFtIChpbiB0aGUgYnVzIGRyaXZlciBzdHJ1Y3QgaXMgYSBhcnJheSBvZiBJRCdz
+IGl0Cj4+PiBjaGVja3MpLgo+Pj4KPj4+IERvZXMgdGhpcyBzb3VuZCBzYW5lPyDCoElzIGl0IGFu
+IGFwcHJvYWNoIHRoYXQgY291bGQgYmUgQUNLZWQgb25lIGRheT8KPj4+IEN1cnJlbnRseSB0aGUg
+Yml0IHRoYXQgbWlnaHQgYmUgY29uc2lkZXJlZCBzaW5mdWwgaXMgdGhlcmUgaXMgZm9yIHNvbWUK
+Pj4+IG9mIHRoZSBkcml2ZXJzIChydGMtbTQ4dDg2LCB0aW1lcmlvbWVtLXJuZyBhbmQgcGxhdF9u
+YW5kKSB0aGUgRlBHQSBidXMKPj4+ICdkcml2ZXInIGlzIGEgbGlnaHQgd3JhcHBlciBhcm91bmQg
+dGhlIHBsYXRmb3JtIGRldmljZSBkcml2ZXIuIMKgVGhpcwo+Pj4gaXMgc28gdGhhdCB0aGUgaG9v
+a3Mgc3RpbGwgZXhpc3Qgc28gdGhlIGJ1cyBrbm93IHdoYXQgdG8gbG9hZCBhbmQKPj4+IHVubG9h
+ZCBhcyBhbmQgd2hlbi4KPj4gCj4+IFBlcnNvbmFsbHksIEknZCBub3Qgd3JpdGUgYSBzZXBhcmF0
+ZSBidXMuICBJJ2Qgd3JpdGUgYSBwbGF0Zm9ybSBkcml2ZXIKPj4gd2hpY2ggdHVybnMgYXJvdW5k
+IGFuZCByZWdpc3RlcnMgbW9yZSBwbGF0Zm9ybSBkZXZpY2VzIHdpdGggdGhlCj4+IG9yaWdpbmFs
+IGRldmljZSBhcyB0aGUgcGFyZW50IGluIHRoZSBfcHJvYmUgcm91dGluZSwgYW5kIHVucmVnaXN0
+ZXJzCj4+IHRoZW0gaW4gX3JlbW92ZS4gIFNob3VsZCBoYXZlIHRoZSBzYW1lIGFmZmVjdCB3aXRo
+IGxlc3MgY29tcGxleCBjb2RlLgo+PiBIb3dldmVyLCBzb21lb25lIHdpdGggbW9yZSBkZXZpY2Ut
+bW9kZWwtZm9vIG1heSBoYXZlIGJldHRlciBhZHZpY2UuCj4+IAo+IFRoYXQncyBhIHRob3VnaHQs
+IGJ1dCB0aGlzICdidXMnIGRvZXMgbm90IGp1c3QgZHJpdmUgcGxhdGZvcm0gZGV2aWNlcywKPiB0
+aGVyZSBhcmUgb3RoZXIgZHJpdmVycyB0aGF0IHdpbGwgbGl2ZSBvdXRzaWRlIHRoZSBzY29wZS4K
+PiAKPiBJIGhhdmUgYSBoYWxmIGNvbXBsZXRlZCBHUElPIGV4cGFuZGVyIGZvciB0aGUgJ2ZhY3Rv
+cnknIEZQR0EgYml0c3RyZWFtCj4gdGhhdCBjb3VsZCBub3QgYmUgZG9uZSBhcyBhIHBsYXRmb3Jt
+IGRldmljZS4gIFRoZSBHUElPIHBpbidzIGFsc28KPiBtdWx0aXBsZXggYXMgYW4gSVNBIChQQy8x
+MDQpIGJ1cyBhbmQgY2hpcCBzZWxlY3QncyBhIFNQSSBidXMgdG9vLgo+IAo+IEFub3RoZXIgZHJp
+dmVyIGlzIGEgRE1BIGVuZ2luZSBwcm92aXNpb25lZCBieSB0aGUgZmFjdG9yeSBiaXRzdHJlYW0g
+dG9vCj4gYXMgd2VsbCBhcyBBVlIrQURDK3dhdGNoZG9nIHN5c3RlbSB0b28uCj4gCj4gV2hhdCB3
+b3VsZCBtYWtlIHNlbnNlIGZvciB0aGlzIGFwcHJvYWNoIHdvdWxkIGJlIGlmIGl0IHdhcyB0byBk
+cml2ZQo+IGJpdCdzIGZyb20gdGhlIG9wZW5jb3Jlcy5vcmcgd2Vic2l0ZS4KPiAKPiBCZWNhdXNl
+IHRoZXJlIGlzIGEgbWl4IG9mIHBsYXRmb3JtIGRldmljZXMgYW5kICdhd2t3YXJkJyBiaXQncywg
+dGhpcyBpcwo+IHdoeSBJIHdhcyB0aGlua2luZyBhYm91dCBhIHNlcGVyYXRlIGJ1cy4KPiAKPiBD
+aGVlcnMgZm9yIHRoZSBzdWdnZXN0aW9uLCBpdCdzIGdvdCBtZSB0aGlua2luZ3RoYXQgdGhlcmUg
+c3RpbGwgaGFzIHRvCj4gYmUgYSBiZXR0ZXIgd2F5IDopCgpXaGVuIGZhY2luZyBuZWFybHkgdGhl
+IHNhbWUgcHJvYmxlbXMgd2l0aCBUb3NoaWJhIE11bHRpIEkvTyBjaGlwcywKd2UgaGF2ZSBjcmVh
+dGVkIGFuZCB1c2VkIHRoZSBzcGVjaWFsIHNldCBvZiBmdW5jdGlvbnMuIFlvdSBjYW4gY2hlY2sK
+dGhlIGRyaXZlcnMvbWZkL21mZC1jb3JlLmMgYW5kIGluY2x1ZGUvbGludXgvbWZkL2NvcmUuaCBm
+b3IgZGV0YWlscy4KCi0tIApXaXRoIGJlc3Qgd2lzaGVzCkRtaXRyeQoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWls
+aW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQG96bGFicy5vcmcKaHR0cHM6Ly9vemxhYnMub3Jn
+L21haWxtYW4vbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
