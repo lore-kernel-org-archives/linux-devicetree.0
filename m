@@ -1,67 +1,83 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 11:37:46 +0100
-Message-ID: <20090528103745.GA19523@sirena.org.uk>
-References: <20090527234801.GP6805@pengutronix.de>
-	<4A1DD3A0.3010501@freescale.com>
-	<20090528000707.GR6805@pengutronix.de>
-	<20090527.171525.204909140.davem@davemloft.net>
+Date: Thu, 28 May 2009 11:34:21 +0100
+Message-ID: <20090528103421.GC14789@n2100.arm.linux.org.uk>
+References: <20090527175609.GB31861@flint.arm.linux.org.uk>
+	<1243496236.3171.140.camel@pasglop>
+	<20090528091513.GA14789@n2100.arm.linux.org.uk>
+	<20090528.025739.16559619.davem@davemloft.net>
+	<1243505493.5573.29.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.arm.linux.org.uk>
 Content-Disposition: inline
-In-Reply-To: <20090527.171525.204909140.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+In-Reply-To: <1243505493.5573.29.camel@pasglop>
+List-Unsubscribe: <http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=unsubscribe>
+List-Archive: <http://lists.arm.linux.org.uk/lurker/list/linux-arm-kernel.html>
+List-Post: <mailto:linux-arm-kernel@lists.arm.linux.org.uk>
+List-Help: <mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=help>
+List-Subscribe: <http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.arm.linux.org.uk
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.arm.linux.org.uk
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: David Miller <davem@davemloft.net>, scottwood@freescale.com, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, timur@freescale.com, yuan-bo.ye@motorola.com, linux-arm-kernel@lists.arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 05:15:25PM -0700, David Miller wrote:
-> From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Thu, May 28, 2009 at 08:11:33PM +1000, Benjamin Herrenschmidt wrote:
+> Well, that example is interesting because you may not want the
+> transceiver to be a child of the UART :-) The tree hierachy is mostly
+> about addressing, and addressing below a UART doesn't mean much.
+> 
+> So if the transceiver has a bunch of MMIO registers, it might be better
+> off located elsewhere, and have the UART have a "fir-transceiver"
+> property with a phandle to the actual device...
 
-> > It works badly for corner cases, and embedded land is full
-> > of it. The effort to get the oftree stuff right is often more than a
-> > magnitude of order higher than the effort for the actual functionality.
-> > That should be an alarm sign that something is wrong.
+IrDA transceivers do not have MMIO registers.  Transceivers are an IR
+LED, an IR phototransitor and receiver circuitry.  They're typically
+9 pin devices with power, ground, transmit, receive and a bunch of
+control signals.
 
-> And here you speak about the negatives purely in generalities that
-> cannot be discussed concretely.
+These control signals end up connected to some random GPIO pins or
+FPGA or some other device which has some free IO lines in the platform.
 
-> And, sadly, I think this is on purpose.
+These control signals need to be controlled with reference to the IrDA
+driver, sometimes with tight timing constraints (particularly when
+switching between SIR and FIR modes.)
 
-A concrete example that was mentioned elsewhere in the thread is audio
-subsystems.  The audio subsystem for an embedded system will contain
-multiple chips - a mobile phone could have the CPU, an audio CODEC,
-bluetooth and GSM for example.  These will be interconnected by a
-combination of analogue and digital links.  The digital links consist of
-six wires (data, sync clock and bit clock for each of transmit and
-recieve), some of which may be tied together in hardware.  Some of these
-links may be shared either with switches or using TDM.  The devices will
-also have master clocks from various sources and will often have PLLs or
-FLLs able to generate clocks if the inputs aren't directly usable.  Each
-clock domain within the audio subsystem will need some level of
-synchronisation of the clocks and there may be multiple clock domains
-within the system.
+> But yes, I definitely agree, it's flexible enough for a lot of that
+> stuff. Where things get tricky is to express "methods" rather than just
+> relationships. This is where x86 loses big time with ACPI, Apple lost
+> with their platform functions in OF properties, and appart from having a
+> real OF implementation under the hood that is kept alive along with the
+> kernel to call in, the tree doesn't provide a simple solution.
+> 
+> However, it doesn't either invalidate existing solutions based on
+> function pointers into the platform code... it might even make it nicer
+> by naming those functions into some kind of directory where they can be
+> registered by the platform code and "named" by a property in the node,
+> though I tend to prefer the approach of having a property with a phandle
+> to a node that is a pseudo-device ("power-control") or so, which has its
+> own driver providing the methods.
 
-In principle we could describe the links between the devices, provide
-some additional use case based constraints then take this information
-and figure out a suitable runtime configuration automatically; this is
-probably the only viable OS neutral way of doing things.  In practice
-we're nowhere near having a clock framework which is able to support
-implementing this.
+The kind of reply I was hoping to get to my email was something more
+along these lines - an informed view giving an idea how some of these
+issues would be addressed with an OF device tree.
 
-The current approach is to write custom code that knows a suitable way
-to set things up in a given system (which is a much more tractable
-problem).  The PowerPC people have mostly accepted using this approach
-but they're really not happy with it and it's been difficult to get the
-general community understanding that it's hard to cope with this in the
-device tree.
+I can see how the named functions/directory would work - that seems to
+be relatively simple and straight forward.
+
+However, the pseudo-device approach I'm less clear about.  With a separate
+driver for the "power control" pseudo-device, how would you communicate
+the state information down to that driver?
+
+I am equating OF devices and drivers too much with the struct device and
+struct driver model, which sounds like it's not the best thing to do with
+OF.
+
+-------------------------------------------------------------------
+List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
+FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
+Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
