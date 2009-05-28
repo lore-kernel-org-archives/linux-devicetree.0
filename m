@@ -1,39 +1,92 @@
-From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 12:17:32 +0000 (UTC)
-Message-ID: <gvlvcs$ub5$1@ger.gmane.org>
-References: <20090527175609.GB31861@flint.arm.linux.org.uk>
-	<1243496236.3171.140.camel@pasglop>
-	<20090528091513.GA14789@n2100.arm.linux.org.uk>
-	<20090528.025739.16559619.davem@davemloft.net>
+Date: Thu, 28 May 2009 14:43:07 +0200
+Message-ID: <20090528124307.GN22742@pengutronix.de>
+References: <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	<20090527150527.GK6805@pengutronix.de>
+	<87vdnm8sec.fsf@macbook.be.48ers.dk>
+	<4A1D6901.2090508@freescale.com>
+	<20090527175609.GB31861@flint.arm.linux.org.uk>
+	<4A1D8FBA.6040802@freescale.com>
+	<20090527192909.GA32398@flint.arm.linux.org.uk>
+	<20090527205218.GA5591@sirena.org.uk>
+	<fa686aa40905271405pc2f1738gc8dd139f61a0e27@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1761426AbZE1MRx@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.arm.linux.org.uk
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fa686aa40905271405pc2f1738gc8dd139f61a0e27-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-David Miller wrote:
+On Wed, May 27, 2009 at 03:05:58PM -0600, Grant Likely wrote:
+> On Wed, May 27, 2009 at 2:52 PM, Mark Brown
+> <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> > On Wed, May 27, 2009 at 08:29:10PM +0100, Russell King wrote:
+> >> On Wed, May 27, 2009 at 02:08:42PM -0500, Scott Wood wrote:
+> >
+> >> > I'm not talking about platform specific code, I'm talking about code=
+ to
+> >> > retrieve information about a device from the device tree. =A0There w=
+ould
+> >> > not be separate instances of this for "platforms X, Y and Z", just o=
+ne
+> >> > of_platform binding in each driver. =A0It's no different than having=
+ a
+> >> > platform bus binding, except in the data structures used.
+> >
+> >> I really don't see what OF buys us then, apart from additional depende=
+ncies
+> >> that have to be correct for the kernel to work. =A0I can only see disa=
+dvantages
+> >> if all OF is, is a way to pass some file to the kernel to (effectively=
+) tell
+> >> it which drivers to use.
+> >
+> > The main selling points of the device tree AFAICT are that some
+> > platforms have to use it it anyway due to the native OS and firmware for
+> > the platform use it, the possibility of using the same device tree with
+> > more than one OS (modulo unrepresentable holes) and the fact that some
+> > people find it more convenient to use than straight data tables
+> > (personally I find the two approaches to be much of a muchness there).
+> > Perhaps I'm missing something, though?
+> =
 
-> From: Russell King - ARM Linux
-> <linux@arm.linux.org.uk> Date: Thu, 28 May 2009
-> 10:15:13 +0100
-> 
->> For example, how would an IrDA transceiver be expressed in OF?
-> 
-> As a child device node of the IRDA device, with associated properties.
-> 
-> You can express _ANYTHING_ using the OF device tree.  It is not even
-> something to discuss, it's flexible enough.
+> Here are some that I've find useful:
+> =
 
-Hmmm. How to express the following situation:
-On one of my platforms (sharp tosa) the backlight controller
-is separated into two parts: one sitting on SPI, one on the I2C.
-The tricky part is that the I2C part is only available when some
-of registers of SPI part are programmed in a specific way.
+> There is the advantage that it decouples the machine description from
+> the kernel code, which in turn seems to encourage code reuse.  There
+> has been a significant decrease in the amount of platform specific
+> code in powerpc since the switch to FDT booting.
+> =
 
--- 
-With best wishes
-Dmitry
+> There is the advantage of easy multiplatform support.  I regularly
+> build a single kernel image which boots on all my MPC5200 boards, and
+> on my MPC83xx boards.
+
+That is not necessarily an advantage of a device tree. On ARM you can
+also build a kernel which runs on 20+ PXA platforms at the same time.
+(And I'm sure it can be done to even support say i.MX and PXA at the
+same time, but this is another story)
+
+Sascha
+
+-- =
+
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
