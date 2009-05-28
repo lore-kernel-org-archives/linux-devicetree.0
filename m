@@ -1,21 +1,23 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Wed, 27 May 2009 21:36:08 -0600
-Message-ID: <fa686aa40905272036ueb35e6do86160788ab7c7d8a@mail.gmail.com>
+Date: Thu, 28 May 2009 13:25:57 +1000
+Message-ID: <20090528032557.GF1464@yookeroo.seuss>
 References: <1243408083.13460.14.camel@debian-nb>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
 	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
 	<20090527150527.GK6805@pengutronix.de>
-	<fa686aa40905270839m375bbdacqb1acb1be0a2d2da0@mail.gmail.com>
-	<20090527162000.GM6805@pengutronix.de>
-	<fa686aa40905271335o1165419hda2334bef42aa3f@mail.gmail.com>
-	<20090527234801.GP6805@pengutronix.de> <4A1DD3A0.3010501@freescale.com>
-	<20090528000707.GR6805@pengutronix.de>
-	<20090528025718.GC1464@yookeroo.seuss>
+	<87vdnm8sec.fsf@macbook.be.48ers.dk>
+	<4A1D6901.2090508@freescale.com>
+	<20090527175609.GB31861@flint.arm.linux.org.uk>
+	<4A1D8FBA.6040802@freescale.com>
+	<20090527192909.GA32398@flint.arm.linux.org.uk>
+	<20090527205218.GA5591@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090528025718.GC1464-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20090527205218.GA5591-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -25,23 +27,42 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <tim>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 8:57 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> Grant mentions the Xilinx devices as an example - they're interesting
-> because of the fancy stuff they're doing, autogenerating the devtree
-> from the FPGA configuration. =A0But to me the real indicator of the
-> device tree's value is the handful of platforms for which support has
-> been added with *only* a new dts - a single, fairly simple text file.
+On Wed, May 27, 2009 at 09:52:23PM +0100, Mark Brown wrote:
+> On Wed, May 27, 2009 at 08:29:10PM +0100, Russell King wrote:
+> > On Wed, May 27, 2009 at 02:08:42PM -0500, Scott Wood wrote:
+> 
+> > > I'm not talking about platform specific code, I'm talking about code to  
+> > > retrieve information about a device from the device tree.  There would  
+> > > not be separate instances of this for "platforms X, Y and Z", just one  
+> > > of_platform binding in each driver.  It's no different than having a  
+> > > platform bus binding, except in the data structures used.
+> 
+> > I really don't see what OF buys us then, apart from additional dependencies
+> > that have to be correct for the kernel to work.  I can only see disadvantages
+> > if all OF is, is a way to pass some file to the kernel to (effectively) tell
+> > it which drivers to use.
+> 
+> The main selling points of the device tree AFAICT are that some
+> platforms have to use it it anyway due to the native OS and firmware for
+> the platform use it, the possibility of using the same device tree with
+> more than one OS (modulo unrepresentable holes) and the fact that some
+> people find it more convenient to use than straight data tables
+> (personally I find the two approaches to be much of a muchness there).
+> Perhaps I'm missing something, though?
 
-Yes, exactly!  Even with the .dtb blob linked into the kernel image
-this has been a huge win in simplicity.
+The tree structure as opposed to plain data tables is not a trivial
+difference.  It makes it much, much more convenient to describe
+complex device layouts unambiguously than flat tables.  It's not
+perfect but it's about three shit loads better than flat data tables
+(powerpc embedded went through that stage too, on the way to device
+trees and it sucked mightily).
 
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
