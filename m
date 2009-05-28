@@ -1,51 +1,58 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 14:07:35 +0100
-Message-ID: <20090528130734.GB19523@sirena.org.uk>
-References: <1243408083.13460.14.camel@debian-nb> <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com> <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com> <20090527150527.GK6805@pengutronix.de> <20090527163223.GE1970@sirena.org.uk> <9e4733910905271150q1d51538draa8d039c8b147c05@mail.gmail.com> <20090527222420.GC5591@sirena.org.uk> <9e4733910905271704q14e98429x241bc91399ccc5d0@mail.gmail.com>
+Date: Thu, 28 May 2009 15:18:02 +0200 (CEST)
+Message-ID: <alpine.LFD.2.00.0905281457170.3397@localhost.localdomain>
+References: <fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com> <ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com> <20090527150527.GK6805@pengutronix.de> <87vdnm8sec.fsf@macbook.be.48ers.dk> <4A1D6901.2090508@freescale.com>
+ <20090527175609.GB31861@flint.arm.linux.org.uk> <4A1D8FBA.6040802@freescale.com> <20090527192909.GA32398@flint.arm.linux.org.uk> <20090527205218.GA5591@sirena.org.uk> <fa686aa40905271405pc2f1738gc8dd139f61a0e27@mail.gmail.com>
+ <20090528124307.GN22742@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1761912AbZE1NHv@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9e4733910905271704q14e98429x241bc91399ccc5d0@mail.gmail.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1762580AbZE1NUj@vger.kernel.org>
+In-Reply-To: <20090528124307.GN22742@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Smirl <jonsmirl@gmail.com>
-Cc: Robert Schwebel <r.schwebel@pengutronix.de>, Timur Tabi <timur@freescale.com>, Janboe Ye <yuan-bo.ye@motorola.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, rmk@arm.linux.org.uk
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King <rmk+lkml@arm.linux.org.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, linux-kernel@vger.kernel.org, Timur Tabi <timur@freescale.com>, Scott Wood <scottwood@freescale.com>, Janboe Ye <yuan-bo.ye@motorola.com>, linux-arm-kernel@lists.arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 08:04:58PM -0400, Jon Smirl wrote:
-> On Wed, May 27, 2009 at 6:24 PM, Mark Brown
+On Thu, 28 May 2009, Sascha Hauer wrote:
+> > There is the advantage of easy multiplatform support.  I regularly
+> > build a single kernel image which boots on all my MPC5200 boards, and
+> > on my MPC83xx boards.
+> 
+> That is not necessarily an advantage of a device tree. On ARM you can
+> also build a kernel which runs on 20+ PXA platforms at the same time.
+> (And I'm sure it can be done to even support say i.MX and PXA at the
+> same time, but this is another story)
 
-> > Please read back over the original soc-of-simple thread, it goes into
-> > the problems in a bit more detail.
+Well, you can run it on 20+ PXA platforms which have all their own
+machine number, but you have all the little details of each platform
+hardcoded into the kernel.
 
-...
+That does not help at all when your board has 5 variants just
+different in subtle details which can not be probed or enumerated by
+inspection. That's a common scenario in the embedded world.
 
-> It's an evolutionary process, let's get ASoC loading all of the right
-> modules first. Then we can move on to clocking, etc. I2C went through
+So you either have 5 board numbers and all the details harcoded again
+or you add some extra magic to deduce on which variant you are running
+on.
 
-As I have said a number of times with the exception of the AC97 the core
-is basically there.  Certainly as far as loading modules goes the work
-that needs doing is all at the driver level.  It'd be helpful if you'd
-take this on board more - as things stand ASoC isn't doing any device
-loading itself and relies on notifications from the individual drivers
-that they're ready to use.
+We have seen almost everything in the weirdness range from poking in
+some hardcoded FLASH cells over weird command line parsers up to a XML
+parser which were added to work around the limitations of the machine
+number model.
 
-There's more stuff that needs doing in the core but I'm not going to
-stop and wait for the drivers to catch up except in so much as it stops
-other work - I only have the ability to test some devices and plenty of
-stuff to be getting on with.  The feature is there if people want to use
-it and I'm insisting on it for new CODEC drivers.
+With a device tree you can avoid that crap and provide a standardized
+interface for such cases.
 
-> the same process.  For example, the new efika-audio-fabric and
-> pcm030-audio-fabric files should not be needed once the binding
+I'm not saying that the device tree will make all those problems go
+away magically, but it's orders of magnitudes better than what people
+do now.
 
-As I have repeatedly explained to you there are particular issues with
-AC97 which affect these drivers.
+There is no need to force switch all of ARM to the device tree, but
+adding support for it would be a good move. Nobody wants to enforce it
+and both models can live happily side by side and we'll see which
+variant turns out to be the long term favourite solution.
 
-> When I disabled soc-of-simple that stop the autoloading of codecs on
-> i2s. That needs to be fixed. Next kernel cycle I will be working on
-> mpc5200 i2s.
+Thanks,
 
-This is going down to the individual drivers for your systems using old
-device instantiation methods.  Someone needs to update the drivers.
+	tglx
