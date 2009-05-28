@@ -1,69 +1,39 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 13:44:08 +0200
-Message-ID: <20090528114408.GA11285@game.jcrosoft.org>
-References: <1243408083.13460.14.camel@debian-nb>
-	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
-	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
-	<20090527150527.GK6805@pengutronix.de>
-	<87vdnm8sec.fsf@macbook.be.48ers.dk>
-	<4A1D6901.2090508@freescale.com>
-	<20090527175609.GB31861@flint.arm.linux.org.uk>
+Date: Thu, 28 May 2009 12:17:32 +0000 (UTC)
+Message-ID: <gvlvcs$ub5$1@ger.gmane.org>
+References: <20090527175609.GB31861@flint.arm.linux.org.uk>
 	<1243496236.3171.140.camel@pasglop>
 	<20090528091513.GA14789@n2100.arm.linux.org.uk>
+	<20090528.025739.16559619.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20090528091513.GA14789-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1761426AbZE1MRx@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 10:15 Thu 28 May     , Russell King - ARM Linux wrote:
-> On Thu, May 28, 2009 at 05:37:16PM +1000, Benjamin Herrenschmidt wrote:
-> > On Wed, 2009-05-27 at 18:56 +0100, Russell King wrote:
-> > > 
-> > > smc91x is a prime example of the kind of information drivers need - base
-> > > address and irq are very much insufficient to describe how this device is
-> > > connected.  There's much more information required to specify this device
-> > > fully, and throwing it into the driver doesn't work.  We've been there
-> > > and proven that point.
-> > 
-> > The device-tree is a very nice and convenient way to convey all the
-> > informations the driver need straight to the driver without any platform
-> > code in the middle :-)
-> 
-> I'm still uncertain whether that's actually a true statement.  For some
-> cases, of course it's true, but I have a nasty suspicion that we have
-> corner cases where OF won't cope well with.
-> 
-> As I see it, if we were to convert to OF, we're boxing ourselves in to
-> a corner that would be extremely difficult to get out of.  We would
-> never be able to step back from OF.  Lets take an example.  If we were
-> to convert PXA to OF including all the PXA SoC drivers, and a board
-> configuration came along which required hacks to a driver.  Later on
-> we find that most platform authors are applying similar hacks because
-> their hardware is subtly different but those differences can't be
-> expressed via OF.  At this point, what do we do?  We can't say "well,
-> OF doesn't work well on this platform, we want to get rid of it" that
-> would be extremely difficult to impossible to do.
-One of the really nice ability is to allow to simplify AMP support
-by defining one device tree for each core where each kernel will use nealy the same
-kernel. As done by Kumar for the mpc8572ds.
+David Miller wrote:
 
-You can found here the boot procedure and kernel option
-http://git.denx.de/?p=u-boot/u-boot-arm.git;a=blob;f=doc/README.mpc8572ds;h=06dab596bea52ab8d8c2ba89d86f793cc4881ccb;hb=HEAD
+> From: Russell King - ARM Linux
+> <linux@arm.linux.org.uk> Date: Thu, 28 May 2009
+> 10:15:13 +0100
+> 
+>> For example, how would an IrDA transceiver be expressed in OF?
+> 
+> As a child device node of the IRDA device, with associated properties.
+> 
+> You can express _ANYTHING_ using the OF device tree.  It is not even
+> something to discuss, it's flexible enough.
 
-Best Regards,
-J.
+Hmmm. How to express the following situation:
+On one of my platforms (sharp tosa) the backlight controller
+is separated into two parts: one sitting on SPI, one on the I2C.
+The tricky part is that the I2C part is only available when some
+of registers of SPI part are programmed in a specific way.
+
+-- 
+With best wishes
+Dmitry
