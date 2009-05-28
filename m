@@ -1,23 +1,20 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Thu, 28 May 2009 13:04:30 +1000
-Message-ID: <20090528030430.GE1464@yookeroo.seuss>
-References: <87vdnm8sec.fsf@macbook.be.48ers.dk>
-	<4A1D6901.2090508@freescale.com>
-	<20090527175609.GB31861@flint.arm.linux.org.uk>
-	<4A1D8FBA.6040802@freescale.com>
-	<9e4733910905271213k7f4b93e7i7e6f2af24d85f@mail.gmail.com>
-	<20090527192116.GA31110@n2100.arm.linux.org.uk>
-	<20090527193927.GD30039@game.jcrosoft.org>
-	<fa686aa40905271322x2f62c3dcs355374b30b4db3ca@mail.gmail.com>
-	<20090527201951.GF30039@game.jcrosoft.org>
-	<fa686aa40905271354y50b9583cp9f53c35354edc285@mail.gmail.com>
+Date: Wed, 27 May 2009 21:16:19 -0600
+Message-ID: <fa686aa40905272016i69d8e762v186943ac4121038a@mail.gmail.com>
+References: <1243408083.13460.14.camel@debian-nb>
+	<fa686aa40905270727m31250984tf12249fc87179ce9@mail.gmail.com>
+	<ed82fe3e0905270739k38018c87ka11f62c5977e45fb@mail.gmail.com>
+	<20090527150527.GK6805@pengutronix.de>
+	<fa686aa40905270839m375bbdacqb1acb1be0a2d2da0@mail.gmail.com>
+	<20090527162000.GM6805@pengutronix.de>
+	<fa686aa40905271335o1165419hda2334bef42aa3f@mail.gmail.com>
+	<20090527234801.GP6805@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fa686aa40905271354y50b9583cp9f53c35354edc285-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20090527234801.GP6805-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -27,38 +24,85 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jon Smirl <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
+To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2009 at 02:54:10PM -0600, Grant Likely wrote:
-> On Wed, May 27, 2009 at 2:19 PM, Jean-Christophe PLAGNIOL-VILLARD
-> <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> >> One option that has been suggested (more than once) is to make the
-> >> adapter code an of_platform_driver which translates the device tree
-> >> data and then registers the appropriate platform_devices. =A0This neat=
-ly
-> >> solves the problem, but I don't like the overhead involved in
-> >> registering 2 struct devices with the kernel for every device node in
-> >> the device tree.
-> > but simplify the dev and maintaining is also an important goal.
-> >
-> > Have to duplicated ressource handling via ifdef in every drivers is als=
-o an
-> > overhead which need to be avoided
-> =
+On Wed, May 27, 2009 at 5:48 PM, Robert Schwebel
+<r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Wed, May 27, 2009 at 02:35:11PM -0600, Grant Likely wrote:
+>> > Unfortunately, it is an incomplete data structure regarding to what
+>> > the kernel needs.
+>>
+>> I don't follow your argument. It's a data structure that uniquely
+>> describes your hardware in a way which encourages the most code reuse
+>> possible; but is still independent of kernel internal implementation.
+>> ie. a FDT blob should be usable not just by Linux, but also by BSD or
+>> any of the other OS options. It is not an attempt to eliminate
+>> platform specific code; just to reduce it as much as possible. Weird,
+>> harry, non-standard stuff probably still needs board specific code to
+>> handle.
+>
+> The oftree by design wants to be a complete hardware description. As you
+> mention above, there are cases where you *nevertheless* need ad-hoc
+> information about things *not* encoded into the device tree.
 
-> agreed.  I don't have a best of both worlds answer here.
+That is an oversimplified characterization.  Of course the device tree
+is striving to be a complete hardware description; but it cannot and
+should not describe everything.  The goal is to make common stuff
+common, and still have a mechanism to identify the corner cases.  For
+example, most serial ports are described with a single node with
+'compatible = "ns16550"' and 'reg', 'interrupts', 'current-speed' and
+'clock-frequency' properties to describe the configuration.  This is a
+common idiom which doesn't require any additional platform specific
+code.  However, for a one-off board specific device which doesn't have
+any kind of common description would probably be described simply as:
 
-I do.  As intimated other places in this thread, I think the right
-approach is to register constructor functions that will be used during
-boot to traverse the OF devtree and instantiate platform devices (or
-other device types in some cases, e.g. i2c).  The driver will then
-bind to the platform device this created.
+        data-capture@[address] {
+                compatible = "<manufacturer>,<custom-daq-device-name>;
+                reg = < [address] [size] >;
+                interrupts = < [irq-number] [irq-sense] >;
+        }
 
--- =
+It it would be assumed that the device driver knows the details about
+how the device is wired up.
 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+So, no it does not eliminate platform specific code in all cases
+(although I would argue most cases), but it does significantly reduce
+it.
+
+> This renders the whole concept ad absurdum. You need a machine number
+> again - and if you need that: why not stay with the ARM model, define
+> everything with platform data and avoid the whole thing?
+
+That is not the problem being addressed.  It doesn't address
+multiplatform kernels, it does not address the duplicate code issue,
+and it doesn't address the reduced effort required of board ports.
+
+> Regarding the multi OS argument: I consider it impossible that people
+> agree on all micro details of a hardware decision. Will it really be
+> possible to get a common agreement about let's say Russell's SMSC
+> example between all these people? Remember: if we forget (or don't agree
+> on) one single aspect which a driver developer *needs*, he will have to
+> work around it -> machine number land.
+
+Even assuming that you are correct; there is greater pressure when
+using the device tree to make things work together because it means
+less code to maintain.
+
+> My impression is that oftree only works in a perfect world. But we don't
+> have one, so the fundamental design decision is broken.
+
+I disagree.  For the things that do work (and there are a lot of them)
+it is a net win, and for the corner cases which do not, the mechanism
+allows for the ability to handle exceptions at the
+platform-support-code level (not at the device driver level).  That's
+why I like the device tree model.  It acknowledges that the data
+structure will never be perfect and provides the ability to deal with
+it gracefully.
+
+g.
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
