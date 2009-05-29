@@ -1,22 +1,20 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Fri, 29 May 2009 10:51:14 +1000
-Message-ID: <1243558274.17903.21.camel@pasglop>
-References: <20090527150527.GK6805@pengutronix.de>
-	<87vdnm8sec.fsf@macbook.be.48ers.dk> <4A1D6901.2090508@freescale.com>
-	<20090527175609.GB31861@flint.arm.linux.org.uk>
-	<4A1D8FBA.6040802@freescale.com>
-	<20090527192909.GA32398@flint.arm.linux.org.uk>
-	<20090527205218.GA5591@sirena.org.uk>
-	<fa686aa40905271405pc2f1738gc8dd139f61a0e27@mail.gmail.com>
-	<20090528124307.GN22742@pengutronix.de>
-	<alpine.LFD.2.00.0905281457170.3397@localhost.localdomain>
-	<20090528150409.GO22742@pengutronix.de>
+Date: Fri, 29 May 2009 11:39:08 +1000
+Message-ID: <20090529013908.GA7831@yookeroo.seuss>
+References: <20090527175609.GB31861@flint.arm.linux.org.uk>
+	<1243496236.3171.140.camel@pasglop>
+	<20090528091513.GA14789@n2100.arm.linux.org.uk>
+	<20090528.025739.16559619.davem@davemloft.net>
+	<gvlvcs$ub5$1@ger.gmane.org>
+	<fa686aa40905280713u2b3ef5fvbe3d58ccdb629b60@mail.gmail.com>
+	<1243549318.17903.9.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090528150409.GO22742-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1243549318.17903.9.camel@pasglop>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -26,24 +24,72 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Russell King <rmk+lkml-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Janboe Ye <yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2009-05-28 at 17:04 +0200, Sascha Hauer wrote:
+On Fri, May 29, 2009 at 08:21:58AM +1000, Benjamin Herrenschmidt wrote:
+> On Thu, 2009-05-28 at 08:13 -0600, Grant Likely wrote:
+> > Two nodes are used to describe the device and a "phandle" is used to
+> > link them.  A device driver probe could be triggered (bind) against
+> > the i2c half of the device and follow the phandle to get the rest of
+> > the description.
 > 
-> We normally hide these subtle details behind a baseboard= kernel
-> parameter. I agree with you that it's far better to have a
-> standardized
-> way to specify this. For my taste the oftree is too bloated for this
-> purpose.
+> One thing I wouldn't do though is to put "phandle" in the property
+> name :-) Just call it spi-interface.
+> 
+> Now, that's an option. And it works to a certain extent. But I do
+> understand the need in general to provide "methods". It's something
+> we don't solve (but then we don't make it worse than it was before).
+> 
+> I think the cleanest option might be named methods in the device-tree
+> for example, a device can have an "enable-method" property and a
+> "clock-method" property. The names would use the usual convention
+> of "manuf,name" to avoid clashes and could be registered by the
+> platform.
+> 
+> Now, it -does- somewhat deviates from the moto that the DT should
+> only contain OS agnostic HW representations, but appart for having
+> a full blown OF with actual method calls in each nodes I don't
+> see a nicer way at this stage.
 
-Define "bloated" ?
+But then another OS can also understand those names and at least use
+them to figure out what procedures it needs.  That's not fundamentally
+different from the fact that the device tree doesn't provide drivers -
+if a node has a certain compatible value, you just have to know how to
+drive it based on that.
 
-We got a lot of push back on powerpc initially with this exact same
-argument "too bloated" but that was never backed up with facts and
-numbers, and I would mostly say that nobody makes it anymore now
-that it's there and people use it.
+Note that ePAPR (a new standard for firmware/OS interface on embedded
+powerpc machines) already has a small example of this approach.  We
+add an "enable-method" property in the cpu nodes to indicate how
+secondary cpus should be started up.  One basic, least common
+denominator method is defined in the standard, but it's kind of
+crappy, so it's expected that vendor and/or platform specific methods
+will be used most of the time - in order to boot such a machine, the
+OS just has to know how to implement that method.
 
-Cheers,
-Ben.
+Also note that there are certainly circumstances where it's reasonable
+to have a device node representing nothing more than a tangle of wires
+between a couple of other devices.  In this case the compatible
+property as usual selects a "driver" for the device (in practice
+usually folded into some other driver) which can handle peculiar
+routing or other fiddling things such as you describe.
+
+> Now, the methods could then take "informations" from the target DT.
+> 
+> For example, one could have a generic "simple-gpio-enable" method that
+> can be used as "enable-method" anywhere, as long as the target device
+> contains also a "enable-gpio" property that points to the actual GPIO
+> (and maybe an "enable-delay" while at it).
+> 
+> IE. We can provide a collection of "simple" methods that handle
+> the easy cases in library code.
+> 
+> I'm very much against putting actual function pointers in the tree
+> though as Jon Smirl proposed.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
