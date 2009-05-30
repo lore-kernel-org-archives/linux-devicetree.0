@@ -1,73 +1,117 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Sat, 30 May 2009 19:52:46 +1000
-Message-ID: <1243677166.440.12.camel@pasglop>
+Date: Sat, 30 May 2009 11:21:53 +0100
+Message-ID: <20090530102153.GA6910@n2100.arm.linux.org.uk>
 References: <20090527234801.GP6805@pengutronix.de>
-	<4A1DD3A0.3010501@freescale.com> <20090528000707.GR6805@pengutronix.de>
+	<4A1DD3A0.3010501@freescale.com>
+	<20090528000707.GR6805@pengutronix.de>
 	<20090527.171525.204909140.davem@davemloft.net>
 	<20090528103745.GA19523@sirena.org.uk>
 	<fa686aa40905281532l76996593ocdc36760eb468e04@mail.gmail.com>
 	<20090529123411.GB14650@rakim.wolfsonmicro.main>
+	<1243677166.440.12.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090529123411.GB14650-HF5t3jzXg/6ND3a5+9QAFujbO/Zr0HzV@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.arm.linux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1243677166.440.12.camel@pasglop>
+List-Unsubscribe: <http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=unsubscribe>
+List-Archive: <http://lists.arm.linux.org.uk/lurker/list/linux-arm-kernel.html>
+List-Post: <mailto:linux-arm-kernel@lists.arm.linux.org.uk>
+List-Help: <mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=help>
+List-Subscribe: <http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.arm.linux.org.uk?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.arm.linux.org.uk
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.arm.linux.org.uk
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, timur@freescale.com, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.arm.linux.org.uk, scottwood@freescale.com, yuan-bo.ye@motorola.com, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, May 30, 2009 at 07:52:46PM +1000, Benjamin Herrenschmidt wrote:
+> 
+> > Sure.  My only big concern with it is that it compeltely sidesteps
+> > clocking decisions so there's a lot of codecs it's not going to be
+> > immediately useful with and I don't have a clear idea how it could be
+> > extended to be so.  Most other things look like they can be added on
+> > fairly easily when required.
+> 
+> Regarding clocks ...
+> 
+> Paulus and I had a discussion the other day and he mentioned a very good
+> idea to represent the clock net in the device-tree.
 
-> Sure.  My only big concern with it is that it compeltely sidesteps
-> clocking decisions so there's a lot of codecs it's not going to be
-> immediately useful with and I don't have a clear idea how it could be
-> extended to be so.  Most other things look like they can be added on
-> fairly easily when required.
+I think the first thing to do is to get an accurate description of the
+problem before thinking about how to come up with solutions.  I saw
+that this kept coming up in Mark's emails, so I asked him about it
+in private.
 
-Regarding clocks ...
+There are several issues surrounding clock stuff which he's seeing:
 
-Paulus and I had a discussion the other day and he mentioned a very good
-idea to represent the clock net in the device-tree.
+1. implementers of the clock API which have not been subject to my
+   rigorous review abuse it to the point of making the API essentially
+   useless, and that causes Mark problems.
 
-Basically, do it just like the interrupts.
+   This basically comes down to people trying to uniquely name every
+   single clock, and use just the name to do the lookup, ignoring the
+   struct device.  This approach, really, does not work and makes the
+   API pointless.
 
-IE. A device would have a "clocks" property that contain a certain
-amount of cells representing a clock source in a clock provider, itself
-identified by a "clock-parent" property (default to the actual node
-parent). Clock providers would have a #clock-cells to provide the number
-of cells a in the "clocks" property for each clock source.
+2. inter-relationships between several clocks.  To take his example,
+   for clocking a DAC and ADC, you may have three clocks (dac_clk,
+   adc_clk and bclk).  You may want dac_clk to be xkHz, adc_clk ykHz
+   and bclk (which could well be related to both) to be zkHz.  For
+   each of these, you might be able to accept an error of so-many-
+   percent.
 
-Actually, we could be a little bit smarter since clocks are more messy
-than interrupts, and define "clocks" to be a serie of clock-parent
-phandle and clock id within that parent. The clock id size is still
-represented by the #clock-cells of the clock parent, but we avoid the
-pitfall of the interrupt routing that makes it hard to connect to
-multiple different PICs.
+I believe (2) is an entirely separate problem to the device tree, and
+really shouldn't concern the device tree beyond, maybe, providing the
+contraints for individual clock _sources_.
 
-That would provide the routing, without actual values or capabilities of
-each clock, that's orthogonal. But that would allow driver to easily
-find their clock "provider" and we could thus provide some simple
-infrastructure to register drivers or handlers to perform actions on
-those clocks, such as refcounting users, etc...
+(1) on the other hand is related, but is not really a device tree problem.
+It's a problem with the way people use the API (even though that wrong
+usage is explicitly documented as being wrong, this doesn't stop people
+being lazy.)
 
-It may also be useful to define properties in the clock controllers
-themselves mapping clock IDs to actual frequencies or things like that
-but I'm only half convinced here. IE. Let's start by defining the
--wiring- and leave the -values- (on,off, slewing, freq adjustement,
-spreading) to an API between drivers and clock providers for now.
+I hadn't been doing the rigorous review of implementations on ARM as they
+come in, in the interests of getting platform support into the kernel.
+However, earlier this year I came up with a solution to this (clkdev) and
+implemented it initially for the platforms I had, and later extended it to
+the most complex ARM platform we have - OMAP.
 
-Maybe later with experience with can find good ways to extend the
-device-tree representiation to provide actual clock settings and/or
-tables.
+clkdev doesn't stop the abuse per-se, but it _does_ make it damned easy
+to change the lookup relationships, even build new relationships at run
+time - which I can see will be an advantage to device tree stuff.
 
-Cheers,
-Ben.
+To put it another way, the conversion from broken-clk-get implementation
+to clkdev is very simple and localised - you can use clkdev to continue
+matching by clock connection name.  Once you've made that step, you can
+then go through the drivers, one by one, fixing them and updating the
+table.
+
+Unlike previous attempts at putting a set of generic code behind the clk
+API, clkdev does not place any requirements on the contents of struct clk.
+To do so is fundamentally wrong - firstly, a struct clk is merely what the
+clk_get API returns to represent the desired clock as a cookie, and
+secondly, it has always been intended for there to be a many-to-one
+relationship between the arguments to clk_get() and the returned cookie.
+
+At the moment, clkdev lives in the ARM architecture, which seemed like a
+sane place while it proves itself.  Moving it out into generic code is
+the next step in its evolution - but I'm certainly not going to play
+bun-fights with people over non-ARM clk API implementations, so it's
+something other people will need to convert over to.
+
+> It may also be useful to define properties in the clock controllers
+> themselves mapping clock IDs to actual frequencies or things like that
+> but I'm only half convinced here. IE. Let's start by defining the
+> -wiring- and leave the -values- (on,off, slewing, freq adjustement,
+> spreading) to an API between drivers and clock providers for now.
+
+We have an API for that already (see above).
+
+-------------------------------------------------------------------
+List admin: http://lists.arm.linux.org.uk/mailman/listinfo/linux-arm-kernel
+FAQ:        http://www.arm.linux.org.uk/mailinglists/faq.php
+Etiquette:  http://www.arm.linux.org.uk/mailinglists/etiquette.php
