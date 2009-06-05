@@ -1,17 +1,12 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC] [PATCH] Device Tree on ARM platform
-Date: Tue, 2 Jun 2009 10:48:11 +0100
-Message-ID: <20090602094811.GC19390@rakim.wolfsonmicro.main>
-References: <20090527234801.GP6805@pengutronix.de>
-	<1243677166.440.12.camel@pasglop>
-	<20090530102153.GA6910@n2100.arm.linux.org.uk>
-	<200906020957.20493.hs4233@mail.mn-solutions.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH V2 0/2] mtd/maps/mtd-ram: Make driver usable for the device
+	tree
+Date: Fri,  5 Jun 2009 14:05:12 +0200
+Message-ID: <1244203514-12516-1-git-send-email-w.sang@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <200906020957.20493.hs4233-x6+DxXLjN1AJvtFkdXX2Hg4jNU5vUVPG@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -21,33 +16,20 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Holger Schurig <hs4233-x6+DxXLjN1AJvtFkdXX2Hg4jNU5vUVPG@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuan-bo.ye-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, albrecht.dress-KvP5wT2u2U0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2009 at 09:57:20AM +0200, Holger Schurig wrote:
+Hello,
 
-> > 1. implementers of the clock API which have not been subject
-> > to my rigorous review abuse it to the point of making the API
-> > essentially useless, and that causes Mark problems.
+this is the new series to adapt the mtd-ram-driver for use with the device
+tree. All comments have been addressed and it has been tested on a
+phyCORE-MPC5200B-IO (with latest linus-git).
 
-> If that's a problem, when something needs changes. An API that 
-> can only be managed by implementers due to rigorous review lacks 
-> something, maybe easy-of-use, maybe documentation. Can it be the 
-> case that the current state makes you a single-point of failure?
+Albrecht: As you used the patches recently, maybe you want to ack them?
 
-The problem is more that a lot of platform maintainers have treated the
-clock API as being a bit of platform support code not intended to be
-used by drivers, causing them to take lots of shortcuts when
-implementing it that only work in their specific use cases - at times to
-the point where it's not even possible to register new clocks.  Since
-this means that the API is essentially unusable in generic driver code
-you end up with nobody using it there and no back pressure other than
-code review on maintainers to provide a good implementation.
+Looking forward to comments, especially on the binding. Thanks!
 
-> If yes, I'd at least suggest better docs in linux/Documentation, 
-> e.g. describe the big-picture, the implementation and common 
-> cave-ats, e.g. why an approach "uniquely name every single 
-> clock ... makes the API pointless" doesn't work.
+Regards,
 
-None of which means that better documentation wouldn't help, of course.
+   Wolfram
