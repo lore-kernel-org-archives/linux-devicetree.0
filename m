@@ -1,13 +1,13 @@
-From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mtd/maps/mtd-ram: add an of-platform driver
-Date: Mon, 08 Jun 2009 19:30:45 +0200
-Message-ID: <1244482256.3278.0@antares>
-References: <20090608163540.GA16384@pengutronix.de>
+From: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH] sdhci: Add support for hosts that are only capable of
+	1-bit transfers
+Date: Fri, 12 Jun 2009 00:15:45 +0400
+Message-ID: <20090611201545.GA15942@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0590960577=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090608163540.GA16384-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (from
-	w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org on Mon Jun  8 18:35:40 2009)
+Content-Disposition: inline
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -15,67 +15,103 @@ List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
 List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Mime-version: 1.0
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: Pierre Ossman <pierre-vCPtPcF4ZGuHXe+LvDLADg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sdhci-devel-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============0590960577==
-Content-Type: multipart/signed; micalg=PGP-SHA1;
-	protocol="application/pgp-signature"; boundary="=-97gFfBnOr0Mpi+yYBi41"
+Some hosts (hardware configurations, or particular SD/MMC slots) may
+not support 4-bit bus. For example, on MPC8569E-MDS boards we can
+switch between serial (1-bit only) and nibble (4-bit) modes, thought
+we have to disable more peripherals to work in 4-bit mode.
 
---=-97gFfBnOr0Mpi+yYBi41
-Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Along with some small core changes, this patch modifies sdhci-of
+driver, so that now it looks for "mode" property in the device-tree.
 
-Am 08.06.09 18:35 schrieb(en) Wolfram Sang:
->> Question: why is bank-width even relevant for a RAM device?
->=20
-> The underlying map_ram-driver uses it once while erasing. The =20
-> question remains if this is really needed?
+Signed-off-by: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+---
 
-Am 06.06.09 18:16 schrieb(en) Albrecht Dre=DF:
-> At least if the RAM is attached to the 5200's Local Plus Bus in =20
-> 16-bit mode, no byte write accesses are allowed (byte /reads/ work, =20
-> though).  I have a tweak (which I will post next week) to address =20
-> this case, which depends upon this setting.
+Pierre, I'm not sure if a quirk would be appropriate here. If so,
+I can redo the patch with FORCE_1_BIT_DATA quirk.
 
-To put this clearer: on '5200 based systems, the driver (more specific: =20
-the function inline_map_copy_to()) *must* know whether the hardware is =20
-connected in 8-bit or 16-bit mode to the Local Plus Bus, as byte writes =20
-(issued by memcpy_toio()) will fail for the latter setup (probably the =20
-same applies for byte and word writes in 32-bit mode).
+Thanks,
 
-IMHO, this information should be passed using the device tree.  The =20
-"bank-width" seems to be an obvious choice for that.
+ Documentation/powerpc/dts-bindings/fsl/esdhc.txt |    2 ++
+ drivers/mmc/host/sdhci-of.c                      |    7 +++++++
+ drivers/mmc/host/sdhci-pci.c                     |    1 +
+ drivers/mmc/host/sdhci.c                         |    2 +-
+ 4 files changed, 11 insertions(+), 1 deletions(-)
 
-Best, Albrecht.
-
---=-97gFfBnOr0Mpi+yYBi41
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.9 (GNU/Linux)
-
-iD8DBQBKLUrQn/9unNAn/9ERAlojAKCQcNeACQ0s+hriPt5oMQphSBrv2QCgquGu
-2U7wswApUdESMZiYG64xdfk=
-=ODlX
------END PGP SIGNATURE-----
-
---=-97gFfBnOr0Mpi+yYBi41--
-
---===============0590960577==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-https://ozlabs.org/mailman/listinfo/devicetree-discuss
-
---===============0590960577==--
+diff --git a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
+index 5093ddf..298b865 100644
+--- a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
++++ b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
+@@ -10,6 +10,8 @@ Required properties:
+   - interrupts : should contain eSDHC interrupt.
+   - interrupt-parent : interrupt source phandle.
+   - clock-frequency : specifies eSDHC base clock frequency.
++  - mode : specifies eSDHC mode, valid values are: "1-bit" and "4-bit".
++    If mode is unspecified, then 4-bit mode is assumed.
+ 
+ Example:
+ 
+diff --git a/drivers/mmc/host/sdhci-of.c b/drivers/mmc/host/sdhci-of.c
+index 09cc597..12b9615 100644
+--- a/drivers/mmc/host/sdhci-of.c
++++ b/drivers/mmc/host/sdhci-of.c
+@@ -14,6 +14,7 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/string.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/interrupt.h>
+@@ -212,6 +213,7 @@ static int __devinit sdhci_of_probe(struct of_device *ofdev,
+ 	struct sdhci_of_data *sdhci_of_data = match->data;
+ 	struct sdhci_host *host;
+ 	struct sdhci_of_host *of_host;
++	const char *mode;
+ 	const u32 *clk;
+ 	int size;
+ 	int ret;
+@@ -244,6 +246,11 @@ static int __devinit sdhci_of_probe(struct of_device *ofdev,
+ 		host->ops = &sdhci_of_data->ops;
+ 	}
+ 
++	mode = of_get_property(np, "mode", &size);
++	if (!mode || (size == sizeof("4-bit") &&
++			!strncmp(mode, "4-bit", size)))
++		host->mmc->caps |= MMC_CAP_4_BIT_DATA;
++
+ 	clk = of_get_property(np, "clock-frequency", &size);
+ 	if (clk && size == sizeof(*clk) && *clk)
+ 		of_host->clock = *clk;
+diff --git a/drivers/mmc/host/sdhci-pci.c b/drivers/mmc/host/sdhci-pci.c
+index 65be279..c447d6c 100644
+--- a/drivers/mmc/host/sdhci-pci.c
++++ b/drivers/mmc/host/sdhci-pci.c
+@@ -535,6 +535,7 @@ static struct sdhci_pci_slot * __devinit sdhci_pci_probe_slot(
+ 	host->hw_name = "PCI";
+ 	host->ops = &sdhci_pci_ops;
+ 	host->quirks = chip->quirks;
++	host->mmc->caps = MMC_CAP_4_BIT_DATA;
+ 
+ 	host->irq = pdev->irq;
+ 
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 9234be2..e31dd2a 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1721,7 +1721,7 @@ int sdhci_add_host(struct sdhci_host *host)
+ 	mmc->ops = &sdhci_ops;
+ 	mmc->f_min = host->max_clk / 256;
+ 	mmc->f_max = host->max_clk;
+-	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
++	mmc->caps |= MMC_CAP_SDIO_IRQ;
+ 
+ 	if (caps & SDHCI_CAN_DO_HISPD)
+ 		mmc->caps |= MMC_CAP_SD_HIGHSPEED;
+-- 
+1.6.3.1
