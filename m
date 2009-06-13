@@ -1,202 +1,93 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/2] uio: add an of_genirq driver
-Date: Fri, 12 Jun 2009 02:04:22 +0200
-Message-ID: <1244765062-14144-3-git-send-email-w.sang@pengutronix.de>
-References: <1244765062-14144-1-git-send-email-w.sang@pengutronix.de>
+From: Pierre Ossman <pierre-vCPtPcF4ZGuHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] sdhci: Add support for hosts that are
+ only capable of 1-bit transfers
+Date: Sat, 13 Jun 2009 13:05:31 +0200
+Message-ID: <20090613130531.59d4e733@mjolnir.ossman.eu>
+References: <20090611201545.GA15942@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <1244765062-14144-1-git-send-email-w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, "Hans J. Koch" <hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============6739089136409550705=="
+Return-path: <sdhci-devel-bounces-qjLDD68F18NoYZYVwN2jqg@public.gmane.org>
+In-Reply-To: <20090611201545.GA15942-wnGakbxT3iijyJ0x5qLZdcN33GVbZNy3@public.gmane.org>
+List-Unsubscribe: <http://list.drzeus.cx/mailman/options/sdhci-devel>,
+	<mailto:sdhci-devel-request-qjLDD68F18NoYZYVwN2jqg@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://list.drzeus.cx/pipermail/sdhci-devel>
+List-Post: <mailto:sdhci-devel-qjLDD68F18NoYZYVwN2jqg@public.gmane.org>
+List-Help: <mailto:sdhci-devel-request-qjLDD68F18NoYZYVwN2jqg@public.gmane.org?subject=help>
+List-Subscribe: <http://list.drzeus.cx/mailman/listinfo/sdhci-devel>,
+	<mailto:sdhci-devel-request-qjLDD68F18NoYZYVwN2jqg@public.gmane.org?subject=subscribe>
+Sender: sdhci-devel-bounces-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
+Errors-To: sdhci-devel-bounces-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
+To: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, sdhci-devel-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Picking up the now exported generic probe function from the
-platform-variant of this driver, this patch adds an of-version. Also add
-the binding documentation.
+This is a MIME-formatted message.  If you see this text it means that your
+E-mail software does not support MIME-formatted messages.
 
-Signed-off-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans J. Koch <hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>
----
+--===============6739089136409550705==
+Content-Type: multipart/signed; micalg=PGP-SHA1; protocol="application/pgp-signature"; boundary="=_freyr.ossman.eu-24962-1244891135-0001-2"
 
-In probe, I put the resources-array on the stack to simplify the code. If this
-is considered too huge for the stack (140 byte for a 32-bit system at the
-moment), I can also post a version using kzalloc.
+This is a MIME-formatted message.  If you see this text it means that your
+E-mail software does not support MIME-formatted messages.
 
- Documentation/powerpc/dts-bindings/uio-generic.txt |   16 +++
- drivers/uio/Kconfig                                |    6 +
- drivers/uio/Makefile                               |    1 +
- drivers/uio/uio_of_genirq.c                        |   98 ++++++++++++++++++++
- 4 files changed, 121 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/uio-generic.txt
- create mode 100644 drivers/uio/uio_of_genirq.c
+--=_freyr.ossman.eu-24962-1244891135-0001-2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/powerpc/dts-bindings/uio-generic.txt b/Documentation/powerpc/dts-bindings/uio-generic.txt
-new file mode 100644
-index 0000000..8ad9861
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/uio-generic.txt
-@@ -0,0 +1,16 @@
-+UIO for custom devices
-+
-+A device which will be mapped using the UIO subsystem.
-+
-+Properties:
-+ - compatible : should contain the specific model used, followed by
-+                "generic-uio".
-+ - reg : address range(s) of the device (up to MAX_UIO_MAPS)
-+ - interrupts : interrupt of the device
-+
-+Example:
-+        c64fpga@0 {
-+                compatible = "ptx,c64fpga001", "generic-uio";
-+                reg = <0x0 0x10000>;
-+                interrupts = <0 0 3>;
-+        };
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 7f86534..18efe38 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -46,6 +46,12 @@ config UIO_PDRV_GENIRQ
- 
- 	  If you don't know what to do here, say N.
- 
-+config UIO_OF_GENIRQ
-+	tristate "Userspace I/O OF driver with generic IRQ handling"
-+	depends on UIO_PDRV_GENIRQ && OF
-+	help
-+	  OF wrapper for the above platform driver.
-+
- config UIO_SMX
- 	tristate "SMX cryptengine UIO interface"
- 	default n
-diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-index 5c2586d..089fd56 100644
---- a/drivers/uio/Makefile
-+++ b/drivers/uio/Makefile
-@@ -2,6 +2,7 @@ obj-$(CONFIG_UIO)	+= uio.o
- obj-$(CONFIG_UIO_CIF)	+= uio_cif.o
- obj-$(CONFIG_UIO_PDRV)	+= uio_pdrv.o
- obj-$(CONFIG_UIO_PDRV_GENIRQ)	+= uio_pdrv_genirq.o
-+obj-$(CONFIG_UIO_OF_GENIRQ)	+= uio_of_genirq.o
- obj-$(CONFIG_UIO_SMX)	+= uio_smx.o
- obj-$(CONFIG_UIO_AEC)	+= uio_aec.o
- obj-$(CONFIG_UIO_SERCOS3)	+= uio_sercos3.o
-diff --git a/drivers/uio/uio_of_genirq.c b/drivers/uio/uio_of_genirq.c
-new file mode 100644
-index 0000000..254ec5b
---- /dev/null
-+++ b/drivers/uio/uio_of_genirq.c
-@@ -0,0 +1,98 @@
-+/*
-+ * OF wrapper to make use of the uio_pdrv_genirq-driver.
-+ *
-+ * Copyright (C) 2009 Wolfram Sang, Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/uio_driver.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/uio_pdrv_genirq.h>
-+
-+#define OF_DRIVER_VERSION "1"
-+
-+static __devinit int uio_of_genirq_probe(struct of_device *op,
-+		const struct of_device_id *match)
-+{
-+	struct uio_info *uioinfo;
-+	struct resource resources[MAX_UIO_MAPS];
-+	int i, ret;
-+
-+	uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-+	if (!uioinfo)
-+		return -ENOMEM;
-+
-+	uioinfo->name = op->node->name;
-+	uioinfo->version = OF_DRIVER_VERSION;
-+	uioinfo->irq = irq_of_parse_and_map(op->node, 0);
-+	if (!uioinfo->irq)
-+		uioinfo->irq = UIO_IRQ_NONE;
-+
-+	for (i = 0; i < MAX_UIO_MAPS; ++i)
-+		if (of_address_to_resource(op->node, i, &resources[i]))
-+			break;
-+
-+	ret = __uio_pdrv_genirq_probe(&op->dev, uioinfo, &resources, i);
-+	if (ret)
-+		goto err_cleanup;
-+
-+	return 0;
-+
-+err_cleanup:
-+	if (uioinfo->irq != UIO_IRQ_NONE)
-+		irq_dispose_mapping(uioinfo->irq);
-+
-+	kfree(uioinfo);
-+	return ret;
-+}
-+
-+static __devexit int uio_of_genirq_remove(struct of_device *op)
-+{
-+	struct uio_pdrv_genirq_platdata *priv = dev_get_drvdata(&op->dev);
-+
-+	uio_unregister_device(priv->uioinfo);
-+
-+	if (priv->uioinfo->irq != UIO_IRQ_NONE)
-+		irq_dispose_mapping(priv->uioinfo->irq);
-+
-+	kfree(priv->uioinfo);
-+	kfree(priv);
-+	return 0;
-+}
-+
-+/* Match table for of_platform binding */
-+static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-+	{ .compatible = "generic-uio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-+
-+static struct of_platform_driver uio_of_genirq_driver = {
-+	.owner = THIS_MODULE,
-+	.name = "uio-of-genirq",
-+	.match_table = uio_of_genirq_match,
-+	.probe = uio_of_genirq_probe,
-+	.remove = __devexit_p(uio_of_genirq_remove),
-+};
-+
-+static inline int __init uio_of_genirq_init(void)
-+{
-+	return of_register_platform_driver(&uio_of_genirq_driver);
-+}
-+module_init(uio_of_genirq_init);
-+
-+static inline void __exit uio_of_genirq_exit(void)
-+{
-+	of_unregister_platform_driver(&uio_of_genirq_driver);
-+}
-+module_exit(uio_of_genirq_exit);
-+
-+MODULE_AUTHOR("Wolfram Sang");
-+MODULE_DESCRIPTION("Userspace I/O OF driver with generic IRQ handling");
-+MODULE_LICENSE("GPL v2");
--- 
-1.6.3.1
+On Fri, 12 Jun 2009 00:15:45 +0400
+Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org> wrote:
+
+> Some hosts (hardware configurations, or particular SD/MMC slots) may
+> not support 4-bit bus. For example, on MPC8569E-MDS boards we can
+> switch between serial (1-bit only) and nibble (4-bit) modes, thought
+> we have to disable more peripherals to work in 4-bit mode.
+>=20
+> Along with some small core changes, this patch modifies sdhci-of
+> driver, so that now it looks for "mode" property in the device-tree.
+>=20
+> Signed-off-by: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+> ---
+>=20
+> Pierre, I'm not sure if a quirk would be appropriate here. If so,
+> I can redo the patch with FORCE_1_BIT_DATA quirk.
+>=20
+
+I'd prefer a quirk, yes. 4-bit support is mandated so this would be a
+deviation from the spec and such should always be handled by quirks for
+clarity.
+
+(I do think it is silly that they made it mandatory though considering
+the embedded market)
+
+Rgds
+--=20
+     -- Pierre Ossman
+
+  WARNING: This correspondence is being monitored by the
+  Swedish government. Make sure your server uses encryption
+  for SMTP traffic and consider using PGP for end-to-end
+  encryption.
+
+--=_freyr.ossman.eu-24962-1244891135-0001-2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.11 (GNU/Linux)
+
+iEYEARECAAYFAkozh/8ACgkQ7b8eESbyJLiHfQCfTcehGZGmEuEnPGhP7MbD5oCD
+UiIAn27D4I3tNJONmxJb0aqMPBxC8fKP
+=1svL
+-----END PGP SIGNATURE-----
+
+--=_freyr.ossman.eu-24962-1244891135-0001-2--
+
+--===============6739089136409550705==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6739089136409550705==--
