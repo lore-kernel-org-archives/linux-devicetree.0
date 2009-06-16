@@ -1,87 +1,54 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] uio: add an of_genirq driver
-Date: Tue, 16 Jun 2009 06:46:47 -0600
-Message-ID: <fa686aa40906160546q73765b66h204334e3ca081de0@mail.gmail.com>
-References: <1244765062-14144-1-git-send-email-w.sang@pengutronix.de>
-	<1244765062-14144-3-git-send-email-w.sang@pengutronix.de>
-	<fa686aa40906140740m43e9dd8am4d242310f681c95c@mail.gmail.com>
-	<20090616090435.GA21321@pengutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] mtd/maps/mtd-ram: add an of-platform driver
+Date: Tue, 16 Jun 2009 06:53:17 -0600
+Message-ID: <fa686aa40906160553m2f0e7cc4n644c3893573845f@mail.gmail.com>
+References: <1244203514-12516-3-git-send-email-w.sang@pengutronix.de>
+	<1245087807.3185.0@antares> <20090616091801.GC21321@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1754689AbZFPMrT@vger.kernel.org>
-In-Reply-To: <20090616090435.GA21321@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@ozlabs.org, "Hans J. Koch" <hjk@linutronix.de>, Magnus Damm <magnus.damm@gmail.com>, linuxppc-dev@ozlabs.org, Greg KH <gregkh@suse.de>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20090616091801.GC21321-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2009 at 3:04 AM, Wolfram Sang<w.sang@pengutronix.de> wr=
-ote:
->
->> > diff --git a/Documentation/powerpc/dts-bindings/uio-generic.txt b/=
-Documentation/powerpc/dts-bindings/uio-generic.txt
->> > new file mode 100644
->> > index 0000000..8ad9861
->> > --- /dev/null
->> > +++ b/Documentation/powerpc/dts-bindings/uio-generic.txt
->> > @@ -0,0 +1,16 @@
->> > +UIO for custom devices
->> > +
->> > +A device which will be mapped using the UIO subsystem.
->> > +
->> > +Properties:
->> > + - compatible : should contain the specific model used, followed =
-by
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0"generic-uio".
->> > + - reg : address range(s) of the device (up to MAX_UIO_MAPS)
->> > + - interrupts : interrupt of the device
->> > +
->> > +Example:
->> > + =A0 =A0 =A0 =A0c64fpga@0 {
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "ptx,c64fpga001", =
-"generic-uio";
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x0 0x10000>;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupts =3D <0 0 3>;
->> > + =A0 =A0 =A0 =A0};
+On Tue, Jun 16, 2009 at 3:18 AM, Wolfram Sang<w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Mon, Jun 15, 2009 at 07:43:20PM +0200, Albrecht Dre=DF wrote:
+>> Am 05.06.09 14:05 schrieb(en) Wolfram Sang:
+>>> Create an of-aware driver using the now exported generic functions
+>>> from plat-ram.c. Also add the documentation for the binding.
+>>> Partitions are not yet supported. Tested on a phyCORE-MPC5200B-IO.
 >>
->> Hmmm, I'm not happy about this. =A0The device tree describes the
->> hardware, not the way Linux uses the hardware. =A0UIO definitely fal=
-ls
->> into the category of Linux implementation detail.
+>> Dumb question: what is the current status of this patch? =A0I ask because
 >
-> Yes, I am aware of that. I just started with the mechanisms which are=
- available
-> today and hoped we could find some compatible-value which will suit a=
-ll needs.
+> I don't know.
+>
+> David wondered if 'of_physmap' could be used, so I wrote what I experienc=
+ed
+> during development. I can't tell if this helped the case.
+>
+> Grant wondered if we need a bankwidth. IMHO it is needed for now, but I d=
+on't
+> know if this is a common agreement.
 
-Trouble is a value that suits all needs today probably won't a year
-from now.  :-)
-
->> This should be approached from the other way around. =A0Either the
->> generic-uio of_platform driver should contain an explicit list of
->> devices to be handled by UIO,
->
-> Well, that could lead to a quite huge match_table over time.
->
->> or the OF infrastructure should be modified to allow things like for=
-ce
->> binding of_devices to of_drivers at runtime.
->
-> That is an interesting idea. I could imagine something like a 'new_co=
-mpatible"
-> entry in the sysfs-section of the driver similar to 'new_id' for PCI.=
- After
-> writing a new compatible-string into it, matching will triggered agai=
-n with the
-> new entry added. That could (should?) also be placed at the of-core-l=
-evel. Or
-> did you have something else in mind?
-
-Yeah, that sounds appropriate.
+I'm not happy about the use case though.  It probably shouldn't appear
+in this binding, or if it does it should be tagged as an optional
+property.  It is only in the 5200 localplus case that bank-width is
+needed to figure out how to apply the workaround.
 
 g.
 
---=20
+-- =
+
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
