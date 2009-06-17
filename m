@@ -1,58 +1,71 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3 v3] mtd: physmap_of: Add multiple regions and
-	concatenation support
-Date: Tue, 16 Jun 2009 23:53:51 -0600
-Message-ID: <fa686aa40906162253j76776e88y9d7c818f4d0f1508@mail.gmail.com>
-References: <1239883845-17804-1-git-send-email-sr@denx.de>
-	<fa686aa40904160626k118cea3cvc0db38a2277e45b8@mail.gmail.com>
-	<200904161537.59048.sr@denx.de>
-	<fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
+From: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH] sdhci: Add support for hosts that are only capable of
+	1-bit transfers
+Date: Thu, 18 Jun 2009 00:13:29 +0400
+Message-ID: <20090617201329.GA9149@oksana.dev.rtsoft.ru>
+References: <20090611201545.GA15942@oksana.dev.rtsoft.ru>
+	<fa686aa40906130840lfb751a7xc9e24646c860a76d@mail.gmail.com>
+Reply-To: avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Stefan Roese <sr@denx.de>, David Woodhouse <dwmw2@infradead.org>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="utf8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fa686aa40906130840lfb751a7xc9e24646c860a76d-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
+List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Pierre Ossman <pierre-vCPtPcF4ZGuHXe+LvDLADg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sdhci-devel-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2009 at 7:46 AM, Grant Likely<grant.likely@secretlab.ca> wr=
-ote:
-> On Thu, Apr 16, 2009 at 7:37 AM, Stefan Roese <sr@denx.de> wrote:
->> On Thursday 16 April 2009, Grant Likely wrote:
->>> > Signed-off-by: Stefan Roese <sr@denx.de>
->>> > Reviewd-by: Grant Likely <grant.likely@secretlab.ca>
->>>
->>> Yup, still looks good to me. =A0What boards has this been tested on?
->>
->> I tested this version on PPC405EX Kilauea equipped only one "standard"
->> Spansion S29GL512 NOR chip. And a slightly modified version on an MPC8360
->> board (kmeter1) which is equipped with the Intel P30 part mentioned in t=
-he
->> bindings description. Slightly modified since this board support is not =
-yet
->> pushed upstream and currently using v2.6.28 (physmap_of.c has received m=
-inor
->> modifications after 2.6.28 release).
->
-> Okay. =A0It will be good to get this one into -next for some testing
-> exposure. =A0Unless he asks me to do otherwise, I'll leave this one to
-> David to pick up.
-
-David, what's the status of this patch?  Will it be merged for 2.6.31?
-
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+T24gU2F0LCBKdW4gMTMsIDIwMDkgYXQgMDk6NDA6MDJBTSAtMDYwMCwgR3JhbnQgTGlrZWx5IHdy
+b3RlOgo+IE9uIFRodSwgSnVuIDExLCAyMDA5IGF0IDI6MTUgUE0sIEFudG9uCj4gVm9yb250c292
+PGF2b3JvbnRzb3ZAcnUubXZpc3RhLmNvbT4gd3JvdGU6Cj4gPiBTb21lIGhvc3RzIChoYXJkd2Fy
+ZSBjb25maWd1cmF0aW9ucywgb3IgcGFydGljdWxhciBTRC9NTUMgc2xvdHMpIG1heQo+ID4gbm90
+IHN1cHBvcnQgNC1iaXQgYnVzLiBGb3IgZXhhbXBsZSwgb24gTVBDODU2OUUtTURTIGJvYXJkcyB3
+ZSBjYW4KPiA+IHN3aXRjaCBiZXR3ZWVuIHNlcmlhbCAoMS1iaXQgb25seSkgYW5kIG5pYmJsZSAo
+NC1iaXQpIG1vZGVzLCB0aG91Z2h0Cj4gPiB3ZSBoYXZlIHRvIGRpc2FibGUgbW9yZSBwZXJpcGhl
+cmFscyB0byB3b3JrIGluIDQtYml0IG1vZGUuCj4gPgo+ID4gQWxvbmcgd2l0aCBzb21lIHNtYWxs
+IGNvcmUgY2hhbmdlcywgdGhpcyBwYXRjaCBtb2RpZmllcyBzZGhjaS1vZgo+ID4gZHJpdmVyLCBz
+byB0aGF0IG5vdyBpdCBsb29rcyBmb3IgIm1vZGUiIHByb3BlcnR5IGluIHRoZSBkZXZpY2UtdHJl
+ZS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnRvbiBWb3JvbnRzb3YgPGF2b3JvbnRzb3ZAcnUu
+bXZpc3RhLmNvbT4KPiA+IC0tLQo+ID4KPiA+IFBpZXJyZSwgSSdtIG5vdCBzdXJlIGlmIGEgcXVp
+cmsgd291bGQgYmUgYXBwcm9wcmlhdGUgaGVyZS4gSWYgc28sCj4gPiBJIGNhbiByZWRvIHRoZSBw
+YXRjaCB3aXRoIEZPUkNFXzFfQklUX0RBVEEgcXVpcmsuCj4gPgo+ID4gVGhhbmtzLAo+ID4KPiA+
+IMKgRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2R0cy1iaW5kaW5ncy9mc2wvZXNkaGMudHh0IHwgwqAg
+wqAyICsrCj4gPiDCoGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb2YuYyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoHwgwqAgwqA3ICsrKysrKysKPiA+IMKgZHJpdmVycy9tbWMvaG9zdC9z
+ZGhjaS1wY2kuYyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB8IMKgIMKgMSArCj4gPiDC
+oGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuYyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCB8IMKgIMKgMiArLQo+ID4gwqA0IGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyks
+IDEgZGVsZXRpb25zKC0pCj4gPgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcG93ZXJw
+Yy9kdHMtYmluZGluZ3MvZnNsL2VzZGhjLnR4dCBiL0RvY3VtZW50YXRpb24vcG93ZXJwYy9kdHMt
+YmluZGluZ3MvZnNsL2VzZGhjLnR4dAo+ID4gaW5kZXggNTA5M2RkZi4uMjk4Yjg2NSAxMDA2NDQK
+PiA+IC0tLSBhL0RvY3VtZW50YXRpb24vcG93ZXJwYy9kdHMtYmluZGluZ3MvZnNsL2VzZGhjLnR4
+dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2R0cy1iaW5kaW5ncy9mc2wvZXNkaGMu
+dHh0Cj4gPiBAQCAtMTAsNiArMTAsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gwqAgLSBp
+bnRlcnJ1cHRzIDogc2hvdWxkIGNvbnRhaW4gZVNESEMgaW50ZXJydXB0Lgo+ID4gwqAgLSBpbnRl
+cnJ1cHQtcGFyZW50IDogaW50ZXJydXB0IHNvdXJjZSBwaGFuZGxlLgo+ID4gwqAgLSBjbG9jay1m
+cmVxdWVuY3kgOiBzcGVjaWZpZXMgZVNESEMgYmFzZSBjbG9jayBmcmVxdWVuY3kuCj4gPiArIMKg
+LSBtb2RlIDogc3BlY2lmaWVzIGVTREhDIG1vZGUsIHZhbGlkIHZhbHVlcyBhcmU6ICIxLWJpdCIg
+YW5kICI0LWJpdCIuCj4gPiArIMKgIMKgSWYgbW9kZSBpcyB1bnNwZWNpZmllZCwgdGhlbiA0LWJp
+dCBtb2RlIGlzIGFzc3VtZWQuCj4gCj4gSW4gbGlnaHQgb2YgUGllcnJlJ3MgY29tbWVudCB0aGF0
+IDQtYml0IGlzIG1hbmRhdG9yeSBhbmQgdGhpcyBpcyBhCj4gZGV2aWF0aW9uLCBwZXJoYXBzIGl0
+IHdvdWxkIGJlIGJldHRlciB0byBkZWZpbmUgYW4gZW1wdHkgcHJvcGVydHkgdG8KPiBpbmRpY2F0
+ZSB0aGF0IG9ubHkgMS1iaXQgdHJhbnNmZXJzIHdvcmsuICBNYXliZSBzb21ldGhpbmcgYWxvbmcg
+dGhlCj4gbGluZXMgb2YgInNkaGMtMS1iaXQtb25seSI/CgpZZWFoLCBzaW5jZSBpdCB0dXJuZWQg
+dXAgdG8gYmUgYSBxdWlyaywgd2UnZCBiZXR0ZXIgdXNlIGEgbmFtZWQKcHJvcGVydHkuCgooSSB0
+aGluayB0aGF0IGJ5IGNvbnZlbnRpb24gd2Ugc2hvdWxkIHVzZSBjb21tYXMgZm9yCmNvbnRyb2xs
+ZXItc3BlY2lmaWMgcHJvcGVydGllcywgaS5lLiAic2RoY2kscHJvcGVydHkiLikKCgpUaGFua3Mh
+CgotLSAKQW50b24gVm9yb250c292CmVtYWlsOiBjYm91YXRtYWlscnVAZ21haWwuY29tCmlyYzov
+L2lyYy5mcmVlbm9kZS5uZXQvYmQyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1k
+aXNjdXNzQG96bGFicy5vcmcKaHR0cHM6Ly9vemxhYnMub3JnL21haWxtYW4vbGlzdGluZm8vZGV2
+aWNldHJlZS1kaXNjdXNzCg==
