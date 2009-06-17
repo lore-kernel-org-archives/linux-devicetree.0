@@ -1,80 +1,58 @@
-From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mtd/maps/mtd-ram: add an of-platform driver
-Date: Tue, 16 Jun 2009 19:19:06 +0200
-Message-ID: <1245172753.3400.0@antares>
-References: <fa686aa40906160553m2f0e7cc4n644c3893573845f@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/3 v3] mtd: physmap_of: Add multiple regions and
+	concatenation support
+Date: Tue, 16 Jun 2009 23:53:51 -0600
+Message-ID: <fa686aa40906162253j76776e88y9d7c818f4d0f1508@mail.gmail.com>
+References: <1239883845-17804-1-git-send-email-sr@denx.de>
+	<fa686aa40904160626k118cea3cvc0db38a2277e45b8@mail.gmail.com>
+	<200904161537.59048.sr@denx.de>
+	<fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0649232822=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <fa686aa40906160553m2f0e7cc4n644c3893573845f-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(from grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org on Tue Jun 16 14:53:17 2009)
-List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
-List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
-Mime-version: 1.0
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <fa686aa40904160646v75a98e02s446fd89c08cfebae@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Stefan Roese <sr@denx.de>, David Woodhouse <dwmw2@infradead.org>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============0649232822==
-Content-Type: multipart/signed; micalg=PGP-SHA1;
-	protocol="application/pgp-signature"; boundary="=-3vEv1y6AYteInxT4S5bC"
+On Thu, Apr 16, 2009 at 7:46 AM, Grant Likely<grant.likely@secretlab.ca> wr=
+ote:
+> On Thu, Apr 16, 2009 at 7:37 AM, Stefan Roese <sr@denx.de> wrote:
+>> On Thursday 16 April 2009, Grant Likely wrote:
+>>> > Signed-off-by: Stefan Roese <sr@denx.de>
+>>> > Reviewd-by: Grant Likely <grant.likely@secretlab.ca>
+>>>
+>>> Yup, still looks good to me. =A0What boards has this been tested on?
+>>
+>> I tested this version on PPC405EX Kilauea equipped only one "standard"
+>> Spansion S29GL512 NOR chip. And a slightly modified version on an MPC8360
+>> board (kmeter1) which is equipped with the Intel P30 part mentioned in t=
+he
+>> bindings description. Slightly modified since this board support is not =
+yet
+>> pushed upstream and currently using v2.6.28 (physmap_of.c has received m=
+inor
+>> modifications after 2.6.28 release).
+>
+> Okay. =A0It will be good to get this one into -next for some testing
+> exposure. =A0Unless he asks me to do otherwise, I'll leave this one to
+> David to pick up.
 
---=-3vEv1y6AYteInxT4S5bC
-Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+David, what's the status of this patch?  Will it be merged for 2.6.31?
 
-Am 16.06.09 14:53 schrieb(en) Grant Likely:
-> I'm not happy about the use case though.  It probably shouldn't =20
-> appear in this binding, or if it does it should be tagged as an =20
-> optional property.
+g.
 
-I agree with you that the naming is really misleading - other devices =20
-which are not mtd's may suffer from the same problem of the lpb (in my =20
-case, I have an extra memory-mapped Ethernet chip which I didn't try to =20
-access yet...).
+-- =
 
-As it is actually a chip select property, what about defining an =20
-optional property like "cs-width =3D (8|16|32)" which defaults to 8 and =20
-may be added to each 5200 lpb child?
-
-> It is only in the 5200 localplus case that bank-width is needed to =20
-> figure out how to apply the workaround.
-
-Just out of curiosity: what about the "localbus" of other Freescale =20
-chips (82xx? 83xx? Maybe others?)?
-
-Thanks, Albrecht.
-
---=-3vEv1y6AYteInxT4S5bC
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.9 (GNU/Linux)
-
-iD8DBQBKN9QRn/9unNAn/9ERAgcZAKCDBRHS+2sgGwIwB2vjxbbyuycbjwCfQBnb
-016afTZRn4vmVMeRgCX/P/Y=
-=RUF4
------END PGP SIGNATURE-----
-
---=-3vEv1y6AYteInxT4S5bC--
-
---===============0649232822==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-https://ozlabs.org/mailman/listinfo/devicetree-discuss
-
---===============0649232822==--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
