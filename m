@@ -1,15 +1,15 @@
-From: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v2] sdhci: Add support for hosts that are only capable of
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2] sdhci: Add support for hosts that are only capable of
 	1-bit transfers
-Date: Thu, 18 Jun 2009 00:14:08 +0400
-Message-ID: <20090617201408.GA17909@oksana.dev.rtsoft.ru>
+Date: Wed, 17 Jun 2009 14:55:46 -0600
+Message-ID: <fa686aa40906171355x5a917b60ne372796133c9e336@mail.gmail.com>
 References: <20090611201545.GA15942@oksana.dev.rtsoft.ru>
+	<20090617201408.GA17909@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20090611201545.GA15942-wnGakbxT3iijyJ0x5qLZdcN33GVbZNy3@public.gmane.org>
+In-Reply-To: <20090617201408.GA17909-wnGakbxT3iijyJ0x5qLZdcN33GVbZNy3@public.gmane.org>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -19,91 +19,119 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Pierre Ossman <pierre-vCPtPcF4ZGuHXe+LvDLADg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sdhci-devel-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
+To: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Pierre Ossman <pierre-vCPtPcF4ZGuHXe+LvDLADg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sdhci-devel-qjLDD68F18NoYZYVwN2jqg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some hosts (hardware configurations, or particular SD/MMC slots) may
-not support 4-bit bus. For example, on MPC8569E-MDS boards we can
-switch between serial (1-bit only) and nibble (4-bit) modes, thought
-we have to disable more peripherals to work in 4-bit mode.
+On Wed, Jun 17, 2009 at 2:14 PM, Anton
+Vorontsov<avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org> wrote:
+> Some hosts (hardware configurations, or particular SD/MMC slots) may
+> not support 4-bit bus. For example, on MPC8569E-MDS boards we can
+> switch between serial (1-bit only) and nibble (4-bit) modes, thought
+> we have to disable more peripherals to work in 4-bit mode.
+>
+> Along with some small core changes, this patch modifies sdhci-of
+> driver, so that now it looks for "sdhci,1-bit-only" property in the
+> device-tree, and if specified we enable a proper quirk.
+>
+> Signed-off-by: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
 
-Along with some small core changes, this patch modifies sdhci-of
-driver, so that now it looks for "sdhci,1-bit-only" property in the
-device-tree, and if specified we enable a proper quirk.
+Looks good to me.
 
-Signed-off-by: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
----
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Pierre,
+g.
 
-As promised, here is a version with a quirk.
-Also incorporated suggestions by Grant Likely.
+> ---
+>
+> Pierre,
+>
+> As promised, here is a version with a quirk.
+> Also incorporated suggestions by Grant Likely.
+>
+>
+> Thanks,
+>
+> =A0Documentation/powerpc/dts-bindings/fsl/esdhc.txt | =A0 =A02 ++
+> =A0drivers/mmc/host/sdhci-of.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0| =A0 =A03 +++
+> =A0drivers/mmc/host/sdhci.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 =A05 ++++-
+> =A0drivers/mmc/host/sdhci.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 =A02 ++
+> =A04 files changed, 11 insertions(+), 1 deletions(-)
+>
+> diff --git a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt b/Documenta=
+tion/powerpc/dts-bindings/fsl/esdhc.txt
+> index 5093ddf..3ed3797 100644
+> --- a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
+> +++ b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
+> @@ -10,6 +10,8 @@ Required properties:
+> =A0 - interrupts : should contain eSDHC interrupt.
+> =A0 - interrupt-parent : interrupt source phandle.
+> =A0 - clock-frequency : specifies eSDHC base clock frequency.
+> + =A0- sdhci,1-bit-only : (optional) specifies that a controller can
+> + =A0 =A0only handle 1-bit data transfers.
+>
+> =A0Example:
+>
+> diff --git a/drivers/mmc/host/sdhci-of.c b/drivers/mmc/host/sdhci-of.c
+> index 09cc597..dd65f84 100644
+> --- a/drivers/mmc/host/sdhci-of.c
+> +++ b/drivers/mmc/host/sdhci-of.c
+> @@ -244,6 +244,9 @@ static int __devinit sdhci_of_probe(struct of_device =
+*ofdev,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0host->ops =3D &sdhci_of_data->ops;
+> =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 if (of_get_property(np, "sdhci,1-bit-only", NULL))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 host->quirks |=3D SDHCI_QUIRK_FORCE_1_BIT_D=
+ATA;
+> +
+> =A0 =A0 =A0 =A0clk =3D of_get_property(np, "clock-frequency", &size);
+> =A0 =A0 =A0 =A0if (clk && size =3D=3D sizeof(*clk) && *clk)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0of_host->clock =3D *clk;
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 9234be2..f28f94a 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1721,7 +1721,10 @@ int sdhci_add_host(struct sdhci_host *host)
+> =A0 =A0 =A0 =A0mmc->ops =3D &sdhci_ops;
+> =A0 =A0 =A0 =A0mmc->f_min =3D host->max_clk / 256;
+> =A0 =A0 =A0 =A0mmc->f_max =3D host->max_clk;
+> - =A0 =A0 =A0 mmc->caps =3D MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
+> + =A0 =A0 =A0 mmc->caps =3D MMC_CAP_SDIO_IRQ;
+> +
+> + =A0 =A0 =A0 if (!(host->quirks & SDHCI_QUIRK_FORCE_1_BIT_DATA))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc->caps |=3D MMC_CAP_4_BIT_DATA;
+>
+> =A0 =A0 =A0 =A0if (caps & SDHCI_CAN_DO_HISPD)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0mmc->caps |=3D MMC_CAP_SD_HIGHSPEED;
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 65c6f99..834f877 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -226,6 +226,8 @@ struct sdhci_host {
+> =A0#define SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET =A0 =A0 =A0 =A0 =A0 (1<<1=
+9)
+> =A0/* Controller has to be forced to use block size of 2048 bytes */
+> =A0#define SDHCI_QUIRK_FORCE_BLK_SZ_2048 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0(1<<20)
+> +/* Controller can only handle 1-bit data transfers */
+> +#define SDHCI_QUIRK_FORCE_1_BIT_DATA =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ (1<<21)
+>
+> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 irq; =A0 =A0 =
+=A0 =A0 =A0 =A0/* Device IRQ */
+> =A0 =A0 =A0 =A0void __iomem * =A0 =A0 =A0 =A0 =A0ioaddr; =A0 =A0 =A0 =A0 =
+/* Mapped address */
+> --
+> 1.6.3.1
+>
 
 
-Thanks,
 
- Documentation/powerpc/dts-bindings/fsl/esdhc.txt |    2 ++
- drivers/mmc/host/sdhci-of.c                      |    3 +++
- drivers/mmc/host/sdhci.c                         |    5 ++++-
- drivers/mmc/host/sdhci.h                         |    2 ++
- 4 files changed, 11 insertions(+), 1 deletions(-)
+-- =
 
-diff --git a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
-index 5093ddf..3ed3797 100644
---- a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
-+++ b/Documentation/powerpc/dts-bindings/fsl/esdhc.txt
-@@ -10,6 +10,8 @@ Required properties:
-   - interrupts : should contain eSDHC interrupt.
-   - interrupt-parent : interrupt source phandle.
-   - clock-frequency : specifies eSDHC base clock frequency.
-+  - sdhci,1-bit-only : (optional) specifies that a controller can
-+    only handle 1-bit data transfers.
- 
- Example:
- 
-diff --git a/drivers/mmc/host/sdhci-of.c b/drivers/mmc/host/sdhci-of.c
-index 09cc597..dd65f84 100644
---- a/drivers/mmc/host/sdhci-of.c
-+++ b/drivers/mmc/host/sdhci-of.c
-@@ -244,6 +244,9 @@ static int __devinit sdhci_of_probe(struct of_device *ofdev,
- 		host->ops = &sdhci_of_data->ops;
- 	}
- 
-+	if (of_get_property(np, "sdhci,1-bit-only", NULL))
-+		host->quirks |= SDHCI_QUIRK_FORCE_1_BIT_DATA;
-+
- 	clk = of_get_property(np, "clock-frequency", &size);
- 	if (clk && size == sizeof(*clk) && *clk)
- 		of_host->clock = *clk;
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 9234be2..f28f94a 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1721,7 +1721,10 @@ int sdhci_add_host(struct sdhci_host *host)
- 	mmc->ops = &sdhci_ops;
- 	mmc->f_min = host->max_clk / 256;
- 	mmc->f_max = host->max_clk;
--	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
-+	mmc->caps = MMC_CAP_SDIO_IRQ;
-+
-+	if (!(host->quirks & SDHCI_QUIRK_FORCE_1_BIT_DATA))
-+		mmc->caps |= MMC_CAP_4_BIT_DATA;
- 
- 	if (caps & SDHCI_CAN_DO_HISPD)
- 		mmc->caps |= MMC_CAP_SD_HIGHSPEED;
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 65c6f99..834f877 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -226,6 +226,8 @@ struct sdhci_host {
- #define SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET		(1<<19)
- /* Controller has to be forced to use block size of 2048 bytes */
- #define SDHCI_QUIRK_FORCE_BLK_SZ_2048			(1<<20)
-+/* Controller can only handle 1-bit data transfers */
-+#define SDHCI_QUIRK_FORCE_1_BIT_DATA			(1<<21)
- 
- 	int			irq;		/* Device IRQ */
- 	void __iomem *		ioaddr;		/* Mapped address */
--- 
-1.6.3.1
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
