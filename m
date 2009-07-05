@@ -1,13 +1,13 @@
-From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Subject: Re: Device tree BSP
-Date: Sun, 5 Jul 2009 19:18:12 +1000
-Message-ID: <1d3f23370907050218l6b2eb9emdbcb7dc321dbab5a@mail.gmail.com>
-References: <4A49F472.3030902@petalogix.com>
-	<20090704181837.4DC219B0051@mail75-va3.bigfish.com>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Device tree BSP
+Date: Sun, 5 Jul 2009 13:43:47 -0700
+Message-ID: <20090705204647.1BBCAB2004B@mail107-dub.bigfish.com>
+References: <4A49F472.3030902@petalogix.com><20090704181837.4DC219B0051@mail75-va3.bigfish.com>
+	<1d3f23370907050218l6b2eb9emdbcb7dc321dbab5a@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0427579397=="
+Content-Type: multipart/mixed; boundary="===============1129750363=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20090704181837.4DC219B0051-AP5P7IoXhpo/OHOHf44ZtvYhGscHeamf@public.gmane.org>
+Content-Class: urn:content-classes:message
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -18,16 +18,38 @@ List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 Mime-version: 1.0
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 Cc: John Linn <linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, David DeBonis <ddeboni-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0427579397==
-Content-Type: multipart/alternative; boundary=0016364ee590616b5f046df1de2e
+--===============1129750363==
+Content-Class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C9FDB1.B4F0087F"
 
---0016364ee590616b5f046df1de2e
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+------_=_NextPart_001_01C9FDB1.B4F0087F
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+
+My (limited) understanding from reading other posts is that there is alread=
+y a GPIO subsystem for handling such misc-GPIO things.
+To me the cost of gates for multiple GPIO cores is small compared to the sy=
+stem cost of having
+a separate OF binding.  IMHO, this should be exposed the way any other GPIO=
+ with such capabilities
+is on any other OF/device-tree enabled system.
+
+Steve
+
+-----Original Message-----
+From: John Williams [mailto:john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org]
+Sent: Sun 7/5/2009 2:18 AM
+To: Stephen Neuendorffer
+Cc: michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org; John Linn; David DeBonis; devicetree-discus=
+s@ozlabs.org
+Subject: Re: Device tree BSP
+ =
 
 On Sun, Jul 5, 2009 at 4:15 AM, Stephen Neuendorffer <
 stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
@@ -38,7 +60,8 @@ stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 > right to me.
 > In particular, why would I have to have a separate core for these
 > functions?
-> Furthermore, I'm sure there must be some generic mechanisms that can/should
+> Furthermore, I'm sure there must be some generic mechanisms that can/shou=
+ld
 > be used for these kind of things.
 > In general, we shouldn't reinvent the wheel here..
 >
@@ -51,74 +74,139 @@ Clearly you don't want these GPIO cores to enumerate as regular xps_gpio
 devices, binding to the standard GPIO driver and appearing in /dev/gpioN
 
 Is your concern the manual override of OF_ binding (the "compatible"
-strings), or just the HW overhead of an extra core to drive these HW utility
+strings), or just the HW overhead of an extra core to drive these HW utilit=
+y
 functions?  Save us from the bad old days of "misc_logic"  IP cores that
 drove this stuff in older Xilinx reference designs!
 
-Would you propose to get tricky and allocate specific bits on existing GPIOs
+Would you propose to get tricky and allocate specific bits on existing GPIO=
+s
 for these "special" functions, and write the GPIO driver/framework to mask
-off these bits etc?  Seems like a complicated software solution to a problem
+off these bits etc?  Seems like a complicated software solution to a proble=
+m
 trivially solved with a few extra gates.
 
 Cheers,
 
 John
--- 
+-- =
+
 John Williams, PhD, B.Eng, B.IT
 PetaLogix - Linux Solutions for a Reconfigurable World
 w: www.petalogix.com  p: +61-7-30090663  f: +61-7-30090663
 
---0016364ee590616b5f046df1de2e
-Content-Type: text/html; charset=ISO-8859-1
+
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
+
+
+------_=_NextPart_001_01C9FDB1.B4F0087F
+Content-Type: text/html; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<br><br><div class=3D"gmail_quote">On Sun, Jul 5, 2009 at 4:15 AM, Stephen =
-Neuendorffer <span dir=3D"ltr">&lt;<a href=3D"mailto:stephen.neuendorffer@x=
-ilinx.com">stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org</a>&gt;</span> wrote:<br><blockq=
-uote class=3D"gmail_quote" style=3D"border-left: 1px solid rgb(204, 204, 20=
-4); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; charset=3Diso-8859-=
+1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version 6.5.7654.12"=
+>
+<TITLE>RE: Device tree BSP</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
+<BR>
+
+<P><FONT SIZE=3D2>My (limited) understanding from reading other posts is th=
+at there is already a GPIO subsystem for handling such misc-GPIO things.<BR=
+>
+To me the cost of gates for multiple GPIO cores is small compared to the sy=
+stem cost of having<BR>
+a separate OF binding.&nbsp; IMHO, this should be exposed the way any other=
+ GPIO with such capabilities<BR>
+is on any other OF/device-tree enabled system.<BR>
+<BR>
+Steve<BR>
+<BR>
+-----Original Message-----<BR>
+From: John Williams [<A HREF=3D"mailto:john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org">mailto:=
+john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org</A>]<BR>
+Sent: Sun 7/5/2009 2:18 AM<BR>
+To: Stephen Neuendorffer<BR>
+Cc: michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org; John Linn; David DeBonis; devicetree-discus=
+s@ozlabs.org<BR>
+Subject: Re: Device tree BSP<BR>
+<BR>
+On Sun, Jul 5, 2009 at 4:15 AM, Stephen Neuendorffer &lt;<BR>
+stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org&gt; wrote:<BR>
+<BR>
+&gt;<BR>
+&gt;<BR>
+&gt; I'm not exactly sure what you're trying to do here, but it doesn't loo=
+k<BR>
+&gt; right to me.<BR>
+&gt; In particular, why would I have to have a separate core for these<BR>
+&gt; functions?<BR>
+&gt; Furthermore, I'm sure there must be some generic mechanisms that can/s=
+hould<BR>
+&gt; be used for these kind of things.<BR>
+&gt; In general, we shouldn't reinvent the wheel here..<BR>
+&gt;<BR>
+<BR>
+The issue as I see it is that in a hardware design, the GPIO is a very<BR>
+convenient core to drive a heartbeat LED, and aux input on proc_sys_reset<B=
+R>
+(for software-driven reset), or whatever.<BR>
+<BR>
+Clearly you don't want these GPIO cores to enumerate as regular xps_gpio<BR=
+>
+devices, binding to the standard GPIO driver and appearing in /dev/gpioN<BR=
+>
+<BR>
+Is your concern the manual override of OF_ binding (the &quot;compatible&qu=
+ot;<BR>
+strings), or just the HW overhead of an extra core to drive these HW utilit=
+y<BR>
+functions?&nbsp; Save us from the bad old days of &quot;misc_logic&quot;&nb=
+sp; IP cores that<BR>
+drove this stuff in older Xilinx reference designs!<BR>
+<BR>
+Would you propose to get tricky and allocate specific bits on existing GPIO=
+s<BR>
+for these &quot;special&quot; functions, and write the GPIO driver/framewor=
+k to mask<BR>
+off these bits etc?&nbsp; Seems like a complicated software solution to a p=
+roblem<BR>
+trivially solved with a few extra gates.<BR>
+<BR>
+Cheers,<BR>
+<BR>
+John<BR>
+--<BR>
+John Williams, PhD, B.Eng, B.IT<BR>
+PetaLogix - Linux Solutions for a Reconfigurable World<BR>
+w: www.petalogix.com&nbsp; p: +61-7-30090663&nbsp; f: +61-7-30090663<BR>
+<BR>
+</FONT>
+</P>
+
+<br clear=3Dall> This email and any attachments are intended for the sole u=
+se of the named recipient(s) and contain(s) confidential information that m=
+ay be proprietary, privileged or copyrighted under applicable law. If you a=
+re not the intended recipient, do not read, copy, or forward this email mes=
+sage or any attachments. Delete this email message and any attachments imme=
+diately.
+</BODY>
+</HTML>
 
 
+------_=_NextPart_001_01C9FDB1.B4F0087F--
 
-
-
-
-
-<div>
-
-<br>
-<br>
-
-<p><font size=3D"2">I&#39;m not exactly sure what you&#39;re trying to do h=
-ere, but it doesn&#39;t look right to me.<br>
-In particular, why would I have to have a separate core for these functions=
-?<br>
-Furthermore, I&#39;m sure there must be some generic mechanisms that can/sh=
-ould be used for these kind of things.<br>
-In general, we shouldn&#39;t reinvent the wheel here..</font></p></div></bl=
-ockquote><div><br>The issue as I see it is that in a hardware design, the G=
-PIO is a very convenient core to drive a heartbeat LED, and aux input on pr=
-oc_sys_reset (for software-driven reset), or whatever.<br>
-=A0<br>Clearly you don&#39;t want these GPIO cores to enumerate as regular =
-xps_gpio devices, binding to the standard GPIO driver and appearing in /dev=
-/gpioN<br><br>Is your concern the manual override of OF_ binding (the &quot=
-;compatible&quot; strings), or just the HW overhead of an extra core to dri=
-ve these HW utility functions?=A0 Save us from the bad old days of &quot;mi=
-sc_logic&quot;=A0 IP cores that drove this stuff in older Xilinx reference =
-designs!<br>
-<br>Would you propose to get tricky and allocate specific bits on existing =
-GPIOs for these &quot;special&quot; functions, and write the GPIO driver/fr=
-amework to mask off these bits etc?=A0 Seems like a complicated software so=
-lution to a problem trivially solved with a few extra gates.<br>
-<br>Cheers,<br><br>John<br></div></div>-- <br>John Williams, PhD, B.Eng, <a=
- href=3D"http://B.IT">B.IT</a><br>PetaLogix - Linux Solutions for a Reconfi=
-gurable World<br>w: <a href=3D"http://www.petalogix.com">www.petalogix.com<=
-/a> =A0p: +61-7-30090663 =A0f: +61-7-30090663<br>
-
-
---0016364ee590616b5f046df1de2e--
-
---===============0427579397==
+--===============1129750363==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -129,4 +217,4 @@ devicetree-discuss mailing list
 devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 https://ozlabs.org/mailman/listinfo/devicetree-discuss
 
---===============0427579397==--
+--===============1129750363==--
