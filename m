@@ -1,18 +1,10 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device tree BSP
-Date: Sun, 5 Jul 2009 17:08:38 -0600
-Message-ID: <fa686aa40907051608n2da78990x674c7e907ab06a85@mail.gmail.com>
-References: <4A49F472.3030902@petalogix.com>
-	<20090704181837.4DC219B0051@mail75-va3.bigfish.com>
-	<1d3f23370907050218l6b2eb9emdbcb7dc321dbab5a@mail.gmail.com>
-	<20090705204647.1BBCAB2004B@mail107-dub.bigfish.com>
-	<fa686aa40907051453of20e849gab47e901ced28501@mail.gmail.com>
-	<1246831858.22625.4.camel@pasglop>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Mailing list moving
+Date: Sun, 12 Jul 2009 15:28:04 +1000
+Message-ID: <20090712152804.8eb2f740.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============0338932288=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-In-Reply-To: <1246831858.22625.4.camel@pasglop>
 List-Unsubscribe: <https://ozlabs.org/mailman/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://ozlabs.org/pipermail/devicetree-discuss>
@@ -20,48 +12,60 @@ List-Post: <mailto:devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Help: <mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=help>
 List-Subscribe: <https://ozlabs.org/mailman/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-mnsaURCQ41sdnm+yROfE0A@public.gmane.org?subject=subscribe>
+Mime-version: 1.0
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, David DeBonis <ddeboni-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, John Linn <linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-owner-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 5, 2009 at 4:10 PM, Benjamin
-Herrenschmidt<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Sun, 2009-07-05 at 15:53 -0600, Grant Likely wrote:
->> This is not a question that I've got an answer to, but
->> I've been thinking about defining a "machine" node, or something
->> similar that can be a parent of such non-addressable devices. =A0I'm
->> hoping Mitch, Ben, DavidG, Scott, or some other OF active folks will
->> jump in here and give their opinion before I go and define something
->> braindead. =A0I was thinking something like this, where the root node
->> would be the parent of this machine node:
->
-> Well, device nodes can perfectly represent non addressable devices...
-> One way is to have no "reg" property but that sucks as you get no unit
-> address neither which can cause problems when you have multiple of them.
->
-> So hosting them under some kind of node that would break that address
-> translatability (have no "ranges" property) makes some amount of sense
-> though I don't necessarily like the term "machine".
+--===============0338932288==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA1";
+ boundary="Signature=_Sun__12_Jul_2009_15_28_04_+1000_acNg5BuZDSWABUeN"
 
-Neither do I, but I've got nothing better.  I'm open to suggestions.  :-)
+--Signature=_Sun__12_Jul_2009_15_28_04_+1000_acNg5BuZDSWABUeN
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> But if no "reg" is good for you, then stick them in the soc node with
-> distinct names.
+Hi all,
 
-It doesn't really belong in the soc node either because it is all
-stuff external to the SoC.
+This mailing list will be moved shortly.  The current submission address
+(devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org) will continue to work, the new address will=
+ be
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsieG/Ez6ZCGd0@public.gmane.org  The mailing list archives will still =
+be
+available but the URL of individual messages may change (with any luck
+they won't).  Future references should be to lists.ozlabs.org.
 
-> Also, why "virtual," in your compatible property for the SPI node ? It's
-> not really virtual...
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
+http://www.canb.auug.org.au/~sfr/
 
-I don't like 'virtual,' either, but its in the currently documented
-binding.  (Documentation/powerpc/dts-bindings/gpio/mdio.txt).
+--Signature=_Sun__12_Jul_2009_15_28_04_+1000_acNg5BuZDSWABUeN
+Content-Type: application/pgp-signature
 
-g.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
 
--- =
+iEYEARECAAYFAkpZdGQACgkQjjKRsyhoI8z7ngCgpET/VAVkWNL5zjfRJdjQpMDC
+WxgAnitjw32kDkEkiIC82CwAK9gCMPZd
+=pkeL
+-----END PGP SIGNATURE-----
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+--Signature=_Sun__12_Jul_2009_15_28_04_+1000_acNg5BuZDSWABUeN--
+
+--===============0338932288==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+https://ozlabs.org/mailman/listinfo/devicetree-discuss
+
+--===============0338932288==--
