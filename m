@@ -1,11 +1,15 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: [PATCH] mtd/maps: add mtd-ram support to physmap_of
-Date: Fri, 17 Jul 2009 14:39:23 +0200
-Message-ID: <1247834363-28198-1-git-send-email-w.sang@pengutronix.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: image/wrapper script questions
+Date: Mon, 27 Jul 2009 15:53:01 -0600
+Message-ID: <fa686aa40907271453sd6463c2h62d798af1baf720a@mail.gmail.com>
+References: <4A6DDF80.209@embeddedarm.com>
+	<20090727183155.7FA16832E416@gemini.denx.de>
+	<4A6E0AE2.3090600@embeddedarm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4A6E0AE2.3090600@embeddedarm.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -15,94 +19,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: linux-mtd@lists.infradead.org
-Cc: devicetree-discuss@ozlabs.org, Vitaly Wool <vwool@ru.mvista.com>, Artem Bityutskiy <dedekind@infradead.org>, =?utf-8?q?Albrecht=20Dre=C3=9F?= <albrecht.dress@arcor.de>, linuxppc-dev@ozlabs.org, Ken MacLeod <ken@bitsko.slc.ut.us>, David Woodhouse <dwmw2@infradead.org>
+To: Eddie Dawydiuk <eddie@embeddedarm.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-VXNlIHBoeXNtYXBfb2YgdG8gYWNjZXNzIFJBTXMgYXMgbXRkIGFuZCBhZGQgZG9jdW1lbmF0aW9u
-IGZvciBpdC4gVGhpcyBhcHByb2FjaAppcyBhIGxvdCBsZXNzIGludHJ1c2l2ZSBhcyBhZGRpbmcg
-YW4gb2Ytd3JhcHBlciBhcm91bmQgcGxhdC1yYW0uYy4gQXMgbW9zdApleHRlbnNpb25zIG9mIHBs
-YXQtcmFtLmMgKGUuZy4gY3VzdG9tIG1hcC1mdW5jdGlvbnMpIGNhbid0IGJlIG1hcHBlZCB0byB0
-aGUKZGV2aWNlIHRyZWUgYW55aG93LCBleHRlbmRpbmcgcGh5c21hcF9vZiBzZWVtcyB0byBiZSB0
-aGUgY2xlYW5lc3QgYXBwcm9hY2guCgpUZXN0ZWQgd2l0aCBhIHBoeUNPUkUtTVBDNTEyMWUuCgpT
-aWduZWQtb2ZmLWJ5OiBXb2xmcmFtIFNhbmcgPHcuc2FuZ0BwZW5ndXRyb25peC5kZT4KQ2M6IFZp
-dGFseSBXb29sIDx2d29vbEBydS5tdmlzdGEuY29tPgpDYzogQXJ0ZW0gQml0eXV0c2tpeSA8ZGVk
-ZWtpbmRAaW5mcmFkZWFkLm9yZz4KQ2M6IERhdmlkIFdvb2Rob3VzZSA8ZHdtdzJAaW5mcmFkZWFk
-Lm9yZz4KQ2M6IEtlbiBNYWNMZW9kIDxrZW5AYml0c2tvLnNsYy51dC51cz4KQ2M6IEFsYnJlY2h0
-IERyZcOfIDxhbGJyZWNodC5kcmVzc0BhcmNvci5kZT4KLS0tCiBEb2N1bWVudGF0aW9uL3Bvd2Vy
-cGMvZHRzLWJpbmRpbmdzL210ZC1waHlzbWFwLnR4dCB8ICAgNDIgKysrKysrKysrKysrLS0tLS0t
-LQogZHJpdmVycy9tdGQvbWFwcy9waHlzbWFwX29mLmMgICAgICAgICAgICAgICAgICAgICAgfCAg
-ICA0ICsrCiAyIGZpbGVzIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygt
-KQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcG93ZXJwYy9kdHMtYmluZGluZ3MvbXRkLXBo
-eXNtYXAudHh0IGIvRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2R0cy1iaW5kaW5ncy9tdGQtcGh5c21h
-cC50eHQKaW5kZXggNjY3YzliZC4uODAxNTJjYiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9w
-b3dlcnBjL2R0cy1iaW5kaW5ncy9tdGQtcGh5c21hcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9w
-b3dlcnBjL2R0cy1iaW5kaW5ncy9tdGQtcGh5c21hcC50eHQKQEAgLTEsMTggKzEsMTkgQEAKLUNG
-SSBvciBKRURFQyBtZW1vcnktbWFwcGVkIE5PUiBmbGFzaAorQ0ZJIG9yIEpFREVDIG1lbW9yeS1t
-YXBwZWQgTk9SIGZsYXNoLCBNVEQtUkFNIChOVlJBTS4uLikKIAogRmxhc2ggY2hpcHMgKE1lbW9y
-eSBUZWNobm9sb2d5IERldmljZXMpIGFyZSBvZnRlbiB1c2VkIGZvciBzb2xpZCBzdGF0ZQogZmls
-ZSBzeXN0ZW1zIG9uIGVtYmVkZGVkIGRldmljZXMuCiAKLSAtIGNvbXBhdGlibGUgOiBzaG91bGQg
-Y29udGFpbiB0aGUgc3BlY2lmaWMgbW9kZWwgb2YgZmxhc2ggY2hpcChzKQotICAgdXNlZCwgaWYg
-a25vd24sIGZvbGxvd2VkIGJ5IGVpdGhlciAiY2ZpLWZsYXNoIiBvciAiamVkZWMtZmxhc2giCi0g
-LSByZWcgOiBBZGRyZXNzIHJhbmdlKHMpIG9mIHRoZSBmbGFzaCBjaGlwKHMpCisgLSBjb21wYXRp
-YmxlIDogc2hvdWxkIGNvbnRhaW4gdGhlIHNwZWNpZmljIG1vZGVsIG9mIG10ZCBjaGlwKHMpCisg
-ICB1c2VkLCBpZiBrbm93biwgZm9sbG93ZWQgYnkgZWl0aGVyICJjZmktZmxhc2giLCAiamVkZWMt
-Zmxhc2giCisgICBvciAibXRkLXJhbSIuCisgLSByZWcgOiBBZGRyZXNzIHJhbmdlKHMpIG9mIHRo
-ZSBtdGQgY2hpcChzKQogICAgSXQncyBwb3NzaWJsZSB0byAob3B0aW9uYWxseSkgZGVmaW5lIG11
-bHRpcGxlICJyZWciIHR1cGxlcyBzbyB0aGF0Ci0gICBub24taWRlbnRpY2FsIE5PUiBjaGlwcyBj
-YW4gYmUgZGVzY3JpYmVkIGluIG9uZSBmbGFzaCBub2RlLgotIC0gYmFuay13aWR0aCA6IFdpZHRo
-IChpbiBieXRlcykgb2YgdGhlIGZsYXNoIGJhbmsuICBFcXVhbCB0byB0aGUKKyAgIG5vbi1pZGVu
-dGljYWwgY2hpcHMgY2FuIGJlIGRlc2NyaWJlZCBpbiBvbmUgbm9kZS4KKyAtIGJhbmstd2lkdGgg
-OiBXaWR0aCAoaW4gYnl0ZXMpIG9mIHRoZSBiYW5rLiAgRXF1YWwgdG8gdGhlCiAgICBkZXZpY2Ug
-d2lkdGggdGltZXMgdGhlIG51bWJlciBvZiBpbnRlcmxlYXZlZCBjaGlwcy4KLSAtIGRldmljZS13
-aWR0aCA6IChvcHRpb25hbCkgV2lkdGggb2YgYSBzaW5nbGUgZmxhc2ggY2hpcC4gIElmCisgLSBk
-ZXZpY2Utd2lkdGggOiAob3B0aW9uYWwpIFdpZHRoIG9mIGEgc2luZ2xlIG10ZCBjaGlwLiAgSWYK
-ICAgIG9taXR0ZWQsIGFzc3VtZWQgdG8gYmUgZXF1YWwgdG8gJ2Jhbmstd2lkdGgnLgotIC0gI2Fk
-ZHJlc3MtY2VsbHMsICNzaXplLWNlbGxzIDogTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBmbGFzaCBo
-YXMKKyAtICNhZGRyZXNzLWNlbGxzLCAjc2l6ZS1jZWxscyA6IE11c3QgYmUgcHJlc2VudCBpZiB0
-aGUgZGV2aWNlIGhhcwogICAgc3ViLW5vZGVzIHJlcHJlc2VudGluZyBwYXJ0aXRpb25zIChzZWUg
-YmVsb3cpLiAgSW4gdGhpcyBjYXNlCiAgICBib3RoICNhZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1j
-ZWxscyBtdXN0IGJlIGVxdWFsIHRvIDEuCiAKQEAgLTIyLDI0ICsyMywyNCBAQCBhcmUgZGVmaW5l
-ZDoKICAtIHZlbmRvci1pZCA6IENvbnRhaW5zIHRoZSBmbGFzaCBjaGlwJ3MgdmVuZG9yIGlkICgx
-IGJ5dGUpLgogIC0gZGV2aWNlLWlkIDogQ29udGFpbnMgdGhlIGZsYXNoIGNoaXAncyBkZXZpY2Ug
-aWQgKDEgYnl0ZSkuCiAKLUluIGFkZGl0aW9uIHRvIHRoZSBpbmZvcm1hdGlvbiBvbiB0aGUgZmxh
-c2ggYmFuayBpdHNlbGYsIHRoZQorSW4gYWRkaXRpb24gdG8gdGhlIGluZm9ybWF0aW9uIG9uIHRo
-ZSBtdGQgYmFuayBpdHNlbGYsIHRoZQogZGV2aWNlIHRyZWUgbWF5IG9wdGlvbmFsbHkgY29udGFp
-biBhZGRpdGlvbmFsIGluZm9ybWF0aW9uCi1kZXNjcmliaW5nIHBhcnRpdGlvbnMgb2YgdGhlIGZs
-YXNoIGFkZHJlc3Mgc3BhY2UuICBUaGlzIGNhbiBiZQorZGVzY3JpYmluZyBwYXJ0aXRpb25zIG9m
-IHRoZSBhZGRyZXNzIHNwYWNlLiAgVGhpcyBjYW4gYmUKIHVzZWQgb24gcGxhdGZvcm1zIHdoaWNo
-IGhhdmUgc3Ryb25nIGNvbnZlbnRpb25zIGFib3V0IHdoaWNoCi1wb3J0aW9ucyBvZiB0aGUgZmxh
-c2ggYXJlIHVzZWQgZm9yIHdoYXQgcHVycG9zZXMsIGJ1dCB3aGljaCBkb24ndAorcG9ydGlvbnMg
-b2YgYSBmbGFzaCBhcmUgdXNlZCBmb3Igd2hhdCBwdXJwb3NlcywgYnV0IHdoaWNoIGRvbid0CiB1
-c2UgYW4gb24tZmxhc2ggcGFydGl0aW9uIHRhYmxlIHN1Y2ggYXMgUmVkQm9vdC4KIAotRWFjaCBw
-YXJ0aXRpb24gaXMgcmVwcmVzZW50ZWQgYXMgYSBzdWItbm9kZSBvZiB0aGUgZmxhc2ggZGV2aWNl
-LgorRWFjaCBwYXJ0aXRpb24gaXMgcmVwcmVzZW50ZWQgYXMgYSBzdWItbm9kZSBvZiB0aGUgbXRk
-IGRldmljZS4KIEVhY2ggbm9kZSdzIG5hbWUgcmVwcmVzZW50cyB0aGUgbmFtZSBvZiB0aGUgY29y
-cmVzcG9uZGluZwotcGFydGl0aW9uIG9mIHRoZSBmbGFzaCBkZXZpY2UuCitwYXJ0aXRpb24gb2Yg
-dGhlIG10ZCBkZXZpY2UuCiAKIEZsYXNoIHBhcnRpdGlvbnMKLSAtIHJlZyA6IFRoZSBwYXJ0aXRp
-b24ncyBvZmZzZXQgYW5kIHNpemUgd2l0aGluIHRoZSBmbGFzaCBiYW5rLgotIC0gbGFiZWwgOiAo
-b3B0aW9uYWwpIFRoZSBsYWJlbCAvIG5hbWUgZm9yIHRoaXMgZmxhc2ggcGFydGl0aW9uLgorIC0g
-cmVnIDogVGhlIHBhcnRpdGlvbidzIG9mZnNldCBhbmQgc2l6ZSB3aXRoaW4gdGhlIG10ZCBiYW5r
-LgorIC0gbGFiZWwgOiAob3B0aW9uYWwpIFRoZSBsYWJlbCAvIG5hbWUgZm9yIHRoaXMgcGFydGl0
-aW9uLgogICAgSWYgb21pdHRlZCwgdGhlIGxhYmVsIGlzIHRha2VuIGZyb20gdGhlIG5vZGUgbmFt
-ZSAoZXhjbHVkaW5nCiAgICB0aGUgdW5pdCBhZGRyZXNzKS4KICAtIHJlYWQtb25seSA6IChvcHRp
-b25hbCkgVGhpcyBwYXJhbWV0ZXIsIGlmIHByZXNlbnQsIGlzIGEgaGludCB0bwotICAgTGludXgg
-dGhhdCB0aGlzIGZsYXNoIHBhcnRpdGlvbiBzaG91bGQgb25seSBiZSBtb3VudGVkCisgICBMaW51
-eCB0aGF0IHRoaXMgcGFydGl0aW9uIHNob3VsZCBvbmx5IGJlIG1vdW50ZWQKICAgIHJlYWQtb25s
-eS4gIFRoaXMgaXMgdXN1YWxseSB1c2VkIGZvciBmbGFzaCBwYXJ0aXRpb25zCiAgICBjb250YWlu
-aW5nIGVhcmx5LWJvb3QgZmlybXdhcmUgaW1hZ2VzIG9yIGRhdGEgd2hpY2ggc2hvdWxkIG5vdAog
-ICAgYmUgY2xvYmJlcmVkLgpAQCAtNzgsMyArNzksMTIgQEAgSGVyZSBhbiBleGFtcGxlIHdpdGgg
-bXVsdGlwbGUgInJlZyIgdHVwbGVzOgogCQkJcmVnID0gPDAgMHgwNDAwMDAwMD47CiAJCX07CiAJ
-fTsKKworQW4gZXhhbXBsZSB1c2luZyBTUkFNOgorCisJc3JhbUAyLDAgeworCQljb21wYXRpYmxl
-ID0gInNhbXN1bmcsazZmMTYxNnU2YSIsICJtdGQtcmFtIjsKKwkJcmVnID0gPDIgMCAweDAwMjAw
-MDAwPjsKKwkJYmFuay13aWR0aCA9IDwyPjsKKwl9OworCmRpZmYgLS1naXQgYS9kcml2ZXJzL210
-ZC9tYXBzL3BoeXNtYXBfb2YuYyBiL2RyaXZlcnMvbXRkL21hcHMvcGh5c21hcF9vZi5jCmluZGV4
-IDM5ZDM1N2IuLjQ1ZWVlMjAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbXRkL21hcHMvcGh5c21hcF9v
-Zi5jCisrKyBiL2RyaXZlcnMvbXRkL21hcHMvcGh5c21hcF9vZi5jCkBAIC0zNjAsNiArMzYwLDEw
-IEBAIHN0YXRpYyBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX2ZsYXNoX21hdGNoW10gPSB7CiAJCS5k
-YXRhCQk9ICh2b2lkICopImplZGVjX3Byb2JlIiwKIAl9LAogCXsKKwkJLmNvbXBhdGlibGUgICAg
-ID0gIm10ZC1yYW0iLAorCQkuZGF0YSAgICAgICAgICAgPSAodm9pZCAqKSJtYXBfcmFtIiwKKwl9
-LAorCXsKIAkJLnR5cGUJCT0gInJvbSIsCiAJCS5jb21wYXRpYmxlCT0gImRpcmVjdC1tYXBwZWQi
-CiAJfSwKLS0gCjEuNi4zLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+(Adding cc:devicetree-discuss)
+
+On Mon, Jul 27, 2009 at 2:15 PM, Eddie Dawydiuk <eddie@embeddedarm.com> wro=
+te:
+> Thanks for the link. Although, I'm not looking for info on optimizing
+> boot time. Rather I'm looking for information on what the path of least
+> resistance is to boot a kernel with an initrd being loaded from it's
+> own partition. To clarify currently I am using a simpleImage.initrd which
+> is a single image with the flattened device tree, kernel, and initial
+> ramdisk in a single file. One can simply load this image in RAM(assuming
+> 1 to 1 MMU mapping) and jump into it. Now what I would like to do is to
+> load a kernel, device tree, and initial ramdisk into RAM at different
+> locations.
+
+Quick word of warning, if you do split the kernel and .dtb images (which
+is a good thing to do for several reasons, and I strongly recommend it),
+make sure you do *not* hard code the .dtb image into firmware.=A0 If the
+end user isn't able to update the .dtb image as easily as updating the
+kernel image, then you are asking for a world of hurt for yourself and
+your users.
+
+> I'm in the process of coming back up to speed on the low-level boot
+> details of the powerpc kernel/architecture. It looks like one can
+> accomplish this by loading R3 with the phys address of the device
+> tree block, R4 with the phys address of the kernel, and R5 with Null.
+> It also looks like the kernel, already has several routines which know
+> about these details(prom_init() and __start()) and I was hoping I could
+> reuse this code to accomplish this rather than rewriting the bootrom to
+> handle this. That is I was hoping there is a boot wrapper image that
+> would allow me to accomplish my goal of creating a single image
+> containing a kernel and device tree block, and an interface to specify
+> where the bootrom loads the initial ramdisk in RAM. I'll continue
+> reading through the docs and code, but if anyone could provide any
+> pointers on how to do this I would really appreciate it.
+
+It really sounds like you're asking for a new board-specific dtbImage
+(which is what dtbImages are designed for).  simpleImage is really just
+a dtbImage with the assumption that firmware provides no boot information.
+
+*HOWEVER* dtbImages were really designed for older firmware that cannot
+handle the kernel and .dtb images separately.  If you've got control of
+the firmware then I strongly recommend *not* relying on the dtbImage
+approach of binding the device tree into the kernel image.  You ignore
+a lot of the advantages of the device tree model if you do.  In particular
+you take on maintenance of a new dtbImage variant in the kernel tree and
+loose the ability to build and boot a more or less 'standard' 440 kernel
+image.
+
+Honestly, I think you'd be better off adapting your firmware to parse and
+boot either a raw vmlinux elf image or a u-boot uImage wrapped image and
+pass in the .dtb and initrd pointers.  I predict it will result in far
+less confusion for your users (they don't need to know about a particular
+'dtbImage.<board>', less maintenance pain for you, and less cursing from
+the rest of the powerpc community about an oddball firmware that behaves
+differently from everything else (from a boot perspective).
+
+In other words, don't try to adapt the kernel boot to your firmware;
+adapt the firmware to an established boot mechanism.
+
+g.
+
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
