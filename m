@@ -1,89 +1,73 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: image/wrapper script questions
-Date: Mon, 27 Jul 2009 15:53:01 -0600
-Message-ID: <fa686aa40907271453sd6463c2h62d798af1baf720a@mail.gmail.com>
-References: <4A6DDF80.209@embeddedarm.com>
-	<20090727183155.7FA16832E416@gemini.denx.de>
-	<4A6E0AE2.3090600@embeddedarm.com>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+Subject: Re: [PATCH] mtd/maps: add mtd-ram support to physmap_of
+Date: Fri, 31 Jul 2009 21:47:10 +0200
+Message-ID: <1249069643.3687.0@antares>
+References: <1247834363-28198-1-git-send-email-w.sang@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4A6E0AE2.3090600@embeddedarm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Eddie Dawydiuk <eddie@embeddedarm.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Wolfgang Denk <wd@denx.de>
+Content-Type: multipart/mixed; boundary="===============2459328791534495375=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1247834363-28198-1-git-send-email-w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (from
+	w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org on Fri Jul 17 14:39:23 2009)
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Vitaly Wool <vwool-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Artem Bityutskiy <dedekind-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ken MacLeod <ken-VbOJbV3qneKf+c8Povm/Gg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(Adding cc:devicetree-discuss)
+--===============2459328791534495375==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=PGP-SHA1; boundary="=-6wC/KUIJ0WEPnkpS4mA1"
 
-On Mon, Jul 27, 2009 at 2:15 PM, Eddie Dawydiuk <eddie@embeddedarm.com> wro=
-te:
-> Thanks for the link. Although, I'm not looking for info on optimizing
-> boot time. Rather I'm looking for information on what the path of least
-> resistance is to boot a kernel with an initrd being loaded from it's
-> own partition. To clarify currently I am using a simpleImage.initrd which
-> is a single image with the flattened device tree, kernel, and initial
-> ramdisk in a single file. One can simply load this image in RAM(assuming
-> 1 to 1 MMU mapping) and jump into it. Now what I would like to do is to
-> load a kernel, device tree, and initial ramdisk into RAM at different
-> locations.
+--=-6wC/KUIJ0WEPnkpS4mA1
+Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Quick word of warning, if you do split the kernel and .dtb images (which
-is a good thing to do for several reasons, and I strongly recommend it),
-make sure you do *not* hard code the .dtb image into firmware.=A0 If the
-end user isn't able to update the .dtb image as easily as updating the
-kernel image, then you are asking for a world of hurt for yourself and
-your users.
+Am 17.07.09 14:39 schrieb(en) Wolfram Sang:
+> Use physmap_of to access RAMs as mtd and add documenation for it. =20
+> This approach is a lot less intrusive as adding an of-wrapper around =20
+> plat-ram.c. As most extensions of plat-ram.c (e.g. custom =20
+> map-functions) can't be mapped to the device tree anyhow, extending =20
+> physmap_of seems to be the cleanest approach.
 
-> I'm in the process of coming back up to speed on the low-level boot
-> details of the powerpc kernel/architecture. It looks like one can
-> accomplish this by loading R3 with the phys address of the device
-> tree block, R4 with the phys address of the kernel, and R5 with Null.
-> It also looks like the kernel, already has several routines which know
-> about these details(prom_init() and __start()) and I was hoping I could
-> reuse this code to accomplish this rather than rewriting the bootrom to
-> handle this. That is I was hoping there is a boot wrapper image that
-> would allow me to accomplish my goal of creating a single image
-> containing a kernel and device tree block, and an interface to specify
-> where the bootrom loads the initial ramdisk in RAM. I'll continue
-> reading through the docs and code, but if anyone could provide any
-> pointers on how to do this I would really appreciate it.
+The patch works nicely on a custom (roughly Icecube) based 5200B board, =20
+with a Renesas static ram, no partitions and a jffs2 file system on =20
+it.  I had to add some more tweaks to physmap_of.c as to work around =20
+the 5200's limitations accessing chips in 16-bit mode through the local =20
+bus, which is a lot easier and cleaner with this patch than with the =20
+old one (of 05 June 09).
 
-It really sounds like you're asking for a new board-specific dtbImage
-(which is what dtbImages are designed for).  simpleImage is really just
-a dtbImage with the assumption that firmware provides no boot information.
+Acked-by: Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
 
-*HOWEVER* dtbImages were really designed for older firmware that cannot
-handle the kernel and .dtb images separately.  If you've got control of
-the firmware then I strongly recommend *not* relying on the dtbImage
-approach of binding the device tree into the kernel image.  You ignore
-a lot of the advantages of the device tree model if you do.  In particular
-you take on maintenance of a new dtbImage variant in the kernel tree and
-loose the ability to build and boot a more or less 'standard' 440 kernel
-image.
+--=-6wC/KUIJ0WEPnkpS4mA1
+Content-Type: application/pgp-signature
 
-Honestly, I think you'd be better off adapting your firmware to parse and
-boot either a raw vmlinux elf image or a u-boot uImage wrapped image and
-pass in the .dtb and initrd pointers.  I predict it will result in far
-less confusion for your users (they don't need to know about a particular
-'dtbImage.<board>', less maintenance pain for you, and less cursing from
-the rest of the powerpc community about an oddball firmware that behaves
-differently from everything else (from a boot perspective).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.9 (GNU/Linux)
 
-In other words, don't try to adapt the kernel boot to your firmware;
-adapt the firmware to an established boot mechanism.
+iD8DBQBKc0pLn/9unNAn/9ERAndaAJ46tL+3fxURYv2K1m+v4Z9UJ00B2QCcCv19
+sk5JUodhOC7jIvauB43/ImU=
+=kGsX
+-----END PGP SIGNATURE-----
 
-g.
+--=-6wC/KUIJ0WEPnkpS4mA1--
 
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+--===============2459328791534495375==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2459328791534495375==--
