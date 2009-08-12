@@ -1,104 +1,61 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: Mark Brown <broonie@sirena.org.uk>
 Subject: Re: ARM clock API to PowerPC
-Date: Thu, 13 Aug 2009 07:56:32 +1000
-Message-ID: <1250114192.3587.41.camel@pasglop>
+Date: Wed, 12 Aug 2009 23:20:31 +0100
+Message-ID: <20090812222031.GC4731@sirena.org.uk>
 References: <1250063825.15143.43.camel@pasglop>
 	<20090812123551.GC11227@sirena.org.uk>
 	<1250112847.3587.26.camel@pasglop>
 	<20090812214444.GA4731@sirena.org.uk>
+	<1250114192.3587.41.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20090812214444.GA4731-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Cc: John Jacques <john.jacques-M7mHMAq9Yzo@public.gmane.org>, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Torez Smith <torez-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <1250114192.3587.41.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: John Jacques <john.jacques@lsi.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss@lists.ozlabs.org, Torez Smith <torez@us.ibm.com>, Russell King <rmk@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2009-08-12 at 22:44 +0100, Mark Brown wrote:
-> On Thu, Aug 13, 2009 at 07:34:07AM +1000, Benjamin Herrenschmidt wrote:
-> > On Wed, 2009-08-12 at 13:35 +0100, Mark Brown wrote:
-> 
-> > > What happens if another clock gets added or the list gets reordered for
-> > > some reason?
-> 
-> > The device-tree is mostly static in that regard. I'm not sure what you
-> > mean. Clocks are referenced by IDs so if you want to add more clocks you
-> > can just add them to the end. The "NULL" case is typically for things
-> > that have only one clock (which seems to be reasonably common in ARM
-> > land).
-> 
-> The issue I'm worrying about here is what happens if the device has only
-> one clock in current revisions of the hardware but another revision of
-> the same hardware is produced which adds another clock.  When that
-> happens your NULL lookup gets confused.
+On Thu, Aug 13, 2009 at 07:56:32AM +1000, Benjamin Herrenschmidt wrote:
 
-Well, then don't use clk_get() with NULL :-) I mean, ARM devices do that
-today (ie, calling with NULL), it makes sense in the context of a
-device-tree binding to provide a defined behaviour for it (pick the
-first clock in the order it appears in the device-tree is one way to do
-it), but we can also recommend to driver writers not to do it :-)
+> Maybe we can make clock-names non-optional though in the DT as an
+> incentive not to use the simple 1-clock "NULL" path.
 
-But if one was to use an existing driver that does it, then we need to
-cater for it.
+Yeah, that was more what I was thinking - apply some pressure on people
+not to use the NULL clock feature for the device tree stuff.
 
-Note that adding a new clock in the future isn't a big deal. As long as
-the first one in the list is the one the driver that calls clk_get with
-NULL expects to obtain.
+> Possibly yes, and that's a reason why we tend to discourage that ;-) But
+> again, it boils down to settling with a naming convention for a given
+> device. If clocks are added later on, the driver will have to cope with
+> the new clocks not existing, of course, or the platform can cater for
+> it.
 
-Maybe we can make clock-names non-optional though in the DT as an
-incentive not to use the simple 1-clock "NULL" path.
+...which is much easier if you discourage people from using the NULL
+name in the first place :)  My concern is more about new device tree and
+older driver code than the other way round (which wouldn't suprise me,
+if only during things like bisection).
 
-> > I think it's reasonable to ask whoever produces the device-tree to keep
-> > the two properties in sync.
-> 
-> It's not just the device tree, it's also the drivers which have to be
-> able to cope with whatever random device tree that's thrown at them.
+> Do you have maybe a precise example scenario where your above statement
+> about the lack of facility for registering new clocks is a problem ? I'm
+> curious to see a real life example so I can think better about how it
+> can be solved (or whether it needs to be solved).
 
-Well, the clocks are named. At some stage, the binding for a given
-device will define what clock names it expects. I don't see that
-differing from what the ARM folks do.
+There was a recent thread on linux-kernel (last week) about the tmio_mmc
+drivers - it's a MMC controller which is present in both some SH CPUs
+and some MFD chips.  I can probably dig up a more exact reference if
+required.
 
-> This is less of a problem on ARM where it's fairly straightforward to
-> adjust the users at the same time as the driver but if you've got a
-> device tree delivered via a completely different distribution mechanism
-> it gets more sticky.
-
-Possibly yes, and that's a reason why we tend to discourage that ;-) But
-again, it boils down to settling with a naming convention for a given
-device. If clocks are added later on, the driver will have to cope with
-the new clocks not existing, of course, or the platform can cater for
-it.
-
-That's also one of the reason why I want to make clk_get() go through
-ppc_md. first, so that the platform can always override the behaviour,
-and for example, fill-in in case the device-tree is incomplete or
-incorrect.
-
-> The problem with the API at the minute in this regard is that there is
-> no standard way of registering new clocks.  Only something that knows
-> about the magic sauce for a given architecture (if any) is able to add
-> clocks.  My concern here is that if PowerPC moves in this direction
-> without some general agreement from elsewhere then there may be problems
-> for drivers.
-
-Well, the idea is to allow to register clock-providers associated with
-device nodes. I think we should keep the rest in the hand of platforms
-for now, and possibly make it evolve later.
-
-Do you have maybe a precise example scenario where your above statement
-about the lack of facility for registering new clocks is a problem ? I'm
-curious to see a real life example so I can think better about how it
-can be solved (or whether it needs to be solved).
-
-Cheers,
-Ben.
+Probably you will be able to, like the ARMs have, get a very long way
+with just supporting the on-SoC clock tree just now and can punt on
+dealing with other things for now.  It's where a large part of the
+interesting clocking in a lot of embedded systems is.
