@@ -1,52 +1,49 @@
-From: Mark Brown <broonie@sirena.org.uk>
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: ARM clock API to PowerPC
-Date: Wed, 12 Aug 2009 13:35:51 +0100
-Message-ID: <20090812123551.GC11227@sirena.org.uk>
+Date: Wed, 12 Aug 2009 08:40:35 -0500
+Message-ID: <4A90486C-8BF5-428C-9FD8-830D822C0D40@kernel.crashing.org>
 References: <1250063825.15143.43.camel@pasglop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+	<20090812111954.GB31596@zod.rchland.ibm.com>
+Mime-Version: 1.0 (Apple Message framework v936)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1250063825.15143.43.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: John Jacques <john.jacques@lsi.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss@lists.ozlabs.org, Torez Smith <torez@us.ibm.com>, Russell King <rmk@arm.linux.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20090812111954.GB31596-jnIq6iUNB1CO8iYQgJmm/0EOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Jacques <john.jacques-M7mHMAq9Yzo@public.gmane.org>, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Torez Smith <torez-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2009 at 05:57:05PM +1000, Benjamin Herrenschmidt wrote:
 
->  - From the above, question: Do we want to keep that parent pointer ?
-> Does it make sense ? Will we have objects that are clock providers and
-> themselves source from multiple parent ? Or we don't care and it becomes
+On Aug 12, 2009, at 6:19 AM, Josh Boyer wrote:
 
-That happens and at times one or more of the sources is off-chip.
+> On Wed, Aug 12, 2009 at 05:57:05PM +1000, Benjamin Herrenschmidt  
+> wrote:
+>> Hi folks !
+>>
+>> (Russell, let us know if you want to dropped from the CC list, but I
+>> felt you may have some useful input to provide here).
+>>
+>> So I think it would be valuable to provide the ARM clock API  
+>> exposed by
+>> include/linux/clk.h on various PowerPC embedded hardware.
+>
+> I'm probably being particularly dense, and I haven't had my coffee  
+> yet this
+> morning, but you never actually said _why_ you think this is valuable?
+>
+> I'm a bit confused as to what problem you are trying to solve with  
+> the API.
 
-> entirely the responsibility of a given struct clk instance to deal with
-> its own parenthood ? Parenthood in the core has the advantage of making
-> it potentially easier to represent clock nets in the device-tree.
+I'm in the same boat as you Josh.  I think there is value and utility  
+here but not sure what problem Ben's trying to solve.
 
-> The core would thus be able to do a search in that list based on the
-> clock-id passed in, or if clk_get(dev, NULL), then, use the first one.
-
-What happens if another clock gets added or the list gets reordered for
-some reason?
-
-> Also, it would be nice to have a way to have "generic" clock provider
-> drivers. For example, have a driver for the FooBar Clock chip, which is
-> known to provide 4 fully programmable clocks. So there could be a
-> generic driver for that, attached to the clock provider by the probe
-> code or via the device-tree, the devices clock-map's just provide the
-> clock ID within the chip (which output of the chip they are connected
-> to), and so the remaining questions is what to program in each clocks.
-
-Note that the present ARM implementations don't handle anything except
-the core SoC normally.
+- k
