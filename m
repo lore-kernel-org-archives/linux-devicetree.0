@@ -1,7 +1,7 @@
 From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: ARM clock API to PowerPC
-Date: Thu, 13 Aug 2009 09:47:31 +1000
-Message-ID: <1250120851.3587.71.camel@pasglop>
+Date: Thu, 13 Aug 2009 13:45:46 +1000
+Message-ID: <1250135146.3587.87.camel@pasglop>
 References: <1250063825.15143.43.camel@pasglop>
 	<20090812123551.GC11227@sirena.org.uk>
 	<1250112847.3587.26.camel@pasglop>
@@ -28,74 +28,8 @@ To: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: John Jacques <john.jacques-M7mHMAq9Yzo@public.gmane.org>, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Torez Smith <torez-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > Ok. So I may have misunderstood what names were for. In my mind, those
-> > were the name of the clock input on the HW device :-)
-> 
-> Oh, I do hope I didn't say that was wrong, because that is quite
-> correct.  What the idea with passing a NULL 'name' with drivers
-> which only had one input was to force people to avoid using 'name'
-> as the sole way to match.
+On Thu, 2009-08-13 at 00:40 +0100, Russell King wrote:
 
-I see. So basically, they are meant to be the input names, but have been
-abused by people to be "global scope" clock names and hence mess
-happened.
-
-> When I originally wrote the AMBA primecell drivers, I did use things
-> like 'UARTCLK' and 'AACICLK' for the clk_get() name - since these
-> were the name on the device, and that really only provided people
-> with a bad example to follow.  Especially if you consider that the
-> hardware I had was FPGA based development boards where the clocking
-> layout lent itself well to ignoring the 'dev' argument.
-
-Right.
-
-> > Right. I didn't intend to name the clock sources. I intended to name the
-> > clock -inputs- of a given device. IE. clk_get(dev, name) in my mind
-> > meant "give me the clock provider that feeds my "name" input).
-> 
-> That's absolutely the right way to look at it!
-
-Cool :-) It did feel right indeed.
-
-> > Allright but passing a NULL doesn't help for drivers with multiple clock
-> > inputs. IE. How do you want to deal with that ? Do you want to deprecate
-> > the named API and instead provide a new clk_get_for_input(dev,
-> > clk_input) (clk_input could be name or numerical ... tbd) ?
-> 
-> NULL certainly doesn't help for drivers with multiple clock inputs.
-> For those, you have to explicitly name the input.  To take the
-> example commits I pointed at (the OMAP watchdog driver) OMAP blocks
-> generally have two clock inputs - a functional clock and an
-> interface clock.
-
-Right, that's a common setup.
-
-> Originally, the driver was effectively setup to match by clock source
-> name (wdt2_fck, wdt2_ick) which was SoC specific.  What the commits
-> did was convert things to looking using the names of the inputs
-> (aka consumer name) - so dev + "fck" and dev + "ick".
-
-Ok, cool, so we are on the same page.
-
-> That results in clkdev looking up the clocks for device "omap_wdt"
-> for inputs "fck" and "ick" respectively.  On OMAP1 platforms, there
-> isn't an "ick" as such, so there's a match-any-device dummy "ick"
-> entry.  On OMAP2 and OMAP3 (the later revs) there are specific
-> clocks for these, and so the dummy entry is missing.
-> 
-> So, the approach I took was: where it is well defined that a device
-> has only one clock input, we pass a NULL name.  If it has more than
-> one clock input, we pass the specific consumer name required.
-
-Makes sense. I think this will work beautifully with the device-tree too
-with the idea of having properties that then provide the binding for a
-given clock input to the clock provider and the clock ID on that
-provider (my proposal makes the later a number because doing strings can
-be awkward in OF land in such mapping tables but I might go back to
-strings, we'll see).
-
-> > Or am I missing a piece of the puzzle ?
-> 
 > Maybe - and since you're just starting to look at clkdev, I'll point
 > out that it's actually not intuitive which way around the "wildcard"
 > matching works in clkdev.  The clk_get() arguments aren't the
@@ -104,9 +38,50 @@ strings, we'll see).
 > wanting to match clocks to a specific set of devices and clock inputs,
 > it's actually the way around that you want.
 
-Ok. I'll read up a bit and see if I can get my head around it.
+Ok so I had a look, it's basically a list of bindings between a device
+"ID" (dev_name(dev)) and a clock input name, matched to a struct clk *.
 
-Thanks !
+I'm not entirely sure I want to port that over, because I believe that I
+can do better with the device-tree, but then, it will mostly depend
+whether we end up wanting to use drivers that do rely on the clkdev
+mechanism.
+
+For one, I'm not 100% certain that our dev_id's are unique. Then, that
+means that at some stage, the clock source provider need to create the
+struct clk for anything devices -may- need, so for all the device clock
+connections in the system, it cannot be done on-demand.
+
+I'm thus tempted to pursue for now an approach where the connection is
+provided by the device-tree exclusively (or override platform code but
+that's to be avoided most of the time), we'll see where it takes us.
+IE. 
+
+In case you haven't looked at what I had in mind there, basically the
+device-node of a device contains properties linking each clock input to
+the device node of the clock provider, along with the ID of that clock
+within the provider space. So all I need is register clock providers,
+that get passed in clk_get() with the "translated" clock ID and that can
+spit out struct clk* "on demand".
+
+For example, if I have an external PLL chip that provides 4 clocks, I
+can register a clock provider driver attached to that device-node (which
+can then also contain properties indicating to the driver how to program
+the said PLL chip if so desired).
+
+Then, if 2 of those lines (PLL1 and PLL3) go respectively to a device
+SYS_CLK and PHY_CLK inputs, for example, then all I need is to have a
+"clock-names" and "clock-map" properties in that device node. The first
+one contains "SYS_CLK" and "PHY_CLK", and the second one, a list of two
+items, each being the the phandle to the PLL and respectively 1 and 3.
+
+I could just parse the tree and generate all the struct clk* at boot
+time and somewhat generate clkdev for them etc... but I believe that
+isn't needed, ie, clkdev is an ARM specific mechanism for expressing the
+linkage between devices and clock sources but not something that we
+would benefit from moving over since we can do better, I believe, with
+the device-tree.
+
+Or am I missing something still ? :-)
 
 Cheers,
 Ben.
