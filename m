@@ -1,96 +1,46 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Stuart Yoder <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [RFC] Clock binding
-Date: Fri, 28 Aug 2009 10:37:17 -0600
-Message-ID: <fa686aa40908280937nda32be7m97314e4aaef9ff81@mail.gmail.com>
+Date: Fri, 28 Aug 2009 13:05:22 -0500
+Message-ID: <955e48b80908281105q60c057e8pfc16213f17da9138@mail.gmail.com>
 References: <1250569288.19007.15.camel@pasglop>
+	<1251346157.20467.22.camel@pasglop> <4A96F69A.5050003@firmworks.com>
+	<1251411532.20467.74.camel@pasglop> <4A970C85.8090703@firmworks.com>
+	<1251420686.20467.96.camel@pasglop> <4A974295.9020504@firmworks.com>
+	<1251427388.20467.122.camel@pasglop>
+	<955e48b80908280516m457530cfn3b07b52f2fa2c471@mail.gmail.com>
+	<fa686aa40908280906w7953017ek44ee498d57e0a642@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1250569288.19007.15.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <fa686aa40908280906w7953017ek44ee498d57e0a642-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2009 at 10:21 PM, Benjamin
-Herrenschmidt<benh@kernel.crashing.org> wrote:
-> However, it's a bit nasty to mix strings and numbers (phandles) in a
-> single property. It's possible, but would likely lead to the phandle not
-> being aligned and tools such as lsprop to fail miserably to display
-> those properties in any kind of readable form.
-[...]
-> However, I really dislike that numerical clock ID. Magic numbers suck.
-> It should be a string.
+> Lets *not* do it on power.org. =A0I'd like to see the bindings used by
+> more than just powerpc people, and power.org might become a bit of a
+> mental barrier for non-powerpc folks. =A0kernel.org would be a good
+> host. =A0So would ozlabs or infradead. =A0Or I'd be happy to maintain one
+> on secretlab.
 
-Agreed.
+I think broadening it beyond power.org is good.  Along those lines I'd pref=
+er
+not having this on kernel.org, as device trees are not Linux-centric.  There
+are other OS vendors I've interacted with that I'd like to see use device t=
+rees
+and separating it from Linux may be better IMO.
 
-> Hence my idea below. It's not perfect but it's the less sucky i've come
-> up with so far. And then we can do some small refinements.
->
-> =A0 =A0 =A0 =A0* Device has:
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0- "clock-input-names" as above
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0- "clock-map" contains list of phandle,ind=
-ex
->
-> =A0 =A0 =A0 =A0* Clock source has:
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0- "clock-output-names" list of strings
+We could also create a new domain like "devicetree.org" (?)..but it still
+would nee a host.
 
-The big problem as you say is the referencing of both phandles and
-strings in the same property, but it's not particularly pretty to
-disperse the data across multiple properties.  Changes to the two
-properties must be kept in sync, and if order changes in one and not
-the other then badness occurs...  Actually, I don't *dislike* you're
-proposed binding, but in the interest of generating and endless
-goodness argument, what about the following?
-
-As above, clock source has:
-        - "clock-output-names" list of strings.  All possible inputs
-must be in this list in the interest of clarity and sanity checking,
-but drivers must not depend on the order of the list.  Drivers must
-always resolve clocks by name.
-
-Clock consumer has:
-        - "clock-inputs" property.  Array of string 'tuples' in the
-form: "input-name","clock-source-path","output-name".
-
-This sidesteps the phandle issue by using the path string instead.
-It's not as efficient space wise, but (at least when using dtc) the
-syntax stays pretty sane, and the output remains mere-mortal parsable:
-  ie: clock-inputs =3D "sysclk", &clocksource, "clkout_orange";
-
-> The "index" in the clock map thus would reference the
-> "clock-output-names" array in the clock provider. That means that the
-> "magic number" here is entirely local to a given device-tree, doesn't
-> leak into driver code, which continues using names.
->
-> In addition, we can even have some smooth "upgrade" path from existing
-> "clock-frequency" properties by assuming that if "clock-output-names" is
-> absent, but "clock-frequency" exist, then index 0 references a fixed
-> frequency clock source without a driver. This could be generally handy
-> anyway to represent crystals of fixed bus clocks without having to write
-> a clock source driver for them.
-
-The analog of this could be:
-
-clock-inputs =3D "sysclk", &clocksource, "0";
-
-Otherwise, I think the approach is sound and I agree fully that
-referencing names makes sense.
-
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Stuart
