@@ -1,84 +1,179 @@
-From: Stuart Yoder <stuyoder@gmail.com>
-Subject: Re: [RFC] Clock binding
-Date: Mon, 31 Aug 2009 12:49:02 -0500
-Message-ID: <955e48b80908311049p4a08e683q3a23239b3307f502@mail.gmail.com>
-References: <1250569288.19007.15.camel@pasglop>
-	<1251411532.20467.74.camel@pasglop> <4A970C85.8090703@firmworks.com>
-	<1251420686.20467.96.camel@pasglop> <4A974295.9020504@firmworks.com>
-	<1251427388.20467.122.camel@pasglop>
-	<955e48b80908280516m457530cfn3b07b52f2fa2c471@mail.gmail.com>
-	<fa686aa40908280906w7953017ek44ee498d57e0a642@mail.gmail.com>
-	<955e48b80908281105q60c057e8pfc16213f17da9138@mail.gmail.com>
-	<fa686aa40908281309g6eedcdb4neb6a96104807a3f1@mail.gmail.com>
+From: Angelo <s104259-whZMOeQn8C0@public.gmane.org>
+Subject: Question on flash node on device tree source
+Date: Tue, 8 Sep 2009 12:18:33 +0000 (GMT)
+Message-ID: <859952.87558.qm@web23106.mail.ird.yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <fa686aa40908281309g6eedcdb4neb6a96104807a3f1@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev list <linuxppc-dev@ozlabs.org>
+Content-Type: multipart/mixed; boundary="===============7446691088279302030=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> How about right here: =A0http://fdt.secretlab.ca/
->
-> I've only just created the site. =A0I'll fill in some documentation and
-> structure in the next few days. =A0Feel free to create an account and
-> start adding stuff.
->
-> We'll need to talk about how best to manage bindings and have some
-> form of review/agreement before a binding is marked as "stable". =A0And
-> the site URL could change as well. =A0But in the meantime we've got a
-> sandbox to start playing in.
+--===============7446691088279302030==
+Content-Type: multipart/alternative; boundary="0-2011298778-1252412313=:87558"
 
-Unless there are better suggestions, your site is fine with me.
+--0-2011298778-1252412313=:87558
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-One other thing-- we need to clarify how the content of the wiki
-is licensed.
+Hi all.
 
-I assume (and hope) that the intent is for the content to be freely
-usable in the most flexible way.  But, this has to be explicit.
+I need some info about device tree blob.
+I'm testing a powerpc board (very similar to mpc512xev) with the following =
+feature:
+=A0- 256MB flash (only 1 bank)
 
-An issue we ran into with the ePAPR was that on the IEEE
-1275 working group site (http://playground.sun.com/1275/home.html)
-that there were bindings that we wanted to include in the ePAPR,
-but the stuff on 1275 site was not copyrighted and no license
-was specified.   This meant that we were in a legally murky
-situation if we cut and pasted anything from one of those
-document.
+Changes some lines of device tree source about flash
 
-My suggestion is to specify that all content of this wiki are
-released to the public domain.  How to do this is a bit tricky
-but Creative Commons has a license called CC0 that does
-this by waving your copyright rights.
+localbus@80000020 {
+=A0=A0=A0 =A0=A0=A0 compatible =3D "fsl,mpc5121ads-localbus";
+=A0=A0=A0 =A0=A0=A0 #address-cells =3D <2>;
+=A0=A0=A0 =A0=A0=A0 #size-cells =3D <1>;
+=A0=A0=A0 =A0=A0=A0 reg =3D <0000020 40>;
 
-Your wiki currently has the following statement above the commit
-message:
+=A0=A0=A0 =A0=A0=A0 ranges =3D <0 0 fc000000 04000000
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0 2 0 82000000 00008000>;
 
-    Please note that all contributions to FDTWiki may be edited, altered,
-    or removed by other contributors. If you do not want your writing to
-    be edited mercilessly, then do not submit it here.
-    You are also promising us that you wrote this yourself, or copied it
-    from a public domain or similar free resource (see
-    FDTWiki:Copyrights for details). Do not submit copyrighted work
-    without permission!
+=A0=A0=A0 =A0=A0=A0 flash@0,0 {
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device_type =3D "rom";
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 compatible =3D "direct-mapped";
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 probe-type =3D "CFI";
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 reg =3D <0 0 4000000>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #address-cells =3D <1>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #size-cells =3D <1>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 bank-width =3D <4>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device-width =3D <2>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partitions =3D <00000000 00040000=A0=A0=A0 =
+=A0=A0=A0 // first sector is protected
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 00040000 03c00000=
+=A0=A0=A0 =A0=A0=A0 // 60 Mb for filesystem
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 03c40000 00280000=
+=A0=A0=A0 =A0=A0=A0 // 2.5 Mb for kernel
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 03ec0000 00040000=
+=A0=A0=A0 =A0=A0=A0 // one sector for device tree
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 03f00000 00100000>;=
+=A0=A0=A0 // one Mb for u-boot
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partition-names =3D "protected", "filesystem"=
+, "kernel", "device-tree", "u-boot";
+=A0=A0=A0 =A0=A0=A0 };
+.....
+with these changes:
+.....
+=A0=A0=A0 =A0=A0=A0 flash@0,0 {
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device_type =3D "rom";
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 compatible =3D "direct-mapped";
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 probe-type =3D "CFI";
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 reg =3D <0 0 1000000>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #address-cells =3D <1>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #size-cells =3D <1>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 bank-width =3D <1>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device-width =3D <1>;
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partitions =3D <300000 200000=A0=A0=A0 =A0=A0=
+=A0 //uimage
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 400000 3200000>=
+;=A0=A0=A0 // fs
+=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partition-names =3D "uimage", "fs";
+=A0=A0=A0 =A0=A0=A0 };
+.....
 
-I would suggest appending the following statement to the above
-text:
+The problem is that on bootstrap stage, kernel truncate the flash memory to=
+ 16MB, so i cannot access to the whole flash. kernel messages:
 
-    You irrevocably agree to release your contribution to the public
-    domain.  To the extent possible under law, you waive all copyright or
-    neighboring rights to your contribution.  See [CC0|link-to-CC0].
+mtd: partition "fs" extends=A0 beyond the end of device "60000000.flash" si=
+ze truncated to 0xc00000.
 
-The above language comes from generated text of the CC0 tool from
-Creative Commons.
+I'd like to know if i have to specify into the dtb file the size of flash m=
+em. What about nand flash controller and its functionality?=20
+If you have more info about this, please write to me.
 
-Stuart
+Thanks in advance,
+@s
+
+=0A=0A=0A      
+--0-2011298778-1252412313=:87558
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
+top" style=3D"font: inherit;">Hi all.<br><br>I need some info about device =
+tree blob.<br>I'm testing a powerpc board (very similar to mpc512xev) with =
+the following feature:<br>&nbsp;- 256MB flash (only 1 bank)<br><br>Changes =
+some lines of device tree source about flash<br><br>localbus@80000020 {<br>=
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; compatible =3D "fsl,mpc5121ads-localb=
+us";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #address-cells =3D &lt;2&gt;;=
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #size-cells =3D &lt;1&gt;;<br>&nb=
+sp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; reg =3D &lt;0000020 40&gt;;<br><br>&nbsp=
+;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ranges =3D &lt;0 0 fc000000 04000000<br>&n=
+bsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 2 0 82000000 =
+00008000&gt;;<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; flash@0,0 {<br>&=
+nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device_type =3D
+ "rom";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; compati=
+ble =3D "direct-mapped";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nb=
+sp;&nbsp; probe-type =3D "CFI";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &n=
+bsp;&nbsp;&nbsp; reg =3D &lt;0 0 4000000&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&=
+nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #address-cells =3D &lt;1&gt;;<br>&nbsp;&nbsp=
+;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #size-cells =3D &lt;1&gt;;<br=
+>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; bank-width =3D &l=
+t;4&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device=
+-width =3D &lt;2&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;=
+&nbsp; partitions =3D &lt;00000000 00040000&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
+nbsp; // first sector is protected<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;=
+ &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 00040=
+000 03c00000&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // 60 Mb for
+ filesystem<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nb=
+sp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 03c40000 00280000&nbsp;&nbsp=
+;&nbsp; &nbsp;&nbsp;&nbsp; // 2.5 Mb for kernel<br>&nbsp;&nbsp;&nbsp; &nbsp=
+;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp; 03ec0000 00040000&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // one secto=
+r for device tree<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbs=
+p; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 03f00000 00100000&gt;;=
+&nbsp;&nbsp;&nbsp; // one Mb for u-boot<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
+nbsp; &nbsp;&nbsp;&nbsp; partition-names =3D "protected", "filesystem", "ke=
+rnel", "device-tree", "u-boot";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; };=
+<br>....<br>with these changes:<br>....<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
+nbsp; flash@0,0 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbs=
+p; device_type =3D "rom";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp; compatible =3D "direct-mapped";<br>&nbsp;&nbsp;&nbsp; &=
+nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; probe-type =3D "CFI";<br>&nbsp;&nbsp;&=
+nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; reg =3D &lt;0 0 1000000&gt;;<br=
+>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #address-cells =
+=3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; =
+#size-cells =3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&=
+nbsp;&nbsp; bank-width =3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nb=
+sp; &nbsp;&nbsp;&nbsp; device-width =3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &n=
+bsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; partitions =3D &lt;300000 200000&nbsp;&=
+nbsp;&nbsp; &nbsp;&nbsp;&nbsp; //uimage<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
+nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;=
+&nbsp; 400000 3200000&gt;;&nbsp;&nbsp;&nbsp; // fs<br>&nbsp;&nbsp;&nbsp; &n=
+bsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; partition-names =3D "uimage",
+ "fs";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; };<br>....<br><br>The probl=
+em is that on bootstrap stage, kernel truncate the flash memory to 16MB, so=
+ i cannot access to the whole flash. kernel messages:<br><br>mtd: partition=
+ "fs" extends&nbsp; beyond the end of device "60000000.flash" size truncate=
+d to 0xc00000.<br><br>I'd like to know if i have to specify into the dtb fi=
+le the size of flash mem. What about nand flash controller and its function=
+ality? <br>If you have more info about this, please write to me.<br><br>Tha=
+nks in advance,<br>@s<br><br></td></tr></table><br>=0A=0A=0A=0A      
+--0-2011298778-1252412313=:87558--
+
+
+--===============7446691088279302030==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7446691088279302030==--
