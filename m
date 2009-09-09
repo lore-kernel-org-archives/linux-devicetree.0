@@ -1,7 +1,7 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Fix bug in -Odts with properties containing multiple terminating nulls
-Date: Wed, 9 Sep 2009 14:34:58 +1000
-Message-ID: <20090909043458.GA7909@yookeroo.seuss>
+Date: Wed, 9 Sep 2009 14:38:30 +1000
+Message-ID: <20090909043830.GC7909@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,7 +16,7 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jdl-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
