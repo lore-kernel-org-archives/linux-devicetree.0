@@ -1,10 +1,12 @@
-From: Angelo <s104259-whZMOeQn8C0@public.gmane.org>
-Subject: Question on flash node on device tree source
-Date: Tue, 8 Sep 2009 12:18:33 +0000 (GMT)
-Message-ID: <859952.87558.qm@web23106.mail.ird.yahoo.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Fix bug in -Odts with properties containing multiple terminating nulls
+Date: Wed, 9 Sep 2009 14:34:58 +1000
+Message-ID: <20090909043458.GA7909@yookeroo.seuss>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7446691088279302030=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -14,166 +16,190 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: jdl-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============7446691088279302030==
-Content-Type: multipart/alternative; boundary="0-2011298778-1252412313=:87558"
+When in -Odts mode, dtc will not produce correct output for
+string-like properties which have more than one \0 character at the
+end of the property's bytestring.  In fact, it generates output which
+is not syntactically correct.  This patch fixes the bug, and adds a
+testcase for future regressions here.
 
---0-2011298778-1252412313=:87558
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Hi all.
+Index: dtc/tests/Makefile.tests
+===================================================================
+--- dtc.orig/tests/Makefile.tests	2009-09-09 13:47:38.000000000 +1000
++++ dtc/tests/Makefile.tests	2009-09-09 13:48:00.000000000 +1000
+@@ -11,6 +11,7 @@ LIB_TESTS_L = get_mem_rsv \
+ 	move_and_save mangle-layout nopulate \
+ 	open_pack rw_tree1 set_name setprop del_property del_node \
+ 	string_escapes references path-references boot-cpuid incbin \
++	extra-terminating-null \
+ 	dtbs_equal_ordered \
+ 	add_subnode_with_nops path_offset_aliases
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+Index: dtc/tests/extra-terminating-null.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ dtc/tests/extra-terminating-null.c	2009-09-09 13:48:08.000000000 +1000
+@@ -0,0 +1,59 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Testcase for properties with more than one terminating null
++ * Copyright (C) 2009 David Gibson, IBM Corporation.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++
++#include <fdt.h>
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++void check_extranull(void *fdt, const char *prop, const char *str, int numnulls)
++{
++	int len = strlen(str);
++	char checkbuf[len+numnulls];
++
++	memset(checkbuf, 0, sizeof(checkbuf));
++	memcpy(checkbuf, TEST_STRING_1, len);
++
++	check_getprop(fdt, 0, prop, len+numnulls, checkbuf);
++}
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++
++	test_init(argc, argv);
++
++	fdt = load_blob_arg(argc, argv);
++
++	check_extranull(fdt, "extranull0", TEST_STRING_1, 1);
++	check_extranull(fdt, "extranull1,1", TEST_STRING_1, 2);
++	check_extranull(fdt, "extranull1,2", TEST_STRING_1, 2);
++	check_extranull(fdt, "extranull2,1", TEST_STRING_1, 3);
++	check_extranull(fdt, "extranull2,2", TEST_STRING_1, 3);
++	check_extranull(fdt, "extranull2,3", TEST_STRING_1, 3);
++	check_extranull(fdt, "extranull2,4", TEST_STRING_1, 3);
++
++	PASS();
++}
+Index: dtc/tests/extra-terminating-null.dts
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ dtc/tests/extra-terminating-null.dts	2009-09-09 13:48:00.000000000 +1000
+@@ -0,0 +1,11 @@
++/dts-v1/;
++
++/ {
++	extranull0 = "hello world";
++	extranull1,1 = "hello world\0";
++	extranull1,2 = "hello world", "";
++	extranull2,1 = "hello world\0\0";
++	extranull2,2 = "hello world", "", "";
++	extranull2,3 = "hello world\0", "";
++	extranull2,4 = "hello world", "\0";
++};
+Index: dtc/tests/run_tests.sh
+===================================================================
+--- dtc.orig/tests/run_tests.sh	2009-09-09 13:47:38.000000000 +1000
++++ dtc/tests/run_tests.sh	2009-09-09 13:48:45.000000000 +1000
+@@ -204,6 +204,9 @@ dtc_tests () {
+     run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb escapes.dts
+     run_test string_escapes dtc_escapes.test.dtb
+ 
++    run_dtc_test -I dts -O dtb -o dtc_extra-terminating-null.test.dtb extra-terminating-null.dts
++    run_test extra-terminating-null dtc_extra-terminating-null.test.dtb
++
+     run_dtc_test -I dts -O dtb -o dtc_references.test.dtb references.dts
+     run_test references dtc_references.test.dtb
+ 
+@@ -253,7 +256,7 @@ dtc_tests () {
+ 
+     # Check -Odts mode preserve all dtb information
+     for tree in test_tree1.dtb dtc_tree1.test.dtb dtc_escapes.test.dtb \
+-	dtc_references.test.dtb; do
++	dtc_extra-terminating-null.test.dtb dtc_references.test.dtb; do
+ 	run_dtc_test -I dtb -O dts -o odts_$tree.test.dts $tree
+ 	run_dtc_test -I dts -O dtb -o odts_$tree.test.dtb odts_$tree.test.dts
+ 	run_test dtbs_equal_ordered $tree odts_$tree.test.dtb
+Index: dtc/treesource.c
+===================================================================
+--- dtc.orig/treesource.c	2009-09-09 14:10:49.000000000 +1000
++++ dtc/treesource.c	2009-09-09 14:27:34.000000000 +1000
+@@ -63,26 +63,20 @@ static void write_propval_string(FILE *f
+ {
+ 	const char *str = val.val;
+ 	int i;
+-	int newchunk = 1;
+ 	struct marker *m = val.markers;
+ 
+ 	assert(str[val.len-1] == '\0');
+ 
++	while (m && (m->offset == 0)) {
++		if (m->type == LABEL)
++			fprintf(f, "%s: ", m->ref);
++		m = m->next;
++	}
++	fprintf(f, "\"");
++
+ 	for (i = 0; i < (val.len-1); i++) {
+ 		char c = str[i];
+ 
+-		if (newchunk) {
+-			while (m && (m->offset <= i)) {
+-				if (m->type == LABEL) {
+-					assert(m->offset == i);
+-					fprintf(f, "%s: ", m->ref);
+-				}
+-				m = m->next;
+-			}
+-			fprintf(f, "\"");
+-			newchunk = 0;
+-		}
+-
+ 		switch (c) {
+ 		case '\a':
+ 			fprintf(f, "\\a");
+@@ -113,7 +107,14 @@ static void write_propval_string(FILE *f
+ 			break;
+ 		case '\0':
+ 			fprintf(f, "\", ");
+-			newchunk = 1;
++			while (m && (m->offset < i)) {
++				if (m->type == LABEL) {
++					assert(m->offset == (i+1));
++					fprintf(f, "%s: ", m->ref);
++				}
++				m = m->next;
++			}
++			fprintf(f, "\"");
+ 			break;
+ 		default:
+ 			if (isprint(c))
 
-I need some info about device tree blob.
-I'm testing a powerpc board (very similar to mpc512xev) with the following =
-feature:
-=A0- 256MB flash (only 1 bank)
-
-Changes some lines of device tree source about flash
-
-localbus@80000020 {
-=A0=A0=A0 =A0=A0=A0 compatible =3D "fsl,mpc5121ads-localbus";
-=A0=A0=A0 =A0=A0=A0 #address-cells =3D <2>;
-=A0=A0=A0 =A0=A0=A0 #size-cells =3D <1>;
-=A0=A0=A0 =A0=A0=A0 reg =3D <0000020 40>;
-
-=A0=A0=A0 =A0=A0=A0 ranges =3D <0 0 fc000000 04000000
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0 2 0 82000000 00008000>;
-
-=A0=A0=A0 =A0=A0=A0 flash@0,0 {
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device_type =3D "rom";
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 compatible =3D "direct-mapped";
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 probe-type =3D "CFI";
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 reg =3D <0 0 4000000>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #address-cells =3D <1>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #size-cells =3D <1>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 bank-width =3D <4>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device-width =3D <2>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partitions =3D <00000000 00040000=A0=A0=A0 =
-=A0=A0=A0 // first sector is protected
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 00040000 03c00000=
-=A0=A0=A0 =A0=A0=A0 // 60 Mb for filesystem
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 03c40000 00280000=
-=A0=A0=A0 =A0=A0=A0 // 2.5 Mb for kernel
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 03ec0000 00040000=
-=A0=A0=A0 =A0=A0=A0 // one sector for device tree
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0=A0=A0 03f00000 00100000>;=
-=A0=A0=A0 // one Mb for u-boot
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partition-names =3D "protected", "filesystem"=
-, "kernel", "device-tree", "u-boot";
-=A0=A0=A0 =A0=A0=A0 };
-.....
-with these changes:
-.....
-=A0=A0=A0 =A0=A0=A0 flash@0,0 {
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device_type =3D "rom";
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 compatible =3D "direct-mapped";
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 probe-type =3D "CFI";
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 reg =3D <0 0 1000000>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #address-cells =3D <1>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 #size-cells =3D <1>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 bank-width =3D <1>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 device-width =3D <1>;
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partitions =3D <300000 200000=A0=A0=A0 =A0=A0=
-=A0 //uimage
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 400000 3200000>=
-;=A0=A0=A0 // fs
-=A0=A0=A0 =A0=A0=A0 =A0=A0=A0 partition-names =3D "uimage", "fs";
-=A0=A0=A0 =A0=A0=A0 };
-.....
-
-The problem is that on bootstrap stage, kernel truncate the flash memory to=
- 16MB, so i cannot access to the whole flash. kernel messages:
-
-mtd: partition "fs" extends=A0 beyond the end of device "60000000.flash" si=
-ze truncated to 0xc00000.
-
-I'd like to know if i have to specify into the dtb file the size of flash m=
-em. What about nand flash controller and its functionality?=20
-If you have more info about this, please write to me.
-
-Thanks in advance,
-@s
-
-=0A=0A=0A      
---0-2011298778-1252412313=:87558
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
-top" style=3D"font: inherit;">Hi all.<br><br>I need some info about device =
-tree blob.<br>I'm testing a powerpc board (very similar to mpc512xev) with =
-the following feature:<br>&nbsp;- 256MB flash (only 1 bank)<br><br>Changes =
-some lines of device tree source about flash<br><br>localbus@80000020 {<br>=
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; compatible =3D "fsl,mpc5121ads-localb=
-us";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #address-cells =3D &lt;2&gt;;=
-<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #size-cells =3D &lt;1&gt;;<br>&nb=
-sp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; reg =3D &lt;0000020 40&gt;;<br><br>&nbsp=
-;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ranges =3D &lt;0 0 fc000000 04000000<br>&n=
-bsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 2 0 82000000 =
-00008000&gt;;<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; flash@0,0 {<br>&=
-nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device_type =3D
- "rom";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; compati=
-ble =3D "direct-mapped";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nb=
-sp;&nbsp; probe-type =3D "CFI";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &n=
-bsp;&nbsp;&nbsp; reg =3D &lt;0 0 4000000&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&=
-nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #address-cells =3D &lt;1&gt;;<br>&nbsp;&nbsp=
-;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #size-cells =3D &lt;1&gt;;<br=
->&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; bank-width =3D &l=
-t;4&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device=
--width =3D &lt;2&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;=
-&nbsp; partitions =3D &lt;00000000 00040000&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
-nbsp; // first sector is protected<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;=
- &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 00040=
-000 03c00000&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // 60 Mb for
- filesystem<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nb=
-sp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 03c40000 00280000&nbsp;&nbsp=
-;&nbsp; &nbsp;&nbsp;&nbsp; // 2.5 Mb for kernel<br>&nbsp;&nbsp;&nbsp; &nbsp=
-;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp; 03ec0000 00040000&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // one secto=
-r for device tree<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbs=
-p; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 03f00000 00100000&gt;;=
-&nbsp;&nbsp;&nbsp; // one Mb for u-boot<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
-nbsp; &nbsp;&nbsp;&nbsp; partition-names =3D "protected", "filesystem", "ke=
-rnel", "device-tree", "u-boot";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; };=
-<br>....<br>with these changes:<br>....<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
-nbsp; flash@0,0 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbs=
-p; device_type =3D "rom";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp; compatible =3D "direct-mapped";<br>&nbsp;&nbsp;&nbsp; &=
-nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; probe-type =3D "CFI";<br>&nbsp;&nbsp;&=
-nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; reg =3D &lt;0 0 1000000&gt;;<br=
->&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #address-cells =
-=3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; =
-#size-cells =3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&=
-nbsp;&nbsp; bank-width =3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nb=
-sp; &nbsp;&nbsp;&nbsp; device-width =3D &lt;1&gt;;<br>&nbsp;&nbsp;&nbsp; &n=
-bsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; partitions =3D &lt;300000 200000&nbsp;&=
-nbsp;&nbsp; &nbsp;&nbsp;&nbsp; //uimage<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
-nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;=
-&nbsp; 400000 3200000&gt;;&nbsp;&nbsp;&nbsp; // fs<br>&nbsp;&nbsp;&nbsp; &n=
-bsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; partition-names =3D "uimage",
- "fs";<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; };<br>....<br><br>The probl=
-em is that on bootstrap stage, kernel truncate the flash memory to 16MB, so=
- i cannot access to the whole flash. kernel messages:<br><br>mtd: partition=
- "fs" extends&nbsp; beyond the end of device "60000000.flash" size truncate=
-d to 0xc00000.<br><br>I'd like to know if i have to specify into the dtb fi=
-le the size of flash mem. What about nand flash controller and its function=
-ality? <br>If you have more info about this, please write to me.<br><br>Tha=
-nks in advance,<br>@s<br><br></td></tr></table><br>=0A=0A=0A=0A      
---0-2011298778-1252412313=:87558--
-
-
---===============7446691088279302030==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7446691088279302030==--
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
