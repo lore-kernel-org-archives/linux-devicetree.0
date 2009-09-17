@@ -1,16 +1,17 @@
-From: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 Subject: Re: Gpio reset handling
-Date: Wed, 16 Sep 2009 12:07:15 +0100
-Message-ID: <1253099235.3416.1512.camel@spitfire.edi.gefes.com>
+Date: Thu, 17 Sep 2009 08:46:02 +0200
+Message-ID: <4AB1DB2A.6050109@monstr.eu>
 References: <4AAFDDD1.9070702@monstr.eu>
 	<fa686aa40909151527r36334528ne1194523f141a8a2@mail.gmail.com>
 	<1d3f23370909151540p411f0bc0r1c81b68ceb2fb45e@mail.gmail.com>
-Reply-To: martin.donnelly-JJi787mZWgc@public.gmane.org
+	<fa686aa40909151607u29d4025ay101e89d9eae5f30a@mail.gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1d3f23370909151540p411f0bc0r1c81b68ceb2fb45e-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <fa686aa40909151607u29d4025ay101e89d9eae5f30a-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,22 +21,95 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDA5LTA5LTE2IGF0IDA4OjQwICsxMDAwLCBKb2huIFdpbGxpYW1zIHdyb3RlOgo+
-IFdlIGFyZSB0cnlpbmcgdG8gYXZvaWQgYm9hcmQtc3BlY2lmaWMgcGxhdGZvcm0gY29kZSBhdCBh
-bGwgY29zdHMgLSB0aGUKPiBhYmlsaXR5IHRvIGZ1bGx5IGNvbmZpZ3VyZSBhIHN0YW5kYXJkIGtl
-cm5lbCBvbnRvIGFyYml0cmFyeSBib2FyZHMgdmlhCj4gYSBEVEIgaXMgcHJvdmluZyB2ZXJ5IHVz
-ZWZ1bCwgYW5kIGFzIEkgc2FpZCBhYm92ZSB3ZSBzZWUgdGhpcwo+IHJlc2V0LWdwaW8gY2FwYWJp
-bGl0eSBhcyBhIGdlbmVyaWMgdGhpbmcgdGhhdCB3aWxsIGJlIHVzZWQgYWNyb3NzIG1hbnkKPiBw
-bGF0Zm9ybXMuICBXZSBqdXN0IHdhbnQgdG8gZG8gaXQgcmlnaHQuCgpNYWtpbmcgdGhpcyBnZW5l
-cmljIHdvdWxkIGJlIHVzZWZ1bCBpbiBtYW55IG9mIG91ciBzeXN0ZW1zLiAgSSd2ZSBqdXN0CnN0
-YXJ0ZWQgd29ya2luZyBvbiBpbXBsZW1lbnRpbmcgdGhpcyBjYXBhYmlsaXR5IGZvciBzb21lIG9m
-IG91cgpwbGF0Zm9ybXMgYW5kIHdhcyBsb29raW5nIHRvIGF2b2lkIHVzaW5nIGJvYXJkLXNwZWNp
-ZmljIHBsYXRmb3JtIGNvZGUgaW4KZG9pbmcgc28uCgpDaGVlcnMKLS0gCsK7TWFydGluIERvbm5l
-bGx5IMK7R0UgRmFudWMgRW1iZWRkZWQgU3lzdGVtcywgRWRpbmJ1cmdoLCBTY290bGFuZApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Grant Likely wrote:
+> On Tue, Sep 15, 2009 at 4:40 PM, John Williams
+> <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org> wrote:
+>> Hi Grant,
+>>
+>> On Wed, Sep 16, 2009 at 8:27 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>>> On Tue, Sep 15, 2009 at 12:32 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+>>>> For this node there should be better reset description not just label with different description.
+>>>> I expect that it will be useful soft and hard reset and maybe you can find some others.
+>>> It sounds like what you are doing is very board specific.  It is
+>>> probably premature to design a 'generic' binding for something that
+>>> may very well not turn out to be very generic at all.
+>> On the contrary - the MicroBlaze CPU itself has no provision for a
+>> self-initiated soft reset.  Instead, the way it is achieved is by
+>> connecting one bit of a GPIO to the AUX_RESET input of Xilinx's
+>> proc_sys_reset IP (also used in PPC designs as you know).  We are
+>> looking for a sensible, flexible way of binding this structure that we
+>> instantiate in almost all MicroBlaze Linux systems.
+>>
+>> BTW - how do you handle soft-reset on Xilinx/PPC designs?
+> 
+> It writes the reset command to the DBCR special purpose register.  The
+> PPC440 core reset output is wired to the RESETPPC0 bus input on the
+> proc_sys_reset core (which actually consists of three reset request
+> lines IIRC).
+> 
+>>> What I'd do is
+>>> create yourself a node for holding board specific properties (like the
+>>> binding to the gpio reset line) and parse that data from your board
+>>> specific setup code.  I suppose you could also do it from an
+>>> of_platform driver, but like irq controllers, it probably doesn't make
+>>> a lot of sense to.
+>> We are trying to avoid board-specific platform code at all costs - the
+>> ability to fully configure a standard kernel onto arbitrary boards via
+>> a DTB is proving very useful, and as I said above we see this
+>> reset-gpio capability as a generic thing that will be used across many
+>> platforms.  We just want to do it right.
+> 
+> okay
+> 
+>> Given my justification above, can you spare some of your bountiful
+>> neurons on considering how we might do it generically?  Does flattery
+>> work on you? :)
+> 
+> :-P
+> 
+> From what I've heard so far, I'd do it the same way but use something
+> like "xlnx,microblaze-gpio-reset" for the compatible value.  As long
+> as you document the binding and post it to the devicetree-discuss
+> mailing list for review you should have no problem doing what you want
+> to do.
+> 
+> BTW, start with the "xlnx,microblaze-*" value for now.  A architecture
+> neutral value can always be chosen at a later date if this proves to
+> be useful.
+
+Here I see some problems if we want to use one reset gpio pin with leds.
+It not happen in these days but I expect to use it with heartbeat led.
+
+If I want to use new compatible node, I have to change BSP to support this
+but I can through out this part of code very soon. And if I want to use
+that node with leds then this is wrong.
+
+My expectation is that if has any port special purpose (like reset) and others
+different purpose then I should create correct node (which is xilinx gpio) and then
+describe that functionality. Exactly as you do for leds.
+
+That gpio has the same behavior as gpio only with all leds but we use one pin
+for reset.
+
+I'll do some more tests with gpio handling in latest kernel and then
+we can discuss more.
+
+Thanks for your comments,
+Michal
+
+
+> 
+> g.
+> 
+
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
