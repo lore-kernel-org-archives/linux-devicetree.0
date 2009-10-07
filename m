@@ -1,66 +1,58 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Help with SPI node
-Date: Mon, 5 Oct 2009 08:30:44 -0600
-Message-ID: <fa686aa40910050730m6a98b156p7b1240b7560f1aab@mail.gmail.com>
-References: <132676.44242.qm@web30102.mail.mud.yahoo.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
+Date: Tue, 06 Oct 2009 22:29:57 -0600
+Message-ID: <20091007041007.16890.62194.stgit__34184.2726259076$1254889864$gmane$org@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <132676.44242.qm@web30102.mail.mud.yahoo.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Joe Shmo <spamreceptor@yahoo.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, microblaze-uclinux
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 1, 2009 at 10:19 AM, Joe Shmo <spamreceptor@yahoo.com> wrote:
->
-> =A0I'm attempting to get SPI to work on my embedded design
-> =A0that is based on the mpc8313erbd reference board wiht a
-> =A02.6.27 kernel.=A0 I cannot open the SPI device.
-> =A0Tracing through the kernel code, it looks like the device is
-> =A0not being found in the DTB file.=A0 However there is a
-> =A0SPI node in there already described.=A0 Our boards is a
-> =A0SPI master, and the device we will attach is a SPI
-> =A0slave.=A0 Could someone elaborate on what is needed in
-> =A0the DTS file to have our SPI driver work and respond to an
-> =A0open() call?
+Well, I've got to start somewhere...
 
-Some notes:
-- you should also cc: the linuxppc-dev@lists.ozlabs.org when asking
-questions about powerpc platforms.
-- Please post in plain text only, not HTML.  Yahoo should have an
-option for posting in plain text instead of formated.
-- "Joe Shmo"?  It's not against the rules to use a pseudoname, but
-it's not very polite.
+So here goes.  I've begun the work to merge and clean up the OF device
+tree handling code and this is my first set of patches.  Not fully
+tested yet, but I'm getting them out to the lists so that I can start
+responding to comments and collecting acks.  This first batch isn't
+anything exciting, just a merge of common code
 
-Things to check:
-- Once the system is booted, look in /sys/bus/of_platform/devices to
-see if the SPI bus device is registered.  If it isn't there then it
-means that the 8xxx platform code (arch/powerpc/platforms/) isn't
-registering the device.
-- Look in /sys/bus/of_platform/drivers/ to see if the mpc8xxx_spi
-driver is loaded into the kernel.  If it isn't there, then you need to
-load the driver into the kernel.
-- If both are present, then look in
-/sys/bus/of_platform/devices/e0007000.spi (I think; the name might be
-slightly different) for a 'driver' symlink.  If the symlink is there,
-then it means that the driver is bound to the device.  Most likely it
-means that the "compatible" value in the node doesn't match what the
-driver is looking for.
+---
 
-Look at those things and report back.
+Grant Likely (12):
+      of: merge of_find_all_nodes() implementations
+      of: merge other miscellaneous prototypes
+      of: merge of_*_flat_dt*() functions
+      of: merge of_node_get(), of_node_put() and of_find_all_nodes()
+      of: merge of_read_number() an of_read_ulong()
+      of: merge of_node_*_flag() and set_node_proc_entry()
+      of: merge struct boot_param_header from Microblaze and PowerPC
+      of: add common header for flattened device tree representation
+      of: Move OF_IS_DYNAMIC and OF_MARK_DYNAMIC macros to of.h
+      of: merge struct device_node
+      of: merge phandle, ihandle and struct property
+      of: Rework linux/of.h and asm/prom.h include ordering
 
-g.
 
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+ arch/microblaze/include/asm/prom.h |  135 +--------------------------------
+ arch/microblaze/kernel/prom.c      |   23 ------
+ arch/powerpc/include/asm/prom.h    |  147 ------------------------------------
+ arch/powerpc/kernel/prom.c         |   23 ------
+ arch/sparc/include/asm/prom.h      |   55 -------------
+ drivers/of/base.c                  |   26 ++++++
+ include/linux/of.h                 |  103 +++++++++++++++++++++++++
+ include/linux/of_fdt.h             |   87 +++++++++++++++++++++
+ 8 files changed, 221 insertions(+), 378 deletions(-)
+ create mode 100644 include/linux/of_fdt.h
+
+-- 
+Signature
