@@ -1,108 +1,61 @@
-From: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
-Subject: RE: Xilinx SYSACE driver and 8-bit attachment
-Date: Wed, 7 Oct 2009 09:18:40 -0700
-Message-ID: <51ada07b-493e-4552-b79b-7a4044ae1b4c@VA3EHSMHS028.ehs.local>
-References: <1d3f23370910070013u6307bc42hf7ab243b52d007df@mail.gmail.com> <fa686aa40910070634r4a8dcf74qdcbfb3bde3413109@mail.gmail.com> <192797ad-5dd4-4ebe-8db3-d381bb949e1e@VA3EHSMHS029.ehs.local> <fa686aa40910070752k1b954a32v1ae6a2e5a089fc5e@mail.gmail.com>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
+Date: Wed, 7 Oct 2009 09:39:12 -0700
+Message-ID: <d7482752-b71b-401e-8ccd-b8c7bea84cd6@VA3EHSMHS013.ehs.local>
+References: <20091007041007.16890.62194.stgit@angua><fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>
+	<20091007.002722.168292120.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S933857AbZJGQTm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Class: urn:content-classes:message
-In-Reply-To: <fa686aa40910070752k1b954a32v1ae6a2e5a089fc5e@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: David DeBonis <ddeboni@xilinx.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@petalogix.com>, John Linn <linnj@xilinx.com>, John Williams <john.williams@petalogix.com>
+In-Reply-To: <20091007.002722.168292120.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-
 > -----Original Message-----
-> From: devicetree-discuss-bounces+stephen.neuendorffer=3Dxilinx.com@li=
-sts.ozlabs.org [mailto:devicetree-
-> discuss-bounces+stephen.neuendorffer=3Dxilinx.com@lists.ozlabs.org] O=
-n Behalf Of Grant Likely
-> Sent: Wednesday, October 07, 2009 7:53 AM
-> To: John Linn
-> Cc: David DeBonis; Stephen Neuendorffer; devicetree-discuss; Linux Ke=
-rnel list; Michal Simek; John
-> Linn; John Williams
-> Subject: Re: Xilinx SYSACE driver and 8-bit attachment
->=20
-> On Wed, Oct 7, 2009 at 8:42 AM, John Linn <John.Linn@xilinx.com> wrot=
-e:
-> >> -----Original Message-----
-> >> From: John Linn
-> >> Sent: Wednesday, October 07, 2009 8:24 AM
-> >> To: 'Grant Likely'; John Williams
-> >> Cc: Linux Kernel list; Michal Simek; David DeBonis; Stephen Neuend=
-orffer; devicetree-discuss
-> >> Subject: RE: Xilinx SYSACE driver and 8-bit attachment
-> >>
-> >> I'll look to see if something has changed. =A0It's not clear to me=
- if it has ever been right.
-> >>
-> >> It look like we normally use 16 bit mode as that's how BSB generat=
-es the system by default.
-> >>
-> >> Thanks,
-> >> John
-> >>
-> >> > -----Original Message-----
-> >> > From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Beha=
-lf Of Grant Likely
-> >> > Sent: Wednesday, October 07, 2009 7:35 AM
-> >> > To: John Williams
-> >> > Cc: Linux Kernel list; Michal Simek; John Linn; David DeBonis; S=
-tephen Neuendorffer; devicetree-
-> >> > discuss
-> >> > Subject: Re: Xilinx SYSACE driver and 8-bit attachment
-> >> >
-> >> > [Added devicetree-discuss to cc: list]
-> >> >
-> >> > On Wed, Oct 7, 2009 at 1:13 AM, John Williams
-> >> > <john.williams@petalogix.com> wrote:
-> >> > > Hi Grant (it's your driver :) and David D ( and your DTS gener=
-ator :)
-> >> > [...]
-> >> > > if (of_find_property(op->node, "8-bit", NULL))
-> >> > [...]
-> >> > > doesn't match the properties generated by Xilinx's device tree=
- generator:
-> >> > [...]
-> >> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 xlnx,mem-width =3D <0x8>;
-> >
-> > Do you know if the 8 bit mode was ever tested with the "8-bit" prop=
-erty in the tree?
-> >
-> > I don't see anything in the device tree generator history to say we=
- ever did that "8-bit", but
-> maybe I'm missing something.
-> >
-> > We are just generating the parameters from the h/w and the memory w=
-idth is it. =A0We can always put
-> something in there special, but it seems silly if it was never used a=
-nyway.
->=20
-> Don't forget that Virtex and Microblaze are not the only users of thi=
-s
-> driver.   There is a AMCC 440 board which uses the sysace as a CF
-> adapter.  8-bit was definitely tested and is in use.
+> From:
+devicetree-discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlaKREJ1Ck/qmQ@public.gmane.org
+org [mailto:devicetree-
+> discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On
+Behalf Of David Miller
+> Sent: Wednesday, October 07, 2009 12:27 AM
+> To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+> Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
+microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org;
+> sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree
+code
+> 
+> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Date: Tue, 6 Oct 2009 22:49:04 -0600
+> 
+> > Also, I'd like to take on responsibility for maintaining the cross-
+> > architecture device tree code.  If there are no objections, I'll
+> > write a patch to add a device tree section to MAINTAINERS.
+> 
+> Feel free.  And also feel free to add my:
+> 
+> Acked-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> 
+> to your patches.
+> 
 
-In this case, I'm pretty sure this tag was never automatically generate=
-d by the DTS generator.
-Personally, I think it's bad practice to always assume that the device =
-tree generator should be modified to match what a Linux driver is expec=
-ting, however given the precedence in this case,
-I agree that it might be reasonable to put a special case in to generat=
-e this.
+Thanks for doing this, Grant....  It's definitely needed.
+
+Acked-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
 Steve
-=20
 
-This email and any attachments are intended for the sole use of the nam=
-ed recipient(s) and contain(s) confidential information that may be pro=
-prietary, privileged or copyrighted under applicable law. If you are no=
-t the intended recipient, do not read, copy, or forward this email mess=
-age or any attachments. Delete this email message and any attachments i=
-mmediately.
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
