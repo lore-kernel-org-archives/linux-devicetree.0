@@ -1,44 +1,54 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+From: Brad Boyer <flar@allandria.com>
 Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
-Date: Wed, 07 Oct 2009 14:09:38 -0700 (PDT)
-Message-ID: <20091007.140938.255120957.davem@davemloft.net>
-References: <20091007135243.GC21646@anhedonia> <4ACCEC67.9070106@firmworks.com>
-	<Pine.LNX.4.60.0910072148040.11795@mailgate.netunix.com>
+Date: Wed, 7 Oct 2009 15:57:58 -0700
+Message-ID: <20091007225758.GD6138@cynthia.pants.nu>
+References: <20091007041007.16890.62194.stgit@angua>
+	<fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>
+	<646765f40910062218s19d540f9q14c9086bedd1d9da@mail.gmail.com>
+	<20091007135243.GC21646@anhedonia>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.60.0910072148040.11795-pb599fR3TxWvwYtD5Hs6llaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: crn-Tjka5CH3XzFBDgjK7y7TUQ@public.gmane.org
-Cc: sammy-4OGMY2YDKIVeoWH0uzbU5w@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <20091007135243.GC21646@anhedonia>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Sam Creasey <sammy@sammy.net>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Julian Calaby <julian.calaby@gmail.com>, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Newport <crn-Tjka5CH3XzFBDgjK7y7TUQ@public.gmane.org>
-Date: Wed, 7 Oct 2009 21:54:34 +0100 (BST)
+On Wed, Oct 07, 2009 at 09:52:43AM -0400, Sam Creasey wrote:
+> On Wed, Oct 07, 2009 at 03:18:04PM +1000, Julian Calaby wrote:
+> > On the subject of merging code, I know that the SUN3 code in m68k uses
+> > a similar prom interface to the sparc32 code. (and I've also
+> > considered unifying that and ... well ... see above) Does anyone know
+> > if it has an OpenFirmware interface for it's devices? Is OF on SUN3
+> > even remotely useful? Does Linux on SUN3 even work with modern
+> > kernels?
+> 
+> Sun3 doesn't have OF, though I've got some dormant patches to add an
+> OF emulation layer to make it easier to reuse Sparc drivers on
+> Sun3...   Never finished enough to submit, so it probably shouldn't
+> affect anything you're doing here.
 
-> Sun4c has also been broken for a long time and sun4d has never worked
-> properly. Is it time to also prune these ?.
-> That would leave only Sun4m in the 32bit kernel, which still works and
-> has plenty of ongoing user interest.
+I was also looking at using the OF code on m68k, but for a different
+reason. My goal was to get macio_bus working so we can merge a few
+of the m68k Mac drivers into the ppc Mac drivers. The simplest way
+to do that seemed to be supporting OF since macio_dev is a wrapper
+for of_device. It was also a nice way to build up a table of all the
+onboard devices in memory. Hopefully it would enable better user-space
+device detection as well.
 
-Chris don't over-exaggerate the state.
+I got the framework built against an older kernel, but it wasn't enough
+to be useful at that point. This set of patches could help quite a bit.
 
-The truth is that the whole sparc32 port is in a state of mild
-disrepair, and many of the issues apply to all the port rather than
-just one family of systems.  I think someone suitably motivated
-could get most of the bugs sorted out.
-
-There is no reason to drop support for SS1 machines, we already fully
-build the software device tree and use all of the generic OF
-infrastructure in the Linux kernel on those systems.  It is not a road
-block at all for the OF genericization work, if that's what you read
-into wmb's email.
+	Brad Boyer
+	flar@allandria.com
