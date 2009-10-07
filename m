@@ -1,71 +1,59 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [microblaze-uclinux] Re: [RFC PATCH 05/12] of: add common header
-	for flattened device tree representation
-Date: Wed, 07 Oct 2009 16:07:39 +0200
-Message-ID: <4ACCA0AB.80407@monstr.eu>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [microblaze-uclinux] Re: [RFC PATCH 00/12] Merge common
+	OpenFirmware device tree code
+Date: Wed, 07 Oct 2009 16:21:33 +0200
+Message-ID: <4ACCA3ED.6090403@monstr.eu>
 References: <20091007041007.16890.62194.stgit@angua>
-	<20091007043052.16890.15975.stgit@angua>
-	<20091007155717.8df62c4d.sfr@canb.auug.org.au>
-	<4ACC861A.7020506@monstr.eu>
-	<fa686aa40910070638v16c1b811w4e5ecb61a9afd836@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+	<fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>
+	<200910070209.59311.rob@landley.net>
+	<fa686aa40910070702j470785d2ka2621122a8e2f1fd@mail.gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <fa686aa40910070638v16c1b811w4e5ecb61a9afd836@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: microblaze-uclinux@itee.uq.edu.au
-Cc: sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <fa686aa40910070702j470785d2ka2621122a8e2f1fd-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
 Grant Likely wrote:
-> On Wed, Oct 7, 2009 at 6:14 AM, Michal Simek <monstr@monstr.eu> wrote:
->>
->> Stephen Rothwell wrote:
->>> Hi Grant,
->>>
->>> Just first obvious thing:
->>>
->>> On Tue, 06 Oct 2009 22:30:59 -0600 Grant Likely <grant.likely@secretlab.ca> wrote:
->>>> diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
->>>> index 64e8b3a..5f461f0 100644
->>>> --- a/arch/microblaze/include/asm/prom.h
->>>> +++ b/arch/microblaze/include/asm/prom.h
->>>> @@ -17,20 +17,10 @@
->>>>  #ifndef _ASM_MICROBLAZE_PROM_H
->>>>  #define _ASM_MICROBLAZE_PROM_H
->>>>  #ifdef __KERNEL__
->>>> -
->>>> -/* Definitions used by the flattened device tree */
->>>> -#define OF_DT_HEADER                0xd00dfeed /* marker */
->>> This is used in arch/microblaze/kernel/head.S, but you move its
->>> definition inside "#ifndef __ASSEMBLY__" below.  You should probably
->>> replace the include of asm/prom.h in arch/microblaze/kernel/head.S with
->>> linux/of_fdt.h (assuming that the comment in there is correct).
->> yes, Stephen is right here. I created one patch (in attachment) which fixed it. I tested your
->> patches on Microblaze (noMMU and MMU) and I have no problem with compilation and simple boot-up
->> works for both versions too.
->>
->> With that my patch: Acked-by: Michal Simek <monstr@monstr.eu>
+> On Wed, Oct 7, 2009 at 1:09 AM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
+>> On Tuesday 06 October 2009 23:49:04 Grant Likely wrote:
+>>> However, I've completely devoted to this work for at least the next
+>>> two months, so there are plenty more patches to follow.  Once I've
+>>> got all the common code merged between Microblaze, PowerPC and Sparc
+>>> I'll be fix the endian problems and making it easily usable by other
+>>> architectures like ARM and MIPS.  Lots of work to be done.
+>> Is there any news on getting QEMU to parse a device tree to figure out what
+>> hardware to emulate?  (I.E. using the device tree code to let qemu provide
+>> configurable board emulations instead of hardwiring them in C code?)
 > 
-> Thanks.  I'll merge your change with my patch so that bisect isn't broken.
+> Not that I have, but I expect that I will be hacking on QEMU as part
+> of this work.
 
-if is possible to do it, please do it.
+ok great. Just let us know - we will test it.
 
 Thanks,
 Michal
 
+> 
+>> Also, what would be involved in getting x86 to (at least have the option to)
+>> use the device tree stuff?
+> 
+> It would be very easy once the endian issues are worked out since the
+> device tree is just a data format to be parsed.
 > 
 > g.
 > 
