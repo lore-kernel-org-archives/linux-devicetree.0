@@ -1,65 +1,77 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [microblaze-uclinux] Re: [RFC PATCH 00/12] Merge common
-	OpenFirmware device tree code
-Date: Wed, 07 Oct 2009 16:21:33 +0200
-Message-ID: <4ACCA3ED.6090403@monstr.eu>
-References: <20091007041007.16890.62194.stgit@angua>
-	<fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>
-	<200910070209.59311.rob@landley.net>
-	<fa686aa40910070702j470785d2ka2621122a8e2f1fd@mail.gmail.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: John Linn <John.Linn@xilinx.com>
+Subject: RE: Xilinx SYSACE driver and 8-bit attachment
+Date: Wed, 7 Oct 2009 08:24:28 -0600
+Message-ID: <838c3c32-27d9-4a0a-a197-c7227b911942@VA3EHSMHS014.ehs.local>
+References: <1d3f23370910070013u6307bc42hf7ab243b52d007df@mail.gmail.com> <fa686aa40910070634r4a8dcf74qdcbfb3bde3413109@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <fa686aa40910070702j470785d2ka2621122a8e2f1fd-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1759275AbZJGOZS@vger.kernel.org>
+Content-Class: urn:content-classes:message
+In-Reply-To: <fa686aa40910070634r4a8dcf74qdcbfb3bde3413109@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, John Williams <john.williams@petalogix.com>
+Cc: Linux Kernel list <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@petalogix.com>, David DeBonis <ddeboni@xilinx.com>, Stephen Neuendorffer <stephenn@xilinx.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+I'll look to see if something has changed.  It's not clear to me if it =
+has ever been right.
 
-
-Grant Likely wrote:
-> On Wed, Oct 7, 2009 at 1:09 AM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
->> On Tuesday 06 October 2009 23:49:04 Grant Likely wrote:
->>> However, I've completely devoted to this work for at least the next
->>> two months, so there are plenty more patches to follow.  Once I've
->>> got all the common code merged between Microblaze, PowerPC and Sparc
->>> I'll be fix the endian problems and making it easily usable by other
->>> architectures like ARM and MIPS.  Lots of work to be done.
->> Is there any news on getting QEMU to parse a device tree to figure out what
->> hardware to emulate?  (I.E. using the device tree code to let qemu provide
->> configurable board emulations instead of hardwiring them in C code?)
-> 
-> Not that I have, but I expect that I will be hacking on QEMU as part
-> of this work.
-
-ok great. Just let us know - we will test it.
+It look like we normally use 16 bit mode as that's how BSB generates th=
+e system by default.
 
 Thanks,
-Michal
+John
 
-> 
->> Also, what would be involved in getting x86 to (at least have the option to)
->> use the device tree stuff?
-> 
-> It would be very easy once the endian issues are worked out since the
-> device tree is just a data format to be parsed.
-> 
+> -----Original Message-----
+> From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Behalf Of=
+ Grant Likely
+> Sent: Wednesday, October 07, 2009 7:35 AM
+> To: John Williams
+> Cc: Linux Kernel list; Michal Simek; John Linn; David DeBonis; Stephe=
+n Neuendorffer; devicetree-
+> discuss
+> Subject: Re: Xilinx SYSACE driver and 8-bit attachment
+>=20
+> [Added devicetree-discuss to cc: list]
+>=20
+> On Wed, Oct 7, 2009 at 1:13 AM, John Williams
+> <john.williams@petalogix.com> wrote:
+> > Hi Grant (it's your driver :) and David D ( and your DTS generator =
+:)
+> [...]
+> > if (of_find_property(op->node, "8-bit", NULL))
+> [...]
+> > doesn't match the properties generated by Xilinx's device tree gene=
+rator:
+> [...]
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+ xlnx,mem-width =3D <0x8>;
+> >
+> > So, the question is, which should change?
+>=20
+> Well, obviously its a device tree generator bug, the driver code is
+> perfect.  :-P
+>=20
+> In all seriousness though, the '8-bit' property has been present for =
+a
+> while now and needs to be retained to not break existing users.  It
+> would be okay for the driver to be modified to *also* check for the
+> xlnx,mem-width property, but the better solution is to modify the
+> device tree generator.  Plus, the '8-bit' property is the documented
+> binding in Documentation/powerpc/dts-bindings/xilinx.txt
+>=20
+> Cheers,
 > g.
-> 
+>=20
+> --
+> Grant Likely, B.Sc., P.Eng.
+> Secret Lab Technologies Ltd.
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+
+This email and any attachments are intended for the sole use of the nam=
+ed recipient(s) and contain(s) confidential information that may be pro=
+prietary, privileged or copyrighted under applicable law. If you are no=
+t the intended recipient, do not read, copy, or forward this email mess=
+age or any attachments. Delete this email message and any attachments i=
+mmediately.
