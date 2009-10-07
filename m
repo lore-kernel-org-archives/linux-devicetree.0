@@ -1,7 +1,7 @@
-From: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Subject: RE: Xilinx SYSACE driver and 8-bit attachment
-Date: Wed, 7 Oct 2009 17:47:58 -0600
-Message-ID: <940f74fd-51b8-4158-9f40-c9ffa9a27ccb@VA3EHSMHS013.ehs.local>
+Date: Wed, 7 Oct 2009 16:48:20 -0700
+Message-ID: <893df3b8-adf9-4d96-a970-11d2412117e8@VA3EHSMHS026.ehs.local>
 References: <1d3f23370910070013u6307bc42hf7ab243b52d007df@mail.gmail.com>
 	<fa686aa40910070634r4a8dcf74qdcbfb3bde3413109@mail.gmail.com>
 	<1d3f23370910071644y5877cf9v879967340a463f19@mail.gmail.com>
@@ -21,12 +21,14 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: David DeBonis <ddeboni-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Neuendorffer <stephenn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: John Linn <linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David DeBonis <ddeboni-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
+
+
 
 > -----Original Message-----
 > From: John Williams [mailto:john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org]
-> Sent: Wednesday, October 07, 2009 5:45 PM
+> Sent: Wednesday, October 07, 2009 4:45 PM
 > To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 > Cc: Linux Kernel list; Michal Simek; John Linn; David DeBonis; Stephen Ne=
 uendorffer; devicetree-
@@ -84,15 +86,12 @@ xlnx,mem-width =3D <0x8>;
 > out any special per-device hacks.  This has a natural tendency towards
 > minimum pain I think.
 
-Agreed. This was special legacy is the only reason it warranted it.
+I second this wholeheartedly.
+Note that by definition, what comes out of the generator 'accurately and ex=
+actly describes the hardware', to the extent that the hardware is represent=
+ed completely by its parameters.
 
-> =
-
-> John
-> --
-> John Williams, PhD, B.Eng, B.IT
-> PetaLogix - Linux Solutions for a Reconfigurable World
-> w: www.petalogix.com  p: +61-7-30090663  f: +61-7-30090663
+Steve
 
 
 This email and any attachments are intended for the sole use of the named r=
