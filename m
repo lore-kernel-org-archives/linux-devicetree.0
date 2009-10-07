@@ -1,61 +1,46 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
-Date: Wed, 7 Oct 2009 09:39:12 -0700
-Message-ID: <d7482752-b71b-401e-8ccd-b8c7bea84cd6@VA3EHSMHS013.ehs.local>
-References: <20091007041007.16890.62194.stgit@angua><fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>
-	<20091007.002722.168292120.davem@davemloft.net>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
+Date: Wed, 07 Oct 2009 09:30:47 -1000
+Message-ID: <4ACCEC67.9070106@firmworks.com>
+References: <20091007041007.16890.62194.stgit@angua>	<fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>	<646765f40910062218s19d540f9q14c9086bedd1d9da@mail.gmail.com> <20091007135243.GC21646@anhedonia>
+Reply-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <20091007.002722.168292120.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+Return-path: <owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
+In-Reply-To: <20091007135243.GC21646@anhedonia>
+Sender: owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
+To: Sam Creasey <sammy-4OGMY2YDKIVeoWH0uzbU5w@public.gmane.org>
+Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+>
+> Sun3 doesn't have OF
 
-> -----Original Message-----
-> From:
-devicetree-discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlaKREJ1Ck/qmQ@public.gmane.org
-org [mailto:devicetree-
-> discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On
-Behalf Of David Miller
-> Sent: Wednesday, October 07, 2009 12:27 AM
-> To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-> Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org;
-> sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree
-code
-> 
-> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Date: Tue, 6 Oct 2009 22:49:04 -0600
-> 
-> > Also, I'd like to take on responsibility for maintaining the cross-
-> > architecture device tree code.  If there are no objections, I'll
-> > write a patch to add a device tree section to MAINTAINERS.
-> 
-> Feel free.  And also feel free to add my:
-> 
-> Acked-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-> 
-> to your patches.
-> 
+When I was first developing Open Boot for the SPARCstation-1, I was also 
+simultaneously trying to do it for a Sun-3 system that was being built 
+at the same time.
 
-Thanks for doing this, Grant....  It's definitely needed.
+It proved to be too much to do both jobs at the same time, especially in 
+light of all the hardware debugging that is part of a new system 
+bringup.  So I gave up on Sun 3 and just focused on SS-1.
 
-Acked-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+That particular Sun-3 machine never sold very well, while the SS-1 was 
+very popular.  That was Sun's last 680x0 machine.
 
-Steve
+Personally, I think that continuing to support Sun-3 in Linux is not 
+useful in a practical sense.  To the extent that supporting 
+long-obsolete platforms and devices makes the job harder for current 
+systems, it is actually harmful.  Portability and generality is good in 
+some theoretical "rightness" sense, but there are practical limits.  
+Code can become so heavily layered that approaching it requires a huge 
+commitment of effort to learn all the artificial layers.  Sometimes you 
+have to prune the dead branches so the living ones can get light and air.
 
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+Taking this one step further, I don't see any real good reason to 
+continue supporting Sun4 going forward.  I got rid of my Sun4 systems 
+long ago because it was just too hard to keep them working - after 
+having used them long after most people had moved on.  Dropping Sun3 and 
+Sun4 eliminates all vestiges of the sunmon interface and also allows 
+dropping support for OBP version 1, which only shipped on SS1-class 
+machines - the first machines in the Sun4c subclass. 
