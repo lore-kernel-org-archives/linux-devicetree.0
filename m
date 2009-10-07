@@ -1,49 +1,142 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
-Date: Wed, 7 Oct 2009 11:02:04 +0200
-Message-ID: <20091007090204.GB3177@pengutronix.de>
-References: <20091007041007.16890.62194.stgit@angua> <fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com>
-Reply-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [microblaze-uclinux] Re: [RFC PATCH 05/12] of: add common header
+ for flattened device tree representation
+Date: Wed, 07 Oct 2009 14:14:18 +0200
+Message-ID: <4ACC861A.7020506@monstr.eu>
+References: <20091007041007.16890.62194.stgit@angua>	<20091007043052.16890.15975.stgit@angua> <20091007155717.8df62c4d.sfr@canb.auug.org.au>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V4b9U9vrdWczvw78"
-Return-path: <owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fa686aa40910062149p5d7141e4x3ff849fd4d191f38-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/mixed;
+ boundary="------------010302030702030902050009"
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20091007155717.8df62c4d.sfr@canb.auug.org.au>
+Sender: sparclinux-owner@vger.kernel.org
+To: microblaze-uclinux@itee.uq.edu.au
+Cc: Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org, davem@davemloft.net, sparclinux@vger.kernel.org, monstr@monstr.eu, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------010302030702030902050009
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
---V4b9U9vrdWczvw78
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 
-> However, I've completely devoted to this work for at least the next
-> two months, so there are plenty more patches to follow.  Once I've
+Stephen Rothwell wrote:
+> Hi Grant,
+> 
+> Just first obvious thing:
+> 
+> On Tue, 06 Oct 2009 22:30:59 -0600 Grant Likely <grant.likely@secretlab.ca> wrote:
+>> diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
+>> index 64e8b3a..5f461f0 100644
+>> --- a/arch/microblaze/include/asm/prom.h
+>> +++ b/arch/microblaze/include/asm/prom.h
+>> @@ -17,20 +17,10 @@
+>>  #ifndef _ASM_MICROBLAZE_PROM_H
+>>  #define _ASM_MICROBLAZE_PROM_H
+>>  #ifdef __KERNEL__
+>> -
+>> -/* Definitions used by the flattened device tree */
+>> -#define OF_DT_HEADER		0xd00dfeed /* marker */
+> 
+> This is used in arch/microblaze/kernel/head.S, but you move its
+> definition inside "#ifndef __ASSEMBLY__" below.  You should probably
+> replace the include of asm/prom.h in arch/microblaze/kernel/head.S with
+> linux/of_fdt.h (assuming that the comment in there is correct).
 
-\o/ Thanks, Grant! A seperate tree would be great. Patches look good to me:
+yes, Stephen is right here. I created one patch (in attachment) which fixed it. I tested your
+patches on Microblaze (noMMU and MMU) and I have no problem with compilation and simple boot-up
+works for both versions too.
 
-Acked-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+With that my patch: Acked-by: Michal Simek <monstr@monstr.eu>
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks,
+Michal
 
---V4b9U9vrdWczvw78
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+P.S.: I have my provider - it block my emails - that's why the patch is in attachment.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
+> 
+>> -#define OF_DT_BEGIN_NODE	0x1 /* Start of node, full name */
+>> -#define OF_DT_END_NODE		0x2 /* End node */
+>> -#define OF_DT_PROP		0x3 /* Property: name off, size, content */
+>> -#define OF_DT_NOP		0x4 /* nop */
+>> -#define OF_DT_END		0x9
+>> -
+>> -#define OF_DT_VERSION		0x10
+>> -
+>>  #ifndef __ASSEMBLY__
+>>  
+>>  #include <linux/types.h>
+>> +#include <linux/of_fdt.h>
+>>  #include <linux/proc_fs.h>
+>>  #include <linux/platform_device.h>
+>>  #include <asm/irq.h>
+> 
 
-iEYEARECAAYFAkrMWQwACgkQD27XaX1/VRt9uQCgjX8ld+ITxAAazfeSs2pemfy4
-T94AoJNNgSLmRH9pFPDUNSml4bWgN3Kl
-=gN0W
------END PGP SIGNATURE-----
 
---V4b9U9vrdWczvw78--
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
+
+--------------010302030702030902050009
+Content-Type: text/x-patch;
+ name="0001-of-microblaze-of_fdt.h-is-used-in-asm-code.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename*0="0001-of-microblaze-of_fdt.h-is-used-in-asm-code.patch"
+
+>From 73b16cccc544fe8410ec8e8e893aa3357093e985 Mon Sep 17 00:00:00 2001
+From: Michal Simek <monstr@monstr.eu>
+Date: Wed, 7 Oct 2009 14:04:01 +0200
+Subject: [PATCH] of: microblaze: of_fdt.h is used in asm code.
+
+Microblaze uses OF_DT_HEADER macro to identify DTB.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Michal Simek <monstr@monstr.eu>
+---
+ arch/microblaze/kernel/head.S |    2 +-
+ include/linux/of_fdt.h        |    3 +++
+ 2 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/arch/microblaze/kernel/head.S b/arch/microblaze/kernel/head.S
+index 697ce30..3091619 100644
+--- a/arch/microblaze/kernel/head.S
++++ b/arch/microblaze/kernel/head.S
+@@ -31,7 +31,7 @@
+ #include <linux/linkage.h>
+ #include <asm/thread_info.h>
+ #include <asm/page.h>
+-#include <asm/prom.h>		/* for OF_DT_HEADER */
++#include <linux/of_fdt.h>		/* for OF_DT_HEADER */
+ 
+ #ifdef CONFIG_MMU
+ #include <asm/setup.h> /* COMMAND_LINE_SIZE */
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index b41bd18..44fecfa 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -30,6 +30,7 @@
+ 
+ #define OF_DT_VERSION		0x10
+ 
++#ifndef __ASSEMBLY__
+ /*
+  * This is what gets passed to the kernel by prom_init or kexec
+  *
+@@ -84,4 +85,6 @@ extern int prom_remove_property(struct device_node *np, struct property *prop);
+ extern int prom_update_property(struct device_node *np,
+ 				struct property *newprop,
+ 				struct property *oldprop);
++#endif /* __ASSEMBLY__ */
++
+ #endif /* _LINUX_OF_FDT_H */
+-- 
+1.5.5.1
+
+
+
+--------------010302030702030902050009--
