@@ -1,56 +1,56 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 05/12] of: add common header for flattened device tree
-	representation
-Date: Wed, 7 Oct 2009 07:41:20 -0600
-Message-ID: <fa686aa40910070641g561ec833vf1cf1a0e098cdbe6@mail.gmail.com>
-References: <20091007041007.16890.62194.stgit@angua>
-	<20091007043052.16890.15975.stgit@angua>
-	<1254892467.6035.273.camel@pasglop>
+From: Sam Creasey <sammy-4OGMY2YDKIVeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
+Date: Wed, 7 Oct 2009 09:52:43 -0400
+Message-ID: <20091007135243.GC21646@anhedonia>
+References: <20091007041007.16890.62194.stgit@angua> <fa686aa40910062149p5d7141e4x3ff849fd4d191f38@mail.gmail.com> <646765f40910062218s19d540f9q14c9086bedd1d9da@mail.gmail.com>
+Reply-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1254892467.6035.273.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <646765f40910062218s19d540f9q14c9086bedd1d9da-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sam Creasey <sammy-4OGMY2YDKIVeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 6, 2009 at 11:14 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Tue, 2009-10-06 at 22:30 -0600, Grant Likely wrote:
->
->> --- /dev/null
->> +++ b/include/linux/of_fdt.h
->> @@ -0,0 +1,30 @@
->> +/*
->> + * Definitions for working with the Flattened Device Tree data format
->> + *
->> + * Copyright (C) 1996-2005 Paul Mackerras.
->> + *
->> + * Updates for PPC64 by Peter Bergner & David Engebretsen, IBM Corp.
->> + * Updates for SPARC by David S. Miller
->> + * Merged to common code by Grant Likely
->
-> I think you should prune the above. Make it (c) myself since I wrote the
-> FDT code initially. You can add back (c) of other people as you add more
-> stuff here I suppose.
->
-> No big deal tho.
+On Wed, Oct 07, 2009 at 03:18:04PM +1000, Julian Calaby wrote:
+> On Wed, Oct 7, 2009 at 14:49, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> =
+wrote:
+> > On Tue, Oct 6, 2009 at 10:29 PM, Grant Likely <grant.likely@secretlab=
+.ca> wrote:
+> >>
+> >> So here goes. =A0I've begun the work to merge and clean up the OF de=
+vice
+> >> tree handling code and this is my first set of patches. =A0Not fully
+> >> tested yet, but I'm getting them out to the lists so that I can star=
+t
+> >> responding to comments and collecting acks. =A0This first batch isn'=
+t
+> >> anything exciting, just a merge of common code
+>=20
+> Good work, for what it's worth, this all looks good to me.
+>=20
+> > However, I've completely devoted to this work for at least the next
+> > two months, so there are plenty more patches to follow. =A0Once I've
+> > got all the common code merged between Microblaze, PowerPC and Sparc
+> > I'll be fix the endian problems and making it easily usable by other
+> > architectures like ARM and MIPS. =A0Lots of work to be done.
+>=20
+> On the subject of merging code, I know that the SUN3 code in m68k uses
+> a similar prom interface to the sparc32 code. (and I've also
+> considered unifying that and ... well ... see above) Does anyone know
+> if it has an OpenFirmware interface for it's devices? Is OF on SUN3
+> even remotely useful? Does Linux on SUN3 even work with modern
+> kernels?
 
-No problem.  What is the exact copyright text that you'd like to see
-here?  I'm not going to guess on other people's copyright notice.  :-)
+Sun3 doesn't have OF, though I've got some dormant patches to add an
+OF emulation layer to make it easier to reuse Sparc drivers on
+Sun3...   Never finished enough to submit, so it probably shouldn't
+affect anything you're doing here.
 
-g.
+As for recent kernels, I think 2.6.19 was the last sun3 I distributed
+patches for, so modern might be pushing it...
 
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-- Sam
