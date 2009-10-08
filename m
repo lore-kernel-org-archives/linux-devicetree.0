@@ -1,101 +1,52 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Xilinx SYSACE driver and 8-bit attachment
-Date: Wed, 7 Oct 2009 16:48:20 -0700
-Message-ID: <893df3b8-adf9-4d96-a970-11d2412117e8@VA3EHSMHS026.ehs.local>
-References: <1d3f23370910070013u6307bc42hf7ab243b52d007df@mail.gmail.com>
-	<fa686aa40910070634r4a8dcf74qdcbfb3bde3413109@mail.gmail.com>
-	<1d3f23370910071644y5877cf9v879967340a463f19@mail.gmail.com>
+From: Chris Newport <crn@netunix.com>
+Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
+Date: Thu, 8 Oct 2009 02:29:25 +0100 (BST)
+Message-ID: <Pine.LNX.4.60.0910080155210.12519@mailgate.netunix.com>
+References: <20091007135243.GC21646@anhedonia> <4ACCEC67.9070106@firmworks.com>
+	<Pine.LNX.4.60.0910072148040.11795@mailgate.netunix.com>
+	<20091007.140938.255120957.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <1d3f23370910071644y5877cf9v879967340a463f19-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: John Linn <linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David DeBonis <ddeboni-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20091007.140938.255120957.davem@davemloft.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: David Miller <davem@davemloft.net>
+Cc: sammy@sammy.net, sfr@canb.auug.org.au, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, julian.calaby@gmail.com, wmb@firmworks.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 7 Oct 2009, David Miller wrote:
 
+>> Sun4c has also been broken for a long time and sun4d has never worked
+>> properly. Is it time to also prune these ?.
+>> That would leave only Sun4m in the 32bit kernel, which still works and
+>> has plenty of ongoing user interest.
+>
+> Chris don't over-exaggerate the state.
+>
+> The truth is that the whole sparc32 port is in a state of mild
+> disrepair, and many of the issues apply to all the port rather than
+> just one family of systems.  I think someone suitably motivated
+> could get most of the bugs sorted out.
+>
+> There is no reason to drop support for SS1 machines, we already fully
+> build the software device tree and use all of the generic OF
+> infrastructure in the Linux kernel on those systems.  It is not a road
+> block at all for the OF genericization work, if that's what you read
+> into wmb's email.
 
-> -----Original Message-----
-> From: John Williams [mailto:john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org]
-> Sent: Wednesday, October 07, 2009 4:45 PM
-> To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-> Cc: Linux Kernel list; Michal Simek; John Linn; David DeBonis; Stephen Ne=
-uendorffer; devicetree-
-> discuss
-> Subject: Re: Xilinx SYSACE driver and 8-bit attachment
-> =
+Your call, as you say there is little to be gained other than tidyness.
 
-> On Wed, Oct 7, 2009 at 11:34 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
- wrote:
-> > [Added devicetree-discuss to cc: list]
-> >
-> > On Wed, Oct 7, 2009 at 1:13 AM, John Williams
-> > <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org> wrote:
-> >> Hi Grant (it's your driver :) and David D ( and your DTS generator :)
-> > [...]
-> >> if (of_find_property(op->node, "8-bit", NULL))
-> > [...]
-> >> doesn't match the properties generated by Xilinx's device tree generat=
-or:
-> > [...]
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
-xlnx,mem-width =3D <0x8>;
-> >>
-> >> So, the question is, which should change?
-> >
-> > Well, obviously its a device tree generator bug, the driver code is
-> > perfect. =A0:-P
-> =
-
-> How did I know you'd say that? :)
-> =
-
-> > In all seriousness though, the '8-bit' property has been present for a
-> > while now and needs to be retained to not break existing users. =A0It
-> > would be okay for the driver to be modified to *also* check for the
-> > xlnx,mem-width property, but the better solution is to modify the
-> > device tree generator. =A0Plus, the '8-bit' property is the documented
-> > binding in Documentation/powerpc/dts-bindings/xilinx.txt
-> =
-
-> I tend to agree - but I also tend think that putting funky, arbitrary
-> output strings in the DTS generator is also a bad idea.
-> =
-
-> In this case, my vote is leaning towards adding a test for
-> "xlnx,mem-width =3D <..>" to the driver, in addition to the existing
-> "8-bit" tag to keep back compatability.
-> =
-
-> How would you feel about that?
-> =
-
-> In future, for new Xilinx drivers I think the default binding should
-> be inspired by what comes from the DTS generator automatically, with
-> out any special per-device hacks.  This has a natural tendency towards
-> minimum pain I think.
-
-I second this wholeheartedly.
-Note that by definition, what comes out of the generator 'accurately and ex=
-actly describes the hardware', to the extent that the hardware is represent=
-ed completely by its parameters.
-
-Steve
-
-
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+FWIW my opinions (and ICBW) are based on :-
+Sun4c machines have a max of 48 or 64Mb and very few are still working
+Sun4d has never had SMP support and this is apparantly problematic
+  due to Cray interlectual property causing a lack of bus documentation.
+  Running these heavy and power hungry lumps UP is a bit silly.
