@@ -1,14 +1,22 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] scripts/get_maintainer: add emails based on keywords in the
-	patch
-Date: Fri, 9 Oct 2009 09:46:58 -0600
-Message-ID: <fa686aa40910090846u38cc3463j4f5d934aa412763f@mail.gmail.com>
-References: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
+Subject: Re: [RFC] misc/at24: add experimental OF support for the generic
+	eeprom driver
+Date: Fri, 9 Oct 2009 10:09:21 -0600
+Message-ID: <fa686aa40910090909q5200cf8cm95e0ecfc23d464fd@mail.gmail.com>
+References: <1255010672-21656-1-git-send-email-w.sang@pengutronix.de>
+	<20091008143301.GA6084@oksana.dev.rtsoft.ru>
+	<fa686aa40910080753v6f597b0h4ce835db9f7a653@mail.gmail.com>
+	<20091008151007.GA21328@oksana.dev.rtsoft.ru>
+	<fa686aa40910080848r459c47baob73fc70a95a08604@mail.gmail.com>
+	<20091008202723.GA8116@pengutronix.de>
+	<20091009051409.GA2361@pengutronix.de>
+	<fa686aa40910082240w7fb2a194tcc80e7afe182e781@mail.gmail.com>
+	<1255096871.16018.49.camel@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
+In-Reply-To: <1255096871.16018.49.camel@localhost.localdomain>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -18,105 +26,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: Joe Perches <joe@perches.com>, linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org
+To: Nate Case <ncase@xes-inc.com>
+Cc: devicetree-discuss@ozlabs.org, linux-embedded@vger.kernel.org, linuxppc-dev@ozlabs.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 9, 2009 at 4:32 AM, Wolfram Sang <w.sang@pengutronix.de> wrote:
-> Make get_maintainer.pl scan the modifying lines of a patch for a list of
-> keywords and add an associated email if found. The first user is the
-> devicetree-discuss mailing list which should always be cc'ed if a device =
-tree
-> property is inserted/removed (keyword 'of_get_property'). This patch is t=
-he
-> result from commit 1965d30356c1c65660ba3330927671cfe81acdd5 entering main=
-line
-> which seems to have been missed by all parties interested in the device t=
-ree
-> (and at least had the documentation missing). As adding properties can ha=
-ppen
-> anywhere and so there is no fitting fileglob, this keyword based approach=
- is
-> proposed.
+On Fri, Oct 9, 2009 at 8:01 AM, Nate Case <ncase@xes-inc.com> wrote:
+> On Thu, 2009-10-08 at 23:40 -0600, Grant Likely wrote:
+>> For your future reference, patches that look at the device tree should
+>> also cc: devicetree-discuss@lists.ozlabs.org so that new bindings can
+>> be reviewed and common mistakes can be avoided. =A0It is expected that
+>> new device tree bindings are accompanied with documentation describing
+>> what the binding is for and how it should be used (see
+>> Documentation/powerpc/dts-bindings).
+>>
+>> I know this change is already in mainline, but can you please post the
+>> device tree fragment that you're using to describe this chip? =A0I want
+>> to make sure we don't get stuck with things in the kernel that will be
+>> hard to maintain in the long term.
+>
+> Hi Grant,
+>
+> Sorry for neglecting to include devicetree-discuss on that one. =A0I was
+> in fact aware of this list, and subscribe to it. =A0I really just forgot
+> in this case.
 
-Nice.  I cannot comment on the implementation, but I like the approach.
+No worries, it happens.
+
+> I also have a documentation patch for it that went along with it, but it
+> wasn't ready in time and so it's been sitting in our local patch queue.
+> I can submit that soon, =A0but it probably makes sense for Wolfram to
+> voice whatever his concerns were about "questionable" properties before
+> I document what's there.
+
+Yes, please post it as soon as you can.
+
+> Here's an example device tree node for this case:
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpio1: gpio@18 {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "nxp,pca955=
+7";
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x18>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#gpio-cells =3D <2>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0gpio-controller;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0polarity =3D <0x00>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>
+> In this case, the linux,gpio-base property wasn't specified. =A0But, the
+> use case is identical to the pdata->gpio_base field. =A0"polarity" is used
+> for specifying polarity inversion for each line, and is in the same
+> format of the 'polarity inversion' register on the chip. =A0My reasoning
+> in the property naming was as follows:
+>
+> =A0 =A0linux,gpio-base: Linux-specific as it relates to internal GPIO
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 numbering. =A0So, it's prefixed w=
+ith "linux,"
+
+This would be the 'questionable' property.  :-)  The device tree is
+supposed to be OS agnostic, so I get the heebee geebees when I see new
+'linux,<blah>' properties defined because it means Linux internal
+implementation details are getting leaked out into the data blob.  The
+problem leakage is that the device tree should not be impacted by
+internal Linux code changes.
+
+In this particular case, specifying the exact GPIO base number doesn't
+really belong in the device tree because Linux is able to assign and
+manage GPIO numbers on its own just like all other OF GPIO controller
+drivers currently do.  In fact, that goes for pretty much all
+enumeration, not just GPIO.  In general, a particular device instance
+(uart, gpio, phy, whatever) should be resolved from its node in the
+device tree, and not by some arbitrary number assigned by the .dts
+author.  The problem with arbitrary numbers is they don't expose the
+linkage between nodes in the same way a 'phandle' does (A phandle can
+be searched for.  An arbitrary number assignment, good luck?), and
+they don't expose intended usage (its just a meaningless number, and
+it only works because userspace just happens to 'agree' to use the
+same number).
+
+> =A0 =A0polarity: Dictated by how hardware is wired up, so it's needed
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0regardless of the OS.
+
+Typically GPIO drivers have been handling this by using #gpio-cells
+set to 2, and using the 2nd cell for flags.  The priority can be
+encoded as a flag.
 
 g.
-
-> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Anton Vorontsov <avorontsov@ru.mvista.com>
-> ---
-> =A0scripts/get_maintainer.pl | =A0 24 ++++++++++++++++--------
-> =A01 files changed, 16 insertions(+), 8 deletions(-)
->
-> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-> index cdb44b6..e1150ea 100755
-> --- a/scripts/get_maintainer.pl
-> +++ b/scripts/get_maintainer.pl
-> @@ -44,6 +44,11 @@ my $help =3D 0;
->
-> =A0my $exit =3D 0;
->
-> +my %keywords_to_mail =3D (
-> + =A0 =A0 =A0 'of_get_property' =3D> 'L: devicetree-discuss@lists.ozlabs.=
-org',
-> +);
-> +my $keywords_to_mail_match =3D join('|', keys %keywords_to_mail);
-> +
-> =A0my @penguin_chief =3D ();
-> =A0push(@penguin_chief,"Linus Torvalds:torvalds\@linux-foundation.org");
-> =A0#Andrew wants in on most everything - 2009/01/14
-> @@ -188,6 +193,12 @@ if ($email_remove_duplicates) {
->
-> =A0my @files =3D ();
-> =A0my @range =3D ();
-> +my @email_to =3D ();
-> +my @list_to =3D ();
-> +my @scm =3D ();
-> +my @web =3D ();
-> +my @subsystem =3D ();
-> +my @status =3D ();
->
-> =A0foreach my $file (@ARGV) {
-> =A0 =A0 ##if $file is a directory and it lacks a trailing slash, add one
-> @@ -213,7 +224,11 @@ foreach my $file (@ARGV) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if ($email_git_blame) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0push(@range, "$lastfile:$1:$2");
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> - =A0 =A0 =A0 =A0 =A0 }
-> + =A0 =A0 =A0 =A0 =A0 # Check the lines which a patch modifies for keywor=
-ds; add mail if found.
-> + =A0 =A0 =A0 =A0 =A0 } elsif (m/^[+-].*($keywords_to_mail_match)/o) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 (my $keyword_mail =3D $keywords_to_mail{$1}=
-) =3D~ s/^([LM]): //;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 push( @{ ($1 eq 'L') ? \@list_to : \@email_=
-to }, $keyword_mail );
-> + =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0close(PATCH);
-> =A0 =A0 =A0 =A0if ($file_cnt =3D=3D @files) {
-> @@ -224,13 +239,6 @@ foreach my $file (@ARGV) {
-> =A0 =A0 }
-> =A0}
->
-> -my @email_to =3D ();
-> -my @list_to =3D ();
-> -my @scm =3D ();
-> -my @web =3D ();
-> -my @subsystem =3D ();
-> -my @status =3D ();
-> -
-> =A0# Find responsible parties
->
-> =A0foreach my $file (@files) {
-> --
-> 1.6.3.3
->
->
-
-
 
 -- =
 
