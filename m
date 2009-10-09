@@ -1,69 +1,94 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Wolfram Sang <w.sang@pengutronix.de>
 Subject: Re: [RFC] misc/at24: add experimental OF support for the generic
 	eeprom driver
-Date: Thu, 8 Oct 2009 16:59:04 -0600
-Message-ID: <fa686aa40910081559v305185b6i6103f83437529f7e@mail.gmail.com>
+Date: Fri, 9 Oct 2009 07:14:09 +0200
+Message-ID: <20091009051409.GA2361@pengutronix.de>
 References: <1255010672-21656-1-git-send-email-w.sang@pengutronix.de>
-	<fa686aa40910080737l5b21654cw9c8f7426f9faf7c3@mail.gmail.com>
-	<20091008204808.GB8116@pengutronix.de>
+	<20091008143301.GA6084@oksana.dev.rtsoft.ru>
+	<fa686aa40910080753v6f597b0h4ce835db9f7a653@mail.gmail.com>
+	<20091008151007.GA21328@oksana.dev.rtsoft.ru>
+	<fa686aa40910080848r459c47baob73fc70a95a08604@mail.gmail.com>
+	<20091008202723.GA8116@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091008204808.GB8116-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============4963436087820861936=="
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20091008202723.GA8116@pengutronix.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-i2c@vger.kernel.org, linux-embedded@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2009 at 2:48 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->
->> I think in general, this is the right direction; but I'm not convinced
->> that the right pattern or form has been found yet. =A0What I don't like
->> on this particular patch is that it still hooks of-specific stuff into
->> an arbitrary point in the probe routine.
->>
->> I'd like to see some pattern for retrieving or populating a
->> platform_data structure when one isn't already provided, and
->> regardless of the data source.
->
-> I thought about this, too. I just wondered how many drivers would actuall=
-y need
-> a 'pdata'-preparation routine before probe, and if this would not cause t=
-oo
-> much overhead for those who don't. But as you say OF might not the only c=
-ase
-> where this is needed, then it might be a reasonable choice to have an ext=
-ra
-> call fot setting up pdata. Then again, if we have preparation routines for
-> OF,UEFI,... for each and every driver, uh, the bloat :(
 
-It shouldn't be too bad.... I'm toying with the idea of a callable
-library function which is passed in a data table of the available
-translators.  Can be very simple, and the library function would take
-care of pdata allocation and management.  Then the translators can be
-kept down to the bare minimum of populating the structure.  If it is
-done right, then only the needed translators get compiled in and it
-won't add any significant size at all to the drivers.
-
->> will take a bit of experimentation to come up with the best form for
->> the pdata fetching function, but it will be better contained if it is
->> all at a single place.
->
-> I might have a try :)
-
-:-)
+--===============4963436087820861936==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
 
 
--- =
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> Will check this tomorrow.
+
+And while doing this and figuring the pro/cons of those methods, I stumbled=
+ over this commit:
+
+	gpio: pca953x: Get platform_data from OpenFirmware
+	(1965d30356c1c65660ba3330927671cfe81acdd5)
+
+It looks to me that it missed all people involved in OF/DT-development and =
+now we
+have undocumented and IMO questionable properties in the kernel.
+
+Conclusions I draw:
+
+a) we better solve the pdata-problem rather sooner than later ;)
+b) we need to spread the word about devicetree-discuss
+c) more documentation may help, too
+
+I know, 'send patches'...
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAkrOxqEACgkQD27XaX1/VRtfIgCgxkVLjSvyhESdWX4zl30z7TVU
+o+cAoIVf/pKmZnENA/PTqnZrKRSN+BqH
+=6cNt
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
+
+--===============4963436087820861936==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============4963436087820861936==--
