@@ -1,20 +1,14 @@
-From: Nate Case <ncase@xes-inc.com>
-Subject: Re: [RFC] misc/at24: add experimental OF support for the generic
-	eeprom driver
-Date: Fri, 09 Oct 2009 08:43:13 -0500
-Message-ID: <1255095793.16018.32.camel@localhost.localdomain>
-References: <1255010672-21656-1-git-send-email-w.sang@pengutronix.de>
-	<20091008143301.GA6084@oksana.dev.rtsoft.ru>
-	<fa686aa40910080753v6f597b0h4ce835db9f7a653@mail.gmail.com>
-	<20091008151007.GA21328@oksana.dev.rtsoft.ru>
-	<fa686aa40910080848r459c47baob73fc70a95a08604@mail.gmail.com>
-	<20091008202723.GA8116@pengutronix.de>
-	<20091009051409.GA2361@pengutronix.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC] scripts/get_maintainer: add emails based on keywords in the
+	patch
+Date: Fri, 9 Oct 2009 09:46:58 -0600
+Message-ID: <fa686aa40910090846u38cc3463j4f5d934aa412763f@mail.gmail.com>
+References: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20091009051409.GA2361@pengutronix.de>
+In-Reply-To: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -25,23 +19,106 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: devicetree-discuss@ozlabs.org, linux-embedded@vger.kernel.org, linuxppc-dev@ozlabs.org, linux-i2c@vger.kernel.org
+Cc: Joe Perches <joe@perches.com>, linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2009-10-09 at 07:14 +0200, Wolfram Sang wrote:
-> And while doing this and figuring the pro/cons of those methods, I
-> stumbled over this commit:
-> 
->         gpio: pca953x: Get platform_data from OpenFirmware
->         (1965d30356c1c65660ba3330927671cfe81acdd5)
+On Fri, Oct 9, 2009 at 4:32 AM, Wolfram Sang <w.sang@pengutronix.de> wrote:
+> Make get_maintainer.pl scan the modifying lines of a patch for a list of
+> keywords and add an associated email if found. The first user is the
+> devicetree-discuss mailing list which should always be cc'ed if a device =
+tree
+> property is inserted/removed (keyword 'of_get_property'). This patch is t=
+he
+> result from commit 1965d30356c1c65660ba3330927671cfe81acdd5 entering main=
+line
+> which seems to have been missed by all parties interested in the device t=
+ree
+> (and at least had the documentation missing). As adding properties can ha=
+ppen
+> anywhere and so there is no fitting fileglob, this keyword based approach=
+ is
+> proposed.
 
-Aside from any issues you have with the properties themselves, what's
-your take on this approach?
+Nice.  I cannot comment on the implementation, but I like the approach.
 
-Personally, I just got tired of waiting for someone else to solve the
-pdata/OF problem.  So I submitted that commit as an attempt at something
-very simple and unobtrusive to the device driver itself.  It seems
-pretty clean to me, but I'm curious to see if others have any better
-ideas.
+g.
 
-- Nate
+> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Anton Vorontsov <avorontsov@ru.mvista.com>
+> ---
+> =A0scripts/get_maintainer.pl | =A0 24 ++++++++++++++++--------
+> =A01 files changed, 16 insertions(+), 8 deletions(-)
+>
+> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> index cdb44b6..e1150ea 100755
+> --- a/scripts/get_maintainer.pl
+> +++ b/scripts/get_maintainer.pl
+> @@ -44,6 +44,11 @@ my $help =3D 0;
+>
+> =A0my $exit =3D 0;
+>
+> +my %keywords_to_mail =3D (
+> + =A0 =A0 =A0 'of_get_property' =3D> 'L: devicetree-discuss@lists.ozlabs.=
+org',
+> +);
+> +my $keywords_to_mail_match =3D join('|', keys %keywords_to_mail);
+> +
+> =A0my @penguin_chief =3D ();
+> =A0push(@penguin_chief,"Linus Torvalds:torvalds\@linux-foundation.org");
+> =A0#Andrew wants in on most everything - 2009/01/14
+> @@ -188,6 +193,12 @@ if ($email_remove_duplicates) {
+>
+> =A0my @files =3D ();
+> =A0my @range =3D ();
+> +my @email_to =3D ();
+> +my @list_to =3D ();
+> +my @scm =3D ();
+> +my @web =3D ();
+> +my @subsystem =3D ();
+> +my @status =3D ();
+>
+> =A0foreach my $file (@ARGV) {
+> =A0 =A0 ##if $file is a directory and it lacks a trailing slash, add one
+> @@ -213,7 +224,11 @@ foreach my $file (@ARGV) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if ($email_git_blame) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0push(@range, "$lastfile:$1:$2");
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> - =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 =A0 =A0 # Check the lines which a patch modifies for keywor=
+ds; add mail if found.
+> + =A0 =A0 =A0 =A0 =A0 } elsif (m/^[+-].*($keywords_to_mail_match)/o) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 (my $keyword_mail =3D $keywords_to_mail{$1}=
+) =3D~ s/^([LM]): //;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 push( @{ ($1 eq 'L') ? \@list_to : \@email_=
+to }, $keyword_mail );
+> + =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0close(PATCH);
+> =A0 =A0 =A0 =A0if ($file_cnt =3D=3D @files) {
+> @@ -224,13 +239,6 @@ foreach my $file (@ARGV) {
+> =A0 =A0 }
+> =A0}
+>
+> -my @email_to =3D ();
+> -my @list_to =3D ();
+> -my @scm =3D ();
+> -my @web =3D ();
+> -my @subsystem =3D ();
+> -my @status =3D ();
+> -
+> =A0# Find responsible parties
+>
+> =A0foreach my $file (@files) {
+> --
+> 1.6.3.3
+>
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
