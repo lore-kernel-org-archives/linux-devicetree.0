@@ -1,32 +1,78 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [RFC] scripts/get_maintainer: add emails based on keywords in
- the patch
-Date: Fri, 09 Oct 2009 04:23:26 -0700
-Message-ID: <1255087406.16347.108.camel@Joe-Laptop.home>
-References: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
+From: Nate Case <ncase@xes-inc.com>
+Subject: Re: [RFC] misc/at24: add experimental OF support for the generic
+	eeprom driver
+Date: Fri, 09 Oct 2009 09:01:11 -0500
+Message-ID: <1255096871.16018.49.camel@localhost.localdomain>
+References: <1255010672-21656-1-git-send-email-w.sang@pengutronix.de>
+	<20091008143301.GA6084@oksana.dev.rtsoft.ru>
+	<fa686aa40910080753v6f597b0h4ce835db9f7a653@mail.gmail.com>
+	<20091008151007.GA21328@oksana.dev.rtsoft.ru>
+	<fa686aa40910080848r459c47baob73fc70a95a08604@mail.gmail.com>
+	<20091008202723.GA8116@pengutronix.de>
+	<20091009051409.GA2361@pengutronix.de>
+	<fa686aa40910082240w7fb2a194tcc80e7afe182e781@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1760466AbZJILYG@vger.kernel.org>
-In-Reply-To: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Anton Vorontsov <avorontsov@ru.mvista.com>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <fa686aa40910082240w7fb2a194tcc80e7afe182e781@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@ozlabs.org, linux-embedded@vger.kernel.org, linuxppc-dev@ozlabs.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2009-10-09 at 12:32 +0200, Wolfram Sang wrote:
+On Thu, 2009-10-08 at 23:40 -0600, Grant Likely wrote:
+> For your future reference, patches that look at the device tree should
+> also cc: devicetree-discuss@lists.ozlabs.org so that new bindings can
+> be reviewed and common mistakes can be avoided.  It is expected that
+> new device tree bindings are accompanied with documentation describing
+> what the binding is for and how it should be used (see
+> Documentation/powerpc/dts-bindings).
+> 
+> I know this change is already in mainline, but can you please post the
+> device tree fragment that you're using to describe this chip?  I want
+> to make sure we don't get stuck with things in the kernel that will be
+> hard to maintain in the long term.
 
-> +my %keywords_to_mail = (
-> +	'of_get_property' => 'L: devicetree-discuss@lists.ozlabs.org',
+Hi Grant,
 
-maybe: '\bof_get_property\b'
+Sorry for neglecting to include devicetree-discuss on that one.  I was
+in fact aware of this list, and subscribe to it.  I really just forgot
+in this case.
 
-> +	    # Check the lines which a patch modifies for keywords; add mail if found.
-> +	    } elsif (m/^[+-].*($keywords_to_mail_match)/o) {
-> +		(my $keyword_mail = $keywords_to_mail{$1}) =~ s/^([LM]): //;
-> +		push( @{ ($1 eq 'L') ? \@list_to : \@email_to }, $keyword_mail );
-> +	   }
+I also have a documentation patch for it that went along with it, but it
+wasn't ready in time and so it's been sitting in our local patch queue.
+I can submit that soon,  but it probably makes sense for Wolfram to
+voice whatever his concerns were about "questionable" properties before
+I document what's there.
 
-If this facility is desired by many others, it might be
-better to have a separate file of 'regex generates email'
-read at initialization.
+Here's an example device tree node for this case:
+
+               gpio1: gpio@18 {
+                        compatible = "nxp,pca9557";
+                        reg = <0x18>;
+                        #gpio-cells = <2>;
+                        gpio-controller;
+                        polarity = <0x00>;
+               };
+
+In this case, the linux,gpio-base property wasn't specified.  But, the
+use case is identical to the pdata->gpio_base field.  "polarity" is used
+for specifying polarity inversion for each line, and is in the same
+format of the 'polarity inversion' register on the chip.  My reasoning
+in the property naming was as follows:
+
+    linux,gpio-base: Linux-specific as it relates to internal GPIO
+                     numbering.  So, it's prefixed with "linux,"
+    polarity: Dictated by how hardware is wired up, so it's needed
+              regardless of the OS.
+
+- Nate
