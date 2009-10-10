@@ -1,207 +1,47 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [RFC] scripts/get_maintainer: add emails based on keywords in
-	the patch
-Date: Fri, 09 Oct 2009 12:01:45 -0700
-Message-ID: <1255114905.16347.137.camel@Joe-Laptop.home>
-References: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
-	<1255087406.16347.108.camel@Joe-Laptop.home>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] Add Open Firmware / Flattened Device Tree entry to maintainers
+Date: Sat, 10 Oct 2009 00:33:43 -0600
+Message-ID: <20091010063334.6432.57743.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1255087406.16347.108.camel@Joe-Laptop.home>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2009-10-09 at 04:23 -0700, Joe Perches wrote:
-> If this facility is desired by many others, it might be
-> better to have a separate file of 'regex generates email'
-> read at initialization.
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
 
-Perhaps it's better to use the existing MAINTAINERS file
-and extend it with a new "K:" for keyword entry.
-
-This patch is a bit longer than necessary because the
-MAINTAINERS initial descriptions are moved around a bit.
-
-Perhaps something like this:
-
- MAINTAINERS               |   71 +++++++++++++++++++++++++-------------------
- scripts/get_maintainer.pl |   24 +++++++++++----
- 2 files changed, 57 insertions(+), 38 deletions(-)
+ MAINTAINERS |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e1da925..9e1263f 100644
+index 09a2028..7c801b0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -65,43 +65,47 @@ trivial patch so apply some common sense.
- 
- 8.	Happy hacking.
- 
--		-----------------------------------
--
--Maintainers List (try to look for most precise areas first)
-+Descriptions of section entries:
-+
-+	P: Person (obsolete)
-+	M: Mail patches to: FullName <address@domain>
-+	L: Mailing list that is relevant to this area
-+	W: Web-page with status/info
-+	T: SCM tree type and location.  Type is one of: git, hg, quilt, stgit.
-+	S: Status, one of the following:
-+	   Supported:	Someone is actually paid to look after this.
-+	   Maintained:	Someone actually looks after it.
-+	   Odd Fixes:	It has a maintainer but they don't have time to do
-+			much other than throw the odd patch in. See below..
-+	   Orphan:	No current maintainer [but maybe you could take the
-+			role as you write your new code].
-+	   Obsolete:	Old code. Something tagged obsolete generally means
-+			it has been replaced by a better system and you
-+			should be using that.
-+	F: Files and directories with wildcard patterns.
-+	   A trailing slash includes all files and subdirectory files.
-+	   F:	drivers/net/	all files in and below drivers/net
-+	   F:	drivers/net/*	all files in drivers/net, but not below
-+	   F:	*/net/*		all files in "any top level directory"/net
-+	   One pattern per line.  Multiple F: lines acceptable.
-+	X: Files and directories that are NOT maintained, same rules as F:
-+	   Files exclusions are tested before file matches.
-+	   Can be useful for excluding a specific subdirectory, for instance:
-+	   F:	net/
-+	   X:	net/ipv6/
-+	   matches all files in and below net excluding net/ipv6/
-+	K: Keyword perl regex pattern to match content in patch
-+	   All patterns are surrounded by "\b"
-+	   for instance: K: of_get_profile
-+	   will match patches that contain the word "of_get_profile"
- 
- Note: For the hard of thinking, this list is meant to remain in alphabetical
- order. If you could add yourselves to it in alphabetical order that would be
- so much easier [Ed]
- 
--P: Person (obsolete)
--M: Mail patches to: FullName <address@domain>
--L: Mailing list that is relevant to this area
--W: Web-page with status/info
--T: SCM tree type and location.  Type is one of: git, hg, quilt, stgit.
--S: Status, one of the following:
--
--	Supported:	Someone is actually paid to look after this.
--	Maintained:	Someone actually looks after it.
--	Odd Fixes:	It has a maintainer but they don't have time to do
--			much other than throw the odd patch in. See below..
--	Orphan:		No current maintainer [but maybe you could take the
--			role as you write your new code].
--	Obsolete:	Old code. Something tagged obsolete generally means
--			it has been replaced by a better system and you
--			should be using that.
-+Maintainers List (try to look for most precise areas first)
- 
--F: Files and directories with wildcard patterns.
--   A trailing slash includes all files and subdirectory files.
--	F:	drivers/net/	all files in and below drivers/net
--	F:	drivers/net/*	all files in drivers/net, but not below
--	F:	*/net/*		all files in "any top level directory"/net
--   One pattern per line.  Multiple F: lines acceptable.
--X: Files and directories that are NOT maintained, same rules as F:
--   Files exclusions are tested before file matches.
--   Can be useful for excluding a specific subdirectory, for instance:
--	F:	net/
--	X:	net/ipv6/
--   matches all files in and below net excluding net/ipv6/
-+		-----------------------------------
- 
- 3C505 NETWORK DRIVER
- M:	Philip Blundell <philb@gnu.org>
-@@ -3876,6 +3880,11 @@ S:	Maintained
+@@ -3869,6 +3869,15 @@ S:	Maintained
  F:	Documentation/i2c/busses/i2c-ocores
  F:	drivers/i2c/busses/i2c-ocores.c
  
-+OPEN FIRMWARE DEVICE TREE
-+L:	devicetree-discuss@lists.ozlabs.org
-+S:	Odd Fixes
++OPEN FIRMWARE AND FLATTENED DEVICE TREE
++M:	Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
++L:	devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
++W:	http://fdt.secretlab.ca
++S:	Maintained
++F:	drivers/of
++F:	include/linux/of*.h
 +K:	of_get_property
 +
  OPROFILE
- M:	Robert Richter <robert.richter@amd.com>
- L:	oprofile-list@lists.sf.net
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index cdb44b6..657711c 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -132,6 +132,8 @@ if (!top_of_kernel_tree($lk_path)) {
- ## Read MAINTAINERS for type/value pairs
- 
- my @typevalue = ();
-+my %keyword_hash;
-+
- open(MAINT, "<${lk_path}MAINTAINERS") || die "$P: Can't open MAINTAINERS\n";
- while (<MAINT>) {
-     my $line = $_;
-@@ -149,6 +151,8 @@ while (<MAINT>) {
- 	    if ((-d $value)) {
- 		$value =~ s@([^/])$@$1/@;
- 	    }
-+	} elsif ($type eq "K") {
-+	    $keyword_hash{@typevalue} = $value;
- 	}
- 	push(@typevalue, "$type:$value");
-     } elsif (!/^(\s)*$/) {
-@@ -188,6 +192,12 @@ if ($email_remove_duplicates) {
- 
- my @files = ();
- my @range = ();
-+my @email_to = ();
-+my @list_to = ();
-+my @scm = ();
-+my @web = ();
-+my @subsystem = ();
-+my @status = ();
- 
- foreach my $file (@ARGV) {
-     ##if $file is a directory and it lacks a trailing slash, add one
-@@ -203,6 +213,7 @@ foreach my $file (@ARGV) {
- 	my $lastfile;
- 	open(PATCH, "<$file") or die "$P: Can't open ${file}\n";
- 	while (<PATCH>) {
-+	    my $patch_line = $_;
- 	    if (m/^\+\+\+\s+(\S+)/) {
- 		my $filename = $1;
- 		$filename =~ s@^[^/]*/@@;
-@@ -213,6 +224,12 @@ foreach my $file (@ARGV) {
- 		if ($email_git_blame) {
- 		    push(@range, "$lastfile:$1:$2");
- 		}
-+	    } else {
-+		foreach my $line (keys %keyword_hash) {
-+		    if ($patch_line =~ m/^[+-].*\b$keyword_hash{$line}\b/o) {
-+			add_categories($line);
-+		    }
-+		}
- 	    }
- 	}
- 	close(PATCH);
-@@ -224,13 +241,6 @@ foreach my $file (@ARGV) {
-     }
- }
- 
--my @email_to = ();
--my @list_to = ();
--my @scm = ();
--my @web = ();
--my @subsystem = ();
--my @status = ();
--
- # Find responsible parties
- 
- foreach my $file (@files) {
+ M:	Robert Richter <robert.richter-5C7GfCeVMHo@public.gmane.org>
+ L:	oprofile-list-TtF/mJH4Jtrk1uMJSBkQmQ@public.gmane.org
