@@ -1,47 +1,97 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH] Add Open Firmware / Flattened Device Tree entry to maintainers
-Date: Sat, 10 Oct 2009 00:33:43 -0600
-Message-ID: <20091010063334.6432.57743.stgit@angua>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [RFC] scripts/get_maintainer: add emails based on keywords in
+	the patch
+Date: Sat, 10 Oct 2009 11:03:02 +0200
+Message-ID: <20091010090302.GA11576@pengutronix.de>
+References: <1255084379-12954-1-git-send-email-w.sang@pengutronix.de>
+	<1255087406.16347.108.camel@Joe-Laptop.home>
+	<1255114905.16347.137.camel@Joe-Laptop.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4995955202718623916=="
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1255114905.16347.137.camel@Joe-Laptop.home>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Joe Perches <joe@perches.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
 
- MAINTAINERS |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+--===============4995955202718623916==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
+Content-Disposition: inline
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09a2028..7c801b0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3869,6 +3869,15 @@ S:	Maintained
- F:	Documentation/i2c/busses/i2c-ocores
- F:	drivers/i2c/busses/i2c-ocores.c
- 
-+OPEN FIRMWARE AND FLATTENED DEVICE TREE
-+M:	Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-+L:	devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-+W:	http://fdt.secretlab.ca
-+S:	Maintained
-+F:	drivers/of
-+F:	include/linux/of*.h
-+K:	of_get_property
-+
- OPROFILE
- M:	Robert Richter <robert.richter-5C7GfCeVMHo@public.gmane.org>
- L:	oprofile-list-TtF/mJH4Jtrk1uMJSBkQmQ@public.gmane.org
+
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> Perhaps it's better to use the existing MAINTAINERS file
+> and extend it with a new "K:" for keyword entry.
+
+Yeah, makes sense to have everything in one file.
+
+> +	K: Keyword perl regex pattern to match content in patch
+> +	   All patterns are surrounded by "\b"
+> +	   for instance: K: of_get_profile
+> +	   will match patches that contain the word "of_get_profile"
+
+=2E..in the lines which are changed?
+
+> +OPEN FIRMWARE DEVICE TREE
+> +L:	devicetree-discuss@lists.ozlabs.org
+> +S:	Odd Fixes
+
+Maintained, I'd say. Especially as Grant Likely recently said he wants to t=
+ake care about OF.
+
+> +K:	of_get_property
+
+F: drivers/of/
+
+Will check the script later this weekend.
+
+Thanks,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAkrQTcYACgkQD27XaX1/VRucqQCfZdjsp0AVO2Y30Kcc4U0WFp2N
+lXIAoIwf4CTFMevnXhrpIHOgfc685loC
+=4dNO
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
+
+--===============4995955202718623916==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============4995955202718623916==--
