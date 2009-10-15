@@ -1,15 +1,14 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH 2/2] of: move struct property to asm/of.h
-Date: Thu, 15 Oct 2009 12:02:49 +1100
-Message-ID: <20091015120249.cf84d941.sfr@canb.auug.org.au>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 00/12] Merge common OpenFirmware device tree code
+Date: Thu, 15 Oct 2009 11:06:15 -0600
+Message-ID: <fa686aa40910151006k43b07c30q1e43c3b1ae4af561@mail.gmail.com>
 References: <20091007041007.16890.62194.stgit@angua>
 	<20091015120007.3780c59b.sfr@canb.auug.org.au>
-	<20091015120144.73ef384c.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20091015120144.73ef384c.sfr@canb.auug.org.au>
+In-Reply-To: <20091015120007.3780c59b.sfr@canb.auug.org.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -19,322 +18,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
 Cc: monstr@monstr.eu, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Also find all users of struct property and make sure that they include
-linux/of.h.
+On Wed, Oct 14, 2009 at 7:00 PM, Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+> Hi Grant,
+>
+> On Tue, 06 Oct 2009 22:29:57 -0600 Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+>>
+>> Well, I've got to start somewhere...
+>>
+>> So here goes. =A0I've begun the work to merge and clean up the OF device
+>> tree handling code and this is my first set of patches. =A0Not fully
+>> tested yet, but I'm getting them out to the lists so that I can start
+>> responding to comments and collecting acks. =A0This first batch isn't
+>> anything exciting, just a merge of common code
+>
+> This all looks OK to me. =A0One thing: =A0I started in this as well some =
+time
+> ago and in my attempt I was hoping to avoid the ARCH ifdefs in linux/of.h
+> by creating asm/of.h and moving the differing bits in there ...
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/powerpc/include/asm/of.h                |    7 +++++++
- arch/powerpc/include/asm/prom.h              |    7 +------
- arch/powerpc/kernel/machine_kexec_64.c       |    1 +
- arch/powerpc/kernel/prom.c                   |    1 +
- arch/powerpc/kernel/prom_parse.c             |    2 ++
- arch/powerpc/platforms/maple/pci.c           |    1 +
- arch/powerpc/platforms/powermac/pci.c        |    1 +
- arch/powerpc/platforms/powermac/pfunc_core.c |    1 +
- arch/powerpc/platforms/pseries/reconfig.c    |    1 +
- arch/powerpc/sysdev/qe_lib/qe.c              |    2 ++
- arch/sparc/include/asm/of.h                  |    9 +++++++++
- arch/sparc/include/asm/prom.h                |    9 +--------
- arch/sparc/kernel/pci_psycho.c               |    1 +
- arch/sparc/kernel/pci_schizo.c               |    1 +
- arch/sparc/kernel/pci_sun4v.c                |    1 +
- arch/sparc/kernel/prom_32.c                  |    1 +
- arch/sparc/kernel/prom_64.c                  |    1 +
- drivers/macintosh/smu.c                      |    1 +
- drivers/sbus/char/openprom.c                 |    2 ++
- fs/openpromfs/inode.c                        |    1 +
- fs/proc/proc_devtree.c                       |    2 ++
- 21 files changed, 39 insertions(+), 14 deletions(-)
+Thanks Stephen.
 
-diff --git a/arch/powerpc/include/asm/of.h b/arch/powerpc/include/asm/of.h
-index 1c1089a..383f48d 100644
---- a/arch/powerpc/include/asm/of.h
-+++ b/arch/powerpc/include/asm/of.h
-@@ -20,4 +20,11 @@
- #define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
- #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
- 
-+struct property {
-+	char		*name;
-+	int		length;
-+	void		*value;
-+	struct property *next;
-+};
-+
- #endif /* _POWERPC_OF_H */
-diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-index 07aef9f..97b24c9 100644
---- a/arch/powerpc/include/asm/prom.h
-+++ b/arch/powerpc/include/asm/prom.h
-@@ -68,12 +68,7 @@ struct boot_param_header
- typedef u32 phandle;
- typedef u32 ihandle;
- 
--struct property {
--	char	*name;
--	int	length;
--	void	*value;
--	struct property *next;
--};
-+struct property;
- 
- struct device_node {
- 	const char *name;
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 040bd1d..8ff5e00 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -15,6 +15,7 @@
- #include <linux/thread_info.h>
- #include <linux/init_task.h>
- #include <linux/errno.h>
-+#include <linux/of.h>
- 
- #include <asm/page.h>
- #include <asm/current.h>
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index d4405b9..c7c2655 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -32,6 +32,7 @@
- #include <linux/debugfs.h>
- #include <linux/irq.h>
- #include <linux/lmb.h>
-+#include <linux/of.h>
- 
- #include <asm/prom.h>
- #include <asm/rtas.h>
-diff --git a/arch/powerpc/kernel/prom_parse.c b/arch/powerpc/kernel/prom_parse.c
-index 8362620..07698d4 100644
---- a/arch/powerpc/kernel/prom_parse.c
-+++ b/arch/powerpc/kernel/prom_parse.c
-@@ -6,6 +6,8 @@
- #include <linux/module.h>
- #include <linux/ioport.h>
- #include <linux/etherdevice.h>
-+#include <linux/of.h>
-+
- #include <asm/prom.h>
- #include <asm/pci-bridge.h>
- 
-diff --git a/arch/powerpc/platforms/maple/pci.c b/arch/powerpc/platforms/maple/pci.c
-index 04296ff..599c192 100644
---- a/arch/powerpc/platforms/maple/pci.c
-+++ b/arch/powerpc/platforms/maple/pci.c
-@@ -17,6 +17,7 @@
- #include <linux/init.h>
- #include <linux/bootmem.h>
- #include <linux/irq.h>
-+#include <linux/of.h>
- 
- #include <asm/sections.h>
- #include <asm/io.h>
-diff --git a/arch/powerpc/platforms/powermac/pci.c b/arch/powerpc/platforms/powermac/pci.c
-index e81403b..ac0ab8d 100644
---- a/arch/powerpc/platforms/powermac/pci.c
-+++ b/arch/powerpc/platforms/powermac/pci.c
-@@ -17,6 +17,7 @@
- #include <linux/init.h>
- #include <linux/bootmem.h>
- #include <linux/irq.h>
-+#include <linux/of.h>
- 
- #include <asm/sections.h>
- #include <asm/io.h>
-diff --git a/arch/powerpc/platforms/powermac/pfunc_core.c b/arch/powerpc/platforms/powermac/pfunc_core.c
-index 96d5ce5..2eb9cde 100644
---- a/arch/powerpc/platforms/powermac/pfunc_core.c
-+++ b/arch/powerpc/platforms/powermac/pfunc_core.c
-@@ -11,6 +11,7 @@
- #include <linux/spinlock.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- 
- #include <asm/prom.h>
- #include <asm/pmac_pfunc.h>
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index 2e2bbe1..5d089d7 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -15,6 +15,7 @@
- #include <linux/kref.h>
- #include <linux/notifier.h>
- #include <linux/proc_fs.h>
-+#include <linux/of.h>
- 
- #include <asm/prom.h>
- #include <asm/machdep.h>
-diff --git a/arch/powerpc/sysdev/qe_lib/qe.c b/arch/powerpc/sysdev/qe_lib/qe.c
-index 464271b..8e690ca 100644
---- a/arch/powerpc/sysdev/qe_lib/qe.c
-+++ b/arch/powerpc/sysdev/qe_lib/qe.c
-@@ -27,6 +27,8 @@
- #include <linux/delay.h>
- #include <linux/ioport.h>
- #include <linux/crc32.h>
-+#include <linux/of.h>
-+
- #include <asm/irq.h>
- #include <asm/page.h>
- #include <asm/pgtable.h>
-diff --git a/arch/sparc/include/asm/of.h b/arch/sparc/include/asm/of.h
-index 57ab8f9..7aeb0c2 100644
---- a/arch/sparc/include/asm/of.h
-+++ b/arch/sparc/include/asm/of.h
-@@ -21,4 +21,13 @@
- #define of_prop_cmp(s1, s2)		strcasecmp((s1), (s2))
- #define of_node_cmp(s1, s2)		strcmp((s1), (s2))
- 
-+struct property {
-+	char		*name;
-+	int		length;
-+	void		*value;
-+	struct property *next;
-+	unsigned long	 _flags;
-+	unsigned int	 unique_id;
-+};
-+
- #endif /* _SPARC_OF_H */
-diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
-index 4b6ec43..03266c2 100644
---- a/arch/sparc/include/asm/prom.h
-+++ b/arch/sparc/include/asm/prom.h
-@@ -24,14 +24,7 @@
- typedef u32 phandle;
- typedef u32 ihandle;
- 
--struct property {
--	char	*name;
--	int	length;
--	void	*value;
--	struct property *next;
--	unsigned long _flags;
--	unsigned int unique_id;
--};
-+struct property;
- 
- struct of_irq_controller;
- struct device_node {
-diff --git a/arch/sparc/kernel/pci_psycho.c b/arch/sparc/kernel/pci_psycho.c
-index 142b9d6..d9c8cde 100644
---- a/arch/sparc/kernel/pci_psycho.c
-+++ b/arch/sparc/kernel/pci_psycho.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
-+#include <linux/of.h>
- #include <linux/of_device.h>
- 
- #include <asm/iommu.h>
-diff --git a/arch/sparc/kernel/pci_schizo.c b/arch/sparc/kernel/pci_schizo.c
-index 2b5cdde..c923817 100644
---- a/arch/sparc/kernel/pci_schizo.c
-+++ b/arch/sparc/kernel/pci_schizo.c
-@@ -9,6 +9,7 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
-+#include <linux/of.h>
- #include <linux/of_device.h>
- 
- #include <asm/iommu.h>
-diff --git a/arch/sparc/kernel/pci_sun4v.c b/arch/sparc/kernel/pci_sun4v.c
-index 23c33ff..322dfe0 100644
---- a/arch/sparc/kernel/pci_sun4v.c
-+++ b/arch/sparc/kernel/pci_sun4v.c
-@@ -13,6 +13,7 @@
- #include <linux/irq.h>
- #include <linux/msi.h>
- #include <linux/log2.h>
-+#include <linux/of.h>
- #include <linux/of_device.h>
- 
- #include <asm/iommu.h>
-diff --git a/arch/sparc/kernel/prom_32.c b/arch/sparc/kernel/prom_32.c
-index 0a37e8c..61eafe0 100644
---- a/arch/sparc/kernel/prom_32.c
-+++ b/arch/sparc/kernel/prom_32.c
-@@ -21,6 +21,7 @@
- #include <linux/mm.h>
- #include <linux/bootmem.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
- #include <asm/prom.h>
- #include <asm/oplib.h>
-diff --git a/arch/sparc/kernel/prom_64.c b/arch/sparc/kernel/prom_64.c
-index fb06ac2..f05ebdc 100644
---- a/arch/sparc/kernel/prom_64.c
-+++ b/arch/sparc/kernel/prom_64.c
-@@ -21,6 +21,7 @@
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/lmb.h>
-+#include <linux/of.h>
- #include <linux/of_device.h>
- 
- #include <asm/prom.h>
-diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
-index 96faa79..743e44a 100644
---- a/drivers/macintosh/smu.c
-+++ b/drivers/macintosh/smu.c
-@@ -36,6 +36,7 @@
- #include <linux/sysdev.h>
- #include <linux/poll.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
- 
-diff --git a/drivers/sbus/char/openprom.c b/drivers/sbus/char/openprom.c
-index 75ac19b..c67a9ab 100644
---- a/drivers/sbus/char/openprom.c
-+++ b/drivers/sbus/char/openprom.c
-@@ -38,6 +38,8 @@
- #include <linux/miscdevice.h>
- #include <linux/init.h>
- #include <linux/fs.h>
-+#include <linux/of.h>
-+
- #include <asm/oplib.h>
- #include <asm/prom.h>
- #include <asm/system.h>
-diff --git a/fs/openpromfs/inode.c b/fs/openpromfs/inode.c
-index ffcd04f..b308cdf 100644
---- a/fs/openpromfs/inode.c
-+++ b/fs/openpromfs/inode.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/seq_file.h>
- #include <linux/magic.h>
-+#include <linux/of.h>
- 
- #include <asm/openprom.h>
- #include <asm/oplib.h>
-diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-index 7ba79a5..42121fc 100644
---- a/fs/proc/proc_devtree.c
-+++ b/fs/proc/proc_devtree.c
-@@ -9,6 +9,8 @@
- #include <linux/proc_fs.h>
- #include <linux/stat.h>
- #include <linux/string.h>
-+#include <linux/of.h>
-+
- #include <asm/prom.h>
- #include <asm/uaccess.h>
- #include "internal.h"
--- 
-1.6.4.3
+At the moment I'm purposefully experimenting with doing arch #ifdefs
+in the hope that it will lead to obvious places where the code can be
+generalized even further.  I'll see how it looks before I commit down
+that path though.
 
--- 
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
-http://www.canb.auug.org.au/~sfr/
+In the mean time, I've pushed out the current series with acked-bys
+added to my git server.  I think I'm ready for things to start going
+into linux-next.  Since this is the first time I've asked for a tree
+to be added to linux-next, please let me know if you see anything
+troublesome or problematic.  Here's the tree:
+
+The following changes since commit 4bdf0bb7d64cf672199519b3d808e2a82f5b59e9:
+  Grant Likely (1):
+        powerpc/5200: Update defconfigs
+
+are available in the git repository at:
+
+  git://git.secretlab.ca/git/linux-2.6 next-devicetree
+
+Grant Likely (12):
+      of: Rework linux/of.h and asm/prom.h include ordering
+      of: merge phandle, ihandle and struct property
+      of: merge struct device_node
+      of: Move OF_IS_DYNAMIC and OF_MARK_DYNAMIC macros to of.h
+      of: add common header for flattened device tree representation
+      of: merge struct boot_param_header from Microblaze and PowerPC
+      of: merge of_node_*_flag() and set_node_proc_entry()
+      of: merge of_read_number() an of_read_ulong()
+      of: merge of_node_get(), of_node_put() and of_find_all_nodes()
+      of: merge of_*_flat_dt*() functions
+      of: merge other miscellaneous prototypes
+      of: merge of_find_all_nodes() implementations
+
+ arch/microblaze/include/asm/prom.h |  135 +--------------------------------
+ arch/microblaze/kernel/head.S      |    2 +-
+ arch/microblaze/kernel/prom.c      |   23 ------
+ arch/powerpc/include/asm/prom.h    |  147 +-------------------------------=
+----
+ arch/powerpc/kernel/prom.c         |   23 ------
+ arch/sparc/include/asm/prom.h      |   55 +-------------
+ drivers/of/base.c                  |   26 ++++++-
+ include/linux/of.h                 |  103 +++++++++++++++++++++++++
+ include/linux/of_fdt.h             |   86 +++++++++++++++++++++
+ 9 files changed, 221 insertions(+), 379 deletions(-)
+ create mode 100644 include/linux/of_fdt.h
+
+
+> I'll send out the two patches I did just to show what I mean (these are
+> from before microblaze was using the OF stuff).
+
+Got them, thanks.
+
+g.
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
