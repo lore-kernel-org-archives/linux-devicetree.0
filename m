@@ -1,46 +1,46 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: dtc: Empty ranges property: #cells-size warning
-Date: Thu, 22 Oct 2009 11:56:48 +0200
-Message-ID: <200910221156.48866.sr@denx.de>
-References: <200910211713.12503.sr@denx.de>
-	<54889.84.105.60.153.1256143282.squirrel@gate.crashing.org>
-	<20091021220413.GA12560@yookeroo.seuss>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH] mscan: add non-polling rx
+Date: Fri, 30 Oct 2009 18:36:15 +0100
+Message-ID: <4AEB240F.1080408@grandegger.com>
+References: <1256902073-22328-1-git-send-email-l.fu@pengutronix.de>
+	<4AEB2328.6090009@grandegger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091021220413.GA12560-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <socketcan-users-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <4AEB2328.6090009-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-users>,
+	<mailto:socketcan-users-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-users>
+List-Post: <mailto:socketcan-users-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-users-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-users>,
+	<mailto:socketcan-users-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-users-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-users-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Luotao Fu <l.fu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, socketcan-users-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 October 2009 00:04:13 David Gibson wrote:
-> > No, the warning is correct, and your device tree is in error.
-> >
-> > An empty "ranges" property means that the child address space is
-> > identical to the parent address space, which isn't the case here.
-> >
-> > You should resolve this by using a non-empty "ranges" property,
-> > instead.  If e.g. the address space is 1GB, and located at 0, you
-> > would do
-> >
-> >    < 0    0 0    0x40000000 >
-> > (child) (parent)    (size)
+Wolfgang Grandegger wrote:
+> Luotao Fu wrote:
+>> This one adds an option to turn of napi and process rx directly in mscan isr. As
+>> for mpc52xx this feature can be turned on by setting a rx-irq property int the
+>> device tree, e.g:
+>> can@980 {
+>>     compatible = "fsl,mpc5200b-mscan","fsl,mpc5200-mscan";
+>>     interrupts = <2 18 0>;
+>>     rx-irq;
+>>     reg = <0x980 0x80>;
+>> };
+>> Default is the polling rx.
+>>
+>> Signed-off-by: Luotao Fu <l.fu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> Exactly.  An empty ranges property makes no sense if the parent and
-> child address spaces aren't identical.  You need an explicit ranges
-> property to show how the child address space is embedded in the
-> parent's.
+> This has little chance to be accepted as the device tree is about
+> hardware. It should not be used to tell the driver what to do (software
+> settings). I have CCed the devicetree-discuss ML for clarification.
 
-OK, thanks for making this clear.
+Forgot the CC to devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 
-Cheers,
-Stefan
+Wolfgang.
