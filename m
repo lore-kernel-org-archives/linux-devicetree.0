@@ -1,48 +1,33 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Flash sector size
-Date: Sun, 1 Nov 2009 01:07:45 -0600
-Message-ID: <fa686aa40911010007i3eee7131n46dcc968512a81e7@mail.gmail.com>
-References: <4AA900CF.4040304@monstr.eu>
+From: Nathan Fontenot <nfont@austin.ibm.com>
+Subject: [RFC PATCH 0/5] Merge common dynamic OF device tree code
+Date: Wed, 04 Nov 2009 16:07:37 -0600
+Message-ID: <4AF1FB29.50905@austin.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4AA900CF.4040304-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org, microblaze-uclinux@itee.uq.edu.au
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 10, 2009 at 7:36 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> Hi All,
->
-> I have just found if is possible to write to device tree any information about flash sector size.
->
-> Just for clearing we use dts/dtb for run-time qemu(cpu emulator) configuration and I would
-> like to configure flash and sectors size based on any information from DTS.
->
-> Is it any proposed solution?
+This is a follow on to Grant Likely's patches, attempting to merge the common
+pieces of dynamic OF device tree updating.  These patches move the common
+code for adding and removing nodes and properties from the device tree to
+drivers/of/of_dynamic.c and wraps them under the new OF_DYNAMIC config
+option.  Additionally this makes the necessary updates to powerpc and
+microblaze arch's for this move.
 
-Sorry for the really late reply.  I'm just cleaning up my mail backlog now.
-
-Yes, there is a binding for describing flash in the device tree.  See
-Documentation/powerpc/dts-bindings/mtd-physmap.txt for some details.
-NOR is well supported.  NAND drivers use it, but each NAND driver may
-require additional properties depending on the NAND controller device
-driver.  Flash size can be specified, but I don't think there is a
-binding yet for sector size since in most cases the sector size is
-probed from the device itself.
-
-g.
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Nathan Fontenot (5)
+	- Move the declaration of devtree_lock and allnodes to linux/of.h
+	- Create drivers/of/of_dynamic.c from common code.
+	- powerpc and pseries updates
+	- microblaze updates
+	- powerpc/iseries updates
