@@ -1,271 +1,75 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH 08/11] of/flattree: Merge unflatten_device_tree
-Date: Thu, 05 Nov 2009 00:46:51 -0700
-Message-ID: <20091105074643.10460.95772.stgit@angua>
-References: <20091105073728.10460.6061.stgit@angua>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] Merge dynamic OF code to of_dynamic.c
+Date: Thu, 5 Nov 2009 00:55:15 -0700
+Message-ID: <fa686aa40911042355l73c7511bod3b2f651e9c9a5a4@mail.gmail.com>
+References: <4AF1FB29.50905@austin.ibm.com> <4AF1FD46.9050101@austin.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20091105073728.10460.6061.stgit@angua>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, sparclinux@vger.kernel.org, monstr@monstr.eu
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4AF1FD46.9050101-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Merge common code between PowerPC and MicroBlaze
+Hi Nathan,
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
----
+Thanks for the patches.  Comments below.
 
- arch/microblaze/include/asm/prom.h |    1 -
- arch/microblaze/kernel/prom.c      |   49 ----------------------------------
- arch/powerpc/kernel/prom.c         |   50 -----------------------------------
- drivers/of/fdt.c                   |   52 ++++++++++++++++++++++++++++++++++++
- include/linux/of.h                 |    3 ++
- include/linux/of_fdt.h             |    4 ---
- 6 files changed, 55 insertions(+), 104 deletions(-)
+On Wed, Nov 4, 2009 at 3:16 PM, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrot=
+e:
+> Creation of the OF dynamic device tree update code in drivers/of. =A0This
+> merges the common device tree updating routines to add/remove nodes and
+> properties from powerpc and microblaze. =A0All of the new code is conditi=
+onal
+> based on a new OF_DYNAMIC config option.
 
-diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
-index ef3ec1d..07d1063 100644
---- a/arch/microblaze/include/asm/prom.h
-+++ b/arch/microblaze/include/asm/prom.h
-@@ -37,7 +37,6 @@ extern struct device_node *of_chosen;
- 
- #define HAVE_ARCH_DEVTREE_FIXUPS
- 
--extern struct device_node *allnodes;	/* temporary while merging */
- extern rwlock_t devtree_lock;	/* temporary while merging */
- 
- /* For updating the device tree at runtime */
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index 021770a..901d538 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -50,55 +50,6 @@ typedef u32 cell_t;
- /* export that to outside world */
- struct device_node *of_chosen;
- 
--/**
-- * unflattens the device-tree passed by the firmware, creating the
-- * tree of struct device_node. It also fills the "name" and "type"
-- * pointers of the nodes so the normal device-tree walking functions
-- * can be used (this used to be done by finish_device_tree)
-- */
--void __init unflatten_device_tree(void)
--{
--	unsigned long start, mem, size;
--	struct device_node **allnextp = &allnodes;
--
--	pr_debug(" -> unflatten_device_tree()\n");
--
--	/* First pass, scan for size */
--	start = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
--	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
--	size = (size | 3) + 1;
--
--	pr_debug("  size is %lx, allocating...\n", size);
--
--	/* Allocate memory for the expanded device tree */
--	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
--	mem = (unsigned long) __va(mem);
--
--	((u32 *)mem)[size / 4] = 0xdeadbeef;
--
--	pr_debug("  unflattening %lx...\n", mem);
--
--	/* Second pass, do actual unflattening */
--	start = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
--	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
--	if (*((u32 *)start) != OF_DT_END)
--		printk(KERN_WARNING "Weird tag at end of tree: %08x\n",
--			*((u32 *)start));
--	if (((u32 *)mem)[size / 4] != 0xdeadbeef)
--		printk(KERN_WARNING "End of tree marker overwritten: %08x\n",
--			((u32 *)mem)[size / 4]);
--	*allnextp = NULL;
--
--	/* Get pointer to OF "/chosen" node for use everywhere */
--	of_chosen = of_find_node_by_path("/chosen");
--	if (of_chosen == NULL)
--		of_chosen = of_find_node_by_path("/chosen@0");
--
--	pr_debug(" <- unflatten_device_tree()\n");
--}
--
- #define early_init_dt_scan_drconf_memory(node) 0
- 
- static int __init early_init_dt_scan_cpus(unsigned long node,
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index a102a0a..1280f34 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -73,8 +73,6 @@ unsigned long tce_alloc_start, tce_alloc_end;
- 
- typedef u32 cell_t;
- 
--extern struct device_node *allnodes;	/* temporary while merging */
--
- extern rwlock_t devtree_lock;	/* temporary while merging */
- 
- /* export that to outside world */
-@@ -119,54 +117,6 @@ static void __init move_device_tree(void)
- 	DBG("<- move_device_tree\n");
- }
- 
--/**
-- * unflattens the device-tree passed by the firmware, creating the
-- * tree of struct device_node. It also fills the "name" and "type"
-- * pointers of the nodes so the normal device-tree walking functions
-- * can be used (this used to be done by finish_device_tree)
-- */
--void __init unflatten_device_tree(void)
--{
--	unsigned long start, mem, size;
--	struct device_node **allnextp = &allnodes;
--
--	DBG(" -> unflatten_device_tree()\n");
--
--	/* First pass, scan for size */
--	start = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
--	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
--	size = (size | 3) + 1;
--
--	DBG("  size is %lx, allocating...\n", size);
--
--	/* Allocate memory for the expanded device tree */
--	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
--	mem = (unsigned long) __va(mem);
--
--	((u32 *)mem)[size / 4] = 0xdeadbeef;
--
--	DBG("  unflattening %lx...\n", mem);
--
--	/* Second pass, do actual unflattening */
--	start = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
--	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
--	if (*((u32 *)start) != OF_DT_END)
--		printk(KERN_WARNING "Weird tag at end of tree: %08x\n", *((u32 *)start));
--	if (((u32 *)mem)[size / 4] != 0xdeadbeef)
--		printk(KERN_WARNING "End of tree marker overwritten: %08x\n",
--		       ((u32 *)mem)[size / 4] );
--	*allnextp = NULL;
--
--	/* Get pointer to OF "/chosen" node for use everywhere */
--	of_chosen = of_find_node_by_path("/chosen");
--	if (of_chosen == NULL)
--		of_chosen = of_find_node_by_path("/chosen@0");
--
--	DBG(" <- unflatten_device_tree()\n");
--}
--
- /*
-  * ibm,pa-features is a per-cpu property that contains a string of
-  * attribute descriptors, each of which has a 2 byte header plus up
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index df1ac8d..ad3a2b6 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -9,6 +9,8 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
-+#include <linux/kernel.h>
-+#include <linux/lmb.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- 
-@@ -367,3 +369,53 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
- 	*p += 4;
- 	return mem;
- }
-+
-+/**
-+ * unflatten_device_tree - create tree of device_nodes from flat blob
-+ *
-+ * unflattens the device-tree passed by the firmware, creating the
-+ * tree of struct device_node. It also fills the "name" and "type"
-+ * pointers of the nodes so the normal device-tree walking functions
-+ * can be used.
-+ */
-+void __init unflatten_device_tree(void)
-+{
-+	unsigned long start, mem, size;
-+	struct device_node **allnextp = &allnodes;
-+
-+	pr_debug(" -> unflatten_device_tree()\n");
-+
-+	/* First pass, scan for size */
-+	start = ((unsigned long)initial_boot_params) +
-+		initial_boot_params->off_dt_struct;
-+	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
-+	size = (size | 3) + 1;
-+
-+	pr_debug("  size is %lx, allocating...\n", size);
-+
-+	/* Allocate memory for the expanded device tree */
-+	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
-+	mem = (unsigned long) __va(mem);
-+
-+	((u32 *)mem)[size / 4] = 0xdeadbeef;
-+
-+	pr_debug("  unflattening %lx...\n", mem);
-+
-+	/* Second pass, do actual unflattening */
-+	start = ((unsigned long)initial_boot_params) +
-+		initial_boot_params->off_dt_struct;
-+	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
-+	if (*((u32 *)start) != OF_DT_END)
-+		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
-+	if (((u32 *)mem)[size / 4] != 0xdeadbeef)
-+		pr_warning("End of tree marker overwritten: %08x\n",
-+			   ((u32 *)mem)[size / 4]);
-+	*allnextp = NULL;
-+
-+	/* Get pointer to OF "/chosen" node for use everywhere */
-+	of_chosen = of_find_node_by_path("/chosen");
-+	if (of_chosen == NULL)
-+		of_chosen = of_find_node_by_path("/chosen@0");
-+
-+	pr_debug(" <- unflatten_device_tree()\n");
-+}
-diff --git a/include/linux/of.h b/include/linux/of.h
-index e7facd8..bec2157 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -63,6 +63,9 @@ struct device_node {
- #endif
- };
- 
-+/* Pointer for first entry in chain of all nodes. */
-+extern struct device_node *allnodes;
-+
- static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
- {
- 	return test_bit(flag, &n->_flags);
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index ace9068..81231e0 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -69,10 +69,6 @@ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
- 				 unsigned long *size);
- extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern unsigned long of_get_flat_dt_root(void);
--extern unsigned long unflatten_dt_node(unsigned long mem, unsigned long *p,
--					struct device_node *dad,
--					struct device_node ***allnextpp,
--					unsigned long fpsize);
- 
- /* Other Prototypes */
- extern void finish_device_tree(void);
+Rather than one patch to create all the moved functions, and then
+subsequent patches to remove the duplicates from each arch, I've been
+using the pattern of one patch for each function or couple of
+functions to both remove from the old files and add to the new home.
+Would you be able to do the same for your patches here?  The merging
+is complicated enough without having to track changes to a function
+between separate commits.  Moving one function at a time will also
+make bisecting more friendly.
+
+Also, have you checked what impact these changes have on SPARC?
+
+> --- linux-next.orig/drivers/of/Makefile 2009-11-03 11:18:08.000000000 -06=
+00
+> +++ linux-next/drivers/of/Makefile =A0 =A0 =A02009-11-03 13:42:35.0000000=
+00 -0600
+> @@ -1,6 +1,7 @@
+> obj-y =3D base.o
+> -obj-$(CONFIG_OF_DEVICE) +=3D device.o platform.o
+> -obj-$(CONFIG_OF_GPIO) =A0 +=3D gpio.o
+> -obj-$(CONFIG_OF_I2C) =A0 +=3D of_i2c.o
+> -obj-$(CONFIG_OF_SPI) =A0 +=3D of_spi.o
+> -obj-$(CONFIG_OF_MDIO) =A0+=3D of_mdio.o
+> +obj-$(CONFIG_OF_DEVICE) =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0+=3D device.o pla=
+tform.o
+> +obj-$(CONFIG_OF_GPIO) =A0 =A0 =A0 =A0 =A0+=3D gpio.o
+> +obj-$(CONFIG_OF_I2C) =A0 =A0 =A0 =A0 =A0 +=3D of_i2c.o
+> +obj-$(CONFIG_OF_SPI) =A0 =A0 =A0 =A0 =A0 +=3D of_spi.o
+> +obj-$(CONFIG_OF_MDIO) =A0 =A0 =A0 =A0 =A0+=3D of_mdio.o
+> +obj-$(CONFIG_OF_DYNAMIC) =A0 =A0 =A0 +=3D of_dynamic.o
+
+Unrelated whitespace churn makes it hard to see what actually changed.
+
+Thanks,
+g.
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
