@@ -1,75 +1,74 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] Merge dynamic OF code to of_dynamic.c
-Date: Thu, 5 Nov 2009 00:55:15 -0700
-Message-ID: <fa686aa40911042355l73c7511bod3b2f651e9c9a5a4@mail.gmail.com>
-References: <4AF1FB29.50905@austin.ibm.com> <4AF1FD46.9050101@austin.ibm.com>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 01/11] of/flattree: merge find_flat_dt_string and
+	initial_boot_params
+Date: Thu, 5 Nov 2009 09:39:45 +0100
+Message-ID: <20091105083945.GA3478@pengutronix.de>
+References: <20091105073728.10460.6061.stgit@angua>
+	<20091105074515.10460.83467.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4AF1FD46.9050101-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============5491047830587941242=="
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20091105074515.10460.83467.stgit@angua>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: sfr@canb.auug.org.au, monstr@monstr.eu, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Nathan,
 
-Thanks for the patches.  Comments below.
-
-On Wed, Nov 4, 2009 at 3:16 PM, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrot=
-e:
-> Creation of the OF dynamic device tree update code in drivers/of. =A0This
-> merges the common device tree updating routines to add/remove nodes and
-> properties from powerpc and microblaze. =A0All of the new code is conditi=
-onal
-> based on a new OF_DYNAMIC config option.
-
-Rather than one patch to create all the moved functions, and then
-subsequent patches to remove the duplicates from each arch, I've been
-using the pattern of one patch for each function or couple of
-functions to both remove from the old files and add to the new home.
-Would you be able to do the same for your patches here?  The merging
-is complicated enough without having to track changes to a function
-between separate commits.  Moving one function at a time will also
-make bisecting more friendly.
-
-Also, have you checked what impact these changes have on SPARC?
-
-> --- linux-next.orig/drivers/of/Makefile 2009-11-03 11:18:08.000000000 -06=
-00
-> +++ linux-next/drivers/of/Makefile =A0 =A0 =A02009-11-03 13:42:35.0000000=
-00 -0600
-> @@ -1,6 +1,7 @@
-> obj-y =3D base.o
-> -obj-$(CONFIG_OF_DEVICE) +=3D device.o platform.o
-> -obj-$(CONFIG_OF_GPIO) =A0 +=3D gpio.o
-> -obj-$(CONFIG_OF_I2C) =A0 +=3D of_i2c.o
-> -obj-$(CONFIG_OF_SPI) =A0 +=3D of_spi.o
-> -obj-$(CONFIG_OF_MDIO) =A0+=3D of_mdio.o
-> +obj-$(CONFIG_OF_DEVICE) =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0+=3D device.o pla=
-tform.o
-> +obj-$(CONFIG_OF_GPIO) =A0 =A0 =A0 =A0 =A0+=3D gpio.o
-> +obj-$(CONFIG_OF_I2C) =A0 =A0 =A0 =A0 =A0 +=3D of_i2c.o
-> +obj-$(CONFIG_OF_SPI) =A0 =A0 =A0 =A0 =A0 +=3D of_spi.o
-> +obj-$(CONFIG_OF_MDIO) =A0 =A0 =A0 =A0 =A0+=3D of_mdio.o
-> +obj-$(CONFIG_OF_DYNAMIC) =A0 =A0 =A0 +=3D of_dynamic.o
-
-Unrelated whitespace churn makes it hard to see what actually changed.
-
-Thanks,
-g.
+--===============5491047830587941242==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Disposition: inline
 
 
--- =
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+On Thu, Nov 05, 2009 at 12:45:22AM -0700, Grant Likely wrote:
+> Merge common code between Microblaze and PowerPC.  Also move instance of
+> ---
+>=20
+>  arch/microblaze/Kconfig       |    1 +
+
+Commit message cut off?
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAkryj1EACgkQD27XaX1/VRt++ACfdbkh9Rs1W7zbNvc9drjv+cLU
+wjsAnRvLdOcmefx/zIQADFXbXTjtz5kg
+=7v2o
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
+
+--===============5491047830587941242==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============5491047830587941242==--
