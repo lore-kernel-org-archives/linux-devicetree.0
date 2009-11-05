@@ -1,74 +1,75 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 00/11] More OF merge patches
-Date: Thu, 5 Nov 2009 11:11:21 +0100
-Message-ID: <20091105101121.GE3478@pengutronix.de>
-References: <20091105073728.10460.6061.stgit@angua>
+From: Nathan Fontenot <nfont@austin.ibm.com>
+Subject: Re: [RFC PATCH 2/5] Merge dynamic OF code to of_dynamic.c
+Date: Thu, 05 Nov 2009 10:59:22 -0600
+Message-ID: <4AF3046A.4050508@austin.ibm.com>
+References: <4AF1FB29.50905@austin.ibm.com> <4AF1FD46.9050101@austin.ibm.com>
+	<fa686aa40911042355l73c7511bod3b2f651e9c9a5a4@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0038019212916365510=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091105073728.10460.6061.stgit@angua>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <fa686aa40911042355l73c7511bod3b2f651e9c9a5a4@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
 List-Id: devicetree@vger.kernel.org
 
+Grant Likely wrote:
+> Hi Nathan,
+> 
+> Thanks for the patches.  Comments below.
+> 
+> On Wed, Nov 4, 2009 at 3:16 PM, Nathan Fontenot <nfont@austin.ibm.com> wrote:
+>> Creation of the OF dynamic device tree update code in drivers/of.  This
+>> merges the common device tree updating routines to add/remove nodes and
+>> properties from powerpc and microblaze.  All of the new code is conditional
+>> based on a new OF_DYNAMIC config option.
+> 
+> Rather than one patch to create all the moved functions, and then
+> subsequent patches to remove the duplicates from each arch, I've been
+> using the pattern of one patch for each function or couple of
+> functions to both remove from the old files and add to the new home.
+> Would you be able to do the same for your patches here?  The merging
+> is complicated enough without having to track changes to a function
+> between separate commits.  Moving one function at a time will also
+> make bisecting more friendly.
+>
 
---===============0038019212916365510==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y2zxS2PfCDLh6JVG"
-Content-Disposition: inline
+Shouldn't be a problem.
 
+ 
+> Also, have you checked what impact these changes have on SPARC?
+>
 
---y2zxS2PfCDLh6JVG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I took a look at sparc code, but will do again as I redo the patches to
+make there are no impacts. 
+ 
+>> --- linux-next.orig/drivers/of/Makefile 2009-11-03 11:18:08.000000000 -0600
+>> +++ linux-next/drivers/of/Makefile      2009-11-03 13:42:35.000000000 -0600
+>> @@ -1,6 +1,7 @@
+>> obj-y = base.o
+>> -obj-$(CONFIG_OF_DEVICE) += device.o platform.o
+>> -obj-$(CONFIG_OF_GPIO)   += gpio.o
+>> -obj-$(CONFIG_OF_I2C)   += of_i2c.o
+>> -obj-$(CONFIG_OF_SPI)   += of_spi.o
+>> -obj-$(CONFIG_OF_MDIO)  += of_mdio.o
+>> +obj-$(CONFIG_OF_DEVICE)                += device.o platform.o
+>> +obj-$(CONFIG_OF_GPIO)          += gpio.o
+>> +obj-$(CONFIG_OF_I2C)           += of_i2c.o
+>> +obj-$(CONFIG_OF_SPI)           += of_spi.o
+>> +obj-$(CONFIG_OF_MDIO)          += of_mdio.o
+>> +obj-$(CONFIG_OF_DYNAMIC)       += of_dynamic.o
+> 
+> Unrelated whitespace churn makes it hard to see what actually changed.
+> 
+ok.
 
-On Thu, Nov 05, 2009 at 12:45:09AM -0700, Grant Likely wrote:
-
-> I've also pushed this series out to the test-devicetree branch on my
-> git server if anyone cares to pull and test:
-
-I did :) Works fine on my phyCORE-IO (MPC5200B). If you pick up my comments:
-
-Reviewed-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---y2zxS2PfCDLh6JVG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAkrypMkACgkQD27XaX1/VRtQ5ACeM+lgu7WV3d++al8FtKudoSpG
-dVQAnRwQwD5qzr2CdncE5tJGrLjLVUlr
-=rjbW
------END PGP SIGNATURE-----
-
---y2zxS2PfCDLh6JVG--
-
---===============0038019212916365510==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0038019212916365510==--
+-Nathan Fontenot
