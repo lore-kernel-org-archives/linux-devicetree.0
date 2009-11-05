@@ -1,177 +1,271 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH 11/11] of/flattree: Merge early_init_dt_check_for_initrd()
-Date: Thu, 05 Nov 2009 00:47:47 -0700
-Message-ID: <20091105074724.10460.4083.stgit@angua>
+Subject: [PATCH 08/11] of/flattree: Merge unflatten_device_tree
+Date: Thu, 05 Nov 2009 00:46:51 -0700
+Message-ID: <20091105074643.10460.95772.stgit@angua>
 References: <20091105073728.10460.6061.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <20091105073728.10460.6061.stgit@angua>
-Sender: sparclinux-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 To: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, sparclinux@vger.kernel.org, monstr@monstr.eu
 List-Id: devicetree@vger.kernel.org
 
-Merge common code between PowerPC and Microblaze
+Merge common code between PowerPC and MicroBlaze
 
 Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 ---
 
- arch/microblaze/kernel/prom.c |   32 --------------------------------
- arch/powerpc/kernel/prom.c    |   30 ------------------------------
- drivers/of/fdt.c              |   37 +++++++++++++++++++++++++++++++++++++
- include/linux/of_fdt.h        |    1 +
- 4 files changed, 38 insertions(+), 62 deletions(-)
+ arch/microblaze/include/asm/prom.h |    1 -
+ arch/microblaze/kernel/prom.c      |   49 ----------------------------------
+ arch/powerpc/kernel/prom.c         |   50 -----------------------------------
+ drivers/of/fdt.c                   |   52 ++++++++++++++++++++++++++++++++++++
+ include/linux/of.h                 |    3 ++
+ include/linux/of_fdt.h             |    4 ---
+ 6 files changed, 55 insertions(+), 104 deletions(-)
 
+diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
+index ef3ec1d..07d1063 100644
+--- a/arch/microblaze/include/asm/prom.h
++++ b/arch/microblaze/include/asm/prom.h
+@@ -37,7 +37,6 @@ extern struct device_node *of_chosen;
+ 
+ #define HAVE_ARCH_DEVTREE_FIXUPS
+ 
+-extern struct device_node *allnodes;	/* temporary while merging */
+ extern rwlock_t devtree_lock;	/* temporary while merging */
+ 
+ /* For updating the device tree at runtime */
 diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index a38e373..7959495 100644
+index 021770a..901d538 100644
 --- a/arch/microblaze/kernel/prom.c
 +++ b/arch/microblaze/kernel/prom.c
-@@ -113,38 +113,6 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 	return 0;
- }
+@@ -50,55 +50,6 @@ typedef u32 cell_t;
+ /* export that to outside world */
+ struct device_node *of_chosen;
  
--#ifdef CONFIG_BLK_DEV_INITRD
--static void __init early_init_dt_check_for_initrd(unsigned long node)
+-/**
+- * unflattens the device-tree passed by the firmware, creating the
+- * tree of struct device_node. It also fills the "name" and "type"
+- * pointers of the nodes so the normal device-tree walking functions
+- * can be used (this used to be done by finish_device_tree)
+- */
+-void __init unflatten_device_tree(void)
 -{
--	unsigned long l;
--	u32 *prop;
+-	unsigned long start, mem, size;
+-	struct device_node **allnextp = &allnodes;
 -
--	pr_debug("Looking for initrd properties... ");
+-	pr_debug(" -> unflatten_device_tree()\n");
 -
--	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &l);
--	if (prop) {
--		initrd_start = (unsigned long)
--					__va((u32)of_read_ulong(prop, l/4));
+-	/* First pass, scan for size */
+-	start = ((unsigned long)initial_boot_params) +
+-		initial_boot_params->off_dt_struct;
+-	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
+-	size = (size | 3) + 1;
 -
--		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &l);
--		if (prop) {
--			initrd_end = (unsigned long)
--					__va((u32)of_read_ulong(prop, 1/4));
--			initrd_below_start_ok = 1;
--		} else {
--			initrd_start = 0;
--		}
--	}
+-	pr_debug("  size is %lx, allocating...\n", size);
 -
--	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n",
--					initrd_start, initrd_end);
+-	/* Allocate memory for the expanded device tree */
+-	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
+-	mem = (unsigned long) __va(mem);
+-
+-	((u32 *)mem)[size / 4] = 0xdeadbeef;
+-
+-	pr_debug("  unflattening %lx...\n", mem);
+-
+-	/* Second pass, do actual unflattening */
+-	start = ((unsigned long)initial_boot_params) +
+-		initial_boot_params->off_dt_struct;
+-	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
+-	if (*((u32 *)start) != OF_DT_END)
+-		printk(KERN_WARNING "Weird tag at end of tree: %08x\n",
+-			*((u32 *)start));
+-	if (((u32 *)mem)[size / 4] != 0xdeadbeef)
+-		printk(KERN_WARNING "End of tree marker overwritten: %08x\n",
+-			((u32 *)mem)[size / 4]);
+-	*allnextp = NULL;
+-
+-	/* Get pointer to OF "/chosen" node for use everywhere */
+-	of_chosen = of_find_node_by_path("/chosen");
+-	if (of_chosen == NULL)
+-		of_chosen = of_find_node_by_path("/chosen@0");
+-
+-	pr_debug(" <- unflatten_device_tree()\n");
 -}
--#else
--static inline void early_init_dt_check_for_initrd(unsigned long node)
--{
--}
--#endif /* CONFIG_BLK_DEV_INITRD */
 -
- static int __init early_init_dt_scan_chosen(unsigned long node,
- 				const char *uname, int depth, void *data)
- {
+ #define early_init_dt_scan_drconf_memory(node) 0
+ 
+ static int __init early_init_dt_scan_cpus(unsigned long node,
 diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 7f88566..1ecd6c6 100644
+index a102a0a..1280f34 100644
 --- a/arch/powerpc/kernel/prom.c
 +++ b/arch/powerpc/kernel/prom.c
-@@ -373,36 +373,6 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 	return 0;
+@@ -73,8 +73,6 @@ unsigned long tce_alloc_start, tce_alloc_end;
+ 
+ typedef u32 cell_t;
+ 
+-extern struct device_node *allnodes;	/* temporary while merging */
+-
+ extern rwlock_t devtree_lock;	/* temporary while merging */
+ 
+ /* export that to outside world */
+@@ -119,54 +117,6 @@ static void __init move_device_tree(void)
+ 	DBG("<- move_device_tree\n");
  }
  
--#ifdef CONFIG_BLK_DEV_INITRD
--static void __init early_init_dt_check_for_initrd(unsigned long node)
+-/**
+- * unflattens the device-tree passed by the firmware, creating the
+- * tree of struct device_node. It also fills the "name" and "type"
+- * pointers of the nodes so the normal device-tree walking functions
+- * can be used (this used to be done by finish_device_tree)
+- */
+-void __init unflatten_device_tree(void)
 -{
--	unsigned long l;
--	u32 *prop;
+-	unsigned long start, mem, size;
+-	struct device_node **allnextp = &allnodes;
 -
--	DBG("Looking for initrd properties... ");
+-	DBG(" -> unflatten_device_tree()\n");
 -
--	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &l);
--	if (prop) {
--		initrd_start = (unsigned long)__va(of_read_ulong(prop, l/4));
+-	/* First pass, scan for size */
+-	start = ((unsigned long)initial_boot_params) +
+-		initial_boot_params->off_dt_struct;
+-	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
+-	size = (size | 3) + 1;
 -
--		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &l);
--		if (prop) {
--			initrd_end = (unsigned long)
--					__va(of_read_ulong(prop, l/4));
--			initrd_below_start_ok = 1;
--		} else {
--			initrd_start = 0;
--		}
--	}
+-	DBG("  size is %lx, allocating...\n", size);
 -
--	DBG("initrd_start=0x%lx  initrd_end=0x%lx\n", initrd_start, initrd_end);
+-	/* Allocate memory for the expanded device tree */
+-	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
+-	mem = (unsigned long) __va(mem);
+-
+-	((u32 *)mem)[size / 4] = 0xdeadbeef;
+-
+-	DBG("  unflattening %lx...\n", mem);
+-
+-	/* Second pass, do actual unflattening */
+-	start = ((unsigned long)initial_boot_params) +
+-		initial_boot_params->off_dt_struct;
+-	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
+-	if (*((u32 *)start) != OF_DT_END)
+-		printk(KERN_WARNING "Weird tag at end of tree: %08x\n", *((u32 *)start));
+-	if (((u32 *)mem)[size / 4] != 0xdeadbeef)
+-		printk(KERN_WARNING "End of tree marker overwritten: %08x\n",
+-		       ((u32 *)mem)[size / 4] );
+-	*allnextp = NULL;
+-
+-	/* Get pointer to OF "/chosen" node for use everywhere */
+-	of_chosen = of_find_node_by_path("/chosen");
+-	if (of_chosen == NULL)
+-		of_chosen = of_find_node_by_path("/chosen@0");
+-
+-	DBG(" <- unflatten_device_tree()\n");
 -}
--#else
--static inline void early_init_dt_check_for_initrd(unsigned long node)
--{
--}
--#endif /* CONFIG_BLK_DEV_INITRD */
 -
- static int __init early_init_dt_scan_chosen(unsigned long node,
- 					    const char *uname, int depth, void *data)
- {
+ /*
+  * ibm,pa-features is a per-cpu property that contains a string of
+  * attribute descriptors, each of which has a 2 byte header plus up
 diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ad3a2b6..3c58f10 100644
+index df1ac8d..ad3a2b6 100644
 --- a/drivers/of/fdt.c
 +++ b/drivers/of/fdt.c
-@@ -11,6 +11,7 @@
+@@ -9,6 +9,8 @@
+  * version 2 as published by the Free Software Foundation.
+  */
  
- #include <linux/kernel.h>
- #include <linux/lmb.h>
-+#include <linux/initrd.h>
++#include <linux/kernel.h>
++#include <linux/lmb.h>
  #include <linux/of.h>
  #include <linux/of_fdt.h>
  
-@@ -370,6 +371,42 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+@@ -367,3 +369,53 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 	*p += 4;
  	return mem;
  }
- 
-+#ifdef CONFIG_BLK_DEV_INITRD
++
 +/**
-+ * early_init_dt_check_for_initrd - Decode initrd location from flat tree
-+ * @node: reference to node containing initrd location ('chosen')
++ * unflatten_device_tree - create tree of device_nodes from flat blob
++ *
++ * unflattens the device-tree passed by the firmware, creating the
++ * tree of struct device_node. It also fills the "name" and "type"
++ * pointers of the nodes so the normal device-tree walking functions
++ * can be used.
 + */
-+void __init early_init_dt_check_for_initrd(unsigned long node)
++void __init unflatten_device_tree(void)
 +{
-+	unsigned long len;
-+	u32 *prop;
++	unsigned long start, mem, size;
++	struct device_node **allnextp = &allnodes;
 +
-+	pr_debug("Looking for initrd properties... ");
++	pr_debug(" -> unflatten_device_tree()\n");
 +
-+	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
-+	if (prop) {
-+		initrd_start = (unsigned long)
-+				__va(of_read_ulong(prop, len/4));
++	/* First pass, scan for size */
++	start = ((unsigned long)initial_boot_params) +
++		initial_boot_params->off_dt_struct;
++	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
++	size = (size | 3) + 1;
 +
-+		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
-+		if (prop) {
-+			initrd_end = (unsigned long)
-+				__va(of_read_ulong(prop, len/4));
-+			initrd_below_start_ok = 1;
-+		} else {
-+			initrd_start = 0;
-+		}
-+	}
++	pr_debug("  size is %lx, allocating...\n", size);
 +
-+	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n",
-+		 initrd_start, initrd_end);
++	/* Allocate memory for the expanded device tree */
++	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
++	mem = (unsigned long) __va(mem);
++
++	((u32 *)mem)[size / 4] = 0xdeadbeef;
++
++	pr_debug("  unflattening %lx...\n", mem);
++
++	/* Second pass, do actual unflattening */
++	start = ((unsigned long)initial_boot_params) +
++		initial_boot_params->off_dt_struct;
++	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
++	if (*((u32 *)start) != OF_DT_END)
++		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
++	if (((u32 *)mem)[size / 4] != 0xdeadbeef)
++		pr_warning("End of tree marker overwritten: %08x\n",
++			   ((u32 *)mem)[size / 4]);
++	*allnextp = NULL;
++
++	/* Get pointer to OF "/chosen" node for use everywhere */
++	of_chosen = of_find_node_by_path("/chosen");
++	if (of_chosen == NULL)
++		of_chosen = of_find_node_by_path("/chosen@0");
++
++	pr_debug(" <- unflatten_device_tree()\n");
 +}
-+#else
-+inline void early_init_dt_check_for_initrd(unsigned long node)
-+{
-+}
-+#endif /* CONFIG_BLK_DEV_INITRD */
+diff --git a/include/linux/of.h b/include/linux/of.h
+index e7facd8..bec2157 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -63,6 +63,9 @@ struct device_node {
+ #endif
+ };
+ 
++/* Pointer for first entry in chain of all nodes. */
++extern struct device_node *allnodes;
 +
- /**
-  * unflatten_device_tree - create tree of device_nodes from flat blob
-  *
+ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
+ {
+ 	return test_bit(flag, &n->_flags);
 diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 81231e0..ec2db82 100644
+index ace9068..81231e0 100644
 --- a/include/linux/of_fdt.h
 +++ b/include/linux/of_fdt.h
-@@ -69,6 +69,7 @@ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
+@@ -69,10 +69,6 @@ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
  				 unsigned long *size);
  extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
  extern unsigned long of_get_flat_dt_root(void);
-+extern void early_init_dt_check_for_initrd(unsigned long node);
+-extern unsigned long unflatten_dt_node(unsigned long mem, unsigned long *p,
+-					struct device_node *dad,
+-					struct device_node ***allnextpp,
+-					unsigned long fpsize);
  
  /* Other Prototypes */
  extern void finish_device_tree(void);
-
