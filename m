@@ -1,75 +1,87 @@
-From: Nathan Fontenot <nfont@austin.ibm.com>
-Subject: Re: [RFC PATCH 2/5] Merge dynamic OF code to of_dynamic.c
-Date: Thu, 05 Nov 2009 10:59:22 -0600
-Message-ID: <4AF3046A.4050508@austin.ibm.com>
-References: <4AF1FB29.50905@austin.ibm.com> <4AF1FD46.9050101@austin.ibm.com>
-	<fa686aa40911042355l73c7511bod3b2f651e9c9a5a4@mail.gmail.com>
+From: Michal Simek <michal.simek@petalogix.com>
+Subject: Re: [microblaze-uclinux] [PATCH 00/11] More OF merge patches
+Date: Mon, 09 Nov 2009 11:35:18 +0100
+Message-ID: <4AF7F066.9070202@petalogix.com>
+References: <20091105073728.10460.6061.stgit@angua>
+Reply-To: michal.simek@petalogix.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <fa686aa40911042355l73c7511bod3b2f651e9c9a5a4@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20091105073728.10460.6061.stgit@angua>
+Sender: sparclinux-owner@vger.kernel.org
+To: microblaze-uclinux@itee.uq.edu.au
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, sparclinux@vger.kernel.org, monstr@monstr.eu
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
+
 Grant Likely wrote:
-> Hi Nathan,
-> 
-> Thanks for the patches.  Comments below.
-> 
-> On Wed, Nov 4, 2009 at 3:16 PM, Nathan Fontenot <nfont@austin.ibm.com> wrote:
->> Creation of the OF dynamic device tree update code in drivers/of.  This
->> merges the common device tree updating routines to add/remove nodes and
->> properties from powerpc and microblaze.  All of the new code is conditional
->> based on a new OF_DYNAMIC config option.
-> 
-> Rather than one patch to create all the moved functions, and then
-> subsequent patches to remove the duplicates from each arch, I've been
-> using the pattern of one patch for each function or couple of
-> functions to both remove from the old files and add to the new home.
-> Would you be able to do the same for your patches here?  The merging
-> is complicated enough without having to track changes to a function
-> between separate commits.  Moving one function at a time will also
-> make bisecting more friendly.
->
+> Round 2.  Here is my 2nd set of merging OF code between PowerPC and
+> Microblaze (no SPARC changes this time).  Compile tested on ppc,
+> microblaze and sparc.  Boot tested on MPC5200 powerpc platform.
 
-Shouldn't be a problem.
+I tested your test-device-tree branch - boot tested on ml505 for MMU and 
+noMMU kernels.
+I expect that you will add these patches to next branch. I test it every 
+day - if is any problem with Microblaze, I will let you know.
 
- 
-> Also, have you checked what impact these changes have on SPARC?
->
+Tested-by: Michal Simek <monstr@monstr.eu>
 
-I took a look at sparc code, but will do again as I redo the patches to
-make there are no impacts. 
- 
->> --- linux-next.orig/drivers/of/Makefile 2009-11-03 11:18:08.000000000 -0600
->> +++ linux-next/drivers/of/Makefile      2009-11-03 13:42:35.000000000 -0600
->> @@ -1,6 +1,7 @@
->> obj-y = base.o
->> -obj-$(CONFIG_OF_DEVICE) += device.o platform.o
->> -obj-$(CONFIG_OF_GPIO)   += gpio.o
->> -obj-$(CONFIG_OF_I2C)   += of_i2c.o
->> -obj-$(CONFIG_OF_SPI)   += of_spi.o
->> -obj-$(CONFIG_OF_MDIO)  += of_mdio.o
->> +obj-$(CONFIG_OF_DEVICE)                += device.o platform.o
->> +obj-$(CONFIG_OF_GPIO)          += gpio.o
->> +obj-$(CONFIG_OF_I2C)           += of_i2c.o
->> +obj-$(CONFIG_OF_SPI)           += of_spi.o
->> +obj-$(CONFIG_OF_MDIO)          += of_mdio.o
->> +obj-$(CONFIG_OF_DYNAMIC)       += of_dynamic.o
+Thanks for this work,
+Michal
+
 > 
-> Unrelated whitespace churn makes it hard to see what actually changed.
+> I've also pushed this series out to the test-devicetree branch on my
+> git server if anyone cares to pull and test:
 > 
-ok.
+> git://git.secretlab.ca/git/linux-2.6 test-devicetree
+> 
+> This is based on the next-devicetree branch which contains the first
+> round of patches and is being pulled into linux-next.
+> 
+> Cheers,
+> g.
+> 
+> ---
+> 
+> Grant Likely (11):
+>       of/flattree: Merge early_init_dt_check_for_initrd()
+>       of: remove special case definition of of_read_ulong()
+>       of: merge prom_{add,remove,modify}_property
+>       of/flattree: Merge unflatten_device_tree
+>       of/flattree: Merge unflatten_dt_node
+>       of/flattree: Merge of_flat_dt_is_compatible
+>       of/flattree: merge of_get_flat_dt_prop
+>       of/flattree: remove __init annotations from the header file
+>       of/flattree: merge of_get_flat_dt_root
+>       of/flattree: merge of_scan_flat_dt
+>       of/flattree: merge find_flat_dt_string and initial_boot_params
+> 
+> 
+>  arch/microblaze/Kconfig            |    1 
+>  arch/microblaze/include/asm/prom.h |    1 
+>  arch/microblaze/kernel/prom.c      |  531 ------------------------------------
+>  arch/powerpc/Kconfig               |    1 
+>  arch/powerpc/kernel/prom.c         |  534 ------------------------------------
+>  drivers/of/Kconfig                 |    4 
+>  drivers/of/Makefile                |    1 
+>  drivers/of/base.c                  |  116 ++++++++
+>  drivers/of/fdt.c                   |  458 +++++++++++++++++++++++++++++++
+>  include/linux/of.h                 |   10 -
+>  include/linux/of_fdt.h             |   21 +
+>  11 files changed, 598 insertions(+), 1080 deletions(-)
+>  create mode 100644 drivers/of/fdt.c
+> 
+> ___________________________
+> microblaze-uclinux mailing list
+> microblaze-uclinux@itee.uq.edu.au
+> Project Home Page : http://www.itee.uq.edu.au/~jwilliams/mblaze-uclinux
+> Mailing List Archive : http://www.itee.uq.edu.au/~listarch/microblaze-uclinux/
+> 
 
--Nathan Fontenot
+
+-- 
+Michal Simek, Ing. (M.Eng)
+PetaLogix - Linux Solutions for a Reconfigurable World
+w: www.petalogix.com p: +61-7-30090663,+42-0-721842854 f: +61-7-30090663
