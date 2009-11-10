@@ -1,13 +1,12 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] mpc52xx/wdt: OF property to enable the WDT on boot
-Date: Tue, 10 Nov 2009 14:02:58 -0700
-Message-ID: <fa686aa40911101302j7c54e1e2re62d1d8f9b83ffd@mail.gmail.com>
-References: <1257882057.14374.1@antares>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress@arcor.de>
+Subject: [PATCH 1/3] mpc52xx/wdt: OF property to enable the WDT on boot
+Date: Tue, 10 Nov 2009 20:40:57 +0100
+Message-ID: <1257882057.14374.1@antares>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1257882057.14374.1@antares>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -17,68 +16,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
-Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, devicetree-discuss@lists.ozlabs.org, Wim Van Sebroeck <wim@iguana.be>
+To: Linux PPC Development <linuxppc-dev@ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 10, 2009 at 12:40 PM, Albrecht Dre=DF <albrecht.dress@arcor.de>=
- wrote:
-> Add the "wdt,on-boot" OF property as to reserve a GPT as WDT which may be=
- a
-> requirement in safety-related (e.g. ISO 61508) applications.
->
-> Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
-> ---
->
-> =A0Documentation/powerpc/dts-bindings/fsl/mpc5200.txt | =A0 15 ++++++++++=
-++++-
-> =A01 files changed, 14 insertions(+), 1 deletions(-)
->
-> diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documen=
-tation/powerpc/dts-bindings/fsl/mpc5200.txt
-> index 8447fd7..1eecb06 100644
-> --- a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
-> +++ b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
-> @@ -103,7 +103,20 @@ fsl,mpc5200-gpt nodes
-> =A0---------------------
-> =A0On the mpc5200 and 5200b, GPT0 has a watchdog timer function. =A0If th=
-e board
-> =A0design supports the internal wdt, then the device node for GPT0 should
-> -include the empty property 'fsl,has-wdt'.
-> +include the empty property 'fsl,has-wdt'. =A0Note that this does not act=
-ivate
-> +the watchdog. =A0The timer will function as a GPT if the timer api is us=
-ed, and
-> +it will function as watchdog if the watchdog device is used. =A0The watc=
-hdog
-> +mode has priority over the gpt mode, i.e. if the watchdog is activated, =
-any
-> +gpt api call to this timer will fail with -EBUSY.
-> +
-> +If you add the property
-> + =A0 =A0 =A0 wdt,on-boot =3D <n>;
-> +GPT0 will be marked as in-use watchdog, i.e. blocking every gpt access t=
-o it.
-> +If n>0, the watchdog is started with a timeout of n seconds. =A0If n=3D0=
-, the
-> +configuration of the watchdog is not touched. =A0This is useful in two c=
-ases:
-> +- just mark GPT0 as watchdog, blocking gpt accesses, and configure it la=
-ter;
-> +- do not touch a configuration assigned by the boot loader which supervi=
-ses
-> + =A0the boot process itself.
+Add the "wdt,on-boot" OF property as to reserve a GPT as WDT which may be a
+requirement in safety-related (e.g. ISO 61508) applications.
 
-I'm not *totally* convinced on the usage model, but I just need some
-time to think about it.  Give me a day or so and ping me again if you
-haven't heard from me.  However, until a common WDT binding is
-defined, this property needs to be named something like
-"fsl,wdt-on-boot".
+Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
+---
 
-Cheers,
-g.
+ Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |   15 ++++++++++++++-
+ 1 files changed, 14 insertions(+), 1 deletions(-)
 
--- =
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documenta=
+tion/powerpc/dts-bindings/fsl/mpc5200.txt
+index 8447fd7..1eecb06 100644
+--- a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
++++ b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+@@ -103,7 +103,20 @@ fsl,mpc5200-gpt nodes
+ ---------------------
+ On the mpc5200 and 5200b, GPT0 has a watchdog timer function.  If the board
+ design supports the internal wdt, then the device node for GPT0 should
+-include the empty property 'fsl,has-wdt'.
++include the empty property 'fsl,has-wdt'.  Note that this does not activate
++the watchdog.  The timer will function as a GPT if the timer api is used, =
+and
++it will function as watchdog if the watchdog device is used.  The watchdog
++mode has priority over the gpt mode, i.e. if the watchdog is activated, any
++gpt api call to this timer will fail with -EBUSY.
++
++If you add the property
++	wdt,on-boot =3D <n>;
++GPT0 will be marked as in-use watchdog, i.e. blocking every gpt access to =
+it.
++If n>0, the watchdog is started with a timeout of n seconds.  If n=3D0, the
++configuration of the watchdog is not touched.  This is useful in two cases:
++- just mark GPT0 as watchdog, blocking gpt accesses, and configure it late=
+r;
++- do not touch a configuration assigned by the boot loader which supervises
++  the boot process itself.
+ =
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+ An mpc5200-gpt can be used as a single line GPIO controller.  To do so,
+ add the following properties to the gpt node:
