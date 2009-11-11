@@ -1,17 +1,15 @@
-From: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Subject: Re: PCI bus node location
-Date: Wed, 11 Nov 2009 15:17:52 +0100
-Message-ID: <C75E76CB-73F3-4448-B643-364304ABB364@semihalf.com>
-References: <B7D31A24-3361-4B80-81C4-5A815F09D42F@semihalf.com>
-	<fa686aa40911091836s2a6b763aq14ece296cd7368db@mail.gmail.com>
-	<20091110031218.GG26042@yookeroo.seuss>
-	<839C8AA0-A8B5-434E-9175-16D2B84D74BD@semihalf.com>
-	<20091110234412.GA3235@yookeroo.seuss>
-Mime-Version: 1.0 (Apple Message framework v1076)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: DTC in native FreeBSD environment
+Date: Wed, 11 Nov 2009 09:25:11 -0600
+Message-ID: <E1N8F4J-0000qK-TS@jdl.com>
+References: <4AF9845B.4090403@semihalf.com>
+	<20091110231452.GP26042@yookeroo.seuss>
+	<F540B1B2-21F0-4F11-9578-F2B1201497B6@semihalf.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091110234412.GA3235-787xzQ0H9iRg7VrjXcPTGA@public.gmane.org>
+In-reply-to: <F540B1B2-21F0-4F11-9578-F2B1201497B6-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,52 +19,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Cc: Lukasz Wojcik <zbr-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 2009-11-11, at 00:44, David Gibson wrote:
+OK, so, first up, I've copied the devicetree discuss list
+for the rest of this conversation.  It should have started
+there from the onset.
 
-> On Tue, Nov 10, 2009 at 05:55:33PM +0100, Rafal Jaworowski wrote:
->> On 2009-11-10, at 04:12, David Gibson wrote:
->>> On Mon, Nov 09, 2009 at 07:36:57PM -0700, Grant Likely wrote:
->>>> On Mon, Nov 9, 2009 at 12:20 PM, Rafal Jaworowski
-> [snip]
->>> Right.
->>>
->>> Under the new scheme, the "soc" node is really a historical  
->>> misnomer -
->>> it represents just the things within the IMMR, not everything on the
->>> SoC.  A number of chips also have the localbus controller as a
->>> separate node, likewise within the SoC but not within the IMMR, so  
->>> not
->>> a child of the soc node.
->>
->> Hm, how do we know whether something belongs under the IMMR/CCSR
->> node or not (even though it physically sits there :-)?
->
-> Well, the basic criterion is whether its registers are relocated with
-> the rest of the IMMR.  Which would cover the PCI control registers, of
-> course, but they're not there for the reasons given.  Yes, it's kind
-> of nasty.
+The bulk of this message is left as context for others now.
+My comments at the bottom.
 
-It seems like the soc/simple-bus node is currently a rather arbitrary  
-subset of peripherals available through SOC internal registers range.  
-My concern is that without clear grouping criteria this is quite  
-confusing.
 
->> Is the 'soc' node going to be named something less confusing then?
->
-> I think it should, but it's difficult to change because u-boot has
-> dependencies on it.  I think there are a few newer trees where it's
-> named IMMR.
+> On 2009-11-11, at 00:14, David Gibson wrote:
+> 
+> > On Tue, Nov 10, 2009 at 04:18:51PM +0100, Lukasz Wojcik wrote:
+> >> Hello,
+> >>
+> >>  In relevence to our efforts to port DTC to native FreeBSD
+> >> environment, we have to compile DTC parser using
+> >> default FreeBSD tool -- YACC instead of Bison. That causes a
+> >> problem, related with YACC/Bison compliance.
+> >>
+> >> To be more precise --  problems are caused by the %locations
+> >> directive, and "yyloc".
+> >>
+> >> "yyloc" is used in dtc-parser.y to return the location of an
+> >> erroneous expression in the device tree source file,
+> >> when including a subset of binary file (incbin). Since YACC does not
+> >> have %locations/yyloc feature, it is impossible to compile
+> >> original code using YACC.
+> >
+> > Um.. right.  Tracking locations is a very useful feature though.  How
+> > would we go about implementing it using portable yacc features?
+> 
+> Maybe it wasnt' clear enough. Yacc supports tracking locations in  
+> general, the problem we have are around using bison internal variable  
+> in the dtc parser i.e. yyloc.
+> 
+> >> After some research, I've managed to find out, that "yyloc" is an
+> >> undocumented feature of Bison, and that it might not be
+> >> maintained in future versions. I'm not a Bison/YACC differences
+> >> specialist, and because of that I'd like to ask,
+> >> whether you see a way how to avoid using thos Bison-internal
+> >> construct in favour of something portable?
+> >
+> > Uh.. it's not undocumented.  I implemented everything I do with
+> > %locations based on the info documentation.
+> 
+> Well, according to bison people 'yyloc' is internal variable and not  
+> guaranteed to behave the same accross bison versions, and it's hardly  
+> documented.. This is opposed to the 'yylloc', which is fine with yacc.  
+> Could you please have a look whether the 'yyloc' is really necessary  
+> and if we could not get away somehow with the 'yylloc'?
+> 
+> Rafal
+> 
 
-So is device_type = "soc" deprecated now for new trees, and for this  
-kind of a bus node the only legit differentiator is the compatible =  
-"simple-bus" prop?
+The use of locations, however spelled, is not going away.
+In fact it the reverse is more likely as there will be
+more development and use of the token position information.
 
-BTW: in ePAPR examples there is device_type = "simple-bus" in a 8572  
-soc node, is this a bug or a leftover?
+If there is a more correct implementation, I will happily
+accept a patch.
 
-Rafal
+If there is a porting issue, I will happily accept
+patches that improve the situation.
+
+I am currently not running a FreeBSD system, so I can not
+do that development work myself.  If you would like me to
+do this work, talk to me privately.
+
+jdl
