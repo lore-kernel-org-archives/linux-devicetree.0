@@ -1,14 +1,13 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: PCI bus node location
-Date: Wed, 11 Nov 2009 11:06:00 -0600
-Message-ID: <4AFAEEF8.3040303@freescale.com>
-References: <B7D31A24-3361-4B80-81C4-5A815F09D42F@semihalf.com>	<fa686aa40911091836s2a6b763aq14ece296cd7368db@mail.gmail.com>	<A3A4CAD4-BE74-4CD4-BFFA-FE616DF38811@semihalf.com>	<20091111000540.GB3235@yookeroo.seuss>
-	<8239D9E6-E390-4DED-81C1-77FACF05C1D4@semihalf.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] mpc52xx/wdt: merge WDT code into the GPT
+Date: Wed, 11 Nov 2009 13:11:15 -0700
+Message-ID: <fa686aa40911111211m41197cddl451165bebed6edd8@mail.gmail.com>
+References: <1980629.1257928058732.JavaMail.ngmail@webmail19.ha2.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <8239D9E6-E390-4DED-81C1-77FACF05C1D4-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1980629.1257928058732.JavaMail.ngmail-hrWuGRo80rRiK3oW1guXusM6rOWSkUom@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,40 +17,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rafal Jaworowski wrote:
-> On 2009-11-11, at 01:05, David Gibson wrote:
->> Well, yes.  And worse, it means there's two places that need to be
->> adjusted rather than one, if the the IMMR is relocated (which it can
->> be).  But it's a trade-off of this versus the inconvenience of dealing
->> with separate "control" and "bridge" nodes for the PCI and following
->> phandles between them.
-> 
-> Would the technique with additional control node and a phandle 
-> complicate bindings handling much? The clear benefit is the ability to 
-> truly reflect hierarchy of devices available within IMMR/CCSR block.
+On Wed, Nov 11, 2009 at 1:27 AM, Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org> =
+wrote:
+> Hi Grant:
+>
+> Thanks a lot for your comments!
+>
+>> On Tue, Nov 10, 2009 at 12:41 PM, Albrecht Dre=DF <albrecht.dress@arcor.=
+de>
+>> > +#if defined(HAVE_MPC5200_WDT)
+>> > + =A0 =A0 =A0 /* check if this device could be a watchdog */
+>> > + =A0 =A0 =A0 if (of_get_property(ofdev->node, "fsl,has-wdt", NULL) ||
+>> > + =A0 =A0 =A0 =A0 =A0 of_get_property(ofdev->node, "has-wdt", NULL)) {
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const u32 *on_boot_wdt;
+>> > +
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpt->wdt_mode =3D MPC52xx_GPT_CAN_WDT;
+>> > +
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* check if the device shall be used as =
+on-boot watchdog
+>> */
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 on_boot_wdt =3D of_get_property(ofdev->n=
+ode, "wdt,on-boot",
+>> NULL);
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (on_boot_wdt) {
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpt->wdt_mode |=3D MPC52=
+xx_GPT_IS_WDT;
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (*on_boot_wdt > 0 &&
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mpc52xx_gpt_wdt_=
+start(gpt, *on_boot_wdt) =3D=3D
+>> 0)
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info=
+(gpt->dev,
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0"running as wdt, timeout %us\n",
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0*on_boot_wdt);
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 else
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info=
+(gpt->dev, "reserved as wdt\n");
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(gpt->dev, "can =
+function as wdt\n");
+>> > + =A0 =A0 =A0 }
+>> > +#endif
+>>
+>> Ditto on the #if/endif
+>
+> I don't think it can be removed here. =A0Think about the following:
+> - user has a dtb with fsl,has-wdt and fsl,wdt-on-boot properties and
+> - disables 5200 WDT in the kernel config.
+>
+> Now the system refuses to use GPT0 as GPT, although the WDT functionality=
+ has been disabled. =A0Of course, the dts doesn't fit the kernel config now=
+, but I think we should catch this case.
 
-It's not very complicated at all, just a few extra lines of code to follow the 
-link.  I had initially done pq2 PCI that way, but it was NACKed because it was 
-different:
+I think the behaviour should be consistent regardless of what support
+is compiled into the kernel.  If the wdt-on-boot property is set, the
+it does make sense for the kernel to never use it as a GPT.  Otherwise
+the kernel behaviour becomes subtly different in ways non-obvious to
+the user.
 
-http://lists.ozlabs.org/pipermail/linuxppc-dev/2007-August/041671.html
+> Actually I tried to implement your requirements from <http://lists.ozlabs=
+.org/pipermail/linuxppc-dev/2009-August/074595.html>:
+> - fsl,has-wdt indicates that the GPT can serve as WDT;
+> - any access through the wdt api to a wdt-capable gpt actually reserves i=
+t as wdt;
+> - the new of property forces reserving the wdt before any gpt api functio=
+n has chance to grab it as gpt.
+>
+> Or did I get something wrong here?
 
->> I don't really understand the question.  As Grant has said the
->> "correct" approach is to have one node representing the control
->> registers - located under the IMMR ("soc") node - and another
->> representing the PCI host bridge itself (which would be in its present
->> location).  There would need to be phandles linking the two.  It
->> doesn't really need any extension to the device tree semantics itself
->> - just a more complex binding for this device.
-> 
-> Maybe I misunderstood Grant, my impression was that there was possible 
-> some 'fixing' of ranges properties (which would be alternative to the 
-> control node approach).
+No, you got it right...  Well, I can't even remember what I said
+yesterday, but this list of requirements looks sane.  :-)
 
-But that would introduce even more dual maintenance.
+Cheers,
+g.
 
--Scott
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
