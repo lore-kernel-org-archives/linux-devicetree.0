@@ -1,18 +1,19 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: PCI bus node location
-Date: Thu, 12 Nov 2009 13:03:43 +1100
-Message-ID: <20091112020343.GK3235@yookeroo.seuss>
+Date: Thu, 12 Nov 2009 13:08:31 +1100
+Message-ID: <20091112020831.GL3235@yookeroo.seuss>
 References: <B7D31A24-3361-4B80-81C4-5A815F09D42F@semihalf.com>
 	<fa686aa40911091836s2a6b763aq14ece296cd7368db@mail.gmail.com>
-	<A3A4CAD4-BE74-4CD4-BFFA-FE616DF38811@semihalf.com>
-	<20091111000540.GB3235@yookeroo.seuss>
-	<8239D9E6-E390-4DED-81C1-77FACF05C1D4@semihalf.com>
+	<20091110031218.GG26042@yookeroo.seuss>
+	<839C8AA0-A8B5-434E-9175-16D2B84D74BD@semihalf.com>
+	<20091110234412.GA3235@yookeroo.seuss>
+	<C75E76CB-73F3-4448-B643-364304ABB364@semihalf.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8239D9E6-E390-4DED-81C1-77FACF05C1D4-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+In-Reply-To: <C75E76CB-73F3-4448-B643-364304ABB364-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,49 +27,66 @@ To: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2009 at 03:16:56PM +0100, Rafal Jaworowski wrote:
+On Wed, Nov 11, 2009 at 03:17:52PM +0100, Rafal Jaworowski wrote:
 > 
-> On 2009-11-11, at 01:05, David Gibson wrote:
+> On 2009-11-11, at 00:44, David Gibson wrote:
 > 
-> >>The current approach seems a bit of a maintenance problem: the PCI
-> >>bridges control reg need to specify the whole address instead of
-> >>just an offset, which is more error prone in case of changes (when a
+> >On Tue, Nov 10, 2009 at 05:55:33PM +0100, Rafal Jaworowski wrote:
+> >>On 2009-11-10, at 04:12, David Gibson wrote:
+> >>>On Mon, Nov 09, 2009 at 07:36:57PM -0700, Grant Likely wrote:
+> >>>>On Mon, Nov 9, 2009 at 12:20 PM, Rafal Jaworowski
+> >[snip]
+> >>>Right.
+> >>>
+> >>>Under the new scheme, the "soc" node is really a historical
+> >>>misnomer -
+> >>>it represents just the things within the IMMR, not everything on the
+> >>>SoC.  A number of chips also have the localbus controller as a
+> >>>separate node, likewise within the SoC but not within the
+> >>>IMMR, so not
+> >>>a child of the soc node.
+> >>
+> >>Hm, how do we know whether something belongs under the IMMR/CCSR
+> >>node or not (even though it physically sits there :-)?
 > >
-> >Well, yes.  And worse, it means there's two places that need to be
-> >adjusted rather than one, if the the IMMR is relocated (which it can
-> >be).  But it's a trade-off of this versus the inconvenience of dealing
-> >with separate "control" and "bridge" nodes for the PCI and following
-> >phandles between them.
+> >Well, the basic criterion is whether its registers are relocated with
+> >the rest of the IMMR.  Which would cover the PCI control registers, of
+> >course, but they're not there for the reasons given.  Yes, it's kind
+> >of nasty.
 > 
-> Would the technique with additional control node and a phandle
-> complicate bindings handling much? The clear benefit is the ability
-> to truly reflect hierarchy of devices available within IMMR/CCSR
-> block.
-> 
-> >>number of places need to be adjusted etc.). What would need to be
-> >>done/extended for the ranges prop you mention to allow for better
-> >>handling cases like this?
-> >
-> >I don't really understand the question.  As Grant has said the
-> >"correct" approach is to have one node representing the control
-> >registers - located under the IMMR ("soc") node - and another
-> >representing the PCI host bridge itself (which would be in its present
-> >location).  There would need to be phandles linking the two.  It
-> >doesn't really need any extension to the device tree semantics itself
-> >- just a more complex binding for this device.
-> 
-> Maybe I misunderstood Grant, my impression was that there was
-> possible some 'fixing' of ranges properties (which would be
-> alternative to the control node approach).
+> It seems like the soc/simple-bus node is currently a rather
+> arbitrary subset of peripherals available through SOC internal
+> registers range. My concern is that without clear grouping criteria
+> this is quite confusing.
 
-Well.. the other approach would be for the "soc" node to have, in
-addition to a range for the IMMR registers, extra ranges for all the
-bridged ranges (PCI or localbus, or whatever).  That has its own
-problems because it means either we need a complicated encoding, or
-it's less obvious which devices have registers in the IMMR space and
-which have registers elsewhere.  We need more complex conventions
-about which range is which in the soc node's "ranges" property and so
-forth.
+It's not arbitrary.  It's everything whose registers lie in the
+movable IMMR region, except those that have a reason to be outside.
+With the reason to be outside being that they control the bridging of
+address ranges that are *not* in the IMMR.
+
+> >>Is the 'soc' node going to be named something less confusing then?
+> >
+> >I think it should, but it's difficult to change because u-boot has
+> >dependencies on it.  I think there are a few newer trees where it's
+> >named IMMR.
+> 
+> So is device_type = "soc" deprecated now for new trees, and for this
+> kind of a bus node the only legit differentiator is the compatible =
+> "simple-bus" prop?
+
+Uh.. well.  It's sort of in that odd half-way house.  It's fairly
+widely acknowledged that there are problems with that representation,
+but a new better one has not yet been articulated sufficiently clearly
+to formally deprecate the old way.  It is after all better to keep
+with the old way until we do have a new method that is clearly better,
+in order to keep down the number of old deprecated formats we need to
+deal with eventually.
+
+> BTW: in ePAPR examples there is device_type = "simple-bus" in a 8572
+> soc node, is this a bug or a leftover?
+
+That would be a bug.  I'll add it to my list of things to point out in
+the ePAPR revision / errata process.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
