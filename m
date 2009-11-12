@@ -1,46 +1,66 @@
-From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-Subject: [PATCHv2 0/3] mpc52xx/wdt: re-enable the MPC5200 WDT
-Date: Thu, 12 Nov 2009 19:39:26 +0100
-Message-ID: <1258051166.2280.0@antares>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress@arcor.de>
+Subject: [PATCHv2 1/3] mpc52xx/wdt: OF property to enable the WDT on boot
+Date: Thu, 12 Nov 2009 19:43:47 +0100
+Message-ID: <1258051427.2280.1@antares>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Likely, Grant" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: "Likely, Grant" <grant.likely@secretlab.ca>, Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-This set of patches merges the MPC5200 WDT into the GPT code, making it
-functional again - currently, the MPC5200 GPT code blocks using the WDT.
+Add the "fsl,wdt-on-boot" OF property as to reserve a GPT as WDT which may
+be a requirement in safety-related (e.g. ISO/EN 61508) applications.
 
-Additionally, it defines a new OF property as to reserve and/or enable the
-WDT during the boot process which may be a requirement for safety-related
-(e.g. ISO/EN 61508) applications.
-
-Note that all patches are against Grant Likely's "next" tree.
-
-Compared to the first version of the patch, the basic change is a full merge
-of the WDT code into the GPT implementation in arch/powerpc/platforms/52xx.
-It makes the old WDT implementation file obsolete.  As a side effect, it is
-not possible any more to build the 52xx WDT support as module which shouldn't
-be a big issue, though.
-
-Cheers, Albrecht.
+Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
 
 ---
 
- Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |   17 +-
- arch/powerpc/include/asm/mpc52xx.h                 |    5 +-
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c          |  328 ++++++++++++++++++--
- drivers/watchdog/Kconfig                           |    4 +-
- drivers/watchdog/Makefile                          |    1 -
- 5 files changed, 331 insertions(+), 24 deletions(-)
+Change against v1: rename the new property.
+
+ Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |   17 ++++++++++++++++-
+ 1 files changed, 16 insertions(+), 1 deletions(-)
+
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documenta=
+tion/powerpc/dts-bindings/fsl/mpc5200.txt
+index 8447fd7..ddd5ee3 100644
+--- a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
++++ b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+@@ -103,7 +103,22 @@ fsl,mpc5200-gpt nodes
+ ---------------------
+ On the mpc5200 and 5200b, GPT0 has a watchdog timer function.  If the board
+ design supports the internal wdt, then the device node for GPT0 should
+-include the empty property 'fsl,has-wdt'.
++include the empty property 'fsl,has-wdt'.  Note that this does not activate
++the watchdog.  The timer will function as a GPT if the timer api is used, =
+and
++it will function as watchdog if the watchdog device is used.  The watchdog
++mode has priority over the gpt mode, i.e. if the watchdog is activated, any
++gpt api call to this timer will fail with -EBUSY.
++
++If you add the property
++	fsl,wdt-on-boot =3D <n>;
++GPT0 will be marked as in-use watchdog, i.e. blocking every gpt access to =
+it.
++If n>0, the watchdog is started with a timeout of n seconds.  If n=3D0, the
++configuration of the watchdog is not touched.  This is useful in two cases:
++- just mark GPT0 as watchdog, blocking gpt accesses, and configure it late=
+r;
++- do not touch a configuration assigned by the boot loader which supervises
++  the boot process itself.
++
++The watchdog will respect the CONFIG_WATCHDOG_NOWAYOUT option.
+ =
+
+ An mpc5200-gpt can be used as a single line GPIO controller.  To do so,
+ add the following properties to the gpt node:
