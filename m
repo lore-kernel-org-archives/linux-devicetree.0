@@ -1,19 +1,12 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: PCI bus node location
-Date: Thu, 12 Nov 2009 13:08:31 +1100
-Message-ID: <20091112020831.GL3235@yookeroo.seuss>
-References: <B7D31A24-3361-4B80-81C4-5A815F09D42F@semihalf.com>
-	<fa686aa40911091836s2a6b763aq14ece296cd7368db@mail.gmail.com>
-	<20091110031218.GG26042@yookeroo.seuss>
-	<839C8AA0-A8B5-434E-9175-16D2B84D74BD@semihalf.com>
-	<20091110234412.GA3235@yookeroo.seuss>
-	<C75E76CB-73F3-4448-B643-364304ABB364@semihalf.com>
+Subject: Fix dtc bugs for 64-bit compile
+Date: Thu, 12 Nov 2009 13:30:02 +1100
+Message-ID: <20091112023002.GN3235@yookeroo.seuss>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <C75E76CB-73F3-4448-B643-364304ABB364-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,70 +16,109 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2009 at 03:17:52PM +0100, Rafal Jaworowski wrote:
-> 
-> On 2009-11-11, at 00:44, David Gibson wrote:
-> 
-> >On Tue, Nov 10, 2009 at 05:55:33PM +0100, Rafal Jaworowski wrote:
-> >>On 2009-11-10, at 04:12, David Gibson wrote:
-> >>>On Mon, Nov 09, 2009 at 07:36:57PM -0700, Grant Likely wrote:
-> >>>>On Mon, Nov 9, 2009 at 12:20 PM, Rafal Jaworowski
-> >[snip]
-> >>>Right.
-> >>>
-> >>>Under the new scheme, the "soc" node is really a historical
-> >>>misnomer -
-> >>>it represents just the things within the IMMR, not everything on the
-> >>>SoC.  A number of chips also have the localbus controller as a
-> >>>separate node, likewise within the SoC but not within the
-> >>>IMMR, so not
-> >>>a child of the soc node.
-> >>
-> >>Hm, how do we know whether something belongs under the IMMR/CCSR
-> >>node or not (even though it physically sits there :-)?
-> >
-> >Well, the basic criterion is whether its registers are relocated with
-> >the rest of the IMMR.  Which would cover the PCI control registers, of
-> >course, but they're not there for the reasons given.  Yes, it's kind
-> >of nasty.
-> 
-> It seems like the soc/simple-bus node is currently a rather
-> arbitrary subset of peripherals available through SOC internal
-> registers range. My concern is that without clear grouping criteria
-> this is quite confusing.
+I've just tested building dtc as an x86_64 binary on a 32-bit i386
+host by using:
+	make CC="gcc -m64"
+This patch fixes a handful of minor bugs thus discovered:
 
-It's not arbitrary.  It's everything whose registers lie in the
-movable IMMR region, except those that have a reason to be outside.
-With the reason to be outside being that they control the bridging of
-address ranges that are *not* in the IMMR.
+ * There is a printf() type mismatch on 64-bit in value-labels.c
 
-> >>Is the 'soc' node going to be named something less confusing then?
-> >
-> >I think it should, but it's difficult to change because u-boot has
-> >dependencies on it.  I think there are a few newer trees where it's
-> >named IMMR.
-> 
-> So is device_type = "soc" deprecated now for new trees, and for this
-> kind of a bus node the only legit differentiator is the compatible =
-> "simple-bus" prop?
+ * For the tests which use libdl, we were using the GNU make feature
+where it will find libdl.so given a dependency in the form '-ldl'.
+But this built-in make logic doesn't know we're compiling 64-bit so
+finds the 32-bit version of the library.  We avoid using this and
+instead explicitly pass -ldl to CC, which being the 64-bit version
+does know where to look.
 
-Uh.. well.  It's sort of in that odd half-way house.  It's fairly
-widely acknowledged that there are problems with that representation,
-but a new better one has not yet been articulated sufficiently clearly
-to formally deprecate the old way.  It is after all better to keep
-with the old way until we do have a new method that is clearly better,
-in order to keep down the number of old deprecated formats we need to
-deal with eventually.
+ * To process dtc's asm output into .so files, run_tests.sh was
+directly invoking the (default instance of) the assembler and linker.
+Instead invoke these via the CC driver, and allow that to be overriden
+from the make environment.
 
-> BTW: in ePAPR examples there is device_type = "simple-bus" in a 8572
-> soc node, is this a bug or a leftover?
+ * The x86_64 assembler doesn't 0 fill with the .balign directive
+(presumably it is NOP filling).  That doesn't produce strictly
+incorrect trees, but it is confusing and confounds are testcases which
+do byte-by-byte comparison of the trees produced by asm output with
+direct dtb output (which does 0 pad where necessary, of course).  This
+patch uses the optional second argument to .balign to force gas to
+zero-fill instead.
 
-That would be a bug.  I'll add it to my list of things to point out in
-the ePAPR revision / errata process.
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
+Index: dtc/tests/value-labels.c
+===================================================================
+--- dtc.orig/tests/value-labels.c	2009-11-12 11:52:14.000000000 +1100
++++ dtc/tests/value-labels.c	2009-11-12 11:52:56.000000000 +1100
+@@ -89,9 +89,9 @@ void check_prop_labels(void *sohandle, v
+ 			FAIL("Couldn't locate label symbol \"%s\"", name);
+ 
+ 		if ((p - prop->data) != off)
+-			FAIL("Label \"%s\" points to offset %d instead of %d"
++			FAIL("Label \"%s\" points to offset %ld instead of %d"
+ 			     "in property \"%s\"", labels[i].labelname,
+-			     p - prop->data, off, name);
++			     (long)(p - prop->data), off, name);
+ 	}
+ }
+ 
+Index: dtc/tests/Makefile.tests
+===================================================================
+--- dtc.orig/tests/Makefile.tests	2009-11-12 11:52:14.000000000 +1100
++++ dtc/tests/Makefile.tests	2009-11-12 11:52:56.000000000 +1100
+@@ -41,7 +41,9 @@ tests:	$(TESTS) $(TESTS_TREES)
+ 
+ $(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_archive)
+ 
+-$(DL_LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_archive) -ldl
++$(DL_LIB_TESTS): %: %.o $(TESTS_PREFIX)testutils.o $(LIBFDT_archive)
++	@$(VECHO) LD [libdl] $@
++	$(LINK.c) -o $@ $^ -ldl
+ 
+ $(LIBTREE_TESTS): %: $(TESTS_PREFIX)testutils.o $(TESTS_PREFIX)trees.o $(LIBFDT_archive)
+ 
+Index: dtc/tests/run_tests.sh
+===================================================================
+--- dtc.orig/tests/run_tests.sh	2009-11-12 11:52:50.000000000 +1100
++++ dtc/tests/run_tests.sh	2009-11-12 11:52:56.000000000 +1100
+@@ -2,6 +2,10 @@
+ 
+ . ./tests.sh
+ 
++if [ -z "$CC" ]; then
++    CC=gcc
++fi
++
+ export QUIET_TEST=1
+ 
+ export VALGRIND=
+@@ -72,8 +76,7 @@ run_dtc_test () {
+ }
+ 
+ asm_to_so () {
+-    as -o $1.test.o data.S $1.test.s && \
+-	ld -shared -o $1.test.so $1.test.o
++    $CC -shared -o $1.test.so data.S $1.test.s
+ }
+ 
+ asm_to_so_test () {
+Index: dtc/flattree.c
+===================================================================
+--- dtc.orig/flattree.c	2009-11-12 11:52:14.000000000 +1100
++++ dtc/flattree.c	2009-11-12 11:52:56.000000000 +1100
+@@ -166,7 +166,7 @@ static void asm_emit_align(void *e, int 
+ {
+ 	FILE *f = e;
+ 
+-	fprintf(f, "\t.balign\t%d\n", a);
++	fprintf(f, "\t.balign\t%d, 0\n", a);
+ }
+ 
+ static void asm_emit_data(void *e, struct data d)
+
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
