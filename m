@@ -1,12 +1,13 @@
-From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress@arcor.de>
-Subject: [PATCHv2 3/3] mpc52xx/wdt: remove obsolete old WDT implementation
-Date: Thu, 12 Nov 2009 19:45:20 +0100
-Message-ID: <1258051520.2280.3@antares>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv2 1/3] mpc52xx/wdt: OF property to enable the WDT on boot
+Date: Thu, 12 Nov 2009 12:06:03 -0700
+Message-ID: <fa686aa40911121106j1d609868vb16d6867955aa607@mail.gmail.com>
+References: <1258051427.2280.1@antares>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
+In-Reply-To: <1258051427.2280.1@antares>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -16,52 +17,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: "Likely, Grant" <grant.likely@secretlab.ca>, Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, Wim Van Sebroeck <wim@iguana.be>
+To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
+Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-Remove the old WDT implementation.
+On Thu, Nov 12, 2009 at 11:43 AM, Albrecht Dre=DF <albrecht.dress@arcor.de>=
+ wrote:
+> Add the "fsl,wdt-on-boot" OF property as to reserve a GPT as WDT which may
+> be a requirement in safety-related (e.g. ISO/EN 61508) applications.
+>
+> Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
+>
+> ---
+>
+> Change against v1: rename the new property.
+>
+> =A0Documentation/powerpc/dts-bindings/fsl/mpc5200.txt | =A0 17 ++++++++++=
+++++++-
+> =A01 files changed, 16 insertions(+), 1 deletions(-)
+>
+> diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documen=
+tation/powerpc/dts-bindings/fsl/mpc5200.txt
+> index 8447fd7..ddd5ee3 100644
+> --- a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+> +++ b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+> @@ -103,7 +103,22 @@ fsl,mpc5200-gpt nodes
+> =A0---------------------
+> =A0On the mpc5200 and 5200b, GPT0 has a watchdog timer function. =A0If th=
+e board
+> =A0design supports the internal wdt, then the device node for GPT0 should
+> -include the empty property 'fsl,has-wdt'.
+> +include the empty property 'fsl,has-wdt'. =A0Note that this does not act=
+ivate
+> +the watchdog. =A0The timer will function as a GPT if the timer api is us=
+ed, and
+> +it will function as watchdog if the watchdog device is used. =A0The watc=
+hdog
+> +mode has priority over the gpt mode, i.e. if the watchdog is activated, =
+any
+> +gpt api call to this timer will fail with -EBUSY.
+> +
+> +If you add the property
+> + =A0 =A0 =A0 fsl,wdt-on-boot =3D <n>;
+> +GPT0 will be marked as in-use watchdog, i.e. blocking every gpt access t=
+o it.
+> +If n>0, the watchdog is started with a timeout of n seconds. =A0If n=3D0=
+, the
+> +configuration of the watchdog is not touched. =A0This is useful in two c=
+ases:
+> +- just mark GPT0 as watchdog, blocking gpt accesses, and configure it la=
+ter;
+> +- do not touch a configuration assigned by the boot loader which supervi=
+ses
+> + =A0the boot process itself.
+> +
+> +The watchdog will respect the CONFIG_WATCHDOG_NOWAYOUT option.
 
-Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
----
+I think it would be better to use a device tree property to enable up
+NOWAYOUT.  The static config isn't multiplatform-friendly.  Thoughts?
 
-Change against v1: WDT stuff now fully merged into the file
-arch/powerpc/platforms/52xx/mpc52xx_gpt.c.
+Otherwise, this looks good to me.
 
-Note: The file drivers/watchdog/mpc5200_wdt.c is now obsolete and should be=
- removed.
+g.
 
- drivers/watchdog/Kconfig  |    4 +++-
- drivers/watchdog/Makefile |    1 -
- 2 files changed, 3 insertions(+), 2 deletions(-)
+-- =
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 3711b88..d958b76 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -861,8 +861,10 @@ config GEF_WDT
- 	  Watchdog timer found in a number of GE Fanuc single board computers.
- =
-
- config MPC5200_WDT
--	tristate "MPC5200 Watchdog Timer"
-+	bool "MPC52xx Watchdog Timer"
- 	depends on PPC_MPC52xx
-+	help
-+	  Use General Purpose Timer (GPT) 0 on the MPC5200 as Watchdog.
- =
-
- config 8xxx_WDT
- 	tristate "MPC8xxx Platform Watchdog Timer"
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 699199b..89c045d 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -118,7 +118,6 @@ obj-$(CONFIG_TXX9_WDT) +=3D txx9wdt.o
- =
-
- # POWERPC Architecture
- obj-$(CONFIG_GEF_WDT) +=3D gef_wdt.o
--obj-$(CONFIG_MPC5200_WDT) +=3D mpc5200_wdt.o
- obj-$(CONFIG_8xxx_WDT) +=3D mpc8xxx_wdt.o
- obj-$(CONFIG_MV64X60_WDT) +=3D mv64x60_wdt.o
- obj-$(CONFIG_PIKA_WDT) +=3D pika_wdt.o
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
