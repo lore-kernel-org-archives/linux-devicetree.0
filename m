@@ -1,13 +1,16 @@
-From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-Subject: [RFC PATCH 5/5] qe_gpio: port to new of gpio interface
-Date: Tue, 17 Nov 2009 18:42:26 +0300
-Message-ID: <1258472546-31343-6-git-send-email-dbaryshkov@gmail.com>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [RFC PATCH 1/5] Rework OpenFirmware GPIO handling
+Date: Tue, 17 Nov 2009 19:12:44 +0300
+Message-ID: <20091117161244.GA6849@oksana.dev.rtsoft.ru>
 References: <1258472546-31343-1-git-send-email-dbaryshkov@gmail.com>
+	<1258472546-31343-2-git-send-email-dbaryshkov@gmail.com>
+Reply-To: cbouatmailru@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1258472546-31343-1-git-send-email-dbaryshkov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1258472546-31343-2-git-send-email-dbaryshkov@gmail.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -17,36 +20,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org
-Cc: David Brownell <dbrownell@users.sourceforge.net>, Paul Mackerras <paulus@samba.org>
+To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, David Brownell <dbrownell@users.sourceforge.net>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
----
- arch/powerpc/sysdev/qe_lib/gpio.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+On Tue, Nov 17, 2009 at 06:42:22PM +0300, Dmitry Eremin-Solenikov wrote:
+> This patch improves OF GPIO bindings so, that most non-OF-specific gpio
+> controllers don't need to call any of OF binding function:
+> 
+> 0) Move of_gpio_chip into main gpio_chip structure.
+> 1) Call of_gpio_init/destroy from gpiochip_add/remove.
+> 2) By default supply reasonable defaults for gpio_cells/xlate
 
-diff --git a/arch/powerpc/sysdev/qe_lib/gpio.c b/arch/powerpc/sysdev/qe_lib/gpio.c
-index 8e7a776..b85eab8 100644
---- a/arch/powerpc/sysdev/qe_lib/gpio.c
-+++ b/arch/powerpc/sysdev/qe_lib/gpio.c
-@@ -187,7 +187,7 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 	if (err < 0)
- 		goto err1;
- 
--	mm_gc = to_of_mm_gpio_chip(&of_gc->gc);
-+	mm_gc = to_of_mm_of_chip(of_gc);
- 	qe_gc = to_qe_gpio_chip(mm_gc);
- 
- 	spin_lock_irqsave(&qe_gc->lock, flags);
-@@ -319,7 +319,7 @@ static int __init qe_add_gpiochips(void)
- 
- 		mm_gc = &qe_gc->mm_gc;
- 		of_gc = &mm_gc->of_gc;
--		gc = &of_gc->gc;
-+		gc = &mm_gc->gc;
- 
- 		mm_gc->save_regs = qe_gpio_save_regs;
- 		of_gc->gpio_cells = 2;
+Heh.. you didn't google before writing the code, did you? ;-)
+
+I don't really think that David will like this approach, just as
+he didn't like the previous one (which was even less intrusive,
+but still wrong):
+
+http://lkml.org/lkml/2008/10/16/248 (a huge thread, but worth reading)
+
+Both of the approaches do not solve the pdata issue.
+
+There are some of David's [absolutely legitimate] comments:
+http://lkml.org/lkml/2008/10/20/43
+
+Some more thoughts:
+http://lkml.org/lkml/2008/10/20/182
+
+And it turned out that the only sane solution is to write
+OF-pdata-hooks for the each driver (that we do for many drivers
+already):
+
+http://lkml.org/lkml/2008/10/22/471
+
+And for this, you'll need the patches that I sent to you
+yesterday.
+
+Thanks,
+
 -- 
-1.6.5
+Anton Vorontsov
+email: cbouatmailru@gmail.com
+irc://irc.freenode.net/bd2
