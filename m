@@ -1,11 +1,10 @@
-From: Nathan Fontenot <nfont@austin.ibm.com>
-Subject: [PATCH 4/4] Move of_node[attach,detach] declarations to linux/of.h
-Date: Tue, 17 Nov 2009 20:57:30 -0600
-Message-ID: <4B03629A.9050503@austin.ibm.com>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 0/4] Merge OF dynamic patches
+Date: Wed, 18 Nov 2009 11:41:47 +0100
+Message-ID: <20091118104147.GD5166@pengutronix.de>
 References: <4B030FC2.9070401@austin.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3936367530785634249=="
 Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <4B030FC2.9070401@austin.ibm.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
@@ -17,72 +16,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
+To: Nathan Fontenot <nfont@austin.ibm.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
 List-Id: devicetree@vger.kernel.org
 
-Merge the declarations of of_attach_node and of_detach_node from the asm/prom.h
-headers of powerpc and microblaze into linux/of.h.
 
-This update also requires adding linux/of.h to the include list for
-powerpc/platforms/pseries/reconfig.h.
+--===============3936367530785634249==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
+Content-Disposition: inline
 
-Signed-off-by: Nathan Fontenot <nfont@austin.ibm.com>
----
 
-Index: test-devicetree/arch/microblaze/include/asm/prom.h
-===================================================================
---- test-devicetree.orig/arch/microblaze/include/asm/prom.h	2009-11-17 14:17:03.000000000 -0600
-+++ test-devicetree/arch/microblaze/include/asm/prom.h	2009-11-17 14:18:25.000000000 -0600
-@@ -139,10 +139,6 @@
- 		of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern unsigned long __init of_get_flat_dt_root(void);
- 
--/* For updating the device tree at runtime */
--extern void of_attach_node(struct device_node *);
--extern void of_detach_node(struct device_node *);
--
- /* Other Prototypes */
- extern void finish_device_tree(void);
- extern void unflatten_device_tree(void);
-Index: test-devicetree/arch/powerpc/include/asm/prom.h
-===================================================================
---- test-devicetree.orig/arch/powerpc/include/asm/prom.h	2009-11-17 14:17:03.000000000 -0600
-+++ test-devicetree/arch/powerpc/include/asm/prom.h	2009-11-17 14:18:25.000000000 -0600
-@@ -137,10 +137,6 @@
- extern int __init of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern unsigned long __init of_get_flat_dt_root(void);
- 
--/* For updating the device tree at runtime */
--extern void of_attach_node(struct device_node *);
--extern void of_detach_node(struct device_node *);
--
- /* Other Prototypes */
- extern void finish_device_tree(void);
- extern void unflatten_device_tree(void);
-Index: test-devicetree/arch/powerpc/platforms/pseries/reconfig.c
-===================================================================
---- test-devicetree.orig/arch/powerpc/platforms/pseries/reconfig.c	2009-11-17 14:17:03.000000000 -0600
-+++ test-devicetree/arch/powerpc/platforms/pseries/reconfig.c	2009-11-17 14:18:25.000000000 -0600
-@@ -15,6 +15,7 @@
- #include <linux/kref.h>
- #include <linux/notifier.h>
- #include <linux/proc_fs.h>
-+#include <linux/of.h>
- 
- #include <asm/prom.h>
- #include <asm/machdep.h>
-Index: test-devicetree/include/linux/of.h
-===================================================================
---- test-devicetree.orig/include/linux/of.h	2009-11-17 14:17:03.000000000 -0600
-+++ test-devicetree/include/linux/of.h	2009-11-17 14:18:25.000000000 -0600
-@@ -84,4 +84,10 @@
- 	const char *list_name, const char *cells_name, int index,
- 	struct device_node **out_node, const void **out_args);
- 
-+#ifdef CONFIG_OF_DYNAMIC
-+/* For updating the device tree at runtime */
-+extern void of_attach_node(struct device_node *);
-+extern void of_detach_node(struct device_node *);
-+#endif
-+
- #endif /* _LINUX_OF_H */
+--mJm6k4Vb/yFcL9ZU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Nov 17, 2009 at 03:04:02PM -0600, Nathan Fontenot wrote:
+> This set of patches merges the common dynamic device tree
+> updating routines of_attach_node() and of_detach_node() to
+> drivers/of/of_dynamic.c.
+>
+> Built and tested on powerpc, I have no access to build/test
+> this on microblaze.
+
+They look good, but I can't test them as they don't apply to test-devicetre=
+e.
+On which commit are they based?
+
+It would be nice if you could also add a diffstat to every patch, this makes
+reviewing 'move-around'-patches a bit easier.
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--mJm6k4Vb/yFcL9ZU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAksDz2sACgkQD27XaX1/VRtfAwCfbiHN6MiWlxdNLenJo8k9NNHu
+P6cAoL7CzP6k83NcxfKGoh9XH0Qavq4i
+=b7kS
+-----END PGP SIGNATURE-----
+
+--mJm6k4Vb/yFcL9ZU--
+
+--===============3936367530785634249==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============3936367530785634249==--
