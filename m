@@ -1,83 +1,47 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
+From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
 Subject: Re: [PATCH 0/4] Merge OF dynamic patches
-Date: Wed, 18 Nov 2009 11:41:47 +0100
-Message-ID: <20091118104147.GD5166@pengutronix.de>
+Date: Wed, 18 Nov 2009 14:16:03 -0600
+Message-ID: <4B045603.5060801@austin.ibm.com>
 References: <4B030FC2.9070401@austin.ibm.com>
+	<20091118104147.GD5166@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3936367530785634249=="
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4B030FC2.9070401@austin.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Nathan Fontenot <nfont@austin.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20091118104147.GD5166-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Wolfram Sang wrote:
+> On Tue, Nov 17, 2009 at 03:04:02PM -0600, Nathan Fontenot wrote:
+>> This set of patches merges the common dynamic device tree
+>> updating routines of_attach_node() and of_detach_node() to
+>> drivers/of/of_dynamic.c.
+>>
+>> Built and tested on powerpc, I have no access to build/test
+>> this on microblaze.
+> 
+> They look good, but I can't test them as they don't apply to test-devicetree.
+> On which commit are they based?
 
---===============3936367530785634249==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
-Content-Disposition: inline
+I meant to base these on the test-devicetree branch but it appears that I did
+not checkout the test-devicetree branch after cloning.  I will rebase the patches
+against the test-devicetree branch and re-send.
 
+> 
+> It would be nice if you could also add a diffstat to every patch, this makes
+> reviewing 'move-around'-patches a bit easier.
 
---mJm6k4Vb/yFcL9ZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+will do.
 
-On Tue, Nov 17, 2009 at 03:04:02PM -0600, Nathan Fontenot wrote:
-> This set of patches merges the common dynamic device tree
-> updating routines of_attach_node() and of_detach_node() to
-> drivers/of/of_dynamic.c.
->
-> Built and tested on powerpc, I have no access to build/test
-> this on microblaze.
-
-They look good, but I can't test them as they don't apply to test-devicetre=
-e.
-On which commit are they based?
-
-It would be nice if you could also add a diffstat to every patch, this makes
-reviewing 'move-around'-patches a bit easier.
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---mJm6k4Vb/yFcL9ZU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAksDz2sACgkQD27XaX1/VRtfAwCfbiHN6MiWlxdNLenJo8k9NNHu
-P6cAoL7CzP6k83NcxfKGoh9XH0Qavq4i
-=b7kS
------END PGP SIGNATURE-----
-
---mJm6k4Vb/yFcL9ZU--
-
---===============3936367530785634249==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/linuxppc-dev
---===============3936367530785634249==--
+-Nathan Fontenot
