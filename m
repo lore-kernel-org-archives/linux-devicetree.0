@@ -1,7 +1,7 @@
 From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-Subject: [PATCH 3/4 v2] Makefile and Kconfig updates
-Date: Fri, 20 Nov 2009 09:08:05 -0600
-Message-ID: <4B06B0D5.8080909@austin.ibm.com>
+Subject: [PATCH 4/4 v2] Include of_dynamic.h in pseries/reconfig.c
+Date: Fri, 20 Nov 2009 09:09:13 -0600
+Message-ID: <4B06B119.1080402@austin.ibm.com>
 References: <4B06AF33.1000400@austin.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
@@ -20,65 +20,24 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the Kconfig and Makefile files for drivers/of, powerpc and microblaze
-to properly configure for CONFIG_OF_DYNAMIC to build the of_dynamic code.
+Include the newly created linux/of_dynamic.h to pick up the 
+of_[attach,detach]_node declarations.
 
 Signed-off-by: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+
 ---
+ arch/powerpc/platforms/pseries/reconfig.c |    1 +
+ 1 file changed, 1 insertion(+)
 
- arch/microblaze/Kconfig |    1 +
- arch/powerpc/Kconfig    |    1 +
- drivers/of/Kconfig      |    4 ++++
- drivers/of/Makefile     |    1 +
- 4 files changed, 7 insertions(+)
-
-Index: test-devicetree/arch/microblaze/Kconfig
+Index: test-devicetree/arch/powerpc/platforms/pseries/reconfig.c
 ===================================================================
---- test-devicetree.orig/arch/microblaze/Kconfig	2009-11-20 11:59:01.000000000 -0600
-+++ test-devicetree/arch/microblaze/Kconfig	2009-11-20 12:35:41.000000000 -0600
-@@ -112,6 +112,7 @@
- config OF
- 	def_bool y
- 	select OF_FLATTREE
-+	select OF_DYNAMIC
+--- test-devicetree.orig/arch/powerpc/platforms/pseries/reconfig.c	2009-11-20 11:59:00.000000000 -0600
++++ test-devicetree/arch/powerpc/platforms/pseries/reconfig.c	2009-11-20 12:37:32.000000000 -0600
+@@ -15,6 +15,7 @@
+ #include <linux/kref.h>
+ #include <linux/notifier.h>
+ #include <linux/proc_fs.h>
++#include <linux/of_dynamic.h>
  
- config PROC_DEVICETREE
- 	bool "Support for device tree in /proc"
-Index: test-devicetree/arch/powerpc/Kconfig
-===================================================================
---- test-devicetree.orig/arch/powerpc/Kconfig	2009-11-20 11:59:01.000000000 -0600
-+++ test-devicetree/arch/powerpc/Kconfig	2009-11-20 12:35:41.000000000 -0600
-@@ -164,6 +164,7 @@
- config OF
- 	def_bool y
- 	select OF_FLATTREE
-+	select OF_DYNAMIC
- 
- config PPC_UDBG_16550
- 	bool
-Index: test-devicetree/drivers/of/Kconfig
-===================================================================
---- test-devicetree.orig/drivers/of/Kconfig	2009-11-20 11:59:01.000000000 -0600
-+++ test-devicetree/drivers/of/Kconfig	2009-11-20 12:35:41.000000000 -0600
-@@ -2,6 +2,10 @@
- 	bool
- 	depends on OF
- 
-+config OF_DYNAMIC
-+	bool
-+	depends on OF
-+
- config OF_DEVICE
- 	def_bool y
- 	depends on OF && (SPARC || PPC_OF || MICROBLAZE)
-Index: test-devicetree/drivers/of/Makefile
-===================================================================
---- test-devicetree.orig/drivers/of/Makefile	2009-11-20 11:59:01.000000000 -0600
-+++ test-devicetree/drivers/of/Makefile	2009-11-20 12:35:41.000000000 -0600
-@@ -1,5 +1,6 @@
- obj-y = base.o
- obj-$(CONFIG_OF_FLATTREE) += fdt.o
-+obj-$(CONFIG_OF_DYNAMIC) += of_dynamic.o
- obj-$(CONFIG_OF_DEVICE) += device.o platform.o
- obj-$(CONFIG_OF_GPIO)   += gpio.o
- obj-$(CONFIG_OF_I2C)	+= of_i2c.o
+ #include <asm/prom.h>
+ #include <asm/machdep.h>
