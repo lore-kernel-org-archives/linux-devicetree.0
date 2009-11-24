@@ -1,53 +1,61 @@
-From: "Yoder Stuart-B08248" <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: Writing Device Tree Source (DTS)
-Date: Mon, 23 Nov 2009 09:48:18 -0700
-Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA3057BD338@az33exm25.fsl.freescale.net>
-References: <200911230858.nAN8vsWf006884@arlmailha04.patni.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH 00/11] Yet another series of OF merge patches.
+Date: Tue, 24 Nov 2009 01:17:41 -0700
+Message-ID: <20091124081316.6216.66310.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <200911230858.nAN8vsWf006884-QAxaCDP67tRcIBjhHP3Ktq0bRtRcJeJQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: amarjit.kumar-7K+nh26gSkEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: amarjit.kumar.mtech-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <sparclinux-owner@vger.kernel.org>
+Sender: sparclinux-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, benh@kernel.crashing.org, sfr@canb.auug.org.au, dave
 List-Id: devicetree@vger.kernel.org
 
+Nothing much to say here other than mostly mechanical merging of OF
+support code.  Some of it remains a little ugly, but I'm taking the
+approach of merging the code first, and refactoring it second.
+
+I've pushed this series out to my test-devicetree branch on my git
+server if anyone wants to test.  That branch also includes the
+previous 2 patch series that I've sent out.
+
+git://git.secretlab.ca/git/linux-2.6 test-devicetree
+
+Compile tested on: ppc64, ppc32, microblaze, sparc64, sparc32.
+Boot tested on mpc5200 (ppc32) platform.
+
+---
+
+Grant Likely (11):
+      of: unify phandle name in struct device_node
+      microblaze: gut implementation of early_init_dt_scan_cpus()
+      of: merge of_attach_node() & of_detach_node()
+      of: Merge of_node_get() and of_node_put()
+      of: merge machine_is_compatible()
+      of/flattree: merge early_init_devtree() and early_init_move_devtree()
+      of/flattree: merge early_init_dt_scan_chosen()
+      of/flattree: eliminate cell_t typedef
+      of/flattree: merge dt_mem_next_cell
+      of/flattree: Merge earlyinit_dt_scan_root()
+      of/flattree: Merge early_init_dt_check_for_initrd()
 
 
-On Mon, Nov 23, 2009 at 2:57 AM, Kumar Amarjit <amarjit.kumar-7K+nh26gSkEAvxtiuMwx3w@public.gmane.org>
-wrote:
->
-> Hi All,
-> We are using PowerPc440 core on our Soc that consists of PCIe core,
-SAS core and many other things.
-> We are writing DTS for our board to be used during booting, we have
-gone through various dts files available inside the Linux Kernel 2.6.31.
-> Our board is closets match with Taishan board.
-> While referring the Taishan.dts, we are unable to get the information
-regarding Interrupt-map and interrupt-map-mask property.
-> Please refer to the snippet.......
-> It would be great if anybody help me to understand the way they are
-writing these properties?
-> I also gone through the DTS document booting-without-of but that does
-not help us, so anybody having any documents on How To Write DTS can
-help me out.
+ arch/microblaze/include/asm/prom.h           |    4 
+ arch/microblaze/kernel/prom.c                |  375 +-------------------------
+ arch/powerpc/include/asm/prom.h              |    4 
+ arch/powerpc/kernel/prom.c                   |  366 ++-----------------------
+ arch/powerpc/platforms/powermac/pfunc_core.c |    2 
+ arch/sparc/kernel/devices.c                  |    2 
+ arch/sparc/kernel/of_device_32.c             |    2 
+ arch/sparc/kernel/of_device_64.c             |    2 
+ arch/sparc/kernel/prom_common.c              |    8 -
+ arch/sparc/kernel/smp_64.c                   |    2 
+ drivers/of/base.c                            |  153 +++++++++++
+ drivers/of/fdt.c                             |  204 ++++++++++++++
+ drivers/sbus/char/openprom.c                 |   10 -
+ drivers/video/aty/atyfb_base.c               |    2 
+ include/linux/of.h                           |    7 
+ include/linux/of_fdt.h                       |   18 +
+ 16 files changed, 430 insertions(+), 731 deletions(-)
 
-Take a look at the ePAPR:
-http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-
-See section 2.4 which discusses interrupts and interrupt
-mapping.
-
-This is not a how to, but explains the properties.
-
-Stuart
+-- 
+Signature
