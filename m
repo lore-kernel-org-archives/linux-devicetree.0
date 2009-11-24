@@ -1,38 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] tty/of_serial: add missing ns16550a id
-Date: Tue, 24 Nov 2009 10:22:41 +0000
-Message-ID: <200911241022.41078.arnd@arndb.de>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 11/11] of: unify phandle name in struct device_node
+Date: Tue, 24 Nov 2009 09:37:32 -0800 (PST)
+Message-ID: <20091124.093732.203692950.davem@davemloft.net>
+References: <20091124081316.6216.66310.stgit@angua>
+	<20091124081957.6216.74456.stgit@angua>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: greg@kroah.com, devicetree-discuss@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20091124081957.6216.74456.stgit@angua>
+Sender: sparclinux-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, benh@kernel.crashing.org, sfr@canb.auug.org.au, monstr@monstr.eu
 List-Id: devicetree@vger.kernel.org
 
-From: Michal Simek <monstr@monstr.eu>
+From: Grant Likely <grant.likely@secretlab.ca>
+Date: Tue, 24 Nov 2009 01:20:05 -0700
 
-Many boards have a bug-free ns16550 compatible serial port, which we should
-register as PORT_16550A. This introduces a new value "ns16550a" for the
-compatible property of of_serial to let a firmware choose that model instead
-of using the crippled PORT_16550 mode.
+> In struct device_node, the phandle is named 'linux_phandle' for PowerPC
+> and MicroBlaze, and 'node' for SPARC.  There is no good reason for the
+> difference, it is just an artifact of the code diverging over a couple
+> of years.  This patch renames .node to .linux_phandle for SPARC.
 
-Reported-by: Alon Ziv <alonz@nolaviz.org>
-Signed-off-by: Michal Simek <monstr@monstr.eu>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+I know it's just a name, but there is no reason to put "linux" in the
+member name.  It's the real device phandle value from OpenFirmware not
+something invented by Linux's OF layer.
 
----
-Please apply to the tty tree for 2.6.33
+PowerPC uses this for something different, it records the information
+here using the special "linux,phandle" and "ibm,phandle" properties.
 
---- a/drivers/serial/of_serial.c
-+++ b/drivers/serial/of_serial.c
-@@ -161,6 +161,7 @@ static int of_platform_serial_remove(struct of_device *ofdev)
- static struct of_device_id __devinitdata of_platform_serial_table[] = {
- 	{ .type = "serial", .compatible = "ns8250",   .data = (void *)PORT_8250, },
- 	{ .type = "serial", .compatible = "ns16450",  .data = (void *)PORT_16450, },
-+	{ .type = "serial", .compatible = "ns16550a", .data = (void *)PORT_16550A, },
- 	{ .type = "serial", .compatible = "ns16550",  .data = (void *)PORT_16550, },
- 	{ .type = "serial", .compatible = "ns16750",  .data = (void *)PORT_16750, },
- 	{ .type = "serial", .compatible = "ns16850",  .data = (void *)PORT_16850, },
+See unflatten_dt_node() in arch/powerpc/kernel/prom.c before your
+changes.
