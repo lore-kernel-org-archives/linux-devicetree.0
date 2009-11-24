@@ -1,77 +1,81 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 11/11] of: unify phandle name in struct device_node
-Date: Tue, 24 Nov 2009 14:39:16 -0700
-Message-ID: <fa686aa40911241339h5b48e6a2i28efec0cfaa1faab@mail.gmail.com>
-References: <20091124081316.6216.66310.stgit@angua> <20091124081957.6216.74456.stgit@angua>
-	<20091124.093732.203692950.davem@davemloft.net> <1259096815.16367.133.camel@pasglop>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 32/38] don't use __exit_p to wrap plat_mpc8xxx_spi_remove
+Date: Tue, 24 Nov 2009 14:42:22 -0700
+Message-ID: <fa686aa40911241342we68d831n4bd6e637ff21f939@mail.gmail.com>
+References: <1259096853-18909-1-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-24-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-25-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-26-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-27-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-28-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-29-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-30-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-31-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1259096853-18909-32-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <1259096815.16367.133.camel@pasglop>
-Sender: sparclinux-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: David Miller <davem@davemloft.net>, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, sfr@canb.auug.org.au, monstr@monstr.eu
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1259096853-18909-32-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: =?ISO-8859-1?Q?Uwe_Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2009 at 2:06 PM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Tue, 2009-11-24 at 09:37 -0800, David Miller wrote:
->> From: Grant Likely <grant.likely@secretlab.ca>
->> Date: Tue, 24 Nov 2009 01:20:05 -0700
->>
->> > In struct device_node, the phandle is named 'linux_phandle' for Po=
-werPC
->> > and MicroBlaze, and 'node' for SPARC. =A0There is no good reason f=
-or the
->> > difference, it is just an artifact of the code diverging over a co=
-uple
->> > of years. =A0This patch renames .node to .linux_phandle for SPARC.
->>
->> I know it's just a name, but there is no reason to put "linux" in th=
-e
->> member name. =A0It's the real device phandle value from OpenFirmware=
- not
->> something invented by Linux's OF layer.
->>
->> PowerPC uses this for something different, it records the informatio=
-n
->> here using the special "linux,phandle" and "ibm,phandle" properties.
->>
->> See unflatten_dt_node() in arch/powerpc/kernel/prom.c before your
->> changes.
+2009/11/24 Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
+> The function plat_mpc8xxx_spi_remove is defined using __devexit, so don't
+> use __exit_p but __devexit_p to wrap it.
 >
-> Right, this comes from a subtle problem with our firmwares on pSeries=
-=2E
->
-> We have a phandle from OF. But some devices, especially virtual devic=
-es,
-> also have an "ibm,phandle" which may or may not be the same afaik.
->
-> In addition, when the hypervisor hotplugs some devices, it sends us s=
-ome
-> new device-tree bits to add. Those don't have a phandle in the formal
-> sense afaik, but -do- have an ibm,phandle property.
->
-> I think we can always just use ibm,phandle instead of the OF one when
-> the former is present, they should be non overlapping, but of course,
-> any chance in that area will require plenty of testing on some of tho=
-se
-> machines.
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-If pseries is the troublesome platform, not powermac, then I'm pretty
-confident this change is okay.  I cannot find any other users of .node
-other than arch/powerpc/platforms/powermac/pfunc_core.c, but I'll
-double check with an allmodconfig and an allyesconfig.  This patch
-shouldn't change the behaviour of linux_phandle at all.
+Obviously correct.
+
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
 g.
 
---=20
+> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+> Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> ---
+> =A0drivers/spi/spi_mpc8xxx.c | =A0 =A02 +-
+> =A01 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/drivers/spi/spi_mpc8xxx.c b/drivers/spi/spi_mpc8xxx.c
+> index 0fd0ec4..1d98be9 100644
+> --- a/drivers/spi/spi_mpc8xxx.c
+> +++ b/drivers/spi/spi_mpc8xxx.c
+> @@ -900,7 +900,7 @@ static int __devexit plat_mpc8xxx_spi_remove(struct p=
+latform_device *pdev)
+> =A0MODULE_ALIAS("platform:mpc8xxx_spi");
+> =A0static struct platform_driver mpc8xxx_spi_driver =3D {
+> =A0 =A0 =A0 =A0.probe =3D plat_mpc8xxx_spi_probe,
+> - =A0 =A0 =A0 .remove =3D __exit_p(plat_mpc8xxx_spi_remove),
+> + =A0 =A0 =A0 .remove =3D __devexit_p(plat_mpc8xxx_spi_remove),
+> =A0 =A0 =A0 =A0.driver =3D {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =3D "mpc8xxx_spi",
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =3D THIS_MODULE,
+> --
+> 1.6.5.2
+>
+>
+
+
+
+-- =
+
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
