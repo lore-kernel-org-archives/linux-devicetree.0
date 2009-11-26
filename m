@@ -1,39 +1,27 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: Support ePAPR compliant phandle properties
-Date: Thu, 26 Nov 2009 15:08:31 -0600
-Message-ID: <E1NDlZn-0005tz-Kd@jdl.com>
-References: <20091126043713.GA27334@yookeroo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [PATCH 04/11] of/flattree: eliminate cell_t typedef
+Date: Thu, 26 Nov 2009 22:36:41 +0100
+Message-ID: <F307E7FB-0819-47E8-9CF4-CA1433C18DA6@kernel.crashing.org>
+References: <20091124081316.6216.66310.stgit@angua> <20091124081827.6216.1896.stgit@angua> <1259207974.16367.226.camel@pasglop> <fa686aa40911252005o2db85dfk3d9acc61c12ca5e5@mail.gmail.com> <1259213266.16367.274.camel@pasglop>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset=US-ASCII; delsp=yes; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20091126043713.GA27334@yookeroo> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <1259213266.16367.274.camel@pasglop>
+Sender: sparclinux-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, sfr@canb.auug.org.au, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-> Currently, the Linux kernel, libfdt and dtc, when using flattened
-> device trees encode a node's phandle into a property named
-> "linux,phandle".  The ePAPR specification, however - aiming as it is
-> to not be a Linux specific spec - requires that phandles be encoded in
-> a property named simply "phandle".
-> 
-> This patch adds support for this newer approach to dtc and libfdt.
+>> You're right, it's not, but makes merging less complex, and then I  
+>> can
+>> refactor properly.
 >
-> ...
->
-> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> Still, make them __be32 at least
 
-Applied.
+There is no alignment guarantee at all either, better make it all u8
+and use accessor functions everywhere.
 
-Thanks,
-jdl
+
+Segher
+
