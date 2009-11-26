@@ -1,50 +1,197 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 11/11] of: unify phandle name in struct device_node
-Date: Tue, 24 Nov 2009 18:33:33 -0700
-Message-ID: <fa686aa40911241733s4588c6fag4ed56153842dcd83@mail.gmail.com>
-References: <20091124215908.559.23998.stgit@angua> <AE8D50AE-03EE-45FC-80EF-376F0836B5CB@kernel.crashing.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 01/11] of/flattree: Merge early_init_dt_check_for_initrd()
+Date: Thu, 26 Nov 2009 14:51:18 +1100
+Message-ID: <1259207478.16367.218.camel@pasglop>
+References: <20091124081316.6216.66310.stgit@angua>
+	<20091124081747.6216.88376.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <AE8D50AE-03EE-45FC-80EF-376F0836B5CB@kernel.crashing.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, monstr@monstr.eu
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20091124081747.6216.88376.stgit@angua>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: sfr@canb.auug.org.au, monstr@monstr.eu, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2009 at 6:30 PM, Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
->> In struct device_node, the phandle is named 'linux_phandle' for Powe=
-rPC
->> and MicroBlaze, and 'node' for SPARC. =A0There is no good reason for=
- the
->> difference, it is just an artifact of the code diverging over a coup=
-le
->> of years. =A0This patch renames both to simply .phandle.
->>
->> Note: the .node also existed in PowerPC/MicroBlaze, but the only use=
-r
->> seems to be arch/powerpc/platforms/powermac/pfunc_core.c. =A0It does=
-n't
->> look like the assignment between .linux_phandle and .node is
->> significantly different enough to warrant the separate code paths
->> unless ibm,phandle properties actually appear in Apple device trees.
->>
->> I think it is safe to eliminate the old .node property and use
->> linux_phandle everywhere.
->
-> =A0^^^^^^^^^^^^ =A0You forgot to update one :-)
+On Tue, 2009-11-24 at 01:17 -0700, Grant Likely wrote:
+> Merge common code between PowerPC and Microblaze
+> 
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Reviewed-by: Wolfram Sang <w.sang@pengutronix.de>
+> Tested-by: Michal Simek <monstr@monstr.eu>
 
-Heeheehee.  oops.
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-g.
+Remind me how you want to merge that ? via my tree ?
 
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ben.
+
+> ---
+> 
+>  arch/microblaze/kernel/prom.c |   32 --------------------------------
+>  arch/powerpc/kernel/prom.c    |   30 ------------------------------
+>  drivers/of/fdt.c              |   37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h        |    1 +
+>  4 files changed, 38 insertions(+), 62 deletions(-)
+> 
+> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+> index a38e373..7959495 100644
+> --- a/arch/microblaze/kernel/prom.c
+> +++ b/arch/microblaze/kernel/prom.c
+> @@ -113,38 +113,6 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -static void __init early_init_dt_check_for_initrd(unsigned long node)
+> -{
+> -	unsigned long l;
+> -	u32 *prop;
+> -
+> -	pr_debug("Looking for initrd properties... ");
+> -
+> -	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &l);
+> -	if (prop) {
+> -		initrd_start = (unsigned long)
+> -					__va((u32)of_read_ulong(prop, l/4));
+> -
+> -		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &l);
+> -		if (prop) {
+> -			initrd_end = (unsigned long)
+> -					__va((u32)of_read_ulong(prop, 1/4));
+> -			initrd_below_start_ok = 1;
+> -		} else {
+> -			initrd_start = 0;
+> -		}
+> -	}
+> -
+> -	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n",
+> -					initrd_start, initrd_end);
+> -}
+> -#else
+> -static inline void early_init_dt_check_for_initrd(unsigned long node)
+> -{
+> -}
+> -#endif /* CONFIG_BLK_DEV_INITRD */
+> -
+>  static int __init early_init_dt_scan_chosen(unsigned long node,
+>  				const char *uname, int depth, void *data)
+>  {
+> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+> index 7f88566..1ecd6c6 100644
+> --- a/arch/powerpc/kernel/prom.c
+> +++ b/arch/powerpc/kernel/prom.c
+> @@ -373,36 +373,6 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -static void __init early_init_dt_check_for_initrd(unsigned long node)
+> -{
+> -	unsigned long l;
+> -	u32 *prop;
+> -
+> -	DBG("Looking for initrd properties... ");
+> -
+> -	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &l);
+> -	if (prop) {
+> -		initrd_start = (unsigned long)__va(of_read_ulong(prop, l/4));
+> -
+> -		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &l);
+> -		if (prop) {
+> -			initrd_end = (unsigned long)
+> -					__va(of_read_ulong(prop, l/4));
+> -			initrd_below_start_ok = 1;
+> -		} else {
+> -			initrd_start = 0;
+> -		}
+> -	}
+> -
+> -	DBG("initrd_start=0x%lx  initrd_end=0x%lx\n", initrd_start, initrd_end);
+> -}
+> -#else
+> -static inline void early_init_dt_check_for_initrd(unsigned long node)
+> -{
+> -}
+> -#endif /* CONFIG_BLK_DEV_INITRD */
+> -
+>  static int __init early_init_dt_scan_chosen(unsigned long node,
+>  					    const char *uname, int depth, void *data)
+>  {
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 43d236c..6ad98e8 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -11,6 +11,7 @@
+>  
+>  #include <linux/kernel.h>
+>  #include <linux/lmb.h>
+> +#include <linux/initrd.h>
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+>  
+> @@ -369,6 +370,42 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+>  	return mem;
+>  }
+>  
+> +#ifdef CONFIG_BLK_DEV_INITRD
+> +/**
+> + * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+> + * @node: reference to node containing initrd location ('chosen')
+> + */
+> +void __init early_init_dt_check_for_initrd(unsigned long node)
+> +{
+> +	unsigned long len;
+> +	u32 *prop;
+> +
+> +	pr_debug("Looking for initrd properties... ");
+> +
+> +	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
+> +	if (prop) {
+> +		initrd_start = (unsigned long)
+> +				__va(of_read_ulong(prop, len/4));
+> +
+> +		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
+> +		if (prop) {
+> +			initrd_end = (unsigned long)
+> +				__va(of_read_ulong(prop, len/4));
+> +			initrd_below_start_ok = 1;
+> +		} else {
+> +			initrd_start = 0;
+> +		}
+> +	}
+> +
+> +	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n",
+> +		 initrd_start, initrd_end);
+> +}
+> +#else
+> +inline void early_init_dt_check_for_initrd(unsigned long node)
+> +{
+> +}
+> +#endif /* CONFIG_BLK_DEV_INITRD */
+> +
+>  /**
+>   * unflatten_device_tree - create tree of device_nodes from flat blob
+>   *
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 81231e0..ec2db82 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -69,6 +69,7 @@ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
+>  				 unsigned long *size);
+>  extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+>  extern unsigned long of_get_flat_dt_root(void);
+> +extern void early_init_dt_check_for_initrd(unsigned long node);
+>  
+>  /* Other Prototypes */
+>  extern void finish_device_tree(void);
