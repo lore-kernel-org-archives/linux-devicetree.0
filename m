@@ -1,58 +1,35 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH 00/11] Yet another series of OF merge patches.
-Date: Thu, 26 Nov 2009 13:28:42 +0100
-Message-ID: <20091126122842.GC4846@pengutronix.de>
-References: <20091124081316.6216.66310.stgit@angua>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JgQwtEuHJzHdouWu"
-Return-path: <sparclinux-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20091124081316.6216.66310.stgit@angua>
-Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, monstr@monstr.eu
+From: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Subject: Re: Support ePAPR compliant phandle properties
+Date: Thu, 26 Nov 2009 18:04:06 +0100
+Message-ID: <87DB15E4-33F6-408A-A93B-7686F48B265E@semihalf.com>
+References: <20091126043713.GA27334@yookeroo>
+Mime-Version: 1.0 (Apple Message framework v1077)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20091126043713.GA27334@yookeroo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---JgQwtEuHJzHdouWu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2009-11-26, at 05:37, David Gibson wrote:
 
-On Tue, Nov 24, 2009 at 01:17:41AM -0700, Grant Likely wrote:
-> Nothing much to say here other than mostly mechanical merging of OF
-> support code.  Some of it remains a little ugly, but I'm taking the
-> approach of merging the code first, and refactoring it second.
->=20
-> I've pushed this series out to my test-devicetree branch on my git
-> server if anyone wants to test.  That branch also includes the
-> previous 2 patch series that I've sent out.
->=20
-> git://git.secretlab.ca/git/linux-2.6 test-devicetree
->=20
-> Compile tested on: ppc64, ppc32, microblaze, sparc64, sparc32.
-> Boot tested on mpc5200 (ppc32) platform.
+> Currently, the Linux kernel, libfdt and dtc, when using flattened
+> device trees encode a node's phandle into a property named
+> "linux,phandle".  The ePAPR specification, however - aiming as it is
+> to not be a Linux specific spec - requires that phandles be encoded in
+> a property named simply "phandle".
 
-test-devicetree as of today also works fine on my phyCORE-MPC5200B-IO.
+Great to see this coming, thank you very much. This was one of the items on my list of things to raise in the near future :-)
 
-Tested-by: Wolfram Sang <w.sang@pengutronix.de>
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---JgQwtEuHJzHdouWu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAksOdHkACgkQD27XaX1/VRsPLgCgv0ZKmj3Ea/43SgVMA6CJ/tB0
-zy0AoLrdXihljb6X17/9LaL0mQa7ugeS
-=eVCc
------END PGP SIGNATURE-----
-
---JgQwtEuHJzHdouWu--
+Rafal
