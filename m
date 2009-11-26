@@ -1,13 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Make the kernel accept ePAPR style phandle information
-Date: Wed, 25 Nov 2009 22:46:29 -0700
-Message-ID: <fa686aa40911252146u73a9f9d3y9fb287bfc051503d@mail.gmail.com>
-References: <20091126051641.GB27334@yookeroo>
+From: "M. Warner Losh" <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 04/11] of/flattree: eliminate cell_t typedef
+Date: Wed, 25 Nov 2009 23:28:18 -0700 (MST)
+Message-ID: <20091125.232818.-1350498258.imp@bsdimp.com>
+References: <20091124081827.6216.1896.stgit@angua>
+	<1259207974.16367.226.camel@pasglop>
+	<fa686aa40911252005o2db85dfk3d9acc61c12ca5e5@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091126051641.GB27334@yookeroo>
+In-Reply-To: <fa686aa40911252005o2db85dfk3d9acc61c12ca5e5-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,87 +19,15 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2009 at 10:16 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> Grant, this is based on your test-devicetree branch, if it could be
-> merged via there would be great.
->
-> Currently when processing flattened device trees, the kernel expects
-> the phandle in a property called "linux,phandle". =A0The ePAPR spec -
-> not being Linux specific - instead requires phandles to be encoded in
-> a property named simply "phandle". =A0This patch makes the kernel accept
-> either form when unflattening the device tree.
->
-> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+In message: <fa686aa40911252005o2db85dfk3d9acc61c12ca5e5-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+            Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> writes:
+: Word from Mitch is the device tree is network byte order.  period.
 
-Looks okay to me.
+OpenFirmware defines the order to be big endian always, even on little
+endian processors.
 
-g.
-
->
-> Index: working-2.6/drivers/of/fdt.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- working-2.6.orig/drivers/of/fdt.c =A0 2009-11-26 09:58:06.052792325 +=
-1100
-> +++ working-2.6/drivers/of/fdt.c =A0 =A0 =A0 =A02009-11-26 10:00:08.30957=
-0256 +1100
-> @@ -314,10 +314,19 @@ unsigned long __init unflatten_dt_node(u
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pp =3D unflatten_dt_alloc(&mem, sizeof(str=
-uct property),
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0__alignof__(struct property));
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (allnextpp) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (strcmp(pname, "linux,ph=
-andle") =3D=3D 0) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We accept flattened tree=
- phandles either in
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* ePAPR-style "phandle" =
-properties, or the
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* legacy "linux,phandle"=
- properties. =A0If both
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* appear and have differ=
-ent values, things
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* will get weird. =A0Don=
-'t do that. */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if ((strcmp(pname, "phandle=
-") =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 || (strcmp(pname, "=
-linux,phandle") =3D=3D 0)) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (np->ph=
-andle =3D=3D 0)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0np->phandle =3D *((u32 *)*p);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* And we process the "ibm,=
-phandle" property
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* used in pSeries dynami=
-c device tree
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* stuff */
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (strcmp(pname, "ibm,pha=
-ndle") =3D=3D 0)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0np->phandl=
-e =3D *((u32 *)*p);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pp->name =3D pname;
->
->
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Warner
