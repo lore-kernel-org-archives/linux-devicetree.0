@@ -1,65 +1,35 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Make the kernel accept ePAPR style phandle information
-Date: Thu, 26 Nov 2009 16:16:42 +1100
-Message-ID: <20091126051641.GB27334@yookeroo>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 04/11] of/flattree: eliminate cell_t typedef
+Date: Thu, 26 Nov 2009 16:27:46 +1100
+Message-ID: <1259213266.16367.274.camel@pasglop>
+References: <20091124081316.6216.66310.stgit@angua>
+	<20091124081827.6216.1896.stgit@angua>
+	<1259207974.16367.226.camel@pasglop>
+	<fa686aa40911252005o2db85dfk3d9acc61c12ca5e5@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <fa686aa40911252005o2db85dfk3d9acc61c12ca5e5@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: sfr@canb.auug.org.au, monstr@monstr.eu, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Grant, this is based on your test-devicetree branch, if it could be
-merged via there would be great.
+On Wed, 2009-11-25 at 21:05 -0700, Grant Likely wrote:
+> 
+> You're right, it's not, but makes merging less complex, and then I can
+> refactor properly. 
 
-Currently when processing flattened device trees, the kernel expects
-the phandle in a property called "linux,phandle".  The ePAPR spec -
-not being Linux specific - instead requires phandles to be encoded in
-a property named simply "phandle".  This patch makes the kernel accept
-either form when unflattening the device tree.
+Still, make them __be32 at least
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-
-Index: working-2.6/drivers/of/fdt.c
-===================================================================
---- working-2.6.orig/drivers/of/fdt.c	2009-11-26 09:58:06.052792325 +1100
-+++ working-2.6/drivers/of/fdt.c	2009-11-26 10:00:08.309570256 +1100
-@@ -314,10 +314,19 @@ unsigned long __init unflatten_dt_node(u
- 		pp = unflatten_dt_alloc(&mem, sizeof(struct property),
- 					__alignof__(struct property));
- 		if (allnextpp) {
--			if (strcmp(pname, "linux,phandle") == 0) {
-+			/* We accept flattened tree phandles either in
-+			 * ePAPR-style "phandle" properties, or the
-+			 * legacy "linux,phandle" properties.  If both
-+			 * appear and have different values, things
-+			 * will get weird.  Don't do that. */
-+			if ((strcmp(pname, "phandle") == 0)
-+			    || (strcmp(pname, "linux,phandle") == 0)) {
- 				if (np->phandle == 0)
- 					np->phandle = *((u32 *)*p);
- 			}
-+			/* And we process the "ibm,phandle" property
-+			 * used in pSeries dynamic device tree
-+			 * stuff */
- 			if (strcmp(pname, "ibm,phandle") == 0)
- 				np->phandle = *((u32 *)*p);
- 			pp->name = pname;
-
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Cheers,
+Ben.
