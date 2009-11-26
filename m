@@ -1,13 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Support ePAPR compliant phandle properties
-Date: Wed, 25 Nov 2009 21:40:40 -0700
-Message-ID: <fa686aa40911252040j968cd8dl87ff237904312894@mail.gmail.com>
-References: <20091126043713.GA27334@yookeroo>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Make the kernel accept ePAPR style phandle information
+Date: Thu, 26 Nov 2009 16:16:42 +1100
+Message-ID: <20091126051641.GB27334@yookeroo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091126043713.GA27334@yookeroo>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,50 +16,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2009 at 9:37 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> Currently, the Linux kernel, libfdt and dtc, when using flattened
-> device trees encode a node's phandle into a property named
-> "linux,phandle". =A0The ePAPR specification, however - aiming as it is
-> to not be a Linux specific spec - requires that phandles be encoded in
-> a property named simply "phandle".
->
-> This patch adds support for this newer approach to dtc and libfdt.
-> Specifically:
->
-> =A0 =A0 =A0 =A0- fdt_get_phandle() will now return the correct phandle if=
- it
-> =A0 =A0 =A0 =A0 =A0is supplied in either of these properties
->
-> =A0 =A0 =A0 =A0- fdt_node_offset_by_phandle() will correctly find a node =
-with
-> =A0 =A0 =A0 =A0 =A0the given phandle encoded in either property.
->
-> =A0 =A0 =A0 =A0- By default, when auto-generating phandles, dtc will enco=
-de
-> =A0 =A0 =A0 =A0 =A0it into both properties for maximum compatibility. =A0=
-A new -H
-> =A0 =A0 =A0 =A0 =A0option allows either only old-style or only new-style
-> =A0 =A0 =A0 =A0 =A0properties to be generated.
->
-> =A0 =A0 =A0 =A0- If phandle properties are explicitly supplied in the dts
-> =A0 =A0 =A0 =A0 =A0file, dtc will not auto-generate ones in the alternate=
- format.
->
-> =A0 =A0 =A0 =A0- If both properties are supplied, dtc will check that they
-> =A0 =A0 =A0 =A0 =A0have the same value.
->
-> =A0 =A0 =A0 =A0- Some existing testcases are updated to use a mix of old =
-and
-> =A0 =A0 =A0 =A0 =A0new-style phandles, partially testing the changes.
->
-> =A0 =A0 =A0 =A0- A new phandle_format test further tests the libfdt suppo=
-rt,
-> =A0 =A0 =A0 =A0 =A0and the -H option.
+Grant, this is based on your test-devicetree branch, if it could be
+merged via there would be great.
 
-Haven't reviewed the code, but the approach seems sound.  FWIW, ACK.
+Currently when processing flattened device trees, the kernel expects
+the phandle in a property called "linux,phandle".  The ePAPR spec -
+not being Linux specific - instead requires phandles to be encoded in
+a property named simply "phandle".  This patch makes the kernel accept
+either form when unflattening the device tree.
 
-g.
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
+Index: working-2.6/drivers/of/fdt.c
+===================================================================
+--- working-2.6.orig/drivers/of/fdt.c	2009-11-26 09:58:06.052792325 +1100
++++ working-2.6/drivers/of/fdt.c	2009-11-26 10:00:08.309570256 +1100
+@@ -314,10 +314,19 @@ unsigned long __init unflatten_dt_node(u
+ 		pp = unflatten_dt_alloc(&mem, sizeof(struct property),
+ 					__alignof__(struct property));
+ 		if (allnextpp) {
+-			if (strcmp(pname, "linux,phandle") == 0) {
++			/* We accept flattened tree phandles either in
++			 * ePAPR-style "phandle" properties, or the
++			 * legacy "linux,phandle" properties.  If both
++			 * appear and have different values, things
++			 * will get weird.  Don't do that. */
++			if ((strcmp(pname, "phandle") == 0)
++			    || (strcmp(pname, "linux,phandle") == 0)) {
+ 				if (np->phandle == 0)
+ 					np->phandle = *((u32 *)*p);
+ 			}
++			/* And we process the "ibm,phandle" property
++			 * used in pSeries dynamic device tree
++			 * stuff */
+ 			if (strcmp(pname, "ibm,phandle") == 0)
+ 				np->phandle = *((u32 *)*p);
+ 			pp->name = pname;
+
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
