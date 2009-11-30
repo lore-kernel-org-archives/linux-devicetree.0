@@ -1,29 +1,45 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 04/11] of/flattree: eliminate cell_t typedef
-Date: Thu, 26 Nov 2009 15:32:12 -0800 (PST)
-Message-ID: <20091126.153212.142866981.davem@davemloft.net>
-References: <fa686aa40911252005o2db85dfk3d9acc61c12ca5e5@mail.gmail.com>
-	<1259213266.16367.274.camel@pasglop>
-	<F307E7FB-0819-47E8-9CF4-CA1433C18DA6@kernel.crashing.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: Writing Device Tree Source (DTS)
+Date: Mon, 30 Nov 2009 14:57:54 -0600
+Message-ID: <20091130205754.GA11487@loki.buserror.net>
+References: <200911230858.nAN8vsWf006884@arlmailha04.patni.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <F307E7FB-0819-47E8-9CF4-CA1433C18DA6@kernel.crashing.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: segher@kernel.crashing.org
-Cc: benh@kernel.crashing.org, grant.likely@secretlab.ca, sfr@canb.auug.org.au, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <200911230858.nAN8vsWf006884-QAxaCDP67tRcIBjhHP3Ktq0bRtRcJeJQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Kumar Amarjit <amarjit.kumar-7K+nh26gSkEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, amarjit.kumar.mtech-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Segher Boessenkool <segher@kernel.crashing.org>
-Date: Thu, 26 Nov 2009 22:36:41 +0100
+On Mon, Nov 23, 2009 at 02:27:44PM +0530, Kumar Amarjit wrote:
+> Hi All,
+> We are using PowerPc440 core on our Soc that consists of PCIe core, SAS core
+> and many other things.
+> We are writing DTS for our board to be used during booting, we have gone
+> through various dts files available inside the Linux Kernel 2.6.31.
+> Our board is closets match with Taishan board.
+> While referring the Taishan.dts, we are unable to get the information
+> regarding Interrupt-map and interrupt-map-mask property.
+> Please refer to the snippet.......
+> It would be great if anybody help me to understand the way they are writing
+> these properties?
+> I also gone through the DTS document booting-without-of but that does not
+> help us, so anybody having any documents on How To Write DTS can help me
+> out.
 
->>> You're right, it's not, but makes merging less complex, and then I can
->>> refactor properly.
->>
->> Still, make them __be32 at least
-> 
-> There is no alignment guarantee at all either, better make it all u8
-> and use accessor functions everywhere.
+These properties are documented in ePAPR -- or you can look at the original
+Open Firmware interrupt mapping recommended practice document plus the PCI
+binding.
 
-I think that might be overkill.
+-Scott
