@@ -1,46 +1,114 @@
-From: Jeremy Kerr <jeremy.kerr@canonical.com>
-Subject: Re: [PATCH 06/11] of/flattree: merge early_init_devtree() and early_init_move_devtree()
-Date: Mon, 7 Dec 2009 15:08:25 +0800
-Message-ID: <200912071508.25551.jeremy.kerr@canonical.com>
-References: <20091124081316.6216.66310.stgit@angua> <20091124081853.6216.68105.stgit@angua>
+From: Peter Tyser <ptyser@xes-inc.com>
+Subject: Re: [PATCH] powerpc: mpc8xxx_gpio: Add ability to mask off unused
+	GPIO pins
+Date: Mon, 07 Dec 2009 10:23:18 -0600
+Message-ID: <1260202998.23828.13344.camel@localhost.localdomain>
+References: <1259955820-28565-1-git-send-email-ptyser@xes-inc.com>
+	<20091205175614.GA10057@oksana.dev.rtsoft.ru>
+	<1260041552.8643.33.camel@ptyser-laptop>
+	<20091205205149.GA26030@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20091124081853.6216.68105.stgit@angua>
-Sender: sparclinux-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, monstr@monstr.eu
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20091205205149.GA26030@oksana.dev.rtsoft.ru>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: avorontsov@ru.mvista.com
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi Anton,
+I've CC-ed devicetree-discuss.  The original patch is at
+http://patchwork.ozlabs.org/patch/40361/ for reference.
 
-> +	/* Scan memory nodes and rebuild LMBs */
-> +	lmb_init();
-> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> +	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-> +
-> +	/* Save command line for /proc/cmdline and then parse parameters */
-> +	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
-> +	parse_early_param();
-> +
-> +	/* This is in an arbitrary spot, but it is temporary.  After all
-> +	 * the common code is merged, the structure of the early init
-> +	 * code will be reevaluated and refactored */
-> +	early_init_devtree_arch();
-> +
-> +	lmb_analyze();
-> +	lmb_dump_all();
+On Sat, 2009-12-05 at 23:51 +0300, Anton Vorontsov wrote:
+> On Sat, Dec 05, 2009 at 01:32:32PM -0600, Peter Tyser wrote:
+> [...]
+> > > > Adding a new "fsl,gpio-mask" device tree property allows a dts file to
+> > > > accurately describe what GPIO pins are available for use on a given
+> > > > board.
+> > > 
+> > > I don't see any real usage for this. If device tree specifies a wrong
+> > > gpio in the gpios = <> property, then it's a bug in the device tree
+> > > and should be fixed (or workarounded in the platform code).
+> > > 
+> > > If a user fiddles with unknown gpios via sysfs interface, then it's
+> > > user's problem.
+> > 
+> > Its the sysfs case that I'm concerned about.  Primarily because:
+> > 1. Users scratch their head when they see that the "ngpio" sysfs value
+> > doesn't match their CPU manual or board vendor's manual, and
+> > subsequently ask their board vendor's engineers (ie me:) what's up.
+> 
+> I don't think that adding code and device tree entries just for
+> documentation purposes is a good idea.
 
-So we're assuming that the arch has lmb support, or should we make this 
-conditional on CONFIG_HAVE_LMB?
+Its not just for documentation purposes.  Right now, the sysfs "ngpio"
+value is flat out wrong for some processors, regardless of
+documentation.  Granted its not a critical bug, but I'd still consider
+it a bug.
 
-Looks like ARM has its own lmb implementation (struct membank), so for the 
-former case, I'd need to convert that to use lmb instead (which may not be a 
-bad thing overall...)
+> > 2. Improperly using GPIO pins could damage hardware for some boards.
+> 
+> Well, your initial patch tried to solve a different problem: to not
+> let users to request non-existent GPIOs, which is usually safe.
 
-Cheers,
+I can update the commit message with this rational if it makes a
+difference.
 
+> [...]
+> > #2 could be worked around by exporting GPIO pins in platform code so
+> > that they are not available via sysfs.
+> 
+> Yes, badly designed hardware deserves ugly hacks in the platform
+> code. ;-) So for this problem, just request these gpios in the
+> platform code.
 
-Jeremy 
+I'd wager lots of boards have GPIO pins that a user shouldn't play
+around with once Linux boots up.  Like GPIO pins used to program an
+FPGA, or control a PLL, etc.  1 device tree property is nicer than
+hacking up lots of platform code...
+
+> > Would it be any more acceptable to instead add
+> > a "fsl,num-gpio" property so that "ngpio" actually reported an accurate
+> > value and non-existent GPIO pins couldn't be used/exported?
+> 
+> I'd think it's actually less acceptable. fsl,gpio-mask is more generic,
+> since from gpio-mask you can deduce ngpio. But it's still ugly.
+> 
+> What would be OK to do is to describe in the device tree every
+> device that is using some GPIO, and then let the userspace request
+> *only* gpios that are described in the device-tree. That way you
+> can automatically exclude not-existent gpios.
+> And if some gpios are just headers on the board, you can still
+> describe them in the device tree via "gpio-header" nodes.
+> 
+> Still, a lot of efforts for no real gain...
+
+Agreed.  Seems like a clean solution, but is a chunk of work.
+
+In any case, my high-level thought process is:
+1. Currently, the "ngpio" value is wrong for some processors and should
+be fixed.
+2. Adding a new "fsl,gpio-mask" gpio solves #1, and has the benefit of
+allowing the device tree to easily reserve GPIO pins which should not be
+used in Linux.
+
+I guess I'm not seeing the big downside of a new "fsl,gpio-mask"
+property.  Its the device tree's job to describe the hardware.  The
+change is pretty minimal (~15 lines), and the property can be made
+optional.
+
+Or is there another suggestion on how to resolve #1 above?  I consider
+it a bug and would like to fix it.
+
+Best,
+Peter
