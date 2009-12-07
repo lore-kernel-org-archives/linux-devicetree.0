@@ -1,45 +1,46 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: Writing Device Tree Source (DTS)
-Date: Mon, 30 Nov 2009 14:57:54 -0600
-Message-ID: <20091130205754.GA11487@loki.buserror.net>
-References: <200911230858.nAN8vsWf006884@arlmailha04.patni.com>
+From: Jeremy Kerr <jeremy.kerr@canonical.com>
+Subject: Re: [PATCH 06/11] of/flattree: merge early_init_devtree() and early_init_move_devtree()
+Date: Mon, 7 Dec 2009 15:08:25 +0800
+Message-ID: <200912071508.25551.jeremy.kerr@canonical.com>
+References: <20091124081316.6216.66310.stgit@angua> <20091124081853.6216.68105.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <200911230858.nAN8vsWf006884-QAxaCDP67tRcIBjhHP3Ktq0bRtRcJeJQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Amarjit <amarjit.kumar-7K+nh26gSkEAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, amarjit.kumar.mtech-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20091124081853.6216.68105.stgit@angua>
+Sender: sparclinux-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, benh@kernel.crashing.org, sfr@canb.auug.org.au, davem@davemloft.net, monstr@monstr.eu
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2009 at 02:27:44PM +0530, Kumar Amarjit wrote:
-> Hi All,
-> We are using PowerPc440 core on our Soc that consists of PCIe core, SAS core
-> and many other things.
-> We are writing DTS for our board to be used during booting, we have gone
-> through various dts files available inside the Linux Kernel 2.6.31.
-> Our board is closets match with Taishan board.
-> While referring the Taishan.dts, we are unable to get the information
-> regarding Interrupt-map and interrupt-map-mask property.
-> Please refer to the snippet.......
-> It would be great if anybody help me to understand the way they are writing
-> these properties?
-> I also gone through the DTS document booting-without-of but that does not
-> help us, so anybody having any documents on How To Write DTS can help me
-> out.
+Hi Grant,
 
-These properties are documented in ePAPR -- or you can look at the original
-Open Firmware interrupt mapping recommended practice document plus the PCI
-binding.
+> +	/* Scan memory nodes and rebuild LMBs */
+> +	lmb_init();
+> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+> +	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+> +
+> +	/* Save command line for /proc/cmdline and then parse parameters */
+> +	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
+> +	parse_early_param();
+> +
+> +	/* This is in an arbitrary spot, but it is temporary.  After all
+> +	 * the common code is merged, the structure of the early init
+> +	 * code will be reevaluated and refactored */
+> +	early_init_devtree_arch();
+> +
+> +	lmb_analyze();
+> +	lmb_dump_all();
 
--Scott
+So we're assuming that the arch has lmb support, or should we make this 
+conditional on CONFIG_HAVE_LMB?
+
+Looks like ARM has its own lmb implementation (struct membank), so for the 
+former case, I'd need to convert that to use lmb instead (which may not be a 
+bad thing overall...)
+
+Cheers,
+
+
+Jeremy 
