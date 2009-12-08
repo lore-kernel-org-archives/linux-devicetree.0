@@ -1,13 +1,17 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [3/4] dtc: Cleanup srcpos_string()
-Date: Tue,  8 Dec 2009 14:24:42 +1100 (EST)
-Message-ID: <20091208032442.257C8B7088@ozlabs.org>
-References: <20091208031924.GD15612@yookeroo>
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] mpc52xx/wdt: WDT uses GPT api
+Date: Tue, 8 Dec 2009 21:48:54 +0100
+Message-ID: <20091208204854.GE4291@infomag.iguana.be>
+References: <fa686aa40911101159y7bef3f9bte74e9aeb5c6e864b@mail.gmail.com>
+	<1257884778.14374.5@antares>
+	<20091112213630.GE19336@infomag.iguana.be>
+	<fa686aa40911122221s24efdcc9k1daf63b600e7b429@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091208031924.GD15612@yookeroo>
+Content-Disposition: inline
+In-Reply-To: <fa686aa40911122221s24efdcc9k1daf63b600e7b429-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,96 +21,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are several small problems with the current srcpos_string().
+Hi Grant,
 
-	- The code unnecessarily uses a temp buffer and two rounds of
-	  *printf(); a single asprintf() will suffice.
+Sorry for the delay, I need to deliver a project in a weeks time...
 
-	- With previous changes, pos->file->name can never be NULL,
-          and the name field for a srcfile bound to stdin is already
-          set to something sensible.
+> In actual fact, it is a single device with multiple functions, some of
+> which can be used at the same time.  The driver for the device
+> determines what the device instance supports and registers the
+> appropriate interfaces.  There is a GPIO controller, a PWM controller,
+> a general purpose timer, and the watchdog.  Because of the
+> multifunction nature of the device, there are subtle interactions
+> between the functions that the driver needs to maintain.  I don't want
+> to export functions from the driver which will only be used by a
+> watchdog instance.  I also don't want the added code and complexity of
+> a secondary probe path.  It is simpler and less code to roll all the
+> behaviour up into the one driver single driver that gets probed once.
+> 
+> >From the maintenance perspective, having the main driver in
+> arch/powerpc and the watchdog bit in drivers/watchdog doesn't really
+> help much anyway because anything that changes the internal driver API
+> (between the core and watchdog bits) will require cross-maintainer
+> changes.  ie. do changes go through my tree because they touch
+> arch/powerpc, or do they go through yours because they touch
+> drivers/watchdog?  I'd much rather all the internal details be
+> contained within a single driver.
 
-	- On allocation failure in asprintf() it returns a bogus
-          result, instead of causing a fatal error like every other
-          failed allocation.
+Your argument about maintenance is the same one as I have: If all watchdog
+driver pieces are under drivers/watchdog then it's easier for me to maintain
+them. (Definitely if we are doing clean-up work and API changes).
 
-	- The format for representing file/line/column is gratuitously
-          different from the file/line format we used to use, and the
-          format used by gcc and bison.
+> Besides, there is already precedence for very arch-specific drivers
+> living under arch/*/.  find ./arch -name *gpio*
 
-This patch addresses all of these.  There remains the problem that
-asprintf() is not portable, but that can wait until another patch.
+But in this case: I know where to find them and I will keep a mental note
+about this one. And yes indeed some very arch specific drivers can reside
+under arch/*/* .
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+So please go ahead with pulling this one in a single driver.
 
----
- srcpos.c |   49 ++++++++++++++++++-------------------------------
- 1 file changed, 18 insertions(+), 31 deletions(-)
-
-Index: dtc/srcpos.c
-===================================================================
---- dtc.orig/srcpos.c	2009-02-09 13:52:11.000000000 +1100
-+++ dtc/srcpos.c	2009-02-09 13:52:14.000000000 +1100
-@@ -182,41 +182,28 @@ srcpos_dump(srcpos *pos)
- char *
- srcpos_string(srcpos *pos)
- {
--	const char *fname;
--	char col_buf[100];
-+	const char *fname = "<no-file>";
- 	char *pos_str;
-+	int rc;
- 
--	if (!pos) {
--		fname = "<no-file>";
--	} else if (pos->file->name) {
-+	if (pos)
- 		fname = pos->file->name;
--		if (strcmp(fname, "-") == 0)
--			fname = "stdin";
--	} else {
--		fname = "<no-file>";
--	}
--
--	if (pos->first_line == pos->last_line) {
--		if (pos->first_column == pos->last_column) {
--			snprintf(col_buf, sizeof(col_buf),
--				 "%d:%d",
--				 pos->first_line, pos->first_column);
--		} else {
--			snprintf(col_buf, sizeof(col_buf),
--				 "%d:%d-%d",
--				 pos->first_line,
--				 pos->first_column, pos->last_column);
--		}
--
--	} else {
--		snprintf(col_buf, sizeof(col_buf),
--			 "%d:%d - %d:%d",
--			 pos->first_line, pos->first_column,
--			 pos->last_line, pos->last_column);
--	}
- 
--	if (asprintf(&pos_str, "%s %s", fname, col_buf) == -1)
--		return "<unknown source position?";
-+
-+	if (pos->first_line != pos->last_line)
-+		rc = asprintf(&pos_str, "%s:%d.%d-%d.%d", fname,
-+			      pos->first_line, pos->first_column,
-+			      pos->last_line, pos->last_column);
-+	else if (pos->first_column != pos->last_column)
-+		rc = asprintf(&pos_str, "%s:%d.%d-%d", fname,
-+			      pos->first_line, pos->first_column,
-+			      pos->last_column);
-+	else
-+		rc = asprintf(&pos_str, "%s:%d.%d", fname,
-+			      pos->first_line, pos->first_column);
-+
-+	if (rc == -1)
-+		die("Couldn't allocate in srcpos string");
- 
- 	return pos_str;
- }
+Kind regards,
+Wim.
