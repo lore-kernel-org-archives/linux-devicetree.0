@@ -1,77 +1,34 @@
-From: Anton Vorontsov <avorontsov@ru.mvista.com>
-Subject: Re: [PATCH] powerpc: mpc8xxx_gpio: Add ability to mask off unused
-	GPIO pins
-Date: Tue, 8 Dec 2009 05:16:38 +0300
-Message-ID: <20091208021638.GA16115@oksana.dev.rtsoft.ru>
-References: <1259955820-28565-1-git-send-email-ptyser@xes-inc.com>
-	<20091205175614.GA10057@oksana.dev.rtsoft.ru>
-	<1260041552.8643.33.camel@ptyser-laptop>
-	<20091205205149.GA26030@oksana.dev.rtsoft.ru>
-	<1260202998.23828.13344.camel@localhost.localdomain>
-Reply-To: avorontsov@ru.mvista.com
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: [0/4] Input file and srcpos rework (resend again)
+Date: Tue, 8 Dec 2009 14:19:24 +1100
+Message-ID: <20091208031924.GD15612@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1260202998.23828.13344.camel@localhost.localdomain>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Peter Tyser <ptyser@xes-inc.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 07, 2009 at 10:23:18AM -0600, Peter Tyser wrote:
-[...]
-> > Yes, badly designed hardware deserves ugly hacks in the platform
-> > code. ;-) So for this problem, just request these gpios in the
-> > platform code.
-> 
-> I'd wager lots of boards have GPIO pins that a user shouldn't play
-> around with once Linux boots up.  Like GPIO pins used to program an
-> FPGA,
+Thought I'd throw this patch series out there again.  It never got
+merge on the previous occasions I posted it because it conflicts with
+jdl's language enhancement patches.
 
-What if I do want to program/upgrade an FPGA, say from the userspace?
-
-[...]
-> In any case, my high-level thought process is:
-> 1. Currently, the "ngpio" value is wrong for some processors and should
-> be fixed.
-> 2. Adding a new "fsl,gpio-mask" gpio solves #1, and has the benefit of
-> allowing the device tree to easily reserve GPIO pins which should not be
-> used in Linux.
-
-OK, if you're so eager to fix this... I'd suggest to not put this
-stuff into device tree. We have compatible property that describes
-the device.
-
-So, in the driver, you can just do
-
-if (of_device_is_compatible("fsl,foo-gpiochip"))
-	mask = ...;
-else if (of_device_is_compatible("fsl,bar-gpiochip"))
-	mask = ...;
-
-If you want to solve "dangerous" GPIOs problem, then I'd say
-
-chosen {
-	linux,dangerous-gpios = <&pio1 0 0 &pio1 1 0
-				 &pio2 4 0 &pio1 5 0>;
-};
-
-And then you can have a generic driver that looks for
-linux,dangerous-gpios and requests them at boot.
-
-Thanks,
+But the language extension stuff seems to have fallen by the wayside
+for the time being, and in any case it shouldn't be that hard to
+update the langauge stuff on top of these cleanups.
 
 -- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
