@@ -1,150 +1,78 @@
-From: Jeremy Kerr <jeremy.kerr@canonical.com>
-Subject: [PATCH] of: merge of_find_node_by_phandle
-Date: Thu, 10 Dec 2009 10:47:59 +0800
-Message-ID: <1260413279.306784.161998452424.1.gpush@pororo>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Deprecating of_platform, the path from here...
+Date: Thu, 10 Dec 2009 13:47:33 -0700
+Message-ID: <fa686aa40912101247k55d56783ge0163dd1da073b49@mail.gmail.com>
+References: <fa686aa40912091406i2ef4e1b2u25c9f46b20786245@mail.gmail.com>
+	<20091209.161550.168794100.davem@davemloft.net>
+	<20091209.162121.256573183.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, sparclinux@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20091209.162121.256573183.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Merge common function between powerpc, sparc and microblaze. Code is
-identical for powerpc and microblaze, but adds a lock (and release) of
-the devtree_lock on sparc.
+Hi David,
 
-Currently untested.
+On Wed, Dec 9, 2009 at 5:21 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> Date: Wed, 09 Dec 2009 16:15:50 -0800 (PST)
+>
+>> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Date: Wed, 9 Dec 2009 15:06:29 -0700
+>>
+>>> 1) of_platform will be deprecated in preference of the platform bus.
+>>
+>> What a shame, it's one of the cleanest driver probing models
+>> in the tree.
+>
+> And BTW, have you folks who "decided" this considered at all the fact
+> that it is much easier to describe represent platform devices using
+> of OF devices rather than the other way around?
 
-Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
+Yup.  I also think of_platform is a cleaner implementation than
+platform, but the fact remains that there are far more platform
+drivers than there are of_platform.  So, as nice as of_platform is, it
+still does pretty much exactly the same job as platform.  I'd rather
+see of_platform features migrated to platform than creating drivers
+with dual registrations to be used on both OF and non-OF platforms.
 
----
-v2: update iterator, fix subject, post to arch lists
+Trying to go the other way around (deprecate platform and encouraging
+of_platform instead) I don't think will gain much traction; whereas I
+think bringing of_platform features into platform will be an easier
+sell.  I'm trying to be pragmatic here.
 
----
- arch/microblaze/kernel/prom.c   |   21 ---------------------
- arch/powerpc/kernel/prom.c      |   21 ---------------------
- arch/sparc/kernel/prom_common.c |   12 ------------
- drivers/of/base.c               |   21 +++++++++++++++++++++
- 4 files changed, 21 insertions(+), 54 deletions(-)
+> The platform device pdata mechanism requires data structure changes
+> and is not dynamically extensible, whereas OF devices are
+> fundamentally so.
+>
+> I don't like the idea to get rid of of_platform devices at all.
 
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index 9b4a20b..3fac1e2 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -238,27 +238,6 @@ void __init early_init_devtree_arch(void)
-  *
-  *******/
- 
--/**
-- *	of_find_node_by_phandle - Find a node given a phandle
-- *	@handle:	phandle of the node to find
-- *
-- *	Returns a node pointer with refcount incremented, use
-- *	of_node_put() on it when done.
-- */
--struct device_node *of_find_node_by_phandle(phandle handle)
--{
--	struct device_node *np;
--
--	read_lock(&devtree_lock);
--	for (np = allnodes; np != NULL; np = np->allnext)
--		if (np->phandle == handle)
--			break;
--	of_node_get(np);
--	read_unlock(&devtree_lock);
--	return np;
--}
--EXPORT_SYMBOL(of_find_node_by_phandle);
--
- #if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
- static struct debugfs_blob_wrapper flat_dt_blob;
- 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index d3ce311..83161d0 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -689,27 +689,6 @@ void __init early_init_devtree_arch(void)
-  *******/
- 
- /**
-- *	of_find_node_by_phandle - Find a node given a phandle
-- *	@handle:	phandle of the node to find
-- *
-- *	Returns a node pointer with refcount incremented, use
-- *	of_node_put() on it when done.
-- */
--struct device_node *of_find_node_by_phandle(phandle handle)
--{
--	struct device_node *np;
--
--	read_lock(&devtree_lock);
--	for (np = allnodes; np != 0; np = np->allnext)
--		if (np->phandle == handle)
--			break;
--	of_node_get(np);
--	read_unlock(&devtree_lock);
--	return np;
--}
--EXPORT_SYMBOL(of_find_node_by_phandle);
--
--/**
-  *	of_find_next_cache_node - Find a node's subsidiary cache
-  *	@np:	node of type "cpu" or "cache"
-  *
-diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom_common.c
-index 5832e13..57ac9e2 100644
---- a/arch/sparc/kernel/prom_common.c
-+++ b/arch/sparc/kernel/prom_common.c
-@@ -37,18 +37,6 @@ EXPORT_SYMBOL(of_console_path);
- char *of_console_options;
- EXPORT_SYMBOL(of_console_options);
- 
--struct device_node *of_find_node_by_phandle(phandle handle)
--{
--	struct device_node *np;
--
--	for (np = allnodes; np; np = np->allnext)
--		if (np->phandle == handle)
--			break;
--
--	return np;
--}
--EXPORT_SYMBOL(of_find_node_by_phandle);
--
- int of_getintprop_default(struct device_node *np, const char *name, int def)
- {
- 	struct property *prop;
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 9212b87..7432011 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -672,6 +672,27 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
- EXPORT_SYMBOL_GPL(of_modalias_node);
- 
- /**
-+ * of_find_node_by_phandle - Find a node given a phandle
-+ * @handle:	phandle of the node to find
-+ *
-+ * Returns a node pointer with refcount incremented, use
-+ * of_node_put() on it when done.
-+ */
-+struct device_node *of_find_node_by_phandle(phandle handle)
-+{
-+	struct device_node *np;
-+
-+	read_lock(&devtree_lock);
-+	for (np = allnodes; np; np = np->allnext)
-+		if (np->phandle == handle)
-+			break;
-+	of_node_get(np);
-+	read_unlock(&devtree_lock);
-+	return np;
-+}
-+EXPORT_SYMBOL(of_find_node_by_phandle);
-+
-+/**
-  * of_parse_phandle - Resolve a phandle property to a device_node pointer
-  * @np: Pointer to device node holding phandle property
-  * @phandle_name: Name of property holding a phandle value
+There are no plans to actually remove of_platform.  I certainly don't
+plan to try and force SPARC to switch from of_platform to platform
+bus.  But on PowerPC (and probably Microblaze) the plan is to move
+away from of_platform for all the reasons discussed, and I'm not be
+bringing of_platform over as I work on ARM support.
+
+> OF devices are really clean, much like netlink messages, where
+> arbitrary named attributes can be added or removed without any data
+> structure changes at all.
+
+No argument here.
+
+g.
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
