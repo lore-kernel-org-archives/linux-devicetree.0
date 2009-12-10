@@ -1,15 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: Deprecating of_platform, the path from here...
-Date: Thu, 10 Dec 2009 13:47:33 -0700
-Message-ID: <fa686aa40912101247k55d56783ge0163dd1da073b49@mail.gmail.com>
+Date: Fri, 11 Dec 2009 08:30:18 +1100
+Message-ID: <1260480618.16132.299.camel@pasglop>
 References: <fa686aa40912091406i2ef4e1b2u25c9f46b20786245@mail.gmail.com>
 	<20091209.161550.168794100.davem@davemloft.net>
-	<20091209.162121.256573183.davem@davemloft.net>
+	<1260409535.16132.109.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20091209.162121.256573183.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <1260409535.16132.109.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,59 +20,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Thu, 2009-12-10 at 12:45 +1100, Benjamin Herrenschmidt wrote:
 
-On Wed, Dec 9, 2009 at 5:21 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-> From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-> Date: Wed, 09 Dec 2009 16:15:50 -0800 (PST)
->
->> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Date: Wed, 9 Dec 2009 15:06:29 -0700
->>
->>> 1) of_platform will be deprecated in preference of the platform bus.
->>
->> What a shame, it's one of the cleanest driver probing models
->> in the tree.
->
-> And BTW, have you folks who "decided" this considered at all the fact
-> that it is much easier to describe represent platform devices using
-> of OF devices rather than the other way around?
+> I don't agree with grant idea however that just converting the content
+> of the device node into properties is the way to go.
 
-Yup.  I also think of_platform is a cleaner implementation than
-platform, but the fact remains that there are far more platform
-drivers than there are of_platform.  So, as nice as of_platform is, it
-still does pretty much exactly the same job as platform.  I'd rather
-see of_platform features migrated to platform than creating drivers
-with dual registrations to be used on both OF and non-OF platforms.
+And here of course I meant " converting the content of the device node
+into into pdata" ...
 
-Trying to go the other way around (deprecate platform and encouraging
-of_platform instead) I don't think will gain much traction; whereas I
-think bringing of_platform features into platform will be an easier
-sell.  I'm trying to be pragmatic here.
-
-> The platform device pdata mechanism requires data structure changes
-> and is not dynamically extensible, whereas OF devices are
-> fundamentally so.
->
-> I don't like the idea to get rid of of_platform devices at all.
-
-There are no plans to actually remove of_platform.  I certainly don't
-plan to try and force SPARC to switch from of_platform to platform
-bus.  But on PowerPC (and probably Microblaze) the plan is to move
-away from of_platform for all the reasons discussed, and I'm not be
-bringing of_platform over as I work on ARM support.
-
-> OF devices are really clean, much like netlink messages, where
-> arbitrary named attributes can be added or removed without any data
-> structure changes at all.
-
-No argument here.
-
-g.
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> I do prefer your proposed approach (from our IRC discussion) which is
+> instead to allocate a struct device-node, convert pdata into properties,
+> and modify the drier to use these properties.
+> 
+> The main difference thus between the two type of conversions (convert to
+> of_platform vs convert to platform) is that in the first case, you have
+> to convert the driver to use properties -and- convert all platforms in
+> all archs including gory ARM cell phone stuff you really don't want to
+> go anywhere near. In the second case, you still convert the driver to
+> use properties natively, but you keep a "wart" to turn pdata into a
+> device-node -inside the driver-, protected by a CONFIG option maybe, so
+> that those archs can be left alone until it becomes so obvious to
+> everybody what approach is better that they'll end up being converted
+> too and the wart can go.
+> 
+> I believe the second approach, while less "clean" in the absolute is a
+> more realistic path to take.
+> 
+> Now, orthogonally to that, I do believe it's still nice to provide a way
+> to statically lay out a device node in platform code, to allow archs
+> that don't otherwise have the device-tree to replace pdata with
+> something nicer and get rid of the wart quicker.
+> 
+> We could either find a way with macros to layout an actual struct
+> device_node statically along with all the properties etc... but that
+> sounds a tad hard.
+> 
+> We could have something that convert an entirely ASCII representation
+> into a struct device_node, but that would be akin of having dtc in the
+> kernel, might be a bit bloated no ? Though it could be made simpler and
+> more restrictive.
+> 
+> Or we could find an in-between .. .A different struct type that is more
+> suitable for being laid out statically (a name, a type, and an enum of
+> structs for various property "types", ie, strings, words, bytes, ...)
+> with a little helper function that conver that into a device node at
+> runtime ?
+> 
+> What do you think ?
+> 
+> Cheers,
+> Ben.
+> 
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
