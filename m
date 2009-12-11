@@ -1,34 +1,49 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 09/11] of: merge of_attach_node() & of_detach_node()
-Date: Thu, 10 Dec 2009 15:21:47 -0700
-Message-ID: <fa686aa40912101421h4eabfeaat7925d89ebfe2c5a0@mail.gmail.com>
-References: <20091124081316.6216.66310.stgit@angua> <20091124081931.6216.27102.stgit@angua>
-	<1259208468.16367.234.camel@pasglop>
+Subject: Re: [PATCH 06/11] of/flattree: merge early_init_devtree() and
+	early_init_move_devtree()
+Date: Thu, 10 Dec 2009 23:19:00 -0700
+Message-ID: <fa686aa40912102219s11a2aba3nc61bc0f53b0e9ffe@mail.gmail.com>
+References: <20091124081316.6216.66310.stgit@angua> <20091124081853.6216.68105.stgit@angua>
+	<1259208248.16367.230.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <1259208468.16367.234.camel@pasglop>
+In-Reply-To: <1259208248.16367.230.camel@pasglop>
 Sender: sparclinux-owner@vger.kernel.org
 To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, sfr@canb.auug.org.au, davem@davemloft.net, monstr@monstr.eu
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2009 at 9:07 PM, Benjamin Herrenschmidt
+On Wed, Nov 25, 2009 at 9:04 PM, Benjamin Herrenschmidt
 <benh@kernel.crashing.org> wrote:
 > On Tue, 2009-11-24 at 01:19 -0700, Grant Likely wrote:
->> Merge common code between PowerPC and Microblaze
+>> =A0/**
+>> + * early_init_move_devtree - move tree to an unused area, if needed=
+=2E
+>> + *
+>> + * The device tree may be allocated beyond our memory limit, or ins=
+ide the
+>> + * crash kernel region for kdump. If so, move it out of the way.
+>> + */
+>> +#if defined(CONFIG_PPC)
+>> +static void __init early_init_move_devtree(void)
 >
-> Some of those guys might wnat to be in of_dynamic (see previous email)
->
-> Remember: We want to keep the footprint low for embedded archs that
-> don't want to do dynamic stuff. Really low.
+> And you still end up with an ifdef mess in the common code ...
 
-I agree.  If it is okay by you I'll update this in a subsequent patch.
- Once the code is merge, then I'm going to do a bunch of refactoring
-patches.
+The #ifdefs are temporary.  I'm leaving them in now exactly because
+they are ugly and show where the code needs to be refactored and
+reorganized.  Once everything is merged, I'll probably do exactly what
+you suggest.  I just cannot yet tell the exact structure of it until I
+see the merged version.
 
 g.
 
--- 
+--=20
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
