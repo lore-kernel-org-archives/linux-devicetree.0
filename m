@@ -1,8 +1,7 @@
 From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH] of/flattree: use OF_ROOT_NODE_{SIZE,
-	ADDR}_CELLS DEFAULT for fdt parsing
-Date: Mon, 14 Dec 2009 11:30:36 +0800
-Message-ID: <1260761436.150950.303060241099.1.gpush@pororo>
+Subject: [RFC,PATCH 0/2] little-endian support in drivers/of
+Date: Mon, 14 Dec 2009 11:37:13 +0800
+Message-ID: <1260761833.381500.196217689909.0.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -19,30 +18,24 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-At present we're using hard-coded values for defaults when parsing the
-FDT. This change uses the #defines instead.
+Hi all,
 
-Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+As I've been looking at device tree support on ARM, I'd like to get the
+common drivers/of code endian-safe. The following two patches are an
+initial attempt to add endian conversion to the sites where we access
+property values.
+
+I've only compile-tested this so far; in particular the spi, mdio and
+i2c files have had only a basic check.
+
+Of course, comments are most welcome.
+
+Cheers,
+
+
+Jeremy
 
 ---
- drivers/of/fdt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 4071639..4d089a1 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -439,11 +439,11 @@ int __init early_init_dt_scan_root(unsigned long node, const char *uname,
- 		return 0;
- 
- 	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
--	dt_root_size_cells = (prop == NULL) ? 1 : *prop;
-+	dt_root_size_cells = prop ? *prop : OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
- 	pr_debug("dt_root_size_cells = %x\n", dt_root_size_cells);
- 
- 	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
--	dt_root_addr_cells = (prop == NULL) ? 2 : *prop;
-+	dt_root_addr_cells = prop ? *prop : OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
- 	pr_debug("dt_root_addr_cells = %x\n", dt_root_addr_cells);
- 
- 	/* break now */
+Jeremy Kerr (2):
+      of: use __be32 for cell value accessors
+      of: assume big-endian properties, adding conversions where necessary
