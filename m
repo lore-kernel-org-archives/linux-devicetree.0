@@ -1,149 +1,100 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [RFC,PATCH] of/flattree: endian-convert members of boot_param_header
-Date: Tue, 15 Dec 2009 14:31:31 +0800
-Message-ID: <1260858691.827261.737373695655.1.gpush@pororo>
+From: Rob Landley <rob@landley.net>
+Subject: CELF Project Proposal - Device tree support for QEMU
+	system emulation.
+Date: Wed, 16 Dec 2009 22:46:41 -0600
+Message-ID: <200912162246.42366.rob@landley.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.gnu.org/pipermail/qemu-devel>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+To: CE Linux Developers List <celinux-dev@tree.celinuxforum.org>
+Cc: devicetree-discuss@lists.ozlabs.org, qemu-devel@nongnu.org
 List-Id: devicetree@vger.kernel.org
 
-The boot_param_header has big-endian fields, so change the types to
-__be32, and perform endian conversion when we access them.
+For background of CELF project proposals, see:
 
-Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+  http://elinux.org/CELF_Open_Project_Proposal_2010
 
----
- drivers/of/fdt.c       |   18 +++++++++---------
- include/linux/of_fdt.h |   20 ++++++++++----------
- 2 files changed, 19 insertions(+), 19 deletions(-)
+Summary:
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3eaabe7..7cb386c 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -42,7 +42,7 @@ struct boot_param_header *initial_boot_params;
- char *find_flat_dt_string(u32 offset)
- {
- 	return ((char *)initial_boot_params) +
--		initial_boot_params->off_dt_strings + offset;
-+		be32_to_cpu(initial_boot_params->off_dt_strings) + offset;
- }
- 
- /**
-@@ -60,7 +60,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 			   void *data)
- {
- 	unsigned long p = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
-+		be32_to_cpu(initial_boot_params->off_dt_struct);
- 	int rc = 0;
- 	int depth = -1;
- 
-@@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 		if (tag == OF_DT_PROP) {
- 			u32 sz = be32_to_cpup((__be32 *)p);
- 			p += 8;
--			if (initial_boot_params->version < 0x10)
-+			if (be32_to_cpu(initial_boot_params->version) < 0x10)
- 				p = _ALIGN(p, sz >= 8 ? 8 : 4);
- 			p += sz;
- 			p = _ALIGN(p, 4);
-@@ -115,7 +115,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- unsigned long __init of_get_flat_dt_root(void)
- {
- 	unsigned long p = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
-+		be32_to_cpu(initial_boot_params->off_dt_struct);
- 
- 	while (be32_to_cpup((__be32 *)p) == OF_DT_NOP)
- 		p += 4;
-@@ -149,7 +149,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
- 		sz = be32_to_cpup((__be32 *)p);
- 		noff = be32_to_cpup((__be32 *)(p + 4));
- 		p += 8;
--		if (initial_boot_params->version < 0x10)
-+		if (be32_to_cpu(initial_boot_params->version) < 0x10)
- 			p = _ALIGN(p, sz >= 8 ? 8 : 4);
- 
- 		nstr = find_flat_dt_string(noff);
-@@ -310,7 +310,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
- 		sz = be32_to_cpup((__be32 *)(*p));
- 		noff = be32_to_cpup((__be32 *)((*p) + 4));
- 		*p += 8;
--		if (initial_boot_params->version < 0x10)
-+		if (be32_to_cpu(initial_boot_params->version) < 0x10)
- 			*p = _ALIGN(*p, sz >= 8 ? 8 : 4);
- 
- 		pname = find_flat_dt_string(noff);
-@@ -591,7 +591,7 @@ static void __init early_init_move_devtree(void)
- 	pr_debug("-> %s()\n", __func__);
- 
- 	start = __pa(initial_boot_params);
--	size = initial_boot_params->totalsize;
-+	size = be32_to_cpu(initial_boot_params->totalsize);
- 
- 	if ((memory_limit && (start + size) > memory_limit) ||
- 			overlaps_crashkernel(start, size)) {
-@@ -684,7 +684,7 @@ void __init unflatten_device_tree(void)
- 
- 	/* First pass, scan for size */
- 	start = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
-+		be32_to_cpu(initial_boot_params->off_dt_struct);
- 	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
- 	size = (size | 3) + 1;
- 
-@@ -701,7 +701,7 @@ void __init unflatten_device_tree(void)
- 
- 	/* Second pass, do actual unflattening */
- 	start = ((unsigned long)initial_boot_params) +
--		initial_boot_params->off_dt_struct;
-+		be32_to_cpu(initial_boot_params->off_dt_struct);
- 	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
- 	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
- 		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 0177e36..77ae0a4 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -42,19 +42,19 @@
-  * ends when size is 0
-  */
- struct boot_param_header {
--	u32	magic;			/* magic word OF_DT_HEADER */
--	u32	totalsize;		/* total size of DT block */
--	u32	off_dt_struct;		/* offset to structure */
--	u32	off_dt_strings;		/* offset to strings */
--	u32	off_mem_rsvmap;		/* offset to memory reserve map */
--	u32	version;		/* format version */
--	u32	last_comp_version;	/* last compatible version */
-+	__be32	magic;			/* magic word OF_DT_HEADER */
-+	__be32	totalsize;		/* total size of DT block */
-+	__be32	off_dt_struct;		/* offset to structure */
-+	__be32	off_dt_strings;		/* offset to strings */
-+	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
-+	__be32	version;		/* format version */
-+	__be32	last_comp_version;	/* last compatible version */
- 	/* version 2 fields below */
--	u32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
-+	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
- 	/* version 3 fields below */
--	u32	dt_strings_size;	/* size of the DT strings block */
-+	__be32	dt_strings_size;	/* size of the DT strings block */
- 	/* version 17 fields below */
--	u32	dt_struct_size;		/* size of the DT structure block */
-+	__be32	dt_struct_size;		/* size of the DT structure block */
- };
- 
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
+Integrate a flattened device tree parser into the emulator QEMU, so QEMU can 
+create board emulations on the fly (at runtime) from the same data files the 
+Linux kernel uses to attach drivers to hardware.
+
+Proposer:
+
+Rob Landley
+
+Description:
+
+Currently, the QEMU is emulating system boards via hardwired .c files, which 
+explicitly set up the resources for each emulation in a separate C function.  
+In theory, QEMU could parse the same device tree data format the Linux kernel 
+uses to set up its hardware resources,  and then pass hardware resources along 
+to kernels it invokes through its built-in bootloader (I.E. with the -kernel 
+option).  This could allow new boards to be added to qemu simply by supplying 
+device tree files at runtime (assuming emulations for the appropriate 
+peripherals had already been implemented in QEMU).
+
+The Device Tree format is a reasonably generic data file describing hardware 
+layout.  It is documented in the linux kernel source at:
+
+  Documentation/powerpc/booting-without-of.txt
+
+It started as the data structure Open Firmware used to describe supported 
+hardware to operating systems, and was picked up by bootloaders such as u-
+boot.  It allows the Linux kernel to parse a generic data structure at boot 
+time to configure itself for the current hardware layout, instead of hardwiring 
+board support in individual .c files.
+
+Device trees are created using an ascii format to describe a board layout, 
+which is converted into a flattened binary representation by dtc (the "device 
+tree compiler", included in current linux kernel sources in scripts/dtc).  A 
+bootloader supporting device trees loads the flattened device tree into memory 
+as a binary blob, and passes the linux kernel a pointer to this blob in a 
+register.  The kernel then uses a built-in device tree parser to understand 
+the board's hardware layout and initialize itself.  (Depending on kernel 
+.config, this information may also be queried from userspace via a /proc 
+interface.)
+
+At the device tree BOF at OLS in 2008, a number of developers expressed 
+interest in extending device tree support to other architectures (such as arm, 
+mips, and sh4).  As a result, device tree development was moved off of the 
+PowerPC mailing list to its own list, for the purpose of genericizing it to 
+more architectures:
+
+  https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+The Linux MAINTAINERS entry for device tree support is:
+
+  OPEN FIRMWARE AND FLATTENED DEVICE TREE
+  M:      Grant Likely <grant.likely@secretlab.ca>
+  L:      devicetree-discuss@lists.ozlabs.org
+  W:      http://fdt.secretlab.ca
+  S:      Maintained
+  F:      drivers/of
+  F:      include/linux/of*.h
+  K:      of_get_property
+
+In theory, at some future date the kernel will no longer need hardwired .c 
+files describing the layout of boards for any of these architectures.  Instead 
+it can have a device tree for each board, which can be statically linked into 
+the kernel binary if necessary.
+
+If the kenrnel doesn't need board support hardwared in .c files, there's no 
+reason QEMU needs it either.
+
+Rob
+-- 
+Latency is more important than throughput. It's that simple. - Linus Torvalds
