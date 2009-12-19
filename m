@@ -1,43 +1,51 @@
-From: Tim Bird <tim.bird@am.sony.com>
-Subject: Re: [Celinux-dev] CELF Project Proposal - Device tree
- support for QEMU	system emulation.
-Date: Thu, 17 Dec 2009 15:14:50 -0800
-Message-ID: <4B2ABB6A.8090005@am.sony.com>
+From: Blue Swirl <blauwirbel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Qemu-devel] CELF Project Proposal - Device tree support for QEMU
+	system emulation.
+Date: Sat, 19 Dec 2009 10:54:37 +0000
+Message-ID: <f43fc5580912190254n43a9a60fv38280d3c0c04ec57@mail.gmail.com>
 References: <200912162246.42366.rob@landley.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-In-Reply-To: <200912162246.42366.rob@landley.net>
-List-Unsubscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.gnu.org/pipermail/qemu-devel>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <http://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-To: Rob Landley <rob@landley.net>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, CE Linux Developers List <celinux-dev@tree.celinuxforum.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <200912162246.42366.rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, CE Linux Developers List <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Landley wrote:
-> For background of CELF project proposals, see:
-> 
->   http://elinux.org/CELF_Open_Project_Proposal_2010
-> 
-> Summary:
-> 
-> Integrate a flattened device tree parser into the emulator QEMU, so QEMU can 
-> create board emulations on the fly (at runtime) from the same data files the 
-> Linux kernel uses to attach drivers to hardware.
-
-I've created a page for this proposal at:
-http://elinux.org/CELF_Project_Proposal/Add_Device_Tree_emulation_support_to_QEMU
-
-=============================
-Tim Bird
-Architecture Group Chair, CE Linux Forum
-Senior Staff Engineer, Sony Corporation of America
-=============================
+T24gVGh1LCBEZWMgMTcsIDIwMDkgYXQgNDo0NiBBTSwgUm9iIExhbmRsZXkgPHJvYkBsYW5kbGV5
+Lm5ldD4gd3JvdGU6Cj4gRm9yIGJhY2tncm91bmQgb2YgQ0VMRiBwcm9qZWN0IHByb3Bvc2Fscywg
+c2VlOgo+Cj4gwqBodHRwOi8vZWxpbnV4Lm9yZy9DRUxGX09wZW5fUHJvamVjdF9Qcm9wb3NhbF8y
+MDEwCj4KPiBTdW1tYXJ5Ogo+Cj4gSW50ZWdyYXRlIGEgZmxhdHRlbmVkIGRldmljZSB0cmVlIHBh
+cnNlciBpbnRvIHRoZSBlbXVsYXRvciBRRU1VLCBzbyBRRU1VIGNhbgo+IGNyZWF0ZSBib2FyZCBl
+bXVsYXRpb25zIG9uIHRoZSBmbHkgKGF0IHJ1bnRpbWUpIGZyb20gdGhlIHNhbWUgZGF0YSBmaWxl
+cyB0aGUKPiBMaW51eCBrZXJuZWwgdXNlcyB0byBhdHRhY2ggZHJpdmVycyB0byBoYXJkd2FyZS4K
+Pgo+IFByb3Bvc2VyOgo+Cj4gUm9iIExhbmRsZXkKPgo+IERlc2NyaXB0aW9uOgo+Cj4gQ3VycmVu
+dGx5LCB0aGUgUUVNVSBpcyBlbXVsYXRpbmcgc3lzdGVtIGJvYXJkcyB2aWEgaGFyZHdpcmVkIC5j
+IGZpbGVzLCB3aGljaAo+IGV4cGxpY2l0bHkgc2V0IHVwIHRoZSByZXNvdXJjZXMgZm9yIGVhY2gg
+ZW11bGF0aW9uIGluIGEgc2VwYXJhdGUgQyBmdW5jdGlvbi4KPiBJbiB0aGVvcnksIFFFTVUgY291
+bGQgcGFyc2UgdGhlIHNhbWUgZGV2aWNlIHRyZWUgZGF0YSBmb3JtYXQgdGhlIExpbnV4IGtlcm5l
+bAo+IHVzZXMgdG8gc2V0IHVwIGl0cyBoYXJkd2FyZSByZXNvdXJjZXMsIMKgYW5kIHRoZW4gcGFz
+cyBoYXJkd2FyZSByZXNvdXJjZXMgYWxvbmcKPiB0byBrZXJuZWxzIGl0IGludm9rZXMgdGhyb3Vn
+aCBpdHMgYnVpbHQtaW4gYm9vdGxvYWRlciAoSS5FLiB3aXRoIHRoZSAta2VybmVsCj4gb3B0aW9u
+KS4gwqBUaGlzIGNvdWxkIGFsbG93IG5ldyBib2FyZHMgdG8gYmUgYWRkZWQgdG8gcWVtdSBzaW1w
+bHkgYnkgc3VwcGx5aW5nCj4gZGV2aWNlIHRyZWUgZmlsZXMgYXQgcnVudGltZSAoYXNzdW1pbmcg
+ZW11bGF0aW9ucyBmb3IgdGhlIGFwcHJvcHJpYXRlCj4gcGVyaXBoZXJhbHMgaGFkIGFscmVhZHkg
+YmVlbiBpbXBsZW1lbnRlZCBpbiBRRU1VKS4KCkluIGFkZGl0aW9uIHRvIC1rZXJuZWwgY2FzZSwg
+dGhlIGRldmljZSB0cmVlIHNob3VsZCBiZSBwYXNzZWQgdG8KT3BlbkJJT1MsIHdoaWNoIHdvdWxk
+IGdlbmVyYXRlIE9GIHRyZWUgZnJvbSBEVC4gVGhpcyB3b3VsZCBiZSB1c2VmdWwKZm9yIE9TZXMg
+b3RoZXIgdGhhbiBMaW51eC4KCkFub3RoZXIgaW50ZXJlc3RpbmcgY2FzZSBpcyBzdW40diBoeXBl
+cnZpc29yLCB3aGljaCB1c2VzIGEgc2ltaWxhcgpkZXZpY2UgdHJlZS4gU29tZSBEVCB0cmFuc2Zv
+cm1hdGlvbiB3b3VsZCBiZSByZXF1aXJlZCBpbiBRRU1VLgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
+CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
+Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
