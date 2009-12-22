@@ -1,46 +1,97 @@
-From: Paul Brook <paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
-Subject: Re: [Qemu-devel] CELF Project Proposal - Device tree support for QEMU
-	system emulation.
-Date: Tue, 22 Dec 2009 12:45:48 +0000
-Message-ID: <200912221245.48495.paul@codesourcery.com>
-References: <200912162246.42366.rob@landley.net>
-	<4B2A94BB.4020200@codemonkey.ws>
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: [PATCH] of/flattree: use callback to setup initrd from /chosen
+Date: Wed, 23 Dec 2009 00:17:36 +1100
+Message-ID: <1261487856.10767.128.camel@concordia>
+References: <1261474791.289871.854376051633.1.gpush@pororo>
+	<1261478868.10767.2.camel@concordia>
+	<200912221854.37572.jeremy.kerr@canonical.com>
+Reply-To: michael@ellerman.id.au
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4B2A94BB.4020200-rdkfGonbjUSkNkDKm+mE6A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anthony Liguori <anthony-rdkfGonbjUSkNkDKm+mE6A@public.gmane.org>, CE Linux Developers List <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5746505025834308230=="
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <200912221854.37572.jeremy.kerr@canonical.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Jeremy Kerr <jeremy.kerr@canonical.com>
+Cc: microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-> http://thread.gmane.org/gmane.comp.emulators.qemu/44869
-> 
-> I'm not sure why Paul never pushed it but I think he was able to create
-> the syborg board purely from a device tree.
 
-The patches referenced above include purely device-tree based Syborg and 
-Stellaris boards.
+--===============5746505025834308230==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-Fb0vQwplt2gfctQX9vPJ"
 
-It works fairly nicely for some embedded boards, but gets fairly hairy when 
-you start considering more complex topologies/machines. I particular the PCI 
-OF/FDT bindings don't really fit what we need for qemu. Obviously full qdev 
-conversion is a prerequisite for device tree based configuration, and at that 
-time qdev was still in its infancy.
 
-Part of the reason for posting that patch was to demonstrate the abstraction 
-layers required for the internal device model. Previous patches tended to be 
-based on the pre-existing PC commandline options, which IMO is a mistake. 
-Likewise if (like my implementation) you focus on embedded machines you risk 
-serious problems trying to extend to server class machines.
+--=-Fb0vQwplt2gfctQX9vPJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Paul
+On Tue, 2009-12-22 at 18:54 +0800, Jeremy Kerr wrote:
+> Hi Michael,
+>=20
+> > >  void early_init_dt_setup_initrd_arch(unsigned long start,
+> > > 				      unsigned long end);
+> >=20
+> > arch_early_init_dt_setup_initrd() makes more sense to me, but ..
+>=20
+> <foo>_arch has been the general convention for arch-specific hooks in=20
+> drivers/of/.
+
+Yuck, doh, guess I should have read those patches before they went in :)
+
+> > > +#ifdef CONFIG_BLK_DEV_INITRD
+> > > +void __init early_init_dt_setup_initrd_arch(unsigned long start,
+> > > +		unsigned long end)
+> > > +{
+> > > +	initrd_start =3D (unsigned long)__va(start);
+> > > +	initrd_end =3D (unsigned long)__va(end);
+> > > +	initrd_below_start_ok =3D 1;
+> > > +}
+> > > +#endif
+> >=20
+> > Given you have two identical implementations why not make that the
+> > default and make it weak, and let ARM override it.
+>=20
+> Yeah, that would be good too; just been avoiding weak as a potential sour=
+ce of=20
+> magic voodoo complexity. Grant - up to you on this one.
+
+Yeah, depends on what toolchains you're supporting, modern ones should
+be OK but it can be troublesome.
+
+cheers
+
+
+
+--=-Fb0vQwplt2gfctQX9vPJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkswxvAACgkQdSjSd0sB4dKOOwCfdkTWwS3PZrrvukngLue5mCaY
+5V8AnjvglCFpvlmjWVedQkqzEGF3lQ+o
+=Ik6W
+-----END PGP SIGNATURE-----
+
+--=-Fb0vQwplt2gfctQX9vPJ--
+
+
+--===============5746505025834308230==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============5746505025834308230==--
