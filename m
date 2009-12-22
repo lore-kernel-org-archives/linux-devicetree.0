@@ -1,7 +1,7 @@
 From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH 05/11] arm-dt: Add CONFIG_ARM_DEVTREE
+Subject: [PATCH 04/11] arm-dt: Add ATAG_DEVTREE tag
 Date: Tue, 22 Dec 2009 18:54:56 +0800
-Message-ID: <1261479296.247114.799279819521.5.gpush@pororo>
+Message-ID: <1261479296.246767.738000991632.4.gpush@pororo>
 References: <1261479296.245235.191110925832.0.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,117 +21,41 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add some basic empty infrastructure for DT support on ARM.
+We'd like to provide a pointer to the device tree blob through the atags
+mechanism, so add a tag type containing a physical dtb pointer.
+
+We won't need a parser for this, as we'll need to do the devtree parsing
+a little earlier than other tags.
 
 Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
 ---
- arch/arm/Kconfig            |   13 +++++++++++++
- arch/arm/include/asm/prom.h |   28 ++++++++++++++++++++++++++++
- arch/arm/kernel/setup.c     |   28 ++++++++++++++++++++++++++++
- 3 files changed, 69 insertions(+)
+ arch/arm/include/asm/setup.h |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 1c4119c..2e53d33 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1225,6 +1225,19 @@ endmenu
+diff --git a/arch/arm/include/asm/setup.h b/arch/arm/include/asm/setup.h
+index 3fa2555..99ba6db 100644
+--- a/arch/arm/include/asm/setup.h
++++ b/arch/arm/include/asm/setup.h
+@@ -141,6 +141,13 @@ struct tag_memclk {
+ 	__u32 fmemclk;
+ };
  
- menu "Boot options"
++/* OF device tree blob pointer */
++#define ATAG_DEVTREE	0x5441000a
++
++struct tag_devtree {
++	__u32 devtree;		/* physical address */
++};
++
+ struct tag {
+ 	struct tag_header hdr;
+ 	union {
+@@ -153,6 +160,7 @@ struct tag {
+ 		struct tag_revision	revision;
+ 		struct tag_videolfb	videolfb;
+ 		struct tag_cmdline	cmdline;
++		struct tag_devtree	devtree;
  
-+config OF
-+	bool
-+	default n
-+
-+config ARM_DEVTREE
-+	bool "Device tree support"
-+	default y
-+	depends on !DEBUG_LL
-+	select OF
-+	select OF_FLATTREE
-+	help
-+	  Support for OpenFirmware-style device trees
-+
- # Compressed boot loader in ROM.  Yes, we really want to ask about
- # TEXT and BSS so we preserve their values in the config files.
- config ZBOOT_ROM_TEXT
-diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
-new file mode 100644
-index 0000000..5260d22
---- /dev/null
-+++ b/arch/arm/include/asm/prom.h
-@@ -0,0 +1,28 @@
-+/*
-+ *  arch/arm/include/asm/prom.h
-+ *
-+ *  Copyright (C) 2009 Canonical Ltd. <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#ifndef __ASMARM_PROM_H
-+#define __ASMARM_PROM_H
-+
-+#include <asm/setup.h>
-+
-+#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT	1
-+#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT	1
-+
-+#define of_compat_cmp(s1, s2, l)	strncasecmp((s1), (s2), (l))
-+#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
-+#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
-+
-+/* _ALIGN expects upwards alignment */
-+#define _ALIGN(addr, size)		(((addr)+((size)-1))&(~((size)-1)))
-+
-+extern struct device_node *of_chosen;
-+
-+#endif
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index 84fd876..e662d17 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -47,6 +47,11 @@
- #include "atags.h"
- #include "tcm.h"
- 
-+#ifdef CONFIG_ARM_DEVTREE
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#endif
-+
- #ifndef MEM_SIZE
- #define MEM_SIZE	(16*1024*1024)
- #endif
-@@ -659,6 +664,29 @@ static int __init customize_machine(void)
- }
- arch_initcall(customize_machine);
- 
-+/* arch-specific device tree handling */
-+#ifdef CONFIG_ARM_DEVTREE
-+void early_init_dt_scan_chosen_arch(unsigned long node) { }
-+
-+void early_init_dt_setup_initrd_arch(unsigned long start, unsigned long_end) { }
-+
-+void early_init_devtree_arch(void) { }
-+
-+int early_init_dt_scan_memory(unsigned long node, const char *uname,
-+			      int depth, void *data)
-+{
-+	return 0;
-+}
-+
-+int early_init_dt_scan_cpus(unsigned long node, const char *uname,
-+			    int depth, void *data)
-+{
-+	return 0;
-+}
-+
-+struct device_node *of_chosen;
-+#endif /* CONFIG_ARM_DEVTREE */
-+
- void __init setup_arch(char **cmdline_p)
- {
- 	struct tag *tags = (struct tag *)&init_tags;
+ 		/*
+ 		 * Acorn specific
