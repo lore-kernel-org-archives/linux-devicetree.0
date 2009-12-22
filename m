@@ -1,7 +1,8 @@
 From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH 11/11] arm/versatile: probe via device tree
+Subject: [PATCH 06/11] arm-dt: postpone machine detection until setup_arch
+	with CONFIG_ARM_DEVTREE
 Date: Tue, 22 Dec 2009 18:54:56 +0800
-Message-ID: <1261479296.248981.81438368107.11.gpush@pororo>
+Message-ID: <1261479296.247430.731563214048.6.gpush@pororo>
 References: <1261479296.245235.191110925832.0.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,175 +22,37 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For testing the dt work, define a dt-enabled versatile platform,
-separate from the existing versatile platform support.
+When we're using CONFIG_ARM_DEVTREE, we need to postpone machine detection
+until later in setup_arch. Because ARM_DEVTREE depends on !DEBUG_LL,
+we don't need the mdesc this early anyway.
+
+We'll add support for ARM_DEVTREE && DEBUG_LL later.
 
 Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
 ---
- arch/arm/mach-versatile/Kconfig        |    7 +
- arch/arm/mach-versatile/Makefile       |    1 
- arch/arm/mach-versatile/versatile_dt.c |  129 +++++++++++++++++++++++++
- 3 files changed, 137 insertions(+)
+ arch/arm/kernel/head.S |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
-index c781f30..9e8f4a9 100644
---- a/arch/arm/mach-versatile/Kconfig
-+++ b/arch/arm/mach-versatile/Kconfig
-@@ -14,4 +14,11 @@ config MACH_VERSATILE_AB
- 	help
- 	  Include support for the ARM(R) Versatile/AP platform.
- 
-+config MACH_VERSATILE_DT
-+	bool "Support Versatile platform from device tree"
-+	depends on ARM_DEVTREE
-+	help
-+	  Include support for the ARM(R) Versatile/PB platform,
-+	  using the device tree for discovery
+diff --git a/arch/arm/kernel/head.S b/arch/arm/kernel/head.S
+index 38ccbe1..66bb56f 100644
+--- a/arch/arm/kernel/head.S
++++ b/arch/arm/kernel/head.S
+@@ -82,9 +82,18 @@ ENTRY(stext)
+ 	bl	__lookup_processor_type		@ r5=procinfo r9=cpuid
+ 	movs	r10, r5				@ invalid processor (r5=0)?
+ 	beq	__error_p			@ yes, error 'p'
 +
- endmenu
-diff --git a/arch/arm/mach-versatile/Makefile b/arch/arm/mach-versatile/Makefile
-index ba81e70..07d0701 100644
---- a/arch/arm/mach-versatile/Makefile
-+++ b/arch/arm/mach-versatile/Makefile
-@@ -5,4 +5,5 @@
- obj-y					:= core.o clock.o
- obj-$(CONFIG_ARCH_VERSATILE_PB)		+= versatile_pb.o
- obj-$(CONFIG_MACH_VERSATILE_AB)		+= versatile_ab.o
-+obj-$(CONFIG_MACH_VERSATILE_DT)		+= versatile_dt.o
- obj-$(CONFIG_PCI)			+= pci.o
-diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
-new file mode 100644
-index 0000000..45c95a2
---- /dev/null
-+++ b/arch/arm/mach-versatile/versatile_dt.c
-@@ -0,0 +1,129 @@
-+/*
-+ *  linux/arch/arm/mach-versatile/versatile_dt.c
-+ *
-+ *  Copyright (C) 2009 Canonical Ltd.
-+ *  Copyright (C) 2004 ARM Limited
-+ *  Copyright (C) 2000 Deep Blue Solutions Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/sysdev.h>
-+#include <linux/amba/bus.h>
-+#include <linux/amba/pl061.h>
-+#include <linux/amba/mmci.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+
-+#include <mach/hardware.h>
-+#include <asm/irq.h>
-+#include <asm/mach-types.h>
-+
-+#include <asm/mach/arch.h>
-+
-+#include "core.h"
-+
-+#if 1
-+#define IRQ_MMCI1A	IRQ_VICSOURCE23
-+#else
-+#define IRQ_MMCI1A	IRQ_SIC_MMCI1A
++	/* If we're using the device tree for machine detection, we don't
++	 * look for a machinfo here, as we'll dynamically create one in
++	 * setup_arch(). ARM_DEVTREE depends on !DEBUG_LL, so we won't need
++	 * any machinfo fields 'til later.
++	 */
++#ifndef CONFIG_ARM_DEVTREE
+ 	bl	__lookup_machine_type		@ r5=machinfo
+ 	movs	r8, r5				@ invalid machine (r5=0)?
+ 	beq	__error_a			@ yes, error 'a'
 +#endif
 +
-+static struct mmci_platform_data mmc1_plat_data = {
-+	.ocr_mask	= MMC_VDD_32_33|MMC_VDD_33_34,
-+	.status		= mmc_status,
-+	.gpio_wp	= -1,
-+	.gpio_cd	= -1,
-+};
-+
-+static struct pl061_platform_data gpio2_plat_data = {
-+	.gpio_base	= 16,
-+	.irq_base	= IRQ_GPIO2_START,
-+};
-+
-+static struct pl061_platform_data gpio3_plat_data = {
-+	.gpio_base	= 24,
-+	.irq_base	= IRQ_GPIO3_START,
-+};
-+
-+#define UART3_IRQ	{ IRQ_SIC_UART3, NO_IRQ }
-+#define UART3_DMA	{ 0x86, 0x87 }
-+#define SCI1_IRQ	{ IRQ_SIC_SCI3, NO_IRQ }
-+#define SCI1_DMA	{ 0x88, 0x89 }
-+#define MMCI1_IRQ	{ IRQ_MMCI1A, IRQ_SIC_MMCI1B }
-+#define MMCI1_DMA	{ 0x85, 0 }
-+
-+/*
-+ * These devices are connected via the core APB bridge
-+ */
-+#define GPIO2_IRQ	{ IRQ_GPIOINT2, NO_IRQ }
-+#define GPIO2_DMA	{ 0, 0 }
-+#define GPIO3_IRQ	{ IRQ_GPIOINT3, NO_IRQ }
-+#define GPIO3_DMA	{ 0, 0 }
-+
-+/*
-+ * These devices are connected via the DMA APB bridge
-+ */
-+
-+/* FPGA Primecells */
-+AMBA_DEVICE(uart3, "fpga:09", UART3,    NULL);
-+AMBA_DEVICE(sci1,  "fpga:0a", SCI1,     NULL);
-+AMBA_DEVICE(mmc1,  "fpga:0b", MMCI1,    &mmc1_plat_data);
-+
-+/* DevChip Primecells */
-+AMBA_DEVICE(gpio2, "dev:e6",  GPIO2,    &gpio2_plat_data);
-+AMBA_DEVICE(gpio3, "dev:e7",  GPIO3,    &gpio3_plat_data);
-+
-+static struct amba_device *amba_devs[] __initdata = {
-+	&uart3_device,
-+	&gpio2_device,
-+	&gpio3_device,
-+	&sci1_device,
-+	&mmc1_device,
-+};
-+
-+static void __init versatile_dt_init(void)
-+{
-+	int i;
-+
-+	versatile_init();
-+
-+	for (i = 0; i < ARRAY_SIZE(amba_devs); i++) {
-+		struct amba_device *d = amba_devs[i];
-+		amba_device_register(d, &iomem_resource);
-+	}
-+}
-+static int __init versatile_dt_probe(unsigned long dt)
-+{
-+	if (!of_flat_dt_is_compatible(dt, "arm,versatile"))
-+		return 0;
-+
-+	return 1;
-+}
-+
-+DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
-+	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
-+	.phys_io	= 0x101f1000,
-+	.io_pg_offst	= ((0xf11f1000) >> 18) & 0xfffc,
-+	.boot_params	= 0x00000100,
-+	.map_io		= versatile_map_io,
-+	.init_irq	= versatile_init_irq,
-+	.timer		= &versatile_timer,
-+	.init_machine	= versatile_dt_init,
-+	.probe_dt	= versatile_dt_probe,
-+MACHINE_END
+ 	bl	__vet_atags
+ 	bl	__create_page_tables
