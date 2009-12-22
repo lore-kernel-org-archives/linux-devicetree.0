@@ -1,13 +1,11 @@
 From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH 08/11] arm-dt: parse memory info from DT
+Subject: [PATCH 00/11] Device-tree support for ARM
 Date: Tue, 22 Dec 2009 18:54:56 +0800
-Message-ID: <1261479296.248065.310822124208.8.gpush@pororo>
-References: <1261479296.245235.191110925832.0.gpush@pororo>
+Message-ID: <1261479296.245235.191110925832.0.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1261479296.245235.191110925832.0.gpush@pororo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,100 +19,78 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move the early_init_dt hooks into a new file, and populate the
-_alloc_memory and _add_memory functions.
+Hi all,
 
-Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+The following series of patches is an early prototype to add device tree
+support to the ARM architecture.
+
+If you're not familiar with device trees: a device tree is a data
+structure describing the hardware that the kernel is booted on. On boot,
+the bootloader can pass a 'device tree blob' to the kernel; the kernel
+then parses the blob and extracts data used to initialise the machine.
+Think ATAGS with a free-form structure and arbitrary property names and
+values.
+
+For cases where we don't want to rely on the bootloader's device tree
+blob[1] (maybe we have an updated one with fixes), we can supply our own
+device tree, attached to the kernel and passed through a boot wrapper.
+
+Device trees are currently used in the boot process for the powerpc,
+sparc and microblaze architectures.
+
+This work is aimed at reducing the effort required to port to a new
+board. Some hardware changes to may not require a new kernel at all;
+these may be described by a corresponding change to the device
+tree.
+
+We'd also hope to see an overall decrease in code required as drivers
+can be made generic enough to support a set of compatible devices, with
+the differences being represented in the device tree.
+
+At this stage, I've just added a mechanism to probe a platform
+(Versatile PB) using a device tree; this is just a proof of concept for
+machine probe, the interesting stuff happens when we can add DT support
+to drivers that the DT-enabled platforms use. Also todo is the boot
+wrapper to enable us to embed an updated DT in a bootable image.
+
+These patches are based on Grant Likely's test-devicetree repo[2], which
+is an effort to merge the common device tree code between the powerpc,
+sparc and microblaze architectures. I have a git tree[3] of these
+patches up too, based on his tree.
+
+The approach I've chosen for a boot interface is to add an ATAG that
+points to a device tree blob. If this ATAG is found, we use the
+device-tree based discovery. There are a couple of other options, but I
+think this is the least-intrusive method of passing the DT to the
+kernel, and will continue to work with non-DT bootloaders.
+
+If you'd like to try the code out, I have a page[4] up that has
+details of the kernel, a link to DT-enabled qemu sources and a sample
+device tree for the versatile machine.
+
+This is only an initial prototype, but I'd appreciate any comments,
+feedback or review.
+
+Cheers,
+
+
+Jeremy
+
+1: http://lkml.org/lkml/2009/5/27/446
+2: http://git.secretlab.ca/?p=linux-2.6.git;a=shortlog;h=refs/heads/test-devicetree
+3: http://kernel.ubuntu.com/git?p=jk/dt/linux-2.6.git;a=summary
+4: https://wiki.ubuntu.com/KernelTeam/ARMDeviceTrees
 
 ---
- arch/arm/kernel/devtree.c |   42 ++++++++++++++++++++++++++++++++++++++
- arch/arm/kernel/setup.c   |   23 --------------------
- 2 files changed, 42 insertions(+), 23 deletions(-)
-
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index 864eab5..a8496f6 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -8,6 +8,48 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/init.h>
-+#include <linux/errno.h>
-+#include <linux/types.h>
-+#include <linux/bootmem.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+
-+#include <asm/setup.h>
-+#include <asm/page.h>
-+
-+struct device_node *of_chosen;
-+
-+void __init early_init_dt_scan_chosen_arch(unsigned long node) { }
-+
-+void __init early_init_dt_setup_initrd_arch(unsigned long start,
-+					    unsigned long end) { }
-+
-+void __init early_init_devtree_arch(void) { }
-+
-+int __init early_init_dt_scan_memory_arch(unsigned long node,
-+					    const char *uname,
-+					    int depth, void *data)
-+{
-+	return -EINVAL;
-+}
-+
-+void __init early_init_dt_add_memory(u64 base, u64 size)
-+{
-+	arm_add_memory(base, size);
-+}
-+
-+u64 __init early_init_dt_alloc_memory(u64 size, u64 align)
-+{
-+	return __pa(__alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS)));
-+}
-+
-+int __init early_init_dt_scan_cpus(unsigned long node, const char *uname,
-+			    int depth, void *data)
-+{
-+	return 0;
-+}
-+
- struct machine_desc * __init parse_devicetree(void *devtree)
- {
- 	return NULL;
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index 8abb4be..88d4def 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -676,29 +676,6 @@ static int __init customize_machine(void)
- }
- arch_initcall(customize_machine);
- 
--/* arch-specific device tree handling */
--#ifdef CONFIG_ARM_DEVTREE
--void early_init_dt_scan_chosen_arch(unsigned long node) { }
--
--void early_init_dt_setup_initrd_arch(unsigned long start, unsigned long_end) { }
--
--void early_init_devtree_arch(void) { }
--
--int early_init_dt_scan_memory(unsigned long node, const char *uname,
--			      int depth, void *data)
--{
--	return 0;
--}
--
--int early_init_dt_scan_cpus(unsigned long node, const char *uname,
--			    int depth, void *data)
--{
--	return 0;
--}
--
--struct device_node *of_chosen;
--#endif /* CONFIG_ARM_DEVTREE */
--
- void __init setup_arch(char **cmdline_p)
- {
- 	struct tag *tags = (struct tag *)&init_tags;
+Jeremy Kerr (11):
+      arm: change command_line to cmd_line, and export it
+      arm: use generic infrastructure for early params
+      arm: export arm_add_memory
+      arm-dt: Add ATAG_DEVTREE tag
+      arm-dt: Add CONFIG_ARM_DEVTREE
+      arm-dt: postpone machine detection until setup_arch with CONFIG_ARM_DEVTREE
+      arm-dt: parse devtree pointer on boot
+      arm-dt: parse memory info from DT
+      arm-dt: probe for device-tree enabled platforms
+      arm-dt: parse initrd from device tree
+      arm/versatile: probe via device tree
