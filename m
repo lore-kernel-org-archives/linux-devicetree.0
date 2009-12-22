@@ -1,11 +1,13 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH] of/flattree: use callback to setup initrd from /chosen
-Date: Tue, 22 Dec 2009 17:39:51 +0800
-Message-ID: <1261474791.289871.854376051633.1.gpush@pororo>
+From: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH] of/flattree: use callback to setup initrd from /chosen
+Date: Tue, 22 Dec 2009 21:47:48 +1100
+Message-ID: <1261478868.10767.2.camel@concordia>
+References: <1261474791.289871.854376051633.1.gpush@pororo>
+Reply-To: michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0952070966579577654=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1261474791.289871.854376051633.1.gpush@pororo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,131 +17,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-At present, the fdt code sets the kernel-wide initrd_start and
-initrd_end variables when parsing /chosen. On ARM, we only set these
-once the bootmem has been reserved.
 
-This change adds an arch callback to setup the initrd from the device
-tree:
+--===============0952070966579577654==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-KrmK5jScTDR/5IkVIssI"
 
- void early_init_dt_setup_initrd_arch(unsigned long start,
-				      unsigned long end);
 
-The arch-specific code can then setup the initrd however it likes.
+--=-KrmK5jScTDR/5IkVIssI
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Compiled on powerpc, with CONFIG_BLK_DEV_INITRD=y and =n.
+On Tue, 2009-12-22 at 17:39 +0800, Jeremy Kerr wrote:
+> At present, the fdt code sets the kernel-wide initrd_start and
+> initrd_end variables when parsing /chosen. On ARM, we only set these
+> once the bootmem has been reserved.
+>=20
+> This change adds an arch callback to setup the initrd from the device
+> tree:
+>=20
+>  void early_init_dt_setup_initrd_arch(unsigned long start,
+> 				      unsigned long end);
 
-Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+arch_early_init_dt_setup_initrd() makes more sense to me, but ..
 
----
- arch/microblaze/kernel/prom.c |   10 ++++++++++
- arch/powerpc/kernel/prom.c    |   10 ++++++++++
- drivers/of/fdt.c              |   15 +++++----------
- include/linux/of_fdt.h        |   10 ++++++++++
- 4 files changed, 35 insertions(+), 10 deletions(-)
+> +#ifdef CONFIG_BLK_DEV_INITRD
+> +void __init early_init_dt_setup_initrd_arch(unsigned long start,
+> +		unsigned long end)
+> +{
+> +	initrd_start =3D (unsigned long)__va(start);
+> +	initrd_end =3D (unsigned long)__va(end);
+> +	initrd_below_start_ok =3D 1;
+> +}
+> +#endif
 
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index 15853de..4fb5d87 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -101,6 +101,16 @@ void __init early_init_devtree_arch(void)
- 	/* No Microblaze specific code here */
- }
- 
-+#ifdef CONFIG_BLK_DEV_INITRD
-+void __init early_init_dt_setup_initrd_arch(unsigned long start,
-+		unsigned long end)
-+{
-+	initrd_start = (unsigned long)__va(start);
-+	initrd_end = (unsigned long)__va(end);
-+	initrd_below_start_ok = 1;
-+}
-+#endif
-+
- /*******
-  *
-  * New implementation of the OF "find" APIs, return a refcounted
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 6fea025..236b02c 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -467,6 +467,16 @@ int __init early_init_dt_scan_memory_arch(unsigned long node, const char *uname,
- }
- #endif /* CONFIG_PPC_PSERIES */
- 
-+#ifdef CONFIG_BLK_DEV_INITRD
-+void __init early_init_dt_setup_initrd_arch(unsigned long start,
-+		unsigned long end)
-+{
-+	initrd_start = (unsigned long)__va(start);
-+	initrd_end = (unsigned long)__va(end);
-+	initrd_below_start_ok = 1;
-+}
-+#endif
-+
- void __init early_reserve_mem(void)
- {
- 	u64 base, size;
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 7cb386c..ad0b09a 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -398,28 +398,23 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
-  */
- void __init early_init_dt_check_for_initrd(unsigned long node)
- {
--	unsigned long len;
-+	unsigned long start, end, len;
- 	__be32 *prop;
- 
- 	pr_debug("Looking for initrd properties... ");
- 
- 	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
- 	if (prop) {
--		initrd_start = (unsigned long)
--				__va(of_read_ulong(prop, len/4));
-+		start = of_read_ulong(prop, len/4);
- 
- 		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
- 		if (prop) {
--			initrd_end = (unsigned long)
--				__va(of_read_ulong(prop, len/4));
--			initrd_below_start_ok = 1;
--		} else {
--			initrd_start = 0;
-+			end = of_read_ulong(prop, len/4);
-+			early_init_dt_setup_initrd_arch(start, end);
- 		}
- 	}
- 
--	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n",
--		 initrd_start, initrd_end);
-+	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n", start, end);
- }
- #else
- inline void early_init_dt_check_for_initrd(unsigned long node)
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 77ae0a4..4aba9a6 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -81,6 +81,16 @@ extern void early_reserve_mem(void);
- extern void early_init_devtree_arch(void);
- extern u64 dt_mem_next_cell(int s, __be32 **cellp);
- 
-+/*
-+ * If BLK_DEV_INITRD, the fdt early init code will call this function,
-+ * to be provided by the arch code. start and end are specified as
-+ * physical addresses.
-+ */
-+#ifdef CONFIG_BLK_DEV_INITRD
-+extern void early_init_dt_setup_initrd_arch(unsigned long start,
-+					    unsigned long end);
-+#endif
-+
- /* With CONFIG_HAVE_LMB, we can just use the lmb_ functions to add & allocate
-  * memory; otherwise, the arch has to provide its own functions to do this.
-  */
+Given you have two identical implementations why not make that the
+default and make it weak, and let ARM override it.
+
+cheers
+
+
+
+--=-KrmK5jScTDR/5IkVIssI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkswo9AACgkQdSjSd0sB4dIdMgCgvF4W8MGiNrOwiZ5YJXzyqNiP
+vskAn39avWrLiMN1s8MJ9G4ey9Lg+Mlq
+=l4Gm
+-----END PGP SIGNATURE-----
+
+--=-KrmK5jScTDR/5IkVIssI--
+
+
+--===============0952070966579577654==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0952070966579577654==--
