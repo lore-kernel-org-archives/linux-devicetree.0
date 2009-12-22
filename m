@@ -1,15 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] of: make set_node_proc_entry private to
-	proc_devtree.c
-Date: Wed, 23 Dec 2009 07:48:23 -0700
-Message-ID: <fa686aa40912230648r3294e8f8m855ae91e490a9edd@mail.gmail.com>
-References: <1261532718.575048.365032094903.0.gpush@pororo>
-	<1261532718.575722.541804401419.2.gpush@pororo>
+From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Subject: Re: [Qemu-devel] CELF Project Proposal - Device tree support for QEMU
+	system emulation.
+Date: Tue, 22 Dec 2009 12:54:22 -0600
+Message-ID: <200912221254.23063.rob@landley.net>
+References: <200912162246.42366.rob@landley.net>
+	<4B2A94BB.4020200@codemonkey.ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1261532718.575722.541804401419.2.gpush@pororo>
+In-Reply-To: <4B2A94BB.4020200-rdkfGonbjUSkNkDKm+mE6A@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,27 +20,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anthony Liguori <anthony-rdkfGonbjUSkNkDKm+mE6A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, CE Linux Developers List <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>, Paul Brook <paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2009 at 6:45 PM, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> We only need set_node_proc_entry in proc_devtree.c, so move it there.
+On Thursday 17 December 2009 14:29:47 Anthony Liguori wrote:
+> Rob Landley wrote:
+> > For background of CELF project proposals, see:
+> >
+> >   http://elinux.org/CELF_Open_Project_Proposal_2010
+> >
+> > Summary:
+> >
+> > Integrate a flattened device tree parser into the emulator QEMU, so QEMU
+> > can create board emulations on the fly (at runtime) from the same data
+> > files the Linux kernel uses to attach drivers to hardware.
 >
-> This fixes the !HAVE_ARCH_DEVTREE_FIXUPS build, as we can't make make
-> the definition in linux/of.h conditional on this #define (definitions in
-> asm/prom.h can't be exposed to linux/of.h, due to the enforced #include
-> ordering).
+> See
 >
-> Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> http://thread.gmane.org/gmane.comp.emulators.qemu/44869
+>
+> I'm not sure why Paul never pushed it but I think he was able to create
+> the syborg board purely from a device tree.
 
-A little ugly, but it can probably be refactored and cleaned up later
-(like a lot of other things in the merged code).  Otherwise these
-three patches look good to me.  I've picked them up into my tree and
-I'll push them out soon.
+He'd be a great person to sponsor to get it finished/updated and checked 
+in, then.  (Or his company, code sourcry, would.)  Me, I just want to use the 
+result.
 
-g.
+By the way, device trees were a topic at this year's kernel summit, and LWN 
+did an excellent write-up, as usual: http://lwn.net/Articles/357487/
 
+(If it does get done, somebody needs to write a HOWTO...)
+
+Rob
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Latency is more important than throughput. It's that simple. - Linus Torvalds
