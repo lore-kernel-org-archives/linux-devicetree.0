@@ -1,97 +1,33 @@
-From: Michael Ellerman <michael@ellerman.id.au>
-Subject: Re: [PATCH] of/flattree: use callback to setup initrd from /chosen
-Date: Wed, 23 Dec 2009 00:17:36 +1100
-Message-ID: <1261487856.10767.128.camel@concordia>
-References: <1261474791.289871.854376051633.1.gpush@pororo>
-	<1261478868.10767.2.camel@concordia>
-	<200912221854.37572.jeremy.kerr@canonical.com>
-Reply-To: michael@ellerman.id.au
+From: Christian Rund <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>
+Subject: AUTO: Christian Rund/Germany/IBM is out of the office from 12/21/2009
+	until 01/11/2010. (returning 11.01.2010)
+Date: Tue, 22 Dec 2009 16:03:00 +0100
+Message-ID: <OF2EB6D048.7709DB45-ONC1257694.0052AC1D-C1257694.0052AC1D@de.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5746505025834308230=="
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <200912221854.37572.jeremy.kerr@canonical.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: Jeremy Kerr <jeremy.kerr@canonical.com>
-Cc: microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============5746505025834308230==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-Fb0vQwplt2gfctQX9vPJ"
+I am out of the office until 11.01.2010.
+
+I will respond to your message when I return.
+
+Merry Christmas and a Happy New Year!
 
 
---=-Fb0vQwplt2gfctQX9vPJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Note: This is an automated response to your message  "devicetree-discuss
+Digest, Vol 18, Issue 14" sent on 22/12/09 11:55:19.
 
-On Tue, 2009-12-22 at 18:54 +0800, Jeremy Kerr wrote:
-> Hi Michael,
->=20
-> > >  void early_init_dt_setup_initrd_arch(unsigned long start,
-> > > 				      unsigned long end);
-> >=20
-> > arch_early_init_dt_setup_initrd() makes more sense to me, but ..
->=20
-> <foo>_arch has been the general convention for arch-specific hooks in=20
-> drivers/of/.
-
-Yuck, doh, guess I should have read those patches before they went in :)
-
-> > > +#ifdef CONFIG_BLK_DEV_INITRD
-> > > +void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> > > +		unsigned long end)
-> > > +{
-> > > +	initrd_start =3D (unsigned long)__va(start);
-> > > +	initrd_end =3D (unsigned long)__va(end);
-> > > +	initrd_below_start_ok =3D 1;
-> > > +}
-> > > +#endif
-> >=20
-> > Given you have two identical implementations why not make that the
-> > default and make it weak, and let ARM override it.
->=20
-> Yeah, that would be good too; just been avoiding weak as a potential sour=
-ce of=20
-> magic voodoo complexity. Grant - up to you on this one.
-
-Yeah, depends on what toolchains you're supporting, modern ones should
-be OK but it can be troublesome.
-
-cheers
-
-
-
---=-Fb0vQwplt2gfctQX9vPJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkswxvAACgkQdSjSd0sB4dKOOwCfdkTWwS3PZrrvukngLue5mCaY
-5V8AnjvglCFpvlmjWVedQkqzEGF3lQ+o
-=Ik6W
------END PGP SIGNATURE-----
-
---=-Fb0vQwplt2gfctQX9vPJ--
-
-
---===============5746505025834308230==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/linuxppc-dev
---===============5746505025834308230==--
+This is the only notification you will receive while this person is away.
