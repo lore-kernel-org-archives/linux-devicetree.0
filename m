@@ -1,14 +1,11 @@
-From: Blue Swirl <blauwirbel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Qemu-devel] CELF Project Proposal - Device tree support for QEMU
-	system emulation.
-Date: Sat, 19 Dec 2009 10:54:37 +0000
-Message-ID: <f43fc5580912190254n43a9a60fv38280d3c0c04ec57@mail.gmail.com>
-References: <200912162246.42366.rob@landley.net>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: [PATCH] of/flattree: use callback to setup initrd from /chosen
+Date: Tue, 22 Dec 2009 17:39:51 +0800
+Message-ID: <1261474791.289871.854376051633.1.gpush@pororo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <200912162246.42366.rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,34 +15,131 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, CE Linux Developers List <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMTcsIDIwMDkgYXQgNDo0NiBBTSwgUm9iIExhbmRsZXkgPHJvYkBsYW5kbGV5
-Lm5ldD4gd3JvdGU6Cj4gRm9yIGJhY2tncm91bmQgb2YgQ0VMRiBwcm9qZWN0IHByb3Bvc2Fscywg
-c2VlOgo+Cj4gwqBodHRwOi8vZWxpbnV4Lm9yZy9DRUxGX09wZW5fUHJvamVjdF9Qcm9wb3NhbF8y
-MDEwCj4KPiBTdW1tYXJ5Ogo+Cj4gSW50ZWdyYXRlIGEgZmxhdHRlbmVkIGRldmljZSB0cmVlIHBh
-cnNlciBpbnRvIHRoZSBlbXVsYXRvciBRRU1VLCBzbyBRRU1VIGNhbgo+IGNyZWF0ZSBib2FyZCBl
-bXVsYXRpb25zIG9uIHRoZSBmbHkgKGF0IHJ1bnRpbWUpIGZyb20gdGhlIHNhbWUgZGF0YSBmaWxl
-cyB0aGUKPiBMaW51eCBrZXJuZWwgdXNlcyB0byBhdHRhY2ggZHJpdmVycyB0byBoYXJkd2FyZS4K
-Pgo+IFByb3Bvc2VyOgo+Cj4gUm9iIExhbmRsZXkKPgo+IERlc2NyaXB0aW9uOgo+Cj4gQ3VycmVu
-dGx5LCB0aGUgUUVNVSBpcyBlbXVsYXRpbmcgc3lzdGVtIGJvYXJkcyB2aWEgaGFyZHdpcmVkIC5j
-IGZpbGVzLCB3aGljaAo+IGV4cGxpY2l0bHkgc2V0IHVwIHRoZSByZXNvdXJjZXMgZm9yIGVhY2gg
-ZW11bGF0aW9uIGluIGEgc2VwYXJhdGUgQyBmdW5jdGlvbi4KPiBJbiB0aGVvcnksIFFFTVUgY291
-bGQgcGFyc2UgdGhlIHNhbWUgZGV2aWNlIHRyZWUgZGF0YSBmb3JtYXQgdGhlIExpbnV4IGtlcm5l
-bAo+IHVzZXMgdG8gc2V0IHVwIGl0cyBoYXJkd2FyZSByZXNvdXJjZXMsIMKgYW5kIHRoZW4gcGFz
-cyBoYXJkd2FyZSByZXNvdXJjZXMgYWxvbmcKPiB0byBrZXJuZWxzIGl0IGludm9rZXMgdGhyb3Vn
-aCBpdHMgYnVpbHQtaW4gYm9vdGxvYWRlciAoSS5FLiB3aXRoIHRoZSAta2VybmVsCj4gb3B0aW9u
-KS4gwqBUaGlzIGNvdWxkIGFsbG93IG5ldyBib2FyZHMgdG8gYmUgYWRkZWQgdG8gcWVtdSBzaW1w
-bHkgYnkgc3VwcGx5aW5nCj4gZGV2aWNlIHRyZWUgZmlsZXMgYXQgcnVudGltZSAoYXNzdW1pbmcg
-ZW11bGF0aW9ucyBmb3IgdGhlIGFwcHJvcHJpYXRlCj4gcGVyaXBoZXJhbHMgaGFkIGFscmVhZHkg
-YmVlbiBpbXBsZW1lbnRlZCBpbiBRRU1VKS4KCkluIGFkZGl0aW9uIHRvIC1rZXJuZWwgY2FzZSwg
-dGhlIGRldmljZSB0cmVlIHNob3VsZCBiZSBwYXNzZWQgdG8KT3BlbkJJT1MsIHdoaWNoIHdvdWxk
-IGdlbmVyYXRlIE9GIHRyZWUgZnJvbSBEVC4gVGhpcyB3b3VsZCBiZSB1c2VmdWwKZm9yIE9TZXMg
-b3RoZXIgdGhhbiBMaW51eC4KCkFub3RoZXIgaW50ZXJlc3RpbmcgY2FzZSBpcyBzdW40diBoeXBl
-cnZpc29yLCB3aGljaCB1c2VzIGEgc2ltaWxhcgpkZXZpY2UgdHJlZS4gU29tZSBEVCB0cmFuc2Zv
-cm1hdGlvbiB3b3VsZCBiZSByZXF1aXJlZCBpbiBRRU1VLgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
-CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
-Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+At present, the fdt code sets the kernel-wide initrd_start and
+initrd_end variables when parsing /chosen. On ARM, we only set these
+once the bootmem has been reserved.
+
+This change adds an arch callback to setup the initrd from the device
+tree:
+
+ void early_init_dt_setup_initrd_arch(unsigned long start,
+				      unsigned long end);
+
+The arch-specific code can then setup the initrd however it likes.
+
+Compiled on powerpc, with CONFIG_BLK_DEV_INITRD=y and =n.
+
+Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+
+---
+ arch/microblaze/kernel/prom.c |   10 ++++++++++
+ arch/powerpc/kernel/prom.c    |   10 ++++++++++
+ drivers/of/fdt.c              |   15 +++++----------
+ include/linux/of_fdt.h        |   10 ++++++++++
+ 4 files changed, 35 insertions(+), 10 deletions(-)
+
+diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+index 15853de..4fb5d87 100644
+--- a/arch/microblaze/kernel/prom.c
++++ b/arch/microblaze/kernel/prom.c
+@@ -101,6 +101,16 @@ void __init early_init_devtree_arch(void)
+ 	/* No Microblaze specific code here */
+ }
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++void __init early_init_dt_setup_initrd_arch(unsigned long start,
++		unsigned long end)
++{
++	initrd_start = (unsigned long)__va(start);
++	initrd_end = (unsigned long)__va(end);
++	initrd_below_start_ok = 1;
++}
++#endif
++
+ /*******
+  *
+  * New implementation of the OF "find" APIs, return a refcounted
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index 6fea025..236b02c 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -467,6 +467,16 @@ int __init early_init_dt_scan_memory_arch(unsigned long node, const char *uname,
+ }
+ #endif /* CONFIG_PPC_PSERIES */
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++void __init early_init_dt_setup_initrd_arch(unsigned long start,
++		unsigned long end)
++{
++	initrd_start = (unsigned long)__va(start);
++	initrd_end = (unsigned long)__va(end);
++	initrd_below_start_ok = 1;
++}
++#endif
++
+ void __init early_reserve_mem(void)
+ {
+ 	u64 base, size;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 7cb386c..ad0b09a 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -398,28 +398,23 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+  */
+ void __init early_init_dt_check_for_initrd(unsigned long node)
+ {
+-	unsigned long len;
++	unsigned long start, end, len;
+ 	__be32 *prop;
+ 
+ 	pr_debug("Looking for initrd properties... ");
+ 
+ 	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
+ 	if (prop) {
+-		initrd_start = (unsigned long)
+-				__va(of_read_ulong(prop, len/4));
++		start = of_read_ulong(prop, len/4);
+ 
+ 		prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
+ 		if (prop) {
+-			initrd_end = (unsigned long)
+-				__va(of_read_ulong(prop, len/4));
+-			initrd_below_start_ok = 1;
+-		} else {
+-			initrd_start = 0;
++			end = of_read_ulong(prop, len/4);
++			early_init_dt_setup_initrd_arch(start, end);
+ 		}
+ 	}
+ 
+-	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n",
+-		 initrd_start, initrd_end);
++	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n", start, end);
+ }
+ #else
+ inline void early_init_dt_check_for_initrd(unsigned long node)
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 77ae0a4..4aba9a6 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -81,6 +81,16 @@ extern void early_reserve_mem(void);
+ extern void early_init_devtree_arch(void);
+ extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+ 
++/*
++ * If BLK_DEV_INITRD, the fdt early init code will call this function,
++ * to be provided by the arch code. start and end are specified as
++ * physical addresses.
++ */
++#ifdef CONFIG_BLK_DEV_INITRD
++extern void early_init_dt_setup_initrd_arch(unsigned long start,
++					    unsigned long end);
++#endif
++
+ /* With CONFIG_HAVE_LMB, we can just use the lmb_ functions to add & allocate
+  * memory; otherwise, the arch has to provide its own functions to do this.
+  */
