@@ -1,66 +1,45 @@
-From: Jeremy Kerr <jeremy.kerr@canonical.com>
-Subject: [PATCH 2/3] of: make set_node_proc_entry private to proc_devtree.c
-Date: Wed, 23 Dec 2009 09:45:18 +0800
-Message-ID: <1261532718.575722.541804401419.2.gpush@pororo>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: make set_node_proc_entry private to
+	proc_devtree.c
+Date: Wed, 23 Dec 2009 07:48:23 -0700
+Message-ID: <fa686aa40912230648r3294e8f8m855ae91e490a9edd@mail.gmail.com>
 References: <1261532718.575048.365032094903.0.gpush@pororo>
+	<1261532718.575722.541804401419.2.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1753623AbZLWBqB@vger.kernel.org>
-In-Reply-To: <1261532718.575048.365032094903.0.gpush@pororo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1261532718.575722.541804401419.2.gpush@pororo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We only need set_node_proc_entry in proc_devtree.c, so move it there.
+On Tue, Dec 22, 2009 at 6:45 PM, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+> We only need set_node_proc_entry in proc_devtree.c, so move it there.
+>
+> This fixes the !HAVE_ARCH_DEVTREE_FIXUPS build, as we can't make make
+> the definition in linux/of.h conditional on this #define (definitions in
+> asm/prom.h can't be exposed to linux/of.h, due to the enforced #include
+> ordering).
+>
+> Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-This fixes the !HAVE_ARCH_DEVTREE_FIXUPS build, as we can't make make
-the definition in linux/of.h conditional on this #define (definitions in
-asm/prom.h can't be exposed to linux/of.h, due to the enforced #include
-ordering).
+A little ugly, but it can probably be refactored and cleaned up later
+(like a lot of other things in the merged code).  Otherwise these
+three patches look good to me.  I've picked them up into my tree and
+I'll push them out soon.
 
-Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
+g.
 
----
- fs/proc/proc_devtree.c |    5 +++--
- include/linux/of.h     |    6 ------
- 2 files changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-index 7ba79a5..31fc7e0 100644
---- a/fs/proc/proc_devtree.c
-+++ b/fs/proc/proc_devtree.c
-@@ -13,12 +13,13 @@
- #include <asm/uaccess.h>
- #include "internal.h"
- 
--#ifndef HAVE_ARCH_DEVTREE_FIXUPS
- static inline void set_node_proc_entry(struct device_node *np,
- 				       struct proc_dir_entry *de)
- {
--}
-+#ifdef HAVE_ARCH_DEVTREE_FIXUPS
-+	np->pde = de;
- #endif
-+}
- 
- static struct proc_dir_entry *proc_device_tree;
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 67c9206..9078747 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -75,12 +75,6 @@ static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
- 	set_bit(flag, &n->_flags);
- }
- 
--static inline void
--set_node_proc_entry(struct device_node *dn, struct proc_dir_entry *de)
--{
--	dn->pde = de;
--}
--
- extern struct device_node *of_find_all_nodes(struct device_node *prev);
- 
- #if defined(CONFIG_SPARC)
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
