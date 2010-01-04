@@ -1,13 +1,15 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: Device Tree "Status" Property Question
-Date: Mon, 04 Jan 2010 14:37:18 -0600
-Message-ID: <4B42517E.6000609@freescale.com>
-References: <1262192287.3811.4.camel@johns>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH 06/11] arm-dt: postpone machine detection until setup_arch
+	with CONFIG_ARM_DEVTREE
+Date: Tue, 5 Jan 2010 06:26:54 +0800
+Message-ID: <201001050926.54286.jeremy.kerr@canonical.com>
+References: <1261479296.247430.731563214048.6.gpush@pororo>
+	<4B421903.4050200@simtec.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1262192287.3811.4.camel@johns>
+In-Reply-To: <4B421903.4050200-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,23 +19,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Schmoller <jschmoller-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Ben Dooks <ben-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-John Schmoller wrote:
-> Hello all,
+Hi Ben,
+
+> > When we're using CONFIG_ARM_DEVTREE, we need to postpone machine
+> > detection until later in setup_arch. Because ARM_DEVTREE depends on
+> > !DEBUG_LL, we don't need the mdesc this early anyway.
+> >
+> > We'll add support for ARM_DEVTREE && DEBUG_LL later.
 > 
-> I'm currently working with U-Boot to pass POST results to Linux in an
-> FDT.  To do this, I'm intending to use the "status" property, as
-> documented in ePAPR 1.0 (I'm using PowerPC).  My question involves the
-> "fail-sss" property value.  What is the intention of "sss"?  Is it meant
-> to be 3 digit error code, or a string, or what?  I'd like to append a
-> failure message to the value if that's appropriate.  Something like
-> "fail-Widgit X did not respond" or some such thing.  Please let me know
-> if that's not the intended use of the "fail-sss" value.
+> Why not add a specific machine type for 'this is device tree' and
+> then these routines don't even need to #ifdef. It would especially
+> be good as it allows dt and non-dt machines to coexist in the same
+> kernel together.
 
-I believe it's supposed to be an arbitrary string, the meaning of which 
-is device-specific.
+Mainly because this doesn't gain us much; the machine_desc that is discovered 
+from this new machine type would not have the correct data (phys_io & 
+io_pg_offset) required for early setup (used for DEBUG_LL).
 
--Scott
+We could conditionally skip the detection if we see a DT machine type, but 
+then we'd need to add similar checks for all the paths where the machine_desc 
+is used.
+
+However, my goal is indeed to allow DT and non-DT machines to coexist as much 
+as possible, this patch is more a temporary workaround while I figure out how 
+to handle the DEBUG_LL stuff nicely for DT cases.
+
+Cheers,
+
+
+Jeremy
