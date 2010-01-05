@@ -1,54 +1,107 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH 06/11] arm-dt: postpone machine detection until setup_arch
-	with CONFIG_ARM_DEVTREE
-Date: Tue, 5 Jan 2010 06:26:54 +0800
-Message-ID: <201001050926.54286.jeremy.kerr@canonical.com>
-References: <1261479296.247430.731563214048.6.gpush@pororo>
-	<4B421903.4050200@simtec.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4B421903.4050200-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ben Dooks <ben-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: [PATCH net-next v2 3/3] powerpc/mpc5xxx: add OF platform binding doc for FSL MSCAN devices
+Date: Tue,  5 Jan 2010 20:19:29 +0100
+Message-ID: <1262719169-2350-4-git-send-email-wg@grandegger.com>
+References: <1262719169-2350-1-git-send-email-wg@grandegger.com>
+ <1262719169-2350-2-git-send-email-wg@grandegger.com>
+ <1262719169-2350-3-git-send-email-wg@grandegger.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1262719169-2350-3-git-send-email-wg@grandegger.com>
+Sender: netdev-owner@vger.kernel.org
+To: Netdev@vger.kernel.org
+Cc: Socketcan-core@lists.berlios.de, Linuxppc-dev@lists.ozlabs.org, Devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Wolfgang Grandegger <wg@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+From: Wolfgang Grandegger <wg@denx.de>
 
-> > When we're using CONFIG_ARM_DEVTREE, we need to postpone machine
-> > detection until later in setup_arch. Because ARM_DEVTREE depends on
-> > !DEBUG_LL, we don't need the mdesc this early anyway.
-> >
-> > We'll add support for ARM_DEVTREE && DEBUG_LL later.
-> 
-> Why not add a specific machine type for 'this is device tree' and
-> then these routines don't even need to #ifdef. It would especially
-> be good as it allows dt and non-dt machines to coexist in the same
-> kernel together.
+This patch adds documentation for the MSCAN OF device bindings for
+the MPC512x and moves the one for the MPC5200 to the new common file
+"Documentation/powerpc/dts-bindings/fsl/can.txt".
 
-Mainly because this doesn't gain us much; the machine_desc that is discovered 
-from this new machine type would not have the correct data (phys_io & 
-io_pg_offset) required for early setup (used for DEBUG_LL).
+Signed-off-by: Wolfgang Grandegger <wg@denx.de>
+Acked-by: Wolfram Sang <w.sang@pengutronix.de>
+---
+ Documentation/powerpc/dts-bindings/fsl/can.txt     |   53 ++++++++++++++++++++
+ Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |    9 +---
+ 2 files changed, 54 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/fsl/can.txt
 
-We could conditionally skip the detection if we see a DT machine type, but 
-then we'd need to add similar checks for all the paths where the machine_desc 
-is used.
+diff --git a/Documentation/powerpc/dts-bindings/fsl/can.txt b/Documentation/powerpc/dts-bindings/fsl/can.txt
+new file mode 100644
+index 0000000..2fa4fcd
+--- /dev/null
++++ b/Documentation/powerpc/dts-bindings/fsl/can.txt
+@@ -0,0 +1,53 @@
++CAN Device Tree Bindings
++------------------------
++
++(c) 2006-2009 Secret Lab Technologies Ltd
++Grant Likely <grant.likely@secretlab.ca>
++
++fsl,mpc5200-mscan nodes
++-----------------------
++In addition to the required compatible-, reg- and interrupt-properties, you can
++also specify which clock source shall be used for the controller:
++
++- fsl,mscan-clock-source : a string describing the clock source. Valid values
++			   are:	"ip" for ip bus clock
++				 "ref" for reference clock (XTAL)
++			   "ref" is default in case this property is not
++			   present.
++
++fsl,mpc5121-mscan nodes
++-----------------------
++In addition to the required compatible-, reg- and interrupt-properties, you can
++also specify which clock source and divider shall be used for the controller:
++
++- fsl,mscan-clock-source : a string describing the clock source. Valid values
++			   are:	"ip" for ip bus clock
++				"ref" for reference clock
++				"sys" for system clock
++			   If this property is not present, an optimal CAN
++			   clock source and frequency based on the system
++			   clock will be selected. If this is not possible,
++			   the reference clock will be used.
++
++- fsl,mscan-clock-divider: for the reference and system clock, an additional
++			   clock divider can be specified. By default, a
++			   value of 1 is used.
++
++Note that the MPC5121 Rev. 1 processor is not supported.
++
++Examples:
++	can@1300 {
++		compatible = "fsl,mpc5121-mscan";
++		interrupts = <12 0x8>;
++		interrupt-parent = <&ipic>;
++		reg = <0x1300 0x80>;
++	};
++
++	can@1380 {
++		compatible = "fsl,mpc5121-mscan";
++		interrupts = <13 0x8>;
++		interrupt-parent = <&ipic>;
++		reg = <0x1380 0x80>;
++		fsl,mscan-clock-source = "ref";
++		fsl,mscan-clock-divider = <3>;
++	};
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+index cabc780..95accfa 100644
+--- a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
++++ b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+@@ -180,11 +180,4 @@ External interrupts:
+ 
+ fsl,mpc5200-mscan nodes
+ -----------------------
+-In addition to the required compatible-, reg- and interrupt-properites, you can
+-also specify which clock source shall be used for the controller:
+-
+-- fsl,mscan-clock-source- a string describing the clock source. Valid values
+-			  are:	"ip" for ip bus clock
+-				"ref" for reference clock (XTAL)
+-			  "ref" is default in case this property is not
+-			  present.
++See file can.txt in this directory.
+-- 
+1.6.2.5
 
-However, my goal is indeed to allow DT and non-DT machines to coexist as much 
-as possible, this patch is more a temporary workaround while I figure out how 
-to handle the DEBUG_LL stuff nicely for DT cases.
-
-Cheers,
-
-
-Jeremy
