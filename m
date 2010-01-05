@@ -1,118 +1,78 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: [PATCH net-next v2 3/3] powerpc/mpc5xxx: add OF platform binding doc
-	for FSL MSCAN devices
-Date: Tue,  5 Jan 2010 20:20:41 +0100
-Message-ID: <1262719241-2422-4-git-send-email-wg@grandegger.com>
-References: <1262719241-2422-1-git-send-email-wg@grandegger.com>
-	<1262719241-2422-2-git-send-email-wg@grandegger.com>
-	<1262719241-2422-3-git-send-email-wg@grandegger.com>
+From: "Yoder Stuart-B08248" <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RFC: proposal to extend the open-pic interrupt specifier definition
+Date: Tue, 5 Jan 2010 16:28:12 -0700
+Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA30590506E@az33exm25.fsl.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-In-Reply-To: <1262719241-2422-3-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-List-Unsubscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
-List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
-Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-class: urn:content-classes:message
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 
-This patch adds documentation for the MSCAN OF device bindings for
-the MPC512x and moves the one for the MPC5200 to the new common file
-"Documentation/powerpc/dts-bindings/fsl/can.txt".
+The current open-pic binding defines that interrupt specifiers
+have 2 cells-- an interrupt number and level/sense encoding.
 
-Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
-Acked-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/powerpc/dts-bindings/fsl/can.txt     |   53 ++++++++++++++++++++
- Documentation/powerpc/dts-bindings/fsl/mpc5200.txt |    9 +---
- 2 files changed, 54 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/fsl/can.txt
+With chips like the P4080 this is no longer sufficient to
+represent the various types of interrupt sources handled by
+the interrupt controller.  A linear list of interrupt numbers
+doesn't handle all interrupt types-- there are at least 4 different
+kinds of interrupts on the P4080.
 
-diff --git a/Documentation/powerpc/dts-bindings/fsl/can.txt b/Documentation/powerpc/dts-bindings/fsl/can.txt
-new file mode 100644
-index 0000000..2fa4fcd
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/fsl/can.txt
-@@ -0,0 +1,53 @@
-+CAN Device Tree Bindings
-+------------------------
-+
-+(c) 2006-2009 Secret Lab Technologies Ltd
-+Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-+
-+fsl,mpc5200-mscan nodes
-+-----------------------
-+In addition to the required compatible-, reg- and interrupt-properties, you can
-+also specify which clock source shall be used for the controller:
-+
-+- fsl,mscan-clock-source : a string describing the clock source. Valid values
-+			   are:	"ip" for ip bus clock
-+				 "ref" for reference clock (XTAL)
-+			   "ref" is default in case this property is not
-+			   present.
-+
-+fsl,mpc5121-mscan nodes
-+-----------------------
-+In addition to the required compatible-, reg- and interrupt-properties, you can
-+also specify which clock source and divider shall be used for the controller:
-+
-+- fsl,mscan-clock-source : a string describing the clock source. Valid values
-+			   are:	"ip" for ip bus clock
-+				"ref" for reference clock
-+				"sys" for system clock
-+			   If this property is not present, an optimal CAN
-+			   clock source and frequency based on the system
-+			   clock will be selected. If this is not possible,
-+			   the reference clock will be used.
-+
-+- fsl,mscan-clock-divider: for the reference and system clock, an additional
-+			   clock divider can be specified. By default, a
-+			   value of 1 is used.
-+
-+Note that the MPC5121 Rev. 1 processor is not supported.
-+
-+Examples:
-+	can@1300 {
-+		compatible = "fsl,mpc5121-mscan";
-+		interrupts = <12 0x8>;
-+		interrupt-parent = <&ipic>;
-+		reg = <0x1300 0x80>;
-+	};
-+
-+	can@1380 {
-+		compatible = "fsl,mpc5121-mscan";
-+		interrupts = <13 0x8>;
-+		interrupt-parent = <&ipic>;
-+		reg = <0x1380 0x80>;
-+		fsl,mscan-clock-source = "ref";
-+		fsl,mscan-clock-divider = <3>;
-+	};
-diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
-index cabc780..95accfa 100644
---- a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
-+++ b/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
-@@ -180,11 +180,4 @@ External interrupts:
- 
- fsl,mpc5200-mscan nodes
- -----------------------
--In addition to the required compatible-, reg- and interrupt-properites, you can
--also specify which clock source shall be used for the controller:
--
--- fsl,mscan-clock-source- a string describing the clock source. Valid values
--			  are:	"ip" for ip bus clock
--				"ref" for reference clock (XTAL)
--			  "ref" is default in case this property is not
--			  present.
-+See file can.txt in this directory.
--- 
-1.6.2.5
+We have a proposal to extend the open-pic binding in
+a backwards compatible way to encode additional information
+in the level/sense field.
+
+The current definition of level/sense is:
+  0 = low to high edge sensitive type enabled
+  1 = active low level sensitive type enabled
+  2 = active high level sensitive type enabled
+  3 = high to low edge sensitive type enabled
+
+Those 2 bits would retain their current meaning, but the
+full encoding would be extended as follows:
+
+     bits      meaning
+     ----------------------------------------------
+     0-7       interrupt sub-type
+     8-15      interrupt type
+     16-23     implementation dependent
+     24-29     reserved
+     30-31     level/sense encoding
+
+     interrupt type
+     --------------
+     The interrupt type field numberspace is divided as
+     follows:
+
+        0x00 to 0x7f - architected interrupt types
+        0x80 to 0xff - implementation dependent interrupt
+                       types
+
+     The interrupt type determines the meaning of the 
+     sub-type.  Implementation dependent types are
+     specified by the interrupt controller binding.
+
+     architected interrupt types
+     ---------------------------
+     0x00 - unspecified / I/O device
+     0x01 - interprocessor interrupt
+     0x02 - timer interrupt
+     0x03 - message signaled interrupt
+
+The advantage of the above approach is backwards compatibility.
+Existing interrupt specifiers (and device trees) are valid with
+this proposal. 
+
+Regards,
+Stuart Yoder
