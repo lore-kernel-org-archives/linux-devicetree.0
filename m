@@ -1,44 +1,119 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH 02/11] arm: use generic infrastructure for early params
-Date: Thu, 7 Jan 2010 09:31:00 +1100
-Message-ID: <201001070931.00811.jeremy.kerr@canonical.com>
-References: <1261479296.245235.191110925832.0.gpush@pororo>
-	<1261479296.246097.171417450949.2.gpush@pororo>
-	<20100106162731.GB1728@n2100.arm.linux.org.uk>
+From: H Hartley Sweeten <hartleys@visionengravers.com>
+Subject: [PATCH] nodmask.h: remove macro any_online_node
+Date: Wed, 6 Jan 2010 16:24:58 -0700
+Message-ID: <201001061624.59118.hartleys@visionengravers.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100106162731.GB1728-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S933078Ab0AFXYl@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux Kernel <linux-kernel@vger.kernel.org>, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Cc: akpm@linux-foundation.org, rientjes@google.com, kamezawa.hiroyu@jp.fujitsu.com, mel@csn.ul.ie, lee.schermerhorn@hp.com, benh@kernel.crashing.org, paulus@samba.org, dave@linux.vnet.ibm.com, miltonm@bga.com, nfont@austin.ibm.com, geoffrey.levand@am.sony.com, grant.likely@secretlab.ca, bfields@fieldses.org, neilb@suse.de, Trond.Myklebust@netapp.com, davem@davemloft.net, bhalevy@panasas.com, chuck.lever@oracle.com, Ricardo.Labiaga@netapp.com
 List-Id: devicetree@vger.kernel.org
 
-Russell,
+nodmask.h: remove macro any_online_node
 
-> This is something which should be separate from the rest of the DT
-> patch - could we have this as a patch which can be applied to the
-> current kernel tree please?
+The macro any_online_node is prone to producing sparse warnings
+due to the local symbol 'node'. Since all the in-tree users are really
+requesting the first online node (the mask argument is either
+NODE_MASK_ALL or node_online_map) just use the first_online_node
+macro and remove the any_online_node macro since there are no users.
 
-Sure, patch coming.
+Signed-off-by: H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>
+Cc: Mel Gorman <mel@csn.ul.ie>
+Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Dave Hansen <dave@linux.vnet.ibm.com>
+Cc: Milton Miller <miltonm@bga.com>
+Cc: Nathan Fontenot <nfont@austin.ibm.com>
+Cc: Geoff Levand <geoffrey.levand@am.sony.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: J. Bruce Fields <bfields@fieldses.org>
+Cc: Neil Brown <neilb@suse.de>
+Cc: Trond Myklebust <Trond.Myklebust@netapp.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Benny Halevy <bhalevy@panasas.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Ricardo Labiaga <Ricardo.Labiaga@netapp.com>
 
-The first three patches of this series (prefixed with arm:, rather than arm-
-dt:) are all generic arm patches that don't specifically add device tree 
-support, would you like the other two as well?
+---
 
-I'm in the process of rebasing my work onto a merge or your and Grant Likely's 
-test-devicetree branch, so future patches should be easier to work with.
-
-Cheers,
-
-
-Jeremy
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index b037d95..64c0022 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -451,7 +451,7 @@ static int __cpuinit numa_setup_cpu(unsigned long lcpu)
+ 	nid = of_node_to_nid_single(cpu);
+ 
+ 	if (nid < 0 || !node_online(nid))
+-		nid = any_online_node(NODE_MASK_ALL);
++		nid = first_online_node;
+ out:
+ 	map_cpu_to_node(lcpu, nid);
+ 
+@@ -1114,7 +1114,7 @@ int hot_add_scn_to_nid(unsigned long scn_addr)
+ 	int nid, found = 0;
+ 
+ 	if (!numa_enabled || (min_common_depth < 0))
+-		return any_online_node(NODE_MASK_ALL);
++		return first_online_node;
+ 
+ 	memory = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
+ 	if (memory) {
+@@ -1125,7 +1125,7 @@ int hot_add_scn_to_nid(unsigned long scn_addr)
+ 	}
+ 
+ 	if (nid < 0 || !node_online(nid))
+-		nid = any_online_node(NODE_MASK_ALL);
++		nid = first_online_node;
+ 
+ 	if (NODE_DATA(nid)->node_spanned_pages)
+ 		return nid;
+diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
+index 454997c..c4fa64b 100644
+--- a/include/linux/nodemask.h
++++ b/include/linux/nodemask.h
+@@ -69,8 +69,6 @@
+  * int node_online(node)		Is some node online?
+  * int node_possible(node)		Is some node possible?
+  *
+- * int any_online_node(mask)		First online node in mask
+- *
+  * node_set_online(node)		set bit 'node' in node_online_map
+  * node_set_offline(node)		clear bit 'node' in node_online_map
+  *
+@@ -467,15 +465,6 @@ static inline int num_node_state(enum node_states state)
+ #define node_online_map 	node_states[N_ONLINE]
+ #define node_possible_map 	node_states[N_POSSIBLE]
+ 
+-#define any_online_node(mask)			\
+-({						\
+-	int node;				\
+-	for_each_node_mask(node, (mask))	\
+-		if (node_online(node))		\
+-			break;			\
+-	node;					\
+-})
+-
+ #define num_online_nodes()	num_node_state(N_ONLINE)
+ #define num_possible_nodes()	num_node_state(N_POSSIBLE)
+ #define node_online(node)	node_state((node), N_ONLINE)
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 538ca43..832c1fe 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -133,7 +133,7 @@ svc_pool_map_choose_mode(void)
+ 		return SVC_POOL_PERNODE;
+ 	}
+ 
+-	node = any_online_node(node_online_map);
++	node = first_online_node;
+ 	if (nr_cpus_node(node) > 2) {
+ 		/*
+ 		 * Non-trivial SMP, or CONFIG_NUMA on
