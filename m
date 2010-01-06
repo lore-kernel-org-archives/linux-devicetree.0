@@ -1,32 +1,44 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Subject: Re: [PATCH 02/11] arm: use generic infrastructure for early params
-Date: Wed, 6 Jan 2010 16:27:31 +0000
-Message-ID: <20100106162731.GB1728@n2100.arm.linux.org.uk>
+Date: Thu, 7 Jan 2010 09:31:00 +1100
+Message-ID: <201001070931.00811.jeremy.kerr@canonical.com>
 References: <1261479296.245235.191110925832.0.gpush@pororo>
 	<1261479296.246097.171417450949.2.gpush@pororo>
+	<20100106162731.GB1728@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1261479296.246097.171417450949.2.gpush@pororo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jeremy Kerr <jeremy.kerr@canonical.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100106162731.GB1728-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2009 at 06:54:56PM +0800, Jeremy Kerr wrote:
-> The ARM setup code includes its own parser for early params, there's
-> also one in the generic init code.
+Russell,
 
-This is something which should be separate from the rest of the DT
-patch - could we have this as a patch which can be applied to the
-current kernel tree please?
+> This is something which should be separate from the rest of the DT
+> patch - could we have this as a patch which can be applied to the
+> current kernel tree please?
+
+Sure, patch coming.
+
+The first three patches of this series (prefixed with arm:, rather than arm-
+dt:) are all generic arm patches that don't specifically add device tree 
+support, would you like the other two as well?
+
+I'm in the process of rebasing my work onto a merge or your and Grant Likely's 
+test-devicetree branch, so future patches should be easier to work with.
+
+Cheers,
+
+
+Jeremy
