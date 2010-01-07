@@ -1,18 +1,18 @@
-From: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: "status" property checks
-Date: Fri, 08 Jan 2010 15:58:40 -0800
-Message-ID: <1262995120.31871.105.camel@localhost.localdomain>
-References: <1262905673.11702.16.camel@localhost.localdomain>
-	<1262918143.2716.8.camel@ccs-laptop>
-	<1262975655.31871.67.camel@localhost.localdomain>
-	<4B478747.8070009@freescale.com>
-	<1262979928.31871.81.camel@localhost.localdomain>
-	<20100108234614.GB2661@yookeroo>
+From: "Sethi Varun-B16395" <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [Power.org:parch] Re: RFC: proposal to extend the open-pic
+	interrupt specifierdefinition
+Date: Thu, 7 Jan 2010 16:47:29 +0530
+Message-ID: <C6084B7975B5484DB5A7801D66F4C592DD3B83@zin33exm21.fsl.freescale.net>
+References: <9696D7A991D0824DBA8DFAC74A9C5FA30590506E@az33exm25.fsl.freescale.net>
+	<20100107005036.GB23206@yookeroo>
+	<9696D7A991D0824DBA8DFAC74A9C5FA305987E61@az33exm25.fsl.freescale.net>
+	<20100107045514.GF2847@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100108234614.GB2661@yookeroo>
+Content-class: urn:content-classes:message
+In-Reply-To: <20100107045514.GF2847@yookeroo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,55 +22,92 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Hunter Cobbs <hunter.cobbs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2010-01-09 at 10:46 +1100, David Gibson wrote:
-> On Fri, Jan 08, 2010 at 11:45:28AM -0800, Hollis Blanchard wrote:
-> > On Fri, 2010-01-08 at 13:28 -0600, Scott Wood wrote:
-> > > Hollis Blanchard wrote:
-> > > > On Thu, 2010-01-07 at 20:35 -0600, Hunter Cobbs wrote:
-> > > >> I think that is definitely a solution.  It does centralize the testing
-> > > >> for this particular issue.  The only thing question I have is if its
-> > > >> really better to have the upper level do the check.  Shouldn't the
-> > > >> driver itself handle the hardware and device node status?
-> > > > 
-> > > > Practically speaking, all drivers doing the checks today just return
-> > > > -ENODEV. They don't try to do anything to "handle" the situation.
-> > > > 
-> > > > The definition of the status property implies it's outside of software's
-> > > > control, for example:
-> > > >         "disabled"
-> > > >         "Indicates that the device is not presently operational, but it
-> > > >         might become operational in the future (for example, something
-> > > >         is not plugged in, or switched off)."
-> > > > 
-> > > > If a device is "not operational" in this sense, I don't think there's
-> > > > anything for a device driver to do.
-> > > 
-> > > I could see situations where there is some software action that could 
-> > > enable the device (e.g. multiple devices sharing pins, where only one 
-> > > can be active at a time) -- but it's likely to not be the driver itself 
-> > > that knows how to do that.
-> > > 
-> > > If the need arises, there could be a mechanism where the enabling entity 
-> > > can tell the platform bus that it has enabled a previously-disabled 
-> > > device, overriding the status in the device tree (and likewise if it 
-> > > wants take down a device that was previously enabled).
-> > 
-> > OK, that makes sense to me. I'll put together a patch for the original
-> > idea, and the enable/disable part can come later as needed.
+ 
+
+> -----Original Message-----
+> From: parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org [mailto:parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org] On Behalf Of 
+> David Gibson
+> Sent: Thursday, January 07, 2010 10:25 AM
+> To: Yoder Stuart-B08248
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
+> Subject: [Power.org:parch] Re: RFC: proposal to extend the 
+> open-pic interrupt specifierdefinition
 > 
-> Sounds good to me to.  Only thing I'd add, is that I'd also suggest a
-> helper function to do an explicit check on the status property (or do
-> we have that already?).  This could be useful for drivers which are
-> bound primarily to one device tree node, but also need to (possibly
-> optionally) check/use some other node.
+> On Wed, Jan 06, 2010 at 08:33:03PM -0700, Yoder Stuart-B08248 wrote:
+> > > From: 
+> > > devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY@public.gmane.org
+> > labs.org [mailto:devicetree-discuss->
+> > bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On
+> > > Behalf Of David Gibson
+> > > Sent: Wednesday, January 06, 2010 6:51 PM
+> > > To: Yoder Stuart-B08248
+> > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
+> > > Subject: Re: RFC: proposal to extend the open-pic interrupt 
+> > > specifierdefinition
+> > > 
+> > > On Tue, Jan 05, 2010 at 04:28:12PM -0700, Yoder 
+> Stuart-B08248 wrote:
+> > > > 
+> > > > The current open-pic binding defines that interrupt specifiers 
+> > > > have 2 cells-- an interrupt number and level/sense encoding.
+> > > > 
+> > > > With chips like the P4080 this is no longer sufficient to 
+> > > > represent the various types of interrupt sources handled by the 
+> > > > interrupt controller.  A linear list of interrupt 
+> numbers doesn't 
+> > > > handle all interrupt types-- there are at least 4 
+> different kinds 
+> > > > of interrupts on the P4080.
+> > > > 
+> > > > We have a proposal to extend the open-pic binding in a 
+> backwards 
+> > > > compatible way to encode additional information in the 
+> level/sense 
+> > > > field.
+> > > > 
+> > > > The current definition of level/sense is:
+> > > >   0 = low to high edge sensitive type enabled
+> > > >   1 = active low level sensitive type enabled
+> > > >   2 = active high level sensitive type enabled
+> > > >   3 = high to low edge sensitive type enabled
+> > > > 
+> > > > Those 2 bits would retain their current meaning, but the full 
+> > > > encoding would be extended as follows:
+> > > > 
+> > > >      bits      meaning
+> > > >      ----------------------------------------------
+> > > >      0-7       interrupt sub-type
+> > > >      8-15      interrupt type
+> > > >      16-23     implementation dependent
+> > > >      24-29     reserved
+> > > >      30-31     level/sense encoding
+> > > 
+> > > Um.. what do "type" and "sub-type" mean in this context?
+> > 
+> > "type" specifies the type of interrupt-- example timer, 
+> MSI, etc and 
+> > would define the meaning of the interrupt number
+> > portion of the interrupt specifier.   A given "type" may or
+> > may not have a "subtype" depending on the binding.
+> > 
+> > As described in the proposal, "type" is a range of numbers, divided 
+> > between standard/architected types and implementation 
+> specific types.
+> > 
+> > We (Freescale) have at least one interrupt type "error" in 
+> the P4080 
+> > that would have a "sub-type" that would indicate a related bit in 
+> > another status register.
+> 
+> And who is the type/subtype relevant to?  From what you've 
+> said here, I don't see why it needs to be in the interrupt specifiers.
+> 
+Error interrupt case would be relevant for a hypervisor in a virtual
+environment. Hypervisor may have to virtualize access to a paltform
+error register.
 
-of_device_is_available() exists and is used already, so I think we're OK
-there.
-
--- 
-Hollis Blanchard
-Mentor Graphics, Embedded Systems Division
+-Varun
