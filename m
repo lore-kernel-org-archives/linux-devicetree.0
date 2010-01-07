@@ -1,125 +1,62 @@
-From: "Yoder Stuart-B08248" <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: RFC: proposal to extend the open-pic interrupt specifierdefinition
-Date: Thu, 7 Jan 2010 10:39:10 -0700
-Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA305987F94@az33exm25.fsl.freescale.net>
-References: <9696D7A991D0824DBA8DFAC74A9C5FA30590506E@az33exm25.fsl.freescale.net><20100107005036.GB23206@yookeroo><9696D7A991D0824DBA8DFAC74A9C5FA305987E61@az33exm25.fsl.freescale.net>
-	<20100107045514.GF2847@yookeroo>
+From: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH net-next v3 1/3] can: mscan: fix improper return if dlc
+	< 8 in start_xmit function
+Date: Thu, 07 Jan 2010 19:10:38 +0100
+Message-ID: <4B46239E.2000403@hartkopp.net>
+References: <1262873421-6863-1-git-send-email-wg@grandegger.com>
+	<1262873421-6863-2-git-send-email-wg@grandegger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <20100107045514.GF2847@yookeroo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <1262873421-6863-2-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Cc: Netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- 
+Wolfgang Grandegger wrote:
 
-> -----Original Message-----
-> From: 
-> devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY@public.gmane.org
-labs.org [mailto:devicetree-discuss->
-bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On 
-> Behalf Of David Gibson
-> Sent: Wednesday, January 06, 2010 10:55 PM
-> To: Yoder Stuart-B08248
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
-> Subject: Re: RFC: proposal to extend the open-pic interrupt 
-> specifierdefinition
-> 
-> On Wed, Jan 06, 2010 at 08:33:03PM -0700, Yoder Stuart-B08248 wrote:
-> > > From: 
-> > > devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY@public.gmane.org
-> > labs.org [mailto:devicetree-discuss->
-> > bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On 
-> > > Behalf Of David Gibson
-> > > Sent: Wednesday, January 06, 2010 6:51 PM
-> > > To: Yoder Stuart-B08248
-> > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
-> > > Subject: Re: RFC: proposal to extend the open-pic interrupt 
-> > > specifierdefinition
-> > > 
-> > > On Tue, Jan 05, 2010 at 04:28:12PM -0700, Yoder 
-> Stuart-B08248 wrote:
-> > > > 
-> > > > The current open-pic binding defines that interrupt specifiers
-> > > > have 2 cells-- an interrupt number and level/sense encoding.
-> > > > 
-> > > > With chips like the P4080 this is no longer sufficient to
-> > > > represent the various types of interrupt sources handled by
-> > > > the interrupt controller.  A linear list of interrupt numbers
-> > > > doesn't handle all interrupt types-- there are at least 
-> 4 different
-> > > > kinds of interrupts on the P4080.
-> > > > 
-> > > > We have a proposal to extend the open-pic binding in
-> > > > a backwards compatible way to encode additional information
-> > > > in the level/sense field.
-> > > > 
-> > > > The current definition of level/sense is:
-> > > >   0 = low to high edge sensitive type enabled
-> > > >   1 = active low level sensitive type enabled
-> > > >   2 = active high level sensitive type enabled
-> > > >   3 = high to low edge sensitive type enabled
-> > > > 
-> > > > Those 2 bits would retain their current meaning, but the
-> > > > full encoding would be extended as follows:
-> > > > 
-> > > >      bits      meaning
-> > > >      ----------------------------------------------
-> > > >      0-7       interrupt sub-type
-> > > >      8-15      interrupt type
-> > > >      16-23     implementation dependent
-> > > >      24-29     reserved
-> > > >      30-31     level/sense encoding
-> > > 
-> > > Um.. what do "type" and "sub-type" mean in this context?
-> > 
-> > "type" specifies the type of interrupt-- example timer, MSI,
-> > etc and would define the meaning of the interrupt number
-> > portion of the interrupt specifier.   A given "type" may or
-> > may not have a "subtype" depending on the binding.
-> > 
-> > As described in the proposal, "type" is a range of numbers,
-> > divided between standard/architected types and implementation
-> > specific types.
-> > 
-> > We (Freescale) have at least one interrupt type "error" in the P4080
-> > that would have a "sub-type" that would indicate a related bit in
-> > another
-> > status register.
-> 
-> And who is the type/subtype relevant to?  From what you've said here,
-> I don't see why it needs to be in the interrupt specifiers.
+> The start_xmit function of the MSCAN Driver did return improperly if
+> the CAN dlc check failed (skb not freed and invalid return code). This
+> patch adds a proper check of the frame lenght and data size and returns
+> now correctly. 
 
-It is relevant to whatever code manages the interrupt
-controller.
+> @@ -177,8 +177,13 @@ static netdev_tx_t mscan_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>  	int i, rtr, buf_id;
+>  	u32 can_id;
+>  
+> -	if (frame->can_dlc > 8)
+> -		return -EINVAL;
+> +	if (skb->len != sizeof(*frame) || frame->can_dlc > 8) {
+> +		dev_err(dev->dev.parent,
+> +			"Dropping non-conform packet: len %u, can_dlc %u\n",
+> +			skb->len, frame->can_dlc);
+> +		kfree_skb(skb);
+> +		return NETDEV_TX_OK;
+> +	}
+>  
 
-A bit more background information. The MPIC in Freescale chips
-supports several types of interrupts-- SOC devices, external 
-interrupts, MSIs, timers.   The registers to manage these interrupt
-sources are not laid out in a way that is conducive to just enumerating
-all the interrupt sources starting from zero.   They are in different
-discrete areas of the MPIC register map.
+Hi Wolfgang,
 
-We need the device tree to be able to represent all interrupt sources
-and distinguish between timer interrupt 0 and SOC device interrupt
-0 and MSI interrupt 0.
+i would suggest to remove the dev_err() which may flood the kernel log and add
 
-In the P4080 we have additional complexity in that SOC device
-interrupt 0 is error interrupt that has multiple sources of
-errors ORed into it.   We don't want to hardcode knowlege of the
-specific topography of the error interrupts into software and
-want to represent in the dev tree.
+   dev->stats.tx_dropped++;
 
-Stuart
+instead.
+
+As discussed with DaveM on netdev-ML this 'silent' handling seems to be the
+most appropriate approach to deal with invalid skbs.
+
+We should update the other CAN drivers in a similar way, if this is ok for you.
+
+Best regards,
+Oliver
