@@ -1,34 +1,39 @@
-From: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: "status" property checks
-Date: Thu, 07 Jan 2010 15:07:53 -0800
-Message-ID: <1262905673.11702.16.camel@localhost.localdomain>
+From: Hunter Cobbs <hunter.cobbs@gmail.com>
+Subject: Re: "status" property checks
+Date: Thu, 07 Jan 2010 20:35:43 -0600
+Message-ID: <1262918143.2716.8.camel@ccs-laptop>
+References: <1262905673.11702.16.camel@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1262905673.11702.16.camel@localhost.localdomain>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Hollis Blanchard <hollis_blanchard@mentor.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Right now, a number of drivers honor the "status" property on device
-nodes (via of_device_is_available() checks), but it's open-coded in each
-driver. I'm thinking of "hiding" arbitrary devices from the kernel, and
-setting this property seems like the best approach, but at the moment
-that would require modifying all OF drivers to check for it.
+I think that is definitely a solution.  It does centralize the testing
+for this particular issue.  The only thing question I have is if its
+really better to have the upper level do the check.  Shouldn't the
+driver itself handle the hardware and device node status?
 
-Wouldn't the better approach be to have of_platform_device_probe()
-itself do the check, and not call the driver's probe() routine if the
-device isn't available?
-
--- 
-Hollis Blanchard
-Mentor Graphics, Embedded Systems Division
+On Thu, 2010-01-07 at 15:07 -0800, Hollis Blanchard wrote:
+> Right now, a number of drivers honor the "status" property on device
+> nodes (via of_device_is_available() checks), but it's open-coded in each
+> driver. I'm thinking of "hiding" arbitrary devices from the kernel, and
+> setting this property seems like the best approach, but at the moment
+> that would require modifying all OF drivers to check for it.
+> 
+> Wouldn't the better approach be to have of_platform_device_probe()
+> itself do the check, and not call the driver's probe() routine if the
+> device isn't available?
+> 
