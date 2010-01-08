@@ -1,39 +1,25 @@
-From: Hunter Cobbs <hunter.cobbs@gmail.com>
-Subject: Re: "status" property checks
-Date: Thu, 07 Jan 2010 20:35:43 -0600
-Message-ID: <1262918143.2716.8.camel@ccs-laptop>
-References: <1262905673.11702.16.camel@localhost.localdomain>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v4 0/3] can: mscan-mpc5xxx: add support for
+ the Freescale MPC512x
+Date: Fri, 08 Jan 2010 00:41:02 -0800 (PST)
+Message-ID: <20100108.004102.225115986.davem@davemloft.net>
+References: <1262893388-16218-1-git-send-email-wg@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1262905673.11702.16.camel@localhost.localdomain>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Hollis Blanchard <hollis_blanchard@mentor.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1262893388-16218-1-git-send-email-wg@grandegger.com>
+Sender: netdev-owner@vger.kernel.org
+To: wg@grandegger.com
+Cc: Netdev@vger.kernel.org, Socketcan-core@lists.berlios.de, Linuxppc-dev@lists.ozlabs.org, Devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-I think that is definitely a solution.  It does centralize the testing
-for this particular issue.  The only thing question I have is if its
-really better to have the upper level do the check.  Shouldn't the
-driver itself handle the hardware and device node status?
+From: Wolfgang Grandegger <wg@grandegger.com>
+Date: Thu,  7 Jan 2010 20:43:05 +0100
 
-On Thu, 2010-01-07 at 15:07 -0800, Hollis Blanchard wrote:
-> Right now, a number of drivers honor the "status" property on device
-> nodes (via of_device_is_available() checks), but it's open-coded in each
-> driver. I'm thinking of "hiding" arbitrary devices from the kernel, and
-> setting this property seems like the best approach, but at the moment
-> that would require modifying all OF drivers to check for it.
-> 
-> Wouldn't the better approach be to have of_platform_device_probe()
-> itself do the check, and not call the driver's probe() routine if the
-> device isn't available?
-> 
+> This patch series adds support for the MPC512x from Freescale to the
+> mpc5xxx_can MSCAN driver. It has been tested on a MPC5121 and MPC5200B
+> board.
+
+So are these ready to go or should I wait for another round
+of review? :-)
