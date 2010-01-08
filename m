@@ -1,74 +1,76 @@
-From: David Gibson <david@gibson.dropbear.id.au>
+From: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Subject: Re: "status" property checks
-Date: Sat, 9 Jan 2010 10:46:14 +1100
-Message-ID: <20100108234614.GB2661@yookeroo>
+Date: Fri, 08 Jan 2010 15:58:40 -0800
+Message-ID: <1262995120.31871.105.camel@localhost.localdomain>
 References: <1262905673.11702.16.camel@localhost.localdomain>
 	<1262918143.2716.8.camel@ccs-laptop>
 	<1262975655.31871.67.camel@localhost.localdomain>
 	<4B478747.8070009@freescale.com>
 	<1262979928.31871.81.camel@localhost.localdomain>
+	<20100108234614.GB2661@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1262979928.31871.81.camel@localhost.localdomain>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Hollis Blanchard <hollis_blanchard@mentor.com>
-Cc: Scott Wood <scottwood@freescale.com>, Hunter Cobbs <hunter.cobbs@gmail.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100108234614.GB2661@yookeroo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Hunter Cobbs <hunter.cobbs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2010 at 11:45:28AM -0800, Hollis Blanchard wrote:
-> On Fri, 2010-01-08 at 13:28 -0600, Scott Wood wrote:
-> > Hollis Blanchard wrote:
-> > > On Thu, 2010-01-07 at 20:35 -0600, Hunter Cobbs wrote:
-> > >> I think that is definitely a solution.  It does centralize the testing
-> > >> for this particular issue.  The only thing question I have is if its
-> > >> really better to have the upper level do the check.  Shouldn't the
-> > >> driver itself handle the hardware and device node status?
+On Sat, 2010-01-09 at 10:46 +1100, David Gibson wrote:
+> On Fri, Jan 08, 2010 at 11:45:28AM -0800, Hollis Blanchard wrote:
+> > On Fri, 2010-01-08 at 13:28 -0600, Scott Wood wrote:
+> > > Hollis Blanchard wrote:
+> > > > On Thu, 2010-01-07 at 20:35 -0600, Hunter Cobbs wrote:
+> > > >> I think that is definitely a solution.  It does centralize the testing
+> > > >> for this particular issue.  The only thing question I have is if its
+> > > >> really better to have the upper level do the check.  Shouldn't the
+> > > >> driver itself handle the hardware and device node status?
+> > > > 
+> > > > Practically speaking, all drivers doing the checks today just return
+> > > > -ENODEV. They don't try to do anything to "handle" the situation.
+> > > > 
+> > > > The definition of the status property implies it's outside of software's
+> > > > control, for example:
+> > > >         "disabled"
+> > > >         "Indicates that the device is not presently operational, but it
+> > > >         might become operational in the future (for example, something
+> > > >         is not plugged in, or switched off)."
+> > > > 
+> > > > If a device is "not operational" in this sense, I don't think there's
+> > > > anything for a device driver to do.
 > > > 
-> > > Practically speaking, all drivers doing the checks today just return
-> > > -ENODEV. They don't try to do anything to "handle" the situation.
+> > > I could see situations where there is some software action that could 
+> > > enable the device (e.g. multiple devices sharing pins, where only one 
+> > > can be active at a time) -- but it's likely to not be the driver itself 
+> > > that knows how to do that.
 > > > 
-> > > The definition of the status property implies it's outside of software's
-> > > control, for example:
-> > >         "disabled"
-> > >         "Indicates that the device is not presently operational, but it
-> > >         might become operational in the future (for example, something
-> > >         is not plugged in, or switched off)."
-> > > 
-> > > If a device is "not operational" in this sense, I don't think there's
-> > > anything for a device driver to do.
+> > > If the need arises, there could be a mechanism where the enabling entity 
+> > > can tell the platform bus that it has enabled a previously-disabled 
+> > > device, overriding the status in the device tree (and likewise if it 
+> > > wants take down a device that was previously enabled).
 > > 
-> > I could see situations where there is some software action that could 
-> > enable the device (e.g. multiple devices sharing pins, where only one 
-> > can be active at a time) -- but it's likely to not be the driver itself 
-> > that knows how to do that.
-> > 
-> > If the need arises, there could be a mechanism where the enabling entity 
-> > can tell the platform bus that it has enabled a previously-disabled 
-> > device, overriding the status in the device tree (and likewise if it 
-> > wants take down a device that was previously enabled).
+> > OK, that makes sense to me. I'll put together a patch for the original
+> > idea, and the enable/disable part can come later as needed.
 > 
-> OK, that makes sense to me. I'll put together a patch for the original
-> idea, and the enable/disable part can come later as needed.
+> Sounds good to me to.  Only thing I'd add, is that I'd also suggest a
+> helper function to do an explicit check on the status property (or do
+> we have that already?).  This could be useful for drivers which are
+> bound primarily to one device tree node, but also need to (possibly
+> optionally) check/use some other node.
 
-Sounds good to me to.  Only thing I'd add, is that I'd also suggest a
-helper function to do an explicit check on the status property (or do
-we have that already?).  This could be useful for drivers which are
-bound primarily to one device tree node, but also need to (possibly
-optionally) check/use some other node.
+of_device_is_available() exists and is used already, so I think we're OK
+there.
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Hollis Blanchard
+Mentor Graphics, Embedded Systems Division
