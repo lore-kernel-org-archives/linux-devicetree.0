@@ -1,21 +1,19 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Power.org:parch] Re: RFC: proposal to extend the open-pic
-	interrupt specifierdefinition
-Date: Sun, 17 Jan 2010 00:13:46 -0700
-Message-ID: <fa686aa41001162313u28ef0fb4s328ebc25bf5e551f@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: RFC: proposal to extend the open-pic interrupt specifier
+	definition
+Date: Mon, 18 Jan 2010 11:11:39 -0600
+Message-ID: <4B54964B.7040402@freescale.com>
 References: <9696D7A991D0824DBA8DFAC74A9C5FA30590506E@az33exm25.fsl.freescale.net>
-	<20100107005036.GB23206@yookeroo>
-	<9696D7A991D0824DBA8DFAC74A9C5FA305987E61@az33exm25.fsl.freescale.net>
-	<20100107045514.GF2847@yookeroo> <4B46176F.2040600@freescale.com>
-	<fa686aa41001122204w3ce1a31m7debe52a4b5d4fc7@mail.gmail.com>
-	<9696D7A991D0824DBA8DFAC74A9C5FA305988946@az33exm25.fsl.freescale.net>
-	<fa686aa41001130627g7ed3bd46p6ac50631576d89ef@mail.gmail.com>
-	<4B4E01A8.5070509@freescale.com>
+	<50433.84.105.60.153.1263320254.squirrel@gate.crashing.org>
+	<9696D7A991D0824DBA8DFAC74A9C5FA305988778@az33exm25.fsl.freescale.net>
+	<fa686aa41001122206l232b270er58323a6409e575e9@mail.gmail.com>
+	<4B4E0AC7.7090502@freescale.com>
+	<fa686aa41001162306x7c4e3dedy196409a4c8420e35@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4B4E01A8.5070509-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <fa686aa41001162306x7c4e3dedy196409a4c8420e35-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,68 +23,69 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Gala Kumar-B11780 <B11780-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2010 at 10:23 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrot=
-e:
-> Grant Likely wrote:
->>
->> On Wed, Jan 13, 2010 at 7:19 AM, Yoder Stuart-B08248
->> <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->>>>
->>>> It does not sound sane or
->>>> particularly parseable to stuff it into bitfields within the second
->>>> cell.
->>>
->>> I think it is somewhat sane compared to the alternatives. =A0The
->>> second cell encodes information about the interrupt source. =A0Allowing
->>> some of those bits to encode information besides level/sense
->>> doesn't seem that difficult.
->>
->> Not difficult. =A0Ugly, unnecessary, and sounds like a premature
->> optimization.
->
-> It is not optimization, but functionality.
+Grant Likely wrote:
+> On Wed, Jan 13, 2010 at 11:02 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> Grant Likely wrote:
+>>> It's not worth toying with.  Just create a new compatible value for this
+>>> new binding and be done with
+>>> it.  When a driver gets modified to handle the new behaviour, then it
+>>> can be also changed to bind against the new compatible value too.
+>> I agree that a new compatible is warranted from a theoretical perspetive,
+>> though from a practical compatibility perspective one should consider the
+>> odds of something breaking because old code chokes on the new bits, versus
+>> the old code not recognizing the new compatible and thus not binding the
+>> device at all.
+> 
+> Letting old drivers bind against new bindings that aren't actually
+> the same isn't good practice and leaves little recourse if we really
+> do need to differentiate between them in the future. Teaching the 
+> current driver to match against the new value is a one line change. 
+> Choosing a new compatible value is so inexpensive, trivial, and safe 
+> that I think it is a no-brainer decision.
 
-I don't doubt you need the data.  What I object to is stuffing it all
-into a single cell since I think it is an unneeded optimization that
-also makes it less user friendly.
+Yes, I said that it's theoretically a bad thing to do, but in practice I 
+really don't see what it would break that wouldn't be just as broken by 
+a change in compatible -- unless we leave in the device_type that the 
+kernel actually binds on at the moment :-P -- and I can see cases where 
+it would improve compatibility.  Making that one-line change without a 
+time machine won't stop the e-mails asking why an old kernel won't boot 
+with a new device tree, especially if we ever get to the point where 
+we're sharing device tree source fragments and don't want to keep 
+separate old-binding and new-binding fragments for each device.
 
->>>> Users have enough trouble parsing irq specifiers as is. =A0It makes me
->>>> nervous to see even more complicated irq specifiers being devised.
->>>
->>> Yes, they become slightly more complicated, but the complexity needs to
->>> go somewhere.
->>
->> Then at the very least do it as separate cells. =A0Carving cells into
->> multiple fields is pretty ugly when cells are cheap.
->
-> That means that all the interrupt specifiers in an existing tree have to =
-be
-> updated with the larger numer of cells whenever such an interrupt is adde=
-d,
-> since #interrupt-cells applies globally to the MPIC interrupt domain. =A0=
-It's
-> unnecessary churn.
+I really don't see anyone supporting both bindings and doing something 
+different with one versus the other.  It's not like we're talking about 
+leaving out chip information where there might be hardware quirks to be 
+dealt with.  It's just a use of previously unused bits (check against 
+zero if you care), or additional cells (check #interrupt-cells if you 
+care).  The only thing that makes it a bit questionable is the ambiguity 
+about whether the existing values are the low two bits of a cell, or a 
+whole-cell enumeration of configurations -- the odd, non-orthogonal 
+encoding does point to the latter.
 
-Pish.  You're talking about updating the interrupt properties in each
-affected .dts file, and it only needs to be done when the new binding
-is applied.  It will simply be adding a bunch of '0' cells to the
-beginning of each existing interrupts property in the file.  Easy to
-review, not a hard change to make, and easier to use/understand
-binding for a long time to come.  BTW, how many .dts files do we
-really have in the tree right now that will be using the new binding?
-I'm guessing not many.  Heck, I'll even volunteer to make the change
-in all affected .dts files when then new binding comes on-line.
+>> Is there any interest in standardizing this with a new compatible, or should
+>> it be FSL-only?
+> 
+> Instead of trying to come up with a new "generic/standard" compatible
+> value, just adopt the name of the first part to use the new binding as
+> the standard compatible value.  If the binding catches on then great,
+> new parts will just claim compatibility with the old.
 
-Make the change now and don't burden us with a binding we'll be
-cursing for the next 10 years.
+Assuming new parts are compatible with the previous part, which is less 
+likely than being compatible with the base openpic design.
 
-g.
+But even if there's nothing generic to match on, it would be nice if 
+different openpic implementations didn't do gratuitously different 
+things in their bindings, hence the RFC.
 
--- =
+> This also has the advantage of the meaning of a fsl,p4080-mpic
+> compatible device is grounded in some real piece of hardware, not in
+> something made up who's definition can change over time.
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Because nothing ever changes in new chip revisions of the same name. :-)
+
+-Scott
