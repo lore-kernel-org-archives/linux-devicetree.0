@@ -1,17 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Flattened Device Tree
-Date: Thu, 21 Jan 2010 14:22:45 -0700
-Message-ID: <fa686aa41001211322o64c956dfg90b4b780722a3204@mail.gmail.com>
-References: <7f9d9abf1001180924o5b587b54i737d60467e3c878@mail.gmail.com>
-	<33307c791001191410r6430bb81wbfee8f9e82c5cbf9@mail.gmail.com>
-	<fa686aa41001210833v7ac9c0a1gd5b40d0ff5bfdc32@mail.gmail.com>
-	<fa686aa41001210838k1fff33fbndf98e9d5a99dec2c@mail.gmail.com>
-	<85F0BAED-9E81-4C1D-ABA4-CE4EFF8198BD@semihalf.com>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+Subject: [PATCH/RFC 1/2] 5200: improve i2c bus error recovery
+Date: Fri, 22 Jan 2010 21:17:55 +0100
+Message-ID: <1264191475.2224.1@antares>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <85F0BAED-9E81-4C1D-ABA4-CE4EFF8198BD-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,86 +16,189 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+To: Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2010 at 1:58 PM, Rafal Jaworowski <raj-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> wrote:
->
-> On 2010-01-21, at 17:38, Grant Likely wrote:
-> Hi Grant,
-> I'm glad you bring this up as I was about to ask a couple of questions on=
- FDT for ARM, not actually about the boot i/f (mine are more bindings-relat=
-ed), but we can discuss that separately.
->
->> I'm also working on adding Linux FDT support to the ARM architecture,
->> and I think we need to coordinate. =A0Specifically, I'd like to agree on
->> a common boot interface for FDT booting on ARM (and PowerPC for that
->> matter).
->>
->> For PowerPC, I assume you're adopting the boot interface specified in
->> ePAPR and are using r3 to pass the FDT blob pointer (page 53 of
->> ePAPR). =A0Correct?
->>
->> What are you using for the ARM boot interface? =A0For the experiments
->> performed to date, the dtb is getting passed to the kernel in a new
->> ATAG, but I thing ATAGs are Linux specific. =A0Ideally, I'd like to have
->
-> We are a bit different. For both ARM and PowerPC platforms we're initiall=
-y bringing FDT for, we have full FreeBSD booting environment which means us=
-ing the native loader(8) -- it is the last stage boot loader running on top=
- of BIOS/U-Boot/whatever. loader(8) from end-user perspective has uniform t=
-ouch and feel accross various architectures FreeBSD supports, and it's main=
- goal is loading kernel, preparing environment for it, setting flags, loadi=
-ng dynamic modules (yes, before kernel is run) and so on. All these supplem=
-entary items for the kernel are called metadata, and the kernel is provided=
- with the metadata pointer when executed. Now, for FDT-oriented platforms, =
-in the presence of loader(8) the DT blob is just part of our metadata. You =
-can see a couple of use examples here: http://wiki.freebsd.org/FlattenedDev=
-iceTree/loader
+Improve the recovery of the MPC5200B's I2C bus from errors like bus
+hangs.
 
-It sounds like the loader-->freebsd interface is pretty much
-effectively a freebsd internal thing.  Is loader ever expected to boot
-anything outside of FreeBSD?  This says to me that the interesting bit
-as far as boot interface is the method that a dtb gets handed from
-firmware to the loader.  How the loader interacts with the FreeBSD
-kernel has little bearing.
+Signed-off-by: Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
 
-> However, there are many embedded platforms, where loader(8) cannot be run=
- or is undesired. For these we'll need to have a way to embed the DTB someh=
-ow with the kernel, although this is rather the problem of a wrapper techni=
-que much like there's a couple of approaches in Linux right now.
+---
 
-Even in this case I could still see it being useful to have a
-standardized method for firmware to pass a dtb blob to the kernel or
-the kernel wrapper.
+This patch introduces several improvements to the MPC5200B's I2C driver
+as to improve the recovery from error conditions I encountered when
+testing a custom board with several I2C devices attached (eeprom, io
+expander, rtc, sensors).  The error conditions included cases where the
+bus if logic of one slave apparently went south, blocking the bus
+completely.
 
->> exactly one method of passing the dtb to the kernel, and I don't see
->> any good reason for Linux, FreeBSD, or any other OS to use different
->> methods. =A0However, I also don't want to break booting older operating
->> system images that don't support FDT. =A0The ATAG approach is nice for
->> Linux because it just adds an additional data item in a backwards
->> compatible way.
->>
->> Thoughts?
->
->
-> As you can observe, we could mostly get away from these kind of questions=
- so far :-) In general I'm all for having a unified convention for ARM FDT,=
- but am not familiar with ATAG too closely, so I need to dig into it first.
+My fixes include:
+1. make the bus timeout configurable in fsl_i2c_probe(); the default of
+   one second is *way* too long for my use case;
+2. if a timeout condition occurs in mpc_xfer(), mpc_i2c_fixup() the bus
+   if *any* of the CF, BB and RXAK flags in the MSR is 1.  I actually
+   saw different combinations with hangs, not only all three set;
+3. improve the fixup procedure by calculating the timing needed from the
+   real (configured) bus clock, calculated in mpc_i2c_setclock_52xx().
+   Furthermore, I issue 9 instead of one cycle, as I experienced cases
+   where the single one is not enough (found this tip in a forum).  As a
+   side effect, the new scheme needs only 81us @375kHz bus clock instead
+   of 150us.  I recorded waveforms for 18.4kHz, 85.9kHz and 375kHz, all
+   looking fine, which I can provide if anyone is interested.
 
-ATAGs are a simple list of data values passed to the kernel via r2.  see he=
-re:
+Open questions:
+- is the approach correct at all, in particular the interpretation of
+  the flags (#2)?
+- could this code also be used on non-5200 processors?
 
-http://www.arm.linux.org.uk/developer/booting
+--- linux-2.6.32-orig/drivers/i2c/busses/i2c-mpc.c	2009-12-03 04:51:21.0000=
+00000 +0100
++++ linux-2.6.32/drivers/i2c/busses/i2c-mpc.c	2010-01-22 16:05:13.000000000=
+ +0100
+@@ -59,6 +59,7 @@ struct mpc_i2c {
+ 	wait_queue_head_t queue;
+ 	struct i2c_adapter adap;
+ 	int irq;
++	u32 real_clk;
+ };
+ =
 
-ATAGs were designed well before the fdt, and the fdt certainly
-supersedes them in terms of functionality, but they have the advantage
-of being trivial to implement and already widely in use.
+ struct mpc_i2c_divider {
+@@ -97,16 +98,32 @@ static irqreturn_t mpc_i2c_isr(int irq, =
 
-g.
+  */
+ static void mpc_i2c_fixup(struct mpc_i2c *i2c)
+ {
+-	writeccr(i2c, 0);
+-	udelay(30);
+-	writeccr(i2c, CCR_MEN);
+-	udelay(30);
+-	writeccr(i2c, CCR_MSTA | CCR_MTX);
+-	udelay(30);
+-	writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
+-	udelay(30);
+-	writeccr(i2c, CCR_MEN);
+-	udelay(30);
++	if (i2c->real_clk =3D=3D 0) {
++		writeccr(i2c, 0);
++		udelay(30);
++		writeccr(i2c, CCR_MEN);
++		udelay(30);
++		writeccr(i2c, CCR_MSTA | CCR_MTX);
++		udelay(30);
++		writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
++		udelay(30);
++		writeccr(i2c, CCR_MEN);
++		udelay(30);
++	} else {
++		int k;
++		u32 delay_val =3D 1000000 / i2c->real_clk + 1;
++
++		if (delay_val < 2)
++			delay_val =3D 2;
++
++		for (k =3D 9; k; k--) {
++			writeccr(i2c, 0);
++			writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
++			udelay(delay_val);
++			writeccr(i2c, CCR_MEN);
++			udelay(delay_val << 1);
++		}
++	}
+ }
+ =
 
--- =
+ static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
+@@ -186,15 +203,18 @@ static const struct mpc_i2c_divider mpc_
+ 	{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
+ };
+ =
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescale=
+r)
++int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescale=
+r,
++			 u32 *real_clk)
+ {
+ 	const struct mpc_i2c_divider *div =3D NULL;
+ 	unsigned int pvr =3D mfspr(SPRN_PVR);
+ 	u32 divider;
+ 	int i;
+ =
+
+-	if (!clock)
++	if (!clock) {
++		*real_clk =3D 0;
+ 		return -EINVAL;
++	}
+ =
+
+ 	/* Determine divider value */
+ 	divider =3D mpc5xxx_get_bus_frequency(node) / clock;
+@@ -212,7 +232,8 @@ int mpc_i2c_get_fdr_52xx(struct device_n
+ 			break;
+ 	}
+ =
+
+-	return div ? (int)div->fdr : -EINVAL;
++	*real_clk =3D mpc5xxx_get_bus_frequency(node) / div->divider;
++	return (int)div->fdr;
+ }
+ =
+
+ static void mpc_i2c_setclock_52xx(struct device_node *node,
+@@ -221,13 +242,14 @@ static void mpc_i2c_setclock_52xx(struct
+ {
+ 	int ret, fdr;
+ =
+
+-	ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler);
++	ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler, &i2c->real_clk);
+ 	fdr =3D (ret >=3D 0) ? ret : 0x3f; /* backward compatibility */
+ =
+
+ 	writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
+ =
+
+ 	if (ret >=3D 0)
+-		dev_info(i2c->dev, "clock %d Hz (fdr=3D%d)\n", clock, fdr);
++		dev_info(i2c->dev, "clock %u Hz (fdr=3D%d)\n", i2c->real_clk,
++			 fdr);
+ }
+ #else /* !CONFIG_PPC_MPC52xx */
+ static void mpc_i2c_setclock_52xx(struct device_node *node,
+@@ -446,10 +468,14 @@ static int mpc_xfer(struct i2c_adapter *
+ 			return -EINTR;
+ 		}
+ 		if (time_after(jiffies, orig_jiffies + HZ)) {
++			u8 status =3D readb(i2c->base + MPC_I2C_SR);
++
+ 			dev_dbg(i2c->dev, "timeout\n");
+-			if (readb(i2c->base + MPC_I2C_SR) =3D=3D
+-			    (CSR_MCF | CSR_MBB | CSR_RXAK))
++			if ((status & (CSR_MCF | CSR_MBB | CSR_RXAK)) !=3D 0) {
++				writeb(status & ~CSR_MAL,
++				       i2c->base + MPC_I2C_SR);
+ 				mpc_i2c_fixup(i2c);
++			}
+ 			return -EIO;
+ 		}
+ 		schedule();
+@@ -540,6 +566,14 @@ static int __devinit fsl_i2c_probe(struc
+ 		}
+ 	}
+ =
+
++	prop =3D of_get_property(op->node, "timeout", &plen);
++	if (prop && plen =3D=3D sizeof(u32)) {
++		mpc_ops.timeout =3D *prop * HZ / 1000000;
++		if (mpc_ops.timeout < 5)
++			mpc_ops.timeout =3D 5;
++	}
++	dev_info(i2c->dev, "timeout %u us\n", mpc_ops.timeout * 1000000 / HZ);
++
+ 	dev_set_drvdata(&op->dev, i2c);
+ =
+
+ 	i2c->adap =3D mpc_ops;
