@@ -1,31 +1,26 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH/RFC 2/2] 5200: improve i2c bus error recovery
-Date: Mon, 25 Jan 2010 08:55:02 +0100
-Message-ID: <4B5D4E56.3020902@grandegger.com>
-References: <1264191502.2224.2@antares>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1264191502.2224.2@antares>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
-Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: [PATCH 0/3] i2c-mpc: add support for the Freescale MPC512x and other fixes
+Date: Mon, 25 Jan 2010 09:27:06 +0100
+Message-ID: <1264408029-5290-1-git-send-email-wg@grandegger.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Albrecht Dre=DF wrote:
-> Make the I2C adapter timeout configurable through a Device Tree property
-> which gives the timeout in microseconds.
+This patch series adds support for the MPC512x from Freescale to the
+i2c-mpc driver. At that occasion, issues with  __devinit[data] have
+been fixed and the doc of the FSL I2C dts bindings updated. It has
+been tested on a MPC5121ADS, TQM5200 and TQM8560 board
 
-My understanding is that software properties should not be defined via
-the device tree. I think a sysfs entry is more appropriate.
+Wolfgang
 
-Wolfgang.
+Wolfgang Grandegger (3):
+  i2c-mpc: use __devinit[data] for initialization functions and data
+  i2c-mpc: add support for the MPC512x processors from Freescale
+  powerpc: doc/dts-bindings: update doc of FSL I2C bindings
+
+ Documentation/powerpc/dts-bindings/fsl/i2c.txt |   10 +-
+ drivers/i2c/busses/Kconfig                     |    9 +-
+ drivers/i2c/busses/i2c-mpc.c                   |  185 +++++++++++++++---------
+ 3 files changed, 126 insertions(+), 78 deletions(-)
