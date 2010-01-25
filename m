@@ -1,53 +1,122 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH 2/3] i2c-mpc: add support for the MPC512x processors	from
- Freescale
-Date: Mon, 25 Jan 2010 19:33:31 +0100
-Message-ID: <4B5DE3FB.10505@grandegger.com>
-References: <1264408029-5290-1-git-send-email-wg@grandegger.com> <1264408029-5290-2-git-send-email-wg@grandegger.com> <1264408029-5290-3-git-send-email-wg@grandegger.com> <20100125115211.GA5257@pengutronix.de> <4B5D894C.4090001@grandegger.com> <20100125151509.GD5257@pengutronix.de>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress@arcor.de>
+Subject: Re: [PATCH/RFC 1/2] 5200: improve i2c bus error recovery
+Date: Mon, 25 Jan 2010 21:21:57 +0100
+Message-ID: <1264450925.2315.0@antares>
+References: <20100125040653.GS10014@trinity.fluff.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20100125151509.GD5257-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4035075379235435420=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100125040653.GS10014@trinity.fluff.org> (from
+	ben-linux@fluff.org on Mon Jan 25 05:06:53 2010)
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Ben Dooks <ben-linux@fluff.org>
+Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang wrote:
->>>>  
->>>> -static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
->>>> -					    struct mpc_i2c *i2c,
->>>> -					    u32 clock, u32 prescaler)
->>>> +static void __devinit mpc_i2c_setup_52xx(struct device_node *node,
->>>> +					 struct mpc_i2c *i2c,
->>>> +					 u32 clock, u32 prescaler)
->>>>  {
->>>>  	int ret, fdr;
->>>>  
->>>> +	if (clock == -1) {
->>> Could we use 0 for 'no_clock'? This would make the above statement simply
->> "0" is already used to maintain backward compatibility setting a safe
->> divider.
-> 
-> Ah, now I see:
-> 
-> 'clock == -1' means 'preserve clocks' (and is checked here in mpc_i2c_setup_52xx())
+--===============4035075379235435420==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=PGP-SHA1; boundary="=-NgTbUQH8tRWQ060ketV7"
 
-Yes, this is now necessary because "setup" does not just do clock settings.
+--=-NgTbUQH8tRWQ060ketV7
+Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 'clock ==  0' means 'safe divider' (and is checked in mpc_i2c_get_fdr_52xx())
+Am 25.01.10 05:06 schrieb(en) Ben Dooks:
+> On Fri, Jan 22, 2010 at 09:17:55PM +0100, Albrecht Dre=DF wrote:
+>> Improve the recovery of the MPC5200B's I2C bus from errors like bus hang=
+s.
+>=20
+> This is very sparse comapred to the large comment below the --- line, may=
+be some more description should be living up here.
 
-This is for compatibility with old DTS files and last time it was tricky
- to get that right and therefore...
+Hmm, that was my interpretation of #15 in Documentation/SubmittingPatches..=
+. ;-)  Maybe it should read
 
-> This is not a beauty ;)
-> 
-> What about adding a flags variable to the setup-functions?
+<snip>
+Improve the recovery of the MPC5200B's I2C bus from errors like bus hangs. =
+ This includes making the bus timeout configurable, a better detection of c=
+ases where the bus has to be "fixed" after a timeout, and a more thorough f=
+ixup sequence.
+</snip>
 
-.. I hesitate to make bigger changes to the code flow, which the
-introduction of a flags variable would required. Also it seems to be
-overkill to me. I will have a closer look, though. At a minimum I will
-replace "-1" with "MPC_I2C_PRESERVE_CLOCK".
+> Is thios a candidate for an -rc or should it be left to merge window?
 
-Wolfgang.
+Well, basically it was a rfc.  I apparently need it on my 5200B board, but =
+I hoped to get some more insight from the Freescale/I2C gurus (see "open qu=
+estions" in the post).  Thus merge window, IMHO...
+
+Thanks, Albrecht.
+
+>=20
+> > Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
+> >
+> > ---
+> >
+> > This patch introduces several improvements to the MPC5200B's I2C driver
+> > as to improve the recovery from error conditions I encountered when
+> > testing a custom board with several I2C devices attached (eeprom, io
+> > expander, rtc, sensors).  The error conditions included cases where the
+> > bus if logic of one slave apparently went south, blocking the bus
+> > completely.
+> >
+> > My fixes include:
+> > 1. make the bus timeout configurable in fsl_i2c_probe(); the default of
+> >    one second is *way* too long for my use case;
+> > 2. if a timeout condition occurs in mpc_xfer(), mpc_i2c_fixup() the bus
+> >    if *any* of the CF, BB and RXAK flags in the MSR is 1.  I actually
+> >    saw different combinations with hangs, not only all three set;
+> > 3. improve the fixup procedure by calculating the timing needed from th=
+e
+> >    real (configured) bus clock, calculated in mpc_i2c_setclock_52xx().
+> >    Furthermore, I issue 9 instead of one cycle, as I experienced cases
+> >    where the single one is not enough (found this tip in a forum).  As =
+a
+> >    side effect, the new scheme needs only 81us @375kHz bus clock instea=
+d
+> >    of 150us.  I recorded waveforms for 18.4kHz, 85.9kHz and 375kHz, all
+> >    looking fine, which I can provide if anyone is interested.
+> >
+> > Open questions:
+> > - is the approach correct at all, in particular the interpretation of
+> >   the flags (#2)?
+> > - could this code also be used on non-5200 processors?
+> >
+> > --- linux-2.6.32-orig/drivers/i2c/busses/i2c-mpc.c	2009-12-03 04:51:21.=
+000000000 +0100
+> > +++ linux-2.6.32/drivers/i2c/busses/i2c-mpc.c	2010-01-22 16:05:13.00000=
+0000 +0100
+[snip]
+
+--=-NgTbUQH8tRWQ060ketV7
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.12 (GNU/Linux)
+
+iD8DBQBLXf1tn/9unNAn/9ERAt2cAJ9b2bt+BiRLEIO9C8E+7NhzcKdR4QCgu9Lv
+pg6d4FlaItCwklfm5elFqQ0=
+=FzKC
+-----END PGP SIGNATURE-----
+
+--=-NgTbUQH8tRWQ060ketV7--
+
+--===============4035075379235435420==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============4035075379235435420==--
