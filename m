@@ -1,139 +1,53 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 08/11] powerpc/mpc5121: add USB host support
-Date: Mon, 25 Jan 2010 18:00:24 +0100
-Message-ID: <20100125180024.1a850578@wker>
-References: <1263932653-3634-1-git-send-email-agust@denx.de>
-	<1263932653-3634-9-git-send-email-agust@denx.de>
-	<fa686aa41001210943i3739f693uecf0c05ef0a81c1@mail.gmail.com>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH 2/3] i2c-mpc: add support for the MPC512x processors	from
+ Freescale
+Date: Mon, 25 Jan 2010 19:33:31 +0100
+Message-ID: <4B5DE3FB.10505@grandegger.com>
+References: <1264408029-5290-1-git-send-email-wg@grandegger.com> <1264408029-5290-2-git-send-email-wg@grandegger.com> <1264408029-5290-3-git-send-email-wg@grandegger.com> <20100125115211.GA5257@pengutronix.de> <4B5D894C.4090001@grandegger.com> <20100125151509.GD5257@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fa686aa41001210943i3739f693uecf0c05ef0a81c1-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20100125151509.GD5257-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Jan 2010 10:43:34 -0700
-Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+Wolfram Sang wrote:
+>>>>  
+>>>> -static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
+>>>> -					    struct mpc_i2c *i2c,
+>>>> -					    u32 clock, u32 prescaler)
+>>>> +static void __devinit mpc_i2c_setup_52xx(struct device_node *node,
+>>>> +					 struct mpc_i2c *i2c,
+>>>> +					 u32 clock, u32 prescaler)
+>>>>  {
+>>>>  	int ret, fdr;
+>>>>  
+>>>> +	if (clock == -1) {
+>>> Could we use 0 for 'no_clock'? This would make the above statement simply
+>> "0" is already used to maintain backward compatibility setting a safe
+>> divider.
+> 
+> Ah, now I see:
+> 
+> 'clock == -1' means 'preserve clocks' (and is checked here in mpc_i2c_setup_52xx())
 
-> > diff --git a/Documentation/powerpc/dts-bindings/fsl/usb.txt b/Docum=
-entation/powerpc/dts-bindings/fsl/usb.txt
-> > index b001524..9050154 100644
-> > --- a/Documentation/powerpc/dts-bindings/fsl/usb.txt
-> > +++ b/Documentation/powerpc/dts-bindings/fsl/usb.txt
-> > @@ -33,6 +33,14 @@ Recommended properties :
-> > =C2=A0- interrupt-parent : the phandle for the interrupt controller=
- that
-> > =C2=A0 =C2=A0services interrupts for this device.
-> >
-> > +Optional properties :
->=20
-> > + - big-endian-regs : boolean; if defined, indicates the USB host
-> > + =C2=A0 controller registers format is big endian.
->=20
-> Rather than testing for this explicitly, add fsl,mpc5121-usb2-dr to
-> the match table and use the .data pointer for setting device specific
-> quirks.
+Yes, this is now necessary because "setup" does not just do clock settings.
 
-There is no match table. fsl_usb_of_init() is an arch_initcall and
-tests other properties using the same approach.
+> 'clock ==  0' means 'safe divider' (and is checked in mpc_i2c_get_fdr_52xx())
 
-> > + - invert-drvvbus : boolean; for MPC5121 only. Indicates the port
-> > + =C2=A0 power polarity of internal PHY signal DRVVBUS is inverted.
-> > + - invert-pwr-fault : boolean; for MPC5121 only. Indicates the
-> > + =C2=A0 PWR_FAULT signal polarity is inverted.
->=20
-> These are also characteristics of the chip, not the board, right?  If
-> so then these also can be determined implicitly by the compatible
-> value.
+This is for compatibility with old DTS files and last time it was tricky
+ to get that right and therefore...
 
-No, these are characteristics of the board. The internal USB PHY doesn'=
-t
-provide supply voltage. Some boards use MIC2025 switches which require =
-active
-high DRVVBUS and active low PWR_FAULT. Some boards could use MIC2026 or
-MAX1838 which require other polarities.
+> This is not a beauty ;)
+> 
+> What about adding a flags variable to the setup-functions?
 
-> Finally, these are all freescale specific properties.  If you still
-> need them, then prefix the property names with 'fsl,'
+.. I hesitate to make bigger changes to the code flow, which the
+introduction of a flags variable would required. Also it seems to be
+overkill to me. I will have a closer look, though. At a minimum I will
+replace "-1" with "MPC_I2C_PRESERVE_CLOCK".
 
-OK.
-
-> > ...
-> > +
-> > +config USB_FSL_BIG_ENDIAN_MMIO
-> > + =C2=A0 =C2=A0 =C2=A0 bool
->=20
-> What's this for?
-
-This is currently unused (will be used later), I will remove it for now=
-=2E
-
-> > ...
-> > @@ -77,14 +77,13 @@ static int usb_hcd_fsl_probe(const struct hc_dr=
-iver *driver,
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOD=
-EV;
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0}
-> >
-> > - =C2=A0 =C2=A0 =C2=A0 res =3D platform_get_resource(pdev, IORESOUR=
-CE_IRQ, 0);
-> > - =C2=A0 =C2=A0 =C2=A0 if (!res) {
-> > + =C2=A0 =C2=A0 =C2=A0 irq =3D platform_get_irq(pdev, 0);
-> > + =C2=A0 =C2=A0 =C2=A0 if (irq < 0) {
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&pde=
-v->dev,
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0"Found HC with no IRQ. Check %s setup!\n",
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0dev_name(&pdev->dev));
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOD=
-EV;
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0}
-> > - =C2=A0 =C2=A0 =C2=A0 irq =3D res->start;
->=20
-> Put this hunk in a separate patch.
-
-OK.
-
-> > ...
-> > + =C2=A0 =C2=A0 =C2=A0 if (pdata->have_sysif_regs) {
-> > =C2=A0#ifdef CONFIG_PPC_85xx
-> > - =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehci + FSL_SOC_USB_PRICTRL, 0x0=
-0000008);
-> > - =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehci + FSL_SOC_USB_AGECNTTHRSH,=
- 0x00000080);
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehc=
-i + FSL_SOC_USB_PRICTRL, 0x00000008);
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehc=
-i + FSL_SOC_USB_AGECNTTHRSH, 0x00000080);
-> > =C2=A0#else
-> > - =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehci + FSL_SOC_USB_PRICTRL, 0x0=
-000000c);
-> > - =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehci + FSL_SOC_USB_AGECNTTHRSH,=
- 0x00000040);
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehc=
-i + FSL_SOC_USB_PRICTRL, 0x0000000c);
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehc=
-i + FSL_SOC_USB_AGECNTTHRSH, 0x00000040);
-> > =C2=A0#endif
-> > - =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehci + FSL_SOC_USB_SICTRL, 0x00=
-000001);
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out_be32(non_ehc=
-i + FSL_SOC_USB_SICTRL, 0x00000001);
-> > + =C2=A0 =C2=A0 =C2=A0 }
-> > =C2=A0}
->=20
-> Unrelated whitespace changes.  Put in separate patch.
-
-OK.
-
-Thanks,
-
-Anatolij
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Wolfgang.
