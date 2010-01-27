@@ -1,43 +1,58 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] i2c-mpc: use __devinit[data] for initialization
- functions and data
-Date: Wed, 27 Jan 2010 16:14:18 +0100
-Message-ID: <4B60584A.5050605@grandegger.com>
-References: <1264452906-32536-1-git-send-email-wg@grandegger.com> <1264452906-32536-2-git-send-email-wg@grandegger.com> <20100126143507.GA12774@fluff.org.uk> <4B5F37FA.8060809@grandegger.com> <20100127150801.GC6090@fluff.org.uk>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 08/11] powerpc/mpc5121: add USB host support
+Date: Wed, 27 Jan 2010 09:52:27 -0700
+Message-ID: <fa686aa41001270852s57e0fa64l3c7067cf211a1d1f@mail.gmail.com>
+References: <1263932653-3634-1-git-send-email-agust@denx.de>
+	<1263932653-3634-9-git-send-email-agust@denx.de> <fa686aa41001210943i3739f693uecf0c05ef0a81c1@mail.gmail.com>
+	<20100125180024.1a850578@wker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20100127150801.GC6090-elnMNo+KYs3pIgCt6eIbzw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20100125180024.1a850578@wker>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ben Dooks wrote:
-> On Tue, Jan 26, 2010 at 07:44:10PM +0100, Wolfgang Grandegger wrote:
->> Ben Dooks wrote:
->>> On Mon, Jan 25, 2010 at 09:55:04PM +0100, Wolfgang Grandegger wrote:
-[snip]
->>> Any particular reason you decided to move this all about?
->> This was necessary to allow using __devinit[data] for the clock setup
->> functions and clock diviver arrays above which results in some notable
->> saving of memory space if the driver is statically linked into the
->> kernel. If the data is defined within "mpc_i2c_of_match", section
->> mismatches are reported.
+On Mon, Jan 25, 2010 at 10:00 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wr=
+ote:
+> On Thu, 21 Jan 2010 10:43:34 -0700
+> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>
+>> > diff --git a/Documentation/powerpc/dts-bindings/fsl/usb.txt b/Docu=
+mentation/powerpc/dts-bindings/fsl/usb.txt
+>> > index b001524..9050154 100644
+>> > --- a/Documentation/powerpc/dts-bindings/fsl/usb.txt
+>> > +++ b/Documentation/powerpc/dts-bindings/fsl/usb.txt
+>> > @@ -33,6 +33,14 @@ Recommended properties :
+>> > =A0- interrupt-parent : the phandle for the interrupt controller t=
+hat
+>> > =A0 =A0services interrupts for this device.
+>> >
+>> > +Optional properties :
 >>
->>> Are you sure that __devinitdata is the right thing here, I've no idea
->>> if there is currently any hotplug type support for openfirmware or
->>> not.
->> I agree that __init[data] is more appropriate for this driver even if
->> many other non-hotplugable drivers use __devinit[data]. I will change that.
-> 
-> sorry, may have gotten confused by which type of __init is which, I
-> think __devinit is the correct one here.
+>> > + - big-endian-regs : boolean; if defined, indicates the USB host
+>> > + =A0 controller registers format is big endian.
+>>
+>> Rather than testing for this explicitly, add fsl,mpc5121-usb2-dr to
+>> the match table and use the .data pointer for setting device specifi=
+c
+>> quirks.
 
-Why? It's not obvious to me how a i2c device might be hotpugged? Will
-require v4 to fix it.
+Still, don't use a new property to describe this.  The regs being
+big-endian is all wrapped up in the definition of what
+fsl,mpc5121-usb2-dr means.  You should also drop fsl-usb2-dr from the
+compatible list in the .dts file since this device is *not* compatible
+with it due to the endian difference.  Test for fsl,mpc5121-usb2-dr
+explicitly, and adapt the driver behaviour accordingly.
 
-Thanks,
+g.
 
-Wolfgang.
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
