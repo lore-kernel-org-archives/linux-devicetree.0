@@ -1,9 +1,10 @@
-From: Marmara par gwi <listmaster-WtTHGHLWrB2UDD0T94cbGdBPR1lH4CV8@public.gmane.org>
-Subject: Gagnez 1 an de vacances avec Marmara !
-Date: Sun, 24 Jan 2010 19:16:15 +0100
-Message-ID: <011f50d0774dd52c1897b8125f410157@unjourensemble.com>
+From: =?UTF-8?Q?SKI_Bed=2C_Gagnez_une_semaine_de_Ski_=E0_vie_!?=
+	<listmaster-WtTHGHLWrB2UDD0T94cbGdBPR1lH4CV8@public.gmane.org>
+Subject: SKI Bed
+Date: Wed, 27 Jan 2010 19:17:34 +0100
+Message-ID: <61863f7c404ac51f52dc94c374302b89@unjourensemble.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6967141799518336673=="
+Content-Type: multipart/mixed; boundary="===============4221333801336403528=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -18,41 +19,49 @@ To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============6967141799518336673==
+--===============4221333801336403528==
 Content-Type: multipart/alternative;
-	boundary="b1_011f50d0774dd52c1897b8125f410157"
+	boundary="b1_61863f7c404ac51f52dc94c374302b89"
 
 
---b1_011f50d0774dd52c1897b8125f410157
+--b1_61863f7c404ac51f52dc94c374302b89
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 
 
+	Partez =E0 la d=E9couverte de Noel !
 
-<http://nodes.reactivpub.fr/r/clic-1169-10641-21266-url-aHR0cDovL2JpcmR5L=
-m1hcm1hcmEuY29tL2luZGV4LnBocD9wPXJlYWM?rgroup=3Dp_995&trackaff=3D&group=3D=
->
+		Si cet email ne s'affiche pas correctement, vous pouvez le
+visualiser gr=E2ce =E0 ce lien
+<http://www.site-leader-immobilier.fr/prospection/mail/mail_skibed.html>
 
- **Avec BIRDY,
+			=09
+<http://tracking.publicidees.com/clic.php?promoid=3D32412&progid=3D1434&p=
+artid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-concours-ski.aspx?r=
+eferent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3DPublicidees&utm_=
+medium=3DAffiliation&utm_campaign=3DmailJeu>
 
- souhaitez la bonne ann=E9e
+			=09
+<http://tracking.publicidees.com/clic.php?promoid=3D32412&progid=3D1434&p=
+artid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-concours-ski.aspx?r=
+eferent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3DPublicidees&utm_=
+medium=3DAffiliation&utm_campaign=3DmailJeu>
 
- =E0 vos amis, et tentez de**
+			=09
+<http://tracking.publicidees.com/clic.php?promoid=3D32412&progid=3D1434&p=
+artid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-concours-ski.aspx?r=
+eferent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3DPublicidees&utm_=
+medium=3DAffiliation&utm_campaign=3DmailJeu>
 
+			=09
+<http://tracking.publicidees.com/clic.php?promoid=3D32412&progid=3D1434&p=
+artid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-concours-ski.aspx?r=
+eferent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3DPublicidees&utm_=
+medium=3DAffiliation&utm_campaign=3DmailJeu>
 
-<http://nodes.reactivpub.fr/r/clic-1169-10641-21266-url-aHR0cDovL2JpcmR5L=
-m1hcm1hcmEuY29tL2luZGV4LnBocD9wPXJlYWM?rgroup=3Dp_995&trackaff=3D&group=3D=
->
-
-
-<http://nodes.reactivpub.fr/r/clic-1169-10641-21266-url-aHR0cDovL2JpcmR5L=
-m1hcm1hcmEuY29tL2luZGV4LnBocD9wPXJlYWM?rgroup=3Dp_995&trackaff=3D&group=3D=
->
-
-* Pour plus d'informations, lire le r=E8glement.
-<http://nodes.reactivpub.fr/r/clic-1169-10641-21266-url-aHR0cDovL2JpcmR5L=
-m1hcm1hcmEuY29tL3JlZ2xlbWVudC5wZGY?rgroup=3Dp_995&trackaff=3D&group=3D>
+		Si vous recevez ce mail c'est que vous =EAtes inscrit =E0 ebusiness
+data.
 
 
 
@@ -67,80 +76,106 @@ Powered by PHPlist, www.phplist.com --
 
 
 
---b1_011f50d0774dd52c1897b8125f410157
+--b1_61863f7c404ac51f52dc94c374302b89
 Content-Type: text/html; charset = "UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<html><head>
-        <meta content=3D"text/html;charset=3DUTF-8" http-equiv=3D"Content=
--Type">
-        <title></title></head><body><div align=3D"center">
-<table width=3D"500" align=3D"center" border=3D"0" cellpadding=3D"0" cell=
-spacing=3D"0">
-    <!-- fwtable fwsrc=3D"BIRDY CONQ 2.png" fwpage=3D"Page 1" fwbase=3D"B=
-IRDY CONQ 2.jpg" fwstyle=3D"Dreamweaver" fwdocid =3D "1134042308" fwneste=
-d=3D"0" -->
-    <tbody>
-        <tr>
-            <td colspan=3D"3"><a href=3D"http://nodes.reactivpub.fr/r/cli=
-c-1169-10641-21266-url-aHR0cDovL2JpcmR5Lm1hcm1hcmEuY29tL2luZGV4LnBocD9wPX=
-JlYWM?rgroup=3Dp_995&trackaff=3D&amp;group=3D"><img alt=3D"" id=3D"head" =
-src=3D"http://webe.emv3.com/octelio/marmara/birdy2/head.jpg" name=3D"head=
-" width=3D"500" border=3D"0" height=3D"191"></a></td>
-        </tr>
-        <tr>
-            <td width=3D"59"><span style=3D"font-size: large;"><span styl=
-e=3D"font-family: Arial;"><img alt=3D"" id=3D"g" src=3D"http://webe.emv3.=
-com/octelio/marmara/birdy2/g.jpg" name=3D"g" width=3D"59" border=3D"0" he=
-ight=3D"95"></span></span></td>
-            <td width=3D"402" bgcolor=3D"#e31e2f">
-            <h2><span style=3D"font-size: large;"><span style=3D"color: r=
-gb(255, 255, 255);"><span class=3D"bir_txt">Avec BIRDY,<br>
-            </span>        <span class=3D"bir_txt">souhaitez la bonne ann=
-=E9e</span><br>
-            <span class=3D"bir_txt">=E0 vos amis, et tentez de</span></sp=
-an></span></h2>
-            </td>
-            <td width=3D"39"><img alt=3D"" id=3D"d" src=3D"http://webe.em=
-v3.com/octelio/marmara/birdy2/d.jpg" name=3D"d" width=3D"39" border=3D"0"=
- height=3D"95"></td>
-        </tr>
-        <tr>
-            <td colspan=3D"3"><a href=3D"http://nodes.reactivpub.fr/r/cli=
-c-1169-10641-21266-url-aHR0cDovL2JpcmR5Lm1hcm1hcmEuY29tL2luZGV4LnBocD9wPX=
-JlYWM?rgroup=3Dp_995&trackaff=3D&amp;group=3D"><img alt=3D"" id=3D"vacanc=
-es" src=3D"http://webe.emv3.com/octelio/marmara/birdy2/vacances.jpg" name=
-=3D"vacances" width=3D"500" border=3D"0" height=3D"107"></a></td>
-        </tr>
-        <tr>
-            <td colspan=3D"3"><a href=3D"http://nodes.reactivpub.fr/r/cli=
-c-1169-10641-21266-url-aHR0cDovL2JpcmR5Lm1hcm1hcmEuY29tL2luZGV4LnBocD9wPX=
-JlYWM?rgroup=3Dp_995&trackaff=3D&amp;group=3D"><img alt=3D"" id=3D"foot" =
-src=3D"http://webe.emv3.com/octelio/marmara/birdy2/foot.jpg" name=3D"foot=
-" width=3D"500" border=3D"0" height=3D"107"></a></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-<div class=3D"mentions" align=3D"center">
-<div align=3D"center">* Pour plus d'informations, <a target=3D"_blank" hr=
-ef=3D"http://nodes.reactivpub.fr/r/clic-1169-10641-21266-url-aHR0cDovL2Jp=
-cmR5Lm1hcm1hcmEuY29tL3JlZ2xlbWVudC5wZGY?rgroup=3Dp_995&trackaff=3D&amp;gr=
-oup=3D">lire le r=E8glement.</a><span class=3D"mentions"><br>
-</span></div>
-</div><img alt=3D"" src=3D"http://nodes.reactivpub.fr/mailing-1169-10641-=
-21266?rgroup=3Dp_995&group=3D" border=3D"0" height=3D"1" width=3D"1"><br =
-/><br /><div class=3D"emailfooter">--<br />
+<html>
+<head>
+	<title>Partez =E0 la d=E9couverte de Noel !</title>
+</head>
+<body>
+	<div style=3D"font-family:Arial; font-size:12px; width:600px; margin:0 a=
+uto; background-color:#FFFFFF; color:#888888; text-align:center">
+		Si cet email ne s'affiche pas correctement, vous pouvez le visualiser g=
+r=E2ce =E0 ce <a href=3D"http://www.site-leader-immobilier.fr/prospection=
+/mail/mail_skibed.html" style=3D"color:red;">lien</a>=09
+	=09
+		<table width=3D"600" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+		  <tr>
+			<td width=3D"204">
+			<table width=3D"204" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+			  <tr>
+				<td><a href=3D"http://tracking.publicidees.com/clic.php?promoid=3D324=
+12&progid=3D1434&partid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-c=
+oncours-ski.aspx?referent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3D=
+Publicidees&utm_medium=3DAffiliation&utm_campaign=3DmailJeu" target=3D"_b=
+lank"><img src=3D"http://www.skibed.com/statique/fr/image/jeuxconcours200=
+9/ski-jeu2009-mail-logo.png" alt=3D"Logo skibed" width=3D"204" height=3D"=
+79" border=3D"0"></a></td>
+			  </tr>
+			  <tr>
+				<td><a href=3D"http://tracking.publicidees.com/clic.php?promoid=3D324=
+12&progid=3D1434&partid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-c=
+oncours-ski.aspx?referent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3D=
+Publicidees&utm_medium=3DAffiliation&utm_campaign=3DmailJeu" target=3D"_b=
+lank"><img src=3D"http://www.skibed.com/statique/fr/image/jeuxconcours200=
+9/ski-jeu2009-mail-fille.jpg" alt=3D"jeu skibed" width=3D"204" height=3D"=
+429" border=3D"0"></a></td>
+			  </tr>
+			</table>
+
+		=09
+			</td>
+			<td width=3D"396">
+			<table width=3D"396" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+			 =20
+			 =20
+			  <tr>
+				<td><a href=3D"http://tracking.publicidees.com/clic.php?promoid=3D324=
+12&progid=3D1434&partid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-c=
+oncours-ski.aspx?referent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3D=
+Publicidees&utm_medium=3DAffiliation&utm_campaign=3DmailJeu" target=3D"_b=
+lank"><img src=3D"http://www.skibed.com/statique/fr/image/jeuxconcours200=
+9/ski-jeu2009-mail-accroche.png" alt=3D"Gagnez une semaine de ski =E0 vie=
+ avec Skibed" width=3D"396" height=3D"320" border=3D"0"></a></td>
+			  </tr>
+			  <tr>
+				<td><a href=3D"http://tracking.publicidees.com/clic.php?promoid=3D324=
+12&progid=3D1434&partid=3D14928&url=3Dhttp%3A%2F%2Fwww.skibed.com%2Fjeu-c=
+oncours-ski.aspx?referent=3Dski-0910-fr-affil-publicidees_jeu&utm_source=3D=
+Publicidees&utm_medium=3DAffiliation&utm_campaign=3DmailJeu" target=3D"_b=
+lank"><img src=3D"http://www.skibed.com/statique/fr/image/jeuxconcours200=
+9/ski-jeu2009-mail-go.png" alt=3D"Go" width=3D"396" height=3D"188" border=
+=3D"0"></a></td>
+			  </tr>
+			</table>   =20
+			</td>
+		  </tr>
+		</table><img src=3D"http://tracking.publicidees.com/link.php?promoid=3D=
+32412&progid=3D1434&partid=3D14928" height=3D"1" width=3D"1">
+
+		Si vous recevez ce mail c'est que vous =EAtes inscrit =E0 ebusiness dat=
+a.
+	</div>
+<br /><br /><div class=3D"emailfooter">--<br />
 Si vous souhaitez ne plus recevoir d'offres de ce partenaire, cliquez sur=
  <a href=3D"http://unjourensemble.com/lists/?p=3Dunsubscribe&uid=3De2e4a7=
-42b00c22c0717b5266804d2f42">ce lien</a></div></body></html>
+42b00c22c0717b5266804d2f42">ce lien</a></div></body>
+</html>
 
 
 
---b1_011f50d0774dd52c1897b8125f410157--
 
 
---===============6967141799518336673==
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--b1_61863f7c404ac51f52dc94c374302b89--
+
+
+--===============4221333801336403528==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -151,4 +186,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============6967141799518336673==--
+--===============4221333801336403528==--
