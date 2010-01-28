@@ -1,10 +1,9 @@
-From: =?UTF-8?Q?SKI_Bed=2C_Gagnez_une_semaine_de_Ski_=E0_vie_!?=
-	<listmaster-WtTHGHLWrB2UDD0T94cbGdBPR1lH4CV8@public.gmane.org>
-Subject: SKI Bed
-Date: Thu, 28 Jan 2010 03:15:17 +0100
-Message-ID: <e459a4fdec139e5d2c6b48f283482561@unjourensemble.com>
+From: SKI Bed <listmaster-WtTHGHLWrB2UDD0T94cbGdBPR1lH4CV8@public.gmane.org>
+Subject: =?UTF-8?Q?SKI_Bed,_Gagnez_une_semaine_de_Ski_=E0_vie_!?=
+Date: Thu, 28 Jan 2010 21:13:47 +0100
+Message-ID: <648d50e424c4e9d8539c6ab24440032c@unjourensemble.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8435506563059731388=="
+Content-Type: multipart/mixed; boundary="===============3884642051221438566=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -19,12 +18,12 @@ To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============8435506563059731388==
+--===============3884642051221438566==
 Content-Type: multipart/alternative;
-	boundary="b1_e459a4fdec139e5d2c6b48f283482561"
+	boundary="b1_648d50e424c4e9d8539c6ab24440032c"
 
 
---b1_e459a4fdec139e5d2c6b48f283482561
+--b1_648d50e424c4e9d8539c6ab24440032c
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -76,7 +75,7 @@ Powered by PHPlist, www.phplist.com --
 
 
 
---b1_e459a4fdec139e5d2c6b48f283482561
+--b1_648d50e424c4e9d8539c6ab24440032c
 Content-Type: text/html; charset = "UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -172,10 +171,10 @@ Si vous souhaitez ne plus recevoir d'offres de ce partenaire, cliquez sur=
 
 
 
---b1_e459a4fdec139e5d2c6b48f283482561--
+--b1_648d50e424c4e9d8539c6ab24440032c--
 
 
---===============8435506563059731388==
+--===============3884642051221438566==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -186,4 +185,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============8435506563059731388==--
+--===============3884642051221438566==--
