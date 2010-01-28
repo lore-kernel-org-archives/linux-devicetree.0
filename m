@@ -1,58 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 08/11] powerpc/mpc5121: add USB host support
-Date: Wed, 27 Jan 2010 09:52:27 -0700
-Message-ID: <fa686aa41001270852s57e0fa64l3c7067cf211a1d1f@mail.gmail.com>
-References: <1263932653-3634-1-git-send-email-agust@denx.de>
-	<1263932653-3634-9-git-send-email-agust@denx.de> <fa686aa41001210943i3739f693uecf0c05ef0a81c1@mail.gmail.com>
-	<20100125180024.1a850578@wker>
+From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Subject: UIO / of_genirq driver
+Date: Thu, 28 Jan 2010 17:13:00 +1000
+Message-ID: <1d3f23371001272313i62fc9158se4cd9173f196fb12@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20100125180024.1a850578@wker>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: gregkh-l3A5Bk7waGM@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2010 at 10:00 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wr=
-ote:
-> On Thu, 21 Jan 2010 10:43:34 -0700
-> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->
->> > diff --git a/Documentation/powerpc/dts-bindings/fsl/usb.txt b/Docu=
-mentation/powerpc/dts-bindings/fsl/usb.txt
->> > index b001524..9050154 100644
->> > --- a/Documentation/powerpc/dts-bindings/fsl/usb.txt
->> > +++ b/Documentation/powerpc/dts-bindings/fsl/usb.txt
->> > @@ -33,6 +33,14 @@ Recommended properties :
->> > =A0- interrupt-parent : the phandle for the interrupt controller t=
-hat
->> > =A0 =A0services interrupts for this device.
->> >
->> > +Optional properties :
->>
->> > + - big-endian-regs : boolean; if defined, indicates the USB host
->> > + =A0 controller registers format is big endian.
->>
->> Rather than testing for this explicitly, add fsl,mpc5121-usb2-dr to
->> the match table and use the .data pointer for setting device specifi=
-c
->> quirks.
+Hi,
 
-Still, don't use a new property to describe this.  The regs being
-big-endian is all wrapped up in the definition of what
-fsl,mpc5121-usb2-dr means.  You should also drop fsl-usb2-dr from the
-compatible list in the .dts file since this device is *not* compatible
-with it due to the endian difference.  Test for fsl,mpc5121-usb2-dr
-explicitly, and adapt the driver behaviour accordingly.
+I came across this thread/patchset from around June last year:
 
-g.
+http://lists.ozlabs.org/pipermail/linuxppc-dev/2009-June/073086.html
 
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+where Wolfgang proposed a generic OF-driven UIO driver.  The
+discussion seemed to stall after Grant Likely indicated he didn't like
+the use of a linux-specific compatible binding in the device tree
+(compatible="generic-uio").
+
+I guess I have a couple of questions:
+
+ * did this patchset go anywhere?  I've been using it here the last
+few days and it works great.
+
+and more generally:
+
+ * Is there a better way to handle the OF bindings for this sort of thing?
+
+Grant's complaint seems to come up often - when you have generic
+controllers in a system (SPI/I2C also spring to mind), we need a way
+of signalling somehow to the kernel that each instance has a
+particular usage intended.
+
+However, the device-tree guys complain whenever anyone tries to encode
+anything non-hardware related into the DTS itself.
+
+I guess I'd like to just open up a discussion, see if there's been any
+progress towards a general solution.
+
+Thanks,
+
+John
+-- 
+John Williams
+PetaLogix - Linux Solutions for a Reconfigurable World
+w: www.petalogix.com  p: +61-7-30090663  f: +61-7-30090663
