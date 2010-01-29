@@ -1,53 +1,63 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] powerpc: doc/dts-bindings: update doc of FSL
-	I2C bindings
-Date: Fri, 29 Jan 2010 17:26:33 +0100
-Message-ID: <20100129162633.GK7812@pengutronix.de>
-References: <1264685141-26391-1-git-send-email-wg@grandegger.com> <1264685141-26391-2-git-send-email-wg@grandegger.com> <1264685141-26391-3-git-send-email-wg@grandegger.com> <1264685141-26391-4-git-send-email-wg@grandegger.com>
+From: Lukasz Wojcik <zbr-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] Modification of lexer and parser, improving dtc portability.
+Date: Fri, 29 Jan 2010 17:31:51 +0100
+Message-ID: <1264782711-52086-1-git-send-email-zbr@semihalf.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yUmmepPgoWmUqRhm"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1264685141-26391-4-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Cc: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This mod allows successful build of dtc using both bison/flex and yacc/lex.
 
---yUmmepPgoWmUqRhm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lukasz Wojcik <zbr-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+---
+ dtc-lexer.l  |    1 +
+ dtc-parser.y |    4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-On Thu, Jan 28, 2010 at 02:25:41PM +0100, Wolfgang Grandegger wrote:
-> From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
->=20
-> This patch adds the MPC5121 to the list of supported devices,
-> enhances the doc of the "clock-frequency" property and removes
-> the obsolete "cell-index" property from the example nodes.
-> Furthermore and example for the MPC5121 has been added.
->=20
-> Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
-
-Reviewed-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---yUmmepPgoWmUqRhm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAktjDDkACgkQD27XaX1/VRtEBQCePpqFLJ62n5Z9dkl8/t+KN7js
-ChwAoJgMAEG/GrFg+ee+9ExCN0zu+1Z3
-=cxxG
------END PGP SIGNATURE-----
-
---yUmmepPgoWmUqRhm--
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index 9021231..3c3434c 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -38,6 +38,7 @@ LINECOMMENT	"//".*\n
+ #include "srcpos.h"
+ #include "dtc-parser.tab.h"
+ 
++YYLTYPE yylloc;
+ 
+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+ #define	YY_USER_ACTION \
+diff --git a/dtc-parser.y b/dtc-parser.y
+index b7c7dbd..a2c0925 100644
+--- a/dtc-parser.y
++++ b/dtc-parser.y
+@@ -18,14 +18,14 @@
+  *                                                                   USA
+  */
+ 
+-%locations
+-
+ %{
+ #include <stdio.h>
+ 
+ #include "dtc.h"
+ #include "srcpos.h"
+ 
++YYLTYPE yylloc;
++
+ extern int yylex(void);
+ extern void yyerror(char const *s);
+ 
+-- 
+1.6.3.1
