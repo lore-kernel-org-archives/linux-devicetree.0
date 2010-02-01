@@ -1,96 +1,125 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: [PATCH v5 3/3] powerpc: doc/dts-bindings: update doc of FSL I2C bindings
-Date: Mon,  1 Feb 2010 08:37:16 +0100
-Message-ID: <1265009836-26398-4-git-send-email-wg@grandegger.com>
-References: <1265009836-26398-1-git-send-email-wg@grandegger.com>
- <1265009836-26398-2-git-send-email-wg@grandegger.com>
- <1265009836-26398-3-git-send-email-wg@grandegger.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1265009836-26398-3-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [resend] Make the kernel accept ePAPR style phandle information
+Date: Mon, 1 Feb 2010 11:00:17 +0100
+Message-ID: <20100201100017.GA3288@pengutronix.de>
+References: <20100201045242.GB8095@yookeroo>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7728416899721901034=="
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100201045242.GB8095@yookeroo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 
-This patch adds the MPC5121 to the list of supported devices,
-enhances the doc of the "clock-frequency" property and removes
-the obsolete "cell-index" property from the example nodes.
-Furthermore and example for the MPC5121 has been added.
+--===============7728416899721901034==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Content-Disposition: inline
 
-Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
-Reviewed-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/powerpc/dts-bindings/fsl/i2c.txt |   30 +++++++++++++++++++----
- 1 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/powerpc/dts-bindings/fsl/i2c.txt b/Documentation/powerpc/dts-bindings/fsl/i2c.txt
-index b6d2e21..2f62dae 100644
---- a/Documentation/powerpc/dts-bindings/fsl/i2c.txt
-+++ b/Documentation/powerpc/dts-bindings/fsl/i2c.txt
-@@ -9,8 +9,9 @@ Recommended properties :
- 
-  - compatible : compatibility list with 2 entries, the first should
-    be "fsl,CHIP-i2c" where CHIP is the name of a compatible processor,
--   e.g. mpc8313, mpc8543, mpc8544, mpc5200 or mpc5200b. The second one
--   should be "fsl-i2c".
-+   e.g. mpc8313, mpc8543, mpc8544, mpc5121, mpc5200 or mpc5200b. The
-+   second one should be "fsl-i2c". For the mpc5121, an additional node
-+   "fsl,mpc5121-i2c-ctrl" is required as shown in the example below.
-  - interrupts : <a b> where a is the interrupt number and b is a
-    field that represents an encoding of the sense and level
-    information for the interrupt.  This should be encoded based on
-@@ -20,29 +21,46 @@ Recommended properties :
-    services interrupts for this device.
-  - fsl,preserve-clocking : boolean; if defined, the clock settings
-    from the bootloader are preserved (not touched).
-- - clock-frequency : desired I2C bus clock frequency in Hz.
-+ - clock-frequency : desired I2C bus clock frequency in Hz.  If this
-+   property and "fsl,preserve-clocking" is not defined, a safe fixed
-+   clock divider value is used (resulting in a small clock frequency).
- 
- Examples :
- 
-+	/* MPC5121 based board */
-+	i2c@1740 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,mpc5121-i2c", "fsl-i2c";
-+		reg = <0x1740 0x20>;
-+		interrupts = <11 0x8>;
-+		interrupt-parent = <&ipic>;
-+		clock-frequency = <100000>;
-+	};
-+
-+	i2ccontrol@1760 {
-+		compatible = "fsl,mpc5121-i2c-ctrl";
-+		reg = <0x1760 0x8>;
-+	};
-+
-+	/* MPC5200B based board */
- 	i2c@3d00 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		compatible = "fsl,mpc5200b-i2c","fsl,mpc5200-i2c","fsl-i2c";
--		cell-index = <0>;
- 		reg = <0x3d00 0x40>;
- 		interrupts = <2 15 0>;
- 		interrupt-parent = <&mpc5200_pic>;
- 		fsl,preserve-clocking;
- 	};
- 
-+	/* MPC8544 base board */
- 	i2c@3100 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		cell-index = <1>;
- 		compatible = "fsl,mpc8544-i2c", "fsl-i2c";
- 		reg = <0x3100 0x100>;
- 		interrupts = <43 2>;
- 		interrupt-parent = <&mpic>;
- 		clock-frequency = <400000>;
- 	};
--
--- 
-1.6.2.5
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 01, 2010 at 03:52:42PM +1100, David Gibson wrote:
+> Grant, I've updated this for your current test-devicetree branch.
+> Please apply.
+>=20
+> Currently when processing flattened device trees, the kernel expects
+> the phandle in a property called "linux,phandle".  The ePAPR spec -
+> not being Linux specific - instead requires phandles to be encoded in
+> a property named simply "phandle".  This patch makes the kernel accept
+> either form when unflattening the device tree.
+>=20
+> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+>=20
+> Index: working-2.6/drivers/of/fdt.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- working-2.6.orig/drivers/of/fdt.c	2010-02-01 15:51:44.000000000 +1100
+> +++ working-2.6/drivers/of/fdt.c	2010-02-01 15:51:46.458557615 +1100
+> @@ -310,10 +310,19 @@ unsigned long __init unflatten_dt_node(u
+>  		pp =3D unflatten_dt_alloc(&mem, sizeof(struct property),
+>  					__alignof__(struct property));
+>  		if (allnextpp) {
+> -			if (strcmp(pname, "linux,phandle") =3D=3D 0) {
+> +			/* We accept flattened tree phandles either in
+> +			 * ePAPR-style "phandle" properties, or the
+> +			 * legacy "linux,phandle" properties.  If both
+> +			 * appear and have different values, things
+> +			 * will get weird.  Don't do that. */
+
+I don't want to be just pedantic, I really think the preferred way of
+multi-line comments
+
+ /*
+  * foo
+  * bar
+  */
+
+will help readability a lot here.
+
+
+> +			if ((strcmp(pname, "phandle") =3D=3D 0)
+> +			    || (strcmp(pname, "linux,phandle") =3D=3D 0)) {
+>  				if (np->phandle =3D=3D 0)
+>  					np->phandle =3D *((u32 *)*p);
+>  			}
+> +			/* And we process the "ibm,phandle" property
+> +			 * used in pSeries dynamic device tree
+> +			 * stuff */
+>  			if (strcmp(pname, "ibm,phandle") =3D=3D 0)
+>  				np->phandle =3D *((u32 *)*p);
+>  			pp->name =3D pname;
+>=20
+> --=20
+> David Gibson			| I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAktmpjEACgkQD27XaX1/VRtH/gCgxP0YNT9wjgDky/HL163sOaGG
+dUUAnjVkCEDwmwlh9bsQsmw8ufnlebP7
+=f4Ab
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
+
+--===============7728416899721901034==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============7728416899721901034==--
