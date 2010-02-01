@@ -1,64 +1,234 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [resend] Make the kernel accept ePAPR style phandle information
-Date: Mon, 1 Feb 2010 15:52:42 +1100
-Message-ID: <20100201045242.GB8095@yookeroo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: [PATCH v5 1/3] i2c-mpc: use __devinit[data] for initialization functions and data
+Date: Mon,  1 Feb 2010 08:37:14 +0100
+Message-ID: <1265009836-26398-2-git-send-email-wg@grandegger.com>
+References: <1265009836-26398-1-git-send-email-wg@grandegger.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1265009836-26398-1-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grant, I've updated this for your current test-devicetree branch.
-Please apply.
+From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 
-Currently when processing flattened device trees, the kernel expects
-the phandle in a property called "linux,phandle".  The ePAPR spec -
-not being Linux specific - instead requires phandles to be encoded in
-a property named simply "phandle".  This patch makes the kernel accept
-either form when unflattening the device tree.
+"__devinit[data]" has not yet been used for all initialization functions
+and data. To avoid truncating lines, the struct "mpc_i2c_match_data" has
+been renamed to "mpc_i2c_data", which is even the better name.
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+Tested-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/i2c/busses/i2c-mpc.c |  103 +++++++++++++++++++----------------------
+ 1 files changed, 48 insertions(+), 55 deletions(-)
 
-Index: working-2.6/drivers/of/fdt.c
-===================================================================
---- working-2.6.orig/drivers/of/fdt.c	2010-02-01 15:51:44.000000000 +1100
-+++ working-2.6/drivers/of/fdt.c	2010-02-01 15:51:46.458557615 +1100
-@@ -310,10 +310,19 @@ unsigned long __init unflatten_dt_node(u
- 		pp = unflatten_dt_alloc(&mem, sizeof(struct property),
- 					__alignof__(struct property));
- 		if (allnextpp) {
--			if (strcmp(pname, "linux,phandle") == 0) {
-+			/* We accept flattened tree phandles either in
-+			 * ePAPR-style "phandle" properties, or the
-+			 * legacy "linux,phandle" properties.  If both
-+			 * appear and have different values, things
-+			 * will get weird.  Don't do that. */
-+			if ((strcmp(pname, "phandle") == 0)
-+			    || (strcmp(pname, "linux,phandle") == 0)) {
- 				if (np->phandle == 0)
- 					np->phandle = *((u32 *)*p);
- 			}
-+			/* And we process the "ibm,phandle" property
-+			 * used in pSeries dynamic device tree
-+			 * stuff */
- 			if (strcmp(pname, "ibm,phandle") == 0)
- 				np->phandle = *((u32 *)*p);
- 			pp->name = pname;
-
+diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
+index f627001..275ebe6 100644
+--- a/drivers/i2c/busses/i2c-mpc.c
++++ b/drivers/i2c/busses/i2c-mpc.c
+@@ -66,7 +66,7 @@ struct mpc_i2c_divider {
+ 	u16 fdr;	/* including dfsrr */
+ };
+ 
+-struct mpc_i2c_match_data {
++struct mpc_i2c_data {
+ 	void (*setclock)(struct device_node *node,
+ 			 struct mpc_i2c *i2c,
+ 			 u32 clock, u32 prescaler);
+@@ -165,7 +165,7 @@ static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
+ }
+ 
+ #ifdef CONFIG_PPC_MPC52xx
+-static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
++static const struct __devinitdata mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
+ 	{20, 0x20}, {22, 0x21}, {24, 0x22}, {26, 0x23},
+ 	{28, 0x24}, {30, 0x01}, {32, 0x25}, {34, 0x02},
+ 	{36, 0x26}, {40, 0x27}, {44, 0x04}, {48, 0x28},
+@@ -186,7 +186,8 @@ static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
+ 	{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
+ };
+ 
+-int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescaler)
++static int __devinit mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock,
++					  int prescaler)
+ {
+ 	const struct mpc_i2c_divider *div = NULL;
+ 	unsigned int pvr = mfspr(SPRN_PVR);
+@@ -215,9 +216,9 @@ int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescaler)
+ 	return div ? (int)div->fdr : -EINVAL;
+ }
+ 
+-static void mpc_i2c_setclock_52xx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ 	int ret, fdr;
+ 
+@@ -230,15 +231,15 @@ static void mpc_i2c_setclock_52xx(struct device_node *node,
+ 		dev_info(i2c->dev, "clock %d Hz (fdr=%d)\n", clock, fdr);
+ }
+ #else /* !CONFIG_PPC_MPC52xx */
+-static void mpc_i2c_setclock_52xx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ }
+ #endif /* CONFIG_PPC_MPC52xx*/
+ 
+ #ifdef CONFIG_FSL_SOC
+-static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
++static const struct __devinitdata mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
+ 	{160, 0x0120}, {192, 0x0121}, {224, 0x0122}, {256, 0x0123},
+ 	{288, 0x0100}, {320, 0x0101}, {352, 0x0601}, {384, 0x0102},
+ 	{416, 0x0602}, {448, 0x0126}, {480, 0x0103}, {512, 0x0127},
+@@ -258,7 +259,7 @@ static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
+ 	{49152, 0x011e}, {61440, 0x011f}
+ };
+ 
+-u32 mpc_i2c_get_sec_cfg_8xxx(void)
++static u32 __devinit mpc_i2c_get_sec_cfg_8xxx(void)
+ {
+ 	struct device_node *node = NULL;
+ 	u32 __iomem *reg;
+@@ -287,7 +288,8 @@ u32 mpc_i2c_get_sec_cfg_8xxx(void)
+ 	return val;
+ }
+ 
+-int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescaler)
++static int __devinit mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock,
++					  u32 prescaler)
+ {
+ 	const struct mpc_i2c_divider *div = NULL;
+ 	u32 divider;
+@@ -320,9 +322,9 @@ int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescaler)
+ 	return div ? (int)div->fdr : -EINVAL;
+ }
+ 
+-static void mpc_i2c_setclock_8xxx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ 	int ret, fdr;
+ 
+@@ -338,9 +340,9 @@ static void mpc_i2c_setclock_8xxx(struct device_node *node,
+ }
+ 
+ #else /* !CONFIG_FSL_SOC */
+-static void mpc_i2c_setclock_8xxx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ }
+ #endif /* CONFIG_FSL_SOC */
+@@ -529,8 +531,8 @@ static int __devinit fsl_i2c_probe(struct of_device *op,
+ 			clock = *prop;
+ 
+ 		if (match->data) {
+-			struct mpc_i2c_match_data *data =
+-				(struct mpc_i2c_match_data *)match->data;
++			struct mpc_i2c_data *data =
++				(struct mpc_i2c_data *)match->data;
+ 			data->setclock(op->node, i2c, clock, data->prescaler);
+ 		} else {
+ 			/* Backwards compatibility */
+@@ -582,44 +584,35 @@ static int __devexit fsl_i2c_remove(struct of_device *op)
+ 	return 0;
+ };
+ 
++static struct mpc_i2c_data __devinitdata mpc_i2c_data_52xx = {
++	.setclock = mpc_i2c_setclock_52xx,
++};
++
++static struct mpc_i2c_data __devinitdata mpc_i2c_data_8313 = {
++	.setclock = mpc_i2c_setclock_8xxx,
++};
++
++static struct mpc_i2c_data __devinitdata mpc_i2c_data_8543 = {
++	.setclock = mpc_i2c_setclock_8xxx,
++	.prescaler = 2,
++};
++
++static struct mpc_i2c_data __devinitdata mpc_i2c_data_8544 = {
++	.setclock = mpc_i2c_setclock_8xxx,
++	.prescaler = 3,
++};
++
+ static const struct of_device_id mpc_i2c_of_match[] = {
+-	{.compatible = "mpc5200-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_52xx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc5200b-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_52xx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc5200-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_52xx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc8313-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_8xxx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc8543-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_8xxx,
+-			.prescaler = 2,
+-		},
+-	},
+-	{.compatible = "fsl,mpc8544-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_8xxx,
+-			.prescaler = 3,
+-		},
++	{.compatible = "mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
++	{.compatible = "fsl,mpc5200b-i2c", .data = &mpc_i2c_data_52xx, },
++	{.compatible = "fsl,mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
++	{.compatible = "fsl,mpc8313-i2c", .data = &mpc_i2c_data_8313, },
++	{.compatible = "fsl,mpc8543-i2c", .data = &mpc_i2c_data_8543, },
++	{.compatible = "fsl,mpc8544-i2c", .data = &mpc_i2c_data_8544, },
+ 	/* Backward compatibility */
+-	},
+ 	{.compatible = "fsl-i2c", },
+ 	{},
+ };
+-
+ MODULE_DEVICE_TABLE(of, mpc_i2c_of_match);
+ 
+ 
+@@ -634,7 +627,7 @@ static struct of_platform_driver mpc_i2c_driver = {
+ 	},
+ };
+ 
+-static int __init fsl_i2c_init(void)
++static int __devinit fsl_i2c_init(void)
+ {
+ 	int rv;
+ 
+@@ -645,7 +638,7 @@ static int __init fsl_i2c_init(void)
+ 	return rv;
+ }
+ 
+-static void __exit fsl_i2c_exit(void)
++static void __devexit fsl_i2c_exit(void)
+ {
+ 	of_unregister_platform_driver(&mpc_i2c_driver);
+ }
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.6.2.5
