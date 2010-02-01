@@ -1,63 +1,55 @@
-From: Lukasz Wojcik <zbr-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] Modification of lexer and parser, improving dtc portability.
-Date: Fri, 29 Jan 2010 17:31:51 +0100
-Message-ID: <1264782711-52086-1-git-send-email-zbr@semihalf.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] nodmask.h: remove macro any_online_node
+Date: Mon, 01 Feb 2010 13:05:58 +1100
+Message-ID: <1264989958.8287.13.camel@pasglop>
+References: <201001061624.59118.hartleys@visionengravers.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-nfs-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201001061624.59118.hartleys-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
+Sender: linux-nfs-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: H Hartley Sweeten <hartleys-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
+Cc: Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-nfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kamezawa.hiroyu-+CUm20s59erQFUHtdCDX3A@public.gmane.org, mel-wPRd99KPJ+uzQB+pC5nmwQ@public.gmane.org, lee.schermerhorn-VXdhtT5mjnY@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, dave-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, miltonm-ogEGBHC/i9Y@public.gmane.org, nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org, geoffrey.levand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, bfields-uC3wQj2KruNg9hUCZPvPmw@public.gmane.org, neilb-l3A5Bk7waGM@public.gmane.org, Trond.Myklebust-HgOvQuBEEgTQT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, bhalevy-C4P08NqkoRlBDgjK7y7TUQ@public.gmane.org, chuck.lever-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, Ricardo.Labiaga-HgOvQuBEEgTQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This mod allows successful build of dtc using both bison/flex and yacc/lex.
+On Wed, 2010-01-06 at 16:24 -0700, H Hartley Sweeten wrote:
+> nodmask.h: remove macro any_online_node
+> 
+> The macro any_online_node is prone to producing sparse warnings
+> due to the local symbol 'node'. Since all the in-tree users are really
+> requesting the first online node (the mask argument is either
+> NODE_MASK_ALL or node_online_map) just use the first_online_node
+> macro and remove the any_online_node macro since there are no users.
+> 
+> Signed-off-by: H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
+> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+> Cc: David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: KAMEZAWA Hiroyuki <kamezawa.hiroyu-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+> Cc: Mel Gorman <mel-wPRd99KPJ+uzQB+pC5nmwQ@public.gmane.org>
+> Cc: Lee Schermerhorn <lee.schermerhorn-VXdhtT5mjnY@public.gmane.org>
 
-Signed-off-by: Lukasz Wojcik <zbr-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
----
- dtc-lexer.l  |    1 +
- dtc-parser.y |    4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 9021231..3c3434c 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -38,6 +38,7 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
-+YYLTYPE yylloc;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
- #define	YY_USER_ACTION \
-diff --git a/dtc-parser.y b/dtc-parser.y
-index b7c7dbd..a2c0925 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -18,14 +18,14 @@
-  *                                                                   USA
-  */
- 
--%locations
--
- %{
- #include <stdio.h>
- 
- #include "dtc.h"
- #include "srcpos.h"
- 
-+YYLTYPE yylloc;
-+
- extern int yylex(void);
- extern void yyerror(char const *s);
- 
--- 
-1.6.3.1
+> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> Cc: Dave Hansen <dave-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Cc: Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>
+> Cc: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+> Cc: Geoff Levand <geoffrey.levand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: J. Bruce Fields <bfields-uC3wQj2KruNg9hUCZPvPmw@public.gmane.org>
+> Cc: Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>
+> Cc: Trond Myklebust <Trond.Myklebust-HgOvQuBEEgTQT0dZR+AlfA@public.gmane.org>
+> Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> Cc: Benny Halevy <bhalevy-C4P08NqkoRlBDgjK7y7TUQ@public.gmane.org>
+> Cc: Chuck Lever <chuck.lever-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+> Cc: Ricardo Labiaga <Ricardo.Labiaga-HgOvQuBEEgTQT0dZR+AlfA@public.gmane.org>
+
+Cheers,
+Ben.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-nfs" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
