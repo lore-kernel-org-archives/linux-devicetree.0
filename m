@@ -1,222 +1,278 @@
 From: Anton Vorontsov <avorontsov@ru.mvista.com>
-Subject: [PATCH 3/3] of/gpio: Introduce of_put_gpio(), add ref counting for
- OF GPIO chips
-Date: Fri, 5 Feb 2010 23:50:45 +0300
-Message-ID: <20100205205045.GC4178@oksana.dev.rtsoft.ru>
+Subject: [PATCH 1/3] of platforms: Move common static initialization to
+	of_node_init()
+Date: Fri, 5 Feb 2010 23:50:41 +0300
+Message-ID: <20100205205041.GA4178@oksana.dev.rtsoft.ru>
 References: <20100205204949.GA2575@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
 In-Reply-To: <20100205204949.GA2575@oksana.dev.rtsoft.ru>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 To: Grant Likely <grant.likely@secretlab.ca>, David Brownell <dbrownell@users.sourceforge.net>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Miller <davem@davemloft.net>, Michal Simek <monstr@monstr.eu>, linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
+Cc: Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, microblaze-uclinux@itee.uq.edu.au, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-OF GPIO infrastructure is using dynamic GPIO bases, so it is possible
-that of_get_gpio()'s returned GPIO number will be no longer valid, or
-worse, it may point to an unexpected GPIO controller.
-
-This scenario is possible:
-
-driver A:               driver B:              driver C:
----------               ---------              ---------
-                        gpiochip_add()
-gpio = of_get_gpio()
-                        gpiochip_remove()
-                                               gpiochip_add()
-gpio_request(gpio);
-gpio_set_value(gpio);
-
-That is, driver A assumes that it is working with GPIO from driver B,
-but in practice it may disappear and driver C will take its GPIO base
-number, so it will provide the same GPIO numbers.
-
-With this patch that situation is no longer possible. Though drivers
-will need to learn to put GPIOs back, so that GPIO controllers could
-be removed.
+So far of_node_init() just initializes a kref, later we'll have to
+initialize other fields (for example node->data_lock).
 
 Signed-off-by: Anton Vorontsov <avorontsov@ru.mvista.com>
 ---
- drivers/of/gpio.c       |   82 ++++++++++++++++++++++++++++++++++++++++-------
- include/linux/of_gpio.h |    5 +++
- 2 files changed, 75 insertions(+), 12 deletions(-)
+ arch/microblaze/kernel/prom.c             |    4 ++--
+ arch/powerpc/kernel/prom.c                |    4 ++--
+ arch/powerpc/platforms/iseries/vio.c      |    5 +++--
+ arch/powerpc/platforms/pseries/dlpar.c    |    7 ++++---
+ arch/powerpc/platforms/pseries/reconfig.c |    7 ++++---
+ arch/powerpc/sysdev/msi_bitmap.c          |    4 ++--
+ arch/sparc/kernel/prom_common.c           |    6 +++---
+ drivers/of/base.c                         |   10 ++++++++++
+ include/linux/of.h                        |    2 ++
+ 9 files changed, 32 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
-index 9d8df77..e94c5c8 100644
---- a/drivers/of/gpio.c
-+++ b/drivers/of/gpio.c
-@@ -28,6 +28,8 @@
-  * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
-  * value on the error condition. If @flags is not NULL the function also fills
-  * in flags for the GPIO.
-+ *
-+ * Remeber to put the GPIO back using of_put_gpio() call.
-  */
- int of_get_gpio_flags(struct device_node *np, int index,
- 		      enum of_gpio_flags *flags)
-@@ -46,6 +48,8 @@ int of_get_gpio_flags(struct device_node *np, int index,
- 		goto err0;
+diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+index b817df1..0003453 100644
+--- a/arch/microblaze/kernel/prom.c
++++ b/arch/microblaze/kernel/prom.c
+@@ -30,6 +30,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/irq.h>
+ #include <linux/lmb.h>
++#include <linux/of.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/page.h>
+@@ -255,7 +256,7 @@ static unsigned long __init unflatten_dt_node(unsigned long mem,
+ 	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) + allocl,
+ 				__alignof__(struct device_node));
+ 	if (allnextpp) {
+-		memset(np, 0, sizeof(*np));
++		of_node_init(np);
+ 		np->full_name = ((char *)np) + sizeof(struct device_node);
+ 		if (new_format) {
+ 			char *p2 = np->full_name;
+@@ -287,7 +288,6 @@ static unsigned long __init unflatten_dt_node(unsigned long mem,
+ 				dad->next->sibling = np;
+ 			dad->next = np;
+ 		}
+-		kref_init(&np->kref);
  	}
+ 	while (1) {
+ 		u32 sz, noff;
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index 4ec3008..d8c2528 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -32,6 +32,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/irq.h>
+ #include <linux/lmb.h>
++#include <linux/of.h>
  
-+	spin_lock(&gc->data_lock);
-+
- 	of_gc = gc->data;
- 	if (!of_gc) {
- 		pr_debug("%s: gpio controller %s isn't registered\n",
-@@ -72,15 +76,62 @@ int of_get_gpio_flags(struct device_node *np, int index,
- 		goto err1;
+ #include <asm/prom.h>
+ #include <asm/rtas.h>
+@@ -290,7 +291,7 @@ static unsigned long __init unflatten_dt_node(unsigned long mem,
+ 	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) + allocl,
+ 				__alignof__(struct device_node));
+ 	if (allnextpp) {
+-		memset(np, 0, sizeof(*np));
++		of_node_init(np);
+ 		np->full_name = ((char*)np) + sizeof(struct device_node);
+ 		if (new_format) {
+ 			char *p = np->full_name;
+@@ -321,7 +322,6 @@ static unsigned long __init unflatten_dt_node(unsigned long mem,
+ 				dad->next->sibling = np;
+ 			dad->next = np;
+ 		}
+-		kref_init(&np->kref);
+ 	}
+ 	while(1) {
+ 		u32 sz, noff;
+diff --git a/arch/powerpc/platforms/iseries/vio.c b/arch/powerpc/platforms/iseries/vio.c
+index 2aa8b56..5f91a96 100644
+--- a/arch/powerpc/platforms/iseries/vio.c
++++ b/arch/powerpc/platforms/iseries/vio.c
+@@ -83,10 +83,12 @@ static void free_property(struct property *np)
+ static struct device_node *new_node(const char *path,
+ 		struct device_node *parent)
+ {
+-	struct device_node *np = kzalloc(sizeof(*np), GFP_KERNEL);
++	struct device_node *np = kmalloc(sizeof(*np), GFP_KERNEL);
  
- 	ret += of_gc->chip->base;
+ 	if (!np)
+ 		return NULL;
 +
-+	if (!try_module_get(of_gc->chip->owner)) {
-+		ret = -EINVAL;
-+		goto err1;
-+	}
-+
-+	of_gc->refcnt++;
- err1:
-+	spin_unlock(&gc->data_lock);
-+
- 	of_node_put(gc);
- err0:
- 	pr_debug("%s exited with status %d\n", __func__, ret);
-+
- 	return ret;
++	of_node_init(np);
+ 	np->full_name = kmalloc(strlen(path) + 1, GFP_KERNEL);
+ 	if (!np->full_name) {
+ 		kfree(np);
+@@ -94,7 +96,6 @@ static struct device_node *new_node(const char *path,
+ 	}
+ 	strcpy(np->full_name, path);
+ 	of_node_set_flag(np, OF_DYNAMIC);
+-	kref_init(&np->kref);
+ 	np->parent = of_node_get(parent);
+ 	return np;
  }
- EXPORT_SYMBOL(of_get_gpio_flags);
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index 37bce52..72043ad 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -11,11 +11,11 @@
+  */
  
- /**
-+ * of_put_gpio - Put a GPIO back to the OF subsystem
-+ * @np:		device node of the GPIO owner
-+ * @index:	index of the GPIO
+ #include <linux/kernel.h>
+-#include <linux/kref.h>
+ #include <linux/notifier.h>
+ #include <linux/proc_fs.h>
+ #include <linux/spinlock.h>
+ #include <linux/cpu.h>
++#include <linux/of.h>
+ #include "offline_states.h"
+ 
+ #include <asm/prom.h>
+@@ -69,10 +69,12 @@ static struct device_node *dlpar_parse_cc_node(struct cc_workarea *ccwa)
+ 	struct device_node *dn;
+ 	char *name;
+ 
+-	dn = kzalloc(sizeof(*dn), GFP_KERNEL);
++	dn = kmalloc(sizeof(*dn), GFP_KERNEL);
+ 	if (!dn)
+ 		return NULL;
+ 
++	of_node_init(dn);
++
+ 	/* The configure connector reported name does not contain a
+ 	 * preceeding '/', so we allocate a buffer large enough to
+ 	 * prepend this to the full_name.
+@@ -242,7 +244,6 @@ int dlpar_attach_node(struct device_node *dn)
+ 	int rc;
+ 
+ 	of_node_set_flag(dn, OF_DYNAMIC);
+-	kref_init(&dn->kref);
+ 	dn->parent = derive_parent(dn->full_name);
+ 	if (!dn->parent)
+ 		return -ENOMEM;
+diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
+index a2305d2..a0b65b7 100644
+--- a/arch/powerpc/platforms/pseries/reconfig.c
++++ b/arch/powerpc/platforms/pseries/reconfig.c
+@@ -12,9 +12,9 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/kref.h>
+ #include <linux/notifier.h>
+ #include <linux/proc_fs.h>
++#include <linux/of.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/machdep.h>
+@@ -113,10 +113,12 @@ static int pSeries_reconfig_add_node(const char *path, struct property *proplist
+ 	struct device_node *np;
+ 	int err = -ENOMEM;
+ 
+-	np = kzalloc(sizeof(*np), GFP_KERNEL);
++	np = kmalloc(sizeof(*np), GFP_KERNEL);
+ 	if (!np)
+ 		goto out_err;
+ 
++	of_node_init(np);
++
+ 	np->full_name = kmalloc(strlen(path) + 1, GFP_KERNEL);
+ 	if (!np->full_name)
+ 		goto out_err;
+@@ -125,7 +127,6 @@ static int pSeries_reconfig_add_node(const char *path, struct property *proplist
+ 
+ 	np->properties = proplist;
+ 	of_node_set_flag(np, OF_DYNAMIC);
+-	kref_init(&np->kref);
+ 
+ 	np->parent = derive_parent(path);
+ 	if (IS_ERR(np->parent)) {
+diff --git a/arch/powerpc/sysdev/msi_bitmap.c b/arch/powerpc/sysdev/msi_bitmap.c
+index 5a32cbe..0f259ff 100644
+--- a/arch/powerpc/sysdev/msi_bitmap.c
++++ b/arch/powerpc/sysdev/msi_bitmap.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/bitmap.h>
++#include <linux/of.h>
+ #include <asm/msi_bitmap.h>
+ 
+ int msi_bitmap_alloc_hwirqs(struct msi_bitmap *bmp, int num)
+@@ -199,8 +200,7 @@ void __init test_of_node(void)
+ 	DECLARE_BITMAP(expected, size);
+ 
+ 	/* There should really be a struct device_node allocator */
+-	memset(&of_node, 0, sizeof(of_node));
+-	kref_init(&of_node.kref);
++	of_node_init(&of_node);
+ 	of_node.full_name = node_name;
+ 
+ 	check(0 == msi_bitmap_alloc(&bmp, size, &of_node));
+diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom_common.c
+index d80a65d..dbfad05 100644
+--- a/arch/sparc/kernel/prom_common.c
++++ b/arch/sparc/kernel/prom_common.c
+@@ -229,11 +229,11 @@ static struct device_node * __init prom_create_node(phandle node,
+ 		return NULL;
+ 
+ 	dp = prom_early_alloc(sizeof(*dp));
+-	dp->unique_id = prom_unique_id++;
+-	dp->parent = parent;
+ 
+-	kref_init(&dp->kref);
++	of_node_init(dp);
+ 
++	dp->unique_id = prom_unique_id++;
++	dp->parent = parent;
+ 	dp->name = get_one_property(node, "name");
+ 	dp->type = get_one_property(node, "device_type");
+ 	dp->node = node;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index e6627b2..716d439 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -28,6 +28,16 @@ struct device_node *allnodes;
+  */
+ DEFINE_RWLOCK(devtree_lock);
+ 
++/**
++ * of_node_init - Initialize a device node
++ * @n:	Node to initialize
 + */
-+static inline void of_put_gpio(struct device_node *np, int index)
++void of_node_init(struct device_node *np)
 +{
-+	int ret;
-+	struct device_node *gc;
-+	struct of_gpio_chip *of_gc;
-+
-+	ret = of_parse_phandles_with_args(np, "gpios", "#gpio-cells", index,
-+					  &gc, NULL);
-+	if (ret) {
-+		pr_debug("%s: can't parse gpios property\n", __func__);
-+		return;
-+	}
-+
-+	spin_lock(&gc->data_lock);
-+
-+	of_gc = gc->data;
-+	if (!of_gc) {
-+		pr_debug("%s: gpio controller %s isn't registered\n",
-+			 np->full_name, gc->full_name);
-+		goto err;
-+	}
-+
-+	if (of_gc->refcnt)
-+		of_gc->refcnt--;
-+	else
-+		WARN_ON(1);
-+
-+	module_put(of_gc->chip->owner);
-+err:
-+	spin_unlock(&gc->data_lock);
++	memset(np, 0, sizeof(*np));
++	kref_init(&np->kref);
 +}
 +
-+/**
-  * of_gpio_count - Count GPIOs for a device
-  * @np:		device node to count GPIOs for
-  *
-@@ -254,11 +305,7 @@ static int of_gpiochip_register_simple(struct gpio_chip *chip,
- 				       struct device_node *np)
+ int of_n_addr_cells(struct device_node *np)
  {
- 	struct of_gpio_chip *of_gc;
--
--	if (np->data) {
--		WARN_ON(1);
--		return -EBUSY;
--	}
-+	int ret;
+ 	const int *ip;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index e7facd8..717d690 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -63,6 +63,8 @@ struct device_node {
+ #endif
+ };
  
- 	of_gc = kzalloc(sizeof(*of_gc), GFP_KERNEL);
- 	if (!of_gc)
-@@ -267,10 +314,12 @@ static int of_gpiochip_register_simple(struct gpio_chip *chip,
- 	of_gc->gpio_cells = 2;
- 	of_gc->xlate = of_gpio_simple_xlate;
- 	of_gc->chip = chip;
--	np->data = of_gc;
--	of_node_get(np);
- 
--	return 0;
-+	ret = of_node_set_data(np, of_gc);
-+	if (ret)
-+		kfree(of_gc);
++extern void of_node_init(struct device_node *np);
 +
-+	return ret;
- }
- EXPORT_SYMBOL(of_gpiochip_register_simple);
- 
-@@ -286,17 +335,26 @@ static int of_gpiochip_unregister(struct gpio_chip *chip,
- 				  struct device_node *np)
+ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
  {
- 	struct of_gpio_chip *of_gc = np->data;
-+	int ret = 0;
- 
- 	if (!of_gc || of_gc->chip != chip) {
- 		WARN_ON(1);
- 		return -EINVAL;
- 	}
- 
--	np->data = NULL;
--	kfree(of_gc);
--	of_node_put(np);
-+	spin_lock(&np->data_lock);
- 
--	return 0;
-+	if (of_gc->refcnt)
-+		ret = -EBUSY;
-+	else
-+		of_node_release_data_unlocked(np);
-+
-+	spin_unlock(&np->data_lock);
-+
-+	if (!ret)
-+		kfree(of_gc);
-+
-+	return ret;
- }
- 
- static int of_gpio_notify(struct notifier_block *nb, unsigned long msg,
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index c74cb37..aca7ab1 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -38,6 +38,7 @@ enum of_gpio_flags {
- struct of_gpio_chip {
- 	struct gpio_chip gc; /* legacy, don't use for a new code */
- 	struct gpio_chip *chip;
-+	unsigned int refcnt;
- 	int gpio_cells;
- 	int (*xlate)(struct of_gpio_chip *of_gc, struct device_node *np,
- 		     const void *gpio_spec, enum of_gpio_flags *flags);
-@@ -83,6 +84,8 @@ static inline int of_get_gpio_flags(struct device_node *np, int index,
- 	return -ENOSYS;
- }
- 
-+static inline void of_put_gpio(struct device_node *np, int index) {}
-+
- static inline unsigned int of_gpio_count(struct device_node *np)
- {
- 	return 0;
-@@ -97,6 +100,8 @@ static inline unsigned int of_gpio_count(struct device_node *np)
-  *
-  * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
-  * value on the error condition.
-+ *
-+ * Remeber to put the GPIO back using of_put_gpio() call.
-  */
- static inline int of_get_gpio(struct device_node *np, int index)
- {
+ 	return test_bit(flag, &n->_flags);
 -- 
 1.6.5.7
