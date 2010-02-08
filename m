@@ -1,130 +1,51 @@
-From: Anton Vorontsov <avorontsov@ru.mvista.com>
-Subject: [PATCH 2/3] of: Introduce safe accessors for node->data
-Date: Fri, 5 Feb 2010 23:50:43 +0300
-Message-ID: <20100205205043.GB4178@oksana.dev.rtsoft.ru>
-References: <20100205204949.GA2575@oksana.dev.rtsoft.ru>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Modification of lexer and parser, improving dtc
+	portability.
+Date: Mon, 8 Feb 2010 19:13:33 +1100
+Message-ID: <20100208081333.GA19789@yookeroo>
+References: <1264782711-52086-1-git-send-email-zbr@semihalf.com>
+	<20100201044601.GA8095@yookeroo> <4B6A9683.300@semihalf.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20100205204949.GA2575@oksana.dev.rtsoft.ru>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>, David Brownell <dbrownell@users.sourceforge.net>
-Cc: Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, microblaze-uclinux@itee.uq.edu.au, David Miller <davem@davemloft.net>
+In-Reply-To: <4B6A9683.300-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Lukasz Wojcik <zbr-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Cc: Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Platform code use node->data to store some private information
-associated with a node.
+On Thu, Feb 04, 2010 at 10:42:27AM +0100, Lukasz Wojcik wrote:
+> On 01.02.2010 05:46, David Gibson wrote:
+> >On Fri, Jan 29, 2010 at 05:31:51PM +0100, Lukasz Wojcik wrote:
+> >>This mod allows successful build of dtc using both bison/flex and
+> >>yacc/lex.
+> >Hrm.  This will enable dtc to build with both bison and yacc, however,
+> >it will sacrifice the (much) more useful error messages that
+> >%locations gives us on bison.  So I'm not very happy to do this
+> >unconditionally.
 
-Previously there was no need for any locks and accessors since we were
-initializing the data mostly at boot time and never modified it later.
+> Would you be so kind, and possibly point me out where exactly the
+> differences between error messages before and after applying this
+> patch lies ? I did some
+> testing around dtc being compiled using:
 
-Though, nowadays OF GPIO infrastructure supports GPIO chips detaching,
-so to handle this correctly we have to introduce locking for the
-node->data field.
+Ah, sorry, I was mistaken.  I'd forgotten that we were using our own
+overridden version of yyerror() which will generate errors including
+location information, even with %locations.  I withdraw my objections
+to the patch.
 
-Signed-off-by: Anton Vorontsov <avorontsov@ru.mvista.com>
----
- drivers/of/base.c  |   45 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h |    5 +++++
- 2 files changed, 50 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 716d439..41ed6ba 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -36,8 +36,53 @@ void of_node_init(struct device_node *np)
- {
- 	memset(np, 0, sizeof(*np));
- 	kref_init(&np->kref);
-+	spin_lock_init(&np->data_lock);
- }
- 
-+/**
-+ *	of_node_set_data - Try to set node->data
-+ *	@node:	Node
-+ *	@data:	Data
-+ *
-+ *	This function tries to safely set node->data. Returns 0 on success,
-+ *	-EBUSY if node->data was already set.
-+ */
-+int of_node_set_data(struct device_node *np, void *data)
-+{
-+	int ret = 0;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&np->data_lock, flags);
-+	if (np->data)
-+		ret = -EBUSY;
-+	else
-+		np->data = data;
-+	spin_unlock_irqrestore(&np->data_lock, flags);
-+
-+	if (!ret)
-+		of_node_get(np);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_node_set_data);
-+
-+/**
-+ *	of_node_release_data_unlocked - Release node->data
-+ *	@node:	Node
-+ *
-+ *	This function releases node->data, so that others could set it.
-+ *
-+ *	This function doesn't grab any locks, so that a caller can grab the
-+ *	lock itself, atomically read the data and decide if it wants to
-+ *	release it.
-+ */
-+void of_node_release_data_unlocked(struct device_node *np)
-+{
-+	np->data = NULL;
-+	of_node_put(np);
-+}
-+EXPORT_SYMBOL(of_node_release_data_unlocked);
-+
- int of_n_addr_cells(struct device_node *np)
- {
- 	const int *ip;
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 717d690..c573ee2 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -18,6 +18,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/kref.h>
-+#include <linux/spinlock.h>
- #include <linux/mod_devicetable.h>
- 
- typedef u32 phandle;
-@@ -56,6 +57,7 @@ struct device_node {
- 	struct	kref kref;
- 	unsigned long _flags;
- 	void	*data;
-+	spinlock_t data_lock;
- #if defined(CONFIG_SPARC)
- 	char	*path_component_name;
- 	unsigned int unique_id;
-@@ -65,6 +67,9 @@ struct device_node {
- 
- extern void of_node_init(struct device_node *np);
- 
-+extern int of_node_set_data(struct device_node *np, void *data);
-+extern void of_node_release_data_unlocked(struct device_node *np);
-+
- static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
- {
- 	return test_bit(flag, &n->_flags);
 -- 
-1.6.5.7
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
