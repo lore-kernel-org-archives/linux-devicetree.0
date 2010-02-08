@@ -1,186 +1,119 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: phy address in the device tree, vs auto probing
-Date: Wed, 10 Feb 2010 12:20:14 -0700
-Message-ID: <fa686aa41002101120v56ef5e7cm64e5505cc7bedc1d@mail.gmail.com>
-References: <4dfe033d-c308-45e0-9c7e-9fc60c6cad8f@SG2EHSMHS013.ehs.local>
-	<fa686aa41002100843o7a1d4160q8fb01768ad48dcf4@mail.gmail.com>
-	<7d35ae9a-9ac0-46e6-8817-15315e0dcc07@SG2EHSMHS004.ehs.local>
-	<fa686aa41002101014s43682e3cra55854b82a40bb5f@mail.gmail.com>
-	<AE7D03BA-0763-42F3-A27B-A6214CE7249E@freescale.com>
+From: Wendy Liang <wendy.liang-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Subject: How to get partition table from a device tree for a SPI FLASH driver?
+Date: Mon, 8 Feb 2010 16:51:07 +1000
+Message-ID: <63596c681002072251s7ca0bae0q9f60d32e4c591969@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <AE7D03BA-0763-42F3-A27B-A6214CE7249E@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fleming Andy-AFLEMING <afleming@freescale.com>
-Cc: John Linn <John.Linn@xilinx.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, netdev <netdev@vger.kernel.org>, Scott Wood <scottwood@freescale.com>
+Content-Type: multipart/mixed; boundary="===============0260156136707414318=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 10, 2010 at 11:40 AM, Fleming Andy-AFLEMING
-<afleming@freescale.com> wrote:
->
->
-> On Feb 10, 2010, at 12:15, "Grant Likely" <grant.likely@secretlab.ca>=
- wrote:
->
->> On Wed, Feb 10, 2010 at 9:52 AM, John Linn <John.Linn@xilinx.com> wr=
-ote:
->>>>
->>>> -----Original Message-----
->>>> From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Behalf=
- Of
->>>> Grant Likely
->>>> Sent: Wednesday, February 10, 2010 9:44 AM
->>>> To: John Linn; devicetree-discuss; netdev
->>>> Subject: Re: phy address in the device tree, vs auto probing
->>>>
->>>> (cc'ing devicetree-discuss and netdev mailing lists)
->>>>
->>>> On Tue, Feb 9, 2010 at 4:23 PM, John Linn <John.Linn@xilinx.com> w=
-rote:
->>>>>
->>>>> Hi Grant,
->>>>>
->>>>> I notice that the OF driver for the mdio bus is not doing auto pr=
-obing.
->>>>>
->>>>> As we start putting in the phy layer in the emac drivers, the dev=
-ice
->>>>> trees tend to have the phy address in them, but we're not sure we
->>>>> really
->>>>> like that.
->>>>>
->>>>> We really think that being able to let the kernel find the phy ad=
-dress
->>>>> is a big benefit, otherwise this is one other piece of info the u=
-ser
->>>>> has
->>>>> to know and get right.
->>>>>
->>>>> Am I missing something here?
->>>>
->>>> No, you're not really missing something, but there is an inherent
->>>> complexity in what you're wanting to do. =A0Like i2c, MDIO is one =
-of
->>>> those busses that is hard to probe reliable. =A0Some PHYs respond =
-on
->>>> more than one address, and there is no way to determine which MAC =
-a
->>>> PHY is wired up to. =A0Many PHYs can live on a single MDIO bus. =A0=
-MACs
->>>> with their own MDIO busses may still get wired to a PHY on a diffe=
-rent
->>>> bus.
->>>>
->>>> In the simple case where there is a one:one:one relationship betwe=
-en
->>>> MAC, MDIO bus and PHY, then it should be okay to probe the PHY,
->>>> correct? =A0The question then must be asked; how does the kernel
->>>> determine that it can use the simple case? =A0Nobody has yet defin=
-ed a
->>>> way to describe that in the device tree; mostly because nobody has
->>>> needed to yet.
->>>>
->>>> So, it is possible to do what you want, but you need a way to
->>>> *explicitly* ask for that behaviour. =A0ie, some way to indicate i=
-n a
->>>> MAC node which MDIO bus the phy is on, and that the phy needs to b=
-e
->>>> probed for. =A0I think this should only be an option when the MDIO=
- bus
->>>> has only one PHY. =A0Come up with a proposal and post it to the
->>>> devicetree-discuss mailing list.
->>>
->>> Here's a couple ideas. See what everyone thinks as I'm not stuck on
->>> either.
->>>
->>> Thanks,
->>> John
->>>
->>> 1. What if we just don't specific a phy address with a reg property=
- which
->>> would specify to auto probe it and find the phy as illustrated belo=
-w?
->>>
->>>
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 Ethernet_MAC: ethernet@81000000 {
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy-handle =3D <&phy0>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mdio {
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #addres=
-s-cells =3D <1>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-c=
-ells =3D <0>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy0: p=
-hy@7 {
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 } ;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 } ;
->>>
->>> 2. Or a special value (-1 or something not 0 - 31) in the phy addre=
-ss
->>> that specifies to auto probe as illustrated below.
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy0: p=
-hy@7 {
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 reg =3D <-1>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 } ;
->>
->> I don't like abusing the reg property in this way. =A0I wonder if a =
-new
->> empty property would be a better way to indicate this. =A0Maybe
->> "phy-probe-address;"? =A0It would also be important to specify in th=
-e
->> binding that only one phy node is allowed when phy-probe-address is
->> used.
->
-> I don't think it's necessary that only one phy node is there. =A0I do=
-n't think
-> the of mdio layer should set policy, here. =A0Some drivers hard code =
-their
-> addresses. =A0Some drivers assume (foolishly, I think) that the PHYs =
-are in
-> order. =A0Many assume there's only one PHY. =A0I think the mdio drive=
-r should
-> set policy, so of_mdio should just allow for PHYs to be probed. =A0I'=
-m
-> actually not sure that requires any changes. =A0Quite possibly this j=
-ust means
-> that of_mdio is not appropriate for such a driver. =A0 The standard P=
-HY code
-> supports this sort of thing.
+--===============0260156136707414318==
+Content-Type: multipart/alternative; boundary=0003255558f6d39e5a047f113916
 
-That still doesn't solve the problem of matching PHYs to MACs.
+--0003255558f6d39e5a047f113916
+Content-Type: text/plain; charset=ISO-8859-1
 
-Consider this example:  2 MACs, 2 PHYs.  mac_a--> phy_a and mac_b -->
-phy_b.  Both phys on the same mdio bus, described thus:
+Hello,
 
-               eth_a: ethernet@81000000 {
-                       #address-cells =3D <1>;
-                       #size-cells =3D <1>;
-                       phy-handle =3D <&phy_a>;
-                       mdio {
-                               #address-cells =3D <1>;
-                               #size-cells =3D <0>;
-                               phy_a: phy_a {
-                               } ;
-                               phy_b: phy_b {
-                               } ;
-                       } ;
-               } ;
-               eth_b: ethernet@82000000 {
-                       #address-cells =3D <1>;
-                       #size-cells =3D <1>;
-                       phy-handle =3D <&phy_b>;
-               } ;
+I am trying to get Flash partition table information from the device tree in
+a SPI FLASH driver in 2.6.31 kernel. I wonder whether this has been done
+already.
 
-In this example, the kernel knows it has two phys, and probing
-confirms this (say at phy addresses 3 and 7).  How does the kernel
-know which address phy_a responds to?
+If yes, could you please tell where I can refer to?
 
-g.
+If no, can I do the following changes for this purpose?:
 
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+   - Add a sub-node of the SPI FLASH into the SPI controller in the DTS file
+   - Add the FLASH partitions as sub-nodes into the SPI FLASH sub-node.
+
+E.g.:
+spi-controller@83400000 {
+......
+spi-flash@xxxxxxxx {
+compatible = ",m25p80";
+reg = <0x0>;
+spi-max-frequency = <80000000>;
+parition@0x00000000 {
+label = "boot";
+reg = <0x00000000 0x00040000>;
+}
+... ...
+};
+}
+
+   - In the probe function of a SPI FLASH driver, e.g., m25p_probe() in
+   m25p80.c, call of_mtd_parse_partitions().
+
+e.g.:
+if (mtd_has_partitions()) {
+struct mtd_partition    *parts = NULL;
+int                     nr_parts = 0;
+nr_parts = of_mtd_parse_partitions(&spi->dev, spi->dev.archdata.of_node,
+&parts)
+... ...
+}
+
+Thanks,
+Wendy
+
+--0003255558f6d39e5a047f113916
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hello,<br><br>I am trying to get Flash partition table information from the=
+ device tree in a SPI FLASH driver in 2.6.31 kernel. I wonder whether this =
+has been done already.<br><br>If yes, could you please tell where I can ref=
+er to?<br>
+
+<br>If no, can I do the following changes for this purpose?:<br>
+<ul><li>Add a sub-node of the SPI FLASH into the SPI controller in the DTS =
+file</li><li>Add the FLASH partitions as sub-nodes into the SPI FLASH sub-n=
+ode.</li></ul>E.g.:<br>spi-controller@83400000 {<br>......<br><div style=3D=
+"margin-left: 40px;">
+
+
+spi-flash@xxxxxxxx {<br><div style=3D"margin-left: 40px;">compatible =3D &q=
+uot;,m25p80&quot;;<br>reg =3D &lt;0x0&gt;;<br>spi-max-frequency =3D &lt;800=
+00000&gt;;<br>parition@0x00000000 {<br><div style=3D"margin-left: 40px;">la=
+bel =3D &quot;boot&quot;;<br>
+
+
+reg =3D &lt;0x00000000 0x00040000&gt;;<br></div>}<br>... ...<br></div>};<br=
+></div>}<br><ul><li>In the probe function of a SPI FLASH driver, e.g., m25p=
+_probe() in m25p80.c, call of_mtd_parse_partitions().</li></ul>e.g.:<br>
+
+if (mtd_has_partitions()) {<br>
+<div style=3D"margin-left: 40px;">struct mtd_partition=A0=A0=A0 *parts =3D =
+NULL;<br>int=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nr=
+_parts =3D 0;<br></div><div style=3D"margin-left: 40px;">nr_parts =3D of_mt=
+d_parse_partitions(&amp;spi-&gt;dev, spi-&gt;dev.archdata.of_node, &amp;par=
+ts)<br>
+
+
+... ...<br></div>}<br><br>Thanks,<br>Wendy<br>
+
+--0003255558f6d39e5a047f113916--
+
+--===============0260156136707414318==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0260156136707414318==--
