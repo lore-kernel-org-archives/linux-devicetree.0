@@ -1,32 +1,58 @@
 From: Anton Vorontsov <avorontsov@ru.mvista.com>
-Subject: Re: [PATCH RFC 0/3] Implement refcounting for OF GPIO chips
-Date: Tue, 9 Feb 2010 22:06:00 +0300
-Message-ID: <20100209190600.GA26668@oksana.dev.rtsoft.ru>
+Subject: Re: [PATCH 2/3] of: Introduce safe accessors for node->data
+Date: Tue, 9 Feb 2010 22:10:53 +0300
+Message-ID: <20100209191053.GA16560@oksana.dev.rtsoft.ru>
 References: <20100205204949.GA2575@oksana.dev.rtsoft.ru>
- <4B712DA5.4000802@petalogix.com>
+ <20100205205043.GB4178@oksana.dev.rtsoft.ru>
+ <fa686aa41002090925q30f362d6x4d14894a72439125@mail.gmail.com>
 Reply-To: avorontsov@ru.mvista.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4B712DA5.4000802@petalogix.com>
+In-Reply-To: <fa686aa41002090925q30f362d6x4d14894a72439125@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@petalogix.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, David Brownell <dbrownell@users.sourceforge.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Miller <davem@davemloft.net>, Michal Simek <monstr@monstr.eu>, linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: David Brownell <dbrownell@users.sourceforge.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Miller <davem@davemloft.net>, Michal Simek <monstr@monstr.eu>, linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2010 at 10:40:53AM +0100, Michal Simek wrote:
-[...]
-> >The above situation is hard to trigger, but the issue is there
-> >nonetheless, and so needs fixing.
+On Tue, Feb 09, 2010 at 10:25:22AM -0700, Grant Likely wrote:
+> On Fri, Feb 5, 2010 at 1:50 PM, Anton Vorontsov
+> <avorontsov@ru.mvista.com> wrote:
+> > Platform code use node->data to store some private information
+> > associated with a node.
+> >
+> > Previously there was no need for any locks and accessors since we were
+> > initializing the data mostly at boot time and never modified it later.
+> >
+> > Though, nowadays OF GPIO infrastructure supports GPIO chips detaching,
+> > so to handle this correctly we have to introduce locking for the
+> > node->data field.
 > 
-> 
-> I tested xilinx gpio driver, heartbeat trigger and access through
-> sysfs and I haven't found any problem. There is only small part of
-> code for Microblaze and it is the same with PowerPC. If is Ben OK
-> with it, I am ok too.
+> I'm not convinced this is needed.  What's wrong with using the
+> whole-tree devtree_lock?
 
-Thanks for testing!
+Why are you concerned? It doesn't add much of any footprint.
+
+$ grep -c { -r arch/powerpc/boot/dts/ | cut -d: -f2 | sort -n | tail -n1
+84
+
+So far we have max 84 nodes, so it's a few hundreds of bytes for all
+the dev tree.
+
+Anyway, yes, we can use the devtree lock. Though, this will require a
+bit more modifications, and I'm not sure if it's a great idea in
+general (i.e. using the global lock in contrast to fine grained
+locking).
+
+The thing is that you can't use most of the of_ functions when you
+hold the devtree lock (IIRC, rwlock has the same restrictions as a
+spinlock, so you can't nest these locks).
+
+I can try to rework OF GPIO calls so that they won't require of_
+calls when they hold the lock, and let's see how it'll look like.
+
+Thanks!
 
 -- 
 Anton Vorontsov
