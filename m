@@ -1,130 +1,66 @@
-From: "Fleming Andy-AFLEMING" <afleming@freescale.com>
+From: "M. Warner Losh" <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
 Subject: Re: phy address in the device tree, vs auto probing
-Date: Wed, 10 Feb 2010 12:40:57 -0600
-Message-ID: <AE7D03BA-0763-42F3-A27B-A6214CE7249E@freescale.com>
-References: <4dfe033d-c308-45e0-9c7e-9fc60c6cad8f@SG2EHSMHS013.ehs.local>  <fa686aa41002100843o7a1d4160q8fb01768ad48dcf4@mail.gmail.com>  <7d35ae9a-9ac0-46e6-8817-15315e0dcc07@SG2EHSMHS004.ehs.local> <fa686aa41002101014s43682e3cra55854b82a40bb5f@mail.gmail.com>
-Mime-Version: 1.0 (iPhone Mail 7E18)
-Content-Type: text/plain;
-	format=flowed;
-	delsp=yes;
-	charset="us-ascii"
+Date: Wed, 10 Feb 2010 11:37:20 -0700 (MST)
+Message-ID: <20100210.113720.1026572228166328165.imp@bsdimp.com>
+References: <7d35ae9a-9ac0-46e6-8817-15315e0dcc07@SG2EHSMHS004.ehs.local>
+	<fa686aa41002101014s43682e3cra55854b82a40bb5f@mail.gmail.com>
+	<4B72FAB2.5000804@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <fa686aa41002101014s43682e3cra55854b82a40bb5f@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: John Linn <John.Linn@xilinx.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, netdev <netdev@vger.kernel.org>, Scott Wood <scottwood@freescale.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4B72FAB2.5000804-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+In message: <4B72FAB2.5000804-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+            Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+: Grant Likely wrote:
+: >> 1. What if we just don't specific a phy address with a reg property
+: >> which would specify to auto probe it and find the phy as illustrated
+: >> below?
+: >>
+: >>
+: >>                Ethernet_MAC: ethernet@81000000 {
+: >>                        #address-cells = <1>;
+: >>                        #size-cells = <1>;
+: >>                        phy-handle = <&phy0>;
+: >>                        mdio {
+: >>                                #address-cells = <1>;
+: >>                                #size-cells = <0>;
+: >>                                phy0: phy@7 {
+: >>                                } ;
+: >>                        } ;
+: >>
+: >> 2. Or a special value (-1 or something not 0 - 31) in the phy address
+: >> that specifies to auto probe as illustrated below.
+: >>                                phy0: phy@7 {
+: >>                                        reg = <-1>;
+: >>                                } ;
+: > I don't like abusing the reg property in this way.  I wonder if a new
+: > empty property would be a better way to indicate this.  Maybe
+: > "phy-probe-address;"?  It would also be important to specify in the
+: > binding that only one phy node is allowed when phy-probe-address is
+: > used.
+: > Also, without a known reg the 'phy@7' name is inaccurate.  Drop the
+: > @7.
+: > Scott, Andy: any thoughts?
+: 
+: I'm not fond of the -1.  I'd prefer the explicit phy-probe-address
+: property, though I don't mind too much using the absence of reg.
 
+There are times that you'd want a list of PHY addresses to use.  This
+suggests a bitmask, but I don't know if they are common enough to
+warrant the extra burden on the usual case...
 
-On Feb 10, 2010, at 12:15, "Grant Likely" <grant.likely@secretlab.ca>  
-wrote:
-
-> On Wed, Feb 10, 2010 at 9:52 AM, John Linn <John.Linn@xilinx.com>  
-> wrote:
->>> -----Original Message-----
->>> From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Behalf  
->>> Of Grant Likely
->>> Sent: Wednesday, February 10, 2010 9:44 AM
->>> To: John Linn; devicetree-discuss; netdev
->>> Subject: Re: phy address in the device tree, vs auto probing
->>>
->>> (cc'ing devicetree-discuss and netdev mailing lists)
->>>
->>> On Tue, Feb 9, 2010 at 4:23 PM, John Linn <John.Linn@xilinx.com>  
->>> wrote:
->>>> Hi Grant,
->>>>
->>>> I notice that the OF driver for the mdio bus is not doing auto  
->>>> probing.
->>>>
->>>> As we start putting in the phy layer in the emac drivers, the  
->>>> device
->>>> trees tend to have the phy address in them, but we're not sure we  
->>>> really
->>>> like that.
->>>>
->>>> We really think that being able to let the kernel find the phy  
->>>> address
->>>> is a big benefit, otherwise this is one other piece of info the  
->>>> user has
->>>> to know and get right.
->>>>
->>>> Am I missing something here?
->>>
->>> No, you're not really missing something, but there is an inherent
->>> complexity in what you're wanting to do.  Like i2c, MDIO is one of
->>> those busses that is hard to probe reliable.  Some PHYs respond on
->>> more than one address, and there is no way to determine which MAC a
->>> PHY is wired up to.  Many PHYs can live on a single MDIO bus.  MACs
->>> with their own MDIO busses may still get wired to a PHY on a  
->>> different
->>> bus.
->>>
->>> In the simple case where there is a one:one:one relationship between
->>> MAC, MDIO bus and PHY, then it should be okay to probe the PHY,
->>> correct?  The question then must be asked; how does the kernel
->>> determine that it can use the simple case?  Nobody has yet defined a
->>> way to describe that in the device tree; mostly because nobody has
->>> needed to yet.
->>>
->>> So, it is possible to do what you want, but you need a way to
->>> *explicitly* ask for that behaviour.  ie, some way to indicate in a
->>> MAC node which MDIO bus the phy is on, and that the phy needs to be
->>> probed for.  I think this should only be an option when the MDIO bus
->>> has only one PHY.  Come up with a proposal and post it to the
->>> devicetree-discuss mailing list.
->>
->> Here's a couple ideas. See what everyone thinks as I'm not stuck on  
->> either.
->>
->> Thanks,
->> John
->>
->> 1. What if we just don't specific a phy address with a reg property  
->> which would specify to auto probe it and find the phy as  
->> illustrated below?
->>
->>
->>                Ethernet_MAC: ethernet@81000000 {
->>                        #address-cells = <1>;
->>                        #size-cells = <1>;
->>                        phy-handle = <&phy0>;
->>                        mdio {
->>                                #address-cells = <1>;
->>                                #size-cells = <0>;
->>                                phy0: phy@7 {
->>                                } ;
->>                        } ;
->>
->> 2. Or a special value (-1 or something not 0 - 31) in the phy  
->> address that specifies to auto probe as illustrated below.
->>                                phy0: phy@7 {
->>                                        reg = <-1>;
->>                                } ;
->
-> I don't like abusing the reg property in this way.  I wonder if a new
-> empty property would be a better way to indicate this.  Maybe
-> "phy-probe-address;"?  It would also be important to specify in the
-> binding that only one phy node is allowed when phy-probe-address is
-> used.
-
-I don't think it's necessary that only one phy node is there.  I don't  
-think the of mdio layer should set policy, here.  Some drivers hard  
-code their addresses.  Some drivers assume (foolishly, I think) that  
-the PHYs are in order.  Many assume there's only one PHY.  I think the  
-mdio driver should set policy, so of_mdio should just allow for PHYs  
-to be probed.  I'm actually not sure that requires any changes.  Quite  
-possibly this just means that of_mdio is not appropriate for such a  
-driver.   The standard PHY code supports this sort of thing.
-
-I don't think this can reasonably be done with of_phy_connect(),  
-because not every driver will want the same behavior.
-
-If you can't have your bootloader modify the tree to have addresses  
-(and then it can do the probe however it wants, in a board-specific  
-way), then you could add some board code or mdio driver code which  
-modifies the device tree to have addresses.
-
-Andy
+Warner
