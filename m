@@ -1,66 +1,70 @@
-From: "M. Warner Losh" <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: phy address in the device tree, vs auto probing
-Date: Wed, 10 Feb 2010 11:37:20 -0700 (MST)
-Message-ID: <20100210.113720.1026572228166328165.imp@bsdimp.com>
+Date: Wed, 10 Feb 2010 12:12:14 -0700
+Message-ID: <fa686aa41002101112o66a74f60jc65fdffb48fd7213@mail.gmail.com>
 References: <7d35ae9a-9ac0-46e6-8817-15315e0dcc07@SG2EHSMHS004.ehs.local>
 	<fa686aa41002101014s43682e3cra55854b82a40bb5f@mail.gmail.com>
-	<4B72FAB2.5000804@freescale.com>
+	<4B72FAB2.5000804@freescale.com> <20100210.113720.1026572228166328165.imp@bsdimp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4B72FAB2.5000804-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20100210.113720.1026572228166328165.imp@bsdimp.com>
+Sender: netdev-owner@vger.kernel.org
+To: "M. Warner Losh" <imp@bsdimp.com>
+Cc: scottwood@freescale.com, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, afleming@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-In message: <4B72FAB2.5000804-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-            Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-: Grant Likely wrote:
-: >> 1. What if we just don't specific a phy address with a reg property
-: >> which would specify to auto probe it and find the phy as illustrated
-: >> below?
-: >>
-: >>
-: >>                Ethernet_MAC: ethernet@81000000 {
-: >>                        #address-cells = <1>;
-: >>                        #size-cells = <1>;
-: >>                        phy-handle = <&phy0>;
-: >>                        mdio {
-: >>                                #address-cells = <1>;
-: >>                                #size-cells = <0>;
-: >>                                phy0: phy@7 {
-: >>                                } ;
-: >>                        } ;
-: >>
-: >> 2. Or a special value (-1 or something not 0 - 31) in the phy address
-: >> that specifies to auto probe as illustrated below.
-: >>                                phy0: phy@7 {
-: >>                                        reg = <-1>;
-: >>                                } ;
-: > I don't like abusing the reg property in this way.  I wonder if a new
-: > empty property would be a better way to indicate this.  Maybe
-: > "phy-probe-address;"?  It would also be important to specify in the
-: > binding that only one phy node is allowed when phy-probe-address is
-: > used.
-: > Also, without a known reg the 'phy@7' name is inaccurate.  Drop the
-: > @7.
-: > Scott, Andy: any thoughts?
-: 
-: I'm not fond of the -1.  I'd prefer the explicit phy-probe-address
-: property, though I don't mind too much using the absence of reg.
+On Wed, Feb 10, 2010 at 11:37 AM, M. Warner Losh <imp@bsdimp.com> wrote=
+:
+> In message: <4B72FAB2.5000804@freescale.com>
+> =A0 =A0 =A0 =A0 =A0 =A0Scott Wood <scottwood@freescale.com> writes:
+> : Grant Likely wrote:
+> : >> 2. Or a special value (-1 or something not 0 - 31) in the phy ad=
+dress
+> : >> that specifies to auto probe as illustrated below.
+> : >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p=
+hy0: phy@7 {
+> : >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0reg =3D <-1>;
+> : >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}=
+ ;
+> : > I don't like abusing the reg property in this way. =A0I wonder if=
+ a new
+> : > empty property would be a better way to indicate this. =A0Maybe
+> : > "phy-probe-address;"? =A0It would also be important to specify in=
+ the
+> : > binding that only one phy node is allowed when phy-probe-address =
+is
+> : > used.
+> : > Also, without a known reg the 'phy@7' name is inaccurate. =A0Drop=
+ the
+> : > @7.
+> : > Scott, Andy: any thoughts?
+> :
+> : I'm not fond of the -1. =A0I'd prefer the explicit phy-probe-addres=
+s
+> : property, though I don't mind too much using the absence of reg.
+>
+> There are times that you'd want a list of PHY addresses to use. =A0Th=
+is
+> suggests a bitmask, but I don't know if they are common enough to
+> warrant the extra burden on the usual case...
 
-There are times that you'd want a list of PHY addresses to use.  This
-suggests a bitmask, but I don't know if they are common enough to
-warrant the extra burden on the usual case...
+Are you talking a single MAC attached to multiple PHYs?  If so, then
+the current device tree binding doesn't support this, but it would be
+easy to extend the current binding by making the phy-handle property a
+list of phy nodes phandes.
 
-Warner
+If you're talking about a phy being able to appear at a number of
+addresses, then perhaps this could be handled by simple listing the
+full range of base addresses in the phy's reg property.  So for a phy
+that could appear at address 2, 3, 6, or 7:
+
+reg =3D <2 3 6 7>;
+
+g.
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
