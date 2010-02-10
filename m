@@ -1,110 +1,216 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] powerpc: doc/dts-bindings: update doc of FSL I2C
-	bindings
-Date: Tue, 9 Feb 2010 15:15:02 -0700
-Message-ID: <fa686aa41002091415i1b1b722epe44a6ba52a7c066f@mail.gmail.com>
-References: <1264685141-26391-1-git-send-email-wg@grandegger.com>
-	<1264685141-26391-2-git-send-email-wg@grandegger.com> <1264685141-26391-3-git-send-email-wg@grandegger.com>
-	<1264685141-26391-4-git-send-email-wg@grandegger.com> <fa686aa41002090950w2c3cd008k47784089dd3417d7@mail.gmail.com>
-	<4B71AFFC.3010301@grandegger.com> <4B71B618.6020807@grandegger.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: [PATCH v6 1/4] i2c-mpc: use __devinit[data] for initialization functions and data
+Date: Wed, 10 Feb 2010 11:05:27 +0100
+Message-ID: <1265796330-15976-2-git-send-email-wg@grandegger.com>
+References: <1265796330-15976-1-git-send-email-wg@grandegger.com>
 Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4B71B618.6020807-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+In-Reply-To: <1265796330-15976-1-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+To: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 9, 2010 at 12:23 PM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org=
-> wrote:
-> Wolfgang Grandegger wrote:
->> Hi Grant,
->>
->> Grant Likely wrote:
->>> On Thu, Jan 28, 2010 at 6:25 AM, Wolfgang Grandegger <wg@grandegger=
-=2Ecom> wrote:
->>>> From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
->>>>
->>>> This patch adds the MPC5121 to the list of supported devices,
->>>> enhances the doc of the "clock-frequency" property and removes
->>>> the obsolete "cell-index" property from the example nodes.
->>>> Furthermore and example for the MPC5121 has been added.
->>>>
->>>> Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
->>> Thanks Wolfgang. =A0Comments below.
->>>
->>>> ---
->>>> =A0Documentation/powerpc/dts-bindings/fsl/i2c.txt | =A0 30 +++++++=
-++++++++++++----
->>>> =A01 files changed, 24 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/Documentation/powerpc/dts-bindings/fsl/i2c.txt b/Docu=
-mentation/powerpc/dts-bindings/fsl/i2c.txt
->>>> index b6d2e21..2f62dae 100644
->>>> --- a/Documentation/powerpc/dts-bindings/fsl/i2c.txt
->>>> +++ b/Documentation/powerpc/dts-bindings/fsl/i2c.txt
->>>> @@ -9,8 +9,9 @@ Recommended properties :
->>>>
->>>> =A0- compatible : compatibility list with 2 entries, the first sho=
-uld
->>>> =A0 =A0be "fsl,CHIP-i2c" where CHIP is the name of a compatible pr=
-ocessor,
->>>> - =A0 e.g. mpc8313, mpc8543, mpc8544, mpc5200 or mpc5200b. The sec=
-ond one
->>>> - =A0 should be "fsl-i2c".
->>>> + =A0 e.g. mpc8313, mpc8543, mpc8544, mpc5121, mpc5200 or mpc5200b=
-=2E The
->>>> + =A0 second one should be "fsl-i2c". For the mpc5121, an addition=
-al node
->>>> + =A0 "fsl,mpc5121-i2c-ctrl" is required as shown in the example b=
-elow.
->>> While you're editing this line; drop the requirement for the second
->>> value to be 'fsl-i2c'. =A0We don't use it anymore, and only preserv=
-e it
->>> for backwards compatibility with old trees.
->>
->> OK.
->>
->>>> =A0- interrupts : <a b> where a is the interrupt number and b is a
->>>> =A0 =A0field that represents an encoding of the sense and level
->>>> =A0 =A0information for the interrupt. =A0This should be encoded ba=
-sed on
->>>> @@ -20,29 +21,46 @@ Recommended properties :
->>>> =A0 =A0services interrupts for this device.
->>>> =A0- fsl,preserve-clocking : boolean; if defined, the clock settin=
-gs
->>>> =A0 =A0from the bootloader are preserved (not touched).
->>>> - - clock-frequency : desired I2C bus clock frequency in Hz.
->>>> + - clock-frequency : desired I2C bus clock frequency in Hz. =A0If=
- this
->>>> + =A0 property and "fsl,preserve-clocking" is not defined, a safe =
-fixed
->>>> + =A0 clock divider value is used (resulting in a small clock freq=
-uency).
->>> Nah, leave this as is. =A0Don't make it sound like omitting both
->>> properties is a valid option. =A0The driver may (and should!) handl=
-e the
->>> situation gracefully, but that fact does not need to be documented.
->>
->> The safe value is not a good choice, indeed. Then it will also chang=
-e
->> MPC_I2C_CLOCK_SAFE to MPC_I2C_CLOCK_LEGACY in i2c-mpc.c.
->>
->> I will also fix the other issues you commented on.
->
-> And I will also remove the "device_type" line from:
->
-> =A0-------------
-> =A0Required properties :
->
-> =A0- device_type : Should be "i2c"
-> =A0- reg : Offset and length of the register set for the device
+From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 
-Yes, please.
+"__devinit[data]" has not yet been used for all initialization functions
+and data. To avoid truncating lines, the struct "mpc_i2c_match_data" has
+been renamed to "mpc_i2c_data", which is even the better name.
 
-Hmmm.  compatible should also be in the 'required properties' section.
+Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+Tested-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/i2c/busses/i2c-mpc.c |   99 +++++++++++++++++++----------------------
+ 1 files changed, 46 insertions(+), 53 deletions(-)
 
-Thanks,
-g.
+diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
+index f627001..ba4e7af 100644
+--- a/drivers/i2c/busses/i2c-mpc.c
++++ b/drivers/i2c/busses/i2c-mpc.c
+@@ -66,7 +66,7 @@ struct mpc_i2c_divider {
+ 	u16 fdr;	/* including dfsrr */
+ };
+ 
+-struct mpc_i2c_match_data {
++struct mpc_i2c_data {
+ 	void (*setclock)(struct device_node *node,
+ 			 struct mpc_i2c *i2c,
+ 			 u32 clock, u32 prescaler);
+@@ -165,7 +165,7 @@ static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
+ }
+ 
+ #ifdef CONFIG_PPC_MPC52xx
+-static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
++static struct mpc_i2c_divider mpc_i2c_dividers_52xx[]  __devinitdata = {
+ 	{20, 0x20}, {22, 0x21}, {24, 0x22}, {26, 0x23},
+ 	{28, 0x24}, {30, 0x01}, {32, 0x25}, {34, 0x02},
+ 	{36, 0x26}, {40, 0x27}, {44, 0x04}, {48, 0x28},
+@@ -186,7 +186,8 @@ static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
+ 	{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
+ };
+ 
+-int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescaler)
++static int __devinit mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock,
++					  int prescaler)
+ {
+ 	const struct mpc_i2c_divider *div = NULL;
+ 	unsigned int pvr = mfspr(SPRN_PVR);
+@@ -215,9 +216,9 @@ int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescaler)
+ 	return div ? (int)div->fdr : -EINVAL;
+ }
+ 
+-static void mpc_i2c_setclock_52xx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ 	int ret, fdr;
+ 
+@@ -230,15 +231,15 @@ static void mpc_i2c_setclock_52xx(struct device_node *node,
+ 		dev_info(i2c->dev, "clock %d Hz (fdr=%d)\n", clock, fdr);
+ }
+ #else /* !CONFIG_PPC_MPC52xx */
+-static void mpc_i2c_setclock_52xx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ }
+ #endif /* CONFIG_PPC_MPC52xx*/
+ 
+ #ifdef CONFIG_FSL_SOC
+-static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
++static struct mpc_i2c_divider mpc_i2c_dividers_8xxx[]  __devinitdata = {
+ 	{160, 0x0120}, {192, 0x0121}, {224, 0x0122}, {256, 0x0123},
+ 	{288, 0x0100}, {320, 0x0101}, {352, 0x0601}, {384, 0x0102},
+ 	{416, 0x0602}, {448, 0x0126}, {480, 0x0103}, {512, 0x0127},
+@@ -258,7 +259,7 @@ static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
+ 	{49152, 0x011e}, {61440, 0x011f}
+ };
+ 
+-u32 mpc_i2c_get_sec_cfg_8xxx(void)
++static u32 __devinit mpc_i2c_get_sec_cfg_8xxx(void)
+ {
+ 	struct device_node *node = NULL;
+ 	u32 __iomem *reg;
+@@ -287,7 +288,8 @@ u32 mpc_i2c_get_sec_cfg_8xxx(void)
+ 	return val;
+ }
+ 
+-int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescaler)
++static int __devinit mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock,
++					  u32 prescaler)
+ {
+ 	const struct mpc_i2c_divider *div = NULL;
+ 	u32 divider;
+@@ -320,9 +322,9 @@ int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescaler)
+ 	return div ? (int)div->fdr : -EINVAL;
+ }
+ 
+-static void mpc_i2c_setclock_8xxx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ 	int ret, fdr;
+ 
+@@ -338,9 +340,9 @@ static void mpc_i2c_setclock_8xxx(struct device_node *node,
+ }
+ 
+ #else /* !CONFIG_FSL_SOC */
+-static void mpc_i2c_setclock_8xxx(struct device_node *node,
+-				  struct mpc_i2c *i2c,
+-				  u32 clock, u32 prescaler)
++static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
++					    struct mpc_i2c *i2c,
++					    u32 clock, u32 prescaler)
+ {
+ }
+ #endif /* CONFIG_FSL_SOC */
+@@ -529,8 +531,8 @@ static int __devinit fsl_i2c_probe(struct of_device *op,
+ 			clock = *prop;
+ 
+ 		if (match->data) {
+-			struct mpc_i2c_match_data *data =
+-				(struct mpc_i2c_match_data *)match->data;
++			struct mpc_i2c_data *data =
++				(struct mpc_i2c_data *)match->data;
+ 			data->setclock(op->node, i2c, clock, data->prescaler);
+ 		} else {
+ 			/* Backwards compatibility */
+@@ -582,44 +584,35 @@ static int __devexit fsl_i2c_remove(struct of_device *op)
+ 	return 0;
+ };
+ 
++static struct mpc_i2c_data mpc_i2c_data_52xx __devinitdata = {
++	.setup = mpc_i2c_setup_52xx,
++};
++
++static struct mpc_i2c_data mpc_i2c_data_8313 __devinitdata = {
++	.setup = mpc_i2c_setup_8xxx,
++};
++
++static struct mpc_i2c_data mpc_i2c_data_8543 __devinitdata = {
++	.setup = mpc_i2c_setup_8xxx,
++	.prescaler = 2,
++};
++
++static struct mpc_i2c_data mpc_i2c_data_8544 __devinitdata = {
++	.setup = mpc_i2c_setup_8xxx,
++	.prescaler = 3,
++};
++
+ static const struct of_device_id mpc_i2c_of_match[] = {
+-	{.compatible = "mpc5200-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_52xx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc5200b-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_52xx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc5200-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_52xx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc8313-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_8xxx,
+-		},
+-	},
+-	{.compatible = "fsl,mpc8543-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_8xxx,
+-			.prescaler = 2,
+-		},
+-	},
+-	{.compatible = "fsl,mpc8544-i2c",
+-	 .data = &(struct mpc_i2c_match_data) {
+-			.setclock = mpc_i2c_setclock_8xxx,
+-			.prescaler = 3,
+-		},
++	{.compatible = "mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
++	{.compatible = "fsl,mpc5200b-i2c", .data = &mpc_i2c_data_52xx, },
++	{.compatible = "fsl,mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
++	{.compatible = "fsl,mpc8313-i2c", .data = &mpc_i2c_data_8313, },
++	{.compatible = "fsl,mpc8543-i2c", .data = &mpc_i2c_data_8543, },
++	{.compatible = "fsl,mpc8544-i2c", .data = &mpc_i2c_data_8544, },
+ 	/* Backward compatibility */
+-	},
+ 	{.compatible = "fsl-i2c", },
+ 	{},
+ };
+-
+ MODULE_DEVICE_TABLE(of, mpc_i2c_of_match);
+ 
+ 
+-- 
+1.6.2.5
