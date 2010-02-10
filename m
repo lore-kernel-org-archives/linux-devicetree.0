@@ -1,14 +1,14 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: [PATCH v7 1/4] i2c-mpc: use __devinit[data] for initialization
-	functions and data
-Date: Wed, 10 Feb 2010 15:55:08 +0100
-Message-ID: <1265813711-16794-2-git-send-email-wg@grandegger.com>
-References: <1265813711-16794-1-git-send-email-wg@grandegger.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: phy address in the device tree, vs auto probing
+Date: Wed, 10 Feb 2010 09:43:42 -0700
+Message-ID: <fa686aa41002100843o7a1d4160q8fb01768ad48dcf4@mail.gmail.com>
+References: <Acqp3tpO+gBYUakZQ7SaeBzVIkh6WA==>
+	<4dfe033d-c308-45e0-9c7e-9fc60c6cad8f@SG2EHSMHS013.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1265813711-16794-1-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+In-Reply-To: <4dfe033d-c308-45e0-9c7e-9fc60c6cad8f-RaUQJvECHivT7m58JnLnSLjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,211 +18,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+To: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+(cc'ing devicetree-discuss and netdev mailing lists)
 
-"__devinit[data]" has not yet been used for all initialization functions
-and data. To avoid truncating lines, the struct "mpc_i2c_match_data" has
-been renamed to "mpc_i2c_data", which is even the better name.
+On Tue, Feb 9, 2010 at 4:23 PM, John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Grant,
+>
+> I notice that the OF driver for the mdio bus is not doing auto probing.
+>
+> As we start putting in the phy layer in the emac drivers, the device
+> trees tend to have the phy address in them, but we're not sure we really
+> like that.
+>
+> We really think that being able to let the kernel find the phy address
+> is a big benefit, otherwise this is one other piece of info the user has
+> to know and get right.
+>
+> Am I missing something here?
 
-Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
-Tested-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/i2c/busses/i2c-mpc.c |   99 +++++++++++++++++++----------------------
- 1 files changed, 46 insertions(+), 53 deletions(-)
+No, you're not really missing something, but there is an inherent
+complexity in what you're wanting to do.  Like i2c, MDIO is one of
+those busses that is hard to probe reliable.  Some PHYs respond on
+more than one address, and there is no way to determine which MAC a
+PHY is wired up to.  Many PHYs can live on a single MDIO bus.  MACs
+with their own MDIO busses may still get wired to a PHY on a different
+bus.
 
-diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
-index f627001..9f0e203 100644
---- a/drivers/i2c/busses/i2c-mpc.c
-+++ b/drivers/i2c/busses/i2c-mpc.c
-@@ -66,7 +66,7 @@ struct mpc_i2c_divider {
- 	u16 fdr;	/* including dfsrr */
- };
- 
--struct mpc_i2c_match_data {
-+struct mpc_i2c_data {
- 	void (*setclock)(struct device_node *node,
- 			 struct mpc_i2c *i2c,
- 			 u32 clock, u32 prescaler);
-@@ -165,7 +165,7 @@ static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
- }
- 
- #ifdef CONFIG_PPC_MPC52xx
--static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
-+static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] __devinitconst = {
- 	{20, 0x20}, {22, 0x21}, {24, 0x22}, {26, 0x23},
- 	{28, 0x24}, {30, 0x01}, {32, 0x25}, {34, 0x02},
- 	{36, 0x26}, {40, 0x27}, {44, 0x04}, {48, 0x28},
-@@ -186,7 +186,8 @@ static const struct mpc_i2c_divider mpc_i2c_dividers_52xx[] = {
- 	{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
- };
- 
--int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescaler)
-+static int __devinit mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock,
-+					  int prescaler)
- {
- 	const struct mpc_i2c_divider *div = NULL;
- 	unsigned int pvr = mfspr(SPRN_PVR);
-@@ -215,9 +216,9 @@ int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescaler)
- 	return div ? (int)div->fdr : -EINVAL;
- }
- 
--static void mpc_i2c_setclock_52xx(struct device_node *node,
--				  struct mpc_i2c *i2c,
--				  u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
-+					    struct mpc_i2c *i2c,
-+					    u32 clock, u32 prescaler)
- {
- 	int ret, fdr;
- 
-@@ -230,15 +231,15 @@ static void mpc_i2c_setclock_52xx(struct device_node *node,
- 		dev_info(i2c->dev, "clock %d Hz (fdr=%d)\n", clock, fdr);
- }
- #else /* !CONFIG_PPC_MPC52xx */
--static void mpc_i2c_setclock_52xx(struct device_node *node,
--				  struct mpc_i2c *i2c,
--				  u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
-+					    struct mpc_i2c *i2c,
-+					    u32 clock, u32 prescaler)
- {
- }
- #endif /* CONFIG_PPC_MPC52xx*/
- 
- #ifdef CONFIG_FSL_SOC
--static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
-+static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] __devinitconst = {
- 	{160, 0x0120}, {192, 0x0121}, {224, 0x0122}, {256, 0x0123},
- 	{288, 0x0100}, {320, 0x0101}, {352, 0x0601}, {384, 0x0102},
- 	{416, 0x0602}, {448, 0x0126}, {480, 0x0103}, {512, 0x0127},
-@@ -258,7 +259,7 @@ static const struct mpc_i2c_divider mpc_i2c_dividers_8xxx[] = {
- 	{49152, 0x011e}, {61440, 0x011f}
- };
- 
--u32 mpc_i2c_get_sec_cfg_8xxx(void)
-+static u32 __devinit mpc_i2c_get_sec_cfg_8xxx(void)
- {
- 	struct device_node *node = NULL;
- 	u32 __iomem *reg;
-@@ -287,7 +288,8 @@ u32 mpc_i2c_get_sec_cfg_8xxx(void)
- 	return val;
- }
- 
--int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescaler)
-+static int __devinit mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock,
-+					  u32 prescaler)
- {
- 	const struct mpc_i2c_divider *div = NULL;
- 	u32 divider;
-@@ -320,9 +322,9 @@ int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescaler)
- 	return div ? (int)div->fdr : -EINVAL;
- }
- 
--static void mpc_i2c_setclock_8xxx(struct device_node *node,
--				  struct mpc_i2c *i2c,
--				  u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
-+					    struct mpc_i2c *i2c,
-+					    u32 clock, u32 prescaler)
- {
- 	int ret, fdr;
- 
-@@ -338,9 +340,9 @@ static void mpc_i2c_setclock_8xxx(struct device_node *node,
- }
- 
- #else /* !CONFIG_FSL_SOC */
--static void mpc_i2c_setclock_8xxx(struct device_node *node,
--				  struct mpc_i2c *i2c,
--				  u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
-+					    struct mpc_i2c *i2c,
-+					    u32 clock, u32 prescaler)
- {
- }
- #endif /* CONFIG_FSL_SOC */
-@@ -529,8 +531,8 @@ static int __devinit fsl_i2c_probe(struct of_device *op,
- 			clock = *prop;
- 
- 		if (match->data) {
--			struct mpc_i2c_match_data *data =
--				(struct mpc_i2c_match_data *)match->data;
-+			struct mpc_i2c_data *data =
-+				(struct mpc_i2c_data *)match->data;
- 			data->setclock(op->node, i2c, clock, data->prescaler);
- 		} else {
- 			/* Backwards compatibility */
-@@ -582,44 +584,35 @@ static int __devexit fsl_i2c_remove(struct of_device *op)
- 	return 0;
- };
- 
-+static struct mpc_i2c_data mpc_i2c_data_52xx __devinitdata = {
-+	.setup = mpc_i2c_setup_52xx,
-+};
-+
-+static struct mpc_i2c_data mpc_i2c_data_8313 __devinitdata = {
-+	.setup = mpc_i2c_setup_8xxx,
-+};
-+
-+static struct mpc_i2c_data mpc_i2c_data_8543 __devinitdata = {
-+	.setup = mpc_i2c_setup_8xxx,
-+	.prescaler = 2,
-+};
-+
-+static struct mpc_i2c_data mpc_i2c_data_8544 __devinitdata = {
-+	.setup = mpc_i2c_setup_8xxx,
-+	.prescaler = 3,
-+};
-+
- static const struct of_device_id mpc_i2c_of_match[] = {
--	{.compatible = "mpc5200-i2c",
--	 .data = &(struct mpc_i2c_match_data) {
--			.setclock = mpc_i2c_setclock_52xx,
--		},
--	},
--	{.compatible = "fsl,mpc5200b-i2c",
--	 .data = &(struct mpc_i2c_match_data) {
--			.setclock = mpc_i2c_setclock_52xx,
--		},
--	},
--	{.compatible = "fsl,mpc5200-i2c",
--	 .data = &(struct mpc_i2c_match_data) {
--			.setclock = mpc_i2c_setclock_52xx,
--		},
--	},
--	{.compatible = "fsl,mpc8313-i2c",
--	 .data = &(struct mpc_i2c_match_data) {
--			.setclock = mpc_i2c_setclock_8xxx,
--		},
--	},
--	{.compatible = "fsl,mpc8543-i2c",
--	 .data = &(struct mpc_i2c_match_data) {
--			.setclock = mpc_i2c_setclock_8xxx,
--			.prescaler = 2,
--		},
--	},
--	{.compatible = "fsl,mpc8544-i2c",
--	 .data = &(struct mpc_i2c_match_data) {
--			.setclock = mpc_i2c_setclock_8xxx,
--			.prescaler = 3,
--		},
-+	{.compatible = "mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
-+	{.compatible = "fsl,mpc5200b-i2c", .data = &mpc_i2c_data_52xx, },
-+	{.compatible = "fsl,mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
-+	{.compatible = "fsl,mpc8313-i2c", .data = &mpc_i2c_data_8313, },
-+	{.compatible = "fsl,mpc8543-i2c", .data = &mpc_i2c_data_8543, },
-+	{.compatible = "fsl,mpc8544-i2c", .data = &mpc_i2c_data_8544, },
- 	/* Backward compatibility */
--	},
- 	{.compatible = "fsl-i2c", },
- 	{},
- };
--
- MODULE_DEVICE_TABLE(of, mpc_i2c_of_match);
- 
- 
--- 
-1.6.2.5
+In the simple case where there is a one:one:one relationship between
+MAC, MDIO bus and PHY, then it should be okay to probe the PHY,
+correct?  The question then must be asked; how does the kernel
+determine that it can use the simple case?  Nobody has yet defined a
+way to describe that in the device tree; mostly because nobody has
+needed to yet.
+
+So, it is possible to do what you want, but you need a way to
+*explicitly* ask for that behaviour.  ie, some way to indicate in a
+MAC node which MDIO bus the phy is on, and that the phy needs to be
+probed for.  I think this should only be an option when the MDIO bus
+has only one PHY.  Come up with a proposal and post it to the
+devicetree-discuss mailing list.
+
+g.
+
+>
+> Thanks,
+> John
+>
+>
+> int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+> {
+> =A0 =A0 =A0 =A0struct phy_device *phy;
+> =A0 =A0 =A0 =A0struct device_node *child;
+> =A0 =A0 =A0 =A0int rc, i;
+>
+> =A0 =A0 =A0 =A0/* Mask out all PHYs from auto probing. =A0Instead the PHY=
+s listed
+> in
+> =A0 =A0 =A0 =A0 * the device tree are populated after the bus has been
+> registered */
+> =A0 =A0 =A0 =A0mdio->phy_mask =3D ~0;
+>
+> This email and any attachments are intended for the sole use of the named=
+ recipient(s) and contain(s) confidential information that may be proprieta=
+ry, privileged or copyrighted under applicable law. If you are not the inte=
+nded recipient, do not read, copy, or forward this email message or any att=
+achments. Delete this email message and any attachments immediately.
+>
+>
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
