@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 2/9] proc_devtree: fix THIS_MODULE without module.h
-Date: Sat, 13 Feb 2010 09:02:37 -0700
-Message-ID: <20100213160236.4767.48310.stgit__29102.1869438284$1266077065$gmane$org@angua>
+Subject: [PATCH 3/9] of: protect linux/of.h with CONFIG_OF
+Date: Sat, 13 Feb 2010 09:02:42 -0700
+Message-ID: <20100213160242.4767.57641.stgit__5391.85163002021$1266077096$gmane$org@angua>
 References: <20100213154838.4767.83881.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,31 +22,32 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-Commit e22f628395432b967f2f505858c64450f7835365 introduced a build
-breakage for ARM devtree work: the THIS_MODULE macro was added, but we
-don't have module.h
-
-This change adds the necessary #include to get THIS_MODULE defined.
-While we could just replace it with NULL (PROC_FS is a bool, not a
-tristate), using THIS_MODULE will prevent unexpected breakage if we
-ever do compile this as a module.
+For platforms that have CONFIG_OF optional, we need to make the contents
+of linux/of.h conditional on CONFIG_OF.
 
 Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- fs/proc/proc_devtree.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ include/linux/of.h |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-index 0ec4511..f8650dc 100644
---- a/fs/proc/proc_devtree.c
-+++ b/fs/proc/proc_devtree.c
-@@ -11,6 +11,7 @@
- #include <linux/stat.h>
- #include <linux/string.h>
- #include <linux/of.h>
-+#include <linux/module.h>
- #include <asm/prom.h>
- #include <asm/uaccess.h>
- #include "internal.h"
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 5c7b6a6..48b0ee6 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -22,6 +22,8 @@
+ 
+ #include <asm/byteorder.h>
+ 
++#ifdef CONFIG_OF
++
+ typedef u32 phandle;
+ typedef u32 ihandle;
+ 
+@@ -194,4 +196,5 @@ extern void of_attach_node(struct device_node *);
+ extern void of_detach_node(struct device_node *);
+ #endif
+ 
++#endif /* CONFIG_OF */
+ #endif /* _LINUX_OF_H */
