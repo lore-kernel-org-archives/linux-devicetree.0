@@ -1,7 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 7/9] of: move definition of of_chosen into common code.
-Date: Sat, 13 Feb 2010 09:03:04 -0700
-Message-ID: <20100213160303.4767.36411.stgit__4039.54176367751$1266077257$gmane$org@angua>
+Subject: [PATCH 8/9] of/sparc: Remove sparc-local declaration of allnodes and
+	devtree_lock
+Date: Sat, 13 Feb 2010 09:03:09 -0700
+Message-ID: <20100213160309.4767.94443.stgit__32546.2127606899$1266077310$gmane$org@angua>
 References: <20100213154838.4767.83881.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,95 +21,51 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sparclinu
 List-Id: devicetree@vger.kernel.org
 
-Rather than defining of_chosen in each arch, it can be defined for all
-in driver/of/base.c
+Both allnodes and devtree_lock are defined in common code.  The
+extern declaration should be in the common header too so that the
+compiler can type check.  allnodes is already in of.h, but
+devtree_lock should be declared there too.
+
+This patch removes the SPARC declarations and uses decls in of.h instead.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- arch/microblaze/include/asm/prom.h |    2 --
- arch/microblaze/kernel/prom.c      |    3 ---
- arch/powerpc/include/asm/prom.h    |    2 --
- arch/powerpc/kernel/prom.c         |    3 ---
- drivers/of/base.c                  |    1 +
- include/linux/of.h                 |    1 +
- 6 files changed, 2 insertions(+), 10 deletions(-)
+ arch/sparc/kernel/prom.h |    3 ---
+ include/linux/of.h       |    2 ++
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
-index 8b1ebd3..aa1a437 100644
---- a/arch/microblaze/include/asm/prom.h
-+++ b/arch/microblaze/include/asm/prom.h
-@@ -26,8 +26,6 @@
- #include <asm/irq.h>
- #include <asm/atomic.h>
+diff --git a/arch/sparc/kernel/prom.h b/arch/sparc/kernel/prom.h
+index 453397f..a8591ef 100644
+--- a/arch/sparc/kernel/prom.h
++++ b/arch/sparc/kernel/prom.h
+@@ -4,9 +4,6 @@
+ #include <linux/spinlock.h>
+ #include <asm/prom.h>
  
--extern struct device_node *of_chosen;
+-extern struct device_node *allnodes;	/* temporary while merging */
+-extern rwlock_t devtree_lock;	/* temporary while merging */
 -
- #define HAVE_ARCH_DEVTREE_FIXUPS
+ extern void * prom_early_alloc(unsigned long size);
+ extern void irq_trans_init(struct device_node *dp);
  
- /* Other Prototypes */
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index a7dcaf0..a15ef6d 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -42,9 +42,6 @@
- #include <asm/sections.h>
- #include <asm/pci-bridge.h>
- 
--/* export that to outside world */
--struct device_node *of_chosen;
--
- void __init early_init_dt_scan_chosen_arch(unsigned long node)
- {
- 	/* No Microblaze specific code here */
-diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-index 4a5070e..7f9a50a 100644
---- a/arch/powerpc/include/asm/prom.h
-+++ b/arch/powerpc/include/asm/prom.h
-@@ -23,8 +23,6 @@
- #include <asm/irq.h>
- #include <asm/atomic.h>
- 
--extern struct device_node *of_chosen;
--
- #define HAVE_ARCH_DEVTREE_FIXUPS
- 
- #ifdef CONFIG_PPC32
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 4869c93..43238b2 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -67,9 +67,6 @@ int __initdata iommu_force_on;
- unsigned long tce_alloc_start, tce_alloc_end;
- #endif
- 
--/* export that to outside world */
--struct device_node *of_chosen;
--
- static int __init early_parse_mem(char *p)
- {
- 	if (!p)
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 873479a..cb96888 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -23,6 +23,7 @@
- #include <linux/proc_fs.h>
- 
- struct device_node *allnodes;
-+struct device_node *of_chosen;
- 
- /* use when traversing tree through the allnext, child, sibling,
-  * or parent members of struct device_node.
 diff --git a/include/linux/of.h b/include/linux/of.h
-index 5cd2840..d34cc5d 100644
+index d34cc5d..f6d9cbc 100644
 --- a/include/linux/of.h
 +++ b/include/linux/of.h
-@@ -66,6 +66,7 @@ struct device_node {
+@@ -19,6 +19,7 @@
+ #include <linux/bitops.h>
+ #include <linux/kref.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/spinlock.h>
  
+ #include <asm/byteorder.h>
+ 
+@@ -67,6 +68,7 @@ struct device_node {
  /* Pointer for first entry in chain of all nodes. */
  extern struct device_node *allnodes;
-+extern struct device_node *of_chosen;
+ extern struct device_node *of_chosen;
++extern rwlock_t devtree_lock;
  
  static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
  {
