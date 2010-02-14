@@ -1,14 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 9/9] of: remove undefined request_OF_resource &
-	release_OF_resource
-Date: Sat, 13 Feb 2010 09:03:15 -0700
-Message-ID: <20100213160314.4767.93924.stgit__5314.49568593434$1266077352$gmane$org@angua>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/9] of: Remove old and misplaced function declarations
+Date: Sun, 14 Feb 2010 17:09:36 +1100
+Message-ID: <1266127776.16346.58.camel@pasglop>
 References: <20100213154838.4767.83881.stgit@angua>
+	<20100213160231.4767.23831.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100213154838.4767.83881.stgit@angua>
+In-Reply-To: <20100213160231.4767.23831.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,47 +18,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sparclinu
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neither request_OF_resource or release_OF_resource are defined
-anywhere.  Remove the declarations.
+On Sat, 2010-02-13 at 09:02 -0700, Grant Likely wrote:
+> The following functions don't exist:
+>   finish_device_tree()
+>   print_properties()
+>   prom_n_intr_cells()
+>   prom_get_irq_senses()
+> 
+> The following functions are in drivers/of/base.c, so the declaration
+> belongs in of.h instead of of_fdt.h
+>   of_machine_is_compatible()
+>   prom_add_property()
+>   prom_remove_property()
+>   prom_update_property()
+> 
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
- arch/microblaze/include/asm/prom.h |    4 ----
- arch/powerpc/include/asm/prom.h    |    5 -----
- 2 files changed, 0 insertions(+), 9 deletions(-)
-
-diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
-index aa1a437..03f45a9 100644
---- a/arch/microblaze/include/asm/prom.h
-+++ b/arch/microblaze/include/asm/prom.h
-@@ -31,10 +31,6 @@
- /* Other Prototypes */
- extern int early_uartlite_console(void);
- 
--extern struct resource *request_OF_resource(struct device_node *node,
--				int index, const char *name_postfix);
--extern int release_OF_resource(struct device_node *node, int index);
--
- /*
-  * OF address retreival & translation
-  */
-diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-index 7f9a50a..ddd408a 100644
---- a/arch/powerpc/include/asm/prom.h
-+++ b/arch/powerpc/include/asm/prom.h
-@@ -39,11 +39,6 @@ extern struct device_node* pci_device_to_OF_node(struct pci_dev *);
- extern void pci_create_OF_bus_map(void);
- #endif
- 
--extern struct resource *request_OF_resource(struct device_node* node,
--				int index, const char* name_postfix);
--extern int release_OF_resource(struct device_node* node, int index);
--
--
- /*
-  * OF address retreival & translation
-  */
+> ---
+> 
+>  include/linux/of.h     |    8 ++++++++
+>  include/linux/of_fdt.h |   10 ----------
+>  2 files changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index fa5571b..5c7b6a6 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -180,6 +180,14 @@ extern int of_parse_phandles_with_args(struct device_node *np,
+>  	const char *list_name, const char *cells_name, int index,
+>  	struct device_node **out_node, const void **out_args);
+>  
+> +extern int of_machine_is_compatible(const char *compat);
+> +
+> +extern int prom_add_property(struct device_node* np, struct property* prop);
+> +extern int prom_remove_property(struct device_node *np, struct property *prop);
+> +extern int prom_update_property(struct device_node *np,
+> +				struct property *newprop,
+> +				struct property *oldprop);
+> +
+>  #if defined(CONFIG_OF_DYNAMIC)
+>  /* For updating the device tree at runtime */
+>  extern void of_attach_node(struct device_node *);
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 0007187..c9cb8a7 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -95,18 +95,8 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+>  				   int depth, void *data);
+>  
+>  /* Other Prototypes */
+> -extern void finish_device_tree(void);
+>  extern void unflatten_device_tree(void);
+>  extern void early_init_devtree(void *);
+> -extern int of_machine_is_compatible(const char *compat);
+> -extern void print_properties(struct device_node *node);
+> -extern int prom_n_intr_cells(struct device_node* np);
+> -extern void prom_get_irq_senses(unsigned char *senses, int off, int max);
+> -extern int prom_add_property(struct device_node* np, struct property* prop);
+> -extern int prom_remove_property(struct device_node *np, struct property *prop);
+> -extern int prom_update_property(struct device_node *np,
+> -				struct property *newprop,
+> -				struct property *oldprop);
+>  
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _LINUX_OF_FDT_H */
