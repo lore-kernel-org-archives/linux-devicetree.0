@@ -1,77 +1,134 @@
-From: "WALID" <eng.walid-W8OjrA9bE4VWk0Htik3J/w@public.gmane.org>
-Subject: RE: Re: [PATCH 3/9] of: protect linux/of.h with CONFIG_OF
-Date: Sun, 14 Feb 2010 09:13:57 +0200
-Message-ID: <32616.31135033$1266132178@news.gmane.org>
-References: <20100213154838.4767.83881.stgit@angua>	 <20100213160242.4767.57641.stgit@angua> <1266127834.16346.60.camel@pasglop>
-Reply-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+From: Michal Simek <michal.simek@petalogix.com>
+Subject: Re: [PATCH 4/9] of/flattree: Don't assume HAVE_LMB
+Date: Sun, 14 Feb 2010 15:00:26 +0100
+Message-ID: <4B7801FA.9080203@petalogix.com>
+References: <20100213154838.4767.83881.stgit@angua> <20100213160247.4767.74578.stgit@angua>
+Reply-To: michal.simek@petalogix.com
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
-In-Reply-To: <1266127834.16346.60.camel@pasglop>
-Content-Language: ar-sy
-Sender: owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, 'Grant Likely' <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20100213160247.4767.74578.stgit@angua>
+Sender: sparclinux-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: monstr@monstr.eu, sfr@canb.auug.org.au, benh@kernel.crashing.org, jeremy.kerr@canonical.com, davem@davemloft.net, microblaze-uclinux@itee.uq.edu.au, linuxppc-dev@ozlabs.org, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Please remove my email from your mailing list!!!!!!!
-
------Original Message-----
-From: owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org [mailto:owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org] On Behalf Of Benjamin Herrenschmidt
-Sent: Sunday, February 14, 2010 8:11 AM
-To: Grant Likely
-Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org; sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org; jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org; davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org; linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org; sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Subject: [microblaze-uclinux] Re: [PATCH 3/9] of: protect linux/of.h with CONFIG_OF
-
-On Sat, 2010-02-13 at 09:02 -0700, Grant Likely wrote:
-> From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Grant Likely wrote:
+> From: Jeremy Kerr <jeremy.kerr@canonical.com>
 > 
-> For platforms that have CONFIG_OF optional, we need to make the contents
-> of linux/of.h conditional on CONFIG_OF.
+> We don't always have lmb available, so make arches provide an
+> early_init_dt_alloc_memory_arch() to handle the allocation of
+> memory in the fdt code.
 > 
-> Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-
-For now...
-
-In the long run, maybe we want some of the iterators to be empty inlines
-returning NULL ?
-
-Cheers,
-Ben.
-
+> When we don't have lmb.h included, we need asm/page.h for __va.
+> 
+> Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 > ---
 > 
->  include/linux/of.h |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
+>  arch/microblaze/kernel/prom.c |    5 +++++
+>  arch/powerpc/kernel/prom.c    |    5 +++++
+>  drivers/of/fdt.c              |    9 ++++++---
+>  include/linux/of_fdt.h        |    1 +
+>  4 files changed, 17 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 5c7b6a6..48b0ee6 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -22,6 +22,8 @@
+> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+> index 050b799..a7dcaf0 100644
+> --- a/arch/microblaze/kernel/prom.c
+> +++ b/arch/microblaze/kernel/prom.c
+> @@ -55,6 +55,11 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+>  	lmb_add(base, size);
+>  }
 >  
->  #include <asm/byteorder.h>
->  
-> +#ifdef CONFIG_OF
+> +u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+> +{
+> +	return lmb_alloc(size, align);
+> +}
 > +
->  typedef u32 phandle;
->  typedef u32 ihandle;
+>  #ifdef CONFIG_EARLY_PRINTK
+>  /* MS this is Microblaze specifig function */
+>  static int __init early_init_dt_scan_serial(unsigned long node,
+> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+> index 43c78d7..5bbbdb2 100644
+> --- a/arch/powerpc/kernel/prom.c
+> +++ b/arch/powerpc/kernel/prom.c
+> @@ -510,6 +510,11 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+>  	memstart_addr = min((u64)memstart_addr, base);
+>  }
 >  
-> @@ -194,4 +196,5 @@ extern void of_attach_node(struct device_node *);
->  extern void of_detach_node(struct device_node *);
->  #endif
+> +u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+> +{
+> +	return lmb_alloc(size, align);
+> +}
+> +
+>  #ifdef CONFIG_BLK_DEV_INITRD
+>  void __init early_init_dt_setup_initrd_arch(unsigned long start,
+>  		unsigned long end)
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index b51f797..406757a 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -10,16 +10,18 @@
+>   */
 >  
-> +#endif /* CONFIG_OF */
->  #endif /* _LINUX_OF_H */
+>  #include <linux/kernel.h>
+> -#include <linux/lmb.h>
+>  #include <linux/initrd.h>
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+> -
+> +#include <linux/string.h>
+> +#include <linux/errno.h>
+>  
+>  #ifdef CONFIG_PPC
+>  #include <asm/machdep.h>
+>  #endif /* CONFIG_PPC */
+
+It is not part of your patch but I think that will be great completely 
+remove this CONFIG_PPC part from generic OF file.
+Would it be possible to include your asm/machdep.h through asm/page.h or 
+any other file?
+
+Michal
+
+>  
+> +#include <asm/page.h>
+> +
+>  int __initdata dt_root_addr_cells;
+>  int __initdata dt_root_size_cells;
+>  
+> @@ -560,7 +562,8 @@ void __init unflatten_device_tree(void)
+>  	pr_debug("  size is %lx, allocating...\n", size);
+>  
+>  	/* Allocate memory for the expanded device tree */
+> -	mem = lmb_alloc(size + 4, __alignof__(struct device_node));
+> +	mem = early_init_dt_alloc_memory_arch(size + 4,
+> +			__alignof__(struct device_node));
+>  	mem = (unsigned long) __va(mem);
+>  
+>  	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index c9cb8a7..a1ca92c 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -78,6 +78,7 @@ extern void early_init_dt_check_for_initrd(unsigned long node);
+>  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+>  				     int depth, void *data);
+>  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+> +extern u64 early_init_dt_alloc_memory_arch(u64 size, u64 align);
+>  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+>  
+>  /*
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
 
-___________________________
-microblaze-uclinux mailing list
-microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
-Project Home Page : http://www.itee.uq.edu.au/~jwilliams/mblaze-uclinux
-Mailing List Archive : http://www.itee.uq.edu.au/~listarch/microblaze-uclinux/
+-- 
+Michal Simek, Ing. (M.Eng)
+PetaLogix - Linux Solutions for a Reconfigurable World
+w: www.petalogix.com p: +61-7-30090663,+42-0-721842854 f: +61-7-30090663
