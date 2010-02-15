@@ -1,68 +1,66 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
 Subject: Re: [PATCH 3/3] of/gpio: Introduce of_put_gpio(), add ref counting
 	for OF GPIO chips
-Date: Mon, 15 Feb 2010 12:49:56 -0700
-Message-ID: <fa686aa41002151149u158bc2fbn5af16f6bd714d36c@mail.gmail.com>
+Date: Mon, 15 Feb 2010 23:59:24 +0300
+Message-ID: <20100215205924.GA23654@oksana.dev.rtsoft.ru>
 References: <20100205204949.GA2575@oksana.dev.rtsoft.ru>
 	<20100205205045.GC4178@oksana.dev.rtsoft.ru>
 	<fa686aa41002090928o6911d095ydca1e1e670a0fc22@mail.gmail.com>
 	<20100209191427.GA18263@oksana.dev.rtsoft.ru>
+	<fa686aa41002151149u158bc2fbn5af16f6bd714d36c@mail.gmail.com>
+Reply-To: avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20100209191427.GA18263@oksana.dev.rtsoft.ru>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: avorontsov@ru.mvista.com
-Cc: Michal Simek <monstr@monstr.eu>, David Brownell <dbrownell@users.sourceforge.net>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, microblaze-uclinux@itee.uq.edu.au, David Miller <davem@davemloft.net>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fa686aa41002151149u158bc2fbn5af16f6bd714d36c-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 9, 2010 at 12:14 PM, Anton Vorontsov
-<avorontsov@ru.mvista.com> wrote:
-> On Tue, Feb 09, 2010 at 10:28:15AM -0700, Grant Likely wrote:
-> [...]
->> Rather than having a lock at the device tree data pointer level which
->> mixes usage with potentially many other drivers; wouldn't it make more
->> sense to use a mutex at the of_gc subsystem context?
->
-> I don't think so.
->
-> of_gc = np->data;
-> lock(of_gc); (or lock(devtree))
-> <do something with of_gc>
->
-> doesn't provide us what we need, i.e. it doesn't guarantee that
-> np->data (of_gc) is still alive.
->
-> And here:
->
-> lock(np->data); (or lock(devtree))
-> of_gc = np->data;
-> lock(of_gc);
-> <do something with of_gc>
->
-> The second lock becomes useless (unless you also refcount np->data
-> usage and can drop the devtree/np->data lock, and grab some other
-> kind of lock, e.g. mutex, but this is silly).
+On Mon, Feb 15, 2010 at 12:49:56PM -0700, Grant Likely wrote:
+[...]
+> Okay, I'm convinced now.  The model is wrong.  struct of_gc does need
+> to be a member of struct gpio_chip and conditionally compiled against
+> CONFIG_OF_GPIO.  This locking requirement is just too plain ugly,
 
-Okay, I'm convinced now.  The model is wrong.  struct of_gc does need
-to be a member of struct gpio_chip and conditionally compiled against
-CONFIG_OF_GPIO.  This locking requirement is just too plain ugly, and
-dereferencing the np->data pointer in this way is dangerous (what if
-something that is not struct of_gc is stored there).
+And how would you implement of_get_gpio(np, index) then?
+You don't have 'struct gpio_chip' in of_get_gpio(), so you can't
+get of_gc out of it.
 
-Put of_gc into struct gpio_chip, and I'll completely support that approach.
+It's possible to lookup all GPIOs (gpio[0..ARCH_NR_GPIOS]) matching
+on chip->dev->archdata.node == np, but you're just moving this stuff
+into gpiolib, where you'll have to grab global gpio_lock instead of
+devtree lock. And just as with np->data_lock or global devtree lock,
+you'll have to grab gpio_lock in of_gpio_put(), of_gpio_chip_register
+and of_gpio_chip_unregister().
 
-g.
+See? Your suggestion doesn't make things better or simpler, instead
+it turns the OF GPIO inside out, exposing arch details to the generic
+code.
+
+There is really no excuse for the arch-specific (OF) stuff being in
+the generic code. Not in the irq subsystem, not in the gpio
+subsystem. My implementation actually proves that.
+
+> and
+> dereferencing the np->data pointer in this way is dangerous
+> (what if
+> something that is not struct of_gc is stored there).
+
+Not possible with the safe np->data accessors.
 
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Anton Vorontsov
+email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+irc://irc.freenode.net/bd2
