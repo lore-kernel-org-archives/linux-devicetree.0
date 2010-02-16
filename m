@@ -1,13 +1,13 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: added documentation for spi chipselects
-Date: Tue, 16 Feb 2010 12:00:12 -0700
-Message-ID: <fa686aa41002161100j45c97bb7w1788140d3fcf981f@mail.gmail.com>
-References: <20100216193957.ccdffee2.eschwab@online.de>
+Subject: Re: [PATCH/RFC 1/2] 5200: improve i2c bus error recovery
+Date: Tue, 16 Feb 2010 12:31:27 -0700
+Message-ID: <fa686aa41002161131j7329a05cx16e66125f82fec39@mail.gmail.com>
+References: <1264191475.2224.1@antares>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100216193957.ccdffee2.eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1264191475.2224.1@antares>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,51 +17,227 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+Cc: Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2010 at 11:39 AM, Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org> wrote:
-> From: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Hi Albrecht,
+
+Comments below.
+
+On Fri, Jan 22, 2010 at 1:17 PM, Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org> =
+wrote:
+> Improve the recovery of the MPC5200B's I2C bus from errors like bus
+> hangs.
 >
-> Added devicetree binding documentation for gpios used as chipselect. The
-> code to evaluate these is already present in spi_mpc8xxx.c.
+> Signed-off-by: Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
 >
-> Signed-off-by: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
-
-Merged, thanks.
-
-
 > ---
-> diff -upr a/Documentation/powerpc/dts-bindings/fsl/spi.txt b/Documentatio=
-n/powerpc/dts-bindings/fsl/spi.txt
-> --- a/Documentation/powerpc/dts-bindings/fsl/spi.txt
-> +++ b/Documentation/powerpc/dts-bindings/fsl/spi.txt
-> @@ -13,6 +13,11 @@ Required properties:
-> =A0- interrupt-parent : the phandle for the interrupt controller that
-> =A0 services interrupts for this device.
 >
-> +Optional properties:
-> +- gpios : specifies the gpio pins to be used for chipselects.
-> + =A0The gpios will be referred to as reg=3D<index> in the SPI child node=
-s.
-> + =A0If unspecified, a single SPI device without a chip select can be use=
-d.
+> This patch introduces several improvements to the MPC5200B's I2C driver
+> as to improve the recovery from error conditions I encountered when
+> testing a custom board with several I2C devices attached (eeprom, io
+> expander, rtc, sensors). =A0The error conditions included cases where the
+> bus if logic of one slave apparently went south, blocking the bus
+> completely.
+>
+> My fixes include:
+> 1. make the bus timeout configurable in fsl_i2c_probe(); the default of
+> =A0 one second is *way* too long for my use case;
+> 2. if a timeout condition occurs in mpc_xfer(), mpc_i2c_fixup() the bus
+> =A0 if *any* of the CF, BB and RXAK flags in the MSR is 1. =A0I actually
+> =A0 saw different combinations with hangs, not only all three set;
+> 3. improve the fixup procedure by calculating the timing needed from the
+> =A0 real (configured) bus clock, calculated in mpc_i2c_setclock_52xx().
+> =A0 Furthermore, I issue 9 instead of one cycle, as I experienced cases
+> =A0 where the single one is not enough (found this tip in a forum). =A0As=
+ a
+> =A0 side effect, the new scheme needs only 81us @375kHz bus clock instead
+> =A0 of 150us. =A0I recorded waveforms for 18.4kHz, 85.9kHz and 375kHz, all
+> =A0 looking fine, which I can provide if anyone is interested.
+
+These are three separate fixes.  Ideally you should submit them in
+separate patches to make it easy on poor old reviewers like me.  And,
+as Ben mentions, this descriptions should be above the '---' line so
+it appears in the commit text.
+
+>
+> Open questions:
+> - is the approach correct at all, in particular the interpretation of
+> =A0the flags (#2)?
+> - could this code also be used on non-5200 processors?
+>
+> --- linux-2.6.32-orig/drivers/i2c/busses/i2c-mpc.c =A0 =A0 =A02009-12-03 =
+04:51:21.000000000 +0100
+> +++ linux-2.6.32/drivers/i2c/busses/i2c-mpc.c =A0 2010-01-22 16:05:13.000=
+000000 +0100
+> @@ -59,6 +59,7 @@ struct mpc_i2c {
+> =A0 =A0 =A0 =A0wait_queue_head_t queue;
+> =A0 =A0 =A0 =A0struct i2c_adapter adap;
+> =A0 =A0 =A0 =A0int irq;
+> + =A0 =A0 =A0 u32 real_clk;
+> =A0};
+>
+> =A0struct mpc_i2c_divider {
+> @@ -97,16 +98,32 @@ static irqreturn_t mpc_i2c_isr(int irq,
+> =A0*/
+> =A0static void mpc_i2c_fixup(struct mpc_i2c *i2c)
+> =A0{
+> - =A0 =A0 =A0 writeccr(i2c, 0);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> - =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 if (i2c->real_clk =3D=3D 0) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, 0);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 int k;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 delay_val =3D 1000000 / i2c->real_clk +=
+ 1;
 > +
-> =A0Example:
-> =A0 =A0 =A0 =A0spi@4c0 {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0cell-index =3D <0>;
-> @@ -21,4 +26,6 @@ Example:
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupts =3D <82 0>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt-parent =3D <700>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0mode =3D "cpu";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpios =3D <&gpio 18 1 =A0 =A0 // device reg=
-=3D<0>, low-active
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&gpio 19 1>; =A0 // devi=
-ce reg=3D<1>, low-active
-> =A0 =A0 =A0 =A0};
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (delay_val < 2)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 delay_val =3D 2;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 for (k =3D 9; k; k--) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, 0);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CC=
+R_MTX | CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(delay_val);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(delay_val << 1);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 }
+
+This doesn't look right.  Why is the old code being preserved?  Isn't
+it not as reliable?  It looks to me that the new block should be the
+only path, with delay_val getting hard set to a sane value if real_clk
+=3D=3D 0.  This approach looks to add complexity to the driver without a
+reason other than fear it *might* breaking something.
+
+If the new code is better, then be strong, stand tall, and say in a
+loud voice, "this old code is crap.  The new stuff is much better."
+
+g.
+
+> =A0}
 >
+> =A0static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
+> @@ -186,15 +203,18 @@ static const struct mpc_i2c_divider mpc_
+> =A0 =A0 =A0 =A0{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
+> =A0};
 >
+> -int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int presca=
+ler)
+> +int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int presca=
+ler,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0u32 *real_clk)
+> =A0{
+> =A0 =A0 =A0 =A0const struct mpc_i2c_divider *div =3D NULL;
+> =A0 =A0 =A0 =A0unsigned int pvr =3D mfspr(SPRN_PVR);
+> =A0 =A0 =A0 =A0u32 divider;
+> =A0 =A0 =A0 =A0int i;
+>
+> - =A0 =A0 =A0 if (!clock)
+> + =A0 =A0 =A0 if (!clock) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *real_clk =3D 0;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> + =A0 =A0 =A0 }
+>
+> =A0 =A0 =A0 =A0/* Determine divider value */
+> =A0 =A0 =A0 =A0divider =3D mpc5xxx_get_bus_frequency(node) / clock;
+> @@ -212,7 +232,8 @@ int mpc_i2c_get_fdr_52xx(struct device_n
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 return div ? (int)div->fdr : -EINVAL;
+> + =A0 =A0 =A0 *real_clk =3D mpc5xxx_get_bus_frequency(node) / div->divide=
+r;
+> + =A0 =A0 =A0 return (int)div->fdr;
+> =A0}
+>
+> =A0static void mpc_i2c_setclock_52xx(struct device_node *node,
+> @@ -221,13 +242,14 @@ static void mpc_i2c_setclock_52xx(struct
+> =A0{
+> =A0 =A0 =A0 =A0int ret, fdr;
+>
+> - =A0 =A0 =A0 ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler);
+> + =A0 =A0 =A0 ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler, &i2c->=
+real_clk);
+> =A0 =A0 =A0 =A0fdr =3D (ret >=3D 0) ? ret : 0x3f; /* backward compatibili=
+ty */
+>
+> =A0 =A0 =A0 =A0writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
+>
+> =A0 =A0 =A0 =A0if (ret >=3D 0)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i2c->dev, "clock %d Hz (fdr=3D%d)\=
+n", clock, fdr);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i2c->dev, "clock %u Hz (fdr=3D%d)\=
+n", i2c->real_clk,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0fdr);
+> =A0}
+> =A0#else /* !CONFIG_PPC_MPC52xx */
+> =A0static void mpc_i2c_setclock_52xx(struct device_node *node,
+> @@ -446,10 +468,14 @@ static int mpc_xfer(struct i2c_adapter *
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINTR;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (time_after(jiffies, orig_jiffies + HZ)=
+) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u8 status =3D readb(i2c->ba=
+se + MPC_I2C_SR);
+> +
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_dbg(i2c->dev, "timeout=
+\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (readb(i2c->base + MPC_I=
+2C_SR) =3D=3D
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 (CSR_MCF | CSR_MBB =
+| CSR_RXAK))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if ((status & (CSR_MCF | CS=
+R_MBB | CSR_RXAK)) !=3D 0) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeb(stat=
+us & ~CSR_MAL,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0i2c->base + MPC_I2C_SR);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0mpc_i2c_fi=
+xup(i2c);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EIO;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0schedule();
+> @@ -540,6 +566,14 @@ static int __devinit fsl_i2c_probe(struc
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 prop =3D of_get_property(op->node, "timeout", &plen);
+> + =A0 =A0 =A0 if (prop && plen =3D=3D sizeof(u32)) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mpc_ops.timeout =3D *prop * HZ / 1000000;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (mpc_ops.timeout < 5)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mpc_ops.timeout =3D 5;
+> + =A0 =A0 =A0 }
+> + =A0 =A0 =A0 dev_info(i2c->dev, "timeout %u us\n", mpc_ops.timeout * 100=
+0000 / HZ);
+> +
+> =A0 =A0 =A0 =A0dev_set_drvdata(&op->dev, i2c);
+>
+> =A0 =A0 =A0 =A0i2c->adap =3D mpc_ops;
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 >
 
 
