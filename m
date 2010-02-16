@@ -1,12 +1,16 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: added documentation for spi chipselects
-Date: Tue, 16 Feb 2010 21:14:59 +0100
-Message-ID: <20100216201459.GA17428@pengutronix.de>
-References: <20100216193957.ccdffee2.eschwab@online.de>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] i2c-mpc: use __devinit[data] for initialization
+	functions and data
+Date: Tue, 16 Feb 2010 21:49:46 +0100
+Message-ID: <4B7B04EA.9010707@grandegger.com>
+References: <1265813711-16794-1-git-send-email-wg@grandegger.com>
+	<1265813711-16794-2-git-send-email-wg@grandegger.com>
+	<fa686aa41002161040kada217ds1f63d363157e08ab@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8978198028554060750=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100216193957.ccdffee2.eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <fa686aa41002161040kada217ds1f63d363157e08ab-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,96 +20,91 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Grant Likely wrote:
+> On Wed, Feb 10, 2010 at 7:55 AM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org> wrote:
+>> From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+>>
+>> "__devinit[data]" has not yet been used for all initialization functions
+>> and data. To avoid truncating lines, the struct "mpc_i2c_match_data" has
+>> been renamed to "mpc_i2c_data", which is even the better name.
+>>
+>> Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+>> Tested-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Between patch 1 & 2 is not bisectable.  Functions still called
+> *_setclock in this patch, but referenced as *_setup in the structure.
+> Please respin.
 
---===============8978198028554060750==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
+Argh, sorry for the mess. I will fix it tomorrow.
 
+> Also ...
+> 
+>> +static struct mpc_i2c_data mpc_i2c_data_52xx __devinitdata = {
+>> +       .setup = mpc_i2c_setup_52xx,
+>> +};
+>> +
+>> +static struct mpc_i2c_data mpc_i2c_data_8313 __devinitdata = {
+>> +       .setup = mpc_i2c_setup_8xxx,
+>> +};
+>> +
+>> +static struct mpc_i2c_data mpc_i2c_data_8543 __devinitdata = {
+>> +       .setup = mpc_i2c_setup_8xxx,
+>> +       .prescaler = 2,
+>> +};
+>> +
+>> +static struct mpc_i2c_data mpc_i2c_data_8544 __devinitdata = {
+>> +       .setup = mpc_i2c_setup_8xxx,
+>> +       .prescaler = 3,
+>> +};
+>> +
+>>  static const struct of_device_id mpc_i2c_of_match[] = {
+>> -       {.compatible = "mpc5200-i2c",
+>> -        .data = &(struct mpc_i2c_match_data) {
+>> -                       .setclock = mpc_i2c_setclock_52xx,
+>> -               },
+>> -       },
+>> -       {.compatible = "fsl,mpc5200b-i2c",
+>> -        .data = &(struct mpc_i2c_match_data) {
+>> -                       .setclock = mpc_i2c_setclock_52xx,
+>> -               },
+>> -       },
+>> -       {.compatible = "fsl,mpc5200-i2c",
+>> -        .data = &(struct mpc_i2c_match_data) {
+>> -                       .setclock = mpc_i2c_setclock_52xx,
+>> -               },
+>> -       },
+>> -       {.compatible = "fsl,mpc8313-i2c",
+>> -        .data = &(struct mpc_i2c_match_data) {
+>> -                       .setclock = mpc_i2c_setclock_8xxx,
+>> -               },
+>> -       },
+>> -       {.compatible = "fsl,mpc8543-i2c",
+>> -        .data = &(struct mpc_i2c_match_data) {
+>> -                       .setclock = mpc_i2c_setclock_8xxx,
+>> -                       .prescaler = 2,
+>> -               },
+>> -       },
+>> -       {.compatible = "fsl,mpc8544-i2c",
+>> -        .data = &(struct mpc_i2c_match_data) {
+>> -                       .setclock = mpc_i2c_setclock_8xxx,
+>> -                       .prescaler = 3,
+>> -               },
+>> +       {.compatible = "mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
+>> +       {.compatible = "fsl,mpc5200b-i2c", .data = &mpc_i2c_data_52xx, },
+>> +       {.compatible = "fsl,mpc5200-i2c", .data = &mpc_i2c_data_52xx, },
+>> +       {.compatible = "fsl,mpc8313-i2c", .data = &mpc_i2c_data_8313, },
+>> +       {.compatible = "fsl,mpc8543-i2c", .data = &mpc_i2c_data_8543, },
+>> +       {.compatible = "fsl,mpc8544-i2c", .data = &mpc_i2c_data_8544, },
+> 
+> ... what was wrong with the old format of declaring the .data
+> structures inline with the match table?
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It does not allow to use __devinitdata because the space reserved by the
+compiler does belong to another section. In other words it was necessary
+to get ride of section mismatches.
 
-On Tue, Feb 16, 2010 at 07:39:57PM +0100, Ernst Schwab wrote:
-> From: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
->=20
-> Added devicetree binding documentation for gpios used as chipselect. The
-> code to evaluate these is already present in spi_mpc8xxx.c.
->=20
-> Signed-off-by: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
-> ---
-> diff -upr a/Documentation/powerpc/dts-bindings/fsl/spi.txt b/Documentatio=
-n/powerpc/dts-bindings/fsl/spi.txt
-> --- a/Documentation/powerpc/dts-bindings/fsl/spi.txt
-> +++ b/Documentation/powerpc/dts-bindings/fsl/spi.txt
-> @@ -13,6 +13,11 @@ Required properties:
->  - interrupt-parent : the phandle for the interrupt controller that
->    services interrupts for this device.
-> =20
-> +Optional properties:
-> +- gpios : specifies the gpio pins to be used for chipselects.=20
-> +  The gpios will be referred to as reg=3D<index> in the SPI child nodes.
-> +  If unspecified, a single SPI device without a chip select can be used.
-
-Minor: I'd prefer spaces around the '=3D'.
-
-> +
->  Example:
->  	spi@4c0 {
->  		cell-index =3D <0>;
-> @@ -21,4 +26,6 @@ Example:
->  		interrupts =3D <82 0>;
->  		interrupt-parent =3D <700>;
->  		mode =3D "cpu";
-> +		gpios =3D <&gpio 18 1	// device reg=3D<0>, low-active
-> +			 &gpio 19 1>;	// device reg=3D<1>, low-active
-
-I'd drop the comments. GPIO controllers may have private xlate-functions, so
-'1' could theoretically mean something else than "low-active" (although in
-practice it hopefully won't).
-
->  	};
->=20
->=20
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAkt6/MMACgkQD27XaX1/VRssDQCfVnAy5zowoJyY+1gVjQSPtfEF
-w6sAnROre2A4KhwGGRlsvQe7vRHoMeph
-=woy4
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
-
---===============8978198028554060750==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8978198028554060750==--
+Wolfgang.
