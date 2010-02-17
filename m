@@ -1,136 +1,84 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: [PATCH v8 2/4] i2c-mpc: rename "setclock" initialization functions to "setup"
-Date: Wed, 17 Feb 2010 11:19:18 +0100
-Message-ID: <1266401960-19127-3-git-send-email-wg@grandegger.com>
-References: <1266401960-19127-1-git-send-email-wg@grandegger.com>
- <1266401960-19127-2-git-send-email-wg@grandegger.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1266401960-19127-2-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+From: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] of: add bus-number specification to spi_mpc8xxx
+Date: Wed, 17 Feb 2010 12:11:05 +0100
+Message-ID: <20100217121105.89ec9fa8.eschwab@online.de>
+References: <20100216150850.d966cd79.eschwab@online.de>
+	<fa686aa41002160628g62bd6564h50e712e8fb9c384d@mail.gmail.com>
+	<20100216160832.730cb00b.eschwab@online.de>
+	<fa686aa41002160718u36fe6f7ey7be83ab69317ec76@mail.gmail.com>
+	<20100216195943.e40e104e.eschwab@online.de>
+	<fa686aa41002161323v72dbcdb4rd28ece040c878972@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <fa686aa41002161323v72dbcdb4rd28ece040c878972-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+On Tue, 16 Feb 2010 14:23:49 -0700
+Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 
-To prepare  support for the MPC512x processors from Freescale the
-"setclock" initialization functions have been renamed to "setup"
-because I2C interrupts must be enabled for the MPC512x by this
-function as well.
+> On Tue, Feb 16, 2010 at 11:59 AM, Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org> wrote:
+> > Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> >
+> >> Add a property to the /chosen node to assign short labels to devices.
+> >
+> > I'm not familiar with this and will check - does anyone know of an
+> > existing example for this?
+> 
+> Oops, sorry.  I meant the 'aliases' node.  'chosen' is for something else.
+> 
+> Properties in the aliases node are simply name = "/path/to/node";
+> pairs.  Do "grep -A 6 arch/powerpc/boot/dts/" to see lots of examples.
+> dtc expands the <name> = &label; construct into the full path to the
+> node.
 
-Signed-off-by: Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
-Acked-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/i2c/busses/i2c-mpc.c |   42 ++++++++++++++++++++----------------------
- 1 files changed, 20 insertions(+), 22 deletions(-)
+Ok, as I did the grep with "chosen" there wasn't anything, "aliases" 
+looks much better. I was aware of this node, but had no idea how
+to use it. Actually, I still do not exactly know how to use it ;-).
 
-diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
-index 2f74d9b..370c342 100644
---- a/drivers/i2c/busses/i2c-mpc.c
-+++ b/drivers/i2c/busses/i2c-mpc.c
-@@ -67,9 +67,8 @@ struct mpc_i2c_divider {
- };
- 
- struct mpc_i2c_data {
--	void (*setclock)(struct device_node *node,
--			 struct mpc_i2c *i2c,
--			 u32 clock, u32 prescaler);
-+	void (*setup)(struct device_node *node, struct mpc_i2c *i2c,
-+		      u32 clock, u32 prescaler);
- 	u32 prescaler;
- };
- 
-@@ -216,9 +215,9 @@ static int __devinit mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock,
- 	return div ? (int)div->fdr : -EINVAL;
- }
- 
--static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
--					    struct mpc_i2c *i2c,
--					    u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setup_52xx(struct device_node *node,
-+					 struct mpc_i2c *i2c,
-+					 u32 clock, u32 prescaler)
- {
- 	int ret, fdr;
- 
-@@ -231,9 +230,9 @@ static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
- 		dev_info(i2c->dev, "clock %d Hz (fdr=%d)\n", clock, fdr);
- }
- #else /* !CONFIG_PPC_MPC52xx */
--static void __devinit mpc_i2c_setclock_52xx(struct device_node *node,
--					    struct mpc_i2c *i2c,
--					    u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setup_52xx(struct device_node *node,
-+					 struct mpc_i2c *i2c,
-+					 u32 clock, u32 prescaler)
- {
- }
- #endif /* CONFIG_PPC_MPC52xx*/
-@@ -322,9 +321,9 @@ static int __devinit mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock,
- 	return div ? (int)div->fdr : -EINVAL;
- }
- 
--static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
--					    struct mpc_i2c *i2c,
--					    u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setup_8xxx(struct device_node *node,
-+					 struct mpc_i2c *i2c,
-+					 u32 clock, u32 prescaler)
- {
- 	int ret, fdr;
- 
-@@ -340,9 +339,9 @@ static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
- }
- 
- #else /* !CONFIG_FSL_SOC */
--static void __devinit mpc_i2c_setclock_8xxx(struct device_node *node,
--					    struct mpc_i2c *i2c,
--					    u32 clock, u32 prescaler)
-+static void __devinit mpc_i2c_setup_8xxx(struct device_node *node,
-+					 struct mpc_i2c *i2c,
-+					 u32 clock, u32 prescaler)
- {
- }
- #endif /* CONFIG_FSL_SOC */
-@@ -533,12 +532,11 @@ static int __devinit fsl_i2c_probe(struct of_device *op,
- 		if (match->data) {
- 			struct mpc_i2c_data *data =
- 				(struct mpc_i2c_data *)match->data;
--			data->setclock(op->node, i2c, clock, data->prescaler);
-+			data->setup(op->node, i2c, clock, data->prescaler);
- 		} else {
- 			/* Backwards compatibility */
- 			if (of_get_property(op->node, "dfsrr", NULL))
--				mpc_i2c_setclock_8xxx(op->node, i2c,
--						      clock, 0);
-+				mpc_i2c_setup_8xxx(op->node, i2c, clock, 0);
- 		}
- 	}
- 
-@@ -585,20 +583,20 @@ static int __devexit fsl_i2c_remove(struct of_device *op)
- };
- 
- static struct mpc_i2c_data mpc_i2c_data_52xx __devinitdata = {
--	.setclock = mpc_i2c_setclock_52xx,
-+	.setup = mpc_i2c_setup_52xx,
- };
- 
- static struct mpc_i2c_data mpc_i2c_data_8313 __devinitdata = {
--	.setclock = mpc_i2c_setclock_8xxx,
-+	.setup = mpc_i2c_setup_8xxx,
- };
- 
- static struct mpc_i2c_data mpc_i2c_data_8543 __devinitdata = {
--	.setclock = mpc_i2c_setclock_8xxx,
-+	.setup = mpc_i2c_setup_8xxx,
- 	.prescaler = 2,
- };
- 
- static struct mpc_i2c_data mpc_i2c_data_8544 __devinitdata = {
--	.setclock = mpc_i2c_setclock_8xxx,
-+	.setup = mpc_i2c_setup_8xxx,
- 	.prescaler = 3,
- };
- 
--- 
-1.6.2.5
+> Use the alias to find the spi bus you care about in /sys/devices/.
+> Then whichever eeprom has that bus as its parent is the device you
+> want.  You can read the expanded device tree in /proc/device-tree.
+> Unfortunately I don't have sample code that shows how to do this; I
+> haven't had to do so personally yet.
+
+I created 
+	aliases { ...
+		spi0 = &spi;
+		eepmain   = &eepmain;
+	};
+
+	spi:spi@7000 { ...
+		eepmain:eeprom@8 { ...
+		};
+	};
+
+The aliases are visible at /proc/device-tree/aliases/:
+eepmain   : contains /immr@e0000000/spi@7000/eeprom@8
+spi0      : contains /immr@e0000000/spi@7000
+
+The EEPROM can be accessed under 
+	/sys/bus/spi/devices/spi32766.8/eeprom
+
+The alias names do not appear in /sys as far as I can see.
+The paths (e.g. /immr@e0000000/spi@7000) seems not to be useable
+to address something in the /sys directory directly.
+
+Does this mean that software which wants to access 'eepmain' 
+has to reformat the alias value to construct a path in the sysfs
+to access the EEPROM contents?
+
+Regards
+Ernst
