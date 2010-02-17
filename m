@@ -1,16 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V2] of: added documentation for spi chipselects
-Date: Wed, 17 Feb 2010 07:33:53 -0700
-Message-ID: <fa686aa41002170633n5848eae7nacca8f33f605d1a4@mail.gmail.com>
-References: <20100216193957.ccdffee2.eschwab@online.de>
-	<20100216201459.GA17428@pengutronix.de>
-	<20100217132322.76cea805.eschwab@online.de>
-	<20100217134138.GC26125@pengutronix.de>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+Subject: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
+Date: Wed, 17 Feb 2010 19:59:14 +0100
+Message-ID: <1266433154.2322.0@antares>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"; Format="Flowed"; DelSp="Yes"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100217134138.GC26125-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,25 +16,220 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks (embedded platforms)
+Cc: "Ira W. Snyder" <iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2010 at 6:41 AM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Wed, Feb 17, 2010 at 01:23:22PM +0100, Ernst Schwab wrote:
->> From: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
->>
->> Added devicetree binding documentation for gpios used as chipselect. The
->> code to evaluate these is already present in spi_mpc8xxx.c.
->>
->> Signed-off-by: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
->
-> Hmm, as Grant merged the original patch already, it might be necessary to
-> convert this into a follow-up patch. He will surely tell you. For both
-> versions, you can add my
->
-> Reviewed-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This patch improves the recovery of the MPC's I2C bus from errors like bus
+hangs resulting in timeouts:
+1. make the bus timeout configurable, as it depends on the bus clock and
+    the attached slave chip(s); default is still 1 second;
+2. detect any of the cases indicated by the CF, BB and RXAK MSR flags if a
+    timeout occurs, and add a missing (required) MAL reset;
+3. use a more reliable method to fixup the bus if a hang has been detected.
+    The sequence is sent 9 times which seems to be necessary if a slave
+    "misses" more than one clock cycle.  For 400 kHz bus speed, the fixup is
+    also ~70us (81us vs. 150us) faster.
 
-I'll just patch up the one in my tree.  Don't worry about it.
+Tested on a custom Lite5200b derived board, with a Dallas RTC, AD sensors
+and NXP IO expander chips attached to the i2c.
 
-g.
+Changes vs. v1:
+- use improved bus fixup sequence for all chips (not only the 5200)
+- calculate real clock from defaults if no clock is given in the device tree
+- better description (I hope) of the changes.
+
+I didn't split the changes in this file into three parts as recommended by
+Grant, as they actually belong together (i.e. they address one single
+problem, just in three places of one single source file).
+
+Signed-off-by: Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+
+---
+
+Note about the reset sequence: I verified the waveforms for 18.4kHz, 85.9kHz
+and 375kHz (drop me a note if you want to see scope screen shots).  Not
+verified on other mpc chips yet.
+@Ira: thanks in advance for giving it a try on your box!
+
+
+--- linux-2.6.32-orig/drivers/i2c/busses/i2c-mpc.c	2009-12-03 04:51:21.0000=
+00000 +0100
++++ linux-2.6.32/drivers/i2c/busses/i2c-mpc.c	2010-02-17 16:23:11.000000000=
+ +0100
+@@ -59,6 +59,7 @@ struct mpc_i2c {
+  	wait_queue_head_t queue;
+  	struct i2c_adapter adap;
+  	int irq;
++	u32 real_clk;
+  };
+
+  struct mpc_i2c_divider {
+@@ -93,20 +94,23 @@ static irqreturn_t mpc_i2c_isr(int irq,
+  /* Sometimes 9th clock pulse isn't generated, and slave doesn't release
+   * the bus, because it wants to send ACK.
+   * Following sequence of enabling/disabling and sending start/stop genera=
+tes
+- * the pulse, so it's all OK.
++ * the 9 pulses, so it's all OK.
+   */
+  static void mpc_i2c_fixup(struct mpc_i2c *i2c)
+  {
+-	writeccr(i2c, 0);
+-	udelay(30);
+-	writeccr(i2c, CCR_MEN);
+-	udelay(30);
+-	writeccr(i2c, CCR_MSTA | CCR_MTX);
+-	udelay(30);
+-	writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
+-	udelay(30);
+-	writeccr(i2c, CCR_MEN);
+-	udelay(30);
++	int k;
++	u32 delay_val =3D 1000000 / i2c->real_clk + 1;
++
++	if (delay_val < 2)
++		delay_val =3D 2;
++
++	for (k =3D 9; k; k--) {
++		writeccr(i2c, 0);
++		writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
++		udelay(delay_val);
++		writeccr(i2c, CCR_MEN);
++		udelay(delay_val << 1);
++	}
+  }
+
+  static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
+@@ -186,15 +190,19 @@ static const struct mpc_i2c_divider mpc_
+  	{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
+  };
+
+-int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescale=
+r)
++int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int prescale=
+r,
++			 u32 *real_clk)
+  {
+  	const struct mpc_i2c_divider *div =3D NULL;
+  	unsigned int pvr =3D mfspr(SPRN_PVR);
+  	u32 divider;
+  	int i;
+
+-	if (!clock)
++	if (!clock) {
++		/* see below - default fdr =3D 0x3f -> div =3D 2048 */
++		*real_clk =3D mpc5xxx_get_bus_frequency(node) / 2048;
+  		return -EINVAL;
++	}
+
+  	/* Determine divider value */
+  	divider =3D mpc5xxx_get_bus_frequency(node) / clock;
+@@ -212,7 +220,8 @@ int mpc_i2c_get_fdr_52xx(struct device_n
+  			break;
+  	}
+
+-	return div ? (int)div->fdr : -EINVAL;
++	*real_clk =3D mpc5xxx_get_bus_frequency(node) / div->divider;
++	return (int)div->fdr;
+  }
+
+  static void mpc_i2c_setclock_52xx(struct device_node *node,
+@@ -221,13 +230,14 @@ static void mpc_i2c_setclock_52xx(struct
+  {
+  	int ret, fdr;
+
+-	ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler);
++	ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler, &i2c->real_clk);
+  	fdr =3D (ret >=3D 0) ? ret : 0x3f; /* backward compatibility */
+
+  	writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
+
+  	if (ret >=3D 0)
+-		dev_info(i2c->dev, "clock %d Hz (fdr=3D%d)\n", clock, fdr);
++		dev_info(i2c->dev, "clock %u Hz (fdr=3D%d)\n", i2c->real_clk,
++			 fdr);
+  }
+  #else /* !CONFIG_PPC_MPC52xx */
+  static void mpc_i2c_setclock_52xx(struct device_node *node,
+@@ -287,14 +297,18 @@ u32 mpc_i2c_get_sec_cfg_8xxx(void)
+  	return val;
+  }
+
+-int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescale=
+r)
++int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 prescale=
+r,
++			 u32 *real_clk)
+  {
+  	const struct mpc_i2c_divider *div =3D NULL;
+  	u32 divider;
+  	int i;
+
+-	if (!clock)
++	if (!clock) {
++		/* see below - default fdr =3D 0x1031 -> div =3D 16 * 3072 */
++		*real_clk =3D fsl_get_sys_freq() / prescaler / (16 * 3072);
+  		return -EINVAL;
++	}
+
+  	/* Determine proper divider value */
+  	if (of_device_is_compatible(node, "fsl,mpc8544-i2c"))
+@@ -317,6 +331,7 @@ int mpc_i2c_get_fdr_8xxx(struct device_n
+  			break;
+  	}
+
++	*real_clk =3D fsl_get_sys_freq() / prescaler / div->divider;
+  	return div ? (int)div->fdr : -EINVAL;
+  }
+
+@@ -326,7 +341,7 @@ static void mpc_i2c_setclock_8xxx(struct
+  {
+  	int ret, fdr;
+
+-	ret =3D mpc_i2c_get_fdr_8xxx(node, clock, prescaler);
++	ret =3D mpc_i2c_get_fdr_8xxx(node, clock, prescaler, &i2c->real_clk);
+  	fdr =3D (ret >=3D 0) ? ret : 0x1031; /* backward compatibility */
+
+  	writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
+@@ -334,7 +349,7 @@ static void mpc_i2c_setclock_8xxx(struct
+
+  	if (ret >=3D 0)
+  		dev_info(i2c->dev, "clock %d Hz (dfsrr=3D%d fdr=3D%d)\n",
+-			 clock, fdr >> 8, fdr & 0xff);
++			 i2c->real_clk, fdr >> 8, fdr & 0xff);
+  }
+
+  #else /* !CONFIG_FSL_SOC */
+@@ -446,10 +461,14 @@ static int mpc_xfer(struct i2c_adapter *
+  			return -EINTR;
+  		}
+  		if (time_after(jiffies, orig_jiffies + HZ)) {
++			u8 status =3D readb(i2c->base + MPC_I2C_SR);
++
+  			dev_dbg(i2c->dev, "timeout\n");
+-			if (readb(i2c->base + MPC_I2C_SR) =3D=3D
+-			    (CSR_MCF | CSR_MBB | CSR_RXAK))
++			if ((status & (CSR_MCF | CSR_MBB | CSR_RXAK)) !=3D 0) {
++				writeb(status & ~CSR_MAL,
++				       i2c->base + MPC_I2C_SR);
+  				mpc_i2c_fixup(i2c);
++			}
+  			return -EIO;
+  		}
+  		schedule();
+@@ -540,6 +559,14 @@ static int __devinit fsl_i2c_probe(struc
+  		}
+  	}
+
++	prop =3D of_get_property(op->node, "fsl,timeout", &plen);
++	if (prop && plen =3D=3D sizeof(u32)) {
++		mpc_ops.timeout =3D *prop * HZ / 1000000;
++		if (mpc_ops.timeout < 5)
++			mpc_ops.timeout =3D 5;
++	}
++	dev_info(i2c->dev, "timeout %u us\n", mpc_ops.timeout * 1000000 / HZ);
++
+  	dev_set_drvdata(&op->dev, i2c);
+
+  	i2c->adap =3D mpc_ops;
