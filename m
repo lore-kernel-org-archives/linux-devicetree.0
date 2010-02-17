@@ -1,218 +1,279 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Notes on consolidating device tree patches
-Date: Wed, 17 Feb 2010 12:47:37 -0700
-Message-ID: <fa686aa41002171147j67921cfhb6aa9b7bc6d24ee7@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
+Date: Wed, 17 Feb 2010 13:10:25 -0700
+Message-ID: <fa686aa41002171210i3899fcbepe2fcc620a55a1e34@mail.gmail.com>
+References: <1266433154.2322.0@antares>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=000e0cd598a682b39c047fd120a6
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1266433154.2322.0@antares>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
+Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, "Ira W. Snyder" <iws@ovro.caltech.edu>
 List-Id: devicetree@vger.kernel.org
 
---000e0cd598a682b39c047fd120a6
-Content-Type: text/plain; charset=ISO-8859-1
+On Wed, Feb 17, 2010 at 11:59 AM, Albrecht Dre=DF <albrecht.dress@arcor.de>=
+ wrote:
+> This patch improves the recovery of the MPC's I2C bus from errors like bus
+> hangs resulting in timeouts:
+> 1. make the bus timeout configurable, as it depends on the bus clock and
+> =A0 the attached slave chip(s); default is still 1 second;
+> 2. detect any of the cases indicated by the CF, BB and RXAK MSR flags if a
+> =A0 timeout occurs, and add a missing (required) MAL reset;
+> 3. use a more reliable method to fixup the bus if a hang has been detecte=
+d.
+> =A0 The sequence is sent 9 times which seems to be necessary if a slave
+> =A0 "misses" more than one clock cycle. =A0For 400 kHz bus speed, the fix=
+up is
+> =A0 also ~70us (81us vs. 150us) faster.
+>
+> Tested on a custom Lite5200b derived board, with a Dallas RTC, AD sensors
+> and NXP IO expander chips attached to the i2c.
+>
+> Changes vs. v1:
+> - use improved bus fixup sequence for all chips (not only the 5200)
+> - calculate real clock from defaults if no clock is given in the device t=
+ree
+> - better description (I hope) of the changes.
+>
+> I didn't split the changes in this file into three parts as recommended by
+> Grant, as they actually belong together (i.e. they address one single
+> problem, just in three places of one single source file).
+>
+> Signed-off-by: Albrecht Dre=DF <albrecht.dress@arcor.de>
 
-Hi Jeremy,
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-I've done some consolidation work between our two trees.  Here's the
-show-branch of what I started with:
+>
+> ---
+>
+> Note about the reset sequence: I verified the waveforms for 18.4kHz, 85.9=
+kHz
+> and 375kHz (drop me a note if you want to see scope screen shots). =A0Not
+> verified on other mpc chips yet.
+> @Ira: thanks in advance for giving it a try on your box!
+>
+>
+> --- linux-2.6.32-orig/drivers/i2c/busses/i2c-mpc.c =A0 =A0 =A02009-12-03
+> 04:51:21.000000000 +0100
+> +++ linux-2.6.32/drivers/i2c/busses/i2c-mpc.c =A0 2010-02-17
+> 16:23:11.000000000 +0100
+> @@ -59,6 +59,7 @@ struct mpc_i2c {
+> =A0 =A0 =A0 =A0wait_queue_head_t queue;
+> =A0 =A0 =A0 =A0struct i2c_adapter adap;
+> =A0 =A0 =A0 =A0int irq;
+> + =A0 =A0 =A0 u32 real_clk;
+> =A0};
+>
+> =A0struct mpc_i2c_divider {
+> @@ -93,20 +94,23 @@ static irqreturn_t mpc_i2c_isr(int irq,
+> =A0/* Sometimes 9th clock pulse isn't generated, and slave doesn't release
+> =A0* the bus, because it wants to send ACK.
+> =A0* Following sequence of enabling/disabling and sending start/stop gene=
+rates
+> - * the pulse, so it's all OK.
+> + * the 9 pulses, so it's all OK.
+> =A0*/
+> =A0static void mpc_i2c_fixup(struct mpc_i2c *i2c)
+> =A0{
+> - =A0 =A0 =A0 writeccr(i2c, 0);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
+> - =A0 =A0 =A0 udelay(30);
+> - =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> - =A0 =A0 =A0 udelay(30);
+> + =A0 =A0 =A0 int k;
+> + =A0 =A0 =A0 u32 delay_val =3D 1000000 / i2c->real_clk + 1;
+> +
+> + =A0 =A0 =A0 if (delay_val < 2)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 delay_val =3D 2;
+> +
+> + =A0 =A0 =A0 for (k =3D 9; k; k--) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, 0);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(delay_val);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeccr(i2c, CCR_MEN);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 udelay(delay_val << 1);
+> + =A0 =A0 =A0 }
+> =A0}
+>
+> =A0static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
+> @@ -186,15 +190,19 @@ static const struct mpc_i2c_divider mpc_
+> =A0 =A0 =A0 =A0{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
+> =A0};
+>
+> -int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int
+> prescaler)
+> +int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int
+> prescaler,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0u32 *real_clk)
+> =A0{
+> =A0 =A0 =A0 =A0const struct mpc_i2c_divider *div =3D NULL;
+> =A0 =A0 =A0 =A0unsigned int pvr =3D mfspr(SPRN_PVR);
+> =A0 =A0 =A0 =A0u32 divider;
+> =A0 =A0 =A0 =A0int i;
+>
+> - =A0 =A0 =A0 if (!clock)
+> + =A0 =A0 =A0 if (!clock) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* see below - default fdr =3D 0x3f -> div =
+=3D 2048 */
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *real_clk =3D mpc5xxx_get_bus_frequency(nod=
+e) / 2048;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> + =A0 =A0 =A0 }
+>
+> =A0 =A0 =A0 =A0/* Determine divider value */
+> =A0 =A0 =A0 =A0divider =3D mpc5xxx_get_bus_frequency(node) / clock;
+> @@ -212,7 +220,8 @@ int mpc_i2c_get_fdr_52xx(struct device_n
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 return div ? (int)div->fdr : -EINVAL;
+> + =A0 =A0 =A0 *real_clk =3D mpc5xxx_get_bus_frequency(node) / div->divide=
+r;
+> + =A0 =A0 =A0 return (int)div->fdr;
+> =A0}
+>
+> =A0static void mpc_i2c_setclock_52xx(struct device_node *node,
+> @@ -221,13 +230,14 @@ static void mpc_i2c_setclock_52xx(struct
+> =A0{
+> =A0 =A0 =A0 =A0int ret, fdr;
+>
+> - =A0 =A0 =A0 ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler);
+> + =A0 =A0 =A0 ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler, &i2c->=
+real_clk);
+> =A0 =A0 =A0 =A0fdr =3D (ret >=3D 0) ? ret : 0x3f; /* backward compatibili=
+ty */
+>
+> =A0 =A0 =A0 =A0writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
+>
+> =A0 =A0 =A0 =A0if (ret >=3D 0)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i2c->dev, "clock %d Hz (fdr=3D%d)\=
+n", clock, fdr);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i2c->dev, "clock %u Hz (fdr=3D%d)\=
+n", i2c->real_clk,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0fdr);
+> =A0}
+> =A0#else /* !CONFIG_PPC_MPC52xx */
+> =A0static void mpc_i2c_setclock_52xx(struct device_node *node,
+> @@ -287,14 +297,18 @@ u32 mpc_i2c_get_sec_cfg_8xxx(void)
+> =A0 =A0 =A0 =A0return val;
+> =A0}
+>
+> -int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32
+> prescaler)
+> +int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32
+> prescaler,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0u32 *real_clk)
+> =A0{
+> =A0 =A0 =A0 =A0const struct mpc_i2c_divider *div =3D NULL;
+> =A0 =A0 =A0 =A0u32 divider;
+> =A0 =A0 =A0 =A0int i;
+>
+> - =A0 =A0 =A0 if (!clock)
+> + =A0 =A0 =A0 if (!clock) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* see below - default fdr =3D 0x1031 -> di=
+v =3D 16 * 3072 */
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *real_clk =3D fsl_get_sys_freq() / prescale=
+r / (16 * 3072);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> + =A0 =A0 =A0 }
+>
+> =A0 =A0 =A0 =A0/* Determine proper divider value */
+> =A0 =A0 =A0 =A0if (of_device_is_compatible(node, "fsl,mpc8544-i2c"))
+> @@ -317,6 +331,7 @@ int mpc_i2c_get_fdr_8xxx(struct device_n
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
+> =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 *real_clk =3D fsl_get_sys_freq() / prescaler / div->divider;
+> =A0 =A0 =A0 =A0return div ? (int)div->fdr : -EINVAL;
+> =A0}
+>
+> @@ -326,7 +341,7 @@ static void mpc_i2c_setclock_8xxx(struct
+> =A0{
+> =A0 =A0 =A0 =A0int ret, fdr;
+>
+> - =A0 =A0 =A0 ret =3D mpc_i2c_get_fdr_8xxx(node, clock, prescaler);
+> + =A0 =A0 =A0 ret =3D mpc_i2c_get_fdr_8xxx(node, clock, prescaler, &i2c->=
+real_clk);
+> =A0 =A0 =A0 =A0fdr =3D (ret >=3D 0) ? ret : 0x1031; /* backward compatibi=
+lity */
+>
+> =A0 =A0 =A0 =A0writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
+> @@ -334,7 +349,7 @@ static void mpc_i2c_setclock_8xxx(struct
+>
+> =A0 =A0 =A0 =A0if (ret >=3D 0)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_info(i2c->dev, "clock %d Hz (dfsrr=3D%=
+d fdr=3D%d)\n",
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0clock, fdr >> 8, fdr & 0=
+xff);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0i2c->real_clk, fdr >> 8,=
+ fdr & 0xff);
+> =A0}
+>
+> =A0#else /* !CONFIG_FSL_SOC */
+> @@ -446,10 +461,14 @@ static int mpc_xfer(struct i2c_adapter *
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINTR;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (time_after(jiffies, orig_jiffies + HZ)=
+) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u8 status =3D readb(i2c->ba=
+se + MPC_I2C_SR);
+> +
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_dbg(i2c->dev, "timeout=
+\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (readb(i2c->base + MPC_I=
+2C_SR) =3D=3D
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 (CSR_MCF | CSR_MBB =
+| CSR_RXAK))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if ((status & (CSR_MCF | CS=
+R_MBB | CSR_RXAK)) !=3D 0)
+> {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 writeb(stat=
+us & ~CSR_MAL,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0i2c->base + MPC_I2C_SR);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0mpc_i2c_fi=
+xup(i2c);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EIO;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0schedule();
+> @@ -540,6 +559,14 @@ static int __devinit fsl_i2c_probe(struc
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 prop =3D of_get_property(op->node, "fsl,timeout", &plen);
+> + =A0 =A0 =A0 if (prop && plen =3D=3D sizeof(u32)) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mpc_ops.timeout =3D *prop * HZ / 1000000;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (mpc_ops.timeout < 5)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mpc_ops.timeout =3D 5;
+> + =A0 =A0 =A0 }
+> + =A0 =A0 =A0 dev_info(i2c->dev, "timeout %u us\n", mpc_ops.timeout * 100=
+0000 /
+> HZ);
+> +
+> =A0 =A0 =A0 =A0dev_set_drvdata(&op->dev, i2c);
+>
+> =A0 =A0 =A0 =A0i2c->adap =3D mpc_ops;
+>
 
-! [test-devicetree] arm/boot/hack: set uImage load address to 0x81000000
- ! [jk/versatile] arm/versatile: probe devices from device tree
---
- + [jk/versatile] arm/versatile: probe devices from device tree
- + [jk/versatile^] arm/versatile: probe via device tree
- + [jk/versatile~2] drivers/amba: probe via device tree
- + [jk/versatile~3] drivers/amba: separate periphid probe logic from
-amba_device_register
- + [jk/versatile~4] arm/clkdev: lookup clocks from OF clock providers
- + [jk/versatile~5] arm/icst307: remove icst307_ps_to_vco
- + [jk/versatile~6] arm/icst307: use common struct clk, unify realview
-and versatile clocks
- + [jk/versatile~7] arm/realview: use generic struct clk
- + [jk/versatile~8] arm/versatile: remove oscoff from clk_versatile
- + [jk/versatile~9] arm/versatile: use generic struct clk
- + [jk/versatile~10] of/clk: parse fixed clocks
- + [jk/versatile~11] of: add clock providers
- + [jk/versatile~12] Generic support for fixed-rate clocks
- + [jk/versatile~13] Add a common struct clk
- + [jk/versatile~14] arm-dt: add devictree node reference to dev_archdata
- + [jk/versatile~15] arm-dt: unflatten device tree
- + [jk/versatile~16] arm-dt: parse initrd from device tree
- + [jk/versatile~17] arm-dt: probe for platforms via the device tree
- + [jk/versatile~18] arm-dt: reserve bootmem containing flat device tree blob
- + [jk/versatile~19] arm-dt: parse devtree pointer on boot
- + [jk/versatile~20] of/flattree: include linux/of.h
- + [jk/versatile~21] arm-dt: postpone machine detection until
-setup_arch with CONFIG_OF
-+  [test-devicetree] arm/boot/hack: set uImage load address to 0x81000000
-+  [test-devicetree^] arm/devicetree: Don't allow CONFIG_DEBUG_LL with
-device tree
-+  [test-devicetree~2] arm-dt: unflatten device tree
-+  [test-devicetree~3] arm/devicetree: Reserve memory used by dtb blob
-+  [test-devicetree~4] arm/devicetree: Allow .dtb to be carried in the
-zImage payload
-++ [jk/versatile~22] arm-dt: Allow CONFIG_OF on ARM
-
-To start, I move some things around and split stuff out in my branch
-to give you a new base point:
-[test-devicetree^] Don't allow CONFIG_DEBUG_LL
-  - dropped.
-  - you merged this into jk/versatile~21
-
-[test-devicetree~2] arm-dt: unflatten device tree
-  - Split into new patches:
-    - the of_fdt.h #if defined(CONFIG_OF_FLATTREE)
-    - the extra error checking
-  - You should be able to drop [jk/versatile~15] arm-dt: unflatten device tree
-
-[test-devicetree~3] arm/devicetree: Reserve memory used by dtb blob
-  - Almost identical to [jk/versatile~18] arm-dt: reserve bootmem...
-  - Would you consider dropping jk/versatile~18 and replacing it with
-the diff from test-devicetree~3..jk/versatile~18?  I'd like to have
-the base series of patches that enables fdt support in arm to not
-change the boot path.  I've attached the diff that I think you'll
-need.
-
-[test-devicetree] arm/boot/hack: set uImage load address to 0x81000000
-   and
-[test-devicetree~4] arm/devicetree: Allow .dtb to be carried in the
-zImage payload
-  - moved to the end of my queue because you don't want these in your tree.
-
-Also, in your queue, you should be able to:
-
-[jk/versatile~20] of/flattree: include linux/of.h
-  - drop; the problem is fixed in next-devicetree
-[jk/versatile~18] arm-dt: reserve bootmem containing flat device tree blob
-  - replace; as mentioned above
-[jk/versatile~14] arm-dt: add devictree node reference to dev_archdata
-  - drop; I've picked it up into my tree
-  - Although what I'd really like to do here is move the of_node
-pointer into the main struct device and eliminate the archdata
-entirely.  I'll see if I get time to work on this.
-
-The showbranch now looks like this for me:
-
-* [secretlab/test-devicetree] arm/boot/hack: set uImage load address
-to 0x81000000
- ! [jk/versatile] arm/versatile: probe devices from device tree
---
-*  [secretlab/test-devicetree] arm/boot/hack: set uImage load address
-to 0x81000000
-*  [secretlab/test-devicetree^] arm/devicetree: Allow .dtb to be
-carried in the zImage payload
-*  [secretlab/test-devicetree~2] arm/devicetree: Reserve memory used by dtb blob
-*  [secretlab/test-devicetree~3] arm-dt: add devictree node reference
-to dev_archdata
-*  [secretlab/test-devicetree~4] arm-dt: unflatten device tree
-*  [secretlab/test-devicetree~5] of/flattree: Make
-unflatten_device_tree() safe to call from any arch
-*  [secretlab/test-devicetree~6] of/flattree: make of_fdt.h safe to
-unconditionally include.
- + [jk/versatile] arm/versatile: probe devices from device tree
- + [jk/versatile^] arm/versatile: probe via device tree
- + [jk/versatile~2] drivers/amba: probe via device tree
- + [jk/versatile~3] drivers/amba: separate periphid probe logic from
-amba_device_register
- + [jk/versatile~4] arm/clkdev: lookup clocks from OF clock providers
- + [jk/versatile~5] arm/icst307: remove icst307_ps_to_vco
- + [jk/versatile~6] arm/icst307: use common struct clk, unify realview
-and versatile clocks
- + [jk/versatile~7] arm/realview: use generic struct clk
- + [jk/versatile~8] arm/versatile: remove oscoff from clk_versatile
- + [jk/versatile~9] arm/versatile: use generic struct clk
- + [jk/versatile~10] of/clk: parse fixed clocks
- + [jk/versatile~11] of: add clock providers
- + [jk/versatile~12] Generic support for fixed-rate clocks
- + [jk/versatile~13] Add a common struct clk
- + [jk/versatile~14] arm-dt: add devictree node reference to dev_archdata
- + [jk/versatile~15] arm-dt: unflatten device tree
- + [jk/versatile~16] arm-dt: parse initrd from device tree
- + [jk/versatile~17] arm-dt: probe for platforms via the device tree
- + [jk/versatile~18] arm-dt: reserve bootmem containing flat device tree blob
- + [jk/versatile~19] arm-dt: parse devtree pointer on boot
- + [jk/versatile~20] of/flattree: include linux/of.h
- + [jk/versatile~21] arm-dt: postpone machine detection until
-setup_arch with CONFIG_OF
-*+ [secretlab/test-devicetree~7] arm-dt: Allow CONFIG_OF on ARM
 
 
+-- =
 
-
-
--- 
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
-
---000e0cd598a682b39c047fd120a6
-Content-Type: application/octet-stream; name=arm-reserve-dtb-rework
-Content-Disposition: attachment; filename=arm-reserve-dtb-rework
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_g5sjatsn0
-
-Y29tbWl0IGU3MWU4ZGNkMGM5ZDkzZTNkOWRiYjlkMWMxNDMxM2Q3YzVlZDlhZWYKQXV0aG9yOiBH
-cmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+CkRhdGU6ICAgV2VkIEZlYiAx
-NyAxMjozMDo0MiAyMDEwIC0wNzAwCgogICAgYXJtL2R0OiByZXdvcmsgZGV2aWNlIHRyZWUgbWVt
-b3J5IHJlc2VydmF0aW9uIGZvciBlYXJseSBwYXJzaW5nCiAgICAKICAgIEplcmVteSwgSSBiZWxp
-ZXZlIHRoaXMgaXMgdGhlIGRpZmYgbmVlZGVkIHRvIGdvIGZyb20gbXkgYXRhZ3MgcGFyc2VkCiAg
-ICBkZXZpY2UgdHJlZSBtZW1vcnkgcmVzZXJ2YXRpb24gdG8geW91cnMuICBJIGRyb3BwZWQgdGhl
-IHNldHVwLmMgaHVuawogICAgYmVjYXVzZSBvZiBhIGNvbmZsaWN0LCBzbyB5b3UnbGwgbmVlZCB0
-byBhZGQgaXQgYmFjay4KICAgIAogICAgZy4KCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tbS9pbml0
-LmMgYi9hcmNoL2FybS9tbS9pbml0LmMKaW5kZXggMmNlYjIxYi4uODY2YTAzOCAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vbW0vaW5pdC5jCisrKyBiL2FyY2gvYXJtL21tL2luaXQuYwpAQCAtNzQsMTQg
-Kzc0LDExIEBAIF9fdGFndGFibGUoQVRBR19JTklUUkQyLCBwYXJzZV90YWdfaW5pdHJkMik7CiBz
-dGF0aWMgdW5zaWduZWQgbG9uZyBwaHlzX2RldnRyZWVfc3RhcnQgX19pbml0ZGF0YSA9IDA7CiBz
-dGF0aWMgdW5zaWduZWQgbG9uZyBwaHlzX2RldnRyZWVfc2l6ZSBfX2luaXRkYXRhID0gMDsKIAot
-c3RhdGljIGludCBfX2luaXQgcGFyc2VfdGFnX2RldnRyZWUoY29uc3Qgc3RydWN0IHRhZyAqdGFn
-KQordm9pZCBfX2luaXQgYm9vdG1lbV9yZWdpc3Rlcl9kZXZ0cmVlKHVuc2lnbmVkIGxvbmcgc3Rh
-cnQsIHVuc2lnbmVkIGxvbmcgc2l6ZSkKIHsKLQlwaHlzX2RldnRyZWVfc3RhcnQgPSB0YWctPnUu
-ZGV2dHJlZS5zdGFydDsKLQlwaHlzX2RldnRyZWVfc2l6ZSA9IHRhZy0+dS5kZXZ0cmVlLnNpemU7
-Ci0JcmV0dXJuIDA7CisJcGh5c19kZXZ0cmVlX3N0YXJ0ID0gc3RhcnQ7CisJcGh5c19kZXZ0cmVl
-X3NpemUgPSBzaXplOwogfQotCi1fX3RhZ3RhYmxlKEFUQUdfREVWVFJFRSwgcGFyc2VfdGFnX2Rl
-dnRyZWUpOwogI2VuZGlmCiAKIC8qCkBAIC0yNTMsNiArMjUwLDkgQEAgc3RhdGljIGludCBfX2lu
-aXQgY2hlY2tfZGV2dHJlZShzdHJ1Y3QgbWVtaW5mbyAqbWkpCiAJaWYgKChwaHlzX2RldnRyZWVf
-c3RhcnQgPT0gMCkgfHwgKHBoeXNfZGV2dHJlZV9zaXplID09IDApKQogCQlnb3RvIG91dDsKIAor
-CXByX2luZm8oIkRFVklDRVRSRUU6IDB4JTA4bHgrMHglMDhseCBDaGVja2luZyBtZW1vcnkgcmVn
-aW9uXG4iLAorCQkgcGh5c19kZXZ0cmVlX3N0YXJ0LCBwaHlzX2RldnRyZWVfc2l6ZSk7CisKIAlu
-b2RlID0gY2hlY2tfcmVnaW9uKG1pLCBwaHlzX2RldnRyZWVfc3RhcnQsIHBoeXNfZGV2dHJlZV9z
-aXplKTsKIAlpZiAobm9kZSA9PSAtMSkgewogCQlwaHlzX2RldnRyZWVfc3RhcnQgPSBwaHlzX2Rl
-dnRyZWVfc2l6ZSA9IDA7CkBAIC0yNjAsNiArMjYwLDggQEAgc3RhdGljIGludCBfX2luaXQgY2hl
-Y2tfZGV2dHJlZShzdHJ1Y3QgbWVtaW5mbyAqbWkpCiAJCSAgICAgICAicGh5c2ljYWwgbWVtb3J5
-IC0gZGlzYWJsaW5nIGRldmljZSB0cmVlXG4iLAogCQkgICAgICAgcGh5c19kZXZ0cmVlX3N0YXJ0
-LCBwaHlzX2RldnRyZWVfc2l6ZSk7CiAJfQorCisJcHJfaW5mbygiREVWSUNFVFJFRTogbm9kZT0l
-aVxuIiwgbm9kZSk7CiAjZW5kaWYKIAogIG91dDoKQEAgLTM1NiwxMiArMzU4LDkgQEAgc3RhdGlj
-IHZvaWQgX19pbml0IGJvb3RtZW1fcmVzZXJ2ZV9kZXZ0cmVlKGludCBub2RlKQogCQkJCSAgIHBo
-eXNfZGV2dHJlZV9zaXplLCBCT09UTUVNX0VYQ0xVU0lWRSk7CiAJaWYgKHJlcykgewogCQlwcl9l
-cnIoIkRFVklDRVRSRUU6IDB4JTA4bHgrMHglMDhseCBvdmVybGFwcyBpbi11c2UgIgotCQkgICAg
-ICAgIm1lbW9yeSByZWdpb24gLSBkaXNhYmxpbmcgZGV2aWNlIHRyZWVcbiIsCisJCSAgICAgICAi
-bWVtb3J5IHJlZ2lvblxuIiwKIAkJCXBoeXNfZGV2dHJlZV9zdGFydCwgcGh5c19kZXZ0cmVlX3Np
-emUpOwotCQlyZXR1cm47CiAJfQotCi0JaW5pdGlhbF9ib290X3BhcmFtcyA9ICh2b2lkICopX19w
-aHlzX3RvX3ZpcnQocGh5c19kZXZ0cmVlX3N0YXJ0KTsKICNlbmRpZgogfQogCmRpZmYgLS1naXQg
-YS9hcmNoL2FybS9tbS9tbS5oIGIvYXJjaC9hcm0vbW0vbW0uaAppbmRleCBhODg4MzYzLi4wZTU4
-YzIwIDEwMDY0NAotLS0gYS9hcmNoL2FybS9tbS9tbS5oCisrKyBiL2FyY2gvYXJtL21tL21tLmgK
-QEAgLTM1LDMgKzM1LDQgQEAgc3RydWN0IHBnbGlzdF9kYXRhOwogdm9pZCBfX2luaXQgY3JlYXRl
-X21hcHBpbmcoc3RydWN0IG1hcF9kZXNjICptZCk7CiB2b2lkIF9faW5pdCBib290bWVtX2luaXQo
-dm9pZCk7CiB2b2lkIHJlc2VydmVfbm9kZV96ZXJvKHN0cnVjdCBwZ2xpc3RfZGF0YSAqcGdkYXQp
-Owordm9pZCBfX2luaXQgYm9vdG1lbV9yZWdpc3Rlcl9kZXZ0cmVlKHVuc2lnbmVkIGxvbmcgc3Rh
-cnQsIHVuc2lnbmVkIGxvbmcgc2l6ZSk7Cg==
---000e0cd598a682b39c047fd120a6
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---000e0cd598a682b39c047fd120a6--
