@@ -1,14 +1,15 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Joakim Tjernlund <joakim.tjernlund@transmode.se>
 Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
-Date: Thu, 18 Feb 2010 10:41:40 -0700
-Message-ID: <fa686aa41002180941y71201b27y64905fe34cc56deb@mail.gmail.com>
+Date: Thu, 18 Feb 2010 19:07:41 +0100
+Message-ID: <OFC6865529.46271A88-ONC12576CE.0063428C-C12576CE.006394F1@transmode.se>
 References: <2921453.1266505456809.JavaMail.ngmail@webmail09.arcor-online.net>
 	<OFC412BED7.5D5934A3-ONC12576CE.005D5F44-C12576CE.005EBE55@transmode.se>
+	<fa686aa41002180941y71201b27y64905fe34cc56deb@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="iso-8859-15"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <OFC412BED7.5D5934A3-ONC12576CE.005D5F44-C12576CE.005EBE55@transmode.se>
+In-Reply-To: <fa686aa41002180941y71201b27y64905fe34cc56deb@mail.gmail.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -18,26 +19,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Joakim Tjernlund <joakim.tjernlund@transmode.se>
-Cc: linuxppc-dev@ozlabs.org, =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>, devicetree-discuss@lists.ozlabs.org, ben-linux@fluff.org, iws@ovro.caltech.edu
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: glikely@secretlab.ca, iws@ovro.caltech.edu, =?ISO-8859-15?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2010 at 10:14 AM, Joakim Tjernlund
-<joakim.tjernlund@transmode.se> wrote:
-> "Albrecht Dre=DF" <albrecht.dress@arcor.de> wrote on 2010/02/18 16:04:16:
-> As far as I can tell your patch does all of the above so
+glikely@secretlab.ca wrote on 2010/02/18 18:41:40:
 >
-> Signed-off-by: Joakim Tjernlund <Joakim.Tjernlund@transmode.se>
+> On Thu, Feb 18, 2010 at 10:14 AM, Joakim Tjernlund
+> <joakim.tjernlund@transmode.se> wrote:
+> > "Albrecht Dre=DF" <albrecht.dress@arcor.de> wrote on 2010/02/18 16:04:1=
+6:
+> > As far as I can tell your patch does all of the above so
+> >
+> > Signed-off-by: Joakim Tjernlund <Joakim.Tjernlund@transmode.se>
+>
+> Thanks Joakim.  On a point of process; "Signed-off-by" means that
+> you've actually handled the patch and forwarded it on, either by
+> reposting or putting it in a git tree for someone to pull.  The
+> Signed-off-by trail collects a history of all the people who have
+> touched a patch during its development and merging.
+>
+> Reviewers can use Acked-by: or Reviewed-by: to indicate their consent.
+>  Ben can add your annotation when he merges the patch into his i2c
+> tree.
 
-Thanks Joakim.  On a point of process; "Signed-off-by" means that
-you've actually handled the patch and forwarded it on, either by
-reposting or putting it in a git tree for someone to pull.  The
-Signed-off-by trail collects a history of all the people who have
-touched a patch during its development and merging.
+I see, then please change that to
+Acked-by: Joakim Tjernlund <Joakim.Tjernlund@transmode.se>
 
-Reviewers can use Acked-by: or Reviewed-by: to indicate their consent.
- Ben can add your annotation when he merges the patch into his i2c
-tree.
 
-Cheers,
-g.
+Thanks,
+        Jocke
