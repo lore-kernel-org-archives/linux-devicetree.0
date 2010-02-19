@@ -1,13 +1,12 @@
-From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
-Date: Thu, 18 Feb 2010 19:45:29 +0100
-Message-ID: <1266518744.5877.0@antares>
-References: <OFC412BED7.5D5934A3-ONC12576CE.005D5F44-C12576CE.005EBE55@transmode.se>
+From: Christian Rund <Christian.Rund-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>
+Subject: AUTO: Christian Rund/Germany/IBM is out of the office from 02/19/2010
+	until 22/02/2010 EOB. (returning 23.02.2010)
+Date: Fri, 19 Feb 2010 04:02:17 +0100
+Message-ID: <OF1C009905.33BDEE9E-ONC12576CF.0010B082-C12576CF.0010B083@de.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1711948684174490771=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <OFC412BED7.5D5934A3-ONC12576CE.005D5F44-C12576CE.005EBE55-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org>
-	(from joakim.tjernlund-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org on Thu Feb 18 18:14:51 2010)
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,124 +16,16 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Joakim Tjernlund <joakim.tjernlund-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============1711948684174490771==
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg=PGP-SHA1; boundary="=-0wrqLKuUL/pP+nxhdEa7"
 
---=-0wrqLKuUL/pP+nxhdEa7
-Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am out of the office until 23.02.2010.
 
-Hi Joakim:
+I will respond to your message when I return.
 
-Am 18.02.10 18:14 schrieb(en) Joakim Tjernlund:
-> > [snip]
-> > > >   static void mpc_i2c_fixup(struct mpc_i2c *i2c)
-> > > >   {
-> > > > -   writeccr(i2c, 0);
-> > > > -   udelay(30);
-> > > > -   writeccr(i2c, CCR_MEN);
-> > > > -   udelay(30);
-> > > > -   writeccr(i2c, CCR_MSTA | CCR_MTX);
-> > > > -   udelay(30);
-> > > > -   writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
-> > > > -   udelay(30);
-> > > > -   writeccr(i2c, CCR_MEN);
-> > > > -   udelay(30);
-> > > > +   int k;
-> > > > +   u32 delay_val =3D 1000000 / i2c->real_clk + 1;
-> > > > +
-> > > > +   if (delay_val < 2)
-> > > > +      delay_val =3D 2;
-> > > > +
-> > > > +   for (k =3D 9; k; k--) {
-> > > > +      writeccr(i2c, 0);
-> > > > +      writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
-> > > > +      udelay(delay_val);
-> > > > +      writeccr(i2c, CCR_MEN);
-> > > > +      udelay(delay_val << 1);
-> > > > +   }
-> > > >   }
-> > >
->>> I am curious, didn't old method work with by just wrapping a for(k=3D9;=
- k; k--) around it? How did the wave form look?
-> >
->> Sure does that work!  The waveform was somewhat "streched", mainly due t=
-o the delays between some of the writeccr() calls which don't change the sd=
-a/scl lines.  Unfortunately I didn't take shots from the scope.
->=20
-> Yeah, the long delays has to go. So the wave form was the same but more s=
-tretched in time? I ask because I don't understand the writeccr(i2c, CCR_MS=
-TA | CCR_MTX); is supposed to do.
 
-Afaict, this is really a no-op.  The '5200 user's manual says about MEN
+Note: This is an automated response to your message  "devicetree-discuss
+Digest, Vol 20, Issue 29" sent on 19/2/10 2:00:01.
 
-<snip>
-* 0 module is reset and disabled. This is the Power-ON reset. When low the =
-interface is held in reset, but registers can still be accessed.
-* 1 I2C module is enabled. Bit must be set before other CR bits have any ef=
-fect.
-</snip>
-
-The change in the MSTA is needed -with the proper delays- as to generate th=
-e START and STOP conditions.
-
-Unfortunately, the data sheet is not very clear (or my English too bad), bu=
-t reading it *after* seeing the signals on the scope, I can at least guess =
-what they mean :-/
-
-Thus, the old code will probably produce SDA and SCL held high for ~90us, t=
-hen a SDA/SCL low for ~30us (plus/minus the delays the hw adds internally a=
-ccording to the clock setting), and then a ~30us SDA/SCL high.  It is not p=
-ossible to get the necessary delays from the data sheet, but as I said I em=
-pirically verified some cases to be safe.
-
-> The old code only works when the device is stuck at the last bit. To cope=
- with any bit (worst case is the first bit) you need 9 cycles, 8 bits + ack=
- =3D 9
->=20
-> Just toggling the clock 9 cycles should unlock any slave stuck in a read =
-operation. To unlock slaves stuck in a write operation you also need to gen=
-erate a START in every cycle too.
-
-Yes, of course...  this was the initial motivation of the patch, as I *have=
-* a slave which sometimes needs more than one cycle!
-
-> As far as I can tell your patch does all of the above so
->=20
-> Signed-off-by: Joakim Tjernlund <Joakim.Tjernlund-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org>
-
-Thanks a lot again for your time, and your helpful comments!
-
-Best, Albrecht.
-
---=-0wrqLKuUL/pP+nxhdEa7
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.12 (GNU/Linux)
-
-iD8DBQBLfYrYn/9unNAn/9ERAuh5AKDFPpNTEl7JNr1E6kZhs9tbtea4mgCgqNew
-XhKsE/T+zkSt9YijWZZdWR0=
-=iQcW
------END PGP SIGNATURE-----
-
---=-0wrqLKuUL/pP+nxhdEa7--
-
---===============1711948684174490771==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1711948684174490771==--
+This is the only notification you will receive while this person is away.
