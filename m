@@ -1,22 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
-Date: Mon, 22 Feb 2010 14:59:25 -0700
-Message-ID: <fa686aa41002221359m4d857e4cn3a1c56c32a24d21d@mail.gmail.com>
-References: <1222460748-20127-3-git-send-email-jdl@jdl.com>
-	<1222460748-20127-7-git-send-email-jdl@jdl.com>
-	<1222460748-20127-8-git-send-email-jdl@jdl.com>
-	<1222460748-20127-9-git-send-email-jdl@jdl.com>
-	<20080930145537.GJ18313@secretlab.ca>
-	<20081001034656.GF30810@yookeroo.seuss>
-	<fa686aa41002200813o3fea9a34s198be367ad81b367@mail.gmail.com>
-	<20100222013004.GM29038@yookeroo>
-	<fa686aa41002212226i4c83376cn8d88a045dd13fe00@mail.gmail.com>
-	<9696D7A991D0824DBA8DFAC74A9C5FA305B2021A@az33exm25.fsl.freescale.net>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/flattree: Make unflatten_device_tree() safe to
+	call from any arch
+Date: Tue, 23 Feb 2010 09:51:18 +1100
+Message-ID: <20100223095118.bed93bac.sfr@canb.auug.org.au>
+References: <20100222154816.3604.67114.stgit@angua>
+	<20100222155059.3604.39718.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============9216781571797643769=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9696D7A991D0824DBA8DFAC74A9C5FA305B2021A-ofAVchDyotYzzZk0BCvKg5jmvxFtTJ+o0e7PPNI6Mm0@public.gmane.org>
+In-Reply-To: <20100222155059.3604.39718.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,70 +18,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2010 at 9:13 AM, Yoder Stuart-B08248
-<B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+--===============9216781571797643769==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA1";
+ boundary="Signature=_Tue__23_Feb_2010_09_51_18_+1100_A6Y9ntPsHTviplAx"
+
+--Signature=_Tue__23_Feb_2010_09_51_18_+1100_A6Y9ntPsHTviplAx
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Grant,
+
+On Mon, 22 Feb 2010 08:50:59 -0700 Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
 >
->> > That still leaves node and property deletion to cover. =A0In keeping
->> > with the above approach, I'd like to do that in the form of
->> "negative
->> > redefinitions" of properties or nodes. =A0A neat syntax for
->> that doesn't
->> > immediately occur to be for that yet, though.
->>
->> hmmm. =A0I'll think more about it too. =A0I agree that a negative
->> redefinition sounds like a reasonable approach. =A0I do want the ability
->> to drop nodes easily. =A0It would make it easy to handle SoC or FPGA
->> design variants.
->
-> We had a similar problem in the Freescale Embedded Hypervisor
-> to control the generation of guest device trees. =A0 We defined
-> several 'magic' properties that had special meaning in
-> the context of a node update.
+> - If CONFIG_OF_FLATTREE is not set, then make unflatten_device_tree()
+>   an empty #define.
 
-heh, so the functionality is definitely needed, but boy is that ugly!
-:-)  I really do think there needs to be a syntactically distinct
-method of deleting nodes and properties.  Magic property names that
-look like normal properties worry me.
+Any reason not to make this a static inline?
 
-What about something like this:  Right now nodes are defined by <name>
-{ [<property>|<node>]; ... }; and properties are defined by <name>; or
-<name> =3D <value>;  To differentiate a command from either a node or
-property definition, perhaps round braces could be used:
+> +#define unflatten_device_tree() do {} while(0)
 
-so for the definition:
-a-node {
-        property-1;
-        property-2 =3D "blah";
-        child-1 {
-                ...
-        };
-};
+static inline void unflatten_device_tree(void) {}
 
-you could delete property-2 and node-1 with:
-a-node {
-        delete-node(child-1);
-        delete-property(property-2);
-};
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
+http://www.canb.auug.org.au/~sfr/
 
-> We also had the need to prepend to a <stringlist> so that
-> compatible properties could be updated.
->
-> =A0 prepend-stringlist =A0<stringlist> The value is a string list that
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0sp=
-ecifies on or more property name/value
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pa=
-irs.
+--Signature=_Tue__23_Feb_2010_09_51_18_+1100_A6Y9ntPsHTviplAx
+Content-Type: application/pgp-signature
 
-This is a bit of a harder problem.  I've go no ideas on how to handle
-this in a syntactically elegant way.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-g.
+iEYEARECAAYFAkuDCmYACgkQjjKRsyhoI8yz3QCdF3W500UskKk8Dr5TaZyBwdLv
+j6gAmgMpa3hZ1wTvPIN/LIM9HwRxFKKH
+=VgF8
+-----END PGP SIGNATURE-----
 
--- =
+--Signature=_Tue__23_Feb_2010_09_51_18_+1100_A6Y9ntPsHTviplAx--
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+--===============9216781571797643769==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============9216781571797643769==--
