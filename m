@@ -1,14 +1,20 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 2/2] of/flattree: Make unflatten_device_tree() safe to call
-	from any arch
-Date: Mon, 22 Feb 2010 08:50:59 -0700
-Message-ID: <20100222155059.3604.39718.stgit@angua>
-References: <20100222154816.3604.67114.stgit@angua>
+From: "Yoder Stuart-B08248" <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 8/9 V3] Add documentation for the new DTS language.
+Date: Mon, 22 Feb 2010 09:13:40 -0700
+Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA305B2021A@az33exm25.fsl.freescale.net>
+References: <1222460748-20127-3-git-send-email-jdl@jdl.com>
+	<1222460748-20127-5-git-send-email-jdl@jdl.com><1222460748-20127-6-git-send-email-jdl@jdl.com>
+	<1222460748-20127-7-git-send-email-jdl@jdl.com><1222460748-20127-8-git-send-email-jdl@jdl.com>
+	<1222460748-20127-9-git-send-email-jdl@jdl.com><20080930145537.GJ18313@secretlab.ca>
+	<20081001034656.GF30810@yookeroo.seuss><fa686aa41002200813o3fea9a34s198be367ad81b367@mail.gmail.com>
+	<20100222013004.GM29038@yookeroo>
+	<fa686aa41002212226i4c83376cn8d88a045dd13fe00@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100222154816.3604.67114.stgit@angua>
+Content-class: urn:content-classes:message
+In-Reply-To: <fa686aa41002212226i4c83376cn8d88a045dd13fe00-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,63 +24,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Wood Scott-B07421 <B07421@frees>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes unflatten_device_tree() safe to call from any arch
-setup code with the following changes:
-- Make sure initial_boot_params actually points to a device tree blob
-  before unflattening
-- Make sure the initial_boot_params->magic field is correct
-- If CONFIG_OF_FLATTREE is not set, then make unflatten_device_tree()
-  an empty #define.
 
-This patch also adds some additional debug output to the top of
-unflatten_device_tree().
+> > That still leaves node and property deletion to cover. =A0In keeping
+> > with the above approach, I'd like to do that in the form of =
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+> "negative
+> > redefinitions" of properties or nodes. =A0A neat syntax for =
 
- drivers/of/fdt.c       |   15 +++++++++++++++
- include/linux/of_fdt.h |    2 ++
- 2 files changed, 17 insertions(+), 0 deletions(-)
+> that doesn't
+> > immediately occur to be for that yet, though.
+> =
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 406757a..5ce7bd5 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -553,6 +553,21 @@ void __init unflatten_device_tree(void)
- 
- 	pr_debug(" -> unflatten_device_tree()\n");
- 
-+	if (!initial_boot_params) {
-+		pr_debug("No device tree pointer\n");
-+		return;
-+	}
-+
-+	pr_debug("Unflattening device tree:\n");
-+	pr_debug("magic: %08x\n", be32_to_cpu(initial_boot_params->magic));
-+	pr_debug("size: %08x\n", be32_to_cpu(initial_boot_params->totalsize));
-+	pr_debug("version: %08x\n", be32_to_cpu(initial_boot_params->version));
-+
-+	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
-+		pr_err("Invalid device tree blob header\n");
-+		return;
-+	}
-+
- 	/* First pass, scan for size */
- 	start = ((unsigned long)initial_boot_params) +
- 		be32_to_cpu(initial_boot_params->off_dt_struct);
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index f0fdd1f..9d7fd6d 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -99,6 +99,8 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
- /* Other Prototypes */
- extern void unflatten_device_tree(void);
- extern void early_init_devtree(void *);
-+#else /* CONFIG_OF_FLATTREE */
-+#define unflatten_device_tree() do {} while(0)
- #endif /* CONFIG_OF_FLATTREE */
- 
- #endif /* __ASSEMBLY__ */
+> hmmm.  I'll think more about it too.  I agree that a negative
+> redefinition sounds like a reasonable approach.  I do want the ability
+> to drop nodes easily.  It would make it easy to handle SoC or FPGA
+> design variants.
+
+We had a similar problem in the Freescale Embedded Hypervisor
+to control the generation of guest device trees.   We defined
+several 'magic' properties that had special meaning in =
+
+the context of a node update.
+
+   delete-prop   <stringlist>   The value identifies one or more names of
+                                properties that should be deleted from the
+                                node.
+
+   delete-node   <stringlist>   The value identifies one or more names of
+                                nodes that should be deleted. The node and
+                                all descendants will be deleted.
+
+We also had the need to prepend to a <stringlist> so that =
+
+compatible properties could be updated.
+
+   prepend-stringlist  <stringlist> The value is a string list that
+                                    specifies on or more property name/value
+                                    pairs. =
+
+
+                                    "prop-name1," "prop-value1,"
+                                         "prop-name2," "propvalue2,"
+
+                                    Each name/value pair consists of two
+                                    strings-the first is the name of the
+                                    property, the second is a string
+                                    to prepend to the property. If the
+                                    property does not already exist it will
+                                    be created.
+
+Examples
+
+   / {
+        parent {
+                child1 {
+                        new-property =3D "stuff";
+                        delete-prop =3D "foo", "bar";
+                };
+        };
+   };
+
+   / {
+        parent {
+                child1 {
+                        delete-node =3D "childA", "childB";
+                };
+        };
+   };
+
+   / {
+        parent {
+                child1 {
+                        prepend-stringlist =3D "compatible", "fsl,foo-bar";
+                };
+        };
+   };
+
+Regards,
+Stuart
