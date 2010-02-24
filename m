@@ -1,51 +1,65 @@
-From: Greg KH <gregkh@suse.de>
-Subject: Re: [RFC] driver-core: Add device node pointer to struct device
-Date: Wed, 24 Feb 2010 13:44:42 -0800
-Message-ID: <20100224214442.GB18437@suse.de>
-References: <20100224210514.16289.86611.stgit@angua>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: dtc: Allow multiple labels on nodes and properties (v2)
+Date: Thu, 25 Feb 2010 08:58:44 +1100
+Message-ID: <20100224215844.GB31576@yookeroo>
+References: <20100224010312.GF7187@yookeroo> <20100224072217.GJ7187@yookeroo>
+	<E1NkIfh-0005pc-R0@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20100224210514.16289.86611.stgit@angua>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kay.sievers@vrfy.org, benh@kernel.crashing.org
+In-Reply-To: <E1NkIfh-0005pc-R0-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 24, 2010 at 02:10:30PM -0700, Grant Likely wrote:
-> Greg and Kay,
+On Wed, Feb 24, 2010 at 08:57:05AM -0600, Jon Loeliger wrote:
+> > Oops, don't apply that one, it has an uninitialized variable bug.
+> > Here's a fixed version.
+> > 
+> > dtc: Allow multiple labels on nodes and properties
+> > 
+> > At present, both the grammar and our internal data structures mean
+> > that there can be only one label on a node or property.  This is a
+> > fairly arbitrary constraint, given that any number of value labels can
+> > appear at the same point, and that in C you can have any number of
+> > labels on the same statement.
+> > 
+> > This is pretty much a non-issue now, but it may become important with
+> > some of the extensions that Grant and I have in mind.  It's not that
+> > hard to change, so this patch does so, allowing an arbitrary number of
+> > labels on any given node or property.  As usual a testcase is added
+> > too.
+> > 
+> > Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > 
+> > Index: dtc/tests/multilabel.dts
+> > ===================================================================
+> > --- /dev/null	1970-01-01 00:00:00.000000000 +0000
+> > +++ dtc/tests/multilabel.dts	2010-02-24 17:57:12.736958851 +1100
+> > @@ -0,0 +1,38 @@
 > 
-> This is a patch from a larger series of OF related cleanup patches.  This
-> one adds a new 'of_node' member to struct device, conditional upon
-> CONFIG_OF.  The goal is to move of_node out of archdata because all
-> arches using CONFIG_OF need it.
 > 
-> Before I commit too much effort down this path, I want to get your
-> feedback.  Do you have any objections to this change to struct device?
+> So, I applied this.  But I had to make an extra amend step to
+> fix three things after applying it:
 > 
-> @@ -414,6 +415,9 @@ struct device {
->  					     override */
->  	/* arch specific additions */
->  	struct dev_archdata	archdata;
-> +#ifdef CONFIG_OF
-> +	struct device_node	*of_node;
-> +#endif
+>     - Remove the meta-comment, (placed after triple dash line)
+>     - Remove the extraneous "(v2)", (placed in Subject brackets)
+>     - Remove the duplicate Subject: line, (not repeated in body)
 
-No objection from me, but do we really need the #ifdef here?
-
-> Full patch follows...
-
-Do you want to take this patch through your tree?  If so, feel free to
-add:
-	Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-
-to the patch.
-
-If not, let me know and I'll take it through my tree.
-
-Glad to see this work coming along, nice job.
-
-thanks,
-
-greg k-h
+Good point, sorry.  I'll keep that in mind in future.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
