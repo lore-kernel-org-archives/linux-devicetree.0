@@ -1,11 +1,13 @@
-From: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] of: add bus-number specification to spi_mpc8xxx
-Date: Tue, 16 Feb 2010 15:08:50 +0100
-Message-ID: <20100216150850.d966cd79.eschwab@online.de>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: Proposal to move PCI out of arch/powerpc and into drivers/of
+Date: Sun, 28 Feb 2010 11:32:06 +1100
+Message-ID: <1267317126.23523.1859.camel@pasglop>
+References: <27bab769-0788-4b48-96a7-ced65e40144c@SG2EHSMHS007.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <27bab769-0788-4b48-96a7-ced65e40144c-RaUQJvECHitCYczPSvLbDrjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,63 +17,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+On Fri, 2010-02-26 at 16:07 -0700, John Linn wrote:
+> Hi all,
+> 
+> We are in the process of putting PCI/PCIe into the microblaze
+> architecture.  
+> 
+> In order to not duplicate/fork the PCI code in Powerpc, we're proposing
+> to move the PCI code from arch/powerpc into drivers/of such that it
+> would be common code for Powerpc and MicroBlaze.
+> 
+> This would be the 1st part of a refactoring that would occur with the
+> PCI code.
+> 
+> Ben H., would you mind if that happened (move arch/powerpc/kernel/pci*
+> to drivers/of/*)?
 
-Added devicetree parsing for SPI bus number. If no bus number is specified,
-a dynamically assigned bus number will be used (typically 32766).
+I don't think we should move the whole thing. I know Grant plans to move
+parts of it though. There's quite a few things in there that are still
+quite powerpc specific (and even different between ppc32 and ppc64).
 
-Signed-off-by: Ernst Schwab <eschwab-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
----
-diff -upr a/Documentation/powerpc/dts-bindings/fsl/spi.txt b/Documentation/powerpc/dts-bindings/fsl/spi.txt
---- a/Documentation/powerpc/dts-bindings/fsl/spi.txt
-+++ b/Documentation/powerpc/dts-bindings/fsl/spi.txt
-@@ -4,6 +4,8 @@ Required properties:
- - cell-index : SPI controller index.
- - compatible : should be "fsl,spi".
- - mode : the SPI operation mode, it can be "cpu" or "cpu-qe".
-+- bus-number : number of the SPI bus. If unspecified, a dynamically
-+  assigned bus number will be used.
- - reg : Offset and length of the register set for the device
- - interrupts : <a b> where a is the interrupt number and b is a
-   field that represents an encoding of the sense and level
-@@ -21,4 +23,5 @@ Example:
- 		interrupts = <82 0>;
- 		interrupt-parent = <700>;
- 		mode = "cpu";
-+		bus-number = <0>;
- 	};
-diff -upr a/drivers/spi/spi_mpc8xxx.c b/drivers/spi/spi_mpc8xxx.c
---- a/drivers/spi/spi_mpc8xxx.c
-+++ b/drivers/spi/spi_mpc8xxx.c
-@@ -1230,6 +1230,8 @@ static int __devinit of_mpc8xxx_spi_prob
- 	struct resource mem;
- 	struct resource irq;
- 	const void *prop;
-+	const int *bus_num;
-+	int len;
- 	int ret = -ENOMEM;
- 
- 	pinfo = kzalloc(sizeof(*pinfo), GFP_KERNEL);
-@@ -1239,8 +1241,16 @@ static int __devinit of_mpc8xxx_spi_prob
- 	pdata = &pinfo->pdata;
- 	dev->platform_data = pdata;
- 
--	/* Allocate bus num dynamically. */
--	pdata->bus_num = -1;
-+
-+	bus_num = of_get_property(np, "bus-number", &len);
-+	if (bus_num && len == sizeof(*bus_num)) {
-+		/* bus number is specified in node */
-+		pdata->bus_num = *bus_num;
-+	} else {
-+		/* Allocate bus num dynamically. */
-+		pdata->bus_num = -1;
-+	}
-+
- 
- 	/* SPI controller is either clocked from QE or SoC clock. */
- 	pdata->sysclk = get_brgfreq();
+I wouldn't mind in the long run if we could make some of powerpc's PCI
+implementation bits more generic, such as struct pci_controller, and the
+MMIO/PIO remapping mechanisms, since many archs do more or less the same
+thing and all in subtely different ways. But that would have to go to
+drivers/pci.
+
+Then there's the whole deal with matching OF nodes with PCI devices. A
+lot of that is still different even between ppc32 and ppc64. I don't
+think any of that is ready to be moved to drivers/of, it's not generic
+enough by far.
+
+Cheers,
+Ben.
