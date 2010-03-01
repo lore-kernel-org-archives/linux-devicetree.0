@@ -1,7 +1,7 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Subject: RE: [PATCH 8/9 V3] Add documentation for the new DTS language.
-Date: Mon, 1 Mar 2010 14:26:27 -0800
-Message-ID: <1012f9aa-1642-41ab-b8cd-a4ab4a7b269e@VA3EHSMHS024.ehs.local>
+Date: Mon, 1 Mar 2010 14:17:47 -0800
+Message-ID: <72f497af-412c-4a05-90c2-5df0be00d93f@VA3EHSMHS007.ehs.local>
 References: <1222460748-20127-3-git-send-email-jdl@jdl.com>
 	<1222460748-20127-9-git-send-email-jdl@jdl.com>
 	<20080930145537.GJ18313@secretlab.ca>
@@ -10,15 +10,15 @@ References: <1222460748-20127-3-git-send-email-jdl@jdl.com>
 	<20100222013004.GM29038@yookeroo>
 	<fa686aa41002212226i4c83376cn8d88a045dd13fe00@mail.gmail.com>
 	<9696D7A991D0824DBA8DFAC74A9C5FA305B2021A@az33exm25.fsl.freescale.net>
+	<fa686aa41003011115m1bb0b644g5014340f6c312ee9@mail.gmail.com>
 	<4288fc0b-79a4-42fd-9e77-573dbad79210@SG2EHSMHS004.ehs.local>
-	<4B8C2C4C.8070901@freescale.com>
-	<fa686aa41003011418x339884c9md61c49948b31a8d1@mail.gmail.com>
+	<fa686aa41003011349i367a423cx2c59953e6afc9b75@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Class: urn:content-classes:message
-In-Reply-To: <fa686aa41003011418x339884c9md61c49948b31a8d1-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <fa686aa41003011349i367a423cx2c59953e6afc9b75-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,7 +28,7 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
@@ -37,193 +37,300 @@ List-Id: devicetree@vger.kernel.org
 > -----Original Message-----
 > From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gra=
 nt Likely
-> Sent: Monday, March 01, 2010 2:19 PM
-> To: Scott Wood
-> Cc: Stephen Neuendorffer; Yoder Stuart-B08248; Wood Scott-B07421; devicet=
-ree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org; John
-> Williams; Jeremy Kerr
+> Sent: Monday, March 01, 2010 1:49 PM
+> To: Stephen Neuendorffer
+> Cc: Yoder Stuart-B08248; Wood Scott-B07421; devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org=
+; John Williams; Jeremy Kerr
 > Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
 > =
 
-> On Mon, Mar 1, 2010 at 2:06 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrot=
-e:
-> > Stephen Neuendorffer wrote:
+> Hi Stephen, good comments...
+> =
+
+> On Mon, Mar 1, 2010 at 1:30 PM, Stephen Neuendorffer
+> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> >> Given the following tree...
 > >>
-> >> One thing I've seen in the past is that there is a sequentialization
-> >> question in this, which becomes
-> >> more apparent once deletion is allowed.
-> >>
-> >> First off, my assumption is that each node name is always unique in a
-> >> tree, even when overrides are allowed.
-> >> Otherwise the sub-node and property ordering becomes important.
-> >>
-> >> foo {
-> >> =A0 =A0 =A0 =A0bar =3D 2;
-> >> =A0 =A0 =A0 =A0bar =3D 3; // Illegal
-> >> } ;
-> >>
-> >>
-> >> foo {
-> >> =A0 =A0 =A0 =A0bar =3D 2;
-> >> } foo {
-> >> =A0 =A0 =A0 =A0bar =3D 3; // Legal
+> >> / {
+> >> =A0 =A0 =A0 =A0 child-label: child {
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D <0xbad>;
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 grandchild-label: grandchild {
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> >> =A0 =A0 =A0 =A0 };
 > >> };
 > >>
+> >> ...here are the use cases that I see as important (plus some suggested
+> >> syntax. =A0I'm not happy with it though, and I'm open to better ideas).
 > >>
-> >> So, essentially, sequentialization of operation is forced by the
-> >> concatenation of trees.
+> >> 1) Deleting a property from a node:
+> >> &child-label {
+> >> =A0 =A0 =A0 =A0 /* syntax to delete "prop" property */
+> >> =A0 =A0 =A0 =A0 delete-prop("prop");
+> >> =A0 =A0 =A0 =A0 ^prop; =A0/* this isn't very good, hard to differentia=
+te from
+> >> node deletion */
+> >> =A0 =A0 =A0 =A0 __delete_property =3D "prop";
+> >> };
+> >>
+> >> 2) Delete a child node:
+> >> &child-label {
+> >> =A0 =A0 =A0 =A0 /* syntax to delete "grandchild" node */
+> >> =A0 =A0 =A0 =A0 delete-node("grandchild");
+> >> =A0 =A0 =A0 =A0 ^grandchild;
+> >> =A0 =A0 =A0 =A0 __delete_node =3D "grandchild";
+> >> =A0 =A0 =A0 =A0 grandchild =3D ^{};
+> >> };
+> >>
+> >> 3) Delete a labelled node from the top level:
+> >> delete-node(&grandchild-label);
+> >>
+> >> Comments? =A0Suggestions? =A0Better ideas? =A0Please? =A0Don't inflict=
+ pain on
+> >> yourself by letting me decide the syntax.
+> >>
+> >> g.
 > >
-> > Hmm, I'd think it would be useful to e.g. include a template and
-> > subsequently modify it within the same node, rather than a more verbose=
- and
-> > error-prone process of referencing labels later.
+> > One thing I've seen in the past is that there is a sequentialization qu=
+estion in this, which becomes
+> > more apparent once deletion is allowed.
 > >
-> > If sequential operations within a tree are supported, I'm not sure that
-> > there's any remaining need for separate top-level trees -- you could ex=
-press
-> > the same thing as top-level property/node redefinitions.
-> >
-> > What are the problems with supporting this?
+> > First off, my assumption is that each node name is always unique in a t=
+ree, even when overrides are
+> allowed.
+> > Otherwise the sub-node and property ordering becomes important.
 > =
 
-> The main problem is that it doesn't fit the use cases I need to solve.
->  I need to start with a 'stock' or 'vanilla' tree, and then add into
-> it board details.  ie. lay down a generic MPC5200 tree (include a .dts
-> file), and then fill it in with i2c and spi devices.  Or include the
-> .dts file generated by the XIlinx FPGA toolchain, and then populate it
-> with board details.  Sequential operations within the tree doesn't do
-> anything to support this use case because the board level fixups will
-> be applied all over the tree.
+> Yes, multiple sibling nodes with the same name are not allowed by dtc.
+>  I believe multiple siblings of the same name is legal with
+> OpenFirmware, but that is at least partially because in OpenFirmware
+> the @<addr> portion isn't necessarily part of the name.  (Imagine
+> having triplets and naming them Sally@1, Sally@2 and Sally@3!)
+> =
 
-Aside: I always pictured this the other way round, where the DTS for an
-FPGA design includes the DTS for the board.  Then again, as long as they
-are independent, it probably doesn't matter.
+> However, the same name can be used by non-siblings.  For example, the
+> following is totally legal:
+> =
 
+> / {
+>     foo {
+>         foo {
+>         };
+>     };
+> };
+> =
+
+> > foo {
+> > =A0 =A0 =A0 =A0bar =3D 2;
+> > =A0 =A0 =A0 =A0bar =3D 3; // Illegal
+> > } ;
+> >
+> >
+> > foo {
+> > =A0 =A0 =A0 =A0bar =3D 2;
+> > }
+> > foo {
+> > =A0 =A0 =A0 =A0bar =3D 3; // Legal
+> > };
+> >
+> >
+> > So, essentially, sequentialization of operation is forced by the concat=
+enation of trees.
+> =
+
+> Yes, you are exactly correct.  The model is to fully form 2 trees, and
+> then overlay the latter on the former.
+> =
+
+> > Similarly:
+> >
+> > foo {
+> > =A0 =A0 =A0 =A0bar-label: bar =3D 2;
+> > }
+> > &bar-label =3D 3;
+> =
+
+> This actually isn't legal, but for an entirely different reason.  Even
+> though labels can be applied to properties, property labels aren't
+> actually used for anything unless asm output is selected.  All tree
+> modification as of now is done from the context of nodes.
+> Redefinition can start from the root node, or it can start from a
+> labelled node, but there is no syntax defined for modifying a labelled
+> property.
+
+Ah, OK.
  =
 
-> To reverse the question, what is the use case that is best solved with
-> sequential operations within the root tree?
+> It is possible to add redefinition of labelled properties, but I'd
+> like to see a use case first, and why it is better than the current
+> form (similar to the arguments I put forth for node redefinition by
+> label).
+
+Ah, right, they have separate namespaces.  When I implemented this
+in the past, properties and hierarchy shared a single namespace.
+
+> So, if I rework your example to use nodes...
 > =
 
-> >> foo {
-> >> =A0 =A0 =A0 =A0bar-label: bar =3D 2;
-> >> }
-> >> delete(&bar-label); =A0// Legal.
-> >> foo {
-> >> =A0 =A0 =A0 =A0bar-label: bar =3D 4; =A0// Legal, even though previous=
-ly deleted
-> >> }
+> foo {
+>         bar-label: bar {
+>                 prop =3D 2;
+>         };
+> };
+> &bar-label {
+>         prop =3D 3;
+> };
+> =
+
+> So, yes, prop in the second tree overrides the prop in the first tree
+> because it is the same property name in the 'bar' node.
+> =
+
+> > delete has the similar problem.
 > >
-> > Is it legal to reuse the label, even though it sort of points to the sa=
-me
-> > spot?
-> =
-
-> In the overlay model that is currently being approached.  Yes.
-> =
-
-> > If you don't reuse the label, but bar is redefined, where does bar-label
-> > point?
-> =
-
-> It doesn't point to anything because when a property is deleted, the
-> label also goes away.
-> =
-
-> > Do all labels to nodes in separate trees that end up referring to the s=
-ame
-> > node in the final tree have the same phandle? =A0Are they interchangeab=
-le in
-> > subsequent delete commands?
-> =
-
-> Yes.
-> =
-
-> >> One trick is that the below is problematic, or at least hard to verify
-> >> statically.
-> >>
-> >> foo {
-> >> =A0 =A0 =A0 =A0delete(&bar-label); // Legal.
-> >> =A0 =A0 =A0 =A0delete(bar); // May or may not be Illegal, since don't =
-know what
-> >> bar-label references
-> >> }
+> > foo {
+> > =A0 =A0 =A0 =A0bar =3D 2;
+> > =A0 =A0 =A0 =A0delete(bar); // Should be illegal
+> > }
 > >
-> > That raises the question of whether it's legal to delete things that ar=
-en't
-> > there.
+> > foo {
+> > =A0 =A0 =A0 =A0bar-label: bar =3D 2;
+> > }
+> > delete(&bar-label); =A0// Legal.
+> > foo {
+> > =A0 =A0 =A0 =A0bar-label: bar =3D 4; =A0// Legal, even though previousl=
+y deleted
+> > }
 > =
 
-> It isn't currently, which seems sane to me.
+> reworked to use nodes:
+> foo {
+>         bar-label: bar {
+>                 prop =3D 2;
+>                 delete(bar); // should be illegal
+>         };
+> };
+
+Um, my original intent was:
+foo {
+         bar-label: bar {
+                 prop =3D 2;
+         };
+         delete(bar); // should be illegal
+};
+
+> foo {
+>         bar-label: bar {  /* legal, adds label to node */
+>                 prop =3D 3;  /* legal, changes prop */
+>         };
+> };
+> delete-node(&bar-label};  // legal
+> foo {
+>         bar-label: bar {  /* Legal, even though previously deleted */
+>                 prop =3D 4;
+>         };
+> };
 > =
 
-> >=A0There may be cases where a dts fragment A doesn't know whether
-> > fragment B will have defined something, and fragment A wants to make su=
-re it
-> > ends up undefined one way or another.
+> > So, regardless of the syntax, I think it's important to ensure the abov=
+e checks and sequentiality.
+> > There's also a canonicalization question, because you can spit out the =
+original source, or the
+> 'reduction'
+> > which results in all the overrides and deletions. =A0 I think from look=
+ing at Grant's patch, this is
+> already
+> > the way things work, but I don't think anyone had really explicitly sta=
+ted that.
 > =
 
-> Later fragments should always override earlier ones.  So if A is
-> defined before B, then B can override anything that A does.
+> Hmmm, perhaps nobody has.  Yes, each node redefinition is fully
+> processed before going on to the next one.  Think: a stack of
+> transparencies where each new sheet masks/changed/adds to the one
+> below it.
 
-So the idiom to do this safely would be:
+I think this makes alot of sense. =
+
+
+> > One trick is that the below is problematic, or at least hard to verify =
+statically.
+> >
+> > foo {
+> > =A0 =A0 =A0 =A0delete(&bar-label); // Legal.
+> =
+
+> This is never legal.  If deleting by label, it must be at the top
+> level.  It doesn't make sense to use a label reference inside a node
+> block, since the node block is already supposed to define where you
+> are working in the tree.
+> =
+
+> > =A0 =A0 =A0 =A0delete(bar); // May or may not be Illegal, since don't k=
+now what bar-label references
+> =
+
+> No longer an issue since the previous line is illegal.
+> =
+
+> Also, must be either delete-node() or delete-prop() since nodes and
+> properties can use the same names.
+
+So, is it true that a tree which is overlayed on another tree can be indepe=
+ndently verified to
+be independent of internal ordering?  This would be nice if so.
+
+> > }
+> >
+> > So, to syntax: the sequentialization property may be more syntactically=
+ obvious if deletion
+> resembles
+> > setting a property or node like:
+> >
+> > =A0^bar
+> > =A0!bar
+> > or even
+> > =A0bar =3D !;
+> > =A0bar !;
+> =
+
+> That's an interesting point.  Perhaps it would be better to use a
+> syntax that enforces the concept of overlays, and talk about masking
+> out instead of deleting nodes and properties from the earlier tree.
+> =
+
+> I kind of like the ^ syntax, but there would have to be syntax
+> variations for both node and property masking.  I'm not sure it's a
+> good idea to dedicate otherwise valid node name characters to the
+> purpose of masking.
+
+I'm not necessarily wild about these syntax options either, BTW...
+
+> > Which brings up the question 'undeletion question'. =A0Can you do:
+> >
+> > d-label: delete(bar);
+> > delete(&d-label);
+> =
+
+> Not sure I follow.  It certainly isn't be valid to apply a label to a
+> command like delete().
+
+But the best thing of the above is that there is no longer a distinction be=
+tween commands and data!
+delete is just a tag which gets interpreted during 'reduction' or 'overlay'.
+
+For instance, deleting a subnode could be:
 
 foo {
-	bar {} // Ensure that bar exists.
+	bar {
+		delete;
+	}
 }
-foo {
-	delete(bar);
-}
 
-Seems baroque, but OK...
-
-> >> So, to syntax: the sequentialization property may be more syntactically
-> >> obvious if deletion resembles
-> >> setting a property or node like:
-> >>
-> >> =A0^bar
-> >> =A0!bar
-> >> or even
-> >> =A0bar =3D !;
-> >> =A0bar !;
-> >
-> > What specifically is made more obvious? =A0Using symbols rather than na=
-mes
-> > seems more cryptic to me.
-> >
-> > Only the "bar =3D !" form seems to clearly indicate that, for the purpo=
-ses of
-> > this particular tree, you're assigning some special placeholder to bar
-> > rather than performing an immediate action. =A0That could just as well =
-be done
-> > with something like "bar =3D /delete-prop/".
-> >
-> > I'd rather make them actually behave like immediate commands, though.
-> >
-> >> Which brings up the question 'undeletion question'. =A0Can you do:
-> >>
-> >> d-label: delete(bar);
-> >> delete(&d-label);
-> >
-> > I'd say no -- delete operates on data, not commands.
-> =
-
-> Yes, I agree.  However, the command() syntax may be a bad idea if
-> following the 'stack of overlays' model to its logical conclusion.  In
-> a sense, properties and nodes are getting masked out of the earlier
-> tree, not deleted.  It is more of an operation (mask) than a command
-> (delete) being applied.  delete-node() may give the misleading
-> impression that something is being executed at that point in the tree.
-
-Regardless of what the syntax is, if the *semantics* is overlay, then there
-doesn't seem to be any reason to disallow undeletion, and in fact, this sem=
-antics
-gives a way to implement it.  I'll defer whether this is *needed*: In the c=
-ase
-of device trees it's not clear that it is.
+I guess this ends up conflicting with a property named 'delete' though.
 
 Steve
+
+
+
 
 This email and any attachments are intended for the sole use of the named r=
 ecipient(s) and contain(s) confidential information that may be proprietary=
