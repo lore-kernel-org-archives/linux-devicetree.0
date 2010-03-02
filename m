@@ -1,92 +1,90 @@
-From: "Albrecht Dreﬂ" <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
+From: Wolfram Sang <w.sang@pengutronix.de>
 Subject: Re: [Patch] mpc5200b: improve baud rate calculation (reach high
 	baud rates, better accuracy)
-Date: Tue, 2 Mar 2010 09:56:48 +0100 (CET)
-Message-ID: <22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
+Date: Tue, 2 Mar 2010 16:27:30 +0100
+Message-ID: <20100302152730.GA7979@pengutronix.de>
 References: <20100302082858.GA4087@pengutronix.de>
 	<14429243.1267517383754.JavaMail.ngmail@webmail14.arcor-online.net>
+	<22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100302082858.GA4087-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1063854518352049578=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Albrecht =?utf-8?B?RHJl77+9?= <albrecht.dress@arcor.de>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram:
 
-[snip]
-> > Yes, but I do all /calculations/ with the /4 prescaler for higher
-> accuracy.
-> > If the divisor exceeds the available 16 bits of the counter reg, I round
-> > (divisor / 8) to use the /32 prescaler.  Think of a 19-bit counter valu=
-e,
-> > where I can choose to use either the lower or the higher 16 bits for the
-> > counter reg.
-> =
+--===============1063854518352049578==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Content-Disposition: inline
 
-> Okay, now I got it. (Maybe this is an indication for another comment above
-> the
-> set divisor function?)
 
-O.k., I will add that comment...
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Remember also that using the higher 16 bits (/32 prescaler) is
-> > probably the exceptional case - with an IPB frequency of 132 MHz this
-> will
-> > happen only for standard baud rates B300 and slower.
-> =
 
-> Even the rare cases have to be correct ;)
+> > > > This should be handled using a new compatible-entry
+> > > > "fsl,mpc5200b-psc-uart".
+> > >=20
+> >=20
+> > > I agree that this would be a lot cleaner, but it's also a lot more
+> > intrusive.
+> > > CC'ing the device tree discussion list here... comments, please!!
+> >=20
+> > Why intrusive? Maybe I miss something?
+>=20
+> Not for the source file, but for all the dts files, if they want to benef=
+it
+> from the detection of the '5200B.  Basically, *all* files have to be chec=
+ked
+> and touched if necessary.  Again, I agree that this would be the clean
+> approach, but I wanted to avoid that effort.  Grant???
 
-I agree - will make the debug output and comments clearer...
+Please check the current 5200b-dts files. They already have the property,
+exactly for the case that a specific driver may be added in the future. And
+even if not, the behaviour of the driver would not change by missing your
+driver improvement, so there is also no regression.
 
-[snip]
-> > > This should be handled using a new compatible-entry
-> > > "fsl,mpc5200b-psc-uart".
-> > =
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-> =
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-> > I agree that this would be a lot cleaner, but it's also a lot more
-> intrusive.
-> > CC'ing the device tree discussion list here... comments, please!!
-> =
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
 
-> Why intrusive? Maybe I miss something?
+iEYEARECAAYFAkuNLmIACgkQD27XaX1/VRtJsACgtfHXuyhBJfC0dfWpZqQXACxD
+al4AmQEPlSy5sjD9X+Z1yx3OeiwK+iI4
+=2n1J
+-----END PGP SIGNATURE-----
 
-Not for the source file, but for all the dts files, if they want to benefit=
- from the detection of the '5200B.  Basically, *all* files have to be check=
-ed and touched if necessary.  Again, I agree that this would be the clean a=
-pproach, but I wanted to avoid that effort.  Grant???
+--BOKacYhQ+x31HxR3--
 
-[snip]
-> Leave those two function pointers empty and fill them during probe (probe
-> has
-> access to the compatible-property it was matched against, see its
-> arguments).
-> So it should be a matter of:
-> =
+--===============1063854518352049578==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> if (matched_property =3D=3D 5200b)
-> 	ops->func =3D this_one;
-> else
-> 	ops->func =3D that_one;
-
-Umm, yes, that's true of course.  Will pick it up.
-
-Thanks, Albrecht.
-
-Tolle Dekollet=E9s oder scharfe Tatoos? Vote jetzt ... oder mach selbst mit=
- und zeige Deine Schokoladenseite
-bei Topp oder Hopp von Arcor: http://www.arcor.de/rd/footer.toh
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============1063854518352049578==--
