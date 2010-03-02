@@ -1,94 +1,93 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [Patch] mpc5200b: improve baud rate calculation (reach high baud
-	rates, better accuracy)
-Date: Tue, 2 Mar 2010 13:12:24 -0700
-Message-ID: <fa686aa41003021212y7ccc9fcalc1578811e8a7c8f8@mail.gmail.com>
-References: <14429243.1267517383754.JavaMail.ngmail@webmail14.arcor-online.net>
-	<20100302082858.GA4087@pengutronix.de>
-	<22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
+Date: Wed, 3 Mar 2010 10:12:03 +1100
+Message-ID: <20100302231203.GO23435@yookeroo>
+References: <20080930145537.GJ18313@secretlab.ca>
+	<20081001034656.GF30810@yookeroo.seuss>
+	<fa686aa41002200813o3fea9a34s198be367ad81b367@mail.gmail.com>
+	<20100222013004.GM29038@yookeroo>
+	<fa686aa41002212226i4c83376cn8d88a045dd13fe00@mail.gmail.com>
+	<9696D7A991D0824DBA8DFAC74A9C5FA305B2021A@az33exm25.fsl.freescale.net>
+	<fa686aa41003011115m1bb0b644g5014340f6c312ee9@mail.gmail.com>
+	<4288fc0b-79a4-42fd-9e77-573dbad79210@SG2EHSMHS004.ehs.local>
+	<fa686aa41003011349i367a423cx2c59953e6afc9b75@mail.gmail.com>
+	<72f497af-412c-4a05-90c2-5df0be00d93f@VA3EHSMHS007.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <72f497af-412c-4a05-90c2-5df0be00d93f-+Ck8Kgl/v09CYczPSvLbDrjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 2, 2010 at 1:56 AM, Albrecht Dre=DF <albrecht.dress@arcor.de> w=
-rote:
-> Hi Wolfram:
->
-> [snip]
->> > Yes, but I do all /calculations/ with the /4 prescaler for higher
->> accuracy.
->> > If the divisor exceeds the available 16 bits of the counter reg, I rou=
-nd
->> > (divisor / 8) to use the /32 prescaler. =A0Think of a 19-bit counter v=
-alue,
->> > where I can choose to use either the lower or the higher 16 bits for t=
-he
->> > counter reg.
->>
->> Okay, now I got it. (Maybe this is an indication for another comment abo=
-ve
->> the
->> set divisor function?)
->
-> O.k., I will add that comment...
->
+On Mon, Mar 01, 2010 at 02:17:47PM -0800, Stephen Neuendorffer wrote:
+> > -----Original Message-----
+> > From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of G=
+rant Likely
+> > Sent: Monday, March 01, 2010 1:49 PM
+> > To: Stephen Neuendorffer
+> > Cc: Yoder Stuart-B08248; Wood Scott-B07421; devicetree-discuss@ozlabs.o=
+rg; John Williams; Jeremy Kerr
+> > Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
+[snip]
+> > This is never legal.  If deleting by label, it must be at the top
+> > level.  It doesn't make sense to use a label reference inside a node
+> > block, since the node block is already supposed to define where you
+> > are working in the tree.
+> > =
 
-Yes, please document your calculation approach thoroughly.
+> > > =A0 =A0 =A0 =A0delete(bar); // May or may not be Illegal, since don't=
+ know what bar-label references
+> > =
 
->> > > This should be handled using a new compatible-entry
->> > > "fsl,mpc5200b-psc-uart".
->> >
->>
->> > I agree that this would be a lot cleaner, but it's also a lot more
->> intrusive.
->> > CC'ing the device tree discussion list here... comments, please!!
->>
->> Why intrusive? Maybe I miss something?
->
-> Not for the source file, but for all the dts files, if they want to benef=
-it from the detection of the '5200B. =A0Basically, *all* files have to be c=
-hecked and touched if necessary. =A0Again, I agree that this would be the c=
-lean approach, but I wanted to avoid that effort. =A0Grant???
+> > No longer an issue since the previous line is illegal.
+> > =
 
-Already there on mainlined .dts files, and it won't break boards that
-don't have it.
+> > Also, must be either delete-node() or delete-prop() since nodes and
+> > properties can use the same names.
+> =
 
-> [snip]
->> Leave those two function pointers empty and fill them during probe (probe
->> has
->> access to the compatible-property it was matched against, see its
->> arguments).
->> So it should be a matter of:
->>
->> if (matched_property =3D=3D 5200b)
->> =A0 =A0 =A0 ops->func =3D this_one;
->> else
->> =A0 =A0 =A0 ops->func =3D that_one;
->
-> Umm, yes, that's true of course. =A0Will pick it up.
+> So, is it true that a tree which is overlayed on another tree can be
+> independently verified to be independent of internal ordering?  This
+> would be nice if so.
 
-When it comes to code clarity, I'd prefer you had separate mpc5200 and
-mpc5200b ops structures.  I'm not worried about an extra 64 bytes
-added to the kernel size for this (minus the # of bytes needed to test
-and set the new op).
+Hrm, yes and no.  Most of our tests for duplicate labels and so forth
+are only performed after all the overlay/merging is completed.
 
-g.
+Which brings up another inconsistency in the current processing.
+Although:
+
+	/ {
+		foo =3D "bar";
+		foo =3D "baz";
+	};
+
+is illegal and will cause an error, the way that merge_nodes() is
+implemented means that the following will be accepted:
+
+	/ {
+	};
+	/ {
+		foo =3D "bar";
+		foo =3D "baz";
+	};
+
+(and the foo property will have the final value "baz").
 
 -- =
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
