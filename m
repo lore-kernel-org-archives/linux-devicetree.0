@@ -1,14 +1,16 @@
 From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [Patch] mpc5200b: improve baud rate calculation (reach high baud
 	rates, better accuracy)
-Date: Tue, 2 Mar 2010 13:06:44 -0700
-Message-ID: <fa686aa41003021206v773b30d1vef6362704dca9e61@mail.gmail.com>
+Date: Tue, 2 Mar 2010 13:12:24 -0700
+Message-ID: <fa686aa41003021212y7ccc9fcalc1578811e8a7c8f8@mail.gmail.com>
 References: <14429243.1267517383754.JavaMail.ngmail@webmail14.arcor-online.net>
+	<20100302082858.GA4087@pengutronix.de>
+	<22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <14429243.1267517383754.JavaMail.ngmail@webmail14.arcor-online.net>
+In-Reply-To: <22132814.1267520208614.JavaMail.ngmail@webmail14.arcor-online.net>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -22,45 +24,71 @@ To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
 Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 2, 2010 at 1:09 AM, Albrecht Dre=DF <albrecht.dress@arcor.de> w=
+On Tue, Mar 2, 2010 at 1:56 AM, Albrecht Dre=DF <albrecht.dress@arcor.de> w=
 rote:
->> > + =A0 /* Check only once if we are running on a mpc5200b or not */
->> > + =A0 if (is_mpc5200b =3D=3D -1) {
->> > + =A0 =A0 =A0 =A0 =A0 struct device_node *np;
->> > +
->> > + =A0 =A0 =A0 =A0 =A0 np =3D of_find_compatible_node(NULL, NULL, "fsl,=
-mpc5200b-immr");
+> Hi Wolfram:
+>
+> [snip]
+>> > Yes, but I do all /calculations/ with the /4 prescaler for higher
+>> accuracy.
+>> > If the divisor exceeds the available 16 bits of the counter reg, I rou=
+nd
+>> > (divisor / 8) to use the /32 prescaler. =A0Think of a 19-bit counter v=
+alue,
+>> > where I can choose to use either the lower or the higher 16 bits for t=
+he
+>> > counter reg.
 >>
->> This should be handled using a new compatible-entry
->> "fsl,mpc5200b-psc-uart".
+>> Okay, now I got it. (Maybe this is an indication for another comment abo=
+ve
+>> the
+>> set divisor function?)
 >
-> I agree that this would be a lot cleaner, but it's also a lot more intrus=
-ive. =A0CC'ing the device tree discussion list here... comments, please!!
+> O.k., I will add that comment...
+>
 
-fsl,mpc5200b-psc-uart is already in the compatible list for all
-MPC500b boards currently in the kernel tree.
+Yes, please document your calculation approach thoroughly.
 
->> > + =A0 =A0 =A0 =A0 =A0 if (np) {
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 is_mpc5200b =3D 1;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_dbg(&op->dev, "mpc5200b: usi=
-ng /4 prescaler\n");
+>> > > This should be handled using a new compatible-entry
+>> > > "fsl,mpc5200b-psc-uart".
+>> >
 >>
->> Does this message respect the fallback case?
+>> > I agree that this would be a lot cleaner, but it's also a lot more
+>> intrusive.
+>> > CC'ing the device tree discussion list here... comments, please!!
+>>
+>> Why intrusive? Maybe I miss something?
 >
-> See comment above...
->
->> You could also have a set_divisor-function for 5200 and 5200B and set it
->> here
->> in the function struct (one reason less for the static ;))
->
-> Hmmm, but then I would need a 'static struct psc_ops mpc5200b_psc_ops', w=
-here only two functions differ from the generic 52xx struct as it is implem=
-ented now. =A0Using the static int needs less space. =A0However, in combina=
-tion with the new compatible entry, it would of course make sense.
->
-> Again, any insight from the device tree gurus would be appreciated!
+> Not for the source file, but for all the dts files, if they want to benef=
+it from the detection of the '5200B. =A0Basically, *all* files have to be c=
+hecked and touched if necessary. =A0Again, I agree that this would be the c=
+lean approach, but I wanted to avoid that effort. =A0Grant???
 
-Wolfram is correct, you should set the correct divisor function in the
-ops structure.  Much clearer code that way.
+Already there on mainlined .dts files, and it won't break boards that
+don't have it.
+
+> [snip]
+>> Leave those two function pointers empty and fill them during probe (probe
+>> has
+>> access to the compatible-property it was matched against, see its
+>> arguments).
+>> So it should be a matter of:
+>>
+>> if (matched_property =3D=3D 5200b)
+>> =A0 =A0 =A0 ops->func =3D this_one;
+>> else
+>> =A0 =A0 =A0 ops->func =3D that_one;
+>
+> Umm, yes, that's true of course. =A0Will pick it up.
+
+When it comes to code clarity, I'd prefer you had separate mpc5200 and
+mpc5200b ops structures.  I'm not worried about an extra 64 bytes
+added to the kernel size for this (minus the # of bytes needed to test
+and set the new op).
 
 g.
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
