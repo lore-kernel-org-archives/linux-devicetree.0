@@ -1,22 +1,22 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
-Date: Mon, 1 Mar 2010 16:42:06 -0700
-Message-ID: <fa686aa41003011542i453156f4ib759c528518a0994@mail.gmail.com>
+Date: Mon, 1 Mar 2010 17:03:18 -0700
+Message-ID: <fa686aa41003011603w12c0a7f1y88b5fc7a008af1d5@mail.gmail.com>
 References: <1222460748-20127-3-git-send-email-jdl@jdl.com>
 	<20081001034656.GF30810@yookeroo.seuss>
 	<fa686aa41002200813o3fea9a34s198be367ad81b367@mail.gmail.com>
 	<20100222013004.GM29038@yookeroo>
 	<fa686aa41002212226i4c83376cn8d88a045dd13fe00@mail.gmail.com>
 	<9696D7A991D0824DBA8DFAC74A9C5FA305B2021A@az33exm25.fsl.freescale.net>
-	<fa686aa41003011115m1bb0b644g5014340f6c312ee9@mail.gmail.com>
 	<4288fc0b-79a4-42fd-9e77-573dbad79210@SG2EHSMHS004.ehs.local>
-	<fa686aa41003011349i367a423cx2c59953e6afc9b75@mail.gmail.com>
-	<72f497af-412c-4a05-90c2-5df0be00d93f@VA3EHSMHS007.ehs.local>
+	<4B8C2C4C.8070901@freescale.com>
+	<fa686aa41003011418x339884c9md61c49948b31a8d1@mail.gmail.com>
+	<1012f9aa-1642-41ab-b8cd-a4ab4a7b269e@VA3EHSMHS024.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <72f497af-412c-4a05-90c2-5df0be00d93f-+Ck8Kgl/v09CYczPSvLbDrjjLBE8jN/0@public.gmane.org>
+In-Reply-To: <1012f9aa-1642-41ab-b8cd-a4ab4a7b269e-+Ck8Kgl/v0989VwWyyPjfbjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,59 +27,146 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 1, 2010 at 3:17 PM, Stephen Neuendorffer
+On Mon, Mar 1, 2010 at 3:26 PM, Stephen Neuendorffer
 <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gra=
-nt Likely
->> reworked to use nodes:
->> foo {
->> =A0 =A0 =A0 =A0 bar-label: bar {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D 2;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 delete(bar); // should be illegal
->> =A0 =A0 =A0 =A0 };
->> };
 >
-> Um, my original intent was:
+>
+>> -----Original Message-----
+>> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gr=
+ant Likely
+>> Sent: Monday, March 01, 2010 2:19 PM
+>> To: Scott Wood
+>> Cc: Stephen Neuendorffer; Yoder Stuart-B08248; Wood Scott-B07421; device=
+tree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org; John
+>> Williams; Jeremy Kerr
+>> Subject: Re: [PATCH 8/9 V3] Add documentation for the new DTS language.
+>>
+>> On Mon, Mar 1, 2010 at 2:06 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wro=
+te:
+>> > Stephen Neuendorffer wrote:
+>> >>
+>> >> One thing I've seen in the past is that there is a sequentialization
+>> >> question in this, which becomes
+>> >> more apparent once deletion is allowed.
+>> >>
+>> >> First off, my assumption is that each node name is always unique in a
+>> >> tree, even when overrides are allowed.
+>> >> Otherwise the sub-node and property ordering becomes important.
+>> >>
+>> >> foo {
+>> >> =A0 =A0 =A0 =A0bar =3D 2;
+>> >> =A0 =A0 =A0 =A0bar =3D 3; // Illegal
+>> >> } ;
+>> >>
+>> >>
+>> >> foo {
+>> >> =A0 =A0 =A0 =A0bar =3D 2;
+>> >> } foo {
+>> >> =A0 =A0 =A0 =A0bar =3D 3; // Legal
+>> >> };
+>> >>
+>> >>
+>> >> So, essentially, sequentialization of operation is forced by the
+>> >> concatenation of trees.
+>> >
+>> > Hmm, I'd think it would be useful to e.g. include a template and
+>> > subsequently modify it within the same node, rather than a more verbos=
+e and
+>> > error-prone process of referencing labels later.
+>> >
+>> > If sequential operations within a tree are supported, I'm not sure that
+>> > there's any remaining need for separate top-level trees -- you could e=
+xpress
+>> > the same thing as top-level property/node redefinitions.
+>> >
+>> > What are the problems with supporting this?
+>>
+>> The main problem is that it doesn't fit the use cases I need to solve.
+>> =A0I need to start with a 'stock' or 'vanilla' tree, and then add into
+>> it board details. =A0ie. lay down a generic MPC5200 tree (include a .dts
+>> file), and then fill it in with i2c and spi devices. =A0Or include the
+>> .dts file generated by the XIlinx FPGA toolchain, and then populate it
+>> with board details. =A0Sequential operations within the tree doesn't do
+>> anything to support this use case because the board level fixups will
+>> be applied all over the tree.
+>
+> Aside: I always pictured this the other way round, where the DTS for an
+> FPGA design includes the DTS for the board. =A0Then again, as long as they
+> are independent, it probably doesn't matter.
+
+Heh, interesting.  Yeah, I suppose it could be done that way too.  The
+/include/ directive works pretty much anywhere in the input file, so a
+file could either lay down a structure and then include a modifer, or
+include a structure and then modify it.  I was thinking in terms of
+the board file including the FPGA file because it matches the pattern
+for say an SoC where there would be a common SoC .dts file and all the
+boards using that SoC would include it.
+
+Also, I was thinking that the SoC or FPGA structure needs to be layed
+down first so that the board file has nodes in the tree to anchor new
+nodes to.  For example, the FPGA's i2c controller needs to be in place
+so that i2c devices can be grafted onto it.
+
+>> >=A0There may be cases where a dts fragment A doesn't know whether
+>> > fragment B will have defined something, and fragment A wants to make s=
+ure it
+>> > ends up undefined one way or another.
+>>
+>> Later fragments should always override earlier ones. =A0So if A is
+>> defined before B, then B can override anything that A does.
+>
+> So the idiom to do this safely would be:
+>
 > foo {
-> =A0 =A0 =A0 =A0 bar-label: bar {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D 2;
-> =A0 =A0 =A0 =A0 };
-> =A0 =A0 =A0 =A0 delete(bar); // should be illegal
-> };
-
-Ah, yes.  And you are right, that should be illegal.
-
-> So, is it true that a tree which is overlayed on another tree can be inde=
-pendently verified to
-> be independent of internal ordering? =A0This would be nice if so.
-
-Yes, I think that is a valid statement, with the assumption that label
-references at the top level are first resolved.
-
->> Not sure I follow. =A0It certainly isn't be valid to apply a label to a
->> command like delete().
->
-> But the best thing of the above is that there is no longer a distinction =
-between commands and data!
-> delete is just a tag which gets interpreted during 'reduction' or 'overla=
-y'.
->
-> For instance, deleting a subnode could be:
->
+> =A0 =A0 =A0 =A0bar {} // Ensure that bar exists.
+> }
 > foo {
-> =A0 =A0 =A0 =A0bar {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0delete;
-> =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0delete(bar);
 > }
 >
-> I guess this ends up conflicting with a property named 'delete' though.
+> Seems baroque, but OK...
 
-Right.  It should be something syntactically distinct.
+Just to make sure I understand you, what bit is striking you as
+baroque?  The bit about the node needing to exist before it can be
+deleted?
 
-g.
+Scott does make a good point in one of his emails, especially within
+the 'stack of overlays' model.  Maybe it should be perfectly fine to
+mask a node or property, regardless of whether or not it exists in the
+previous tree.  Maybe this should be just fine:
+foo {
+};
+foo {
+       mask-node(bar);
+};
+
+
+>> following the 'stack of overlays' model to its logical conclusion. =A0In
+>> a sense, properties and nodes are getting masked out of the earlier
+>> tree, not deleted. =A0It is more of an operation (mask) than a command
+>> (delete) being applied. =A0delete-node() may give the misleading
+>> impression that something is being executed at that point in the tree.
+>
+> Regardless of what the syntax is, if the *semantics* is overlay, then the=
+re
+> doesn't seem to be any reason to disallow undeletion, and in fact, this s=
+emantics
+> gives a way to implement it. =A0I'll defer whether this is *needed*: In t=
+he case
+> of device trees it's not clear that it is.
+
+The only reason is a practical one.  The way the node redefinitions
+are currently processed makes this difficult.  dtc fully processes and
+resolves a node definition before moving on to the next one.  The data
+is already gone by the time any kind of undelete occurs (but a new
+node which the same name can certainly be created).
+
+With my current love affair of wanting to know the use-case before
+committing to a feature, I'd like to know where undelete would be used
+before doing the rework required to implement it.
 
 -- =
 
