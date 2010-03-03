@@ -1,13 +1,13 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: dtc: Correct headers in util.c
-Date: Wed, 03 Mar 2010 07:57:10 -0600
-Message-ID: <E1Nmp4Y-00011V-SB@jdl.com>
-References: <20100303053801.GR23435@yookeroo>
+Subject: Re: dtc: Enable more warnings
+Date: Wed, 03 Mar 2010 08:16:16 -0600
+Message-ID: <E1NmpN2-0001Bf-Oe@jdl.com>
+References: <20100303052630.GQ23435@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20100303053801.GR23435@yookeroo> 
+In-reply-to: <20100303052630.GQ23435@yookeroo> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,15 +21,39 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Since util.c is used in programs other than full dtc, it shouldn't
-> include the full dtc.h, just util.h which has prototypes directly
-> relevant to it.  This patch makes the change, and also adds includes
-> of the necessary system headers which were previously included
-> indirectly by dtc.h.
+> This patch turns on a bunch of extra gcc warnings, most of which are
+> probably a good idea.  Of the new warnings -Wnested-externs and
+> -Wstrict-prototypes need no code changes, we're already warning-clean.
+> The remaining one, -Wmissing-prototypes requires trivial changes in
+> some of the tests (making functions local).
+> 
+> This patch also rearranges the warnings flags into a separate make
+> variable for convenience, and turns on -Werror, to really encourage
+> people to keep the code warning-clean.
 > 
 > Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Applied.
+This patch didn't apply due to something wrong here:
+
+
+> Index: dtc/Makefile
+> ===================================================================
+> --- dtc.orig/Makefile	2010-03-03 16:10:27.235986452 +1100
+> +++ dtc/Makefile	2010-03-03 16:22:17.439987248 +1100
+> @@ -16,7 +16,9 @@ LOCAL_VERSION =
+>  CONFIG_LOCALVERSION =
+>  
+>  CPPFLAGS = -I libfdt
+> -CFLAGS = -Wall -g -Os -fPIC -Wpointer-arith -Wcast-qual
+> +WARNINGS = -Werror -Wall  -Wpointer-arith -Wcast-qual -Wnested-externs \
+> +	-Wstrict-prototypes -Wmissing-prototypes
+> +CFLAGS = -g -Os -fPIC -Werror $(WARNINGS)
+>  
+>  CPPFLAGS += -std=c99 -D_XOPEN_SOURCE -D_BSD_SOURCE
+>  CFLAGS += -Werror
+
+
+I think it is the extra CPPFLAGS line?  I dont seem to have that.
 
 Thanks,
 jdl
