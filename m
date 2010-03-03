@@ -1,7 +1,7 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: dtc: Enable more warnings
-Date: Wed, 3 Mar 2010 16:26:30 +1100
-Message-ID: <20100303052630.GQ23435@yookeroo>
+Subject: dtc: Correct headers in util.c
+Date: Wed, 3 Mar 2010 16:38:01 +1100
+Message-ID: <20100303053801.GR23435@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,87 +20,33 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch turns on a bunch of extra gcc warnings, most of which are
-probably a good idea.  Of the new warnings -Wnested-externs and
--Wstrict-prototypes need no code changes, we're already warning-clean.
-The remaining one, -Wmissing-prototypes requires trivial changes in
-some of the tests (making functions local).
-
-This patch also rearranges the warnings flags into a separate make
-variable for convenience, and turns on -Werror, to really encourage
-people to keep the code warning-clean.
+Since util.c is used in programs other than full dtc, it shouldn't
+include the full dtc.h, just util.h which has prototypes directly
+relevant to it.  This patch makes the change, and also adds includes
+of the necessary system headers which were previously included
+indirectly by dtc.h.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Index: dtc/Makefile
+Index: dtc/util.c
 ===================================================================
---- dtc.orig/Makefile	2010-03-03 16:10:27.235986452 +1100
-+++ dtc/Makefile	2010-03-03 16:22:17.439987248 +1100
-@@ -16,7 +16,9 @@ LOCAL_VERSION =
- CONFIG_LOCALVERSION =
+--- dtc.orig/util.c	2010-03-03 16:34:25.029011952 +1100
++++ dtc/util.c	2010-03-03 16:35:18.655986458 +1100
+@@ -17,7 +17,12 @@
+  *                                                                   USA
+  */
  
- CPPFLAGS = -I libfdt
--CFLAGS = -Wall -g -Os -fPIC -Wpointer-arith -Wcast-qual
-+WARNINGS = -Werror -Wall  -Wpointer-arith -Wcast-qual -Wnested-externs \
-+	-Wstrict-prototypes -Wmissing-prototypes
-+CFLAGS = -g -Os -fPIC -Werror $(WARNINGS)
+-#include "dtc.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdarg.h>
++#include <string.h>
++
++#include "util.h"
  
- CPPFLAGS += -std=c99 -D_XOPEN_SOURCE -D_BSD_SOURCE
- CFLAGS += -Werror
-Index: dtc/tests/extra-terminating-null.c
-===================================================================
---- dtc.orig/tests/extra-terminating-null.c	2010-03-03 16:16:22.635986164 +1100
-+++ dtc/tests/extra-terminating-null.c	2010-03-03 16:16:40.535985904 +1100
-@@ -28,7 +28,7 @@
- #include "tests.h"
- #include "testdata.h"
- 
--void check_extranull(void *fdt, const char *prop, const char *str, int numnulls)
-+static void check_extranull(void *fdt, const char *prop, const char *str, int numnulls)
+ char *xstrdup(const char *s)
  {
- 	int len = strlen(str);
- 	char checkbuf[len+numnulls];
-Index: dtc/tests/get_alias.c
-===================================================================
---- dtc.orig/tests/get_alias.c	2010-03-03 16:15:42.444985835 +1100
-+++ dtc/tests/get_alias.c	2010-03-03 16:16:06.128012501 +1100
-@@ -29,7 +29,7 @@
- #include "tests.h"
- #include "testdata.h"
- 
--void check_alias(void *fdt, const char *path, const char *alias)
-+static void check_alias(void *fdt, const char *path, const char *alias)
- {
- 	const char *aliaspath;
- 
-Index: dtc/tests/path_offset_aliases.c
-===================================================================
---- dtc.orig/tests/path_offset_aliases.c	2010-03-03 16:16:56.991986652 +1100
-+++ dtc/tests/path_offset_aliases.c	2010-03-03 16:17:16.043985873 +1100
-@@ -29,7 +29,7 @@
- #include "tests.h"
- #include "testdata.h"
- 
--void check_alias(void *fdt, const char *full_path, const char *alias_path)
-+static void check_alias(void *fdt, const char *full_path, const char *alias_path)
- {
- 	int offset, offset_a;
- 
-Index: dtc/tests/value-labels.c
-===================================================================
---- dtc.orig/tests/value-labels.c	2010-03-03 16:17:27.988986891 +1100
-+++ dtc/tests/value-labels.c	2010-03-03 16:17:47.228985724 +1100
-@@ -59,8 +59,8 @@ struct val_label labels3[] = {
- 	{ "end3", -1 },
- };
- 
--void check_prop_labels(void *sohandle, void *fdt, const char *name,
--		       const struct val_label* labels, int n)
-+static void check_prop_labels(void *sohandle, void *fdt, const char *name,
-+			      const struct val_label* labels, int n)
- {
- 	const struct fdt_property *prop;
- 	const char *p;
+
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
