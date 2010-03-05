@@ -1,56 +1,112 @@
-From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 0/4 v3] mv643xx_eth: use mvmdio MDIO bus driver
-Date: Fri, 22 Mar 2013 14:39:24 +0100
-Message-ID: <1363959568-16976-1-git-send-email-florian@openwrt.org>
-References: <1363284515-9865-1-git-send-email-florian@openwrt.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363284515-9865-1-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+From: Andy Fleming <afleming@freescale.com>
+Subject: [PATCH] of_mdio: Add of_phy_attach function
+Date: Fri, 5 Mar 2010 13:48:19 -0600
+Message-ID: <E1UJ1fR-0004i1-Fc@swissweb.swissdisk.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+of_phy_connect is useful for most systems, but some drivers will want
+finer-grained control over their PHYs, and won't want to use the
+PHY Lib state machine or interrupt handlers.
 
-This patch converts the mv643xx_eth driver to use the mvmdio MDIO bus driver
-instead of rolling its own implementation. As a result, all users of this
-mv643xx_eth driver are converted to register an "orion-mdio" platform_device.
-The mvmdio driver is also updated to support an interrupt line which reports
-SMI error/completion, and to allow traditionnal platform device registration
-instead of just device tree.
+This mirrors phy_attach() in libphy, which is already exported.
 
-David, I think it makes sense for you to merge all of this, since we do
-not want the architecture files to be desynchronized from the mv643xx_eth to
-avoid runtime breakage. The potential for merge conflicts should be very small.
+Signed-off-by: Andy Fleming <afleming@freescale.com>
+Signed-off-by: Ben Collins <ben.c@servergy.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ drivers/net/phy/phy_device.c |  8 +++-----
+ drivers/of/of_mdio.c         | 14 ++++++++++++++
+ include/linux/of_mdio.h      |  3 +++
+ include/linux/phy.h          |  2 ++
+ 4 files changed, 22 insertions(+), 5 deletions(-)
 
-Florian Fainelli (4):
-  net: mvmdio: allow platform device style registration
-  net: mvmdio: rename base register cookie from smireg to regs
-  net: mvmdio: enhance driver to support SMI error/done interrupts
-  mv643xx_eth: convert to use the Marvell Orion MDIO driver
-
- .../devicetree/bindings/net/marvell-orion-mdio.txt |    3 +
- arch/arm/plat-orion/common.c                       |   54 +++---
- arch/powerpc/platforms/chrp/pegasos_eth.c          |   20 ++
- arch/powerpc/sysdev/mv64x60_dev.c                  |   16 +-
- drivers/net/ethernet/marvell/Kconfig               |    5 +-
- drivers/net/ethernet/marvell/Makefile              |    2 +-
- drivers/net/ethernet/marvell/mv643xx_eth.c         |  195 ++------------------
- drivers/net/ethernet/marvell/mvmdio.c              |  130 ++++++++++---
- include/linux/mv643xx_eth.h                        |    1 -
- 9 files changed, 187 insertions(+), 239 deletions(-)
-
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 3657b4a..54ba552 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -60,9 +60,6 @@ extern void mdio_bus_exit(void);
+ static LIST_HEAD(phy_fixup_list);
+ static DEFINE_MUTEX(phy_fixup_lock);
+ 
+-static int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
+-			     u32 flags, phy_interface_t interface);
+-
+ /*
+  * Creates a new phy_fixup and adds it to the list
+  * @bus_id: A string which matches phydev->dev.bus_id (or PHY_ANY_ID)
+@@ -524,8 +521,8 @@ int phy_init_hw(struct phy_device *phydev)
+  *     the attaching device, and given a callback for link status
+  *     change.  The phy_device is returned to the attaching driver.
+  */
+-static int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
+-			     u32 flags, phy_interface_t interface)
++int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
++		      u32 flags, phy_interface_t interface)
+ {
+ 	struct device *d = &phydev->dev;
+ 	int err;
+@@ -571,6 +568,7 @@ static int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
+ 
+ 	return err;
+ }
++EXPORT_SYMBOL(phy_attach_direct);
+ 
+ /**
+  * phy_attach - attach a network device to a particular PHY device
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 199b7f2..2b2c64c 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -198,3 +198,17 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+ 	return IS_ERR(phy) ? NULL : phy;
+ }
+ EXPORT_SYMBOL(of_phy_connect_fixed_link);
++
++/* Attach a network device to a particular OF PHY device */
++struct phy_device *of_phy_attach(struct net_device *dev,
++				struct device_node *phy_np, u32 flags,
++				phy_interface_t iface)
++{
++	struct phy_device *phy = of_phy_find_device(phy_np);
++
++	if (!phy)
++		return NULL;
++
++	return phy_attach_direct(dev, phy, flags, iface) ? NULL : phy;
++}
++EXPORT_SYMBOL(of_phy_attach);
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index cdc62c9..88319da 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -22,6 +22,9 @@ extern struct phy_device *of_phy_connect(struct net_device *dev,
+ extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+ 					 void (*hndlr)(struct net_device *),
+ 					 phy_interface_t iface);
++extern struct phy_device *of_phy_attach(struct net_device *dev,
++				struct device_node *phy_np, u32 flags,
++				phy_interface_t iface);
+ 
+ extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+ 
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 5a94ec7..0521e72 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -508,6 +508,8 @@ int phy_device_register(struct phy_device *phy);
+ int phy_init_hw(struct phy_device *phydev);
+ struct phy_device * phy_attach(struct net_device *dev,
+ 		const char *bus_id, phy_interface_t interface);
++int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
++		      u32 flags, phy_interface_t interface);
+ struct phy_device *phy_find_first(struct mii_bus *bus);
+ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
+ 		void (*handler)(struct net_device *),
 -- 
-1.7.10.4
+1.8.1.2
