@@ -1,80 +1,117 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] drivercore: Add of_match_table to the common device drivers
-Date: Sun, 7 Mar 2010 13:33:27 -0700
-Message-ID: <fa686aa41003071233t686969f3y533a2c5a6b952b27@mail.gmail.com>
-References: <20100307064111.1442.63478.stgit@angua> <20100307180534.GA3604@suse.de>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: dtc: Enable more warnings
+Date: Tue, 9 Mar 2010 10:49:33 +1100
+Message-ID: <20100308234933.GD4993@yookeroo>
+References: <20100303052630.GQ23435@yookeroo> <20100304001218.GC4488@yookeroo>
+	<E1NnfLy-00073h-8R@jdl.com> <20100305225212.GB17068@yookeroo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100307180534.GA3604@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@suse.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kay.sievers@vrfy.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20100305225212.GB17068@yookeroo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 7, 2010 at 11:05 AM, Greg KH <gregkh@suse.de> wrote:
-> On Sat, Mar 06, 2010 at 11:47:00PM -0700, Grant Likely wrote:
->> OF-style matching can be available to any device, on any type of bus=
-=2E
->> This patch allows any driver to provide an OF match table when CONFI=
-G_OF
->> is enabled so that drivers can be bound against devices described in
->> the device tree.
->>
->> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
->> ---
->>
->> Hi Greg and Kay,
->>
->> Here is a potentially even more controversial RFC patch, the relevan=
-t
->> chunk being the addition of an of-style match table to struct device=
-_driver
->> when CONFIG_OF is set. =A0The idea being that OF style device bindin=
-g is
->> applicable on any bus, regardless of the bus type. =A0Each bus' prob=
-e could
->> be trivially extended to allow for an OF-style probe match.
->>
->> I've used a #ifdef in this version, but it doesn't have to be condit=
-ional
->> if that would make for cleaner code. =A0Either way, none of the core=
- code
->> would need to have and #ifdef bits.
->>
->> As with the previous patch, I want to get feedback before I proceed =
-too
->> far down this path.
->
-> I have no objection to this patch at all, it looks good to me.
->
-> Perhaps, in the future, you might be able to move the OF driver/devic=
-e
-> binding into the driver core itself to make it easier in the end. =A0=
-But
-> for now, feel free to add:
-> =A0 =A0 =A0 =A0Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-> and send it off through your tree.
+This patch turns on a bunch of extra gcc warnings, most of which are
+probably a good idea.  Of the new warnings -Wnested-externs and
+-Wstrict-prototypes need no code changes, we're already warning-clean.
+The remaining one, -Wmissing-prototypes requires trivial changes in
+some of the tests (making functions local).
 
-Thanks Greg.
+This patch also rearranges the warnings flags into a separate make
+variable for convenience, and turns on -Werror, to really encourage
+people to keep the code warning-clean.
 
-Yes, I seem to be moving in that direction.  The OF api's are turning
-out to be quite complementary to the rest of the driver model.  If
-CONFIG_OF is enabled, then a whole bunch of routines become available
-to drivers for fetching data as an alternative to pdata.  If not, then
-the OF apis become empty inline stubs that return invalid or error
-codes.  The nice thing is that the apis all work the same, regardless
-of the underlying bus interface, so it is usable by more than just the
-platform & of_platform busses.
-
-I've got a metric truckload of patches to post that go in this
-direction, but I'm waiting until after the merge window so I don't add
-to the normal bedlam.  :-)
-
-Cheers,
-g.
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
 ---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+
+Third time lucky.  Please?
+
+Index: dtc/Makefile
+===================================================================
+--- dtc.orig/Makefile	2010-03-04 11:09:54.527022044 +1100
++++ dtc/Makefile	2010-03-09 10:48:23.343113245 +1100
+@@ -16,7 +16,9 @@ LOCAL_VERSION =
+ CONFIG_LOCALVERSION =
+ 
+ CPPFLAGS = -I libfdt
+-CFLAGS = -Wall -g -Os -fPIC -Wpointer-arith -Wcast-qual
++WARNINGS = -Werror -Wall -Wpointer-arith -Wcast-qual -Wnested-externs \
++	-Wstrict-prototypes -Wmissing-prototypes
++CFLAGS = -g -Os -fPIC -Werror $(WARNINGS)
+ 
+ BISON = bison
+ LEX = flex
+Index: dtc/tests/extra-terminating-null.c
+===================================================================
+--- dtc.orig/tests/extra-terminating-null.c	2010-03-04 11:09:54.363021733 +1100
++++ dtc/tests/extra-terminating-null.c	2010-03-04 11:09:55.796048832 +1100
+@@ -28,7 +28,7 @@
+ #include "tests.h"
+ #include "testdata.h"
+ 
+-void check_extranull(void *fdt, const char *prop, const char *str, int numnulls)
++static void check_extranull(void *fdt, const char *prop, const char *str, int numnulls)
+ {
+ 	int len = strlen(str);
+ 	char checkbuf[len+numnulls];
+Index: dtc/tests/get_alias.c
+===================================================================
+--- dtc.orig/tests/get_alias.c	2010-03-04 11:09:54.335020966 +1100
++++ dtc/tests/get_alias.c	2010-03-04 11:09:55.796048832 +1100
+@@ -29,7 +29,7 @@
+ #include "tests.h"
+ #include "testdata.h"
+ 
+-void check_alias(void *fdt, const char *path, const char *alias)
++static void check_alias(void *fdt, const char *path, const char *alias)
+ {
+ 	const char *aliaspath;
+ 
+Index: dtc/tests/path_offset_aliases.c
+===================================================================
+--- dtc.orig/tests/path_offset_aliases.c	2010-03-04 11:09:54.379023209 +1100
++++ dtc/tests/path_offset_aliases.c	2010-03-04 11:09:55.796048832 +1100
+@@ -29,7 +29,7 @@
+ #include "tests.h"
+ #include "testdata.h"
+ 
+-void check_alias(void *fdt, const char *full_path, const char *alias_path)
++static void check_alias(void *fdt, const char *full_path, const char *alias_path)
+ {
+ 	int offset, offset_a;
+ 
+Index: dtc/tests/value-labels.c
+===================================================================
+--- dtc.orig/tests/value-labels.c	2010-03-04 11:09:54.355048932 +1100
++++ dtc/tests/value-labels.c	2010-03-04 11:09:55.796048832 +1100
+@@ -59,8 +59,8 @@ struct val_label labels3[] = {
+ 	{ "end3", -1 },
+ };
+ 
+-void check_prop_labels(void *sohandle, void *fdt, const char *name,
+-		       const struct val_label* labels, int n)
++static void check_prop_labels(void *sohandle, void *fdt, const char *name,
++			      const struct val_label* labels, int n)
+ {
+ 	const struct fdt_property *prop;
+ 	const char *p;
+
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
