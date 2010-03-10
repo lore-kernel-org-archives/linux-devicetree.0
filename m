@@ -1,15 +1,13 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: dtc: Enable more warnings
-Date: Wed, 10 Mar 2010 08:16:20 -0600
-Message-ID: <E1NpMhw-0001iD-3p@jdl.com>
-References: <20100303052630.GQ23435@yookeroo> <20100304001218.GC4488@yookeroo>
-	<E1NnfLy-00073h-8R@jdl.com> <20100305225212.GB17068@yookeroo>
-	<20100308234933.GD4993@yookeroo>
+Subject: Re: libfdt: Implement property iteration functions
+Date: Wed, 10 Mar 2010 08:17:01 -0600
+Message-ID: <E1NpMib-0001id-Pi@jdl.com>
+References: <20100309063914.GA11655@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20100308234933.GD4993@yookeroo> 
+In-reply-to: <20100309063914.GA11655@yookeroo> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,22 +21,26 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> This patch turns on a bunch of extra gcc warnings, most of which are
-> probably a good idea.  Of the new warnings -Wnested-externs and
-> -Wstrict-prototypes need no code changes, we're already warning-clean.
-> The remaining one, -Wmissing-prototypes requires trivial changes in
-> some of the tests (making functions local).
+> For ages, we've been talking about adding functions to libfdt to allow
+> iteration through properties.  So, finally, here are some.
 > 
-> This patch also rearranges the warnings flags into a separate make
-> variable for convenience, and turns on -Werror, to really encourage
-> people to keep the code warning-clean.
+> I got bogged down on this for a long time because I didn't want to
+> expose offsets directly to properties to the callers.  But without
+> that, attempting to make reasonable iteration functions just became
+> horrible.  So eventually, I settled on an interface which does now
+> expose property offsets.  fdt_first_property_offset() and
+> fdt_next_property_offset() are used to step through the offsets of the
+> properties starting from a particularly node offset.  The details of
+> the property at each offset can then be retrieved with either
+> fdt_get_property_by_offset() or fdt_getprop_by_offset() which have
+> interfaces similar to fdt_get_property() and fdt_getprop()
+> respectively.
+> 
+> No explicit testcases are included, but we do use the new functions to
+> reimplement the existing fdt_get_property() function.
 > 
 > Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> 
-> ---
-> 
-> Third time lucky.  Please?
 
-Applied!
+Applied.
 
 jdl
