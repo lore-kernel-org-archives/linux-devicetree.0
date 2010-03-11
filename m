@@ -1,42 +1,69 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 00/37] OF: move device node pointer into struct device.
-Date: Thu, 11 Mar 2010 11:25:46 -0700
-Message-ID: <fa686aa41003111025n7f059995v9263f13fac1bd1ee@mail.gmail.com>
-References: <20100311174830.4824.19820.stgit@angua> <20100311.102043.40590962.davem@davemloft.net>
-	<20100311.102347.169562565.davem@davemloft.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH 31/37] drivers/of: use .of_node instead of .archdata.of_node
+	in struct device
+Date: Thu, 11 Mar 2010 11:06:39 -0700
+Message-ID: <20100311180638.4824.71650.stgit__12161.5201388069$1268332013$gmane$org@angua>
+References: <20100311174830.4824.19820.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20100311.102347.169562565.davem@davemloft.net>
-Sender: linux-scsi-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: monstr@monstr.eu, gregkh@suse.de, benh@kernel.crashing.org, akpm@linux-foundation.org, sfr@canb.auug.org.au, jgarzik@pobox.com, ben-linux@fluff.org, dwmw2@infradead.org, jeremy.kerr@canonical.com, James.Bottomley@suse.de, broonie@opensource.wolfsonmicro.com, microblaze-uclinux@itee.uq.edu.au, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, sparclinux@vger.kernel.org, linux-ide@vger.kernel.org, netdev@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-scsi@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100311174830.4824.19820.stgit@angua>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, jgarzik-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, dwmw2@infrade
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 11, 2010 at 11:23 AM, David Miller <davem@davemloft.net> wrote:
-> From: David Miller <davem@davemloft.net>
-> Date: Thu, 11 Mar 2010 10:20:43 -0800 (PST)
->
->> Three or four of the patches don't apply because only your tree
->> has those "/* temporary */" comments, f.e. in arch/sparc/kernel/pci.c
->>
->> I took care of this when applying to my tree.
->
-> It also doesn't build, what the heck is this against
-> Grant?
->
-> drivers/of/device.c: In function 'of_match_device':
-> drivers/of/device.c:24: error: 'const struct device' has no member named 'of_node'
-> drivers/of/device.c:26: error: 'const struct device' has no member named 'of_node'
->
-> Please make a patch set against Linus's vanilla tree so
-> I and others can test this.
+.archdata.node is being removed from Microblaze, SPARC and PowerPC.
 
-Oops, sorry David, I accidentally dropped the top patch.  Give me a
-moment and I'll send it out.
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
 
-g.
+ drivers/of/of_i2c.c  |    1 -
+ drivers/of/of_mdio.c |    1 -
+ drivers/of/of_spi.c  |    1 -
+ 3 files changed, 0 insertions(+), 3 deletions(-)
 
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
+index 43f803e..ab6522c 100644
+--- a/drivers/of/of_i2c.c
++++ b/drivers/of/of_i2c.c
+@@ -42,7 +42,6 @@ void of_register_i2c_devices(struct i2c_adapter *adap,
+ 
+ 		info.addr = be32_to_cpup(addr);
+ 
+-		dev_archdata_set_node(&dev_ad, node); /* temporary */
+ 		info.of_node = node;
+ 		info.archdata = &dev_ad;
+ 
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 64e08d7..794fbc2 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -79,7 +79,6 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 		/* Associate the OF node with the device structure so it
+ 		 * can be looked up later */
+ 		of_node_get(child);
+-		dev_archdata_set_node(&phy->dev.archdata, child); /* temp */
+ 		phy->dev.of_node = child;
+ 
+ 		/* All data is now stored in the phy struct; register it */
+diff --git a/drivers/of/of_spi.c b/drivers/of/of_spi.c
+index 433d76d..5fed7e3 100644
+--- a/drivers/of/of_spi.c
++++ b/drivers/of/of_spi.c
+@@ -80,7 +80,6 @@ void of_register_spi_devices(struct spi_master *master, struct device_node *np)
+ 		/* Store a pointer to the node in the device structure */
+ 		of_node_get(nc);
+ 		spi->dev.of_node = nc;
+-		spi->dev.archdata.of_node = nc; /* temporary */
+ 
+ 		/* Register the new device */
+ 		request_module(spi->modalias);
