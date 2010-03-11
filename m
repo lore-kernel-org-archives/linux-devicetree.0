@@ -1,8 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 1/3] of/flattree: make of_fdt.h safe to unconditionally
-	include.
-Date: Thu, 11 Mar 2010 10:31:58 -0700
-Message-ID: <20100311173157.4423.84971.stgit@angua>
+Subject: [PATCH 2/3] of/flattree: Make unflatten_device_tree() safe to call
+	from any arch
+Date: Thu, 11 Mar 2010 10:32:03 -0700
+Message-ID: <20100311173203.4423.8733.stgit@angua>
 References: <20100311173024.4423.53178.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,32 +22,60 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If CONFIG_OF_FLATTREE is not set, then don't process the body of
-linux/of_fdt.h
+This patch makes unflatten_device_tree() safe to call from any arch
+setup code with the following changes:
+- Make sure initial_boot_params actually points to a device tree blob
+  before unflattening
+- Make sure the initial_boot_params->magic field is correct
+- If CONFIG_OF_FLATTREE is not set, then make unflatten_device_tree()
+  an empty #define.
+
+This patch also adds some additional debug output to the top of
+unflatten_device_tree().
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
+ drivers/of/fdt.c       |   15 +++++++++++++++
  include/linux/of_fdt.h |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ 2 files changed, 17 insertions(+), 0 deletions(-)
 
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 406757a..5ce7bd5 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -553,6 +553,21 @@ void __init unflatten_device_tree(void)
+ 
+ 	pr_debug(" -> unflatten_device_tree()\n");
+ 
++	if (!initial_boot_params) {
++		pr_debug("No device tree pointer\n");
++		return;
++	}
++
++	pr_debug("Unflattening device tree:\n");
++	pr_debug("magic: %08x\n", be32_to_cpu(initial_boot_params->magic));
++	pr_debug("size: %08x\n", be32_to_cpu(initial_boot_params->totalsize));
++	pr_debug("version: %08x\n", be32_to_cpu(initial_boot_params->version));
++
++	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
++		pr_err("Invalid device tree blob header\n");
++		return;
++	}
++
+ 	/* First pass, scan for size */
+ 	start = ((unsigned long)initial_boot_params) +
+ 		be32_to_cpu(initial_boot_params->off_dt_struct);
 diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index a1ca92c..f0fdd1f 100644
+index f0fdd1f..54399f1 100644
 --- a/include/linux/of_fdt.h
 +++ b/include/linux/of_fdt.h
-@@ -57,6 +57,7 @@ struct boot_param_header {
- 	__be32	dt_struct_size;		/* size of the DT structure block */
- };
- 
-+#if defined(CONFIG_OF_FLATTREE)
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
- extern int __initdata dt_root_size_cells;
-@@ -98,6 +99,7 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+@@ -99,6 +99,8 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
  /* Other Prototypes */
  extern void unflatten_device_tree(void);
  extern void early_init_devtree(void *);
-+#endif /* CONFIG_OF_FLATTREE */
++#else /* CONFIG_OF_FLATTREE */
++static inline void define unflatten_device_tree(void) {}
+ #endif /* CONFIG_OF_FLATTREE */
  
  #endif /* __ASSEMBLY__ */
- #endif /* _LINUX_OF_FDT_H */
