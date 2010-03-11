@@ -1,11 +1,14 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 0/3] Various OF cleanups
-Date: Thu, 11 Mar 2010 10:31:52 -0700
-Message-ID: <20100311173024.4423.53178.stgit@angua>
+Subject: [PATCH 1/3] of/flattree: make of_fdt.h safe to unconditionally
+	include.
+Date: Thu, 11 Mar 2010 10:31:58 -0700
+Message-ID: <20100311173157.4423.84971.stgit@angua>
+References: <20100311173024.4423.53178.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100311173024.4423.53178.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,25 +22,32 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Here are some simple fixes to make the OF header files safe to include
-when CONFIG_OF is not set, and add some debug context messages.
+If CONFIG_OF_FLATTREE is not set, then don't process the body of
+linux/of_fdt.h
 
-Cheers,
-g.
-
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
-Grant Likely (3):
-      of: protect contents of of_platform.h and of_device.h
-      of/flattree: Make unflatten_device_tree() safe to call from any arch
-      of/flattree: make of_fdt.h safe to unconditionally include.
+ include/linux/of_fdt.h |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-
- drivers/of/fdt.c            |   15 +++++++++++++++
- include/linux/of_device.h   |    2 ++
- include/linux/of_fdt.h      |    4 ++++
- include/linux/of_platform.h |    2 ++
- 4 files changed, 23 insertions(+), 0 deletions(-)
-
--- 
-Signature
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index a1ca92c..f0fdd1f 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -57,6 +57,7 @@ struct boot_param_header {
+ 	__be32	dt_struct_size;		/* size of the DT structure block */
+ };
+ 
++#if defined(CONFIG_OF_FLATTREE)
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+ extern int __initdata dt_root_addr_cells;
+ extern int __initdata dt_root_size_cells;
+@@ -98,6 +99,7 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ /* Other Prototypes */
+ extern void unflatten_device_tree(void);
+ extern void early_init_devtree(void *);
++#endif /* CONFIG_OF_FLATTREE */
+ 
+ #endif /* __ASSEMBLY__ */
+ #endif /* _LINUX_OF_FDT_H */
