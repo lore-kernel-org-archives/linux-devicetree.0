@@ -1,8 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 01/37] i2c/of: Allow device node to be passed via
-	i2c_board_info
-Date: Thu, 11 Mar 2010 11:03:52 -0700
-Message-ID: <20100311180352.4824.75457.stgit__48873.0253106498$1268331908$gmane$org@angua>
+Subject: [PATCH 03/37] of/sparc: use dev->of_node instead of
+	dev->archdata.prom_node
+Date: Thu, 11 Mar 2010 11:04:04 -0700
+Message-ID: <20100311180403.4824.90589.stgit__43422.1067037017$1268331911$gmane$org@angua>
 References: <20100311174830.4824.19820.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,73 +21,80 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, jgarzik-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, dwmw2@infrade
 List-Id: devicetree@vger.kernel.org
 
-The struct device_node *of_node pointer is moving out of dev->archdata
-and into the struct device proper.  of_i2c.c needs to set the of_node
-pointer before the device is registered.  Since the i2c subsystem
-doesn't allow 2 stage allocation and registration of i2c devices, the
-of_node pointer needs to be passed via the i2c_board_info structure
-so that it is set prior to registration.
-
-This patch adds of_node to struct i2c_board_info (conditional on
-CONFIG_OF), sets of_node in i2c_new_device(), and modifies of_i2c.c
-to use the new parameter.  The calling of dev_archdata_set_node()
-from of_i2c will be removed in a subsequent patch when of_node is
-removed from archdata and all users are converted over.
+The prom_node pointer is being moved out of archdata to dev->of_node.
+This patch changes users of prom_node to use the new location.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- drivers/i2c/i2c-core.c |    3 +++
- drivers/of/of_i2c.c    |    3 ++-
- include/linux/i2c.h    |    4 ++++
- 3 files changed, 9 insertions(+), 1 deletions(-)
+ arch/sparc/include/asm/fb.h      |    2 +-
+ arch/sparc/kernel/of_device_32.c |    3 ++-
+ arch/sparc/kernel/of_device_64.c |    3 ++-
+ arch/sparc/kernel/pci.c          |    4 ++--
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 3202a86..4099b2b 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -387,6 +387,9 @@ i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
- 	client->dev.parent = &client->adapter->dev;
- 	client->dev.bus = &i2c_bus_type;
- 	client->dev.type = &i2c_client_type;
-+#ifdef CONFIG_OF
-+	client->dev.of_node = info->of_node;
-+#endif
+diff --git a/arch/sparc/include/asm/fb.h b/arch/sparc/include/asm/fb.h
+index b83e447..e834880 100644
+--- a/arch/sparc/include/asm/fb.h
++++ b/arch/sparc/include/asm/fb.h
+@@ -18,7 +18,7 @@ static inline int fb_is_primary_device(struct fb_info *info)
+ 	struct device *dev = info->device;
+ 	struct device_node *node;
  
- 	dev_set_name(&client->dev, "%d-%04x", i2c_adapter_id(adap),
- 		     client->addr);
-diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-index a3a708e..605bc42 100644
---- a/drivers/of/of_i2c.c
-+++ b/drivers/of/of_i2c.c
-@@ -42,7 +42,8 @@ void of_register_i2c_devices(struct i2c_adapter *adap,
+-	node = dev->archdata.prom_node;
++	node = dev->of_node;
+ 	if (node &&
+ 	    node == of_console_device)
+ 		return 1;
+diff --git a/arch/sparc/kernel/of_device_32.c b/arch/sparc/kernel/of_device_32.c
+index da527b3..5a5509c 100644
+--- a/arch/sparc/kernel/of_device_32.c
++++ b/arch/sparc/kernel/of_device_32.c
+@@ -345,8 +345,9 @@ static struct of_device * __init scan_one_device(struct device_node *dp,
+ 		return NULL;
  
- 		info.addr = be32_to_cpup(addr);
+ 	sd = &op->dev.archdata;
+-	sd->prom_node = dp;
++	sd->prom_node = dp; /* temporary */
+ 	sd->op = op;
++	op->dev.of_node = dp;
  
--		dev_archdata_set_node(&dev_ad, node);
-+		dev_archdata_set_node(&dev_ad, node); /* temporary */
-+		info.of_node = node;
- 		info.archdata = &dev_ad;
+ 	op->node = dp;
  
- 		request_module("%s", info.type);
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 0a5da63..4f37ff1 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -34,6 +34,7 @@
- #include <linux/device.h>	/* for struct device */
- #include <linux/sched.h>	/* for completion */
- #include <linux/mutex.h>
-+#include <linux/of.h>		/* for struct device_node */
+diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
+index b3d4cb5..9d30b07 100644
+--- a/arch/sparc/kernel/of_device_64.c
++++ b/arch/sparc/kernel/of_device_64.c
+@@ -640,9 +640,10 @@ static struct of_device * __init scan_one_device(struct device_node *dp,
+ 		return NULL;
  
- extern struct bus_type i2c_bus_type;
+ 	sd = &op->dev.archdata;
+-	sd->prom_node = dp;
++	sd->prom_node = dp; /* temporary */
+ 	sd->op = op;
  
-@@ -251,6 +252,9 @@ struct i2c_board_info {
- 	unsigned short	addr;
- 	void		*platform_data;
- 	struct dev_archdata	*archdata;
-+#ifdef CONFIG_OF
-+	struct device_node *of_node;
-+#endif
- 	int		irq;
- };
++	op->dev.of_node = dp;
+ 	op->node = dp;
+ 
+ 	op->clock_freq = of_getintprop_default(dp, "clock-frequency",
+diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
+index cf73f43..40861ed 100644
+--- a/arch/sparc/kernel/pci.c
++++ b/arch/sparc/kernel/pci.c
+@@ -654,7 +654,7 @@ show_pciobppath_attr(struct device * dev, struct device_attribute * attr, char *
+ 	struct device_node *dp;
+ 
+ 	pdev = to_pci_dev(dev);
+-	dp = pdev->dev.archdata.prom_node;
++	dp = pdev->dev.of_node;
+ 
+ 	return snprintf (buf, PAGE_SIZE, "%s\n", dp->full_name);
+ }
+@@ -1023,7 +1023,7 @@ void arch_teardown_msi_irq(unsigned int virt_irq)
+ 
+ struct device_node *pci_device_to_OF_node(struct pci_dev *pdev)
+ {
+-	return pdev->dev.archdata.prom_node;
++	return pdev->dev.of_node;
+ }
+ EXPORT_SYMBOL(pci_device_to_OF_node);
