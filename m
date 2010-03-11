@@ -1,8 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 24/37] drivers/char: use .dev.of_node instead of .node in
+Subject: [PATCH 20/37] drivers/input: use .dev.of_node instead of .node in
 	struct of_device
-Date: Thu, 11 Mar 2010 11:06:00 -0700
-Message-ID: <20100311180600.4824.44001.stgit__5621.17265440083$1268331954$gmane$org@angua>
+Date: Thu, 11 Mar 2010 11:05:38 -0700
+Message-ID: <20100311180538.4824.40399.stgit__28870.9123422906$1268331954$gmane$org@angua>
 References: <20100311174830.4824.19820.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -26,56 +26,54 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- drivers/char/hw_random/n2-drv.c     |    2 +-
- drivers/char/hw_random/pasemi-rng.c |    2 +-
- drivers/char/ipmi/ipmi_si_intf.c    |    4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/input/serio/i8042-sparcio.h |    2 +-
+ drivers/input/serio/xilinx_ps2.c    |    8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/char/hw_random/n2-drv.c b/drivers/char/hw_random/n2-drv.c
-index 9b3e09c..4d05003 100644
---- a/drivers/char/hw_random/n2-drv.c
-+++ b/drivers/char/hw_random/n2-drv.c
-@@ -660,7 +660,7 @@ static int __devinit n2rng_probe(struct of_device *op,
- 				np->hvapi_major);
- 			goto out_hvapi_unregister;
- 		}
--		np->num_units = of_getintprop_default(op->node,
-+		np->num_units = of_getintprop_default(op->dev.of_node,
- 						      "rng-#units", 0);
- 		if (!np->num_units) {
- 			dev_err(&op->dev, "VF RNG lacks rng-#units property\n");
-diff --git a/drivers/char/hw_random/pasemi-rng.c b/drivers/char/hw_random/pasemi-rng.c
-index 7fa61dd..b213855 100644
---- a/drivers/char/hw_random/pasemi-rng.c
-+++ b/drivers/char/hw_random/pasemi-rng.c
-@@ -98,7 +98,7 @@ static int __devinit rng_probe(struct of_device *ofdev,
- 			       const struct of_device_id *match)
+diff --git a/drivers/input/serio/i8042-sparcio.h b/drivers/input/serio/i8042-sparcio.h
+index 5071af2..29e1769 100644
+--- a/drivers/input/serio/i8042-sparcio.h
++++ b/drivers/input/serio/i8042-sparcio.h
+@@ -51,7 +51,7 @@ static inline void i8042_write_command(int val)
+ 
+ static int __devinit sparc_i8042_probe(struct of_device *op, const struct of_device_id *match)
  {
- 	void __iomem *rng_regs;
--	struct device_node *rng_np = ofdev->node;
-+	struct device_node *rng_np = ofdev->dev.of_node;
- 	struct resource res;
- 	int err = 0;
+-	struct device_node *dp = op->node;
++	struct device_node *dp = op->dev.of_node;
  
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 176f175..45305f2 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -2406,7 +2406,7 @@ static int __devinit ipmi_of_probe(struct of_device *dev,
- 	struct smi_info *info;
- 	struct resource resource;
- 	const int *regsize, *regspacing, *regshift;
--	struct device_node *np = dev->node;
-+	struct device_node *np = dev->dev.of_node;
- 	int ret;
- 	int proplen;
+ 	dp = dp->child;
+ 	while (dp) {
+diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/xilinx_ps2.c
+index 8298e1f..f154153 100644
+--- a/drivers/input/serio/xilinx_ps2.c
++++ b/drivers/input/serio/xilinx_ps2.c
+@@ -243,17 +243,17 @@ static int __devinit xps2_of_probe(struct of_device *ofdev,
+ 	int error;
  
-@@ -2462,7 +2462,7 @@ static int __devinit ipmi_of_probe(struct of_device *dev,
- 	info->io.regspacing	= regspacing ? *regspacing : DEFAULT_REGSPACING;
- 	info->io.regshift	= regshift ? *regshift : 0;
+ 	dev_info(dev, "Device Tree Probing \'%s\'\n",
+-			ofdev->node->name);
++			ofdev->dev.of_node->name);
  
--	info->irq		= irq_of_parse_and_map(dev->node, 0);
-+	info->irq		= irq_of_parse_and_map(dev->dev.of_node, 0);
- 	info->dev		= &dev->dev;
+ 	/* Get iospace for the device */
+-	error = of_address_to_resource(ofdev->node, 0, &r_mem);
++	error = of_address_to_resource(ofdev->dev.of_node, 0, &r_mem);
+ 	if (error) {
+ 		dev_err(dev, "invalid address\n");
+ 		return error;
+ 	}
  
- 	dev_dbg(&dev->dev, "addr 0x%lx regsize %d spacing %d irq %x\n",
+ 	/* Get IRQ for the device */
+-	if (of_irq_to_resource(ofdev->node, 0, &r_irq) == NO_IRQ) {
++	if (of_irq_to_resource(ofdev->dev.of_node, 0, &r_irq) == NO_IRQ) {
+ 		dev_err(dev, "no IRQ found\n");
+ 		return -ENODEV;
+ 	}
+@@ -341,7 +341,7 @@ static int __devexit xps2_of_remove(struct of_device *of_dev)
+ 	iounmap(drvdata->base_address);
+ 
+ 	/* Get iospace of the device */
+-	if (of_address_to_resource(of_dev->node, 0, &r_mem))
++	if (of_address_to_resource(of_dev->dev.of_node, 0, &r_mem))
+ 		dev_err(dev, "invalid address\n");
+ 	else
+ 		release_mem_region(r_mem.start, resource_size(&r_mem));
