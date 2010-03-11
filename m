@@ -1,44 +1,42 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 29/37] drivers/char: use .of_node instead of .archdata.of_node
-	in struct device
-Date: Thu, 11 Mar 2010 11:06:28 -0700
-Message-ID: <20100311180627.4824.32286.stgit__34031.0690961362$1268331967$gmane$org@angua>
-References: <20100311174830.4824.19820.stgit@angua>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 00/37] OF: move device node pointer into struct device.
+Date: Thu, 11 Mar 2010 11:25:46 -0700
+Message-ID: <fa686aa41003111025n7f059995v9263f13fac1bd1ee@mail.gmail.com>
+References: <20100311174830.4824.19820.stgit@angua> <20100311.102043.40590962.davem@davemloft.net>
+	<20100311.102347.169562565.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100311174830.4824.19820.stgit@angua>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, jgarzik-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, dwmw2@infrade
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20100311.102347.169562565.davem@davemloft.net>
+Sender: linux-scsi-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: monstr@monstr.eu, gregkh@suse.de, benh@kernel.crashing.org, akpm@linux-foundation.org, sfr@canb.auug.org.au, jgarzik@pobox.com, ben-linux@fluff.org, dwmw2@infradead.org, jeremy.kerr@canonical.com, James.Bottomley@suse.de, broonie@opensource.wolfsonmicro.com, microblaze-uclinux@itee.uq.edu.au, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, sparclinux@vger.kernel.org, linux-ide@vger.kernel.org, netdev@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-scsi@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-.archdata.node is being removed from Microblaze, SPARC and PowerPC.
+On Thu, Mar 11, 2010 at 11:23 AM, David Miller <davem@davemloft.net> wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Thu, 11 Mar 2010 10:20:43 -0800 (PST)
+>
+>> Three or four of the patches don't apply because only your tree
+>> has those "/* temporary */" comments, f.e. in arch/sparc/kernel/pci.c
+>>
+>> I took care of this when applying to my tree.
+>
+> It also doesn't build, what the heck is this against
+> Grant?
+>
+> drivers/of/device.c: In function 'of_match_device':
+> drivers/of/device.c:24: error: 'const struct device' has no member named 'of_node'
+> drivers/of/device.c:26: error: 'const struct device' has no member named 'of_node'
+>
+> Please make a patch set against Linus's vanilla tree so
+> I and others can test this.
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+Oops, sorry David, I accidentally dropped the top patch.  Give me a
+moment and I'll send it out.
 
- drivers/char/viotape.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+g.
 
-diff --git a/drivers/char/viotape.c b/drivers/char/viotape.c
-index 042c814..f37935c 100644
---- a/drivers/char/viotape.c
-+++ b/drivers/char/viotape.c
-@@ -865,7 +865,7 @@ static int viotape_probe(struct vio_dev *vdev, const struct vio_device_id *id)
- {
- 	int i = vdev->unit_address;
- 	int j;
--	struct device_node *node = vdev->dev.archdata.of_node;
-+	struct device_node *node = vdev->dev.of_node;
- 
- 	if (i >= VIOTAPE_MAX_TAPE)
- 		return -ENODEV;
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
