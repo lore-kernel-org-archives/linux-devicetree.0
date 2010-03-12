@@ -1,55 +1,51 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/flattree: Make unflatten_device_tree() safe to
-	call from any arch
-Date: Thu, 11 Mar 2010 21:55:52 -0700
-Message-ID: <fa686aa41003112055i51bb1d31k6874a20d2a37748a@mail.gmail.com>
-References: <20100311173024.4423.53178.stgit@angua>
-	<20100311173203.4423.8733.stgit@angua>
-	<20100312104840.2128fe99.sfr@canb.auug.org.au>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH 33/37] sound/soc: use .dev.of_node instead of .node in
+  struct of_device
+Date: Fri, 12 Mar 2010 09:26:19 +0100
+Message-ID: <20100312092619.6a6f5e20@hyperion.delvare>
+References: <20100311174830.4824.19820.stgit@angua>
+	<20100311180649.4824.10368.stgit@angua>
+	<20100311193458.GA13289@opensource.wolfsonmicro.com>
+	<fa686aa41003111322wc1f15b2hd3f653af060f56bf@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100312104840.2128fe99.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <fa686aa41003111322wc1f15b2hd3f653af060f56bf@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, monstr@monstr.eu, gregkh@suse.de, benh@kernel.crashing.org, akpm@linux-foundation.org, davem@davemloft.net, sfr@canb.auug.org.au, jgarzik@pobox.com, ben-linux@fluff.org, dwmw2@infradead.org, jeremy.kerr@canonical.com, James.Bottomley@suse.de, microblaze-uclinux@itee.uq.edu.au, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, sparclinux@vger.kernel.org, linux-ide@vger.kernel.org, netdev@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-scsi@vger.kernel.org, alsa-devel@alsa-project.org, timur@freescale.com, lrg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 11, 2010 at 4:48 PM, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org> wr=
-ote:
-> Hi Grant,
->
-> On Thu, 11 Mar 2010 10:32:03 -0700 Grant Likely <grant.likely@secretlab.c=
-a> wrote:
->>
->> - If CONFIG_OF_FLATTREE is not set, then make unflatten_device_tree()
->> =A0 an empty #define.
->
-> "an empty static inline funtion."
->
->> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
->> index f0fdd1f..54399f1 100644
->> --- a/include/linux/of_fdt.h
->> +++ b/include/linux/of_fdt.h
->> @@ -99,6 +99,8 @@ extern int early_init_dt_scan_root(unsigned long node,=
- const char *uname,
->> =A0/* Other Prototypes */
->> =A0extern void unflatten_device_tree(void);
->> =A0extern void early_init_devtree(void *);
->> +#else /* CONFIG_OF_FLATTREE */
->> +static inline void define unflatten_device_tree(void) {}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0^^^^^^
-> You need to remove that.
+On Thu, 11 Mar 2010 14:22:37 -0700, Grant Likely wrote:
+> On Thu, Mar 11, 2010 at 12:34 PM, Mark Brown
+> <broonie@opensource.wolfsonmicro.com> wrote:
+> > On Thu, Mar 11, 2010 at 11:06:50AM -0700, Grant Likely wrote:
+> >> .node is being removed
+> >>
+> >> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> >
+> > Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> >
+> > but please ensure that Liam and especially Timur also check this (both
+> > CCed).
+> >
+> > For enormous patch serieses like this it's really nice if you can ensure
+> > that each person is only CCed on the patches that they need to review.
+> > Much less stuff in the inbox.
+> 
+> Yeah, sorry about that (and to everyone receiving this thread, I'm
+> really sorry.  I won't do it again).  I've already been yelled at for
+> that.  What happened is that on a previous series I was yelled at for
+> not sending all patches to everyone (so that the patches could be
+> reviewed in context).  So, naturally, I made sure to include everyone
+> on the whole series this time....  doh.
+> 
+> Next time I post I'll constrain it to small chunks.
 
-Fixed.  Thanks.
+A good compromise IMHO is to send only the pieces they really have to
+see and ack to each person, and provide a pointer to somewhere the full
+series can be seen and downloaded for the interested.
 
-g.
+-- 
+Jean Delvare
