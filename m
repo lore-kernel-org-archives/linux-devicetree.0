@@ -1,51 +1,28 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCH 33/37] sound/soc: use .dev.of_node instead of .node in
-  struct of_device
-Date: Fri, 12 Mar 2010 09:26:19 +0100
-Message-ID: <20100312092619.6a6f5e20@hyperion.delvare>
+From: Alexander Schmidt <alexs@linux.vnet.ibm.com>
+Subject: Re: [PATCH 25/37] drivers/infiniband: use .dev.of_node instead of
+ .node in struct of_device
+Date: Fri, 12 Mar 2010 14:30:22 +0100
+Message-ID: <20100312143022.18b954a5@alex-laptop>
 References: <20100311174830.4824.19820.stgit@angua>
-	<20100311180649.4824.10368.stgit@angua>
-	<20100311193458.GA13289@opensource.wolfsonmicro.com>
-	<fa686aa41003111322wc1f15b2hd3f653af060f56bf@mail.gmail.com>
+	<20100311180605.4824.3613.stgit@angua>
+	<adavdd2d41q.fsf@roland-alpha.cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <fa686aa41003111322wc1f15b2hd3f653af060f56bf@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, monstr@monstr.eu, gregkh@suse.de, benh@kernel.crashing.org, akpm@linux-foundation.org, davem@davemloft.net, sfr@canb.auug.org.au, jgarzik@pobox.com, ben-linux@fluff.org, dwmw2@infradead.org, jeremy.kerr@canonical.com, James.Bottomley@suse.de, microblaze-uclinux@itee.uq.edu.au, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, sparclinux@vger.kernel.org, linux-ide@vger.kernel.org, netdev@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-scsi@vger.kernel.org, alsa-devel@alsa-project.org, timur@freescale.com, lrg@slimlogic.co.uk
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <adavdd2d41q.fsf@roland-alpha.cisco.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Roland Dreier <rdreier@cisco.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, broonie@opensource.wolfsonmicro.com, linux-ide@vger.kernel.org, James.Bottomley@suse.de, linux-i2c@vger.kernel.org, sparclinux@vger.kernel.org, jeremy.kerr@canonical.com, sfr@canb.auug.org.au, linux-scsi@vger.kernel.org, jgarzik@pobox.com, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, Christoph Raisch <raisch@de.ibm.com>, ben-linux@fluff.org, monstr@monstr.eu, linuxppc-dev@ozlabs.org, netdev@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, dwmw2@infradead.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Mar 2010 14:22:37 -0700, Grant Likely wrote:
-> On Thu, Mar 11, 2010 at 12:34 PM, Mark Brown
-> <broonie@opensource.wolfsonmicro.com> wrote:
-> > On Thu, Mar 11, 2010 at 11:06:50AM -0700, Grant Likely wrote:
-> >> .node is being removed
-> >>
-> >> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> >
-> > Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> >
-> > but please ensure that Liam and especially Timur also check this (both
-> > CCed).
-> >
-> > For enormous patch serieses like this it's really nice if you can ensure
-> > that each person is only CCed on the patches that they need to review.
-> > Much less stuff in the inbox.
-> 
-> Yeah, sorry about that (and to everyone receiving this thread, I'm
-> really sorry.  I won't do it again).  I've already been yelled at for
-> that.  What happened is that on a previous series I was yelled at for
-> not sending all patches to everyone (so that the patches could be
-> reviewed in context).  So, naturally, I made sure to include everyone
-> on the whole series this time....  doh.
-> 
-> Next time I post I'll constrain it to small chunks.
+On Thu, 11 Mar 2010 11:57:53 -0800
+Roland Dreier <rdreier@cisco.com> wrote:
 
-A good compromise IMHO is to send only the pieces they really have to
-see and ack to each person, and provide a pointer to somewhere the full
-series can be seen and downloaded for the interested.
+> Seems fine... adding EHCA guys just to make sure.
+> 
+>  > .node is being removed
+>  > 
+>  > Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 
--- 
-Jean Delvare
+Acked-by: Alexander Schmidt <alexs@linux.vnet.ibm.com>
