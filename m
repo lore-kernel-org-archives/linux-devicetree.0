@@ -1,14 +1,11 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] of: Fix comparison of "compatible" properties
-Date: Thu, 18 Mar 2010 08:49:57 +0100
-Message-ID: <4BA1DB25.4020705@monstr.eu>
-References: <20100318010001.6814.88310.stgit@angua>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: RFC: of_platform and platform bus merge
+Date: Thu, 18 Mar 2010 10:52:47 -0600
+Message-ID: <fa686aa41003180952q547ab888kff72a4f0bf258677@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100318010001.6814.88310.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,80 +15,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> Commit 7c7b60cb87547b1664a4385c187f029bf514a737
-> "of: put default string compare and #a/s-cell values into common header"
-> 
-> Breaks various things on powerpc due to using strncasecmp instead of
-> strcasecmp for comparing against "compatible" strings.
-> 
-> This causes things like the 4xx PCI code to fail miserably due to the
-> partial matches in code like this:
-> 
->        for_each_compatible_node(np, NULL, "ibm,plb-pcix")
->                ppc4xx_probe_pcix_bridge(np);
->        for_each_compatible_node(np, NULL, "ibm,plb-pci")
->                ppc4xx_probe_pci_bridge(np);
-> 
-> This reverts us to use strcasecmp. I do wonder why microblase and sparc
-> want the partial matches though. For sparc it could be historical, but
-> microblaze is probably doing the wrong thing so this patch also changes
-> the microblaze behaviour to use not allow partial matches.  Michal will
-> surely beat me over the head with a cluestick if I'm wrong, in which
-> case I'll fix this patch.
+Hi Dave,
 
-No, you are correct. I don't want partial matches.
+I need your opinion on the of_platform bus.  For powerpc, microblaze,
+and all others I intend to merge the current of_platform_bus_type with
+platform_bus_type.  powerpc and microblaze basically use of_platform
+bus as if it were the platform bus, so this is an easy decision to
+make.  As I mentioned, I've already written a patch that makes
+of_device and platform_device the same structure.  I also think I have
+a way to adapt the of_platform_driver registration to make existing
+of_platform_drivers register on the platform bus without any driver
+changes, and preserving the existing OF-style match behaviour
+(basically by moving the of_match_table into struct device_driver when
+CONFIG_OF is set; I've got a patch that does this too), and preserving
+the existing device hierarchy.
 
-> 
-> It's not quite right to do partial name match. Entries in a compatible
-> list are meant to be matched whole. If a device is compatible with both
-> "foo" and "foo1", then the device should have both strings in its
-> "compatible" property.
+However, I know that sparc uses a different model in that every node
+in a sparc device tree gets registered on the of_platform_bus, not
+just the things that would be analogous to 'platform' devices.
+Therefore, the merging of_platform_bus_type and platform_bus_type, and
+the inherent co-mingling of device drivers for both buses, has a
+higher likelyhood of causing problems on sparc than it does on powerpc
+or microblaze.
 
-Nice example. I have better one. Look at of_serial.c. ns16550a must be 
-for partial matches before ns16550. :-)
+I see two possible ways to proceed.
+1. Split of_platform code so that sparc preserves the old behaviour,
+while powerpc, mb, arm, etc. go ahead with the of_platform bus merge.
+ie. when building sparc, of_platform_drivers will get registered on
+the of_platform_bus_type as they currently do.  When building
+everything else, of_platform_driver registration will use an adapter
+shim to register of_platform_drivers onto the platform bus.  Non-sparc
+of_platform_drivers will slowly get migrated to normal platform
+drivers, and eventually the of_platform_bus APIs will be a
+sparc-specific thing.
 
-	{ .type = "serial", .compatible = "ns16550a", .data = (void 
-*)PORT_16550A, },
-	{ .type = "serial", .compatible = "ns16550",  .data = (void 
-*)PORT_16550, },
+2. Merge of_platform_bus_type with platform_bus on sparc too.
 
-Acked-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+I'm happy to take either path, so I need to know your opinion on the
+of_platform/platform bus merger.  I will of course do all the sparc
+compile testing on any changes that I make, but I'll need help making
+sure I don't break things at runtime.
 
-> 
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->       (for patch description)
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> CC: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> CC: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-> ---
-> 
->  include/linux/of.h |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index f6d9cbc..a367e19 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -127,7 +127,7 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
->  
->  /* Default string compare functions, Allow arch asm/prom.h to override */
->  #if !defined(of_compat_cmp)
-> -#define of_compat_cmp(s1, s2, l)	strncasecmp((s1), (s2), (l))
-> +#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
->  #define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
->  #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
->  #endif
-> 
-
+Thanks,
+g.
 
 -- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
