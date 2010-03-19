@@ -1,28 +1,57 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: RFC: of_platform and platform bus merge
-Date: Thu, 18 Mar 2010 22:24:44 -0600
-Message-ID: <fa686aa41003182124v186f7909s94c18a745b40529a@mail.gmail.com>
-References: <fa686aa41003180952q547ab888kff72a4f0bf258677@mail.gmail.com>
-	<20100318.173203.226756208.davem@davemloft.net>
+Subject: [v2 PATCH] of/flattree: Fix unhandled OF_DT_NOP tag when unflattening
+	the device tree
+Date: Fri, 19 Mar 2010 14:01:49 -0600
+Message-ID: <20100319200049.5195.97171.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20100318.173203.226756208.davem@davemloft.net>
-Sender: sparclinux-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, benh@kernel.crashing.org, sfr@canb.auug.org.au, michal.simek@petalogix.com, jeremy.kerr@canonical.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: devicetree-discuss@lists.ozlabs.org, benh@kernel.crashing.org, monstr@monstr.eu, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 18, 2010 at 6:32 PM, David Miller <davem@davemloft.net> wrote:
-> From: Grant Likely <grant.likely@secretlab.ca>
-> Date: Thu, 18 Mar 2010 10:52:47 -0600
->
->> 2. Merge of_platform_bus_type with platform_bus on sparc too.
->
-> Try this, if it explodes we'll just revert it and have
-> to think of a better idea.
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 
-Okay, will do.  I'll prepare the patches.
+NOPs within the property section are skipped, but NOPs between
+OF_DT_END_NODE and OF_DT_BEGIN_NODE were not. My firmware NOPs out
+entire nodes depending on various environment parameters.
 
-Thanks,
-g.
+of_scan_flat_dt already handles NOP more generally.
+
+Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
+v2 - adapted to new location of unflatten_dt_node().
+
+Jason, please test against 2.6.34-rc1
+
+ drivers/of/fdt.c |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 406757a..dee4fb5 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -376,8 +376,11 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		if (!np->type)
+ 			np->type = "<NULL>";
+ 	}
+-	while (tag == OF_DT_BEGIN_NODE) {
+-		mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
++	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
++		if (tag == OF_DT_NOP)
++			*p += 4;
++		else
++			mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
+ 		tag = be32_to_cpup((__be32 *)(*p));
+ 	}
+ 	if (tag != OF_DT_END_NODE) {
