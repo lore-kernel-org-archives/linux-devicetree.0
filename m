@@ -1,57 +1,43 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [v2 PATCH] of/flattree: Fix unhandled OF_DT_NOP tag when unflattening
-	the device tree
-Date: Fri, 19 Mar 2010 14:01:49 -0600
-Message-ID: <20100319200049.5195.97171.stgit@angua>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [v2 PATCH] of/flattree: Fix unhandled OF_DT_NOP tag when
+	unflattening the device tree
+Date: Sat, 20 Mar 2010 11:24:07 +1100
+Message-ID: <20100320002407.GA15222@yookeroo>
+References: <20100319200049.5195.97171.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: devicetree-discuss@lists.ozlabs.org, benh@kernel.crashing.org, monstr@monstr.eu, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20100319200049.5195.97171.stgit@angua>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+On Fri, Mar 19, 2010 at 02:01:49PM -0600, Grant Likely wrote:
+> From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> 
+> NOPs within the property section are skipped, but NOPs between
+> OF_DT_END_NODE and OF_DT_BEGIN_NODE were not. My firmware NOPs out
+> entire nodes depending on various environment parameters.
+> 
+> of_scan_flat_dt already handles NOP more generally.
 
-NOPs within the property section are skipped, but NOPs between
-OF_DT_END_NODE and OF_DT_BEGIN_NODE were not. My firmware NOPs out
-entire nodes depending on various environment parameters.
+Fwiw, there's a test program in the libfdt/dtc tree called "nopulate"
+which will liberally spread NOPs through a device tree blob (one
+between every other tag), which might be useful for testing this
 
-of_scan_flat_dt already handles NOP more generally.
-
-Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
----
-v2 - adapted to new location of unflatten_dt_node().
-
-Jason, please test against 2.6.34-rc1
-
- drivers/of/fdt.c |    7 +++++--
- 1 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 406757a..dee4fb5 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -376,8 +376,11 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
- 		if (!np->type)
- 			np->type = "<NULL>";
- 	}
--	while (tag == OF_DT_BEGIN_NODE) {
--		mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
-+	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
-+		if (tag == OF_DT_NOP)
-+			*p += 4;
-+		else
-+			mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
- 		tag = be32_to_cpup((__be32 *)(*p));
- 	}
- 	if (tag != OF_DT_END_NODE) {
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
