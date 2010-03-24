@@ -1,95 +1,136 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Tue, 23 Mar 2010 16:42:32 -0500
-Message-ID: <1269380552-10418-1-git-send-email-timur@freescale.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
+Date: Wed, 24 Mar 2010 00:07:51 -0600
+Message-ID: <fa686aa41003232307s39af071bn6377800951d6615c@mail.gmail.com>
+References: <1269380552-10418-1-git-send-email-timur@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1269380552-10418-1-git-send-email-timur@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Timur Tabi <timur@freescale.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Define a binding for embedding a QE firmware blob into the device tree.  Also
-define a new property for the QE node that links to a firmware node.
+On Tue, Mar 23, 2010 at 3:42 PM, Timur Tabi <timur@freescale.com> wrote:
+> Define a binding for embedding a QE firmware blob into the device tree. =
+=A0Also
+> define a new property for the QE node that links to a firmware node.
+>
+> Signed-off-by: Timur Tabi <timur@freescale.com>
+> ---
+> =A0.../powerpc/dts-bindings/fsl/cpm_qe/qe.txt =A0 =A0 =A0 =A0 | =A0 50 ++=
+++++++++++++++++++
+> =A01 files changed, 50 insertions(+), 0 deletions(-)
+>
+> diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt b/Docum=
+entation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
+> index 6e37be1..d9d6431 100644
+> --- a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
+> +++ b/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
+> @@ -20,6 +20,14 @@ Required properties:
+> =A0- fsl,qe-num-riscs: define how many RISC engines the QE has.
+> =A0- fsl,qe-num-snums: define how many serial number(SNUM) the QE can use=
+ for the
+> =A0 threads.
+> +- fsl,firmware-phandle:
+> + =A0 =A0Usage: required
+> + =A0 =A0Value type: <phandle>
+> + =A0 =A0Definition: Points to a firmware node (see "QE Firmware Node" be=
+low)
+> + =A0 =A0 =A0 =A0that contains the firmware that should be uploaded for t=
+his QE.
+> + =A0 =A0 =A0 =A0The compatible property for the firmware node should say,
+> + =A0 =A0 =A0 =A0"fsl,qe-firmware".
+> +
 
-Signed-off-by: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../powerpc/dts-bindings/fsl/cpm_qe/qe.txt         |   50 ++++++++++++++++++++
- 1 files changed, 50 insertions(+), 0 deletions(-)
+Why the phandle redirection?  Why not just put the firmware blob into
+a property in the QE node, or as a subnode?
 
-diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt b/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
-index 6e37be1..d9d6431 100644
---- a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
-+++ b/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
-@@ -20,6 +20,14 @@ Required properties:
- - fsl,qe-num-riscs: define how many RISC engines the QE has.
- - fsl,qe-num-snums: define how many serial number(SNUM) the QE can use for the
-   threads.
-+- fsl,firmware-phandle:
-+    Usage: required
-+    Value type: <phandle>
-+    Definition: Points to a firmware node (see "QE Firmware Node" below)
-+        that contains the firmware that should be uploaded for this QE.
-+        The compatible property for the firmware node should say,
-+        "fsl,qe-firmware".
-+
- 
- Recommended properties
- - brg-frequency : the internal clock source frequency for baud-rate
-@@ -59,3 +67,45 @@ Example:
- 		reg = <0 c000>;
- 	};
-      };
-+
-+* QE Firmware Node
-+
-+This node defines a firmware binary that is embedded in the device tree, for
-+the purpose of passing the firmware from bootloader to the kernel, or from
-+the hypervisor to the guest.
-+
-+The firmware node itself contains the firmware binary contents, a compatible
-+property, and any firmware-specific properties.  The node itself can be located
-+anywhere, but should probably be placed at the top level.  The QE node
-+that needs the firmware should define a property that links to the firmware
-+node's phandle.
-+
-+This node is typically not defined in the DTS.  Instead, the boot loader
-+normally creates the node from scratch, using a firmware binary that is already
-+located in non-volatile storage or transferred from a tftp server.
-+
-+Required properties:
-+  - compatible
-+      Usage: required
-+      Value type: <string>
-+      Definition: A standard property.  Specify a string that indicates what
-+          kind of firmware it is.  For QE, this should be "fsl,qe-firmware".
-+
-+   - fsl,firmware
-+      Usage: required
-+      Value type: <prop-encoded-array>, encoded as an array of bytes
-+      Definition: A standard property.  This property contains the firmware
-+          binary "blob".
-+
-+Example:
-+	qe@e0080000 {
-+		compatible = "fsl,qe";
-+		fsl,firmware-phandle = <&qe_firmware>;
-+		...
-+	}
-+
-+	qe_firmware:qe-firmware {
-+		compatible = "fsl,qe-firmware";
-+		fsl,firmware = <0x70 0xcd 0x00 0x00 0x01 0x46 0x45 0x63 ...>
-+	}
-+
--- 
-1.6.5
+g.
+
+>
+> =A0Recommended properties
+> =A0- brg-frequency : the internal clock source frequency for baud-rate
+> @@ -59,3 +67,45 @@ Example:
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0 c000>;
+> =A0 =A0 =A0 =A0};
+> =A0 =A0 =A0};
+> +
+> +* QE Firmware Node
+> +
+> +This node defines a firmware binary that is embedded in the device tree,=
+ for
+> +the purpose of passing the firmware from bootloader to the kernel, or fr=
+om
+> +the hypervisor to the guest.
+> +
+> +The firmware node itself contains the firmware binary contents, a compat=
+ible
+> +property, and any firmware-specific properties. =A0The node itself can b=
+e located
+> +anywhere, but should probably be placed at the top level. =A0The QE node
+> +that needs the firmware should define a property that links to the firmw=
+are
+> +node's phandle.
+> +
+> +This node is typically not defined in the DTS. =A0Instead, the boot load=
+er
+> +normally creates the node from scratch, using a firmware binary that is =
+already
+> +located in non-volatile storage or transferred from a tftp server.
+> +
+> +Required properties:
+> + =A0- compatible
+> + =A0 =A0 =A0Usage: required
+> + =A0 =A0 =A0Value type: <string>
+> + =A0 =A0 =A0Definition: A standard property. =A0Specify a string that in=
+dicates what
+> + =A0 =A0 =A0 =A0 =A0kind of firmware it is. =A0For QE, this should be "f=
+sl,qe-firmware".
+> +
+> + =A0 - fsl,firmware
+> + =A0 =A0 =A0Usage: required
+> + =A0 =A0 =A0Value type: <prop-encoded-array>, encoded as an array of byt=
+es
+> + =A0 =A0 =A0Definition: A standard property. =A0This property contains t=
+he firmware
+> + =A0 =A0 =A0 =A0 =A0binary "blob".
+> +
+> +Example:
+> + =A0 =A0 =A0 qe@e0080000 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fsl,qe";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 fsl,firmware-phandle =3D <&qe_firmware>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 ...
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 qe_firmware:qe-firmware {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fsl,qe-firmware";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 fsl,firmware =3D <0x70 0xcd 0x00 0x00 0x01 =
+0x46 0x45 0x63 ...>
+> + =A0 =A0 =A0 }
+> +
+> --
+> 1.6.5
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
