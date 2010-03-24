@@ -1,7 +1,7 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+From: Timur Tabi <timur@freescale.com>
 Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Wed, 24 Mar 2010 08:21:07 -1000
-Message-ID: <4BAA5813.30406@firmworks.com>
+Date: Wed, 24 Mar 2010 13:25:05 -0500
+Message-ID: <4BAA5901.7000707@freescale.com>
 References: <1269380552-10418-1-git-send-email-timur@freescale.com>
 	<fa686aa41003232307s39af071bn6377800951d6615c@mail.gmail.com>
 	<ed82fe3e1003240505h59d29c83x6948f8b3b70c4570@mail.gmail.com>
@@ -10,31 +10,61 @@ References: <1269380552-10418-1-git-send-email-timur@freescale.com>
 	<4BAA4C8A.70104@freescale.com>
 	<fa686aa41003241110u75e9486dn503c6b039944708c@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <fa686aa41003241110u75e9486dn503c6b039944708c-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <fa686aa41003241110u75e9486dn503c6b039944708c@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
->
-> > Most firmware is 8-12KB, so this will make for one ugly DTS.  Plus, there's the issue of distributing non-GPL firmware data inside a DTS, which is GPL.
->   
->
+Grant Likely wrote:
+
+> Thanks.  This is important information when talking about his.
+> 
+> You can also put it into an initrd and use the Linux firmware loader.
+
+We may also need to support non-Linux operating systems that don't use an initrd.  For now, an initrd might work.  I don't know how I'll convince our BSP team to start using one, though.
+
+> That would also neatly solve your GPL distribution issues.
+
+True.
+
+> Also, depending on U-Boot (or any other boot firmware) to correctly
+> squirt the QE blob into
+> the dtb at boot is risky.  Even when U-Boot is buggy, there is
+> resistance to upgrading U-Boot
+> on working boards because it could result in a bricked board.
+
+Ok, that makes more sense, but we're not talking about upgrading U-Boot.  Once U-Boot has the capability to inject the QE blob into the DTB, then upgrading the QE blob won't require an upgrade to U-Boot.  The QE blob is still a QE blob.
+
+> You're right, that wouldn't be very nice.  Try this syntax instead:
+> 
+> fsl,firmware = /incbin/("firmware-file-name.bin");
+
+It's not a bad idea, but it would require firmware-file-name.bin to be distributed with the kernel itself, otherwise building the DTB will be complicated.  The path to firmware-file-name.bin would need to be hard-coded in the DTS.
+
 > You've got the distribution problem that needs to be solved regardless
 > because it cannot be part of U-Boot either.  How do you plan to handle
 > QE firmware distribution and loading?
->   
 
-Or you could use real Open Firmware, which is free as in free, instead 
-of free as in whatever RMS says.
+Today, we just put the QE blob somewhere in flash, and then U-Boot is told about like this:
+
+#define CONFIG_SYS_QE_FW_ADDR	0xfff00000
+
+Then we have GPL code in U-Boot that uploads it.  
+
+But you do have a point -- once we embed the QE blob in the DTB, whether it's a DTB created by DTC or updated by U-Boot, we might already have a GPL issue.  I'll have to get back to you on that one.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
