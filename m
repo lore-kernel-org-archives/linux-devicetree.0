@@ -1,7 +1,7 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Timur Tabi <timur@freescale.com>
 Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Thu, 25 Mar 2010 14:53:56 -0500
-Message-ID: <4BABBF54.3010104@freescale.com>
+Date: Thu, 25 Mar 2010 15:04:31 -0500
+Message-ID: <4BABC1CF.1000306@freescale.com>
 References: <1269380552-10418-1-git-send-email-timur@freescale.com>
 	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
 	<4BAA4C8A.70104@freescale.com>
@@ -12,85 +12,42 @@ References: <1269380552-10418-1-git-send-email-timur@freescale.com>
 	<fa686aa41003250959v401d14e0g151aa54a57eea39@mail.gmail.com>
 	<4BAB9755.2080408@freescale.com>
 	<fa686aa41003251035h3574a2bahce183ca6056e5f7e@mail.gmail.com>
+	<4BABBF54.3010104@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <fa686aa41003251035h3574a2bahce183ca6056e5f7e-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4BABBF54.3010104@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: Mitch Bradley <wmb@firmworks.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> On Thu, Mar 25, 2010 at 11:03 AM, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> Grant Likely wrote:
->>> For indirect firmware, create a /chosen/firmware node.  Don't add a
->>> compatible property,
->> Oh, I don't like that idea at all.  The compatible property is useful for me to know *how* to parse the binary blob.
-> 
-> Compatible is for devices.
+Scott Wood wrote:
 
-Compatible is for matching.  Who cares what category the thing being 
-matched is in?  What is the definition of a device, and why does it matter?
+> I don't know that it's strictly necessary in this case --  it looks like 
+> there is a magic number in the firmware blob -- but I don't understand 
+> the objection as a matter of principle.  These device tree discussions 
+> have a tendency to get awfully bikesheddy.
 
-> This is not a device.  Drivers cannot bind
-> against it.  Use a different mechanism if you have metadata about the
-> blob.  If your driver doesn't know how to validate its own firmware
-> blobs, then you've got bigger problems.
+I don't want this discussion, and any binding definitions that come from it, to be limited to the specifics of a QE firmware.  I want to make sure that any binding that we come up with can be easily extended to any kind of firmware, including firmware that has no headers.
 
-One could also say, if your hardware can't be probed at runtime, you've 
-got bigger problems. :-)
+Many companies will distribute their firmware as a generic sequence of bytes (no header), and a simple code fragment that demonstrates uploading the binary to the hardware.  The license for these files sometimes precludes the option of wrapping that microcode inside or with another binary.  That is, if you want to distribute this firmware, it must be distributed as-is.  
 
-What's wrong with an indication of what type of "thing" a node is 
-supposed to be?  There could be multiple microcode formats, for example.
+Example:
 
-I don't know that it's strictly necessary in this case --  it looks like 
-there is a magic number in the firmware blob -- but I don't understand 
-the objection as a matter of principle.  These device tree discussions 
-have a tendency to get awfully bikesheddy.
+Freescale buys a chip from some vendor and puts the chip on a reference board.  The chip requires some microcode to be uploaded, and the vendor distributes some binary blob and a code snippet.  Freescale embeds the code snippet in Linux, and puts the microcode somewhere in flash.  The license for the microcode says, "thou shalt not merge this microcode with any other binary".  Freescale decides, for whatever reason, that putting a header around the microcode and putting *that* in flash is a violation of the license, but having U-Boot dynamically embed it into a DTB isn't.  Ok, maybe that's a bit ridiculous, but just humor me.  In this case, it would useful to have the microcode in its own node with properties describing the microcode.
 
->>>  Put each firmware blob into a separate property, and make
->>> the names reasonable (ie. mpc<blah>-qe-firmware).  Have the QE
->>> reference the firmware blob by property name.
->> I don't like the idea of using the property name as a pseudo-compatible string.
-> 
-> It's a name, not a pseudo compatible string, and your device node will
-> explicitly reference it by name.  There is not backwards compatibility
-> or fuzzy binding issues at play here.
+Anyway, I may have gone off in the weeds with this discussion.
 
-There is a forward compatibility issue, in that we'll have to update the 
-code with every new mpc<blah> (or p<blah>rev<n>) that comes along.
-
-Or are we supposed to pick some random chip to request the firmware for, 
-like with compatibles?  What would be the point?  This isn't being used 
-to bind a driver.
-
-> It is a way for your driver
-> node to state, "I want *that exact* firmware blob".
-
-The driver wants the firmware blob that the device tree provides.  The 
-device tree knows better than the driver, being that the device tree is 
-the describer of the hardware.
-
-> You could make
-> the property name "george" 
-
-If "george" is fine, then so is "fsl,firmware".  Maybe "fsl,qe-firmware".
-
-> and it would still be completely clear (if
-> a little weird) because all the references are contained within the
-> tree.
-
-How are the references contained within the tree?  The driver has to 
-know which property to read.
-
--Scott
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
