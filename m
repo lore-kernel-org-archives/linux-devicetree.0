@@ -1,22 +1,15 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Thu, 25 Mar 2010 17:22:34 -0400
-Message-ID: <20100325212234.GA26649@yookeroo>
-References: <ed82fe3e1003240505h59d29c83x6948f8b3b70c4570@mail.gmail.com>
-	<90D93687-940F-47FB-8CEA-F3C065EA611D@kernel.crashing.org>
-	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
-	<4BAA4C8A.70104@freescale.com>
-	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
-	<4BAB7E67.6040707@freescale.com> <4BAB816F.5060405@firmworks.com>
-	<fa686aa41003250916t3d0839e5m42d7f7f6540e821a@mail.gmail.com>
-	<4BAB9120.1060600@freescale.com>
-	<fa686aa41003250959v401d14e0g151aa54a57eea39@mail.gmail.com>
+Subject: Re: RFC: ARM Boot standard for passing device tree blob
+Date: Thu, 25 Mar 2010 19:40:53 -0400
+Message-ID: <20100325234053.GB26649@yookeroo>
+References: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
+	<20100325210409.GH24984@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <fa686aa41003250959v401d14e0g151aa54a57eea39-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20100325210409.GH24984-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,46 +19,81 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Philippe Robin <Philippe.Robin-5wv7dgnIgG8@public.gmane.org>, David Rusling <David.Rusling-5wv7dgnIgG8@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 25, 2010 at 10:59:01AM -0600, Grant Likely wrote:
-> On Thu, Mar 25, 2010 at 10:36 AM, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > Grant Likely wrote:
-> >> On Thu, Mar 25, 2010 at 9:29 AM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wro=
-te:
-> >>> It seems to me that there are plausible use cases for both direct-inc=
-lusion
-> >>> and indirection. =A0I don't see any real problems with either, so I w=
-ould vote
-> >>> for specifying both alternatives.
-> >>
-> >> Ugh. =A0Then this one driver would need to implement both binding for
-> >> little, if any, actual benefit.
-> >
-> > Although I agree that I don't like supporting both bindings, we could e=
-ncapsulate the locating of the firmware node in a function. =A0The function=
- will first look for a child firmware node, and if it doesn't find it, look=
- for a fsl,firmware property. =A0It will return a pointer to the firmware n=
-ode regardless.
-> >
-> >> I'm sure we can come to an agreement
-> >> on one method if the firmware absolutely has to be in the tree.
-> >
-> > If we have to pick one, then I think the only viable choice is have a s=
-eparate firmware node and a phandle pointer to it. =A0Otherwise, I just don=
-'t see how we can handle multiple devices needing the same firmware.
-> =
+On Thu, Mar 25, 2010 at 09:04:09PM +0000, Russell King - ARM Linux wrote:
+> On Wed, Mar 24, 2010 at 09:11:56AM -0600, Grant Likely wrote:
+> > Hi all,
+> > 
+> > Since work is being done to add ARM Flattened Device Tree support to
+> > both Linux and FreeBSD, I think it would be worth while to agree on a
+> > common boot interface for passing a device tree blob from firmware to
+> > the kernel (or in the case of kexec, from the old to new kernels).
+> > I've drafted up something quickly on fdt.secretlab.ca.  The page can
+> > be found here:
+> > 
+> > http://fdt.secretlab.ca/Boot_Environment#ARM
+> > 
+> > Feel free to modify the draft on the wiki if you notice any missing
+> > details.  I've also posted the current text below so it is easy to
+> > review and comment on.
+> > 
+> > (btw, the wiki at fdt.secretlab.ca should be moving to devicetree.org
+> > in the near future, but I'll keep the old domain name around.
+> > devicetree.org will be used to document new device tree bindings in an
+> > OS-agnostic location.)
+> > 
+> > 
+> > == ARM ==
+> > See Documentation/arm/Booting and arch/arm/include/asm/setup.h in the
+> > Linux kernel source tree for background information.  Some of the
+> > content of this section is extracted from those files.
+> > 
+> > '''Draft'''
+> > 
+> > ===Required System State===
+> > *Quiesce all DMA
+> > *CPU register contents
+> > **r0 = 0
+> > **r1 = Linux machine number (as defined in the ARM Linux machine database) or 0
+> 
+> 0 is a valid machine number.  What is your purpose of passing 0?
 
-> Wait for David to weigh in on this one before making a decision.  He
-> knows the dtb format best.
+Presumably a machine number will need to be allocated to mean "use the
+device tree instead of fixed machine number info".
 
-I'll do that when I can.  Right now I'm in the middle of intense
-bringup work so I won't have time for this for a while.
+> > **r2 = physical address of tagged parameter list in system RAM
+> > *IRQs disabled
+> > *MMU off
+> > *Instruction cache either on or off
+> > *Data cache turned off
+> 
+> Would recommend saying "Data cache(s) turned off" so that L2 cache is
+> included.
+> 
+> > ===Minimal state for Flattened Device Tree Boot===
+> > For FDT booting, the tagged list only needs to contain a single device
+> > tree tag, and the device tree blob could be appended to the end of the
+> > tagged list so that everything resides in the same region of memory.
+> 
+> That's a bad idea.  Sometimes the tagged list can be extended by wrappers
+> around the kernel, and data placed at the end of the list would be
+> overwritten.
+> 
+> As the tagged list can encode arbitarily sized data chunks, there's no
+> reason to use a pointer in the tagged list.  However, there is a problem:
+> what do you do with a large chunk of data in the tagged list?  You can't
+> allocate memory to copy it in the kernel because no memory allocators
+> are up and running...
 
--- =
+It's not clear that you'll need to copy it particularly soon.  The
+libfdt functions we use in the zImage wrapper on powerpc will deal
+fine with a device tree accessed in place, or moved about.  They are
+built specifically not to assume the existence of an allocater.
 
+-- 
 David Gibson			| I'll have my music baroque, and my code
 david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
