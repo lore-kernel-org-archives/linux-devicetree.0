@@ -1,53 +1,87 @@
-From: Timur Tabi <timur@freescale.com>
-Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Thu, 25 Mar 2010 15:04:31 -0500
-Message-ID: <4BABC1CF.1000306@freescale.com>
-References: <1269380552-10418-1-git-send-email-timur@freescale.com>
-	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
-	<4BAA4C8A.70104@freescale.com>
-	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
-	<4BAB7E67.6040707@freescale.com> <4BAB816F.5060405@firmworks.com>
-	<fa686aa41003250916t3d0839e5m42d7f7f6540e821a@mail.gmail.com>
-	<4BAB9120.1060600@freescale.com>
-	<fa686aa41003250959v401d14e0g151aa54a57eea39@mail.gmail.com>
-	<4BAB9755.2080408@freescale.com>
-	<fa686aa41003251035h3574a2bahce183ca6056e5f7e@mail.gmail.com>
-	<4BABBF54.3010104@freescale.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: RFC: ARM Boot standard for passing device tree blob
+Date: Thu, 25 Mar 2010 21:04:09 +0000
+Message-ID: <20100325210409.GH24984@n2100.arm.linux.org.uk>
+References: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4BABBF54.3010104@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Mitch Bradley <wmb@firmworks.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rafal Jaworowski <raj@semihalf.com>, Philippe Robin <Philippe.Robin@arm.com>, David Rusling <David.Rusling@arm.com>, Jeremy Kerr <jeremy.kerr@canonical.com>, Dave P Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Scott Wood wrote:
+On Wed, Mar 24, 2010 at 09:11:56AM -0600, Grant Likely wrote:
+> Hi all,
+> 
+> Since work is being done to add ARM Flattened Device Tree support to
+> both Linux and FreeBSD, I think it would be worth while to agree on a
+> common boot interface for passing a device tree blob from firmware to
+> the kernel (or in the case of kexec, from the old to new kernels).
+> I've drafted up something quickly on fdt.secretlab.ca.  The page can
+> be found here:
+> 
+> http://fdt.secretlab.ca/Boot_Environment#ARM
+> 
+> Feel free to modify the draft on the wiki if you notice any missing
+> details.  I've also posted the current text below so it is easy to
+> review and comment on.
+> 
+> (btw, the wiki at fdt.secretlab.ca should be moving to devicetree.org
+> in the near future, but I'll keep the old domain name around.
+> devicetree.org will be used to document new device tree bindings in an
+> OS-agnostic location.)
+> 
+> 
+> == ARM ==
+> See Documentation/arm/Booting and arch/arm/include/asm/setup.h in the
+> Linux kernel source tree for background information.  Some of the
+> content of this section is extracted from those files.
+> 
+> '''Draft'''
+> 
+> ===Required System State===
+> *Quiesce all DMA
+> *CPU register contents
+> **r0 = 0
+> **r1 = Linux machine number (as defined in the ARM Linux machine database) or 0
 
-> I don't know that it's strictly necessary in this case --  it looks like 
-> there is a magic number in the firmware blob -- but I don't understand 
-> the objection as a matter of principle.  These device tree discussions 
-> have a tendency to get awfully bikesheddy.
+0 is a valid machine number.  What is your purpose of passing 0?
 
-I don't want this discussion, and any binding definitions that come from it, to be limited to the specifics of a QE firmware.  I want to make sure that any binding that we come up with can be easily extended to any kind of firmware, including firmware that has no headers.
+> **r2 = physical address of tagged parameter list in system RAM
+> *IRQs disabled
+> *MMU off
+> *Instruction cache either on or off
+> *Data cache turned off
 
-Many companies will distribute their firmware as a generic sequence of bytes (no header), and a simple code fragment that demonstrates uploading the binary to the hardware.  The license for these files sometimes precludes the option of wrapping that microcode inside or with another binary.  That is, if you want to distribute this firmware, it must be distributed as-is.  
+Would recommend saying "Data cache(s) turned off" so that L2 cache is
+included.
 
-Example:
+> ===Minimal state for Flattened Device Tree Boot===
+> For FDT booting, the tagged list only needs to contain a single device
+> tree tag, and the device tree blob could be appended to the end of the
+> tagged list so that everything resides in the same region of memory.
 
-Freescale buys a chip from some vendor and puts the chip on a reference board.  The chip requires some microcode to be uploaded, and the vendor distributes some binary blob and a code snippet.  Freescale embeds the code snippet in Linux, and puts the microcode somewhere in flash.  The license for the microcode says, "thou shalt not merge this microcode with any other binary".  Freescale decides, for whatever reason, that putting a header around the microcode and putting *that* in flash is a violation of the license, but having U-Boot dynamically embed it into a DTB isn't.  Ok, maybe that's a bit ridiculous, but just humor me.  In this case, it would useful to have the microcode in its own node with properties describing the microcode.
+That's a bad idea.  Sometimes the tagged list can be extended by wrappers
+around the kernel, and data placed at the end of the list would be
+overwritten.
 
-Anyway, I may have gone off in the weeds with this discussion.
+As the tagged list can encode arbitarily sized data chunks, there's no
+reason to use a pointer in the tagged list.  However, there is a problem:
+what do you do with a large chunk of data in the tagged list?  You can't
+allocate memory to copy it in the kernel because no memory allocators
+are up and running...
 
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+That's always been the catch-22 with passing binary data blobs to the
+kernel.
