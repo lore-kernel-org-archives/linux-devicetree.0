@@ -1,87 +1,178 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: RFC: ARM Boot standard for passing device tree blob
-Date: Thu, 25 Mar 2010 21:04:09 +0000
-Message-ID: <20100325210409.GH24984@n2100.arm.linux.org.uk>
-References: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
+Date: Thu, 25 Mar 2010 15:39:08 -0600
+Message-ID: <fa686aa41003251439t23c04581n16d064c27d2516f4@mail.gmail.com>
+References: <1269380552-10418-1-git-send-email-timur@freescale.com>
+	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
+	<4BAB7E67.6040707@freescale.com> <4BAB816F.5060405@firmworks.com>
+	<fa686aa41003250916t3d0839e5m42d7f7f6540e821a@mail.gmail.com>
+	<4BAB9120.1060600@freescale.com>
+	<fa686aa41003250959v401d14e0g151aa54a57eea39@mail.gmail.com>
+	<4BAB9755.2080408@freescale.com>
+	<fa686aa41003251035h3574a2bahce183ca6056e5f7e@mail.gmail.com>
+	<4BABBF54.3010104@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rafal Jaworowski <raj@semihalf.com>, Philippe Robin <Philippe.Robin@arm.com>, David Rusling <David.Rusling@arm.com>, Jeremy Kerr <jeremy.kerr@canonical.com>, Dave P Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4BABBF54.3010104@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: Mitch Bradley <wmb@firmworks.com>, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org, Timur Tabi <timur@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 24, 2010 at 09:11:56AM -0600, Grant Likely wrote:
-> Hi all,
-> 
-> Since work is being done to add ARM Flattened Device Tree support to
-> both Linux and FreeBSD, I think it would be worth while to agree on a
-> common boot interface for passing a device tree blob from firmware to
-> the kernel (or in the case of kexec, from the old to new kernels).
-> I've drafted up something quickly on fdt.secretlab.ca.  The page can
-> be found here:
-> 
-> http://fdt.secretlab.ca/Boot_Environment#ARM
-> 
-> Feel free to modify the draft on the wiki if you notice any missing
-> details.  I've also posted the current text below so it is easy to
-> review and comment on.
-> 
-> (btw, the wiki at fdt.secretlab.ca should be moving to devicetree.org
-> in the near future, but I'll keep the old domain name around.
-> devicetree.org will be used to document new device tree bindings in an
-> OS-agnostic location.)
-> 
-> 
-> == ARM ==
-> See Documentation/arm/Booting and arch/arm/include/asm/setup.h in the
-> Linux kernel source tree for background information.  Some of the
-> content of this section is extracted from those files.
-> 
-> '''Draft'''
-> 
-> ===Required System State===
-> *Quiesce all DMA
-> *CPU register contents
-> **r0 = 0
-> **r1 = Linux machine number (as defined in the ARM Linux machine database) or 0
+On Thu, Mar 25, 2010 at 1:53 PM, Scott Wood <scottwood@freescale.com> wrote:
+> Grant Likely wrote:
+>>
+>> On Thu, Mar 25, 2010 at 11:03 AM, Timur Tabi <timur@freescale.com> wrote:
+>>>
+>>> Grant Likely wrote:
+>>>>
+>>>> For indirect firmware, create a /chosen/firmware node. =A0Don't add a
+>>>> compatible property,
+>>>
+>>> Oh, I don't like that idea at all. =A0The compatible property is useful=
+ for
+>>> me to know *how* to parse the binary blob.
+>>
+>> Compatible is for devices.
+>
+> Compatible is for matching. =A0Who cares what category the thing being ma=
+tched
+> is in? =A0What is the definition of a device, and why does it matter?
 
-0 is a valid machine number.  What is your purpose of passing 0?
+Compatible specifies a device and a list of devices it can emulate:
 
-> **r2 = physical address of tagged parameter list in system RAM
-> *IRQs disabled
-> *MMU off
-> *Instruction cache either on or off
-> *Data cache turned off
+http://www.openfirmware.org/1275/proposals/Closed/Accepted/343-it.txt
 
-Would recommend saying "Data cache(s) turned off" so that L2 cache is
-included.
+>> This is not a device. =A0Drivers cannot bind
+>> against it. =A0Use a different mechanism if you have metadata about the
+>> blob. =A0If your driver doesn't know how to validate its own firmware
+>> blobs, then you've got bigger problems.
+>
+> One could also say, if your hardware can't be probed at runtime, you've g=
+ot
+> bigger problems. :-)
+>
+> What's wrong with an indication of what type of "thing" a node is supposed
+> to be? =A0There could be multiple microcode formats, for example.
+>
+> I don't know that it's strictly necessary in this case -- =A0it looks like
+> there is a magic number in the firmware blob -- but I don't understand the
+> objection as a matter of principle. =A0These device tree discussions have=
+ a
+> tendency to get awfully bikesheddy.
 
-> ===Minimal state for Flattened Device Tree Boot===
-> For FDT booting, the tagged list only needs to contain a single device
-> tree tag, and the device tree blob could be appended to the end of the
-> tagged list so that everything resides in the same region of memory.
+That's because the pain inflicted in getting it wrong is very high.
+Consider this: The model being discussed is for U-Boot to load the
+blob into the tree.  Once U-Boot is deployed there is a lot of
+resistance to changing it for a lot of good reasons, even on eval
+boards.  Say that firmware node thingy is put under /qe-firmware,
+u-boot uses it, and the system is shipped.  Then say that the node
+format is changed because of a deficiency.  Or say that the node is
+moved (either intentionally, or as part of an unrelated 'cleanup').
+Will any assumptions made by a deployed version of U-Boot cause
+breakage?
 
-That's a bad idea.  Sometimes the tagged list can be extended by wrappers
-around the kernel, and data placed at the end of the list would be
-overwritten.
+Case in point: there are a lot of dts files in the tree using
+"soc<chip>" as a node name.  If the name is changed (say to "soc" as
+per generic names) then many systems won't boot because older versions
+of U-Boot are hardcoded to use the soc<chip> name.
 
-As the tagged list can encode arbitarily sized data chunks, there's no
-reason to use a pointer in the tagged list.  However, there is a problem:
-what do you do with a large chunk of data in the tagged list?  You can't
-allocate memory to copy it in the kernel because no memory allocators
-are up and running...
+More manipulation performed by U-Boot =3D=3D more things to go horribly
+horribly wrong.  :-)  We can work around breakage, but it is always
+better when the design means we don't have to.
 
-That's always been the catch-22 with passing binary data blobs to the
-kernel.
+So, I'm not saying don't have properties that say what kind of thing
+it is; but I am saying make it part of the QE binding proper and
+isolate the scope to the binding for that node.  I'm saying be
+defensive in the design and eliminate the complexities from what
+u-boot needs to do.  ie. create a single named property in a well
+defined location that works for any firmware blob.  U-Boot doesn't
+need to care about the format.  The fact that the QE node references
+that specific blob should be sufficient to define what format the blob
+needs to be in.
+
+I don't see any need to make the firmware anything more than just a
+named blob.  In fact, I would be even more defensive in designing it
+by not hardcoding the tree update into the U-Boot.  I'd make the fdt
+command support creating properties from memory regions and squirt the
+blob into the tree using a boot script instead.
+
+>
+>>>> =A0Put each firmware blob into a separate property, and make
+>>>> the names reasonable (ie. mpc<blah>-qe-firmware). =A0Have the QE
+>>>> reference the firmware blob by property name.
+>>>
+>>> I don't like the idea of using the property name as a pseudo-compatible
+>>> string.
+>>
+>> It's a name, not a pseudo compatible string, and your device node will
+>> explicitly reference it by name. =A0There is not backwards compatibility
+>> or fuzzy binding issues at play here.
+>
+> There is a forward compatibility issue, in that we'll have to update the
+> code with every new mpc<blah> (or p<blah>rev<n>) that comes along.
+>
+> Or are we supposed to pick some random chip to request the firmware for,
+> like with compatibles? =A0What would be the point? =A0This isn't being us=
+ed to
+> bind a driver.
+
+communication breakdown... see below.
+
+>> It is a way for your driver
+>> node to state, "I want *that exact* firmware blob".
+>
+> The driver wants the firmware blob that the device tree provides. =A0The
+> device tree knows better than the driver, being that the device tree is t=
+he
+> describer of the hardware.
+
+Heh.  Typo.  Sorry.  What you said is exactly what I meant.  "It is a
+way for your *device node* to specify..."  Not the driver.
+
+>> You could make
+>> the property name "george"
+>
+> If "george" is fine, then so is "fsl,firmware". =A0Maybe "fsl,qe-firmware=
+".
+>
+>> and it would still be completely clear (if
+>> a little weird) because all the references are contained within the
+>> tree.
+>
+> How are the references contained within the tree? =A0The driver has to kn=
+ow
+> which property to read.
+
+More fallout from my typo.  I mean something like this:
+
+/.../...../qe {
+        fsl,qe-firmware-blob =3D "george";
+};
+chosen {
+        firmware {
+                george =3D /bininc/("blob.bin");
+        };
+};
+
+That's what I mean by 'george' being contained within the tree.  The
+QE binding will specify the fsl,qe-firmware-blob (or whatever)
+property name, but the name assigned to the firmware blob the driver
+doesn't actually have to care about it.
+
+g.
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
