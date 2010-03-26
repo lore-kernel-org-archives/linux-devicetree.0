@@ -1,76 +1,48 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Fri, 26 Mar 2010 12:20:34 -0600
-Message-ID: <fa686aa41003261120o15fea3cev8ca625f389bc8664@mail.gmail.com>
-References: <1269380552-10418-1-git-send-email-timur@freescale.com>
-	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
-	<4BAA4C8A.70104@freescale.com>
-	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
-	<4BAB7E67.6040707@freescale.com> <4BAB816F.5060405@firmworks.com>
-	<fa686aa41003250916t3d0839e5m42d7f7f6540e821a@mail.gmail.com>
-	<4BAB9120.1060600@freescale.com>
-	<fa686aa41003251826m16ea94dfy422fae14fec81204@mail.gmail.com>
-	<4BACD011.5050609@freescale.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 13/27] drivers/net/of: don't use deprecated
+	field in of_platform_driver
+Date: Fri, 26 Mar 2010 12:23:54 -0600
+Message-ID: <fa686aa41003261123r72bcd49bw1902d85ebf6e4d06@mail.gmail.com>
+References: <20100311181604.13103.30088.stgit@angua>
+	<20100311182259.13103.87535.stgit@angua>
+	<ed82fe3e1003260823q5a2ba774ifd3465b41b8f0a10@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4BACD011.5050609@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Timur Tabi <timur@freescale.com>
-Cc: Mitch Bradley <wmb@firmworks.com>, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <ed82fe3e1003260823q5a2ba774ifd3465b41b8f0a10-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 26, 2010 at 9:17 AM, Timur Tabi <timur@freescale.com> wrote:
-> Grant Likely wrote:
+On Fri, Mar 26, 2010 at 9:23 AM, Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> I'm seeing this error with this patch applied, when building for an mpc86=
+41_hpcn
 >
->> +- fsl,firmware:
->> + =A0 =A0Usage: Optional.
->> + =A0 =A0Value type: <prop-encoded-array>, encoded array of bytes
->> + =A0 =A0Definition: Contains the QUICC engine firmware blob.
->> [plus any other properties needed for firmware metadata]
->
-> This would place the firmware metadata properties inside the QE node itse=
-lf, which would break the QE binding.
+> =A0CC =A0 =A0 =A0drivers/net/gianfar.o
+> drivers/net/gianfar.c: In function 'gfar_of_init':
+> drivers/net/gianfar.c:606: error: 'struct platform_device' has no
+> member named 'node'
+> drivers/net/gianfar.c:644: error: 'struct platform_device' has no
+> member named 'node'
+> drivers/net/gianfar.c: In function 'gfar_probe':
+> drivers/net/gianfar.c:891: error: 'struct platform_device' has no
+> member named 'node'
+> make[2]: *** [drivers/net/gianfar.o] Error 1
+> make[1]: *** [drivers/net] Error 2
+> make: *** [drivers] Error 2
 
-Not really true.  Adding extra properties seldom breaks a binding.
-It's a wash when compared with compared with adding a node.  But
-that's not really an important debate.
-
-> Here, the fsl,qe-firmware-eccr property is associated with the QE itself.=
- =A0This is why I want a compatible property for the firmware node, no matt=
-er where it is. =A0Then you can do this:
->
-> =A0 =A0 =A0 qe1: qe@e0080000 {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fsl,qe";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 fsl,qe_firmware {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible=3D"fsl,qe-firmware=
-";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fsl,firmware =3D /bininc/("fi=
-rmware-blob.bin");
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fsl,qe-firmware-eccr =3D <0x0=
-0000000 0x00001230>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 ...
-> =A0 =A0 =A0 }
->
-> Without the compatible property, the only way I'd know that the child nod=
-e contains a firmware is to look at the actual name of the child node, whic=
-h (as Scott and I believe) is not better than a compatible property.
-
-If it is always a child of a qe node, then I've got no objections.
+Thanks for the testing Timur.  I missed converting that driver.  I
+believe I've got that fixed now and I'll be pushing out a new tree
+real-soon-now.
 
 g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
