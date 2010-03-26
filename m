@@ -1,90 +1,93 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Fri, 26 Mar 2010 10:17:37 -0500
-Message-ID: <4BACD011.5050609@freescale.com>
-References: <1269380552-10418-1-git-send-email-timur@freescale.com>
-	<ed82fe3e1003240505h59d29c83x6948f8b3b70c4570@mail.gmail.com>
-	<90D93687-940F-47FB-8CEA-F3C065EA611D@kernel.crashing.org>
-	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
-	<4BAA4C8A.70104@freescale.com>
-	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
-	<4BAB7E67.6040707@freescale.com> <4BAB816F.5060405@firmworks.com>
-	<fa686aa41003250916t3d0839e5m42d7f7f6540e821a@mail.gmail.com>
-	<4BAB9120.1060600@freescale.com>
-	<fa686aa41003251826m16ea94dfy422fae14fec81204@mail.gmail.com>
+From: Timur Tabi <timur.tabi@gmail.com>
+Subject: Re: [alsa-devel] [PATCH 13/27] drivers/net/of: don't use deprecated
+	field in of_platform_driver
+Date: Fri, 26 Mar 2010 10:23:14 -0500
+Message-ID: <ed82fe3e1003260823q5a2ba774ifd3465b41b8f0a10@mail.gmail.com>
+References: <20100311181604.13103.30088.stgit@angua> <20100311182259.13103.87535.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <fa686aa41003251826m16ea94dfy422fae14fec81204-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20100311182259.13103.87535.stgit@angua>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
+I'm seeing this error with this patch applied, when building for an mpc=
+8641_hpcn
 
-> +- fsl,firmware:
-> +    Usage: Optional.
-> +    Value type: <prop-encoded-array>, encoded array of bytes
-> +    Definition: Contains the QUICC engine firmware blob.
-> [plus any other properties needed for firmware metadata]
+  CC      drivers/net/gianfar.o
+drivers/net/gianfar.c: In function 'gfar_of_init':
+drivers/net/gianfar.c:606: error: 'struct platform_device' has no
+member named 'node'
+drivers/net/gianfar.c:644: error: 'struct platform_device' has no
+member named 'node'
+drivers/net/gianfar.c: In function 'gfar_probe':
+drivers/net/gianfar.c:891: error: 'struct platform_device' has no
+member named 'node'
+make[2]: *** [drivers/net/gianfar.o] Error 1
+make[1]: *** [drivers/net] Error 2
+make: *** [drivers] Error 2
 
-This would place the firmware metadata properties inside the QE node itself, which would break the QE binding.
 
-> +Example:
-> +       qe1: qe@e0080000 {
-> +               compatible = "fsl,qe";
-> +               fsl,firmware = /bininc/("firmware-blob.bin");  /* Or
-> squirted in by firmware */
-> +               ...
-> +       }
-> +
-> +       qe@e0090000 {
-> +               compatible = "fsl,qe";
-> +               fsl,firmware-phandle = <&qe1>;
-> +               ...
-> +       }
-> 
-> Putting the blob into just one of the qe nodes keeps everything nicely
-> contained with the device it actually applies to.  No debates about
-> the best place to put device firmware blobs or new compatible values,
-> and it is applicable to any device where firmware needs to be passed
-> via the tree.
+On Thu, Mar 11, 2010 at 1:23 PM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+> .name, .match_table and .owner are duplicated in both of_platform_dri=
+ver
+> and device_driver, so the of_platform_driver copies will be removed s=
+oon.
+>
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>
+> =A0drivers/net/can/mscan/mpc5xxx_can.c =A0 =A0 =A0 =A0 =A0 | =A0 =A08=
+ +++++---
+> =A0drivers/net/can/sja1000/sja1000_of_platform.c | =A0 =A08 +++++---
+> =A0drivers/net/ehea/ehea_main.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
+=A0 =A07 +++++--
+> =A0drivers/net/fs_enet/fs_enet-main.c =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A0=
+7 +++++--
+> =A0drivers/net/fs_enet/mii-bitbang.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0=
+7 +++++--
+> =A0drivers/net/fs_enet/mii-fec.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A07 +++++--
+> =A0drivers/net/fsl_pq_mdio.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+| =A0 =A07 +++++--
+> =A0drivers/net/gianfar.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 10 ++++++----
+> =A0drivers/net/ibm_newemac/core.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A08 +++++---
+> =A0drivers/net/ibm_newemac/mal.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A08 +++++---
+> =A0drivers/net/ibm_newemac/rgmii.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =
+=A08 +++++---
+> =A0drivers/net/ibm_newemac/tah.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A08 +++++---
+> =A0drivers/net/ibm_newemac/zmii.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A08 +++++---
+> =A0drivers/net/ll_temac_main.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
+=A0 =A02 +-
+> =A0drivers/net/myri_sbus.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 =A07 +++++--
+> =A0drivers/net/niu.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 | =A0 =A07 +++++--
+> =A0drivers/net/phy/mdio-gpio.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
+=A0 =A07 +++++--
+> =A0drivers/net/sunbmac.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 =A07 +++++--
+> =A0drivers/net/sunhme.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 =A07 +++++--
+> =A0drivers/net/sunlance.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 =A07 +++++--
+> =A0drivers/net/sunqe.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 =A07 +++++--
+> =A0drivers/net/ucc_geth.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 =A07 +++++--
+> =A0drivers/net/xilinx_emaclite.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A07 +++++--
+> =A023 files changed, 112 insertions(+), 54 deletions(-)
 
-Except when you actually need to add metadata properties:
-
-       qe1: qe@e0080000 {
-               compatible = "fsl,qe";
-               fsl,firmware = /bininc/("firmware-blob.bin"); 
-               fsl,qe-firmware-eccr = <0x00000000 0x00001230>;
-               ...
-       }
-
-(The ECCR is stored in the QE firmware blob, but let's pretend it isn't and I need to specify it)
-
-Here, the fsl,qe-firmware-eccr property is associated with the QE itself.  This is why I want a compatible property for the firmware node, no matter where it is.  Then you can do this:
-
-       qe1: qe@e0080000 {
-               compatible = "fsl,qe";
-               fsl,qe_firmware {
-                       compatible="fsl,qe-firmware";
-                       fsl,firmware = /bininc/("firmware-blob.bin"); 
-                       fsl,qe-firmware-eccr = <0x00000000 0x00001230>;
-               }
-               ...
-       }
-
-Without the compatible property, the only way I'd know that the child node contains a firmware is to look at the actual name of the child node, which (as Scott and I believe) is not better than a compatible property.
-
--- 
+--=20
 Timur Tabi
 Linux kernel developer at Freescale
