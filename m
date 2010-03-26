@@ -1,21 +1,22 @@
-From: Rafal Jaworowski <raj@semihalf.com>
+From: Timur Tabi <timur@freescale.com>
 Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
-Date: Fri, 26 Mar 2010 19:23:17 +0100
-Message-ID: <01EA90A9-7B78-4803-80CE-0EF878DE2A85@semihalf.com>
+Date: Fri, 26 Mar 2010 13:39:55 -0500
+Message-ID: <4BACFF7B.3010002@freescale.com>
 References: <1269380552-10418-1-git-send-email-timur@freescale.com>
-	<fa686aa41003232307s39af071bn6377800951d6615c@mail.gmail.com>
-	<ed82fe3e1003240505h59d29c83x6948f8b3b70c4570@mail.gmail.com>
-	<90D93687-940F-47FB-8CEA-F3C065EA611D@kernel.crashing.org>
 	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
-	<4BAA4C8A.70104@freescale.com>	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
-	<ed82fe3e1003250742t5affee7dudca651ab3352bc16@mail.gmail.com>
-	<fa686aa41003250910n437e4e73p34645f5627d25784@mail.gmail.com>
-	<4BAB90B1.9080603@freescale.com> <4BAB9361.8090900@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1077)
+	<4BAA4C8A.70104@freescale.com>
+	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
+	<4BAB7E67.6040707@freescale.com> <4BAB816F.5060405@firmworks.com>
+	<fa686aa41003250916t3d0839e5m42d7f7f6540e821a@mail.gmail.com>
+	<4BAB9120.1060600@freescale.com>
+	<fa686aa41003251826m16ea94dfy422fae14fec81204@mail.gmail.com>
+	<4BACD011.5050609@freescale.com>
+	<fa686aa41003261120o15fea3cev8ca625f389bc8664@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4BAB9361.8090900@freescale.com>
+In-Reply-To: <fa686aa41003261120o15fea3cev8ca625f389bc8664@mail.gmail.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -25,18 +26,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Timur Tabi <timur@freescale.com>
-Cc: Scott Wood <scottwood@freescale.com>, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mitch Bradley <wmb@firmworks.com>, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Grant Likely wrote:
+>> Without the compatible property, the only way I'd know that the child node contains a firmware is to look at the actual name of the child node, which (as Scott and I believe) is not better than a compatible property.
+> If it is always a child of a qe node, then I've got no objections.
 
-On 2010-03-25, at 17:46, Timur Tabi wrote:
+I have no problem with putting the firmware node as a child of the QE node and skipping the phandle property, but only as long as there's only one QE node.  Would you agree that this is bad:
 
-> The more I think about it, the more I believe that this is how we're going to have to do it.  Whether or not Freescale can embed a non-GPL firmware into a device tree is still undecided.  It may require relicensing all of our device trees as dual bsd/gpl first.  Technically, we should probably do that anyway.
+qe1: qe@e0080000 {
+        compatible = "fsl,qe";
+        qefw: fsl,qe_firmware {
+                compatible="fsl,qe-firmware";
+                fsl,firmware = /bininc/("firmware-blob.bin");
+                fsl,qe-firmware-eccr = <0x00000000 0x00001230>;
+        }
+        ...
+}
 
-The dual-licensing process has already started, see the following :-)
+qe2: qe@e0090000 {
+        compatible = "fsl,qe";
+	fsl,firmware-phandle = <&qefw>;
+        ...
+}
 
-http://p4db.freebsd.org/changeView.cgi?CH=173836
-http://p4db.freebsd.org/changeView.cgi?CH=174365
-
-Rafal
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
