@@ -1,48 +1,42 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 13/27] drivers/net/of: don't use deprecated
-	field in of_platform_driver
-Date: Fri, 26 Mar 2010 12:23:54 -0600
-Message-ID: <fa686aa41003261123r72bcd49bw1902d85ebf6e4d06@mail.gmail.com>
-References: <20100311181604.13103.30088.stgit@angua>
-	<20100311182259.13103.87535.stgit@angua>
-	<ed82fe3e1003260823q5a2ba774ifd3465b41b8f0a10@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <ed82fe3e1003260823q5a2ba774ifd3465b41b8f0a10-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Rafal Jaworowski <raj@semihalf.com>
+Subject: Re: [PATCH] powerpc/fsl: add device tree binding for QE firmware
+Date: Fri, 26 Mar 2010 19:23:17 +0100
+Message-ID: <01EA90A9-7B78-4803-80CE-0EF878DE2A85@semihalf.com>
+References: <1269380552-10418-1-git-send-email-timur@freescale.com>
+	<fa686aa41003232307s39af071bn6377800951d6615c@mail.gmail.com>
+	<ed82fe3e1003240505h59d29c83x6948f8b3b70c4570@mail.gmail.com>
+	<90D93687-940F-47FB-8CEA-F3C065EA611D@kernel.crashing.org>
+	<fa686aa41003241007mf6052d5s4643795f4a87cdcf@mail.gmail.com>
+	<4BAA4C8A.70104@freescale.com>	<65327.84.105.60.153.1269481760.squirrel@gate.crashing.org>
+	<ed82fe3e1003250742t5affee7dudca651ab3352bc16@mail.gmail.com>
+	<fa686aa41003250910n437e4e73p34645f5627d25784@mail.gmail.com>
+	<4BAB90B1.9080603@freescale.com> <4BAB9361.8090900@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1077)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4BAB9361.8090900@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Timur Tabi <timur@freescale.com>
+Cc: Scott Wood <scottwood@freescale.com>, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 26, 2010 at 9:23 AM, Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> I'm seeing this error with this patch applied, when building for an mpc86=
-41_hpcn
->
-> =A0CC =A0 =A0 =A0drivers/net/gianfar.o
-> drivers/net/gianfar.c: In function 'gfar_of_init':
-> drivers/net/gianfar.c:606: error: 'struct platform_device' has no
-> member named 'node'
-> drivers/net/gianfar.c:644: error: 'struct platform_device' has no
-> member named 'node'
-> drivers/net/gianfar.c: In function 'gfar_probe':
-> drivers/net/gianfar.c:891: error: 'struct platform_device' has no
-> member named 'node'
-> make[2]: *** [drivers/net/gianfar.o] Error 1
-> make[1]: *** [drivers/net] Error 2
-> make: *** [drivers] Error 2
 
-Thanks for the testing Timur.  I missed converting that driver.  I
-believe I've got that fixed now and I'll be pushing out a new tree
-real-soon-now.
+On 2010-03-25, at 17:46, Timur Tabi wrote:
 
-g.
+> The more I think about it, the more I believe that this is how we're going to have to do it.  Whether or not Freescale can embed a non-GPL firmware into a device tree is still undecided.  It may require relicensing all of our device trees as dual bsd/gpl first.  Technically, we should probably do that anyway.
+
+The dual-licensing process has already started, see the following :-)
+
+http://p4db.freebsd.org/changeView.cgi?CH=173836
+http://p4db.freebsd.org/changeView.cgi?CH=174365
+
+Rafal
