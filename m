@@ -1,60 +1,73 @@
-From: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [patch] of: check for IS_ERR()
-Date: Mon, 29 Mar 2010 18:41:09 +0300
-Message-ID: <20100329154109.GF5069@bicker>
-References: <20100226094941.GE4912@bicker>
-	<20100226.015420.66646406.davem@davemloft.net>
+From: Jamie Lokier <jamie@shareable.org>
+Subject: Re: RFC: ARM Boot standard for passing device tree blob
+Date: Tue, 30 Mar 2010 01:26:38 +0100
+Message-ID: <20100330002638.GI9876@shareable.org>
+References: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
+	<20100325210409.GH24984@n2100.arm.linux.org.uk>
+	<1269610665.807.51.camel@e102109-lin.cambridge.arm.com>
+	<4BACF238.3040405@firmworks.com>
+	<fa686aa41003261113o7cd8612eh9b51904114902a3a@mail.gmail.com>
+	<alpine.LFD.2.00.1003261435460.694@xanadu.home>
+	<fa686aa41003261252u7dc31bb6nca2e77ae8feb4355@mail.gmail.com>
+	<20100326230343.GC29179@n2100.arm.linux.org.uk>
+	<000001cacf32$66d4b190$4044010a@Emea.Arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20100226.015420.66646406.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org
-Cc: jezz-kPcTzGkeZgAdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <000001cacf32$66d4b190$4044010a@Emea.Arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Dave P. Martin" <Dave.Martin@arm.com>
+Cc: 'Russell King - ARM Linux' <linux@arm.linux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Catalin Marinas <Catalin.Marinas@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Philippe Robin <Philippe.Robin@arm.com>, David Rusling <David.Rusling@arm.com>, Mitch Bradley <wmb@firmworks.com>, Jeremy Kerr <jeremy.kerr@canonical.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2010 at 01:54:20AM -0800, David Miller wrote:
-> From: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date: Fri, 26 Feb 2010 12:49:41 +0300
+Dave P. Martin wrote:
+> Hi
 > 
-> > get_phy_device() can return an ERR_PTR()
+> > -----Original Message-----
+> > From: Russell King - ARM Linux [mailto:linux@arm.linux.org.uk] 
+> > Sent: 26 March 2010 23:04
+> > To: Grant Likely
+> > Cc: Nicolas Pitre; Mitch Bradley; Catalin Marinas; 
+> > devicetree-discuss; Philippe Robin; David Rusling; Jeremy 
+> > Kerr; Dave P Martin; linux-arm-kernel@lists.infradead.org
+> > Subject: Re: RFC: ARM Boot standard for passing device tree blob
+> 
+> [...]
+> 
+> > 2. No ARM CPU supports having the D-cache enabled without the MMU; the
+> >    data cache needs to be told via the page tables what can be cached
+> >    and what can't - it needs to be told that RAM can cached but IO
+> >    devices must not be.
 > > 
-> > Signed-off-by: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> > I don't have a cross compile environment set up so I can't even compile 
-> > test this.  :/  But err.h is included so it should be OK.
+> > In short, the MMU must always be off, which in turn means the 
+> > D-cache must always be disabled.
 > 
-> It should return ERR_PTR() consistently.  Checking for both
-> NULL and ERR_PTR() is undesirable.
+> Further to this, it's worth pointing out that some systems have external
+> caches (such as non-architected L2 cache etc.) which are not integrated into
+> the the CPU.  If we allow D-cache to be turned on at all, we would have to
+> be clear that external caches must be turned off or configured in a very
+> precise way in order to avoid breaking the kernel's bootstrap process.  This
+> is especially important when assumptions about the cache arrangement are not
+> fixed at build time (in the device tree context, such assumptions generally
+> won't be completely fixed).  There's a potential world of problems here---
+> it seems best avoided.
+> 
+> It could be worth clarifying that the L1 I-cache is the _only_ cache which
+> is permitted to be enabled at kernel entry, and that all other caches in the
+> system must be disabled.
 
-Hi Giulio,
+Catalin said that on some platforms, the L2 cache is unavoidably
+enabled by the time of kernel boot and it cannot be turned off.
+So the above cannot be satisfied.
 
-get_phy_device() currently returns NULL because of: 3ee82383f0098a2 "phy: 
-fix phy address bug".  If I change it to return ERR_PTR(-ENODEV) that
-will mean we break out of the loop with an error in mdiobus_register()
-where before we would just continue on.
-
-drivers/net/phy/mdio_bus.c
-   119                          phydev = mdiobus_scan(bus, i);
-   120                          if (IS_ERR(phydev)) {
-   121                                  err = PTR_ERR(phydev);
-   122                                  goto error;
-   123                          }
-
-Is that OK?
-
-I'm not really familiar with this hardware at all, I'm just going based
-on static analysis. :/
-
-regards,
-dan carpenter
+-- Jamie
