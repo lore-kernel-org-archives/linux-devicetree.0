@@ -1,63 +1,46 @@
-From: Ben Dooks <ben-linux@fluff.org>
-Subject: Re: RFC: ARM Boot standard for passing device tree blob
-Date: Wed, 31 Mar 2010 02:10:02 +0100
-Message-ID: <20100331011002.GL31126@trinity.fluff.org>
-References: <fa686aa41003240811l6f40c8cfs6fdad496facdc089@mail.gmail.com>
-	<20100325210409.GH24984@n2100.arm.linux.org.uk>
-	<1269610665.807.51.camel@e102109-lin.cambridge.arm.com>
-	<4BACF238.3040405@firmworks.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH 0/2] QEMU patches to generate device tree data
+Date: Sat, 03 Apr 2010 01:19:25 -0600
+Message-ID: <20100403071537.27923.48206.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4BACF238.3040405@firmworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Philippe Robin <Philippe.Robin@arm.com>, David Rusling <David.Rusling@arm.com>, Jeremy Kerr <jeremy.kerr@canonical.com>, Dave P Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 26, 2010 at 07:43:20AM -1000, Mitch Bradley wrote:
-> Catalin Marinas wrote:
->> On Thu, 2010-03-25 at 21:04 +0000, Russell King - ARM Linux wrote:
->>   
->>> On Wed, Mar 24, 2010 at 09:11:56AM -0600, Grant Likely wrote:
->>>     
->>>> ===Required System State===
->>>>       
->> [...]
->>   
->>>> *IRQs disabled
->>>> *MMU off
->>>> *Instruction cache either on or off
->>>> *Data cache turned off
->>>>       
->>> Would recommend saying "Data cache(s) turned off" so that L2 cache is
->>> included.
->>>     
->>
->> There are platforms where the L2 cache is turned on by the boot monitor
->> (secure monitor) and Linux has no control over it (I think OMAP).
->>   
->
-> What is the reason for turning off the data caches?  Leaving all caches  
-> turned on and coherent with one another has always worked well for me at  
-> the interface from firmware to a booted program.
+Hi Jeremy,
 
-Dealing with cache maintainace early in the kernel is difficult, you
-end up with piles of ASM replicated from the arm mm to deal with
-coherency, code modification due to decompression, etc.
+Here are a couple of patches to your QEMU tree that add basic support
+for creating device nodes at run time based on the data in the qemu
+device model.  I'm still refining these, and the irq handling is a
+bit of a hack, but I wanted to get these out to you so that you could
+take a look and provide some initial feedback.
+
+Cheers,
+g.
+---
+
+Grant Likely (2):
+      arm-dt: auto-populate the device tree with qdev data
+      devicetree: Add 8k instead of double dtb size when reserving extra memory
+
+
+ device_tree.c |    4 +-
+ hw/arm_boot.c |    3 +
+ hw/qdev.c     |  127 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ hw/qdev.h     |    9 ++++
+ hw/sysbus.c   |   84 ++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 225 insertions(+), 2 deletions(-)
 
 -- 
-Ben
-
-Q:      What's a light-year?
-A:      One-third less calories than a regular year.
+Signature
