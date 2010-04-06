@@ -1,17 +1,14 @@
-From: "Herring Robert-RA7055" <ra7055-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: devicetree platform bus bindings
-Date: Tue, 6 Apr 2010 11:37:26 -0700
-Message-ID: <DE2504B3A515524BBE6934369EFDC0DA0925348B@az33exm20.fsl.freescale.net>
-References: <DE2504B3A515524BBE6934369EFDC0DA09252CF7@az33exm20.fsl.freescale.net>
-	<k2nfa686aa41004011531tbecd5a5bp9c43abc7d206ff70@mail.gmail.com>
-	<DE2504B3A515524BBE6934369EFDC0DA0925331F@az33exm20.fsl.freescale.net>
-	<s2ufa686aa41004060646nd12cb443z45b1e80a4e9ccad8@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: new device tree binding review process idea
+Date: Tue, 6 Apr 2010 13:48:24 -0600
+Message-ID: <m2nfa686aa41004061248w8e5fad71sb7d1871c80787d9c@mail.gmail.com>
+References: <fa686aa41003252213w3f403d42pea3c8c88adbf5832@mail.gmail.com>
+	<9696D7A991D0824DBA8DFAC74A9C5FA305CAFB62@az33exm25.fsl.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <s2ufa686aa41004060646nd12cb443z45b1e80a4e9ccad8-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <9696D7A991D0824DBA8DFAC74A9C5FA305CAFB62-ofAVchDyotYzzZk0BCvKg5jmvxFtTJ+o0e7PPNI6Mm0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,128 +18,127 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+Hi Stewart, thanks for the feedback.  Comments below...
 
-> -----Original Message-----
-> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On =
+On Tue, Apr 6, 2010 at 9:04 AM, Yoder Stuart-B08248
+<B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>
+>> Device tree 'bindings' document how individual devices are described
+>> in the device tree. =A0For any given device, the binding says what
+>> properties and nodes a device driver needs to use the device.
+>>
+>> This page documents the process for writing and reviewing new
+>> bindings. =A0New bindings are written for new devices that cannot be
+>> handled by existing bindings.
+>>
+>> =3D=3D Creating a new draft binding =3D=3D
+>> * New draft bindings shall be written in plain-text format using the
+>> Mediawiki markup language, ideally as a new page in this wiki.
+>
+> I think the review and approval process looks good, no issues
+> with it.
+>
+> I do question whether we want bindings created in Mediawiki markup
+> languages vs just plain text.
+>
+> I've created a couple of example bindings based on the ePAPR
+> ns16550 binding (using a binding template we have been using
+> internally at Freescale for a couple of years):
+>
+> Plain text: http://fdt.secretlab.ca/Compatible%3Dsry,ns16550-v1
+>
+> Mediawiki: http://fdt.secretlab.ca/Compatible%3Dsry,ns16550-v2
+>
+> You could get a lot more fancy than that and use tables or
+> something, but the more Mediawiki-ized the text gets the harder
+> it to review the source text on a mailing list.
 
-> Behalf Of Grant Likely
-> Sent: Tuesday, April 06, 2010 8:47 AM
-> To: Herring Robert-RA7055
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: devicetree platform bus bindings
-> =
+I'm not sure I agree.  I find the mediawiki markup pretty readable.
+We can also enforce some rules like "keep text to 80 chars", or "don't
+reflow existing text" so that diffs remain sane.
 
-> Hi Rob,
-> =
+Something I haven't verified yet is whether it is possible to get
+MediaWiki to generate unified instead of side-by-side diffs.  If
+cannot, then I don't expect it would be too hard to add.  I want to
+make it as easy as possible to go from the wiki to an email for
+requesting review.
 
-> On Tue, Apr 6, 2010 at 6:45 AM, Herring Robert-RA7055
-> <ra7055-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > Grant,
-> >
-> >> > Do you plan to have generic DT parsing to platform device
-> >> creation code or
-> >> > will this remain platform specific?
-> >>
-> >> I'm actively developing this. =A0A while ago I decided I was =
+> Another thing to consider is whether eventually we want to
+> maintain approved bindings in git. =A0It would be convenient
+> to do a git clone of a device-tree-bindings.git repo, be able to
+> grep it, etc. =A0Say you want to find all bindings that use
+> a certain property. =A0 I'm not sure how good the Mediawiki
+> search is.
 
-> not going
-> >> to port of_platform_bus_type bus to any new architectures =
+I've got the entire wiki (php & database) backed up into a git repo,
+but I can't really publish it because it also contains all user
+account information.  I do want to replicate it somehow in case I get
+hit by a bus, or hired by Microsoft, or something equally nasty.
 
-> because it
-> >> is effectively just platform_bus_type with a slightly different
-> >> matching scheme. =A0So I wrote a patch that generates =
+MediaWiki does support XML exporting for off-line editing (one of the
+reasons I chose mediawiki), so we could have a canned xml export of
+approved bindings into a git repo somewhere.  Being able to generate
+an off-line copy is something I think is important.
 
-> platform devices
-> >> from the device tree instead.
-> >>
-> >> However, since then I took on the task of removing
-> >> of_platform_bus_type entirely and just using =
+Mediawiki search is pretty good, and google will crawl it, so they can
+be used as a secondary search tool.  :-)
 
-> platform_bus_type on ppc,
-> >> mb & sparc, so arm will be able to use the same code. =A0The =
+> So, my vote would be to require a plain text format/template
+> that should be used with no Mediawiki markup. =A0The binding
+> would be posted on the wiki between <pre></pre> tags.
+>
+> The plain text will give some flexibility in how the binding
+> could be used in other contexts.
 
-> patches I
-> >> just pushed out to my experimental branch show my WIP code and how
-> >> both the versatile and omap platforms are modified to use =
+Personally, I like the idea of using some basic markup, whether it be
+mediawiki or something else.  Originally, I considered using gitwiki
+which stores everything in a git repo, and uses the markdown markup
+format.  I like the idea of anyone being able to clone the repo and
+editing it offline.  However, git-wiki is pretty immature, and I don't
+want to get into the business of maintaining wiki code.
 
-> the common
-> >> code.
-> >>
-> >> Word of warning though, this is highly experimental code =
+By using some form of markup, it adds some level of context to the
+binding text which can be used to reformat into other forms, while
+still remaining readable in plain text (with the possible exception of
+tables).  Filters can easily be written to transform from one markup
+to another as needed.
 
-> and I cannot
-> >> promise it won't break spectacularly.
-> >>
-> >
-> > I've updated to your latest tree and have MX51 working with =
+Mediawiki is as readable as any, and it's got the advantage of a
+stable and well supported application behind it.  I've used mediawiki
+for a while now, and it's pretty much proven that it scales well, and
+does a good job of handling off-line edits.  Although I would agree
+that it makes sense to define a binding template and formating guide
+to keep things looking uniform and readable.
 
-> DT. I've got
-> > a few issues with bus_id/name+id. Is your goal that =
+>
+>> * Authors and reviews should work toward a consensus on the binding.
+>> * When consensus is reached, ask one of the device tree binding
+>> maintainers mark the binding as 'approved'.
+>> * '''(TBD: who are the maintainers going to be? =A0How does someone
+>> contact the maintainers)'''
+>
+> To start with I think each company should designate a maintainer
+> for company-specific bindings.
 
-> existing platform
-> > drivers work unmodified? If so, the current <address>.<name> bus_id
-> > scheme doesn't really work. The platform matching code needs
-> > platform_device.name to be just a name without any instance =
+s/designate/nominate/
 
-> id. I was
-> > thinking this would be the compatible field. There are also =
+Following the Linux lead, I want the caveat that a company doesn't
+automatically get to select the maintainer for their parts.  If
+someone shows competence and interest in a particular area, then I've
+got no problem with him or her being a maintainer regardless of who
+that person works for.  The reverse is also true; someone who hasn't
+already been involved with binding documentation and review should not
+get to be maintainer.
 
-> dependencies
-> > on the bus_id being name.id in the clock code for example. I was
-> > planning to use cell-index property for the id.
-> =
+BTW, I haven't forgotten about the comments you made about a year ago
+about the wiki regarding licensing.  It's still on my todo list to act
+on them.  :-/  Soon, I promise.
 
-> As much as possible, I'd prefer drivers to use OF style matching for
-> the OF use case so that driver bindings are explicit.  For this to
-> work an OF match table needs to be added to the driver (which is
-> trivial).  The code to do this is already in my tree, but I don't yet
-> know if it works.
-> =
+-- =
 
-Adding the table may be trivial, but if there are other dependencies on nam=
-e, id or dev_name, then more changes are needed. For example, id could be u=
-sed as an array index to driver data. The imx uart driver is one example of=
- this:
-
-sport->port.line =3D pdev->id;
-...
-imx_ports[pdev->id] =3D sport;
-
-
-> I'm also playing with the platform bus code to test the compatible
-> list against the platform_driver's .id_table list, but I haven't
-> pushed any of that code out yet.  Either way, the of-style binding
-> string would need to be added to the driver.  I don't want to
-> reproduce the nasty hack that spi and i2c are using right now to
-> derive a single device name from the compatible list.
-> =
-
-> > How do you see adding platform_data to the devices working?
-> =
-
-> I'm hoping to avoid it as much as possible and get drivers to decode
-> their own platform_data from the device tree properties.  This does
-> require driver changes too, but again it is contained and can co-exist
-> with the existing platform_data method.  In the few cases where
-> platform data is unavoidable (such as function pointers), I'm thinking
-> about using platform-specific hooks or notifiers so that platform code
-> can modify device registrations before the device gets bound to a
-> driver (where modify =3D3D=3D3D add pdata at device registration time).
-> However, that approach is both opaque and still has the non-type-safe
-> problems of current pdata, and I'd rather avoid it unless absolutely
-> necessary.
-> =
-
-I agree that static data should be in the device tree. As long as there is =
-a hook for setting platform_data, then this transisition can be done over t=
-ime. I think it is important that drivers not require changes to ease adopt=
-ion of device trees on ARM. On i.MX for example we have lots of chips with =
-common drivers, but I don't want to have to move all platforms at once to d=
-evice trees.
-
-Rob
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
