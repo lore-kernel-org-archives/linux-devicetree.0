@@ -1,43 +1,60 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 33/37] sound/soc: use .dev.of_node instead of .node in
-	struct of_device
-Date: Mon, 5 Apr 2010 17:47:48 -0600
-Message-ID: <q2tfa686aa41004051647p4c8182d0h807583d09714761a@mail.gmail.com>
-References: <20100311174830.4824.19820.stgit@angua> <20100311180649.4824.10368.stgit@angua>
-	<20100405230301.GF32401@fluff.org.uk>
+From: "Herring Robert-RA7055" <ra7055-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: devicetree platform bus bindings
+Date: Tue, 6 Apr 2010 05:45:17 -0700
+Message-ID: <DE2504B3A515524BBE6934369EFDC0DA0925331F@az33exm20.fsl.freescale.net>
+References: <DE2504B3A515524BBE6934369EFDC0DA09252CF7@az33exm20.fsl.freescale.net>
+	<k2nfa686aa41004011531tbecd5a5bp9c43abc7d206ff70@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20100405230301.GF32401-elnMNo+KYs3pIgCt6eIbzw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, jgarzik-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, James.Bottomley-l3A5Bk7waGM@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-class: urn:content-classes:message
+In-Reply-To: <k2nfa686aa41004011531tbecd5a5bp9c43abc7d206ff70-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben, thanks for the comment.  Reply below...
+Grant,
 
-On Mon, Apr 5, 2010 at 5:03 PM, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org> wrote:
-> On Thu, Mar 11, 2010 at 11:06:50AM -0700, Grant Likely wrote:
->> .node is being removed
-[...]
->> --- a/sound/soc/fsl/mpc8610_hpcd.c
->> +++ b/sound/soc/fsl/mpc8610_hpcd.c
->> @@ -202,7 +202,7 @@ static struct snd_soc_ops mpc8610_hpcd_ops =3D {
->> =A0static int mpc8610_hpcd_probe(struct of_device *ofdev,
->> =A0 =A0 =A0 const struct of_device_id *match)
->> =A0{
->> - =A0 =A0 struct device_node *np =3D ofdev->node;
->> + =A0 =A0 struct device_node *np =3D ofdev->dev.of_node;
->> =A0 =A0 =A0 struct device_node *codec_np =3D NULL;
->> =A0 =A0 =A0 struct device_node *guts_np =3D NULL;
->> =A0 =A0 =A0 struct device_node *dma_np =3D NULL;
->
-> This looks like one case where an inline function would have been a
-> help.
+> > Do you plan to have generic DT parsing to platform device 
+> creation code or
+> > will this remain platform specific?
+> 
+> I'm actively developing this.  A while ago I decided I was not going
+> to port of_platform_bus_type bus to any new architectures because it
+> is effectively just platform_bus_type with a slightly different
+> matching scheme.  So I wrote a patch that generates platform devices
+> from the device tree instead.
+> 
+> However, since then I took on the task of removing
+> of_platform_bus_type entirely and just using platform_bus_type on ppc,
+> mb & sparc, so arm will be able to use the same code.  The patches I
+> just pushed out to my experimental branch show my WIP code and how
+> both the versatile and omap platforms are modified to use the common
+> code.
+> 
+> Word of warning though, this is highly experimental code and I cannot
+> promise it won't break spectacularly.
+> 
 
-In what regard (how would you like it to look)?  The node pointer
-location is very unlikely to move again, and I prefer the clarity of
-direct dereferencing.
+I've updated to your latest tree and have MX51 working with DT. I've got
+a few issues with bus_id/name+id. Is your goal that existing platform
+drivers work unmodified? If so, the current <address>.<name> bus_id
+scheme doesn't really work. The platform matching code needs
+platform_device.name to be just a name without any instance id. I was
+thinking this would be the compatible field. There are also dependencies
+on the bus_id being name.id in the clock code for example. I was
+planning to use cell-index property for the id.
 
-g.
+How do you see adding platform_data to the devices working?
+
+Rob
