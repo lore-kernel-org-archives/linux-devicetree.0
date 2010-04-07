@@ -1,8 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC PATCH 3/7] devicetree: add helper for determining IRQ properties
-	in the device tree
-Date: Tue, 06 Apr 2010 22:10:13 -0600
-Message-ID: <20100407041013.20274.26545.stgit@angua>
+Subject: [RFC PATCH 4/7] devicetree: Add sysbus fdt populate hooks.
+Date: Tue, 06 Apr 2010 22:10:18 -0600
+Message-ID: <20100407041018.20274.36307.stgit@angua>
 References: <20100407040129.20274.44284.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,84 +20,153 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the qbus_fdt_irq_to_number() helper to determine the
-interrupt number and phandle needed for adding the interrupts property
-to a device node in the device tree.
+This patch adds sysbus specific fdt_populate hooks to fill sysbus
+device nodes with 'reg' and 'interrupts' properties, and to
+provide 'ranges' properties for correct address translations.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- hw/qdev.c |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- hw/qdev.h |    1 +
- 2 files changed, 49 insertions(+), 0 deletions(-)
+ hw/sysbus.c |   92 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ hw/sysbus.h |    2 +
+ 2 files changed, 94 insertions(+), 0 deletions(-)
 
-diff --git a/hw/qdev.c b/hw/qdev.c
-index b177c3d..ed68a70 100644
---- a/hw/qdev.c
-+++ b/hw/qdev.c
-@@ -751,6 +751,54 @@ void do_device_del(Monitor *mon, const QDict *qdict)
+diff --git a/hw/sysbus.c b/hw/sysbus.c
+index 1f7f138..861572f 100644
+--- a/hw/sysbus.c
++++ b/hw/sysbus.c
+@@ -22,11 +22,16 @@
+ #include "monitor.h"
  
- #ifdef CONFIG_FDT
- #include <libfdt.h>
-+/* Iterate over entire device list looking for the interrupt parent */
-+static int __qbus_fdt_irq_to_number(qemu_irq irq, BusState *bus,
-+                                    uint32_t *phandle);
-+static int __qbus_fdt_irq_to_number_dev(qemu_irq irq, DeviceState *dev,
-+                                        uint32_t *phandle)
+ static void sysbus_dev_print(Monitor *mon, DeviceState *dev, int indent);
++static int sysbus_fdt_populate_node(DeviceState *dev, void *fdt, int offset);
++static int sysbus_fdt_populate_bus(BusState *bus, void *fdt, int offset);
+ 
+ struct BusInfo system_bus_info = {
+     .name       = "System",
+     .size       = sizeof(BusState),
+     .print_dev  = sysbus_dev_print,
++#ifdef CONFIG_FDT
++    .fdt_populate = sysbus_fdt_populate_bus,
++#endif /* CONFIG_FDT */
+ };
+ 
+ void sysbus_connect_irq(SysBusDevice *dev, int n, qemu_irq irq)
+@@ -115,6 +120,7 @@ static int sysbus_device_init(DeviceState *dev, DeviceInfo *base)
+ void sysbus_register_withprop(SysBusDeviceInfo *info)
+ {
+     info->qdev.init = sysbus_device_init;
++    info->qdev.fdt_populate = sysbus_fdt_populate_node;
+     info->qdev.bus_info = &system_bus_info;
+ 
+     assert(info->qdev.size >= sizeof(SysBusDevice));
+@@ -170,3 +176,89 @@ static void sysbus_dev_print(Monitor *mon, DeviceState *dev, int indent)
+                        indent, "", s->mmio[i].addr, s->mmio[i].size);
+     }
+ }
++
++#ifdef CONFIG_FDT
++#include <libfdt.h>
++static int sysbus_fdt_populate_bus(BusState *bus, void *fdt, int offset)
 +{
-+    BusState *child;
-+    int rc, i;
-+
-+    for (i = 0; i < dev->num_gpio_in; i++) {
-+        if (irq == qdev_get_gpio_in(dev, i)) {
-+            if (phandle)
-+                *phandle = (uint64_t)dev;
-+            return i;
-+        }
-+    }
-+
-+    QLIST_FOREACH(child, &dev->child_bus, sibling) {
-+        rc = __qbus_fdt_irq_to_number(irq, child, phandle);
-+        if (rc >= 0)
-+            return rc;
-+    }
-+
-+    return -1;
-+}
-+
-+static int __qbus_fdt_irq_to_number(qemu_irq irq, BusState *bus,
-+                                    uint32_t *phandle)
-+{
-+    struct DeviceState *dev;
 +    int rc;
 +
-+    QLIST_FOREACH(dev, &bus->children, sibling) {
-+        rc = __qbus_fdt_irq_to_number_dev(irq, dev, phandle);
-+        if (rc >= 0)
++    rc = fdt_setprop_string(fdt, offset, "compatible", "simple-bus");
++    if (rc < 0)
++        return rc;
++
++    rc = fdt_setprop_cell(fdt, offset, "#address-cells", 1);
++    if (rc < 0)
++        return rc;
++    rc = fdt_setprop_cell(fdt, offset, "#size-cells", 1);
++    if (rc < 0)
++        return rc;
++    rc = fdt_setprop(fdt, offset, "ranges", NULL, 0);
++    if (rc < 0)
++        return rc;
++    return 0;
++}
++
++static int sysbus_fdt_populate_node(DeviceState *dev, void *fdt, int offset)
++{
++    SysBusDevice *s = sysbus_from_qdev(dev);
++    SysBusDeviceInfo *info = container_of(dev->info, SysBusDeviceInfo, qdev);
++
++    uint32_t reg_data[s->num_mmio * 2]; /* one cell each address and size */
++    uint32_t irq_data[s->num_irq];
++    uint32_t *pos;
++    uint32_t phandle;
++    int i, rc;
++
++    /* Create 'reg' property */
++    pos = reg_data;
++    for (i = 0; i < s->num_mmio; i++) {
++        /* By convention, the name is appended with '@<first reg addr>' */
++        if (i == 0) {
++            char n[sizeof(dev->info->name) + 10];
++            sprintf(n, "%s@%x", dev->info->name, (uint32_t)s->mmio[i].addr);
++            rc = fdt_set_name(fdt, offset, n);
++            if (rc < 0)
++                return rc;
++        }
++        *pos++ = cpu_to_be32(s->mmio[i].addr);
++        *pos++ = cpu_to_be32(s->mmio[i].size);
++    }
++    rc = fdt_setprop(fdt, offset, "reg", reg_data, sizeof(reg_data));
++    if (rc < 0)
++        return rc;
++
++    /* Is this an interrupt controller? */
++    if (dev->num_gpio_in) {
++        rc = fdt_setprop(fdt, offset, "interrupt-controller", NULL, 0);
++        if (rc < 0)
++            return rc;
++        rc = fdt_setprop_cell(fdt, offset, "#interrupt-cells", 1);
++        if (rc < 0)
 +            return rc;
 +    }
 +
-+    return -1;
++    /* Create 'interrupts' property */
++    phandle = 0;
++    pos = irq_data;
++    for (i = 0; i < s->num_irq; i++) {
++        *pos++ = cpu_to_be32(qbus_fdt_irq_to_number(*s->irqp[i], &phandle));
++    }
++    if (phandle) {
++        rc = fdt_setprop_cell(fdt, offset, "interrupt-parent", phandle);
++        if (rc < 0)
++            return rc;
++        rc = fdt_setprop(fdt, offset, "interrupts", irq_data, sizeof(irq_data));
++        if (rc < 0)
++            return rc;
++    }
++
++    if (info->fdt_populate) {
++        rc = info->fdt_populate(s, fdt, offset);
++        if (rc < 0)
++            return rc;
++    }
++
++    return 0;
 +}
-+
-+int qbus_fdt_irq_to_number(qemu_irq irq, uint32_t *phandle)
-+{
-+    return __qbus_fdt_irq_to_number(irq, main_system_bus, phandle);
-+}
-+
-+
-+
- static int qbus_fdt_add_bus(void *fdt, BusState *bus, int dev_offset);
- static int qdev_fdt_add_device(void *fdt, DeviceState *dev, int bus_offset)
- {
-diff --git a/hw/qdev.h b/hw/qdev.h
-index d549d43..84544c7 100644
---- a/hw/qdev.h
-+++ b/hw/qdev.h
-@@ -277,6 +277,7 @@ void qdev_prop_set_compat(DeviceState *dev);
- extern struct BusInfo system_bus_info;
++#endif /* CONFIG_FDT */
+diff --git a/hw/sysbus.h b/hw/sysbus.h
+index 1a8f289..2c43191 100644
+--- a/hw/sysbus.h
++++ b/hw/sysbus.h
+@@ -26,6 +26,7 @@ struct SysBusDevice {
+ };
  
- #ifdef CONFIG_FDT
-+int qbus_fdt_irq_to_number(qemu_irq irq, uint32_t *phandle);
- int qdev_fdt_populate(void *fdt);
- #endif
+ typedef int (*sysbus_initfn)(SysBusDevice *dev);
++typedef int (*sysbus_fdt_populatefn)(SysBusDevice *dev, void *fdt, int node_offset);
+ 
+ /* Macros to compensate for lack of type inheritance in C.  */
+ #define sysbus_from_qdev(dev) ((SysBusDevice *)(dev))
+@@ -34,6 +35,7 @@ typedef int (*sysbus_initfn)(SysBusDevice *dev);
+ typedef struct {
+     DeviceInfo qdev;
+     sysbus_initfn init;
++    sysbus_fdt_populatefn fdt_populate;
+ } SysBusDeviceInfo;
+ 
+ void sysbus_register_dev(const char *name, size_t size, sysbus_initfn init);
