@@ -1,12 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC PATCH] devicetree: Fix buffer overflow on setting device node
-	name
-Date: Wed, 07 Apr 2010 19:51:42 -0600
-Message-ID: <20100408015013.18100.89239.stgit@angua>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [RFC PATCH] devicetree: Fix buffer overflow on setting device
+	node name
+Date: Thu, 8 Apr 2010 11:48:01 +0800
+Message-ID: <201004081148.02064.jeremy.kerr@canonical.com>
+References: <20100408015013.18100.89239.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100408015013.18100.89239.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,51 +18,21 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix bug where temporary buffer for sprintf() was not large enough
-when setting a device tree node name.
+Hi Grant,
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+Thanks, this fixes the overflow for me too. Have applied to my tree and pushed 
+out.
 
-Hi Jeremy.  Here's the fix I promised.  With this change your current tree
-works beautifully.  I've pushed out the kernel that works with this QEMU
-branch to my Linux kernel git tree:
+If anyone else would like to check out out the patches, my tree is at:
 
-git://git.secretlab.ca/git/linux-2.6 test-devicetree
+  http://kernel.ubuntu.com/git?p=jk/dt/qemu.git;a=summary
+  git://kernel.ubuntu.com/jk/dt/qemu.git
 
 Cheers,
-g.
 
- hw/qdev.c   |    2 +-
- hw/sysbus.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/hw/qdev.c b/hw/qdev.c
-index caa5b35..36582ec 100644
---- a/hw/qdev.c
-+++ b/hw/qdev.c
-@@ -868,7 +868,7 @@ static int qdev_fdt_add_device(void *fdt, DeviceState *dev, int bus_offset)
- {
-     BusState *child;
-     int dev_offset, rc;
--    char name[sizeof(dev->info->name) + 9];
-+    char name[sizeof(dev->info->name) + 20];
-     static int unique = 0;
- 
-     sprintf(name, "%s@%x", dev->info->name, unique++);
-diff --git a/hw/sysbus.c b/hw/sysbus.c
-index c63deef..c17d12d 100644
---- a/hw/sysbus.c
-+++ b/hw/sysbus.c
-@@ -230,7 +230,7 @@ static int sysbus_fdt_populate_node(DeviceState *dev, void *fdt, int offset)
-     for (i = 0; i < s->num_mmio; i++) {
-         /* By convention, the name is appended with '@<first reg addr>' */
-         if (i == 0) {
--            char n[sizeof(dev->info->name) + 10];
-+            char n[sizeof(dev->info->name) + 20];
-             sprintf(n, "%s@%x", dev->info->name, (uint32_t)s->mmio[i].addr);
-             rc = fdt_set_name(fdt, offset, n);
-             if (rc < 0)
+Jeremy
