@@ -1,16 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: new device tree binding review process idea
-Date: Thu, 8 Apr 2010 10:16:41 -0600
-Message-ID: <l2ufa686aa41004080916jcb4e6dddzad4bc19306d32baa@mail.gmail.com>
-References: <fa686aa41003252213w3f403d42pea3c8c88adbf5832@mail.gmail.com>
-	<9696D7A991D0824DBA8DFAC74A9C5FA305CAFB62@az33exm25.fsl.freescale.net>
-	<m2nfa686aa41004061248w8e5fad71sb7d1871c80787d9c@mail.gmail.com>
-	<9696D7A991D0824DBA8DFAC74A9C5FA305CAFFD0@az33exm25.fsl.freescale.net>
+From: Paul Brook <paul-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
+Subject: Re: [Qemu-devel] [RFC PATCH 0/7] QEMU patches to generate FDT from
+	qdevs
+Date: Fri, 9 Apr 2010 13:07:22 +0100
+Message-ID: <201004091307.22473.paul@codesourcery.com>
+References: <20100407040129.20274.44284.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9696D7A991D0824DBA8DFAC74A9C5FA305CAFFD0-ofAVchDyotYzzZk0BCvKg5jmvxFtTJ+o0e7PPNI6Mm0@public.gmane.org>
+In-Reply-To: <20100407040129.20274.44284.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,26 +18,23 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+To: qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 8, 2010 at 9:04 AM, Yoder Stuart-B08248
-<B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> Mediawiki is as readable as any, and it's got the advantage of a
->> stable and well supported application behind it. =A0I've used mediawiki
->> for a while now, and it's pretty much proven that it scales well, and
->> does a good job of handling off-line edits. =A0Although I would agree
->> that it makes sense to define a binding template and formating guide
->> to keep things looking uniform and readable.
->
-> Ok. =A0I do think that the wiki formatting will keep things a bit more
-> readable via web browsers, which will be the primary way people
-> are reading this.
->
-> I do have a few ideas/suggestions for a binding template that I
-> will post for comments soon.
+> Hi everyone,
+> 
+> This is an experimental set of patches for populating the flattened
+> device tree (fdt) data from the actual set of qdevs in the platform.
+> I'm not expecting this to get merged anytime soon, but I wanted to get
+> it out there to solicit comments.  My target for this is testing
+> device tree support on ARM.
 
-Excellent!  Thanks.  I'll watch out for them.
+I think you need to convert some more interesting machines before it's 
+possible to tell whether this is a sane setup. When investigating FDTs for 
+creation of machine I found it's easy to invent something that can handle the 
+simple integrator/cp board, but it all starts to fall apart when you encounter 
+more complicated boards. In particular things like PCI, USB, I2C, etc. and 
+strange bus configurations when you have both on-chip and external devices.
 
-g.
+Paul
