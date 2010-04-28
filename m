@@ -1,106 +1,86 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 1/3] video: add support for getting video mode from
-	device tree
-Date: Wed, 28 Apr 2010 15:43:03 +0200
-Message-ID: <20100428154303.45d1ce87@wker>
-References: <fa686aa41002161006l3b301febt94fe990df4bddfe9@mail.gmail.com>
-	<1267307902-31939-2-git-send-email-agust@denx.de>
-	<fa686aa41002272230s7f900c0fv1aabf0e26ccbf84c@mail.gmail.com>
-	<4B8A2CD7.7070305@firmworks.com>
-	<1267415120.23523.1898.camel@pasglop>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/2] powerpc: add platform registration for
+	ALSA SoC drivers
+Date: Wed, 28 Apr 2010 15:58:34 -0600
+Message-ID: <z2xfa686aa41004281458u3a3048feh9d762e07f8052348@mail.gmail.com>
+References: <1272314980-23679-1-git-send-email-timur@freescale.com>
+	<1272350168.24542.6.camel@pasglop>
+	<20100427095440.GA15492@rakim.wolfsonmicro.main>
+	<1272362955.24542.24.camel@pasglop>
+	<j2qed82fe3e1004281335h4076b050jc2894d4c4d6eac65@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1267415120.23523.1898.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <j2qed82fe3e1004281335h4076b050jc2894d4c4d6eac65@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Timur Tabi <timur.tabi@gmail.com>
+Cc: alsa-devel@alsa-project.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kumar.gala@freescale.com, Mark Brown <broonie@opensource.wolfsonmicro.com>, linuxppc-dev@ozlabs.org, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, lrg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Mar 2010 14:45:20 +1100
-Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+On Wed, Apr 28, 2010 at 2:35 PM, Timur Tabi <timur.tabi@gmail.com> wrote:
+> On Tue, Apr 27, 2010 at 5:09 AM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+>
+>> Keep in mind that it's perfectly kosher to create nodes for "virtual"
+>> devices. IE. We could imagine a node for the "sound subsystem" that
+>> doesn't actually correspond to any physical device but contain the
+>> necessary properties that binds everything together. You could even have
+>> multiple of these if you have separate set of sound HW that aren't
+>> directly dependant.
+>
+> First, I want to officially retract this patch. =A0I've talked with
+> Grant, and we've come up with a different approach to this problem.
+>
+> Second, how about this binding for the virtual sound node? =A0It would
+> be a root-level node.
+>
+> =A0 =A0 =A0 =A0sound-devices {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0sound0 {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0ssi =3D &ssi0;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0playback-dma =3D &dma00;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0capture-dma =3D &dma01;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0codec =3D &cs4270;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0};
 
-> On Sat, 2010-02-27 at 22:44 -1000, Mitch Bradley wrote:
-> 
-> > As it turns out, I'm doing exactly that - exporting verbatim EDID
-> > data 
-> > as the value of the "edid" property - for the display node on the Via 
-> > version of the OLPC machine.  The kernel driver uses it instead of 
-> > trying to obtain the EDID data from the monitor, because the builtin 
-> > OLPC display cannot supply EDID data through the usual hardware
-> > interfaces.
-> 
-> This is actually a common practice (though EDID is most often in
-> uppercase) on Apple hardware too. It has issues though in the sense that
-> it doesn't carry proper connector information and falls over in many
-> multi-head cases.
-> 
-> I think passing the EDID data, when available, is thus the right thing
-> to do indeed, however that doesn't solve two problems:
-> 
->  - Where to put that property ? This is a complicated problem and we
-> might argue on a binding for weeks because video cards typically support
-> multiple outputs, etc. etc... I think the best for now is to stick as
-> closely as possible to the existing OF fb binding, and have "display"
-> nodes for each output, which can eventually contain an EDID. We might
-> also want to add a string that indicate the connector type. Specific
-> drivers might want to define additional properties here where it makes
-> sense such as binding of those outputs to CRTCs or such, up to you.
+The sound0 node needs a compatible value, the sound-device node should
+probably have one too.
 
-Putting EDID to display node would be really sufficient for LCDs in
-our case. Other systems might define this additional connector type
-property.
+The sound0 node should have something board specific like
+"fsl,mpc8610hpcd-sound" to make it clear that the binding really only
+applies to this particular board.  It would also be a good idea to
+prefix all of the property names with 'fsl,' to avoid conflicting with
+any future common bindings or conventions.  Other boards can use the
+same binding, but they would get a different compatible value (the
+driver could bind on both).
 
-> 
->  - We -also- want a way to specify the "default" mode as set by the
-> firmware, at least on some devices. The EDID gives capabilities, and
-> often for LCDs also the "preferred" mode which is almost always the
-> "default" mode ... but could be different. In order to avoid "flicking",
-> the driver might wants to know what is the currently programmed mode.
-> For that, having split out properties makes sense, though I would like
-> to either prefix them all with "mode," or stick them in a sub-node of
-> the display@.
+I'm not a huge fan of the name "sound-devices" for the parent node.
+There are other sorts of things that we need 'virtual' device nodes to
+describe.  It would be nice to have a single place for collecting
+nodes for stuff like this.  Perhaps this:
 
-I would propose defining following properties in the case the
-programmed mode is different from "default" mode:
-
-display@...{
-	compatible = "<vendor>,<model>"
-	EDID = [edid-data];
-
-	current-mode {
-		pixel_clock = <value>;
-		horizontal_active = <value>;
-		horizontal_blank = <value>;
-		vertical_active = <value>;
-		vertical_blank = <value>;
-		horizontal_active = <value>;
-		hsync_offset = <value>;
-		hsync_pulse_width = <value>;
-		vsync_offset = <value>;
-		vsync_pulse_width = <value>;
-		hsync_positive;
-		vsync_positive;
-	}
+system {
+        compatible =3D "system-devices";
+        sound0 {
+                compatible =3D "fsl,mpc8610hpcd-sound";
+                fsl,ssi =3D &ssi0;
+                fsl,playback-dma =3D &dma00;
+                fsl,capture-dma =3D &dma01;
+                fsl,codec =3D &cs4270;
+        };
 };
 
-The firmware can set the "default" mode using the EDID's preferred
-Detailed Timing Descriptor data. If on some devices it sets another
-mode than the preferred mode, then the firmware can insert a
-"current-mode" sub-node with currently programmed mode. The driver
-can check for this sub-node and use it's data and if it isn't present,
-it can use the preferred timing data from EDID. The names of the
-properties here are actually what Detailed Timing Descriptor in EDID
-specifies. What do you think?
+But I really don't have any knowledge of what has been done previously
+in this regard or if any conventions have been established.  Ben, any
+thoughts?
 
-Thanks,
-Anatolij
+g.
