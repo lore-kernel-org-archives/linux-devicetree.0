@@ -1,56 +1,53 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH 1/5] fsl-diu-fb: fix issue with re-enabling DIU area
-	descriptor on MPC5121
-Date: Fri, 30 Apr 2010 01:49:34 +0200
-Message-ID: <1272584978-19063-2-git-send-email-agust@denx.de>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH 2/5] fsl-diu-fb: move fsl-diu-fb.h to include/linux
+Date: Fri, 30 Apr 2010 01:49:35 +0200
+Message-ID: <1272584978-19063-3-git-send-email-agust@denx.de>
 References: <1272584978-19063-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1272584978-19063-1-git-send-email-agust@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@ozlabs.org
-Cc: linux-fbdev@vger.kernel.org, wd@denx.de, dzu@denx.de, devicetree-discuss@lists.ozlabs.org, yorksun@freescale.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1272584978-19063-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On MPC5121 re-configuring the DIU area descriptor by writing
-new descriptor address doesn't work. As a result, DIU continues
-to display using old area descriptor even if the new one has
-been set.
+Some DIU structures will be used in platform code in
+subsequent MPC5121 DIU patch, so we move this header
+to be able to include it elsewhere.
 
-Disabling the DIU before setting the new descriptor and
-subsequently enabling it fixes the problem.
-
-Signed-off-by: Anatolij Gustschin <agust@denx.de>
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 ---
- drivers/video/fsl-diu-fb.c |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+ drivers/video/fsl-diu-fb.c                    |    2 +-
+ {drivers/video => include/linux}/fsl-diu-fb.h |    0
+ 2 files changed, 1 insertions(+), 1 deletions(-)
+ rename {drivers/video => include/linux}/fsl-diu-fb.h (100%)
 
 diff --git a/drivers/video/fsl-diu-fb.c b/drivers/video/fsl-diu-fb.c
-index 994358a..ee15a99 100644
+index ee15a99..7acdc09 100644
 --- a/drivers/video/fsl-diu-fb.c
 +++ b/drivers/video/fsl-diu-fb.c
-@@ -329,8 +329,11 @@ static int fsl_diu_enable_panel(struct fb_info *info)
- 	if (mfbi->type != MFB_TYPE_OFF) {
- 		switch (mfbi->index) {
- 		case 0:				/* plane 0 */
--			if (hw->desc[0] != ad->paddr)
-+			if (hw->desc[0] != ad->paddr) {
-+				out_be32(&dr.diu_reg->diu_mode, MFB_MODE0);
- 				out_be32(&hw->desc[0], ad->paddr);
-+				out_be32(&dr.diu_reg->diu_mode, MFB_MODE1);
-+			}
- 			break;
- 		case 1:				/* plane 1 AOI 0 */
- 			cmfbi = machine_data->fsl_diu_info[2]->par;
+@@ -34,7 +34,7 @@
+ #include <linux/of_platform.h>
+ 
+ #include <sysdev/fsl_soc.h>
+-#include "fsl-diu-fb.h"
++#include <linux/fsl-diu-fb.h>
+ 
+ /*
+  * These parameters give default parameters
+diff --git a/drivers/video/fsl-diu-fb.h b/include/linux/fsl-diu-fb.h
+similarity index 100%
+rename from drivers/video/fsl-diu-fb.h
+rename to include/linux/fsl-diu-fb.h
 -- 
 1.6.3.3
