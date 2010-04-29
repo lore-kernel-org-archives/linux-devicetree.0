@@ -1,53 +1,46 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH 2/5] fsl-diu-fb: move fsl-diu-fb.h to include/linux
-Date: Fri, 30 Apr 2010 01:49:35 +0200
-Message-ID: <1272584978-19063-3-git-send-email-agust@denx.de>
-References: <1272584978-19063-1-git-send-email-agust@denx.de>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH 0/5] Rework MPC5121 DIU support (for 2.6.35)
+Date: Fri, 30 Apr 2010 01:49:33 +0200
+Message-ID: <1272584978-19063-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1272584978-19063-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linuxppc-dev@ozlabs.org
+Cc: linux-fbdev@vger.kernel.org, wd@denx.de, dzu@denx.de, devicetree-discuss@lists.ozlabs.org, yorksun@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Some DIU structures will be used in platform code in
-subsequent MPC5121 DIU patch, so we move this header
-to be able to include it elsewhere.
+This patch series rework DIU support patches submitted
+previously. Comments to the previos patch series have
+been addressed, not related changes are dropped and some
+changes are split out to separate patches to simplify
+review. Furthermore a patch has been added to support
+setting display mode using EDID block in the device tree.
 
-Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
----
- drivers/video/fsl-diu-fb.c                    |    2 +-
- {drivers/video => include/linux}/fsl-diu-fb.h |    0
- 2 files changed, 1 insertions(+), 1 deletions(-)
+Anatolij Gustschin (5):
+  fsl-diu-fb: fix issue with re-enabling DIU area descriptor on MPC5121
+  fsl-diu-fb: move fsl-diu-fb.h to include/linux
+  powerpc/mpc5121: shared DIU framebuffer support
+  powerpc: doc/dts-bindings: update doc of FSL DIU bindings
+  fsl-diu-fb: Support setting display mode using EDID
+
+ Documentation/powerpc/dts-bindings/fsl/diu.txt |   20 ++-
+ arch/powerpc/platforms/512x/mpc5121_ads.c      |    7 +
+ arch/powerpc/platforms/512x/mpc5121_generic.c  |   12 +
+ arch/powerpc/platforms/512x/mpc512x.h          |    2 +
+ arch/powerpc/platforms/512x/mpc512x_shared.c   |  284 ++++++++++++++++++++++++
+ arch/powerpc/sysdev/fsl_soc.h                  |    1 +
+ drivers/video/Kconfig                          |    1 +
+ drivers/video/fsl-diu-fb.c                     |  104 ++++++++-
+ {drivers/video => include/linux}/fsl-diu-fb.h  |    0
+ 9 files changed, 419 insertions(+), 12 deletions(-)
  rename {drivers/video => include/linux}/fsl-diu-fb.h (100%)
-
-diff --git a/drivers/video/fsl-diu-fb.c b/drivers/video/fsl-diu-fb.c
-index ee15a99..7acdc09 100644
---- a/drivers/video/fsl-diu-fb.c
-+++ b/drivers/video/fsl-diu-fb.c
-@@ -34,7 +34,7 @@
- #include <linux/of_platform.h>
- 
- #include <sysdev/fsl_soc.h>
--#include "fsl-diu-fb.h"
-+#include <linux/fsl-diu-fb.h>
- 
- /*
-  * These parameters give default parameters
-diff --git a/drivers/video/fsl-diu-fb.h b/include/linux/fsl-diu-fb.h
-similarity index 100%
-rename from drivers/video/fsl-diu-fb.h
-rename to include/linux/fsl-diu-fb.h
--- 
-1.6.3.3
