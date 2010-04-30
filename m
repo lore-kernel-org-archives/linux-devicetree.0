@@ -1,52 +1,92 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: dtc: Extend and better test dtbs_equal utility programs (resend)
-Date: Fri, 30 Apr 2010 08:39:05 -0500
-Message-ID: <E1O7qQr-0004ZA-Ez@jdl.com>
-References: <20100430053000.GV6284@yookeroo>
+From: Timur Tabi <timur.tabi@gmail.com>
+Subject: Re: [PATCH 3/5] powerpc/mpc5121: shared DIU framebuffer support
+Date: Fri, 30 Apr 2010 10:08:45 -0500
+Message-ID: <x2ned82fe3e1004300808q757826cs864ac1c7c082f81@mail.gmail.com>
+References: <1272584978-19063-1-git-send-email-agust@denx.de>
+	<1272584978-19063-4-git-send-email-agust@denx.de>
+	<s2ted82fe3e1004291905mf562f0cbi24054bb973aa2dbb@mail.gmail.com>
+	<20100430121947.1d265ca6@wker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20100430053000.GV6284@yookeroo> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100430121947.1d265ca6@wker>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Anatolij Gustschin <agust@denx.de>
+Cc: linux-fbdev@vger.kernel.org, wd@denx.de, dzu@denx.de, John Rigby <jrigby@gmail.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org, yorksun@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-> The dtbs_equal_ordered test program is used to implement a number of
-> testcases.  However, the test program itself has never been
-> particularly well tested.  In addition there are testcases coming in
-> future for which it would be useful to have a corresponding
-> "dtbs_equal_unordered" which checks for equality of device trees, not
-> considering the internal ordering of elements.  Finally, for some
-> tests we may want it would be useful to check trees for equality with
-> the PASS case being when they are *not* equal.
-> 
-> This patch addresses all of the above.  A dtbs_equal_unordered is
-> added, and both it and the existing dtbs_equal_ordered program now
-> take a -n option to make the PASS case be where the trees are not
-> equal.  A number of example trees with slight modifications from
-> test_tree1 are used to verify that both these programs correctly
-> identify when the tree is altered, and a dtb_reverse program is used
-> to verify that the unordered version does not depend on internal
-> ordering.  These new testcases for the equality testing programs are
-> split out into a new test group in run_tests.sh.
-> 
-> dtbs_equal_unordered uses the new property iteration functions, and so
-> this also acts as further testing for those functions.
-> dtbs_equal_unordered will be useful for further testing the recently
-> added tree-merging code and its upcoming extensions.
-> 
-> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+On Fri, Apr 30, 2010 at 5:19 AM, Anatolij Gustschin <agust@denx.de> wrote:
 
-Applied.
+>> How about just doing this?
+>>
+>> .init_early =A0 =A0 =A0 =A0 =A0 =A0 =3D mpc512x_init_diu,
+>
+> I thought it should be prepared for adding other code here.
+> mpc5121_ads_init_early() is generic and could contain other
+> things as well. I would vote for current version.
 
-jdl
+Do you have any plans to add any additional code?   If not, then I say
+skip the middle-man.  If someone ever needs to do more, he can always
+put that function back.
+
+>> I'm pretty sure the compiler will optimize this to:
+>>
+>> =A0 =A0 temp =3D (1000000000000UL / pixclock);
+>>
+>> so you may as well do it that way.
+>
+> ??
+> 1000000000000 is _not_ UL, but UUL.
+
+That's what I meant.  Actually, I think it's ULL.  Regardless, I think
+the compiler will see the  "1000000000 ... * 1000" and just combine
+them together.  You're not actually outsmarting the compiler.
+
+>> > + =A0 =A0 =A0 err =3D 100000000;
+>>
+>> Why do you assign err to this arbitrary value?
+>
+> Dunno. It is Freescale's code and I do not have time to check
+> and understand each bit of it and to explain it.
+
+*sigh*  You're not the first person to modify the DIU driver without
+understanding what it all does.  I suspect that the original author
+should have done this:
+
+    err =3D -1;
+
+because he wanted it to be the largest possible integer.
+
+>> Do you really need to use reserve_bootmem? =A0Have you tried kmalloc or
+>> alloc_pages_exact()?
+>
+> Yes. No, it is too early to use them here.
+
+There was a recent change in the kernel that allows kmalloc to work
+earlier than before.  Take a look at commit
+85355bb272db31a3f2dd99d547eef794805e1319 ("powerpc: Fix mpic alloc
+warning").
+
+>> > + =A0 =A0 =A0 mode =3D in_be32(diu_reg + 0x1c);
+>> > + =A0 =A0 =A0 if (mode !=3D 1) {
+>>
+>> How can in_be32() return a -1?
+>
+> It is a 1, not -1. I will use appropriate macro here and also
+> change to use a struct instead of adding offset to register base.
+
+Sorry, I misread the code.  I could have sworn it read "mode !=3D -1"
+
+-- =
+
+Timur Tabi
+Linux kernel developer at Freescale
