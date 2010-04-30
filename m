@@ -1,17 +1,18 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+From: Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 3/5] powerpc/mpc5121: shared DIU framebuffer support
-Date: Fri, 30 Apr 2010 19:00:51 +0200
-Message-ID: <20100430190051.3a5ba058@wker>
+Date: Fri, 30 Apr 2010 13:18:46 -0500
+Message-ID: <r2sed82fe3e1004301118xc52b46cfi879de534283fd51@mail.gmail.com>
 References: <1272584978-19063-1-git-send-email-agust@denx.de>
 	<1272584978-19063-4-git-send-email-agust@denx.de>
 	<s2ted82fe3e1004291905mf562f0cbi24054bb973aa2dbb@mail.gmail.com>
 	<20100430121947.1d265ca6@wker>
 	<x2ned82fe3e1004300808q757826cs864ac1c7c082f81@mail.gmail.com>
+	<20100430162254.GA24285@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <x2ned82fe3e1004300808q757826cs864ac1c7c082f81-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20100430162254.GA24285-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,41 +22,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, John Rigby <jrigby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAzMCBBcHIgMjAxMCAxMDowODo0NSAtMDUwMApUaW11ciBUYWJpIDx0aW11ci50YWJp
-QGdtYWlsLmNvbT4gd3JvdGU6Cgo+IE9uIEZyaSwgQXByIDMwLCAyMDEwIGF0IDU6MTkgQU0sIEFu
-YXRvbGlqIEd1c3RzY2hpbiA8YWd1c3RAZGVueC5kZT4gd3JvdGU6Cj4gCj4gPj4gSG93IGFib3V0
-IGp1c3QgZG9pbmcgdGhpcz8KPiA+Pgo+ID4+IC5pbml0X2Vhcmx5IMKgIMKgIMKgIMKgIMKgIMKg
-ID0gbXBjNTEyeF9pbml0X2RpdSwKPiA+Cj4gPiBJIHRob3VnaHQgaXQgc2hvdWxkIGJlIHByZXBh
-cmVkIGZvciBhZGRpbmcgb3RoZXIgY29kZSBoZXJlLgo+ID4gbXBjNTEyMV9hZHNfaW5pdF9lYXJs
-eSgpIGlzIGdlbmVyaWMgYW5kIGNvdWxkIGNvbnRhaW4gb3RoZXIKPiA+IHRoaW5ncyBhcyB3ZWxs
-LiBJIHdvdWxkIHZvdGUgZm9yIGN1cnJlbnQgdmVyc2lvbi4KPiAKPiBEbyB5b3UgaGF2ZSBhbnkg
-cGxhbnMgdG8gYWRkIGFueSBhZGRpdGlvbmFsIGNvZGU/ICAgSWYgbm90LCB0aGVuIEkgc2F5Cj4g
-c2tpcCB0aGUgbWlkZGxlLW1hbi4gIElmIHNvbWVvbmUgZXZlciBuZWVkcyB0byBkbyBtb3JlLCBo
-ZSBjYW4gYWx3YXlzCj4gcHV0IHRoYXQgZnVuY3Rpb24gYmFjay4KCkN1cnJlbnRseSBJIGRvIG5v
-dCBoYXZlIHN1Y2ggcGxhbnMuIE9rIHdpbGwgc2tpcCB0aGVtLgoKLi4uCj4gPj4gRG8geW91IHJl
-YWxseSBuZWVkIHRvIHVzZSByZXNlcnZlX2Jvb3RtZW0/IMKgSGF2ZSB5b3UgdHJpZWQga21hbGxv
-YyBvcgo+ID4+IGFsbG9jX3BhZ2VzX2V4YWN0KCk/Cj4gPgo+ID4gWWVzLiBObywgaXQgaXMgdG9v
-IGVhcmx5IHRvIHVzZSB0aGVtIGhlcmUuCj4gCj4gVGhlcmUgd2FzIGEgcmVjZW50IGNoYW5nZSBp
-biB0aGUga2VybmVsIHRoYXQgYWxsb3dzIGttYWxsb2MgdG8gd29yawo+IGVhcmxpZXIgdGhhbiBi
-ZWZvcmUuICBUYWtlIGEgbG9vayBhdCBjb21taXQKPiA4NTM1NWJiMjcyZGIzMWEzZjJkZDk5ZDU0
-N2VlZjc5NDgwNWUxMzE5ICgicG93ZXJwYzogRml4IG1waWMgYWxsb2MKPiB3YXJuaW5nIikuCgpU
-aGFua3MuIFNvcnJ5IGZvciBteSB3cm9uZyBhbnN3ZXIgYWJvdmUsIG5vdyBJIHJlbWVtYmVyIHRo
-ZSBsb2dpYwpiZWhpbmQgdGhpcyBhbmQgd2lsbCB0cnkgdG8gZXhwbGFpbi4gQWN0dWFsbHkgdGhl
-IHJlYXNvbiBJIGRvIG5vdAp1c2Uga21hbGxvYygpIGhlcmUgaXMgdGhhdCBJIGRvIG5vdCB3YW50
-IHRvIF9jb3B5XyBiaXRtYXAgZGF0YSB0bwpuZXdseSBhbGxvY2F0ZWQgZnJhbWUgYnVmZmVyIGFy
-ZWEgKEl0IHdpbGwgbmVnYXRpdmVseSBhZmZlY3QgYm9vdAp0aW1lKS4gSW5zdGVhZCBJIHJlc2Vy
-dmUgdGhlIGFscmVhZHkgY29uZmlndXJlZCBmcmFtZSBidWZmZXIgYXJlYQpzbyB0aGF0IGl0IHdv
-bid0IGJlIGRlc3Ryb3llZC4gVGhlIHN0YXJ0aW5nIGFkZHJlc3Mgb2YgdGhlIGFyZWEKdG8gcmVz
-ZXJ2ZSBhbmQgYWxzbyB0aGUgbGVuZ2h0IGlzIHBhc3NlZCB0byByZXNlcnZlX2Jvb3RtZW0oKS4K
-VGhpcyBpcyB0aGUgcmVhbCByZWFzb24gZm9yIHVzaW5nIHJlc2VydmVfYm9vdG1lbSgpIGhlcmUu
-CkkgY291bGQgYWxsb2MgbmV3IGJpdG1hcCBhcmVhIHVzaW5nIGFsbG9jYXRvcnMsIGJ1dCB0aGVu
-IEkgaGF2ZQp0byBjb3B5IHRoZSBiaXRtYXAgZGF0YSAoc3BsYXNoIGltYWdlKSB0byBuZXdseSBh
-bGxvY2F0ZWQgYXJlYQphbmQgaGF2ZSB0byByZS1jb25maWd1cmUgdGhlIGRlc2NyaXB0b3JzIHRv
-IGRpc3BsYXkgZnJvbSBuZXcKYml0bWFwIGJ1ZmZlci4KCkFuYXRvbGlqCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWls
-aW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0
-cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Fri, Apr 30, 2010 at 11:22 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrot=
+e:
+
+>> That's what I meant. =A0Actually, I think it's ULL. =A0Regardless, I thi=
+nk
+>> the compiler will see the =A0"1000000000 ... * 1000" and just combine
+>> them together. =A0You're not actually outsmarting the compiler.
+>
+> The compiler will do no such thing. =A0That's a valid transformation when
+> doing pure math, but not when working with integers.
+
+I ran some tests, and it appears you're right.  I doesn't make a lot
+of sense to me, but whatever.
+
+However, "(1000000000 / pixclock) * 1000" produces a result that's
+less accurate than "1000000000000ULL / pixclock".  Unfortunately, that
+math caused a linker problem with __udivdi3 when I tried it, so maybe
+you can use do_div() instead?
+
+>> =A0 =A0 err =3D -1;
+>>
+>> because he wanted it to be the largest possible integer.
+>
+> -1 is not the largest possible integer. =A0LONG_MAX, perhaps?
+
+What, you don't like implicit casting of -1 to an unsigned? :-)
+
+Since err is a long integer, LONG_MAX is the better choice.
+
+-- =
+
+Timur Tabi
+Linux kernel developer at Freescale
