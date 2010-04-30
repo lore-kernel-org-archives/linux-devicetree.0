@@ -1,15 +1,13 @@
 From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 3/5] powerpc/mpc5121: shared DIU framebuffer support
-Date: Fri, 30 Apr 2010 12:19:47 +0200
-Message-ID: <20100430121947.1d265ca6@wker>
-References: <1272584978-19063-1-git-send-email-agust@denx.de>
-	<1272584978-19063-4-git-send-email-agust@denx.de>
-	<s2ted82fe3e1004291905mf562f0cbi24054bb973aa2dbb@mail.gmail.com>
+Subject: [PATCH v2 3/5] powerpc/mpc5121: shared DIU framebuffer support
+Date: Fri, 30 Apr 2010 12:40:15 +0200
+Message-ID: <1272624015-4356-1-git-send-email-agust@denx.de>
+References: <1272584978-19063-4-git-send-email-agust@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <s2ted82fe3e1004291905mf562f0cbi24054bb973aa2dbb@mail.gmail.com>
+In-Reply-To: <1272584978-19063-4-git-send-email-agust@denx.de>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -19,202 +17,503 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Timur Tabi <timur.tabi@gmail.com>
-Cc: linux-fbdev@vger.kernel.org, wd@denx.de, dzu@denx.de, John Rigby <jrigby@gmail.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org, yorksun@freescale.com
+To: linuxppc-dev@ozlabs.org
+Cc: linux-fbdev@vger.kernel.org, wd@denx.de, dzu@denx.de, John Rigby <jrigby@gmail.com>, devicetree-discuss@lists.ozlabs.org, yorksun@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyOSBBcHIgMjAxMCAyMTowNToyNiAtMDUwMApUaW11ciBUYWJpIDx0aW11ci50YWJp
-QGdtYWlsLmNvbT4gd3JvdGU6Cgo+IE9uIFRodSwgQXByIDI5LCAyMDEwIGF0IDY6NDkgUE0sIEFu
-YXRvbGlqIEd1c3RzY2hpbiA8YWd1c3RAZGVueC5kZT4gd3JvdGU6Cj4gCj4gCj4gPiArdm9pZCBf
-X2luaXQgbXBjNTEyMV9hZHNfaW5pdF9lYXJseSh2b2lkKQo+ID4gK3sKPiA+ICsgwqAgwqAgwqAg
-bXBjNTEyeF9pbml0X2RpdSgpOwo+ID4gK30KPiA+ICsKPiA+IMKgZGVmaW5lX21hY2hpbmUobXBj
-NTEyMV9hZHMpIHsKPiA+IMKgIMKgIMKgIMKgLm5hbWUgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgPSAiTVBDNTEyMSBBRFMiLAo+ID4gwqAgwqAgwqAgwqAucHJvYmUgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqA9IG1wYzUxMjFfYWRzX3Byb2JlLAo+ID4gwqAgwqAgwqAgwqAuc2V0dXBfYXJj
-aCDCoCDCoCDCoCDCoCDCoCDCoCA9IG1wYzUxMjFfYWRzX3NldHVwX2FyY2gsCj4gPiDCoCDCoCDC
-oCDCoC5pbml0IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgID0gbXBjNTEyeF9pbml0LAo+ID4g
-KyDCoCDCoCDCoCAuaW5pdF9lYXJseSDCoCDCoCDCoCDCoCDCoCDCoCA9IG1wYzUxMjFfYWRzX2lu
-aXRfZWFybHksCj4gCj4gSG93IGFib3V0IGp1c3QgZG9pbmcgdGhpcz8KPiAKPiAuaW5pdF9lYXJs
-eSAgICAgICAgICAgICA9IG1wYzUxMnhfaW5pdF9kaXUsCgpJIHRob3VnaHQgaXQgc2hvdWxkIGJl
-IHByZXBhcmVkIGZvciBhZGRpbmcgb3RoZXIgY29kZSBoZXJlLgptcGM1MTIxX2Fkc19pbml0X2Vh
-cmx5KCkgaXMgZ2VuZXJpYyBhbmQgY291bGQgY29udGFpbiBvdGhlcgp0aGluZ3MgYXMgd2VsbC4g
-SSB3b3VsZCB2b3RlIGZvciBjdXJyZW50IHZlcnNpb24uCgo+ID4gK3ZvaWQgX19pbml0IG1wYzUx
-MnhfZ2VuZXJpY19pbml0X2Vhcmx5KHZvaWQpCj4gPiArewo+ID4gKyDCoCDCoCDCoCBtcGM1MTJ4
-X2luaXRfZGl1KCk7Cj4gPiArfQo+ID4gKwo+ID4gK3ZvaWQgX19pbml0IG1wYzUxMnhfZ2VuZXJp
-Y19zZXR1cF9hcmNoKHZvaWQpCj4gPiArewo+ID4gKyDCoCDCoCDCoCBtcGM1MTJ4X3NldHVwX2Rp
-dSgpOwo+ID4gK30KPiA+ICsKPiA+IMKgZGVmaW5lX21hY2hpbmUobXBjNTEyMV9nZW5lcmljKSB7
-Cj4gPiDCoCDCoCDCoCDCoC5uYW1lIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgID0gIk1QQzUx
-MjEgZ2VuZXJpYyIsCj4gPiDCoCDCoCDCoCDCoC5wcm9iZSDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoD0gbXBjNTEyMV9nZW5lcmljX3Byb2JlLAo+ID4gwqAgwqAgwqAgwqAuaW5pdCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCA9IG1wYzUxMnhfaW5pdCwKPiA+ICsgwqAgwqAgwqAgLmluaXRf
-ZWFybHkgwqAgwqAgwqAgwqAgwqAgwqAgPSBtcGM1MTJ4X2dlbmVyaWNfaW5pdF9lYXJseSwKPiA+
-ICsgwqAgwqAgwqAgLnNldHVwX2FyY2ggwqAgwqAgwqAgwqAgwqAgwqAgPSBtcGM1MTJ4X2dlbmVy
-aWNfc2V0dXBfYXJjaCwKPiAKPiBBbmQgYSBzaW1pbGFyIGNoYW5nZSBoZXJlLgoKU2FtZSBoZXJl
-LgoKLi4uCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy81MTJ4L21wYzUx
-Mnhfc2hhcmVkLmMgYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzUxMngvbXBjNTEyeF9zaGFyZWQu
-Ywo+ID4gaW5kZXggYjdmNTE4YS4uOGUyOTdmYSAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvcG93ZXJw
-Yy9wbGF0Zm9ybXMvNTEyeC9tcGM1MTJ4X3NoYXJlZC5jCj4gPiArKysgYi9hcmNoL3Bvd2VycGMv
-cGxhdGZvcm1zLzUxMngvbXBjNTEyeF9zaGFyZWQuYwo+ID4gQEAgLTE2LDcgKzE2LDExIEBACj4g
-PiDCoCNpbmNsdWRlIDxsaW51eC9pby5oPgo+ID4gwqAjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4g
-PiDCoCNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9m
-c2wtZGl1LWZiLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2Jvb3RtZW0uaD4KPiA+ICsjaW5jbHVk
-ZSA8c3lzZGV2L2ZzbF9zb2MuaD4KPiA+Cj4gPiArI2luY2x1ZGUgPGFzbS9jYWNoZWZsdXNoLmg+
-Cj4gPiDCoCNpbmNsdWRlIDxhc20vbWFjaGRlcC5oPgo+ID4gwqAjaW5jbHVkZSA8YXNtL2lwaWMu
-aD4KPiA+IMKgI2luY2x1ZGUgPGFzbS9wcm9tLmg+Cj4gPiBAQCAtNTMsNiArNTcsMjg2IEBAIHZv
-aWQgbXBjNTEyeF9yZXN0YXJ0KGNoYXIgKmNtZCkKPiA+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-Owo+ID4gwqB9Cj4gPgo+ID4gK3N0cnVjdCBmc2xfZGl1X3NoYXJlZF9mYiB7Cj4gPiArIMKgIMKg
-IMKgIGNoYXIgwqAgwqAgwqAgwqAgwqAgwqBnYW1tYVsweDMwMF07IMKgIC8qIDMyLWJpdCBhbGln
-bmVkISAqLwo+IAo+IGNoYXIgb3IgdTg/CgpXaWxsIHVzZSB1OC4KCj4gPiArIMKgIMKgIMKgIHN0
-cnVjdCBkaXVfYWQgwqAgYWQwOyDCoCDCoCDCoCDCoCDCoCDCoC8qIDMyLWJpdCBhbGlnbmVkISAq
-Lwo+ID4gKyDCoCDCoCDCoCBwaHlzX2FkZHJfdCDCoCDCoCBmYl9waHlzOwo+ID4gKyDCoCDCoCDC
-oCBzaXplX3QgwqAgwqAgwqAgwqAgwqBmYl9sZW47Cj4gPiArIMKgIMKgIMKgIGJvb2wgwqAgwqAg
-wqAgwqAgwqAgwqBpbl91c2U7Cj4gPiArfTsKPiAKPiBXaGVyZSBkaWQgImJvb2wiIGNvbWUgZnJv
-bT8gIFVzZSAiaW50IiBpbnN0ZWFkLgoKSXQgaXMgY29tbW9uIHByYWN0aXNlIHRvIHVzZSAiYm9v
-bCIgdHlwZSwgZ3JlcCBpbiBkcml2ZXJzIGRpci4KCj4gPiArdW5zaWduZWQgaW50IG1wYzUxMnhf
-Z2V0X3BpeGVsX2Zvcm1hdCh1bnNpZ25lZCBpbnQgYml0c19wZXJfcGl4ZWwsCj4gPiArIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGludCBtb25p
-dG9yX3BvcnQpCj4gPiArewo+ID4gKyDCoCDCoCDCoCB1bnNpZ25lZCBpbnQgcGl4X2ZtdDsKPiA+
-ICsKPiA+ICsgwqAgwqAgwqAgc3dpdGNoIChiaXRzX3Blcl9waXhlbCkgewo+ID4gKyDCoCDCoCDC
-oCBjYXNlIDMyOgo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBwaXhfZm10ID0gMHg4ODg4MzMx
-NjsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgYnJlYWs7Cj4gPiArIMKgIMKgIMKgIGNhc2Ug
-MjQ6Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHBpeF9mbXQgPSAweDg4MDgyMjE5Owo+ID4g
-KyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBicmVhazsKPiA+ICsgwqAgwqAgwqAgY2FzZSAxNjoKPiA+
-ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcGl4X2ZtdCA9IDB4NjUwNTMxMTg7Cj4gPiArIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIGJyZWFrOwo+ID4gKyDCoCDCoCDCoCBkZWZhdWx0Ogo+ID4gKyDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCBwaXhfZm10ID0gMHgwMDAwMDQwMDsKPiA+ICsgwqAgwqAgwqAgfQo+
-ID4gKyDCoCDCoCDCoCByZXR1cm4gcGl4X2ZtdDsKPiA+ICt9Cj4gCj4gVGhpcyBpcyBzaW1wbGVy
-Ogo+IAo+ICAgICAgICBzd2l0Y2ggKGJpdHNfcGVyX3BpeGVsKSB7Cj4gICAgICAgIGNhc2UgMzI6
-Cj4gICAgICAgICAgICAgICAgcmV0dXJuIDB4ODg4ODMzMTY7Cj4gICAgICAgIGNhc2UgMjQ6Cj4g
-ICAgICAgICAgICAgICAgcmV0dXJuIDB4ODgwODIyMTk7Cj4gICAgICAgIGNhc2UgMTY6Cj4gICAg
-ICAgICAgICAgICAgcmV0dXJuID0gMHg2NTA1MzExODsKPiAgICAgICB9Cj4gCj4gICAgICAgcmV0
-dXJuIDB4MDAwMDA0MDA7Cj4gfQoKV2lsbCBzaW1wbGlmeSBhcyBzdWdnZXN0ZWQsIHRoYW5rcyEK
-Cj4gPiArIMKgIMKgIMKgIGNjbSA9IG9mX2lvbWFwKG5wLCAwKTsKPiA+ICsgwqAgwqAgwqAgaWYg
-KCFjY20pIHsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcHJfZXJyKCJDYW4ndCBtYXAgY2xv
-Y2sgY29udHJvbCBtb2R1bGUgcmVnLlxuIik7Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIG9m
-X25vZGVfcHV0KG5wKTsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcmV0dXJuOwo+ID4gKyDC
-oCDCoCDCoCB9Cj4gPiArIMKgIMKgIMKgIG9mX25vZGVfcHV0KG5wKTsKPiAKPiBUaGlzIGlzIHNp
-bXBsZXI6Cj4gCj4gICAgICAgIGNjbSA9IG9mX2lvbWFwKG5wLCAwKTsKPiAgICAgICAgb2Zfbm9k
-ZV9wdXQobnApOwo+ICAgICAgICBpZiAoIWNjbSkgewo+ICAgICAgICAgICAgICAgIHByX2Vycigi
-Q2FuJ3QgbWFwIGNsb2NrIGNvbnRyb2wgbW9kdWxlIHJlZy5cbiIpOwo+ICAgICAgICAgICAgICAg
-IHJldHVybjsKPiAgICAgICAgfQoKT0ssIHdpbGwgZml4LCB0aGFua3MuCgo+IAo+ID4gKyDCoCDC
-oCDCoCBucCA9IG9mX2ZpbmRfbm9kZV9ieV90eXBlKE5VTEwsICJjcHUiKTsKPiA+ICsgwqAgwqAg
-wqAgaWYgKG5wKSB7Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHVuc2lnbmVkIGludCBzaXpl
-Owo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjb25zdCB1bnNpZ25lZCBpbnQgKnByb3AgPQo+
-ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBvZl9nZXRfcHJvcGVydHkobnAs
-ICJidXMtZnJlcXVlbmN5IiwgJnNpemUpOwo+IAo+IFNpbmNlIHlvdSBkb24ndCB1c2UgJ3NpemUn
-LCB5b3UgY2FuIHNraXAgaXQ6Cj4gCj4gICAgICAgICAgICAgICBjb25zdCB1bnNpZ25lZCBpbnQg
-KnByb3AgPQo+ICAgICAgICAgICAgICAgICAgICAgICBvZl9nZXRfcHJvcGVydHkobnAsICJidXMt
-ZnJlcXVlbmN5IiwgTlVMTCk7Cj4gCj4gPiArIMKgIMKgIMKgIH0gZWxzZSB7Cj4gPiArIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIHByX2VycigiQ2FuJ3QgZmluZCBcImNwdVwiIG5vZGUuXG4iKTsKPiAK
-PiAnY3B1JyBpcyBzaW1wbGVyIHRoYW4gXCJjcHVcIgoKV2lsbCBzaW1wbGlmeSwgdG9vLgoKPiA+
-ICsgwqAgwqAgwqAgLyogQ2FsY3VsYXRlIHRoZSBwaXhlbCBjbG9jayB3aXRoIHRoZSBzbWFsbGVz
-dCBlcnJvciAqLwo+ID4gKyDCoCDCoCDCoCAvKiBjYWxjdWxhdGUgdGhlIGZvbGxvd2luZyBpbiBz
-dGVwcyB0byBhdm9pZCBvdmVyZmxvdyAqLwo+ID4gKyDCoCDCoCDCoCBwcl9kZWJ1ZygiRElVIHBp
-eGNsb2NrIGluIHBzIC0gJWRcbiIsIHBpeGNsb2NrKTsKPiA+ICsgwqAgwqAgwqAgdGVtcCA9ICgx
-MDAwMDAwMDAwIC8gcGl4Y2xvY2spICogMTAwMDsKPiAKPiBJJ20gcHJldHR5IHN1cmUgdGhlIGNv
-bXBpbGVyIHdpbGwgb3B0aW1pemUgdGhpcyB0bzoKPiAKPiAgICAgdGVtcCA9ICgxMDAwMDAwMDAw
-MDAwVUwgLyBwaXhjbG9jayk7Cj4gCj4gc28geW91IG1heSBhcyB3ZWxsIGRvIGl0IHRoYXQgd2F5
-LgoKPz8KMTAwMDAwMDAwMDAwMCBpcyBfbm90XyBVTCwgYnV0IFVVTC4KCj4gCj4gPiArIMKgIMKg
-IMKgIHBpeGNsb2NrID0gdGVtcDsKPiA+ICsgwqAgwqAgwqAgcHJfZGVidWcoIkRJVSBwaXhjbG9j
-ayBmcmVxIC0gJXVcbiIsIHBpeGNsb2NrKTsKPiA+ICsKPiA+ICsgwqAgwqAgwqAgdGVtcCA9ICh0
-ZW1wICogNSkgLyAxMDA7IC8qIHBpeGNsb2NrICogMC4wNSAqLwo+IAo+IFRoZSBjb21waWxlciB3
-aWxsIG9wdGltaXplIHRoaXMgdG86Cj4gCj4gICAgIHRlbXAgLz0gMjA7CgpDYW4gZG8gaXQsIHRv
-by4gVGhhbmtzLgoKPiA+ICsgwqAgwqAgwqAgcHJfZGVidWcoImRldmlhdGlvbiA9ICVkXG4iLCB0
-ZW1wKTsKPiA+ICsgwqAgwqAgwqAgbWlucGl4Y2xvY2sgPSBwaXhjbG9jayAtIHRlbXA7Cj4gPiAr
-IMKgIMKgIMKgIG1heHBpeGNsb2NrID0gcGl4Y2xvY2sgKyB0ZW1wOwo+ID4gKyDCoCDCoCDCoCBw
-cl9kZWJ1ZygiRElVIG1pbnBpeGNsb2NrIC0gJWx1XG4iLCBtaW5waXhjbG9jayk7Cj4gPiArIMKg
-IMKgIMKgIHByX2RlYnVnKCJESVUgbWF4cGl4Y2xvY2sgLSAlbHVcbiIsIG1heHBpeGNsb2NrKTsK
-PiA+ICsgwqAgwqAgwqAgcGl4dmFsID0gc3BlZWRfY2NiL3BpeGNsb2NrOwo+ID4gKyDCoCDCoCDC
-oCBwcl9kZWJ1ZygiRElVIHBpeHZhbCA9ICVsdVxuIiwgcGl4dmFsKTsKPiA+ICsKPiA+ICsgwqAg
-wqAgwqAgZXJyID0gMTAwMDAwMDAwOwo+IAo+IFdoeSBkbyB5b3UgYXNzaWduIGVyciB0byB0aGlz
-IGFyYml0cmFyeSB2YWx1ZT8KCkR1bm5vLiBJdCBpcyBGcmVlc2NhbGUncyBjb2RlIGFuZCBJIGRv
-IG5vdCBoYXZlIHRpbWUgdG8gY2hlY2sKYW5kIHVuZGVyc3RhbmQgZWFjaCBiaXQgb2YgaXQgYW5k
-IHRvIGV4cGxhaW4gaXQuCgo+ID4gKyDCoCDCoCDCoCBiZXN0dmFsID0gcGl4dmFsOwo+ID4gKyDC
-oCDCoCDCoCBwcl9kZWJ1ZygiRElVIGJlc3R2YWwgPSAlbHVcbiIsIGJlc3R2YWwpOwo+ID4gKwo+
-ID4gKyDCoCDCoCDCoCBiZXN0ZnJlcSA9IDA7Cj4gPiArIMKgIMKgIMKgIGZvciAoaSA9IC0xOyBp
-IDw9IDE7IGkrKykgewo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCB0ZW1wID0gc3BlZWRfY2Ni
-IC8gKHBpeHZhbCtpKTsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcHJfZGVidWcoIkRJVSB0
-ZXN0IHBpeHZhbCBpPSVkLCBwaXh2YWw9JWx1LCB0ZW1wIGZyZXEuID0gJXVcbiIsCj4gPiArIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGksIHBpeHZhbCwgdGVtcCk7Cj4gPiArIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIGlmICgodGVtcCA8IG1pbnBpeGNsb2NrKSB8fCAodGVtcCA+IG1h
-eHBpeGNsb2NrKSkKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcHJfZGVi
-dWcoIkRJVSBleGNlZWRzIG1vbml0b3IgcmFuZ2UgKCVsdSB0byAlbHUpXG4iLAo+ID4gKyDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBtaW5waXhjbG9jaywgbWF4
-cGl4Y2xvY2spOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBlbHNlIGlmIChhYnModGVtcCAt
-IHBpeGNsb2NrKSA8IGVycikgewo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCBwcl9kZWJ1ZygiRW50ZXJlZCB0aGUgZWxzZSBpZiBibG9jayAlZFxuIiwgaSk7Cj4gPiArIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGVyciA9IGFicyh0ZW1wIC0gcGl4Y2xvY2sp
-Owo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBiZXN0dmFsID0gcGl4dmFs
-ICsgaTsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgYmVzdGZyZXEgPSB0
-ZW1wOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCB9Cj4gPiArIMKgIMKgIMKgIH0KPiA+ICsK
-PiA+ICsgwqAgwqAgwqAgcHJfZGVidWcoIkRJVSBjaG9zZSA9ICVseFxuIiwgYmVzdHZhbCk7Cj4g
-PiArIMKgIMKgIMKgIHByX2RlYnVnKCJESVUgZXJyb3IgPSAlbGRcbiBOb21QaXhDbGsgIiwgZXJy
-KTsKPiA+ICsgwqAgwqAgwqAgcHJfZGVidWcoIkRJVTogQmVzdCBGcmVxID0gJWx4XG4iLCBiZXN0
-ZnJlcSk7Cj4gPiArIMKgIMKgIMKgIC8qIE1vZGlmeSBESVVfRElWIGluIENDTSBTQ0ZSMSAqLwo+
-ID4gKyDCoCDCoCDCoCB0ZW1wID0gaW5fYmUzMihjY20gKyBDQ01fU0NGUjEpOwo+IAo+IERvbid0
-IHVzZSBvZmZzZXRzIGxpa2UgKyBDQ01fU0NGUjEuICBDcmVhdGUgYSBzdHJ1Y3R1cmUgYW5kIHVz
-ZSB0aGF0IGluc3RlYWQuCgpEb25lIGluIG5leHQgcGF0Y2ggdmVyc2lvbi4KCj4gPiArIMKgIMKg
-IMKgIHByX2RlYnVnKCJESVU6IEN1cnJlbnQgdmFsdWUgb2YgU0NGUjE6IDB4JTA4eFxuIiwgdGVt
-cCk7Cj4gPiArIMKgIMKgIMKgIHRlbXAgJj0gfkRJVV9ESVZfTUFTSzsKPiA+ICsgwqAgwqAgwqAg
-dGVtcCB8PSAoYmVzdHZhbCAmIERJVV9ESVZfTUFTSyk7Cj4gPiArIMKgIMKgIMKgIG91dF9iZTMy
-KGNjbSArIENDTV9TQ0ZSMSwgdGVtcCk7Cj4gPiArIMKgIMKgIMKgIHByX2RlYnVnKCJESVU6IE1v
-ZGlmaWVkIHZhbHVlIG9mIFNDRlIxOiAweCUwOHhcbiIsIHRlbXApOwo+ID4gKyDCoCDCoCDCoCBp
-b3VubWFwKGNjbSk7Cj4gPiArfQo+ID4gKwo+ID4gK3NzaXplX3QgbXBjNTEyeF9zaG93X21vbml0
-b3JfcG9ydChpbnQgbW9uaXRvcl9wb3J0LCBjaGFyICpidWYpCj4gPiArewo+ID4gKyDCoCDCoCDC
-oCByZXR1cm4gc25wcmludGYoYnVmLCBQQUdFX1NJWkUsICIwIC0gNTEyMSBMQ0RcbiIpOwo+IAo+
-IFRoZXJlJ3Mgbm8gcG9pbnQgaW4gdXNpbmcgc25wcmludGYgc2luY2UgeW91J3JlIHByaW50aW5n
-IGEgc3RyaW5nCj4gbGl0ZXJhbC4gIFlvdSBjYW4gdXNlIHNwcmludGYuCgpXaWxsIGRvLCB0aGFu
-a3MuCgo+ID4gK30KPiA+ICsKPiA+ICtpbnQgbXBjNTEyeF9zZXRfc3lzZnNfbW9uaXRvcl9wb3J0
-KGludCB2YWwpCj4gPiArewo+ID4gKyDCoCDCoCDCoCByZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4g
-PiArc3RhdGljIHN0cnVjdCBmc2xfZGl1X3NoYXJlZF9mYiBfX2F0dHJpYnV0ZV9fICgoX19hbGln
-bmVkX18oOCkpKSBkaXVfc2hhcmVkX2ZiOwo+ID4gKwo+ID4gKyNpZiBkZWZpbmVkKENPTkZJR19G
-Ql9GU0xfRElVKSB8fCBcCj4gPiArIMKgIMKgZGVmaW5lZChDT05GSUdfRkJfRlNMX0RJVV9NT0RV
-TEUpCj4gPiArc3RhdGljIGlubGluZSB2b2lkIG1wYzUxMnhfZnJlZV9ib290bWVtKHN0cnVjdCBw
-YWdlICpwYWdlKQo+ID4gK3sKPiA+ICsgwqAgwqAgwqAgX19DbGVhclBhZ2VSZXNlcnZlZChwYWdl
-KTsKPiA+ICsgwqAgwqAgwqAgQlVHX09OKFBhZ2VUYWlsKHBhZ2UpKTsKPiA+ICsgwqAgwqAgwqAg
-QlVHX09OKGF0b21pY19yZWFkKCZwYWdlLT5fY291bnQpID4gMSk7Cj4gPiArIMKgIMKgIMKgIGF0
-b21pY19zZXQoJnBhZ2UtPl9jb3VudCwgMSk7Cj4gPiArIMKgIMKgIMKgIF9fZnJlZV9wYWdlKHBh
-Z2UpOwo+ID4gKyDCoCDCoCDCoCB0b3RhbHJhbV9wYWdlcysrOwo+ID4gK30KPiA+ICsKPiA+ICt2
-b2lkIG1wYzUxMnhfcmVsZWFzZV9ib290bWVtKHZvaWQpCj4gPiArewo+ID4gKyDCoCDCoCDCoCB1
-bnNpZ25lZCBsb25nIGFkZHIgPSBkaXVfc2hhcmVkX2ZiLmZiX3BoeXMgJiBQQUdFX01BU0s7Cj4g
-PiArIMKgIMKgIMKgIHVuc2lnbmVkIGxvbmcgc2l6ZSA9IGRpdV9zaGFyZWRfZmIuZmJfbGVuOwo+
-ID4gKyDCoCDCoCDCoCB1bnNpZ25lZCBsb25nIHN0YXJ0LCBlbmQ7Cj4gPiArCj4gPiArIMKgIMKg
-IMKgIGlmIChkaXVfc2hhcmVkX2ZiLmluX3VzZSkgewo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCBzdGFydCA9IFBGTl9VUChhZGRyKTsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZW5kID0g
-UEZOX0RPV04oYWRkciArIHNpemUpOwo+ID4gKwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBm
-b3IgKDsgc3RhcnQgPCBlbmQ7IHN0YXJ0KyspCj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIG1wYzUxMnhfZnJlZV9ib290bWVtKHBmbl90b19wYWdlKHN0YXJ0KSk7Cj4gPiAr
-Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGRpdV9zaGFyZWRfZmIuaW5fdXNlID0gZmFsc2U7
-Cj4gPiArIMKgIMKgIMKgIH0KPiA+ICsgwqAgwqAgwqAgZGl1X29wcy5yZWxlYXNlX2Jvb3RtZW0g
-PSBOVUxMOwo+ID4gK30KPiA+ICsjZW5kaWYKPiAKPiBEbyB5b3UgcmVhbGx5IG5lZWQgdG8gdXNl
-IHJlc2VydmVfYm9vdG1lbT8gIEhhdmUgeW91IHRyaWVkIGttYWxsb2Mgb3IKPiBhbGxvY19wYWdl
-c19leGFjdCgpPwoKWWVzLiBObywgaXQgaXMgdG9vIGVhcmx5IHRvIHVzZSB0aGVtIGhlcmUuCgo+
-ID4gKwo+ID4gKy8qCj4gPiArICogQ2hlY2sgaWYgRElVIHdhcyBwcmUtaW5pdGlhbGl6ZWQuIElm
-IHNvLCBwZXJmb3JtIHN0ZXBzCj4gPiArICogbmVlZGVkIHRvIGNvbnRpbnVlIGRpc3BsYXlpbmcg
-dGhyb3VnaCB0aGUgd2hvbGUgYm9vdCBwcm9jZXNzLgo+ID4gKyAqIE1vdmUgYXJlYSBkZXNjcmlw
-dG9yIGFuZCBnYW1tYSB0YWJsZSBlbHNld2hlcmUsIHRoZXkgYXJlCj4gPiArICogZGVzdHJveWVk
-IGJ5IGJvb3RtZW0gYWxsb2NhdG9yIG90aGVyd2lzZS4gVGhlIGZyYW1lIGJ1ZmZlcgo+ID4gKyAq
-IGFkZHJlc3MgcmFuZ2Ugd2lsbCBiZSByZXNlcnZlZCBpbiBzZXR1cF9hcmNoKCkgYWZ0ZXIgYm9v
-dG1lbQo+ID4gKyAqIGFsbG9jYXRvciBpcyB1cC4KPiA+ICsgKi8KPiA+ICt2b2lkIF9faW5pdCBt
-cGM1MTJ4X2luaXRfZGl1KHZvaWQpCj4gPiArewo+ID4gKyDCoCDCoCDCoCBzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5wOwo+ID4gKyDCoCDCoCDCoCB2b2lkIF9faW9tZW0gKmRpdV9yZWc7Cj4gPiArIMKg
-IMKgIMKgIHBoeXNfYWRkcl90IGRlc2M7Cj4gPiArIMKgIMKgIMKgIHZvaWQgX19pb21lbSAqdmFk
-ZHI7Cj4gPiArIMKgIMKgIMKgIHVuc2lnbmVkIGxvbmcgbW9kZSwgcGl4X2ZtdCwgcmVzLCBicHA7
-Cj4gPiArIMKgIMKgIMKgIHVuc2lnbmVkIGxvbmcgZHN0Owo+ID4gKwo+ID4gKyDCoCDCoCDCoCBu
-cCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJmc2wsbXBjNTEyMS1kaXUi
-KTsKPiA+ICsgwqAgwqAgwqAgaWYgKCFucCkgewo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBw
-cl9lcnIoIk5vIERJVSBub2RlXG4iKTsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcmV0dXJu
-Owo+ID4gKyDCoCDCoCDCoCB9Cj4gCj4gU2hvdWxkbid0IHlvdSBiZSBwcm9iaW5nIGFzIGFuIE9G
-IGRyaXZlciBpbnN0ZWFkIG9mIG1hbnVhbGx5IHNlYXJjaGluZwo+IGZvciB0aGUgRElVIG5vZGU/
-CgpObywgbm90IGhlcmUuCgo+ID4gKwo+ID4gKyDCoCDCoCDCoCBkaXVfcmVnID0gb2ZfaW9tYXAo
-bnAsIDApOwo+ID4gKyDCoCDCoCDCoCBvZl9ub2RlX3B1dChucCk7Cj4gPiArIMKgIMKgIMKgIGlm
-ICghZGl1X3JlZykgewo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBwcl9lcnIoIkNhbid0IG1h
-cCBESVVcbiIpOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZXR1cm47Cj4gPiArIMKgIMKg
-IMKgIH0KPiA+ICsKPiA+ICsgwqAgwqAgwqAgbW9kZSA9IGluX2JlMzIoZGl1X3JlZyArIDB4MWMp
-Owo+ID4gKyDCoCDCoCDCoCBpZiAobW9kZSAhPSAxKSB7Cj4gCj4gSG93IGNhbiBpbl9iZTMyKCkg
-cmV0dXJuIGEgLTE/CgpJdCBpcyBhIDEsIG5vdCAtMS4gSSB3aWxsIHVzZSBhcHByb3ByaWF0ZSBt
-YWNybyBoZXJlIGFuZCBhbHNvCmNoYW5nZSB0byB1c2UgYSBzdHJ1Y3QgaW5zdGVhZCBvZiBhZGRp
-bmcgb2Zmc2V0IHRvIHJlZ2lzdGVyIGJhc2UuCgpUaGFua3MgZm9yIHlvdXIgcmV2aWV3IGFuZCBj
-b21tZW50cyEKQW5hdG9saWoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+MPC5121 DIU configuration/setup as initialized by the boot
+loader currently will get lost while booting Linux. As a
+result displaying the boot splash is not possible through
+the boot process.
+
+To prevent this we reserve configured DIU frame buffer
+address range while booting and preserve AOI descriptor
+and gamma table so that DIU continues displaying through
+the whole boot process. On first open from user space
+DIU frame buffer driver releases the reserved frame
+buffer area and continues to operate as usual.
+
+Signed-off-by: John Rigby <jrigby@gmail.com>
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+---
+v1 -> v2:
+ - use struct for CCM register access, don't use offset macros,
+   so CCM struct definition is added now
+ - use struct for DIU descriptors access
+ - simplify code and correct variable types as suggested by Timur
+
+ arch/powerpc/include/asm/mpc5121.h            |   32 +++
+ arch/powerpc/platforms/512x/mpc5121_ads.c     |    7 +
+ arch/powerpc/platforms/512x/mpc5121_generic.c |   12 +
+ arch/powerpc/platforms/512x/mpc512x.h         |    2 +
+ arch/powerpc/platforms/512x/mpc512x_shared.c  |  274 +++++++++++++++++++++++++
+ arch/powerpc/sysdev/fsl_soc.h                 |    1 +
+ drivers/video/fsl-diu-fb.c                    |   17 ++-
+ 7 files changed, 343 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/mpc5121.h b/arch/powerpc/include/asm/mpc5121.h
+index e6a30bb..8c0ab2c 100644
+--- a/arch/powerpc/include/asm/mpc5121.h
++++ b/arch/powerpc/include/asm/mpc5121.h
+@@ -21,4 +21,36 @@ struct mpc512x_reset_module {
+ 	u32	rcer;	/* Reset Control Enable Register */
+ };
+ 
++/*
++ * Clock Control Module
++ */
++struct mpc512x_ccm {
++	u32	spmr;	/* System PLL Mode Register */
++	u32	sccr1;	/* System Clock Control Register 1 */
++	u32	sccr2;	/* System Clock Control Register 2 */
++	u32	scfr1;	/* System Clock Frequency Register 1 */
++	u32	scfr2;	/* System Clock Frequency Register 2 */
++	u32	scfr2s;	/* System Clock Frequency Shadow Register 2 */
++	u32	bcr;	/* Bread Crumb Register */
++	u32	p0ccr;	/* PSC0 Clock Control Register */
++	u32	p1ccr;	/* PSC1 CCR */
++	u32	p2ccr;	/* PSC2 CCR */
++	u32	p3ccr;	/* PSC3 CCR */
++	u32	p4ccr;	/* PSC4 CCR */
++	u32	p5ccr;	/* PSC5 CCR */
++	u32	p6ccr;	/* PSC6 CCR */
++	u32	p7ccr;	/* PSC7 CCR */
++	u32	p8ccr;	/* PSC8 CCR */
++	u32	p9ccr;	/* PSC9 CCR */
++	u32	p10ccr;	/* PSC10 CCR */
++	u32	p11ccr;	/* PSC11 CCR */
++	u32	spccr;	/* SPDIF Clock Control Register */
++	u32	cccr;	/* CFM Clock Control Register */
++	u32	dccr;	/* DIU Clock Control Register */
++	u32	m1ccr;	/* MSCAN1 CCR */
++	u32	m2ccr;	/* MSCAN2 CCR */
++	u32	m3ccr;	/* MSCAN3 CCR */
++	u32	m4ccr;	/* MSCAN4 CCR */
++	u8	res[0x98]; /* Reserved */
++};
+ #endif /* __ASM_POWERPC_MPC5121_H__ */
+diff --git a/arch/powerpc/platforms/512x/mpc5121_ads.c b/arch/powerpc/platforms/512x/mpc5121_ads.c
+index ee6ae12..082aa6f 100644
+--- a/arch/powerpc/platforms/512x/mpc5121_ads.c
++++ b/arch/powerpc/platforms/512x/mpc5121_ads.c
+@@ -42,6 +42,7 @@ static void __init mpc5121_ads_setup_arch(void)
+ 	for_each_compatible_node(np, "pci", "fsl,mpc5121-pci")
+ 		mpc83xx_add_bridge(np);
+ #endif
++	mpc512x_setup_diu();
+ }
+ 
+ static void __init mpc5121_ads_init_IRQ(void)
+@@ -60,11 +61,17 @@ static int __init mpc5121_ads_probe(void)
+ 	return of_flat_dt_is_compatible(root, "fsl,mpc5121ads");
+ }
+ 
++void __init mpc5121_ads_init_early(void)
++{
++	mpc512x_init_diu();
++}
++
+ define_machine(mpc5121_ads) {
+ 	.name			= "MPC5121 ADS",
+ 	.probe			= mpc5121_ads_probe,
+ 	.setup_arch		= mpc5121_ads_setup_arch,
+ 	.init			= mpc512x_init,
++	.init_early		= mpc512x_init_diu,
+ 	.init_IRQ		= mpc5121_ads_init_IRQ,
+ 	.get_irq		= ipic_get_irq,
+ 	.calibrate_decr		= generic_calibrate_decr,
+diff --git a/arch/powerpc/platforms/512x/mpc5121_generic.c b/arch/powerpc/platforms/512x/mpc5121_generic.c
+index a6c0e3a..c5ecb3d 100644
+--- a/arch/powerpc/platforms/512x/mpc5121_generic.c
++++ b/arch/powerpc/platforms/512x/mpc5121_generic.c
+@@ -48,10 +48,22 @@ static int __init mpc5121_generic_probe(void)
+ 	return board[i] != NULL;
+ }
+ 
++void __init mpc512x_generic_init_early(void)
++{
++	mpc512x_init_diu();
++}
++
++void __init mpc512x_generic_setup_arch(void)
++{
++	mpc512x_setup_diu();
++}
++
+ define_machine(mpc5121_generic) {
+ 	.name			= "MPC5121 generic",
+ 	.probe			= mpc5121_generic_probe,
+ 	.init			= mpc512x_init,
++	.init_early		= mpc512x_generic_init_early,
++	.setup_arch		= mpc512x_generic_setup_arch,
+ 	.init_IRQ		= mpc512x_init_IRQ,
+ 	.get_irq		= ipic_get_irq,
+ 	.calibrate_decr		= generic_calibrate_decr,
+diff --git a/arch/powerpc/platforms/512x/mpc512x.h b/arch/powerpc/platforms/512x/mpc512x.h
+index b2daca0..1ab6d11 100644
+--- a/arch/powerpc/platforms/512x/mpc512x.h
++++ b/arch/powerpc/platforms/512x/mpc512x.h
+@@ -16,4 +16,6 @@ extern void __init mpc512x_init(void);
+ extern int __init mpc5121_clk_init(void);
+ void __init mpc512x_declare_of_platform_devices(void);
+ extern void mpc512x_restart(char *cmd);
++extern void mpc512x_init_diu(void);
++extern void mpc512x_setup_diu(void);
+ #endif				/* __MPC512X_H__ */
+diff --git a/arch/powerpc/platforms/512x/mpc512x_shared.c b/arch/powerpc/platforms/512x/mpc512x_shared.c
+index b7f518a..e5a8e8a 100644
+--- a/arch/powerpc/platforms/512x/mpc512x_shared.c
++++ b/arch/powerpc/platforms/512x/mpc512x_shared.c
+@@ -16,7 +16,11 @@
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/of_platform.h>
++#include <linux/fsl-diu-fb.h>
++#include <linux/bootmem.h>
++#include <sysdev/fsl_soc.h>
+ 
++#include <asm/cacheflush.h>
+ #include <asm/machdep.h>
+ #include <asm/ipic.h>
+ #include <asm/prom.h>
+@@ -53,6 +57,276 @@ void mpc512x_restart(char *cmd)
+ 		;
+ }
+ 
++struct fsl_diu_shared_fb {
++	u8		gamma[0x300];	/* 32-bit aligned! */
++	struct diu_ad	ad0;		/* 32-bit aligned! */
++	phys_addr_t	fb_phys;
++	size_t		fb_len;
++	bool		in_use;
++};
++
++unsigned int mpc512x_get_pixel_format(unsigned int bits_per_pixel,
++				      int monitor_port)
++{
++	switch (bits_per_pixel) {
++	case 32:
++		return 0x88883316;
++	case 24:
++		return 0x88082219;
++	case 16:
++		return 0x65053118;
++	}
++	return 0x00000400;
++}
++
++void mpc512x_set_gamma_table(int monitor_port, char *gamma_table_base)
++{
++}
++
++void mpc512x_set_monitor_port(int monitor_port)
++{
++}
++
++#define DIU_DIV_MASK	0x000000ff
++void mpc512x_set_pixel_clock(unsigned int pixclock)
++{
++	unsigned long bestval, bestfreq, speed_ccb, busfreq;
++	unsigned long minpixclock, maxpixclock, pixval;
++	struct mpc512x_ccm __iomem *ccm;
++	struct device_node *np;
++	u32 temp;
++	long err;
++	int i;
++
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5121-clock");
++	if (!np) {
++		pr_err("Can't find clock control module.\n");
++		return;
++	}
++
++	ccm = of_iomap(np, 0);
++	of_node_put(np);
++	if (!ccm) {
++		pr_err("Can't map clock control module reg.\n");
++		return;
++	}
++
++	np = of_find_node_by_type(NULL, "cpu");
++	if (np) {
++		const unsigned int *prop =
++			of_get_property(np, "bus-frequency", NULL);
++
++		of_node_put(np);
++		if (prop) {
++			busfreq = *prop;
++		} else {
++			pr_err("Can't get bus-frequency property\n");
++			return;
++		}
++	} else {
++		pr_err("Can't find 'cpu' node.\n");
++		return;
++	}
++
++	/* Pixel Clock configuration */
++	pr_debug("DIU: Bus Frequency = %lu\n", busfreq);
++	speed_ccb = busfreq * 4;
++
++	/* Calculate the pixel clock with the smallest error */
++	/* calculate the following in steps to avoid overflow */
++	pr_debug("DIU pixclock in ps - %d\n", pixclock);
++	temp = (1000000000 / pixclock) * 1000;
++	pixclock = temp;
++	pr_debug("DIU pixclock freq - %u\n", pixclock);
++
++	temp = temp / 20; /* pixclock * 0.05 */
++	pr_debug("deviation = %d\n", temp);
++	minpixclock = pixclock - temp;
++	maxpixclock = pixclock + temp;
++	pr_debug("DIU minpixclock - %lu\n", minpixclock);
++	pr_debug("DIU maxpixclock - %lu\n", maxpixclock);
++	pixval = speed_ccb/pixclock;
++	pr_debug("DIU pixval = %lu\n", pixval);
++
++	err = 100000000;
++	bestval = pixval;
++	pr_debug("DIU bestval = %lu\n", bestval);
++
++	bestfreq = 0;
++	for (i = -1; i <= 1; i++) {
++		temp = speed_ccb / (pixval+i);
++		pr_debug("DIU test pixval i=%d, pixval=%lu, temp freq. = %u\n",
++			i, pixval, temp);
++		if ((temp < minpixclock) || (temp > maxpixclock))
++			pr_debug("DIU exceeds monitor range (%lu to %lu)\n",
++				minpixclock, maxpixclock);
++		else if (abs(temp - pixclock) < err) {
++			pr_debug("Entered the else if block %d\n", i);
++			err = abs(temp - pixclock);
++			bestval = pixval + i;
++			bestfreq = temp;
++		}
++	}
++
++	pr_debug("DIU chose = %lx\n", bestval);
++	pr_debug("DIU error = %ld\n NomPixClk ", err);
++	pr_debug("DIU: Best Freq = %lx\n", bestfreq);
++	/* Modify DIU_DIV in CCM SCFR1 */
++	temp = in_be32(&ccm->scfr1);
++	pr_debug("DIU: Current value of SCFR1: 0x%08x\n", temp);
++	temp &= ~DIU_DIV_MASK;
++	temp |= (bestval & DIU_DIV_MASK);
++	out_be32(&ccm->scfr1, temp);
++	pr_debug("DIU: Modified value of SCFR1: 0x%08x\n", temp);
++	iounmap(ccm);
++}
++
++ssize_t mpc512x_show_monitor_port(int monitor_port, char *buf)
++{
++	return sprintf(buf, "0 - 5121 LCD\n");
++}
++
++int mpc512x_set_sysfs_monitor_port(int val)
++{
++	return 0;
++}
++
++static struct fsl_diu_shared_fb __attribute__ ((__aligned__(8))) diu_shared_fb;
++
++#if defined(CONFIG_FB_FSL_DIU) || \
++    defined(CONFIG_FB_FSL_DIU_MODULE)
++static inline void mpc512x_free_bootmem(struct page *page)
++{
++	__ClearPageReserved(page);
++	BUG_ON(PageTail(page));
++	BUG_ON(atomic_read(&page->_count) > 1);
++	atomic_set(&page->_count, 1);
++	__free_page(page);
++	totalram_pages++;
++}
++
++void mpc512x_release_bootmem(void)
++{
++	unsigned long addr = diu_shared_fb.fb_phys & PAGE_MASK;
++	unsigned long size = diu_shared_fb.fb_len;
++	unsigned long start, end;
++
++	if (diu_shared_fb.in_use) {
++		start = PFN_UP(addr);
++		end = PFN_DOWN(addr + size);
++
++		for (; start < end; start++)
++			mpc512x_free_bootmem(pfn_to_page(start));
++
++		diu_shared_fb.in_use = false;
++	}
++	diu_ops.release_bootmem	= NULL;
++}
++#endif
++
++/*
++ * Check if DIU was pre-initialized. If so, perform steps
++ * needed to continue displaying through the whole boot process.
++ * Move area descriptor and gamma table elsewhere, they are
++ * destroyed by bootmem allocator otherwise. The frame buffer
++ * address range will be reserved in setup_arch() after bootmem
++ * allocator is up.
++ */
++void __init mpc512x_init_diu(void)
++{
++	struct device_node *np;
++	struct diu __iomem *diu_reg;
++	phys_addr_t desc;
++	void __iomem *vaddr;
++	unsigned long mode, pix_fmt, res, bpp;
++	unsigned long dst;
++
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5121-diu");
++	if (!np) {
++		pr_err("No DIU node\n");
++		return;
++	}
++
++	diu_reg = of_iomap(np, 0);
++	of_node_put(np);
++	if (!diu_reg) {
++		pr_err("Can't map DIU\n");
++		return;
++	}
++
++	mode = in_be32(&diu_reg->diu_mode);
++	if (mode != MFB_MODE1) {
++		pr_info("%s: DIU OFF\n", __func__);
++		goto out;
++	}
++
++	desc = in_be32(&diu_reg->desc[0]);
++	vaddr = ioremap(desc, sizeof(struct diu_ad));
++	if (!vaddr) {
++		pr_err("Can't map DIU area desc.\n");
++		goto out;
++	}
++	memcpy(&diu_shared_fb.ad0, vaddr, sizeof(struct diu_ad));
++	/* flush fb area descriptor */
++	dst = (unsigned long)&diu_shared_fb.ad0;
++	flush_dcache_range(dst, dst + sizeof(struct diu_ad) - 1);
++
++	res = in_be32(&diu_reg->disp_size);
++	pix_fmt = in_le32(vaddr);
++	bpp = ((pix_fmt >> 16) & 0x3) + 1;
++	diu_shared_fb.fb_phys = in_le32(vaddr + 4);
++	diu_shared_fb.fb_len = ((res & 0xfff0000) >> 16) * (res & 0xfff) * bpp;
++	diu_shared_fb.in_use = true;
++	iounmap(vaddr);
++
++	desc = in_be32(&diu_reg->gamma);
++	vaddr = ioremap(desc, sizeof(diu_shared_fb.gamma));
++	if (!vaddr) {
++		pr_err("Can't map DIU area desc.\n");
++		diu_shared_fb.in_use = false;
++		goto out;
++	}
++	memcpy(&diu_shared_fb.gamma, vaddr, sizeof(diu_shared_fb.gamma));
++	/* flush gamma table */
++	dst = (unsigned long)&diu_shared_fb.gamma;
++	flush_dcache_range(dst, dst + sizeof(diu_shared_fb.gamma) - 1);
++
++	iounmap(vaddr);
++	out_be32(&diu_reg->gamma, virt_to_phys(&diu_shared_fb.gamma));
++	out_be32(&diu_reg->desc[1], 0);
++	out_be32(&diu_reg->desc[2], 0);
++	out_be32(&diu_reg->desc[0], virt_to_phys(&diu_shared_fb.ad0));
++
++out:
++	iounmap(diu_reg);
++}
++
++void __init mpc512x_setup_diu(void)
++{
++	int ret;
++
++	if (diu_shared_fb.in_use) {
++		ret = reserve_bootmem(diu_shared_fb.fb_phys,
++				      diu_shared_fb.fb_len,
++				      BOOTMEM_EXCLUSIVE);
++		if (ret) {
++			pr_err("%s: reserve bootmem failed\n", __func__);
++			diu_shared_fb.in_use = false;
++		}
++	}
++
++#if defined(CONFIG_FB_FSL_DIU) || \
++    defined(CONFIG_FB_FSL_DIU_MODULE)
++	diu_ops.get_pixel_format	= mpc512x_get_pixel_format;
++	diu_ops.set_gamma_table		= mpc512x_set_gamma_table;
++	diu_ops.set_monitor_port	= mpc512x_set_monitor_port;
++	diu_ops.set_pixel_clock		= mpc512x_set_pixel_clock;
++	diu_ops.show_monitor_port	= mpc512x_show_monitor_port;
++	diu_ops.set_sysfs_monitor_port	= mpc512x_set_sysfs_monitor_port;
++	diu_ops.release_bootmem		= mpc512x_release_bootmem;
++#endif
++}
++
+ void __init mpc512x_init_IRQ(void)
+ {
+ 	struct device_node *np;
+diff --git a/arch/powerpc/sysdev/fsl_soc.h b/arch/powerpc/sysdev/fsl_soc.h
+index 42381bb..5360948 100644
+--- a/arch/powerpc/sysdev/fsl_soc.h
++++ b/arch/powerpc/sysdev/fsl_soc.h
+@@ -30,6 +30,7 @@ struct platform_diu_data_ops {
+ 	void (*set_pixel_clock) (unsigned int pixclock);
+ 	ssize_t (*show_monitor_port) (int monitor_port, char *buf);
+ 	int (*set_sysfs_monitor_port) (int val);
++	void (*release_bootmem) (void);
+ };
+ 
+ extern struct platform_diu_data_ops diu_ops;
+diff --git a/drivers/video/fsl-diu-fb.c b/drivers/video/fsl-diu-fb.c
+index 7acdc09..81dec09 100644
+--- a/drivers/video/fsl-diu-fb.c
++++ b/drivers/video/fsl-diu-fb.c
+@@ -1103,6 +1103,10 @@ static int fsl_diu_open(struct fb_info *info, int user)
+ 	struct mfb_info *mfbi = info->par;
+ 	int res = 0;
+ 
++	/* free boot splash memory on first /dev/fb0 open */
++	if (!mfbi->index && diu_ops.release_bootmem)
++		diu_ops.release_bootmem();
++
+ 	spin_lock(&diu_lock);
+ 	mfbi->count++;
+ 	if (mfbi->count == 1) {
+@@ -1430,6 +1434,7 @@ static int __devinit fsl_diu_probe(struct of_device *ofdev,
+ 	int ret, i, error = 0;
+ 	struct resource res;
+ 	struct fsl_diu_data *machine_data;
++	int diu_mode;
+ 
+ 	machine_data = kzalloc(sizeof(struct fsl_diu_data), GFP_KERNEL);
+ 	if (!machine_data)
+@@ -1466,7 +1471,9 @@ static int __devinit fsl_diu_probe(struct of_device *ofdev,
+ 		goto error2;
+ 	}
+ 
+-	out_be32(&dr.diu_reg->diu_mode, 0);		/* disable DIU anyway*/
++	diu_mode = in_be32(&dr.diu_reg->diu_mode);
++	if (diu_mode != MFB_MODE1)
++		out_be32(&dr.diu_reg->diu_mode, 0);	/* disable DIU */
+ 
+ 	/* Get the IRQ of the DIU */
+ 	machine_data->irq = irq_of_parse_and_map(np, 0);
+@@ -1514,7 +1521,13 @@ static int __devinit fsl_diu_probe(struct of_device *ofdev,
+ 	machine_data->dummy_ad->offset_xyd = 0;
+ 	machine_data->dummy_ad->next_ad = 0;
+ 
+-	out_be32(&dr.diu_reg->desc[0], machine_data->dummy_ad->paddr);
++	/*
++	 * Let DIU display splash screen if it was pre-initialized
++	 * by the bootloader, set dummy area descriptor otherwise.
++	 */
++	if (diu_mode != MFB_MODE1)
++		out_be32(&dr.diu_reg->desc[0], machine_data->dummy_ad->paddr);
++
+ 	out_be32(&dr.diu_reg->desc[1], machine_data->dummy_ad->paddr);
+ 	out_be32(&dr.diu_reg->desc[2], machine_data->dummy_ad->paddr);
+ 
+-- 
+1.6.3.3
