@@ -1,63 +1,63 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 3/5] powerpc/mpc5121: shared DIU framebuffer support
-Date: Sat, 1 May 2010 17:15:31 +0200
-Message-ID: <20100501171531.75d2c520@wker>
-References: <1272584978-19063-1-git-send-email-agust@denx.de>
-	<1272584978-19063-4-git-send-email-agust@denx.de>
-	<s2ted82fe3e1004291905mf562f0cbi24054bb973aa2dbb@mail.gmail.com>
-	<20100430121947.1d265ca6@wker>
-	<x2ned82fe3e1004300808q757826cs864ac1c7c082f81@mail.gmail.com>
-	<20100430162254.GA24285@schlenkerla.am.freescale.net>
-	<r2sed82fe3e1004301118xc52b46cfi879de534283fd51@mail.gmail.com>
-	<4BDB402C.9080301@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4BDB402C.9080301-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, John Rigby <jrigby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+From: Kumar Gala <galak@kernel.crashing.org>
+Subject: Re: [PATCH 3/3] ptp: Added a clock that uses the eTSEC found on the MPC85xx.
+Date: Sat, 1 May 2010 11:36:12 -0500
+Message-ID: <FFD6BE31-AF2B-4D44-9751-61DB06327DBD@kernel.crashing.org>
+References: <20100429092005.GA6727@riccoc20.at.omicron.at>
+Mime-Version: 1.0 (Apple Message framework v1078)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20100429092005.GA6727@riccoc20.at.omicron.at>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Netdev <netdev@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Apr 2010 15:40:12 -0500
-Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-> Timur Tabi wrote:
-> > On Fri, Apr 30, 2010 at 11:22 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > 
-> >>> That's what I meant.  Actually, I think it's ULL.  Regardless, I think
-> >>> the compiler will see the  "1000000000 ... * 1000" and just combine
-> >>> them together.  You're not actually outsmarting the compiler.
-> >> The compiler will do no such thing.  That's a valid transformation when
-> >> doing pure math, but not when working with integers.
-> > 
-> > I ran some tests, and it appears you're right.  I doesn't make a lot
-> > of sense to me, but whatever.
-> > 
-> > However, "(1000000000 / pixclock) * 1000" produces a result that's
-> > less accurate than "1000000000000ULL / pixclock".
+On Apr 29, 2010, at 4:20 AM, Richard Cochran wrote:
+
+> The eTSEC includes a PTP clock with quite a few features. This patch adds
+> support for the basic clock adjustment functions.
 > 
-> Precisely, that's what makes it a distinct computation -- as far as the 
-> compiler knows, it could be intentional.  Plus, turning it into 64-bit 
-> math would invoke a library call for 64-bit division, which wouldn't be 
-> much of an optimization anyway.
+> Signed-off-by: Richard Cochran <richard.cochran@omicron.at>
+> ---
+> arch/powerpc/boot/dts/mpc8313erdb.dts |   14 ++
+> arch/powerpc/boot/dts/p2020ds.dts     |   13 ++
+> arch/powerpc/boot/dts/p2020rdb.dts    |   14 ++
+> drivers/net/Makefile                  |    1 +
+> drivers/net/gianfar_ptp.c             |  308 +++++++++++++++++++++++++++++++++
+> drivers/net/gianfar_ptp_reg.h         |  107 ++++++++++++
+> drivers/ptp/Kconfig                   |   13 ++
+> 7 files changed, 470 insertions(+), 0 deletions(-)
+> create mode 100644 drivers/net/gianfar_ptp.c
+> create mode 100644 drivers/net/gianfar_ptp_reg.h
 > 
-> The question is whether the loss of accuracy matters in this case.
+> diff --git a/arch/powerpc/boot/dts/mpc8313erdb.dts b/arch/powerpc/boot/dts/mpc8313erdb.dts
+> index 183f2aa..b760aee 100644
+> --- a/arch/powerpc/boot/dts/mpc8313erdb.dts
+> +++ b/arch/powerpc/boot/dts/mpc8313erdb.dts
+> @@ -208,6 +208,20 @@
+> 			sleep = <&pmc 0x00300000>;
+> 		};
+> 
+> +		ptp_clock@24E00 {
+> +			device_type = "ptp_clock";
+> +			model = "eTSEC";
+> +			reg = <0x24E00 0xB0>;
+> +			interrupts = <0x0C 2 0x0D 2>;
+> +			interrupt-parent = < &ipic >;
+> +			tclk_period = <10>;
+> +			tmr_prsc    = <100>;
+> +			tmr_add     = <0x999999A4>;
+> +			cksel       = <0x1>;
+> +			tmr_fiper1  = <0x3B9AC9F6>;
+> +			tmr_fiper2  = <0x00018696>;
+> +		};
+> +
+> 		enet0: ethernet@24000 {
+> 			#address-cells = <1>;
+> 			#size-cells = <1>;
 
-Here, this loss of accuracy doesn't matter at all. Max. possible
-loss by this current conversion is 999 HZ compared to conversion
-using 64-bit division. Further computation tolerates 5% deviation
-for pixclock and selects best possible value. This deviation is
-by far greater than 999 HZ. It is 156862 HZ for lowest configurable
-pixel clock.
+Is there a binding document that describes this node you are adding?
 
-Anatolij
+- k
