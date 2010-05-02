@@ -1,7 +1,8 @@
 From: Anton Vorontsov <avorontsov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/3] powerpc/83xx/mcu: Add OF match table
-Date: Sun, 2 May 2010 21:00:39 +0400
-Message-ID: <20100502170039.GA14036@oksana.dev.rtsoft.ru>
+Subject: [PATCH 2/3] serial/ucc_uart: Use .dev.of_node instead of .node in
+	struct of_device
+Date: Sun, 2 May 2010 21:00:42 +0400
+Message-ID: <20100502170042.GB14036@oksana.dev.rtsoft.ru>
 References: <20100502165912.GA11300@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,45 +23,28 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-of_modalias_node() matches on the first (most specific) entries,
-which isn't quite practical but it was discussed that this won't
-change.
+Fixes following build failure:
 
-The bindings specifies verbose information for the devices, but
-it doesn't fit in the I2C ID's 20 characters limit. The limit won't
-change, and the bindings won't change either as they're correct.
-
-So we have to put an explicit OF matching table for the
-MPC8349E-mITX-compatible MCUs.
-
-(Previously this was in the OF exception table, see commit
-4c3ed7d61bd474380e0d3e1eb0da164942f7c84e.)
+drivers/serial/ucc_uart.c: In function 'ucc_uart_probe':
+drivers/serial/ucc_uart.c:1200: error: 'struct platform_device' has no member named 'node'
 
 Signed-off-by: Anton Vorontsov <avorontsov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 ---
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+ drivers/serial/ucc_uart.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-index 59b0ed1..70798ac 100644
---- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-+++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-@@ -160,10 +160,16 @@ static const struct i2c_device_id mcu_ids[] = {
- };
- MODULE_DEVICE_TABLE(i2c, mcu_ids);
- 
-+static struct of_device_id mcu_of_match_table[] __devinitdata = {
-+	{ .compatible = "fsl,mcu-mpc8349emitx", },
-+	{ },
-+};
-+
- static struct i2c_driver mcu_driver = {
- 	.driver = {
- 		.name = "mcu-mpc8349emitx",
- 		.owner = THIS_MODULE,
-+		.of_match_table = mcu_of_match_table,
- 	},
- 	.probe = mcu_probe,
- 	.remove	= __devexit_p(mcu_remove),
+diff --git a/drivers/serial/ucc_uart.c b/drivers/serial/ucc_uart.c
+index fce07be..907b06f 100644
+--- a/drivers/serial/ucc_uart.c
++++ b/drivers/serial/ucc_uart.c
+@@ -1197,7 +1197,7 @@ static void uart_firmware_cont(const struct firmware *fw, void *context)
+ static int ucc_uart_probe(struct of_device *ofdev,
+ 	const struct of_device_id *match)
+ {
+-	struct device_node *np = ofdev->node;
++	struct device_node *np = ofdev->dev.of_node;
+ 	const unsigned int *iprop;      /* Integer OF properties */
+ 	const char *sprop;      /* String OF properties */
+ 	struct uart_qe_port *qe_port = NULL;
 -- 
 1.7.0.5
