@@ -1,279 +1,75 @@
-From: "Ira W. Snyder" <iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org>
+From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress@arcor.de>
 Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
-Date: Wed, 5 May 2010 15:09:16 -0700
-Message-ID: <20100505220916.GD3529@ovro.caltech.edu>
-References: <1266433154.2322.0@antares>
+Date: Thu, 06 May 2010 19:54:31 +0200
+Message-ID: <1273168472.1767.1@antares>
+References: <20100505220916.GD3529@ovro.caltech.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1266433154.2322.0@antares>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Albrecht =?iso-8859-1?Q?Dre=DF?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-Cc: Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5480857228557753608=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100505220916.GD3529@ovro.caltech.edu> (from
+	iws@ovro.caltech.edu on Thu May  6 00:09:16 2010)
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: "Ira W. Snyder" <iws@ovro.caltech.edu>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2010 at 07:59:14PM +0100, Albrecht Dre=DF wrote:
-> This patch improves the recovery of the MPC's I2C bus from errors like bus
-> hangs resulting in timeouts:
-> 1. make the bus timeout configurable, as it depends on the bus clock and
->     the attached slave chip(s); default is still 1 second;
-> 2. detect any of the cases indicated by the CF, BB and RXAK MSR flags if a
->     timeout occurs, and add a missing (required) MAL reset;
-> 3. use a more reliable method to fixup the bus if a hang has been detecte=
-d.
->     The sequence is sent 9 times which seems to be necessary if a slave
->     "misses" more than one clock cycle.  For 400 kHz bus speed, the fixup=
- is
->     also ~70us (81us vs. 150us) faster.
-> =
+--===============5480857228557753608==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=PGP-SHA1; boundary="=-GESm4MLGNwyJwiypmWfs"
 
-> Tested on a custom Lite5200b derived board, with a Dallas RTC, AD sensors
-> and NXP IO expander chips attached to the i2c.
-> =
+--=-GESm4MLGNwyJwiypmWfs
+Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Changes vs. v1:
-> - use improved bus fixup sequence for all chips (not only the 5200)
-> - calculate real clock from defaults if no clock is given in the device t=
-ree
-> - better description (I hope) of the changes.
-> =
-
-> I didn't split the changes in this file into three parts as recommended by
-> Grant, as they actually belong together (i.e. they address one single
-> problem, just in three places of one single source file).
-> =
-
-> Signed-off-by: Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-> =
-
-> ---
-> =
-
-> Note about the reset sequence: I verified the waveforms for 18.4kHz, 85.9=
-kHz
-> and 375kHz (drop me a note if you want to see scope screen shots).  Not
-> verified on other mpc chips yet.
-> @Ira: thanks in advance for giving it a try on your box!
-> =
-
-
-Did this series get forgotten about? I don't see it in bjdook's next-i2c
+Am 06.05.10 00:09 schrieb(en) Ira W. Snyder:
+> Did this series get forgotten about? I don't see it in bjdook's next-i2c =
 branch or in benh's next branch.
 
-I've pulled these into my 2.6.31.13 kernel, and they seem to work fine.
-You've got my Tested-by if you didn't get one from me already.
+It's not in Grant's 5xxx tree either - as it's specific for those processor=
+s, I think he might be the responsible person.  The patch is still in a "ne=
+w" state in patchwork, btw.
 
-Ira
+> I've pulled these into my 2.6.31.13 kernel, and they seem to work fine. Y=
+ou've got my Tested-by if you didn't get one from me already.
 
-> --- linux-2.6.32-orig/drivers/i2c/busses/i2c-mpc.c	2009-12-03 04:51:21.00=
-0000000 +0100
-> +++ linux-2.6.32/drivers/i2c/busses/i2c-mpc.c	2010-02-17 16:23:11.0000000=
-00 +0100
-> @@ -59,6 +59,7 @@ struct mpc_i2c {
->   	wait_queue_head_t queue;
->   	struct i2c_adapter adap;
->   	int irq;
-> +	u32 real_clk;
->   };
-> =
+Tanks a lot!
 
->   struct mpc_i2c_divider {
-> @@ -93,20 +94,23 @@ static irqreturn_t mpc_i2c_isr(int irq,
->   /* Sometimes 9th clock pulse isn't generated, and slave doesn't release
->    * the bus, because it wants to send ACK.
->    * Following sequence of enabling/disabling and sending start/stop gene=
-rates
-> - * the pulse, so it's all OK.
-> + * the 9 pulses, so it's all OK.
->    */
->   static void mpc_i2c_fixup(struct mpc_i2c *i2c)
->   {
-> -	writeccr(i2c, 0);
-> -	udelay(30);
-> -	writeccr(i2c, CCR_MEN);
-> -	udelay(30);
-> -	writeccr(i2c, CCR_MSTA | CCR_MTX);
-> -	udelay(30);
-> -	writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
-> -	udelay(30);
-> -	writeccr(i2c, CCR_MEN);
-> -	udelay(30);
-> +	int k;
-> +	u32 delay_val =3D 1000000 / i2c->real_clk + 1;
-> +
-> +	if (delay_val < 2)
-> +		delay_val =3D 2;
-> +
-> +	for (k =3D 9; k; k--) {
-> +		writeccr(i2c, 0);
-> +		writeccr(i2c, CCR_MSTA | CCR_MTX | CCR_MEN);
-> +		udelay(delay_val);
-> +		writeccr(i2c, CCR_MEN);
-> +		udelay(delay_val << 1);
-> +	}
->   }
-> =
+I think, though, the whole stuff has been discussed in depth in February, s=
+o I do not understand why it's still pending as "new".  Grant, did we miss =
+something here?
 
->   static int i2c_wait(struct mpc_i2c *i2c, unsigned timeout, int writing)
-> @@ -186,15 +190,19 @@ static const struct mpc_i2c_divider mpc_
->   	{10240, 0x9d}, {12288, 0x9e}, {15360, 0x9f}
->   };
-> =
+Thanks, Albrecht.
 
-> -int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int presca=
-ler)
-> +int mpc_i2c_get_fdr_52xx(struct device_node *node, u32 clock, int presca=
-ler,
-> +			 u32 *real_clk)
->   {
->   	const struct mpc_i2c_divider *div =3D NULL;
->   	unsigned int pvr =3D mfspr(SPRN_PVR);
->   	u32 divider;
->   	int i;
-> =
+--=-GESm4MLGNwyJwiypmWfs
+Content-Type: application/pgp-signature
 
-> -	if (!clock)
-> +	if (!clock) {
-> +		/* see below - default fdr =3D 0x3f -> div =3D 2048 */
-> +		*real_clk =3D mpc5xxx_get_bus_frequency(node) / 2048;
->   		return -EINVAL;
-> +	}
-> =
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
 
->   	/* Determine divider value */
->   	divider =3D mpc5xxx_get_bus_frequency(node) / clock;
-> @@ -212,7 +220,8 @@ int mpc_i2c_get_fdr_52xx(struct device_n
->   			break;
->   	}
-> =
+iD8DBQBL4wJXn/9unNAn/9ERAnIKAKCtGrks2uRqLy0dIrGrUdSvLi/MvQCgy3zK
+QTMSuK41i8DzgaFSXhZrZUY=
+=khvH
+-----END PGP SIGNATURE-----
 
-> -	return div ? (int)div->fdr : -EINVAL;
-> +	*real_clk =3D mpc5xxx_get_bus_frequency(node) / div->divider;
-> +	return (int)div->fdr;
->   }
-> =
+--=-GESm4MLGNwyJwiypmWfs--
 
->   static void mpc_i2c_setclock_52xx(struct device_node *node,
-> @@ -221,13 +230,14 @@ static void mpc_i2c_setclock_52xx(struct
->   {
->   	int ret, fdr;
-> =
+--===============5480857228557753608==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> -	ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler);
-> +	ret =3D mpc_i2c_get_fdr_52xx(node, clock, prescaler, &i2c->real_clk);
->   	fdr =3D (ret >=3D 0) ? ret : 0x3f; /* backward compatibility */
-> =
-
->   	writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
-> =
-
->   	if (ret >=3D 0)
-> -		dev_info(i2c->dev, "clock %d Hz (fdr=3D%d)\n", clock, fdr);
-> +		dev_info(i2c->dev, "clock %u Hz (fdr=3D%d)\n", i2c->real_clk,
-> +			 fdr);
->   }
->   #else /* !CONFIG_PPC_MPC52xx */
->   static void mpc_i2c_setclock_52xx(struct device_node *node,
-> @@ -287,14 +297,18 @@ u32 mpc_i2c_get_sec_cfg_8xxx(void)
->   	return val;
->   }
-> =
-
-> -int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 presca=
-ler)
-> +int mpc_i2c_get_fdr_8xxx(struct device_node *node, u32 clock, u32 presca=
-ler,
-> +			 u32 *real_clk)
->   {
->   	const struct mpc_i2c_divider *div =3D NULL;
->   	u32 divider;
->   	int i;
-> =
-
-> -	if (!clock)
-> +	if (!clock) {
-> +		/* see below - default fdr =3D 0x1031 -> div =3D 16 * 3072 */
-> +		*real_clk =3D fsl_get_sys_freq() / prescaler / (16 * 3072);
->   		return -EINVAL;
-> +	}
-> =
-
->   	/* Determine proper divider value */
->   	if (of_device_is_compatible(node, "fsl,mpc8544-i2c"))
-> @@ -317,6 +331,7 @@ int mpc_i2c_get_fdr_8xxx(struct device_n
->   			break;
->   	}
-> =
-
-> +	*real_clk =3D fsl_get_sys_freq() / prescaler / div->divider;
->   	return div ? (int)div->fdr : -EINVAL;
->   }
-> =
-
-> @@ -326,7 +341,7 @@ static void mpc_i2c_setclock_8xxx(struct
->   {
->   	int ret, fdr;
-> =
-
-> -	ret =3D mpc_i2c_get_fdr_8xxx(node, clock, prescaler);
-> +	ret =3D mpc_i2c_get_fdr_8xxx(node, clock, prescaler, &i2c->real_clk);
->   	fdr =3D (ret >=3D 0) ? ret : 0x1031; /* backward compatibility */
-> =
-
->   	writeb(fdr & 0xff, i2c->base + MPC_I2C_FDR);
-> @@ -334,7 +349,7 @@ static void mpc_i2c_setclock_8xxx(struct
-> =
-
->   	if (ret >=3D 0)
->   		dev_info(i2c->dev, "clock %d Hz (dfsrr=3D%d fdr=3D%d)\n",
-> -			 clock, fdr >> 8, fdr & 0xff);
-> +			 i2c->real_clk, fdr >> 8, fdr & 0xff);
->   }
-> =
-
->   #else /* !CONFIG_FSL_SOC */
-> @@ -446,10 +461,14 @@ static int mpc_xfer(struct i2c_adapter *
->   			return -EINTR;
->   		}
->   		if (time_after(jiffies, orig_jiffies + HZ)) {
-> +			u8 status =3D readb(i2c->base + MPC_I2C_SR);
-> +
->   			dev_dbg(i2c->dev, "timeout\n");
-> -			if (readb(i2c->base + MPC_I2C_SR) =3D=3D
-> -			    (CSR_MCF | CSR_MBB | CSR_RXAK))
-> +			if ((status & (CSR_MCF | CSR_MBB | CSR_RXAK)) !=3D 0) {
-> +				writeb(status & ~CSR_MAL,
-> +				       i2c->base + MPC_I2C_SR);
->   				mpc_i2c_fixup(i2c);
-> +			}
->   			return -EIO;
->   		}
->   		schedule();
-> @@ -540,6 +559,14 @@ static int __devinit fsl_i2c_probe(struc
->   		}
->   	}
-> =
-
-> +	prop =3D of_get_property(op->node, "fsl,timeout", &plen);
-> +	if (prop && plen =3D=3D sizeof(u32)) {
-> +		mpc_ops.timeout =3D *prop * HZ / 1000000;
-> +		if (mpc_ops.timeout < 5)
-> +			mpc_ops.timeout =3D 5;
-> +	}
-> +	dev_info(i2c->dev, "timeout %u us\n", mpc_ops.timeout * 1000000 / HZ);
-> +
->   	dev_set_drvdata(&op->dev, i2c);
-> =
-
->   	i2c->adap =3D mpc_ops;
-> =
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============5480857228557753608==--
