@@ -1,51 +1,74 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
-Date: Thu, 6 May 2010 20:06:14 +0200
-Message-ID: <h2mfa686aa41005061106ofda766f5z64c4f631eaded414@mail.gmail.com>
-References: <20100505220916.GD3529@ovro.caltech.edu>
-	<1273168472.1767.1@antares>
+From: "Dezhong Diao (dediao)" <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] The Device Tree Patch for MIPS Platform
+Date: Thu, 6 May 2010 19:12:57 -0500
+Message-ID: <7A9214B0DEB2074FBCA688B30B04400DBBAF83@XMB-RCD-208.cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1273168472.1767.1@antares>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress@arcor.de>
-Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, "Ira W. Snyder" <iws@ovro.caltech.edu>
+Content-Type: multipart/mixed; boundary="===============6890664815385724156=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-class: urn:content-classes:message
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 6, 2010 at 7:54 PM, Albrecht Dre=DF <albrecht.dress@arcor.de> w=
-rote:
-> Am 06.05.10 00:09 schrieb(en) Ira W. Snyder:
->>
->> Did this series get forgotten about? I don't see it in bjdook's next-i2c
->> branch or in benh's next branch.
->
-> It's not in Grant's 5xxx tree either - as it's specific for those
-> processors, I think he might be the responsible person. =A0The patch is s=
-till
-> in a "new" state in patchwork, btw.
->
->> I've pulled these into my 2.6.31.13 kernel, and they seem to work fine.
->> You've got my Tested-by if you didn't get one from me already.
->
-> Tanks a lot!
->
-> I think, though, the whole stuff has been discussed in depth in February,=
- so
-> I do not understand why it's still pending as "new". =A0Grant, did we miss
-> something here?
+This is a multi-part message in MIME format.
 
-I generally let subsystem maintainers pick up the device driver
-patches for embedded platforms I'm responsible for unless I'm asked to
-do otherwise.  I think ben has asked me to take these through my tree.
+--===============6890664815385724156==
+Content-class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01CAED7A.0C6D524C"
 
-g.
+This is a multi-part message in MIME format.
+
+------_=_NextPart_001_01CAED7A.0C6D524C
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+=20
+With the help from grant, we have done the preliminary version of device
+tree patch for MIPS platform.
+
+------_=_NextPart_001_01CAED7A.0C6D524C
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<META content=3D"MSHTML 6.00.2900.3660" name=3DGENERATOR></HEAD>
+<BODY>
+<DIV><FONT face=3DArial size=3D2><SPAN class=3D435220600-07052010>Hi=20
+all,</SPAN></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><SPAN=20
+class=3D435220600-07052010></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2><SPAN class=3D435220600-07052010>With =
+the help from=20
+grant, we have done the preliminary version of device tree patch for =
+MIPS=20
+platform.</SPAN></FONT></DIV></BODY></HTML>
+
+------_=_NextPart_001_01CAED7A.0C6D524C--
+
+--===============6890664815385724156==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6890664815385724156==--
