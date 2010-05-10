@@ -1,13 +1,13 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 0/3] The Device Tree Patch for MIPS Platform
-Date: Mon, 10 May 2010 13:16:17 +1000
-Message-ID: <20100510031617.GB12968@yookeroo>
-References: <7A9214B0DEB2074FBCA688B30B04400DBBAF83@XMB-RCD-208.cisco.com>
+Date: Mon, 10 May 2010 07:36:14 +0200
+Message-ID: <v2ifa686aa41005092236tb7de223aiec0c86c6cf69879a@mail.gmail.com>
+References: <AcrtegwsqvREgzVmSDemBl8vgLnTPA==>
+	<7A9214B0DEB2074FBCA688B30B04400DBBAF83@XMB-RCD-208.cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
 In-Reply-To: <7A9214B0DEB2074FBCA688B30B04400DBBAF83-2KNrN6/GZtCQwNoRDPPJJaBKnGwkPULj@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -22,17 +22,16 @@ To: "Dezhong Diao (dediao)" <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 06, 2010 at 07:12:57PM -0500, Dezhong Diao (dediao) wrote:
+On Fri, May 7, 2010 at 2:12 AM, Dezhong Diao (dediao) <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org> wrote:
 > Hi all,
->  
+>
 > With the help from grant, we have done the preliminary version of device
 > tree patch for MIPS platform.
 
-Awesome, another step towards world domination :).  If you need any
-assistance with, or extensions to, dtc or libfdt, please be in touch.
+I only received patches 1 and 2.  Is there a patch 3?
+
+g.
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
