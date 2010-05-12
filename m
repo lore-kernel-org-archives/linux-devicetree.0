@@ -1,14 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] The Device Tree Patch for MIPS Platform
-Date: Mon, 10 May 2010 22:44:30 +0200
-Message-ID: <AANLkTilXGtkrTKTy0Z2hDv_Au_gXCfQIsBaw1TLARUgz@mail.gmail.com>
-References: <v2ifa686aa41005092236tb7de223aiec0c86c6cf69879a@mail.gmail.com>
-	<7A9214B0DEB2074FBCA688B30B04400DC63FEC@XMB-RCD-208.cisco.com>
+From: "Thirumalai" <thirumalai.p-0ZFwKFrCjf3djTIvvxD1Tp/QNRX+jHPU@public.gmane.org>
+Subject: msi and powerpc
+Date: Wed, 12 May 2010 15:13:30 +0530
+Message-ID: <5BC29000351A441D8F8702221A9D0422@itd210>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <7A9214B0DEB2074FBCA688B30B04400DC63FEC-2KNrN6/GZtCQwNoRDPPJJaBKnGwkPULj@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,20 +15,18 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Dezhong Diao (dediao)" <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 10, 2010 at 6:14 PM, Dezhong Diao (dediao) <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org> wrote:
-> No. There are only two patches. "3" means the total number of email
-> threads.
+Hi,
+  I just want to know how to mention the MSI interrupt mapping on device 
+tree. On my MPC8640D based board we have connected USB using MSI. On dmesg 
+output am seeing "ohci_hcd 0000:08:01.0: request interrupt 17 failed" Error 
+message
 
-In this case, the correct convention is to use 0/2, 1/2 and 2/2 for a
-series of 2 patches plus a header email.  Not having a 3/3 looks like
-an email is missing.
+-Thirumalai
 
-g.
 
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+**************** CAUTION - Disclaimer *****************This email may contain confidential and privileged material for the
+sole use of the intended recipient(s). Any review, use, retention, distribution or disclosure by others is strictly prohibited. If you are not the intended recipient (or authorized to receive for the recipient), please contact the sender by reply email and delete all copies of this message. Also, email is susceptible to data corruption, interception, tampering, unauthorized amendment and viruses. We only send and receive emails on the basis that we are not liable for any such corruption, interception, tampering, amendment or viruses or any consequence thereof. 
+*********** End of Disclaimer ***********DataPatterns ITS Group**********
