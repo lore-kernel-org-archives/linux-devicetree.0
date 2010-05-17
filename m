@@ -1,74 +1,194 @@
-From: Albrecht =?iso-8859-1?b?RHJl3w==?= <albrecht.dress@arcor.de>
-Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
-Date: Sun, 16 May 2010 19:47:59 +0200
-Message-ID: <1274032079.1729.3@antares>
-References: <20100505220916.GD3529@ovro.caltech.edu>
-	<1273168472.1767.1@antares>
-	<h2mfa686aa41005061106ofda766f5z64c4f631eaded414@mail.gmail.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ptp: Added a clock that uses the eTSEC found on
+	the MPC85xx.
+Date: Mon, 17 May 2010 10:27:57 +0200
+Message-ID: <20100517082757.GA9703@riccoc20.at.omicron.at>
+References: <cover.1273855016.git.richard.cochran@omicron.at>
+	<ee6c3edca3ee6aa86565e59da999375f79c9de1b.1273855017.git.richard.cochran@omicron.at>
+	<4BED8C91.8020107@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2980141577925361354=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <h2mfa686aa41005061106ofda766f5z64c4f631eaded414@mail.gmail.com>
-	(from grant.likely@secretlab.ca on Thu May  6 20:06:14 2010)
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linux PPC Development <linuxppc-dev@ozlabs.org>, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, "Ira W. Snyder" <iws@ovro.caltech.edu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4BED8C91.8020107-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============2980141577925361354==
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg=PGP-SHA1; boundary="=-5nETcC2XTHhzUzma+rvq"
+On Fri, May 14, 2010 at 12:46:57PM -0500, Scott Wood wrote:
+> On 05/14/2010 11:46 AM, Richard Cochran wrote:
+> >diff --git a/Documentation/powerpc/dts-bindings/fsl/tsec.txt b/Documentation/powerpc/dts-bindings/fsl/tsec.txt
+> 
+> Get rid of both device_type and model, and specify a compatible
+> string instead (e.g. "fsl,etsec-ptp").
 
---=-5nETcC2XTHhzUzma+rvq
-Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay, will do. I really am at a loss at understanding all the rules in
+the whole device tree world. I just tried to follow
+Documentation/powerpc and what is already present in the kernel.
 
-Am 06.05.10 20:06 schrieb(en) Grant Likely:
-> > I think, though, the whole stuff has been discussed in depth in Februar=
-y, so
-> > I do not understand why it's still pending as "new". =A0Grant, did we m=
-iss
-> > something here?
->=20
-> I generally let subsystem maintainers pick up the device driver
-> patches for embedded platforms I'm responsible for unless I'm asked to
-> do otherwise.  I think ben has asked me to take these through my tree.
+> Or perhaps this should just be some additional properties on the
+> existing gianfar nodes, rather than presenting it as a separate
+> device?  How do you associate a given ptp block with the
+> corresponding gianfar node?
 
-That's <http://git.secretlab.ca/?p=3Dlinux-2.6.git;a=3Dshortlog>, isn't it?=
-  Hmmm, didn't find it there... :-/
+There only one PTP clock. Its registers repeat in each port's memory
+space, but you are only supposed to touch the first set of PTP
+registers. If you consider how PTP works, there can never be per port
+clocks, since this would make it impossible to make a boundary clock,
+for example.
 
-Best, Albrecht.
+The whole idea of this PTP clock framework is to keep the clock
+drivers separate from the MAC drivers, even when they use the same
+hardware. The functionality is logically divided into two parts. The
+MAC provides time stamps, and the clock provides a way to control its
+offset and frequency.
 
---=-5nETcC2XTHhzUzma+rvq
-Content-Type: application/pgp-signature
+Up until this point, people have simply hacked new private ioctls into
+the driver for each MAC that supports PTP. That is not a good long
+term solution for PTP support in Linux.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.14 (GNU/Linux)
+In general, I think it will not be hard to keep the MAC and the clock
+drivers from stepping on each other's toes. The eTSEC hardware is
+certainly able to be used in this way.
 
-iD8DBQBL8C/Pn/9unNAn/9ERAvJWAJ0Xzcg4qyz+v7ilWBHZQIWGb3wOHQCfQc3u
-wc/gvVOWze93DMSyw0vuABM=
-=bQki
------END PGP SIGNATURE-----
+> If there are differences in ptp implementation between different
+> versions of etsec, can the ptp driver see the etsec version
+> register?
 
---=-5nETcC2XTHhzUzma+rvq--
+There are no differences (that I know of) in how the PTP clocks
+work. I have in house the mpc8313, the mpc8572, and the p2020. The
+mpc8572 appears to lack some of the TMR_CTRL bits, but this is
+probably a documentation bug. I will check it.
 
---===============2980141577925361354==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> >+  - tclk_period  Timer reference clock period in nanoseconds.
+> >+  - tmr_prsc     Prescaler, divides the output clock.
+> >+  - tmr_add      Frequency compensation value.
+> >+  - cksel        0= external clock, 1= eTSEC system clock, 3= RTC clock input.
+> >+                 Currently the driver only supports choice "1".
+> >+  - tmr_fiper1   Fixed interval period pulse generator.
+> >+  - tmr_fiper2   Fixed interval period pulse generator.
+> 
+> Dashes are more typical in OF names than underscores, and it's
+> generally better to be a little more verbose -- these aren't local
+> loop iterators.
 
-_______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/linuxppc-dev
---===============2980141577925361354==--
+The names come from the register mnemonics from the documentation. I
+prefer to use the same names as is found in the manuals. That way, a
+person working with docu in hand will have an easier job.
+
+> They should probably have an "fsl,ptp-" prefix as well.
+
+Okay, but must I then change the following code in order to find them?
+Does adding the prefix just mean that I also add it to my search
+strings, or is it preprocessed (stripped) somehow?
+
+static int get_of_u32(struct device_node *node, char *str, u32 *val)
+{
+	int plen;
+	const u32 *prop = of_get_property(node, str, &plen);
+
+	if (!prop || plen != sizeof(*prop))
+	   return -1;
+	   *val = *prop;
+	   return 0;
+}
+...
+	if (get_of_u32(node, "tclk_period",&etsects->tclk_period) ||
+	    get_of_u32(node, "tmr_prsc",&etsects->tmr_prsc) ||
+	    get_of_u32(node, "tmr_add",&etsects->tmr_add) ||
+	    get_of_u32(node, "cksel",&etsects->cksel) ||
+	    get_of_u32(node, "tmr_fiper1",&etsects->tmr_fiper1) ||
+	    get_of_u32(node, "tmr_fiper2",&etsects->tmr_fiper2))
+		return -ENODEV;
+
+> >+  These properties set the operational parameters for the PTP
+> >+  clock. You must choose these carefully for the clock to work right.
+> 
+> Do these values describe the way the hardware is, or how it's been
+> configured by firmware, or a set of values that are clearly optimal
+> for this particular board?  If it's just configuration for the Linux
+> driver, that could reasonably differ based on what a given user or
+> OS will want, the device tree probably isn't the right place for it.
+
+The values are related to the board. One important parameter is the
+input clock, and the rest reflect some engineering decisions/tradeoffs
+related to the signals to and from the PTP clock. There is not just
+one "optimal" choice, so I wanted to let the designer set the
+values. In any case, the parameters are definitely related to the
+board (not to the cpu or to linux), so I think the device tree is the
+right place for them.
+
+> This one has 3 interrupts?  The driver supports only two.
+
+The documentation does not specify the IRQ line that each event
+belongs to. After some trial and error, it appears that all of the
+ancillary clock interrupts arrive on the first interrupt. The other
+lines (one per port) must be for the Tx/Rx packet time stamp
+indication, but we don't need these for the clock or for the MAC.
+
+I'll just reduce the driver to one interrupt.
+
+> >+/* Private globals */
+> >+static struct ptp_clock *gianfar_clock;
+> 
+> Do you not support more than one of these?
+> 
+> >+static struct etsects the_clock;
+> 
+> "The" clock?  As oppsed to the "other" clock one line above? :-)
+
+The 'gianfar_clock' variable holds the returned instance from the
+class driver, while 'the_clock' is the driver's private data (and
+there can only be one driver).
+
+I'll combine these into one struct to make it more clear and less
+funny sounding.
+
+> >+	return IRQ_HANDLED;
+> 
+> Should only return IRQ_HANDLED if you found an event.
+
+Okay.
+
+> >+	if (get_of_u32(node, "tclk_period",&etsects->tclk_period) ||
+> >+	    get_of_u32(node, "tmr_prsc",&etsects->tmr_prsc) ||
+> >+	    get_of_u32(node, "tmr_add",&etsects->tmr_add) ||
+> >+	    get_of_u32(node, "cksel",&etsects->cksel) ||
+> >+	    get_of_u32(node, "tmr_fiper1",&etsects->tmr_fiper1) ||
+> >+	    get_of_u32(node, "tmr_fiper2",&etsects->tmr_fiper2))
+> >+		return -ENODEV;
+> 
+> Might want to print an error so the user knows what's missing.
+
+Okay.
+
+> You've got two IRQs, with the same handler, and the same dev_id?
+> From the manual it looks like there's one PTP interrupt per eTSEC
+> (which would explain 3 interrupts on p2020).
+
+Will reduce to just one IRQ.
+
+> >+static struct of_device_id match_table[] = {
+> >+	{ .type = "ptp_clock" },
+> >+	{},
+> >+};
+> 
+> This driver controls every possible PTP implementation?
+
+No, I only want to match with the eTSEC clock device. Given the
+compatible string above ("fsl,etsec-ptp"), what is the correct way to
+do this? (pointer to an existing driver to emulate would be enough)
+
+Thanks for your help,
+
+Richard
