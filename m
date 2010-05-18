@@ -1,14 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Cmdline FDT query tool
-Date: Tue, 18 May 2010 18:53:54 +1000
-Message-ID: <20100518085354.GD25892@yookeroo>
-References: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv@mail.gmail.com>
+Subject: Re: Boot interface for device trees on ARM
+Date: Tue, 18 May 2010 18:49:54 +1000
+Message-ID: <20100518084954.GC25892@yookeroo>
+References: <201005181054.32325.jeremy.kerr@canonical.com>
+	<alpine.LFD.2.00.1005172341200.12758@xanadu.home>
+	<201005181324.45701.jeremy.kerr@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <201005181324.45701.jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,57 +20,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Cc: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 18, 2010 at 12:03:19PM +1000, John Williams wrote:
-> Hi Grant,
+On Tue, May 18, 2010 at 01:24:43PM +0800, Jeremy Kerr wrote:
+> Hi Nicolas,
 > 
-> At ELC I mentioned a tool I'd written that basically hacked u-boot's
-> "fdt" command into a commandline util for querying DTBs.  You can do
-> stuff like this:
+> > I think that, for the moment, it is best if the bootloader on already 
+> > existing subarchitectures where DT is introduced still preserve the 
+> > already existing ability to boot using ATAGs.  This allows for the 
+> > testing and validation of the DT concept against the legacy ATAG method 
+> > more easily.
 > 
-> $ fdt-tool system.dtp print
+> Just to clarify - by "still preserve the existing ability to use ATAGs" you 
+> mean only for non-DT boot, right? This proposal still does not require 
+> ATAG_DEVTREE?
 > 
-> <dump entire DTB in text format>
+> > Why one DT machine ID per subarchitecture?  Simply because a significant
+> > part of the DT handling code will have to be subarchitecture specific
+> > anyway.  The timer hardware, the GPIO configuration and muxing, SOC
+> > specific platform data handling, power management config, and many other
+> > things are simply too different from one SOC family to another and
+> > trying to have a single global DT support code to rule them all is
+> > insane.
 > 
-> $ fdt-tool system.dtb list /cpus/cpu@0 xlnx,use-dcache
-> xlnx,use-dcache = <0x1>
-> 
-> and so on.
-> 
-> I wrote it four our PetaLinux distribution because we need our tools
-> to make decisions based on contents of device trees, but thought you
-> might like to look at it, see if it's more broadly useful (maybe could
-> be a candidate for scripts/ in the kernel for example).
-> 
-> It's pretty rough, I hacked it together in about 20 minutes and threw
-> in a readline interface so you can also use it interactively as well.
+> The code for DT boot will be still subarch-specific, but I don't
+> think we need IDs for that. There is enough information in the
+> device tree to select the subarch-specific code to use for early
+> init, without needing to parameterise every element of the
+> machine. The machine-level "compatible" property allows us to do
+> this.
 
-Interesting.  It might be nice to include this into the libfdt tree,
-as both a code example and a useful standalone tool.
+That's right.  On PowerPC currently we don't have any real concept of
+sub-architecture, but we do have platform level code to cover exactly
+the sorts of messy things you mention, and it is selected on the basis
+of the device tree's top-level compatible property.  Well, usually on
+the compatible property, the platform probe routines can use other
+information if, for example, firmware has screwed up the compatible
+property.
 
-> Possible enhancements would be
->   * clean up!
->   * support DTS input format (only DTB supported currently)
+One of the nice features that makes using the flat device tree quite
+robust, is that even when firmware (or whoever) totally and utterly
+stuffs up the device tree, there's nearly always *something* in there
+that's sufficient to identify the board (by accident, if nothing
+else).  A suitable platform probe routine can look for that, and claw
+its way back to sanity from there (in the worst case, it could even
+substitute an entire new corrected device tree, though I don't think
+that's been necessary yet).
 
-Hrm.  Unless you do it by calling out to dtc, that would be a big job,
-and essentially mean re-implementing a big chunk of dtc - with which
-it could then get out of sync.  So please don't do that.
+The only reason you'd need a subarchitecture number or equivalent is
+if you need to do things differently in the very, very early asm boot
+code.  We may need a minimal form of this on PowerPC if we ever
+support multiple MMU families in the same kernel binary.
 
->   * Allow modifying and re-writing (current DTB is read-only)
-> 
-> It can also do some interesting things with u-boot FIT images - you
-> can basically crack out kernel, DTB or rootfs payloads from a FIT.
-> 
-> If it does go into the kernel then MicroBlaze arch would be an
-> immediate user, we have a few KCONFIG params that drive GCC cpuflag
-> options - for simpleImage targets we could pull these straight from
-> the DTS instead to avoid kernel/CPU mismatches.  We could do it today
-> with sed/grep/awk etc, but it's ugly ugly ugly.  A DTS-aware tool like
-> this would make it a no-brainer.  I'm sure PPC could find some useful
-> things to do with it as well.
+> Therefore, I don't think we need the machine ID at all: once the DT is 
+> available, we can use that for any machine-specific stuff. Even though we're 
+> not *configuring* it from the device tree, we can *select* it from there 
+> instead.
+
+Yes, absolutely.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
