@@ -1,49 +1,48 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v3 3/3] ptp: Added a clock that uses the eTSEC found on
- the MPC85xx.
-Date: Tue, 18 May 2010 11:23:38 -0500
-Message-ID: <4BF2BF0A.8000405@freescale.com>
-References: <cover.1273855016.git.richard.cochran@omicron.at> <ee6c3edca3ee6aa86565e59da999375f79c9de1b.1273855017.git.richard.cochran@omicron.at> <4BED8C91.8020107@freescale.com> <20100517082757.GA9703@riccoc20.at.omicron.at> <4BF18582.6000500@freescale.com> <20100518063608.GA2720@riccoc20.at.omicron.at>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Cmdline FDT query tool
+Date: Tue, 18 May 2010 12:20:05 -0600
+Message-ID: <AANLkTinlyoA-FqbtWh939l9qoc6QDnKwPzNVnjgHFcVc@mail.gmail.com>
+References: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20100518063608.GA2720@riccoc20.at.omicron.at>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Cc: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/18/2010 01:36 AM, Richard Cochran wrote:
-> On Mon, May 17, 2010 at 01:05:54PM -0500, Scott Wood wrote:
->>>>>> +  - tmr_fiper1   Fixed interval period pulse generator.
->>>>>> +  - tmr_fiper2   Fixed interval period pulse generator.
->>>>
->>
->> MPC8572 and P2020 have fiper3 as well.
+On Mon, May 17, 2010 at 8:03 PM, John Williams
+<john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org> wrote:
+> Hi Grant,
 >
-> I doubt they really have a third fiper.
+> At ELC I mentioned a tool I'd written that basically hacked u-boot's
+> "fdt" command into a commandline util for querying DTBs. =A0You can do
+> stuff like this:
 >
-> First of all, this signal is not routed anywhere on the boards.
-
-OK, but that's a separate issue from whether it exists on the chip and 
-could be used on a different board.
-
-> Also, according to the documentation, it has no bit in the TMR_CTRL or the
-> TMR_TEMASK registers.
-
-It does seem inconsistent -- but could just be bad docs.
-
-> Unless there is a bit in TMR_TEMASK, you cannot
-> get an interrupt from it.
+> $ fdt-tool system.dtp print
 >
-> If you cannot use the signal externally (in the "real" world) and you
-> cannot get an interrupt, what good is it to have such a periodic
-> signal? Polling the bit in the TMR_TEVENT to see when a pulse occurs
-> seems pointless.
+> <dump entire DTB in text format>
 >
-> Scott, you have connections, right? Can you clarify this for me?
+> $ fdt-tool system.dtb list /cpus/cpu@0 xlnx,use-dcache
+> xlnx,use-dcache =3D <0x1>
+>
+> and so on.
 
-I'll ask around.
+Cool.  Thanks John.
 
--Scott
+I agree with David.  It would probably be useful to include in the
+libfdt (which U-Boot fdt support makes use of too) source repo.  Seems
+like a useful tool.
+
+Cheers,
+g.
