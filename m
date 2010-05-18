@@ -1,19 +1,14 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ptp: Added a clock that uses the eTSEC found on
-	the MPC85xx.
-Date: Tue, 18 May 2010 08:36:08 +0200
-Message-ID: <20100518063608.GA2720@riccoc20.at.omicron.at>
-References: <cover.1273855016.git.richard.cochran@omicron.at>
-	<ee6c3edca3ee6aa86565e59da999375f79c9de1b.1273855017.git.richard.cochran@omicron.at>
-	<4BED8C91.8020107@freescale.com>
-	<20100517082757.GA9703@riccoc20.at.omicron.at>
-	<4BF18582.6000500@freescale.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Cmdline FDT query tool
+Date: Tue, 18 May 2010 18:53:54 +1000
+Message-ID: <20100518085354.GD25892@yookeroo>
+References: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4BF18582.6000500-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,31 +18,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Cc: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 17, 2010 at 01:05:54PM -0500, Scott Wood wrote:
-> >>> >+  - tmr_fiper1   Fixed interval period pulse generator.
-> >>> >+  - tmr_fiper2   Fixed interval period pulse generator.
-> >>
+On Tue, May 18, 2010 at 12:03:19PM +1000, John Williams wrote:
+> Hi Grant,
 > 
-> MPC8572 and P2020 have fiper3 as well.
+> At ELC I mentioned a tool I'd written that basically hacked u-boot's
+> "fdt" command into a commandline util for querying DTBs.  You can do
+> stuff like this:
+> 
+> $ fdt-tool system.dtp print
+> 
+> <dump entire DTB in text format>
+> 
+> $ fdt-tool system.dtb list /cpus/cpu@0 xlnx,use-dcache
+> xlnx,use-dcache = <0x1>
+> 
+> and so on.
+> 
+> I wrote it four our PetaLinux distribution because we need our tools
+> to make decisions based on contents of device trees, but thought you
+> might like to look at it, see if it's more broadly useful (maybe could
+> be a candidate for scripts/ in the kernel for example).
+> 
+> It's pretty rough, I hacked it together in about 20 minutes and threw
+> in a readline interface so you can also use it interactively as well.
 
-I doubt they really have a third fiper.
+Interesting.  It might be nice to include this into the libfdt tree,
+as both a code example and a useful standalone tool.
 
-First of all, this signal is not routed anywhere on the boards. Also,
-according to the documentation, it has no bit in the TMR_CTRL or the
-TMR_TEMASK registers. Unless there is a bit in TMR_TEMASK, you cannot
-get an interrupt from it.
+> Possible enhancements would be
+>   * clean up!
+>   * support DTS input format (only DTB supported currently)
 
-If you cannot use the signal externally (in the "real" world) and you
-cannot get an interrupt, what good is it to have such a periodic
-signal? Polling the bit in the TMR_TEVENT to see when a pulse occurs
-seems pointless.
+Hrm.  Unless you do it by calling out to dtc, that would be a big job,
+and essentially mean re-implementing a big chunk of dtc - with which
+it could then get out of sync.  So please don't do that.
 
-Scott, you have connections, right? Can you clarify this for me?
+>   * Allow modifying and re-writing (current DTB is read-only)
+> 
+> It can also do some interesting things with u-boot FIT images - you
+> can basically crack out kernel, DTB or rootfs payloads from a FIT.
+> 
+> If it does go into the kernel then MicroBlaze arch would be an
+> immediate user, we have a few KCONFIG params that drive GCC cpuflag
+> options - for simpleImage targets we could pull these straight from
+> the DTS instead to avoid kernel/CPU mismatches.  We could do it today
+> with sed/grep/awk etc, but it's ugly ugly ugly.  A DTS-aware tool like
+> this would make it a no-brainer.  I'm sure PPC could find some useful
+> things to do with it as well.
 
-Thanks,
-
-Richard
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
