@@ -1,7 +1,7 @@
-From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Subject: Cmdline FDT query tool
-Date: Tue, 18 May 2010 12:03:19 +1000
-Message-ID: <AANLkTilo68Va3EzuWq3SPzv-YpXt-7Ty7Us_Q0Fw_Nmv@mail.gmail.com>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Boot interface for device trees on ARM
+Date: Tue, 18 May 2010 10:54:29 +0800
+Message-ID: <201005181054.32325.jeremy.kerr@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,55 +15,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi all,
 
-At ELC I mentioned a tool I'd written that basically hacked u-boot's
-"fdt" command into a commandline util for querying DTBs.  You can do
-stuff like this:
+As we're getting closer to device tree support on ARM, I'd like to get some 
+input on our proposed boot interface.
 
-$ fdt-tool system.dtp print
+Basically, I'd like to define how we pass the device tree from the bootloader 
+to the kernel.
 
-<dump entire DTB in text format>
+My current method of doing this is through a new atag. It looks like this:
 
-$ fdt-tool system.dtb list /cpus/cpu@0 xlnx,use-dcache
-xlnx,use-dcache = <0x1>
+	/* flattened device tree blob pointer */
+	#define ATAG_DEVTREE	0x5441000a
 
-and so on.
+	struct tag_devtree {
+		__u32 start;	/* physical start address */
+		__u32 size;	/* size of dtb image in bytes */
+	};
 
-I wrote it four our PetaLinux distribution because we need our tools
-to make decisions based on contents of device trees, but thought you
-might like to look at it, see if it's more broadly useful (maybe could
-be a candidate for scripts/ in the kernel for example).
+With ATAG_DEVTREE, we keep the existing boot interface the same (ie, machine 
+number in r1, atags pointer r2).
 
-It's pretty rough, I hacked it together in about 20 minutes and threw
-in a readline interface so you can also use it interactively as well.
+Some notes about this scheme:
 
-Possible enhancements would be
-  * clean up!
-  * support DTS input format (only DTB supported currently)
-  * Allow modifying and re-writing (current DTB is read-only)
+ + We can easily keep compatibility with the existing boot interface; both DT 
+and non-DT kernels will be supported if a bootloader uses this.
 
-It can also do some interesting things with u-boot FIT images - you
-can basically crack out kernel, DTB or rootfs payloads from a FIT.
+ - It's a little more complex, as the bootloader has to initialise the atags 
+structure.
 
-If it does go into the kernel then MicroBlaze arch would be an
-immediate user, we have a few KCONFIG params that drive GCC cpuflag
-options - for simpleImage targets we could pull these straight from
-the DTS instead to avoid kernel/CPU mismatches.  We could do it today
-with sed/grep/awk etc, but it's ugly ugly ugly.  A DTS-aware tool like
-this would make it a no-brainer.  I'm sure PPC could find some useful
-things to do with it as well.
+ - If we end up in a situation where most machines are DT-enabled, then we'll 
+be carrying a seldom-used structure (ie, a mostly-empty atags block) just to 
+provide one pointer to the kernel.
 
-http://developer.petalogix.com/downloads/fdt-tool.tar.gz
+ - We are now potentially carrying data in two different places - atags and 
+the device tree. For example, the physical memory layout and kernel command 
+line may be present in both.
+
+Nicolas Pitre has suggested that we make it simpler, and specify the device 
+tree blob directly instead (and remove the atags). In this case, r2 would 
+point to the device tree blob, and r1 would be ignored.
+
+Fortunately, both structures (atags list and device tree blob) begin with a 
+magic number, so it is trivial to determine whether the pointer is to an atags 
+list or a device tree blob.
+
+Some notes about this scheme:
+
+ - This would break compatibility with the existing boot interface: 
+bootloaders that expect a DT kernel will not be able to boot a non-DT kernel. 
+However, does this matter? Once the machine support (ie, bootloader and 
+kernel) is done, we don't expect to have to enable both methods.
+
+ + A simpler boot interface, so less to do (and get wrong) in the bootloader
+
+ + We don't have two potential sources of boot information
+
+Although I have been using the atag for a while, I have not pushed it to an 
+upstream (either qemu or the kernel), as I would like to get a firm decision 
+on the best method before making any commitment.
+
+Comments and questions most welcome.
 
 Cheers,
 
-John
--- 
-John Williams, PhD, B.Eng, B.IT
-PetaLogix - Linux Solutions for a Reconfigurable World
-w: www.petalogix.com  p: +61-7-30090663  f: +61-7-30090663
+
+Jeremy
