@@ -1,20 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Subject: Re: Boot interface for device trees on ARM
-Date: Wed, 19 May 2010 17:12:57 +1000
-Message-ID: <20100519071257.GR25892@yookeroo>
+Date: Wed, 19 May 2010 16:50:53 +0800
+Message-ID: <201005191650.55978.jeremy.kerr@canonical.com>
 References: <201005181054.32325.jeremy.kerr@canonical.com>
-	<alpine.LFD.2.00.1005172341200.12758@xanadu.home>
-	<201005181324.45701.jeremy.kerr@canonical.com>
 	<20100518084954.GC25892@yookeroo>
 	<alpine.LFD.2.00.1005180802010.12758@xanadu.home>
-	<20100519002826.GG25892@yookeroo>
-	<20100519014118.GD2318@shareable.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20100519014118.GD2318-yetKDKU6eevNLxjTenLetw@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1005180802010.12758-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,68 +19,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>
-Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 19, 2010 at 02:41:18AM +0100, Jamie Lokier wrote:
-> David Gibson wrote:
-> > On Tue, May 18, 2010 at 08:24:06AM -0400, Nicolas Pitre wrote:
-> > > On Tue, 18 May 2010, David Gibson wrote:
-> > > > On Tue, May 18, 2010 at 01:24:43PM +0800, Jeremy Kerr wrote:
-> > > > > Nicolas Pitre wrote:
-> > [snip]
-> > > > The only reason you'd need a subarchitecture number or equivalent is
-> > > > if you need to do things differently in the very, very early asm boot
-> > > > code.  We may need a minimal form of this on PowerPC if we ever
-> > > > support multiple MMU families in the same kernel binary.
-> > > 
-> > > Exact.  For example, on ARM the machine ID is also used to figure out 
-> > > the MMU mapping needed to be able to simply be able to debug the very 
-> > > early assembly boot stage when there isn't even a stack available. While 
-> > > this info is stored in the machine record, it is actually 
-> > > subarchitecture specific and already half-digested for easy usage by 
-> > > that initial MMU setup.  I just don't want to imagine what the 
-> > > equivalent functionality with DT would look like.
-> > 
-> > Well, it wouldn't be *that* bad - you'd need a minimal asm-only tree
-> > walker to find and look up the compatible property.  Quite possible
-> > but, yes, fairly awkward.
-> 
-> I'm not entirely clear, is the DT intended to replace the command line
-> for saying things like "console=XXX"?
+Nicolas,
 
-Um.. well, in a DT based system, the bootloader typically passes the
-command line to the kernel via the device tree (it goes in the
-bootargs property of /chosen).
+> Exact.  For example, on ARM the machine ID is also used to figure out
+> the MMU mapping needed to be able to simply be able to debug the very
+> early assembly boot stage when there isn't even a stack available.
 
-However, at least on PowerPC the default console is also specified
-directly in the DT (via the linux,stdout-path property in /chosen), so
-putting console= on the command line isn't usually necessary (if given
-it will override the linux,stdout-path property for most purposes).
+I get the impression that this is the only thing that we need the io_pg_offset 
+for - setting up the debug page mapping, for very early printk output.
 
-> Real example: I have a device where the bootloader decides which
-> serial port will be the diagnostic boot console, if any, based on a
-> specially wired serial cable detected at boot time, and it passes the
-> decision to the kernel.
+If this is the case, I would much rather have it as a compile-time constant 
+when doing this early debug; this is what I have been doing for DT boot in my 
+tree (however, I would like to move it to something more configurable).
 
-Setting linux,stdout-path in the device tree sounds like the right
-thing to do here.
+In the cases where we need to debug the pre-C stuff (ie, machine bringup), I 
+think we can live with a compile-time constant, rather than having to define a 
+special 'exception' in the DT boot interface to handle this.
 
-> In that case, does the console selection need to be easily accessible
-> to that early asm code, for early printks?
+Or is there another early use of the mdesc that I'm not aware of?
 
-Well, typically I wouldn't expect printk() to occur until you're in C
-code at least, but I don't know about the ARM code.  Once you're in C
-code it shouldn't be significantly harder to consult the device tree
-than to parse the command line.
+Cheers,
 
-On PowerPC we do have a super-early debug printing mechanism, but when
-that's enabled all the specifics are compile-time selected (it's
-basically only recommended for use during bringup).
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Jeremy
