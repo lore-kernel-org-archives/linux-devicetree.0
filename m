@@ -1,18 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] video: add support for getting video mode from device
-	tree
-Date: Wed, 19 May 2010 15:19:57 -0600
-Message-ID: <AANLkTim4JddVZK99zb53iCKNLWSGLxfAX-d0yRS39yYc@mail.gmail.com>
-References: <fa686aa41002161006l3b301febt94fe990df4bddfe9@mail.gmail.com>
-	<1267307902-31939-2-git-send-email-agust@denx.de>
-	<fa686aa41002272230s7f900c0fv1aabf0e26ccbf84c@mail.gmail.com>
-	<4B8A2CD7.7070305@firmworks.com> <1267415120.23523.1898.camel@pasglop>
-	<20100428154303.45d1ce87@wker>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] powerpc: make the padding for the device tree a
+	configurable option
+Date: Thu, 20 May 2010 07:20:13 +1000
+Message-ID: <1274304013.1931.6.camel@pasglop>
+References: <1274298809-12772-1-git-send-email-timur@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100428154303.45d1ce87@wker>
+In-Reply-To: <1274298809-12772-1-git-send-email-timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,109 +18,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 28, 2010 at 7:43 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> On Mon, 01 Mar 2010 14:45:20 +1100
-> Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->
->> On Sat, 2010-02-27 at 22:44 -1000, Mitch Bradley wrote:
->>
->> > As it turns out, I'm doing exactly that - exporting verbatim EDID
->> > data
->> > as the value of the "edid" property - for the display node on the Via
->> > version of the OLPC machine. =A0The kernel driver uses it instead of
->> > trying to obtain the EDID data from the monitor, because the builtin
->> > OLPC display cannot supply EDID data through the usual hardware
->> > interfaces.
->>
->> This is actually a common practice (though EDID is most often in
->> uppercase) on Apple hardware too. It has issues though in the sense that
->> it doesn't carry proper connector information and falls over in many
->> multi-head cases.
->>
->> I think passing the EDID data, when available, is thus the right thing
->> to do indeed, however that doesn't solve two problems:
->>
->> =A0- Where to put that property ? This is a complicated problem and we
->> might argue on a binding for weeks because video cards typically support
->> multiple outputs, etc. etc... I think the best for now is to stick as
->> closely as possible to the existing OF fb binding, and have "display"
->> nodes for each output, which can eventually contain an EDID. We might
->> also want to add a string that indicate the connector type. Specific
->> drivers might want to define additional properties here where it makes
->> sense such as binding of those outputs to CRTCs or such, up to you.
->
-> Putting EDID to display node would be really sufficient for LCDs in
-> our case. Other systems might define this additional connector type
-> property.
->
->>
->> =A0- We -also- want a way to specify the "default" mode as set by the
->> firmware, at least on some devices. The EDID gives capabilities, and
->> often for LCDs also the "preferred" mode which is almost always the
->> "default" mode ... but could be different. In order to avoid "flicking",
->> the driver might wants to know what is the currently programmed mode.
->> For that, having split out properties makes sense, though I would like
->> to either prefix them all with "mode," or stick them in a sub-node of
->> the display@.
->
-> I would propose defining following properties in the case the
-> programmed mode is different from "default" mode:
->
-> display@...{
-> =A0 =A0 =A0 =A0compatible =3D "<vendor>,<model>"
-> =A0 =A0 =A0 =A0EDID =3D [edid-data];
->
-> =A0 =A0 =A0 =A0current-mode {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pixel_clock =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0horizontal_active =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0horizontal_blank =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0vertical_active =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0vertical_blank =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0horizontal_active =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0hsync_offset =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0hsync_pulse_width =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0vsync_offset =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0vsync_pulse_width =3D <value>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0hsync_positive;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0vsync_positive;
-> =A0 =A0 =A0 =A0}
-> };
->
-> The firmware can set the "default" mode using the EDID's preferred
-> Detailed Timing Descriptor data. If on some devices it sets another
-> mode than the preferred mode, then the firmware can insert a
-> "current-mode" sub-node with currently programmed mode. The driver
-> can check for this sub-node and use it's data and if it isn't present,
-> it can use the preferred timing data from EDID. The names of the
-> properties here are actually what Detailed Timing Descriptor in EDID
-> specifies. What do you think?
+On Wed, 2010-05-19 at 14:53 -0500, Timur Tabi wrote:
+> Add the DTS_PADDING Kconfig option, which allows users and board defconfig
+> files to specify a padding value when compiling device trees.
+> 
+> When a device tree source (DTS) is compiled into a binary (DTB), a hard-coded
+> padding of 1024 bytes is used (i.e. dtc command-line parameter "-p 1024").
+> Although this has worked so far, it may not be sufficient in the future for
+> some boards.  Newer versions of U-boot perform more and more fixup on the
+> device tree, and eventually it will run out.
+> 
+> So to accommodate future boards where more padding is needed, we make the
+> option for the -p parameter configurable.
 
-If you really want to do that, then I think it is okay.  I really
-don't know enough about the problem space to say whether or not that
-particular description is a good binding or not, but regardless it
-should be a video-controller-specific binding.  The name of the node
-should probably be prefixed with "<manufacturer>," and it should be
-documented along with the display controller's device tree binding.
-If another controller wants/needs a different binding format (for the
-current mode), then that is fine too (unless you can make a really
-good argument that this current-mode binding is perfect and no other
-layout should ever be required).  :-)
+Can't u-boot just allocate more space ?
 
-Cheers,
-g.
+Ben.
 
->
-> Thanks,
-> Anatolij
->
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> Signed-off-by: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/powerpc/boot/Makefile     |    4 ++--
+>  arch/powerpc/platforms/Kconfig |   13 +++++++++++++
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+> index bb2465b..750fa6b 100644
+> --- a/arch/powerpc/boot/Makefile
+> +++ b/arch/powerpc/boot/Makefile
+> @@ -35,7 +35,7 @@ endif
+>  
+>  BOOTCFLAGS	+= -I$(obj) -I$(srctree)/$(obj)
+>  
+> -DTS_FLAGS	?= -p 1024
+> +DTS_FLAGS	?= -p ${CONFIG_DTS_PADDING}
+>  
+>  $(obj)/4xx.o: BOOTCFLAGS += -mcpu=405
+>  $(obj)/ebony.o: BOOTCFLAGS += -mcpu=405
+> @@ -331,7 +331,7 @@ $(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
+>  # Rule to build device tree blobs
+>  DTC = $(objtree)/scripts/dtc/dtc
+>  
+> -$(obj)/%.dtb: $(dtstree)/%.dts
+> +$(obj)/%.dtb: $(dtstree)/%.dts $(srctree)/.config
+>  	$(DTC) -O dtb -o $(obj)/$*.dtb -b 0 $(DTS_FLAGS) $(dtstree)/$*.dts
+>  
+>  # If there isn't a platform selected then just strip the vmlinux.
+> diff --git a/arch/powerpc/platforms/Kconfig b/arch/powerpc/platforms/Kconfig
+> index d1663db..2b0a9c3 100644
+> --- a/arch/powerpc/platforms/Kconfig
+> +++ b/arch/powerpc/platforms/Kconfig
+> @@ -41,6 +41,19 @@ config PPC_OF_BOOT_TRAMPOLINE
+>  
+>  	  In case of doubt, say Y
+>  
+> +config DTS_PADDING
+> +	int "Padding for the device tree binary"
+> +	default 1024
+> +	help
+> +	  Specify the padding value to be used when compiling a DTS (device
+> +	  tree source) file into a DTB (device tree binary).  The padding is
+> +	  used to ensure enough space for any additional nodes and properties
+> +	  that the boot loader adds during fix-up.  If your boot loader
+> +	  complains about lack of space during fix-up, try increasing this
+> +	  value.
+> +
+> +	  If unsure, leave this value at the default.
+> +
+>  config UDBG_RTAS_CONSOLE
+>  	bool "RTAS based debug console"
+>  	depends on PPC_RTAS
