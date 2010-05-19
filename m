@@ -1,16 +1,18 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: Boot interface for device trees on ARM
-Date: Wed, 19 May 2010 06:13:07 -0600
-Message-ID: <AANLkTinsOSI_TIc7Jyy4QFuFaS2d-fi0y3LMuITLyG3N@mail.gmail.com>
+Date: Wed, 19 May 2010 08:21:44 -0600
+Message-ID: <AANLkTik-9wjg0qGvqhn1dWhfLm-BAroHNWyU48jcrcqk@mail.gmail.com>
 References: <201005181054.32325.jeremy.kerr@canonical.com>
 	<alpine.LFD.2.00.1005172341200.12758@xanadu.home>
 	<201005181324.45701.jeremy.kerr@canonical.com>
-	<alpine.LFD.2.00.1005180742500.12758@xanadu.home>
+	<20100518084954.GC25892@yookeroo>
+	<alpine.LFD.2.00.1005180802010.12758@xanadu.home>
+	<20100519002826.GG25892@yookeroo> <20100519014118.GD2318@shareable.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.00.1005180742500.12758-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+In-Reply-To: <20100519014118.GD2318-yetKDKU6eevNLxjTenLetw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,96 +22,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>
+Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 18, 2010 at 5:57 AM, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> wrote:
-> On Tue, 18 May 2010, Jeremy Kerr wrote:
->
->> Hi Nicolas,
+On Tue, May 18, 2010 at 7:41 PM, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org> wrote:
+> David Gibson wrote:
+>> On Tue, May 18, 2010 at 08:24:06AM -0400, Nicolas Pitre wrote:
+>> > On Tue, 18 May 2010, David Gibson wrote:
+>> > > On Tue, May 18, 2010 at 01:24:43PM +0800, Jeremy Kerr wrote:
+>> > > > Nicolas Pitre wrote:
+>> [snip]
+>> > > The only reason you'd need a subarchitecture number or equivalent is
+>> > > if you need to do things differently in the very, very early asm boot
+>> > > code. =A0We may need a minimal form of this on PowerPC if we ever
+>> > > support multiple MMU families in the same kernel binary.
+>> >
+>> > Exact. =A0For example, on ARM the machine ID is also used to figure out
+>> > the MMU mapping needed to be able to simply be able to debug the very
+>> > early assembly boot stage when there isn't even a stack available. Whi=
+le
+>> > this info is stored in the machine record, it is actually
+>> > subarchitecture specific and already half-digested for easy usage by
+>> > that initial MMU setup. =A0I just don't want to imagine what the
+>> > equivalent functionality with DT would look like.
 >>
->> > I think that, for the moment, it is best if the bootloader on already
->> > existing subarchitectures where DT is introduced still preserve the
->> > already existing ability to boot using ATAGs. =A0This allows for the
->> > testing and validation of the DT concept against the legacy ATAG method
->> > more easily.
->>
->> Just to clarify - by "still preserve the existing ability to use ATAGs" =
-you
->> mean only for non-DT boot, right?
+>> Well, it wouldn't be *that* bad - you'd need a minimal asm-only tree
+>> walker to find and look up the compatible property. =A0Quite possible
+>> but, yes, fairly awkward.
 >
-> Exact. =A0Once a particular SOC family has no non-DT support anymore (due
-> to being entirely new, or because people get really enthusiastic and
-> fade out legacy machine specific init code completely) then and only
-> then it might be logical to remove ATAG from the concerned bootloaders.
->
->
->> This proposal still does not require ATAG_DEVTREE?
->
-> No.
+> I'm not entirely clear, is the DT intended to replace the command line
+> for saying things like "console=3DXXX"?
 
-Hmmm...  I misunderstood then.  I don't agree that this is the best way for=
-ward.
+It doesn't replace the kernel parameters line, but the kernel
+parameters line can be passed to the kernel via a property in the
+/chosen node.  Firmware is allowed to modify the DT (ie. to change the
+kernel parameters) before passing it to the kernel.
 
-Doing it this way means a non-compatible break in the interface.  It
-means that the bootloader needs to know what interface the kernel is
-expecting for boot; information that is not readily available from the
-image type.  The user then needs to tell the boot loader which
-interface to use rather than a backwards compatible addition of a blob
-of data.
-
-You mention below "shifting the World Order on ARM" and it creating
-resistance for merging DT support.  Isn't this much the same thing as
-it creates a non backwards compatible change in the way bootloaders
-pass data to the kernel.  The cutover in powerpc from the old
-interface to the new caused no end of confusion and people who could
-no longer get their systems to boot.  On PowerPC is was necessary
-because the old method was completely broken, but ATAGs are clean,
-simple and well implemented.
-
-It also means teaching every boot loader two separate methods for
-booting and exposing those differences to the user.
-
->> The code for DT boot will be still subarch-specific, but I don't think w=
-e need
->> IDs for that. There is enough information in the device tree to select t=
-he
->> subarch-specific code to use for early init, without needing to paramete=
-rise
->> every element of the machine.
->
-> You can't do that without shifting the World Order on ARM. =A0And _that_
-> is going to create resistance for merging DT support.
->
->> The machine-level "compatible" property allows
->> us to do this.
->>
->> Therefore, I don't think we need the machine ID at all: once the DT is
->> available, we can use that for any machine-specific stuff. Even though w=
-e're
->> not *configuring* it from the device tree, we can *select* it from there
->> instead.
->
-> This is just added complexity, especially in the early boot code which
-> for now simply has to compare r1 against well known constants. =A0We have
-> that ID passed by the bootloader already. =A0I don't see the advantage of
-> ignoring it and relying solely on DT for that.
->
-> Furthermore, if you're interested only in, say, OMAP5 (let's say you're
-> doing U-Boot for it) then you need no bother about anything else than
-> passing the ID number for OMAP5_DEVICE_TREE into r1 and manage
-> *everything else* in the device tree.
->
->
-> Nicolas
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
-
-
+Cheers,
+g.
 
 -- =
 
