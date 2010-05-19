@@ -1,52 +1,63 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc: make the padding for the device tree a
-	configurable option
-Date: Wed, 19 May 2010 16:33:50 -0500
-Message-ID: <4BF4593E.8030101@freescale.com>
-References: <1274298809-12772-1-git-send-email-timur@freescale.com>
-	<1274304013.1931.6.camel@pasglop>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 2/2] powerpc/mpc5121: add initial support for PDM360NG
+	board
+Date: Wed, 19 May 2010 16:37:35 -0500
+Message-ID: <4BF45A1F.70100@freescale.com>
+References: <1272659448-23302-1-git-send-email-agust@denx.de>
+	<1272659448-23302-2-git-send-email-agust@denx.de>
+	<g2tfa686aa41005020754t46934f13hbd5c75a6b7668a54@mail.gmail.com>
+	<4BDEFB13.5060407@freescale.com>
+	<AANLkTilBveOR1aJTgunOq0aqnsGtf1vWHfn8A6uXyoPU@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1274304013.1931.6.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <AANLkTilBveOR1aJTgunOq0aqnsGtf1vWHfn8A6uXyoPU@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Detlev Zundel <dzu@denx.de>, Markus Fischer <markus.fischer.ec@ifm.com>, devicetree-discuss@lists.ozlabs.org, Michael Weiss <michael.weiss@ifm.com>, linuxppc-dev@ozlabs.org, Anatolij Gustschin <agust@denx.de>, Wolfgang Grandegger <wg@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Benjamin Herrenschmidt wrote:
+On 05/19/2010 04:27 PM, Grant Likely wrote:
+> On Mon, May 3, 2010 at 10:34 AM, Scott Wood<scottwood@freescale.com>  wrote:
+>> Grant Likely wrote:
+>>>>
+>>>> +               // IPIC
+>>>> +               // interrupts cell =<intr #, sense>
+>>>> +               // sense values match linux IORESOURCE_IRQ_* defines:
+>>>> +               // sense == 8: Level, low assertion
+>>>> +               // sense == 2: Edge, high-to-low change
+>>>> +               //
+>>>> +               ipic: interrupt-controller@c00 {
+>>>> +                       compatible = "fsl,mpc5121-ipic", "fsl,ipic";
+>>>> +                       interrupt-controller;
+>>>> +                       #address-cells =<0>;
+>>>
+>>> Don't need #address-cells here
+>>
+>> #address-cells is required by ePAPR for interrupt controllers if an
+>> interrupt-map is used.
+>
+> Why?
+>
+> /me is too lazy to dig out ePAPR and look.
 
->> So to accommodate future boards where more padding is needed, we make the
->> option for the -p parameter configurable.
-> 
-> Can't u-boot just allocate more space ?
+Address cells are part of the interrupt identification.  Typically with 
+interrupt maps this is only used on the child end (e.g. to select a 
+particular PCI slot), but if the parent interrupt controller's address 
+cells are non-zero it will be expected in the parent interrupt specifier 
+as well.
 
-Yes and no.  U-Boot has functions to increase the size of an fdt, but these
-functions can't be sure that the fdt will grow beyond its allocated space.
-So if U-Boot calls fdt_setprop() or fdt_add_subnode(), and there isn't
-enough space in the fdt, those functions will return with an error.
+I believe the only part of this that is new with ePAPR is that it asks 
+that the interrupt controller address cells be explicitly specified, as 
+it's a bit icky for it to default to 2 in some contexts and 0 in others.
 
-The problem with growing the fdt is that the function which does this
-(fdt_open_into) cannot guarantee that the fdt will grow too large and
-overwrite the end of whatever allocated memory it's in.
-
-I had a long argument with Wolfgang on this (see "libfdt: make
-fdt_increase_size() available to everyone"), and he says he'll reject any
-patch that can't guarantee that fdt_open_into() won't grow too large.  He'll
-also reject any patch that uses a macro constant to reserve this space, even
-if I use that constant to ensure that fdt_open_into() won't do anything bad.
-
-So in other words, U-Boot could allocate more space, but Wolfgang won't let it.
-
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+-Scott
