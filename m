@@ -1,16 +1,18 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Patch v2 1/2] 5200/mpc: improve i2c bus error recovery
-Date: Wed, 19 May 2010 10:02:48 -0600
-Message-ID: <AANLkTikrF7-oxN5BzdiJga0XbMbQPKKj-SqwLp46_GQb@mail.gmail.com>
-References: <20100505220916.GD3529@ovro.caltech.edu>
-	<1273168472.1767.1@antares>
-	<h2mfa686aa41005061106ofda766f5z64c4f631eaded414@mail.gmail.com>
-	<1274032079.1729.3@antares>
+From: Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>
+Subject: Re: Boot interface for device trees on ARM
+Date: Wed, 19 May 2010 17:45:34 +0100
+Message-ID: <20100519164534.GE1693@shareable.org>
+References: <201005181054.32325.jeremy.kerr@canonical.com>
+	<alpine.LFD.2.00.1005172341200.12758@xanadu.home>
+	<201005181324.45701.jeremy.kerr@canonical.com>
+	<alpine.LFD.2.00.1005180742500.12758@xanadu.home>
+	<AANLkTinsOSI_TIc7Jyy4QFuFaS2d-fi0y3LMuITLyG3N@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1274032079.1729.3@antares>
+Content-Disposition: inline
+In-Reply-To: <AANLkTinsOSI_TIc7Jyy4QFuFaS2d-fi0y3LMuITLyG3N-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,37 +22,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: =?ISO-8859-1?Q?Albrecht_Dre=DF?= <albrecht.dress-KvP5wT2u2U0@public.gmane.org>
-Cc: Linux PPC Development <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "Ira W. Snyder" <iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 16, 2010 at 11:47 AM, Albrecht Dre=DF <albrecht.dress-KvP5wT2u2U0@public.gmane.org>=
- wrote:
-> Am 06.05.10 20:06 schrieb(en) Grant Likely:
->>
->> > I think, though, the whole stuff has been discussed in depth in
->> > February, so
->> > I do not understand why it's still pending as "new". =A0Grant, did we =
-miss
->> > something here?
->>
->> I generally let subsystem maintainers pick up the device driver
->> patches for embedded platforms I'm responsible for unless I'm asked to
->> do otherwise. =A0I think ben has asked me to take these through my tree.
->
-> That's <http://git.secretlab.ca/?p=3Dlinux-2.6.git;a=3Dshortlog>, isn't i=
-t?
-> =A0Hmmm, didn't find it there... :-/
+Grant Likely wrote:
+> On Tue, May 18, 2010 at 5:57 AM, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> wrote:
+> > On Tue, 18 May 2010, Jeremy Kerr wrote:
+> >
+> >> Hi Nicolas,
+> >>
+> >> > I think that, for the moment, it is best if the bootloader on already
+> >> > existing subarchitectures where DT is introduced still preserve the
+> >> > already existing ability to boot using ATAGs. =A0This allows for the
+> >> > testing and validation of the DT concept against the legacy ATAG met=
+hod
+> >> > more easily.
+> >>
+> >> Just to clarify - by "still preserve the existing ability to use ATAGs=
+" you
+> >> mean only for non-DT boot, right?
+> >
+> > Exact. =A0Once a particular SOC family has no non-DT support anymore (d=
+ue
+> > to being entirely new, or because people get really enthusiastic and
+> > fade out legacy machine specific init code completely) then and only
+> > then it might be logical to remove ATAG from the concerned bootloaders.
+> >
+> >
+> >> This proposal still does not require ATAG_DEVTREE?
+> >
+> > No.
+> =
 
-Ugh... Stupid typing too fast.  I meant to say, "I *don't* think ben
-has asked me to take..."
+> Hmmm...  I misunderstood then.  I don't agree that this is the best way f=
+orward.
+> =
 
-Well this leaves a bit of a mess.  I'll make sure it gets in one way or ano=
-ther.
+> Doing it this way means a non-compatible break in the interface.  It
+> means that the bootloader needs to know what interface the kernel is
+> expecting for boot; information that is not readily available from the
+> image type.  The user then needs to tell the boot loader which
+> interface to use rather than a backwards compatible addition of a blob
+> of data.
 
-g.
+Also the other way around: Sometimes you want to install the same
+kernel on systems with old and new bootloaders, without touching the
+bootloaders (due to that not being powerfail-safe, say).  The kernel
+needs to know if it's passed a DT from a newer bootloader or not.
 
--- =
+And sometimes you'd like to install a newer, tested kernel (that uses
+DTs) on systems with old bootloaders.
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> You mention below "shifting the World Order on ARM" and it creating
+> resistance for merging DT support.  Isn't this much the same thing as
+> it creates a non backwards compatible change in the way bootloaders
+> pass data to the kernel.  The cutover in powerpc from the old
+> interface to the new caused no end of confusion and people who could
+> no longer get their systems to boot.  On PowerPC is was necessary
+> because the old method was completely broken, but ATAGs are clean,
+> simple and well implemented.
+
+You can't always update the boot loader.  Sometimes you're stuck with
+what's there for the life of a device.  Either it's ROM, or it's too
+risky to modify in place.
+
+> It also means teaching every boot loader two separate methods for
+> booting and exposing those differences to the user.
+
+Embedded devices usually don't have any way for the "user" to choose
+from a boot menu ;-)
+
+ATAG_DEVTREE sounds good to me for mix'n'match systems.
+
+New systems that always use DTs could use _just_ ATAG_DEVTREE, to
+avoid questions of conflicting info.  They could also settle on a
+fixed R1 value meaning "devtree platform".
+
+Or if a fixed "devtree platform" R1 is used, R2 could point directly
+at the DT, no atag list in that specific case.
+
+-- Jamie
