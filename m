@@ -1,20 +1,12 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc: make the padding for the device tree a
-	configurable option
-Date: Thu, 20 May 2010 06:40:50 -0500
-Message-ID: <AANLkTineV8MVuQGsIa81LOkO6BkJP9iU7MAX7OEz1lcu@mail.gmail.com>
-References: <1274298809-12772-1-git-send-email-timur@freescale.com>
-	<1274304013.1931.6.camel@pasglop> <4BF4593E.8030101@freescale.com>
-	<1274309050.1931.21.camel@pasglop>
-	<AANLkTilefxXcMnWqKSultu88r4D9W98adHLHxvUwi113@mail.gmail.com>
-	<20100520011820.GT25892@yookeroo>
-	<AANLkTily6AYGJbvTx-4MJm7HKeRWOuB9jpPzgVmys1sm@mail.gmail.com>
-	<20100520061739.GE25892@yookeroo>
+From: Nigel Cunningham <nigel-jrkICu/7yk3k1uMJSBkQmQ@public.gmane.org>
+Subject: Adding device tree emulation support to QEMU.
+Date: Thu, 20 May 2010 21:52:15 +1000
+Message-ID: <4BF5226F.5030107@tuxonice.net>
+Reply-To: nigel-jrkICu/7yk3k1uMJSBkQmQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100520061739.GE25892@yookeroo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,20 +16,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 20, 2010 at 1:17 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+Hi all.
 
-> Um.. what? =A0As far as I can tell that thread is about runtime
-> expanding the space given to the dtb. =A0I'm talking about altering the
-> padding on the file before giving it to u-boot in the first place.
+CELF has a project proposal:
 
-Sorry, I guess I don't understand.  How do I alter the padding before
-giving it to U-Boot?
+http://elinux.org/CELF_Project_Proposal/Add_Device_Tree_emulation_support_to_QEMU
 
--- =
+which I'm looking into performing as a contractor. This isn't an area 
+where I've done any work in the past, so I have a fair bit of catching 
+up to do.
 
-Timur Tabi
-Linux kernel developer at Freescale
+I've seen in the list archives that Grant Likely has already been doing 
+some work in this area and am therefore wondering whether there is 
+actually any work that I could contract to do. Grant and others, would 
+you be willing/able to comment?
+
+Thanks in advance,
+
+Nigel
