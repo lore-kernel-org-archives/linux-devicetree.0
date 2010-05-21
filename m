@@ -1,16 +1,18 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc: make the padding for the device tree
-	a	configurable option
-Date: Thu, 20 May 2010 11:04:29 -0500
-Message-ID: <4BF55D8D.5070801@freescale.com>
-References: <1274298809-12772-1-git-send-email-timur@freescale.com>	<1274304013.1931.6.camel@pasglop>
-	<4BF4593E.8030101@freescale.com>	<1274309050.1931.21.camel@pasglop>	<AANLkTilefxXcMnWqKSultu88r4D9W98adHLHxvUwi113@mail.gmail.com>
-	<20100520011820.GT25892@yookeroo>
+From: John Rigby <jcrigby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Boot interface for device trees on ARM
+Date: Fri, 21 May 2010 10:24:27 -0600
+Message-ID: <AANLkTil3vDAN4QIJJImk8MnQklisqFJq_RBc7c9VEZxl@mail.gmail.com>
+References: <201005181054.32325.jeremy.kerr@canonical.com>
+	<alpine.LFD.2.00.1005172341200.12758@xanadu.home>
+	<AANLkTilJl9_NHiT1LITG7UbA9S7OYsnGMcDAsFEEx5Ob@mail.gmail.com>
+	<alpine.LFD.2.00.1005191055180.12758@xanadu.home>
+	<20100519200819.GF1693@shareable.org>
+	<alpine.LFD.2.00.1005191614580.12758@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100520011820.GT25892@yookeroo>
+In-Reply-To: <alpine.LFD.2.00.1005191614580.12758-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,46 +22,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/19/2010 08:18 PM, David Gibson wrote:
-> On Wed, May 19, 2010 at 07:03:17PM -0500, Timur Tabi wrote:
->> On Wed, May 19, 2010 at 5:44 PM, Benjamin Herrenschmidt
->>> The padding in the kernel built is intended to
->>> make space for DT changes done by the zImage wrapper.
->>
->> Well, okay.  I think it would be nice if we expanded that to handle
->> general usage.
+Wow, no responses for almost two days, does that mean consensus has
+been reached?
 
-Don't we have dynamic expansion in the zImage wrapper?
-
->>> Maybe we could add to libfdt a way to provide a realloc() callback to it
->>> when it hits the max size, and uboot can then move things around (or
->>> fail).
->>
->> The problem is that the code which allocates a block for the fdt is
->> completely distinct from the code that manipulates the fdt.  We'd need
->> to put in either some kind of funky callback mechanism, or insist that
->> every fdt exist in a block of memory allocated by some specific method
->> (e.g. lmb).
->>
->> I'm stuck between a rock and a hard place, it seems.  No one is
->> willing to compromise on any of my ideas.  It's hard to convince our
->> BSP developers that they should be pushing more code upstream when I
->> get so much resistance for a such a mundane change.
+On Wed, May 19, 2010 at 2:22 PM, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> wrote:
+> On Wed, 19 May 2010, Jamie Lokier wrote:
 >
-> Couldn't you use the configurable padding, but put the stuff to do it
-> into u-boot.  i.e. repad the dtb at u-boot build time, rather than
-> u-boot runtime.
-
-Currently generating a dtb is not done as part of the u-boot build 
-process -- and apparently some people are using the Linux makefile 
-target to do it.
-
-I think the right thing is to do whatever we need to do in u-boot to get 
-dynamic expansion fully working (it already does it in some 
-circumstances, just not always, or necessarily safely).  Static padding 
-is too fragile.
-
--Scott
+>> Nicolas Pitre wrote:
+>> > It is not up to the bootloader to "adjust" to the kernel. =A0But rather
+>> > for the kernel to cope with the bootloader's provided information. =A0=
+If
+>> > the bootloader passes a specific machine ID with the ATAG list then the
+>> > kernel will use that, and if the bootloader passes a DT machine ID with
+>> > a DT blob then the kernel will use that. =A0You just have to configure
+>> > your kernel with both "machine types" at the same time.
+>>
+>> Scenario:
+>>
+>> You upgrade your systems to a new DT-capable kernel and DT-capable
+>> bootloader. =A0It works great. =A0You ship new instances of your device =
+with this.
+>>
+>> Once they're in the field, someone reports a bug that doesn't happen
+>> with the older device instances. =A0It's not a bug you can reproduce,
+>> but you suspect the newer of kernel. =A0So you remote-update some of the
+>> newly shipped devices with an old, pre-DT kernel binary that's been
+>> stable on the older devices, to see if the bug goes away.
+>>
+>> Problem: The newer shipped devices have a DT-capable bootloader, and
+>> it can't boot old kernels, because they don't understand the DT format.
+>>
+>> You could remote-downgrade the bootloaders, but that's risky. =A0You
+>> could try building the old kernel with DT support, but that adds
+>> another variable to your testing.
+>>
+>> Anticipating this well in advance, you of course built your DT-capable
+>> bootloader with the ability to boot old and new style kernels...
+>
+> Exact. =A0Quoting myself:
+>
+> |I think that, for the moment, it is best if the bootloader on already
+> |existing subarchitectures where DT is introduced still preserve the
+> |already existing ability to boot using ATAGs. =A0This allows for the
+> |testing and validation of the DT concept against the legacy ATAG method
+> |more easily.
+> |
+> |On new subarchitectures, it might make sense to go with DT from the
+> |start instead of creating setup code for every single machine. =A0In that
+> |case the bootloader for those machines would only need to care about DT
+> |and forget about ATAGs.
+>
+>
+> Nicolas
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
