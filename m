@@ -1,56 +1,40 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 3/11] arch/sparc/kernel: Eliminate what looks like a NULL
- pointer dereference
-Date: Thu, 27 May 2010 14:32:45 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1005271432250.5422@ask.diku.dk>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3] powerpc: Add i8042 keyboard and mouse irq parsing
+Date: Sat, 29 May 2010 13:35:53 +1000
+Message-ID: <1275104153.1931.522.camel@pasglop>
+References: <20100525080834.29149.70967.stgit@ES-J7S4D2J.amer.consind.ge.com>
+	<AANLkTikve-ZghgpVl3cyjjgWAch-oCJ0EiYK2127f5gS@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <sparclinux-owner@vger.kernel.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@secretlab.ca>, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.orgkern
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTikve-ZghgpVl3cyjjgWAch-oCJ0EiYK2127f5gS-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Martyn Welch <martyn.welch-JJi787mZWgc@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Julia Lawall <julia@diku.dk>
 
-At the point of the test, action cannot be NULL, as it has been dereferenced
-in the code just above.
+> The patch looks okay to me.
+> 
+> BTW, where is the i8042 binding documented?  Ben, is this location of
+> the kbd/mouse irq historical, or is it just something that we happened
+> to get when the .dts files were first created?  Having the irq
+> specified directly in the kbd or aux nodes would make a lot more
+> sense, and if this isn't something already nailed down, then it
+> probably does make sense to move the irq specification, fall back to
+> the parent node to still support older trees, and with the hard coded
+> irq numbers as the last resort.
 
-A simplified version of the semantic match that finds this problem is as
-follows: (http://coccinelle.lip6.fr/)
+That's just ISA crap. It should be in the existing OF bindings.
 
-// <smpl>
-@r exists@
-expression E,E1;
-identifier f;
-statement S1,S2,S3;
-@@
-
-if ((E == NULL && ...) || ...)
-{
-  ... when != if (...) S1 else S2
-      when != E = E1
-* E->f
-  ... when any
-}
-else S3
-// </smpl>
-
-Signed-off-by: Julia Lawall <julia@diku.dk>
-
----
- arch/sparc/kernel/sun4d_irq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/sparc/kernel/sun4d_irq.c b/arch/sparc/kernel/sun4d_irq.c
-index ab036a7..e11b461 100644
---- a/arch/sparc/kernel/sun4d_irq.c
-+++ b/arch/sparc/kernel/sun4d_irq.c
-@@ -183,7 +183,7 @@ void sun4d_free_irq(unsigned int irq, void *dev_id)
- 		goto out_unlock;
- 	}
- 	
--	if (action && tmp)
-+	if (tmp)
- 		tmp->next = action->next;
- 	else
- 		*actionp = action->next;
+Cheers,
+Ben.
