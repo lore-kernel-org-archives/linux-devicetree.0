@@ -1,49 +1,90 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 0/5] Rework MPC5121 DIU support (for 2.6.35)
-Date: Tue, 1 Jun 2010 11:38:01 +0200
-Message-ID: <20100601113801.5b0ff773@wker>
-References: <1272584978-19063-1-git-send-email-agust@denx.de>
-	<y2med82fe3e1004291839m92dea081o6a46dc307e07c4ad@mail.gmail.com>
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 1/4] drivers/mtd/maps: introduce missing kfree
+Date: Tue, 1 Jun 2010 16:34:20 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1006011625510.12546@ask.diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <y2med82fe3e1004291839m92dea081o6a46dc307e07c4ad-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.orgker
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
+From: Julia Lawall <julia@diku.dk>
 
-On Thu, 29 Apr 2010 20:39:02 -0500
-Timur Tabi <timur.tabi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Error handling code following a kmalloc should free the allocated data.
 
-> On Thu, Apr 29, 2010 at 6:49 PM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> > This patch series rework DIU support patches submitted
-> > previously. Comments to the previos patch series have
-> > been addressed, not related changes are dropped and some
-> > changes are split out to separate patches to simplify
-> > review. Furthermore a patch has been added to support
-> > setting display mode using EDID block in the device tree.
-> 
-> Have you tested these changes on an MPC8610 HPCD?  If not, do you
-> think your changes will break that platform?
-> 
-> I have an 8610 in-house, but I'm currently working on another issue on
-> that board, so I can't test these patches for you just yet.
+The semantic match that finds the problem is as follows:
+(http://www.emn.fr/x-info/coccinelle/)
 
-Could you please test these patches on MPC8610 HPCD? I think these
-changes won't break that platform. The patches apply cleanly on
-2.6.35-rc1.
+// <smpl>
+@r exists@
+local idexpression x;
+statement S;
+expression E;
+identifier f,f1,l;
+position p1,p2;
+expression *ptr != NULL;
+@@
 
-Thanks,
-Anatolij
+x@p1 = \(kmalloc\|kzalloc\|kcalloc\)(...);
+...
+if (x == NULL) S
+<... when != x
+     when != if (...) { <+...x...+> }
+(
+x->f1 = E
+|
+ (x->f1 == NULL || ...)
+|
+ f(...,x->f1,...)
+)
+...>
+(
+ return \(0\|<+...x...+>\|ptr\);
+|
+ return@p2 ...;
+)
+
+@script:python@
+p1 << r.p1;
+p2 << r.p2;
+@@
+
+print "* file: %s kmalloc %s return %s" % (p1[0].file,p1[0].line,p2[0].line)
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+---
+ drivers/mtd/maps/physmap_of.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+index ba124ba..6ac5f9f 100644
+--- a/drivers/mtd/maps/physmap_of.c
++++ b/drivers/mtd/maps/physmap_of.c
+@@ -353,7 +353,7 @@ static int __devinit of_flash_probe(struct of_device *dev,
+ 				   &info->parts, 0);
+ 	if (err < 0) {
+ 		of_free_probes(part_probe_types);
+-		return err;
++		goto err_out;
+ 	}
+ 	of_free_probes(part_probe_types);
+ 
+@@ -361,14 +361,14 @@ static int __devinit of_flash_probe(struct of_device *dev,
+ 	if (err == 0) {
+ 		err = of_mtd_parse_partitions(&dev->dev, dp, &info->parts);
+ 		if (err < 0)
+-			return err;
++			goto err_out;
+ 	}
+ #endif
+ 
+ 	if (err == 0) {
+ 		err = parse_obsolete_partitions(dev, info, dp);
+ 		if (err < 0)
+-			return err;
++			goto err_out;
+ 	}
+ 
+ 	if (err > 0)
