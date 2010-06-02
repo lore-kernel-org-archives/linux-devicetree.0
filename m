@@ -1,90 +1,48 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 1/4] drivers/mtd/maps: introduce missing kfree
-Date: Tue, 1 Jun 2010 16:34:20 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1006011625510.12546@ask.diku.dk>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] of/usb: fix build error due to of_node pointer move
+Date: Wed, 02 Jun 2010 13:47:16 -0600
+Message-ID: <20100602194022.6780.28819.stgit@angua>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.orgker
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Julia Lawall <julia@diku.dk>
+Fix driver to use new location of of_node pointer (introduced by commit
+use new location of of_node pointer (introduced by commit
+61c7a080a5a061c976988fd4b844dfb468dda255; of: Always use 'struct
+device.of_node' to get device node pointer)
 
-Error handling code following a kmalloc should free the allocated data.
-
-The semantic match that finds the problem is as follows:
-(http://www.emn.fr/x-info/coccinelle/)
-
-// <smpl>
-@r exists@
-local idexpression x;
-statement S;
-expression E;
-identifier f,f1,l;
-position p1,p2;
-expression *ptr != NULL;
-@@
-
-x@p1 = \(kmalloc\|kzalloc\|kcalloc\)(...);
-...
-if (x == NULL) S
-<... when != x
-     when != if (...) { <+...x...+> }
-(
-x->f1 = E
-|
- (x->f1 == NULL || ...)
-|
- f(...,x->f1,...)
-)
-...>
-(
- return \(0\|<+...x...+>\|ptr\);
-|
- return@p2 ...;
-)
-
-@script:python@
-p1 << r.p1;
-p2 << r.p2;
-@@
-
-print "* file: %s kmalloc %s return %s" % (p1[0].file,p1[0].line,p2[0].line)
-// </smpl>
-
-Signed-off-by: Julia Lawall <julia@diku.dk>
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Reported-by: John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+CC: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
+CC: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+CC: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- drivers/mtd/maps/physmap_of.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-index ba124ba..6ac5f9f 100644
---- a/drivers/mtd/maps/physmap_of.c
-+++ b/drivers/mtd/maps/physmap_of.c
-@@ -353,7 +353,7 @@ static int __devinit of_flash_probe(struct of_device *dev,
- 				   &info->parts, 0);
- 	if (err < 0) {
- 		of_free_probes(part_probe_types);
--		return err;
-+		goto err_out;
- 	}
- 	of_free_probes(part_probe_types);
- 
-@@ -361,14 +361,14 @@ static int __devinit of_flash_probe(struct of_device *dev,
- 	if (err == 0) {
- 		err = of_mtd_parse_partitions(&dev->dev, dp, &info->parts);
- 		if (err < 0)
--			return err;
-+			goto err_out;
- 	}
- #endif
- 
- 	if (err == 0) {
- 		err = parse_obsolete_partitions(dev, info, dp);
- 		if (err < 0)
--			return err;
-+			goto err_out;
- 	}
- 
- 	if (err > 0)
+I've applied this patch to my merge-devicetree branch
+
+ drivers/usb/host/ehci-xilinx-of.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+index 013972b..4899f45 100644
+--- a/drivers/usb/host/ehci-xilinx-of.c
++++ b/drivers/usb/host/ehci-xilinx-of.c
+@@ -151,7 +151,7 @@ static const struct hc_driver ehci_xilinx_of_hc_driver = {
+ static int __devinit
+ ehci_hcd_xilinx_of_probe(struct of_device *op, const struct of_device_id *match)
+ {
+-	struct device_node *dn = op->node;
++	struct device_node *dn = op->dev.of_node;
+ 	struct usb_hcd *hcd;
+ 	struct ehci_hcd	*ehci;
+ 	struct resource res;
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
