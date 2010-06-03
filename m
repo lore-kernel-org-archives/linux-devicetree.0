@@ -1,11 +1,22 @@
 From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] of/usb: fsl_qe_udc.c: fix build breakage
-Date: Thu,  3 Jun 2010 02:59:55 +0200
-Message-ID: <1275526795-849-1-git-send-email-agust@denx.de>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH] of/net: fs_enet/mii-bitbang.c: fix build breakage
+Date: Thu,  3 Jun 2010 03:06:54 +0200
+Message-ID: <1275527214-1000-1-git-send-email-agust@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Fixes build error caused by the OF device_node
@@ -13,35 +24,30 @@ pointer being moved into struct device
 
 Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 ---
- drivers/usb/gadget/fsl_qe_udc.c |    4 ++--
+ drivers/net/fs_enet/mii-bitbang.c |    4 ++--
  1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/fsl_qe_udc.c b/drivers/usb/gadget/fsl_qe_udc.c
-index 2928523..82506ca 100644
---- a/drivers/usb/gadget/fsl_qe_udc.c
-+++ b/drivers/usb/gadget/fsl_qe_udc.c
-@@ -2400,7 +2400,7 @@ EXPORT_SYMBOL(usb_gadget_unregister_driver);
- static struct qe_udc __devinit *qe_udc_config(struct of_device *ofdev)
- {
- 	struct qe_udc *udc;
--	struct device_node *np = ofdev->node;
-+	struct device_node *np = ofdev->dev.of_node;
- 	unsigned int tmp_addr = 0;
- 	struct usb_device_para __iomem *usbpram;
- 	unsigned int i;
-@@ -2525,7 +2525,7 @@ static void qe_udc_release(struct device *dev)
- static int __devinit qe_udc_probe(struct of_device *ofdev,
- 			const struct of_device_id *match)
- {
--	struct device_node *np = ofdev->node;
-+	struct device_node *np = ofdev->dev.of_node;
- 	struct qe_ep *ep;
- 	unsigned int ret = 0;
- 	unsigned int i;
+diff --git a/drivers/net/fs_enet/mii-bitbang.c b/drivers/net/fs_enet/mii-bitbang.c
+index 0f90685..3607340 100644
+--- a/drivers/net/fs_enet/mii-bitbang.c
++++ b/drivers/net/fs_enet/mii-bitbang.c
+@@ -169,7 +169,7 @@ static int __devinit fs_enet_mdio_probe(struct of_device *ofdev,
+ 
+ 	new_bus->name = "CPM2 Bitbanged MII",
+ 
+-	ret = fs_mii_bitbang_init(new_bus, ofdev->node);
++	ret = fs_mii_bitbang_init(new_bus, ofdev->dev.of_node);
+ 	if (ret)
+ 		goto out_free_bus;
+ 
+@@ -181,7 +181,7 @@ static int __devinit fs_enet_mdio_probe(struct of_device *ofdev,
+ 	new_bus->parent = &ofdev->dev;
+ 	dev_set_drvdata(&ofdev->dev, new_bus);
+ 
+-	ret = of_mdiobus_register(new_bus, ofdev->node);
++	ret = of_mdiobus_register(new_bus, ofdev->dev.of_node);
+ 	if (ret)
+ 		goto out_free_irqs;
+ 
 -- 
 1.7.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
