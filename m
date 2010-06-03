@@ -1,36 +1,28 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/watchdog: gef_wdt.c: fix build breakage
-Date: Wed, 2 Jun 2010 20:14:16 -0600
-Message-ID: <20100603021416.GJ27186@angua.secretlab.ca>
-References: <1275528631-1523-1-git-send-email-agust@denx.de>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] of/crypto: n2_core.c: Fix build failures
+Date: Wed, 02 Jun 2010 19:45:49 -0700 (PDT)
+Message-ID: <20100602.194549.200117567.davem@davemloft.net>
+References: <1275521741-11040-1-git-send-email-y>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1275528631-1523-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1275521741-11040-1-git-send-email-y>
+Sender: linux-crypto-owner@vger.kernel.org
+To: agust@denx.de
+Cc: linux-crypto@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, herbert@gondor.apana.org.au
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 03, 2010 at 03:30:31AM +0200, Anatolij Gustschin wrote:
-> Fixes build error caused by the OF device_node
-> pointer being moved into struct device
+From: agust@denx.de
+Date: Thu,  3 Jun 2010 01:35:41 +0200
+
+> From: Anatolij Gustschin <agust@denx.de>
 > 
-> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-> ---
->  drivers/watchdog/gef_wdt.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> Fixes build errors caused by the:
+> - OF device_node pointer being moved into struct device
+> - removal of the match_table and name fields from
+>   struct of_platform_driver
+> 
+> Signed-off-by: Anatolij Gustschin <agust@denx.de>
 
-applied.  Thanks for all the work Anatolij
-
-g.
+This is already fixed in the crypto GIT tree.
