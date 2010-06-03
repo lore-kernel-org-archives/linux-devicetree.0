@@ -1,25 +1,37 @@
-From: David Miller <davem@davemloft.net>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 Subject: Re: [PATCH 2/2] of/crypto: n2_core: fix build breakage
-Date: Thu, 03 Jun 2010 02:49:02 -0700 (PDT)
-Message-ID: <20100603.024902.139551876.davem@davemloft.net>
-References: <AANLkTikNcAvyHf1yHPweNBVSCSPNmq-JaEOgYW2FYUGJ@mail.gmail.com>
-	<1275537827-28921-2-git-send-email-w.sang@pengutronix.de>
+Date: Thu, 3 Jun 2010 20:03:09 +1000
+Message-ID: <20100603100309.GA30618@gondor.apana.org.au>
+References: <AANLkTikNcAvyHf1yHPweNBVSCSPNmq-JaEOgYW2FYUGJ@mail.gmail.com> <1275537827-28921-2-git-send-email-w.sang@pengutronix.de> <20100603.024902.139551876.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1275537827-28921-2-git-send-email-w.sang@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <20100603.024902.139551876.davem@davemloft.net>
 Sender: linux-crypto-owner@vger.kernel.org
-To: w.sang@pengutronix.de
-Cc: devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, grant.likely@secretlab.ca, linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au
+To: David Miller <davem@davemloft.net>
+Cc: w.sang@pengutronix.de, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, grant.likely@secretlab.ca, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wolfram Sang <w.sang@pengutronix.de>
-Date: Thu,  3 Jun 2010 06:03:47 +0200
+On Thu, Jun 03, 2010 at 02:49:02AM -0700, David Miller wrote:
+> From: Wolfram Sang <w.sang@pengutronix.de>
+> Date: Thu,  3 Jun 2010 06:03:47 +0200
+> 
+> > Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> 
+> Herbert you really need to push your pending crypto tree stuff to
+> Linus, this is the second time this build fix has been posted just
+> today alone and it's in your tree since last week :-)
 
-> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
+Sorry, I hadn't realised that the breakage was in the main tree
+as opposed to linux-next.
 
-Herbert you really need to push your pending crypto tree stuff to
-Linus, this is the second time this build fix has been posted just
-today alone and it's in your tree since last week :-)
+I'll push it out now.
+
+Thanks,
+-- 
+Visit Openswan at http://www.openswan.org/
+Email: Herbert Xu ~{PmV>HI~} <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
