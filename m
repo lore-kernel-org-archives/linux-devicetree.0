@@ -1,44 +1,30 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH 0/5] Consolidate OF IRQ handling code
-Date: Fri, 4 Jun 2010 15:24:54 -0600
-Message-ID: <AANLkTil1-afn4-qCEAza53taNamu-agigv09VSdyB0sB@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 3/11] arch/sparc/kernel: Eliminate what looks like a
+ NULL pointer dereference
+Date: Fri, 04 Jun 2010 16:17:50 -0700 (PDT)
+Message-ID: <20100604.161750.70215425.davem@davemloft.net>
+References: <Pine.LNX.4.64.1005271432250.5422@ask.diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1005271432250.5422@ask.diku.dk>
 Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Michal Simek <monstr@monstr.eu>, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, sparclinux@vger.kernel.org, Jeremy Kerr <jeremy.kerr@canonical.com>, "David S. Miller" <davem@davemloft.net>
+To: julia@diku.dk
+Cc: grant.likely@secretlab.ca, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series merges the common IRQ handling code between Microblaze and Powerpc.
+From: Julia Lawall <julia@diku.dk>
+Date: Thu, 27 May 2010 14:32:45 +0200 (CEST)
 
-I'll be adding these patches to linux-next next week unless there are
-objections.
+> From: Julia Lawall <julia@diku.dk>
+> 
+> At the point of the test, action cannot be NULL, as it has been dereferenced
+> in the code just above.
+> 
+> A simplified version of the semantic match that finds this problem is as
+> follows: (http://coccinelle.lip6.fr/)
+ ...
+> Signed-off-by: Julia Lawall <julia@diku.dk>
 
-Cheers,
-g.
-
-Grant Likely (5):
-      of/irq: Move irq_of_parse_and_map() to common code
-      of/microblaze: strip out of_irq_workarounds code
-      of/irq: merge of_irq_find_parent()
-      of/irq: Merge of_irq_map_raw()
-      of/irq: merge of_irq_map_one()
-
- arch/microblaze/include/asm/irq.h   |   13 --
- arch/microblaze/include/asm/prom.h  |   63 +-------
- arch/microblaze/kernel/irq.c        |   14 +--
- arch/microblaze/kernel/prom_parse.c |  321 +---------------------------------
- arch/powerpc/include/asm/irq.h      |   13 --
- arch/powerpc/include/asm/prom.h     |   51 +-----
- arch/powerpc/kernel/irq.c           |   14 +--
- arch/powerpc/kernel/prom_parse.c    |  254 +--------------------------
- arch/sparc/include/asm/prom.h       |    1 -
- drivers/of/Kconfig                  |    4 +
- drivers/of/Makefile                 |    1 +
- drivers/of/irq.c                    |  336 +++++++++++++++++++++++++++++++++++
- drivers/of/of_mdio.c                |    1 +
- include/linux/of_irq.h              |   49 +++++
- 14 files changed, 405 insertions(+), 730 deletions(-)
- create mode 100644 drivers/of/irq.c
- create mode 100644 include/linux/of_irq.h
+Applied, thanks Julia.
