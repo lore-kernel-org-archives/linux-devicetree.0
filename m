@@ -1,30 +1,58 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 3/11] arch/sparc/kernel: Eliminate what looks like a
- NULL pointer dereference
-Date: Fri, 04 Jun 2010 16:17:50 -0700 (PDT)
-Message-ID: <20100604.161750.70215425.davem@davemloft.net>
-References: <Pine.LNX.4.64.1005271432250.5422@ask.diku.dk>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: Boot interface for device trees on ARM
+Date: Sat, 5 Jun 2010 09:33:04 +0800
+Message-ID: <201006050933.06714.jeremy.kerr@canonical.com>
+References: <201005181054.32325.jeremy.kerr@canonical.com>
+	<alpine.LFD.2.00.1005191055180.12758@xanadu.home>
+	<AANLkTilhqg270l-_m9raalqAPPRhvLJD9omHe8ysgLjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1005271432250.5422@ask.diku.dk>
-Sender: sparclinux-owner@vger.kernel.org
-To: julia@diku.dk
-Cc: grant.likely@secretlab.ca, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTilhqg270l-_m9raalqAPPRhvLJD9omHe8ysgLjg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: nicolas.pitre-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Julia Lawall <julia@diku.dk>
-Date: Thu, 27 May 2010 14:32:45 +0200 (CEST)
+All,
 
-> From: Julia Lawall <julia@diku.dk>
+> > With this, the kernel can remain largely backward compatible with the
+> > legacy boot method, requiring _no_ change to the existing code, as the
+> > ID is sufficient to distinguish between both boot types.  The machine
+> > record remains largely relevant even for a DT boot as the majority of
+> > its content is SOC specific anyway, and given a per SOC ID for DT usage
+> > means that the early boot facilities are still usable as is even in the
+> > DT context.  And then the init_machine method in the machine record is
+> > naturally used to parse the device tree and do its work on multiple
+> > machines' behalf instead of relying on compiled-in static data for a
+> > specific machine.
 > 
-> At the point of the test, action cannot be NULL, as it has been dereferenced
-> in the code just above.
+> There will still be instances of machine-specific setup code that
+> needs to be chosen at boot (based on the top level 'compatible'
+> property), but init_machine() appears to be early enough to handle
+> this.
 > 
-> A simplified version of the semantic match that finds this problem is as
-> follows: (http://coccinelle.lip6.fr/)
- ...
-> Signed-off-by: Julia Lawall <julia@diku.dk>
+> hmmm... however, things the device tree blob and the initrd both need
+> to be marked as bootmem at paging_init() time, but init_machine()
+> doesn't run until later.  There will still need to be some hooks for
+> doing early DT processing, but none of that should be either board or
+> SoC specific.
 
-Applied, thanks Julia.
+If we're planning to keep the machine IDs around (even if they are now per-
+SoC), I'd like to know what would be left using them. The only thing that I 
+can see that we currently use is io_pg_offset for the DEBUG_LL builds, and 
+that isn't a convincing case to keep them.
+
+Cheers,
+
+
+Jeremy
