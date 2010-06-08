@@ -1,13 +1,11 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 5/5] of/address: restrict 'no-ranges' kludge to powerpc
-Date: Tue, 08 Jun 2010 08:10:18 -0600
-Message-ID: <20100608141018.25879.44413.stgit@angua>
-References: <20100608140917.25879.67745.stgit@angua>
+Subject: [PATCH 0/6] OF device code merges and improvements
+Date: Tue, 08 Jun 2010 08:26:13 -0600
+Message-ID: <20100608142152.26088.1108.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100608140917.25879.67745.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,45 +15,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: ben-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linuxppc-dev@lists.
 List-Id: devicetree@vger.kernel.org
 
-Certain Apple machines don't use the ranges property correctly, but the
-workaround should not be applied on other architectures.  This patch
-disables the workaround for non-powerpc architectures.
+These patches merge more common of_device code between microblaze and
+powerpc and some other miscellaneous improvement in preparation for
+the merge of of_platform_bus_type with platform_bus_type.
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-CC: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-CC: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-CC: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+These patches are based on top of the IRQ and address code merge which
+I posted earlier.  If you want to test them, I've pushed the commits
+out to the here:
+
+git://git.secretlab.ca/git/linux-2.6 devicetree-next
+
+Cheers,
+g.
+
 ---
- drivers/of/address.c |   11 ++++++++++-
- 1 files changed, 10 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 0b04137..5c220c3 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -346,12 +346,21 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
- 	 * a 1:1 translation at that level. It's up to the caller not to try
- 	 * to translate addresses that aren't supposed to be translated in
- 	 * the first place. --BenH.
-+	 *
-+	 * As far as we know, this damage only exists on Apple machines, so
-+	 * This code is only enabled on powerpc. --gcl
- 	 */
- 	ranges = of_get_property(parent, rprop, &rlen);
-+#if !defined(CONFIG_PPC)
-+	if (ranges == NULL) {
-+		pr_err("OF: no ranges; cannot translate\n");
-+		return 1;
-+	}
-+#endif /* !defined(CONFIG_PPC) */
- 	if (ranges == NULL || rlen == 0) {
- 		offset = of_read_number(addr, na);
- 		memset(addr, 0, pna * 4);
--		pr_debug("OF: no ranges, 1:1 translation\n");
-+		pr_debug("OF: empty ranges; 1:1 translation\n");
- 		goto finish;
- 	}
+Grant Likely (6):
+      of: Use full node name in resource structures
+      of/device: merge of_device_uevent
+      of: Modify of_device_get_modalias to be passed struct device
+      of/device: Merge of_platform_bus_probe()
+      of: Merge of_device_alloc
+      of/device: populate platform_device (of_device) resource table on allocation
+
+
+ arch/microblaze/include/asm/device.h      |    3 
+ arch/microblaze/include/asm/of_device.h   |   21 ---
+ arch/microblaze/include/asm/of_platform.h |   33 ----
+ arch/microblaze/kernel/Makefile           |    2 
+ arch/microblaze/kernel/of_device.c        |  112 ---------------
+ arch/microblaze/kernel/of_platform.c      |  141 ++-----------------
+ arch/powerpc/include/asm/device.h         |    3 
+ arch/powerpc/include/asm/of_device.h      |   13 --
+ arch/powerpc/include/asm/of_platform.h    |   11 -
+ arch/powerpc/kernel/of_device.c           |  110 +-------------
+ arch/powerpc/kernel/of_platform.c         |  131 -----------------
+ drivers/macintosh/macio_sysfs.c           |    5 -
+ drivers/of/address.c                      |    2 
+ drivers/of/device.c                       |   62 +++++++-
+ drivers/of/irq.c                          |    1 
+ drivers/of/platform.c                     |  221 +++++++++++++++++++++++++++++
+ include/linux/of_device.h                 |    6 +
+ include/linux/of_platform.h               |   21 +++
+ 18 files changed, 337 insertions(+), 561 deletions(-)
+ delete mode 100644 arch/microblaze/kernel/of_device.c
