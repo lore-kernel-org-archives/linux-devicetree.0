@@ -1,69 +1,103 @@
-From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH 6/6] of/device: populate platform_device (of_device)
 	resource table on allocation
-Date: Tue, 8 Jun 2010 20:46:45 +0400
-Message-ID: <20100608164645.GA15216@oksana.dev.rtsoft.ru>
+Date: Tue, 8 Jun 2010 12:41:47 -0600
+Message-ID: <AANLkTinHH-YhdWpH60Z2BYsiEjzLb_imrk6KUmQRH07P@mail.gmail.com>
 References: <20100608142152.26088.1108.stgit@angua>
 	<20100608142643.26088.61366.stgit@angua>
 	<20100608155702.GA5419@oksana.dev.rtsoft.ru>
 	<AANLkTinZT4z93SWxjce5oRZzmaQHtVnO96zsXO9OX2UZ@mail.gmail.com>
+	<20100608164645.GA15216@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTinZT4z93SWxjce5oRZzmaQHtVnO96zsXO9OX2UZ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100608164645.GA15216@oksana.dev.rtsoft.ru>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: sfr@canb.auug.org.au, monstr@monstr.eu, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, jeremy.kerr@canonical.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMDgsIDIwMTAgYXQgMTA6MDI6NDlBTSAtMDYwMCwgR3JhbnQgTGlrZWx5IHdy
-b3RlOgo+IE9uIFR1ZSwgSnVuIDgsIDIwMTAgYXQgOTo1NyBBTSwgQW50b24gVm9yb250c292IDxj
-Ym91YXRtYWlscnVAZ21haWwuY29tPiB3cm90ZToKPiA+IE9uIFR1ZSwgSnVuIDA4LCAyMDEwIGF0
-IDA4OjI2OjQzQU0gLTA2MDAsIEdyYW50IExpa2VseSB3cm90ZToKPiA+IFsuLi5dCj4gPj4gKyDC
-oCDCoCBkZXYgPSBremFsbG9jKHNpemVvZigqZGV2KSArIChzaXplb2Yoc3RydWN0IHJlc291cmNl
-KSAqIGkpLCBHRlBfS0VSTkVMKTsKPiA+PiDCoCDCoCDCoCBpZiAoIWRldikKPiA+PiDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCByZXR1cm4gTlVMTDsKPiA+PiAtCj4gPj4gwqAgwqAgwqAgZGV2LT5kZXYu
-b2Zfbm9kZSA9IG9mX25vZGVfZ2V0KG5wKTsKPiA+PiDCoCDCoCDCoCBkZXYtPmRldi5kbWFfbWFz
-ayA9ICZkZXYtPmFyY2hkYXRhLmRtYV9tYXNrOwo+ID4+IMKgIMKgIMKgIGRldi0+ZGV2LnBhcmVu
-dCA9IHBhcmVudDsKPiA+PiDCoCDCoCDCoCBkZXYtPmRldi5yZWxlYXNlID0gb2ZfcmVsZWFzZV9k
-ZXY7Cj4gPj4KPiA+PiArIMKgIMKgIC8qIFBvcHVsYXRlIHRoZSByZXNvdXJjZSB0YWJsZSAqLwo+
-ID4+ICsgwqAgwqAgaWYgKG51bV9pcnEgfHwgbnVtX3JlZykgewo+ID4+ICsgwqAgwqAgwqAgwqAg
-wqAgwqAgZGV2LT5yZXNvdXJjZSA9ICh2b2lkKikmZGV2WzFdOwo+ID4KPiA+IFRoaXMgaXMgdWds
-eS4gV2h5IG5vdCBhbGxvY2F0ZSB0aGUgbWVtb3J5IHNwZWNpZmljYWxseSBmb3IKPiA+IGRldi0+
-cmVzb3VyY2U/IElzIHRoaXMgYmVjYXVzZSB5b3UgcGxhbiB0byBnZXQgcmlkIG9mCj4gPiBvZl9y
-ZWxlYXNlX2RldigpLCBhbmQgdGhlIGdlbmVyaWMgcmVsZWFzZV9kZXYoKSB3b24ndAo+ID4ga25v
-dyBpZiBpdCBzaG91bGQgZnJlZSB0aGUgZGV2LT5yZXNvdXJjZT8gVGhlcmUgbXVzdAo+ID4gYmUg
-YSBiZXR0ZXIgd2F5IHRvIGhhbmRsZSB0aGlzLgo+IAo+IEFsbG9jYXRpbmcgaW4gb25lIGJpZyBi
-bG9jayBtZWFucyBsZXNzIHBvdGVudGlhbCBtZW1vcnkgZnJhZ21lbnRhdGlvbiwKPiBhbmQgdGhl
-IGtlcm5lbCBjYW4gZnJlZSBpdCBhbGwgYXQgb25jZS4KCkFyZSB0aGVyZSBhbnkgbnVtYmVycyBv
-ZiBzYXZlZCBhbW91bnQgb2YgbWVtb3J5IHNvIHRoYXQgd2UKY291bGQgY29tcGFyZT8KClRoZSAi
-bGVzcyBtZW1vcnkgZnJhZ21lbnRhdGlvbiIgaXMgaW5kZWVkIHBvdGVudGlhbCwgYnV0CmludHJv
-ZHVjdGlvbiBvZiBvYnNjdXJlIGNvZGUgaXMgZ29pbmcgb24gbm93IGF0IHRoaXMgcHJlY2lzZQpt
-b21lbnQuCgo+IFRoaXMgaXMgYSBjb21tb24gcGF0dGVybi4KClRoaXMgY2FuJ3QgYmUgdHJ1ZSBi
-ZWNhdXNlIGl0IHByb2R1Y2VzIHVnbHkgY2FzdHMgYW5kIGZyYWdpbGUKY29kZSBhbGwgb3ZlciB0
-aGUgcGxhY2UgLS0gd2hpY2ggaXMgZXhhY3RseSB3aGF0IGV2ZXJ5Ym9keQp0cmllcyB0byBhdm9p
-ZCBpbiB0aGUga2VybmVsLgoKU3VjaCBhIHBhdHRlcm4gaXMgY29tbW9uIHdoZW4gYSBkcml2ZXIg
-YWxsb2NhdGVzIGUuZy4gdHggYW5kIHJ4CmJ1ZmZlcnMgKG9mIHRoZSBzYW1lIHR5cGUpIHRvZ2V0
-aGVyLCBhbmQgdGhlbiBzcGxpdCB0aGUgYnVmZmVyCmludG8gdHdvIHBvaW50ZXJzLgoKQnV0IEkg
-aGVhcmQgb2Ygbm8gc3VjaCBwYXR0ZXJuIGZvciAnc3RydWN0IGRldmljZSArIHN0cnVjdApyZXNv
-dXJjZXMnIGFsbG9jYXRpb24gd2l0aG91dCBldmVuIHNvbWUga2luZCBvZiBfcHJpdiBzdHJ1Y3Qs
-CndoaWNoIGlzIHN1cmVseSBzb21ldGhpbmcgbmV3LCBhbmQgdWdseS4KCklmIHlvdSByZWFsbHkg
-d2FudCB0byBhdm9pZCAoYW4gdW5wcm92ZW4pIG1lbW9yeSBmcmFnbWVudGF0aW9uLAp5b3UgY291
-bGQgZG86CgpzdHJ1Y3Qgb2ZfZGV2aWNlX3dpdGhfcmVzb3VyY2VzIHsKCXN0cnVjdCBkZXZpY2Ug
-ZGV2OwoJc3RydWN0IHJlc291cmNlIHJlc291cnNlc1swXTsKfTsKClRoaXMgYXQgbGVhc3Qgd2ls
-bCBnZXQgcmlkIG9mIHRoZSBjYXN0cyBhbmQgaW5jb21wcmVoZW5zaWJsZQoiZGV2LT5yZXNvdXJj
-ZSA9ICh2b2lkKikmZGV2WzFdOyIgY29uc3RydWN0aW9uLgoKLS0gCkFudG9uIFZvcm9udHNvdgpl
-bWFpbDogY2JvdWF0bWFpbHJ1QGdtYWlsLmNvbQppcmM6Ly9pcmMuZnJlZW5vZGUubmV0L2JkMgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVl
-LWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3Jn
-Cmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Tue, Jun 8, 2010 at 10:46 AM, Anton Vorontsov <cbouatmailru@gmail.com> w=
+rote:
+> On Tue, Jun 08, 2010 at 10:02:49AM -0600, Grant Likely wrote:
+>> On Tue, Jun 8, 2010 at 9:57 AM, Anton Vorontsov <cbouatmailru@gmail.com>=
+ wrote:
+>> > On Tue, Jun 08, 2010 at 08:26:43AM -0600, Grant Likely wrote:
+>> > [...]
+>> >> + =A0 =A0 dev =3D kzalloc(sizeof(*dev) + (sizeof(struct resource) * i=
+), GFP_KERNEL);
+>> >> =A0 =A0 =A0 if (!dev)
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+>> >> -
+>> >> =A0 =A0 =A0 dev->dev.of_node =3D of_node_get(np);
+>> >> =A0 =A0 =A0 dev->dev.dma_mask =3D &dev->archdata.dma_mask;
+>> >> =A0 =A0 =A0 dev->dev.parent =3D parent;
+>> >> =A0 =A0 =A0 dev->dev.release =3D of_release_dev;
+>> >>
+>> >> + =A0 =A0 /* Populate the resource table */
+>> >> + =A0 =A0 if (num_irq || num_reg) {
+>> >> + =A0 =A0 =A0 =A0 =A0 =A0 dev->resource =3D (void*)&dev[1];
+>> >
+>> > This is ugly. Why not allocate the memory specifically for
+>> > dev->resource? Is this because you plan to get rid of
+>> > of_release_dev(), and the generic release_dev() won't
+>> > know if it should free the dev->resource? There must
+>> > be a better way to handle this.
+>>
+>> Allocating in one big block means less potential memory fragmentation,
+>> and the kernel can free it all at once.
+>
+> Are there any numbers of saved amount of memory so that we
+> could compare?
+>
+> The "less memory fragmentation" is indeed potential, but
+> introduction of obscure code is going on now at this precise
+> moment.
+
+It's not obscure.  It's smaller and simpler code with fewer error paths.
+
+>> This is a common pattern.
+>
+> This can't be true because it produces ugly casts and fragile
+> code all over the place -- which is exactly what everybody
+> tries to avoid in the kernel.
+
+Fragile?  How?  &var[1] *always* gives you a pointer to the first
+address after a structure.  If the structure changes, then so does the
+offset.  Heck, if the type of 'var' changes, then the offset changes
+in kind too.  If anything, I should have also used sizeof(*res) in the
+kzalloc call so that the allocated size is protected against a type
+change to 'res' too.
+
+If you prefer, I can move the dev->resource assignment to immediately
+after the kzalloc to keep everything contained within 4 lines of each
+other.
+
+> Such a pattern is common when a driver allocates e.g. tx and rx
+> buffers (of the same type) together, and then split the buffer
+> into two pointers.
+
+tx & rx buffers are different because they must be DMAable.  That
+imposes alignment requirements with kzalloc() guarantees.
+
+> But I heard of no such pattern for 'struct device + struct
+> resources' allocation without even some kind of _priv struct,
+> which is surely something new, and ugly.
+
+git grep '\*).*&[a-z1-9_]*\[1\]'
+
+g.
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
