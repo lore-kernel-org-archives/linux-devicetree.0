@@ -1,17 +1,13 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Boot interface for device trees on ARM
-Date: Fri, 4 Jun 2010 23:59:02 -0600
-Message-ID: <AANLkTin_PpsY6_hWKtJ9HZqk4nhEO0mcD5TdKpq0KbYk@mail.gmail.com>
-References: <201005181054.32325.jeremy.kerr@canonical.com>
-	<alpine.LFD.2.00.1005191055180.12758@xanadu.home>
-	<AANLkTilhqg270l-_m9raalqAPPRhvLJD9omHe8ysgLjg@mail.gmail.com>
-	<201006050933.06714.jeremy.kerr@canonical.com>
-	<alpine.LFD.2.00.1006042212400.30664@xanadu.home>
+Subject: [PATCH 5/5] of/address: restrict 'no-ranges' kludge to powerpc
+Date: Tue, 08 Jun 2010 08:10:18 -0600
+Message-ID: <20100608141018.25879.44413.stgit@angua>
+References: <20100608140917.25879.67745.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.00.1006042212400.30664-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+In-Reply-To: <20100608140917.25879.67745.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,48 +17,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 4, 2010 at 8:29 PM, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> wrote:
-> On Sat, 5 Jun 2010, Jeremy Kerr wrote:
->> > hmmm... however, things the device tree blob and the initrd both need
->> > to be marked as bootmem at paging_init() time, but init_machine()
->> > doesn't run until later. =A0There will still need to be some hooks for
->> > doing early DT processing, but none of that should be either board or
->> > SoC specific.
->>
->> If we're planning to keep the machine IDs around (even if they are now p=
-er-
->> SoC), I'd like to know what would be left using them. The only thing tha=
-t I
->> can see that we currently use is io_pg_offset for the DEBUG_LL builds, a=
-nd
->> that isn't a convincing case to keep them.
->
-> Why not?
->
-> Kernel infrastructure backward compatibility means that you need to keep
-> struct machine_desc instances around. =A0Granted, for the DT case, many of
-> the members could be NULL or initialized with dummy stubs. =A0But that is
-> very cheap to keep around, and that allows the same kernel binary to be
-> able to use both the DT boot and the legacy boot.
+Certain Apple machines don't use the ranges property correctly, but the
+workaround should not be applied on other architectures.  This patch
+disables the workaround for non-powerpc architectures.
 
-I agree with Nicolas on this point.  He's convinced me that machine id
-without ATAGs is sufficient to deal with the backwards compatibility
-issues.  I have no problem with making machine_id in r1 part of the
-boot requirements.
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+CC: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+CC: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+CC: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ drivers/of/address.c |   11 ++++++++++-
+ 1 files changed, 10 insertions(+), 1 deletions(-)
 
-That being said; each DT must still be fully-formed.  Every DT still
-needs a top level compatible property to uniquely identify the
-machine.  If it turns out that Linux can ignore the machine ID and
-rely solely on the DT data, then so be it.  I actually don't care much
-since then it is just an internal Linux kernel implementation detail.
-
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 0b04137..5c220c3 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -346,12 +346,21 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	 * a 1:1 translation at that level. It's up to the caller not to try
+ 	 * to translate addresses that aren't supposed to be translated in
+ 	 * the first place. --BenH.
++	 *
++	 * As far as we know, this damage only exists on Apple machines, so
++	 * This code is only enabled on powerpc. --gcl
+ 	 */
+ 	ranges = of_get_property(parent, rprop, &rlen);
++#if !defined(CONFIG_PPC)
++	if (ranges == NULL) {
++		pr_err("OF: no ranges; cannot translate\n");
++		return 1;
++	}
++#endif /* !defined(CONFIG_PPC) */
+ 	if (ranges == NULL || rlen == 0) {
+ 		offset = of_read_number(addr, na);
+ 		memset(addr, 0, pna * 4);
+-		pr_debug("OF: no ranges, 1:1 translation\n");
++		pr_debug("OF: empty ranges; 1:1 translation\n");
+ 		goto finish;
+ 	}
