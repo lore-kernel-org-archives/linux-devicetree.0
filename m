@@ -1,91 +1,57 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH 6/6] of/device: populate platform_device (of_device)
-	resource table on allocation
-Date: Tue, 8 Jun 2010 23:48:09 +0400
-Message-ID: <20100608194809.GA32732@oksana.dev.rtsoft.ru>
-References: <20100608142152.26088.1108.stgit@angua>
-	<20100608142643.26088.61366.stgit@angua>
-	<20100608155702.GA5419@oksana.dev.rtsoft.ru>
-	<AANLkTinZT4z93SWxjce5oRZzmaQHtVnO96zsXO9OX2UZ@mail.gmail.com>
-	<20100608164645.GA15216@oksana.dev.rtsoft.ru>
-	<AANLkTinHH-YhdWpH60Z2BYsiEjzLb_imrk6KUmQRH07P@mail.gmail.com>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: Boot interface for device trees on ARM
+Date: Wed, 9 Jun 2010 12:26:13 +0800
+Message-ID: <201006091226.15438.jeremy.kerr@canonical.com>
+References: <201005181054.32325.jeremy.kerr@canonical.com>
+	<201006050933.06714.jeremy.kerr@canonical.com>
+	<alpine.LFD.2.00.1006042212400.30664@xanadu.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTinHH-YhdWpH60Z2BYsiEjzLb_imrk6KUmQRH07P@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: sfr@canb.auug.org.au, monstr@monstr.eu, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, jeremy.kerr@canonical.com, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1006042212400.30664-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 08, 2010 at 12:41:47PM -0600, Grant Likely wrote:
-[...]
-> >> This is a common pattern.
-> >
-> > This can't be true because it produces ugly casts and fragile
-> > code all over the place -- which is exactly what everybody
-> > tries to avoid in the kernel.
+Hi Nicolas,
+
+> > If we're planning to keep the machine IDs around (even if they are now
+> > per- SoC), I'd like to know what would be left using them. The only
+> > thing that I can see that we currently use is io_pg_offset for the
+> > DEBUG_LL builds, and that isn't a convincing case to keep them.
 > 
-> Fragile?  How?  &var[1] *always* gives you a pointer to the first
-> address after a structure.  If the structure changes, then so does the
-> offset.  Heck, if the type of 'var' changes, then the offset changes
-> in kind too.  If anything, I should have also used sizeof(*res) in the
-> kzalloc call so that the allocated size is protected against a type
-> change to 'res' too.
+> Why not?
 
-You just introduced an unnamed structure of device + resources,
-it isn't declared anywhere but in the code itself (either via
-&foo[1] or buf + sizeof(*foo)).
+Because it's something we can justifiably replace with a single compile-time 
+constant, since it's only for low-level debug. I don't see that as a reason 
+for keeping these machine numbers around if that's all they're used for.
 
-You're not the only one who hacks (or at least have to
-understand) the OF stuff, so let's try keep this stuff
-readable?
+However...
 
-I told you several ways of how to improve the code (based on
-the ideas from drivers/base/, so the ideas aren't even mine,
-fwiw).
+> Kernel infrastructure backward compatibility means that you need to keep
+> struct machine_desc instances around.  Granted, for the DT case, many of
+> the members could be NULL or initialized with dummy stubs.  But that is
+> very cheap to keep around, and that allows the same kernel binary to be
+> able to use both the DT boot and the legacy boot.
 
-> If you prefer, I can move the dev->resource assignment to immediately
-> after the kzalloc to keep everything contained within 4 lines of each
-> other.
+... this is a good point; if it helps with the transition, then this is 
+probably a decent reason to keep it in the interface.
 
-Sure, that would be better, but I already said what would I
-really prefer, i.e.
+I'd like to keep my "only use the device tree" value (MACH_TYPE_DT = 
+0xffffffff) though, so we don't needlessly allocate machine numbers where they 
+aren't actually used.
 
-- A dedicated allocation;
-- Or, at least, the same thing as drivers/base/platform.c does:
-  platform_object { platform_device; name[1]; };
+Cheers,
 
-> > But I heard of no such pattern for 'struct device + struct
-> > resources' allocation without even some kind of _priv struct,
-> > which is surely something new, and ugly.
-> 
-> git grep '\*).*&[a-z1-9_]*\[1\]'
 
-Ugh? This produces a lot of false positives. But OK, let's run it.
-
-~/linux-2.6$ git grep '\*).*&[a-z1-9_]*\[1\]' | wc -l
-164
-
-^^^ Now let's presume that half of it (and not just a few hits)
-    is the ugly hacks that we're talking about. Then compare:
-
-~/linux-2.6$ git grep 'struct.*_priv' | wc -l
-22448
-
-^^^ this is a common pattern.
-
--- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+Jeremy
