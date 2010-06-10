@@ -1,101 +1,63 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH 2/2] i2c: Add OF-style registration and binding
-Date: Wed, 09 Jun 2010 23:22:37 -0600
-Message-ID: <20100610052237.16222.32754.stgit@angua>
-References: <20100610052102.16222.86662.stgit@angua>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH v2 0/5] Generalize OF gpio support code
+Date: Wed, 09 Jun 2010 23:40:41 -0600
+Message-ID: <20100610053439.16716.53944.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100610052102.16222.86662.stgit@angua>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, jeremy.kerr@canonical.com, devicetree-discuss@lists.ozlabs.org, ben-linux@fluff.org, linux-i2c@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
+Cc: bgat-uPd5UNENI//N9NzbbXoYwQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds OF hooks to the i2c core so that devices can automatically
-be registered based on device tree data.
+This series makes all gpio drivers usable from the OF support apis by
+automatically registering a default OF translator when the of_node
+pointer is assigned.  These patches are heavily based on the work that
+Anton did earlier, but I didn't add the notifiers infrastructure and
+the OF data now lives directly inside the core gpio_chip structure so
+that fewer gymnastics are needed to get at it.
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+These patches are currently sitting in the following branch:
+
+git://git.secretlab.ca/git/linux-2.6 next-devicetree
+
 ---
- drivers/i2c/busses/i2c-cpm.c     |    5 -----
- drivers/i2c/busses/i2c-ibm_iic.c |    3 ---
- drivers/i2c/busses/i2c-mpc.c     |    1 -
- drivers/i2c/i2c-core.c           |    9 +++++++++
- 4 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cpm.c b/drivers/i2c/busses/i2c-cpm.c
-index 03ae62e..e591de1 100644
---- a/drivers/i2c/busses/i2c-cpm.c
-+++ b/drivers/i2c/busses/i2c-cpm.c
-@@ -677,11 +677,6 @@ static int __devinit cpm_i2c_probe(struct of_device *ofdev,
- 	dev_dbg(&ofdev->dev, "hw routines for %s registered.\n",
- 		cpm->adap.name);
- 
--	/*
--	 * register OF I2C devices
--	 */
--	of_i2c_register_devices(&cpm->adap);
--
- 	return 0;
- out_shut:
- 	cpm_i2c_shutdown(cpm);
-diff --git a/drivers/i2c/busses/i2c-ibm_iic.c b/drivers/i2c/busses/i2c-ibm_iic.c
-index d964121..1168d61 100644
---- a/drivers/i2c/busses/i2c-ibm_iic.c
-+++ b/drivers/i2c/busses/i2c-ibm_iic.c
-@@ -761,9 +761,6 @@ static int __devinit iic_probe(struct of_device *ofdev,
- 	dev_info(&ofdev->dev, "using %s mode\n",
- 		 dev->fast_mode ? "fast (400 kHz)" : "standard (100 kHz)");
- 
--	/* Now register all the child nodes */
--	of_i2c_register_devices(adap);
--
- 	return 0;
- 
- error_cleanup:
-diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
-index d2e26d2..9f7fef8 100644
---- a/drivers/i2c/busses/i2c-mpc.c
-+++ b/drivers/i2c/busses/i2c-mpc.c
-@@ -607,7 +607,6 @@ static int __devinit fsl_i2c_probe(struct of_device *op,
- 		dev_err(i2c->dev, "failed to add adapter\n");
- 		goto fail_add;
- 	}
--	of_i2c_register_devices(&i2c->adap);
- 
- 	return result;
- 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 1cca263..5588ac1 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -30,6 +30,8 @@
- #include <linux/init.h>
- #include <linux/idr.h>
- #include <linux/mutex.h>
-+#include <linux/of_i2c.h>
-+#include <linux/of_device.h>
- #include <linux/completion.h>
- #include <linux/hardirq.h>
- #include <linux/irqflags.h>
-@@ -70,6 +72,10 @@ static int i2c_device_match(struct device *dev, struct device_driver *drv)
- 	if (!client)
- 		return 0;
- 
-+	/* Attempt an OF style match */
-+	if (of_driver_match_device(dev, drv))
-+		return 1;
-+
- 	driver = to_i2c_driver(drv);
- 	/* match on an id table if there is one */
- 	if (driver->id_table)
-@@ -790,6 +796,9 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
- 	if (adap->nr < __i2c_first_dynamic_bus_num)
- 		i2c_scan_static_board_info(adap);
- 
-+	/* Register devices from the device tree */
-+	of_i2c_register_devices(adap);
-+
- 	/* Notify drivers */
- 	mutex_lock(&core_lock);
- 	dummy = bus_for_each_drv(&i2c_bus_type, NULL, adap,
+Anton Vorontsov (3):
+      gpiolib: cosmetic improvements for error handling in gpiochip_add()
+      of/gpio: Kill of_gpio_chip and add members directly to gpio_chip
+      of/gpio: add default of_xlate function if device has a node pointer
+
+Grant Likely (2):
+      of/gpio: stop using device_node data pointer to find gpio_chip
+      of/device: Add OF style matching helper function
+
+
+ arch/microblaze/kernel/reset.c                 |   12 ++-
+ arch/powerpc/platforms/52xx/mpc52xx_gpio.c     |   30 ++++----
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c      |   29 ++++----
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c |   34 ++-------
+ arch/powerpc/platforms/86xx/gef_gpio.c         |   24 +++----
+ arch/powerpc/sysdev/cpm1.c                     |   10 +--
+ arch/powerpc/sysdev/cpm_common.c               |    5 -
+ arch/powerpc/sysdev/mpc8xxx_gpio.c             |    5 -
+ arch/powerpc/sysdev/ppc4xx_gpio.c              |    5 -
+ arch/powerpc/sysdev/qe_lib/gpio.c              |   31 ++++-----
+ arch/powerpc/sysdev/simple_gpio.c              |    5 -
+ drivers/gpio/gpiolib.c                         |   55 ++++++++++++++-
+ drivers/gpio/xilinx_gpio.c                     |   15 ++--
+ drivers/of/device.c                            |    2 -
+ drivers/of/gpio.c                              |   86 +++++++++++++++---------
+ include/asm-generic/gpio.h                     |   15 ++++
+ include/linux/of_device.h                      |   19 +++++
+ include/linux/of_gpio.h                        |   35 +++-------
+ 18 files changed, 226 insertions(+), 191 deletions(-)
