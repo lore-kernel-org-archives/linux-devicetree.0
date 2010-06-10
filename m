@@ -2,7 +2,7 @@ From: Anton Vorontsov <cbouatmailru@gmail.com>
 Subject: Re: [PATCH 6/6] of/device: populate platform_device (of_device)
 	resource table on allocation
 Date: Thu, 10 Jun 2010 19:47:41 +0400
-Message-ID: <20100610154741.GA7484__19310.8970219784$1276186518$gmane$org@oksana.dev.rtsoft.ru>
+Message-ID: <20100610154741.GA7484__17857.3712859817$1276186523$gmane$org@oksana.dev.rtsoft.ru>
 References: <20100608194809.GA32732@oksana.dev.rtsoft.ru>
 	<1276150663.1962.43.camel@pasglop>
 	<AANLkTilpUi1cazljWSFbzliY78RKyHUlvBshUD3NPHPv@mail.gmail.com>
@@ -10,7 +10,7 @@ References: <20100608194809.GA32732@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
 In-Reply-To: <20100610.091357.513168276793712624.imp@bsdimp.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
@@ -20,8 +20,8 @@ List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
 List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 To: "M. Warner Losh" <imp@bsdimp.com>
 Cc: sfr@canb.auug.org.au, devicetree-discuss@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, jeremy.kerr@canonical.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
