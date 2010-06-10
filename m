@@ -1,36 +1,47 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH 6/6] of/device: populate platform_device (of_device)
 	resource table on allocation
-Date: Thu, 10 Jun 2010 11:20:13 -0600
-Message-ID: <AANLkTinf2X79ROUekvP3_plImaImI1nuKc369TcqRcFo@mail.gmail.com>
-References: <AANLkTilpUi1cazljWSFbzliY78RKyHUlvBshUD3NPHPv@mail.gmail.com>
+Date: Thu, 10 Jun 2010 11:21:16 -0600
+Message-ID: <AANLkTinG8oDNsTEjFrV36Sv4okTL1RBuaFCpOvH_PJt1@mail.gmail.com>
+References: <20100608194809.GA32732@oksana.dev.rtsoft.ru>
+	<1276150663.1962.43.camel@pasglop>
+	<AANLkTilpUi1cazljWSFbzliY78RKyHUlvBshUD3NPHPv@mail.gmail.com>
 	<20100610.091357.513168276793712624.imp@bsdimp.com>
 	<20100610154741.GA7484@oksana.dev.rtsoft.ru>
-	<20100610.100140.8559628065321695.imp@bsdimp.com>
-	<20100610165243.GA18043@oksana.dev.rtsoft.ru>
-	<4C111C34.1010708@firmworks.com>
+	<AANLkTimjIyclTWZZW1A26zOcWroK-bwOkmEqsLm4DINk@mail.gmail.com>
+	<20100610171029.GA18824@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4C111C34.1010708-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100610171029.GA18824@oksana.dev.rtsoft.ru>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: sfr@canb.auug.org.au, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, jeremy.kerr@canonical.com, linuxppc-dev@lists.ozlabs.org, "M. Warner Losh" <imp@bsdimp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 10, 2010 at 11:09 AM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
-> Wow, there is some serious bikeshedding going on with this argument about
-> structures and arrays .
+On Thu, Jun 10, 2010 at 11:10 AM, Anton Vorontsov
+<cbouatmailru@gmail.com> wrote:
+> On Thu, Jun 10, 2010 at 10:30:26AM -0600, Grant Likely wrote:
+> [...]
+>> =A0 =A0 =A0 res =3D kzalloc((sizeof(*res) * num_res), GFP_KERNEL);
+>> =A0 =A0 =A0 if (!res) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(ofdev); =A0/* or goto an error unwind =
+label */
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+>> =A0 =A0 =A0 }
+>> =A0 =A0 =A0 res =3D (struct resource *)&ofdev[1];
+>
+> You mean ofdev->resource =3D res; ?
 
-I know! Isn't it fun?
+Yeah, cut-and-paste error.
 
 g.
