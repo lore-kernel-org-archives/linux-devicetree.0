@@ -1,21 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] of/device: populate platform_device (of_device)
-	resource table on allocation
-Date: Thu, 10 Jun 2010 08:18:19 -0600
-Message-ID: <AANLkTilpUi1cazljWSFbzliY78RKyHUlvBshUD3NPHPv@mail.gmail.com>
-References: <20100608142152.26088.1108.stgit@angua>
-	<20100608142643.26088.61366.stgit@angua>
-	<20100608155702.GA5419@oksana.dev.rtsoft.ru>
-	<AANLkTinZT4z93SWxjce5oRZzmaQHtVnO96zsXO9OX2UZ@mail.gmail.com>
-	<20100608164645.GA15216@oksana.dev.rtsoft.ru>
-	<AANLkTinHH-YhdWpH60Z2BYsiEjzLb_imrk6KUmQRH07P@mail.gmail.com>
-	<20100608194809.GA32732@oksana.dev.rtsoft.ru>
-	<1276150663.1962.43.camel@pasglop>
+Subject: Re: [PATCH 5/5] of/address: restrict 'no-ranges' kludge to powerpc
+Date: Thu, 10 Jun 2010 08:28:34 -0600
+Message-ID: <AANLkTikg1hLdV_OUjc3QIhFatP_iLfVClhzmyixmjje1@mail.gmail.com>
+References: <20100608140917.25879.67745.stgit@angua>
+	<20100608141018.25879.44413.stgit@angua>
+	<1276152275.1962.61.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1276150663.1962.43.camel@pasglop>
+In-Reply-To: <1276152275.1962.61.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,49 +20,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 10, 2010 at 12:17 AM, Benjamin Herrenschmidt
+On Thu, Jun 10, 2010 at 12:44 AM, Benjamin Herrenschmidt
 <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> On Tue, 2010-06-08 at 08:10 -0600, Grant Likely wrote:
+>> Certain Apple machines don't use the ranges property correctly, but the
+>> workaround should not be applied on other architectures. =A0This patch
+>> disables the workaround for non-powerpc architectures.
 >
->> You just introduced an unnamed structure of device + resources,
->> it isn't declared anywhere but in the code itself (either via
->> &foo[1] or buf + sizeof(*foo)).
->>
->> You're not the only one who hacks (or at least have to
->> understand) the OF stuff, so let's try keep this stuff
->> readable?
->>
->> I told you several ways of how to improve the code (based on
->> the ideas from drivers/base/, so the ideas aren't even mine,
->> fwiw).
->
-> I tend to agree with Anton here.
+> I'm half tempted to add it to the quirk list (which should really be
+> made generic) so I can disable it on more 'modern' powerpc as well.
 
-The reason I'm confident doing it that way is that it is *not* a
-structure.  There is no structure relationship between the resource
-table and the platform_device other than they are allocated with the
-same kzalloc() call.  All the code that cares about that is contained
-within 4 lines of code.  I'm resistant to using a structure because it
-is adds an additional 5-6 lines of code to add a structure that won't
-be used anywhere else, and is only 4 lines to begin with.
-
-> BTW. Why not make of_device a wrapper (or even alias of)
-> platform_device ? :-) That way you get the resource array etc.. for free
-> and it will make the whole of_device vs. platform_device issue moot.
-
-of_device is an alias of platform_device now.  The resource array in
-platform devices is not statically defined.  It is allocated
-separately.  I can't currently use the platform_device_alloc code
-which does separate deallocation because the OF code needs its own
-release hook to put the node.  OTOH, I can probably change the guts of
-of_release_dev() to be called by platform_device_release().
-
-okay, I'll try changing this an see how it looks.
+In the mean time, are you okay with this version of the patch?
 
 g.
 
--- 
+>
+> Cheers,
+> Ben.
+>
+>> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> CC: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+>> CC: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+>> CC: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> ---
+>> =A0drivers/of/address.c | =A0 11 ++++++++++-
+>> =A01 files changed, 10 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index 0b04137..5c220c3 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -346,12 +346,21 @@ static int of_translate_one(struct device_node *pa=
+rent, struct of_bus *bus,
+>> =A0 =A0 =A0 =A0* a 1:1 translation at that level. It's up to the caller =
+not to try
+>> =A0 =A0 =A0 =A0* to translate addresses that aren't supposed to be trans=
+lated in
+>> =A0 =A0 =A0 =A0* the first place. --BenH.
+>> + =A0 =A0 =A0*
+>> + =A0 =A0 =A0* As far as we know, this damage only exists on Apple machi=
+nes, so
+>> + =A0 =A0 =A0* This code is only enabled on powerpc. --gcl
+>> =A0 =A0 =A0 =A0*/
+>> =A0 =A0 =A0 ranges =3D of_get_property(parent, rprop, &rlen);
+>> +#if !defined(CONFIG_PPC)
+>> + =A0 =A0 if (ranges =3D=3D NULL) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pr_err("OF: no ranges; cannot translate\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return 1;
+>> + =A0 =A0 }
+>> +#endif /* !defined(CONFIG_PPC) */
+>> =A0 =A0 =A0 if (ranges =3D=3D NULL || rlen =3D=3D 0) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 offset =3D of_read_number(addr, na);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 memset(addr, 0, pna * 4);
+>> - =A0 =A0 =A0 =A0 =A0 =A0 pr_debug("OF: no ranges, 1:1 translation\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pr_debug("OF: empty ranges; 1:1 translation\n"=
+);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto finish;
+>> =A0 =A0 =A0 }
+>>
+>
+>
+>
+
+
+
+-- =
+
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
