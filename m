@@ -1,33 +1,41 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Request review of device tree documentation
-Date: Fri, 11 Jun 2010 16:59:46 -0600
-Message-ID: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Dan Malek <ppc6dev-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>
+Subject: Re: Request review of device tree documentation
+Date: Fri, 11 Jun 2010 16:47:26 -0700
+Message-ID: <33BD8E86-9397-432A-97BF-F154812C157B@digitaldans.com>
+References: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
+Reply-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset="US-ASCII"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Jeremy Kerr <jeremy.kerr@canonical.com>, John Rigby <jcrigby@gmail.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, microblaze-u
+Return-path: <owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
+In-Reply-To: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: owner-microblaze-uclinux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Rigby <jcrigby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, Olof
+ Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I've been doing a bit of work on some introductory level documentation
-of the flattened device tree.  I've got a rough copy up on the
-devicetree.org wiki, and I could use some feedback.  If anyone has
-some time to look at it, you can find it here:
 
-http://devicetree.org/Device_Tree_Usage
+Hi Grant.
 
-Thanks,
-g.
+On Jun 11, 2010, at 3:59 PM, Grant Likely wrote:
 
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> I've been doing a bit of work on some introductory level documentation
+> of the flattened device tree.
+
+Wow, I feel empowered to create device trees now :-)
+Seriously, I never understood this well and this is a
+great document.
+
+I have one source of confusion.  Your first Initial structure
+example uses 'compatible' to describe the machine, the
+paragraph below then mentions the 'model' property,
+and all subsequent examples use model.
+
+Does this mean if I use just the single line in the dts,
+using 'compatible' implies the ARM machine ID?  If I
+have more description I use 'model'?
+
+Thanks.
+
+	-- Dan
