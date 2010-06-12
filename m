@@ -1,11 +1,14 @@
-From: Matt Tyrlik <tyrlik-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Subject: AUTO: Matt Tyrlik/Raleigh/IBM is out of the office until 07/29/2002.
-	(returning 06/24/2010)
-Date: Fri, 11 Jun 2010 20:04:23 -0600
-Message-ID: <OF1A5B2386.5CDA62F1-ON87257740.000B6374-87257740.000B6375@us.ibm.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: Request review of device tree documentation
+Date: Sat, 12 Jun 2010 12:58:07 +1000
+Message-ID: <1276311487.1962.172.camel@pasglop>
+References: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
+	<33BD8E86-9397-432A-97BF-F154812C157B@digitaldans.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8240274576132115409=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <33BD8E86-9397-432A-97BF-F154812C157B-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,65 +18,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dan Malek <ppc6dev-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8240274576132115409==
-Content-type: multipart/alternative;
-	Boundary="0__=08BBFDD3DF98E5E48f9e8a93df938690918c08BBFDD3DF98E5E4"
-Content-Disposition: inline
+On Fri, 2010-06-11 at 16:47 -0700, Dan Malek wrote:
+> Hi Grant.
+> 
+> On Jun 11, 2010, at 3:59 PM, Grant Likely wrote:
+> 
+> > I've been doing a bit of work on some introductory level documentation
+> > of the flattened device tree.
+> 
+> Wow, I feel empowered to create device trees now :-)
+> Seriously, I never understood this well and this is a
+> great document.
+> 
+> I have one source of confusion.  Your first Initial structure
+> example uses 'compatible' to describe the machine, the
+> paragraph below then mentions the 'model' property,
+> and all subsequent examples use model.
+> 
+> Does this mean if I use just the single line in the dts,
+> using 'compatible' implies the ARM machine ID?  If I
+> have more description I use 'model'?
 
---0__=08BBFDD3DF98E5E48f9e8a93df938690918c08BBFDD3DF98E5E4
-Content-type: text/plain; charset=US-ASCII
-Content-transfer-encoding: quoted-printable
+Normally, "compatible" is what is used for code to match,
+and model is more like a user-visible thingy.
 
+It's possible to peek at 'model' tho, in some cases, I've seen the case
+for example where things are -supposed- to be identical from an arch
+point of view, have the same compatible, but later on, a quirk is found
+and a test against model is used to differentiate. But that's something
+to avoid in general. Better off having multiple strings in "compatible"
+then, one more "generic" to have the BSP match against, and one more
+"specific" that can be used if a quirk is needed.
 
+Of course, it doesn't help that all pseries have "chrp" and nothing else
+as compatible :-) But then, both IBM and Apple have been quite lax with
+their (ab)use of the DT.
 
-I am out of the office until 06/24/2010.
-
-Vacation.  I will have very limited access to e-mail during this time
-
-
-Note: This is an automated response to your message  "devicetree-discus=
-s
-Digest, Vol 24, Issue 21" sent on 6/11/10 20:00:01.
-
-This is the only notification you will receive while this person is awa=
-y.=
-
---0__=08BBFDD3DF98E5E48f9e8a93df938690918c08BBFDD3DF98E5E4
-Content-type: text/html; charset=US-ASCII
-Content-Disposition: inline
-Content-transfer-encoding: quoted-printable
-
-<html><body>
-<p><font size=3D"2">I am out of the office until 06/24/2010.<br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2">Vacation.  I will have very limited access to e=
--mail during this time<br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2" color=3D"#808080">Note: This is an automated re=
-sponse to your message  &quot;</font><b><font size=3D"2">devicetree-dis=
-cuss Digest, Vol 24, Issue 21&quot;</font></b><font size=3D"2" color=3D=
-"#808080"> sent on </font><b><font size=3D"2">6/11/10 20:00:01</font></=
-b><font size=3D"2" color=3D"#808080">. <br>
-</font><font size=3D"2" color=3D"#808080"><br>
-</font><font size=3D"2" color=3D"#808080">This is the only notification=
- you will receive while this person is away.</font></body></html>=
-
---0__=08BBFDD3DF98E5E48f9e8a93df938690918c08BBFDD3DF98E5E4--
-
-
---===============8240274576132115409==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8240274576132115409==--
+Cheers,
+Ben.
