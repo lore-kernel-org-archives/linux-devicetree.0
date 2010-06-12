@@ -1,68 +1,58 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 Subject: Re: Request review of device tree documentation
-Date: Sat, 12 Jun 2010 00:53:59 -0600
-Message-ID: <AANLkTilv6TtPZs0DAwd8JlSV_J3VvMsvtVVOOeQauOIn@mail.gmail.com>
+Date: Fri, 11 Jun 2010 22:19:23 -1000
+Message-ID: <4C13430B.5000907@firmworks.com>
 References: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
 	<33BD8E86-9397-432A-97BF-F154812C157B@digitaldans.com>
+	<AANLkTilv6TtPZs0DAwd8JlSV_J3VvMsvtVVOOeQauOIn@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <33BD8E86-9397-432A-97BF-F154812C157B@digitaldans.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Dan Malek <ppc6dev@digitaldans.com>, Mitch Bradley <wmb@firmworks.com>
-Cc: microblaze-uclinux@itee.uq.edu.au, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Olof Johansson <olof@lixom.net>, Jeremy Kerr <jeremy.kerr@canonical.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTilv6TtPZs0DAwd8JlSV_J3VvMsvtVVOOeQauOIn-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Dan Malek <ppc6dev-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 11, 2010 at 5:47 PM, Dan Malek <ppc6dev@digitaldans.com> wrote:
+Grant Likely wrote:
 >
-> Hi Grant.
+> I also changed the property in the cpu nodes from model to compatible
+> so that the exact CPU version can be specified.  This isn't actually
+> in any spec anywhere, but I need something to properly identify the
+> different ARM cores.
 >
-> On Jun 11, 2010, at 3:59 PM, Grant Likely wrote:
+> Mitch, I know you were working on a draft ARM binding a while ago,
+> have you resurrected it at all?
+
+As it turns out, today I re-began ARM OFW work in earnest, after a 
+hiatus of something like 10 years.
+
+I haven't thought much about a binding yet.  I'm still getting my head 
+around the current state of the ARM art.
+
+>   How do you think the core should be identified?
+>   
+
+When I was last working on ARM, few ARM devices had enough resources to 
+run a general purpose OS.   To first approximation, StrongARM was the 
+only game in town - so there wasn't much need to address the 
+identification question.
+
+It seems that many of the differences at the CPU level can be determined 
+by looking at "coprocessor" registers.  For what purpose(s) do we need 
+to identify the core?  That will inform our choice of a core ID schema.
+
+> Cheers,
+> g.
 >
->> I've been doing a bit of work on some introductory level documentation
->> of the flattened device tree.
 >
-> Wow, I feel empowered to create device trees now :-)
-> Seriously, I never understood this well and this is a
-> great document.
-
-Hey, thanks!  That's a fantastic compliment!
-
-> I have one source of confusion. =A0Your first Initial structure
-> example uses 'compatible' to describe the machine, the
-> paragraph below then mentions the 'model' property,
-> and all subsequent examples use model.
->
-> Does this mean if I use just the single line in the dts,
-> using 'compatible' implies the ARM machine ID? =A0If I
-> have more description I use 'model'?
-
-No, that is just a reflection of a late change I made to the document.
- It should be compatible all the way down.  I was trying to keep
-things simple because on a lot of boards both compatible and model
-properties will exist in the root node.  I started writing with model,
-and then changed it last minute without fixing everything up which is
-why the document was confusing.
-
-I've fixed it now if you want to take a look.
-
-I also changed the property in the cpu nodes from model to compatible
-so that the exact CPU version can be specified.  This isn't actually
-in any spec anywhere, but I need something to properly identify the
-different ARM cores.
-
-Mitch, I know you were working on a draft ARM binding a while ago,
-have you resurrected it at all?  How do you think the core should be
-identified?
-
-Cheers,
-g.
+>   
