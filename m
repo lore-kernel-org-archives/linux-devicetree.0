@@ -1,21 +1,23 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+From: Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>
 Subject: Re: Request review of device tree documentation
-Date: Mon, 14 Jun 2010 09:51:50 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1006140943350.13427@xanadu.home>
-References: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
-	<33BD8E86-9397-432A-97BF-F154812C157B@digitaldans.com>
-	<AANLkTilv6TtPZs0DAwd8JlSV_J3VvMsvtVVOOeQauOIn@mail.gmail.com>
-	<4C13430B.5000907@firmworks.com> <1276339529.1962.184.camel@pasglop>
-	<1276339684.1962.186.camel@pasglop> <4C13B618.1030006@firmworks.com>
-	<1276383132.1962.195.camel@pasglop>
+Date: Mon, 14 Jun 2010 15:29:58 +0100
+Message-ID: <20100614142958.GA9550@shareable.org>
+References: <1276383132.1962.195.camel@pasglop>
 	<AANLkTimRV8u3gDNCAIlROJoPcKs7jFwj2na3ZDFOg3O0@mail.gmail.com>
-	<4C146F18.9030008@firmworks.com> <1276408773.1962.574.camel@pasglop>
+	<4C146F18.9030008@firmworks.com>
+	<1276408773.1962.574.camel@pasglop>
 	<AANLkTinwL0XtMNG13inr_1UliOlqZkyr4dlvG-ZGL9JT@mail.gmail.com>
+	<20100614073828.GA6095@n2100.arm.linux.org.uk>
+	<4C15DE2E.1050905@firmworks.com>
+	<20100614092559.GA7881@n2100.arm.linux.org.uk>
+	<1276508170.2552.43.camel@pasglop>
+	<20100614094740.GB7881@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <AANLkTinwL0XtMNG13inr_1UliOlqZkyr4dlvG-ZGL9JT-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20100614094740.GB7881-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,30 +27,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, Dan Malek <ppc6dev-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, Dan Malek <ppc6dev-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 13 Jun 2010, Grant Likely wrote:
-
-> [cc'ing linux-arm-kernel]
+Russell King - ARM Linux wrote:
+> On Mon, Jun 14, 2010 at 07:36:10PM +1000, Benjamin Herrenschmidt wrote:
+> > However, there's a lot of room for abuse here and I'm worried that if it
+> > becomes widespread, we'll start seeing vendors use that as a way to do
+> > some kind of HAL and hide various platform methods in there (clock
+> > control, nvram, etc...).
 > 
-> On Sat, Jun 12, 2010 at 11:59 PM, Benjamin Herrenschmidt
-> > BTW. I notice no ARM list is CCed on this discussion ... maybe we should
-> > fix that ?
+> This is what I'm worried about too.
 > 
-> cc'ing linux-arm-kernel in all my replies
+> As I said in my first reply in this thread, calling out from the kernel
+> will kill performance due to the time taken to shut down the caches and
+> MMU, which can only be done safely with all exceptions turned off.
 
-I'm afraid this won't be enough.
+Some applications use ARM (or other "embedded"-ish CPU) as opposed to
+x86 PCs, to get predictable and reasonable interrupt latency.
 
-I'm seeing a stream of frightening crazy talk involving ARM and some 
-other stuff I still can't make head and tail of.  So, before you get a 
-wholesale NAK on everything from me, please I'd suggest you guys rewind 
-a bit now that the ARM list is in CC and just explain what this is all 
-about and why we should feel concerned.  Then maybe the ARM savvy people 
-amongst us could suggest more appropriate approaches?
+x86 PCs sometimes have unpredictable interrupt latency due to those
+mystery interrupts that the BIOS handles and the OS can't see or
+block.  It's a different cause, but let's not duplicate the symptom
+where it isn't wanted.
 
-Thank you.
+Even if opaque firmware callouts were fast, it would be an issue with
+real-time kernels if they couldn't depend on that as an auditable fact.
 
-
-Nicolas
+-- Jamie
