@@ -1,23 +1,20 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Request review of device tree documentation
-Date: Tue, 15 Jun 2010 12:02:24 +1000
-Message-ID: <20100615020224.GK9323@yookeroo>
-References: <4C13430B.5000907@firmworks.com>
-	<1276339529.1962.184.camel@pasglop>
-	<1276339684.1962.186.camel@pasglop>
-	<4C13B618.1030006@firmworks.com>
-	<1276383132.1962.195.camel@pasglop>
-	<AANLkTimRV8u3gDNCAIlROJoPcKs7jFwj2na3ZDFOg3O0@mail.gmail.com>
-	<4C146F18.9030008@firmworks.com>
-	<AANLkTikls3hjXOmKFqG2D_9GaJSjOXNuuRXPlanAjo5E@mail.gmail.com>
-	<20100614124438.GF9323@yookeroo>
-	<alpine.LFD.2.00.1006141044510.13427@xanadu.home>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: Re:Re: PCIe bus seems work while 'dma' can't under linux
+Date: Tue, 15 Jun 2010 17:12:42 +1000
+Message-ID: <1276585962.2552.102.camel@pasglop>
+References: <1276240884.1962.132.camel@pasglop>
+	<1276219072.1962.82.camel@pasglop>
+	<20100604212134.10552.70717.stgit@angua>
+	<20100604212155.10552.19260.stgit@angua>
+	<1276152002.1962.55.camel@pasglop>
+	<AANLkTinmDFBvAjcjrgf3RHuiXgNxVV20yLzBaqhE5lrk@mail.gmail.com>
+	<c3ef46.1e4c.12924a10776.Coremail.jxnuxdy@163.com>
+	<1a6d876.2342.1293a6db848.Coremail.jxnuxdy@163.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.00.1006141044510.13427-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+In-Reply-To: <1a6d876.2342.1293a6db848.Coremail.jxnuxdy-9Onoh4P/yGk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,82 +24,128 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Dan Malek <ppc6dev-7kUUosv42bfn7oBBQGLwdg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: jxnuxdy <jxnuxdy-9Onoh4P/yGk@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 14, 2010 at 10:59:20AM -0400, Nicolas Pitre wrote:
-> On Mon, 14 Jun 2010, David Gibson wrote:
-> =
-
-> > On Sun, Jun 13, 2010 at 11:02:15PM -0600, Grant Likely wrote:
-> > [sni]
-> > > > That's sort of a self-fulfilling prophecy. =A0If the OS doesn't tru=
-st the
-> > > > firmware, there is no pressure for the firmware to "get it right".
-> > > =
-
-> > > Firmware will not get it right.  Period.  There will always be
-> > > something wrong.  It is never right on PCs.  It will never be right on
-> > > the other architectures.
-> > =
-
-> > Yes, yes, yes.  And there is a great deal of empirical evidence to
-> > back that assertion.
-> > =
-
-> > >  That goes for OSes too, but upgrading an OS
-> > > isn't as risky as upgrading firmware.  That isn't to say that it can't
-> > > be close, but every firmware feature that the OS depends on is a
-> > > feature that could force a risky firmware upgrade when the bug in it
-> > > is discovered.
-> > =
-
-> > Indeed.  In fact, the general rule of thumb is really "put as much as
-> > possible into the most easily replaced layer of the stack".  This is,
-> > incidentally, why I've always been dubious about simple firmwares
-> > supplying a flattened device tree rather than including the device
-> > tree template in the kernel, cuboot style.
-> =
-
-> The biggest advantage, IMHO, for adding DT to ARM, is actually to =
-
-> decouple the hardware config information and the kernel.  If in the end =
-
-> the DT has to be shipped in the kernel then we're losing all this =
-
-> advantage over the current state of things on ARM which still works =
-
-> pretty well otherwise.
-
-Right, which is why I'm just dubious, not dead against it.  If
-firmware supplies a device tree that's so awful you have to replace
-most of it, then you haven't won much over having a kernel wrapper
-which uses ad-hoc logic to detect the board type from whatever random
-clues the firmware leaves and selects a device tree from it's library
-of them based on that.  On ARM this sort of approach is probably more
-effective than powerpc, even, since you could use the machine number
-to select from a bag of canned device trees and still have a
-multi-board kernel.
-
-> In the best case, the simple firmware simply has to retrieve the =
-
-> flattened device tree from flash, and pass it to the kernel just like =
-
-> some anonymous blob.  And the simple firmware only needs to provide a =
-
-> way for that DT blob to be updatable, like through an upload of a =
-
-> replacement blob that was prepared offline.  Just like a ramdisk image =
-
-> or the like.
-
-Yes, having the firmware DT independently updateable makes most of my
-concerns about it go away.
-
--- =
-
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+T24gVHVlLCAyMDEwLTA2LTE1IGF0IDE1OjA1ICswODAwLCBqeG51eGR5IHdyb3RlOgo+IFRoYW5r
+cyBCZW5qYW1pbiwgdGhlIHJlZ2lvbnMgZG9uJ3QgZGlzcGxheSBhcyB3aGF0IHdlIGV4cGVjdCwg
+dGhhdCdzIHdoeSB3ZSBzdXNwZWN0IGlmIHRoZXJlIGFueSBjb25maWd1cmF0aW9uIHByb2JlbG1z
+IGluIENQVSBob3N0IGJyaWRnZSwgYnV0IHdlIGNoYW5nZWQgdGhlIHVib290L2xpbnV4IGEgbG90
+LCBzZWVtcyB0YWtlIG5vIGVmZmVjdCBvbiB0aGF0IHByb2JsZW1zLgo+IAo+IFdlIHVzZSBDUFUg
+TVBDODU0NCwgYW5kIGNvbm5lY3QgdHdvIFBDSUUgZGV2aWNlcyB0byBDUFUgUENJRTEgYW5kIFBD
+SUUyIGRpcmVjdGx5IHdpdGhvdXQgYSAgZXh0ZW5kZWQgUENJRSBicmlkZ2UsIHNvIHdlIGRpc2Fi
+bGVkIFBDSUUzIGFuZCBQQ0kgY29udHJvbGVycyBpbiB1Ym9vdCBsZXZlbC4KPiAKPiBNb3JlIHNl
+dHRpbmdzIHBscyB0YWtlIGEgbG9vayBhdCB0aGUgYXR0YWNoIGZpbGUgbG9nLnR4dC4KCkknbSBu
+b3QgZmFtaWxpYXIgd2l0aCB0aG9zZSBmcmVlc2NhbGUgcGFydHMsIHNvIEknbGwgbGV0IG90aGVy
+cyBjb21tZW50Cm9uIHlvdXIgc2V0dGluZ3Mgc2luY2UgaXQncyBtb3N0IGxpa2VseSB0byBiZSB3
+aGVyZSB0aGUgcHJvYmxlbSBpcy4KCkNoZWVycywKQmVuLgoKPiAKPiBNYW55IHRoYW5rcywKPiBE
+ZW5ueQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0KPiDlnKgyMDEwLTA2LTExIDE1OjIxOjI077yMIkJlbmphbWluIEhl
+cnJlbnNjaG1pZHQiIDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+IOWGmemBk++8mgo+ID5PbiBG
+cmksIDIwMTAtMDYtMTEgYXQgMDk6MzAgKzA4MDAsIGp4bnV4ZHkgd3JvdGU6Cj4gPj4gSGkgZ3V5
+cywKPiA+PiAKPiA+PiBJIGVuY291bnRlcmVkIGEgUENJZSBwcm9ibGVtIHVuZGVyIGxpbnV4LCB0
+aGUgdHdvIFBDSWUgYnVzIG9uIG15IGJvYXJkIHNlZW1zIHdvcmssIAo+ID4+IGF0IGxlYXN0IEkg
+Y2FuIGFjY2VzcyB0aGUgcmVnaXN0ZXJzIHRocm91Z2ggdGhlIFBDSWUgYnVzLCBob3dldmVyIHRo
+ZSBkbWEgZm9yIHRoZQo+ID4+IFBDSWUgYnVzIGNhbid0IHdvcmssIHNvIEkganVzdCBkdW1wZWQg
+dGhlIHBjaSBkZXZpY2UsIGJ1dCBJIGFtIGN1cmlvdXNseSB0byBmaW5kCj4gPj4gdGhlcmUgaXMg
+bm8gcmVnaW9ucyBkaXNwbGF5ZWQgb24gUENJZSBjb250cm9sZXJzLCB3aHk/IGlzIGl0IHJlbGF0
+ZSB3aXRoIG15ICdkbWEnIGlzc3VlIHRoZW4/Cj4gPgo+ID5JdCB3b3VsZCBoZWxwIGlmIHlvdSB0
+b2xkIHVzIGEgYml0IG1vcmUgd2hhdCB0aGUgSFcgaXMsIHdoYXQgeW91IGFyZQo+ID5kb2luZyB3
+aXRoIGl0LCBldGMuLi4KPiA+Cj4gPklFLiBXaGF0IGlzIHlvdXIgaG9zdCwgd2hhdCBpcyB5b3Vy
+IGRldmljZSwgd2hhdCBwbGF0Zm9ybSwgZXRjLi4uCj4gPgo+ID5ETUEgc2hvdWxkIHdvcmsgcHJv
+dmlkZWQgdGhhdCB5b3VyIHBsYXRmb3JtIGNvZGUgc2V0cyBpdCB1cCBwcm9wZXJseS4KPiA+VGhl
+IERNQSByZWdpb25zIGRvbid0IGFwcGVhciBpbiAvcHJvYy9wY2kgb3IgbHNwY2kuCj4gPgo+ID5D
+aGVlcnMsCj4gPkJlbi4KPiA+Cj4gPj4gCj4gPj4gYmFzaC0yLjA0IyBjYXQgL3Byb2MvcGNpCj4g
+Pj4gUENJIGRldmljZXMgZm91bmQ6Cj4gPj4gICBCdXMgIDAsIGRldmljZSAgIDAsIGZ1bmN0aW9u
+ICAwOgo+ID4+ICAgICBDbGFzcyAwYjIwICBIZWFkZXIgVHlwZSAwMTogUENJIGRldmljZSAxOTU3
+OjAwMzIgKHJldiAxNykuCj4gPj4gICBCdXMgIDEsIGRldmljZSAgIDAsIGZ1bmN0aW9uICAwOgo+
+ID4+ICAgICBDbGFzcyAwNTgwICBIZWFkZXIgVHlwZSAwMDogUENJIGRldmljZSAxMWFiOmRiOTAg
+KHJldiAxKS4KPiA+PiAgICAgICBQcmVmZXRjaGFibGUgNjQgYml0IG1lbW9yeSBhdCAweDgwMDAw
+MDAwIFsweDgwMGZmZmZmXS4KPiA+PiAgICAgICBQcmVmZXRjaGFibGUgNjQgYml0IG1lbW9yeSBh
+dCAweDg0MDAwMDAwIFsweDg3ZmZmZmZmXS4KPiA+PiAgIEJ1cyAgOSwgZGV2aWNlICAgMCwgZnVu
+Y3Rpb24gIDA6Cj4gPj4gICAgIENsYXNzIDBiMjAgIEhlYWRlciBUeXBlIDAxOiBQQ0kgZGV2aWNl
+IDE5NTc6MDAzMiAocmV2IDE3KS4KPiA+PiAgIEJ1cyAxMCwgZGV2aWNlICAgMCwgZnVuY3Rpb24g
+IDA6Cj4gPj4gICAgIENsYXNzIDA1ODAgIEhlYWRlciBUeXBlIDAwOiBQQ0kgZGV2aWNlIDExYWI6
+ZGI5MCAocmV2IDEpLgo+ID4+ICAgICAgIFByZWZldGNoYWJsZSA2NCBiaXQgbWVtb3J5IGF0IDB4
+YTAwMDAwMDAgWzB4YTAwZmZmZmZdLgo+ID4+ICAgICAgIFByZWZldGNoYWJsZSA2NCBiaXQgbWVt
+b3J5IGF0IDB4YTQwMDAwMDAgWzB4YTdmZmZmZmZdLgo+ID4+IGJhc2gtMi4wNCMgbHNwY2kgLXZ2
+Cj4gPj4gMDA6MDAuMCBQb3dlciBQQzogVW5rbm93biBkZXZpY2UgMTk1NzowMDMyIChyZXYgMTEp
+Cj4gPj4gICAgICAgICAhISEgSW52YWxpZCBjbGFzcyAwYjIwIGZvciBoZWFkZXIgdHlwZSAwMQo+
+ID4+ICAgICAgICAgQ29udHJvbDogSS9PLSBNZW0rIEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1X
+SU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0KPiA+PiAgICAg
+ICAgIFN0YXR1czogQ2FwKyA2Nk1oei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0
+ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0KPiA+PiAgICAgICAgIExh
+dGVuY3k6IDAsIGNhY2hlIGxpbmUgc2l6ZSAwOAo+ID4+ICAgICAgICAgQnVzOiBwcmltYXJ5PTAw
+LCBzZWNvbmRhcnk9MDEsIHN1Ym9yZGluYXRlPTA2LCBzZWMtbGF0ZW5jeT0wCj4gPj4gICAgICAg
+ICBJL08gYmVoaW5kIGJyaWRnZTogMDAwMDAwMDAtMDAwMDBmZmYKPiA+PiAgICAgICAgIE1lbW9y
+eSBiZWhpbmQgYnJpZGdlOiA4MDAwMDAwMC05ZmZmZmZmZgo+ID4+ICAgICAgICAgQnJpZGdlQ3Rs
+OiBQYXJpdHktIFNFUlItIE5vSVNBLSBWR0EtIE1BYm9ydC0gPlJlc2V0LSBGYXN0QjJCLQo+ID4+
+ICAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNDRdIFBvd2VyIE1hbmFnZW1lbnQgdmVyc2lvbiAyCj4g
+Pj4gICAgICAgICAgICAgICAgIEZsYWdzOiBQTUVDbGstIERTSS0gRDErIEQyKyBBdXhDdXJyZW50
+PTBtQSBQTUUoRDArLEQxKyxEMissRDNob3QrLEQzY29sZCspCj4gPj4gICAgICAgICAgICAgICAg
+IFN0YXR1czogRDAgUE1FLUVuYWJsZS0gRFNlbD0wIERTY2FsZT0wIFBNRS0KPiA+PiAgICAgICAg
+IENhcGFiaWxpdGllczogWzRjXSAjMTAgWzAwNDFdCj4gPj4gCj4gPj4gMDE6MDAuMCBNZW1vcnkg
+Y29udHJvbGxlcjogR2FsaWxlbyBUZWNobm9sb2d5IEx0ZC46IFVua25vd24gZGV2aWNlIGRiOTAg
+KHJldiAwMSkKPiA+PiAgICAgICAgIFN1YnN5c3RlbTogR2FsaWxlbyBUZWNobm9sb2d5IEx0ZC46
+IFVua25vd24gZGV2aWNlIDExYWIKPiA+PiAgICAgICAgIENvbnRyb2w6IEkvTy0gTWVtKyBCdXNN
+YXN0ZXIrIFNwZWNDeWNsZS0gTWVtV0lOVi0gVkdBU25vb3AtIFBhckVyci0gU3RlcHBpbmctIFNF
+UlItIEZhc3RCMkItCj4gPj4gICAgICAgICBTdGF0dXM6IENhcCsgNjZNaHotIFVERi0gRmFzdEIy
+Qi0gUGFyRXJyLSBERVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0LSA8TUFib3J0LSA+U0VSUi0g
+PFBFUlItCj4gPj4gICAgICAgICBMYXRlbmN5OiAwLCBjYWNoZSBsaW5lIHNpemUgMDgKPiA+PiAg
+ICAgICAgIEludGVycnVwdDogcGluIEEgcm91dGVkIHRvIElSUSAwCj4gPj4gICAgICAgICBSZWdp
+b24gMDogTWVtb3J5IGF0IDgwMDAwMDAwICg2NC1iaXQsIHByZWZldGNoYWJsZSkgW3NpemU9MU1d
+Cj4gPj4gICAgICAgICBSZWdpb24gMjogTWVtb3J5IGF0IDg0MDAwMDAwICg2NC1iaXQsIHByZWZl
+dGNoYWJsZSkgW3NpemU9NjRNXQo+ID4+ICAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNDBdIFBvd2Vy
+IE1hbmFnZW1lbnQgdmVyc2lvbiAyCj4gPj4gICAgICAgICAgICAgICAgIEZsYWdzOiBQTUVDbGst
+IERTSS0gRDEtIEQyLSBBdXhDdXJyZW50PTBtQSBQTUUoRDAtLEQxLSxEMi0sRDNob3QtLEQzY29s
+ZC0pCj4gPj4gICAgICAgICAgICAgICAgIFN0YXR1czogRDAgUE1FLUVuYWJsZS0gRFNlbD0wIERT
+Y2FsZT0wIFBNRS0KPiA+PiAgICAgICAgIENhcGFiaWxpdGllczogWzUwXSBNZXNzYWdlIFNpZ25h
+bGxlZCBJbnRlcnJ1cHRzOiA2NGJpdCsgUXVldWU9MC8wIEVuYWJsZS0KPiA+PiAgICAgICAgICAg
+ICAgICAgQWRkcmVzczogMDAwMDAwMDAwMDAwMDAwMCAgRGF0YTogMDAwMAo+ID4+ICAgICAgICAg
+Q2FwYWJpbGl0aWVzOiBbNjBdICMxMCBbMDAxMV0KPiA+PiAKPiA+PiAwOTowMC4wIFBvd2VyIFBD
+OiBVbmtub3duIGRldmljZSAxOTU3OjAwMzIgKHJldiAxMSkKPiA+PiAgICAgICAgICEhISBJbnZh
+bGlkIGNsYXNzIDBiMjAgZm9yIGhlYWRlciB0eXBlIDAxCj4gPj4gICAgICAgICBDb250cm9sOiBJ
+L08tIE1lbSsgQnVzTWFzdGVyKyBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnIt
+IFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLQo+ID4+ICAgICAgICAgU3RhdHVzOiBDYXArIDY2TWh6
+LSBVREYtIEZhc3RCMkItIFBhckVyci0gREVWU0VMPWZhc3QgPlRBYm9ydC0gPFRBYm9ydC0gPE1B
+Ym9ydC0gPlNFUlItIDxQRVJSLQo+ID4+ICAgICAgICAgTGF0ZW5jeTogMCwgY2FjaGUgbGluZSBz
+aXplIDA4Cj4gPj4gICAgICAgICBCdXM6IHByaW1hcnk9MDAsIHNlY29uZGFyeT0wYSwgc3Vib3Jk
+aW5hdGU9MGYsIHNlYy1sYXRlbmN5PTAKPiA+PiAgICAgICAgIEkvTyBiZWhpbmQgYnJpZGdlOiAw
+MDAwMDAwMC0wMDAwMGZmZgo+ID4+ICAgICAgICAgTWVtb3J5IGJlaGluZCBicmlkZ2U6IGEwMDAw
+MDAwLWJmZmZmZmZmCj4gPj4gICAgICAgICBCcmlkZ2VDdGw6IFBhcml0eS0gU0VSUi0gTm9JU0Et
+IFZHQS0gTUFib3J0LSA+UmVzZXQtIEZhc3RCMkItCj4gPj4gICAgICAgICBDYXBhYmlsaXRpZXM6
+IFs0NF0gUG93ZXIgTWFuYWdlbWVudCB2ZXJzaW9uIDIKPiA+PiAgICAgICAgICAgICAgICAgRmxh
+Z3M6IFBNRUNsay0gRFNJLSBEMSsgRDIrIEF1eEN1cnJlbnQ9MG1BIFBNRShEMCssRDErLEQyKyxE
+M2hvdCssRDNjb2xkKykKPiA+PiAgICAgICAgICAgICAgICAgU3RhdHVzOiBEMCBQTUUtRW5hYmxl
+LSBEU2VsPTAgRFNjYWxlPTAgUE1FLQo+ID4+ICAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNGNdICMx
+MCBbMDA0MV0KPiA+PiAKPiA+PiAwYTowMC4wIE1lbW9yeSBjb250cm9sbGVyOiBHYWxpbGVvIFRl
+Y2hub2xvZ3kgTHRkLjogVW5rbm93biBkZXZpY2UgZGI5MCAocmV2IDAxKQo+ID4+ICAgICAgICAg
+U3Vic3lzdGVtOiBHYWxpbGVvIFRlY2hub2xvZ3kgTHRkLjogVW5rbm93biBkZXZpY2UgMTFhYgo+
+ID4+ICAgICAgICAgQ29udHJvbDogSS9PLSBNZW0rIEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1X
+SU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0KPiA+PiAgICAg
+ICAgIFN0YXR1czogQ2FwKyA2Nk1oei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0
+ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0KPiA+PiAgICAgICAgIExh
+dGVuY3k6IDAsIGNhY2hlIGxpbmUgc2l6ZSAwOAo+ID4+ICAgICAgICAgSW50ZXJydXB0OiBwaW4g
+QSByb3V0ZWQgdG8gSVJRIDAKPiA+PiAgICAgICAgIFJlZ2lvbiAwOiBNZW1vcnkgYXQgYTAwMDAw
+MDAgKDY0LWJpdCwgcHJlZmV0Y2hhYmxlKSBbc2l6ZT0xTV0KPiA+PiAgICAgICAgIFJlZ2lvbiAy
+OiBNZW1vcnkgYXQgYTQwMDAwMDAgKDY0LWJpdCwgcHJlZmV0Y2hhYmxlKSBbc2l6ZT02NE1dCj4g
+Pj4gICAgICAgICBDYXBhYmlsaXRpZXM6IFs0MF0gUG93ZXIgTWFuYWdlbWVudCB2ZXJzaW9uIDIK
+PiA+PiAgICAgICAgICAgICAgICAgRmxhZ3M6IFBNRUNsay0gRFNJLSBEMS0gRDItIEF1eEN1cnJl
+bnQ9MG1BIFBNRShEMC0sRDEtLEQyLSxEM2hvdC0sRDNjb2xkLSkKPiA+PiAgICAgICAgICAgICAg
+ICAgU3RhdHVzOiBEMCBQTUUtRW5hYmxlLSBEU2VsPTAgRFNjYWxlPTAgUE1FLQo+ID4+ICAgICAg
+ICAgQ2FwYWJpbGl0aWVzOiBbNTBdIE1lc3NhZ2UgU2lnbmFsbGVkIEludGVycnVwdHM6IDY0Yml0
+KyBRdWV1ZT0wLzAgRW5hYmxlLQo+ID4+ICAgICAgICAgICAgICAgICBBZGRyZXNzOiAwMDAwMDAw
+MDAwMDAwMDAwICBEYXRhOiAwMDAwCj4gPj4gICAgICAgICBDYXBhYmlsaXRpZXM6IFs2MF0gIzEw
+IFswMDExXQo+ID4+IAo+ID4+IGJhc2gtMi4wNCMgCj4gPj4gCj4gPj4gVGhhbmtzCj4gPj4gRGVu
+bnkKPiA+PiAKPiA+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwo+ID4+IExpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKPiA+PiBMaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZwo+ID4+IGh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51
+eHBwYy1kZXYKPiA+Cj4gPgo+ID5fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwo+ID5MaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Cj4gPkxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnCj4gPmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51
+eHBwYy1kZXYKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0
+cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVl
+LWRpc2N1c3MK
