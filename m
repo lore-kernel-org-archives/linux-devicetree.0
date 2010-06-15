@@ -1,84 +1,35 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 03/12] phylib: add a driver method for the SIOCSHWTSTAMP
-	ioctl.
-Date: Tue, 15 Jun 2010 10:27:59 -0600
-Message-ID: <AANLkTiml5FyHstY-0ZPHxFDvA349BZv3TeX9gXtURFFN@mail.gmail.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 03/12] phylib: add a driver method for the
+ SIOCSHWTSTAMP ioctl.
+Date: Tue, 15 Jun 2010 18:34:09 +0200
+Message-ID: <20100615163409.GA10668@riccoc20.at.omicron.at>
 References: <cover.1276615626.git.richard.cochran@omicron.at>
-	<77fe18d640e35dcbfad1e117a4321f935500d5ac.1276615626.git.richard.cochran@omicron.at>
+ <77fe18d640e35dcbfad1e117a4321f935500d5ac.1276615626.git.richard.cochran@omicron.at>
+ <AANLkTiml5FyHstY-0ZPHxFDvA349BZv3TeX9gXtURFFN@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <77fe18d640e35dcbfad1e117a4321f935500d5ac.1276615626.git.richard.cochran@omicron.at>
+Content-Disposition: inline
+In-Reply-To: <AANLkTiml5FyHstY-0ZPHxFDvA349BZv3TeX9gXtURFFN@mail.gmail.com>
 Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
+To: Grant Likely <grant.likely@secretlab.ca>
 Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 15, 2010 at 10:08 AM, Richard Cochran
-<richardcochran@gmail.com> wrote:
-> This patch adds a phy driver method for configuring hardware time sta=
-mping.
-> Drivers may optionally implement this function.
->
-> Signed-off-by: Richard Cochran <richard.cochran@omicron.at>
+On Tue, Jun 15, 2010 at 10:27:59AM -0600, Grant Likely wrote:
+> On Tue, Jun 15, 2010 at 10:08 AM, Richard Cochran
+> <richardcochran@gmail.com> wrote:
+> > This patch adds a phy driver method for configuring hardware time stamping.
+> > Drivers may optionally implement this function.
+> >
+> > Signed-off-by: Richard Cochran <richard.cochran@omicron.at>
+> 
+> Adding an ioctl to the userspace ABI.  Make sure you cc: linux-kernel
+> on the next spin of this series.
 
-Adding an ioctl to the userspace ABI.  Make sure you cc: linux-kernel
-on the next spin of this series.
+Not sure what you mean. SIOCSHWTSTAMP is a standard socket option as
+of 2.6.30. The patch just makes it possible for PHY drivers to
+implement this option.
 
-g.
+Richard
 
-> ---
-> =A0drivers/net/phy/phy.c | =A0 =A05 +++++
-> =A0include/linux/phy.h =A0 | =A0 =A03 +++
-> =A02 files changed, 8 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index bd88d81..5130db8 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -361,6 +361,11 @@ int phy_mii_ioctl(struct phy_device *phydev,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
->
-> + =A0 =A0 =A0 case SIOCSHWTSTAMP:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (phydev->drv->hwtstamp)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return phydev->drv->hwt=
-stamp(phydev, ifr);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* fall through */
-> +
-> =A0 =A0 =A0 =A0default:
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EOPNOTSUPP;
-> =A0 =A0 =A0 =A0}
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index d63736a..a5e9df1 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -402,6 +402,9 @@ struct phy_driver {
-> =A0 =A0 =A0 =A0/* Clears up any memory if needed */
-> =A0 =A0 =A0 =A0void (*remove)(struct phy_device *phydev);
->
-> + =A0 =A0 =A0 /* Handles SIOCSHWTSTAMP ioctl for hardware time stampi=
-ng. */
-> + =A0 =A0 =A0 int (*hwtstamp)(struct phy_device *phydev, struct ifreq=
- *ifr);
-> +
-> =A0 =A0 =A0 =A0struct device_driver driver;
-> =A0};
-> =A0#define to_phy_driver(d) container_of(d, struct phy_driver, driver=
-)
-> --
-> 1.6.3.3
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
-
-
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
