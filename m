@@ -1,47 +1,46 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 5/5] of/address: restrict 'no-ranges' kludge to powerpc
-Date: Wed, 16 Jun 2010 10:33:54 +1000
-Message-ID: <1276648434.2552.165.camel@pasglop>
-References: <20100608140917.25879.67745.stgit@angua>
-	<20100608141018.25879.44413.stgit@angua>
-	<1276152275.1962.61.camel@pasglop>
-	<1C7A9067-DDE6-47D3-AC78-FDC081354519@kernel.crashing.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 04/12] phylib: add a way to make PHY time stamps
+ possible.
+Date: Wed, 16 Jun 2010 07:40:47 +0200
+Message-ID: <20100616054047.GA2887@riccoc20.at.omicron.at>
+References: <cover.1276615626.git.richard.cochran@omicron.at>
+ <27c0ad283f025c2bb71e7ceb71be07f969939429.1276615626.git.richard.cochran@omicron.at>
+ <AANLkTimhAvu0_WuMCwnCrw9Rbcy6dKxvTlzepJm7ZDdR@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1C7A9067-DDE6-47D3-AC78-FDC081354519-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AANLkTimhAvu0_WuMCwnCrw9Rbcy6dKxvTlzepJm7ZDdR@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2010-06-15 at 18:23 +0200, Segher Boessenkool wrote:
-> >> Certain Apple machines don't use the ranges property correctly,  
-> >> but the
-> >> workaround should not be applied on other architectures.  This patch
-> >> disables the workaround for non-powerpc architectures.
-> >
-> > I'm half tempted to add it to the quirk list (which should really be
-> > made generic) so I can disable it on more 'modern' powerpc as well.
-> 
-> Oh please oh please oh please yes do.
-> 
-> OTOH, it would be even better to just fix up the device tree in the
-> early platform code.  Quirks are for broken hardware; software, we
-> can fix.
+On Tue, Jun 15, 2010 at 10:33:51AM -0600, Grant Likely wrote:
+> > +config NETWORK_PHY_TIMESTAMPING
+> Some overhead?  At a brief glance of the series it looks like it could
+> add a lot of overhead, but I'm not fully clear on what the full
+> process is.  Can you describe how the hardware timestamping works?  I
+> could use an overview of what the kernel has to do.
 
-That would work if I could bloody remember which machines need what on
-what nodes ... some of those are ancient and I don't have access to all
-of them.
+First of all, I want to emphasize that this network stack option is
+purely voluntary. Only those people who know that they have a PTP
+capable PHY and really want the timestamps will (or should) enable
+this option. When it is not enabled, it has no effect at all.
 
-Cheers,
-Ben.
+Hardware timestamping is described in
+
+   Documentation/networking/timestamping.txt
+   Documentation/networking/timestamping/timestamping.c
+
+The PTP subsystem is described in
+
+   Documentation/ptp/ptp.txt
+
+There really is more to say about the issue than appears in those
+documents, but they are a good starting place for discussion.
+
+BTW I am submitting a conference paper on the design on the PTP
+subsystem. If you would like to have it, just ask me off-list.
+
+Richard
