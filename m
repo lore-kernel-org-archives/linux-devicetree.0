@@ -1,39 +1,146 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 12/12] ptp: Added a clock driver for the National
- Semiconductor PHYTER.
-Date: Wed, 16 Jun 2010 12:05:39 +0200
-Message-ID: <20100616100539.GA3569@riccoc20.at.omicron.at>
-References: <cover.1276615626.git.richard.cochran@omicron.at>
- <37f5015b186bdd51f8451ade042f90c8b39a5cc8.1276615626.git.richard.cochran@omicron.at>
- <AANLkTilqd-wxqMWDxssC-XMDJqZ8iIiSrvp2t8xARAQV@mail.gmail.com>
+From: Mike Rapoport <mike@compulab.co.il>
+Subject: Re: Request review of device tree documentation
+Date: Wed, 16 Jun 2010 13:39:03 +0300
+Message-ID: <4C18A9C7.5070800@compulab.co.il>
+References: <4C13430B.5000907@firmworks.com>	<1276339529.1962.184.camel@pasglop>	<1276339684.1962.186.camel@pasglop>	<4C13B618.1030006@firmworks.com>	<1276383132.1962.195.camel@pasglop>	<AANLkTimRV8u3gDNCAIlROJoPcKs7jFwj2na3ZDFOg3O0@mail.gmail.com>	<4C146F18.9030008@firmworks.com>	<AANLkTikls3hjXOmKFqG2D_9GaJSjOXNuuRXPlanAjo5E@mail.gmail.com>	<20100614124438.GF9323@yookeroo>	<alpine.LFD.2.00.1006141044510.13427@xanadu.home>	<20100614160201.GD9550@shareable.org>
+	<4C165FD1.6080505@firmworks.com> <4C186AA8.4040709@compulab.co.il>
+	<4C186B7B.1060308@firmworks.com> <4C186C72.2020506@compulab.co.il>
+	<4C187013.5000400@firmworks.com> <4C18738C.4090809@compulab.co.il>
+	<4C187FF0.5020806@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTilqd-wxqMWDxssC-XMDJqZ8iIiSrvp2t8xARAQV@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4C187FF0.5020806@firmworks.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Nicolas Pitre <nico@fluxnic.net>, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Jamie Lokier <jamie@shareable.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mike Rapoport <mike@compulab.co.il>, Dan Malek <ppc6dev@digitaldans.com>, Jeremy Kerr <jeremy.kerr@canonical.com>, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 15, 2010 at 12:49:13PM -0600, Grant Likely wrote:
-> Won't this break things for existing DP83640 users?
-
-Nope, the driver was only added five patches ago, and it only offers
-the timestamping stuff. The standard PHY functions just call the
-generic functions, so the PHY works fine even without this driver.
-
-> > +static struct ptp_clock *dp83640_clock;
-> > +DEFINE_SPINLOCK(clock_lock); /* protects the one and only dp83640_clock */
+Mitch Bradley wrote:
+> Mike Rapoport wrote:
+>> Mitch Bradley wrote:
+>>> Mike Rapoport wrote:
+>>>> Mitch Bradley wrote:
+>>>>> Mike Rapoport wrote:
+>>>>>> Mitch Bradley wrote:
+>>>>>>
+>>>>>>> The second topic is the hypothetical use of OFW as a HAL. That 
+>>>>>>> will not happen for several reasons.  The opposition to the idea 
+>>>>>>> is widespread and deeply held, and there are good arguments to 
+>>>>>>> support that opposition.   Furthermore, the economic conditions 
+>>>>>>> necessary for the creation of such a HAL do not exist in the ARM 
+>>>>>>> world, nor indeed in the Linux world in general.  (The necessary 
+>>>>>>> condition is the ability for one company to impose a substantial 
+>>>>>>> change by fiat - essentially a monopoly position.)
+>>>>>>>
+>>>>>>> Shall we agree, then, that any further discussion of the HAL 
+>>>>>>> issue is "just for fun", and that nobody needs to feel threatened 
+>>>>>>> that it would actually happen?
+>>>>>>
+>>>>>> I've recently worked with vendor versions of U-Boot for advanced 
+>>>>>> ARM SoCs. There is already *huge* chunk of HAL code in those 
+>>>>>> versions. And if there would be possibility to have callbacks into 
+>>>>>> the firmware these chunks would only grow, IMHO.
+>>>>>
+>>>>> How can there be HAL code in U-Boot unless there is already the 
+>>>>> possibility to have callbacks into the firmware?
+>>>>
+>>>> Currently it aims to abstract hardware from U-Boot and reuse the 
+>>>> same HW access code across operating systems and bootloaders. If 
+>>>> this code would have callbacks I afraid the things would became worse.
+>>>
+>>> The only way I can understand what you said is if I assume that by 
+>>> "callback", you mean the following sequence:
+>>>
+>>> a) U-boot loads and executes the OS, providing to the OS the address 
+>>> of some HW access routines that it can use
+>>> b) The OS calls one of those HW access routines
+>>> c) During the execution of that HW access routine, that routine calls 
+>>> "back" into the OS, before returning.  So a call into the OS is 
+>>> nested inside a call into U-boot resident code.
+>>>
+>>> If that is what you are worried about, it is not what we were 
+>>> discussing.  We were discussing - and many people were against - step 
+>>> (b).
+>>>
+>>> Are you saying that step (b) - the OS calling into routines provided 
+>>> by U-Boot - is already the status quo?
+>>
+>> I'm also objecting the step (b) and, fortunately, it's not yet the 
+>> status quo.
+>> Current U-Boot/kernel implementations I've encountered still do not 
+>> have OS calls to resident HW access routines. But if such calls would 
+>> be allowed, my impression is that SoC vendors would make extensive use 
+>> of them.
 > 
-> Why only one?  Is it not possible to have 2 of these PHYs in a system?
+> One could argue that a feature that vendors would use extensively is one 
+> that is sorely needed from their point of view.
+> 
+> One counterargument, of course, is that "there is a better way".  But it 
+> is only "better" under a cost function that values things differently 
+> than the vendors value them.  Were that not so, the vendors would gladly 
+> use the "better" way and not be tempted to use the objectionable 
+> feature. (Unless, of course, the vendors are just ignorant or unskilled 
+> - but I generally find that different cost functions cause more 
+> disconnects than lack of ability.)
 
-Yes, you can have multiple PHYs, but only one PTP clock.
+It's hardly arguable that Linux community and decision makers at chip 
+vendor companies use different cost functions. But it's not that obvious 
+that vendors cost functions based on well established _technical_ analysis.
+Many vendors try to use the same code base for several operating 
+systems. From the high level perspective it sounds logical: use the same 
+core functionality and thin adaptation layers to fit the core 
+functionality into several OSes. But in reality, developing the OS 
+abstraction layer and "thin" adaptation layers may become more expensive 
+than developing each OS support from scratch. Besides, such code becomes 
+a real mess after a while, and it's maintainability is very questionable.
 
-If you do use multiple PHYs, then you must wire their clocks together
-and adjust the PTP clock on only one of the PHYs.
+> Which of course raises the question:  How does the Linux community view 
+> such SoC vendors?  Are they embraced and eagerly supported, or (either 
+> openly or secretly) viewed as a nuisance?  How does the widespread 
+> objection to something that such vendors "would make extensive use of" 
+> mesh with that view?
+
+I cannot tell for the entire Linux community, but from what I know, such 
+vendors are not much welcomed in the community.
+
+>>
+>>>>
+>>>>> It is not HAL if it can't be called.
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> The potential for "vendors breaking out of the debugging use case 
+>>>>>>> and turning it into a HAL" is miniscule, because
+>>>>>>>
+>>>>>>> a) The callback is disabled by default
+>>>>>>> b) The technical challenges of the callback interface limit its 
+>>>>>>> applicability to specific "wizard user" scenarios
+>>>>>>> c) OFW is unlikely to achieve sufficient market penetration for 
+>>>>>>> the HAL thing to be worth doing
+>>>>>>>
+>>>>>>>
+>>>>>>> _______________________________________________
+>>>>>>> linux-arm-kernel mailing list
+>>>>>>> linux-arm-kernel@lists.infradead.org
+>>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>>>
+>>>>>>
+>>>>
+>>>>
+>>
+>>
 
 
-Thanks for your other comments,
-
-Richard
+-- 
+Sincerely yours,
+Mike.
