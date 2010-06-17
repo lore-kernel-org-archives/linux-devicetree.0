@@ -1,90 +1,51 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: OF Clock binding discussion
-Date: Thu, 17 Jun 2010 09:58:48 -0600
-Message-ID: <AANLkTimDwCMTskN6us8RhZDM4aNFMLmeIMwZCRHUmuAj@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 5/5] of/irq: merge of_irq_map_one()
+Date: Thu, 17 Jun 2010 17:11:02 -0600
+Message-ID: <AANLkTin5K0IL5iKj9i9qBucSpQz2-p5wIvUtC4iU0jUP@mail.gmail.com>
+References: <20100604212134.10552.70717.stgit@angua>
+	<20100604212155.10552.19260.stgit@angua>
+	<1276152002.1962.55.camel@pasglop>
+	<AANLkTinmDFBvAjcjrgf3RHuiXgNxVV20yLzBaqhE5lrk@mail.gmail.com>
+	<1276219072.1962.82.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, David Gibson <david-xT8FGy+AXnR4Cd2VRjVQmg@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1276219072.1962.82.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Michal Simek <monstr@monstr.eu>, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben & David.
+On Thu, Jun 10, 2010 at 7:17 PM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Thu, 2010-06-10 at 17:36 -0600, Grant Likely wrote:
+>>
+>> Okay. =A0I had been trying to avoid #ifdefs in the common code, but
+>> you're probably right. =A0I'll rework.
+>
+> Not even ifdef's ... just move the quirk map there. You can always
+> #define the quirk variable to 0 on archs that have no quirks, to
+> make it compile away if you believe it represents bloat, but they
+> are simple well localized things so I doubt it matters.
 
-jk & I have been the clock binding details, some on the wiki's talk
-page, but I'd like to get your opinions too.  Here's the URL, and the
-discussion so far:
+They're pretty small, but powermac32 is the only code that actually
+uses the quirk facility.  Everything else parses sanely it would
+appear.  I'd rather have them localized to the powermac code and
+eliminate the quirks from the common code.
 
-http://devicetree.org/Talk:ClockBindings
+If other platforms show up with bad irq mappings, then I want to take
+the approach of fixing the data rather than adding more quirks cases.
 
+Anyway, let me try my hand at reworking to be a lot clearer and see
+what it looks like.
 
-Text from talk page:
-
-The use of indices in clock-map is a little messy and has been (in my
-experience) an easy way to create an incorrect DT. It may be neater to
-drop the clock-input-names property and define the clock-map property
-as a list of:
-
- <input-name provider-phandle provider-output-name>
-
-- ie, using the input name directly, and using the provider output
-name rather than the index of the name in the provider's
-clock-output-names property.
-
-This means that there are fewer dependencies between properties; the
-order of clock-map no longer depends on the (arbitrary) order of
-clock-input-names, and doesn't need to index into the (arbitrarily
-ordered) clock-output-names property.
-
-This will add a bit of complexity to the parsing code, but this will
-only need to be maintained in one place (ie, the generic of_clk
-infrastructure).
-
---[[User:Jk|Jk]] 02:56, 16 June 2010 (UTC)
-
-Yes, I agree.  The indicies in the clock-map is the part that I'm most
-uncomfortable with.  Dropping the names altogether would almost be
-better in this regard.  It would be harder to read, but at least there
-would be only 1 levels of indirection <code>(input index --> output
-index)</code> rather than 3 <code>(input name --> input index -->
-output index --> output name)</code>.  And it would match closer with
-already established patterns for interrupts and gpios.  However, the
-redirection does have to happen somewhere, either in the device tree,
-or in the driver code, as existing users (at least in Linux) refer to
-clocks by name anyway.
-
-I would also prefer the <input-name provider-phandle
-provider-output-name> form, but that would require mixing string and
-cell values in the same property.  The dtc compiler does support it in
-this form, but it doesn't seem very tasteful to me:
-
- prop = "input-name", <&phandle>, "output-name";
-
-Alternately, I've been thinking about adding code to path resolution
-so that aliases are automatically dereferenced if the path is in the
-form "<alias-name>:".  That combined with replacing the phandle with
-the device alias or path would give this:
-
- prop = "<input-name>","<provider-path-or-alias>","<output-name>";
-
-Which would ultimately look like one of these:
-
- prop = "bus-clk","&clk-source","clk1";  // full path using label
- prop = "bus-clk","clk-source:","clk1";  // using alias; much shorter
-string when compiled
-
---[[User:GrantLikely|GrantLikely]] 15:45, 17 June 2010 (UTC)
-
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+g.
