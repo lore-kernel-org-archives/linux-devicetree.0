@@ -1,17 +1,16 @@
-From: "Lorenzo Pieralisi" <Lorenzo.Pieralisi@arm.com>
-Subject: RE: Platform data with function pointers
-Date: Fri, 18 Jun 2010 15:25:43 +0100
-Message-ID: <22138.6788799011$1276871193@news.gmane.org>
+From: Eric Miao <eric.y.miao@gmail.com>
+Subject: Re: Platform data with function pointers
+Date: Fri, 18 Jun 2010 22:33:32 +0800
+Message-ID: <AANLkTik4B8yyxWDbN4J7aWXb7v3HGkAabaRdyIAzmnGC@mail.gmail.com>
 References: <-71663801230973480@unknownmsgid>
 	<AANLkTikqONUs722_ev6hqfpJiehUq2qAGWGhmxg6WkTs@mail.gmail.com>
-	<000901cb0ee4$68e19e20$3aa4da60$@Pieralisi@arm.com>
 	<20100618131301.GA21333@n2100.arm.linux.org.uk>
+	<-8400781325900388878@unknownmsgid>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20100618131301.GA21333@n2100.arm.linux.org.uk>
-Content-Language: en-gb
+In-Reply-To: <-8400781325900388878@unknownmsgid>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,63 +20,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 'Russell King - ARM Linux' <linux@arm.linux.org.uk>
-Cc: 'Grant Likely' <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Jeremy Kerr <jeremy.kerr@canonical.com>, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nico@fluxnic.net>
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Jeremy Kerr <jeremy.kerr@canonical.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Concerning platform_devices ids, sorry I wasn't meant to report an amba primecell binding snippet, I wanted to report here just a
-binding for a simple memory mapped platform device (not a primecell one). I was asking that question about platform_device
-statically defined structs that use the id for enumeration, and going with FDT the id has to be initialized somehow from the tree
-because the struct is allocated dynamically.
-
-Wrt map_desc point taken, I was looking into possible ways of getting rid of platform specific statically defined data, that array
-in particular.
-
-Thanks a lot for your feedback,
-
-Lorenzo
-
------Original Message-----
-From: Russell King - ARM Linux [mailto:linux@arm.linux.org.uk] 
-Sent: Friday, June 18, 2010 2:13 PM
-To: Lorenzo Pieralisi
-Cc: 'Grant Likely'; devicetree-discuss; linux-arm-kernel@lists.infradead.org; Jeremy Kerr; Nicolas Pitre
-Subject: Re: Platform data with function pointers
-
-On Fri, Jun 18, 2010 at 01:47:28PM +0100, Lorenzo Pieralisi wrote:
-> I think chip-select addressing should be used if that is the way HW handles it. If the device is described through a
-memory-mapping,
-> ex. snippet follows:
-> 
-> serial@101f2000 {
->         compatible = "arm,pl011";
->         reg = <0x101f2000 0x1000 >;
-> };
-
-Primecell devices aren't platform devices.  They have no 'id' field as
-such.  Instead, modern implementations have PCI-like IDs.
-
-> struct map_desc {
-> 	unsigned long virtual;
-> 	unsigned long pfn;
-> 	unsigned long length;
-> 	unsigned int type;
-> };
-> 
-> static struct map_desc realview_eb_io_desc[] __initdata = {
-> 	{
-> 		.virtual	= IO_ADDRESS(REALVIEW_SYS_BASE),
-> 		.pfn		= __phys_to_pfn(REALVIEW_SYS_BASE),
-> 		.length		= SZ_4K,
-> 		.type		= MT_DEVICE,
-> 	}, ...
-
-These mappings are entirely arbitary, and change according to the
-implementation of the platform.
-
-Some platforms want to avoid using ioremap() to create 4K page mappings
-for their devices, so instead they statically map them and arrange for
-ioremap() to know about that static mapping.
-
-Given that PAGE_OFFSET can be changed, it would be absolutely silly to
-put this into the device tree.
+T24gRnJpLCBKdW4gMTgsIDIwMTAgYXQgMTA6MjUgUE0sIExvcmVuem8gUGllcmFsaXNpCjxMb3Jl
+bnpvLlBpZXJhbGlzaUBhcm0uY29tPiB3cm90ZToKPiBDb25jZXJuaW5nIHBsYXRmb3JtX2Rldmlj
+ZXMgaWRzLCBzb3JyeSBJIHdhc24ndCBtZWFudCB0byByZXBvcnQgYW4gYW1iYSBwcmltZWNlbGwg
+YmluZGluZyBzbmlwcGV0LCBJIHdhbnRlZCB0byByZXBvcnQgaGVyZSBqdXN0IGEKPiBiaW5kaW5n
+IGZvciBhIHNpbXBsZSBtZW1vcnkgbWFwcGVkIHBsYXRmb3JtIGRldmljZSAobm90IGEgcHJpbWVj
+ZWxsIG9uZSkuIEkgd2FzIGFza2luZyB0aGF0IHF1ZXN0aW9uIGFib3V0IHBsYXRmb3JtX2Rldmlj
+ZQo+IHN0YXRpY2FsbHkgZGVmaW5lZCBzdHJ1Y3RzIHRoYXQgdXNlIHRoZSBpZCBmb3IgZW51bWVy
+YXRpb24sIGFuZCBnb2luZyB3aXRoIEZEVCB0aGUgaWQgaGFzIHRvIGJlIGluaXRpYWxpemVkIHNv
+bWVob3cgZnJvbSB0aGUgdHJlZQo+IGJlY2F1c2UgdGhlIHN0cnVjdCBpcyBhbGxvY2F0ZWQgZHlu
+YW1pY2FsbHkuCj4KPiBXcnQgbWFwX2Rlc2MgcG9pbnQgdGFrZW4sIEkgd2FzIGxvb2tpbmcgaW50
+byBwb3NzaWJsZSB3YXlzIG9mIGdldHRpbmcgcmlkIG9mIHBsYXRmb3JtIHNwZWNpZmljIHN0YXRp
+Y2FsbHkgZGVmaW5lZCBkYXRhLCB0aGF0IGFycmF5Cj4gaW4gcGFydGljdWxhci4KPgoKVGhhdCdz
+IGFjdHVhbGx5IHF1aXRlIGNoYWxsZW5naW5nLiBBbmQgYXMgRFQgaXMgdXNlZCB0byAnZGVzY3Jp
+YmUnIHRoZSBoYXJkd2FyZQphcyBpcywgaW5zdGVhZCBvZiBkaXJlY3RpbmcgdGhlIHNvZnR3YXJl
+IGhvdyB0byBkbyBhIG1hcHBpbmcsIEkgZG91YnQKdGhpcyBzaG91bGQKYmUgZG9uZSB3aXRoIERU
+LgoKPiBUaGFua3MgYSBsb3QgZm9yIHlvdXIgZmVlZGJhY2ssCj4KPiBMb3JlbnpvCj4KPiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCBb
+bWFpbHRvOmxpbnV4QGFybS5saW51eC5vcmcudWtdCj4gU2VudDogRnJpZGF5LCBKdW5lIDE4LCAy
+MDEwIDI6MTMgUE0KPiBUbzogTG9yZW56byBQaWVyYWxpc2kKPiBDYzogJ0dyYW50IExpa2VseSc7
+IGRldmljZXRyZWUtZGlzY3VzczsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+OyBKZXJlbXkgS2VycjsgTmljb2xhcyBQaXRyZQo+IFN1YmplY3Q6IFJlOiBQbGF0Zm9ybSBkYXRh
+IHdpdGggZnVuY3Rpb24gcG9pbnRlcnMKPgo+IE9uIEZyaSwgSnVuIDE4LCAyMDEwIGF0IDAxOjQ3
+OjI4UE0gKzAxMDAsIExvcmVuem8gUGllcmFsaXNpIHdyb3RlOgo+PiBJIHRoaW5rIGNoaXAtc2Vs
+ZWN0IGFkZHJlc3Npbmcgc2hvdWxkIGJlIHVzZWQgaWYgdGhhdCBpcyB0aGUgd2F5IEhXIGhhbmRs
+ZXMgaXQuIElmIHRoZSBkZXZpY2UgaXMgZGVzY3JpYmVkIHRocm91Z2ggYQo+IG1lbW9yeS1tYXBw
+aW5nLAo+PiBleC4gc25pcHBldCBmb2xsb3dzOgo+Pgo+PiBzZXJpYWxAMTAxZjIwMDAgewo+PiDC
+oCDCoCDCoCDCoCBjb21wYXRpYmxlID0gImFybSxwbDAxMSI7Cj4+IMKgIMKgIMKgIMKgIHJlZyA9
+IDwweDEwMWYyMDAwIDB4MTAwMCA+Owo+PiB9Owo+Cj4gUHJpbWVjZWxsIGRldmljZXMgYXJlbid0
+IHBsYXRmb3JtIGRldmljZXMuIMKgVGhleSBoYXZlIG5vICdpZCcgZmllbGQgYXMKPiBzdWNoLiDC
+oEluc3RlYWQsIG1vZGVybiBpbXBsZW1lbnRhdGlvbnMgaGF2ZSBQQ0ktbGlrZSBJRHMuCj4KPj4g
+c3RydWN0IG1hcF9kZXNjIHsKPj4gwqAgwqAgwqAgdW5zaWduZWQgbG9uZyB2aXJ0dWFsOwo+PiDC
+oCDCoCDCoCB1bnNpZ25lZCBsb25nIHBmbjsKPj4gwqAgwqAgwqAgdW5zaWduZWQgbG9uZyBsZW5n
+dGg7Cj4+IMKgIMKgIMKgIHVuc2lnbmVkIGludCB0eXBlOwo+PiB9Owo+Pgo+PiBzdGF0aWMgc3Ry
+dWN0IG1hcF9kZXNjIHJlYWx2aWV3X2ViX2lvX2Rlc2NbXSBfX2luaXRkYXRhID0gewo+PiDCoCDC
+oCDCoCB7Cj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIC52aXJ0dWFsIMKgIMKgIMKgIMKgPSBJT19B
+RERSRVNTKFJFQUxWSUVXX1NZU19CQVNFKSwKPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgLnBmbiDC
+oCDCoCDCoCDCoCDCoCDCoD0gX19waHlzX3RvX3BmbihSRUFMVklFV19TWVNfQkFTRSksCj4+IMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIC5sZW5ndGggwqAgwqAgwqAgwqAgPSBTWl80SywKPj4gwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgLnR5cGUgwqAgwqAgwqAgwqAgwqAgPSBNVF9ERVZJQ0UsCj4+IMKgIMKg
+IMKgIH0sIC4uLgo+Cj4gVGhlc2UgbWFwcGluZ3MgYXJlIGVudGlyZWx5IGFyYml0YXJ5LCBhbmQg
+Y2hhbmdlIGFjY29yZGluZyB0byB0aGUKPiBpbXBsZW1lbnRhdGlvbiBvZiB0aGUgcGxhdGZvcm0u
+Cj4KPiBTb21lIHBsYXRmb3JtcyB3YW50IHRvIGF2b2lkIHVzaW5nIGlvcmVtYXAoKSB0byBjcmVh
+dGUgNEsgcGFnZSBtYXBwaW5ncwo+IGZvciB0aGVpciBkZXZpY2VzLCBzbyBpbnN0ZWFkIHRoZXkg
+c3RhdGljYWxseSBtYXAgdGhlbSBhbmQgYXJyYW5nZSBmb3IKPiBpb3JlbWFwKCkgdG8ga25vdyBh
+Ym91dCB0aGF0IHN0YXRpYyBtYXBwaW5nLgo+Cj4gR2l2ZW4gdGhhdCBQQUdFX09GRlNFVCBjYW4g
+YmUgY2hhbmdlZCwgaXQgd291bGQgYmUgYWJzb2x1dGVseSBzaWxseSB0bwo+IHB1dCB0aGlzIGlu
+dG8gdGhlIGRldmljZSB0cmVlLgo+Cj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKPgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
