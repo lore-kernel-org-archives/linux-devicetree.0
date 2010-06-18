@@ -1,16 +1,16 @@
-From: Eric Miao <eric.y.miao@gmail.com>
-Subject: Re: Platform data with function pointers
-Date: Fri, 18 Jun 2010 22:33:32 +0800
-Message-ID: <AANLkTik4B8yyxWDbN4J7aWXb7v3HGkAabaRdyIAzmnGC@mail.gmail.com>
-References: <-71663801230973480@unknownmsgid>
-	<AANLkTikqONUs722_ev6hqfpJiehUq2qAGWGhmxg6WkTs@mail.gmail.com>
-	<20100618131301.GA21333@n2100.arm.linux.org.uk>
-	<-8400781325900388878@unknownmsgid>
+From: Frank Rowand <frank.rowand@am.sony.com>
+Subject: Re: Request review of device tree documentation
+Date: Fri, 18 Jun 2010 15:12:03 -0700
+Message-ID: <4C1BEF33.7090400@am.sony.com>
+References: <4C186B7B.1060308@firmworks.com>
+	<4C186C72.2020506@compulab.co.il>	<4C187013.5000400@firmworks.com>
+	<20100616.005237.338122493954307067.imp@bsdimp.com>
+Reply-To: frank.rowand@am.sony.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <-8400781325900388878@unknownmsgid>
+In-Reply-To: <20100616.005237.338122493954307067.imp@bsdimp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,60 +20,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Jeremy Kerr <jeremy.kerr@canonical.com>, linux-arm-kernel@lists.infradead.org
+To: "M. Warner Losh" <imp@bsdimp.com>
+Cc: "nico@fluxnic.net" <nico@fluxnic.net>, "microblaze-uclinux@itee.uq.edu.au" <microblaze-uclinux@itee.uq.edu.au>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "jamie@shareable.org" <jamie@shareable.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "mike@compulab.co.il" <mike@compulab.co.il>, "wmb@firmworks.com" <wmb@firmworks.com>, "ppc6dev@digitaldans.com" <ppc6dev@digitaldans.com>, "jeremy.kerr@canonical.com" <jeremy.kerr@canonical.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTgsIDIwMTAgYXQgMTA6MjUgUE0sIExvcmVuem8gUGllcmFsaXNpCjxMb3Jl
-bnpvLlBpZXJhbGlzaUBhcm0uY29tPiB3cm90ZToKPiBDb25jZXJuaW5nIHBsYXRmb3JtX2Rldmlj
-ZXMgaWRzLCBzb3JyeSBJIHdhc24ndCBtZWFudCB0byByZXBvcnQgYW4gYW1iYSBwcmltZWNlbGwg
-YmluZGluZyBzbmlwcGV0LCBJIHdhbnRlZCB0byByZXBvcnQgaGVyZSBqdXN0IGEKPiBiaW5kaW5n
-IGZvciBhIHNpbXBsZSBtZW1vcnkgbWFwcGVkIHBsYXRmb3JtIGRldmljZSAobm90IGEgcHJpbWVj
-ZWxsIG9uZSkuIEkgd2FzIGFza2luZyB0aGF0IHF1ZXN0aW9uIGFib3V0IHBsYXRmb3JtX2Rldmlj
-ZQo+IHN0YXRpY2FsbHkgZGVmaW5lZCBzdHJ1Y3RzIHRoYXQgdXNlIHRoZSBpZCBmb3IgZW51bWVy
-YXRpb24sIGFuZCBnb2luZyB3aXRoIEZEVCB0aGUgaWQgaGFzIHRvIGJlIGluaXRpYWxpemVkIHNv
-bWVob3cgZnJvbSB0aGUgdHJlZQo+IGJlY2F1c2UgdGhlIHN0cnVjdCBpcyBhbGxvY2F0ZWQgZHlu
-YW1pY2FsbHkuCj4KPiBXcnQgbWFwX2Rlc2MgcG9pbnQgdGFrZW4sIEkgd2FzIGxvb2tpbmcgaW50
-byBwb3NzaWJsZSB3YXlzIG9mIGdldHRpbmcgcmlkIG9mIHBsYXRmb3JtIHNwZWNpZmljIHN0YXRp
-Y2FsbHkgZGVmaW5lZCBkYXRhLCB0aGF0IGFycmF5Cj4gaW4gcGFydGljdWxhci4KPgoKVGhhdCdz
-IGFjdHVhbGx5IHF1aXRlIGNoYWxsZW5naW5nLiBBbmQgYXMgRFQgaXMgdXNlZCB0byAnZGVzY3Jp
-YmUnIHRoZSBoYXJkd2FyZQphcyBpcywgaW5zdGVhZCBvZiBkaXJlY3RpbmcgdGhlIHNvZnR3YXJl
-IGhvdyB0byBkbyBhIG1hcHBpbmcsIEkgZG91YnQKdGhpcyBzaG91bGQKYmUgZG9uZSB3aXRoIERU
-LgoKPiBUaGFua3MgYSBsb3QgZm9yIHlvdXIgZmVlZGJhY2ssCj4KPiBMb3JlbnpvCj4KPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCBb
-bWFpbHRvOmxpbnV4QGFybS5saW51eC5vcmcudWtdCj4gU2VudDogRnJpZGF5LCBKdW5lIDE4LCAy
-MDEwIDI6MTMgUE0KPiBUbzogTG9yZW56byBQaWVyYWxpc2kKPiBDYzogJ0dyYW50IExpa2VseSc7
-IGRldmljZXRyZWUtZGlzY3VzczsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBKZXJlbXkgS2VycjsgTmljb2xhcyBQaXRyZQo+IFN1YmplY3Q6IFJlOiBQbGF0Zm9ybSBkYXRh
-IHdpdGggZnVuY3Rpb24gcG9pbnRlcnMKPgo+IE9uIEZyaSwgSnVuIDE4LCAyMDEwIGF0IDAxOjQ3
-OjI4UE0gKzAxMDAsIExvcmVuem8gUGllcmFsaXNpIHdyb3RlOgo+PiBJIHRoaW5rIGNoaXAtc2Vs
-ZWN0IGFkZHJlc3Npbmcgc2hvdWxkIGJlIHVzZWQgaWYgdGhhdCBpcyB0aGUgd2F5IEhXIGhhbmRs
-ZXMgaXQuIElmIHRoZSBkZXZpY2UgaXMgZGVzY3JpYmVkIHRocm91Z2ggYQo+IG1lbW9yeS1tYXBw
-aW5nLAo+PiBleC4gc25pcHBldCBmb2xsb3dzOgo+Pgo+PiBzZXJpYWxAMTAxZjIwMDAgewo+PiDC
-oCDCoCDCoCDCoCBjb21wYXRpYmxlID0gImFybSxwbDAxMSI7Cj4+IMKgIMKgIMKgIMKgIHJlZyA9
-IDwweDEwMWYyMDAwIDB4MTAwMCA+Owo+PiB9Owo+Cj4gUHJpbWVjZWxsIGRldmljZXMgYXJlbid0
-IHBsYXRmb3JtIGRldmljZXMuIMKgVGhleSBoYXZlIG5vICdpZCcgZmllbGQgYXMKPiBzdWNoLiDC
-oEluc3RlYWQsIG1vZGVybiBpbXBsZW1lbnRhdGlvbnMgaGF2ZSBQQ0ktbGlrZSBJRHMuCj4KPj4g
-c3RydWN0IG1hcF9kZXNjIHsKPj4gwqAgwqAgwqAgdW5zaWduZWQgbG9uZyB2aXJ0dWFsOwo+PiDC
-oCDCoCDCoCB1bnNpZ25lZCBsb25nIHBmbjsKPj4gwqAgwqAgwqAgdW5zaWduZWQgbG9uZyBsZW5n
-dGg7Cj4+IMKgIMKgIMKgIHVuc2lnbmVkIGludCB0eXBlOwo+PiB9Owo+Pgo+PiBzdGF0aWMgc3Ry
-dWN0IG1hcF9kZXNjIHJlYWx2aWV3X2ViX2lvX2Rlc2NbXSBfX2luaXRkYXRhID0gewo+PiDCoCDC
-oCDCoCB7Cj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIC52aXJ0dWFsIMKgIMKgIMKgIMKgPSBJT19B
-RERSRVNTKFJFQUxWSUVXX1NZU19CQVNFKSwKPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgLnBmbiDC
-oCDCoCDCoCDCoCDCoCDCoD0gX19waHlzX3RvX3BmbihSRUFMVklFV19TWVNfQkFTRSksCj4+IMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIC5sZW5ndGggwqAgwqAgwqAgwqAgPSBTWl80SywKPj4gwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgLnR5cGUgwqAgwqAgwqAgwqAgwqAgPSBNVF9ERVZJQ0UsCj4+IMKgIMKg
-IMKgIH0sIC4uLgo+Cj4gVGhlc2UgbWFwcGluZ3MgYXJlIGVudGlyZWx5IGFyYml0YXJ5LCBhbmQg
-Y2hhbmdlIGFjY29yZGluZyB0byB0aGUKPiBpbXBsZW1lbnRhdGlvbiBvZiB0aGUgcGxhdGZvcm0u
-Cj4KPiBTb21lIHBsYXRmb3JtcyB3YW50IHRvIGF2b2lkIHVzaW5nIGlvcmVtYXAoKSB0byBjcmVh
-dGUgNEsgcGFnZSBtYXBwaW5ncwo+IGZvciB0aGVpciBkZXZpY2VzLCBzbyBpbnN0ZWFkIHRoZXkg
-c3RhdGljYWxseSBtYXAgdGhlbSBhbmQgYXJyYW5nZSBmb3IKPiBpb3JlbWFwKCkgdG8ga25vdyBh
-Ym91dCB0aGF0IHN0YXRpYyBtYXBwaW5nLgo+Cj4gR2l2ZW4gdGhhdCBQQUdFX09GRlNFVCBjYW4g
-YmUgY2hhbmdlZCwgaXQgd291bGQgYmUgYWJzb2x1dGVseSBzaWxseSB0bwo+IHB1dCB0aGlzIGlu
-dG8gdGhlIGRldmljZSB0cmVlLgo+Cj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKPgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 06/15/10 23:52, M. Warner Losh wrote:
+> In message: <4C187013.5000400@firmworks.com>
+>             Mitch Bradley <wmb@firmworks.com> writes:
+> : Mike Rapoport wrote:
+> : > Mitch Bradley wrote:
+> : >> Mike Rapoport wrote:
+> : >>> Mitch Bradley wrote:
+> : >>>
+> : >>>> The second topic is the hypothetical use of OFW as a HAL. That will
+> : >>>> not happen for several reasons.  The opposition to the idea is
+> : >>>> widespread and deeply held, and there are good arguments to support
+> : >>>> that opposition.  Furthermore, the economic conditions necessary for
+> : >>>> the creation of such a HAL do not exist in the ARM world, nor indeed
+> : >>>> in the Linux world in general.  (The necessary condition is the
+> : >>>> ability for one company to impose a substantial change by fiat -
+> : >>>> essentially a monopoly position.)
+> : >>>>
+> : >>>> Shall we agree, then, that any further discussion of the HAL issue is
+> : >>>> "just for fun", and that nobody needs to feel threatened that it would
+> : >>>> actually happen?
+> : >>>
+> : >>> I've recently worked with vendor versions of U-Boot for advanced ARM
+> : >>> SoCs. There is already *huge* chunk of HAL code in those versions. And
+> : >>> if there would be possibility to have callbacks into the firmware
+> : >>> these chunks would only grow, IMHO.
+> : >>
+> : >> How can there be HAL code in U-Boot unless there is already the
+> : >> possibility to have callbacks into the firmware?
+> : >
+> : > Currently it aims to abstract hardware from U-Boot and reuse the same
+> : > HW access code across operating systems and bootloaders. If this code
+> : > would have callbacks I afraid the things would became worse.
+> : 
+> : The only way I can understand what you said is if I assume that by
+> : "callback", you mean the following sequence:
+> : 
+> : a) U-boot loads and executes the OS, providing to the OS the address
+> : of some HW access routines that it can use
+> : b) The OS calls one of those HW access routines
+> : c) During the execution of that HW access routine, that routine calls
+> : "back" into the OS, before returning.  So a call into the OS is nested
+> : inside a call into U-boot resident code.
+> : 
+> : If that is what you are worried about, it is not what we were
+> : discussing.  We were discussing - and many people were against - step
+> : (b).
+> : 
+> : Are you saying that step (b) - the OS calling into routines provided
+> : by U-Boot - is already the status quo?
+> 
+> I don't know about status quo, but it certainly is supported.  There's
+> an option to allow for a secondary boot loader, such as FreeBSD's
+> /boot/loader, to call back into uboot to read things from
+> flash/disk/whatever, do network access, etc.  Not so much a HAL, but
+> more of an echo of the functionality provided by PC BIOS functions.
+> /boot/loader can be viewed as a mini OS that calls back into uboot to
+> have it do things.  Once /boot/loader loads FreeBSD, btw, it and uboot
+> disappear from the scene, so this isn't exactly a HAL situation...
+
+Just for reference, there is a patch request on LKML to enable calling
+openfirmware from the kernel on OLPC:
+
+   http://lkml.org/lkml/2010/6/18/336
+
+-Frank
