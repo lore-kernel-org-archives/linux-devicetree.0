@@ -1,25 +1,25 @@
-From: "Lorenzo Pieralisi" <Lorenzo.Pieralisi@arm.com>
+From: "Lorenzo Pieralisi" <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
 Subject: RE: Platform data with function pointers
 Date: Fri, 18 Jun 2010 13:47:28 +0100
-Message-ID: <10974.014332942$1276865329@news.gmane.org>
+Message-ID: <20948.1694306762$1276866195@news.gmane.org>
 References: <-71663801230973480@unknownmsgid>
 	<AANLkTikqONUs722_ev6hqfpJiehUq2qAGWGhmxg6WkTs@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AANLkTikqONUs722_ev6hqfpJiehUq2qAGWGhmxg6WkTs@mail.gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTikqONUs722_ev6hqfpJiehUq2qAGWGhmxg6WkTs-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-gb
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 'Grant Likely' <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jeremy.kerr@canonical.>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: 'Grant Likely' <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jeremy.kerr@canonical.>
 List-Id: devicetree@vger.kernel.org
 
 Hi Grant,
@@ -39,7 +39,7 @@ device defines its address space (reg) through indexes
 into a range of the parent node and id becomes the offset field within a "c=
 hip-select - like" reg property ?
 
-http://www.mail-archive.com/linuxppc-dev@lists.ozlabs.org/msg29921.html
+http://www.mail-archive.com/linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg29921.html
 
 I think chip-select addressing should be used if that is the way HW handles=
  it. If the device is described through a memory-mapping,
@@ -90,10 +90,10 @@ Lorenzo
 
 
 -----Original Message-----
-From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Behalf Of Grant=
+From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Grant=
  Likely
 Sent: Monday, June 14, 2010 6:32 PM
-To: Lorenzo Pieralisi; devicetree-discuss; linux-arm-kernel@lists.infradead=
+To: Lorenzo Pieralisi; devicetree-discuss; linux-arm-kernel-IAPFreCvJWM1dQTEkxZZdg@public.gmane.org=
 .org; Jeremy Kerr; Nicolas Pitre
 Subject: Re: Platform data with function pointers
 
@@ -102,7 +102,7 @@ Subject: Re: Platform data with function pointers
 Hi Lorenzo,
 
 On Mon, Jun 14, 2010 at 4:42 AM, Lorenzo Pieralisi
-<Lorenzo.Pieralisi@arm.com> wrote:
+<Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
 > Hi Grant,
 >
 > Sorry to bother you, we had a chat about this at UDS, but I wanted to mak=
