@@ -1,65 +1,102 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH v2 0/5] Consolidate OF IRQ handling code
-Date: Mon, 21 Jun 2010 16:30:11 -0600
-Message-ID: <20100621222052.18925.61569.stgit@angua>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH v2 2/5] of/microblaze: strip out of_irq_workarounds code
+Date: Mon, 21 Jun 2010 16:30:38 -0600
+Message-ID: <20100621223027.18925.83250.stgit@angua>
+References: <20100621222052.18925.61569.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20100621222052.18925.61569.stgit@angua>
+Sender: linux-kernel-owner@vger.kernel.org
+To: microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Cc: sfr@canb.auug.org.au, monstr@monstr.eu, linux-kernel@vger.kernel.org, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-This series merges the common IRQ handling code between Microblaze and Powerpc
+Microblaze doesn't have any legacy workaround in the device tree irq
+mapping data.  All of the of_irq_workarounds stuff can be dropped
 
-Changes in v2:
-- The 3 patches to merge of_irq_find_parent(), of_irq_map_raw() and
-  of_irq_map_one() have been merged into a single patch.
-- Patch added to move powermac quirk handing into
-  arch/powerpc/platforms/powermac.
-- Add endian fixes patch from Rob Herring
-
-Ben, please take a look and let me know if you like this better.
-
-Thanks,
-g.
-
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
+ arch/microblaze/include/asm/prom.h  |   10 ---------
+ arch/microblaze/kernel/prom_parse.c |   41 -----------------------------------
+ 2 files changed, 0 insertions(+), 51 deletions(-)
 
-Grant Likely (4):
-      of/irq: Move irq_of_parse_and_map() to common code
-      of/microblaze: strip out of_irq_workarounds code
-      of/powerpc: Move Powermac irq quirk code into powermac pic driver code
-      of/irq: merge irq mapping code
-
-Rob Herring (1):
-      of/irq: little endian fixes
-
-
- arch/microblaze/include/asm/irq.h     |   13 -
- arch/microblaze/include/asm/prom.h    |   67 ------
- arch/microblaze/kernel/irq.c          |   14 -
- arch/microblaze/kernel/prom_parse.c   |  331 -------------------------------
- arch/powerpc/include/asm/irq.h        |   13 -
- arch/powerpc/include/asm/prom.h       |   68 ------
- arch/powerpc/kernel/irq.c             |   14 -
- arch/powerpc/kernel/prom_parse.c      |  351 ---------------------------------
- arch/powerpc/platforms/powermac/pic.c |   72 ++++++-
- arch/sparc/include/asm/prom.h         |    1 
- drivers/of/Kconfig                    |    4 
- drivers/of/Makefile                   |    1 
- drivers/of/irq.c                      |  339 ++++++++++++++++++++++++++++++++
- drivers/of/of_mdio.c                  |    1 
- include/linux/of_irq.h                |   70 +++++++
- 15 files changed, 487 insertions(+), 872 deletions(-)
- create mode 100644 drivers/of/irq.c
- create mode 100644 include/linux/of_irq.h
+diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
+index e9fb2eb..4f34bc5 100644
+--- a/arch/microblaze/include/asm/prom.h
++++ b/arch/microblaze/include/asm/prom.h
+@@ -93,19 +93,9 @@ extern const void *of_get_mac_address(struct device_node *np);
+  * OF interrupt mapping
+  */
+ 
+-/**
+- * of_irq_map_init - Initialize the irq remapper
+- * @flags:	flags defining workarounds to enable
+- *
+- * Some machines have bugs in the device-tree which require certain workarounds
+- * to be applied. Call this before any interrupt mapping attempts to enable
+- * those workarounds.
+- */
+ #define OF_IMAP_OLDWORLD_MAC	0x00000001
+ #define OF_IMAP_NO_PHANDLE	0x00000002
+ 
+-extern void of_irq_map_init(unsigned int flags);
+-
+ /**
+  * of_irq_map_raw - Low level interrupt tree parsing
+  * @parent:	the device interrupt parent
+diff --git a/arch/microblaze/kernel/prom_parse.c b/arch/microblaze/kernel/prom_parse.c
+index bf7e6c2..cba0581 100644
+--- a/arch/microblaze/kernel/prom_parse.c
++++ b/arch/microblaze/kernel/prom_parse.c
+@@ -676,47 +676,6 @@ static struct device_node *of_irq_find_parent(struct device_node *child)
+ 	return p;
+ }
+ 
+-/* This doesn't need to be called if you don't have any special workaround
+- * flags to pass
+- */
+-void of_irq_map_init(unsigned int flags)
+-{
+-	of_irq_workarounds = flags;
+-
+-	/* OldWorld, don't bother looking at other things */
+-	if (flags & OF_IMAP_OLDWORLD_MAC)
+-		return;
+-
+-	/* If we don't have phandles, let's try to locate a default interrupt
+-	 * controller (happens when booting with BootX). We do a first match
+-	 * here, hopefully, that only ever happens on machines with one
+-	 * controller.
+-	 */
+-	if (flags & OF_IMAP_NO_PHANDLE) {
+-		struct device_node *np;
+-
+-		for (np = NULL; (np = of_find_all_nodes(np)) != NULL;) {
+-			if (of_get_property(np, "interrupt-controller", NULL)
+-				== NULL)
+-				continue;
+-			/* Skip /chosen/interrupt-controller */
+-			if (strcmp(np->name, "chosen") == 0)
+-				continue;
+-			/* It seems like at least one person on this planet
+-			 * wants to use BootX on a machine with an AppleKiwi
+-			 * controller which happens to pretend to be an
+-			 * interrupt controller too.
+-			 */
+-			if (strcmp(np->name, "AppleKiwi") == 0)
+-				continue;
+-			/* I think we found one ! */
+-			of_irq_dflt_pic = np;
+-			break;
+-		}
+-	}
+-
+-}
+-
+ int of_irq_map_raw(struct device_node *parent, const u32 *intspec, u32 ointsize,
+ 		const u32 *addr, struct of_irq *out_irq)
+ {
