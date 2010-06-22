@@ -1,93 +1,40 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v2 5/5] of/irq: little endian fixes
-Date: Mon, 21 Jun 2010 16:32:25 -0600
-Message-ID: <20100621223223.18925.66253.stgit@angua>
-References: <20100621222052.18925.61569.stgit@angua>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 0/5] Rework MPC5121 DIU support (for 2.6.35)
+Date: Tue, 22 Jun 2010 11:29:50 -0500
+Message-ID: <AANLkTil0-hijJOvosWUEArVUOLDb_kLWIhfflj2C9pIK@mail.gmail.com>
+References: <1272584978-19063-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100621222052.18925.61569.stgit@angua>
-Sender: linux-kernel-owner@vger.kernel.org
-To: microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
-Cc: sfr@canb.auug.org.au, monstr@monstr.eu, linux-kernel@vger.kernel.org, benh@kernel.crashing.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1272584978-19063-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, dzu-ynQEQJNshbs@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, yorksun-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <r.herring@freescale.com>
+On Thu, Apr 29, 2010 at 6:49 PM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
+> This patch series rework DIU support patches submitted
+> previously. Comments to the previos patch series have
+> been addressed, not related changes are dropped and some
+> changes are split out to separate patches to simplify
+> review. Furthermore a patch has been added to support
+> setting display mode using EDID block in the device tree.
 
-Fix some endian issues in the irq mapping OF code.
+All five patches:
 
-Signed-off-by: Rob Herring <r.herring@freescale.com>
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-CC: Michal Simek <monstr@monstr.eu>
-CC: Wolfram Sang <w.sang@pengutronix.de>
-CC: Stephen Rothwell <sfr@canb.auug.org.au>
-CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- drivers/of/irq.c |   17 +++++++++--------
- 1 files changed, 9 insertions(+), 8 deletions(-)
+Acked-by: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 0b0518f..b68a924 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -87,7 +87,7 @@ int of_irq_map_raw(struct device_node *parent, const u32 *intspec, u32 ointsize,
- 		const u32 *addr, struct of_irq *out_irq)
- {
- 	struct device_node *ipar, *tnode, *old = NULL, *newpar = NULL;
--	const u32 *tmp, *imap, *imask;
-+	const __be32 *tmp, *imap, *imask;
- 	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
- 	int imaplen, match, i;
- 
-@@ -103,7 +103,7 @@ int of_irq_map_raw(struct device_node *parent, const u32 *intspec, u32 ointsize,
- 	do {
- 		tmp = of_get_property(ipar, "#interrupt-cells", NULL);
- 		if (tmp != NULL) {
--			intsize = *tmp;
-+			intsize = be32_to_cpu(*tmp);
- 			break;
- 		}
- 		tnode = ipar;
-@@ -132,7 +132,7 @@ int of_irq_map_raw(struct device_node *parent, const u32 *intspec, u32 ointsize,
- 	} while (old && tmp == NULL);
- 	of_node_put(old);
- 	old = NULL;
--	addrsize = (tmp == NULL) ? 2 : *tmp;
-+	addrsize = (tmp == NULL) ? 2 : be32_to_cpu(*tmp);
- 
- 	pr_debug(" -> addrsize=%d\n", addrsize);
- 
-@@ -144,8 +144,9 @@ int of_irq_map_raw(struct device_node *parent, const u32 *intspec, u32 ointsize,
- 		if (of_get_property(ipar, "interrupt-controller", NULL) !=
- 				NULL) {
- 			pr_debug(" -> got it !\n");
--			memcpy(out_irq->specifier, intspec,
--			       intsize * sizeof(u32));
-+			for (i = 0; i < intsize; i++)
-+				out_irq->specifier[i] =
-+						of_read_number(intspec +i, 1);
- 			out_irq->size = intsize;
- 			out_irq->controller = ipar;
- 			of_node_put(old);
-@@ -215,9 +216,9 @@ int of_irq_map_raw(struct device_node *parent, const u32 *intspec, u32 ointsize,
- 				pr_debug(" -> parent lacks #interrupt-cells!\n");
- 				goto fail;
- 			}
--			newintsize = *tmp;
-+			newintsize = be32_to_cpu(*tmp);
- 			tmp = of_get_property(newpar, "#address-cells", NULL);
--			newaddrsize = (tmp == NULL) ? 0 : *tmp;
-+			newaddrsize = (tmp == NULL) ? 0 : be32_to_cpu(*tmp);
- 
- 			pr_debug(" -> newintsize=%d, newaddrsize=%d\n",
- 			    newintsize, newaddrsize);
-@@ -299,7 +300,7 @@ int of_irq_map_one(struct device_node *device, int index, struct of_irq *out_irq
- 	tmp = of_get_property(p, "#interrupt-cells", NULL);
- 	if (tmp == NULL)
- 		goto out;
--	intsize = *tmp;
-+	intsize = be32_to_cpu(*tmp);
- 
- 	pr_debug(" intsize=%d intlen=%d\n", intsize, intlen);
- 
+Tested on an MPC8610 HPCD.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
