@@ -1,48 +1,39 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: ALSA SoC device tree bindings
-Date: Wed, 23 Jun 2010 20:30:13 +0800
-Message-ID: <201006232030.14138.jeremy.kerr@canonical.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH 0/3] Automatically register i2c devices from the device tree
+Date: Thu, 24 Jun 2010 14:11:44 -0600
+Message-ID: <20100624200509.10527.513.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: kernel-team-nLRlyDuq1AZFpShjVBNYrg@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, wg-ynQEQJNshbs@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+The following series adds automatic registration of i2c devices from
+OF device tree data.  If the i2c bus has the of_node pointer set, then
+it will use that node pointer as the parent for a set of i2c devices and
+automatically register the child nodes as new i2c devices.
 
->From some discussions at the previous Ubuntu Developer Summit, I've put up a 
-page on the devicetree.org wiki with the ultimate goal of describing device 
-tree bindings for ALSA System on Chip devices.
+When CONFIG_OF is not set, the of i2c hooks become empty stubs.
 
-At this stage, we're just looking at how to structure device in the device 
-tree. The bindings for specific devices will come as required (ie, as we add 
-device tree support for them).
+---
 
-So - if you're interested in the ALSA and/or device tree areas, please take a 
-look at the notes from UDS:
-
- http://devicetree.org/SoC_Audio
-
-- if you have any comments or suggestions, please let me know, or add to the 
-page (or the discussion for the page). I intend for this document to become a 
-more formal specification, but we still have a way to go before that happens.
-
-If you'd like an introduction to device trees, Grant has a good walkthrough-
-style document at:
-
- http://devicetree.org/Device_Tree_Usage
-
-Cheers,
+Grant Likely (3):
+      of/i2c: Generalize OF support
+      i2c: Add OF-style registration and binding
+      of: refactor of_modalias_node() and remove explicit match table.
 
 
-Jeremy
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c |    6 ++
+ drivers/i2c/busses/i2c-cpm.c                   |    6 --
+ drivers/i2c/busses/i2c-ibm_iic.c               |    4 --
+ drivers/i2c/busses/i2c-mpc.c                   |    2 -
+ drivers/i2c/i2c-core.c                         |    9 +++
+ drivers/mmc/host/mmc_spi.c                     |    8 +++
+ drivers/of/Kconfig                             |    2 -
+ drivers/of/base.c                              |   64 +++---------------------
+ drivers/of/of_i2c.c                            |   50 +++++++++++--------
+ include/linux/of_i2c.h                         |   13 ++++-
+ 10 files changed, 75 insertions(+), 89 deletions(-)
