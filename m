@@ -1,169 +1,53 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH 3/3] of: refactor of_modalias_node() and remove explicit match
-	table.
-Date: Thu, 24 Jun 2010 14:12:00 -0600
-Message-ID: <20100624201200.10527.60038.stgit@angua>
-References: <20100624200509.10527.513.stgit@angua>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: ALSA SoC device tree bindings
+Date: Fri, 25 Jun 2010 12:25:07 +0100
+Message-ID: <20100625112506.GA2803@sirena.org.uk>
+References: <201006232030.14138.jeremy.kerr@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100624200509.10527.513.stgit@angua>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: avorontsov@ru.mvista.com, ben-linux@fluff.org, wg@denx.de
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <201006232030.14138.jeremy.kerr@canonical.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Jeremy Kerr <jeremy.kerr@canonical.com>
+Cc: devicetree-discuss@lists.ozlabs.org, kernel-team@lists.ubuntu.com, linaro-dev@lists.linaro.org, alsa-devel@alsa-project.org, lrg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-This patch tightens up the behaviour of of_modalias_node() to be more
-predicatable and to eliminate the explicit of_modalias_tablep[] that
-is currently used to override the first entry in the compatible list
-of a device.  The override table was needed originally because spi
-and i2c drivers had no way to do of-style matching.  Now that all
-devices can have an of_node pointer, and all drivers can have an
-of_match_table, the explicit override table is no longer needed
-because each driver can specify its own OF-style match data.
+On Wed, Jun 23, 2010 at 08:30:13PM +0800, Jeremy Kerr wrote:
 
-The mpc8349emitx-mcu driver is modified to explicitly specify the
-correct device to bind against.
+> From some discussions at the previous Ubuntu Developer Summit, I've put up a 
+> page on the devicetree.org wiki with the ultimate goal of describing device 
+> tree bindings for ALSA System on Chip devices.
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
----
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c |    6 ++
- drivers/mmc/host/mmc_spi.c                     |    8 +++
- drivers/of/base.c                              |   64 +++---------------------
- 3 files changed, 23 insertions(+), 55 deletions(-)
+Please do remember to CC maintainers on e-mails if you're looking for a
+response, this is standard practice for kernel stuff due to the number
+of high volume mailing lists and busy maintainers.  I've added Liam into
+the CCs.
 
-diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-index 59b0ed1..70798ac 100644
---- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-+++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-@@ -160,10 +160,16 @@ static const struct i2c_device_id mcu_ids[] = {
- };
- MODULE_DEVICE_TABLE(i2c, mcu_ids);
- 
-+static struct of_device_id mcu_of_match_table[] __devinitdata = {
-+	{ .compatible = "fsl,mcu-mpc8349emitx", },
-+	{ },
-+};
-+
- static struct i2c_driver mcu_driver = {
- 	.driver = {
- 		.name = "mcu-mpc8349emitx",
- 		.owner = THIS_MODULE,
-+		.of_match_table = mcu_of_match_table,
- 	},
- 	.probe = mcu_probe,
- 	.remove	= __devexit_p(mcu_remove),
-diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-index ad847a2..7b0f3ef 100644
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -1533,12 +1533,20 @@ static int __devexit mmc_spi_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+#if defined(CONFIG_OF)
-+static struct of_device_id mmc_spi_of_match_table[] __devinitdata = {
-+	{ .compatible = "mmc-spi-slot", },
-+};
-+#endif
- 
- static struct spi_driver mmc_spi_driver = {
- 	.driver = {
- 		.name =		"mmc_spi",
- 		.bus =		&spi_bus_type,
- 		.owner =	THIS_MODULE,
-+#if defined(CONFIG_OF)
-+		.of_match_table = mmc_spi_of_match_table,
-+#endif
- 	},
- 	.probe =	mmc_spi_probe,
- 	.remove =	__devexit_p(mmc_spi_remove),
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b5ad974..e3f7af8 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -545,74 +545,28 @@ struct device_node *of_find_matching_node(struct device_node *from,
- EXPORT_SYMBOL(of_find_matching_node);
- 
- /**
-- * of_modalias_table: Table of explicit compatible ==> modalias mappings
-- *
-- * This table allows particulare compatible property values to be mapped
-- * to modalias strings.  This is useful for busses which do not directly
-- * understand the OF device tree but are populated based on data contained
-- * within the device tree.  SPI and I2C are the two current users of this
-- * table.
-- *
-- * In most cases, devices do not need to be listed in this table because
-- * the modalias value can be derived directly from the compatible table.
-- * However, if for any reason a value cannot be derived, then this table
-- * provides a method to override the implicit derivation.
-- *
-- * At the moment, a single table is used for all bus types because it is
-- * assumed that the data size is small and that the compatible values
-- * should already be distinct enough to differentiate between SPI, I2C
-- * and other devices.
-- */
--struct of_modalias_table {
--	char *of_device;
--	char *modalias;
--};
--static struct of_modalias_table of_modalias_table[] = {
--	{ "fsl,mcu-mpc8349emitx", "mcu-mpc8349emitx" },
--	{ "mmc-spi-slot", "mmc_spi" },
--};
--
--/**
-  * of_modalias_node - Lookup appropriate modalias for a device node
-  * @node:	pointer to a device tree node
-  * @modalias:	Pointer to buffer that modalias value will be copied into
-  * @len:	Length of modalias value
-  *
-- * Based on the value of the compatible property, this routine will determine
-- * an appropriate modalias value for a particular device tree node.  Two
-- * separate methods are attempted to derive a modalias value.
-+ * Based on the value of the compatible property, this routine will attempt
-+ * to choose an appropriate modalias value for a particular device tree node.
-+ * It does this by stripping the manufacturer prefix (as delimited by a ',')
-+ * from the first entry in the compatible list property.
-  *
-- * First method is to lookup the compatible value in of_modalias_table.
-- * Second is to strip off the manufacturer prefix from the first
-- * compatible entry and use the remainder as modalias
-- *
-- * This routine returns 0 on success
-+ * This routine returns 0 on success, <0 on failure.
-  */
- int of_modalias_node(struct device_node *node, char *modalias, int len)
- {
--	int i, cplen;
--	const char *compatible;
--	const char *p;
--
--	/* 1. search for exception list entry */
--	for (i = 0; i < ARRAY_SIZE(of_modalias_table); i++) {
--		compatible = of_modalias_table[i].of_device;
--		if (!of_device_is_compatible(node, compatible))
--			continue;
--		strlcpy(modalias, of_modalias_table[i].modalias, len);
--		return 0;
--	}
-+	const char *compatible, *p;
-+	int cplen;
- 
- 	compatible = of_get_property(node, "compatible", &cplen);
--	if (!compatible)
-+	if (!compatible || strlen(compatible) > cplen)
- 		return -ENODEV;
--
--	/* 2. take first compatible entry and strip manufacturer */
- 	p = strchr(compatible, ',');
--	if (!p)
--		return -ENODEV;
--	p++;
--	strlcpy(modalias, p, len);
-+	strlcpy(modalias, p ? p + 1 : compatible, len);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_modalias_node);
+> So - if you're interested in the ALSA and/or device tree areas, please take a 
+> look at the notes from UDS:
+
+>  http://devicetree.org/SoC_Audio
+
+A few comments:
+
+ - There's no mention of clocking in the page, which is one of the more
+   exciting bits of this stuff.  Reading the page I'm not sure that
+   we've even fully captured the problem definition.
+
+ - I'm not sure what "ALSA quirking" is?
+
+ - "i2s" isn't the best thing to use in a property name, I2S is just one
+   of several different standards for interconn
+
+ - How does the way you're defining the audio links cope with multi-drop
+   links (eg, bluetooth and cellular modem on the same bus)?
