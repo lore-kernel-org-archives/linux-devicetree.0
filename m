@@ -1,13 +1,12 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Timur Tabi <timur@freescale.com>
 Subject: Re: ALSA SoC device tree bindings
-Date: Fri, 25 Jun 2010 12:25:07 +0100
-Message-ID: <20100625112506.GA2803@sirena.org.uk>
+Date: Fri, 25 Jun 2010 08:21:45 -0500
+Message-ID: <AANLkTimb38wmXv6yOp46cdwe6LcZdDOpHl_xLPxnAXYo@mail.gmail.com>
 References: <201006232030.14138.jeremy.kerr@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
 In-Reply-To: <201006232030.14138.jeremy.kerr@canonical.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
@@ -19,35 +18,21 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 Sender: alsa-devel-bounces@alsa-project.org
 Errors-To: alsa-devel-bounces@alsa-project.org
 To: Jeremy Kerr <jeremy.kerr@canonical.com>
-Cc: devicetree-discuss@lists.ozlabs.org, kernel-team@lists.ubuntu.com, linaro-dev@lists.linaro.org, alsa-devel@alsa-project.org, lrg@slimlogic.co.uk
+Cc: devicetree-discuss@lists.ozlabs.org, kernel-team@lists.ubuntu.com, linaro-dev@lists.linaro.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 23, 2010 at 08:30:13PM +0800, Jeremy Kerr wrote:
+On Wed, Jun 23, 2010 at 7:30 AM, Jeremy Kerr <jeremy.kerr@canonical.com> wrote:
 
-> From some discussions at the previous Ubuntu Developer Summit, I've put up a 
-> page on the devicetree.org wiki with the ultimate goal of describing device 
-> tree bindings for ALSA System on Chip devices.
+> - if you have any comments or suggestions, please let me know, or add to the
+> page (or the discussion for the page). I intend for this document to become a
+> more formal specification, but we still have a way to go before that happens.
 
-Please do remember to CC maintainers on e-mails if you're looking for a
-response, this is standard practice for kernel stuff due to the number
-of high volume mailing lists and busy maintainers.  I've added Liam into
-the CCs.
+Please consider using the MPC8610 HPCD board as a reference
+implementation, instead of i.MX boards.  This is a PowerPC board that
+has long since support OF bindings for ASoC drivers, so the code is
+more robust.  ARM only recently got basic OF support, and AFAIK, none
+of the audio drivers support it.
 
-> So - if you're interested in the ALSA and/or device tree areas, please take a 
-> look at the notes from UDS:
-
->  http://devicetree.org/SoC_Audio
-
-A few comments:
-
- - There's no mention of clocking in the page, which is one of the more
-   exciting bits of this stuff.  Reading the page I'm not sure that
-   we've even fully captured the problem definition.
-
- - I'm not sure what "ALSA quirking" is?
-
- - "i2s" isn't the best thing to use in a property name, I2S is just one
-   of several different standards for interconn
-
- - How does the way you're defining the audio links cope with multi-drop
-   links (eg, bluetooth and cellular modem on the same bus)?
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
