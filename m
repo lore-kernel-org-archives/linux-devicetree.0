@@ -1,14 +1,17 @@
-From: Jon Smirl <jonsmirl@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: ALSA SoC device tree bindings
-Date: Sun, 27 Jun 2010 08:39:55 -0400
-Message-ID: <AANLkTimIv99spub4iYnMFKTcNKIzcaPTmDE_b7ygmLJ-@mail.gmail.com>
+Date: Sun, 27 Jun 2010 21:53:29 +0100
+Message-ID: <ED586769-8F80-4548-8CDE-9E4FBB0F58F7@opensource.wolfsonmicro.com>
 References: <201006232030.14138.jeremy.kerr@canonical.com>
 	<20100627094246.GA2845@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	<AANLkTimIv99spub4iYnMFKTcNKIzcaPTmDE_b7ygmLJ-@mail.gmail.com>
+	(sfid-20100627_134001_594020_7513B7E6)
+Mime-Version: 1.0 (Apple Message framework v1081)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20100627094246.GA2845@sirena.org.uk>
+In-Reply-To: <AANLkTimIv99spub4iYnMFKTcNKIzcaPTmDE_b7ygmLJ-@mail.gmail.com>
+	(sfid-20100627_134001_594020_7513B7E6)
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
@@ -18,46 +21,23 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Sender: alsa-devel-bounces@alsa-project.org
 Errors-To: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+To: Jon Smirl <jonsmirl@gmail.com>
 Cc: alsa-devel@alsa-project.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, kernel-team@lists.ubuntu.com, Jeremy Kerr <jeremy.kerr@canonical.com>, lrg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 27, 2010 at 5:42 AM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Wed, Jun 23, 2010 at 08:30:13PM +0800, Jeremy Kerr wrote:
->
->> At this stage, we're just looking at how to structure device in the devi=
-ce
->> tree. The bindings for specific devices will come as required (ie, as we=
- add
->> device tree support for them).
->
-> Actually, re-reading the page I'm not sure it really captures my
-> understanding of the discussion (and all the previous discussions we've
-> had on the lists and so on) at all. =A0Reading the page the idea that a
-> machine specific driver is normal and expected doesn't come over at all
-> well, especially in the design section which doesn't make any mention at
-> all of machine specific drivers.
+On 27 Jun 2010, at 13:39, Jon Smirl wrote:
+> On Sun, Jun 27, 2010 at 5:42 AM, Mark Brown
 
-Do we really want to call them machine drivers? Machine drivers
-already exist in the basic non-audio platform code. Calling the audio
-drivers machine drivers overloads the term. In the Apple audio code
-they are called fabric drivers.
+>> well, especially in the design section which doesn't make any mention at
+>> all of machine specific drivers.
 
+> Do we really want to call them machine drivers? Machine drivers
+> already exist in the basic non-audio platform code. Calling the audio
+> drivers machine drivers overloads the term. In the Apple audio code
+> they are called fabric drivers.
 
-> As I keep saying the main thing I'm looking for from any device tree
-> binding is something that I can point people at so we don't need to go
-> through the rehashings of this subject which come up every time someone
-> decides they want to use device trees.
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->
-
-
-
--- =
-
-Jon Smirl
-jonsmirl@gmail.com
+They've been called machine drivers for years. If you find this confusing
+I'd suggest qualifying the name ("ASoC machine drivers"), I don't think
+renaming them would be worthwhile just for PowerPC. Given the similarity
+of their role I'm having a hard time seeing the overlap as a bad thing even
+for the people who have difficulty with this.
