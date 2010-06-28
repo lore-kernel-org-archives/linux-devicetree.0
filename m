@@ -1,13 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Using devices trees on X86
-Date: Mon, 28 Jun 2010 11:08:33 -0700
-Message-ID: <AANLkTiljCPHU7NJ-tPOIyekBJ0_csyNkRLMCcel5dSzn@mail.gmail.com>
-References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Re: [PATCH] of/Kconfig: Add "config OF"
+Date: Tue, 29 Jun 2010 04:11:12 +1000
+Message-ID: <20100629041112.0eed017a.sfr@canb.auug.org.au>
+References: <a528d660-c029-4a84-840c-1fb9278ea861@VA3EHSMHS031.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============4075107025624797747=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3-+Ck8Kgl/v09CYczPSvLbDrjjLBE8jN/0@public.gmane.org>
+In-Reply-To: <a528d660-c029-4a84-840c-1fb9278ea861-+Ck8Kgl/v0/nHLUNXTEFU7jjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,50 +20,72 @@ To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gma
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 28, 2010 at 10:57 AM, Stephen Neuendorffer
-<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> Grant,
+--===============4075107025624797747==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA1";
+ boundary="Signature=_Tue__29_Jun_2010_04_11_12_+1000_L+9UgcVVz06t6xKZ"
+
+--Signature=_Tue__29_Jun_2010_04_11_12_+1000_L+9UgcVVz06t6xKZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Stephen,
+
+On Mon, 28 Jun 2010 10:47:55 -0700 Stephen Neuendorffer <stephen.neuendorff=
+er-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 >
-> OK, here's the current set of patches... =A0The end goal of which is to be
-> able to parse a device
-> tree and generate a set of struct device objects on any architecture,
-> but specifically X86.
-> I can't see that much of this is anywhere near
-> final form, hence the lack of signed-off-by lines. =A0It does compile on
-> X86, although it's not
-> clear that I actually get any devices discovered behind the PCI bus yet.
-> I'll summarize a couple
-> of issues, that you can see in somewhat concrete form in the patches:
+> Conceivably, device tree parsing could work on any architecture, but
+> unless this is defined somewhere in Kconfig that is not architecture spec=
+ific, it won't work.
+>=20
+> The architecture specific versions of this should get abstracted.
+> ---
+>  drivers/of/Kconfig |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index e8286d4..26957a2 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -1,3 +1,7 @@
+> +config OF
+> +	bool
+> +	default n
 
-Thanks Stephen.
+You don't need the "default n", it is implicit.
 
-> 1) no _ALIGN on x86, which you've already dealt with
-> 2) config OF is currently implemented in the architecture code. =A0This
-> should be non-architecture dependent and selected by the arches that
-> need it.
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
+http://www.canb.auug.org.au/~sfr/
 
-Agreed.  I've been thinking the same thing.  Just haven't gotten
-around to it yet.
+--Signature=_Tue__29_Jun_2010_04_11_12_+1000_L+9UgcVVz06t6xKZ
+Content-Type: application/pgp-signature
 
-> 3) Theres a bunch of support functions that drivers/of requires. =A0Some
-> are just stubs and some seem to actually
-> do something non-trivial (like the SMP affinity mappings). =A0Probably all
-> of this should get stubs with weak symbols so that the arches don't have
-> to do anything special, especially since I expect pushback from adding
-> this architecture code "Just for device trees".
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-Yes.  I expect to slowly push these instances down and get rid of them
-before I have a final set of core ARM device tree patches ready for
-merging.
+iQEcBAEBAgAGBQJMKOXAAAoJEDMEi1NhKgbs8vgIAJLc5RoKhYargmt+X4E71SHM
+SiGqVqSJapaHeZNtnDzp2mKqbsJSUVIwmsOabbJUD9tucADQUtiB/+T9Cuve/DAk
+YCb/N/R+eU6fKDaP5oPLpcT54NIcAN1x2p8dV3JwMalaLIATBWGfL8lkUE36NGKs
+BCC04w5m5utcX7rCu3H7jz3uFKoWOjOc1zxxItm+6wOr7DMlPDw6CJmcuSphcTkw
+a3M6MWo6DWh/xoKz8TKQ4UGMH+CUqS3erhU8Pqu1UNEs+zHKTwPnTR5kFWdszMX8
+XXN0TYbtRXCljlqNBFJWjFyDRxOuXrGWe3b5/rCmcI/NIueCOZN+Ttn4cdc6tbQ=
+=k+HY
+-----END PGP SIGNATURE-----
 
-> Comments greatly appreciated, in particular if you have
-> likely-to-be-easy-to-get-accepted suggestions for 3), or feel like
-> carefully solving 2) in
-> a way which doesn't bork the existing of-based arches.
+--Signature=_Tue__29_Jun_2010_04_11_12_+1000_L+9UgcVVz06t6xKZ--
 
-:-)
+--===============4075107025624797747==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Thanks for the patches.  I'm traveling at the moment, but I'll dig
-into them when I get back to Calgary.
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-g.
+--===============4075107025624797747==--
