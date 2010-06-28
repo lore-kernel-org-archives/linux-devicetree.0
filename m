@@ -1,16 +1,14 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] xilinx_pcipr: Added Xilinx reconfigurable PCI endpoint driver.
-Date: Mon, 28 Jun 2010 10:47:59 -0700
-Message-ID: <eab0dbb2-2819-4d1e-b8fd-630fb0912b31@SG2EHSMHS006.ehs.local>
+Subject: [PATCH] of/fdt: Add unflatten_partial_device_tree
+Date: Mon, 28 Jun 2010 10:47:57 -0700
+Message-ID: <aa5152a0-4931-479a-bc89-78ac4922c7f1@SG2EHSMHS006.ehs.local>
 References: <1277747279-9236-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1277747279-9236-2-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1277747279-9236-3-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1277747279-9236-4-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1277747279-9236-4-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1277747279-9236-2-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,257 +21,414 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This bus has an internal bus which contains some devices, which
-are described in a device tree.  This code is *very* preliminary
-and mainly exists to exercise the device tree code on an arbitrary
-architecture.
+This code allows a user to parse a partial device tree blob, which is
+structurally independent of any toplevel blob.
+Previously, this code assumed that the blob comes from initial_boot_params.
+Now, unflatten_partial_device_tree can take a blob from an arbitrary position,
+and the location of the blob gets passed around to the various support functions.
+Some of the functions are still tied to the initial_boot_params blob, although
+perhaps they should get abstracted as well?
 ---
- drivers/pci/Kconfig        |    9 ++
- drivers/pci/Makefile       |    2 +
- drivers/pci/xilinx_pcipr.c |  203 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 214 insertions(+), 0 deletions(-)
- create mode 100644 drivers/pci/xilinx_pcipr.c
+ drivers/of/fdt.c       |  147 ++++++++++++++++++++++++++++++++++++------------
+ include/linux/of_fdt.h |   10 ++-
+ 2 files changed, 118 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 34ef70d..ec9b25d 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -65,3 +65,12 @@ config PCI_IOAPIC
- 	depends on ACPI
- 	depends on HOTPLUG
- 	default y
-+
-+config XILINX_PCIPR
-+	tristate "Xilinx OF-based PCI endpoint"
-+	depends on PCI
-+	select OF
-+	select OF_FLATTREE
-+        select OF_DEVICE
-+	help
-+	  Enable support for Xilinx PCIPR endpoint
-\ No newline at end of file
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 0b51857..ec44c21 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -62,6 +62,8 @@ obj-$(CONFIG_PCI_SYSCALL) += syscall.o
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 66401bc..628ba4f 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -11,10 +11,12 @@
  
- obj-$(CONFIG_PCI_STUB) += pci-stub.o
- 
-+obj-$(CONFIG_XILINX_PCIPR) += xilinx_pcipr.o
-+
- ifeq ($(CONFIG_PCI_DEBUG),y)
- EXTRA_CFLAGS += -DDEBUG
- endif
-diff --git a/drivers/pci/xilinx_pcipr.c b/drivers/pci/xilinx_pcipr.c
-new file mode 100644
-index 0000000..17fde0b
---- /dev/null
-+++ b/drivers/pci/xilinx_pcipr.c
-@@ -0,0 +1,203 @@
-+/*
-+ *  Copyright 2010 Xilinx, Inc.
-+ *
-+ */
-+
+ #include <linux/kernel.h>
+ #include <linux/initrd.h>
 +#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/ide.h>
-+#include <linux/init.h>
-+#include <linux/dmi.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/string.h>
+ #include <linux/errno.h>
++#include <linux/slab.h>
+ 
+ #ifdef CONFIG_PPC
+ #include <asm/machdep.h>
+@@ -22,15 +24,16 @@
+ 
+ #include <asm/page.h>
+ 
+-int __initdata dt_root_addr_cells;
+-int __initdata dt_root_size_cells;
++int dt_root_addr_cells;
++int dt_root_size_cells;
+ 
+ struct boot_param_header *initial_boot_params;
+ 
+-char *find_flat_dt_string(u32 offset)
++char *find_flat_dt_string(u32 offset,
++			  struct boot_param_header *blob)
+ {
+-	return ((char *)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_strings) + offset;
++	return ((char *)blob) +
++		be32_to_cpu(blob->off_dt_strings) + offset;
+ }
+ 
+ /**
+@@ -42,7 +45,7 @@ char *find_flat_dt_string(u32 offset)
+  * used to extract the memory information at boot before we can
+  * unflatten the tree
+  */
+-int __init of_scan_flat_dt(int (*it)(unsigned long node,
++int  of_scan_flat_dt(int (*it)(unsigned long node,
+ 				     const char *uname, int depth,
+ 				     void *data),
+ 			   void *data)
+@@ -102,7 +105,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ /**
+  * of_get_flat_dt_root - find the root node in the flat blob
+  */
+-unsigned long __init of_get_flat_dt_root(void)
++unsigned long  of_get_flat_dt_root(void)
+ {
+ 	unsigned long p = ((unsigned long)initial_boot_params) +
+ 		be32_to_cpu(initial_boot_params->off_dt_struct);
+@@ -120,8 +123,9 @@ unsigned long __init of_get_flat_dt_root(void)
+  * This function can be used within scan_flattened_dt callback to get
+  * access to properties
+  */
+-void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+-				 unsigned long *size)
++void * of_get_flat_dt_prop(unsigned long node, const char *name,
++				 unsigned long *size,
++				 struct boot_param_header *blob)
+ {
+ 	unsigned long p = node;
+ 
+@@ -142,7 +146,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 		if (be32_to_cpu(initial_boot_params->version) < 0x10)
+ 			p = ALIGN(p, sz >= 8 ? 8 : 4);
+ 
+-		nstr = find_flat_dt_string(noff);
++		nstr = find_flat_dt_string(noff, blob);
+ 		if (nstr == NULL) {
+ 			pr_warning("Can't find property index name !\n");
+ 			return NULL;
+@@ -162,12 +166,13 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+  * @node: node to test
+  * @compat: compatible string to compare with compatible list.
+  */
+-int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
++int  of_flat_dt_is_compatible(unsigned long node, const char *compat,
++				 struct boot_param_header *blob)
+ {
+ 	const char *cp;
+ 	unsigned long cplen, l;
+ 
+-	cp = of_get_flat_dt_prop(node, "compatible", &cplen);
++	cp = of_get_flat_dt_prop(node, "compatible", &cplen, blob);
+ 	if (cp == NULL)
+ 		return 0;
+ 	while (cplen > 0) {
+@@ -181,7 +186,7 @@ int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
+ 	return 0;
+ }
+ 
+-static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
++static void * unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+ 				       unsigned long align)
+ {
+ 	void *res;
+@@ -200,11 +205,12 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+  * @allnextpp: pointer to ->allnext from last allocated device_node
+  * @fpsize: Size of the node path up at the current depth.
+  */
+-unsigned long __init unflatten_dt_node(unsigned long mem,
++unsigned long  unflatten_dt_node(unsigned long mem,
+ 					unsigned long *p,
+ 					struct device_node *dad,
+ 					struct device_node ***allnextpp,
+-					unsigned long fpsize)
++					unsigned long fpsize,
++				 struct boot_param_header *blob)
+ {
+ 	struct device_node *np;
+ 	struct property *pp, **prev_pp = NULL;
+@@ -300,10 +306,10 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		sz = be32_to_cpup((__be32 *)(*p));
+ 		noff = be32_to_cpup((__be32 *)((*p) + 4));
+ 		*p += 8;
+-		if (be32_to_cpu(initial_boot_params->version) < 0x10)
++		if (be32_to_cpu(blob->version) < 0x10)
+ 			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
+ 
+-		pname = find_flat_dt_string(noff);
++		pname = find_flat_dt_string(noff, blob);
+ 		if (pname == NULL) {
+ 			pr_info("Can't find property name in list !\n");
+ 			break;
+@@ -382,7 +388,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		if (tag == OF_DT_NOP)
+ 			*p += 4;
+ 		else
+-			mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
++			mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize, blob);
+ 		tag = be32_to_cpup((__be32 *)(*p));
+ 	}
+ 	if (tag != OF_DT_END_NODE) {
+@@ -393,24 +399,26 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 	return mem;
+ }
+ 
++#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC) || defined(CONFIG_SPARC)
 +
-+#include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
+ #ifdef CONFIG_BLK_DEV_INITRD
+ /**
+  * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+  * @node: reference to node containing initrd location ('chosen')
+  */
+-void __init early_init_dt_check_for_initrd(unsigned long node)
++void  early_init_dt_check_for_initrd(unsigned long node)
+ {
+ 	unsigned long start, end, len;
+ 	__be32 *prop;
+ 
+ 	pr_debug("Looking for initrd properties... ");
+ 
+-	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
++	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len, initial_boot_params);
+ 	if (!prop)
+ 		return;
+ 	start = of_read_ulong(prop, len/4);
+ 
+-	prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
++	prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len, initial_boot_params);
+ 	if (!prop)
+ 		return;
+ 	end = of_read_ulong(prop, len/4);
+@@ -427,7 +435,7 @@ inline void early_init_dt_check_for_initrd(unsigned long node)
+ /**
+  * early_init_dt_scan_root - fetch the top level address and size cells
+  */
+-int __init early_init_dt_scan_root(unsigned long node, const char *uname,
++int  early_init_dt_scan_root(unsigned long node, const char *uname,
+ 				   int depth, void *data)
+ {
+ 	__be32 *prop;
+@@ -438,12 +446,12 @@ int __init early_init_dt_scan_root(unsigned long node, const char *uname,
+ 	dt_root_size_cells = OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
+ 	dt_root_addr_cells = OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+ 
+-	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
++	prop = of_get_flat_dt_prop(node, "#size-cells", NULL, initial_boot_params);
+ 	if (prop)
+ 		dt_root_size_cells = be32_to_cpup(prop);
+ 	pr_debug("dt_root_size_cells = %x\n", dt_root_size_cells);
+ 
+-	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
++	prop = of_get_flat_dt_prop(node, "#address-cells", NULL, initial_boot_params);
+ 	if (prop)
+ 		dt_root_addr_cells = be32_to_cpup(prop);
+ 	pr_debug("dt_root_addr_cells = %x\n", dt_root_addr_cells);
+@@ -452,7 +460,7 @@ int __init early_init_dt_scan_root(unsigned long node, const char *uname,
+ 	return 1;
+ }
+ 
+-u64 __init dt_mem_next_cell(int s, __be32 **cellp)
++u64  dt_mem_next_cell(int s, __be32 **cellp)
+ {
+ 	__be32 *p = *cellp;
+ 
+@@ -463,10 +471,10 @@ u64 __init dt_mem_next_cell(int s, __be32 **cellp)
+ /**
+  * early_init_dt_scan_memory - Look for an parse memory nodes
+  */
+-int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
++int  early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data)
+ {
+-	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	char *type = of_get_flat_dt_prop(node, "device_type", NULL, initial_boot_params);
+ 	__be32 *reg, *endp;
+ 	unsigned long l;
+ 
+@@ -481,9 +489,9 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 	} else if (strcmp(type, "memory") != 0)
+ 		return 0;
+ 
+-	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l, initial_boot_params);
+ 	if (reg == NULL)
+-		reg = of_get_flat_dt_prop(node, "reg", &l);
++		reg = of_get_flat_dt_prop(node, "reg", &l, initial_boot_params);
+ 	if (reg == NULL)
+ 		return 0;
+ 
+@@ -509,7 +517,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 	return 0;
+ }
+ 
+-int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
++int  early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data)
+ {
+ 	unsigned long l;
+@@ -523,12 +531,12 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	early_init_dt_check_for_initrd(node);
+ 
++#ifdef CONFIG_CMDLINE
+ 	/* Retreive command line */
+-	p = of_get_flat_dt_prop(node, "bootargs", &l);
++	p = of_get_flat_dt_prop(node, "bootargs", &l, initial_boot_params);
+ 	if (p != NULL && l > 0)
+ 		strlcpy(cmd_line, p, min((int)l, COMMAND_LINE_SIZE));
+ 
+-#ifdef CONFIG_CMDLINE
+ #ifndef CONFIG_CMDLINE_FORCE
+ 	if (p == NULL || l == 0 || (l == 1 && (*p) == 0))
+ #endif
+@@ -537,12 +545,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	early_init_dt_scan_chosen_arch(node);
+ 
++#ifdef CONFIG_CMDLINE
+ 	pr_debug("Command line is: %s\n", cmd_line);
++#endif /* CONFIG_CMDLINE */
+ 
+ 	/* break now */
+ 	return 1;
+ }
+-
++	      
+ /**
+  * unflatten_device_tree - create tree of device_nodes from flat blob
+  *
+@@ -551,7 +561,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+  * pointers of the nodes so the normal device-tree walking functions
+  * can be used.
+  */
+-void __init unflatten_device_tree(void)
++void unflatten_device_tree(void)
+ {
+ 	unsigned long start, mem, size;
+ 	struct device_node **allnextp = &allnodes;
+@@ -576,7 +586,7 @@ void __init unflatten_device_tree(void)
+ 	/* First pass, scan for size */
+ 	start = ((unsigned long)initial_boot_params) +
+ 		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
++	size = unflatten_dt_node(0, &start, NULL, NULL, 0, initial_boot_params);
+ 	size = (size | 3) + 1;
+ 
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -593,7 +603,7 @@ void __init unflatten_device_tree(void)
+ 	/* Second pass, do actual unflattening */
+ 	start = ((unsigned long)initial_boot_params) +
+ 		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
++	unflatten_dt_node(mem, &start, NULL, &allnextp, 0, initial_boot_params);
+ 	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
+ 		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
+ 	if (be32_to_cpu(((__be32 *)mem)[size / 4]) != 0xdeadbeef)
+@@ -608,3 +618,68 @@ void __init unflatten_device_tree(void)
+ 
+ 	pr_debug(" <- unflatten_device_tree()\n");
+ }
 +
-+
-+#include <asm/io.h>
-+
-+#define DRV_NAME "xilinx_pcipr"
-+
-+
-+unsigned char pcipr_dtb[] = {
-+  0xd0, 0x0d, 0xfe, 0xed, 0x00, 0x00, 0x01, 0x6a, 0x00, 0x00, 0x00, 0x38,
-+  0x00, 0x00, 0x01, 0x24, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x11,
-+  0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46,
-+  0x00, 0x00, 0x00, 0xec, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04,
-+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x03,
-+  0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x01,
-+  0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x1b,
-+  0x78, 0x6c, 0x6e, 0x78, 0x2c, 0x70, 0x6c, 0x62, 0x2d, 0x76, 0x34, 0x36,
-+  0x2d, 0x31, 0x2e, 0x30, 0x33, 0x2e, 0x61, 0x00, 0x78, 0x6c, 0x6e, 0x78,
-+  0x2c, 0x70, 0x6c, 0x62, 0x2d, 0x76, 0x34, 0x36, 0x2d, 0x31, 0x2e, 0x30,
-+  0x30, 0x2e, 0x61, 0x00, 0x73, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x2d, 0x62,
-+  0x75, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x78, 0x70, 0x73, 0x2d,
-+  0x68, 0x77, 0x69, 0x63, 0x61, 0x70, 0x40, 0x38, 0x30, 0x30, 0x33, 0x30,
-+  0x30, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x17,
-+  0x00, 0x00, 0x00, 0x1b, 0x78, 0x6c, 0x6e, 0x78, 0x2c, 0x78, 0x70, 0x73,
-+  0x2d, 0x68, 0x77, 0x69, 0x63, 0x61, 0x70, 0x2d, 0x31, 0x2e, 0x30, 0x30,
-+  0x2e, 0x61, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x08,
-+  0x00, 0x00, 0x00, 0x26, 0x80, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
-+  0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x2a,
-+  0x76, 0x69, 0x72, 0x74, 0x65, 0x78, 0x35, 0x00, 0x00, 0x00, 0x00, 0x03,
-+  0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x36, 0x66, 0x61, 0x6c, 0x73,
-+  0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02,
-+  0x00, 0x00, 0x00, 0x09, 0x23, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73,
-+  0x2d, 0x63, 0x65, 0x6c, 0x6c, 0x73, 0x00, 0x23, 0x73, 0x69, 0x7a, 0x65,
-+  0x2d, 0x63, 0x65, 0x6c, 0x6c, 0x73, 0x00, 0x63, 0x6f, 0x6d, 0x70, 0x61,
-+  0x74, 0x69, 0x62, 0x6c, 0x65, 0x00, 0x72, 0x65, 0x67, 0x00, 0x78, 0x6c,
-+  0x6e, 0x78, 0x2c, 0x66, 0x61, 0x6d, 0x69, 0x6c, 0x79, 0x00, 0x78, 0x6c,
-+  0x6e, 0x78, 0x2c, 0x73, 0x69, 0x6d, 0x75, 0x6c, 0x61, 0x74, 0x69, 0x6f,
-+  0x6e, 0x00
-+};
-+unsigned int pcipr_dtb_len = 362;
-+
-+
-+struct xilinx_pcipr_drvdata {
-+	unsigned long *blob;
-+	struct device_node *child_nodes;
-+};
++#endif
 +
 +/**
-+ *	xilinx_pcipr_probe - Setup the endpoint
-+ *	@dev: PCI device to set up
++ * unflatten_partial_device_tree - create tree of device_nodes from flat blob
++ *
++ * unflattens the device-tree passed by the firmware, creating the
++ * tree of struct device_node. It also fills the "name" and "type"
++ * pointers of the nodes so the normal device-tree walking functions
++ * can be used.
 + */
-+static int __devinit xilinx_pcipr_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++void unflatten_partial_device_tree(unsigned long *blob, struct device_node **mynodes)
 +{
-+  int ret;
-+  struct xilinx_pcipr_drvdata *drvdata;
-+	dev_dbg(&pdev->dev, "xilinx_pcipr_probe\n");
++  struct boot_param_header *device_tree = (struct boot_param_header *)blob;
++        unsigned long start, mem, size;
++	struct device_node **allnextp = mynodes;
 +
-+	drvdata = kzalloc(sizeof(struct xilinx_pcipr_drvdata), GFP_KERNEL);
-+	if (!drvdata) {
-+		dev_err(&pdev->dev, "Couldn't allocate device private record\n");
-+		ret = -ENOMEM;
-+		goto out;
++	pr_debug(" -> unflatten_partial_device_tree()\n");
++
++	if (!device_tree) {
++		pr_debug("No device tree pointer\n");
++		return;
 +	}
 +
-+	dev_set_drvdata(&pdev->dev, (void *)drvdata);
++	pr_debug("Unflattening device tree:\n");
++	pr_debug("magic: %08x\n", be32_to_cpu(device_tree->magic));
++	pr_debug("size: %08x\n", be32_to_cpu(device_tree->totalsize));
++	pr_debug("version: %08x\n", be32_to_cpu(device_tree->version));
 +
-+/* 	/\* */
-+/* 	 * If we failed to assign proper bus numbers for this cardbus */
-+/* 	 * controller during PCI probe, its subordinate pci_bus is NULL. */
-+/* 	 * Bail out if so. */
-+/* 	 *\/ */
-+/* 	if (!dev->subordinate) { */
-+/* 		dev_printk(KERN_ERR, &dev->dev, "no bus associated! " */
-+/* 			   "(try 'pci=assign-busses')\n"); */
-+/* 		return -ENODEV; */
-+/* 	} */
-+
-+	/*
-+	 * Do some basic sanity checking..
-+	 */
-+	if (pci_enable_device(pdev)) {
-+		ret = -EBUSY;
-+		goto free;
++	if (be32_to_cpu(device_tree->magic) != OF_DT_HEADER) {
++	  pr_err("Invalid device tree blob header %x \n", be32_to_cpu(device_tree->magic));
++		return;
 +	}
 +
-+	ret = pci_request_regions(pdev, "xilinx_pcipr");
-+	if (ret)
-+		goto disable;
++	/* First pass, scan for size */
++	start = ((unsigned long)device_tree) +
++		be32_to_cpu(device_tree->off_dt_struct);
++	size = unflatten_dt_node(0, &start, NULL, NULL, 0, device_tree);
++	size = (size | 3) + 1;
 +
-+	if (!pci_resource_start(pdev, 0)) {
-+		dev_printk(KERN_ERR, &pdev->dev, "No cardbus resource!\n");
-+		ret = -ENODEV;
-+		goto release;
-+	}
++	pr_debug("  size is %lx, allocating...\n", size);
 +
-+	drvdata->blob = pcipr_dtb;
++	/* Allocate memory for the expanded device tree */
++	mem = (unsigned long) kzalloc(size + 4,
++		      __alignof__(struct device_node));
 +
-+/* 	/\* */
-+/* 	 * Ok, start setup.. Map the cardbus registers, */
-+/* 	 * and request the IRQ. */
-+/* 	 *\/ */
-+/* 	socket->base = ioremap(pci_resource_start(pdev, 0), 0x1000); */
-+/* 	if (!socket->base) { */
-+/* 		ret = -ENOMEM; */
-+/* 		goto release; */
-+/* 	} */
++	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
 +
-+	/*
-+	 * report the subsystem vendor and device for help debugging
-+	 * the irq stuff...
-+	 */
-+	dev_printk(KERN_INFO, &pdev->dev, "Xilinx PCIPR bridge found [%04x:%04x]\n",
-+		   pdev->subsystem_vendor, pdev->subsystem_device);
++	pr_debug("  unflattening %lx...\n", mem);
 +
++	/* Second pass, do actual unflattening */
++	start = ((unsigned long)device_tree) +
++		be32_to_cpu(device_tree->off_dt_struct);
++	unflatten_dt_node(mem, &start, NULL, &allnextp, 0, device_tree);
++	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
++		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
++	if (be32_to_cpu(((__be32 *)mem)[size / 4]) != 0xdeadbeef)
++		pr_warning("End of tree marker overwritten: %08x\n",
++			   be32_to_cpu(((__be32 *)mem)[size / 4]));
++	*allnextp = NULL;
 +
-+	//	yenta_fixup_parent_bridge(dev->subordinate);
-+
-+	// initialize our sub-devices.
-+
-+	
-+	unflatten_partial_device_tree(drvdata->blob, &drvdata->child_nodes);
-+	of_platform_bus_probe(drvdata->child_nodes, NULL, &pdev->dev);
-+
-+/* 	printk(KERN_CRIT DRIVER_NAME ": Discovered %d devices.\n", */
-+/* 	       devices->num_devices); */
-+/* 	for (i = 0; i < devices->num_devices; i++) { */
-+/* 		printk(KERN_CRIT DRIVER_NAME ": Adding device %s.\n", */
-+/* 		       devices->device[i].name); */
-+/* 		devices->device[i].dev.release = do_nothing_release; */
-+/* 		platform_device_register(&(devices->device[i])); */
-+/* 		// sysfs_create_link(&(xilinx_socket_dev.dev->kobj), &(xilinx_socket_dev.dev->kobj), "x"); */
-+/* 	} */
-+
-+/* 	printk(KERN_CRIT DRIVER_NAME ": Done probing socket.\n"); */
-+
-+
-+ release:
-+	pci_release_regions(pdev);
-+ disable:
-+	pci_disable_device(pdev);
-+ free:
-+	kfree(drvdata);
-+ out:
-+	return ret;
++	pr_debug(" <- unflatten_partial_device_tree()\n");
 +}
 +
-+static int __devexit xilinx_pcipr_remove(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct xilinx_pcipr_drvdata *drvdata = dev_get_drvdata(dev);
-+
-+	return 0;
-+}
-+
-+
-+static const struct pci_device_id xilinx_pcipr_ids[] = {
-+	{ PCI_VDEVICE(XILINX, 0x0505), 0 },
-+	{ PCI_VDEVICE(AL, PCI_DEVICE_ID_AL_M5228), 1 },
-+	{ 0, },
-+};
-+MODULE_DEVICE_TABLE(pci, xilinx_pcipr_ids);
-+
-+static struct pci_driver  xilinx_pcipr_driver = {
-+	.name		= "XILINX_PCIPR",
-+	.id_table	= xilinx_pcipr_ids,
-+	.probe		= xilinx_pcipr_probe,
-+	.remove		= xilinx_pcipr_remove,
-+	//	.suspend	= ide_pci_suspend,
-+	//	.resume		= ide_pci_resume,
-+};
-+
-+static int __init xilinx_pcipr_init(void)
-+{
-+  return ide_pci_register_driver(&xilinx_pcipr_driver);
-+}
-+
-+static void __exit xilinx_pcipr_exit(void)
-+{
-+	pci_unregister_driver(&xilinx_pcipr_driver);
-+}
-+
-+module_init(xilinx_pcipr_init);
-+module_exit(xilinx_pcipr_exit);
-+
-+MODULE_AUTHOR("Xilinx Research Labs");
-+MODULE_DESCRIPTION("PCI driver for PCI reconfigurable endpoint");
-+MODULE_LICENSE("GPL");
++EXPORT_SYMBOL(unflatten_partial_device_tree);
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 71e1a91..008f520 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -64,13 +64,16 @@ extern int __initdata dt_root_size_cells;
+ extern struct boot_param_header *initial_boot_params;
+ 
+ /* For scanning the flat device-tree at boot time */
+-extern char *find_flat_dt_string(u32 offset);
++extern char *find_flat_dt_string(u32 offset,
++			  struct boot_param_header *blob);
+ extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+ 				     int depth, void *data),
+ 			   void *data);
+ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
+-				 unsigned long *size);
+-extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
++				 unsigned long *size,
++			  struct boot_param_header *blob);
++extern int of_flat_dt_is_compatible(unsigned long node, const char *name,
++			  struct boot_param_header *blob);
+ extern unsigned long of_get_flat_dt_root(void);
+ extern void early_init_dt_scan_chosen_arch(unsigned long node);
+ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+@@ -98,6 +101,7 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ 
+ /* Other Prototypes */
+ extern void unflatten_device_tree(void);
++extern void unflatten_partial_device_tree(unsigned long *blob, struct device_node **mynodes);
+ extern void early_init_devtree(void *);
+ #else /* CONFIG_OF_FLATTREE */
+ static inline void unflatten_device_tree(void) {}
 -- 
 1.5.6.6
 
