@@ -1,63 +1,74 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 1/5] microblaze: turn CONFIG_OF into a select
-Date: Tue, 29 Jun 2010 11:57:26 +0200
-Message-ID: <4C29C386.7090707@monstr.eu>
-References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>	<20100629123843.5f94d477.sfr@canb.auug.org.au>
-	<20100629124200.20ca24b7.sfr@canb.auug.org.au>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 5/5] of: remove architecture CONFIG_OF definitions
+Date: Tue, 29 Jun 2010 11:58:04 +0200
+Message-ID: <4C29C3AC.8040304@monstr.eu>
+References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>	<20100629123843.5f94d477.sfr@canb.auug.org.au> <20100629124701.f879c55c.sfr@canb.auug.org.au>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100629124200.20ca24b7.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20100629124701.f879c55c.sfr@canb.auug.org.au>
+Sender: sparclinux-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>, devicetree-discuss@lists.ozlabs.org, David Miller <davem@davemloft.net>, sparclinux@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 Stephen Rothwell wrote:
-> so that we can make CONFIG_OF global and remove it from
-> the architecture Kconfig files later.
+> now that CONFIG_OF is defined globally
 > 
-> Signed-off-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-Acked-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Acked-by: Michal Simek <monstr@monstr.eu>
 
 > ---
->  arch/microblaze/Kconfig |    5 +++--
->  1 files changed, 3 insertions(+), 2 deletions(-)
+>  arch/microblaze/Kconfig |    3 ---
+>  arch/powerpc/Kconfig    |    3 ---
+>  arch/sparc/Kconfig      |    3 ---
+>  3 files changed, 0 insertions(+), 9 deletions(-)
 > 
 > diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-> index 76818f9..2b37820 100644
+> index 2b37820..1a8f682 100644
 > --- a/arch/microblaze/Kconfig
 > +++ b/arch/microblaze/Kconfig
-> @@ -17,6 +17,8 @@ config MICROBLAZE
->  	select HAVE_DMA_ATTRS
->  	select HAVE_DMA_API_DEBUG
->  	select TRACING_SUPPORT
-> +	select OF
-> +	select OF_FLATTREE
->  
->  config SWAP
->  	def_bool n
-> @@ -125,8 +127,7 @@ config CMDLINE_FORCE
+> @@ -126,9 +126,6 @@ config CMDLINE_FORCE
+>  	  Set this to have arguments from the default kernel command string
 >  	  override those passed by the boot loader.
 >  
->  config OF
-> -	def_bool y
-> -	select OF_FLATTREE
-> +	bool
->  
+> -config OF
+> -	bool
+> -
 >  config PROC_DEVICETREE
 >  	bool "Support for device tree in /proc"
+>  	depends on PROC_FS
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 3697231..402f4c0 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -174,9 +174,6 @@ config ARCH_MAY_HAVE_PC_FDC
+>  config PPC_OF
+>  	def_bool y
+>  
+> -config OF
+> -	bool
+> -
+>  config PPC_UDBG_16550
+>  	bool
+>  	default n
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index d02e8ac..13a9f2f 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -149,9 +149,6 @@ config GENERIC_GPIO
+>  config ARCH_NO_VIRT_TO_BUS
+>  	def_bool y
+>  
+> -config OF
+> -	bool
+> -
+>  config ARCH_SUPPORTS_DEBUG_PAGEALLOC
+>  	def_bool y if SPARC64
+>  
 
 
 -- 
