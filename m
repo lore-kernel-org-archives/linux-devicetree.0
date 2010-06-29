@@ -1,46 +1,58 @@
-From: Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: Add unflatten_partial_device_tree
-Date: Mon, 28 Jun 2010 19:40:00 -0700
-Message-ID: <cf16ff7b-9208-4f47-8cea-ed8a8e52d30e@email.android.com>
-References: <1277747279-9236-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1277747279-9236-2-git-send-email-stephen.neuendorffer@xilinx.com>
-	<aa5152a0-4931-479a-bc89-78ac4922c7f1@SG2EHSMHS006.ehs.local>
-	<AANLkTilXgArDaFjv0RiTMeQBdU3bma4sTtLLbwN8lI4O@mail.gmail.com>
-	<20100629012207.GG13509@yookeroo>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: Using devices trees on X86
+Date: Mon, 28 Jun 2010 22:56:14 -0700
+Message-ID: <AANLkTikEJluwUSTmG64jgQYAt_8YI7-gVA2iqOPKrM9W@mail.gmail.com>
+References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>
+	<20100629123843.5f94d477.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100629012207.GG13509@yookeroo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20100629123843.5f94d477.sfr@canb.auug.org.au>
+Sender: sparclinux-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>, devicetree-discuss@lists.ozlabs.org, David Miller <davem@davemloft.net>, sparclinux@vger.kernel.org, Michal Simek <monstr@monstr.eu>, microblaze-uclinux@itee.uq.edu.au, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
->> Another question is what to do with the unflattened tree once it is
->> unflattened.  Some of the existing code expects the node to be part of
->> the global tree.  Those could either be refactored, or the new partial
->> tree could be grafted into the global tree.  Grafting will have the
->> least impact, but it probably isn't a good idea in the long term.
->> Grafting together unrelated trees seems messy to me.
+On Mon, Jun 28, 2010 at 7:38 PM, Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> Hi Stephen,
 >
->I think I must have missed an earlier discussion.  What's the use case
->for multiple fdt blobs?
+> On Mon, 28 Jun 2010 10:57:33 -0700 Stephen Neuendorffer <stephen.neue=
+ndorffer@xilinx.com> wrote:
+>>
+>> 2) config OF is currently implemented in the architecture code. =A0T=
+his
+>> should be non-architecture dependent and selected by the arches that
+>> need it.
+>>
+>> Comments greatly appreciated, in particular if you have
+>> likely-to-be-easy-to-get-accepted suggestions for 3), or feel like
+>> carefully solving 2) in
+>> a way which doesn't bork the existing of-based arches.
+>
+> See the following patch set. =A0Parts 1, 2 and 3 could be applied to =
+the
+> respective architecture trees as well as Grant's tree to aleviate som=
+e
+> conflict problems. =A0Part 5 could wait until a later time if necessa=
+ry.
+> However, this is relatively trivial, so we could just collect ACKs an=
+d
+> put it all in Grant's tree and live with any minor pain.
+>
+> Having OF in more than one Kconfig file should not cause any problems=
+ as
+> long as they are all the same.
 
-FPGA on an add-on board in an x86 host.  Device tree fragment describes the fpga design.  There could be multiple boards in a system.
+I've got an Ack from David now.  I'll wait for more acks, and then
+pull the whole series of 5 into my devicetree-next branch.  It's
+certainly less invasive that some of the other changes arch changes
+I've taken through my tree.
 
 g.
-
-
-
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+--
+To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
