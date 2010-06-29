@@ -1,15 +1,15 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Using devices trees on X86
-Date: Tue, 29 Jun 2010 08:56:09 -0700
-Message-ID: <865b299f-8552-46bb-9524-e21af847e5b8@SG2EHSMHS003.ehs.local>
-References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>
-	<20100629123843.5f94d477.sfr@canb.auug.org.au>
+From: "M. Warner Losh" <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: Add unflatten_partial_device_tree
+Date: Tue, 29 Jun 2010 10:25:03 -0600 (MDT)
+Message-ID: <20100629.102503.835458634865560451.imp@bsdimp.com>
+References: <AANLkTilXgArDaFjv0RiTMeQBdU3bma4sTtLLbwN8lI4O@mail.gmail.com>
+	<20100629012207.GG13509@yookeroo>
+	<cf16ff7b-9208-4f47-8cea-ed8a8e52d30e@email.android.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <20100629123843.5f94d477.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+In-Reply-To: <cf16ff7b-9208-4f47-8cea-ed8a8e52d30e-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,50 +19,27 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+In message: <cf16ff7b-9208-4f47-8cea-ed8a8e52d30e-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+            Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> writes:
+: 
+: >> Another question is what to do with the unflattened tree once it is
+: >> unflattened.  Some of the existing code expects the node to be part of
+: >> the global tree.  Those could either be refactored, or the new partial
+: >> tree could be grafted into the global tree.  Grafting will have the
+: >> least impact, but it probably isn't a good idea in the long term.
+: >> Grafting together unrelated trees seems messy to me.
+: >
+: >I think I must have missed an earlier discussion.  What's the use case
+: >for multiple fdt blobs?
+: 
+: FPGA on an add-on board in an x86 host.  Device tree fragment
+: describes the fpga design.  There could be multiple boards in a
+: system.
 
+How do you imagine these fragments getting loaded into the system?
 
-> -----Original Message-----
-> From: Stephen Rothwell [mailto:sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org]
-> Sent: Monday, June 28, 2010 7:39 PM
-> To: Stephen Neuendorffer
-> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-David Miller;
-> sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal Simek;
-microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org; Benjamin Herrenschmidt;
-> Paul Mackerras; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: Using devices trees on X86
-> 
-> Hi Stephen,
-> 
-> On Mon, 28 Jun 2010 10:57:33 -0700 Stephen Neuendorffer
-<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> >
-> > 2) config OF is currently implemented in the architecture code.
-This
-> > should be non-architecture dependent and selected by the arches that
-> > need it.
-> >
-> > Comments greatly appreciated, in particular if you have
-> > likely-to-be-easy-to-get-accepted suggestions for 3), or feel like
-> > carefully solving 2) in
-> > a way which doesn't bork the existing of-based arches.
-> 
-> See the following patch set.  Parts 1, 2 and 3 could be applied to the
-> respective architecture trees as well as Grant's tree to aleviate some
-> conflict problems.  Part 5 could wait until a later time if necessary.
-> However, this is relatively trivial, so we could just collect ACKs and
-> put it all in Grant's tree and live with any minor pain.
-> 
-> Having OF in more than one Kconfig file should not cause any problems
-as
-> long as they are all the same.
-
-Ah, well, that simplifies things.. :) Thanks!
-
-Steve
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+Warner
