@@ -1,60 +1,62 @@
 From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: Using devices trees on X86
-Date: Tue, 29 Jun 2010 16:02:51 +1000
-Message-ID: <20100629160251.9e9fe7b1.sfr@canb.auug.org.au>
-References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>
-	<20100629123843.5f94d477.sfr@canb.auug.org.au>
-	<AANLkTikEJluwUSTmG64jgQYAt_8YI7-gVA2iqOPKrM9W@mail.gmail.com>
+Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building
+ code out into drivers/of
+Date: Tue, 29 Jun 2010 16:15:44 +1000
+Message-ID: <20100629161544.e0af63f0.sfr@canb.auug.org.au>
+References: <20100628215407.2017bf2f@debian>
+	<20100628220037.5744c207@debian>
 Mime-Version: 1.0
 Content-Type: multipart/signed; protocol="application/pgp-signature";
  micalg="PGP-SHA1";
- boundary="Signature=_Tue__29_Jun_2010_16_02_51_+1000_3zaId60c1ZdQbS8+"
+ boundary="Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo"
 Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <AANLkTikEJluwUSTmG64jgQYAt_8YI7-gVA2iqOPKrM9W@mail.gmail.com>
+In-Reply-To: <20100628220037.5744c207@debian>
 Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>, devicetree-discuss@lists.ozlabs.org, David Miller <davem@davemloft.net>, sparclinux@vger.kernel.org, Michal Simek <monstr@monstr.eu>, microblaze-uclinux@itee.uq.edu.au, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: devicetree-discuss@lists.ozlabs.org, pgf@laptop.org, x86@kernel.org, linux-kernel@vger.kernel.org, Mitch Bradley <wmb@laptop.org>, mingo@redhat.com, hpa@zytor.com, sparclinux@vger.kernel.org, tglx@linutronix.de, cjb@laptop.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
---Signature=_Tue__29_Jun_2010_16_02_51_+1000_3zaId60c1ZdQbS8+
+--Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo
 Content-Type: text/plain; charset=US-ASCII
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Grant,
+Hi Andres,
 
-On Mon, 28 Jun 2010 22:56:14 -0700 Grant Likely <grant.likely@secretlab.ca>=
- wrote:
+On Mon, 28 Jun 2010 22:00:37 -0400 Andres Salomon <dilinger@queued.net> wro=
+te:
 >
-> I've got an Ack from David now.  I'll wait for more acks, and then
-> pull the whole series of 5 into my devicetree-next branch.  It's
-> certainly less invasive that some of the other changes arch changes
-> I've taken through my tree.
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index 6f1470b..b4cb63b 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -150,6 +150,7 @@ config ARCH_NO_VIRT_TO_BUS
+> =20
+>  config OF
+>  	def_bool y
+> +	select OF_PROMTREE
 
-Yes, certainly.  However, I have a plan to write a series of patches for
-PowerPC that may clash some what, so if that is the case, I might ask Ben
-to take the one patch as well.  Especially if the conflict turns up in
-linux-next :-)
+Please put this select in CONFIG_SPARC instead as we want to move
+CONFIG_OF to drivers/og/Kconfig
 
-Thanks.
 --=20
 Cheers,
 Stephen Rothwell                    sfr@canb.auug.org.au
 http://www.canb.auug.org.au/~sfr/
 
---Signature=_Tue__29_Jun_2010_16_02_51_+1000_3zaId60c1ZdQbS8+
+--Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iQEcBAEBAgAGBQJMKYyLAAoJEDMEi1NhKgbsrngH/0mqEE+cpwI9SPgN/f8ekHrL
-10rb3vBkMyKQngvGYKusBlKwj5mW4L7HkhvHvv9EqZGBA2jwxqtPYC09tywCe3Ie
-hgwa7UIneoIZApeibMQKWItW7b/UJWOHyRmumFa5ixJ9J/SkP6QidygkaSwZGJbF
-nwEY623fYJtyRcjQaYKiwqsbkV8olkkHNXKKK9Yx+Qu4O+Zywn1ljGaDVVgB/Y0+
-OF9Xd1FzF5m99S17qYfU0d1ggdk8ygGWYa2rB8DxkNGreUL2nkmukk6VC54mqIuc
-LYYxegVyIXfg55OEo6H7j07zrAYuAs+JzDg0rCks8g3V12duBwyyBCKe9/tgZ1s=
-=hiZm
+iQEcBAEBAgAGBQJMKY+QAAoJEDMEi1NhKgbsDJMH/0lTOUhiEzu+od7cSu8EyqVL
++rHJhvo0mqAbEIF0qMuPj2JqsPJ6/O1cAPTBJ5eSDUXtxTZoLlnFzeU0tD8rtmca
+DiXT8+9rYS+vlx93yZe306RNjuCIhwWMoDfraAuo6WUErGN+mzfX26vUbXhHmoYN
+22p3jjD/DraYNq+l689oC3LFQCy8fSMpPxlULDijk6sMXgEE1+gTa3OAEVty7QvS
+j30YyGrqU3x+Q1co1rC+iw5C9Zc48Fy891Amf6DGPssI74xLqIJNw5euE2pdy4EL
+keCZrpK/KJZ8ujcyznRyrClcIc7eqbtsiLZYY2/VVC531yPuJg6C99e4U4xrsig=
+=+saU
 -----END PGP SIGNATURE-----
 
---Signature=_Tue__29_Jun_2010_16_02_51_+1000_3zaId60c1ZdQbS8+--
+--Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo--
