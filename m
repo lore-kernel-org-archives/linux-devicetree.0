@@ -1,62 +1,107 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building
- code out into drivers/of
-Date: Tue, 29 Jun 2010 16:15:44 +1000
-Message-ID: <20100629161544.e0af63f0.sfr@canb.auug.org.au>
-References: <20100628215407.2017bf2f@debian>
-	<20100628220037.5744c207@debian>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/4] proc: unify PROC_DEVICETREE config
+Date: Tue, 29 Jun 2010 00:33:59 -0700
+Message-ID: <AANLkTil30jVU79NGdPdAw516-_AOTzbX6DQdwahv4evx@mail.gmail.com>
+References: <20100628215407.2017bf2f@debian> <20100628220048.6a07c5ee@debian>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA1";
- boundary="Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20100628220037.5744c207@debian>
+In-Reply-To: <20100628220048.6a07c5ee@debian>
 Sender: sparclinux-owner@vger.kernel.org
 To: Andres Salomon <dilinger@queued.net>
-Cc: devicetree-discuss@lists.ozlabs.org, pgf@laptop.org, x86@kernel.org, linux-kernel@vger.kernel.org, Mitch Bradley <wmb@laptop.org>, mingo@redhat.com, hpa@zytor.com, sparclinux@vger.kernel.org, tglx@linutronix.de, cjb@laptop.org, davem@davemloft.net
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
---Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Andres,
-
-On Mon, 28 Jun 2010 22:00:37 -0400 Andres Salomon <dilinger@queued.net> wro=
-te:
+On Mon, Jun 28, 2010 at 7:00 PM, Andres Salomon <dilinger@queued.net> w=
+rote:
 >
-> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-> index 6f1470b..b4cb63b 100644
-> --- a/arch/sparc/Kconfig
-> +++ b/arch/sparc/Kconfig
-> @@ -150,6 +150,7 @@ config ARCH_NO_VIRT_TO_BUS
-> =20
->  config OF
->  	def_bool y
-> +	select OF_PROMTREE
+> Microblaze and PPC both use PROC_DEVICETREE, and OLPC will as well.. =
+put
+> the Kconfig option into fs/ rather than in arch/*/Kconfig.
+>
+> Signed-off-by: Andres Salomon <dilinger@queued.net>
+> ---
+> =A0arch/microblaze/Kconfig | =A0 =A08 --------
+> =A0arch/powerpc/Kconfig =A0 =A0| =A0 =A08 --------
+> =A0fs/proc/Kconfig =A0 =A0 =A0 =A0 | =A0 =A08 ++++++++
+> =A03 files changed, 8 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+> index 76818f9..b66c962 100644
+> --- a/arch/microblaze/Kconfig
+> +++ b/arch/microblaze/Kconfig
+> @@ -128,14 +128,6 @@ config OF
+> =A0 =A0 =A0 =A0def_bool y
+> =A0 =A0 =A0 =A0select OF_FLATTREE
+>
+> -config PROC_DEVICETREE
+> - =A0 =A0 =A0 bool "Support for device tree in /proc"
+> - =A0 =A0 =A0 depends on PROC_FS
+> - =A0 =A0 =A0 help
+> - =A0 =A0 =A0 =A0 This option adds a device-tree directory under /pro=
+c which contains
+> - =A0 =A0 =A0 =A0 an image of the device tree that the kernel copies =
+from Open
+> - =A0 =A0 =A0 =A0 Firmware or other boot firmware. If unsure, say Y h=
+ere.
+> -
+> =A0endmenu
+>
+> =A0menu "Advanced setup"
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 328774b..8a56e8b 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -578,14 +578,6 @@ config SCHED_SMT
+> =A0 =A0 =A0 =A0 =A0when dealing with POWER5 cpus at a cost of slightl=
+y increased
+> =A0 =A0 =A0 =A0 =A0overhead in some places. If unsure say N here.
+>
+> -config PROC_DEVICETREE
+> - =A0 =A0 =A0 bool "Support for device tree in /proc"
+> - =A0 =A0 =A0 depends on PROC_FS
+> - =A0 =A0 =A0 help
+> - =A0 =A0 =A0 =A0 This option adds a device-tree directory under /pro=
+c which contains
+> - =A0 =A0 =A0 =A0 an image of the device tree that the kernel copies =
+from Open
+> - =A0 =A0 =A0 =A0 Firmware or other boot firmware. If unsure, say Y h=
+ere.
+> -
+> =A0config CMDLINE_BOOL
+> =A0 =A0 =A0 =A0bool "Default bootloader kernel arguments"
+>
+> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+> index 50f8f06..858a859 100644
+> --- a/fs/proc/Kconfig
+> +++ b/fs/proc/Kconfig
+> @@ -39,6 +39,14 @@ config PROC_VMCORE
+> =A0 =A0 =A0 =A0 help
+> =A0 =A0 =A0 =A0 Exports the dump image of crashed kernel in ELF forma=
+t.
+>
+> +config PROC_DEVICETREE
+> + =A0 =A0 =A0 bool "Support for device tree in /proc"
+> + =A0 =A0 =A0 depends on PROC_FS && (PPC || MICROBLAZE)
+> + =A0 =A0 =A0 help
+> + =A0 =A0 =A0 =A0 This option adds a device-tree directory under /pro=
+c which contains
+> + =A0 =A0 =A0 =A0 an image of the device tree that the kernel copies =
+from Open
+> + =A0 =A0 =A0 =A0 Firmware or other boot firmware. If unsure, say Y h=
+ere.
+> +
 
-Please put this select in CONFIG_SPARC instead as we want to move
-CONFIG_OF to drivers/og/Kconfig
+Looks good to me.  However, I've changed the depends line to the follow=
+ing.
 
---=20
+depends on PROC_FS && OF && !SPARC
+
 Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
-http://www.canb.auug.org.au/~sfr/
-
---Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQEcBAEBAgAGBQJMKY+QAAoJEDMEi1NhKgbsDJMH/0lTOUhiEzu+od7cSu8EyqVL
-+rHJhvo0mqAbEIF0qMuPj2JqsPJ6/O1cAPTBJ5eSDUXtxTZoLlnFzeU0tD8rtmca
-DiXT8+9rYS+vlx93yZe306RNjuCIhwWMoDfraAuo6WUErGN+mzfX26vUbXhHmoYN
-22p3jjD/DraYNq+l689oC3LFQCy8fSMpPxlULDijk6sMXgEE1+gTa3OAEVty7QvS
-j30YyGrqU3x+Q1co1rC+iw5C9Zc48Fy891Amf6DGPssI74xLqIJNw5euE2pdy4EL
-keCZrpK/KJZ8ujcyznRyrClcIc7eqbtsiLZYY2/VVC531yPuJg6C99e4U4xrsig=
-=+saU
------END PGP SIGNATURE-----
-
---Signature=_Tue__29_Jun_2010_16_15_44_+1000_WUxM38Ip/cO_C_Xo--
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
