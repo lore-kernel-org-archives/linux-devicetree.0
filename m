@@ -1,107 +1,47 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 4/4] x86: OLPC: add OLPC device-tree support
-Date: Tue, 29 Jun 2010 10:23:39 -0400
-Message-ID: <20100629102339.5e8a30b6@dev.queued.net>
-References: <20100628215407.2017bf2f@debian> <20100628220058.19e8f143@debian>
-	<AANLkTinUy_FGuN9DiF5KtMCsqYUbByfS6g2Mdw0ATvtQ@mail.gmail.com>
+From: Andres Salomon <dilinger@queued.net>
+Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building
+ code  out into drivers/of
+Date: Tue, 29 Jun 2010 11:03:24 -0400
+Message-ID: <20100629110324.2756cc02@debian>
+References: <20100628215407.2017bf2f@debian>
+	<20100628220037.5744c207@debian>
+	<AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTinUy_FGuN9DiF5KtMCsqYUbByfS6g2Mdw0ATvtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: pgf-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitch Bradley <wmb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyOSBKdW4gMjAxMCAwMToxMjozNiAtMDcwMApHcmFudCBMaWtlbHkgPGdyYW50Lmxp
-a2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgoKPiBIaSBBbmRyZXMsIGNvbW1lbnRzIGJlbG93Li4u
-LgoKVGhhbmtzIQoKCj4gCj4gT24gTW9uLCBKdW4gMjgsIDIwMTAgYXQgNzowMCBQTSwgQW5kcmVz
-IFNhbG9tb24gPGRpbGluZ2VyQHF1ZXVlZC5uZXQ+Cj4gd3JvdGU6Cj4gPgo+ID4gTWFrZSB1c2Ug
-b2YgUFJPQ19ERVZJQ0VUUkVFIHRvIGV4cG9ydCB0aGUgdHJlZSwgYW5kIHNwYXJjJ3MKPiA+IFBS
-T01UUkVFIGNvZGUgdG8gY2FsbCBpbnRvIE9MUEMncyBPcGVuIEZpcm13YXJlIHRvIGJ1aWxkIHRo
-ZSB0cmVlLgo+ID4KPiA+IChZZXMsIEkga25vdyB0aGlzIGxlYWtzIG1lbW9yeSBieSBzaW1wbHkg
-dXNpbmcga21hbGxvYykKPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXMgU2Fsb21vbiA8ZGls
-aW5nZXJAcXVldWVkLm5ldD4KPiA+IC0tLQo+ID4gwqBhcmNoL3g4Ni9LY29uZmlnIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIHwgwqAgwqA1ICsrCj4gPiDCoGFyY2gveDg2L2luY2x1ZGUvYXNtL29s
-cGNfcHJvbS5oIHwgwqAgNDIgKysrKysrKysrKysKPiA+IMKgYXJjaC94ODYvaW5jbHVkZS9hc20v
-cHJvbS5oIMKgIMKgIMKgfCDCoCDCoDUgKysKPiA+IMKgYXJjaC94ODYva2VybmVsL01ha2VmaWxl
-IMKgIMKgIMKgIMKgIHwgwqAgwqAxICsKPiA+IMKgYXJjaC94ODYva2VybmVsL29scGNfb2Z3LmMg
-wqAgwqAgwqAgfCDCoCAxMyArKysrCj4gPiDCoGFyY2gveDg2L2tlcm5lbC9vbHBjX3Byb20uYyDC
-oCDCoCDCoHwgwqAxNDgKPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-IGZzL3Byb2MvS2NvbmZpZwo+ID4gwqAgwqAgwqB8IMKgIMKgMiArLSA3IGZpbGVzIGNoYW5nZWQs
-IDIxNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9ucygtKQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2
-NDQgYXJjaC94ODYvaW5jbHVkZS9hc20vb2xwY19wcm9tLmgKPiA+IMKgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGFyY2gveDg2L2luY2x1ZGUvYXNtL3Byb20uaAo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQg
-YXJjaC94ODYva2VybmVsL29scGNfcHJvbS5jCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2
-L0tjb25maWcgYi9hcmNoL3g4Ni9LY29uZmlnCj4gPiBpbmRleCA3MWMxOTRkLi43YWVhMDA0IDEw
-MDY0NAo+ID4gLS0tIGEvYXJjaC94ODYvS2NvbmZpZwo+ID4gKysrIGIvYXJjaC94ODYvS2NvbmZp
-Zwo+ID4gQEAgLTIwNzEsNiArMjA3MSwxMSBAQCBjb25maWcgT0xQQ19PUEVORklSTVdBUkUKPiA+
-IMKgIMKgIMKgIMKgIMKgdGhhdCBpcyB1c2VkIG9uIHRoZSBPTFBDIFhPLTEgQ2hpbGRyZW4ncyBN
-YWNoaW5lLgo+ID4gwqAgwqAgwqAgwqAgwqBJZiB1bnN1cmUsIHNheSBOIGhlcmUuCj4gPgo+ID4g
-K2NvbmZpZyBPRgo+ID4gKyDCoCDCoCDCoCBkZWZfYm9vbCB5Cj4gPiArIMKgIMKgIMKgIGRlcGVu
-ZHMgb24gT0xQQ19PUEVORklSTVdBUkUKPiA+ICsgwqAgwqAgwqAgc2VsZWN0IE9GX1BST01UUkVF
-Cj4gPiArCj4gCj4gVGhpcyBodW5rIHdpbGwgbmVlZCB0byBiZSByZXNwdW4gb24gdG9wIG9mIFN0
-ZXBoZW4ncyBDT05GSUdfT0YgY2hhbmdlLgo+ICBJdCdzIGN1cnJlbnRseSBpbiBteSB0ZXN0LWRl
-dmljZXRyZWUgYnJhbmNoIG9uCj4gZ2l0Oi8vZ2l0LnNlY3JldGxhYi5jYS9naXQvbGludXgtMi42
-CgpZZXAsIEkndmUgY2hhbmdlZCBpdCBsb2NhbGx5LgoKPiAKPiA+IMKgZW5kaWYgIyBYODZfMzIK
-PiA+Cj4gPiDCoGNvbmZpZyBLOF9OQgo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUv
-YXNtL29scGNfcHJvbS5oCj4gPiBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL29scGNfcHJvbS5oIG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi45NmNkY2VlCj4gPiAtLS0gL2Rl
-di9udWxsCj4gPiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9vbHBjX3Byb20uaAo+ID4gQEAg
-LTAsMCArMSw0MiBAQAo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPiDCoC8qIGxpbnV4L29mLmgg
-Z2V0cyB0byBkZXRlcm1pbmUgI2luY2x1ZGUKPiA+IG9yZGVyaW5nICovICsvKgo+ID4gKyAqIERl
-ZmluaXRpb25zIGZvciB0YWxraW5nIHRvIHRoZSBPcGVuIEZpcm13YXJlIFBST00gb24KPiA+ICsg
-KiBQb3dlciBNYWNpbnRvc2ggY29tcHV0ZXJzLgo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0IChD
-KSAxOTk2LTIwMDUgUGF1bCBNYWNrZXJyYXMuCj4gPiArICoKPiA+ICsgKiBVcGRhdGVzIGZvciBQ
-UEM2NCBieSBQZXRlciBCZXJnbmVyICYgRGF2aWQgRW5nZWJyZXRzZW4sIElCTQo+ID4gQ29ycC4K
-PiA+ICsgKiBVcGRhdGVzIGZvciBTUEFSQyBieSBEYXZpZCBTLiBNaWxsZXIKPiA+ICsgKiBVcGRh
-dGVzIGZvciB4ODYvT0xQQyBieSBBbmRyZXMgU2Fsb21vbgo+ID4gKyAqCj4gPiArICogVGhpcyBw
-cm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcgo+
-ID4gKyAqIG1vZGlmeSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1Ymxp
-YyBMaWNlbnNlCj4gPiArICogYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5k
-YXRpb247IGVpdGhlciB2ZXJzaW9uCj4gPiArICogMiBvZiB0aGUgTGljZW5zZSwgb3IgKGF0IHlv
-dXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KPiA+ICsgKi8KPiA+ICsKPiA+ICsjaWZuZGVm
-IF9YODZfUFJPTV9PTFBDX0gKPiA+ICsjZGVmaW5lIF9YODZfUFJPTV9PTFBDX0gKPiA+ICsjaWZk
-ZWYgX19LRVJORUxfXwo+ID4gKwo+ID4gKyNkZWZpbmUgT0ZfUk9PVF9OT0RFX0FERFJfQ0VMTFNf
-REVGQVVMVCAyCj4gPiArI2RlZmluZSBPRl9ST09UX05PREVfU0laRV9DRUxMU19ERUZBVUxUIDEK
-PiAKPiBEbyB5b3UgcmVhbGx5IG5lZWQgdG8gb3ZlcnJpZGUgdGhlc2UgZnJvbSB0aGUgZGVmYXVs
-dD8KPiAKPiA+ICsjZGVmaW5lIG9mX2NvbXBhdF9jbXAoczEsIHMyLCBsKSDCoCDCoCDCoCBzdHJu
-Y21wKChzMSksIChzMiksIChsKSkKPiA+ICsjZGVmaW5lIG9mX3Byb3BfY21wKHMxLCBzMikgwqAg
-wqAgwqAgwqAgwqAgwqBzdHJjYXNlY21wKChzMSksIChzMikpCj4gPiArI2RlZmluZSBvZl9ub2Rl
-X2NtcChzMSwgczIpIMKgIMKgIMKgIMKgIMKgIMKgc3RyY21wKChzMSksIChzMikpCj4gCj4gRGl0
-dG8gaGVyZT8KClRoZXkncmUgYmFzZWQgdXBvbiB3aGF0IHRoZSBvbGQgcHJvbWZzIHBhdGNoIHVz
-ZWQuICBJIG5lZWQgdG8gdGVzdCBhbmQKdmVyaWZ5IHRoYXQgc3RyaW5ncyBhcmUgYmVpbmcgbWFu
-Z2xlZCBpbiB0aGUgc2FtZSB3YXkgYmVmb3JlIEkgc3RhcnQKbWFraW5nIGNoYW5nZXMgaGVyZS4K
-Cgo+IAo+ID4gK2V4dGVybiB2b2lkIHByb21fYnVpbGRfZGV2aWNldHJlZSh2b2lkKTsKPiA+ICsK
-PiA+ICtleHRlcm4gdm9pZCAqcHJvbV9lYXJseV9hbGxvYyh1bnNpZ25lZCBsb25nIHNpemUpOwo+
-ID4gKwo+ID4gK2V4dGVybiBjaGFyICpwcm9tX2ZpcnN0cHJvcChwaGFuZGxlIG5vZGUsIGNoYXIg
-KmJ1Zik7Cj4gPiArZXh0ZXJuIGNoYXIgKnByb21fbmV4dHByb3AocGhhbmRsZSBub2RlLCBjb25z
-dCBjaGFyICpwcmV2LCBjaGFyCj4gPiAqYnVmKTsgK2V4dGVybiBpbnQgcHJvbV9nZXRwcm9wbGVu
-KHBoYW5kbGUgbm9kZSwgY29uc3QgY2hhciAqcHJvcCk7Cj4gPiArZXh0ZXJuIGludCBwcm9tX2dl
-dHByb3BlcnR5KHBoYW5kbGUgbm9kZSwgY29uc3QgY2hhciAqcHJvcCwKPiA+ICsgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjaGFyICpidWZmZXIsIGludCBidWZzaXpl
-KTsKPiA+ICtleHRlcm4gcGhhbmRsZSBwcm9tX2dldGNoaWxkKHBoYW5kbGUgbm9kZSk7Cj4gPiAr
-ZXh0ZXJuIHBoYW5kbGUgcHJvbV9nZXRzaWJsaW5nKHBoYW5kbGUgbm9kZSk7Cj4gPiArCj4gPiAr
-I2VuZGlmIC8qIF9fS0VSTkVMX18gKi8KPiA+ICsjZW5kaWYgLyogX1g4Nl9QUk9NX09MUENfSCAq
-Lwo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3Byb20uaAo+ID4gYi9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9wcm9tLmggbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAw
-MDAwMDAuLjdiNTYxYjIKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2FyY2gveDg2L2luY2x1
-ZGUvYXNtL3Byb20uaAo+ID4gQEAgLTAsMCArMSw1IEBACj4gPiArI2lmZGVmIENPTkZJR19PTFBD
-X09QRU5GSVJNV0FSRQo+ID4gKyMgaW5jbHVkZSA8YXNtL29scGNfcHJvbS5oPgo+ID4gKyNlbHNl
-Cj4gPiArIyBlcnJvciAiTm8gT0ZXIHByb20gZGVmaW5lZCBmb3IgeDg2ISIKPiA+ICsjZW5kaWYK
-PiAKPiBQZXJzb25hbGx5LCBJIHdvdWxkbid0IGJvdGhlciB3aXRoIHRoZSBoZWFkZXIgZmlsZSBy
-ZWRpcmVjdGlvbi4KClRoZSByZWFzb24gZm9yIHRoZSBoZWFkZXIgZmlsZSByZWRpcmVjdGlvbiBp
-cyBiZWNhdXNlIHRoaXMgaXMKT0xQQy1vbmx5OyB0aGUgeDg2IGZvbGtzIGRvbid0IHdhbnQgbWUg
-Y2xhaW1pbmcgdGhpcyB0byBiZSB0aGUgT25lClRydWUgeDg2IE9GVy4KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWls
-aW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0
-cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Tue, 29 Jun 2010 00:50:08 -0700
+Grant Likely <grant.likely@secretlab.ca> wrote:
+
+> On Mon, Jun 28, 2010 at 7:00 PM, Andres Salomon <dilinger@queued.net> wrote:
+> >
+> > Stick code into drivers/of/pdt.c (Prom Device Tree) that other
+> > architectures with OpenFirmware resident in memory can make use of.
+> >
+> > Signed-off-by: Andres Salomon <dilinger@queued.net>
+> 
+> Hi Andres,
+> 
+> The patch itself looks fine, but there are currently two methods for
+> extracting the device tree from open firmware; one in arch/powerpc
+> using the flattened format, and one in arch/sparc.  I don't want to
+> end up maintaining both methods in drivers/of, and there has also some
+> discussions on moving the powerpc version into common code.  I've been
+> thinking about using the powerpc approach to support ARM platforms
+> using both the flat tree and real OFW.
+> 
+> Ben, what say you?  Before I do anything I'd like to have your opinion.
+> 
+
+So you're saying that you want ARM (and sparc, and OLPC) to generate a
+flat tree by calling into OFW?  Sparc and OLPC have very similar
+mechanisms for getting device tree info from OFW, so it makes sense to
+share code between them.
+
+
