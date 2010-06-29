@@ -1,47 +1,68 @@
-From: Andres Salomon <dilinger@queued.net>
-Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building
- code  out into drivers/of
-Date: Tue, 29 Jun 2010 11:03:24 -0400
-Message-ID: <20100629110324.2756cc02@debian>
-References: <20100628215407.2017bf2f@debian>
-	<20100628220037.5744c207@debian>
-	<AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Using devices trees on X86
+Date: Tue, 29 Jun 2010 08:56:09 -0700
+Message-ID: <865b299f-8552-46bb-9524-e21af847e5b8@SG2EHSMHS003.ehs.local>
+References: <0bcc23b9-2cbd-4465-b17c-7b3c2dff9fd3@VA3EHSMHS007.ehs.local>
+	<20100629123843.5f94d477.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Class: urn:content-classes:message
+In-Reply-To: <20100629123843.5f94d477.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Jun 2010 00:50:08 -0700
-Grant Likely <grant.likely@secretlab.ca> wrote:
 
-> On Mon, Jun 28, 2010 at 7:00 PM, Andres Salomon <dilinger@queued.net> wrote:
+
+> -----Original Message-----
+> From: Stephen Rothwell [mailto:sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org]
+> Sent: Monday, June 28, 2010 7:39 PM
+> To: Stephen Neuendorffer
+> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
+David Miller;
+> sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal Simek;
+microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org; Benjamin Herrenschmidt;
+> Paul Mackerras; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: Using devices trees on X86
+> 
+> Hi Stephen,
+> 
+> On Mon, 28 Jun 2010 10:57:33 -0700 Stephen Neuendorffer
+<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 > >
-> > Stick code into drivers/of/pdt.c (Prom Device Tree) that other
-> > architectures with OpenFirmware resident in memory can make use of.
+> > 2) config OF is currently implemented in the architecture code.
+This
+> > should be non-architecture dependent and selected by the arches that
+> > need it.
 > >
-> > Signed-off-by: Andres Salomon <dilinger@queued.net>
+> > Comments greatly appreciated, in particular if you have
+> > likely-to-be-easy-to-get-accepted suggestions for 3), or feel like
+> > carefully solving 2) in
+> > a way which doesn't bork the existing of-based arches.
 > 
-> Hi Andres,
+> See the following patch set.  Parts 1, 2 and 3 could be applied to the
+> respective architecture trees as well as Grant's tree to aleviate some
+> conflict problems.  Part 5 could wait until a later time if necessary.
+> However, this is relatively trivial, so we could just collect ACKs and
+> put it all in Grant's tree and live with any minor pain.
 > 
-> The patch itself looks fine, but there are currently two methods for
-> extracting the device tree from open firmware; one in arch/powerpc
-> using the flattened format, and one in arch/sparc.  I don't want to
-> end up maintaining both methods in drivers/of, and there has also some
-> discussions on moving the powerpc version into common code.  I've been
-> thinking about using the powerpc approach to support ARM platforms
-> using both the flat tree and real OFW.
-> 
-> Ben, what say you?  Before I do anything I'd like to have your opinion.
-> 
+> Having OF in more than one Kconfig file should not cause any problems
+as
+> long as they are all the same.
 
-So you're saying that you want ARM (and sparc, and OLPC) to generate a
-flat tree by calling into OFW?  Sparc and OLPC have very similar
-mechanisms for getting device tree info from OFW, so it makes sense to
-share code between them.
+Ah, well, that simplifies things.. :) Thanks!
 
+Steve
 
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
