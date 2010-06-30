@@ -1,68 +1,78 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 4/4] x86: OLPC: add OLPC device-tree support
-Date: Wed, 30 Jun 2010 17:32:18 -0400
-Message-ID: <20100630173218.2bdd18d4@dev.queued.net>
-References: <20100628215407.2017bf2f@debian> <20100628220058.19e8f143@debian>
-	<AANLkTinUy_FGuN9DiF5KtMCsqYUbByfS6g2Mdw0ATvtQ@mail.gmail.com>
-	<20100629102339.5e8a30b6@dev.queued.net>
-	<AANLkTik7rqaGz7RtsOlhoSZw_-6bhv43YlWETsB17__4@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building code
+	out into drivers/of
+Date: Wed, 30 Jun 2010 15:52:51 -0600
+Message-ID: <AANLkTilme2uAoXjorUEzam9j_xosR8kl70W8PS71d-Th@mail.gmail.com>
+References: <20100628215407.2017bf2f@debian> <20100628220037.5744c207@debian>
+	<AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
+	<20100629110324.2756cc02@debian> <AANLkTinPsrqxj5oQirEDRvVOuOeWgWSdljsMRbw8wn8V@mail.gmail.com>
+	<20100629193618.5a840b8e@dev.queued.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTik7rqaGz7RtsOlhoSZw_-6bhv43YlWETsB17__4-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: pgf-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitch Bradley <wmb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20100629193618.5a840b8e@dev.queued.net>
+Sender: sparclinux-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAzMCBKdW4gMjAxMCAxNToxMzoyNiAtMDYwMApHcmFudCBMaWtlbHkgPGdyYW50Lmxp
-a2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgoKPiBPbiBUdWUsIEp1biAyOSwgMjAxMCBhdCA4OjIz
-IEFNLCBBbmRyZXMgU2Fsb21vbiA8ZGlsaW5nZXJAcXVldWVkLm5ldD4KPiB3cm90ZToKPiA+IE9u
-IFR1ZSwgMjkgSnVuIDIwMTAgMDE6MTI6MzYgLTA3MDAKPiA+IEdyYW50IExpa2VseSA8Z3JhbnQu
-bGlrZWx5QHNlY3JldGxhYi5jYT4gd3JvdGU6ClsuLi5dCj4gPj4gPiArZXh0ZXJuIHZvaWQgcHJv
-bV9idWlsZF9kZXZpY2V0cmVlKHZvaWQpOwo+ID4+ID4gKwo+ID4+ID4gK2V4dGVybiB2b2lkICpw
-cm9tX2Vhcmx5X2FsbG9jKHVuc2lnbmVkIGxvbmcgc2l6ZSk7Cj4gPj4gPiArCj4gPj4gPiArZXh0
-ZXJuIGNoYXIgKnByb21fZmlyc3Rwcm9wKHBoYW5kbGUgbm9kZSwgY2hhciAqYnVmKTsKPiA+PiA+
-ICtleHRlcm4gY2hhciAqcHJvbV9uZXh0cHJvcChwaGFuZGxlIG5vZGUsIGNvbnN0IGNoYXIgKnBy
-ZXYsIGNoYXIKPiA+PiA+ICpidWYpOyArZXh0ZXJuIGludCBwcm9tX2dldHByb3BsZW4ocGhhbmRs
-ZSBub2RlLCBjb25zdCBjaGFyCj4gPj4gPiAqcHJvcCk7ICtleHRlcm4gaW50IHByb21fZ2V0cHJv
-cGVydHkocGhhbmRsZSBub2RlLCBjb25zdCBjaGFyCj4gPj4gPiAqcHJvcCwKPiA+PiA+ICsgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjaGFyICpidWZmZXIsIGludCBi
-dWZzaXplKTsKPiA+PiA+ICtleHRlcm4gcGhhbmRsZSBwcm9tX2dldGNoaWxkKHBoYW5kbGUgbm9k
-ZSk7Cj4gPj4gPiArZXh0ZXJuIHBoYW5kbGUgcHJvbV9nZXRzaWJsaW5nKHBoYW5kbGUgbm9kZSk7
-Cj4gPj4gPiArCj4gPj4gPiArI2VuZGlmIC8qIF9fS0VSTkVMX18gKi8KPiA+PiA+ICsjZW5kaWYg
-LyogX1g4Nl9QUk9NX09MUENfSCAqLwo+ID4+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1
-ZGUvYXNtL3Byb20uaAo+ID4+ID4gYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wcm9tLmggbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKPiA+PiA+IGluZGV4IDAwMDAwMDAuLjdiNTYxYjIKPiA+PiA+IC0tLSAv
-ZGV2L251bGwKPiA+PiA+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3Byb20uaAo+ID4+ID4g
-QEAgLTAsMCArMSw1IEBACj4gPj4gPiArI2lmZGVmIENPTkZJR19PTFBDX09QRU5GSVJNV0FSRQo+
-ID4+ID4gKyMgaW5jbHVkZSA8YXNtL29scGNfcHJvbS5oPgo+ID4+ID4gKyNlbHNlCj4gPj4gPiAr
-IyBlcnJvciAiTm8gT0ZXIHByb20gZGVmaW5lZCBmb3IgeDg2ISIKPiA+PiA+ICsjZW5kaWYKPiA+
-Pgo+ID4+IFBlcnNvbmFsbHksIEkgd291bGRuJ3QgYm90aGVyIHdpdGggdGhlIGhlYWRlciBmaWxl
-IHJlZGlyZWN0aW9uLgo+ID4KPiA+IFRoZSByZWFzb24gZm9yIHRoZSBoZWFkZXIgZmlsZSByZWRp
-cmVjdGlvbiBpcyBiZWNhdXNlIHRoaXMgaXMKPiA+IE9MUEMtb25seTsgdGhlIHg4NiBmb2xrcyBk
-b24ndCB3YW50IG1lIGNsYWltaW5nIHRoaXMgdG8gYmUgdGhlIE9uZQo+ID4gVHJ1ZSB4ODYgT0ZX
-Lgo+IAo+IEhvd2V2ZXIsIHRoZSAjaWZkZWYvI2Vsc2VpZi8jZWxzZS8jZW5kaWYgYXBwcm9hY2gg
-YWxzbyBtYWtlcyB0aGUKPiBhc3N1bXB0aW9uIHRoYXQgb25seSBvbmUga2luZCBvZiBPRlcgd2ls
-bCBiZSBzdXBwb3J0ZWQgYnkgYW55IGdpdmVuCj4ga2VybmVsLiAgT3IgZm9yIHRoYXQgbWF0dGVy
-LCBib3RoIE9GVyBhbmQgdGhlIGZsYXR0ZW5lZCB0cmVlIGFsc28KPiBiZWNvbWUgbXV0dWFsbHkg
-ZXhjbHVzaXZlIGR1ZSB0byB0aGUgZGVmYXVsdCBiZWhhdmlvdXIgb3ZlcnJpZGUuCj4gCj4gQmVz
-aWRlcywgYXJlbid0IHRoZSBmdW5jdGlvbiBkZWNsYXJhdGlvbnMganVzdCB0aGUgaW50ZXJmYWNl
-IGRlZmluZWQKPiBieSB0aGUgcHJvbSBleHRyYWN0aW9uIGNvZGU/ICBJcyB0aGVyZSBhbnkgbmVl
-ZCB0byAjaWZkZWYgdGhhdCBBUEk/ICBJCj4gd291bGQgdGhpbmsgdGhvc2UgZnVuY3Rpb24gcHJv
-dG90eXBlcyBzaG91bGQgYmUgZGVmaW5lZCBieSB0aGUgaGVhZGVyCj4gZm9yIHRoZSBwcm9tIGV4
-dHJhY3Rpb24gY29kZS4KCk1tLCBib3RoIGFyZSBnb29kIHBvaW50czsgSSBzdXBwb3NlIGZvciBu
-b3cgaXQgZG9lc24ndCBodXJ0IHRvIGxvc2UgdGhlCiNpZmRlZnMsIGFuZCBkZWFsIHcvIGFkZGl0
-aW9uYWwgeDg2IHByb21zIHN1cHBvcnQgaWYgaXQgY29tZXMgdXAuCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGlu
-ZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMu
-b3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Tue, Jun 29, 2010 at 5:36 PM, Andres Salomon <dilinger@queued.net> w=
+rote:
+> On Tue, 29 Jun 2010 15:42:54 -0600
+> Grant Likely <grant.likely@secretlab.ca> wrote:
+>
+>> On Tue, Jun 29, 2010 at 9:03 AM, Andres Salomon <dilinger@queued.net=
+>
+>> wrote:
+> [...]
+>>
+>> > =A0Sparc and OLPC have very similar
+>> > mechanisms for getting device tree info from OFW, so it makes sens=
+e
+>> > to share code between them.
+>>
+>> Other than the flattened tree step; is the powerpc method dissimilar
+>> from the Sparc and OLPC method for talking to OFW? =A0(This is not a
+>> rhetorical question, I'm want to know if I'm missing some details).
+>> The main difference I know about is that OFW can still kept alive at
+>> runtime for sparc, which powerpc does not do. =A0However, keeping OF=
+W
+>> callable is a separate issue from how to extract the device tree.
+>>
+>
+> After having a look at powerpc's flatten_device_tree, I don't see any
+> obvious reason why OLPC couldn't use this
+
+Okay.
+
+>(though it still strikes me
+> as weird to go from prom->fdt->dt when the option of prom->dt is
+> available and less complex).
+
+Which is why I didn't simply NACK it out of hand.  It is a valid point.
+
+I'd probably be happier if both fdt and pdt used a shared set of
+utility functions for allocating and tying together the device_node
+data structures.  Then at least there would be only one instance of
+code to deal with the fiddly data structure interconnections.
+
+The nice thing about the powerpc version is that the tree can be
+extracted really early in the boot process, before any of the core
+kernel infrastructure or memory management is initialized.
+
+> Do you already have the patches that put
+> this into drivers/of/?
+
+No.
+
+g.
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
