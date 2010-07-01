@@ -1,78 +1,54 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building code
-	out into drivers/of
-Date: Wed, 30 Jun 2010 15:52:51 -0600
-Message-ID: <AANLkTilme2uAoXjorUEzam9j_xosR8kl70W8PS71d-Th@mail.gmail.com>
-References: <20100628215407.2017bf2f@debian> <20100628220037.5744c207@debian>
-	<AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
-	<20100629110324.2756cc02@debian> <AANLkTinPsrqxj5oQirEDRvVOuOeWgWSdljsMRbw8wn8V@mail.gmail.com>
-	<20100629193618.5a840b8e@dev.queued.net>
+From: Dan Williams <dan.j.williams@gmail.com>
+Subject: Re: [git pull] (updated) OF-related build breakage fixes
+Date: Thu, 1 Jul 2010 02:06:35 -0700
+Message-ID: <AANLkTimvYT9MFPzX7xmCXPZ6ScFQZxO3zSKlcqczd_GO@mail.gmail.com>
+References: <AANLkTikNcAvyHf1yHPweNBVSCSPNmq-JaEOgYW2FYUGJ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20100629193618.5a840b8e@dev.queued.net>
-Sender: sparclinux-owner@vger.kernel.org
-To: Andres Salomon <dilinger@queued.net>
-Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: multipart/mixed; boundary=0050450141328df8d3048a4fc979
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AANLkTikNcAvyHf1yHPweNBVSCSPNmq-JaEOgYW2FYUGJ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Anatolij Gustschin <agust@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 29, 2010 at 5:36 PM, Andres Salomon <dilinger@queued.net> w=
-rote:
-> On Tue, 29 Jun 2010 15:42:54 -0600
-> Grant Likely <grant.likely@secretlab.ca> wrote:
->
->> On Tue, Jun 29, 2010 at 9:03 AM, Andres Salomon <dilinger@queued.net=
->
->> wrote:
-> [...]
->>
->> > =A0Sparc and OLPC have very similar
->> > mechanisms for getting device tree info from OFW, so it makes sens=
-e
->> > to share code between them.
->>
->> Other than the flattened tree step; is the powerpc method dissimilar
->> from the Sparc and OLPC method for talking to OFW? =A0(This is not a
->> rhetorical question, I'm want to know if I'm missing some details).
->> The main difference I know about is that OFW can still kept alive at
->> runtime for sparc, which powerpc does not do. =A0However, keeping OF=
-W
->> callable is a separate issue from how to extract the device tree.
->>
->
-> After having a look at powerpc's flatten_device_tree, I don't see any
-> obvious reason why OLPC couldn't use this
+--0050450141328df8d3048a4fc979
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Okay.
+On Wed, Jun 2, 2010 at 8:06 PM, Grant Likely <grant.likely@secretlab.ca> wr=
+ote:
+> Updated pull request. =A0Added more fixes from Anatolij of the same sort.
 
->(though it still strikes me
-> as weird to go from prom->fdt->dt when the option of prom->dt is
-> available and less complex).
+Here is one more (attached) that seems to have escaped.
 
-Which is why I didn't simply NACK it out of hand.  It is a valid point.
-
-I'd probably be happier if both fdt and pdt used a shared set of
-utility functions for allocating and tying together the device_node
-data structures.  Then at least there would be only one instance of
-code to deal with the fiddly data structure interconnections.
-
-The nice thing about the powerpc version is that the tree can be
-extracted really early in the boot process, before any of the core
-kernel infrastructure or memory management is initialized.
-
-> Do you already have the patches that put
-> this into drivers/of/?
-
-No.
-
-g.
-
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
 --
-To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dan
+
+--0050450141328df8d3048a4fc979
+Content-Type: application/octet-stream; name="fix-ppc4xx-adma-build.patch"
+Content-Disposition: attachment; filename="fix-ppc4xx-adma-build.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_gb3de2rp0
+
+b2YvZG1hOiBmaXggcmVtYWluaW5nIHBwYzR4eCBidWlsZCBicmVha2FnZQoKRnJvbTogRGFuIFdp
+bGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+CgpDb21taXQgMDVjMDI1NDIgIm9mL2Rt
+YTogZml4IGJ1aWxkIGJyZWFrYWdlIGluIHBwYzR4eCBhZG1hIGRyaXZlciIKbWlzc2VkIG9uZSBj
+b252ZXJzaW9uIHNpdGUuCgpDYzogQW5hdG9saWogR3VzdHNjaGluIDxhZ3VzdEBkZW54LmRlPgpD
+YzogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNhPgpTaWduZWQtb2ZmLWJ5
+OiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4KLS0tCgogZHJpdmVycy9k
+bWEvcHBjNHh4L2FkbWEuYyB8ICAgIDQgKysrLQogMSBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb25zKC0pCgoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL3BwYzR4eC9h
+ZG1hLmMgYi9kcml2ZXJzL2RtYS9wcGM0eHgvYWRtYS5jCmluZGV4IDVhMjJjYTYuLjdjMzc0Nzkg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZG1hL3BwYzR4eC9hZG1hLmMKKysrIGIvZHJpdmVycy9kbWEv
+cHBjNHh4L2FkbWEuYwpAQCAtNDI1NywxMCArNDI1NywxMiBAQCBzdGF0aWMgaW50IHBwYzQ0MHNw
+ZV9hZG1hX3NldHVwX2lycXMoc3RydWN0IHBwYzQ0MHNwZV9hZG1hX2RldmljZSAqYWRldiwKIAkJ
+CQkgICAgIHN0cnVjdCBwcGM0NDBzcGVfYWRtYV9jaGFuICpjaGFuLAogCQkJCSAgICAgaW50ICpp
+bml0Y29kZSkKIHsKKwlzdHJ1Y3Qgb2ZfZGV2aWNlICpvZmRldjsKIAlzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wOwogCWludCByZXQ7CiAKLQlucCA9IGNvbnRhaW5lcl9vZihhZGV2LT5kZXYsIHN0cnVj
+dCBvZl9kZXZpY2UsIGRldiktPm5vZGU7CisJb2ZkZXYgPSBjb250YWluZXJfb2YoYWRldi0+ZGV2
+LCBzdHJ1Y3Qgb2ZfZGV2aWNlLCBkZXYpOworCW5wID0gb2ZkZXYtPmRldi5vZl9ub2RlOwogCWlm
+IChhZGV2LT5pZCAhPSBQUEM0NDBTUEVfWE9SX0lEKSB7CiAJCWFkZXYtPmVycl9pcnEgPSBpcnFf
+b2ZfcGFyc2VfYW5kX21hcChucCwgMSk7CiAJCWlmIChhZGV2LT5lcnJfaXJxID09IE5PX0lSUSkg
+ewo=
+--0050450141328df8d3048a4fc979--
