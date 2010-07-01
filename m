@@ -1,54 +1,66 @@
-From: Dan Williams <dan.j.williams@gmail.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [git pull] (updated) OF-related build breakage fixes
-Date: Thu, 1 Jul 2010 02:06:35 -0700
-Message-ID: <AANLkTimvYT9MFPzX7xmCXPZ6ScFQZxO3zSKlcqczd_GO@mail.gmail.com>
+Date: Thu, 1 Jul 2010 15:16:24 +0200
+Message-ID: <20100701151624.2bf6c533@wker>
 References: <AANLkTikNcAvyHf1yHPweNBVSCSPNmq-JaEOgYW2FYUGJ@mail.gmail.com>
+	<AANLkTimvYT9MFPzX7xmCXPZ6ScFQZxO3zSKlcqczd_GO@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=0050450141328df8d3048a4fc979
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AANLkTikNcAvyHf1yHPweNBVSCSPNmq-JaEOgYW2FYUGJ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Anatolij Gustschin <agust@denx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTimvYT9MFPzX7xmCXPZ6ScFQZxO3zSKlcqczd_GO-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dan Williams <dan.j.williams-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---0050450141328df8d3048a4fc979
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, 1 Jul 2010 02:06:35 -0700
+Dan Williams <dan.j.williams-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Wed, Jun 2, 2010 at 8:06 PM, Grant Likely <grant.likely@secretlab.ca> wr=
-ote:
-> Updated pull request. =A0Added more fixes from Anatolij of the same sort.
+> of/dma: fix remaining ppc4xx build breakage
+> 
+> From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> Commit 05c02542 "of/dma: fix build breakage in ppc4xx adma driver"
+> missed one conversion site.
+> 
+> Cc: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Signed-off-by: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+>  drivers/dma/ppc4xx/adma.c |    4 +++-
+>  1 files changed, 3 insertions(+), 1 deletions(-)
 
-Here is one more (attached) that seems to have escaped.
+Acked-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 
---
-Dan
+Thanks for fixing!
 
---0050450141328df8d3048a4fc979
-Content-Type: application/octet-stream; name="fix-ppc4xx-adma-build.patch"
-Content-Disposition: attachment; filename="fix-ppc4xx-adma-build.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_gb3de2rp0
-
-b2YvZG1hOiBmaXggcmVtYWluaW5nIHBwYzR4eCBidWlsZCBicmVha2FnZQoKRnJvbTogRGFuIFdp
-bGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+CgpDb21taXQgMDVjMDI1NDIgIm9mL2Rt
-YTogZml4IGJ1aWxkIGJyZWFrYWdlIGluIHBwYzR4eCBhZG1hIGRyaXZlciIKbWlzc2VkIG9uZSBj
-b252ZXJzaW9uIHNpdGUuCgpDYzogQW5hdG9saWogR3VzdHNjaGluIDxhZ3VzdEBkZW54LmRlPgpD
-YzogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNhPgpTaWduZWQtb2ZmLWJ5
-OiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4KLS0tCgogZHJpdmVycy9k
-bWEvcHBjNHh4L2FkbWEuYyB8ICAgIDQgKysrLQogMSBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlv
-bnMoKyksIDEgZGVsZXRpb25zKC0pCgoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL3BwYzR4eC9h
-ZG1hLmMgYi9kcml2ZXJzL2RtYS9wcGM0eHgvYWRtYS5jCmluZGV4IDVhMjJjYTYuLjdjMzc0Nzkg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZG1hL3BwYzR4eC9hZG1hLmMKKysrIGIvZHJpdmVycy9kbWEv
-cHBjNHh4L2FkbWEuYwpAQCAtNDI1NywxMCArNDI1NywxMiBAQCBzdGF0aWMgaW50IHBwYzQ0MHNw
-ZV9hZG1hX3NldHVwX2lycXMoc3RydWN0IHBwYzQ0MHNwZV9hZG1hX2RldmljZSAqYWRldiwKIAkJ
-CQkgICAgIHN0cnVjdCBwcGM0NDBzcGVfYWRtYV9jaGFuICpjaGFuLAogCQkJCSAgICAgaW50ICpp
-bml0Y29kZSkKIHsKKwlzdHJ1Y3Qgb2ZfZGV2aWNlICpvZmRldjsKIAlzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wOwogCWludCByZXQ7CiAKLQlucCA9IGNvbnRhaW5lcl9vZihhZGV2LT5kZXYsIHN0cnVj
-dCBvZl9kZXZpY2UsIGRldiktPm5vZGU7CisJb2ZkZXYgPSBjb250YWluZXJfb2YoYWRldi0+ZGV2
-LCBzdHJ1Y3Qgb2ZfZGV2aWNlLCBkZXYpOworCW5wID0gb2ZkZXYtPmRldi5vZl9ub2RlOwogCWlm
-IChhZGV2LT5pZCAhPSBQUEM0NDBTUEVfWE9SX0lEKSB7CiAJCWFkZXYtPmVycl9pcnEgPSBpcnFf
-b2ZfcGFyc2VfYW5kX21hcChucCwgMSk7CiAJCWlmIChhZGV2LT5lcnJfaXJxID09IE5PX0lSUSkg
-ewo=
---0050450141328df8d3048a4fc979--
+> 
+> 
+> diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
+> index 5a22ca6..7c37479 100644
+> --- a/drivers/dma/ppc4xx/adma.c
+> +++ b/drivers/dma/ppc4xx/adma.c
+> @@ -4257,10 +4257,12 @@ static int ppc440spe_adma_setup_irqs(struct ppc440spe_adma_device *adev,
+>  				     struct ppc440spe_adma_chan *chan,
+>  				     int *initcode)
+>  {
+> +	struct of_device *ofdev;
+>  	struct device_node *np;
+>  	int ret;
+>  
+> -	np = container_of(adev->dev, struct of_device, dev)->node;
+> +	ofdev = container_of(adev->dev, struct of_device, dev);
+> +	np = ofdev->dev.of_node;
+>  	if (adev->id != PPC440SPE_XOR_ID) {
+>  		adev->err_irq = irq_of_parse_and_map(np, 1);
+>  		if (adev->err_irq == NO_IRQ) {
