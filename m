@@ -1,43 +1,36 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+From: Andres Salomon <dilinger@queued.net>
 Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building
-	code  out into drivers/of
-Date: Tue, 6 Jul 2010 02:17:51 +0000 (UTC)
-Message-ID: <20100707040734.05d625af@debxo>
-References: <20100628215407.2017bf2f@debian> <20100628220037.5744c207@debian>
+ code  out into drivers/of
+Date: Tue, 6 Jul 2010 02:17:58 +0000 (UTC)
+Message-ID: <20100707040734.05d625af__41816.6774711155$1278382678$gmane$org@debxo>
+References: <20100628215407.2017bf2f@debian>
+	<20100628220037.5744c207@debian>
 	<AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
 	<20100629110324.2756cc02@debian>
 	<AANLkTinPsrqxj5oQirEDRvVOuOeWgWSdljsMRbw8wn8V@mail.gmail.com>
 	<20100629193618.5a840b8e@dev.queued.net>
 	<AANLkTilme2uAoXjorUEzam9j_xosR8kl70W8PS71d-Th@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <sparclinux-owner@vger.kernel.org>
 Date: Wed, 7 Jul 2010 04:07:34 +0000
-In-Reply-To: <AANLkTilme2uAoXjorUEzam9j_xosR8kl70W8PS71d-Th-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: pgf-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitch Bradley <wmb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+In-Reply-To: <AANLkTilme2uAoXjorUEzam9j_xosR8kl70W8PS71d-Th@mail.gmail.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 30 Jun 2010 15:52:51 -0600
-Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+Grant Likely <grant.likely@secretlab.ca> wrote:
 
-> On Tue, Jun 29, 2010 at 5:36 PM, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> On Tue, Jun 29, 2010 at 5:36 PM, Andres Salomon <dilinger@queued.net>
 > wrote:
 > > On Tue, 29 Jun 2010 15:42:54 -0600
-> > Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > Grant Likely <grant.likely@secretlab.ca> wrote:
 > >
 > >> On Tue, Jun 29, 2010 at 9:03 AM, Andres Salomon
-> >> <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org> wrote:
+> >> <dilinger@queued.net> wrote:
 > > [...]
 > >>
 > >> > =A0Sparc and OLPC have very similar
@@ -55,20 +48,16 @@ Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 > >
 > > After having a look at powerpc's flatten_device_tree, I don't see
 > > any obvious reason why OLPC couldn't use this
-> =
-
+>=20
 > Okay.
-> =
-
+>=20
 > >(though it still strikes me
 > > as weird to go from prom->fdt->dt when the option of prom->dt is
 > > available and less complex).
-> =
-
+>=20
 > Which is why I didn't simply NACK it out of hand.  It is a valid
 > point.
-> =
-
+>=20
 > I'd probably be happier if both fdt and pdt used a shared set of
 > utility functions for allocating and tying together the device_node
 > data structures.  Then at least there would be only one instance of
@@ -119,9 +108,13 @@ that simply tracks the amount remaining in a list of chunks, and
 allocates a new chunk if necessary.
 
 
-> =
-
+>=20
 > The nice thing about the powerpc version is that the tree can be
 > extracted really early in the boot process, before any of the core
 > kernel infrastructure or memory management is initialized.
-> =
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
