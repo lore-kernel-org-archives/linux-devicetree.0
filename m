@@ -1,8 +1,8 @@
 From: Andres Salomon <dilinger@queued.net>
 Subject: Re: [PATCH 2/4] sparc: break out some prom device-tree building
  code  out into drivers/of
-Date: Tue, 6 Jul 2010 02:17:58 +0000 (UTC)
-Message-ID: <20100707040734.05d625af__41816.6774711155$1278382678$gmane$org@debxo>
+Date: Tue, 6 Jul 2010 02:17:59 +0000 (UTC)
+Message-ID: <20100707040734.05d625af__39731.5678805628$1278382679$gmane$org@debxo>
 References: <20100628215407.2017bf2f@debian>
 	<20100628220037.5744c207@debian>
 	<AANLkTilN3_ntG7AWKi-8LM9X_dZJPPlWM6xRM_V_00xU@mail.gmail.com>
@@ -13,10 +13,10 @@ References: <20100628215407.2017bf2f@debian>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <sparclinux-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Date: Wed, 7 Jul 2010 04:07:34 +0000
 In-Reply-To: <AANLkTilme2uAoXjorUEzam9j_xosR8kl70W8PS71d-Th@mail.gmail.com>
-Sender: sparclinux-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
 Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
@@ -113,8 +113,3 @@ allocates a new chunk if necessary.
 > extracted really early in the boot process, before any of the core
 > kernel infrastructure or memory management is initialized.
 >=20
---
-To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
