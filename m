@@ -1,23 +1,15 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+From: Andres Salomon <dilinger@queued.net>
 Subject: [PATCH] sparc: move is_root_node from private header to of.h
-Date: Mon, 12 Jul 2010 06:21:12 +0000 (UTC)
-Message-ID: <20100713094226.33b421dd__45308.8240967647$1278915672$gmane$org@debxo>
+Date: Mon, 12 Jul 2010 06:21:13 +0000 (UTC)
+Message-ID: <20100713094226.33b421dd__32691.9396793985$1278915673$gmane$org@debxo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Date: Tue, 13 Jul 2010 09:42:26 +0000
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
 
@@ -25,7 +17,7 @@ Make is_root_node available for all archs to use, as it's not PROM-specific.
 Also rename it to of_is_root_node, and a few other minor changes for
 style/consistency.
 
-Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Signed-off-by: Andres Salomon <dilinger@queued.net>
 ---
  arch/sparc/kernel/prom.h        |    8 --------
  arch/sparc/kernel/prom_64.c     |    6 +++---
