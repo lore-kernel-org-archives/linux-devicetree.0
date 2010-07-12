@@ -1,85 +1,112 @@
-From: Kulikov Vasiliy <segooon@gmail.com>
-Subject: [PATCH v3] ll_temac: fix DMA and memory leaks
-Date: Fri,  9 Jul 2010 21:55:13 +0400
-Message-ID: <1278698113-5713-1-git-send-email-segooon@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: kernel-janitors@vger.kernel.org
-Cc: Denis Kirjanov <dkirjanov@kernel.org>, "David S. Miller" <davem@davemloft.net>, John Linn <john.linn@xilinx.com>, Grant Likely <grant.likely@secretlab.ca>, Jiri Pirko <jpirko@redhat.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Andres Salomon <dilinger@queued.net>
+Subject: [PATCH] sparc: move is_root_node from private header to of.h
+Date: Mon, 12 Jul 2010 06:21:02 +0000 (UTC)
+Message-ID: <20100713094226.33b421dd@debxo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+Date: Tue, 13 Jul 2010 09:42:26 +0000
+Sender: sparclinux-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-temac_dma_bd_init() doesn't free DMA and memory on error. Also
-temac_stop() must free them.
 
-Signed-off-by: Denis Kirjanov <dkirjanov@kernel.org>
-Signed-off-by: Kulikov Vasiliy <segooon@gmail.com>
+Make is_root_node available for all archs to use, as it's not PROM-specific.
+Also rename it to of_is_root_node, and a few other minor changes for
+style/consistency.
+
+Signed-off-by: Andres Salomon <dilinger@queued.net>
 ---
- drivers/net/ll_temac_main.c |   38 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 38 insertions(+), 0 deletions(-)
+ arch/sparc/kernel/prom.h        |    8 --------
+ arch/sparc/kernel/prom_64.c     |    6 +++---
+ arch/sparc/kernel/prom_common.c |    2 +-
+ include/linux/of.h              |    8 ++++++++
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ll_temac_main.c b/drivers/net/ll_temac_main.c
-index 5bca20b..9090e79 100644
---- a/drivers/net/ll_temac_main.c
-+++ b/drivers/net/ll_temac_main.c
-@@ -193,6 +193,41 @@ static int temac_dcr_setup(struct temac_local *lp, struct of_device *op,
+diff --git a/arch/sparc/kernel/prom.h b/arch/sparc/kernel/prom.h
+index a8591ef..eeb04a7 100644
+--- a/arch/sparc/kernel/prom.h
++++ b/arch/sparc/kernel/prom.h
+@@ -9,14 +9,6 @@ extern void irq_trans_init(struct device_node *dp);
+ 
+ extern unsigned int prom_unique_id;
+ 
+-static inline int is_root_node(const struct device_node *dp)
+-{
+-	if (!dp)
+-		return 0;
+-
+-	return (dp->parent == NULL);
+-}
+-
+ extern char *build_path_component(struct device_node *dp);
+ extern void of_console_init(void);
+ 
+diff --git a/arch/sparc/kernel/prom_64.c b/arch/sparc/kernel/prom_64.c
+index fb06ac2..dd5e487 100644
+--- a/arch/sparc/kernel/prom_64.c
++++ b/arch/sparc/kernel/prom_64.c
+@@ -21,7 +21,7 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/lmb.h>
+-#include <linux/of_device.h>
++#include <linux/of.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/oplib.h>
+@@ -81,7 +81,7 @@ static void __init sun4v_path_component(struct device_node *dp, char *tmp_buf)
+ 		return;
+ 
+ 	regs = rprop->value;
+-	if (!is_root_node(dp->parent)) {
++	if (!of_is_root_node(dp->parent)) {
+ 		sprintf(tmp_buf, "%s@%x,%x",
+ 			dp->name,
+ 			(unsigned int) (regs->phys_addr >> 32UL),
+@@ -121,7 +121,7 @@ static void __init sun4u_path_component(struct device_node *dp, char *tmp_buf)
+ 		return;
+ 
+ 	regs = prop->value;
+-	if (!is_root_node(dp->parent)) {
++	if (!of_is_root_node(dp->parent)) {
+ 		sprintf(tmp_buf, "%s@%x,%x",
+ 			dp->name,
+ 			(unsigned int) (regs->phys_addr >> 32UL),
+diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom_common.c
+index 57ac9e2..40123a6 100644
+--- a/arch/sparc/kernel/prom_common.c
++++ b/arch/sparc/kernel/prom_common.c
+@@ -244,7 +244,7 @@ char * __init build_full_name(struct device_node *dp)
+ 
+ 	n = prom_early_alloc(len);
+ 	strcpy(n, dp->parent->full_name);
+-	if (!is_root_node(dp->parent)) {
++	if (!of_is_root_node(dp->parent)) {
+ 		strcpy(n + plen, "/");
+ 		plen++;
+ 	}
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a367e19..b38cdf7 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -97,6 +97,14 @@ extern struct device_node *of_node_get(struct device_node *node);
+ extern void of_node_put(struct device_node *node);
  #endif
  
- /**
-+ *  * temac_dma_bd_release - Release buffer descriptor rings
-+ */
-+static void temac_dma_bd_release(struct net_device *ndev)
++static inline bool of_is_root_node(const struct device_node *node)
 +{
-+	struct temac_local *lp = netdev_priv(ndev);
-+	int i;
++	if (!node)
++		return false;
 +
-+	if (lp->rx_skb) {
-+		for (i = 0; i < RX_BD_NUM; i++) {
-+			if (!lp->rx_skb[i])
-+				break;
-+			dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-+				    XTE_MAX_JUMBO_FRAME_SIZE, DMA_FROM_DEVICE);
-+			dev_kfree_skb(lp->rx_skb[i]);
-+		}
-+		kfree(lp->rx_skb);
-+		lp->rx_skb = NULL;
-+	}
-+
-+	if (lp->rx_bd_v) {
-+		dma_free_coherent(ndev->dev.parent,
-+				sizeof(*lp->rx_bd_v) * RX_BD_NUM,
-+				lp->rx_bd_v, lp->rx_bd_p);
-+		lp->rx_bd_v = NULL;
-+	}
-+
-+	if (lp->tx_bd_v) {
-+		dma_free_coherent(ndev->dev.parent,
-+				sizeof(*lp->tx_bd_v) * TX_BD_NUM,
-+				lp->tx_bd_v, lp->tx_bd_p);
-+		lp->tx_bd_v = NULL;
-+	}
++	return (node->parent == NULL);
 +}
 +
-+/**
-  * temac_dma_bd_init - Setup buffer descriptor rings
+ /*
+  * OF address retreival & translation
   */
- static int temac_dma_bd_init(struct net_device *ndev)
-@@ -275,6 +310,7 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 	return 0;
- 
- out:
-+	temac_dma_bd_release(ndev);
- 	return -ENOMEM;
- }
- 
-@@ -858,6 +894,8 @@ static int temac_stop(struct net_device *ndev)
- 		phy_disconnect(lp->phy_dev);
- 	lp->phy_dev = NULL;
- 
-+	temac_dma_bd_release(ndev);
-+
- 	return 0;
- }
- 
 -- 
-1.7.0.4
+1.5.6.5
 
