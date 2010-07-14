@@ -1,13 +1,13 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 05/11] tulip: formatting of pointers in printk()
-Date: Wed, 14 Jul 2010 15:07:39 -0700 (PDT)
-Message-ID: <20100714.150739.193711125.davem@davemloft.net>
-References: <1279130568-10857-1-git-send-email-segooon@gmail.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: Fix a filehandle leak
+Date: Wed, 14 Jul 2010 17:31:38 -0500
+Message-ID: <E1OZAUM-0007wJ-A8@jdl.com>
+References: <20100714061056.GE23242@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279130568-10857-1-git-send-email-segooon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-reply-to: <20100714061056.GE23242@yookeroo> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,22 +17,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: segooon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: grundler-6jwH94ZQLHl74goWV3ctuw@public.gmane.org, jpirko-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyle-pfcGkIkfWfAsA/PxXw9srA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kulikov Vasiliy <segooon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Wed, 14 Jul 2010 22:02:47 +0400
-
-> Use %p instead of %08x in printk().
+> From: Martin Ettl <ettl.martin-Mmb7MZpHnFY@public.gmane.org>
 > 
-> Signed-off-by: Kulikov Vasiliy <segooon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> During a check of the current git head of the linux kernel with the
+> static code analysis tool cppcheck
+> (http://sourceforge.net/apps/mediawiki/cppcheck/index.php?title=Main_Page)
+> the tool discovered a resource leak in linux-2.6/scripts/dtc/fstree.c.
+> 
+> Please refer the attached patch, that fixes the issue.
+> 
+> Fixes https://bugzilla.kernel.org/show_bug.cgi?id=15363
+> 
+> Signed-off-by: Martin Ettl <ettl.martin-Mmb7MZpHnFY@public.gmane.org>
+> Signed-off-by: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> 
+> ---
+> 
+> Jon, please apply.
+> 
+>  scripts/dtc/fstree.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/scripts/dtc/fstree.c b/scripts/dtc/fstree.c
+> index 766b269..8fe1bdf 100644
+> --- a/scripts/dtc/fstree.c
+> +++ b/scripts/dtc/fstree.c
+> @@ -77,6 +77,7 @@ static struct node *read_fstree(const char *dirname)
+>  		free(tmpnam);
+>  	}
+>  
+> +	closedir(d);
+>  	return tree;
+>  }
+>  
+> -- 
+> 1.7.1
+> 
+> -- 
+> David Gibson			| I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _ot
+> her_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
 
-Since patch #5 and #6 are doing the same change to different
-files in the same driver, I combined them into one commit.
+Applied -p 3.
 
-There is no need to split things up with so much granularity.
-If it's all in the same driver, doing the same transformation,
-keep it all in one patch.
-
-Thanks.
+jdl
