@@ -1,77 +1,36 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] sparc: move is_root_node from private header to of.h
-Date: Mon, 12 Jul 2010 21:17:29 -0700 (PDT)
-Message-ID: <20100712.211729.73671287.davem@davemloft.net>
-References: <20100713094226.33b421dd@debxo>
-	<AANLkTinVpBjQQa93DZ17ULQdspDByGV8h037bVJ2qxGC@mail.gmail.com>
-	<20100713200541.0dc8d0be@debxo>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20100713200541.0dc8d0be@debxo>
-Sender: sparclinux-owner@vger.kernel.org
-To: dilinger@queued.net
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Kulikov Vasiliy <segooon@gmail.com>
+Subject: [PATCH 05/11] tulip: formatting of pointers in printk()
+Date: Wed, 14 Jul 2010 22:02:47 +0400
+Message-ID: <1279130568-10857-1-git-send-email-segooon@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kernel-janitors@vger.kernel.org
+Cc: Grant Grundler <grundler@parisc-linux.org>, Kyle McMartin <kyle@mcmartin.ca>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Jiri Pirko <jpirko@redhat.com>, Ben Hutchings <ben@decadent.org.uk>, Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Andres Salomon <dilinger@queued.net>
-Date: Tue, 13 Jul 2010 20:05:41 +0000
+Use %p instead of %08x in printk().
 
-> On Mon, 12 Jul 2010 09:53:04 -0600
-> Grant Likely <grant.likely@secretlab.ca> wrote:
->=20
->> On Tue, Jul 13, 2010 at 3:42 AM, Andres Salomon <dilinger@queued.net=
->
->> wrote:
->> >
->> > Make is_root_node available for all archs to use, as it's not
->> > PROM-specific. Also rename it to of_is_root_node, and a few other
->> > minor changes for style/consistency.
->> >
->> > Signed-off-by: Andres Salomon <dilinger@queued.net>
->> > ---
->> > =A0arch/sparc/kernel/prom.h =A0 =A0 =A0 =A0| =A0 =A08 --------
->> > =A0arch/sparc/kernel/prom_64.c =A0 =A0 | =A0 =A06 +++---
->> > =A0arch/sparc/kernel/prom_common.c | =A0 =A02 +-
->> > =A0include/linux/of.h =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A08 ++++++=
-++
->> > =A04 files changed, 12 insertions(+), 12 deletions(-)
->> [...]
->> > diff --git a/include/linux/of.h b/include/linux/of.h
->> > index a367e19..b38cdf7 100644
->> > --- a/include/linux/of.h
->> > +++ b/include/linux/of.h
->> > @@ -97,6 +97,14 @@ extern struct device_node *of_node_get(struct
->> > device_node *node); extern void of_node_put(struct device_node
->> > *node); #endif
->> >
->> > +static inline bool of_is_root_node(const struct device_node *node=
-)
->> > +{
->> > + =A0 =A0 =A0 if (!node)
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return false;
->> > +
->> > + =A0 =A0 =A0 return (node->parent =3D=3D NULL);
->> > +}
->>=20
->> Are you okay if I shorten this to?
->>=20
->> +static inline bool of_is_root_node(const struct device_node *node)
->> +{
->> +       return (node && (node->parent =3D=3D NULL));
->> +}
->>=20
->> g.
->=20
-> It's fine with me.
->=20
+Signed-off-by: Kulikov Vasiliy <segooon@gmail.com>
+---
+ drivers/net/tulip/tulip_core.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Me too:
-
-Acked-by: David S. Miller <davem@davemloft.net>
---
-To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/tulip/tulip_core.c b/drivers/net/tulip/tulip_core.c
+index 03e96b9..14e5312 100644
+--- a/drivers/net/tulip/tulip_core.c
++++ b/drivers/net/tulip/tulip_core.c
+@@ -596,10 +596,10 @@ static void tulip_tx_timeout(struct net_device *dev)
+ 					pr_cont(" %02x", buf[j]);
+ 			pr_cont(" j=%d\n", j);
+ 		}
+-		printk(KERN_DEBUG "  Rx ring %08x: ", (int)tp->rx_ring);
++		printk(KERN_DEBUG "  Rx ring %p: ", tp->rx_ring);
+ 		for (i = 0; i < RX_RING_SIZE; i++)
+ 			pr_cont(" %08x", (unsigned int)tp->rx_ring[i].status);
+-		printk(KERN_DEBUG "  Tx ring %08x: ", (int)tp->tx_ring);
++		printk(KERN_DEBUG "  Tx ring %p: ", tp->tx_ring);
+ 		for (i = 0; i < TX_RING_SIZE; i++)
+ 			pr_cont(" %08x", (unsigned int)tp->tx_ring[i].status);
+ 		pr_cont("\n");
+-- 
+1.7.0.4
