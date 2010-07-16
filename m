@@ -1,13 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/8] Reconfigurable FPGAs over PCIe.
-Date: Fri, 16 Jul 2010 12:22:55 -0600
-Message-ID: <AANLkTinCjN6Kce-1Uv2H6aFEU6M1PEfDVyDSrHCNBCCb@mail.gmail.com>
-References: <97058007-dca9-479d-b51f-87c369666e5e@SG2EHSMHS005.ehs.local>
+Subject: Re: [PATCH 1/8] of/fdt.c: use architecture-independent ALIGN macro,
+	defined in kernel.h
+Date: Fri, 16 Jul 2010 12:29:54 -0600
+Message-ID: <AANLkTin8GUuMjAVI-r2KNXBoH7DjsQWfTjC1inQTlD6V@mail.gmail.com>
+References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<f2cebad3-5fb1-4984-800f-ef847e388e65@SG2EHSMHS001.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <97058007-dca9-479d-b51f-87c369666e5e-RaUQJvECHitEus+KprP3J7jjLBE8jN/0@public.gmane.org>
+In-Reply-To: <f2cebad3-5fb1-4984-800f-ef847e388e65-RaUQJvECHitZbvUCbuG1mrjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,50 +25,144 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri, Jul 16, 2010 at 12:13 PM, Stephen Neuendorffer
 <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> This sequence of patches has the goal of enabling an FPGA connected
-> over PCIe to have multiple internal devices specified in a device
-> tree.. =A0Of course, such a device should work in any machine, in
-> addition to those architectures which use device trees to describe the
-> basic platform functionality: In particular, x86. =A0This requires some
-> basic support on x86 in order to make device trees work, and small
-> amount of driver code to light everything up.
->
-> This has been tested on a Virtex5 board plugged into the PCIe slot of
-> an x86 machine. =A0The device tree used looks like:
->
-> /dts-v1/;
-> / {
-> =A0 =A0 =A0 =A0#address-cells =3D <1>;
-> =A0 =A0 =A0 =A0#size-cells =3D <1>;
-> =A0 compatible =3D "simple-bus";
-> =A0 =A0 =A0 =A0mb_plb: plb@0 {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#address-cells =3D <1>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#size-cells =3D <1>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "xlnx,plb-v46-1.03.a", "xln=
-x,plb-v46-1.00.a", "simple-bus";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0xps_hwicap_0: xps-hwicap@80030000 {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "xlnx,xps-h=
-wicap-1.00.a";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D < 0x80030000 0x100=
-00 >;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0xlnx,family =3D "virtex5";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0xlnx,simulation =3D "false=
-";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0} ;
-> =A0 } ;
-> } =A0;
->
-> Note that the bulk of the code is work in progress. =A0In particular,
-> exactly how the device tree support should get extended to X86 is
-> still up for grabs. =A0In addition, there are certain aspects of the
-> device tree used which are suboptimal: The PCIe bridge translation
-> range is currently hardcoded into the driver, and there is no
-> provision for connecting interrupt lines into the PCIe bridge.
-> Comments greatly appreciated...
->
-> Grant: I've thrown in two hwicap patches, which should be final, if
-> you want to pick them up that would be great.
+> This removes an architecture dependency, making the code more generic.
 
-Okay, I'll take a look.
+A similar change will be in linux-next today.  :-)  I've recently
+updated my next-devicetree and test-devicetree branches if you would
+like to rebase.
 
 g.
+
+> ---
+> =A0drivers/of/fdt.c | =A0 20 ++++++++++----------
+> =A01 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index b6987bb..d61fda8 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -69,9 +69,9 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0u32 sz =3D be32_to_cpup((_=
+_be32 *)p);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D 8;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (be32_to_cpu(initial_bo=
+ot_params->version) < 0x10)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIG=
+N(p, sz >=3D 8 ? 8 : 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN=
+(p, sz >=3D 8 ? 8 : 4);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D sz;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p, 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p, 4);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0continue;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (tag !=3D OF_DT_BEGIN_NODE) {
+> @@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0depth++;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pathp =3D (char *)p;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p + strlen(pathp) + 1, 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p + strlen(pathp) + 1, 4);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if ((*pathp) =3D=3D '/') {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0char *lp, *np;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0for (lp =3D NULL, np =3D p=
+athp; *np; np++)
+> @@ -109,7 +109,7 @@ unsigned long __init of_get_flat_dt_root(void)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D 4;
+> =A0 =A0 =A0 =A0BUG_ON(be32_to_cpup((__be32 *)p) !=3D OF_DT_BEGIN_NODE);
+> =A0 =A0 =A0 =A0p +=3D 4;
+> - =A0 =A0 =A0 return _ALIGN(p + strlen((char *)p) + 1, 4);
+> + =A0 =A0 =A0 return ALIGN(p + strlen((char *)p) + 1, 4);
+> =A0}
+>
+> =A0/**
+> @@ -138,7 +138,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, =
+const char *name,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0noff =3D be32_to_cpup((__be32 *)(p + 4));
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D 8;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (be32_to_cpu(initial_boot_params->versi=
+on) < 0x10)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p, sz >=3D 8 ?=
+ 8 : 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p, sz >=3D 8 ? =
+8 : 4);
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0nstr =3D find_flat_dt_string(noff);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (nstr =3D=3D NULL) {
+> @@ -151,7 +151,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, =
+const char *name,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return (void *)p;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D sz;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p, 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p, 4);
+> =A0 =A0 =A0 =A0} while (1);
+> =A0}
+>
+> @@ -184,7 +184,7 @@ static void *__init unflatten_dt_alloc(unsigned long =
+*mem, unsigned long size,
+> =A0{
+> =A0 =A0 =A0 =A0void *res;
+>
+> - =A0 =A0 =A0 *mem =3D _ALIGN(*mem, align);
+> + =A0 =A0 =A0 *mem =3D ALIGN(*mem, align);
+> =A0 =A0 =A0 =A0res =3D (void *)*mem;
+> =A0 =A0 =A0 =A0*mem +=3D size;
+>
+> @@ -220,7 +220,7 @@ unsigned long __init unflatten_dt_node(unsigned long =
+mem,
+> =A0 =A0 =A0 =A0*p +=3D 4;
+> =A0 =A0 =A0 =A0pathp =3D (char *)*p;
+> =A0 =A0 =A0 =A0l =3D allocl =3D strlen(pathp) + 1;
+> - =A0 =A0 =A0 *p =3D _ALIGN(*p + l, 4);
+> + =A0 =A0 =A0 *p =3D ALIGN(*p + l, 4);
+>
+> =A0 =A0 =A0 =A0/* version 0x10 has a more compact unit name here instead =
+of the full
+> =A0 =A0 =A0 =A0 * path. we accumulate the full path size using "fpsize", =
+we'll rebuild
+> @@ -299,7 +299,7 @@ unsigned long __init unflatten_dt_node(unsigned long =
+mem,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0noff =3D be32_to_cpup((__be32 *)((*p) + 4)=
+);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*p +=3D 8;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (be32_to_cpu(initial_boot_params->versi=
+on) < 0x10)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D _ALIGN(*p, sz >=3D 8=
+ ? 8 : 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D ALIGN(*p, sz >=3D 8 =
+? 8 : 4);
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pname =3D find_flat_dt_string(noff);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (pname =3D=3D NULL) {
+> @@ -333,7 +333,7 @@ unsigned long __init unflatten_dt_node(unsigned long =
+mem,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*prev_pp =3D pp;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0prev_pp =3D &pp->next;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D _ALIGN((*p) + sz, 4);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D ALIGN((*p) + sz, 4);
+> =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0/* with version 0x10 we may not have the name property, re=
+create
+> =A0 =A0 =A0 =A0 * it here from the unit name if absent
+> --
+> 1.5.6.6
+>
+>
+>
+> This email and any attachments are intended for the sole use of the named=
+ recipient(s) and contain(s) confidential information that may be proprieta=
+ry, privileged or copyrighted under applicable law. If you are not the inte=
+nded recipient, do not read, copy, or forward this email message or any att=
+achments. Delete this email message and any attachments immediately.
+>
+>
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
