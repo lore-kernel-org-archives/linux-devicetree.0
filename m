@@ -1,17 +1,20 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/8] drivers/of: Make device tree code work on any arch.
-Date: Fri, 16 Jul 2010 11:34:50 -0700
-Message-ID: <686f0008-74c9-4ee5-bfb3-b4920835b765@SG2EHSMHS005.ehs.local>
+Subject: RE: [PATCH 4/8] of/base.c: export property access/modification
+	functions
+Date: Fri, 16 Jul 2010 11:38:17 -0700
+Message-ID: <e198df81-5939-4b82-9d27-952d9781ec05@VA3EHSMHS007.ehs.local>
 References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
-	<592c6c35-556d-4874-8b75-2ebf0acf00e9@VA3EHSMHS011.ehs.local>
-	<AANLkTimW3tsllx82F-cKtAEHGxVXwG4ESbtYWBzS17Wb@mail.gmail.com>
+	<1279304021-22216-3-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-4-git-send-email-stephen.neuendorffer@xilinx.com>
+	<01cb5edd-5330-40ba-b410-6732e44f0954@VA3EHSMHS011.ehs.local>
+	<AANLkTikwtfpH5qyG5cbsLYPHLSaAmBcHaSJT3zbt4s35@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Class: urn:content-classes:message
-In-Reply-To: <AANLkTimW3tsllx82F-cKtAEHGxVXwG4ESbtYWBzS17Wb-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <AANLkTikwtfpH5qyG5cbsLYPHLSaAmBcHaSJT3zbt4s35-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,46 +31,31 @@ List-Id: devicetree@vger.kernel.org
 
 
 > -----Original Message-----
-> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gra=
-nt Likely
-> Sent: Friday, July 16, 2010 11:32 AM
+> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of
+Grant Likely
+> Sent: Friday, July 16, 2010 11:34 AM
 > To: Stephen Neuendorffer
 > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [PATCH 2/8] drivers/of: Make device tree code work on any ar=
-ch.
-> =
-
+> Subject: Re: [PATCH 4/8] of/base.c: export property
+access/modification functions
+> 
 > On Fri, Jul 16, 2010 at 12:13 PM, Stephen Neuendorffer
 > <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> > Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> >
-> > ---
-> >
-> > I'm not sure what the right way to abstract these functions is.
-> > of_node_to_nid seems specific to those platforms which have a root
-> > device tree. =A0pci_address_to_pio seems to probably have a useful
-> > implementation, but I'm not sure what it's trying to do. =A0Perhaps
-> > someone can shed some light?
-> =
+> > These functions can be usefully used by device drivers.
+> 
+> I'd like a little more description of the intended use case.  What are
+> the circumstances where a driver needs to modify the data (this
+> information should be part of the patch description)?
 
-> Right now I'm making each arch implement the pci_address_to_pio() and
-> of_node_to_nid() hooks.  Not sure if I'll retain that in the long
-> term.  pci_address_to_pio() will probably become common code
-> eventually.
-
-One thought that I had was to factor those archs/platforms that have a root=
- device tree
-(and probably have a useful of_node_to_nid), from those that don't.  This w=
-ould also simplify
-some of the #ifdefs in drivers/of/fdt.c which pick out MICROBLAZE, POWERPC =
-and SPARC for
-the early_device_tree stuff.
+The PCIPR driver code needs to stuff the ranges property using these
+calls...
+I admit I'm somewhat nervous about making changes to the device tree
+after 
+struct device objects are generated, but don't see a way to go about
+what needs
+to be done simply without these EXPORTS.
 
 Steve
 
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
