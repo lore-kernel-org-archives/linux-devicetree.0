@@ -1,11 +1,20 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/8] Reconfigurable FPGAs over PCIe.
-Date: Fri, 16 Jul 2010 11:13:33 -0700
-Message-ID: <97058007-dca9-479d-b51f-87c369666e5e@SG2EHSMHS005.ehs.local>
+Subject: [PATCH 7/8] [Xilinx] xilinx_hwicap: Update driver to use generic io
+	accessors
+Date: Fri, 16 Jul 2010 11:13:40 -0700
+Message-ID: <b76eb511-4cf3-49ee-af81-0fe554c49e9e@SG2EHSMHS008.ehs.local>
+References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-3-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-4-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-5-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-6-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279304021-22216-7-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1279304021-22216-7-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,47 +27,243 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This sequence of patches has the goal of enabling an FPGA connected
-over PCIe to have multiple internal devices specified in a device
-tree..  Of course, such a device should work in any machine, in
-addition to those architectures which use device trees to describe the
-basic platform functionality: In particular, x86.  This requires some
-basic support on x86 in order to make device trees work, and small
-amount of driver code to light everything up.
+out_be32 and in_be32 are mainly powerpc-isms.  Switch
+to using ioread32be and iowrite32be instead.  This allows
+the code to be used on x86 or ARM, for instance.
 
-This has been tested on a Virtex5 board plugged into the PCIe slot of
-an x86 machine.  The device tree used looks like:
+signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/char/xilinx_hwicap/buffer_icap.c   |   16 +++++-----
+ drivers/char/xilinx_hwicap/fifo_icap.c     |   39 +++++++++++++--------------
+ drivers/char/xilinx_hwicap/xilinx_hwicap.c |    1 +
+ drivers/char/xilinx_hwicap/xilinx_hwicap.h |    1 +
+ 4 files changed, 29 insertions(+), 28 deletions(-)
 
-/dts-v1/;
-/ {
-	#address-cells = <1>;
-	#size-cells = <1>;
-   compatible = "simple-bus";
-	mb_plb: plb@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		compatible = "xlnx,plb-v46-1.03.a", "xlnx,plb-v46-1.00.a", "simple-bus";
-		xps_hwicap_0: xps-hwicap@80030000 {
-			compatible = "xlnx,xps-hwicap-1.00.a";
-			reg = < 0x80030000 0x10000 >;
-			xlnx,family = "virtex5";
-			xlnx,simulation = "false";
-		} ;
-   } ;
-}  ;
+diff --git a/drivers/char/xilinx_hwicap/buffer_icap.c b/drivers/char/xilinx_hwicap/buffer_icap.c
+index 05d8977..bc361fc 100644
+--- a/drivers/char/xilinx_hwicap/buffer_icap.c
++++ b/drivers/char/xilinx_hwicap/buffer_icap.c
+@@ -87,7 +87,7 @@
+  **/
+ u32 buffer_icap_get_status(struct hwicap_drvdata *drvdata)
+ {
+-	return in_be32(drvdata->base_address + XHI_STATUS_REG_OFFSET);
++	return ioread32be(drvdata->base_address + XHI_STATUS_REG_OFFSET);
+ }
+ 
+ /**
+@@ -101,7 +101,7 @@ u32 buffer_icap_get_status(struct hwicap_drvdata *drvdata)
+ static inline u32 buffer_icap_get_bram(void __iomem *base_address,
+ 		u32 offset)
+ {
+-	return in_be32(base_address + (offset << 2));
++	return ioread32be(base_address + (offset << 2));
+ }
+ 
+ /**
+@@ -114,7 +114,7 @@ static inline u32 buffer_icap_get_bram(void __iomem *base_address,
+  **/
+ static inline bool buffer_icap_busy(void __iomem *base_address)
+ {
+-	u32 status = in_be32(base_address + XHI_STATUS_REG_OFFSET);
++	u32 status = ioread32be(base_address + XHI_STATUS_REG_OFFSET);
+ 	return (status & 1) == XHI_NOT_FINISHED;
+ }
+ 
+@@ -129,7 +129,7 @@ static inline bool buffer_icap_busy(void __iomem *base_address)
+ static inline void buffer_icap_set_size(void __iomem *base_address,
+ 		u32 data)
+ {
+-	out_be32(base_address + XHI_SIZE_REG_OFFSET, data);
++	iowrite32be(data, base_address + XHI_SIZE_REG_OFFSET);
+ }
+ 
+ /**
+@@ -143,7 +143,7 @@ static inline void buffer_icap_set_size(void __iomem *base_address,
+ static inline void buffer_icap_set_offset(void __iomem *base_address,
+ 		u32 data)
+ {
+-	out_be32(base_address + XHI_BRAM_OFFSET_REG_OFFSET, data);
++	iowrite32be(data, base_address + XHI_BRAM_OFFSET_REG_OFFSET);
+ }
+ 
+ /**
+@@ -159,7 +159,7 @@ static inline void buffer_icap_set_offset(void __iomem *base_address,
+ static inline void buffer_icap_set_rnc(void __iomem *base_address,
+ 		u32 data)
+ {
+-	out_be32(base_address + XHI_RNC_REG_OFFSET, data);
++	iowrite32be(data, base_address + XHI_RNC_REG_OFFSET);
+ }
+ 
+ /**
+@@ -174,7 +174,7 @@ static inline void buffer_icap_set_rnc(void __iomem *base_address,
+ static inline void buffer_icap_set_bram(void __iomem *base_address,
+ 		u32 offset, u32 data)
+ {
+-	out_be32(base_address + (offset << 2), data);
++	iowrite32be(data, base_address + (offset << 2));
+ }
+ 
+ /**
+@@ -255,7 +255,7 @@ static int buffer_icap_device_write(struct hwicap_drvdata *drvdata,
+  **/
+ void buffer_icap_reset(struct hwicap_drvdata *drvdata)
+ {
+-    out_be32(drvdata->base_address + XHI_STATUS_REG_OFFSET, 0xFEFE);
++	iowrite32be(0xFEFE, drvdata->base_address + XHI_STATUS_REG_OFFSET);
+ }
+ 
+ /**
+diff --git a/drivers/char/xilinx_hwicap/fifo_icap.c b/drivers/char/xilinx_hwicap/fifo_icap.c
+index 02225eb..062df1d 100644
+--- a/drivers/char/xilinx_hwicap/fifo_icap.c
++++ b/drivers/char/xilinx_hwicap/fifo_icap.c
+@@ -94,7 +94,7 @@ static inline void fifo_icap_fifo_write(struct hwicap_drvdata *drvdata,
+ 		u32 data)
+ {
+ 	dev_dbg(drvdata->dev, "fifo_write: %x\n", data);
+-	out_be32(drvdata->base_address + XHI_WF_OFFSET, data);
++	iowrite32be(data, drvdata->base_address + XHI_WF_OFFSET);
+ }
+ 
+ /**
+@@ -105,7 +105,7 @@ static inline void fifo_icap_fifo_write(struct hwicap_drvdata *drvdata,
+  **/
+ static inline u32 fifo_icap_fifo_read(struct hwicap_drvdata *drvdata)
+ {
+-	u32 data = in_be32(drvdata->base_address + XHI_RF_OFFSET);
++	u32 data = ioread32be(drvdata->base_address + XHI_RF_OFFSET);
+ 	dev_dbg(drvdata->dev, "fifo_read: %x\n", data);
+ 	return data;
+ }
+@@ -118,7 +118,7 @@ static inline u32 fifo_icap_fifo_read(struct hwicap_drvdata *drvdata)
+ static inline void fifo_icap_set_read_size(struct hwicap_drvdata *drvdata,
+ 		u32 data)
+ {
+-	out_be32(drvdata->base_address + XHI_SZ_OFFSET, data);
++	iowrite32be(data, drvdata->base_address + XHI_SZ_OFFSET);
+ }
+ 
+ /**
+@@ -127,7 +127,7 @@ static inline void fifo_icap_set_read_size(struct hwicap_drvdata *drvdata,
+  **/
+ static inline void fifo_icap_start_config(struct hwicap_drvdata *drvdata)
+ {
+-	out_be32(drvdata->base_address + XHI_CR_OFFSET, XHI_CR_WRITE_MASK);
++	iowrite32be(XHI_CR_WRITE_MASK, drvdata->base_address + XHI_CR_OFFSET);
+ 	dev_dbg(drvdata->dev, "configuration started\n");
+ }
+ 
+@@ -137,7 +137,7 @@ static inline void fifo_icap_start_config(struct hwicap_drvdata *drvdata)
+  **/
+ static inline void fifo_icap_start_readback(struct hwicap_drvdata *drvdata)
+ {
+-	out_be32(drvdata->base_address + XHI_CR_OFFSET, XHI_CR_READ_MASK);
++	iowrite32be(XHI_CR_READ_MASK, drvdata->base_address + XHI_CR_OFFSET);
+ 	dev_dbg(drvdata->dev, "readback started\n");
+ }
+ 
+@@ -159,7 +159,7 @@ static inline void fifo_icap_start_readback(struct hwicap_drvdata *drvdata)
+  **/
+ u32 fifo_icap_get_status(struct hwicap_drvdata *drvdata)
+ {
+-	u32 status = in_be32(drvdata->base_address + XHI_SR_OFFSET);
++	u32 status = ioread32be(drvdata->base_address + XHI_SR_OFFSET);
+ 	dev_dbg(drvdata->dev, "Getting status = %x\n", status);
+ 	return status;
+ }
+@@ -170,7 +170,7 @@ u32 fifo_icap_get_status(struct hwicap_drvdata *drvdata)
+  **/
+ static inline u32 fifo_icap_busy(struct hwicap_drvdata *drvdata)
+ {
+-	u32 status = in_be32(drvdata->base_address + XHI_SR_OFFSET);
++	u32 status = ioread32be(drvdata->base_address + XHI_SR_OFFSET);
+ 	return (status & XHI_SR_DONE_MASK) ? 0 : 1;
+ }
+ 
+@@ -183,7 +183,7 @@ static inline u32 fifo_icap_busy(struct hwicap_drvdata *drvdata)
+ static inline u32 fifo_icap_write_fifo_vacancy(
+ 		struct hwicap_drvdata *drvdata)
+ {
+-	return in_be32(drvdata->base_address + XHI_WFV_OFFSET);
++	return ioread32be(drvdata->base_address + XHI_WFV_OFFSET);
+ }
+ 
+ /**
+@@ -195,7 +195,7 @@ static inline u32 fifo_icap_write_fifo_vacancy(
+ static inline u32 fifo_icap_read_fifo_occupancy(
+ 		struct hwicap_drvdata *drvdata)
+ {
+-	return in_be32(drvdata->base_address + XHI_RFO_OFFSET);
++	return ioread32be(drvdata->base_address + XHI_RFO_OFFSET);
+ }
+ 
+ /**
+@@ -361,13 +361,12 @@ void fifo_icap_reset(struct hwicap_drvdata *drvdata)
+ 	 * Reset the device by setting/clearing the RESET bit in the
+ 	 * Control Register.
+ 	 */
+-	reg_data = in_be32(drvdata->base_address + XHI_CR_OFFSET);
++	reg_data = ioread32be(drvdata->base_address + XHI_CR_OFFSET);
+ 
+-	out_be32(drvdata->base_address + XHI_CR_OFFSET,
+-				reg_data | XHI_CR_SW_RESET_MASK);
+-
+-	out_be32(drvdata->base_address + XHI_CR_OFFSET,
+-				reg_data & (~XHI_CR_SW_RESET_MASK));
++	iowrite32be(reg_data | XHI_CR_SW_RESET_MASK,
++		    drvdata->base_address + XHI_CR_OFFSET);
++	iowrite32be(reg_data & (~XHI_CR_SW_RESET_MASK),
++		    drvdata->base_address + XHI_CR_OFFSET);
+ 
+ }
+ 
+@@ -382,12 +381,12 @@ void fifo_icap_flush_fifo(struct hwicap_drvdata *drvdata)
+ 	 * Flush the FIFO by setting/clearing the FIFO Clear bit in the
+ 	 * Control Register.
+ 	 */
+-	reg_data = in_be32(drvdata->base_address + XHI_CR_OFFSET);
++	reg_data = ioread32be(drvdata->base_address + XHI_CR_OFFSET);
+ 
+-	out_be32(drvdata->base_address + XHI_CR_OFFSET,
+-				reg_data | XHI_CR_FIFO_CLR_MASK);
++	iowrite32be(reg_data | XHI_CR_FIFO_CLR_MASK,
++		    drvdata->base_address + XHI_CR_OFFSET);
+ 
+-	out_be32(drvdata->base_address + XHI_CR_OFFSET,
+-				reg_data & (~XHI_CR_FIFO_CLR_MASK));
++	iowrite32be(reg_data & (~XHI_CR_FIFO_CLR_MASK),
++		    drvdata->base_address + XHI_CR_OFFSET);
+ }
+ 
+diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.c b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
+index ed8a9ce..0c5a3d5 100644
+--- a/drivers/char/xilinx_hwicap/xilinx_hwicap.c
++++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
+@@ -96,6 +96,7 @@
+ /* For open firmware. */
+ #include <linux/of_device.h>
+ #include <linux/of_platform.h>
++#include <linux/of_address.h>
+ #endif
+ 
+ #include "xilinx_hwicap.h"
+diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.h b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
+index 8cca119..09449f3 100644
+--- a/drivers/char/xilinx_hwicap/xilinx_hwicap.h
++++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
+@@ -38,6 +38,7 @@
+ #include <linux/platform_device.h>
+ 
+ #include <asm/io.h>
++#include <asm/iomap.h>
+ 
+ struct hwicap_drvdata {
+ 	u32 write_buffer_in_use;  /* Always in [0,3] */
+-- 
+1.5.6.6
 
-Note that the bulk of the code is work in progress.  In particular,
-exactly how the device tree support should get extended to X86 is
-still up for grabs.  In addition, there are certain aspects of the
-device tree used which are suboptimal: The PCIe bridge translation
-range is currently hardcoded into the driver, and there is no
-provision for connecting interrupt lines into the PCIe bridge.
-Comments greatly appreciated...
-
-Grant: I've thrown in two hwicap patches, which should be final, if
-you want to pick them up that would be great.
-
-Steve
 
 
 This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
