@@ -1,20 +1,15 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 7/8] [Xilinx] xilinx_hwicap: Update driver to use generic io
-	accessors
-Date: Fri, 16 Jul 2010 11:13:40 -0700
-Message-ID: <b76eb511-4cf3-49ee-af81-0fe554c49e9e@SG2EHSMHS008.ehs.local>
+Subject: [PATCH 3/8] of/fdt: Add unflatten_partial_device_tree
+Date: Fri, 16 Jul 2010 11:13:36 -0700
+Message-ID: <91a7e060-e748-47d5-aa7d-4fc45343d212@SG2EHSMHS005.ehs.local>
 References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-3-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-4-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-5-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-6-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-7-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279304021-22216-7-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1279304021-22216-3-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,240 +22,413 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-out_be32 and in_be32 are mainly powerpc-isms.  Switch
-to using ioread32be and iowrite32be instead.  This allows
-the code to be used on x86 or ARM, for instance.
+This code allows a user to parse a partial device tree blob, which is
+structurally independent of any toplevel blob.
+Previously, this code assumed that the blob comes from initial_boot_params.
+Now, unflatten_partial_device_tree can take a blob from an arbitrary position,
+and the location of the blob gets passed around to the various support functions.
 
-signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/char/xilinx_hwicap/buffer_icap.c   |   16 +++++-----
- drivers/char/xilinx_hwicap/fifo_icap.c     |   39 +++++++++++++--------------
- drivers/char/xilinx_hwicap/xilinx_hwicap.c |    1 +
- drivers/char/xilinx_hwicap/xilinx_hwicap.h |    1 +
- 4 files changed, 29 insertions(+), 28 deletions(-)
+ drivers/of/fdt.c       |  169 +++++++++++++++++++++++++++++++++--------------
+ include/linux/of_fdt.h |   11 ++-
+ 2 files changed, 126 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/char/xilinx_hwicap/buffer_icap.c b/drivers/char/xilinx_hwicap/buffer_icap.c
-index 05d8977..bc361fc 100644
---- a/drivers/char/xilinx_hwicap/buffer_icap.c
-+++ b/drivers/char/xilinx_hwicap/buffer_icap.c
-@@ -87,7 +87,7 @@
-  **/
- u32 buffer_icap_get_status(struct hwicap_drvdata *drvdata)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index d61fda8..89fb1f3 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -11,10 +11,12 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/initrd.h>
++#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/string.h>
+ #include <linux/errno.h>
++#include <linux/slab.h>
+ 
+ #ifdef CONFIG_PPC
+ #include <asm/machdep.h>
+@@ -22,15 +24,19 @@
+ 
+ #include <asm/page.h>
+ 
+-int __initdata dt_root_addr_cells;
+-int __initdata dt_root_size_cells;
++int dt_root_addr_cells;
++int dt_root_size_cells;
+ 
+ struct boot_param_header *initial_boot_params;
+ 
+-char *find_flat_dt_string(u32 offset)
++void __unflatten_device_tree(unsigned long *blob, struct device_node **mynodes,
++			     unsigned long (*dt_alloc)(u64 size, u64 align));
++
++char *find_flat_dt_string(u32 offset,
++			  struct boot_param_header *blob)
  {
--	return in_be32(drvdata->base_address + XHI_STATUS_REG_OFFSET);
-+	return ioread32be(drvdata->base_address + XHI_STATUS_REG_OFFSET);
+-	return ((char *)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_strings) + offset;
++	return ((char *)blob) +
++		be32_to_cpu(blob->off_dt_strings) + offset;
  }
  
  /**
-@@ -101,7 +101,7 @@ u32 buffer_icap_get_status(struct hwicap_drvdata *drvdata)
- static inline u32 buffer_icap_get_bram(void __iomem *base_address,
- 		u32 offset)
+@@ -118,8 +124,9 @@ unsigned long __init of_get_flat_dt_root(void)
+  * This function can be used within scan_flattened_dt callback to get
+  * access to properties
+  */
+-void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+-				 unsigned long *size)
++void * __init of_get_flat_dt_prop(unsigned long node, const char *name,
++				 unsigned long *size,
++				 struct boot_param_header *blob)
  {
--	return in_be32(base_address + (offset << 2));
-+	return ioread32be(base_address + (offset << 2));
+ 	unsigned long p = node;
+ 
+@@ -140,7 +147,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 		if (be32_to_cpu(initial_boot_params->version) < 0x10)
+ 			p = ALIGN(p, sz >= 8 ? 8 : 4);
+ 
+-		nstr = find_flat_dt_string(noff);
++		nstr = find_flat_dt_string(noff, blob);
+ 		if (nstr == NULL) {
+ 			pr_warning("Can't find property index name !\n");
+ 			return NULL;
+@@ -160,12 +167,13 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+  * @node: node to test
+  * @compat: compatible string to compare with compatible list.
+  */
+-int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
++int  of_flat_dt_is_compatible(unsigned long node, const char *compat,
++				 struct boot_param_header *blob)
+ {
+ 	const char *cp;
+ 	unsigned long cplen, l;
+ 
+-	cp = of_get_flat_dt_prop(node, "compatible", &cplen);
++	cp = of_get_flat_dt_prop(node, "compatible", &cplen, blob);
+ 	if (cp == NULL)
+ 		return 0;
+ 	while (cplen > 0) {
+@@ -179,7 +187,7 @@ int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
+ 	return 0;
  }
  
+-static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
++static void *unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+ 				       unsigned long align)
+ {
+ 	void *res;
+@@ -198,11 +206,12 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+  * @allnextpp: pointer to ->allnext from last allocated device_node
+  * @fpsize: Size of the node path up at the current depth.
+  */
+-unsigned long __init unflatten_dt_node(unsigned long mem,
+-					unsigned long *p,
+-					struct device_node *dad,
+-					struct device_node ***allnextpp,
+-					unsigned long fpsize)
++unsigned long unflatten_dt_node(unsigned long mem,
++				unsigned long *p,
++				struct device_node *dad,
++				struct device_node ***allnextpp,
++				unsigned long fpsize,
++				struct boot_param_header *blob)
+ {
+ 	struct device_node *np;
+ 	struct property *pp, **prev_pp = NULL;
+@@ -298,10 +307,10 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		sz = be32_to_cpup((__be32 *)(*p));
+ 		noff = be32_to_cpup((__be32 *)((*p) + 4));
+ 		*p += 8;
+-		if (be32_to_cpu(initial_boot_params->version) < 0x10)
++		if (be32_to_cpu(blob->version) < 0x10)
+ 			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
+ 
+-		pname = find_flat_dt_string(noff);
++		pname = find_flat_dt_string(noff, blob);
+ 		if (pname == NULL) {
+ 			pr_info("Can't find property name in list !\n");
+ 			break;
+@@ -380,7 +389,8 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		if (tag == OF_DT_NOP)
+ 			*p += 4;
+ 		else
+-			mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
++			mem = unflatten_dt_node(mem, p, np, allnextpp,
++						fpsize, blob);
+ 		tag = be32_to_cpup((__be32 *)(*p));
+ 	}
+ 	if (tag != OF_DT_END_NODE) {
+@@ -391,6 +401,8 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 	return mem;
+ }
+ 
++#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC) || defined(CONFIG_SPARC)
++
+ #ifdef CONFIG_BLK_DEV_INITRD
  /**
-@@ -114,7 +114,7 @@ static inline u32 buffer_icap_get_bram(void __iomem *base_address,
-  **/
- static inline bool buffer_icap_busy(void __iomem *base_address)
+  * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+@@ -403,12 +415,14 @@ void __init early_init_dt_check_for_initrd(unsigned long node)
+ 
+ 	pr_debug("Looking for initrd properties... ");
+ 
+-	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
++	prop = of_get_flat_dt_prop(node, "linux,initrd-start",
++				   &len, initial_boot_params);
+ 	if (!prop)
+ 		return;
+ 	start = of_read_ulong(prop, len/4);
+ 
+-	prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
++	prop = of_get_flat_dt_prop(node, "linux,initrd-end",
++				   &len, initial_boot_params);
+ 	if (!prop)
+ 		return;
+ 	end = of_read_ulong(prop, len/4);
+@@ -436,12 +450,14 @@ int __init early_init_dt_scan_root(unsigned long node, const char *uname,
+ 	dt_root_size_cells = OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
+ 	dt_root_addr_cells = OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+ 
+-	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
++	prop = of_get_flat_dt_prop(node, "#size-cells",
++				   NULL, initial_boot_params);
+ 	if (prop)
+ 		dt_root_size_cells = be32_to_cpup(prop);
+ 	pr_debug("dt_root_size_cells = %x\n", dt_root_size_cells);
+ 
+-	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
++	prop = of_get_flat_dt_prop(node, "#address-cells",
++				   NULL, initial_boot_params);
+ 	if (prop)
+ 		dt_root_addr_cells = be32_to_cpup(prop);
+ 	pr_debug("dt_root_addr_cells = %x\n", dt_root_addr_cells);
+@@ -450,7 +466,7 @@ int __init early_init_dt_scan_root(unsigned long node, const char *uname,
+ 	return 1;
+ }
+ 
+-u64 __init dt_mem_next_cell(int s, __be32 **cellp)
++u64  dt_mem_next_cell(int s, __be32 **cellp)
  {
--	u32 status = in_be32(base_address + XHI_STATUS_REG_OFFSET);
-+	u32 status = ioread32be(base_address + XHI_STATUS_REG_OFFSET);
- 	return (status & 1) == XHI_NOT_FINISHED;
- }
+ 	__be32 *p = *cellp;
  
-@@ -129,7 +129,7 @@ static inline bool buffer_icap_busy(void __iomem *base_address)
- static inline void buffer_icap_set_size(void __iomem *base_address,
- 		u32 data)
+@@ -464,7 +480,8 @@ u64 __init dt_mem_next_cell(int s, __be32 **cellp)
+ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data)
  {
--	out_be32(base_address + XHI_SIZE_REG_OFFSET, data);
-+	iowrite32be(data, base_address + XHI_SIZE_REG_OFFSET);
- }
+-	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	char *type = of_get_flat_dt_prop(node, "device_type",
++					 NULL, initial_boot_params);
+ 	__be32 *reg, *endp;
+ 	unsigned long l;
  
- /**
-@@ -143,7 +143,7 @@ static inline void buffer_icap_set_size(void __iomem *base_address,
- static inline void buffer_icap_set_offset(void __iomem *base_address,
- 		u32 data)
- {
--	out_be32(base_address + XHI_BRAM_OFFSET_REG_OFFSET, data);
-+	iowrite32be(data, base_address + XHI_BRAM_OFFSET_REG_OFFSET);
- }
+@@ -479,9 +496,10 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 	} else if (strcmp(type, "memory") != 0)
+ 		return 0;
  
- /**
-@@ -159,7 +159,7 @@ static inline void buffer_icap_set_offset(void __iomem *base_address,
- static inline void buffer_icap_set_rnc(void __iomem *base_address,
- 		u32 data)
- {
--	out_be32(base_address + XHI_RNC_REG_OFFSET, data);
-+	iowrite32be(data, base_address + XHI_RNC_REG_OFFSET);
- }
+-	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory",
++				  &l, initial_boot_params);
+ 	if (reg == NULL)
+-		reg = of_get_flat_dt_prop(node, "reg", &l);
++		reg = of_get_flat_dt_prop(node, "reg", &l, initial_boot_params);
+ 	if (reg == NULL)
+ 		return 0;
  
- /**
-@@ -174,7 +174,7 @@ static inline void buffer_icap_set_rnc(void __iomem *base_address,
- static inline void buffer_icap_set_bram(void __iomem *base_address,
- 		u32 offset, u32 data)
- {
--	out_be32(base_address + (offset << 2), data);
-+	iowrite32be(data, base_address + (offset << 2));
- }
+@@ -521,12 +539,12 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
  
- /**
-@@ -255,7 +255,7 @@ static int buffer_icap_device_write(struct hwicap_drvdata *drvdata,
-  **/
- void buffer_icap_reset(struct hwicap_drvdata *drvdata)
- {
--    out_be32(drvdata->base_address + XHI_STATUS_REG_OFFSET, 0xFEFE);
-+	iowrite32be(0xFEFE, drvdata->base_address + XHI_STATUS_REG_OFFSET);
- }
+ 	early_init_dt_check_for_initrd(node);
  
- /**
-diff --git a/drivers/char/xilinx_hwicap/fifo_icap.c b/drivers/char/xilinx_hwicap/fifo_icap.c
-index 02225eb..062df1d 100644
---- a/drivers/char/xilinx_hwicap/fifo_icap.c
-+++ b/drivers/char/xilinx_hwicap/fifo_icap.c
-@@ -94,7 +94,7 @@ static inline void fifo_icap_fifo_write(struct hwicap_drvdata *drvdata,
- 		u32 data)
- {
- 	dev_dbg(drvdata->dev, "fifo_write: %x\n", data);
--	out_be32(drvdata->base_address + XHI_WF_OFFSET, data);
-+	iowrite32be(data, drvdata->base_address + XHI_WF_OFFSET);
- }
++#ifdef CONFIG_CMDLINE
+ 	/* Retreive command line */
+-	p = of_get_flat_dt_prop(node, "bootargs", &l);
++	p = of_get_flat_dt_prop(node, "bootargs", &l, initial_boot_params);
+ 	if (p != NULL && l > 0)
+ 		strlcpy(cmd_line, p, min((int)l, COMMAND_LINE_SIZE));
  
- /**
-@@ -105,7 +105,7 @@ static inline void fifo_icap_fifo_write(struct hwicap_drvdata *drvdata,
-  **/
- static inline u32 fifo_icap_fifo_read(struct hwicap_drvdata *drvdata)
- {
--	u32 data = in_be32(drvdata->base_address + XHI_RF_OFFSET);
-+	u32 data = ioread32be(drvdata->base_address + XHI_RF_OFFSET);
- 	dev_dbg(drvdata->dev, "fifo_read: %x\n", data);
- 	return data;
- }
-@@ -118,7 +118,7 @@ static inline u32 fifo_icap_fifo_read(struct hwicap_drvdata *drvdata)
- static inline void fifo_icap_set_read_size(struct hwicap_drvdata *drvdata,
- 		u32 data)
- {
--	out_be32(drvdata->base_address + XHI_SZ_OFFSET, data);
-+	iowrite32be(data, drvdata->base_address + XHI_SZ_OFFSET);
- }
- 
- /**
-@@ -127,7 +127,7 @@ static inline void fifo_icap_set_read_size(struct hwicap_drvdata *drvdata,
-  **/
- static inline void fifo_icap_start_config(struct hwicap_drvdata *drvdata)
- {
--	out_be32(drvdata->base_address + XHI_CR_OFFSET, XHI_CR_WRITE_MASK);
-+	iowrite32be(XHI_CR_WRITE_MASK, drvdata->base_address + XHI_CR_OFFSET);
- 	dev_dbg(drvdata->dev, "configuration started\n");
- }
- 
-@@ -137,7 +137,7 @@ static inline void fifo_icap_start_config(struct hwicap_drvdata *drvdata)
-  **/
- static inline void fifo_icap_start_readback(struct hwicap_drvdata *drvdata)
- {
--	out_be32(drvdata->base_address + XHI_CR_OFFSET, XHI_CR_READ_MASK);
-+	iowrite32be(XHI_CR_READ_MASK, drvdata->base_address + XHI_CR_OFFSET);
- 	dev_dbg(drvdata->dev, "readback started\n");
- }
- 
-@@ -159,7 +159,7 @@ static inline void fifo_icap_start_readback(struct hwicap_drvdata *drvdata)
-  **/
- u32 fifo_icap_get_status(struct hwicap_drvdata *drvdata)
- {
--	u32 status = in_be32(drvdata->base_address + XHI_SR_OFFSET);
-+	u32 status = ioread32be(drvdata->base_address + XHI_SR_OFFSET);
- 	dev_dbg(drvdata->dev, "Getting status = %x\n", status);
- 	return status;
- }
-@@ -170,7 +170,7 @@ u32 fifo_icap_get_status(struct hwicap_drvdata *drvdata)
-  **/
- static inline u32 fifo_icap_busy(struct hwicap_drvdata *drvdata)
- {
--	u32 status = in_be32(drvdata->base_address + XHI_SR_OFFSET);
-+	u32 status = ioread32be(drvdata->base_address + XHI_SR_OFFSET);
- 	return (status & XHI_SR_DONE_MASK) ? 0 : 1;
- }
- 
-@@ -183,7 +183,7 @@ static inline u32 fifo_icap_busy(struct hwicap_drvdata *drvdata)
- static inline u32 fifo_icap_write_fifo_vacancy(
- 		struct hwicap_drvdata *drvdata)
- {
--	return in_be32(drvdata->base_address + XHI_WFV_OFFSET);
-+	return ioread32be(drvdata->base_address + XHI_WFV_OFFSET);
- }
- 
- /**
-@@ -195,7 +195,7 @@ static inline u32 fifo_icap_write_fifo_vacancy(
- static inline u32 fifo_icap_read_fifo_occupancy(
- 		struct hwicap_drvdata *drvdata)
- {
--	return in_be32(drvdata->base_address + XHI_RFO_OFFSET);
-+	return ioread32be(drvdata->base_address + XHI_RFO_OFFSET);
- }
- 
- /**
-@@ -361,13 +361,12 @@ void fifo_icap_reset(struct hwicap_drvdata *drvdata)
- 	 * Reset the device by setting/clearing the RESET bit in the
- 	 * Control Register.
- 	 */
--	reg_data = in_be32(drvdata->base_address + XHI_CR_OFFSET);
-+	reg_data = ioread32be(drvdata->base_address + XHI_CR_OFFSET);
- 
--	out_be32(drvdata->base_address + XHI_CR_OFFSET,
--				reg_data | XHI_CR_SW_RESET_MASK);
--
--	out_be32(drvdata->base_address + XHI_CR_OFFSET,
--				reg_data & (~XHI_CR_SW_RESET_MASK));
-+	iowrite32be(reg_data | XHI_CR_SW_RESET_MASK,
-+		    drvdata->base_address + XHI_CR_OFFSET);
-+	iowrite32be(reg_data & (~XHI_CR_SW_RESET_MASK),
-+		    drvdata->base_address + XHI_CR_OFFSET);
- 
- }
- 
-@@ -382,12 +381,12 @@ void fifo_icap_flush_fifo(struct hwicap_drvdata *drvdata)
- 	 * Flush the FIFO by setting/clearing the FIFO Clear bit in the
- 	 * Control Register.
- 	 */
--	reg_data = in_be32(drvdata->base_address + XHI_CR_OFFSET);
-+	reg_data = ioread32be(drvdata->base_address + XHI_CR_OFFSET);
- 
--	out_be32(drvdata->base_address + XHI_CR_OFFSET,
--				reg_data | XHI_CR_FIFO_CLR_MASK);
-+	iowrite32be(reg_data | XHI_CR_FIFO_CLR_MASK,
-+		    drvdata->base_address + XHI_CR_OFFSET);
- 
--	out_be32(drvdata->base_address + XHI_CR_OFFSET,
--				reg_data & (~XHI_CR_FIFO_CLR_MASK));
-+	iowrite32be(reg_data & (~XHI_CR_FIFO_CLR_MASK),
-+		    drvdata->base_address + XHI_CR_OFFSET);
- }
- 
-diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.c b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-index ed8a9ce..0c5a3d5 100644
---- a/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-+++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-@@ -96,6 +96,7 @@
- /* For open firmware. */
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
-+#include <linux/of_address.h>
+-#ifdef CONFIG_CMDLINE
+ #ifndef CONFIG_CMDLINE_FORCE
+ 	if (p == NULL || l == 0 || (l == 1 && (*p) == 0))
  #endif
+@@ -535,12 +553,21 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
  
- #include "xilinx_hwicap.h"
-diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.h b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
-index 8cca119..09449f3 100644
---- a/drivers/char/xilinx_hwicap/xilinx_hwicap.h
-+++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
-@@ -38,6 +38,7 @@
- #include <linux/platform_device.h>
+ 	early_init_dt_scan_chosen_arch(node);
  
- #include <asm/io.h>
-+#include <asm/iomap.h>
++#ifdef CONFIG_CMDLINE
+ 	pr_debug("Command line is: %s\n", cmd_line);
++#endif /* CONFIG_CMDLINE */
  
- struct hwicap_drvdata {
- 	u32 write_buffer_in_use;  /* Always in [0,3] */
+ 	/* break now */
+ 	return 1;
+ }
+ 
++
++static unsigned long early_device_tree_alloc(u64 size, u64 align)
++{
++	unsigned long mem = early_init_dt_alloc_memory_arch(size, align);
++	return (unsigned long) __va(mem);
++}
++
+ /**
+  * unflatten_device_tree - create tree of device_nodes from flat blob
+  *
+@@ -551,58 +578,98 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+  */
+ void __init unflatten_device_tree(void)
+ {
++	__unflatten_device_tree(initial_boot_params, &allnodes,
++				early_device_tree_alloc);
++
++	/* Get pointer to OF "/chosen" node for use everywhere */
++	of_chosen = of_find_node_by_path("/chosen");
++	if (of_chosen == NULL)
++		of_chosen = of_find_node_by_path("/chosen@0");
++}
++
++#endif
++
++static unsigned long kernel_tree_alloc(u64 size, u64 align)
++{
++	return (unsigned long) kzalloc(size, GFP_KERNEL);
++}
++
++/**
++ * unflatten_partial_device_tree - create tree of device_nodes from flat blob
++ *
++ * unflattens the device-tree passed by the firmware, creating the
++ * tree of struct device_node. It also fills the "name" and "type"
++ * pointers of the nodes so the normal device-tree walking functions
++ * can be used.
++ */
++void unflatten_partial_device_tree(unsigned long *blob,
++				   struct device_node **mynodes)
++{
++	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
++}
++EXPORT_SYMBOL(unflatten_partial_device_tree);
++
++/**
++ * __unflatten_device_tree - create tree of device_nodes from flat blob
++ *
++ * unflattens the device-tree passed by the firmware, creating the
++ * tree of struct device_node. It also fills the "name" and "type"
++ * pointers of the nodes so the normal device-tree walking functions
++ * can be used.  Memory is allocated using the given function.
++ */
++void __unflatten_device_tree(unsigned long *blob, struct device_node **mynodes,
++			     unsigned long (*dt_alloc)(u64 size, u64 align))
++{
++	struct boot_param_header *device_tree =
++		(struct boot_param_header *)blob;
+ 	unsigned long start, mem, size;
+-	struct device_node **allnextp = &allnodes;
++	struct device_node **allnextp = mynodes;
+ 
+ 	pr_debug(" -> unflatten_device_tree()\n");
+ 
+-	if (!initial_boot_params) {
++	if (!device_tree) {
+ 		pr_debug("No device tree pointer\n");
+ 		return;
+ 	}
+ 
+ 	pr_debug("Unflattening device tree:\n");
+-	pr_debug("magic: %08x\n", be32_to_cpu(initial_boot_params->magic));
+-	pr_debug("size: %08x\n", be32_to_cpu(initial_boot_params->totalsize));
+-	pr_debug("version: %08x\n", be32_to_cpu(initial_boot_params->version));
++	pr_debug("magic: %08x\n", be32_to_cpu(device_tree->magic));
++	pr_debug("size: %08x\n", be32_to_cpu(device_tree->totalsize));
++	pr_debug("version: %08x\n", be32_to_cpu(device_tree->version));
+ 
+-	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+-		pr_err("Invalid device tree blob header\n");
++	if (be32_to_cpu(device_tree->magic) != OF_DT_HEADER) {
++		pr_err("Invalid device tree blob header %x\n",
++		       be32_to_cpu(device_tree->magic));
+ 		return;
+ 	}
+ 
+ 	/* First pass, scan for size */
+-	start = ((unsigned long)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
++	start = ((unsigned long)device_tree) +
++		be32_to_cpu(device_tree->off_dt_struct);
++	size = unflatten_dt_node(0, &start, NULL, NULL, 0, device_tree);
+ 	size = (size | 3) + 1;
+ 
+ 	pr_debug("  size is %lx, allocating...\n", size);
+ 
+ 	/* Allocate memory for the expanded device tree */
+-	mem = early_init_dt_alloc_memory_arch(size + 4,
+-			__alignof__(struct device_node));
+-	mem = (unsigned long) __va(mem);
++	mem = (unsigned long) dt_alloc(size + 4,
++		      __alignof__(struct device_node));
+ 
+ 	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
+ 
+ 	pr_debug("  unflattening %lx...\n", mem);
+ 
+ 	/* Second pass, do actual unflattening */
+-	start = ((unsigned long)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
++	start = ((unsigned long)device_tree) +
++		be32_to_cpu(device_tree->off_dt_struct);
++	unflatten_dt_node(mem, &start, NULL, &allnextp, 0, device_tree);
+ 	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
+-		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
++		pr_warning("Weird tag at end of tree: %08x\n",
++			   *((u32 *)start));
+ 	if (be32_to_cpu(((__be32 *)mem)[size / 4]) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpu(((__be32 *)mem)[size / 4]));
+ 	*allnextp = NULL;
+ 
+-	/* Get pointer to OF "/chosen" node for use everywhere */
+-	of_chosen = of_find_node_by_path("/chosen");
+-	if (of_chosen == NULL)
+-		of_chosen = of_find_node_by_path("/chosen@0");
+-
+ 	pr_debug(" <- unflatten_device_tree()\n");
+ }
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 71e1a91..2bc0754 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -64,13 +64,16 @@ extern int __initdata dt_root_size_cells;
+ extern struct boot_param_header *initial_boot_params;
+ 
+ /* For scanning the flat device-tree at boot time */
+-extern char *find_flat_dt_string(u32 offset);
++extern char *find_flat_dt_string(u32 offset,
++			  struct boot_param_header *blob);
+ extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+ 				     int depth, void *data),
+ 			   void *data);
+ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
+-				 unsigned long *size);
+-extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
++				 unsigned long *size,
++			  struct boot_param_header *blob);
++extern int of_flat_dt_is_compatible(unsigned long node, const char *name,
++			  struct boot_param_header *blob);
+ extern unsigned long of_get_flat_dt_root(void);
+ extern void early_init_dt_scan_chosen_arch(unsigned long node);
+ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+@@ -98,6 +101,8 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ 
+ /* Other Prototypes */
+ extern void unflatten_device_tree(void);
++extern void unflatten_partial_device_tree(unsigned long *blob,
++					  struct device_node **mynodes);
+ extern void early_init_devtree(void *);
+ #else /* CONFIG_OF_FLATTREE */
+ static inline void unflatten_device_tree(void) {}
 -- 
 1.5.6.6
 
