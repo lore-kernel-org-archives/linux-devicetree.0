@@ -1,14 +1,14 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/8] drivers/of: Make device tree code work on any arch.
-Date: Fri, 16 Jul 2010 11:13:35 -0700
-Message-ID: <592c6c35-556d-4874-8b75-2ebf0acf00e9@VA3EHSMHS011.ehs.local>
+Subject: [PATCH 1/8] of/fdt.c: use architecture-independent ALIGN macro,
+	defined in kernel.h
+Date: Fri, 16 Jul 2010 11:13:34 -0700
+Message-ID: <f2cebad3-5fb1-4984-800f-ef847e388e65@SG2EHSMHS001.ehs.local>
 References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279304021-22216-2-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1279304021-22216-1-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,56 +21,99 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-
+This removes an architecture dependency, making the code more generic.
 ---
+ drivers/of/fdt.c |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
 
-I'm not sure what the right way to abstract these functions is.
-of_node_to_nid seems specific to those platforms which have a root
-device tree.  pci_address_to_pio seems to probably have a useful
-implementation, but I'm not sure what it's trying to do.  Perhaps
-someone can shed some light?
----
- drivers/of/address.c |    5 +++++
- drivers/of/device.c  |    7 ++++++-
- 2 files changed, 11 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index fcadb72..61e652b 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -539,7 +539,12 @@ static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
- 	memset(r, 0, sizeof(struct resource));
- 	if (flags & IORESOURCE_IO) {
- 		unsigned long port;
-+		// FIXME: utter hack...
-+#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC)
- 		port = pci_address_to_pio(taddr);
-+#else
-+		port = -1;
-+#endif
- 		if (port == (unsigned long)-1)
- 			return -EINVAL;
- 		r->start = port;
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 5282a20..27a65fc 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -107,8 +107,13 @@ int of_device_register(struct of_device *ofdev)
- 	/* device_add will assume that this device is on the same node as
- 	 * the parent. If there is no parent defined, set the node
- 	 * explicitly */
--	if (!ofdev->dev.parent)
-+	if (!ofdev->dev.parent) {
-+#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC) || defined(CONFIG_SPARC) 
- 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
-+#else
-+		set_dev_node(&ofdev->dev, -1);
-+#endif
-+	}
- 
- 	return device_add(&ofdev->dev);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index b6987bb..d61fda8 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -69,9 +69,9 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ 			u32 sz = be32_to_cpup((__be32 *)p);
+ 			p += 8;
+ 			if (be32_to_cpu(initial_boot_params->version) < 0x10)
+-				p = _ALIGN(p, sz >= 8 ? 8 : 4);
++				p = ALIGN(p, sz >= 8 ? 8 : 4);
+ 			p += sz;
+-			p = _ALIGN(p, 4);
++			p = ALIGN(p, 4);
+ 			continue;
+ 		}
+ 		if (tag != OF_DT_BEGIN_NODE) {
+@@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ 		}
+ 		depth++;
+ 		pathp = (char *)p;
+-		p = _ALIGN(p + strlen(pathp) + 1, 4);
++		p = ALIGN(p + strlen(pathp) + 1, 4);
+ 		if ((*pathp) == '/') {
+ 			char *lp, *np;
+ 			for (lp = NULL, np = pathp; *np; np++)
+@@ -109,7 +109,7 @@ unsigned long __init of_get_flat_dt_root(void)
+ 		p += 4;
+ 	BUG_ON(be32_to_cpup((__be32 *)p) != OF_DT_BEGIN_NODE);
+ 	p += 4;
+-	return _ALIGN(p + strlen((char *)p) + 1, 4);
++	return ALIGN(p + strlen((char *)p) + 1, 4);
  }
+ 
+ /**
+@@ -138,7 +138,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 		noff = be32_to_cpup((__be32 *)(p + 4));
+ 		p += 8;
+ 		if (be32_to_cpu(initial_boot_params->version) < 0x10)
+-			p = _ALIGN(p, sz >= 8 ? 8 : 4);
++			p = ALIGN(p, sz >= 8 ? 8 : 4);
+ 
+ 		nstr = find_flat_dt_string(noff);
+ 		if (nstr == NULL) {
+@@ -151,7 +151,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 			return (void *)p;
+ 		}
+ 		p += sz;
+-		p = _ALIGN(p, 4);
++		p = ALIGN(p, 4);
+ 	} while (1);
+ }
+ 
+@@ -184,7 +184,7 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+ {
+ 	void *res;
+ 
+-	*mem = _ALIGN(*mem, align);
++	*mem = ALIGN(*mem, align);
+ 	res = (void *)*mem;
+ 	*mem += size;
+ 
+@@ -220,7 +220,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 	*p += 4;
+ 	pathp = (char *)*p;
+ 	l = allocl = strlen(pathp) + 1;
+-	*p = _ALIGN(*p + l, 4);
++	*p = ALIGN(*p + l, 4);
+ 
+ 	/* version 0x10 has a more compact unit name here instead of the full
+ 	 * path. we accumulate the full path size using "fpsize", we'll rebuild
+@@ -299,7 +299,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		noff = be32_to_cpup((__be32 *)((*p) + 4));
+ 		*p += 8;
+ 		if (be32_to_cpu(initial_boot_params->version) < 0x10)
+-			*p = _ALIGN(*p, sz >= 8 ? 8 : 4);
++			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
+ 
+ 		pname = find_flat_dt_string(noff);
+ 		if (pname == NULL) {
+@@ -333,7 +333,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 			*prev_pp = pp;
+ 			prev_pp = &pp->next;
+ 		}
+-		*p = _ALIGN((*p) + sz, 4);
++		*p = ALIGN((*p) + sz, 4);
+ 	}
+ 	/* with version 0x10 we may not have the name property, recreate
+ 	 * it here from the unit name if absent
 -- 
 1.5.6.6
 
