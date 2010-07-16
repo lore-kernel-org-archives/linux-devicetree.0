@@ -1,19 +1,17 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 6/8] [Xilinx] xilinx_pcipr: Added Xilinx reconfigurable PCI
-	endpoint driver.
-Date: Fri, 16 Jul 2010 11:13:39 -0700
-Message-ID: <19f2f30b-1b43-4729-a079-da1df0b04609@SG2EHSMHS001.ehs.local>
+Subject: [PATCH 5/8] arch/x86: Add support for device tree code.
+Date: Fri, 16 Jul 2010 11:13:38 -0700
+Message-ID: <961e55b7-170c-45ac-a491-628797a0aa5e@VA3EHSMHS006.ehs.local>
 References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-3-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-4-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279304021-22216-5-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-6-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279304021-22216-6-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1279304021-22216-5-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,259 +24,164 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This device has an internal bus which contains multiple devices, which
-are described in a device tree.
+A few support device-tree related support functions that x86 didn't
+have before.
 
 Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
 ----
 
-This is probably still preliminary, although it actually works now.
-1) It should probably correctly deallocate and free all the contained
-devices.
-2) It should probably handle different device trees for multiple boards
-in the same system.  How to do this?
+ I have no idea if continuing to add these functions to every arch is
+a good thing or whether they should (for instance) be weak symbols
+with a generic definition.
 ---
- drivers/pci/Kconfig        |    9 ++
- drivers/pci/Makefile       |    2 +
- drivers/pci/xilinx_pcipr.c |  197 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 208 insertions(+), 0 deletions(-)
- create mode 100644 drivers/pci/xilinx_pcipr.c
+ arch/x86/include/asm/device.h |    6 ++++
+ arch/x86/include/asm/irq.h    |    4 ++
+ arch/x86/kernel/Makefile      |    1 +
+ arch/x86/kernel/device_tree.c |   63 +++++++++++++++++++++++++++++++++++++++++
+ drivers/of/platform.c         |    2 +
+ include/linux/of_irq.h        |    1 +
+ 6 files changed, 77 insertions(+), 0 deletions(-)
+ create mode 100644 arch/x86/kernel/device_tree.c
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 34ef70d..ec9b25d 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -65,3 +65,12 @@ config PCI_IOAPIC
- 	depends on ACPI
- 	depends on HOTPLUG
- 	default y
-+
-+config XILINX_PCIPR
-+	tristate "Xilinx OF-based PCI endpoint"
-+	depends on PCI
-+	select OF
-+	select OF_FLATTREE
-+        select OF_DEVICE
-+	help
-+	  Enable support for Xilinx PCIPR endpoint
-\ No newline at end of file
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 0b51857..ec44c21 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -62,6 +62,8 @@ obj-$(CONFIG_PCI_SYSCALL) += syscall.o
+diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
+index 029f230..01414f2 100644
+--- a/arch/x86/include/asm/device.h
++++ b/arch/x86/include/asm/device.h
+@@ -14,6 +14,12 @@ struct dma_map_ops *dma_ops;
+ };
  
- obj-$(CONFIG_PCI_STUB) += pci-stub.o
+ struct pdev_archdata {
++#ifdef CONFIG_OF
++	u64 dma_mask;
++#endif
+ };
  
-+obj-$(CONFIG_XILINX_PCIPR) += xilinx_pcipr.o
++/* Don't override the default bus id behaviour */
++#define of_device_make_bus_id __of_device_make_bus_id
 +
- ifeq ($(CONFIG_PCI_DEBUG),y)
- EXTRA_CFLAGS += -DDEBUG
- endif
-diff --git a/drivers/pci/xilinx_pcipr.c b/drivers/pci/xilinx_pcipr.c
+ #endif /* _ASM_X86_DEVICE_H */
+diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
+index 5458380..6c61992 100644
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -10,6 +10,10 @@
+ #include <asm/apicdef.h>
+ #include <asm/irq_vectors.h>
+ 
++#define NO_IRQ (-1)
++
++#define irq_dispose_mapping(...)
++
+ static inline int irq_canonicalize(int irq)
+ {
+ 	return ((irq == 2) ? 9 : irq);
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index e77b220..a5c20e8 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -105,6 +105,7 @@ scx200-y			+= scx200_32.o
+ 
+ obj-$(CONFIG_OLPC)		+= olpc.o
+ obj-$(CONFIG_X86_MRST)		+= mrst.o
++obj-$(CONFIG_OF)		+= device_tree.o
+ 
+ microcode-y				:= microcode_core.o
+ microcode-$(CONFIG_MICROCODE_INTEL)	+= microcode_intel.o
+diff --git a/arch/x86/kernel/device_tree.c b/arch/x86/kernel/device_tree.c
 new file mode 100644
-index 0000000..80f8f1a
+index 0000000..f6d27f6
 --- /dev/null
-+++ b/drivers/pci/xilinx_pcipr.c
-@@ -0,0 +1,197 @@
-+/*
-+ *  Copyright 2010 Xilinx, Inc.
-+ *
-+ */
++++ b/arch/x86/kernel/device_tree.c
+@@ -0,0 +1,63 @@
++#undef DEBUG
 +
-+#include <linux/module.h>
-+#include <linux/types.h>
 +#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/ide.h>
-+#include <linux/init.h>
-+#include <linux/dmi.h>
-+#include <linux/firmware.h>
-+
++#include <linux/string.h>
++#include <linux/pci_regs.h>
++#include <linux/module.h>
++#include <linux/ioport.h>
++#include <linux/etherdevice.h>
 +#include <linux/of.h>
-+#include <linux/of_fdt.h>
++#include <linux/of_device.h>
 +#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
 +
-+#include <linux/io.h>
-+
-+#define DRV_NAME "xilinx_pcipr"
-+
-+struct xilinx_pcipr_drvdata {
-+	struct device_node *child_nodes;
-+	struct firmware *fw_entry;
++struct bus_type of_platform_bus_type = {
++       .uevent	= of_device_uevent,
 +};
++EXPORT_SYMBOL(of_platform_bus_type);
 +
-+/**
-+ *	xilinx_pcipr_probe - Setup the endpoint
-+ *	@dev: PCI device to set up
++static int __init of_bus_driver_init(void)
++{
++	return of_bus_type_init(&of_platform_bus_type, "of_platform");
++}
++postcore_initcall(of_bus_driver_init);
++
++/*
++ * The list of OF IDs below is used for matching bus types in the
++ * system whose devices are to be exposed as of_platform_devices.
++ *
++ * This is the default list valid for most platforms. This file provides
++ * functions who can take an explicit list if necessary though
++ *
++ * The search is always performed recursively looking for children of
++ * the provided device_node and recursively if such a children matches
++ * a bus type in the list
 + */
-+static int __devinit xilinx_pcipr_probe(struct pci_dev *pdev,
-+					const struct pci_device_id *id)
-+{
-+	int ret;
-+	struct xilinx_pcipr_drvdata *drvdata;
-+	resource_size_t start, len;
-+	struct property *ranges_prop;
-+	unsigned long *value;
-+	struct device_node *bus_node;
 +
-+	dev_dbg(&pdev->dev, "xilinx_pcipr_probe\n");
-+
-+	drvdata = kzalloc(sizeof(struct xilinx_pcipr_drvdata), GFP_KERNEL);
-+	if (!drvdata) {
-+		dev_err(&pdev->dev,
-+			"Couldn't allocate device private record\n");
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, (void *)drvdata);
-+
-+	/*
-+	 * Do some basic sanity checking..
-+	 */
-+	if (pci_enable_device(pdev)) {
-+		ret = -EBUSY;
-+		goto free;
-+	}
-+
-+	/* Enable the board to bus master. */
-+	pci_set_master(pdev);
-+
-+	if (request_firmware(&drvdata->fw_entry,
-+			    "xilinx_pcipr.dtb", &pdev->dev)) {
-+		dev_err(&pdev->dev, "Couldn't get dtb\n");
-+		ret = -ENODEV;
-+		goto disable;
-+	}
-+
-+
-+	ret = pci_request_regions(pdev, "xilinx_pcipr");
-+	if (ret)
-+		goto release_dtb;
-+
-+	if (!pci_resource_start(pdev, 0)) {
-+		dev_printk(KERN_ERR, &pdev->dev, "No cardbus resource!\n");
-+		ret = -ENODEV;
-+		goto release;
-+	}
-+
-+
-+	/*
-+	 * report the subsystem vendor and device for help debugging
-+	 * the irq stuff...
-+	 */
-+	dev_printk(KERN_INFO, &pdev->dev,
-+		   "Xilinx PCIPR bridge found [%04x:%04x]\n",
-+		   pdev->subsystem_vendor, pdev->subsystem_device);
-+
-+	/* Stuff the ranges property into the toplevel bus of the device
-+	   tree, according to how the BARs are programmed */
-+	start = pci_resource_start(pdev, 0);
-+	len = pci_resource_len(pdev, 0);
-+
-+	dev_printk(KERN_INFO, &pdev->dev,
-+		   "Xilinx PCIPR bridge range %llx %llx",
-+		   (unsigned long long) start, (unsigned long long) len);
-+
-+	ranges_prop = kzalloc(sizeof(struct property), GFP_KERNEL);
-+	ranges_prop->value = kzalloc(sizeof(unsigned long) * 3, GFP_KERNEL);
-+	ranges_prop->name = "ranges";
-+	ranges_prop->length = sizeof(unsigned long) * 3;
-+	value = (unsigned long *)ranges_prop->value;
-+	/* FIXME: gotta get this from the bridge */
-+	value[0] = cpu_to_be32(0x80000000);
-+	value[1] = cpu_to_be32(start);
-+	value[2] = cpu_to_be32(len);
-+
-+	unflatten_partial_device_tree((unsigned long *)drvdata->fw_entry->data,
-+				      &drvdata->child_nodes);
-+	of_node_get(drvdata->child_nodes);
-+	bus_node = of_find_node_by_name(drvdata->child_nodes, "plb");
-+	prom_add_property(bus_node, ranges_prop);
-+
-+	/* Generate child devices from the device tree */
-+	of_platform_bus_probe(drvdata->child_nodes, NULL, &pdev->dev);
-+
-+	pci_release_regions(pdev);
-+
-+	goto out; /* Success */
-+
-+ release:
-+	pci_release_regions(pdev);
-+
-+ release_dtb:
-+	release_firmware(drvdata->fw_entry);
-+
-+ disable:
-+	pci_disable_device(pdev);
-+ free:
-+	kfree(drvdata);
-+	dev_set_drvdata(&pdev->dev, NULL);
-+ out:
-+	return ret;
-+}
-+
-+static int __devexit xilinx_pcipr_remove(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct xilinx_pcipr_drvdata *drvdata = dev_get_drvdata(dev);
-+
-+	/* FIXME: Release the contained devices. There should probably
-+be a device-tree method to free a whole tree of devices, essentially
-+the inverse of of_platform_bus_probe
-+	*/
-+
-+	release_firmware(drvdata->fw_entry);
-+	pci_disable_device(pdev);
-+	kfree(drvdata);
-+	dev_set_drvdata(dev, NULL);
-+	return 0;
-+}
-+
-+
-+static const struct pci_device_id xilinx_pcipr_ids[] = {
-+	{ PCI_VDEVICE(XILINX, 0x0505), 0 },
-+	{ 0, },
-+};
-+MODULE_DEVICE_TABLE(pci, xilinx_pcipr_ids);
-+
-+pci_ers_result_t *xilinx_pcipr_error_detected(struct pci_dev *pdev,
-+					      enum pci_channel_state error) {
-+	dev_printk(KERN_INFO, &pdev->dev, "Error detected!\n");
-+	return PCI_ERS_RESULT_NEED_RESET;
-+}
-+
-+static struct pci_error_handlers xilinx_pcipr_error_handlers = {
-+	/* PCI bus error detected on this device */
-+	.error_detected = xilinx_pcipr_error_detected,
++const struct of_device_id of_default_bus_ids[] = {
++	{ .type = "soc", },
++	{ .compatible = "soc", },
++	{ .compatible = "simple-bus", },
++	{ .type = "plb5", },
++	{ .type = "plb4", },
++	{ .type = "opb", },
++	{ .type = "simple", },
++	{},
 +};
 +
-+static struct pci_driver  xilinx_pcipr_driver = {
-+	.name		= "XILINX_PCIPR",
-+	.id_table	= xilinx_pcipr_ids,
-+	.probe		= xilinx_pcipr_probe,
-+	.remove		= __devexit_p(xilinx_pcipr_remove),
-+	.err_handler    = &xilinx_pcipr_error_handlers,
-+};
++/*
++ * Interrupt remapper
++ */
 +
-+static int __init xilinx_pcipr_init(void)
++struct device_node *of_irq_find_parent_by_phandle(phandle p)
 +{
-+	return ide_pci_register_driver(&xilinx_pcipr_driver);
++	return of_find_node_by_phandle(p);
 +}
 +
-+static void __exit xilinx_pcipr_exit(void)
++unsigned int irq_create_of_mapping(struct device_node *controller,
++				   const u32 *intspec, unsigned int intsize)
 +{
-+	pci_unregister_driver(&xilinx_pcipr_driver);
++	return intspec[0];
 +}
-+
-+module_init(xilinx_pcipr_init);
-+module_exit(xilinx_pcipr_exit);
-+
-+MODULE_AUTHOR("Xilinx Research Labs");
-+MODULE_DESCRIPTION("PCI driver for PCI reconfigurable endpoint");
-+MODULE_LICENSE("GPL");
++EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 125f2bc..3ec3147 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -18,6 +18,8 @@
+ #include <linux/slab.h>
+ #include <linux/of_device.h>
+ #include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ 
+ extern struct device_attribute of_platform_device_attrs[];
+ 
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 5929781..25fc90d 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -7,6 +7,7 @@ struct of_irq;
+ #include <linux/errno.h>
+ #include <linux/ioport.h>
+ #include <linux/of.h>
++#include <linux/irq.h>
+ 
+ /*
+  * irq_of_parse_and_map() is used ba all OF enabled platforms; but SPARC
 -- 
 1.5.6.6
 
