@@ -1,36 +1,24 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: Fix a filehandle leak
-Date: Thu, 15 Jul 2010 07:09:13 -0500
-Message-ID: <E1OZNFZ-00018m-GN@jdl.com>
-References: <20100714061056.GE23242@yookeroo> <E1OZAUM-0007wJ-A8@jdl.com>
-	<20100715040141.GB5250@yookeroo>
+From: Kyle McMartin <kyle@mcmartin.ca>
+Subject: Re: [PATCH 05/11] tulip: formatting of pointers in printk()
+Date: Thu, 15 Jul 2010 20:46:31 -0400
+Message-ID: <20100716004631.GF10884@bombadil.infradead.org>
+References: <1279130568-10857-1-git-send-email-segooon@gmail.com>
+ <20100714.150739.193711125.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20100715040141.GB5250@yookeroo> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20100714.150739.193711125.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: segooon@gmail.com, kernel-janitors@vger.kernel.org, grundler@parisc-linux.org, kyle@mcmartin.ca, joe@perches.com, jpirko@redhat.com, ben@decadent.org.uk, grant.likely@secretlab.ca, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, Jul 14, 2010 at 05:31:38PM -0500, Jon Loeliger wrote:
-> > > From: Martin Ettl <ettl.martin-Mmb7MZpHnFY@public.gmane.org>
-> [snip]
-> > 
-> > Applied -p 3.
+On Wed, Jul 14, 2010 at 03:07:39PM -0700, David Miller wrote:
+> Since patch #5 and #6 are doing the same change to different
+> files in the same driver, I combined them into one commit.
 > 
-> Ugh, sorry.  Meant to mangle the patch to apply directly to the dtc
-> tree,  but I forgot.
 
-No worries.
+Thanks, Dave!
 
-jdl
+--Kyle
