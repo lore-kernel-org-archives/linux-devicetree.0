@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/8] of/fdt.c: use architecture-independent ALIGN macro,
-	defined in kernel.h
-Date: Fri, 16 Jul 2010 12:29:54 -0600
-Message-ID: <AANLkTin8GUuMjAVI-r2KNXBoH7DjsQWfTjC1inQTlD6V@mail.gmail.com>
+Subject: Re: [PATCH 2/8] drivers/of: Make device tree code work on any arch.
+Date: Fri, 16 Jul 2010 12:31:52 -0600
+Message-ID: <AANLkTimW3tsllx82F-cKtAEHGxVXwG4ESbtYWBzS17Wb@mail.gmail.com>
 References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<f2cebad3-5fb1-4984-800f-ef847e388e65@SG2EHSMHS001.ehs.local>
+	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
+	<592c6c35-556d-4874-8b75-2ebf0acf00e9@VA3EHSMHS011.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <f2cebad3-5fb1-4984-800f-ef847e388e65-RaUQJvECHitZbvUCbuG1mrjjLBE8jN/0@public.gmane.org>
+In-Reply-To: <592c6c35-556d-4874-8b75-2ebf0acf00e9-+Ck8Kgl/v0+Da4789yZHSLjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,127 +25,66 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri, Jul 16, 2010 at 12:13 PM, Stephen Neuendorffer
 <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> This removes an architecture dependency, making the code more generic.
+> Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>
+> ---
+>
+> I'm not sure what the right way to abstract these functions is.
+> of_node_to_nid seems specific to those platforms which have a root
+> device tree. =A0pci_address_to_pio seems to probably have a useful
+> implementation, but I'm not sure what it's trying to do. =A0Perhaps
+> someone can shed some light?
 
-A similar change will be in linux-next today.  :-)  I've recently
-updated my next-devicetree and test-devicetree branches if you would
-like to rebase.
-
-g.
+Right now I'm making each arch implement the pci_address_to_pio() and
+of_node_to_nid() hooks.  Not sure if I'll retain that in the long
+term.  pci_address_to_pio() will probably become common code
+eventually.
 
 > ---
-> =A0drivers/of/fdt.c | =A0 20 ++++++++++----------
-> =A01 files changed, 10 insertions(+), 10 deletions(-)
+> =A0drivers/of/address.c | =A0 =A05 +++++
+> =A0drivers/of/device.c =A0| =A0 =A07 ++++++-
+> =A02 files changed, 11 insertions(+), 1 deletions(-)
 >
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index b6987bb..d61fda8 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -69,9 +69,9 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0u32 sz =3D be32_to_cpup((_=
-_be32 *)p);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D 8;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (be32_to_cpu(initial_bo=
-ot_params->version) < 0x10)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIG=
-N(p, sz >=3D 8 ? 8 : 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN=
-(p, sz >=3D 8 ? 8 : 4);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D sz;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p, 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p, 4);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0continue;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (tag !=3D OF_DT_BEGIN_NODE) {
-> @@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0depth++;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pathp =3D (char *)p;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p + strlen(pathp) + 1, 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p + strlen(pathp) + 1, 4);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if ((*pathp) =3D=3D '/') {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0char *lp, *np;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0for (lp =3D NULL, np =3D p=
-athp; *np; np++)
-> @@ -109,7 +109,7 @@ unsigned long __init of_get_flat_dt_root(void)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D 4;
-> =A0 =A0 =A0 =A0BUG_ON(be32_to_cpup((__be32 *)p) !=3D OF_DT_BEGIN_NODE);
-> =A0 =A0 =A0 =A0p +=3D 4;
-> - =A0 =A0 =A0 return _ALIGN(p + strlen((char *)p) + 1, 4);
-> + =A0 =A0 =A0 return ALIGN(p + strlen((char *)p) + 1, 4);
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index fcadb72..61e652b 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -539,7 +539,12 @@ static int __of_address_to_resource(struct device_no=
+de *dev, const u32 *addrp,
+> =A0 =A0 =A0 =A0memset(r, 0, sizeof(struct resource));
+> =A0 =A0 =A0 =A0if (flags & IORESOURCE_IO) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned long port;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 // FIXME: utter hack...
+> +#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0port =3D pci_address_to_pio(taddr);
+> +#else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 port =3D -1;
+> +#endif
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (port =3D=3D (unsigned long)-1)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0r->start =3D port;
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 5282a20..27a65fc 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -107,8 +107,13 @@ int of_device_register(struct of_device *ofdev)
+> =A0 =A0 =A0 =A0/* device_add will assume that this device is on the same =
+node as
+> =A0 =A0 =A0 =A0 * the parent. If there is no parent defined, set the node
+> =A0 =A0 =A0 =A0 * explicitly */
+> - =A0 =A0 =A0 if (!ofdev->dev.parent)
+> + =A0 =A0 =A0 if (!ofdev->dev.parent) {
+> +#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC) || defined(CON=
+FIG_SPARC)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0set_dev_node(&ofdev->dev, of_node_to_nid(o=
+fdev->dev.of_node));
+> +#else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 set_dev_node(&ofdev->dev, -1);
+> +#endif
+> + =A0 =A0 =A0 }
+>
+> =A0 =A0 =A0 =A0return device_add(&ofdev->dev);
 > =A0}
->
-> =A0/**
-> @@ -138,7 +138,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, =
-const char *name,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0noff =3D be32_to_cpup((__be32 *)(p + 4));
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D 8;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (be32_to_cpu(initial_boot_params->versi=
-on) < 0x10)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p, sz >=3D 8 ?=
- 8 : 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p, sz >=3D 8 ? =
-8 : 4);
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0nstr =3D find_flat_dt_string(noff);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (nstr =3D=3D NULL) {
-> @@ -151,7 +151,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, =
-const char *name,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return (void *)p;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p +=3D sz;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D _ALIGN(p, 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D ALIGN(p, 4);
-> =A0 =A0 =A0 =A0} while (1);
-> =A0}
->
-> @@ -184,7 +184,7 @@ static void *__init unflatten_dt_alloc(unsigned long =
-*mem, unsigned long size,
-> =A0{
-> =A0 =A0 =A0 =A0void *res;
->
-> - =A0 =A0 =A0 *mem =3D _ALIGN(*mem, align);
-> + =A0 =A0 =A0 *mem =3D ALIGN(*mem, align);
-> =A0 =A0 =A0 =A0res =3D (void *)*mem;
-> =A0 =A0 =A0 =A0*mem +=3D size;
->
-> @@ -220,7 +220,7 @@ unsigned long __init unflatten_dt_node(unsigned long =
-mem,
-> =A0 =A0 =A0 =A0*p +=3D 4;
-> =A0 =A0 =A0 =A0pathp =3D (char *)*p;
-> =A0 =A0 =A0 =A0l =3D allocl =3D strlen(pathp) + 1;
-> - =A0 =A0 =A0 *p =3D _ALIGN(*p + l, 4);
-> + =A0 =A0 =A0 *p =3D ALIGN(*p + l, 4);
->
-> =A0 =A0 =A0 =A0/* version 0x10 has a more compact unit name here instead =
-of the full
-> =A0 =A0 =A0 =A0 * path. we accumulate the full path size using "fpsize", =
-we'll rebuild
-> @@ -299,7 +299,7 @@ unsigned long __init unflatten_dt_node(unsigned long =
-mem,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0noff =3D be32_to_cpup((__be32 *)((*p) + 4)=
-);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*p +=3D 8;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (be32_to_cpu(initial_boot_params->versi=
-on) < 0x10)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D _ALIGN(*p, sz >=3D 8=
- ? 8 : 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D ALIGN(*p, sz >=3D 8 =
-? 8 : 4);
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pname =3D find_flat_dt_string(noff);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (pname =3D=3D NULL) {
-> @@ -333,7 +333,7 @@ unsigned long __init unflatten_dt_node(unsigned long =
-mem,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*prev_pp =3D pp;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0prev_pp =3D &pp->next;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D _ALIGN((*p) + sz, 4);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *p =3D ALIGN((*p) + sz, 4);
-> =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0/* with version 0x10 we may not have the name property, re=
-create
-> =A0 =A0 =A0 =A0 * it here from the unit name if absent
 > --
 > 1.5.6.6
 >
