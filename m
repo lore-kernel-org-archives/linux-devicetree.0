@@ -1,14 +1,11 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/8] of/fdt.c: use architecture-independent ALIGN macro,
-	defined in kernel.h
-Date: Fri, 16 Jul 2010 11:13:34 -0700
-Message-ID: <f2cebad3-5fb1-4984-800f-ef847e388e65@SG2EHSMHS001.ehs.local>
-References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
+Subject: [PATCH 0/8] Reconfigurable FPGAs over PCIe.
+Date: Fri, 16 Jul 2010 11:13:33 -0700
+Message-ID: <97058007-dca9-479d-b51f-87c369666e5e@SG2EHSMHS005.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279304021-22216-1-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,102 +18,47 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This removes an architecture dependency, making the code more generic.
----
- drivers/of/fdt.c |   20 ++++++++++----------
- 1 files changed, 10 insertions(+), 10 deletions(-)
+This sequence of patches has the goal of enabling an FPGA connected
+over PCIe to have multiple internal devices specified in a device
+tree..  Of course, such a device should work in any machine, in
+addition to those architectures which use device trees to describe the
+basic platform functionality: In particular, x86.  This requires some
+basic support on x86 in order to make device trees work, and small
+amount of driver code to light everything up.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index b6987bb..d61fda8 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -69,9 +69,9 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 			u32 sz = be32_to_cpup((__be32 *)p);
- 			p += 8;
- 			if (be32_to_cpu(initial_boot_params->version) < 0x10)
--				p = _ALIGN(p, sz >= 8 ? 8 : 4);
-+				p = ALIGN(p, sz >= 8 ? 8 : 4);
- 			p += sz;
--			p = _ALIGN(p, 4);
-+			p = ALIGN(p, 4);
- 			continue;
- 		}
- 		if (tag != OF_DT_BEGIN_NODE) {
-@@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 		}
- 		depth++;
- 		pathp = (char *)p;
--		p = _ALIGN(p + strlen(pathp) + 1, 4);
-+		p = ALIGN(p + strlen(pathp) + 1, 4);
- 		if ((*pathp) == '/') {
- 			char *lp, *np;
- 			for (lp = NULL, np = pathp; *np; np++)
-@@ -109,7 +109,7 @@ unsigned long __init of_get_flat_dt_root(void)
- 		p += 4;
- 	BUG_ON(be32_to_cpup((__be32 *)p) != OF_DT_BEGIN_NODE);
- 	p += 4;
--	return _ALIGN(p + strlen((char *)p) + 1, 4);
-+	return ALIGN(p + strlen((char *)p) + 1, 4);
- }
- 
- /**
-@@ -138,7 +138,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
- 		noff = be32_to_cpup((__be32 *)(p + 4));
- 		p += 8;
- 		if (be32_to_cpu(initial_boot_params->version) < 0x10)
--			p = _ALIGN(p, sz >= 8 ? 8 : 4);
-+			p = ALIGN(p, sz >= 8 ? 8 : 4);
- 
- 		nstr = find_flat_dt_string(noff);
- 		if (nstr == NULL) {
-@@ -151,7 +151,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
- 			return (void *)p;
- 		}
- 		p += sz;
--		p = _ALIGN(p, 4);
-+		p = ALIGN(p, 4);
- 	} while (1);
- }
- 
-@@ -184,7 +184,7 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
- {
- 	void *res;
- 
--	*mem = _ALIGN(*mem, align);
-+	*mem = ALIGN(*mem, align);
- 	res = (void *)*mem;
- 	*mem += size;
- 
-@@ -220,7 +220,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
- 	*p += 4;
- 	pathp = (char *)*p;
- 	l = allocl = strlen(pathp) + 1;
--	*p = _ALIGN(*p + l, 4);
-+	*p = ALIGN(*p + l, 4);
- 
- 	/* version 0x10 has a more compact unit name here instead of the full
- 	 * path. we accumulate the full path size using "fpsize", we'll rebuild
-@@ -299,7 +299,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
- 		noff = be32_to_cpup((__be32 *)((*p) + 4));
- 		*p += 8;
- 		if (be32_to_cpu(initial_boot_params->version) < 0x10)
--			*p = _ALIGN(*p, sz >= 8 ? 8 : 4);
-+			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
- 
- 		pname = find_flat_dt_string(noff);
- 		if (pname == NULL) {
-@@ -333,7 +333,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
- 			*prev_pp = pp;
- 			prev_pp = &pp->next;
- 		}
--		*p = _ALIGN((*p) + sz, 4);
-+		*p = ALIGN((*p) + sz, 4);
- 	}
- 	/* with version 0x10 we may not have the name property, recreate
- 	 * it here from the unit name if absent
--- 
-1.5.6.6
+This has been tested on a Virtex5 board plugged into the PCIe slot of
+an x86 machine.  The device tree used looks like:
 
+/dts-v1/;
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+   compatible = "simple-bus";
+	mb_plb: plb@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "xlnx,plb-v46-1.03.a", "xlnx,plb-v46-1.00.a", "simple-bus";
+		xps_hwicap_0: xps-hwicap@80030000 {
+			compatible = "xlnx,xps-hwicap-1.00.a";
+			reg = < 0x80030000 0x10000 >;
+			xlnx,family = "virtex5";
+			xlnx,simulation = "false";
+		} ;
+   } ;
+}  ;
+
+Note that the bulk of the code is work in progress.  In particular,
+exactly how the device tree support should get extended to X86 is
+still up for grabs.  In addition, there are certain aspects of the
+device tree used which are suboptimal: The PCIe bridge translation
+range is currently hardcoded into the driver, and there is no
+provision for connecting interrupt lines into the PCIe bridge.
+Comments greatly appreciated...
+
+Grant: I've thrown in two hwicap patches, which should be final, if
+you want to pick them up that would be great.
+
+Steve
 
 
 This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
