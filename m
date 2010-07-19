@@ -1,14 +1,14 @@
 From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/3] of/flattree: Use common ALIGN() macro instead of
-	arch specific _ALIGN
-Date: Mon, 19 Jul 2010 10:03:11 +1000
-Message-ID: <1279497791.10390.1750.camel@pasglop>
+Subject: Re: [PATCH 3/3] of: Remove unused of_find_device_by_phandle()
+Date: Mon, 19 Jul 2010 10:06:11 +1000
+Message-ID: <1279497971.10390.1757.camel@pasglop>
 References: <20100714233130.21887.73872.stgit@angua>
+	<20100714233141.21887.81866.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100714233130.21887.73872.stgit@angua>
+In-Reply-To: <20100714233141.21887.81866.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,121 +23,96 @@ Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WL
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 2010-07-14 at 17:31 -0600, Grant Likely wrote:
-> There's no reason to use the powerpc-specific _ALIGN macro in the fdt
-> code.  Replace it with ALIGN() from kernel.h
-> 
 > Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
 Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
 > ---
->  arch/microblaze/include/asm/page.h |    7 -------
->  drivers/of/fdt.c                   |   20 ++++++++++----------
->  2 files changed, 10 insertions(+), 17 deletions(-)
+>  arch/microblaze/include/asm/of_platform.h |    2 --
+>  arch/microblaze/kernel/of_platform.c      |   18 ------------------
+>  arch/powerpc/include/asm/of_platform.h    |    2 --
+>  arch/powerpc/kernel/of_platform.c         |   19 -------------------
+>  4 files changed, 0 insertions(+), 41 deletions(-)
 > 
-> diff --git a/arch/microblaze/include/asm/page.h b/arch/microblaze/include/asm/page.h
-> index 464ff32..2fd4761 100644
-> --- a/arch/microblaze/include/asm/page.h
-> +++ b/arch/microblaze/include/asm/page.h
-> @@ -39,13 +39,6 @@
->  #define PAGE_UP(addr)	(((addr)+((PAGE_SIZE)-1))&(~((PAGE_SIZE)-1)))
->  #define PAGE_DOWN(addr)	((addr)&(~((PAGE_SIZE)-1)))
+> diff --git a/arch/microblaze/include/asm/of_platform.h b/arch/microblaze/include/asm/of_platform.h
+> index 625003f..353d8f6 100644
+> --- a/arch/microblaze/include/asm/of_platform.h
+> +++ b/arch/microblaze/include/asm/of_platform.h
+> @@ -14,8 +14,6 @@
+>  /* This is just here during the transition */
+>  #include <linux/of_platform.h>
 >  
-> -/* align addr on a size boundary - adjust address up/down if needed */
-> -#define _ALIGN_UP(addr, size)	(((addr)+((size)-1))&(~((size)-1)))
-> -#define _ALIGN_DOWN(addr, size)	((addr)&(~((size)-1)))
+> -extern struct of_device *of_find_device_by_phandle(phandle ph);
 > -
-> -/* align addr on a size boundary - adjust address up if needed */
-> -#define _ALIGN(addr, size)	_ALIGN_UP(addr, size)
+>  extern void of_instantiate_rtc(void);
+>  
+>  #endif /* _ASM_MICROBLAZE_OF_PLATFORM_H */
+> diff --git a/arch/microblaze/kernel/of_platform.c b/arch/microblaze/kernel/of_platform.c
+> index 33212bb..80c9c49 100644
+> --- a/arch/microblaze/kernel/of_platform.c
+> +++ b/arch/microblaze/kernel/of_platform.c
+> @@ -63,21 +63,3 @@ struct of_device *of_find_device_by_node(struct device_node *np)
+>  	return NULL;
+>  }
+>  EXPORT_SYMBOL(of_find_device_by_node);
 > -
->  #ifndef CONFIG_MMU
->  /*
->   * PAGE_OFFSET -- the first address of the first page of memory. When not
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index b6987bb..d61fda8 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -69,9 +69,9 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
->  			u32 sz = be32_to_cpup((__be32 *)p);
->  			p += 8;
->  			if (be32_to_cpu(initial_boot_params->version) < 0x10)
-> -				p = _ALIGN(p, sz >= 8 ? 8 : 4);
-> +				p = ALIGN(p, sz >= 8 ? 8 : 4);
->  			p += sz;
-> -			p = _ALIGN(p, 4);
-> +			p = ALIGN(p, 4);
->  			continue;
->  		}
->  		if (tag != OF_DT_BEGIN_NODE) {
-> @@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
->  		}
->  		depth++;
->  		pathp = (char *)p;
-> -		p = _ALIGN(p + strlen(pathp) + 1, 4);
-> +		p = ALIGN(p + strlen(pathp) + 1, 4);
->  		if ((*pathp) == '/') {
->  			char *lp, *np;
->  			for (lp = NULL, np = pathp; *np; np++)
-> @@ -109,7 +109,7 @@ unsigned long __init of_get_flat_dt_root(void)
->  		p += 4;
->  	BUG_ON(be32_to_cpup((__be32 *)p) != OF_DT_BEGIN_NODE);
->  	p += 4;
-> -	return _ALIGN(p + strlen((char *)p) + 1, 4);
-> +	return ALIGN(p + strlen((char *)p) + 1, 4);
+> -static int of_dev_phandle_match(struct device *dev, void *data)
+> -{
+> -	phandle *ph = data;
+> -	return to_of_device(dev)->dev.of_node->phandle == *ph;
+> -}
+> -
+> -struct of_device *of_find_device_by_phandle(phandle ph)
+> -{
+> -	struct device *dev;
+> -
+> -	dev = bus_find_device(&platform_bus_type,
+> -			      NULL, &ph, of_dev_phandle_match);
+> -	if (dev)
+> -		return to_of_device(dev);
+> -	return NULL;
+> -}
+> -EXPORT_SYMBOL(of_find_device_by_phandle);
+> diff --git a/arch/powerpc/include/asm/of_platform.h b/arch/powerpc/include/asm/of_platform.h
+> index b37d2dc..d506aa6 100644
+> --- a/arch/powerpc/include/asm/of_platform.h
+> +++ b/arch/powerpc/include/asm/of_platform.h
+> @@ -11,8 +11,6 @@
+>   *
+>   */
+>  
+> -extern struct of_device *of_find_device_by_phandle(phandle ph);
+> -
+>  extern void of_instantiate_rtc(void);
+>  
+>  #endif	/* _ASM_POWERPC_OF_PLATFORM_H */
+> diff --git a/arch/powerpc/kernel/of_platform.c b/arch/powerpc/kernel/of_platform.c
+> index a3d7154..b093d4b 100644
+> --- a/arch/powerpc/kernel/of_platform.c
+> +++ b/arch/powerpc/kernel/of_platform.c
+> @@ -68,25 +68,6 @@ struct of_device *of_find_device_by_node(struct device_node *np)
 >  }
+>  EXPORT_SYMBOL(of_find_device_by_node);
 >  
->  /**
-> @@ -138,7 +138,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
->  		noff = be32_to_cpup((__be32 *)(p + 4));
->  		p += 8;
->  		if (be32_to_cpu(initial_boot_params->version) < 0x10)
-> -			p = _ALIGN(p, sz >= 8 ? 8 : 4);
-> +			p = ALIGN(p, sz >= 8 ? 8 : 4);
+> -static int of_dev_phandle_match(struct device *dev, void *data)
+> -{
+> -	phandle *ph = data;
+> -	return to_of_device(dev)->dev.of_node->phandle == *ph;
+> -}
+> -
+> -struct of_device *of_find_device_by_phandle(phandle ph)
+> -{
+> -	struct device *dev;
+> -
+> -	dev = bus_find_device(&platform_bus_type,
+> -			      NULL, &ph, of_dev_phandle_match);
+> -	if (dev)
+> -		return to_of_device(dev);
+> -	return NULL;
+> -}
+> -EXPORT_SYMBOL(of_find_device_by_phandle);
+> -
+> -
+>  #ifdef CONFIG_PPC_OF_PLATFORM_PCI
 >  
->  		nstr = find_flat_dt_string(noff);
->  		if (nstr == NULL) {
-> @@ -151,7 +151,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
->  			return (void *)p;
->  		}
->  		p += sz;
-> -		p = _ALIGN(p, 4);
-> +		p = ALIGN(p, 4);
->  	} while (1);
->  }
->  
-> @@ -184,7 +184,7 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
->  {
->  	void *res;
->  
-> -	*mem = _ALIGN(*mem, align);
-> +	*mem = ALIGN(*mem, align);
->  	res = (void *)*mem;
->  	*mem += size;
->  
-> @@ -220,7 +220,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
->  	*p += 4;
->  	pathp = (char *)*p;
->  	l = allocl = strlen(pathp) + 1;
-> -	*p = _ALIGN(*p + l, 4);
-> +	*p = ALIGN(*p + l, 4);
->  
->  	/* version 0x10 has a more compact unit name here instead of the full
->  	 * path. we accumulate the full path size using "fpsize", we'll rebuild
-> @@ -299,7 +299,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
->  		noff = be32_to_cpup((__be32 *)((*p) + 4));
->  		*p += 8;
->  		if (be32_to_cpu(initial_boot_params->version) < 0x10)
-> -			*p = _ALIGN(*p, sz >= 8 ? 8 : 4);
-> +			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
->  
->  		pname = find_flat_dt_string(noff);
->  		if (pname == NULL) {
-> @@ -333,7 +333,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
->  			*prev_pp = pp;
->  			prev_pp = &pp->next;
->  		}
-> -		*p = _ALIGN((*p) + sz, 4);
-> +		*p = ALIGN((*p) + sz, 4);
->  	}
->  	/* with version 0x10 we may not have the name property, recreate
->  	 * it here from the unit name if absent
+>  /* The probing of PCI controllers from of_platform is currently
