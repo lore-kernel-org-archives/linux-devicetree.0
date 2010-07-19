@@ -1,24 +1,14 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 4/8] of/base.c: export property access/modification
-	functions
-Date: Fri, 16 Jul 2010 15:03:18 -0700
-Message-ID: <e0211df5-5645-4bdd-8ff7-30deeff92377@SG2EHSMHS007.ehs.local>
-References: <1279304021-22216-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-2-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-3-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279304021-22216-4-git-send-email-stephen.neuendorffer@xilinx.com>
-	<01cb5edd-5330-40ba-b410-6732e44f0954@VA3EHSMHS011.ehs.local>
-	<AANLkTikwtfpH5qyG5cbsLYPHLSaAmBcHaSJT3zbt4s35@mail.gmail.com>
-	<e198df81-5939-4b82-9d27-952d9781ec05@VA3EHSMHS007.ehs.local>
-	<AANLkTilXmgTkJ2N0dTYsV99ElqssZAXwOgtKPBENZoX8@mail.gmail.com>
-	<41b1b87c-a391-493d-8235-a9304562a6e4@SG2EHSMHS003.ehs.local>
-	<AANLkTinlTNa0TEnqk27Jv2Yy8sZ1Vx3V89YJvcs-jULM@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/3] of/flattree: Use common ALIGN() macro instead of
+	arch specific _ALIGN
+Date: Mon, 19 Jul 2010 10:03:11 +1000
+Message-ID: <1279497791.10390.1750.camel@pasglop>
+References: <20100714233130.21887.73872.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <AANLkTinlTNa0TEnqk27Jv2Yy8sZ1Vx3V89YJvcs-jULM-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20100714233130.21887.73872.stgit@angua>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -29,97 +19,125 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2010-07-14 at 17:31 -0600, Grant Likely wrote:
+> There's no reason to use the powerpc-specific _ALIGN macro in the fdt
+> code.  Replace it with ALIGN() from kernel.h
+> 
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
+Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-> -----Original Message-----
-> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gra=
-nt Likely
-> Sent: Friday, July 16, 2010 2:44 PM
-> To: Stephen Neuendorffer
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [PATCH 4/8] of/base.c: export property access/modification f=
-unctions
-> =
-
-> On Fri, Jul 16, 2010 at 2:07 PM, Stephen Neuendorffer
-> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of =
-Grant Likely
-> >> Sent: Friday, July 16, 2010 11:57 AM
-> >> To: Stephen Neuendorffer
-> >> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> >> Subject: Re: [PATCH 4/8] of/base.c: export property access/modificatio=
-n functions
-> >>
-> >> On Fri, Jul 16, 2010 at 12:38 PM, Stephen Neuendorffer
-> >> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> >> >
-> >> >
-> >> >> -----Original Message-----
-> >> >> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf =
-Of
-> >> > Grant Likely
-> >> >> Sent: Friday, July 16, 2010 11:34 AM
-> >> >> To: Stephen Neuendorffer
-> >> >> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> >> >> Subject: Re: [PATCH 4/8] of/base.c: export property
-> >> > access/modification functions
-> >> >>
-> >> >> On Fri, Jul 16, 2010 at 12:13 PM, Stephen Neuendorffer
-> >> >> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> >> >> > These functions can be usefully used by device drivers.
-> >> >>
-> >> >> I'd like a little more description of the intended use case. =A0Wha=
-t are
-> >> >> the circumstances where a driver needs to modify the data (this
-> >> >> information should be part of the patch description)?
-> >> >
-> >> > The PCIPR driver code needs to stuff the ranges property using these
-> >> > calls...
-> >>
-> >> I'd rather change the translation code to give you an intermediary
-> >> value (an offset from a bar), and then use non-OF code to translate
-> >> that into a physical address.
-> >
-> > I don't see how that will work, since there is no callback from the dev=
-ice-tree
-> > code behind platform_get_resource/of_address_to_resource back into the =
-pcipr driver to
-> > do the last translation bit. =A0I considered having a new 'bus_type' re=
-gistered in the
-> > address translation code that would take care of it, but it seemed to s=
-till require
-> > the information from somewhere and it wasn't clear where to get it.
-> =
-
-> You get the information from the PCI device instance.  We can change
-> the bus_type infrastructure to allow instance specific data if need
-> be.
-> =
-
-> Alternately, the translation could be done at device registration
-> time.  With the changes being made to the of code, of_devices are
-> going away, and being replaced with normal platform_devices which have
-> a resource structure.  We could do the translation at device
-> registration time so that drivers only need to look at the resource
-> structure.  This will require some changes to the current
-> of_platform_drivers, but in the long run I think it is the right thing
-> to do.
-
-OK, perhaps I'm being a little dense, but I don't see how to proceed here.
-Can you make this more concrete?
-
-Steve
-
-
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+> ---
+>  arch/microblaze/include/asm/page.h |    7 -------
+>  drivers/of/fdt.c                   |   20 ++++++++++----------
+>  2 files changed, 10 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/microblaze/include/asm/page.h b/arch/microblaze/include/asm/page.h
+> index 464ff32..2fd4761 100644
+> --- a/arch/microblaze/include/asm/page.h
+> +++ b/arch/microblaze/include/asm/page.h
+> @@ -39,13 +39,6 @@
+>  #define PAGE_UP(addr)	(((addr)+((PAGE_SIZE)-1))&(~((PAGE_SIZE)-1)))
+>  #define PAGE_DOWN(addr)	((addr)&(~((PAGE_SIZE)-1)))
+>  
+> -/* align addr on a size boundary - adjust address up/down if needed */
+> -#define _ALIGN_UP(addr, size)	(((addr)+((size)-1))&(~((size)-1)))
+> -#define _ALIGN_DOWN(addr, size)	((addr)&(~((size)-1)))
+> -
+> -/* align addr on a size boundary - adjust address up if needed */
+> -#define _ALIGN(addr, size)	_ALIGN_UP(addr, size)
+> -
+>  #ifndef CONFIG_MMU
+>  /*
+>   * PAGE_OFFSET -- the first address of the first page of memory. When not
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index b6987bb..d61fda8 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -69,9 +69,9 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+>  			u32 sz = be32_to_cpup((__be32 *)p);
+>  			p += 8;
+>  			if (be32_to_cpu(initial_boot_params->version) < 0x10)
+> -				p = _ALIGN(p, sz >= 8 ? 8 : 4);
+> +				p = ALIGN(p, sz >= 8 ? 8 : 4);
+>  			p += sz;
+> -			p = _ALIGN(p, 4);
+> +			p = ALIGN(p, 4);
+>  			continue;
+>  		}
+>  		if (tag != OF_DT_BEGIN_NODE) {
+> @@ -80,7 +80,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+>  		}
+>  		depth++;
+>  		pathp = (char *)p;
+> -		p = _ALIGN(p + strlen(pathp) + 1, 4);
+> +		p = ALIGN(p + strlen(pathp) + 1, 4);
+>  		if ((*pathp) == '/') {
+>  			char *lp, *np;
+>  			for (lp = NULL, np = pathp; *np; np++)
+> @@ -109,7 +109,7 @@ unsigned long __init of_get_flat_dt_root(void)
+>  		p += 4;
+>  	BUG_ON(be32_to_cpup((__be32 *)p) != OF_DT_BEGIN_NODE);
+>  	p += 4;
+> -	return _ALIGN(p + strlen((char *)p) + 1, 4);
+> +	return ALIGN(p + strlen((char *)p) + 1, 4);
+>  }
+>  
+>  /**
+> @@ -138,7 +138,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+>  		noff = be32_to_cpup((__be32 *)(p + 4));
+>  		p += 8;
+>  		if (be32_to_cpu(initial_boot_params->version) < 0x10)
+> -			p = _ALIGN(p, sz >= 8 ? 8 : 4);
+> +			p = ALIGN(p, sz >= 8 ? 8 : 4);
+>  
+>  		nstr = find_flat_dt_string(noff);
+>  		if (nstr == NULL) {
+> @@ -151,7 +151,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+>  			return (void *)p;
+>  		}
+>  		p += sz;
+> -		p = _ALIGN(p, 4);
+> +		p = ALIGN(p, 4);
+>  	} while (1);
+>  }
+>  
+> @@ -184,7 +184,7 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+>  {
+>  	void *res;
+>  
+> -	*mem = _ALIGN(*mem, align);
+> +	*mem = ALIGN(*mem, align);
+>  	res = (void *)*mem;
+>  	*mem += size;
+>  
+> @@ -220,7 +220,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+>  	*p += 4;
+>  	pathp = (char *)*p;
+>  	l = allocl = strlen(pathp) + 1;
+> -	*p = _ALIGN(*p + l, 4);
+> +	*p = ALIGN(*p + l, 4);
+>  
+>  	/* version 0x10 has a more compact unit name here instead of the full
+>  	 * path. we accumulate the full path size using "fpsize", we'll rebuild
+> @@ -299,7 +299,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+>  		noff = be32_to_cpup((__be32 *)((*p) + 4));
+>  		*p += 8;
+>  		if (be32_to_cpu(initial_boot_params->version) < 0x10)
+> -			*p = _ALIGN(*p, sz >= 8 ? 8 : 4);
+> +			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
+>  
+>  		pname = find_flat_dt_string(noff);
+>  		if (pname == NULL) {
+> @@ -333,7 +333,7 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+>  			*prev_pp = pp;
+>  			prev_pp = &pp->next;
+>  		}
+> -		*p = _ALIGN((*p) + sz, 4);
+> +		*p = ALIGN((*p) + sz, 4);
+>  	}
+>  	/* with version 0x10 we may not have the name property, recreate
+>  	 * it here from the unit name if absent
