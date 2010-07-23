@@ -1,11 +1,19 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/9] Xilinx PCI endpoint driver
-Date: Fri, 23 Jul 2010 13:57:34 -0700
-Message-ID: <f2151811-2db6-4d85-a739-6a076943b3a3@SG2EHSMHS005.ehs.local>
+Subject: [PATCH 7/9] [Xilinx] xilinx_hwicap: use linux/io.h instead of asm/io.h
+Date: Fri, 23 Jul 2010 13:57:41 -0700
+Message-ID: <bd5961af-2af1-4f6d-a220-a03fdbb19453@VA3EHSMHS017.ehs.local>
+References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-2-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-3-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-4-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-5-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-6-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-7-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1279918663-29960-7-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,50 +26,75 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The bulk of this code is still preliminary.  This update contains a fix
-	for the hwicap core, which should work on all arches this time.  There's
-also an IRQ-related fix that removes the dependency of drivers/of on a
-architecture-specific definition of NO_IRQ.
+Better style, and it gives access to the asm-generic/iomap.h
+accessors in all architectures.
 
-Stephen Neuendorffer (9):
-  drivers/of: Make device tree code work on any arch.
-  of/fdt: Add unflatten_partial_device_tree
-  of/base.c: export property access/modification functions
-  drivers/of: Allow IRQ code to work properly on architectures without
-    NO_IRQ
-  arch/x86: Add support for device tree code.
-  [Xilinx] xilinx_pcipr: Added Xilinx reconfigurable PCI endpoint
-    driver.
-  [Xilinx] xilinx_hwicap: use linux/io.h instead of asm/io.h
-  [Xilinx] xilinx_hwicap: Update driver to use generic io accessors
-  [Xilinx] xilinx_hwicap: Enable whenever OF/device trees are
-    available.
+Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/char/xilinx_hwicap/buffer_icap.h   |    3 +--
+ drivers/char/xilinx_hwicap/fifo_icap.h     |    3 +--
+ drivers/char/xilinx_hwicap/xilinx_hwicap.c |    3 +--
+ drivers/char/xilinx_hwicap/xilinx_hwicap.h |    3 +--
+ 4 files changed, 4 insertions(+), 8 deletions(-)
 
- arch/x86/include/asm/device.h              |    3 +
- arch/x86/include/asm/irq.h                 |    4 +
- arch/x86/kernel/Makefile                   |    1 +
- arch/x86/kernel/device_tree.c              |   63 +++++++++
- drivers/char/Kconfig                       |    2 +-
- drivers/char/xilinx_hwicap/buffer_icap.c   |   16 +-
- drivers/char/xilinx_hwicap/buffer_icap.h   |    3 +-
- drivers/char/xilinx_hwicap/fifo_icap.c     |   39 +++---
- drivers/char/xilinx_hwicap/fifo_icap.h     |    3 +-
- drivers/char/xilinx_hwicap/xilinx_hwicap.c |    4 +-
- drivers/char/xilinx_hwicap/xilinx_hwicap.h |    3 +-
- drivers/of/address.c                       |    5 +
- drivers/of/base.c                          |    3 +
- drivers/of/device.c                        |    7 +-
- drivers/of/fdt.c                           |  169 +++++++++++++++++-------
- drivers/of/irq.c                           |   10 +-
- drivers/of/platform.c                      |    2 +
- drivers/pci/Kconfig                        |    8 +
- drivers/pci/Makefile                       |    2 +
- drivers/pci/xilinx_pcipr.c                 |  197 ++++++++++++++++++++++++++++
- include/linux/of_fdt.h                     |   11 +-
- include/linux/of_irq.h                     |    1 +
- 22 files changed, 462 insertions(+), 94 deletions(-)
- create mode 100644 arch/x86/kernel/device_tree.c
- create mode 100644 drivers/pci/xilinx_pcipr.c
+diff --git a/drivers/char/xilinx_hwicap/buffer_icap.h b/drivers/char/xilinx_hwicap/buffer_icap.h
+index d4f419e..aa859b0 100644
+--- a/drivers/char/xilinx_hwicap/buffer_icap.h
++++ b/drivers/char/xilinx_hwicap/buffer_icap.h
+@@ -36,8 +36,7 @@
+ #include <linux/types.h>
+ #include <linux/cdev.h>
+ #include <linux/platform_device.h>
+-
+-#include <asm/io.h>
++#include <linux/io.h>
+ #include "xilinx_hwicap.h"
+ 
+ /* Loads a partial bitstream from system memory. */
+diff --git a/drivers/char/xilinx_hwicap/fifo_icap.h b/drivers/char/xilinx_hwicap/fifo_icap.h
+index 4c9dd9a..b266c40 100644
+--- a/drivers/char/xilinx_hwicap/fifo_icap.h
++++ b/drivers/char/xilinx_hwicap/fifo_icap.h
+@@ -36,8 +36,7 @@
+ #include <linux/types.h>
+ #include <linux/cdev.h>
+ #include <linux/platform_device.h>
+-
+-#include <asm/io.h>
++#include <linux/io.h>
+ #include "xilinx_hwicap.h"
+ 
+ /* Reads integers from the device into the storage buffer. */
+diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.c b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
+index ed8a9ce..6172689 100644
+--- a/drivers/char/xilinx_hwicap/xilinx_hwicap.c
++++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
+@@ -87,8 +87,7 @@
+ #include <linux/cdev.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+-
+-#include <asm/io.h>
++#include <linux/io.h>
+ #include <asm/uaccess.h>
+ #include <asm/system.h>
+ 
+diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.h b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
+index 8cca119..e0a6857 100644
+--- a/drivers/char/xilinx_hwicap/xilinx_hwicap.h
++++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
+@@ -36,8 +36,7 @@
+ #include <linux/types.h>
+ #include <linux/cdev.h>
+ #include <linux/platform_device.h>
+-
+-#include <asm/io.h>
++#include <linux/io.h>
+ 
+ struct hwicap_drvdata {
+ 	u32 write_buffer_in_use;  /* Always in [0,3] */
+-- 
+1.5.6.6
 
 
 
