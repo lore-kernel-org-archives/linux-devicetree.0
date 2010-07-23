@@ -1,13 +1,15 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/9] drivers/of: Make device tree code work on any arch.
-Date: Fri, 23 Jul 2010 13:57:35 -0700
-Message-ID: <7e773827-71eb-47a5-826c-cd255b4ce02c@SG2EHSMHS008.ehs.local>
+Subject: [PATCH 3/9] of/base.c: export property access/modification functions
+Date: Fri, 23 Jul 2010 13:57:37 -0700
+Message-ID: <ceba5315-090d-4776-9315-0cbca209b5af@SG2EHSMHS006.ehs.local>
 References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-2-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-3-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279918663-29960-1-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1279918663-29960-3-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,56 +22,41 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+These functions can be usefully used by device drivers.
+
 Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-
 ---
+ drivers/of/base.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-I'm not sure what the right way to abstract these functions is.
-of_node_to_nid seems specific to those platforms which have a root
-device tree.  pci_address_to_pio seems to probably have a useful
-implementation, but I'm not sure what it's trying to do.  Perhaps
-someone can shed some light?
----
- drivers/of/address.c |    5 +++++
- drivers/of/device.c  |    7 ++++++-
- 2 files changed, 11 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index fcadb72..61e652b 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -539,7 +539,12 @@ static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
- 	memset(r, 0, sizeof(struct resource));
- 	if (flags & IORESOURCE_IO) {
- 		unsigned long port;
-+		// FIXME: utter hack...
-+#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC)
- 		port = pci_address_to_pio(taddr);
-+#else
-+		port = -1;
-+#endif
- 		if (port == (unsigned long)-1)
- 			return -EINVAL;
- 		r->start = port;
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 5282a20..27a65fc 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -107,8 +107,13 @@ int of_device_register(struct of_device *ofdev)
- 	/* device_add will assume that this device is on the same node as
- 	 * the parent. If there is no parent defined, set the node
- 	 * explicitly */
--	if (!ofdev->dev.parent)
-+	if (!ofdev->dev.parent) {
-+#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC) || defined(CONFIG_SPARC) 
- 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
-+#else
-+		set_dev_node(&ofdev->dev, -1);
-+#endif
-+	}
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index e3f7af8..9ee27f6 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -763,6 +763,7 @@ int prom_add_property(struct device_node *np, struct property *prop)
  
- 	return device_add(&ofdev->dev);
+ 	return 0;
  }
++EXPORT_SYMBOL(prom_add_property);
+ 
+ /**
+  * prom_remove_property - Remove a property from a node.
+@@ -804,6 +805,7 @@ int prom_remove_property(struct device_node *np, struct property *prop)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(prom_remove_property);
+ 
+ /*
+  * prom_update_property - Update a property in a node.
+@@ -848,6 +850,7 @@ int prom_update_property(struct device_node *np,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(prom_update_property);
+ 
+ #if defined(CONFIG_OF_DYNAMIC)
+ /*
 -- 
 1.5.6.6
 
