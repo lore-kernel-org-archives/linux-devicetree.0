@@ -1,17 +1,17 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/9] drivers/of: Allow IRQ code to work properly on
-	architectures without NO_IRQ
-Date: Fri, 23 Jul 2010 13:57:38 -0700
-Message-ID: <e07ceaf0-18ef-4a0c-bc5e-6d7ff69fb07b@SG2EHSMHS007.ehs.local>
+Subject: [PATCH 5/9] arch/x86: Add support for device tree code.
+Date: Fri, 23 Jul 2010 13:57:39 -0700
+Message-ID: <a85fdc9c-4a93-4381-b01e-5b9bc7666863@SG2EHSMHS007.ehs.local>
 References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279918663-29960-2-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279918663-29960-3-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279918663-29960-4-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1279918663-29960-5-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279918663-29960-4-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1279918663-29960-5-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,47 +24,159 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sane architectures don't rely on NO_IRQ.  The device tree code shouldn't
-require it either.
----
- drivers/of/irq.c |   10 ++++++++--
- 1 files changed, 8 insertions(+), 2 deletions(-)
+A few support device-tree related support functions that x86 didn't
+have before.
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 6cfb307..e85883e 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -24,6 +24,12 @@
- #include <linux/of_irq.h>
- #include <linux/string.h>
+Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+
+----
+
+ I have no idea if continuing to add these functions to every arch is
+a good thing or whether they should (for instance) be weak symbols
+with a generic definition.
+---
+ arch/x86/include/asm/device.h |    3 ++
+ arch/x86/include/asm/irq.h    |    4 ++
+ arch/x86/kernel/Makefile      |    1 +
+ arch/x86/kernel/device_tree.c |   63 +++++++++++++++++++++++++++++++++++++++++
+ drivers/of/platform.c         |    2 +
+ include/linux/of_irq.h        |    1 +
+ 6 files changed, 74 insertions(+), 0 deletions(-)
+ create mode 100644 arch/x86/kernel/device_tree.c
+
+diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
+index 029f230..0bf0a17 100644
+--- a/arch/x86/include/asm/device.h
++++ b/arch/x86/include/asm/device.h
+@@ -16,4 +16,7 @@ struct dma_map_ops *dma_ops;
+ struct pdev_archdata {
+ };
  
-+#ifdef NO_IRQ
-+#define OF_NO_IRQ NO_IRQ
-+#else
-+#define OF_NO_IRQ 0
-+#endif
++/* Don't override the default bus id behaviour */
++#define of_device_make_bus_id __of_device_make_bus_id
 +
- /**
-  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
-  * @device: Device node of the device whose interrupt is to be mapped
-@@ -37,7 +43,7 @@ unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
- 	struct of_irq oirq;
+ #endif /* _ASM_X86_DEVICE_H */
+diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
+index 5458380..6c61992 100644
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -10,6 +10,10 @@
+ #include <asm/apicdef.h>
+ #include <asm/irq_vectors.h>
  
- 	if (of_irq_map_one(dev, index, &oirq))
--		return NO_IRQ;
-+		return OF_NO_IRQ;
++#define NO_IRQ (-1)
++
++#define irq_dispose_mapping(...)
++
+ static inline int irq_canonicalize(int irq)
+ {
+ 	return ((irq == 2) ? 9 : irq);
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index e77b220..a5c20e8 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -105,6 +105,7 @@ scx200-y			+= scx200_32.o
  
- 	return irq_create_of_mapping(oirq.controller, oirq.specifier,
- 				     oirq.size);
-@@ -337,7 +343,7 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+ obj-$(CONFIG_OLPC)		+= olpc.o
+ obj-$(CONFIG_X86_MRST)		+= mrst.o
++obj-$(CONFIG_OF)		+= device_tree.o
  
- 	/* Only dereference the resource if both the
- 	 * resource and the irq are valid. */
--	if (r && irq != NO_IRQ) {
-+	if (r && irq != OF_NO_IRQ) {
- 		r->start = r->end = irq;
- 		r->flags = IORESOURCE_IRQ;
- 		r->name = dev->full_name;
+ microcode-y				:= microcode_core.o
+ microcode-$(CONFIG_MICROCODE_INTEL)	+= microcode_intel.o
+diff --git a/arch/x86/kernel/device_tree.c b/arch/x86/kernel/device_tree.c
+new file mode 100644
+index 0000000..543884c
+--- /dev/null
++++ b/arch/x86/kernel/device_tree.c
+@@ -0,0 +1,63 @@
++#undef DEBUG
++
++#include <linux/kernel.h>
++#include <linux/string.h>
++#include <linux/pci_regs.h>
++#include <linux/module.h>
++#include <linux/ioport.h>
++#include <linux/etherdevice.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++struct bus_type of_platform_bus_type = {
++       .uevent	= of_device_uevent,
++};
++EXPORT_SYMBOL(of_platform_bus_type);
++
++static int __init of_bus_driver_init(void)
++{
++	return of_bus_type_init(&of_platform_bus_type, "of_platform");
++}
++postcore_initcall(of_bus_driver_init);
++
++/*
++ * The list of OF IDs below is used for matching bus types in the
++ * system whose devices are to be exposed as of_platform_devices.
++ *
++ * This is the default list valid for most platforms. This file provides
++ * functions who can take an explicit list if necessary though
++ *
++ * The search is always performed recursively looking for children of
++ * the provided device_node and recursively if such a children matches
++ * a bus type in the list
++ */
++
++const struct of_device_id of_default_bus_ids[] = {
++	{ .type = "soc", },
++	{ .compatible = "soc", },
++	{ .compatible = "simple-bus", },
++	{ .type = "plb5", },
++	{ .type = "plb4", },
++	{ .type = "opb", },
++	{ .type = "simple", },
++	{},
++};
++
++/*
++ * Interrupt remapper
++ */
++
++struct device_node *of_irq_find_parent_by_phandle(phandle p)
++{
++	return of_find_node_by_phandle(p);
++}
++
++unsigned int irq_create_of_mapping(struct device_node *controller,
++				   const u32 *intspec, unsigned int intsize)
++{
++	return intspec[0] + 1;
++}
++EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 9d3d932..0221125 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -20,6 +20,8 @@
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ 
+ #if defined(CONFIG_PPC_DCR)
+ #include <asm/dcr.h>
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 5929781..25fc90d 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -7,6 +7,7 @@ struct of_irq;
+ #include <linux/errno.h>
+ #include <linux/ioport.h>
+ #include <linux/of.h>
++#include <linux/irq.h>
+ 
+ /*
+  * irq_of_parse_and_map() is used ba all OF enabled platforms; but SPARC
 -- 
 1.5.6.6
 
