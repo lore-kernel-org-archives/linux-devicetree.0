@@ -1,19 +1,17 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 7/9] [Xilinx] xilinx_hwicap: use linux/io.h instead of asm/io.h
-Date: Fri, 23 Jul 2010 13:57:41 -0700
-Message-ID: <bd5961af-2af1-4f6d-a220-a03fdbb19453@VA3EHSMHS017.ehs.local>
+Subject: [PATCH 4/9] drivers/of: Allow IRQ code to work properly on
+	architectures without NO_IRQ
+Date: Fri, 23 Jul 2010 13:57:38 -0700
+Message-ID: <e07ceaf0-18ef-4a0c-bc5e-6d7ff69fb07b@SG2EHSMHS007.ehs.local>
 References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279918663-29960-2-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279918663-29960-3-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1279918663-29960-4-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-5-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-6-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-7-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1279918663-29960-7-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1279918663-29960-4-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,73 +24,47 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Better style, and it gives access to the asm-generic/iomap.h
-accessors in all architectures.
-
-Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sane architectures don't rely on NO_IRQ.  The device tree code shouldn't
+require it either.
 ---
- drivers/char/xilinx_hwicap/buffer_icap.h   |    3 +--
- drivers/char/xilinx_hwicap/fifo_icap.h     |    3 +--
- drivers/char/xilinx_hwicap/xilinx_hwicap.c |    3 +--
- drivers/char/xilinx_hwicap/xilinx_hwicap.h |    3 +--
- 4 files changed, 4 insertions(+), 8 deletions(-)
+ drivers/of/irq.c |   10 ++++++++--
+ 1 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/xilinx_hwicap/buffer_icap.h b/drivers/char/xilinx_hwicap/buffer_icap.h
-index d4f419e..aa859b0 100644
---- a/drivers/char/xilinx_hwicap/buffer_icap.h
-+++ b/drivers/char/xilinx_hwicap/buffer_icap.h
-@@ -36,8 +36,7 @@
- #include <linux/types.h>
- #include <linux/cdev.h>
- #include <linux/platform_device.h>
--
--#include <asm/io.h>
-+#include <linux/io.h>
- #include "xilinx_hwicap.h"
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6cfb307..e85883e 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -24,6 +24,12 @@
+ #include <linux/of_irq.h>
+ #include <linux/string.h>
  
- /* Loads a partial bitstream from system memory. */
-diff --git a/drivers/char/xilinx_hwicap/fifo_icap.h b/drivers/char/xilinx_hwicap/fifo_icap.h
-index 4c9dd9a..b266c40 100644
---- a/drivers/char/xilinx_hwicap/fifo_icap.h
-+++ b/drivers/char/xilinx_hwicap/fifo_icap.h
-@@ -36,8 +36,7 @@
- #include <linux/types.h>
- #include <linux/cdev.h>
- #include <linux/platform_device.h>
--
--#include <asm/io.h>
-+#include <linux/io.h>
- #include "xilinx_hwicap.h"
++#ifdef NO_IRQ
++#define OF_NO_IRQ NO_IRQ
++#else
++#define OF_NO_IRQ 0
++#endif
++
+ /**
+  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
+  * @device: Device node of the device whose interrupt is to be mapped
+@@ -37,7 +43,7 @@ unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
+ 	struct of_irq oirq;
  
- /* Reads integers from the device into the storage buffer. */
-diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.c b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-index ed8a9ce..6172689 100644
---- a/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-+++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-@@ -87,8 +87,7 @@
- #include <linux/cdev.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
--
--#include <asm/io.h>
-+#include <linux/io.h>
- #include <asm/uaccess.h>
- #include <asm/system.h>
+ 	if (of_irq_map_one(dev, index, &oirq))
+-		return NO_IRQ;
++		return OF_NO_IRQ;
  
-diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.h b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
-index 8cca119..e0a6857 100644
---- a/drivers/char/xilinx_hwicap/xilinx_hwicap.h
-+++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.h
-@@ -36,8 +36,7 @@
- #include <linux/types.h>
- #include <linux/cdev.h>
- #include <linux/platform_device.h>
--
--#include <asm/io.h>
-+#include <linux/io.h>
+ 	return irq_create_of_mapping(oirq.controller, oirq.specifier,
+ 				     oirq.size);
+@@ -337,7 +343,7 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
  
- struct hwicap_drvdata {
- 	u32 write_buffer_in_use;  /* Always in [0,3] */
+ 	/* Only dereference the resource if both the
+ 	 * resource and the irq are valid. */
+-	if (r && irq != NO_IRQ) {
++	if (r && irq != OF_NO_IRQ) {
+ 		r->start = r->end = irq;
+ 		r->flags = IORESOURCE_IRQ;
+ 		r->name = dev->full_name;
 -- 
 1.5.6.6
 
