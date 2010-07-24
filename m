@@ -1,15 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/device: Make of_device_make_bus_id() usable by other
-	code.
-Date: Sun, 25 Jul 2010 15:23:49 -0600
-Message-ID: <AANLkTin3RF+Va-b5ejT-6EJpybMKFE+myLR7Y40e0mha@mail.gmail.com>
-References: <20100724160111.7072.68144.stgit@angua>
-	<20100725133430.4c1d38a3.sfr@canb.auug.org.au>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: Respinning my test-devicetree branch
+Date: Sat, 24 Jul 2010 23:48:31 +0200
+Message-ID: <1280008111.2198.23.camel@pororo.lan>
+References: <AANLkTimsJRHchDJPemDkz6wkXgTzYtS_c0eDru6uQXt-@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100725133430.4c1d38a3.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+In-Reply-To: <AANLkTimsJRHchDJPemDkz6wkXgTzYtS_c0eDru6uQXt--JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,38 +17,74 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 24, 2010 at 9:34 PM, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org> wr=
-ote:
-> Hi Grant,
->
-> On Sat, 24 Jul 2010 10:01:11 -0600 Grant Likely <grant.likely@secretlab.c=
-a> wrote:
->>
->> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
->> index e11a0be..249bc11 100644
->> --- a/include/linux/of_device.h
->> +++ b/include/linux/of_device.h
->> @@ -27,6 +27,9 @@
->>
->> =A0extern const struct of_device_id *of_match_device(
->> =A0 =A0 =A0 const struct of_device_id *matches, const struct device *dev=
-);
->> +#if !defined(CONFIG_SPARC)
->> +extern void of_device_make_bus_id(struct device *dev);
->> +#endif
->
-> You don't really need the protection here - it does not clash with
-> anything on SPARC, right?
-
-No, it doesn't conflict with anything.  I'll drop the if !defined() wrapper.
-
-g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+SGkgR3JhbnQsCgo+IEkndmUgcmVzcHVuIG15IHRlc3QtZGV2aWNldHJlZSBicmFuY2ggYW5kIGRy
+b3BwZWQgYSBidW5jaCBvZiBwYXRjaGVzCj4gaW4gcHJlZmVyZW5jZSBmb3Igb25lcyBpbiB5b3Vy
+IGFybS1kdCBicmFuY2guICBIZXJlIGFyZSBteSBub3RlcyBhcyBJCj4gd2FzIHdvcmtpbmcgb24g
+aXQuCgpPSywgY29vbC4gVGhlIHBhdGNoZXMgYXJlbid0IDEwMCUgY29uZmlybWVkIHlldCAtIE5p
+Y29sYXMgYW5kIEkgYXJlCnN0aWxsIGNoYXR0aW5nIGFib3V0IHRoZSBzcGVjaWZpY3Mgb2YgbWFj
+aGluZS1pZCBhbGxvY2F0aW9uIGFuZCBwcm9iaW5nCmZvciBkZXZpY2UgdHJlZSBib290LiBJJ20g
+cHJvcG9zaW5nIGEgc2luZ2xlIG1hY2hpbmUgSUQgZm9yIGRldmljZSB0ZWUKYm9vdCwgYW5kIGxv
+b2tpbmcgdXAgYSBtZGVzYyBsYXRlciAocHJvYmluZyB2aWEgdGhlIGRldmljZSB0cmVlKS4gSGlz
+CnByZWZlcmVuY2UgaXMgYSBwZXItU09DIG1hY2hpbmUgSURzIChlZywgIm9tYXA0IHdpdGggZGV2
+aWNlIHRyZWUKc3VwcG9ydCIsIGFuZCBubyBsYXRlciBEVCBwcm9iZS4KCkhvd2V2ZXIsIGl0IHdv
+bid0IGJlIGRpZmZpY3VsdCB0byBjYXRlciBmb3IgZWl0aGVyIGFzIHdlIGdvIGFsb25nLgoKPiAt
+IHNraXBwZWQgOTRiOWVjYSBhcm0vZHQ6IEFsbG93IENPTkZJR19PRiBvbiBBUk0KPiAgICBUaGUg
+dmVyc2lvbiBpbiBteSB0cmVlIHJlZmxlY3RzIGNoYW5nZXMgdG8gdGhlIGRyaXZlcnMvb2YgY29k
+ZQoKT0suCgo+IC0gY2hlcnJ5IHBpY2tlZCA1NzY5NjQ4IGFybS9kdDogcG9zdHBvbmUgbWRlc2Mg
+bG9va3VwIHVudGlsIHNldHVwX2FyY2gKPiB3aGVuIGJvb3Rpbmcgd2l0aCBhIERUCj4gICAtIHFl
+bXUgd291bGQgbm8gbG9uZ2VyIGJvb3Qgb24gbm9ybWFsIHZlcnNhdGlsZXBiIHdpdGggdGhpcyBw
+YXRjaC4KPiBIYWQgdG8gY2hhbmdlIGNvbXBhcmUgdG8gdXNlICJiZXEiIHRvIGdldCBpdCB0byBi
+b290LgoKT0ssIHNvdW5kcyByZWFzb25hYmxlIC0gSSBoYWRuJ3QgdGVzdGVkIHRoYXQgY2hhbmdl
+IG9uIG5vbi1EVC4gSSBzaG91bGQKZmlndXJlIG91dCB3aHkgdGVzdGluZyB0aGUgY2FycnkgYml0
+IGRvZXNuJ3Qgd29yaywgYXMgaXQgbWFkZSBzZW5zZSBhdAp0aGUgdGltZSA6KQoKPiAtIGNoZXJy
+eSBwaWNrZWQgNGFjMzZlYSBhcm0vZHQ6IGFsbG93IGJvb3RtZW0gcmVzZXJ2YXRpb24gZm9yIGRl
+dmljZSB0cmVlIGJsb2IKPiAgIC0gUGxlYXNlIGFkZCBteSBzLW8tYiBsaW5lIHRvIHRoaXMgcGF0
+Y2guICBBIGNodW5rIG9mIHRoYXQgcGF0Y2gKPiBzZWVtcyB0byBiZSBiYXNlZCBvbiBvbmUgb2Yg
+dGhlIHBhdGNoZXMgSSB3cm90ZSAoImFybS9kZXZpY2V0cmVlOgo+IFJlc2VydmUgbWVtb3J5IHVz
+ZWQgYnkgZHRiIGJsb2IiLiAgQ29ycmVjdCBtZSBpZiBJJ20gbm90IHJlbWVtYmVyaW5nCj4gY29y
+cmVjdGx5KS4KClllczsgaXQncyBhIHBhdGNoIHdpdGggbXVsdGlwbGUgY29udHJpYnV0aW9ucyBm
+cm9tIGJvdGggb2YgdXM7IEkgbXVzdApoYXZlIGRyb3BwZWQgeW91ciBzaWdub2ZmIGF0IHNvbWUg
+cG9pbnQsIHNvcnJ5IGFib3V0IHRoYXQuCgo+IC0gY2hlcnJ5IHBpY2tlZCBmYmRmOWNmIGFybS9k
+dDogaG9vayBkZXZpY2UgdHJlZSBzZXR1cCBpbnRvIGJvb3QgY29kZQo+IC0gY2hlcnJ5IHBpY2tl
+ZCA0N2FlNjU1IGFybS9kdDogcHJvYmUgZm9yIHBsYXRmb3JtcyB2aWEgdGhlIGRldmljZSB0cmVl
+Cj4gLSBjaGVycnkgcGlja2VkIGY1MjhhODUgZHJpdmVycy9hbWJhOiBzZXBhcmF0ZSBwZXJpcGhp
+ZCBwcm9iZSBsb2dpYwo+IGZyb20gYW1iYV9kZXZpY2VfcmVnaXN0ZXIKPiAtIGNoZXJyeSBwaWNr
+ZWQgYmY1ZWY1YyBkcml2ZXJzL2FtYmE6IHByb2JlIHZpYSBkZXZpY2UgdHJlZQo+IAoKPiBJIGNo
+ZXJyeSBwaWNrZWQgdGhlIGdlbmVyaWMgY2xvY2sgc3R1ZmYsIGJ1dCBJIHNob3VsZCBwcm9iYWJs
+eSBtZXJnZQo+IGluIHlvdXIgY2xvY2sgdHJlZSBpbnN0ZWFkLiAgTm9uZSBvZiB0aGlzIGlzIHN0
+dWZmIHRoYXQgSSB3aWxsIGJlCj4gY2FycnlpbmcgaW4gbXkgdHJlZSBvdmVyIHRoZSBsb25nIHRl
+cm06Cj4gLSBjaGVycnkgcGlja2VkIGIxNTZlMzUgQWRkIGEgY29tbW9uIHN0cnVjdCBjbGsKPiAt
+IGNoZXJyeSBwaWNrZWQgMGEyZTNkOCBjbGs6IEdlbmVyaWMgc3VwcG9ydCBmb3IgZml4ZWQtcmF0
+ZSBjbG9ja3MKPiAtIGNoZXJyeSBwaWNrZWQgMTIyYTQ2NyBhcm0vY2xrZGV2OiBBbGxvdyBjb21t
+b24gc3RydWN0IGNsayB1c2FnZQo+IC0gY2hlcnJ5IHBpY2tlZCA4YTljODkyIGFybS9wbGF0LXZl
+cnNhdGlsZTogY29udmVydCB0byBjb21tb24gc3RydWN0IGNsawoKT0suIFRoZXNlIGNsb2NrIGNo
+YW5nZWQgYXJlIG1lcmdlZCBpbiBteSBEVCBicmFuY2ggdG8gbWFrZSB0aGUgdmVyc2F0aWxlCkRU
+IHBvcnQgZWFzaWVyOyBidXQgaXQncyBwb3NzaWJsZSB0byBtZXJnZSB0aGF0IHNlcGFyYXRlbHku
+IEkndmUgcG9zdGVkCnRoZSBiYXNlIGNsayBpbmZyYXN0cnVjdHVyZSBjaGFuZ2VzIHRvIHJtaydz
+IHRyZWUsIEkgdGhpbmsgd2UncmUgbWFraW5nCnByb2dyZXNzIHRvIGhhdmUgdGhhdCBhY2NlcHRl
+ZC4gT25jZSB0aGF0IGlzIGRvbmUsIHRoZSB2ZXJzYXRpbGUgcG9ydCB0bwp0aGUgbmV3IGNsayBj
+b2RlIHNob3VsZCBiZSBmYWlybHkgdW5pbnRydXNpdmUuCgo+IEZvciB0aGUgb2YtY2xvY2tzIEkn
+dmUgY2hlcnJ5IHBpY2tlZCB0aGUgZm9sbG93aW5nIGFuZCB0aGVuIG1hZGUgc29tZQo+IGNoYW5n
+ZXMgb24gdG9wOgo+IC0gY2hlcnJ5IHBpY2tlZCAwMTc3ZWY1IG9mOiBhZGQgY2xvY2sgcHJvdmlk
+ZXJzCj4gICAtIEZpeGVkIHVwIEtjb25maWcgY29uZmxpY3RzCj4gLSBjaGVycnkgcGlja2VkIDZi
+ZGJiZDcgb2YvY2xrOiBwYXJzZSBmaXhlZCBjbG9ja3MKClRoaXMgb25lIGNvdWxkIGRvIHdpdGgg
+c29tZSBzYW5pdHkgY2hlY2tpbmc7IHRoZSBEVCBwYXJzaW5nIG1heSBiZSBhCmxpdHRsZSBuYcOv
+dmUuCgo+IC0gY2hlcnJ5IHBpY2tlZCBjMGUwM2ZhIGFybS9jbGtkZXY6IGxvb2t1cCBjbG9ja3Mg
+ZnJvbSBPRiBjbG9jayBwcm92aWRlcnMKPiAtIEFkZGVkIHBhdGNoICJvZi9jbG9jazogcmV3b3Jr
+IHRvIG5ldyBiaW5kaW5nIgo+ICAgLSBJJ20gc3RpbGwgd29ya2luZyBvbiB0aGlzLiAgSSdsbCBw
+b3N0IHRvIHRoZSBNTCBpdCBJJ3ZlIHRlc3RlZCBpdC4KCk9LLCBjb29sLgoKPiBGaW5hbGx5IEkn
+dmUgY2hlcnJ5IHBpY2tlZCB0aGUgbW9kaWZpZWQgdmVyc2F0aWxlIHBsYXRmb3JtLCBhbmQgbWFk
+ZSBhCj4gZmV3IGNoYW5nZXMgZm9yIG15IG93biBwdXJwb3NlLgo+IC0gY2hlcnJ5IHBpY2tlZCA5
+MWViOGI4IGFybS92ZXJzYXRpbGU6IGFkZCBhIGRldmljZSB0cmVlIHZlcnNhdGlsZSBwbGF0Zm9y
+bQo+IC0gc3F1YXNoZWQgaW50byA5MWViOGI4OiAgYjFlNjdkMiBhcm0vdmVyc2F0aWxlOiBwcm9i
+ZSBkZXZpY2VzIGZyb20gZGV2aWNlIHRyZWUKPiAKPiBBbHNvIGhhdmUgYSBjb3VwbGUgb2YgcGF0
+Y2hlcyBvbiB0b3AgdG8gZml4IGEgcGhhbmRsZSBlbmRpYW4gaXNzdWUgYW5kCj4gdG8gZml4IGJv
+b3Rpbmcgb2YgdmVyc2F0aWxlcGIgd2hlbiB0aGUgZHQgcGF0Y2hlcyBhcmUgYXBwbGllZDoKCkFs
+bCBsb29rcyBnb29kLCB0aGFua3MgZm9yIHRoYXQhCgpDaGVlcnMsCgoKSmVyZW15CgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1
+c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
