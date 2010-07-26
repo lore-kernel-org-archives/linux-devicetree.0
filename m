@@ -1,36 +1,38 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH v3] of: Create asm-generic/of.h and provide default
 	of_node_to_nid()
-Date: Mon, 26 Jul 2010 15:48:54 -0700 (PDT)
-Message-ID: <20100726.154854.35052662.davem@davemloft.net>
-References: <20100726220405.1550.63442.stgit@angua>
-	<20100726222627.GA23501@merkur.ravnborg.org>
+Date: Mon, 26 Jul 2010 16:51:01 -0600
+Message-ID: <AANLkTikpON7WUkTLrnW4y2kghM=H8cLCAFst08S3cL_Z@mail.gmail.com>
+References: <20100726220405.1550.63442.stgit@angua> <20100726222627.GA23501@merkur.ravnborg.org>
 	<AANLkTikcV3jJUm_My-oK-drudSDz3M2iH1cWhxdt+W1s@mail.gmail.com>
+	<20100726.154854.35052662.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTikcV3jJUm_My-oK-drudSDz3M2iH1cWhxdt+W1s-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20100726.154854.35052662.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: sam@ravnborg.org, sfr@canb.auug.org.au, monstr@monstr.eu, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, benh@kernel.crashing.org, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Date: Mon, 26 Jul 2010 16:42:20 -0600
+On Mon, Jul 26, 2010 at 4:48 PM, David Miller <davem@davemloft.net> wro=
+te:
+> From: Grant Likely <grant.likely@secretlab.ca>
+> Date: Mon, 26 Jul 2010 16:42:20 -0600
+>
+>> It protects against some later include file doing a #define
+>> of_node_to_nid and thus resulting in an inconsistent definition. =A0=
+If
+>> some code tries to do this then the preprocessor will complain. =A0T=
+his
+>> is the pattern that Stephen suggested.
+>
+> Also, it would be nice to unravel the "0" vs. "-1" default
+> inconsistency.
 
-> It protects against some later include file doing a #define
-> of_node_to_nid and thus resulting in an inconsistent definition.  If
-> some code tries to do this then the preprocessor will complain.  This
-> is the pattern that Stephen suggested.
+Indeed.  I looked at it briefly, but it wasn't immediately clear what
+the impact would be to switch powerpc over to -1, and it looked to me
+like sparc depends on -1 to signify no node association.
 
-Also, it would be nice to unravel the "0" vs. "-1" default
-inconsistency.
+g.
