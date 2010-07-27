@@ -1,19 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] powerpc/mpc5121: add initial support for PDM360NG
-	board
-Date: Tue, 27 Jul 2010 11:43:29 -0600
-Message-ID: <AANLkTimY+Uq7GEF50Qqus4GrTH8g8w_in99G2raaFVV7@mail.gmail.com>
-References: <1272882222-12253-1-git-send-email-agust@denx.de>
-	<1279892973-24110-1-git-send-email-agust@denx.de>
-	<AANLkTi=Ee6HR+Ux0g4V1+81DXUmsO=UDhi6jWsDgGchv@mail.gmail.com>
-	<20100727123647.0a3b8832@wker>
-	<AANLkTika=KeKcaY_FF8tN5Fy-H+cozjZsGObXoQhKiVh@mail.gmail.com>
-	<20100727192856.63edc8e0@wker>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v2] of/spi: call of_register_spi_devices() from spi core code
+Date: Tue, 27 Jul 2010 22:35:58 +0200
+Message-ID: <1280262958-21914-1-git-send-email-agust@denx.de>
+References: <AANLkTimG+QLksWVbQ63F=Bc1h-9946J1RO0qSavBAegO@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100727192856.63edc8e0@wker>
+In-Reply-To: <AANLkTimG+QLksWVbQ63F=Bc1h-9946J1RO0qSavBAegO-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,44 +17,273 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Markus Fischer <markus.fischer.ec-Jj5Fu8i2Z9Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michael Weiss <michael.weiss-Jj5Fu8i2Z9Q@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Wolfgang Grandegger <wg-ynQEQJNshbs@public.gmane.org>
+To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 27, 2010 at 11:28 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> On Tue, 27 Jul 2010 10:58:33 -0600
-> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> ...
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 spi@11900 {
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fsl,m=
-pc5121-psc-spi", "fsl,mpc5121-psc";
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cell-index =3D <9>;
->> >>
->> >> Try to drop the cell-index properties. =A0They are almost always misu=
-sed.
->> >
->> > Removing cell-index would require changing the spi driver's probe.
->> > Currently cell-index is used to set spi bus number. What could be used
->> > for bus enumeration instead? Is it okay to use part of the spi node
->> > address? e.g. obtaining the offset 0x11900, masking out the unrelated
->> > bits and shifting by 8 would deliver unique index 9 for PSC9 in SPI
->> > mode. This would work for all 12 PSC SPI controllers of mpc5121.
->>
->> Does the spi bus number really matter? =A0The device tree context gives
->> you a firm association between spi masters and devices which doesn't
->> require assigning a specific bus number. =A0The core spi code can
->> dynamically assign a bus number for the bus by setting bus_num to -1.
->
-> The bus number is used in the mpc5121 psc spi driver to obtain correct
-> clock for PSC in question (0 to 11) and to enable the PSC clock at probe
-> time. Therefore using dynamically assigned bus number would require anoth=
-er
-> change to the spi driver.
+Move of_register_spi_devices() call from drivers to
+spi_register_master(). Also change the function to use
+the struct device_node pointer from master spi device
+instead of passing it as function argument.
 
-That's unrelated to the bus number.  Use cell-index value directly for
-obtaining the clock if you need to; but limit its exposure.  Once
-Jeremy gets his common clock architecture merged, then we could
-probably migrate to that for obtaining the correct clock without
-cell-index.
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+Changes in v2 as requested by Grant:
 
-g.
+ - check master->dev.of_node to prevent potential null
+   pointer dereference
+ - set master->dev.of_node in OF-aware SPI bus drivers
+ - also drop of_register_spi_devices() in xilinx_spi_of.c
+   and spi_ppc4xx.c drivers
+
+ drivers/of/of_spi.c           |   10 ++++++----
+ drivers/spi/mpc512x_psc_spi.c |    1 +
+ drivers/spi/mpc52xx_psc_spi.c |   10 ++--------
+ drivers/spi/mpc52xx_spi.c     |    3 +--
+ drivers/spi/spi.c             |    4 ++++
+ drivers/spi/spi_mpc8xxx.c     |    4 +---
+ drivers/spi/spi_ppc4xx.c      |    2 +-
+ drivers/spi/xilinx_spi.c      |    1 +
+ drivers/spi/xilinx_spi_of.c   |    3 ---
+ include/linux/of_spi.h        |   11 ++++++++---
+ 10 files changed, 25 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/of/of_spi.c b/drivers/of/of_spi.c
+index d504f1d..1dbce58 100644
+--- a/drivers/of/of_spi.c
++++ b/drivers/of/of_spi.c
+@@ -15,12 +15,11 @@
+ /**
+  * of_register_spi_devices - Register child devices onto the SPI bus
+  * @master:	Pointer to spi_master device
+- * @np:		parent node of SPI device nodes
+  *
+- * Registers an spi_device for each child node of 'np' which has a 'reg'
++ * Registers an spi_device for each child node of master node which has a 'reg'
+  * property.
+  */
+-void of_register_spi_devices(struct spi_master *master, struct device_node *np)
++void of_register_spi_devices(struct spi_master *master)
+ {
+ 	struct spi_device *spi;
+ 	struct device_node *nc;
+@@ -28,7 +27,10 @@ void of_register_spi_devices(struct spi_master *master, struct device_node *np)
+ 	int rc;
+ 	int len;
+ 
+-	for_each_child_of_node(np, nc) {
++	if (!master->dev.of_node)
++		return;
++
++	for_each_child_of_node(master->dev.of_node, nc) {
+ 		/* Alloc an spi_device */
+ 		spi = spi_alloc_device(master);
+ 		if (!spi) {
+diff --git a/drivers/spi/mpc512x_psc_spi.c b/drivers/spi/mpc512x_psc_spi.c
+index c8d69fc..b5539d3 100644
+--- a/drivers/spi/mpc512x_psc_spi.c
++++ b/drivers/spi/mpc512x_psc_spi.c
+@@ -440,6 +440,7 @@ static int __devinit mpc512x_psc_spi_do_probe(struct device *dev, u32 regaddr,
+ 	master->setup = mpc512x_psc_spi_setup;
+ 	master->transfer = mpc512x_psc_spi_transfer;
+ 	master->cleanup = mpc512x_psc_spi_cleanup;
++	master->dev.of_node = dev->of_node;
+ 
+ 	tempp = ioremap(regaddr, size);
+ 	if (!tempp) {
+diff --git a/drivers/spi/mpc52xx_psc_spi.c b/drivers/spi/mpc52xx_psc_spi.c
+index 7104cb7..bd81ff9 100644
+--- a/drivers/spi/mpc52xx_psc_spi.c
++++ b/drivers/spi/mpc52xx_psc_spi.c
+@@ -17,7 +17,6 @@
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/of_platform.h>
+-#include <linux/of_spi.h>
+ #include <linux/workqueue.h>
+ #include <linux/completion.h>
+ #include <linux/io.h>
+@@ -398,6 +397,7 @@ static int __init mpc52xx_psc_spi_do_probe(struct device *dev, u32 regaddr,
+ 	master->setup = mpc52xx_psc_spi_setup;
+ 	master->transfer = mpc52xx_psc_spi_transfer;
+ 	master->cleanup = mpc52xx_psc_spi_cleanup;
++	master->dev.of_node = dev->of_node;
+ 
+ 	mps->psc = ioremap(regaddr, size);
+ 	if (!mps->psc) {
+@@ -470,7 +470,6 @@ static int __init mpc52xx_psc_spi_of_probe(struct of_device *op,
+ 	const u32 *regaddr_p;
+ 	u64 regaddr64, size64;
+ 	s16 id = -1;
+-	int rc;
+ 
+ 	regaddr_p = of_get_address(op->dev.of_node, 0, &size64, NULL);
+ 	if (!regaddr_p) {
+@@ -491,13 +490,8 @@ static int __init mpc52xx_psc_spi_of_probe(struct of_device *op,
+ 		id = *psc_nump + 1;
+ 	}
+ 
+-	rc = mpc52xx_psc_spi_do_probe(&op->dev, (u32)regaddr64, (u32)size64,
++	return mpc52xx_psc_spi_do_probe(&op->dev, (u32)regaddr64, (u32)size64,
+ 				irq_of_parse_and_map(op->dev.of_node, 0), id);
+-	if (rc == 0)
+-		of_register_spi_devices(dev_get_drvdata(&op->dev),
+-					op->dev.of_node);
+-
+-	return rc;
+ }
+ 
+ static int __exit mpc52xx_psc_spi_of_remove(struct of_device *op)
+diff --git a/drivers/spi/mpc52xx_spi.c b/drivers/spi/mpc52xx_spi.c
+index b1a76bf..56136ff 100644
+--- a/drivers/spi/mpc52xx_spi.c
++++ b/drivers/spi/mpc52xx_spi.c
+@@ -18,7 +18,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+ #include <linux/spi/spi.h>
+-#include <linux/of_spi.h>
+ #include <linux/io.h>
+ #include <linux/of_gpio.h>
+ #include <linux/slab.h>
+@@ -439,6 +438,7 @@ static int __devinit mpc52xx_spi_probe(struct of_device *op,
+ 	master->setup = mpc52xx_spi_setup;
+ 	master->transfer = mpc52xx_spi_transfer;
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
++	master->dev.of_node = op->dev.of_node;
+ 
+ 	dev_set_drvdata(&op->dev, master);
+ 
+@@ -512,7 +512,6 @@ static int __devinit mpc52xx_spi_probe(struct of_device *op,
+ 	if (rc)
+ 		goto err_register;
+ 
+-	of_register_spi_devices(master, op->dev.of_node);
+ 	dev_info(&ms->master->dev, "registered MPC5200 SPI bus\n");
+ 
+ 	return rc;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index fdde706..a9e5c79 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -26,6 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_spi.h>
+ 
+ 
+ /* SPI bustype and spi_master class are registered after board init code
+@@ -544,6 +545,9 @@ int spi_register_master(struct spi_master *master)
+ 	/* populate children from any spi device tables */
+ 	scan_boardinfo(master);
+ 	status = 0;
++
++	/* Register devices from the device tree */
++	of_register_spi_devices(master);
+ done:
+ 	return status;
+ }
+diff --git a/drivers/spi/spi_mpc8xxx.c b/drivers/spi/spi_mpc8xxx.c
+index 97ab0a8..aad9ae1 100644
+--- a/drivers/spi/spi_mpc8xxx.c
++++ b/drivers/spi/spi_mpc8xxx.c
+@@ -38,7 +38,6 @@
+ #include <linux/of_platform.h>
+ #include <linux/gpio.h>
+ #include <linux/of_gpio.h>
+-#include <linux/of_spi.h>
+ #include <linux/slab.h>
+ 
+ #include <sysdev/fsl_soc.h>
+@@ -1009,6 +1008,7 @@ mpc8xxx_spi_probe(struct device *dev, struct resource *mem, unsigned int irq)
+ 	master->setup = mpc8xxx_spi_setup;
+ 	master->transfer = mpc8xxx_spi_transfer;
+ 	master->cleanup = mpc8xxx_spi_cleanup;
++	master->dev.of_node = dev->of_node;
+ 
+ 	mpc8xxx_spi = spi_master_get_devdata(master);
+ 	mpc8xxx_spi->dev = dev;
+@@ -1299,8 +1299,6 @@ static int __devinit of_mpc8xxx_spi_probe(struct of_device *ofdev,
+ 		goto err;
+ 	}
+ 
+-	of_register_spi_devices(master, np);
+-
+ 	return 0;
+ 
+ err:
+diff --git a/drivers/spi/spi_ppc4xx.c b/drivers/spi/spi_ppc4xx.c
+index d53466a..0f5fa7e 100644
+--- a/drivers/spi/spi_ppc4xx.c
++++ b/drivers/spi/spi_ppc4xx.c
+@@ -407,6 +407,7 @@ static int __init spi_ppc4xx_of_probe(struct of_device *op,
+ 	master = spi_alloc_master(dev, sizeof *hw);
+ 	if (master == NULL)
+ 		return -ENOMEM;
++	master->dev.of_node = np;
+ 	dev_set_drvdata(dev, master);
+ 	hw = spi_master_get_devdata(master);
+ 	hw->master = spi_master_get(master);
+@@ -545,7 +546,6 @@ static int __init spi_ppc4xx_of_probe(struct of_device *op,
+ 	}
+ 
+ 	dev_info(dev, "driver initialized\n");
+-	of_register_spi_devices(master, np);
+ 
+ 	return 0;
+ 
+diff --git a/drivers/spi/xilinx_spi.c b/drivers/spi/xilinx_spi.c
+index 1b47363..d101a84 100644
+--- a/drivers/spi/xilinx_spi.c
++++ b/drivers/spi/xilinx_spi.c
+@@ -390,6 +390,7 @@ struct spi_master *xilinx_spi_init(struct device *dev, struct resource *mem,
+ 
+ 	master->bus_num = bus_num;
+ 	master->num_chipselect = pdata->num_chipselect;
++	master->dev.of_node = dev->of_node;
+ 
+ 	xspi->mem = *mem;
+ 	xspi->irq = irq;
+diff --git a/drivers/spi/xilinx_spi_of.c b/drivers/spi/xilinx_spi_of.c
+index 4654805..87cda09 100644
+--- a/drivers/spi/xilinx_spi_of.c
++++ b/drivers/spi/xilinx_spi_of.c
+@@ -80,9 +80,6 @@ static int __devinit xilinx_spi_of_probe(struct of_device *ofdev,
+ 
+ 	dev_set_drvdata(&ofdev->dev, master);
+ 
+-	/* Add any subnodes on the SPI bus */
+-	of_register_spi_devices(master, ofdev->dev.of_node);
+-
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/of_spi.h b/include/linux/of_spi.h
+index 5f71ee8..9e3e70f 100644
+--- a/include/linux/of_spi.h
++++ b/include/linux/of_spi.h
+@@ -9,10 +9,15 @@
+ #ifndef __LINUX_OF_SPI_H
+ #define __LINUX_OF_SPI_H
+ 
+-#include <linux/of.h>
+ #include <linux/spi/spi.h>
+ 
+-extern void of_register_spi_devices(struct spi_master *master,
+-				    struct device_node *np);
++#if defined(CONFIG_OF_SPI) || defined(CONFIG_OF_SPI_MODULE)
++extern void of_register_spi_devices(struct spi_master *master);
++#else
++static inline void of_register_spi_devices(struct spi_master *master)
++{
++	return;
++}
++#endif /* CONFIG_OF_SPI */
+ 
+ #endif /* __LINUX_OF_SPI */
+-- 
+1.7.0.4
