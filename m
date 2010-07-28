@@ -1,7 +1,7 @@
 From: John Rigby <john.rigby-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RFC PATCH 2/3] ARM: WIP: add flat device tree support
-Date: Wed, 28 Jul 2010 15:59:54 -0600
-Message-ID: <1280354395-9128-3-git-send-email-john.rigby@linaro.org>
+Subject: [RFC PATCH 3/3] ARM: add config for beagle with fdt enabled
+Date: Wed, 28 Jul 2010 15:59:55 -0600
+Message-ID: <1280354395-9128-4-git-send-email-john.rigby@linaro.org>
 References: <1280354395-9128-1-git-send-email-john.rigby@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,254 +20,389 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Just for testing ARM device tree support
+
 Signed-off-by: John Rigby <john.rigby-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/include/asm/config.h |    1 +
- arch/arm/lib/bootm.c          |  128 ++++++++++++++++++++++++++++++++++++++++-
- common/cmd_bootm.c            |    5 +-
- common/image.c                |    7 ++-
- include/image.h               |    2 +-
- 5 files changed, 138 insertions(+), 5 deletions(-)
+ MAKEALL                           |    1 +
+ boards.cfg                        |    1 +
+ include/configs/omap3_beagle_dt.h |  344 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 346 insertions(+), 0 deletions(-)
+ create mode 100644 include/configs/omap3_beagle_dt.h
 
-diff --git a/arch/arm/include/asm/config.h b/arch/arm/include/asm/config.h
-index b76fd8e..9bca5bc 100644
---- a/arch/arm/include/asm/config.h
-+++ b/arch/arm/include/asm/config.h
-@@ -23,5 +23,6 @@
- 
- /* Relocation to SDRAM works on all ARM boards */
- #define CONFIG_RELOC_FIXUP_WORKS
-+#define CONFIG_LMB
- 
- #endif
-diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c
-index 3101321..e45d974 100644
---- a/arch/arm/lib/bootm.c
-+++ b/arch/arm/lib/bootm.c
-@@ -27,6 +27,12 @@
- #include <u-boot/zlib.h>
- #include <asm/byteorder.h>
- 
-+#if defined(CONFIG_OF_LIBFDT)
-+#include <fdt.h>
-+#include <libfdt.h>
-+#include <fdt_support.h>
+diff --git a/MAKEALL b/MAKEALL
+index 2133559..86efd5c 100755
+--- a/MAKEALL
++++ b/MAKEALL
+@@ -653,6 +653,7 @@ LIST_ARMV7="		\
+ 	devkit8000		\
+ 	mx51evk			\
+ 	omap3_beagle		\
++	omap3_beagle_dt		\
+ 	omap3_overo		\
+ 	omap3_evm		\
+ 	omap3_pandora		\
+diff --git a/boards.cfg b/boards.cfg
+index b82f530..d67865b 100644
+--- a/boards.cfg
++++ b/boards.cfg
+@@ -259,6 +259,7 @@ omap3_pandora	arm	armv7		pandora		-		omap3
+ omap3_zoom1	arm	armv7		zoom1		logicpd		omap3
+ omap3_zoom2	arm	armv7		zoom2		logicpd		omap3
+ omap3_beagle	arm	armv7		beagle		ti		omap3
++omap3_beagle_dt	arm	armv7		beagle		ti		omap3
+ omap3_evm	arm	armv7		evm		ti		omap3
+ omap3_sdp3430	arm	armv7		sdp3430		ti		omap3
+ omap4_panda	arm	armv7		panda		ti		omap4
+diff --git a/include/configs/omap3_beagle_dt.h b/include/configs/omap3_beagle_dt.h
+new file mode 100644
+index 0000000..6bd3c7b
+--- /dev/null
++++ b/include/configs/omap3_beagle_dt.h
+@@ -0,0 +1,344 @@
++/*
++ * (C) Copyright 2006-2008
++ * Texas Instruments.
++ * Richard Woodruff <r-woodruff2-l0cyMroinI0@public.gmane.org>
++ * Syed Mohammed Khasim <x0khasim-l0cyMroinI0@public.gmane.org>
++ *
++ * Configuration settings for the TI OMAP3530 Beagle board.
++ *
++ * See file CREDITS for list of people who contributed to this
++ * project.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++#ifndef __CONFIG_H
++#define __CONFIG_H
++
++/*
++ * High Level Configuration Options
++ */
++#define CONFIG_ARMV7		1	/* This is an ARM V7 CPU core */
++#define CONFIG_OMAP		1	/* in a TI OMAP core */
++#define CONFIG_OMAP34XX		1	/* which is a 34XX */
++#define CONFIG_OMAP3430		1	/* which is in a 3430 */
++#define CONFIG_OMAP3_BEAGLE	1	/* working with BEAGLE */
++
++#define CONFIG_SDRC	/* The chip has SDRC controller */
++
++#include <asm/arch/cpu.h>		/* get chip and board defs */
++#include <asm/arch/omap3.h>
++
++/*
++ * Display CPU and Board information
++ */
++#define CONFIG_DISPLAY_CPUINFO		1
++#define CONFIG_DISPLAY_BOARDINFO	1
++
++/* Clock Defines */
++#define V_OSCK			26000000	/* Clock output from T2 */
++#define V_SCLK			(V_OSCK >> 1)
++
++#undef CONFIG_USE_IRQ				/* no support for IRQs */
++#define CONFIG_MISC_INIT_R
++
++#define CONFIG_OF_LIBFDT		1
++#define CONFIG_SYS_BOOTMAPSZ	    (8 << 20)
++
++#define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
++#define CONFIG_SETUP_MEMORY_TAGS	1
++#define CONFIG_INITRD_TAG		1
++#define CONFIG_REVISION_TAG		1
++
++/*
++ * Size of malloc() pool
++ */
++#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
++						/* Sector */
++#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (128 << 10))
++#define CONFIG_SYS_GBL_DATA_SIZE	128	/* bytes reserved for */
++						/* initial data */
++
++/*
++ * Hardware drivers
++ */
++
++/*
++ * NS16550 Configuration
++ */
++#define V_NS16550_CLK			48000000	/* 48MHz (APLL96/2) */
++
++#define CONFIG_SYS_NS16550
++#define CONFIG_SYS_NS16550_SERIAL
++#define CONFIG_SYS_NS16550_REG_SIZE	(-4)
++#define CONFIG_SYS_NS16550_CLK		V_NS16550_CLK
++
++/*
++ * select serial console configuration
++ */
++#define CONFIG_CONS_INDEX		3
++#define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
++#define CONFIG_SERIAL3			3	/* UART3 on Beagle Rev 2 */
++
++/* allow to overwrite serial and ethaddr */
++#define CONFIG_ENV_OVERWRITE
++#define CONFIG_BAUDRATE			115200
++#define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
++					115200}
++#define CONFIG_MMC			1
++#define CONFIG_OMAP3_MMC		1
++#define CONFIG_DOS_PARTITION		1
++
++/* DDR - I use Micron DDR */
++#define CONFIG_OMAP3_MICRON_DDR		1
++
++/* USB */
++#define CONFIG_MUSB_UDC			1
++#define CONFIG_USB_OMAP3		1
++#define CONFIG_TWL4030_USB		1
++
++/* USB device configuration */
++#define CONFIG_USB_DEVICE		1
++#define CONFIG_USB_TTY			1
++#define CONFIG_SYS_CONSOLE_IS_IN_ENV	1
++/* Change these to suit your needs */
++#define CONFIG_USBD_VENDORID		0x0451
++#define CONFIG_USBD_PRODUCTID		0x5678
++#define CONFIG_USBD_MANUFACTURER	"Texas Instruments"
++#define CONFIG_USBD_PRODUCT_NAME	"Beagle"
++
++/* commands to include */
++#include <config_cmd_default.h>
++
++#define CONFIG_CMD_EXT2		/* EXT2 Support			*/
++#define CONFIG_CMD_FAT		/* FAT support			*/
++#define CONFIG_CMD_JFFS2	/* JFFS2 Support		*/
++#define CONFIG_CMD_MTDPARTS	/* Enable MTD parts commands */
++#define CONFIG_MTD_DEVICE	/* needed for mtdparts commands */
++#define MTDIDS_DEFAULT			"nand0=nand"
++#define MTDPARTS_DEFAULT		"mtdparts=nand:512k(x-loader),"\
++					"1920k(u-boot),128k(u-boot-env),"\
++					"4m(kernel),-(fs)"
++
++#define CONFIG_CMD_I2C		/* I2C serial bus support	*/
++#define CONFIG_CMD_MMC		/* MMC support			*/
++#define CONFIG_CMD_NAND		/* NAND support			*/
++
++#undef CONFIG_CMD_FLASH		/* flinfo, erase, protect	*/
++#undef CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
++#undef CONFIG_CMD_IMI		/* iminfo			*/
++#undef CONFIG_CMD_IMLS		/* List all found images	*/
++#undef CONFIG_CMD_NET		/* bootp, tftpboot, rarpboot	*/
++#undef CONFIG_CMD_NFS		/* NFS support			*/
++
++#define CONFIG_SYS_NO_FLASH
++#define CONFIG_HARD_I2C			1
++#define CONFIG_SYS_I2C_SPEED		100000
++#define CONFIG_SYS_I2C_SLAVE		1
++#define CONFIG_SYS_I2C_BUS		0
++#define CONFIG_SYS_I2C_BUS_SELECT	1
++#define CONFIG_DRIVER_OMAP34XX_I2C	1
++#define CONFIG_I2C_MULTI_BUS		1
++
++/*
++ * TWL4030
++ */
++#define CONFIG_TWL4030_POWER		1
++#define CONFIG_TWL4030_LED		1
++
++/*
++ * Board NAND Info.
++ */
++#define CONFIG_SYS_NAND_QUIET_TEST	1
++#define CONFIG_NAND_OMAP_GPMC
++#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
++							/* to access nand */
++#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
++							/* to access nand at */
++							/* CS0 */
++#define GPMC_NAND_ECC_LP_x16_LAYOUT	1
++
++#define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
++							/* devices */
++#define CONFIG_JFFS2_NAND
++/* nand device jffs2 lives on */
++#define CONFIG_JFFS2_DEV		"nand0"
++/* start of jffs2 partition */
++#define CONFIG_JFFS2_PART_OFFSET	0x680000
++#define CONFIG_JFFS2_PART_SIZE		0xf980000	/* size of jffs2 */
++							/* partition */
++
++/* Environment information */
++#define CONFIG_BOOTDELAY		10
++
++#define CONFIG_EXTRA_ENV_SETTINGS \
++	"loadaddr=0x82000000\0" \
++	"usbtty=cdc_acm\0" \
++	"console=ttyS2,115200n8\0" \
++	"mpurate=500\0" \
++	"vram=12M\0" \
++	"dvimode=1024x768MR-16@60\0" \
++	"defaultdisplay=dvi\0" \
++	"mmcroot=/dev/mmcblk0p2 rw\0" \
++	"mmcrootfstype=ext3 rootwait\0" \
++	"nandroot=/dev/mtdblock4 rw\0" \
++	"nandrootfstype=jffs2\0" \
++	"mmcargs=setenv bootargs console=${console} " \
++		"mpurate=${mpurate} " \
++		"vram=${vram} " \
++		"omapfb.mode=dvi:${dvimode} " \
++		"omapdss.def_disp=${defaultdisplay} " \
++		"root=${mmcroot} " \
++		"rootfstype=${mmcrootfstype}\0" \
++	"nandargs=setenv bootargs console=${console} " \
++		"mpurate=${mpurate} " \
++		"vram=${vram} " \
++		"omapfb.mode=dvi:${dvimode} " \
++		"omapdss.def_disp=${defaultdisplay} " \
++		"root=${nandroot} " \
++		"rootfstype=${nandrootfstype}\0" \
++	"loadbootscript=fatload mmc 0 ${loadaddr} boot.scr\0" \
++	"bootscript=echo Running bootscript from mmc ...; " \
++		"source ${loadaddr}\0" \
++	"loaduimage=fatload mmc 0 ${loadaddr} uImage\0" \
++	"mmcboot=echo Booting from mmc ...; " \
++		"run mmcargs; " \
++		"bootm ${loadaddr}\0" \
++	"nandboot=echo Booting from nand ...; " \
++		"run nandargs; " \
++		"nand read ${loadaddr} 280000 400000; " \
++		"bootm ${loadaddr}\0" \
++
++#define CONFIG_BOOTCOMMAND \
++	"if mmc init; then " \
++		"if run loadbootscript; then " \
++			"run bootscript; " \
++		"else " \
++			"if run loaduimage; then " \
++				"run mmcboot; " \
++			"else run nandboot; " \
++			"fi; " \
++		"fi; " \
++	"else run nandboot; fi"
++
++#define CONFIG_AUTO_COMPLETE		1
++/*
++ * Miscellaneous configurable options
++ */
++#define CONFIG_SYS_LONGHELP		/* undef to save memory */
++#define CONFIG_SYS_HUSH_PARSER		/* use "hush" command parser */
++#define CONFIG_SYS_PROMPT_HUSH_PS2	"> "
++#define CONFIG_SYS_PROMPT		"OMAP3 beagleboard.org # "
++#define CONFIG_SYS_CBSIZE		256	/* Console I/O Buffer Size */
++/* Print Buffer Size */
++#define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + \
++					sizeof(CONFIG_SYS_PROMPT) + 16)
++#define CONFIG_SYS_MAXARGS		16	/* max number of command args */
++/* Boot Argument Buffer Size */
++#define CONFIG_SYS_BARGSIZE		(CONFIG_SYS_CBSIZE)
++
++#define CONFIG_SYS_MEMTEST_START	(OMAP34XX_SDRC_CS0)	/* memtest */
++								/* works on */
++#define CONFIG_SYS_MEMTEST_END		(OMAP34XX_SDRC_CS0 + \
++					0x01F00000) /* 31MB */
++
++#define CONFIG_SYS_LOAD_ADDR		(OMAP34XX_SDRC_CS0)	/* default */
++							/* load address */
++
++/*
++ * OMAP3 has 12 GP timers, they can be driven by the system clock
++ * (12/13/16.8/19.2/38.4MHz) or by 32KHz clock. We use 13MHz (V_SCLK).
++ * This rate is divided by a local divisor.
++ */
++#define CONFIG_SYS_TIMERBASE		(OMAP34XX_GPT2)
++#define CONFIG_SYS_PTV			2       /* Divisor: 2^(PTV+1) => 8 */
++#define CONFIG_SYS_HZ			1000
++
++/*-----------------------------------------------------------------------
++ * Stack sizes
++ *
++ * The stack sizes are set up in start.S using the settings below
++ */
++#define CONFIG_STACKSIZE	(128 << 10)	/* regular stack 128 KiB */
++#ifdef CONFIG_USE_IRQ
++#define CONFIG_STACKSIZE_IRQ	(4 << 10)	/* IRQ stack 4 KiB */
++#define CONFIG_STACKSIZE_FIQ	(4 << 10)	/* FIQ stack 4 KiB */
 +#endif
 +
- DECLARE_GLOBAL_DATA_PTR;
- 
- #if defined (CONFIG_SETUP_MEMORY_TAGS) || \
-@@ -50,7 +56,34 @@ static void setup_end_tag (bd_t *bd);
- static struct tag *params;
- #endif /* CONFIG_SETUP_MEMORY_TAGS || CONFIG_CMDLINE_TAG || CONFIG_INITRD_TAG */
- 
--int do_bootm_linux(int flag, int argc, char * const argv[], bootm_headers_t *images)
-+static ulong get_sp(void);
-+#if defined(CONFIG_OF_LIBFDT)
-+static int bootm_linux_fdt(bootm_headers_t *images);
++/*-----------------------------------------------------------------------
++ * Physical Memory Map
++ */
++#define CONFIG_NR_DRAM_BANKS	2	/* CS1 may or may not be populated */
++#define PHYS_SDRAM_1		OMAP34XX_SDRC_CS0
++#define PHYS_SDRAM_1_SIZE	(32 << 20)	/* at least 32 MiB */
++#define PHYS_SDRAM_2		OMAP34XX_SDRC_CS1
++
++/* SDRAM Bank Allocation method */
++#define SDRC_R_B_C		1
++
++/*-----------------------------------------------------------------------
++ * FLASH and environment organization
++ */
++
++/* **** PISMO SUPPORT *** */
++
++/* Configure the PISMO */
++#define PISMO1_NAND_SIZE		GPMC_SIZE_128M
++#define PISMO1_ONEN_SIZE		GPMC_SIZE_128M
++
++#define CONFIG_SYS_MAX_FLASH_SECT	520	/* max number of sectors on */
++						/* one chip */
++#define CONFIG_SYS_MAX_FLASH_BANKS	2	/* max number of flash banks */
++#define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* Reserve 2 sectors */
++
++#define CONFIG_SYS_FLASH_BASE		boot_flash_base
++
++/* Monitor at start of flash */
++#define CONFIG_SYS_MONITOR_BASE		CONFIG_SYS_FLASH_BASE
++#define CONFIG_SYS_ONENAND_BASE		ONENAND_MAP
++
++#define CONFIG_ENV_IS_IN_NAND		1
++#define ONENAND_ENV_OFFSET		0x260000 /* environment starts here */
++#define SMNAND_ENV_OFFSET		0x260000 /* environment starts here */
++
++#define CONFIG_SYS_ENV_SECT_SIZE	boot_flash_sec
++#define CONFIG_ENV_OFFSET		boot_flash_off
++#define CONFIG_ENV_ADDR			SMNAND_ENV_OFFSET
++
++/*-----------------------------------------------------------------------
++ * CFI FLASH driver setup
++ */
++/* timeout values are in ticks */
++#define CONFIG_SYS_FLASH_ERASE_TOUT	(100 * CONFIG_SYS_HZ)
++#define CONFIG_SYS_FLASH_WRITE_TOUT	(100 * CONFIG_SYS_HZ)
++
++/* Flash banks JFFS2 should use */
++#define CONFIG_SYS_MAX_MTD_BANKS	(CONFIG_SYS_MAX_FLASH_BANKS + \
++					CONFIG_SYS_MAX_NAND_DEVICE)
++#define CONFIG_SYS_JFFS2_MEM_NAND
++/* use flash_info[2] */
++#define CONFIG_SYS_JFFS2_FIRST_BANK	CONFIG_SYS_MAX_FLASH_BANKS
++#define CONFIG_SYS_JFFS2_NUM_BANKS	1
++
++#ifndef __ASSEMBLY__
++extern unsigned int boot_flash_base;
++extern volatile unsigned int boot_flash_env_addr;
++extern unsigned int boot_flash_off;
++extern unsigned int boot_flash_sec;
++extern unsigned int boot_flash_type;
 +#endif
 +
-+void arch_lmb_reserve(struct lmb *lmb)
-+{
-+	ulong sp;
-+
-+	/*
-+	 * Booting a (Linux) kernel image
-+	 *
-+	 * Allocate space for command line and board info - the
-+	 * address should be as high as possible within the reach of
-+	 * the kernel (see CONFIG_SYS_BOOTMAPSZ settings), but in unused
-+	 * memory, which means far enough below the current stack
-+	 * pointer.
-+	 */
-+	sp = get_sp();
-+	debug("## Current stack ends at 0x%08lx ", sp);
-+
-+	/* adjust sp by 1K to be safe */
-+	sp -= 1024;
-+	lmb_reserve(lmb, sp,
-+		    gd->bd->bi_dram[0].start + gd->bd->bi_dram[0].size - sp);
-+}
-+
-+int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
- {
- 	bd_t	*bd = gd->bd;
- 	char	*s;
-@@ -64,6 +97,11 @@ int do_bootm_linux(int flag, int argc, char * const argv[], bootm_headers_t *ima
- 	if ((flag != 0) && (flag != BOOTM_STATE_OS_GO))
- 		return 1;
- 
-+#ifdef CONFIG_OF_LIBFDT
-+	if (images->ft_len)
-+		return bootm_linux_fdt(images);
-+#endif
-+
- 	theKernel = (void (*)(int, int, uint))images->ep;
- 
- 	s = getenv ("machid");
-@@ -99,7 +137,7 @@ int do_bootm_linux(int flag, int argc, char * const argv[], bootm_headers_t *ima
- 	if (images->rd_start && images->rd_end)
- 		setup_initrd_tag (bd, images->rd_start, images->rd_end);
- #endif
--	setup_end_tag (bd);
-+	setup_end_tag(bd);
- #endif
- 
- 	/* we assume that the kernel is in place */
-@@ -120,6 +158,84 @@ int do_bootm_linux(int flag, int argc, char * const argv[], bootm_headers_t *ima
- 	return 1;
- }
- 
-+#if defined(CONFIG_OF_LIBFDT)
-+static int fixup_memory_node(void *blob)
-+{
-+	bd_t	*bd = gd->bd;
-+	int bank;
-+	u64 start[CONFIG_NR_DRAM_BANKS];
-+	u64 size[CONFIG_NR_DRAM_BANKS];
-+
-+	for (bank = 0; bank < CONFIG_NR_DRAM_BANKS; bank++) {
-+		start[bank] = bd->bi_dram[bank].start;
-+		size[bank] = bd->bi_dram[bank].size;
-+	}
-+
-+	return fdt_fixup_memory_banks(blob, start, size, CONFIG_NR_DRAM_BANKS);
-+}
-+
-+static int bootm_linux_fdt(bootm_headers_t *images)
-+{
-+	ulong rd_len;
-+	bd_t *bd = gd->bd;
-+	char *s;
-+	int machid = bd->bi_arch_number;
-+	void (*theKernel)(int zero, int dt_machid, void *dtblob);
-+	ulong bootmap_base = getenv_bootm_low();
-+	ulong of_size = images->ft_len;
-+	char **of_flat_tree = &images->ft_addr;
-+	ulong *initrd_start = &images->initrd_start;
-+	ulong *initrd_end = &images->initrd_end;
-+	struct lmb *lmb = &images->lmb;
-+	int ret;
-+
-+	theKernel = (void (*)(int, int, void *))images->ep;
-+
-+	s = getenv("machid");
-+	if (s) {
-+		machid = simple_strtoul(s, NULL, 16);
-+		printf("Using machid 0x%x from environment\n", machid);
-+	}
-+
-+	show_boot_progress(15);
-+
-+	rd_len = images->rd_end - images->rd_start;
-+	ret = boot_ramdisk_high(lmb, images->rd_start, rd_len,
-+				initrd_start, initrd_end);
-+	if (ret)
-+		return ret;
-+
-+	ret = boot_relocate_fdt(lmb, bootmap_base, of_flat_tree, &of_size);
-+	if (ret)
-+		return ret;
-+
-+	debug("## Transferring control to Linux (at address %08lx) ...\n",
-+	       (ulong) theKernel);
-+
-+	fdt_chosen(*of_flat_tree, 1);
-+
-+	fixup_memory_node(*of_flat_tree);
-+
-+	fdt_initrd(*of_flat_tree, *initrd_start, *initrd_end, 1);
-+
-+	/* we assume that the kernel is in place */
-+	printf("\nStarting kernel ...\n\n");
-+
-+#ifdef CONFIG_USB_DEVICE
-+	{
-+		extern void udc_disconnect(void);
-+		udc_disconnect();
-+	}
-+#endif
-+
-+	cleanup_before_linux();
-+
-+	theKernel(0, machid, *of_flat_tree);
-+	/* does not return */
-+
-+	return 1;
-+}
-+#endif
- 
- #if defined (CONFIG_SETUP_MEMORY_TAGS) || \
-     defined (CONFIG_CMDLINE_TAG) || \
-@@ -239,4 +355,12 @@ static void setup_end_tag (bd_t *bd)
- 	params->hdr.size = 0;
- }
- 
-+static ulong get_sp(void)
-+{
-+	ulong ret;
-+
-+	asm("mov %0, sp" : "=r"(ret) : );
-+	return ret;
-+}
-+
- #endif /* CONFIG_SETUP_MEMORY_TAGS || CONFIG_CMDLINE_TAG || CONFIG_INITRD_TAG */
-diff --git a/common/cmd_bootm.c b/common/cmd_bootm.c
-index adfa6cd..6519321 100644
---- a/common/cmd_bootm.c
-+++ b/common/cmd_bootm.c
-@@ -301,7 +301,10 @@ static int bootm_start(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]
- 		}
- 
- #if defined(CONFIG_OF_LIBFDT)
--#if defined(CONFIG_PPC) || defined(CONFIG_M68K) || defined(CONFIG_SPARC)
-+#if defined(CONFIG_PPC) || \
-+    defined(CONFIG_M68K) || \
-+    defined(CONFIG_SPARC) || \
-+    defined(CONFIG_ARM)
- 		/* find flattened device tree */
- 		ret = boot_get_fdt (flag, argc, argv, &images,
- 				    &images.ft_addr, &images.ft_len);
-diff --git a/common/image.c b/common/image.c
-index 6d8833e..6da38aa 100644
---- a/common/image.c
-+++ b/common/image.c
-@@ -985,7 +985,10 @@ int boot_get_ramdisk (int argc, char * const argv[], bootm_headers_t *images,
- 	return 0;
- }
- 
--#if defined(CONFIG_PPC) || defined(CONFIG_M68K) || defined(CONFIG_SPARC)
-+#if defined(CONFIG_PPC) || \
-+    defined(CONFIG_M68K) || \
-+    defined(CONFIG_SPARC) || \
-+    defined(CONFIG_ARM)
- /**
-  * boot_ramdisk_high - relocate init ramdisk
-  * @lmb: pointer to lmb handle, will be used for memory mgmt
-@@ -1206,9 +1209,11 @@ int boot_relocate_fdt (struct lmb *lmb, ulong bootmap_base,
- 	if (fdt_blob < (char *)bootmap_base)
- 		relocate = 1;
- 
-+#ifdef CONFIG_SYS_BOOTMAPSZ
- 	if ((fdt_blob + *of_size + CONFIG_SYS_FDT_PAD) >=
- 			((char *)CONFIG_SYS_BOOTMAPSZ + bootmap_base))
- 		relocate = 1;
-+#endif
- 
- 	/* move flattend device tree if needed */
- 	if (relocate) {
-diff --git a/include/image.h b/include/image.h
-index bcc08d1..8f06cdc 100644
---- a/include/image.h
-+++ b/include/image.h
-@@ -339,7 +339,7 @@ int boot_relocate_fdt (struct lmb *lmb, ulong bootmap_base,
- 		char **of_flat_tree, ulong *of_size);
- #endif
- 
--#if defined(CONFIG_PPC) || defined(CONFIG_M68K)
-+#if defined(CONFIG_PPC) || defined(CONFIG_M68K) || defined(CONFIG_ARM)
- int boot_ramdisk_high (struct lmb *lmb, ulong rd_data, ulong rd_len,
- 		  ulong *initrd_start, ulong *initrd_end);
- 
++#endif /* __CONFIG_H */
 -- 
 1.7.0.4
