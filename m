@@ -1,50 +1,51 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] fsl-diu-fb: fix issue with re-enabling DIU area
-	descriptor
-Date: Wed, 28 Jul 2010 09:56:55 +0200
-Message-ID: <20100728095655.0e1c81eb@wker>
-References: <1279893639-24333-1-git-send-email-agust@denx.de>
-	<1279893639-24333-2-git-send-email-agust@denx.de>
-	<AANLkTikkLVCxU4ZC_nmUhKTQogUNeQzxOX6KqgZcxiYr@mail.gmail.com>
+From: Ian Campbell <Ian.Campbell@citrix.com>
+Subject: [GIT/PATCH 0/4] Do not use IRQF_TIMER for non timer interrupts
+Date: Wed, 28 Jul 2010 11:54:05 +0100
+Message-ID: <1280314445.24292.90.camel@zakaz.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTikkLVCxU4ZC_nmUhKTQogUNeQzxOX6KqgZcxiYr-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jeremy Fitzhardinge <jeremy@goop.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, xen-devel@lists.xensource.com, linux-input@vger.kernel.org, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyOCBKdWwgMjAxMCAwMTowMjo1OSAtMDYwMApHcmFudCBMaWtlbHkgPGdyYW50Lmxp
-a2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgouLi4KPiA+IMKgZHJpdmVycy92aWRlby9mc2wtZGl1
-LWZiLmMgfCDCoCAzOCArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQo+ID4g
-wqAxIGZpbGVzIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQo+ID4K
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2ZzbC1kaXUtZmIuYyBiL2RyaXZlcnMvdmlk
-ZW8vZnNsLWRpdS1mYi5jCj4gPiBpbmRleCAyNzQ1NWNlLi45YjhjOTkxIDEwMDY0NAo+ID4gLS0t
-IGEvZHJpdmVycy92aWRlby9mc2wtZGl1LWZiLmMKPiA+ICsrKyBiL2RyaXZlcnMvdmlkZW8vZnNs
-LWRpdS1mYi5jCj4gPiBAQCAtMzE3LDYgKzMxNywxNyBAQCBzdGF0aWMgdm9pZCBmc2xfZGl1X2Zy
-ZWUodm9pZCAqdmlydCwgc2l6ZV90IHNpemUpCj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGZy
-ZWVfcGFnZXNfZXhhY3QodmlydCwgc2l6ZSk7Cj4gPiDCoH0KPiA+Cj4gPiArLyoKPiA+ICsgKiBX
-b3JrYXJvdW5kIGZvciBmYWlsZWQgd3JpdGluZyBkZXNjIHJlZ2lzdGVyIG9mIHBsYW5lcy4KPiA+
-ICsgKiBOZWVkZWQgd2l0aCBNUEM1MTIxIERJVSByZXYgMi4wIHNpbGljb24uCj4gPiArICovCj4g
-PiArdm9pZCB3cl9yZWdfd2EodTMyICpyZWcsIHUzMiB2YWwpCj4gPiArewo+ID4gKyDCoCDCoCDC
-oCBkbyB7Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIG91dF9iZTMyKHJlZywgdmFsKTsKPiA+
-ICsgwqAgwqAgwqAgfSB3aGlsZSAoaW5fYmUzMihyZWcpICE9IHZhbCk7Cj4gPiArfQo+IAo+IEkn
-bGwgYXBwbHkgdGhpcyBvbmUsIGJ1dCBpdCBsb29rcyBsaWtlIGEgcG90ZW50aWFsIHByb2JsZW0u
-ICBXaGF0Cj4gaGFwcGVucyBpZiB0aGUgd3JpdGUgbmV2ZXIgc3VjY2VlZHM/ICBUaGUga2VybmVs
-IHRoZW4gZ2V0cyBzdHVjayBpbiBhCj4gZm9yZXZlciBidXN5IGxvb3AuICBZb3Ugc2hvdWxkIGxv
-b2sgYXQgcmV3b3JraW5nIGl0LgoKSSdsbCBzdWJtaXQgYW4gaW5jcmVtZW50YWwgcGF0Y2ggdGhh
-dCBwcmV2ZW50cyBsb29waW5nIGZvcmV2ZXIgaW4KdGhlIGNhc2UgaWYgdGhlIHdyaXRlIG5ldmVy
-IHN1Y2NlZWRzLiBUaGFua3MhCgpBbmF0b2xpagpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmlj
-ZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Hi Thomas,
+
+A small number of users of IRQF_TIMER are using it for the implied no
+suspend behaviour on interrupts which are not timer interrupts.
+
+Therefore the following series renames the IRQF_TIMER flag to
+IRQF_NO_SUSPEND and updates the users which are not timer interrupts to
+use the new name. IRQF_TIMER is retained as an alias for
+IRQF_NO_SUSPEND.
+
+The final patch in the series adds a new user the flag which disables
+suspend of Xen IPI IRQs.
+
+Ian.
+
+The following changes since commit fc0f5ac8fe693d1b05f5a928cc48135d1c8b7f2e:
+  Linus Torvalds (1):
+        Merge branch 'for-linus' of git://git.kernel.org/.../ericvh/v9fs
+
+are available in the git repository at:
+
+  git://xenbits.xensource.com/people/ianc/linux-2.6.git for-irq/irqf-no-suspend
+
+Ian Campbell (4):
+      irq: rename IRQF_TIMER to IRQF_NO_SUSPEND
+      ixp4xx-beeper: Use IRQF_NO_SUSPEND not IRQF_TIMER for non-timer interrupt
+      powerpc: Use IRQF_NO_SUSPEND not IRQF_TIMER for non-timer interrupts
+      xen: do not suspend IPI IRQs.
+
+ arch/powerpc/platforms/powermac/low_i2c.c |    4 ++--
+ drivers/input/misc/ixp4xx-beeper.c        |    2 +-
+ drivers/macintosh/via-pmu.c               |    4 ++--
+ drivers/xen/events.c                      |    1 +
+ include/linux/interrupt.h                 |    8 ++++++--
+ kernel/irq/manage.c                       |    2 +-
+ 6 files changed, 13 insertions(+), 8 deletions(-)
+
+
