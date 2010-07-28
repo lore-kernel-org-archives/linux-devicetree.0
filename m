@@ -1,33 +1,45 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH v2 1/2] MIPS: Add device tree support to MIPS
-Date: Wed, 28 Jul 2010 22:33:20 +0100
-Message-ID: <20100728213320.GA11538@linux-mips.org>
-References: <20100727214948.GA29241@dediao-lnx2.corp.sa.net>
- <AANLkTi=a=tGURpMKo7g+32LMcFovx4GJk2Wid6vmvQt8@mail.gmail.com>
- <4C5082BE.5050203@caviumnetworks.com>
- <AANLkTi=74zoQziQTmAGo-cNtF9FAT77h+KZagsNEFjEf@mail.gmail.com>
+From: John Rigby <john.rigby-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC PATCH 0/3] *** Add device tree support for ARM to U-Boot ***
+Date: Wed, 28 Jul 2010 15:59:52 -0600
+Message-ID: <1280354395-9128-1-git-send-email-john.rigby@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTi=74zoQziQTmAGo-cNtF9FAT77h+KZagsNEFjEf@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: David Daney <ddaney@caviumnetworks.com>, Dezhong Diao <dediao@cisco.com>, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org, dvomlehn@cisco.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 28, 2010 at 01:25:52PM -0600, Grant Likely wrote:
+These patches add device tree support to the bootm command in u-boot
+for the ARM.  I'm sending the patches to this list first for comments
+before sending it to the wider audience on the u-boot list.
 
-> It would probably be best if I at least pick up the first patch into
-> my test tree to give it a spin with the latest changes.  I'd be happy
-> to take the 2nd too to avoid ordering issues.
+The only testing so far has shown that this patch does not break non-dt
+booting.  I don't have a dt enabled beagle kernel so I have not tried that
+yet.
 
-Makes sense and even though this patch applies to arch/mips it's probably
-more of an DT than a MIPS patch.
+John Rigby (3):
+  FDT: Add fixup support of multiple banks of memory
+  ARM: WIP: add flat device tree support
+  ARM: add config for beagle with fdt enabled
 
-That said a long standing problem is that code that is relevant to MIPS
-tends to get tested only if it's in one of the MIPS trees but far less in
-other trees such as -next.
-
-  Ralf
+ MAKEALL                           |    1 +
+ arch/arm/include/asm/config.h     |    1 +
+ arch/arm/lib/bootm.c              |  128 ++++++++++++++-
+ boards.cfg                        |    1 +
+ common/cmd_bootm.c                |    5 +-
+ common/fdt_support.c              |   86 +++++-----
+ common/image.c                    |    7 +-
+ include/configs/omap3_beagle_dt.h |  344 +++++++++++++++++++++++++++++++++++++
+ include/fdt_support.h             |    1 +
+ include/image.h                   |    2 +-
+ 10 files changed, 531 insertions(+), 45 deletions(-)
+ create mode 100644 include/configs/omap3_beagle_dt.h
