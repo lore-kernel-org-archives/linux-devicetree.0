@@ -1,48 +1,31 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] arm/dt: Print machine name after dt probe
-Date: Thu, 29 Jul 2010 01:02:06 -0600
-Message-ID: <AANLkTik3AzttgXLPuWG5e791=yzYD+XKfPiwv-_z-OUK@mail.gmail.com>
-References: <20100728044319.24530.72074.stgit@angua>
-	<1280371228.11181.9.camel@pororo.lan>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/4] irq: rename IRQF_TIMER to IRQF_NO_SUSPEND
+Date: Thu, 29 Jul 2010 10:49:21 +0200 (CEST)
+Message-ID: <alpine.LFD.2.00.1007291045060.2471@localhost.localdomain>
+References: <1280314445.24292.90.camel@zakaz.uk.xensource.com> <1280314467-5637-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1280371228.11181.9.camel-353AF/3W9ll+urZeOPWqwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1280314467-5637-1-git-send-email-ian.campbell@citrix.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: linux-kernel@vger.kernel.org, Jeremy Fitzhardinge <jeremy@goop.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, xen-devel@lists.xensource.com, linux-input@vger.kernel.org, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 28, 2010 at 8:40 PM, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wr=
-ote:
-> Hi Grant,
->
->> To match the behaviour of mach_type probing
->>
->> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> ---
->>
->> Hi Jeremy,
->>
->> I've got this patch in my tree. =A0I'm going to squash it into "arm/dt:
->> probe for platforms via the device tree".
->
-> Looks good. How do you want to manage the trees from here? Are you going
-> to adopt my arm-dt branch (and related branches), or should I keep
-> maintaining it?
+On Wed, 28 Jul 2010, Ian Campbell wrote:
 
-I'm treating my tree as a staging point for linux-next; so I'm happy
-to cherry pick and stabilize patches, but unfortunately it also means
-I'm going to continue to rebase a lot, which could mess you up a lot.
-Let's talk about it on IRC tomorrow night (morning for you)
+> Continue to provide IRQF_TIMER as an alias to IRQF_NO_SUSPEND since I
+> think it is worth preserving the nice self-documenting name (where it
+> is used appropriately). It also avoid needing to patch all the many
+> users who are using the flag for an actual timer interrupt.
 
-g.
+I'm not happy about the alias. What about:
+
+#define __IRQF_TIMER		0x00000200
+#define IRQF_NO_SUSPEND		0x00000400
+
+#define IRQF_TIMER    (__IRQF_TIMER | IRQF_NO_SUSPEND)
+
+Thanks,
+
+	tglx
