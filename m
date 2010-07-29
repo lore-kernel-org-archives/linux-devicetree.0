@@ -1,125 +1,118 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] MIPS: PowerTV: Add device tree support
-Date: Thu, 29 Jul 2010 12:56:23 -0600
-Message-ID: <AANLkTim7MEyGFiedDrbWiNiZb18Qy3a5ZZ=aYBh4Jj7L@mail.gmail.com>
-References: <20100727215337.GA29365@dediao-lnx2.corp.sa.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] of: Provide default of_node_to_nid() implementation.
+Date: Thu, 29 Jul 2010 13:04:23 -0600
+Message-ID: <20100729190324.28739.1749.stgit@angua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100727215337.GA29365-xfMjgo8mR/VtOC46+g3osbQa8qPdvLwY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+Sender: sparclinux-owner@vger.kernel.org
+To: sfr@canb.auug.org.au, monstr@monstr.eu, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, benh@kernel.cras
 List-Id: devicetree@vger.kernel.org
 
-Just noticed something....
+of_node_to_nid() is only relevant in a few architectures.  Don't force
+everyone to implement it anyway.
 
-On Tue, Jul 27, 2010 at 3:53 PM, Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org> wrote:
-> V2:
-> =A0 =A0Synchronize with test-devicetree branch of device tree.
->
-> V1:
-> =A0 =A0Add device tree support for PowerTV.
-> =A0 =A0Customize user-defined memory scan function.
->
-> Signed-off-by: Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
-> =A0arch/mips/configs/powertv_defconfig =A0 =A0 =A0 =A0| =A0293 ++++++++++=
-+++++++++++-------
-> =A0arch/mips/include/asm/mach-powertv/asic.h =A0| =A0 =A08 +-
-> =A0arch/mips/include/asm/mach-powertv/mdesc.h | =A0 51 +++++
-> =A0arch/mips/powertv/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A02 =
-+-
-> =A0arch/mips/powertv/asic/asic_devices.c =A0 =A0 =A0| =A0 22 --
-> =A0arch/mips/powertv/mdesc.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0224 =
-+++++++++++++++++++++
-> =A0arch/mips/powertv/memory.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0242 ++=
-++++++++++++---------
-> =A07 files changed, 649 insertions(+), 193 deletions(-)
-> =A0create mode 100644 arch/mips/include/asm/mach-powertv/mdesc.h
-> =A0create mode 100644 arch/mips/powertv/mdesc.c
->
-> diff --git a/arch/mips/powertv/mdesc.c b/arch/mips/powertv/mdesc.c
-> new file mode 100644
-> index 0000000..8a7b972
-> --- /dev/null
-> +++ b/arch/mips/powertv/mdesc.c
-[...]
-> +static int __init early_init_dt_scan_extent(unsigned long node,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const char *uname, int depth, void *data)
-> +{
-> + =A0 =A0 =A0 char buf[8 + log10_extent(MEM_EXTENT_MAX)];
-> + =A0 =A0 =A0 unsigned long l;
-> + =A0 =A0 =A0 char *memory_type;
-> + =A0 =A0 =A0 enum Memory_Type type;
-> + =A0 =A0 =A0 cell_t *reg, *endp;
-> + =A0 =A0 =A0 unsigned long phys_base, bus_base;
-> + =A0 =A0 =A0 unsigned long size;
-> +
-> + =A0 =A0 =A0 snprintf(buf, sizeof(buf), "memory@%d", num_extent);
-> +
-> + =A0 =A0 =A0 if (strcmp(uname, buf) !=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> +
-> + =A0 =A0 =A0 memory_type =3D of_get_flat_dt_prop(node, "memory_type", &l=
-);
-> + =A0 =A0 =A0 if (memory_type =3D=3D NULL || l <=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> +
-> + =A0 =A0 =A0 if (strcmp(memory_type, "low") =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D MEM_EXTENT_LOW;
-> + =A0 =A0 =A0 else if (strcmp(memory_type, "high") =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D MEM_EXTENT_HIGH;
-> + =A0 =A0 =A0 else
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D MEM_EXTENT_OTHER;
-> +
-> + =A0 =A0 =A0 reg =3D (cell_t *)of_get_flat_dt_prop(node, "reg", &l);
-> + =A0 =A0 =A0 if (reg =3D=3D NULL)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> +
-> + =A0 =A0 =A0 endp =3D reg + (l / sizeof(cell_t));
-> +
-> + =A0 =A0 =A0 pr_info("memory scan node %s, reg size %ld, data: %x %x %x\=
-n",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 uname, l, reg[0], reg[1], reg[2]);
-> +
-> + =A0 =A0 =A0 while ((endp - reg) >=3D (num_addr_cells + num_size_cells))=
- {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 phys_base =3D dt_mem_next_cell(1, &reg);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus_base =3D dt_mem_next_cell(1, &reg);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 size =3D dt_mem_next_cell(1, &reg);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (size =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mem_desc_add(phys_base, bus_base, size, typ=
-e);
-> + =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 return 1;
-> +}
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
 
-What is the purpose of this function.  Why doesn't the normal memory
-binding work for MIPS?
+v3: make -1 the default return value and let powerpc override it to 0 when
+CONFIG_NUMA not set.
 
-> +int __init early_init_dt_scan_memory_arch(unsigned long node,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const char *uname, int depth, void *data)
-> +{
-> + =A0 =A0 =A0 u32 *prop;
-> +
-> + =A0 =A0 =A0 prop =3D of_get_flat_dt_prop(node, "#address-cells", NULL);
-> + =A0 =A0 =A0 num_addr_cells =3D (prop =3D=3D NULL) ? 2 : *prop;
-> +
-> + =A0 =A0 =A0 prop =3D of_get_flat_dt_prop(node, "#size-cells", NULL);
-> + =A0 =A0 =A0 num_size_cells =3D (prop =3D=3D NULL) ? 1 : *prop;
+ arch/microblaze/include/asm/topology.h |   10 ----------
+ arch/powerpc/include/asm/prom.h        |    7 +++++++
+ arch/powerpc/include/asm/topology.h    |    7 -------
+ arch/sparc/include/asm/prom.h          |    3 +--
+ include/linux/of.h                     |    5 +++++
+ 5 files changed, 13 insertions(+), 19 deletions(-)
 
-Nack.  Fix your device tree data.  :-)
+diff --git a/arch/microblaze/include/asm/topology.h b/arch/microblaze/include/asm/topology.h
+index 96bcea5..5428f33 100644
+--- a/arch/microblaze/include/asm/topology.h
++++ b/arch/microblaze/include/asm/topology.h
+@@ -1,11 +1 @@
+ #include <asm-generic/topology.h>
+-
+-#ifndef _ASM_MICROBLAZE_TOPOLOGY_H
+-#define _ASM_MICROBLAZE_TOPOLOGY_H
+-
+-struct device_node;
+-static inline int of_node_to_nid(struct device_node *device)
+-{
+-	return 0;
+-}
+-#endif /* _ASM_MICROBLAZE_TOPOLOGY_H */
+diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+index da7dd63..55bccc0 100644
+--- a/arch/powerpc/include/asm/prom.h
++++ b/arch/powerpc/include/asm/prom.h
+@@ -103,6 +103,13 @@ struct device_node *of_find_next_cache_node(struct device_node *np);
+ /* Get the MAC address */
+ extern const void *of_get_mac_address(struct device_node *np);
+ 
++#ifdef CONFIG_NUMA
++extern int of_node_to_nid(struct device_node *device);
++#else
++static inline int of_node_to_nid(struct device_node *device) { return 0; }
++#endif
++#define of_node_to_nid of_node_to_nid
++
+ /**
+  * of_irq_map_pci - Resolve the interrupt for a PCI device
+  * @pdev:	the device whose interrupt is to be resolved
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index 32adf72..09dd38c 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -41,8 +41,6 @@ static inline int cpu_to_node(int cpu)
+ 			       cpu_all_mask :				\
+ 			       node_to_cpumask_map[node])
+ 
+-int of_node_to_nid(struct device_node *device);
+-
+ struct pci_bus;
+ #ifdef CONFIG_PCI
+ extern int pcibus_to_node(struct pci_bus *bus);
+@@ -94,11 +92,6 @@ extern void sysfs_remove_device_from_node(struct sys_device *dev, int nid);
+ 
+ #else
+ 
+-static inline int of_node_to_nid(struct device_node *device)
+-{
+-	return 0;
+-}
+-
+ static inline void dump_numa_cpu_topology(void) {}
+ 
+ static inline int sysfs_add_device_to_node(struct sys_device *dev, int nid)
+diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
+index c82a7da..291f125 100644
+--- a/arch/sparc/include/asm/prom.h
++++ b/arch/sparc/include/asm/prom.h
+@@ -43,8 +43,7 @@ extern int of_getintprop_default(struct device_node *np,
+ extern int of_find_in_proplist(const char *list, const char *match, int len);
+ #ifdef CONFIG_NUMA
+ extern int of_node_to_nid(struct device_node *dp);
+-#else
+-#define of_node_to_nid(dp)	(-1)
++#define of_node_to_nid of_node_to_nid
+ #endif
+ 
+ extern void prom_build_devicetree(void);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index b0756f3..cad7cf0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -146,6 +146,11 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ 
+ #define OF_BAD_ADDR	((u64)-1)
+ 
++#ifndef of_node_to_nid
++static inline int of_node_to_nid(struct device_node *np) { return -1; }
++#define of_node_to_nid of_node_to_nid
++#endif
++
+ extern struct device_node *of_find_node_by_name(struct device_node *from,
+ 	const char *name);
+ #define for_each_node_by_name(dn, name) \
 
-g.
