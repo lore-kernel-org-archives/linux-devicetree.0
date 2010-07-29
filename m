@@ -1,70 +1,128 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: [PATCH 3/4] powerpc: Use IRQF_NO_SUSPEND not IRQF_TIMER for non-timer interrupts
-Date: Thu, 29 Jul 2010 11:16:34 +0100
-Message-ID: <1280398595-29708-3-git-send-email-ian.campbell@citrix.com>
-References: <1280398573.24292.1684.camel@zakaz.uk.xensource.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1280398573.24292.1684.camel@zakaz.uk.xensource.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Ian Campbell <ian.campbell@citrix.com>, Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
+From: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [patch] nouveau: unwind on load errors
+Date: Thu, 29 Jul 2010 20:02:31 +0200
+Message-ID: <20100729180231.GV26313@bicker>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Francisco Jerez <currojerez-sGOZH3hwPm2sTnJN9+BGXg@public.gmane.org>, Marcin =?utf-8?Q?Ko=C5=9Bcielnicki?= <koriakin-mP9o5jsk0RY@public.gmane.org>, Marcin Slusarz <marcin.slusarz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-kw_i2c_irq and via_pmu_interrupt are not timer interrupts and
-therefore should not use IRQF_TIMER. Use the recently introduced
-IRQF_NO_SUSPEND instead since that is the actual desired behaviour.
+nouveau_load() just returned directly if there was an error instead of
+releasing resources.
 
-Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: linuxppc-dev@ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org
----
- arch/powerpc/platforms/powermac/low_i2c.c |    5 +++--
- drivers/macintosh/via-pmu.c               |    9 +++++----
- 2 files changed, 8 insertions(+), 6 deletions(-)
+Signed-off-by: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/arch/powerpc/platforms/powermac/low_i2c.c b/arch/powerpc/platforms/powermac/low_i2c.c
-index 06a137c..480567e 100644
---- a/arch/powerpc/platforms/powermac/low_i2c.c
-+++ b/arch/powerpc/platforms/powermac/low_i2c.c
-@@ -542,11 +542,12 @@ static struct pmac_i2c_host_kw *__init kw_i2c_host_init(struct device_node *np)
- 	/* Make sure IRQ is disabled */
- 	kw_write_reg(reg_ier, 0);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_state.c b/drivers/gpu/drm/nouveau/nouveau_state.c
+index e632339..e53253a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_state.c
++++ b/drivers/gpu/drm/nouveau/nouveau_state.c
+@@ -688,10 +688,13 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
+ 	struct drm_nouveau_private *dev_priv;
+ 	uint32_t reg0;
+ 	resource_size_t mmio_start_offs;
++	int ret;
  
--	/* Request chip interrupt. We set IRQF_TIMER because we don't
-+	/* Request chip interrupt. We set IRQF_NO_SUSPEND because we don't
- 	 * want that interrupt disabled between the 2 passes of driver
- 	 * suspend or we'll have issues running the pfuncs
- 	 */
--	if (request_irq(host->irq, kw_i2c_irq, IRQF_TIMER, "keywest i2c", host))
-+	if (request_irq(host->irq, kw_i2c_irq, IRQF_NO_SUSPEND,
-+			"keywest i2c", host))
- 		host->irq = NO_IRQ;
+ 	dev_priv = kzalloc(sizeof(*dev_priv), GFP_KERNEL);
+-	if (!dev_priv)
+-		return -ENOMEM;
++	if (!dev_priv) {
++		ret = -ENOMEM;
++		goto err_out;
++	}
+ 	dev->dev_private = dev_priv;
+ 	dev_priv->dev = dev;
  
- 	printk(KERN_INFO "KeyWest i2c @0x%08x irq %d %s\n",
-diff --git a/drivers/macintosh/via-pmu.c b/drivers/macintosh/via-pmu.c
-index 3d4fc0f..35bc273 100644
---- a/drivers/macintosh/via-pmu.c
-+++ b/drivers/macintosh/via-pmu.c
-@@ -400,11 +400,12 @@ static int __init via_pmu_start(void)
- 		printk(KERN_ERR "via-pmu: can't map interrupt\n");
- 		return -ENODEV;
+@@ -702,8 +705,10 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
+ 		 dev->pci_vendor, dev->pci_device, dev->pdev->class);
+ 
+ 	dev_priv->wq = create_workqueue("nouveau");
+-	if (!dev_priv->wq)
+-		return -EINVAL;
++	if (!dev_priv->wq) {
++		ret = -EINVAL;
++		goto err_priv;
++	}
+ 
+ 	/* resource 0 is mmio regs */
+ 	/* resource 1 is linear FB */
+@@ -716,7 +721,8 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
+ 	if (!dev_priv->mmio) {
+ 		NV_ERROR(dev, "Unable to initialize the mmio mapping. "
+ 			 "Please report your setup to " DRIVER_EMAIL "\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto err_wq;
  	}
--	/* We set IRQF_TIMER because we don't want the interrupt to be disabled
--	 * between the 2 passes of driver suspend, we control our own disabling
--	 * for that one
-+	/* We set IRQF_NO_SUSPEND because we don't want the interrupt
-+	 * to be disabled between the 2 passes of driver suspend, we
-+	 * control our own disabling for that one
- 	 */
--	if (request_irq(irq, via_pmu_interrupt, IRQF_TIMER, "VIA-PMU", (void *)0)) {
-+	if (request_irq(irq, via_pmu_interrupt, IRQF_NO_SUSPEND,
-+			"VIA-PMU", (void *)0)) {
- 		printk(KERN_ERR "via-pmu: can't request irq %d\n", irq);
- 		return -ENODEV;
+ 	NV_DEBUG(dev, "regs mapped ok at 0x%llx\n",
+ 					(unsigned long long)mmio_start_offs);
+@@ -764,16 +770,17 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
+ 		break;
+ 	default:
+ 		NV_INFO(dev, "Unsupported chipset 0x%08x\n", reg0);
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto err_mmio;
  	}
--- 
-1.5.6.5
+ 
+ 	NV_INFO(dev, "Detected an NV%2x generation card (0x%08x)\n",
+ 		dev_priv->card_type, reg0);
+ 
+ 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+-		int ret = nouveau_remove_conflicting_drivers(dev);
++		ret = nouveau_remove_conflicting_drivers(dev);
+ 		if (ret)
+-			return ret;
++			goto err_mmio;
+ 	}
+ 
+ 	/* map larger RAMIN aperture on NV40 cards */
+@@ -801,7 +808,8 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
+ 							dev_priv->ramin_size);
+ 		if (!dev_priv->ramin) {
+ 			NV_ERROR(dev, "Failed to map BAR0 PRAMIN.\n");
+-			return -ENOMEM;
++			ret = -ENOMEM;
++			goto err_mmio;
+ 		}
+ 	}
+ 
+@@ -815,12 +823,24 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
+ 
+ 	/* For kernel modesetting, init card now and bring up fbcon */
+ 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+-		int ret = nouveau_card_init(dev);
++		ret = nouveau_card_init(dev);
+ 		if (ret)
+-			return ret;
++			goto err_ramin;
+ 	}
+ 
+ 	return 0;
++
++err_ramin:
++	iounmap(dev_priv->ramin);
++err_mmio:
++	iounmap(dev_priv->mmio);
++err_wq:
++	destroy_workqueue(dev_priv->wq);
++err_priv:
++	kfree(dev_priv);
++	dev->dev_private = NULL;
++err_out:
++	return ret;
+ }
+ 
+ static void nouveau_close(struct drm_device *dev)
