@@ -1,12 +1,13 @@
-From: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [patch] nouveau: unwind on load errors
-Date: Thu, 29 Jul 2010 20:02:31 +0200
-Message-ID: <20100729180231.GV26313@bicker>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] MIPS: PowerTV: Add device tree support
+Date: Thu, 29 Jul 2010 12:56:23 -0600
+Message-ID: <AANLkTim7MEyGFiedDrbWiNiZb18Qy3a5ZZ=aYBh4Jj7L@mail.gmail.com>
+References: <20100727215337.GA29365@dediao-lnx2.corp.sa.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <20100727215337.GA29365-xfMjgo8mR/VtOC46+g3osbQa8qPdvLwY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,113 +17,109 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Francisco Jerez <currojerez-sGOZH3hwPm2sTnJN9+BGXg@public.gmane.org>, Marcin =?utf-8?Q?Ko=C5=9Bcielnicki?= <koriakin-mP9o5jsk0RY@public.gmane.org>, Marcin Slusarz <marcin.slusarz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-nouveau_load() just returned directly if there was an error instead of
-releasing resources.
+Just noticed something....
 
-Signed-off-by: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Jul 27, 2010 at 3:53 PM, Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org> wrote:
+> V2:
+> =A0 =A0Synchronize with test-devicetree branch of device tree.
+>
+> V1:
+> =A0 =A0Add device tree support for PowerTV.
+> =A0 =A0Customize user-defined memory scan function.
+>
+> Signed-off-by: Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> ---
+> =A0arch/mips/configs/powertv_defconfig =A0 =A0 =A0 =A0| =A0293 ++++++++++=
++++++++++++-------
+> =A0arch/mips/include/asm/mach-powertv/asic.h =A0| =A0 =A08 +-
+> =A0arch/mips/include/asm/mach-powertv/mdesc.h | =A0 51 +++++
+> =A0arch/mips/powertv/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A02 =
++-
+> =A0arch/mips/powertv/asic/asic_devices.c =A0 =A0 =A0| =A0 22 --
+> =A0arch/mips/powertv/mdesc.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0224 =
++++++++++++++++++++++
+> =A0arch/mips/powertv/memory.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0242 ++=
+++++++++++++---------
+> =A07 files changed, 649 insertions(+), 193 deletions(-)
+> =A0create mode 100644 arch/mips/include/asm/mach-powertv/mdesc.h
+> =A0create mode 100644 arch/mips/powertv/mdesc.c
+>
+> diff --git a/arch/mips/powertv/mdesc.c b/arch/mips/powertv/mdesc.c
+> new file mode 100644
+> index 0000000..8a7b972
+> --- /dev/null
+> +++ b/arch/mips/powertv/mdesc.c
+[...]
+> +static int __init early_init_dt_scan_extent(unsigned long node,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const char *uname, int depth, void *data)
+> +{
+> + =A0 =A0 =A0 char buf[8 + log10_extent(MEM_EXTENT_MAX)];
+> + =A0 =A0 =A0 unsigned long l;
+> + =A0 =A0 =A0 char *memory_type;
+> + =A0 =A0 =A0 enum Memory_Type type;
+> + =A0 =A0 =A0 cell_t *reg, *endp;
+> + =A0 =A0 =A0 unsigned long phys_base, bus_base;
+> + =A0 =A0 =A0 unsigned long size;
+> +
+> + =A0 =A0 =A0 snprintf(buf, sizeof(buf), "memory@%d", num_extent);
+> +
+> + =A0 =A0 =A0 if (strcmp(uname, buf) !=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+> +
+> + =A0 =A0 =A0 memory_type =3D of_get_flat_dt_prop(node, "memory_type", &l=
+);
+> + =A0 =A0 =A0 if (memory_type =3D=3D NULL || l <=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+> +
+> + =A0 =A0 =A0 if (strcmp(memory_type, "low") =3D=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D MEM_EXTENT_LOW;
+> + =A0 =A0 =A0 else if (strcmp(memory_type, "high") =3D=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D MEM_EXTENT_HIGH;
+> + =A0 =A0 =A0 else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D MEM_EXTENT_OTHER;
+> +
+> + =A0 =A0 =A0 reg =3D (cell_t *)of_get_flat_dt_prop(node, "reg", &l);
+> + =A0 =A0 =A0 if (reg =3D=3D NULL)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+> +
+> + =A0 =A0 =A0 endp =3D reg + (l / sizeof(cell_t));
+> +
+> + =A0 =A0 =A0 pr_info("memory scan node %s, reg size %ld, data: %x %x %x\=
+n",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 uname, l, reg[0], reg[1], reg[2]);
+> +
+> + =A0 =A0 =A0 while ((endp - reg) >=3D (num_addr_cells + num_size_cells))=
+ {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 phys_base =3D dt_mem_next_cell(1, &reg);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus_base =3D dt_mem_next_cell(1, &reg);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 size =3D dt_mem_next_cell(1, &reg);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (size =3D=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mem_desc_add(phys_base, bus_base, size, typ=
+e);
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 return 1;
+> +}
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_state.c b/drivers/gpu/drm/nouveau/nouveau_state.c
-index e632339..e53253a 100644
---- a/drivers/gpu/drm/nouveau/nouveau_state.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_state.c
-@@ -688,10 +688,13 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
- 	struct drm_nouveau_private *dev_priv;
- 	uint32_t reg0;
- 	resource_size_t mmio_start_offs;
-+	int ret;
- 
- 	dev_priv = kzalloc(sizeof(*dev_priv), GFP_KERNEL);
--	if (!dev_priv)
--		return -ENOMEM;
-+	if (!dev_priv) {
-+		ret = -ENOMEM;
-+		goto err_out;
-+	}
- 	dev->dev_private = dev_priv;
- 	dev_priv->dev = dev;
- 
-@@ -702,8 +705,10 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
- 		 dev->pci_vendor, dev->pci_device, dev->pdev->class);
- 
- 	dev_priv->wq = create_workqueue("nouveau");
--	if (!dev_priv->wq)
--		return -EINVAL;
-+	if (!dev_priv->wq) {
-+		ret = -EINVAL;
-+		goto err_priv;
-+	}
- 
- 	/* resource 0 is mmio regs */
- 	/* resource 1 is linear FB */
-@@ -716,7 +721,8 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
- 	if (!dev_priv->mmio) {
- 		NV_ERROR(dev, "Unable to initialize the mmio mapping. "
- 			 "Please report your setup to " DRIVER_EMAIL "\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_wq;
- 	}
- 	NV_DEBUG(dev, "regs mapped ok at 0x%llx\n",
- 					(unsigned long long)mmio_start_offs);
-@@ -764,16 +770,17 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
- 		break;
- 	default:
- 		NV_INFO(dev, "Unsupported chipset 0x%08x\n", reg0);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_mmio;
- 	}
- 
- 	NV_INFO(dev, "Detected an NV%2x generation card (0x%08x)\n",
- 		dev_priv->card_type, reg0);
- 
- 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
--		int ret = nouveau_remove_conflicting_drivers(dev);
-+		ret = nouveau_remove_conflicting_drivers(dev);
- 		if (ret)
--			return ret;
-+			goto err_mmio;
- 	}
- 
- 	/* map larger RAMIN aperture on NV40 cards */
-@@ -801,7 +808,8 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
- 							dev_priv->ramin_size);
- 		if (!dev_priv->ramin) {
- 			NV_ERROR(dev, "Failed to map BAR0 PRAMIN.\n");
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto err_mmio;
- 		}
- 	}
- 
-@@ -815,12 +823,24 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
- 
- 	/* For kernel modesetting, init card now and bring up fbcon */
- 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
--		int ret = nouveau_card_init(dev);
-+		ret = nouveau_card_init(dev);
- 		if (ret)
--			return ret;
-+			goto err_ramin;
- 	}
- 
- 	return 0;
-+
-+err_ramin:
-+	iounmap(dev_priv->ramin);
-+err_mmio:
-+	iounmap(dev_priv->mmio);
-+err_wq:
-+	destroy_workqueue(dev_priv->wq);
-+err_priv:
-+	kfree(dev_priv);
-+	dev->dev_private = NULL;
-+err_out:
-+	return ret;
- }
- 
- static void nouveau_close(struct drm_device *dev)
+What is the purpose of this function.  Why doesn't the normal memory
+binding work for MIPS?
+
+> +int __init early_init_dt_scan_memory_arch(unsigned long node,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const char *uname, int depth, void *data)
+> +{
+> + =A0 =A0 =A0 u32 *prop;
+> +
+> + =A0 =A0 =A0 prop =3D of_get_flat_dt_prop(node, "#address-cells", NULL);
+> + =A0 =A0 =A0 num_addr_cells =3D (prop =3D=3D NULL) ? 2 : *prop;
+> +
+> + =A0 =A0 =A0 prop =3D of_get_flat_dt_prop(node, "#size-cells", NULL);
+> + =A0 =A0 =A0 num_size_cells =3D (prop =3D=3D NULL) ? 1 : *prop;
+
+Nack.  Fix your device tree data.  :-)
+
+g.
