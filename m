@@ -1,8 +1,7 @@
 From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-Subject: [PATCH 4/9] arch/powerpc/platforms/powermac: Drop unnecessary null
-	test
-Date: Tue, 3 Aug 2010 23:33:43 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1008032333250.20393__22493.1770623245$1280871278$gmane$org@ask.diku.dk>
+Subject: [PATCH 8/9] arch/powerpc/kernel: Drop unnecessary null test
+Date: Tue, 3 Aug 2010 23:35:17 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1008032334420.20393__22559.040450915$1280871357$gmane$org@ask.diku.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -21,8 +20,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
 
-for_each_node_by_name binds its first argument to a non-null value, and
-thus any null test on the value of that argument is superfluous.
+list_for_each_entry binds its first argument to a non-null value, and thus
+any null test on the value of that argument is superfluous.
 
 The semantic patch that makes this change is as follows:
 (http://coccinelle.lip6.fr/)
@@ -30,32 +29,33 @@ The semantic patch that makes this change is as follows:
 // <smpl>
 @@
 iterator I;
-expression x,E;
+expression x,E,E1,E2;
+statement S,S1,S2;
 @@
 
 I(x,...) { <...
-(
-- (x != NULL) &&
-  E
+- if (x != NULL || ...)
+  S
   ...> }
 // </smpl>
 
 Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
 
 ---
- arch/powerpc/platforms/powermac/feature.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/pci_of_scan.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/platforms/powermac/feature.c
-index 9e1b9fd..537957b 100644
---- a/arch/powerpc/platforms/powermac/feature.c
-+++ b/arch/powerpc/platforms/powermac/feature.c
-@@ -2867,7 +2867,7 @@ set_initial_features(void)
- 
- 		/* Switch airport off */
- 		for_each_node_by_name(np, "radio") {
--			if (np && np->parent == macio_chips[0].of_node) {
-+			if (np->parent == macio_chips[0].of_node) {
- 				macio_chips[0].flags |= MACIO_FLAG_AIRPORT_ON;
- 				core99_airport_enable(np, 0, 0);
- 			}
+diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
+index 6ddb795..62dd363 100644
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -336,8 +336,7 @@ static void __devinit __of_scan_bus(struct device_node *node,
+ 		if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE ||
+ 		    dev->hdr_type == PCI_HEADER_TYPE_CARDBUS) {
+ 			struct device_node *child = pci_device_to_OF_node(dev);
+-			if (dev)
+-				of_scan_pci_bridge(child, dev);
++			of_scan_pci_bridge(child, dev);
+ 		}
+ 	}
+ }
