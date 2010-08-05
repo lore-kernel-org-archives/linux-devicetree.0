@@ -1,13 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] arch/powerpc: Drop unnecessary of_node_put
-Date: Wed, 4 Aug 2010 18:01:08 -0600
-Message-ID: <AANLkTi=4WimRKyPWv=ZckXBC4vsgnUPFgWu6EkfZN_zO@mail.gmail.com>
-References: <Pine.LNX.4.64.1008032149410.20393@ask.diku.dk>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Request review of device tree documentation
+Date: Thu, 5 Aug 2010 14:43:25 +1000
+Message-ID: <20100805044325.GC25458@yookeroo>
+References: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1008032149410.20393-QfmoRoYWmW9knbxzx/v8hQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,87 +18,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 3, 2010 at 1:50 PM, Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org> wrote:
-> From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
->
-> for_each_node_by_name only exits when its first argument is NULL, and a
-> subsequent call to of_node_put on that argument is unnecessary.
->
-> The semantic patch that makes this change is as follows:
-> (http://coccinelle.lip6.fr/)
->
-> // <smpl>
-> @@
-> iterator name for_each_node_by_name;
-> expression np,E;
-> identifier l;
-> @@
->
-> for_each_node_by_name(np,...) {
-> =A0... when !=3D break;
-> =A0 =A0 =A0when !=3D goto l;
-> }
-> ... when !=3D np =3D E
-> - of_node_put(np);
-> // </smpl>
->
-> Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+On Fri, Jun 11, 2010 at 04:59:46PM -0600, Grant Likely wrote:
+> I've been doing a bit of work on some introductory level documentation
+> of the flattened device tree.  I've got a rough copy up on the
+> devicetree.org wiki, and I could use some feedback.  If anyone has
+> some time to look at it, you can find it here:
+> 
+> http://devicetree.org/Device_Tree_Usage
 
-Looks correct to me:
+Sorry I haven't replied sooner, I've been away, then sick and
+generally preoccupied.  Still here are some comments now.
 
-Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+How Addressing Works:
 
->
-> ---
-> =A0arch/powerpc/platforms/powermac/feature.c | =A0 =A01 -
-> =A0arch/powerpc/platforms/powermac/pci.c =A0 =A0 | =A0 =A02 --
-> =A02 files changed, 3 deletions(-)
->
-> diff -u -p a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/pla=
-tforms/powermac/feature.c
-> --- a/arch/powerpc/platforms/powermac/feature.c
-> +++ b/arch/powerpc/platforms/powermac/feature.c
-> @@ -2872,7 +2872,6 @@ set_initial_features(void)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0core99_air=
-port_enable(np, 0, 0);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_node_put(np);
-> =A0 =A0 =A0 =A0}
->
-> =A0 =A0 =A0 =A0/* On all machines that support sound PM, switch sound off=
- */
-> diff -u -p a/arch/powerpc/platforms/powermac/pci.c b/arch/powerpc/platfor=
-ms/powermac/pci.c
-> --- a/arch/powerpc/platforms/powermac/pci.c
-> +++ b/arch/powerpc/platforms/powermac/pci.c
-> @@ -1155,13 +1155,11 @@ void __init pmac_pcibios_after_init(void
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pmac_call_feature(PMAC_FTR=
-_1394_CABLE_POWER, nd, 0, 0);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0}
-> - =A0 =A0 =A0 of_node_put(nd);
-> =A0 =A0 =A0 =A0for_each_node_by_name(nd, "ethernet") {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (nd->parent && of_device_is_compatible(=
-nd, "gmac")
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&& of_device_is_compatible(nd->par=
-ent, "uni-north"))
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pmac_call_feature(PMAC_FTR=
-_GMAC_ENABLE, nd, 0, 0);
-> =A0 =A0 =A0 =A0}
-> - =A0 =A0 =A0 of_node_put(nd);
-> =A0}
->
-> =A0void pmac_pci_fixup_cardbus(struct pci_dev* dev)
->
+ * Small inconsistency you use "address1", "address2" then "unit-address3".
+
+ * Perhaps re-emphasise that a parent's #*-cells properties govern the
+   children's reg properties, not its own, since this is a common
+   misunderstanding..
+
+Non Memory Mapped Devices:
+
+ * Your phrasing here suggests that non-memory-maped == zero
+   size-cells, which is not always true.
+
+Ranges (Address Translation):
+
+ * Third paragraph, first sentence is a grammatical dogs' breakfast,
+
+How Interrupts Work:
+
+ * Bogus paragraph break partway through first sentence.
+
+ * At the end you say the second cell indicates the interrupt's
+   polarity, but you don't specify how this is encoded.  It might be
+   worth emphasising that while most interrupt specifiers do include
+   trigger and polarity type information, the encoding of it can and
+   does vary between interrupt controllers.
+
+Advanced Sample Machine:
+
+ * The unit address in the name shouldn't have a "0x" prefix
+
+Advanced Interrupt Mapping:
+
+ * Perhaps worth noting that while a PCI *card* will use INTA..INTD,
+   on-board PCI devices can, and frequently do, have interrupts wired
+   side-band to the PCI bus, directly to the main interrupt
+   controller.
+
+ * In your example, you're muddying the waters of your previous usage
+   of interrupt-parent.  The PCI child nodes have the PCI top-level
+   node as their implicit interrupt parent, because its their first
+   ancestor with an interrupt-map, and we hit that before the
+   interrupt-parent property specified at the very top level.  This
+   means amongst other things that if there are PCI devices with
+   seperately wired interrupts, they must explicitly set
+   interrupt-parent to bypass the normal PCI interrupt mapping.
 
 
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
