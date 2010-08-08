@@ -1,78 +1,66 @@
-From: Matt Tyrlik <tyrlik-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Subject: AUTO: Matt Tyrlik/Raleigh/IBM is out of the office until 08/08/2002.
-	(returning 08/08/2010)
-Date: Sat, 7 Aug 2010 18:04:34 -0600
-Message-ID: <OFC1961973.8F180759-ON87257779.00006B20-87257779.00006B20@us.ibm.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] of/sparc: fix build regression from of_device changes
+Date: Sun, 08 Aug 2010 01:19:38 -0600
+Message-ID: <20100808071628.11437.93510.stgit@angua>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3598103159609063871=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+Sender: sparclinux-owner@vger.kernel.org
+To: sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============3598103159609063871==
-Content-type: multipart/alternative;
-	Boundary="0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0"
-Content-Disposition: inline
+Commit id 1636f8ac2b08410df4766449f7c86b912443cd99 (sparc/of: Move
+of_device fields into struct pdev_archdata) missed fixing up the
+n2_core.c and greth.c drivers.  This patch makes the required changes.
 
---0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0
-Content-type: text/plain; charset=US-ASCII
-Content-transfer-encoding: quoted-printable
+Reported-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
 
+David, I've currently got this one in my next-devicetree branch.  You
+can either pick it up, or it can go out when I ask Linus to pull on
+Monday or Tuesday.
 
+g.
 
-I am out of the office until 08/08/2010.
+ drivers/crypto/n2_core.c |    4 ++--
+ drivers/net/greth.c      |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Vacation returning 08/08/2010
+diff --git a/drivers/crypto/n2_core.c b/drivers/crypto/n2_core.c
+index 26af2dd..3704e46 100644
+--- a/drivers/crypto/n2_core.c
++++ b/drivers/crypto/n2_core.c
+@@ -1580,7 +1580,7 @@ static int find_devino_index(struct of_device *dev, struct spu_mdesc_info *ip,
+ 	if (!dev_intrs)
+ 		return -ENODEV;
+ 
+-	for (i = 0; i < dev->num_irqs; i++) {
++	for (i = 0; i < dev->archdata.num_irqs; i++) {
+ 		if (dev_intrs[i] == intr)
+ 			return i;
+ 	}
+@@ -1603,7 +1603,7 @@ static int spu_map_ino(struct of_device *dev, struct spu_mdesc_info *ip,
+ 	if (index < 0)
+ 		return index;
+ 
+-	p->irq = dev->irqs[index];
++	p->irq = dev->archdata.irqs[index];
+ 
+ 	sprintf(p->irq_name, "%s-%d", irq_name, index);
+ 
+diff --git a/drivers/net/greth.c b/drivers/net/greth.c
+index 4d09eab..ffe8bed 100644
+--- a/drivers/net/greth.c
++++ b/drivers/net/greth.c
+@@ -1412,7 +1412,7 @@ static int __devinit greth_of_probe(struct of_device *ofdev, const struct of_dev
+ 	}
+ 
+ 	regs = (struct greth_regs *) greth->regs;
+-	greth->irq = ofdev->irqs[0];
++	greth->irq = ofdev->archdata.irqs[0];
+ 
+ 	dev_set_drvdata(greth->dev, dev);
+ 	SET_NETDEV_DEV(dev, greth->dev);
 
-
-Note: This is an automated response to your message  "devicetree-discus=
-s
-Digest, Vol 25, Issue 41" sent on 7/30/10 20:00:02.
-
-This is the only notification you will receive while this person is awa=
-y.=
-
---0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0
-Content-type: text/html; charset=US-ASCII
-Content-Disposition: inline
-Content-transfer-encoding: quoted-printable
-
-<html><body>
-<p><font size=3D"2">I am out of the office until 08/08/2010.<br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2">Vacation returning 08/08/2010<br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2" color=3D"#808080">Note: This is an automated re=
-sponse to your message  &quot;</font><b><font size=3D"2">devicetree-dis=
-cuss Digest, Vol 25, Issue 41&quot;</font></b><font size=3D"2" color=3D=
-"#808080"> sent on </font><b><font size=3D"2">7/30/10 20:00:02</font></=
-b><font size=3D"2" color=3D"#808080">. <br>
-</font><font size=3D"2" color=3D"#808080"><br>
-</font><font size=3D"2" color=3D"#808080">This is the only notification=
- you will receive while this person is away.</font></body></html>=
-
---0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0--
-
-
---===============3598103159609063871==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3598103159609063871==--
