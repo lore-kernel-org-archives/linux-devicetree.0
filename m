@@ -1,14 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Review Request: New proposal for device tree clock binding.
-Date: Thu, 5 Aug 2010 17:37:14 -0600
-Message-ID: <AANLkTint8RBnSLZgj91TQFfNV_basiPCangvuW9a97Sg@mail.gmail.com>
-References: <AANLkTimm7G--LQHYBqPB1YCXQb7fSXPDaYsLq0p30DG1@mail.gmail.com>
-	<F9BD3E0A8083BE4ABAA94D7EDD7E3F63108ED2@zch01exm26.fsl.freescale.net>
+From: Matt Tyrlik <tyrlik-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Subject: AUTO: Matt Tyrlik/Raleigh/IBM is out of the office until 08/08/2002.
+	(returning 08/08/2010)
+Date: Sat, 7 Aug 2010 18:04:34 -0600
+Message-ID: <OFC1961973.8F180759-ON87257779.00006B20-87257779.00006B20@us.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============3598103159609063871=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <F9BD3E0A8083BE4ABAA94D7EDD7E3F63108ED2-bKEhWGtIRUJ4Lp7cDGe+DVjVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,147 +15,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 4, 2010 at 10:53 PM, Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrot=
-e:
-> Hi Grant,
->
-> I have some comment on this proposal.
->
->>Subject: Review Request: New proposal for device tree clock binding.
->>
->>Hi Ben (well, hello to everyone, but I'm particularly interested in Ben's
->>feedback),
->>
->>Jeremy and I have been kicking around the clock binding, and we've come up
->>with a new proposal that doesn't feel quite as forced to me.
->>Please take a look and let me know what you think. =A0The link to the
->>binding is below[1], but I've also copied the full text so that you can
->>reply and comment. =A0The rational for the new binding can be found in ta=
-lk
->>page[2].
->>
->>[1] http://www.devicetree.org/ClockBindings
->>[2] http://www.devicetree.org/Talk:ClockBindings
->>
->>---
->>
->>This page descibes the proposed OF clock bindings. These are a work-in-
->>progress, and are based on some [http://patchwork.ozlabs.org/patch/31551/
->>experimental work by benh].
->>
->>=3D=3DClock providers=3D=3D
->>
->>Sources of clock signal can be represented by any node in the device tree.
->>A mandatory "<tt>clock-outputs</tt>" property describes the clock outputs
->>from this device.
->>
->>{|border=3D1
->>!property
->>!format
->>!notes
->>|-
->>|<tt>clock-outputs</tt>
->>|list of strings
->>|specifies output clock signal names.
->>|}
->>
->>For example:
->>
->> =A0 =A0oscillator {
->> =A0 =A0 =A0 =A0clock-outputs =3D "ckil", "ckih";
->> =A0 =A0};
->>
->>- this node defines a device with two clock outputs, the first named
->>"ckil" and the second named "ckih". =A0Consumer nodes always reference
->>clocks by name. =A0The names should reflect the clock output signal names
->>for the device.
->>
->>=3D=3DClock consumers=3D=3D
->>
->>A device connected to a clock signal needs a *-clock property for each
->>clock that it is connected to.
->>
->>{|border=3D1
->>!property
->>!format
->>!notes
->>|-
->>|<tt>*-clock</tt>
->>|1 cell phandle to the clock provider, followed by a string containing
->>the clock output name.
->>|The name of this property should be the name of the clock input
->>signal with a "-clock" suffix.
->>|}
->>
->><tt>*-clock</tt> is named for the signal name for the ''clock input''
->>of the device. it should describe the function of the signal for that
->>device, rather than the name of the system-wide clock line. For example, a
->>UART with two clocks - one for baud-rate clocking, and the other for
->>register clocking - may have clock input properties named "baud-clock" and
->>"register-clock". =A0The property value is a tuple containing the phandle=
- to
->>the clock provider and the name of the clock output signal.
->>
->>For example:
->>
->> =A0 =A0uart {
->> =A0 =A0 =A0 =A0baud-clock =3D <&osc>, "ckil";
->> =A0 =A0 =A0 =A0register-clock =3D <&ref>, "bus";
->> =A0 =A0};
->>
->>
->>This represents a device with two clock inputs, named "baud" and
->>"register". The baud clock is connected to the "ckil" output of the "osc"
->>device, and the register clock is connected to the "bus" output of the
->>"ref" device.
->
->
-> Instead of having two items to identify a clock, I would suggest to have =
-a node for each clock. =A0So that clock can be referenced by one handle. =
-=A0Also we can have clock specific information defined in the clock node. =
-=A0Here is the example I am planning to use on 85xx PMC.
->
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0power@e0070{
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "fsl,mpc854=
-8-pmc", "fsl,p2020-pmc";
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0xe0070 0x20>;
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0etsec1_clk: soc-clk@24{
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0fsl,pmcdr-=
-mask =3D <0x00000080>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0etsec2_clk: soc-clk@25{
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0fsl,pmcdr-=
-mask =3D <0x00000040>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0etsec3_clk: soc-clk@26{
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0fsl,pmcdr-=
-mask =3D <0x00000020>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0enet0: ethernet@24000 {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0......
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0master-clock =3D <&etsec1_=
-clk>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0......
->
->
-> What do you think?
+--===============3598103159609063871==
+Content-type: multipart/alternative;
+	Boundary="0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0"
+Content-Disposition: inline
 
-I've avoided requiring clock nodes to have a separate sub node for
-each output because it is more verbose and it prevents clock providers
-from having child nodes for other purposes.  Are you concerned that
-having the <phandle>+output name pair will be difficult to manage?
+--0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0
+Content-type: text/plain; charset=US-ASCII
+Content-transfer-encoding: quoted-printable
 
-Jeremy and I have prototyped the binding I posted and it works quite
-well so far (code in my test-devicetree branch).  There would be a
-common library function for actually parsing the clock binding so
-drivers wouldn't need to do anything special.
 
-g.
+
+I am out of the office until 08/08/2010.
+
+Vacation returning 08/08/2010
+
+
+Note: This is an automated response to your message  "devicetree-discus=
+s
+Digest, Vol 25, Issue 41" sent on 7/30/10 20:00:02.
+
+This is the only notification you will receive while this person is awa=
+y.=
+
+--0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
+Content-transfer-encoding: quoted-printable
+
+<html><body>
+<p><font size=3D"2">I am out of the office until 08/08/2010.<br>
+</font><font size=3D"2"><br>
+</font><font size=3D"2">Vacation returning 08/08/2010<br>
+</font><font size=3D"2"><br>
+</font><font size=3D"2"><br>
+</font><font size=3D"2" color=3D"#808080">Note: This is an automated re=
+sponse to your message  &quot;</font><b><font size=3D"2">devicetree-dis=
+cuss Digest, Vol 25, Issue 41&quot;</font></b><font size=3D"2" color=3D=
+"#808080"> sent on </font><b><font size=3D"2">7/30/10 20:00:02</font></=
+b><font size=3D"2" color=3D"#808080">. <br>
+</font><font size=3D"2" color=3D"#808080"><br>
+</font><font size=3D"2" color=3D"#808080">This is the only notification=
+ you will receive while this person is away.</font></body></html>=
+
+--0__=08BBFDEADF93EDB08f9e8a93df938690918c08BBFDEADF93EDB0--
+
+
+--===============3598103159609063871==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3598103159609063871==--
