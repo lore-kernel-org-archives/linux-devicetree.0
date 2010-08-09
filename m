@@ -1,193 +1,144 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 3/3] sparc: add pdt/of_pdt namespace to pdt code
-Date: Sun, 8 Aug 2010 23:11:42 -0400
-Message-ID: <20100808231142.61da6c64@dev.queued.net>
+From: Li Yang-R58472 <r58472@freescale.com>
+Subject: RE: Review Request: New proposal for device tree clock binding.
+Date: Mon, 9 Aug 2010 12:50:05 +0800
+Message-ID: <F9BD3E0A8083BE4ABAA94D7EDD7E3F63109216@zch01exm26.fsl.freescale.net>
+References: <AANLkTimm7G--LQHYBqPB1YCXQb7fSXPDaYsLq0p30DG1@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Class: urn:content-classes:message
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Jeremy Kerr <jk@ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linuxppc-dev@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+It looks like the previous sending didn't hit the mailing list.  Resend.
 
-For symbols still lacking namespace qualifiers, add of_pdt to non-static
-stuff and pdt_ to static names.
+Hi Grant,
 
-Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
----
- arch/sparc/kernel/leon_kernel.c |    2 +-
- drivers/of/pdt.c                |   40 +++++++++++++++++++-------------------
- include/linux/of_pdt.h          |    2 +-
- 3 files changed, 22 insertions(+), 22 deletions(-)
+I have some comment on this proposal.
 
-diff --git a/arch/sparc/kernel/leon_kernel.c b/arch/sparc/kernel/leon_kernel.c
-index 6a7b4db..2d51527 100644
---- a/arch/sparc/kernel/leon_kernel.c
-+++ b/arch/sparc/kernel/leon_kernel.c
-@@ -282,5 +282,5 @@ void __init leon_init_IRQ(void)
- 
- void __init leon_init(void)
- {
--	prom_build_more = &leon_node_init;
-+	of_pdt_build_more = &leon_node_init;
- }
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index 22f46fb..ad31d5d 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -23,7 +23,7 @@
- #include <linux/of_pdt.h>
- #include <asm/prom.h>
- 
--void __initdata (*prom_build_more)(struct device_node *dp,
-+void __initdata (*of_pdt_build_more)(struct device_node *dp,
- 		struct device_node ***nextp);
- 
- static struct of_pdt_ops prom_ops __initdata;
-@@ -59,7 +59,7 @@ static inline void irq_trans_init(struct device_node *dp)
- 
- #endif /* !CONFIG_SPARC */
- 
--static struct property * __init build_one_prop(phandle node, char *prev,
-+static struct property * __init pdt_build_one_prop(phandle node, char *prev,
- 					       char *special_name,
- 					       void *special_val,
- 					       int special_len)
-@@ -110,17 +110,17 @@ static struct property * __init build_one_prop(phandle node, char *prev,
- 	return p;
- }
- 
--static struct property * __init build_prop_list(phandle node)
-+static struct property * __init pdt_build_prop_list(phandle node)
- {
- 	struct property *head, *tail;
- 
--	head = tail = build_one_prop(node, NULL,
-+	head = tail = pdt_build_one_prop(node, NULL,
- 				     ".node", &node, sizeof(node));
- 
--	tail->next = build_one_prop(node, NULL, NULL, NULL, 0);
-+	tail->next = pdt_build_one_prop(node, NULL, NULL, NULL, 0);
- 	tail = tail->next;
- 	while(tail) {
--		tail->next = build_one_prop(node, tail->name,
-+		tail->next = pdt_build_one_prop(node, tail->name,
- 					    NULL, NULL, 0);
- 		tail = tail->next;
- 	}
-@@ -128,7 +128,7 @@ static struct property * __init build_prop_list(phandle node)
- 	return head;
- }
- 
--static char * __init get_one_property(phandle node, const char *name)
-+static char * __init pdt_get_one_property(phandle node, const char *name)
- {
- 	char *buf = "<NULL>";
- 	int len;
-@@ -142,7 +142,7 @@ static char * __init get_one_property(phandle node, const char *name)
- 	return buf;
- }
- 
--static struct device_node * __init prom_create_node(phandle node,
-+static struct device_node * __init pdt_create_node(phandle node,
- 						    struct device_node *parent)
- {
- 	struct device_node *dp;
-@@ -156,18 +156,18 @@ static struct device_node * __init prom_create_node(phandle node,
- 
- 	kref_init(&dp->kref);
- 
--	dp->name = get_one_property(node, "name");
--	dp->type = get_one_property(node, "device_type");
-+	dp->name = pdt_get_one_property(node, "name");
-+	dp->type = pdt_get_one_property(node, "device_type");
- 	dp->phandle = node;
- 
--	dp->properties = build_prop_list(node);
-+	dp->properties = pdt_build_prop_list(node);
- 
- 	irq_trans_init(dp);
- 
- 	return dp;
- }
- 
--static char * __init build_full_name(struct device_node *dp)
-+static char * __init pdt_build_full_name(struct device_node *dp)
- {
- 	int len, ourlen, plen;
- 	char *n;
-@@ -187,7 +187,7 @@ static char * __init build_full_name(struct device_node *dp)
- 	return n;
- }
- 
--static struct device_node * __init prom_build_tree(struct device_node *parent,
-+static struct device_node * __init pdt_build_tree(struct device_node *parent,
- 						   phandle node,
- 						   struct device_node ***nextp)
- {
-@@ -195,7 +195,7 @@ static struct device_node * __init prom_build_tree(struct device_node *parent,
- 	struct device_node *dp;
- 
- 	while (1) {
--		dp = prom_create_node(node, parent);
-+		dp = pdt_create_node(node, parent);
- 		if (!dp)
- 			break;
- 
-@@ -212,12 +212,12 @@ static struct device_node * __init prom_build_tree(struct device_node *parent,
- #if defined(CONFIG_SPARC)
- 		dp->path_component_name = build_path_component(dp);
- #endif
--		dp->full_name = build_full_name(dp);
-+		dp->full_name = pdt_build_full_name(dp);
- 
--		dp->child = prom_build_tree(dp, prom_ops.getchild(node), nextp);
-+		dp->child = pdt_build_tree(dp, prom_ops.getchild(node), nextp);
- 
--		if (prom_build_more)
--			prom_build_more(dp, nextp);
-+		if (of_pdt_build_more)
-+			of_pdt_build_more(dp, nextp);
- 
- 		node = prom_ops.getsibling(node);
- 	}
-@@ -229,12 +229,12 @@ void __init of_pdt_build_devicetree(int root_node)
- {
- 	struct device_node **nextp;
- 
--	allnodes = prom_create_node(root_node, NULL);
-+	allnodes = pdt_create_node(root_node, NULL);
- 	allnodes->path_component_name = "";
- 	allnodes->full_name = "/";
- 
- 	nextp = &allnodes->allnext;
--	allnodes->child = prom_build_tree(allnodes,
-+	allnodes->child = pdt_build_tree(allnodes,
- 			prom_ops.getchild(allnodes->phandle),
- 			&nextp);
- }
-diff --git a/include/linux/of_pdt.h b/include/linux/of_pdt.h
-index 1324ba5..ea7a17b 100644
---- a/include/linux/of_pdt.h
-+++ b/include/linux/of_pdt.h
-@@ -36,7 +36,7 @@ extern void of_pdt_set_ops(struct of_pdt_ops *ops);
- /* for building the device tree */
- extern void of_pdt_build_devicetree(int root_node);
- 
--extern void (*prom_build_more)(struct device_node *dp,
-+extern void (*of_pdt_build_more)(struct device_node *dp,
- 		struct device_node ***nextp);
- 
- #endif /* _LINUX_OF_PDT_H */
--- 
-1.5.6.5
+>Subject: Review Request: New proposal for device tree clock binding.
+>
+>Hi Ben (well, hello to everyone, but I'm particularly interested in 
+>Ben's feedback),
+>
+>Jeremy and I have been kicking around the clock binding, and we've come 
+>up with a new proposal that doesn't feel quite as forced to me.
+>Please take a look and let me know what you think.  The link to the 
+>binding is below[1], but I've also copied the full text so that you can 
+>reply and comment.  The rational for the new binding can be found in 
+>talk page[2].
+>
+>[1] http://www.devicetree.org/ClockBindings
+>[2] http://www.devicetree.org/Talk:ClockBindings
+>
+>---
+>
+>This page descibes the proposed OF clock bindings. These are a work-in- 
+>progress, and are based on some 
+>[http://patchwork.ozlabs.org/patch/31551/
+>experimental work by benh].
+>
+>==Clock providers==
+>
+>Sources of clock signal can be represented by any node in the device tree.
+>A mandatory "<tt>clock-outputs</tt>" property describes the clock 
+>outputs from this device.
+>
+>{|border=1
+>!property
+>!format
+>!notes
+>|-
+>|<tt>clock-outputs</tt>
+>|list of strings
+>|specifies output clock signal names.
+>|}
+>
+>For example:
+>
+>    oscillator {
+>        clock-outputs = "ckil", "ckih";
+>    };
+>
+>- this node defines a device with two clock outputs, the first named 
+>"ckil" and the second named "ckih".  Consumer nodes always reference 
+>clocks by name.  The names should reflect the clock output signal names 
+>for the device.
+>
+>==Clock consumers==
+>
+>A device connected to a clock signal needs a *-clock property for each 
+>clock that it is connected to.
+>
+>{|border=1
+>!property
+>!format
+>!notes
+>|-
+>|<tt>*-clock</tt>
+>|1 cell phandle to the clock provider, followed by a string containing
+>the clock output name.
+>|The name of this property should be the name of the clock input
+>signal with a "-clock" suffix.
+>|}
+>
+><tt>*-clock</tt> is named for the signal name for the ''clock input''
+>of the device. it should describe the function of the signal for that 
+>device, rather than the name of the system-wide clock line. For 
+>example, a UART with two clocks - one for baud-rate clocking, and the 
+>other for register clocking - may have clock input properties named 
+>"baud-clock" and "register-clock".  The property value is a tuple 
+>containing the phandle to the clock provider and the name of the clock output signal.
+>
+>For example:
+>
+>    uart {
+>        baud-clock = <&osc>, "ckil";
+>        register-clock = <&ref>, "bus";
+>    };
+>
+>
+>This represents a device with two clock inputs, named "baud" and 
+>"register". The baud clock is connected to the "ckil" output of the "osc"
+>device, and the register clock is connected to the "bus" output of the 
+>"ref" device.
+
+
+Instead of having two items to identify a clock, I would suggest to have a node for each clock.  So that clock can be referenced by one handle.  Also we can have clock specific information defined in the clock node.  Here is the example I am planning to use on 85xx PMC.
+
+
+                power@e0070{
+                        compatible = "fsl,mpc8548-pmc", "fsl,p2020-pmc";
+                        reg = <0xe0070 0x20>;
+
+                        etsec1_clk: soc-clk@24{
+                                fsl,pmcdr-mask = <0x00000080>;
+                        };
+                        etsec2_clk: soc-clk@25{
+                                fsl,pmcdr-mask = <0x00000040>;
+                        };
+                        etsec3_clk: soc-clk@26{
+                                fsl,pmcdr-mask = <0x00000020>;
+                        };
+                };
+
+                enet0: ethernet@24000 {
+                  ......
+                        master-clock = <&etsec1_clk>;
+			......
+
+
+What do you think?
+
+- Leo
