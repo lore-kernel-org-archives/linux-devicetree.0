@@ -1,232 +1,545 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/3] sparc: add pdt/of_pdt namespace to pdt code
-Date: Sun, 8 Aug 2010 23:14:01 -0600
-Message-ID: <AANLkTinSLVAqGZgv+i5eRai4up3X0oR6nPWyQsgz48H+@mail.gmail.com>
-References: <20100808231142.61da6c64@dev.queued.net>
+Subject: Re: [PATCH 1/3] sparc: break out some PROM device-tree building code
+	out into drivers/of
+Date: Sun, 8 Aug 2010 23:15:56 -0600
+Message-ID: <AANLkTikJf0ZzgXv3nVBMvXVWpfaGuB-qeUsEYZHRuJMF@mail.gmail.com>
+References: <20100808231030.1d555250@dev.queued.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20100808231142.61da6c64@dev.queued.net>
+In-Reply-To: <20100808231030.1d555250@dev.queued.net>
 Sender: sparclinux-owner@vger.kernel.org
 To: Andres Salomon <dilinger@queued.net>
 Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, davem@davemloft.net, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 8, 2010 at 9:11 PM, Andres Salomon <dilinger@queued.net> wr=
+On Sun, Aug 8, 2010 at 9:10 PM, Andres Salomon <dilinger@queued.net> wr=
 ote:
 >
-> For symbols still lacking namespace qualifiers, add of_pdt to non-sta=
-tic
-> stuff and pdt_ to static names.
-
-Don't bother with 2 different prefixes.  Just use of_pdt for
-everything.  the static stuff just won't appear in the global
-namespace.
-
+> Transitioning into making this useful for architectures other than sp=
+arc.
 >
 > Signed-off-by: Andres Salomon <dilinger@queued.net>
+
+I assume this is just a verbatim copy.  If so, looks fine to me, but I
+won't pick it up yet since you'll be respinning patches 2 and 3
+anyway.
+
+g.
+
 > ---
-> =A0arch/sparc/kernel/leon_kernel.c | =A0 =A02 +-
-> =A0drivers/of/pdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 40 +++++++++=
-++++++++++-------------------
-> =A0include/linux/of_pdt.h =A0 =A0 =A0 =A0 =A0| =A0 =A02 +-
-> =A03 files changed, 22 insertions(+), 22 deletions(-)
+> =A0arch/sparc/kernel/prom_common.c | =A0190 +------------------------=
+----------
+> =A0drivers/of/pdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0217 +++++++++=
+++++++++++++++++++++++++++++++
+> =A02 files changed, 218 insertions(+), 189 deletions(-)
+> =A0create mode 100644 drivers/of/pdt.c
 >
-> diff --git a/arch/sparc/kernel/leon_kernel.c b/arch/sparc/kernel/leon=
-_kernel.c
-> index 6a7b4db..2d51527 100644
-> --- a/arch/sparc/kernel/leon_kernel.c
-> +++ b/arch/sparc/kernel/leon_kernel.c
-> @@ -282,5 +282,5 @@ void __init leon_init_IRQ(void)
+> diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom=
+_common.c
+> index 40123a6..7b454f6 100644
+> --- a/arch/sparc/kernel/prom_common.c
+> +++ b/arch/sparc/kernel/prom_common.c
+> @@ -26,8 +26,6 @@
 >
-> =A0void __init leon_init(void)
-> =A0{
-> - =A0 =A0 =A0 prom_build_more =3D &leon_node_init;
-> + =A0 =A0 =A0 of_pdt_build_more =3D &leon_node_init;
+> =A0#include "prom.h"
+>
+> -void (*prom_build_more)(struct device_node *dp, struct device_node *=
+**nextp);
+> -
+> =A0struct device_node *of_console_device;
+> =A0EXPORT_SYMBOL(of_console_device);
+>
+> @@ -119,192 +117,6 @@ int of_find_in_proplist(const char *list, const=
+ char *match, int len)
 > =A0}
-> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-> index 22f46fb..ad31d5d 100644
-> --- a/drivers/of/pdt.c
-> +++ b/drivers/of/pdt.c
-> @@ -23,7 +23,7 @@
-> =A0#include <linux/of_pdt.h>
-> =A0#include <asm/prom.h>
+> =A0EXPORT_SYMBOL(of_find_in_proplist);
 >
-> -void __initdata (*prom_build_more)(struct device_node *dp,
-> +void __initdata (*of_pdt_build_more)(struct device_node *dp,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device_node ***nextp);
->
-> =A0static struct of_pdt_ops prom_ops __initdata;
-> @@ -59,7 +59,7 @@ static inline void irq_trans_init(struct device_nod=
-e *dp)
->
-> =A0#endif /* !CONFIG_SPARC */
->
+> -unsigned int prom_unique_id;
+> -
 > -static struct property * __init build_one_prop(phandle node, char *p=
 rev,
-> +static struct property * __init pdt_build_one_prop(phandle node, cha=
-r *prev,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 char *special_name,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 void *special_val,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 int special_len)
-> @@ -110,17 +110,17 @@ static struct property * __init build_one_prop(=
-phandle node, char *prev,
-> =A0 =A0 =A0 =A0return p;
-> =A0}
->
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0char *special_name,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0void *special_val,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0int special_len)
+> -{
+> - =A0 =A0 =A0 static struct property *tmp =3D NULL;
+> - =A0 =A0 =A0 struct property *p;
+> - =A0 =A0 =A0 const char *name;
+> -
+> - =A0 =A0 =A0 if (tmp) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D tmp;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 memset(p, 0, sizeof(*p) + 32);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 tmp =3D NULL;
+> - =A0 =A0 =A0 } else {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D prom_early_alloc(sizeof(struct pr=
+operty) + 32);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->unique_id =3D prom_unique_id++;
+> - =A0 =A0 =A0 }
+> -
+> - =A0 =A0 =A0 p->name =3D (char *) (p + 1);
+> - =A0 =A0 =A0 if (special_name) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 strcpy(p->name, special_name);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->length =3D special_len;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->value =3D prom_early_alloc(special_l=
+en);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy(p->value, special_val, special_l=
+en);
+> - =A0 =A0 =A0 } else {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prev =3D=3D NULL) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 name =3D prom_firstprop=
+(node, p->name);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 name =3D prom_nextprop(=
+node, prev, p->name);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!name || strlen(name) =3D=3D 0) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 tmp =3D p;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> -#ifdef CONFIG_SPARC32
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 strcpy(p->name, name);
+> -#endif
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->length =3D prom_getproplen(node, p->=
+name);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (p->length <=3D 0) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->length =3D 0;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int len;
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->value =3D prom_early=
+_alloc(p->length + 1);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 len =3D prom_getpropert=
+y(node, p->name, p->value,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0p->length);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (len <=3D 0)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->leng=
+th =3D 0;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ((unsigned char *)p->va=
+lue)[p->length] =3D '\0';
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> - =A0 =A0 =A0 }
+> - =A0 =A0 =A0 return p;
+> -}
+> -
 > -static struct property * __init build_prop_list(phandle node)
-> +static struct property * __init pdt_build_prop_list(phandle node)
-> =A0{
-> =A0 =A0 =A0 =A0struct property *head, *tail;
->
+> -{
+> - =A0 =A0 =A0 struct property *head, *tail;
+> -
 > - =A0 =A0 =A0 head =3D tail =3D build_one_prop(node, NULL,
-> + =A0 =A0 =A0 head =3D tail =3D pdt_build_one_prop(node, NULL,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- ".node", &node, sizeof(node));
->
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0".node", &node, sizeof(node));
+> -
 > - =A0 =A0 =A0 tail->next =3D build_one_prop(node, NULL, NULL, NULL, 0=
 );
-> + =A0 =A0 =A0 tail->next =3D pdt_build_one_prop(node, NULL, NULL, NUL=
-L, 0);
-> =A0 =A0 =A0 =A0tail =3D tail->next;
-> =A0 =A0 =A0 =A0while(tail) {
+> - =A0 =A0 =A0 tail =3D tail->next;
+> - =A0 =A0 =A0 while(tail) {
 > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 tail->next =3D build_one_prop(node, tai=
 l->name,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 tail->next =3D pdt_build_one_prop(node,=
- tail->name,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0NULL, NULL, 0);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tail =3D tail->next;
-> =A0 =A0 =A0 =A0}
-> @@ -128,7 +128,7 @@ static struct property * __init build_prop_list(p=
-handle node)
-> =A0 =A0 =A0 =A0return head;
-> =A0}
->
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 NULL, NULL, 0);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 tail =3D tail->next;
+> - =A0 =A0 =A0 }
+> -
+> - =A0 =A0 =A0 return head;
+> -}
+> -
 > -static char * __init get_one_property(phandle node, const char *name=
 )
-> +static char * __init pdt_get_one_property(phandle node, const char *=
-name)
-> =A0{
-> =A0 =A0 =A0 =A0char *buf =3D "<NULL>";
-> =A0 =A0 =A0 =A0int len;
-> @@ -142,7 +142,7 @@ static char * __init get_one_property(phandle nod=
-e, const char *name)
-> =A0 =A0 =A0 =A0return buf;
-> =A0}
->
+> -{
+> - =A0 =A0 =A0 char *buf =3D "<NULL>";
+> - =A0 =A0 =A0 int len;
+> -
+> - =A0 =A0 =A0 len =3D prom_getproplen(node, name);
+> - =A0 =A0 =A0 if (len > 0) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 buf =3D prom_early_alloc(len);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 len =3D prom_getproperty(node, name, bu=
+f, len);
+> - =A0 =A0 =A0 }
+> -
+> - =A0 =A0 =A0 return buf;
+> -}
+> -
 > -static struct device_node * __init prom_create_node(phandle node,
-> +static struct device_node * __init pdt_create_node(phandle node,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device_node *parent)
-> =A0{
-> =A0 =A0 =A0 =A0struct device_node *dp;
-> @@ -156,18 +156,18 @@ static struct device_node * __init prom_create_=
-node(phandle node,
->
-> =A0 =A0 =A0 =A0kref_init(&dp->kref);
->
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node *parent)
+> -{
+> - =A0 =A0 =A0 struct device_node *dp;
+> -
+> - =A0 =A0 =A0 if (!node)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+> -
+> - =A0 =A0 =A0 dp =3D prom_early_alloc(sizeof(*dp));
+> - =A0 =A0 =A0 dp->unique_id =3D prom_unique_id++;
+> - =A0 =A0 =A0 dp->parent =3D parent;
+> -
+> - =A0 =A0 =A0 kref_init(&dp->kref);
+> -
 > - =A0 =A0 =A0 dp->name =3D get_one_property(node, "name");
 > - =A0 =A0 =A0 dp->type =3D get_one_property(node, "device_type");
-> + =A0 =A0 =A0 dp->name =3D pdt_get_one_property(node, "name");
-> + =A0 =A0 =A0 dp->type =3D pdt_get_one_property(node, "device_type");
-> =A0 =A0 =A0 =A0dp->phandle =3D node;
->
+> - =A0 =A0 =A0 dp->phandle =3D node;
+> -
 > - =A0 =A0 =A0 dp->properties =3D build_prop_list(node);
-> + =A0 =A0 =A0 dp->properties =3D pdt_build_prop_list(node);
->
-> =A0 =A0 =A0 =A0irq_trans_init(dp);
->
-> =A0 =A0 =A0 =A0return dp;
-> =A0}
->
-> -static char * __init build_full_name(struct device_node *dp)
-> +static char * __init pdt_build_full_name(struct device_node *dp)
-> =A0{
-> =A0 =A0 =A0 =A0int len, ourlen, plen;
-> =A0 =A0 =A0 =A0char *n;
-> @@ -187,7 +187,7 @@ static char * __init build_full_name(struct devic=
-e_node *dp)
-> =A0 =A0 =A0 =A0return n;
-> =A0}
->
+> -
+> - =A0 =A0 =A0 irq_trans_init(dp);
+> -
+> - =A0 =A0 =A0 return dp;
+> -}
+> -
+> -char * __init build_full_name(struct device_node *dp)
+> -{
+> - =A0 =A0 =A0 int len, ourlen, plen;
+> - =A0 =A0 =A0 char *n;
+> -
+> - =A0 =A0 =A0 plen =3D strlen(dp->parent->full_name);
+> - =A0 =A0 =A0 ourlen =3D strlen(dp->path_component_name);
+> - =A0 =A0 =A0 len =3D ourlen + plen + 2;
+> -
+> - =A0 =A0 =A0 n =3D prom_early_alloc(len);
+> - =A0 =A0 =A0 strcpy(n, dp->parent->full_name);
+> - =A0 =A0 =A0 if (!of_is_root_node(dp->parent)) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 strcpy(n + plen, "/");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 plen++;
+> - =A0 =A0 =A0 }
+> - =A0 =A0 =A0 strcpy(n + plen, dp->path_component_name);
+> -
+> - =A0 =A0 =A0 return n;
+> -}
+> -
 > -static struct device_node * __init prom_build_tree(struct device_nod=
 e *parent,
-> +static struct device_node * __init pdt_build_tree(struct device_node=
- *parent,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 phandle node,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node ***nextp)
-> =A0{
-> @@ -195,7 +195,7 @@ static struct device_node * __init prom_build_tre=
-e(struct device_node *parent,
-> =A0 =A0 =A0 =A0struct device_node *dp;
->
-> =A0 =A0 =A0 =A0while (1) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0phandle node,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device_node ***nextp)
+> -{
+> - =A0 =A0 =A0 struct device_node *ret =3D NULL, *prev_sibling =3D NUL=
+L;
+> - =A0 =A0 =A0 struct device_node *dp;
+> -
+> - =A0 =A0 =A0 while (1) {
 > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp =3D prom_create_node(node, parent);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp =3D pdt_create_node(node, parent);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (!dp)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
->
-> @@ -212,12 +212,12 @@ static struct device_node * __init prom_build_t=
-ree(struct device_node *parent,
-> =A0#if defined(CONFIG_SPARC)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dp->path_component_name =3D build_path=
-_component(dp);
-> =A0#endif
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!dp)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prev_sibling)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prev_sibling->sibling =3D=
+ dp;
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!ret)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D dp;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 prev_sibling =3D dp;
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 *(*nextp) =3D dp;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 *nextp =3D &dp->allnext;
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->path_component_name =3D build_path_=
+component(dp);
 > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->full_name =3D build_full_name(dp);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->full_name =3D pdt_build_full_name(d=
-p);
->
+> -
 > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->child =3D prom_build_tree(dp, prom_=
-ops.getchild(node), nextp);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->child =3D pdt_build_tree(dp, prom_o=
-ps.getchild(node), nextp);
->
+getchild(node), nextp);
+> -
 > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prom_build_more)
 > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prom_build_more(dp, nex=
 tp);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (of_pdt_build_more)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_pdt_build_more(dp, n=
-extp);
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 node =3D prom_getsibling(node);
+> - =A0 =A0 =A0 }
+> -
+> - =A0 =A0 =A0 return ret;
+> -}
+> -
+> =A0unsigned int prom_early_allocated __initdata;
 >
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0node =3D prom_ops.getsibling(node);
-> =A0 =A0 =A0 =A0}
-> @@ -229,12 +229,12 @@ void __init of_pdt_build_devicetree(int root_no=
-de)
-> =A0{
-> =A0 =A0 =A0 =A0struct device_node **nextp;
->
-> - =A0 =A0 =A0 allnodes =3D prom_create_node(root_node, NULL);
-> + =A0 =A0 =A0 allnodes =3D pdt_create_node(root_node, NULL);
-> =A0 =A0 =A0 =A0allnodes->path_component_name =3D "";
-> =A0 =A0 =A0 =A0allnodes->full_name =3D "/";
->
-> =A0 =A0 =A0 =A0nextp =3D &allnodes->allnext;
+> -void __init prom_build_devicetree(void)
+> -{
+> - =A0 =A0 =A0 struct device_node **nextp;
+> -
+> - =A0 =A0 =A0 allnodes =3D prom_create_node(prom_root_node, NULL);
+> - =A0 =A0 =A0 allnodes->path_component_name =3D "";
+> - =A0 =A0 =A0 allnodes->full_name =3D "/";
+> -
+> - =A0 =A0 =A0 nextp =3D &allnodes->allnext;
 > - =A0 =A0 =A0 allnodes->child =3D prom_build_tree(allnodes,
-> + =A0 =A0 =A0 allnodes->child =3D pdt_build_tree(allnodes,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0prom_ops.getchild(alln=
-odes->phandle),
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&nextp);
-> =A0}
-> diff --git a/include/linux/of_pdt.h b/include/linux/of_pdt.h
-> index 1324ba5..ea7a17b 100644
-> --- a/include/linux/of_pdt.h
-> +++ b/include/linux/of_pdt.h
-> @@ -36,7 +36,7 @@ extern void of_pdt_set_ops(struct of_pdt_ops *ops);
-> =A0/* for building the device tree */
-> =A0extern void of_pdt_build_devicetree(int root_node);
->
-> -extern void (*prom_build_more)(struct device_node *dp,
-> +extern void (*of_pdt_build_more)(struct device_node *dp,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device_node ***nextp);
->
-> =A0#endif /* _LINUX_OF_PDT_H */
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 prom_getchild(allnodes->phandle),
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 &nextp);
+> - =A0 =A0 =A0 of_console_init();
+> -
+> - =A0 =A0 =A0 printk("PROM: Built device tree with %u bytes of memory=
+=2E\n",
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0prom_early_allocated);
+> -}
+> +#include "../../../drivers/of/pdt.c"
+> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+> new file mode 100644
+> index 0000000..61d9477
+> --- /dev/null
+> +++ b/drivers/of/pdt.c
+> @@ -0,0 +1,217 @@
+> +/* prom_common.c: OF device tree support common code.
+> + *
+> + * Paul Mackerras =A0 =A0 =A0August 1996.
+> + * Copyright (C) 1996-2005 Paul Mackerras.
+> + *
+> + * =A0Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergne=
+r.
+> + * =A0 =A0{engebret|bergner}@us.ibm.com
+> + *
+> + * =A0Adapted for sparc by David S. Miller davem@davemloft.net
+> + *
+> + * =A0 =A0 =A0This program is free software; you can redistribute it=
+ and/or
+> + * =A0 =A0 =A0modify it under the terms of the GNU General Public Li=
+cense
+> + * =A0 =A0 =A0as published by the Free Software Foundation; either v=
+ersion
+> + * =A0 =A0 =A02 of the License, or (at your option) any later versio=
+n.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/errno.h>
+> +#include <linux/mutex.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <asm/prom.h>
+> +#include <asm/oplib.h>
+> +#include <asm/leon.h>
+> +
+> +void (*prom_build_more)(struct device_node *dp, struct device_node *=
+**nextp);
+> +
+> +unsigned int prom_unique_id;
+> +
+> +static struct property * __init build_one_prop(phandle node, char *p=
+rev,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0char *special_name,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0void *special_val,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0int special_len)
+> +{
+> + =A0 =A0 =A0 static struct property *tmp =3D NULL;
+> + =A0 =A0 =A0 struct property *p;
+> + =A0 =A0 =A0 const char *name;
+> +
+> + =A0 =A0 =A0 if (tmp) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D tmp;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memset(p, 0, sizeof(*p) + 32);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 tmp =3D NULL;
+> + =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p =3D prom_early_alloc(sizeof(struct pr=
+operty) + 32);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->unique_id =3D prom_unique_id++;
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 p->name =3D (char *) (p + 1);
+> + =A0 =A0 =A0 if (special_name) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 strcpy(p->name, special_name);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->length =3D special_len;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->value =3D prom_early_alloc(special_l=
+en);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy(p->value, special_val, special_l=
+en);
+> + =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prev =3D=3D NULL) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 name =3D prom_firstprop=
+(node, p->name);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 name =3D prom_nextprop(=
+node, prev, p->name);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!name || strlen(name) =3D=3D 0) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 tmp =3D p;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> +#ifdef CONFIG_SPARC32
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 strcpy(p->name, name);
+> +#endif
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->length =3D prom_getproplen(node, p->=
+name);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (p->length <=3D 0) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->length =3D 0;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int len;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->value =3D prom_early=
+_alloc(p->length + 1);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 len =3D prom_getpropert=
+y(node, p->name, p->value,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0p->length);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (len <=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p->leng=
+th =3D 0;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ((unsigned char *)p->va=
+lue)[p->length] =3D '\0';
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 }
+> + =A0 =A0 =A0 return p;
+> +}
+> +
+> +static struct property * __init build_prop_list(phandle node)
+> +{
+> + =A0 =A0 =A0 struct property *head, *tail;
+> +
+> + =A0 =A0 =A0 head =3D tail =3D build_one_prop(node, NULL,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0".node", &node, sizeof(node));
+> +
+> + =A0 =A0 =A0 tail->next =3D build_one_prop(node, NULL, NULL, NULL, 0=
+);
+> + =A0 =A0 =A0 tail =3D tail->next;
+> + =A0 =A0 =A0 while(tail) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 tail->next =3D build_one_prop(node, tai=
+l->name,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 NULL, NULL, 0);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 tail =3D tail->next;
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 return head;
+> +}
+> +
+> +static char * __init get_one_property(phandle node, const char *name=
+)
+> +{
+> + =A0 =A0 =A0 char *buf =3D "<NULL>";
+> + =A0 =A0 =A0 int len;
+> +
+> + =A0 =A0 =A0 len =3D prom_getproplen(node, name);
+> + =A0 =A0 =A0 if (len > 0) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 buf =3D prom_early_alloc(len);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 len =3D prom_getproperty(node, name, bu=
+f, len);
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 return buf;
+> +}
+> +
+> +static struct device_node * __init prom_create_node(phandle node,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node *parent)
+> +{
+> + =A0 =A0 =A0 struct device_node *dp;
+> +
+> + =A0 =A0 =A0 if (!node)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+> +
+> + =A0 =A0 =A0 dp =3D prom_early_alloc(sizeof(*dp));
+> + =A0 =A0 =A0 dp->unique_id =3D prom_unique_id++;
+> + =A0 =A0 =A0 dp->parent =3D parent;
+> +
+> + =A0 =A0 =A0 kref_init(&dp->kref);
+> +
+> + =A0 =A0 =A0 dp->name =3D get_one_property(node, "name");
+> + =A0 =A0 =A0 dp->type =3D get_one_property(node, "device_type");
+> + =A0 =A0 =A0 dp->phandle =3D node;
+> +
+> + =A0 =A0 =A0 dp->properties =3D build_prop_list(node);
+> +
+> + =A0 =A0 =A0 irq_trans_init(dp);
+> +
+> + =A0 =A0 =A0 return dp;
+> +}
+> +
+> +char * __init build_full_name(struct device_node *dp)
+> +{
+> + =A0 =A0 =A0 int len, ourlen, plen;
+> + =A0 =A0 =A0 char *n;
+> +
+> + =A0 =A0 =A0 plen =3D strlen(dp->parent->full_name);
+> + =A0 =A0 =A0 ourlen =3D strlen(dp->path_component_name);
+> + =A0 =A0 =A0 len =3D ourlen + plen + 2;
+> +
+> + =A0 =A0 =A0 n =3D prom_early_alloc(len);
+> + =A0 =A0 =A0 strcpy(n, dp->parent->full_name);
+> + =A0 =A0 =A0 if (!of_is_root_node(dp->parent)) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 strcpy(n + plen, "/");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 plen++;
+> + =A0 =A0 =A0 }
+> + =A0 =A0 =A0 strcpy(n + plen, dp->path_component_name);
+> +
+> + =A0 =A0 =A0 return n;
+> +}
+> +
+> +static struct device_node * __init prom_build_tree(struct device_nod=
+e *parent,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0phandle node,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device_node ***nextp)
+> +{
+> + =A0 =A0 =A0 struct device_node *ret =3D NULL, *prev_sibling =3D NUL=
+L;
+> + =A0 =A0 =A0 struct device_node *dp;
+> +
+> + =A0 =A0 =A0 while (1) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp =3D prom_create_node(node, parent);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!dp)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prev_sibling)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prev_sibling->sibling =3D=
+ dp;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!ret)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D dp;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prev_sibling =3D dp;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *(*nextp) =3D dp;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *nextp =3D &dp->allnext;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->path_component_name =3D build_path_=
+component(dp);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->full_name =3D build_full_name(dp);
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dp->child =3D prom_build_tree(dp, prom_=
+getchild(node), nextp);
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prom_build_more)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prom_build_more(dp, nex=
+tp);
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 node =3D prom_getsibling(node);
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 return ret;
+> +}
+> +
+> +void __init prom_build_devicetree(void)
+> +{
+> + =A0 =A0 =A0 struct device_node **nextp;
+> +
+> + =A0 =A0 =A0 allnodes =3D prom_create_node(prom_root_node, NULL);
+> + =A0 =A0 =A0 allnodes->path_component_name =3D "";
+> + =A0 =A0 =A0 allnodes->full_name =3D "/";
+> +
+> + =A0 =A0 =A0 nextp =3D &allnodes->allnext;
+> + =A0 =A0 =A0 allnodes->child =3D prom_build_tree(allnodes,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prom_getchild(allnodes-=
+>phandle),
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &nextp);
+> +
+> + =A0 =A0 =A0 of_console_init();
+> +
+> + =A0 =A0 =A0 printk("PROM: Built device tree with %u bytes of memory=
+=2E\n",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0prom_early_allocated);
+> +}
+> +
 > --
 > 1.5.6.5
 >
