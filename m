@@ -1,14 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/9] drivers/of: Make device tree code work on any arch.
-Date: Tue, 10 Aug 2010 11:22:46 -0600
-Message-ID: <AANLkTinO5ax5xBQHMLYmTio6V__MCjZK86-H=ycKL7Ac@mail.gmail.com>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 0/9] Xilinx PCI endpoint driver
+Date: Tue, 10 Aug 2010 10:27:59 -0700
+Message-ID: <1a6203e3-1f65-4b0c-9838-1cbcc8c9e04e@VA3EHSMHS013.ehs.local>
 References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<7e773827-71eb-47a5-826c-cd255b4ce02c@SG2EHSMHS008.ehs.local>
+	<0f773b9c-7bf4-4795-93e1-64b1f81dd286@VA3EHSMHS028.ehs.local>
+	<AANLkTim81JjUYzRaiz_X3sh1evKSEfUia39_Lzjr7H-o@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <7e773827-71eb-47a5-826c-cd255b4ce02c-RaUQJvECHiusiP+nND6G/7jjLBE8jN/0@public.gmane.org>
+Content-Class: urn:content-classes:message
+In-Reply-To: <AANLkTim81JjUYzRaiz_X3sh1evKSEfUia39_Lzjr7H-o-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,89 +20,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 23, 2010 at 2:57 PM, Stephen Neuendorffer
-<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-You should be able to drop this patch now.  A generic version is part
-of the common include.
+> -----Original Message-----
+> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gra=
+nt Likely
+> Sent: Tuesday, August 10, 2010 10:15 AM
+> To: Stephen Neuendorffer
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: [PATCH 0/9] Xilinx PCI endpoint driver
+> =
 
-g.
+> On Fri, Jul 23, 2010 at 3:39 PM, Stephen Neuendorffer
+> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> > Sorry, I just realized that the NO_IRQ patch is incomplete 'cuz I hadn't
+> > fixed the
+> > x86 part... =A0But can you try putting the hwicap fix in the test tree?
+> =
 
->
-> ---
->
-> I'm not sure what the right way to abstract these functions is.
-> of_node_to_nid seems specific to those platforms which have a root
-> device tree. =A0pci_address_to_pio seems to probably have a useful
-> implementation, but I'm not sure what it's trying to do. =A0Perhaps
-> someone can shed some light?
-> ---
-> =A0drivers/of/address.c | =A0 =A05 +++++
-> =A0drivers/of/device.c =A0| =A0 =A07 ++++++-
-> =A02 files changed, 11 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index fcadb72..61e652b 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -539,7 +539,12 @@ static int __of_address_to_resource(struct device_no=
-de *dev, const u32 *addrp,
-> =A0 =A0 =A0 =A0memset(r, 0, sizeof(struct resource));
-> =A0 =A0 =A0 =A0if (flags & IORESOURCE_IO) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned long port;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 // FIXME: utter hack...
-> +#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0port =3D pci_address_to_pio(taddr);
-> +#else
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 port =3D -1;
-> +#endif
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (port =3D=3D (unsigned long)-1)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0r->start =3D port;
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 5282a20..27a65fc 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -107,8 +107,13 @@ int of_device_register(struct of_device *ofdev)
-> =A0 =A0 =A0 =A0/* device_add will assume that this device is on the same =
-node as
-> =A0 =A0 =A0 =A0 * the parent. If there is no parent defined, set the node
-> =A0 =A0 =A0 =A0 * explicitly */
-> - =A0 =A0 =A0 if (!ofdev->dev.parent)
-> + =A0 =A0 =A0 if (!ofdev->dev.parent) {
-> +#if defined(CONFIG_MICROBLAZE) || defined(CONFIG_POWERPC) || defined(CON=
-FIG_SPARC)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0set_dev_node(&ofdev->dev, of_node_to_nid(o=
-fdev->dev.of_node));
-> +#else
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 set_dev_node(&ofdev->dev, -1);
-> +#endif
-> + =A0 =A0 =A0 }
->
-> =A0 =A0 =A0 =A0return device_add(&ofdev->dev);
-> =A0}
-> --
-> 1.5.6.6
->
->
->
-> This email and any attachments are intended for the sole use of the named=
- recipient(s) and contain(s) confidential information that may be proprieta=
-ry, privileged or copyrighted under applicable law. If you are not the inte=
-nded recipient, do not read, copy, or forward this email message or any att=
-achments. Delete this email message and any attachments immediately.
->
->
->
+> Hi Stephen,  I didn't get a chance to look at these before the merge
+> window opened, and then of course everything else fell to the wayside.
+>  I'll take a quick look now, but a bunch of devicetree changes went in
+> that will affect some of your patches, so you'll want to rebase on top
+> of Linus' current tree sometime soon.
+> =
 
+> g.
 
+No worries about the hwicap stuff...
 
--- =
+As for the other device tree things:
+I've also been stuck on other things and haven't had much chance to drive a=
+nything.
+I see the main barrier being the code that has to get added to x86 to make =
+it work,
+and all the recent updates you've made are moving in exactly the right dire=
+ction, so
+I've been waiting a bit for that to settle down.
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Steve
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
