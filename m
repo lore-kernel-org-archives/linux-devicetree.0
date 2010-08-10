@@ -1,18 +1,14 @@
-From: Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: Review Request: New proposal for device tree clock binding.
-Date: Tue, 10 Aug 2010 12:56:24 +0800
-Message-ID: <F9BD3E0A8083BE4ABAA94D7EDD7E3F631093B6@zch01exm26.fsl.freescale.net>
-References: <AANLkTimm7G--LQHYBqPB1YCXQb7fSXPDaYsLq0p30DG1@mail.gmail.com>
-	<F9BD3E0A8083BE4ABAA94D7EDD7E3F63109216@zch01exm26.fsl.freescale.net>
-	<AANLkTi=3MQBSd_phbSZnRA-wFB7cfa4U_PKND+BgZVhd@mail.gmail.com>
-	<F9BD3E0A8083BE4ABAA94D7EDD7E3F6310925F@zch01exm26.fsl.freescale.net>
-	<AANLkTinQnFBcLiDyQtRRwzdAg_M48BnNsa2OyKWCiSUh@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 0/9] Xilinx PCI endpoint driver
+Date: Tue, 10 Aug 2010 11:15:11 -0600
+Message-ID: <AANLkTim81JjUYzRaiz_X3sh1evKSEfUia39_Lzjr7H-o@mail.gmail.com>
+References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<0f773b9c-7bf4-4795-93e1-64b1f81dd286@VA3EHSMHS028.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <AANLkTinQnFBcLiDyQtRRwzdAg_M48BnNsa2OyKWCiSUh-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <0f773b9c-7bf4-4795-93e1-64b1f81dd286-+Ck8Kgl/v08NTaRkHJHP0bjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,26 +18,20 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->>> I've avoided requiring clock nodes to have a separate sub node for
->>> each output because it is more verbose and it prevents clock
->>> providers from having child nodes for other purposes. =A0Are you
->>> concerned that
->>
->> I don't see why there should be child nodes for other purposes under
->clock node.
->>
->>> having the <phandle>+output name pair will be difficult to manage?
->>
->> That's part of my concern.
->
->I was concerned about this too until I found precedence for doing the
->exact same thing in the pci binding (and ePAPR).  Mixing phandle and a
->string in this way doesn't bother me anymore.
+On Fri, Jul 23, 2010 at 3:39 PM, Stephen Neuendorffer
+<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Sorry, I just realized that the NO_IRQ patch is incomplete 'cuz I hadn't
+> fixed the
+> x86 part... =A0But can you try putting the hwicap fix in the test tree?
 
-Where exactly can I get the sample code for handling this binding?
+Hi Stephen,  I didn't get a chance to look at these before the merge
+window opened, and then of course everything else fell to the wayside.
+ I'll take a quick look now, but a bunch of devicetree changes went in
+that will affect some of your patches, so you'll want to rebase on top
+of Linus' current tree sometime soon.
 
-- Leo
+g.
