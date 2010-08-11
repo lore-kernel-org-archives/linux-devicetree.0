@@ -1,25 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] [Xilinx] xilinx_hwicap: Enable whenever OF/device
-	trees are available.
-Date: Tue, 10 Aug 2010 13:19:28 -0600
-Message-ID: <AANLkTinyW55zhQOUherurSyvJMK1hEytVgtJUig+yn8T@mail.gmail.com>
-References: <1279918663-29960-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-2-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-3-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-4-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-5-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-6-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-7-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-8-git-send-email-stephen.neuendorffer@xilinx.com>
-	<1279918663-29960-9-git-send-email-stephen.neuendorffer@xilinx.com>
-	<d3cc257d-ca6f-40cd-82d4-5941e5fbc1d0@SG2EHSMHS001.ehs.local>
-	<AANLkTimxkhWtnwViKj=3rEXcwZ7rPNezTe39Ef3Q5-WO@mail.gmail.com>
-	<5817abce-3f51-4e8e-a8ba-f95ea13a3536@SG2EHSMHS006.ehs.local>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: olpc ofw question
+Date: Tue, 10 Aug 2010 20:40:10 -0400
+Message-ID: <20100810204010.134618fb@dev.queued.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5817abce-3f51-4e8e-a8ba-f95ea13a3536-RaUQJvECHiv5op9OF0Koj7jjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -29,54 +15,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 10, 2010 at 1:01 PM, Stephen Neuendorffer
-<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->
->> -----Original Message-----
->> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gr=
-ant Likely
->> Sent: Tuesday, August 10, 2010 11:18 AM
->> To: Stephen Neuendorffer
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Subject: Re: [PATCH 9/9] [Xilinx] xilinx_hwicap: Enable whenever OF/devi=
-ce trees are available.
->>
->> On Fri, Jul 23, 2010 at 2:57 PM, Stephen Neuendorffer
->> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->> > Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>
->> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>
->> > ---
->> > =A0drivers/char/Kconfig | =A0 =A02 +-
->> > =A01 files changed, 1 insertions(+), 1 deletions(-)
->> >
->> > diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
->> > index 7cfcc62..f445f2f 100644
->> > --- a/drivers/char/Kconfig
->> > +++ b/drivers/char/Kconfig
->> > @@ -909,7 +909,7 @@ config DTLK
->> >
->> > =A0config XILINX_HWICAP
->> > =A0 =A0 =A0 =A0tristate "Xilinx HWICAP Support"
->> > - =A0 =A0 =A0 depends on XILINX_VIRTEX || MICROBLAZE
->> > + =A0 =A0 =A0 depends on OF
->> > =A0 =A0 =A0 =A0help
->> > =A0 =A0 =A0 =A0 =A0This option enables support for Xilinx Internal Con=
-figuration
->> > =A0 =A0 =A0 =A0 =A0Access Port (ICAP) driver. =A0The ICAP is used on X=
-ilinx Virtex
->> > --
->> > 1.5.6.6
->
-> Did you pull the fixed version into your next tree to build test on Power=
-PC?
+Hi,
 
-I pulled the 3 into my tree now, but I haven't pushed it out for
-cross-architecture build testing.  I'll do so after the merge window.
+I've run a comparison between OLPC's old OFW code (which mounts the
+device-tree at /ofw, and makes use of the sparc code) versus the code
+which I'm planning to send upstream (which mounts the device-tree
+at /proc/device-tree, and makes use of PROC_DEVTREE).  The results are
+here:
 
-g.
+http://dev.queued.net/~dilinger/dt.diff
+
+That's from running:
+
+find /proc/device-tree -type f | sort | while read f; do echo $f | sed 's#/proc/device-tree##'; sudo od -c $f; done > ~/dt-proc
+find /ofw -type f | sort | while read f; do echo $f | sed 's#/ofw##'; sudo od -c $f; done > ~/dt-ofw
+diff -u dt-ofw dt-proc > dt.diff
+
+Note that this was run on two different OLPC XO-1 machines, hence the
+difference in serial numbers, mfg-data, and other such things.
+
+There are two things I'm concerned about; the first is that device names
+are mangled.  For some things (ie, "/battery@0/name" => "/battery/name"),
+I don't particularly care; for others ("/pci/audio@f,3/device-id"
+=> "/pci/audio/device-id"), it's kind of annoying to lose that extra
+bit of information.  What's the purpose being the mangling that
+happens w/ /proc/device-tree?  I the following comment in proc_devtree.c:
+
+ * For a node with a name like "gc@10", we make symlinks called "gc"
+ * and "@10" to it.
+
+However, I'm not seeing *any* symlinks at all in /proc/device-tree.
+
+My second concern is the renaming of /pci/usb@f,4 (the ohci device)
+to /pci/usb.  I'm not sure if that's due to a bug in the devtree code,
+OFW, or my patch.  Note that the kernel spits out the following messages
+while populating /proc/device-tree:
+
+
+[    0.130869] device-tree: Duplicate name in /pci, renamed to "usb#1"
+[    0.131589] device-tree: Duplicate name in /, renamed to "dropin-fs#1"
+
+I'm assuming that the code first renamed the ohci device from
+/pci/usb@f,4 to /pci/usb, attempted to then rename the
+wireless chip from /pci/usb@f,5 to /pci/usb, and spit out
+that error.  That seems.. odd.
+
+Any insight into the reasoning for this mangling?
