@@ -1,84 +1,92 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: olpc ofw question
-Date: Wed, 11 Aug 2010 17:20:45 -0400
-Message-ID: <20100811172045.77cda7a0@dev.queued.net>
-References: <20100810204010.134618fb@dev.queued.net>
-	<55307.84.105.60.153.1281559723.squirrel@gate.crashing.org>
+From: Greg KH <gregkh@suse.de>
+Subject: [039/111] irq: Add new IRQ flag IRQF_NO_SUSPEND
+Date: Wed, 11 Aug 2010 16:54:20 -0700
+Message-ID: <20100811235459.104341564@clark.site>
+References: <20100811235623.GA24440@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <55307.84.105.60.153.1281559723.squirrel-JorI+TVEvZrY24RiXHRV3ti2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20100811235623.GA24440@kroah.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linux-kernel@vger.kernel.org, stable@kernel.org
+Cc: Jeremy Fitzhardinge <jeremy@goop.org>, xen-devel@lists.xensource.com, Thomas Gleixner <tglx@linutronix.de>, Ian Campbell <ian.campbell@citrix.com>, devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linuxppc-dev@ozlabs.org, Paul Mackerras <paulus@samba.org>, linux-input@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, stable-review@kernel.org, alan@lxorguk.ukuu.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Aug 2010 22:48:43 +0200 (CEST)
-"Segher Boessenkool" <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+2.6.32-stable review patch.  If anyone has any objections, please let us know.
 
-> > I've run a comparison between OLPC's old OFW code (which mounts the
-> > device-tree at /ofw, and makes use of the sparc code) versus the
-> > code which I'm planning to send upstream (which mounts the
-> > device-tree at /proc/device-tree, and makes use of PROC_DEVTREE).
-> > The results are here:
-> 
-> [unit addresses are missing]
-> 
-> > Any insight into the reasoning for this mangling?
-> 
-> It sounds to me like you're not putting the (textual representation
-> of the) unit address in the device_node->full_name field.  How do
-> you fill that field?
+------------------
 
-Ah, that could very well be it.  Note that the *old* OLPC code used the
-'path_component_name' of device_node.  The new code uses just 'name' in
-pdt_build_full_name(), as path_component_name is #ifdef'd out
-for !SPARC.  I guess I'm not entirely sure why sparc used
-path_component_name in the first place..
+From: Ian Campbell <ian.campbell@citrix.com>
 
+commit 685fd0b4ea3f0f1d5385610b0d5b57775a8d5842 upstream.
 
-The code that fills in full_name:
+A small number of users of IRQF_TIMER are using it for the implied no
+suspend behaviour on interrupts which are not timer interrupts.
 
-                dp->full_name = pdt_build_full_name(dp);
+Therefore add a new IRQF_NO_SUSPEND flag, rename IRQF_TIMER to
+__IRQF_TIMER and redefine IRQF_TIMER in terms of these new flags.
 
+Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+Cc: Jeremy Fitzhardinge <jeremy@goop.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: xen-devel@lists.xensource.com
+Cc: linux-input@vger.kernel.org
+Cc: linuxppc-dev@ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org
+LKML-Reference: <1280398595-29708-1-git-send-email-ian.campbell@citrix.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 
-static char * __init pdt_build_full_name(struct device_node *dp)
-{
-        int len, ourlen, plen;
-        char *n;
+---
+ include/linux/interrupt.h |    7 ++++++-
+ kernel/irq/manage.c       |    2 +-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-        plen = strlen(dp->parent->full_name);
-        ourlen = strlen(fetch_node_name(dp));
-        len = ourlen + plen + 2;
-
-        n = prom_early_alloc(len);
-        strcpy(n, dp->parent->full_name);
-        if (!of_is_root_node(dp->parent)) {
-                strcpy(n + plen, "/");
-                plen++;
-        }
-        strcpy(n + plen, fetch_node_name(dp));
-
-        return n;
-}
-
-#if defined(CONFIG_SPARC)
-static inline const char *fetch_node_name(struct device_node *dp)
-{
-        return dp->path_component_name;
-}
-#else
-static inline const char *fetch_node_name(struct device_node *dp)
-{
-        return dp->name;
-}
-#endif
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -52,16 +52,21 @@
+  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler finished.
+  *                Used by threaded interrupts which need to keep the
+  *                irq line disabled until the threaded handler has been run.
++ * IRQF_NO_SUSPEND - Do not disable this IRQ during suspend
++ *
+  */
+ #define IRQF_DISABLED		0x00000020
+ #define IRQF_SAMPLE_RANDOM	0x00000040
+ #define IRQF_SHARED		0x00000080
+ #define IRQF_PROBE_SHARED	0x00000100
+-#define IRQF_TIMER		0x00000200
++#define __IRQF_TIMER		0x00000200
+ #define IRQF_PERCPU		0x00000400
+ #define IRQF_NOBALANCING	0x00000800
+ #define IRQF_IRQPOLL		0x00001000
+ #define IRQF_ONESHOT		0x00002000
++#define IRQF_NO_SUSPEND		0x00004000
++
++#define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND)
+ 
+ /*
+  * Bits used by threaded handlers:
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -200,7 +200,7 @@ static inline int setup_affinity(unsigne
+ void __disable_irq(struct irq_desc *desc, unsigned int irq, bool suspend)
+ {
+ 	if (suspend) {
+-		if (!desc->action || (desc->action->flags & IRQF_TIMER))
++		if (!desc->action || (desc->action->flags & IRQF_NO_SUSPEND))
+ 			return;
+ 		desc->status |= IRQ_SUSPENDED;
+ 	}
