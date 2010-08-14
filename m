@@ -1,44 +1,50 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 08/12] ptp: Added a brand new class driver for ptp clocks.
-Date: Fri, 13 Aug 2010 17:54:42 -0600
-Message-ID: <AANLkTi=f0i7vetMvr4mK1cNJK6TYj1J6iCxjFeka00jc@mail.gmail.com>
-References: <cover.1276615626.git.richard.cochran@omicron.at>
- <4a030d2bace90f089f2f3f61496b918c6f1dfb52.1276615626.git.richard.cochran@omicron.at>
- <AANLkTinYjzfChsN0AB5W6kOh6xJYPJtoEq941pG8WbmS@mail.gmail.com> <20100813093438.GA18112@riccoc20.at.omicron.at>
+From: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [patch] ehci-ppc-of: problems in unwind
+Date: Sat, 14 Aug 2010 11:06:19 +0200
+Message-ID: <20100814090619.GY645@bicker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20100813093438.GA18112@riccoc20.at.omicron.at>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sean MacLennan <smaclennan-Qtffpm9i2AVWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Vitaly Bordug <vitb-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 13, 2010 at 3:34 AM, Richard Cochran
-<richardcochran@gmail.com> wrote:
-> On Tue, Jun 15, 2010 at 01:11:30PM -0600, Grant Likely wrote:
->> On Tue, Jun 15, 2010 at 10:09 AM, Richard Cochran
->> > +static DEFINE_SPINLOCK(clocks_lock); /* protects 'clocks' */
->>
->> Doesn't appear that clocks is manipulated at atomic context. =A0Mute=
-x instead?
-> ...
->> If the spinlock is changed to a mutex that is held for the entire
->> function call, then the logic here can be simpler.
->
-> Grant,
->
-> I am working on another go at this patch series. Stupid question:
->
-> The caller of ptp_clock_register(), which takes the clocks_lock, is
-> always a module_init() function. Is this always a safe context in
-> which to call mutex_lock?
+The iounmap(ehci->ohci_hcctrl_reg); should be the first thing we do
+because the ioremap() was the last thing we did.  Also if we hit any of
+the goto statements in the original code then it would have led to a
+NULL dereference of "ehci".  This bug was introduced in: 796bcae7361c
+"USB: powerpc: Workaround for the PPC440EPX USBH_23 errata [take 3]"
 
-Yes, you can take mutexes in the module_init context.
+I modified the few lines in front a little so that my code didn't
+obscure the return success code path.
 
-g.
+Signed-off-by: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+I don't have a cross compile environment set up so I haven't compiled
+this code.  Sorry for that.
 
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+diff --git a/drivers/usb/host/ehci-ppc-of.c b/drivers/usb/host/ehci-ppc-of.c
+index 335ee69..ba52be4 100644
+--- a/drivers/usb/host/ehci-ppc-of.c
++++ b/drivers/usb/host/ehci-ppc-of.c
+@@ -192,17 +192,19 @@ ehci_hcd_ppc_of_probe(struct platform_device *op, const struct of_device_id *mat
+ 	}
+ 
+ 	rv = usb_add_hcd(hcd, irq, 0);
+-	if (rv == 0)
+-		return 0;
++	if (rv)
++		goto err_ehci;
++
++	return 0;
+ 
++err_ehci:
++	if (ehci->has_amcc_usb23)
++		iounmap(ehci->ohci_hcctrl_reg);
+ 	iounmap(hcd->regs);
+ err_ioremap:
+ 	irq_dispose_mapping(irq);
+ err_irq:
+ 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
