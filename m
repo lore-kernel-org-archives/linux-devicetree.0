@@ -1,67 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Mon, 16 Aug 2010 21:59:39 +0200
-Message-ID: <201008162159.39734.arnd@arndb.de>
-References: <cover.1281956490.git.richard.cochran@omicron.at> <201008161626.24083.arnd@arndb.de> <20100816190003.GB4166@riccoc20.at.omicron.at>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: standard property to convey device dma address width?
+Date: Mon, 16 Aug 2010 10:17:10 -1000
+Message-ID: <4C699CC6.1060507@firmworks.com>
+References: <5A878376-AFCC-4CB0-A0E9-F2F497066FD5@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20100816190003.GB4166@riccoc20.at.omicron.at>
-Sender: netdev-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Richard Cochran <richardcochran@gmail.com>, Rodolfo Giometti <giometti@linux.it>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5A878376-AFCC-4CB0-A0E9-F2F497066FD5-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Yoder Stuart-B08248 <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 August 2010 21:00:03 Richard Cochran wrote:
-> 
-> On Mon, Aug 16, 2010 at 04:26:23PM +0200, Arnd Bergmann wrote:
-> > Have you considered integrating the subsystem into the Posix clock/timer
-> > framework?
-> 
-> Yes, but see below.
->  
-> > I can't really tell from reading the source if this is possible or
-> > not, but my feeling is that if it can be done, that would be a much
-> > nicer interface. We already have clock_gettime/clock_settime/
-> > timer_settime/... system calls, and while you'd need to add another
-> > clockid and some syscalls, my feeling is that it will be more
-> > usable in the end.
-> 
-> You are not the first person to ask about this. See this link for
-> longer explanation of why I did not go that way:
-> 
->   http://marc.info/?l=linux-netdev&m=127669810232201&w=2
-> 
-> You could offer the PTP clock as a Linux clock source/event device,
-> and I agree that it would be nicer. However, the problem is, what do
-> you do with the PHY based clocks?  Just one 16 bit read from a PHY
-> clock can take 40 usec, and you need four such read operations just to
-> get the current time value.
+Kumar Gala wrote:
+> Do we or should we have a standard property to convey that address width a device is capable of?
+>   
 
-Why does it matter how long it takes to read the clock? I wasn't thinking
-of replacing the system clock with this, just exposing the additional
-clock as a new clockid_t value that can be accessed using the existing
-syscalls.
+What is the context?  When Open Firmware was first developed, the only 
+bus with partial addresses was ISA.  The ISA bus binding has a "dma" 
+property that describes some of the legacy DMA characteristics, but 
+address width isn't one of them, for reasons that I don't remember.
 
-> Also, I really did not want to add or change any syscalls. I could not
-> see a practical way to extend the existing syscalls to accommodate PTP
-> clocks.
+I thought at the time (perhaps wishfully) that partial addresses would 
+not be consideration for future buses, because
 
-Why did you not want to add syscalls? Adding ioctls instead of syscalls
-does not make the interface better, just less visible.
+a) The transition to large-scale integration had already made logic 
+gates nearly "free", so there was no motivation to skimp on address 
+register bits.
 
-Out of the ioctl commands you define, we already seem to have half or more:
+b) Although packages were - and still are - pin-limited, partial address 
+bus connections were not feasible because of uneven bus loading problems.
 
-PTP_CLOCK_APIVERS -> not needed
-PTP_CLOCK_ADJFREQ -> new clock_adjfreq
-PTP_CLOCK_ADJTIME -> new clock_adjtime
-PTP_CLOCK_GETTIME -> clock_gettime
-PTP_CLOCK_SETTIME -> clock_settime
-PTP_CLOCK_GETCAPS -> new clock_getcaps
-PTP_CLOCK_GETTIMER -> timer_gettime
-PTP_CLOCK_SETTIMER -> timer_create/timer_settime
-PTP_FEATURE_REQUEST -> possibly clock_feature
+c) Address and data buses were usually multiplexed onto the same pins, 
+further reducing the motivation for partial addresses.
 
-	Arnd
+Obviously, since you are asking the question, there is some case where 
+address width could be variable.  I'd be interested to learn the details.
+
+If I had to describe a partial address, I'd consider a property name 
+like "dma-address-mask", whose value is a bitmap of implemented bits, 
+corresponding to the bits in a unit address for the parent bus.  
+Low-order bits might be zero if the DMA addressing hardware had 
+alignment restrictions.
+
+> - k
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+>   
