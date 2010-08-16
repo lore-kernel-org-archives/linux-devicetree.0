@@ -1,99 +1,82 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] MIPS: Add device tree support to MIPS
-Date: Mon, 16 Aug 2010 14:42:11 -0600
-Message-ID: <20100816204211.GA17571@angua.secretlab.ca>
-References: <AANLkTi=74zoQziQTmAGo-cNtF9FAT77h+KZagsNEFjEf@mail.gmail.com>
-	<7A9214B0DEB2074FBCA688B30B04400D013FA46D@XMB-RCD-208.cisco.com>
+Subject: Re: [patch] ehci-ppc-of: problems in unwind
+Date: Mon, 16 Aug 2010 15:52:54 -0600
+Message-ID: <AANLkTinq9m=8DHFLJRmdFceGn3+_j5wcT4bUws0_W-vm@mail.gmail.com>
+References: <20100814090619.GY645@bicker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7A9214B0DEB2074FBCA688B30B04400D013FA46D-2KNrN6/GZtCQwNoRDPPJJaBKnGwkPULj@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Dezhong Diao (dediao)" <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20100814090619.GY645@bicker>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Sean MacLennan <smaclennan-Qtffpm9i2AVWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Vitaly Bordug <vitb-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 28, 2010 at 03:47:20PM -0500, Dezhong Diao (dediao) wrote:
-> Grant,
-> =
+On Sat, Aug 14, 2010 at 3:06 AM, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+> The iounmap(ehci->ohci_hcctrl_reg); should be the first thing we do
+> because the ioremap() was the last thing we did. =A0Also if we hit an=
+y of
+> the goto statements in the original code then it would have led to a
+> NULL dereference of "ehci". =A0This bug was introduced in: 796bcae736=
+1c
+> "USB: powerpc: Workaround for the PPC440EPX USBH_23 errata [take 3]"
+>
+> I modified the few lines in front a little so that my code didn't
+> obscure the return success code path.
+>
+> Signed-off-by: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> I agree with your approach. Please go ahead to make changes and get the p=
-atches working with latest code in test tree. Or I am able to make changes =
-in terms of your comments too.
-> =
+Looks correct, but I don't have the hardware to test.
 
-> It is best we can have MIPS OF support in 2.6.36, but I have you and Ralf=
- decide it.
+Slightly-Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Wasn't quite ready in time for 2.6.36, but .37 should be no problem.  All o=
-f the pending devicetree core patches are now in Linus' tree, so it is a go=
-od time to rebase.  When you repost I can pick them up into my tree to get =
-some build test exposure.
-
-I'll also make sure to start build testing on MIPS.  Ralf, any suggestions =
-on defconfigs I should use?
-
-Cheers,
 g.
 
+> ---
+> I don't have a cross compile environment set up so I haven't compiled
+> this code. =A0Sorry for that.
+>
+> diff --git a/drivers/usb/host/ehci-ppc-of.c b/drivers/usb/host/ehci-p=
+pc-of.c
+> index 335ee69..ba52be4 100644
+> --- a/drivers/usb/host/ehci-ppc-of.c
+> +++ b/drivers/usb/host/ehci-ppc-of.c
+> @@ -192,17 +192,19 @@ ehci_hcd_ppc_of_probe(struct platform_device *o=
+p, const struct of_device_id *mat
+> =A0 =A0 =A0 =A0}
+>
+> =A0 =A0 =A0 =A0rv =3D usb_add_hcd(hcd, irq, 0);
+> - =A0 =A0 =A0 if (rv =3D=3D 0)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+> + =A0 =A0 =A0 if (rv)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_ehci;
+> +
+> + =A0 =A0 =A0 return 0;
+>
+> +err_ehci:
+> + =A0 =A0 =A0 if (ehci->has_amcc_usb23)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 iounmap(ehci->ohci_hcctrl_reg);
+> =A0 =A0 =A0 =A0iounmap(hcd->regs);
+> =A0err_ioremap:
+> =A0 =A0 =A0 =A0irq_dispose_mapping(irq);
+> =A0err_irq:
+> =A0 =A0 =A0 =A0release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+> -
+> - =A0 =A0 =A0 if (ehci->has_amcc_usb23)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 iounmap(ehci->ohci_hcctrl_reg);
+> =A0err_rmr:
+> =A0 =A0 =A0 =A0usb_put_hcd(hcd);
+>
+>
 
-> =
 
-> =
 
-> Thanks.
-> =
-
-> =
-
-> Dezhong  =
-
-> =
-
-> -----Original Message-----
-> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gra=
-nt Likely
-> Sent: Wednesday, July 28, 2010 12:26 PM
-> To: David Daney
-> Cc: Dezhong Diao (dediao); devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-mip=
-s@linux-mips.org; ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org; David VomLehn (dvomlehn)
-> Subject: Re: [PATCH v2 1/2] MIPS: Add device tree support to MIPS
-> =
-
-> On Wed, Jul 28, 2010 at 1:19 PM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> =
-wrote:
-> > On 07/28/2010 11:54 AM, Grant Likely wrote:
-> >>
-> >> Hi Dezhong,
-> >
-> > [...]
-> >>
-> >> Very nice clean patch, thanks! =A0How/when would you like to see MIPS =
-
-> >> OF support go into mainline?
-> >>
-> >
-> > I can't speak for the patch authors, but my preference would be to =
-
-> > have MIPS OF support go in to 2.6.36 if possible.
-> >
-> > How? To me it doesn't matter. =A0I would let you and Ralf fight it out.
-> =
-
-> It would probably be best if I at least pick up the first patch into my t=
-est tree to give it a spin with the latest changes.  I'd be happy to take t=
-he 2nd too to avoid ordering issues.
-> =
-
-> Cheers,
-> g.
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
