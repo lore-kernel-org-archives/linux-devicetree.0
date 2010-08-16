@@ -1,24 +1,46 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: standard property to convey device dma address width?
-Date: Mon, 16 Aug 2010 11:01:37 -0500
-Message-ID: <5A878376-AFCC-4CB0-A0E9-F2F497066FD5@kernel.crashing.org>
-Mime-Version: 1.0 (Apple Message framework v1081)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Yoder Stuart-B08248 <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
+Date: Mon, 16 Aug 2010 21:00:03 +0200
+Message-ID: <20100816190003.GB4166@riccoc20.at.omicron.at>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+ <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
+ <201008161626.24083.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201008161626.24083.arnd@arndb.de>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>
 List-Id: devicetree@vger.kernel.org
 
-Do we or should we have a standard property to convey that address width a device is capable of?
+On Mon, Aug 16, 2010 at 04:26:23PM +0200, Arnd Bergmann wrote:
+> Have you considered integrating the subsystem into the Posix clock/timer
+> framework?
 
-- k
+Yes, but see below.
+ 
+> I can't really tell from reading the source if this is possible or
+> not, but my feeling is that if it can be done, that would be a much
+> nicer interface. We already have clock_gettime/clock_settime/
+> timer_settime/... system calls, and while you'd need to add another
+> clockid and some syscalls, my feeling is that it will be more
+> usable in the end.
+
+You are not the first person to ask about this. See this link for
+longer explanation of why I did not go that way:
+
+  http://marc.info/?l=linux-netdev&m=127669810232201&w=2
+
+You *could* offer the PTP clock as a Linux clock source/event device,
+and I agree that it would be nicer. However, the problem is, what do
+you do with the PHY based clocks?  Just one 16 bit read from a PHY
+clock can take 40 usec, and you need four such read operations just to
+get the current time value.
+
+Also, I really did not want to add or change any syscalls. I could not
+see a practical way to extend the existing syscalls to accommodate PTP
+clocks.
+
+Richard
