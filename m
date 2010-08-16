@@ -1,14 +1,16 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: olpc ofw question
-Date: Sat, 14 Aug 2010 15:52:05 -1000
-Message-ID: <4C674845.8090202@firmworks.com>
-References: <20100810204010.134618fb@dev.queued.net>	<55307.84.105.60.153.1281559723.squirrel@gate.crashing.org>	<20100811172045.77cda7a0@dev.queued.net>	<4C635428.9010009@firmworks.com>
-	<20100814203545.4aee7e0f@debxo>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/3] sparc: make driver/of/pdt no longer sparc-specific
+Date: Mon, 16 Aug 2010 00:22:44 -0400
+Message-ID: <20100816002244.6ddf37e6@debxo>
+References: <20100808231116.21c7d6f3@dev.queued.net>
+	<AANLkTimG7u5eXWSn5VznKfuFcFD+evTzo1_QpAFmCdpL@mail.gmail.com>
+	<20100809013245.1cefb9bf@dev.queued.net>
+	<20100808.223444.62324566.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100814203545.4aee7e0f@debxo>
+In-Reply-To: <20100808.223444.62324566.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,72 +20,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Andres Salomon wrote:
-> On Wed, 11 Aug 2010 15:53:44 -1000
-> Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
->
-> [...]
->   
->> The "proc_of.c" code that I wrote in Dec 2006 uses the
->> package-to-path method mentioned above, getting the "name@addr"
->> representation (package-to-path returns the full path, but you can
->> easily extract just the tail component with strrchr(path, '/'))
->>     
->
->
-> Thanks for the tip.  I changed the code:
->
-> -       dp->name = pdt_get_one_property(node, "name");
-> +//     dp->name = pdt_get_one_property(node, "name");
-> +       dp->name = pdt_get_fullname(node);
->
-> Where pdt_get_fullname() runs package-to-path and returns
-> strrchr(buf, '/')+1; /proc/device-tree looks much better.
-> Here's the diff now between /ofw and /proc/device-tree:
->
-> http://dev.queued.net/~dilinger/dt2.diff
->
-> Now I'm wondering a few things;
->
-> 1) I'm setting node->name to the full node name now (including
-> the "@" suffix).  Is there any reason why this might be incorrect
-> (ie, that I should only be using the @ suffix in node->full_name)?
-> It looks fine to me, but it's worth asking...
->
-> 2) At a later point, it's probably worth looking into changing
-> the sparc code to use this as well.  Is there a reason why the
-> sparc code doesn't shouldn't use this (ie, old firmware bugs)?
->   
+On Sun, 08 Aug 2010 22:34:44 -0700 (PDT)
+David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
 
-package-to-path first appeared in OBP 3, i.e. the major version that 
-conformed to the IEEE 1275 standard.  OBP 1.x and OBP 2.x had a 
-different (less portable and somewhat less functional) client interface 
-ABI called "romvec".  If I remember correctly, OBP 3 first appeared on 
-Sun 5 - UltraSPARC - systems.  OBP 1 and 2 were on Sun 4c and related 
-machines.
+> From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> Date: Mon, 9 Aug 2010 01:32:45 -0400
+> 
+> > On Sun, 8 Aug 2010 23:12:21 -0600
+> > Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > 
+> >> If you have to explicitly cast these function pointers, then you're
+> >> doing it wrong.  :-)  Listen to and fix the compiler complaint
+> >> here.
+> >> 
+> > 
+> > Hm, can you please expand on that?  The reason it's necessary to
+> > cast is because sparc's prom_* functions are using ints instead of
+> > phandles.  I don't understand why casting is the wrong thing here.
+> > 
+> > I could write some 1-line wrapper functions that simply call prom_*
+> > rather than casting, I suppose.
+> 
+> There's no reason the Sparc interfaces can't take phandles since they
+> are just ints, and that would make the call signatures of these
+> functions compatible with the types used by the other architectures.
 
-I think it has been about 15 years since the last OBP 2.x system was 
-released.  There may still be a few working machines from that 
-generation, but if so, they are of more historic interest than economic 
-value.  I ditched my last one something like 10 years ago.
-> 3) I get the following during proc population:
->
-> [    0.126687] device-tree: Duplicate name in /, renamed to "dropin-fs#1"
->
-> Looking at the diff, I see
->
-> -/dropin-fs/.node
-> -0000000   ` 222 206 377
-> -0000004
-> -/dropin-fs/.node
-> -0000000   ` 222 206 377
->
-> Is this a bug in my version of OFW?
->   
+You're saying to convert the sparc code to use phandles?  Doing so has
+caused phandles to show up in asm/openprom.h (linux_dev_v2_funcs's
+v2_inst2pkg returns a phandle, and linux_nodeops use phandles).  This
+is fine, except asm/openprom.h is an exported kernel header, and
+linux/of.h is not.
 
-Yes.  I just fixed it.  Thanks for noticing it.  Fortunately, it is 
-innocuous.
+I'm tempted to break the phandle/device_node/property stuff out into a
+separate header (that gets exported), and include that from linux/of.h
+and asm/openprom.h.
