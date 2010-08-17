@@ -1,82 +1,81 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [patch] ehci-ppc-of: problems in unwind
-Date: Mon, 16 Aug 2010 15:52:54 -0600
-Message-ID: <AANLkTinq9m=8DHFLJRmdFceGn3+_j5wcT4bUws0_W-vm@mail.gmail.com>
-References: <20100814090619.GY645@bicker>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] MIPS: Add device tree support to MIPS
+Date: Tue, 17 Aug 2010 13:40:39 +1000
+Message-ID: <20100817134039.fc1108c7.sfr@canb.auug.org.au>
+References: <AANLkTi=74zoQziQTmAGo-cNtF9FAT77h+KZagsNEFjEf@mail.gmail.com>
+	<7A9214B0DEB2074FBCA688B30B04400D013FA46D@XMB-RCD-208.cisco.com>
+	<20100816204211.GA17571@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20100814090619.GY645@bicker>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Sean MacLennan <smaclennan-Qtffpm9i2AVWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Vitaly Bordug <vitb-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2552970631445058662=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100816204211.GA17571-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 14, 2010 at 3:06 AM, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
-> The iounmap(ehci->ohci_hcctrl_reg); should be the first thing we do
-> because the ioremap() was the last thing we did. =A0Also if we hit an=
-y of
-> the goto statements in the original code then it would have led to a
-> NULL dereference of "ehci". =A0This bug was introduced in: 796bcae736=
-1c
-> "USB: powerpc: Workaround for the PPC440EPX USBH_23 errata [take 3]"
->
-> I modified the few lines in front a little so that my code didn't
-> obscure the return success code path.
->
-> Signed-off-by: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--===============2552970631445058662==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA1";
+ boundary="Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/"
 
-Looks correct, but I don't have the hardware to test.
+--Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Slightly-Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Hi Grant,
 
-g.
-
-> ---
-> I don't have a cross compile environment set up so I haven't compiled
-> this code. =A0Sorry for that.
+On Mon, 16 Aug 2010 14:42:11 -0600 Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
 >
-> diff --git a/drivers/usb/host/ehci-ppc-of.c b/drivers/usb/host/ehci-p=
-pc-of.c
-> index 335ee69..ba52be4 100644
-> --- a/drivers/usb/host/ehci-ppc-of.c
-> +++ b/drivers/usb/host/ehci-ppc-of.c
-> @@ -192,17 +192,19 @@ ehci_hcd_ppc_of_probe(struct platform_device *o=
-p, const struct of_device_id *mat
-> =A0 =A0 =A0 =A0}
->
-> =A0 =A0 =A0 =A0rv =3D usb_add_hcd(hcd, irq, 0);
-> - =A0 =A0 =A0 if (rv =3D=3D 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> + =A0 =A0 =A0 if (rv)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_ehci;
-> +
-> + =A0 =A0 =A0 return 0;
->
-> +err_ehci:
-> + =A0 =A0 =A0 if (ehci->has_amcc_usb23)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 iounmap(ehci->ohci_hcctrl_reg);
-> =A0 =A0 =A0 =A0iounmap(hcd->regs);
-> =A0err_ioremap:
-> =A0 =A0 =A0 =A0irq_dispose_mapping(irq);
-> =A0err_irq:
-> =A0 =A0 =A0 =A0release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
-> -
-> - =A0 =A0 =A0 if (ehci->has_amcc_usb23)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 iounmap(ehci->ohci_hcctrl_reg);
-> =A0err_rmr:
-> =A0 =A0 =A0 =A0usb_put_hcd(hcd);
->
->
+> I'll also make sure to start build testing on MIPS.  Ralf, any suggestion=
+s on defconfigs I should use?
 
+Linux-next does defconfig, allnoconfig, allmodconfig (which has failed
+for a long time) and ip32_defconfig for mips and mipsel.  I am not sure
+if all these are still relevant.
 
-
+(http://kisskb.ellerman.id.au/kisskb/branch/9/)
 --=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
+http://www.canb.auug.org.au/~sfr/
+
+--Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iQEcBAEBAgAGBQJMagS3AAoJEDMEi1NhKgbsNZsH/A5oh++2w0Bdc0dp0+XzlFXI
+5grlYLJ5CKPuCxd1VQ2BBLopeuzUR9YzvdyMkILLTONReWu7KJiUoTnNiZC95V/Z
+/THxQuHo6gpMxketzgRU+VjfOSe4oVq8Ttk7tzKygIh/2WXbTqbBqI1IHFvWD10+
+56hCEiQHyow0n1ME03urhBwlB5Wq0pHFAvnGKQ/HUmcSlVEzjvkNyP+kM6U1xHry
+NDUkXk5NEARTWL8VqOT3HR77rg/0bNISmSnIIu6tpDcU4uMz4CkZVG/vgf1Fp75Z
+lbJBs/DVWqvmGFbaW54FcYUaiuNMs0yCqgrmRUh2M/pJTHtVHBtBp85m9g8emBE=
+=pXMp
+-----END PGP SIGNATURE-----
+
+--Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/--
+
+--===============2552970631445058662==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2552970631445058662==--
