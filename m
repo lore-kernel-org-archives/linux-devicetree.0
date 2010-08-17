@@ -1,48 +1,25 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Tue, 17 Aug 2010 10:32:16 +0200
-Message-ID: <20100817083216.GA3330@riccoc20.at.omicron.at>
-References: <cover.1281956490.git.richard.cochran@omicron.at>
- <201008161626.24083.arnd@arndb.de>
- <20100816190003.GB4166@riccoc20.at.omicron.at>
- <201008162159.39734.arnd@arndb.de>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 31/42] drivers/net: Adjust confusing if indentation
+Date: Tue, 17 Aug 2010 01:49:22 -0700 (PDT)
+Message-ID: <20100817.014922.39157339.davem@davemloft.net>
+References: <Pine.LNX.4.64.1008052226050.31692@ask.diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201008162159.39734.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linuxppc-dev@lists.ozlabs.org, Rodolfo Giometti <giometti@linux.it>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.64.1008052226050.31692-QfmoRoYWmW9knbxzx/v8hQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: julia-dAYI7NvHqcQ@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 16, 2010 at 09:59:39PM +0200, Arnd Bergmann wrote:
-> Why does it matter how long it takes to read the clock? I wasn't thinking
-> of replacing the system clock with this, just exposing the additional
-> clock as a new clockid_t value that can be accessed using the existing
-> syscalls.
 
-Okay, now I see. You are suggesting this:
-
-      clock_gettime(CLOCK_PTP, &ts);
-      clock_settime(CLOCK_PTP, &ts);
-
-I like this. If there is agreement about it, I am happy to implement
-the PTP stuff that way.
-
-> Why did you not want to add syscalls? Adding ioctls instead of syscalls
-> does not make the interface better, just less visible.
-
-I bet that, had I posted patch set with new syscalls, someone would
-have said, "You are adding new syscalls. Can't you just use a char
-device instead!"
-
-If you add syscalls and introduce CLOCK_PTP, then you add it to
-everyone's kernel, even those people who never heard of PTP. A char
-device has the advantage that can it be simply ignored. Also, a
-syscall has got to have the right form from the very beginning. If the
-next generation of PTP hardware looks very different, then it is not
-that much of a crime to change an ioctl interface, provided it has
-versioning.
-
-Richard
+Applied.
