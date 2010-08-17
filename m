@@ -1,81 +1,48 @@
-From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] MIPS: Add device tree support to MIPS
-Date: Tue, 17 Aug 2010 13:40:39 +1000
-Message-ID: <20100817134039.fc1108c7.sfr@canb.auug.org.au>
-References: <AANLkTi=74zoQziQTmAGo-cNtF9FAT77h+KZagsNEFjEf@mail.gmail.com>
-	<7A9214B0DEB2074FBCA688B30B04400D013FA46D@XMB-RCD-208.cisco.com>
-	<20100816204211.GA17571@angua.secretlab.ca>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
+Date: Tue, 17 Aug 2010 10:32:16 +0200
+Message-ID: <20100817083216.GA3330@riccoc20.at.omicron.at>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+ <201008161626.24083.arnd@arndb.de>
+ <20100816190003.GB4166@riccoc20.at.omicron.at>
+ <201008162159.39734.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2552970631445058662=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100816204211.GA17571-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201008162159.39734.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linuxppc-dev@lists.ozlabs.org, Rodolfo Giometti <giometti@linux.it>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
 List-Id: devicetree@vger.kernel.org
 
---===============2552970631445058662==
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA1";
- boundary="Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/"
+On Mon, Aug 16, 2010 at 09:59:39PM +0200, Arnd Bergmann wrote:
+> Why does it matter how long it takes to read the clock? I wasn't thinking
+> of replacing the system clock with this, just exposing the additional
+> clock as a new clockid_t value that can be accessed using the existing
+> syscalls.
 
---Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay, now I see. You are suggesting this:
 
-Hi Grant,
+      clock_gettime(CLOCK_PTP, &ts);
+      clock_settime(CLOCK_PTP, &ts);
 
-On Mon, 16 Aug 2010 14:42:11 -0600 Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
- wrote:
->
-> I'll also make sure to start build testing on MIPS.  Ralf, any suggestion=
-s on defconfigs I should use?
+I like this. If there is agreement about it, I am happy to implement
+the PTP stuff that way.
 
-Linux-next does defconfig, allnoconfig, allmodconfig (which has failed
-for a long time) and ip32_defconfig for mips and mipsel.  I am not sure
-if all these are still relevant.
+> Why did you not want to add syscalls? Adding ioctls instead of syscalls
+> does not make the interface better, just less visible.
 
-(http://kisskb.ellerman.id.au/kisskb/branch/9/)
---=20
-Cheers,
-Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
-http://www.canb.auug.org.au/~sfr/
+I bet that, had I posted patch set with new syscalls, someone would
+have said, "You are adding new syscalls. Can't you just use a char
+device instead!"
 
---Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/
-Content-Type: application/pgp-signature
+If you add syscalls and introduce CLOCK_PTP, then you add it to
+everyone's kernel, even those people who never heard of PTP. A char
+device has the advantage that can it be simply ignored. Also, a
+syscall has got to have the right form from the very beginning. If the
+next generation of PTP hardware looks very different, then it is not
+that much of a crime to change an ioctl interface, provided it has
+versioning.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQEcBAEBAgAGBQJMagS3AAoJEDMEi1NhKgbsNZsH/A5oh++2w0Bdc0dp0+XzlFXI
-5grlYLJ5CKPuCxd1VQ2BBLopeuzUR9YzvdyMkILLTONReWu7KJiUoTnNiZC95V/Z
-/THxQuHo6gpMxketzgRU+VjfOSe4oVq8Ttk7tzKygIh/2WXbTqbBqI1IHFvWD10+
-56hCEiQHyow0n1ME03urhBwlB5Wq0pHFAvnGKQ/HUmcSlVEzjvkNyP+kM6U1xHry
-NDUkXk5NEARTWL8VqOT3HR77rg/0bNISmSnIIu6tpDcU4uMz4CkZVG/vgf1Fp75Z
-lbJBs/DVWqvmGFbaW54FcYUaiuNMs0yCqgrmRUh2M/pJTHtVHBtBp85m9g8emBE=
-=pXMp
------END PGP SIGNATURE-----
-
---Signature=_Tue__17_Aug_2010_13_40_39_+1000_loXQi+2twtQLFo7/--
-
---===============2552970631445058662==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2552970631445058662==--
+Richard
