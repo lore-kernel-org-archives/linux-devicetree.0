@@ -1,19 +1,21 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] MIPS: Add device tree support to MIPS
-Date: Wed, 18 Aug 2010 16:36:25 +0100
-Message-ID: <20100818153625.GA29740@linux-mips.org>
-References: <AANLkTi=74zoQziQTmAGo-cNtF9FAT77h+KZagsNEFjEf@mail.gmail.com>
-	<7A9214B0DEB2074FBCA688B30B04400D013FA46D@XMB-RCD-208.cisco.com>
-	<20100816204211.GA17571@angua.secretlab.ca>
-	<20100817134039.fc1108c7.sfr@canb.auug.org.au>
-	<20100818143926.GB2849@linux-mips.org>
-	<20100819011856.bfef5f65.sfr@canb.auug.org.au>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH 09/14] ARM: ARM flash driver DT port
+Date: Wed, 18 Aug 2010 19:59:55 +0100
+Message-ID: <1282158000-23081-10-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-4-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-5-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-6-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-7-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-8-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20100819011856.bfef5f65.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+In-Reply-To: <1282158000-23081-9-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,35 +25,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, philippe.robin-5wv7dgnIgG8@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 19, 2010 at 01:18:56AM +1000, Stephen Rothwell wrote:
+When OF is enabled drivers should initialize the driver match table
+to allow the kernel to find and recognise drivers suitable for
+devices. The initialization is carried out through a static inline
+function at driver init time.
 
-> > A suggested set of kernel defconfigs to test:
-> > 
-> > bigsur_defconfig
-> > cavium-octeon_defconfig
-> > ip22_defconfig
-> > ip27_defconfig
-> > ip32_defconfig
-> > malta_defconfig
-> > allmodconfig
-> > 
-> > These cover a huge variety of features, UP, SMP & weirdo SMP, flatmem & NUMA,
-> > 32-bit, 64-bit, little and big endian.
-> 
-> OK, I will adjust the MIPS builds tomorrow.  Thanks for the suggestions.
-> Just be clear, I only need to build with one compiler (presumably what
-> gcc/binutils produces when I ask for a "mips" toolchain) and can drop the
-> other ("mipsel"), correct?
+This patch adds a match table and relative init code to support
+device tree probing methodology for the ARM flash driver.
 
-Yes, that's entirely correct.
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+---
+ drivers/mtd/maps/integrator-flash.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-For the sake of others reading this I should mention that some GCC version
-apparently had a bug which resulted in bad code generation for the
-non-default ABI.  I don't know which versions were affected but for
-just doing build tests it really doesn't matter.
-
-  Ralf
+diff --git a/drivers/mtd/maps/integrator-flash.c b/drivers/mtd/maps/integrator-flash.c
+index 2aac41b..aa9a556 100644
+--- a/drivers/mtd/maps/integrator-flash.c
++++ b/drivers/mtd/maps/integrator-flash.c
+@@ -291,6 +291,11 @@ static int armflash_remove(struct platform_device *dev)
+ 	return 0;
+ }
+ 
++static struct of_device_id armflash_matches[] = {
++	{ .compatible = "arm,arm-flash"},
++	{},
++};
++
+ static struct platform_driver armflash_driver = {
+ 	.probe		= armflash_probe,
+ 	.remove		= armflash_remove,
+@@ -302,6 +307,7 @@ static struct platform_driver armflash_driver = {
+ 
+ static int __init armflash_init(void)
+ {
++	platform_init_match(&armflash_driver, armflash_matches);
+ 	return platform_driver_register(&armflash_driver);
+ }
+ 
+-- 
+1.6.3.3
