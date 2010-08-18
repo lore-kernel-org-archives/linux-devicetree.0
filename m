@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 08/14] ARM: versatile-i2c driver DT port
-Date: Wed, 18 Aug 2010 15:17:59 -0600
-Message-ID: <AANLkTikNWK-RGOk8ESoqT6vdy8yNCepUUEzJK9P8g0dF@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/14] ARM: ARM flash driver DT port
+Date: Wed, 18 Aug 2010 15:22:56 -0600
+Message-ID: <AANLkTik2gPYrP+xh-jhFLWjVbr8dwCuCMnVXXvYP56e4@mail.gmail.com>
 References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
@@ -11,11 +11,12 @@ References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-7-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-8-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-10-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1282158000-23081-9-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1282158000-23081-10-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -31,49 +32,49 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Aug 18, 2010 at 12:59 PM, Lorenzo Pieralisi
 <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> When OF is enabled, each driver should define a match table to
-> allow the kernel to recognise drivers suitable for a given device.
-> Initialization is carried out through a static inline at driver init
-> time. The match-table is declared following OF bindings.
+> When OF is enabled drivers should initialize the driver match table
+> to allow the kernel to find and recognise drivers suitable for
+> devices. The initialization is carried out through a static inline
+> function at driver init time.
 >
-> This patch adds the required initialization call to the versatile-i2c
-> driver.
+> This patch adds a match table and relative init code to support
+> device tree probing methodology for the ARM flash driver.
 >
 > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 > ---
-> =A0drivers/i2c/busses/i2c-versatile.c | =A0 =A06 ++++++
+> =A0drivers/mtd/maps/integrator-flash.c | =A0 =A06 ++++++
 > =A01 files changed, 6 insertions(+), 0 deletions(-)
 >
-> diff --git a/drivers/i2c/busses/i2c-versatile.c b/drivers/i2c/busses/i2c-=
-versatile.c
-> index 6055601..ea8e3b5 100644
-> --- a/drivers/i2c/busses/i2c-versatile.c
-> +++ b/drivers/i2c/busses/i2c-versatile.c
-> @@ -133,6 +133,11 @@ static int i2c_versatile_remove(struct platform_devi=
-ce *dev)
+> diff --git a/drivers/mtd/maps/integrator-flash.c b/drivers/mtd/maps/integ=
+rator-flash.c
+> index 2aac41b..aa9a556 100644
+> --- a/drivers/mtd/maps/integrator-flash.c
+> +++ b/drivers/mtd/maps/integrator-flash.c
+> @@ -291,6 +291,11 @@ static int armflash_remove(struct platform_device *d=
+ev)
 > =A0 =A0 =A0 =A0return 0;
 > =A0}
 >
-> +static struct of_device_id versatile_i2c_matches[] =3D {
-> + =A0 =A0 =A0 { .compatible =3D "arm,versatile-i2c"},
+> +static struct of_device_id armflash_matches[] =3D {
+> + =A0 =A0 =A0 { .compatible =3D "arm,arm-flash"},
+
+(Assuming I'm reading the integrator-flash driver correctly...) When
+using the device tree, the entire flash map should be encoded in the
+tree, and this mapping driver is no longer needed.  See
+mtd/maps/physmap_of.c.
+
 > + =A0 =A0 =A0 {},
 > +};
 > +
-> =A0static struct platform_driver i2c_versatile_driver =3D {
-> =A0 =A0 =A0 =A0.probe =A0 =A0 =A0 =A0 =A0=3D i2c_versatile_probe,
-> =A0 =A0 =A0 =A0.remove =A0 =A0 =A0 =A0 =3D i2c_versatile_remove,
-> @@ -144,6 +149,7 @@ static struct platform_driver i2c_versatile_driver =
-=3D {
+> =A0static struct platform_driver armflash_driver =3D {
+> =A0 =A0 =A0 =A0.probe =A0 =A0 =A0 =A0 =A0=3D armflash_probe,
+> =A0 =A0 =A0 =A0.remove =A0 =A0 =A0 =A0 =3D armflash_remove,
+> @@ -302,6 +307,7 @@ static struct platform_driver armflash_driver =3D {
 >
-> =A0static int __init i2c_versatile_init(void)
+> =A0static int __init armflash_init(void)
 > =A0{
-> + =A0 =A0 =A0 platform_init_match(&i2c_versatile_driver, versatile_i2c_ma=
-tches);
-
-Ditto to my comments on the last driver.  I'd rather see the pointer
-statically assigned instead of set at runtime.
-
-> =A0 =A0 =A0 =A0return platform_driver_register(&i2c_versatile_driver);
+> + =A0 =A0 =A0 platform_init_match(&armflash_driver, armflash_matches);
+> =A0 =A0 =A0 =A0return platform_driver_register(&armflash_driver);
 > =A0}
 >
 > --
