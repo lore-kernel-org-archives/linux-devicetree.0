@@ -1,74 +1,101 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: standard property to convey device dma address width?
-Date: Tue, 17 Aug 2010 11:22:26 -1000
-Message-ID: <4C6AFD92.1000700@firmworks.com>
-References: <5A878376-AFCC-4CB0-A0E9-F2F497066FD5@kernel.crashing.org>
-	<4C699CC6.1060507@firmworks.com>
-	<366D8D84-D210-4BC1-8FC1-4E0A9E06C433@kernel.crashing.org>
+From: john stultz <johnstul@us.ibm.com>
+Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
+Date: Tue, 17 Aug 2010 17:22:43 -0700
+Message-ID: <1282090963.1734.97.camel@localhost>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+	 <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
+	 <AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
+	 <20100817085324.GB3330@riccoc20.at.omicron.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <366D8D84-D210-4BC1-8FC1-4E0A9E06C433-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Yoder Stuart-B08248 <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20100817085324.GB3330@riccoc20.at.omicron.at>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Kumar Gala wrote:
-> On Aug 16, 2010, at 3:17 PM, Mitch Bradley wrote:
->
->   
->> Kumar Gala wrote:
->>     
->>> Do we or should we have a standard property to convey that address width a device is capable of?
->>>  
->>>       
->> ...
->> If I had to describe a partial address, I'd consider a property name like "dma-address-mask", whose value is a bitmap of implemented bits, corresponding to the bits in a unit address for the parent bus.  Low-order bits might be zero if the DMA addressing hardware had alignment restrictions.
->>     
->
-> As I said to Stuart.  On the Freescale SOCs we have different device blocks w/varying dma address capabilities.  Some are limited to 32-bits some are capable of 36-bits on the same SOC.
->
-> - k
->
->   
+On Tue, 2010-08-17 at 10:53 +0200, Richard Cochran wrote:
+> On Mon, Aug 16, 2010 at 12:24:48PM -0700, john stultz wrote:
+> > 3) I'm not sure I see the benefit of being able to have multiple
+> > frequency corrected time domains.  In other words, what benefit would
+> > you get from adjusting a PTP clock's frequency instead of just
+> > adjusting the system's time freq? Having the PTP time as a reference
+> > to correct the system time seems reasonable, but I'm not sure I see
+> > why userland would want to adjust the PTP clock's freq.
+> 
+> For PTP enabled hardware, the timestamp on the network packet comes
+> from from the PTP clock, not from the system time.
+> 
+> Of course, you can always just leave the PTP clock alone, figure the
+> needed correction, and apply it whenever needed. But this has some
+> disadvantages. First of all, the (one and only) open source PTPd does
+> not do it that way. Also, only one program (the PTPd or equivalent)
+> will know the correct time. Other programs will not be able to ask the
+> operating system for time services. Instead, they would need to use
+> IPC to the PTPd.
 
-The closest existing property that I know of is "dma-ranges" - see 
-http://playground.sun.com/1275/proposals/Closed/Accepted/410-it.txt
+Why would system time not be adjusted to the PTP time?
 
-That's not directly applicable, as "dma-ranges" in its current form 
-applies to bus bridges, describing the translation between DMA addresses 
-on a child bus to DMA addresses on a parent bus.
+This is my main concern, that we're presenting a fractured API to
+userland. Suddenly there isn't just system time, but ptp time as well,
+and possibly multiple different ptp times.
 
-The case in question has some general similarities, in that the limited 
-devices have an implicit 32-bit "child bus" that is translated to the 
-36-bit parent bus, presumably by concatenating zeros in bits 35:32.  Is 
-that correct, i.e. are the high bits implicitly 0?
+Forgive me, as I suspect I'm missing something key here.
 
-The dma-ranges representation doesn't assume the "zero-extend" property, 
-but rather explicitly lists child-base-address,parent-base-address,size 
-triples.  I wonder if that generality is justifiable in this case?
+> The PTP protocol (and some PTP hardware) offers a "one step" method,
+> where the timestamps are inserted by the hardware on the fly. Here you
+> really do need the PTP clock to be correctly adjusted.
+> 
+> All of the PTP hardware that I am familiar with provides a clock
+> adjustment method, so it simpler and cleaner just to use this facility
+> to tune the PTP clock.
 
-I see several obvious representations with varying degrees of generality:
+Hmm. So trying to recap here to see if I'm understanding properly:
 
-a) boolean property saying "this is one of those 32-bit only devices, 
-with all the implications"
-b) width in bits - assumes an implicit translation rule (e.g. zero-extend)
-c) bitmask - assumes implicit translation rule, capable of representing 
-alignment restrictions with low-order zeros
-d) something like dma-ranges - explicitly represents translation rule, 
-no representation for alignment restriction
+The PTP clock is a bit of hardware (usually on the NIC) that can put
+timestamps on packets (both incoming or outgoing?).
 
-My 2 cents: Generality is often only justified when you have a good 
-collection of problem instances, so you can amortize the generality over 
-several specific known examples.  Otherwise you often end up 
-implementing something elaborate that never gets used.
+The need to offset/freq correct the PTP clock is important so that the
+timestamps (incoming and outgoing) are correct, which makes future
+offset calculations simpler.
+
+Hmm. So I'm actually starting to come around to the chardev interface.
+
+In a way, it seems it has some similarities to how the RTC device is
+used in NTPd. Granted, NTPd doesn't correct the RTC (the kernel does
+when we're synced, but its not a perfect parallel), but it can be used
+as an input the steer the clock.
+
+So while to me, it think it would be more ideal (or maybe just less
+different) to have a read-only interface (like the RTC), leaving PTPd to
+manage offset calculations and use that to steer the system time. I can
+acknowledge the need to have some way to correct the freq so the packet
+timestamps are corrected.
+
+I still feel a little concerned over the timer/alarm related interfaces.
+Could you explain why the alarm interface is necessary? 
+
+So really I think my initial negative gut reaction to this was mostly
+out of the fact that you introduced a char dev that provides almost 100%
+coverage of the posix-time interface. That is duplication we definitely
+don't want. 
+
+Also I think the documentation I've read about PTP (likely just due to
+the engineering focus) has an odd inverted sense of priority, focusing
+on keeping obscure hardware clocks on NIC cards in sync, rather then the
+the more tangible feature of keeping the system time in sync.
+
+This could be comically interpreted as trying to create a shadow-time on
+the system that is the "real time" and "yea, maybe we'll let the system
+know what time it is, but user-apps who want to know the score can send
+a magic ioctl to /dev/something and get the real deal". ;)  I'm sure
+that's not the case, but I'd like to keep any confusion in userland
+about which time is the best time to a minimum (ie: use the system
+time).
+
+thanks
+-john
+
+
