@@ -1,20 +1,15 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH 08/14] ARM: versatile-i2c driver DT port
-Date: Wed, 18 Aug 2010 19:59:54 +0100
-Message-ID: <1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH 02/14] ARM: vexpress: fix clocks definition to comply with
+	new framework
+Date: Wed, 18 Aug 2010 19:59:48 +0100
+Message-ID: <1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-4-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-5-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-6-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-7-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-8-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1282158000-23081-8-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1282158000-23081-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,42 +23,67 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s
 Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, philippe.robin-5wv7dgnIgG8@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When OF is enabled, each driver should define a match table to
-allow the kernel to recognise drivers suitable for a given device.
-Initialization is carried out through a static inline at driver init
-time. The match-table is declared following OF bindings.
+The new clock infrastructure introduced within the DT series of patches
+slightly changed how clocks are declared and initialized. Some clock
+definitions become platform specific.
 
-This patch adds the required initialization call to the versatile-i2c
-driver.
+This patch fixes some typos on ARM Versatile Express clock definition
+and initialization that caused compile time errors.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/i2c/busses/i2c-versatile.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+ arch/arm/mach-vexpress/include/mach/clkdev.h |    2 +-
+ arch/arm/mach-vexpress/v2m.c                 |   13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-versatile.c b/drivers/i2c/busses/i2c-versatile.c
-index 6055601..ea8e3b5 100644
---- a/drivers/i2c/busses/i2c-versatile.c
-+++ b/drivers/i2c/busses/i2c-versatile.c
-@@ -133,6 +133,11 @@ static int i2c_versatile_remove(struct platform_device *dev)
- 	return 0;
+diff --git a/arch/arm/mach-vexpress/include/mach/clkdev.h b/arch/arm/mach-vexpress/include/mach/clkdev.h
+index ad3f6e7..9e23cac 100644
+--- a/arch/arm/mach-vexpress/include/mach/clkdev.h
++++ b/arch/arm/mach-vexpress/include/mach/clkdev.h
+@@ -9,7 +9,7 @@ struct clk_v2m {
+ 	u32		config;
+ };
+ 
+-const struct clk_ops clk_v2m_ops;
++extern const struct clk_ops clk_v2m_ops;
+ 
+ #define INIT_CLK_V2M(r,c) { .clk = INIT_CLK(clk_v2m_ops), \
+ 	.rate = r, .config = c }
+diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+index f22e272..06d6914 100644
+--- a/arch/arm/mach-vexpress/v2m.c
++++ b/arch/arm/mach-vexpress/v2m.c
+@@ -285,12 +285,21 @@ static int clk_v2m_set_rate(struct clk *_clk, unsigned long rate)
+ 	struct clk_v2m *clk = to_clk_v2m(_clk);
+ 	int ret;
+ 
+-	ret = v2m_cfg_write(clk->cofig, rate);
++	ret = v2m_cfg_write(clk->config, rate);
+ 	if (!ret)
+ 		clk->rate = rate;
+ 	return ret;
  }
  
-+static struct of_device_id versatile_i2c_matches[] = {
-+	{ .compatible = "arm,versatile-i2c"},
-+	{},
-+};
++static void clk_v2m_put(struct clk *_clk)
++{
++}
 +
- static struct platform_driver i2c_versatile_driver = {
- 	.probe		= i2c_versatile_probe,
- 	.remove		= i2c_versatile_remove,
-@@ -144,6 +149,7 @@ static struct platform_driver i2c_versatile_driver = {
- 
- static int __init i2c_versatile_init(void)
++static int clk_v2m_get(struct clk *_clk)
++{
++	return 1;
++}
++
+ static unsigned long clk_v2m_get_rate(struct clk *clk)
  {
-+	platform_init_match(&i2c_versatile_driver, versatile_i2c_matches);
- 	return platform_driver_register(&i2c_versatile_driver);
- }
+ 	return to_clk_v2m(clk)->rate;
+@@ -300,6 +309,8 @@ const struct clk_ops clk_v2m_ops = {
+ 	.round_rate = clk_v2m_round_rate,
+ 	.get_rate = clk_v2m_get_rate,
+ 	.set_rate = clk_v2m_set_rate,
++	.get = clk_v2m_get,
++	.put = clk_v2m_put,
+ };
  
+ static struct clk_v2m osc1_clk =
 -- 
 1.6.3.3
