@@ -1,17 +1,16 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH 05/14] ARM: vexpress: fix typo in addruart
-Date: Wed, 18 Aug 2010 19:59:51 +0100
-Message-ID: <1282158000-23081-6-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH 04/14] ARM: r1 DT mach id init
+Date: Wed, 18 Aug 2010 19:59:50 +0100
+Message-ID: <1282158000-23081-5-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-4-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-5-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1282158000-23081-5-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1282158000-23081-4-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,32 +24,33 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s
 Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, philippe.robin-5wv7dgnIgG8@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The new infrastructure for low level debug in ARM requires the
-addruart macro to be defined on a platform specific basis to get
-rid of static addresses init in machine descriptors.
-Uart physical and virtual addresses should be retrieved through
-the addruart macro.
+Device tree ARM machine desc has been allocated id 0xffffffff temporarily.
+This machine id should be passed in r1 upon kernel booting.
+Legacy code requires code stubs to update r1 accordingly when
+booting from legacy boot loaders that do not necessarily pass DT
+mach id on r1.
 
-This patch fixes the addruart macro for Versatile Express board
-in order to return the proper uart physical address.
+This patch adds code in the dtb stub to automatically generate and move
+the required DT machine id into r1 before jumping to kernel code.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/mach-vexpress/include/mach/debug-macro.S |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ arch/arm/boot/dt/dtb.S |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-vexpress/include/mach/debug-macro.S b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-index e0382fd..050d65e 100644
---- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
-+++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-@@ -15,7 +15,7 @@
- 		.macro	addruart,rp,rv
- 		mov	\rp, #DEBUG_LL_UART_OFFSET
- 		orr	\rv, \rp, #0xf8000000	@ virtual base
--		orr	\rv, \rp, #0x10000000	@ physical base
-+		orr	\rp, \rp, #0x10000000	@ physical base
- 		.endm
+diff --git a/arch/arm/boot/dt/dtb.S b/arch/arm/boot/dt/dtb.S
+index e678db2..7d56289 100644
+--- a/arch/arm/boot/dt/dtb.S
++++ b/arch/arm/boot/dt/dtb.S
+@@ -35,6 +35,9 @@ setup_dtb:
+ 	cmp	r4, r5
+ 	blo	2b
  
- #include <asm/hardware/debug-pl01x.S>
++	/* update r1 with DT id  */
++	mvn	r1, #0x0
++
+ 	b	zimage_start
+ 
+ 	.ltorg
 -- 
 1.6.3.3
