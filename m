@@ -1,7 +1,8 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH 11/14] ARM: PMU: add device tree probing
-Date: Wed, 18 Aug 2010 19:59:57 +0100
-Message-ID: <1282158000-23081-12-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH 13/14] ARM: vexpress: Definition of vexpress dts
+	specification
+Date: Wed, 18 Aug 2010 19:59:59 +0100
+Message-ID: <1282158000-23081-14-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
@@ -13,11 +14,13 @@ References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-10-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-11-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-12-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-13-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1282158000-23081-11-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1282158000-23081-13-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -31,133 +34,224 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s
 Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, philippe.robin-5wv7dgnIgG8@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When OF is enabled, platform drivers are required to define a
-match table in order to allow the kernel to find drivers suitable
-for a given device. The device tree allows to retrieve resources
-from device tree nodes dynamically.
+The device tree methodology requires a dts file to be defined per
+platform in order to describe the platform address space and topology,
+in short the device tree in source format.
 
-This patch adds device tree support to the ARM PMU driver. This
-includes a match table and code to initialize the driver id from
-the respective device tree node compatible property.
+This patch adds the dts file for the Versatile Express board.
+Some device names are still temporary and non-compliant waiting for the
+definition of proper clock bindings.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/include/asm/pmu.h |    6 ++++++
- arch/arm/kernel/Makefile   |    3 ++-
- arch/arm/kernel/pmu-of.c   |   30 ++++++++++++++++++++++++++++++
- arch/arm/kernel/pmu.c      |   18 ++++++++++++------
- 4 files changed, 50 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm/kernel/pmu-of.c
+ arch/arm/boot/dts/vexpress.dts |  199 ++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 199 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/vexpress.dts
 
-diff --git a/arch/arm/include/asm/pmu.h b/arch/arm/include/asm/pmu.h
-index 8ccea01..d317b64 100644
---- a/arch/arm/include/asm/pmu.h
-+++ b/arch/arm/include/asm/pmu.h
-@@ -17,6 +17,12 @@ enum arm_pmu_type {
- 	ARM_NUM_PMU_DEVICES,
- };
- 
-+#ifndef CONFIG_OF
-+static inline int pmu_probe_dt(struct platform_device *pdev) { return -ENODEV; }
-+#else
-+extern int __devinit pmu_probe_dt(struct platform_device *pdev);
-+#endif
-+
- #ifdef CONFIG_CPU_HAS_PMU
- 
- /**
-diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
-index 0ace897..b7d846f 100644
---- a/arch/arm/kernel/Makefile
-+++ b/arch/arm/kernel/Makefile
-@@ -48,7 +48,8 @@ obj-$(CONFIG_CPU_XSCALE)	+= xscale-cp0.o
- obj-$(CONFIG_CPU_XSC3)		+= xscale-cp0.o
- obj-$(CONFIG_CPU_MOHAWK)	+= xscale-cp0.o
- obj-$(CONFIG_IWMMXT)		+= iwmmxt.o
--obj-$(CONFIG_CPU_HAS_PMU)	+= pmu.o
-+pmu_of-$(CONFIG_OF)		:= pmu-of.o
-+obj-$(CONFIG_CPU_HAS_PMU)	+= pmu.o $(pmu_of-y)
- obj-$(CONFIG_HW_PERF_EVENTS)	+= perf_event.o
- AFLAGS_iwmmxt.o			:= -Wa,-mcpu=iwmmxt
- 
-diff --git a/arch/arm/kernel/pmu-of.c b/arch/arm/kernel/pmu-of.c
+diff --git a/arch/arm/boot/dts/vexpress.dts b/arch/arm/boot/dts/vexpress.dts
 new file mode 100644
-index 0000000..5c5ee94
+index 0000000..cc58603
 --- /dev/null
-+++ b/arch/arm/kernel/pmu-of.c
-@@ -0,0 +1,30 @@
-+/*
-+ *  linux/arch/arm/kernel/pmu-of.c --  PMU DT probe function
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
++++ b/arch/arm/boot/dts/vexpress.dts
+@@ -0,0 +1,199 @@
++/dts-v1/;
 +
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
++/ {
++	model = "versatile-express";
++	compatible = "arm,versatile-express";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	#interrupt-cells = <1>;
++	interrupt-parent = <&intc>;
 +
-+#include <asm/pmu.h>
++	memory {
++		name = "memory";
++		device_type = "memory";
++		reg = <0x60000000 0x20000000>;
++	};
 +
-+int __devinit pmu_probe_dt(struct platform_device *pdev)
-+{
-+	int ret = -ENODEV;
-+	struct device_node *node = pdev->dev.of_node;
++	chosen {
++		bootargs = "rdinit=/bin/ash console=ttyAMA0 vga=0x311 mem=512M debug earlyprintk";
++	};
 +
-+	if (of_device_is_compatible(node, "arm,arm-pmu")) {
-+		pdev->id = ARM_PMU_DEVICE_CPU;
-+		ret = 0;
-+	} else {
-+		pr_warning("Probing device not recognized "
-+				"device %s\n", node->full_name);
-+	}
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		device_type = "soc";
++		compatible = "simple-bus";
++		ranges = <0x00000000 0x00000000 0xFFFFFFFF>;
 +
-+	return ret;
-+}
-diff --git a/arch/arm/kernel/pmu.c b/arch/arm/kernel/pmu.c
-index b8af96e..f070b3d 100644
---- a/arch/arm/kernel/pmu.c
-+++ b/arch/arm/kernel/pmu.c
-@@ -27,12 +27,12 @@ static struct platform_device *pmu_devices[ARM_NUM_PMU_DEVICES];
- 
- static int __devinit pmu_device_probe(struct platform_device *pdev)
- {
--
--	if (pdev->id < 0 || pdev->id >= ARM_NUM_PMU_DEVICES) {
--		pr_warning("received registration request for unknown "
--				"device %d\n", pdev->id);
--		return -EINVAL;
--	}
-+	if (pmu_probe_dt(pdev) == -ENODEV)
-+		if (pdev->id < 0 || pdev->id >= ARM_NUM_PMU_DEVICES) {
-+			pr_warning("received registration request for unknown "
-+					"device %d\n", pdev->id);
-+			return -EINVAL;
-+		}
- 
- 	if (pmu_devices[pdev->id])
- 		pr_warning("registering new PMU device type %d overwrites "
-@@ -45,6 +45,11 @@ static int __devinit pmu_device_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct of_device_id arm_pmu_matches[] = {
-+	{ .compatible = "arm,arm-pmu"},
-+	{},
++		gic-cpu {
++			#address-cells = <0>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			reg = <0x1e000100 0x1000>;
++			compatible = "arm,gic-cpu-interrupt-controller";
++			device_type = "gic";
++		};
++
++		intc: gic-dist {
++			#address-cells = <0>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			reg = <0x1e001000 0x1000>;
++			compatible = "arm,gic-dist-interrupt-controller";
++			device_type = "gic";
++			irq-start = <29>;
++		};
++
++		smsc@4e000000 {
++			compatible = "smc,smsc-911";
++			 reg = <0x4e000000 0x1000>;
++			interrupts = <47>;
++			flags = <2>;
++			irq-polarity = <1>;
++			irq-type = <1>;
++			phy-interface = <0>;
++		};
++
++		flash@40000000 {
++			compatible = "arm,arm-flash";
++			reg = <0x40000000 0x4000000
++			       0x44000000 0x4000000>;
++		};
++
++		isp@4f000000 {
++			compatible = "nxp,usb-isp1761";
++			reg = <0x4f000000 0x20000>;
++			interrupts = <48>;
++			port1_otg;
++		};
++
++		ddc@10016000 {
++			compatible = "arm,versatile-i2c";
++			reg = <0x10016000 0x1000>;
++		};
++
++		pmu@0 {
++			compatible = "arm,arm-pmu";
++			interrupts = <92 93 94 95>;
++		};
++
++		timer@10011000 {
++			compatible = "arm,arm-sp804";
++			reg = <0x10011000 0x1000>;
++			interrupts = <34>;
++		};
++
++		timer@10012000 {
++			compatible = "arm,arm-sp804";
++			reg = <0x10012000 0x1000>;
++		};
++
++	};
++
++	amba {
++		compatible = "arm,amba";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		uart@0 {
++			compatible = "arm,amba-device";
++			reg = <0x10009000 0x1000>;
++			arm,amba-deviceid = <0x00141011>;
++			interrupts = <37>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		uart@1 {
++			compatible = "arm,amba-device";
++			reg = <0x1000a000 0x1000>;
++			arm,amba-deviceid = <0x00141011>;
++			interrupts = <38>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		kbd@0 {
++			compatible = "arm,amba-device";
++			reg = <0x10006000 0x1000>;
++			arm,amba-deviceid = <0x00041050>;
++			interrupts = <44>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		aaci@0 {
++			compatible = "arm,amba-device";
++			reg = <0x10004000 0x1000>;
++			arm,amba-deviceid = <0x00041041>;
++			interrupts = <43>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		ps2@0 {
++			compatible = "arm,amba-device";
++			reg = <0x10007000 0x1000>;
++			arm,amba-deviceid = <0x00041050>;
++			interrupts = <45>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		rtc@0 {
++			compatible = "arm,amba-device";
++			reg = <0x10017000 0x1000>;
++			arm,amba-deviceid = <0x00041031>;
++			interrupts = <36>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		wdt@0 {
++			compatible = "arm,amba-device";
++			reg = <0x1000f000 0x1000>;
++			arm,amba-deviceid = <0x00041085>;
++			interrupts = <32>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		clcd@0 {
++			compatible = "arm,clcd-pl11x","arm,amba-device";
++			reg = <0x10020000 0x1000>;
++			arm,amba-deviceid = <0x00041111>;
++			interrupts = <76>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		mmci@0 {
++			compatible = "arm,mmc-pl18x","arm,amba-device";
++			reg = <0x10005000 0x1000>;
++			interrupts = <41 42>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		dmc@0 {
++			compatible = "arm,dmc","arm,amba-device";
++			reg = <0x100e0000 0x1000>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		smc@0 {
++			compatible = "arm,smc","arm,amba-device";
++			reg = <0x100e1000 0x1000>;
++			interrupts = <77 78>;
++			clock-map = <&ref24_clk 0>;
++		};
++
++		gpio@0 {
++			compatible = "arm,gpio","arm,amba-device";
++			reg = <0x100e8000 0x1000>;
++			interrupts = <82>;
++			clock-map = <&ref24_clk 0>;
++		};
++	};
++
++	clocks {
++		ref24_clk: clock@0 {
++			device_type = "clock";
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-output-names = "ref";
++		};
++	};
++
 +};
-+
- static struct platform_driver pmu_driver = {
- 	.driver		= {
- 		.name	= "arm-pmu",
-@@ -54,6 +59,7 @@ static struct platform_driver pmu_driver = {
- 
- static int __init register_pmu_driver(void)
- {
-+	platform_init_match(&pmu_driver, arm_pmu_matches);
- 	return platform_driver_register(&pmu_driver);
- }
- device_initcall(register_pmu_driver);
 -- 
 1.6.3.3
