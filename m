@@ -1,54 +1,71 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Thu, 19 Aug 2010 11:22:47 +0200
-Message-ID: <20100819092246.GA8484@riccoc20.at.omicron.at>
-References: <cover.1281956490.git.richard.cochran@omicron.at>
-	<201008171336.29375.arnd@arndb.de>
-	<20100818140440.GA22655@riccoc20.at.omicron.at>
-	<201008181702.03384.arnd@arndb.de>
+Date: Thu, 19 Aug 2010 14:28:04 +0200
+Message-ID: <201008191428.04546.arnd@arndb.de>
+References: <cover.1281956490.git.richard.cochran@omicron.at> <1282176776.2865.100.camel@localhost.localdomain> <20100819055518.GA4084@riccoc20.at.omicron.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201008181702.03384.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, john stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20100819055518.GA4084@riccoc20.at.omicron.at>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: john stultz <johnstul@us.ibm.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 18, 2010 at 05:02:03PM +0200, Arnd Bergmann wrote:
-> You might want to use callbacks for these system calls that you
-> can register to at module load time, like it is done for the
-> existing syscalls.
-
-Can you point me to a specific example?
-
-> The simpler way (e.g. for testing) is using Kconfig dependencies, like
+On Thursday 19 August 2010, Richard Cochran wrote:
+> On Wed, Aug 18, 2010 at 05:12:56PM -0700, john stultz wrote:
+> > On Wed, 2010-08-18 at 09:19 +0200, Richard Cochran wrote:
+> > > The timer/alarm stuff is "ancillary" and is not at all necessary. It
+> > > is just a "nice to have." I will happily remove it, if it is too
+> > > troubling for people.
+> > 
+> > If there's a compelling argument for it, I'm interested to hear. But
+> > again, it seems like just
+> > yet-another-way-to-get-alarm/timer-functionality, so before we add an
+> > extra API (or widen an existing API) I'd like to understand the need.
 > 
-> config PTP
-> 	bool "IEEE 1588 Precision Time Protocol"
+> We don't really need it, IMHO.
 > 
-> config PPS
-> 	tristate "Pulse per Second"
-> 	depends on PTP || !PTP
+> But if we offer clockid_t CLOCK_PTP, then we get timer_settime()
+> without any extra effort.
+
+Makes sense.
+
+> > So in thinking about this, try to focus on what the new clock_id
+> > provides that the other existing clockids do not? Are they at comparable
+> > levels of abstraction? 15 years from now, are folks likely to still be
+> > using it? Will it be maintainable? etc...
 > 
-> The depends statement is a way of expressing that when PTP is enabled,
-> PPS cannot be a module, while it may be a module if PTP is disabled.
+> Arnd convinced me that clockid_t=CLOCK_PTP is a good fit.
 
-THis did not work for me.
+My point was that a syscall is better than an ioctl based interface here,
+which I definitely still think. Given that John knows much more about
+clocks than I do, we still need to get agreement on the question that
+he raised, which is whether we actually need to expose this clock to the
+user or not.
 
-What I got was, in effect, two independent booleans.
+If we can find a way to sync system time accurate enough with PTP and
+PPS, user applications may not need to see two separate clocks at all.
 
+> My plan would be to introduce just one additional syscall:
+> 
+> SYSCALL_DEFINE3(clock_adjtime, const clockid_t, clkid,
+> 		int, ppb, struct timespec __user *, ts)
+> 
+> ppb - desired frequency adjustment in parts per billion
+> ts  - desired time step (or jump) in <sec,nsec> to correct
+>       a measured offset
+> 
+> Arguably, this syscall might be useful for other clocks, too.
 
-Thanks,
+This is a mix of adjtime and adjtimex with the addition of
+the clkid parameter, right?
 
-Richard
+Have you considered passing a struct timex instead of ppb and ts?
+
+Is using ppb instead of the timex ppm required to get the accuracy
+you want?
+
+	Arnd
