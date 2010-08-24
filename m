@@ -1,109 +1,98 @@
-From: john stultz <johnstul@us.ibm.com>
-Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Mon, 23 Aug 2010 13:21:39 -0700
-Message-ID: <1282594899.3111.358.camel@localhost.localdomain>
-References: <cover.1281956490.git.richard.cochran@omicron.at>
-	 <1282176776.2865.100.camel@localhost.localdomain>
-	 <20100819055518.GA4084@riccoc20.at.omicron.at>
-	 <201008191428.04546.arnd@arndb.de>
-	 <20100819153847.GA10695@riccoc20.at.omicron.at>
+From: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: resend-- RFC: representation of CPUs/threads in device trees
+Date: Tue, 24 Aug 2010 07:50:04 -0700
+Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA306631B4F@az33exm25.fsl.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20100819153847.GA10695@riccoc20.at.omicron.at>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Class: urn:content-classes:message
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2010-08-19 at 17:38 +0200, Richard Cochran wrote:
-> On Thu, Aug 19, 2010 at 02:28:04PM +0200, Arnd Bergmann wrote:
-> > My point was that a syscall is better than an ioctl based interface here,
-> > which I definitely still think. Given that John knows much more about
-> > clocks than I do, we still need to get agreement on the question that
-> > he raised, which is whether we actually need to expose this clock to the
-> > user or not.
-> > 
-> > If we can find a way to sync system time accurate enough with PTP and
-> > PPS, user applications may not need to see two separate clocks at all.
-> 
-> At the very least, one user application (the PTPd) needs to see the
-> PTP clock.
-> 
-> > > SYSCALL_DEFINE3(clock_adjtime, const clockid_t, clkid,
-> > > 		int, ppb, struct timespec __user *, ts)
-> > > 
-> > > ppb - desired frequency adjustment in parts per billion
-> > > ts  - desired time step (or jump) in <sec,nsec> to correct
-> > >       a measured offset
-> > > 
-> > > Arguably, this syscall might be useful for other clocks, too.
-> > 
-> > This is a mix of adjtime and adjtimex with the addition of
-> > the clkid parameter, right?
-> 
-> Sort of, but not really. ADJTIME(3) takes an offset and slowly
-> corrects the clock using a servo in the kernel, over hours.
-> 
-> For this function, the offset passed in the 'ts' parameter will be
-> immediately corrected, by jumping to the new time. This reflects the
-> way that PTP works. After the first few samples, the PTPd has an
-> estimate of the offset to the master and the rate difference. The PTPd
-> can proceed in one of two ways.
-> 
-> 1. If resetting the clock is not desired, then the clock is set to the
->    maximum adjustment (in the right direction) until the clock time is
->    close to the master's time.
-> 
-> 2. The estimated offset is added to the current time, resulting in a
->    jump in time.
-> 
-> We need clock_adjtime(id, 0, ts) for the second case.
->
-> > Have you considered passing a struct timex instead of ppb and ts?
-> 
-> Yes, but the timex is not suitable, IMHO.
+There is no standard binding for how hardware threads
+(which in most cases share an MMU) for the Power 
+architecture are represented in device trees.
 
-Could you expand on this?
+The IBM SPAPR uses the ibm,ppc-interrupt-server#s.
+property, which is an array with 1 element per thread.  The
+number is used in addressing by the interrupt controller.
 
-Could we not add a adjustment mode ADJ_SETOFFSET or something that would
-provide the instantaneous offset correction?
+The question of how/if a CPU or thread's PIR value is
+represented is also relevant.  Some CPUs have an unmodifiable
+PIR number space that is distinct from the number space
+addressed from the interrupt controller.
 
-> > Is using ppb instead of the timex ppm required to get the accuracy
-> > you want?
-> 
-> That is one very good reason.
-> 
-> Another is this: can you explain what the 20+ fields mean?
-> 
-> Consider the field, freq. The comment says "frequency offset (scaled
-> ppm)."  To what is it scaled? The only way I know of to find out is to
-> read the NTP code (which is fairly complex) and see what the unit
-> really is meant to be. Ditto for the other fields.
-> 
-> The timex structure reveals, AFAICT, the inner workings of the kernel
-> clock servo. For PTP, we don't need or want the kernel servo. The PTPd
-> has its own clock servo in user space.
+The proposal below outlines a general approach.  If there
+is consensus, this would eventually get written up in a
+more formal form and added to the ePAPR.
 
-You're right that the timex is a little crufty. But its legacy that we
-will support indefinitely. So following the established interface helps
-maintainability.
+Regards, Stuart Yoder
 
-So if the clock_adjtime interface is needed, it would seem best for it
-to be generic enough to support not only PTP, but also the NTP kernel
-PLL. 
+=============================================================
 
-In effect, this would make clock_adjtime(or clock_adjtimex) identical to
-adjtimex, but only applicable to different CLOCK_ids. Additionally, it
-would simplify the code for the CLOCK_REALTIME case as you could just
-call directly into do_adjtimex(). 
+-CPUs and threads are numbered through a unified
+ number-space  that should match as closely as possible
+ the interrupt controller's numbering of CPUs/threads
 
-Of course, extending adjtimex for ADJ_SETOFFSET would be needed first,
-but that seems like a reasonable expansion of the interface that could
-be used by more then just PTP.
+-What goes under a CPU node?
 
-thanks
--john
+  -generally, a CPU node represents a hardware
+   execution block that is sufficiently independent that
+   it is capable of running an operating system without
+   interfering with other CPUs possibly running other
+   operating systems.
 
+  -threads that share an MMU would generally be
+   represented under 1 CPU node
 
+  -If other more complex CPU topographies
+   are designed the CPU binding must describe the
+   topology (e.g. threads that don't share an MMU).
+
+-If a CPU/thread can be the target of an external
+ interrupt the "reg" property value must contain a unique
+ CPU/thread id that is addressable by the interrupt
+ controller
+
+-If a CPU/thread cannot be the target of an external
+ interrupt, then "reg" must be unique and out of bounds
+ of the range addressed by the interrupt controller
+
+-If a CPU supports more than one thread (i.e. multiple
+ streams of execution) the "reg" property is an array with
+ 1  element per thread
+
+-The #address-cells property on the "cpus" container
+ specifies  how many cells each element of the "reg"
+ property array takes
+
+-Software can determine the number of threads by dividing
+ the size of "reg" by "#address-cells"
+
+-If a CPU/thread's PIR is modifiable it should be modified
+ to match the "reg" property value.  If PIR cannot be
+ modified and the PIR value is distinct from the interrupt
+ controller numberspace, the CPUs binding may define a
+ binding-specific representation of PIR values if desired.
+
+-Regarding a standardized way to start secondary threads--
+
+   -The current spin table mechanism is not thread safe and
+    is insufficient for starting threads.
+
+   -Given the variety of implementations in IBM and
+    Freescale roadmaps, it is highly questionable whether
+    a common thread release mechanism can be defined for
+    all threaded CPUs.  Specific release methods for
+    different processors most likely needs to be created
+    and defined in processor bindings.
