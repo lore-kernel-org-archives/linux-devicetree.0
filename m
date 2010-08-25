@@ -1,7 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 09/14] ARM: ARM flash driver DT port
-Date: Wed, 25 Aug 2010 01:40:41 -0600
-Message-ID: <AANLkTi=EVP=ZXDKQ6nHESqaRGWyVHj9vfgiOoXrV5s=1@mail.gmail.com>
+Subject: Re: [RFC PATCH 13/14] ARM: vexpress: Definition of vexpress dts
+	specification
+Date: Wed, 25 Aug 2010 02:24:42 -0600
+Message-ID: <AANLkTimQOLNPfB1d=1wfCWfgEWOmwHW0OM=fw8-gfgWL@mail.gmail.com>
 References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
@@ -12,13 +13,19 @@ References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-8-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-10-git-send-email-lorenzo.pieralisi@arm.com>
-	<AANLkTik2gPYrP+xh-jhFLWjVbr8dwCuCMnVXXvYP56e4@mail.gmail.com>
-	<1282300189.3888.4.camel@e102109-lin.cambridge.arm.com>
+	<1282158000-23081-11-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-12-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-13-git-send-email-lorenzo.pieralisi@arm.com>
+	<1282158000-23081-14-git-send-email-lorenzo.pieralisi@arm.com>
+	<AANLkTimb1vgf1v3TQKsBFBPGrxr9iPpKY3Z6fzfAEPgZ@mail.gmail.com>
+	<977313260285850582@unknownmsgid>
+	<AANLkTi=WiHd06=e4d_WdCe+HMfFhj-Q=xRS_4f-TzGUs@mail.gmail.com>
+	<1086814508538526416@unknownmsgid>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1282300189.3888.4.camel-uqmqopRKlSLZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <1086814508538526416@unknownmsgid>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,52 +35,173 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philippe Robin <philippe.robin-5wv7dgnIgG8@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philippe Robin <Philippe.Robin-5wv7dgnIgG8@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 20, 2010 at 4:29 AM, Catalin Marinas
-<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, 2010-08-18 at 22:22 +0100, Grant Likely wrote:
->> On Wed, Aug 18, 2010 at 12:59 PM, Lorenzo Pieralisi
->> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
->> > When OF is enabled drivers should initialize the driver match table
->> > to allow the kernel to find and recognise drivers suitable for
->> > devices. The initialization is carried out through a static inline
->> > function at driver init time.
->> >
->> > This patch adds a match table and relative init code to support
->> > device tree probing methodology for the ARM flash driver.
->> >
->> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->> > ---
->> > =A0drivers/mtd/maps/integrator-flash.c | =A0 =A06 ++++++
->> > =A01 files changed, 6 insertions(+), 0 deletions(-)
->> >
->> > diff --git a/drivers/mtd/maps/integrator-flash.c b/drivers/mtd/maps/in=
-tegrator-flash.c
->> > index 2aac41b..aa9a556 100644
->> > --- a/drivers/mtd/maps/integrator-flash.c
->> > +++ b/drivers/mtd/maps/integrator-flash.c
->> > @@ -291,6 +291,11 @@ static int armflash_remove(struct platform_device=
- *dev)
->> > =A0 =A0 =A0 =A0return 0;
->> > =A0}
->> >
->> > +static struct of_device_id armflash_matches[] =3D {
->> > + =A0 =A0 =A0 { .compatible =3D "arm,arm-flash"},
->>
->> (Assuming I'm reading the integrator-flash driver correctly...) When
->> using the device tree, the entire flash map should be encoded in the
->> tree, and this mapping driver is no longer needed. =A0See
->> mtd/maps/physmap_of.c.
+On Mon, Aug 23, 2010 at 9:47 AM, Lorenzo Pieralisi
+<Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Grant,
 >
-> BTW, I managed to get the RealView boards working with physmap.c instead
-> of the integrator flash (same functionality, just different drivers). We
-> could do the same for Versatile Express and get rid of the integrator
-> flash entirely.
+>> -----Original Message-----
+>> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gr=
+ant
+>> Likely
+>> Sent: 20 August 2010 21:32
+>> To: Lorenzo Pieralisi
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Philippe Robin; nico-vtqb6HGKxmxNg+MwTxZMZA@public.gmane.org=
+t;
+>> linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org; Catalin Marinas; jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+>> Subject: Re: [RFC PATCH 13/14] ARM: vexpress: Definition of vexpress dts
+>> specification
+>>
+>> Hi Lorenzo,
+>>
+>> On Fri, Aug 20, 2010 at 11:51 AM, Lorenzo Pieralisi
+>> <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+>> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> >> > +
+>> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 smsc@4e000000 {
+>> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "smc,s=
+msc-911";
+>> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x4e00000=
+0 0x1000>;
+>> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <47>;
+>> >>
+>> >> I suspect this interrupts property is wrong. =A0An interrupts specifi=
+er
+>> >> is specific to the interrupt controller node; so this should always
+>> >> specify the interrupt input on a specific controller (either gic-cpu
+>> >> or gic-dist in this system). =A0It looks like '47' is the global irq
+>> >> number. =A0Am I correct?
+>> >>
+>> >
+>> > Strictly related to the previous point.
+>> >
+>> > When you say input Grant you mean input HW pin or interrupt HW ID ?
+>> >
+>> > I think you mean the irq ID specific to a given interrupt controller,
+>> > because that is what SW sees and controls.
+>>
+>> I mean HW pin, but see discussion below to make sure we're talking
+>> about the same thing.
+>>
+>> > 47 is the eth interrupt ID on the gic-dist, that in this particular
+>> > case becomes the global IRQ number as well if I am not mistaken.
+>> > (it is retrieved through the platform device resource).
+>> > I think it is correct as it is, but I will countercheck.
+>>
+>> Okay. =A0Just to make sure I understand... I see two interrupt
+>> controllers in this device tree; gic-cpu and gic-dist. =A0I'm assuming
+>> that each irq controller has N interrupt inputs numbered 0..N-1. =A0My
+>> expectation would be that each device is wired to a single interrupt
+>> pin on one of the two controllers. =A0I also would expect that (unless
+>> there are two interrupt input pins on the CPU) one of the irq
+>> controllers is cascaded to the other. =A0Am I correct so far?
+>>
+>
+> Well, it is the fact that I coded them as two controllers which is the
+> source of confusion, I apologise but it is good to start discussing
+> a proper binding.
+> The gic-cpu and gic-dist are two subcomponents of a single
+> interrupt controller called GIC. Devices are wired to the gic-dist which
+> is in charge of distributing interrupts to the gic-cpu (per cpu IRQ IF).
 
-Nice!  It should just drop in then (although there may be some endian
-issues to tidy up).
+Ah, so this is really just one device.  It probably makes sense to
+describe it with only one interrupt-controller node then.  (Or if it
+is a couple of nodes, only one should be declared as an
+interrupt-controller.
+
+>> So, if 47 was the hardware input number, that would mean irq-dist had
+>> least 48 discrete interrupt inputs (this is actually what had me
+>> suspicious; I assumed that that are only 32 inputs on the gic
+>> controller but I didn't go and check).
+>
+> The GIC deals with interrupts through ID numbers, and yes the gic-dist
+> can have more than 48 discrete interrupts lines.
+> The point is that HW input pin numbers or wires map to irq ID through a s=
+hift
+> (e.g. HW ID 37 means interrupt pin 5, because the first 32 irq IDs are
+> used for SW IRQs and private (to one core) peripheral IRQs).
+> That's why I asked if =A0"interrupts" should represent the HW input pin/l=
+ine.
+> Ethernet interrupt GIC HW ID is 47 (vexpress), but that does not mean
+> the eth device irq line is connected to the 47th irq input line in
+> the gic-dist because interrupt ID for peripherals start at ID 16
+> (and there are two kinds of peripherals, private to a core (ID 16..31)
+> or common to all cores, ID 32 onwards).
+
+In general, using the HW input pin number is a good idea because the
+device tree data is supposed to describe the hardware.
+
+> TO be honest I do not think we should think in HW interrupt pin terms, in
+> this context it is the GIC HW ID that should go into "interrupts"
+
+Hmmm.  You've lost me here.  I'm not catching how HW ID is lining up
+with HW interrupt pin number, and so having trouble determining which
+is the better value to specify.
+
+> (which in
+> turn means we may well end up having two identical "interrupts" values
+> on different GICs (cascaded), and that's perfectly fine because
+> they are relative to a given controller).
+
+Correct.
+
+>> From the Linux perspective, the hw irq numbers for each controller
+>> needs to be mapped onto the flat Linux irq space. =A0So if gic-cpu has N
+>> irqs and gic-dist has M irqs, then the mapping might look something
+>> like this:
+>>
+>> linux irq
+>> (0) =A0 =3D=3D gic-cpu:0
+>> (1) =A0 =3D=3D gic-cpu:1
+>> ...
+>> (N-2) =3D=3D gpi-cpu:N-2
+>> (N-1) =3D=3D gpi-cpu:N-1
+>> (N) =A0 =3D=3D gic-dist:0
+>> (N+1) =3D=3D gic-dist:1
+>> ...
+>> (N+M-2) =3D=3D gpi-dist:M-2
+>> (N+M-1) =3D=3D gpi-dist:M-1
+>>
+>> Am I still correct, or have I misunderstood the versatile interrupt
+>> controller architecture?
+>
+> The two components have to be seen as one interrupt controller.
+> It is possible we need two "reg" properties since the offset between
+> gic-cpu registers and gic-dist ones may differ.
+> If there is a board/SoC with two cascaded GICs your reasoning
+> above applies, agreed, sorry for having split the single GIC in two
+> interrupt controllers, that caused confusion (but it is a RFC
+> to define a proper binding 8-) ).
+
+:-)
+
+>> Regardless though, the linux mapping doesn't actually have any bearing
+>> on the device tree because the mapping from HW to linux irq number is
+>> all internal to the kernel. =A0The kernel could choose to start the
+>> mapping at 42 or somewhere else and it would all still work. =A0The
+>> of_irq support code has all the information it needs to translate an
+>> interrupt specifier to an interrupt controller, and then map the
+>> number to the linux irq number.
+>>
+>
+> Agreed, and took your point and Warner's. I did not want to code the
+> Linux global number in the interrupts property. IMHO that should define
+> the GIC HW irq ID and it is not Linux specific, see above.
+> But due to the current mapping 47 ends up being the Linux IRQ number
+> as well.
+
+"accidental" congruity is perfectly fine; as long as the software
+doesn't depend on the congruity continuing to exist in the future.
+
+> It is time I started writing a GIC binding since it is likely to be
+> reused for different boards (and gic init code should be factored out
+> of board specific dirs).
+>
+> I hope it helps.
+
+I think so; but I'm still a little confused.  HW documentation would help.
 
 g.
