@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 11/14] ARM: PMU: add device tree probing
-Date: Wed, 25 Aug 2010 01:39:52 -0600
-Message-ID: <AANLkTimWnPzT0KBgpMD8AoyDMsSLyx0kCcq4Jc-HP595@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/14] ARM: ARM flash driver DT port
+Date: Wed, 25 Aug 2010 01:40:41 -0600
+Message-ID: <AANLkTi=EVP=ZXDKQ6nHESqaRGWyVHj9vfgiOoXrV5s=1@mail.gmail.com>
 References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
@@ -12,15 +12,13 @@ References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-8-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
 	<1282158000-23081-10-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-11-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-12-git-send-email-lorenzo.pieralisi@arm.com>
-	<AANLkTinz2CWrzPk3BtM6tWxu1udeAS1LFzjACB9spq-y@mail.gmail.com>
-	<-4778531030339335058@unknownmsgid>
+	<AANLkTik2gPYrP+xh-jhFLWjVbr8dwCuCMnVXXvYP56e4@mail.gmail.com>
+	<1282300189.3888.4.camel@e102109-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <-4778531030339335058@unknownmsgid>
+In-Reply-To: <1282300189.3888.4.camel-uqmqopRKlSLZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -30,40 +28,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philippe Robin <Philippe.Robin-5wv7dgnIgG8@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philippe Robin <philippe.robin-5wv7dgnIgG8@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 20, 2010 at 4:56 AM, Lorenzo Pieralisi
-<Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
->> Also, (as you've brought up before) the pdev->id issue needs to be
->> solved. =A0I don't believe it is allowed to change the id field after
->> the platform_device is registered. =A0I'd rather see the id dynamically
->> assigned, which generally works in the OF use-case because
->> interconnections between devices are described in the tree and
->> specific ids aren't really needed. =A0However, it could be that the best
->> thing to do is retrieve the system-wide unique id from the aliases
->> node.
+On Fri, Aug 20, 2010 at 4:29 AM, Catalin Marinas
+<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Wed, 2010-08-18 at 22:22 +0100, Grant Likely wrote:
+>> On Wed, Aug 18, 2010 at 12:59 PM, Lorenzo Pieralisi
+>> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > When OF is enabled drivers should initialize the driver match table
+>> > to allow the kernel to find and recognise drivers suitable for
+>> > devices. The initialization is carried out through a static inline
+>> > function at driver init time.
+>> >
+>> > This patch adds a match table and relative init code to support
+>> > device tree probing methodology for the ARM flash driver.
+>> >
+>> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> > ---
+>> > =A0drivers/mtd/maps/integrator-flash.c | =A0 =A06 ++++++
+>> > =A01 files changed, 6 insertions(+), 0 deletions(-)
+>> >
+>> > diff --git a/drivers/mtd/maps/integrator-flash.c b/drivers/mtd/maps/in=
+tegrator-flash.c
+>> > index 2aac41b..aa9a556 100644
+>> > --- a/drivers/mtd/maps/integrator-flash.c
+>> > +++ b/drivers/mtd/maps/integrator-flash.c
+>> > @@ -291,6 +291,11 @@ static int armflash_remove(struct platform_device=
+ *dev)
+>> > =A0 =A0 =A0 =A0return 0;
+>> > =A0}
+>> >
+>> > +static struct of_device_id armflash_matches[] =3D {
+>> > + =A0 =A0 =A0 { .compatible =3D "arm,arm-flash"},
 >>
->> ... and ditto on my comment that this will be simpler if it lives
->> directly in pmu.c. =A0:-)
+>> (Assuming I'm reading the integrator-flash driver correctly...) When
+>> using the device tree, the entire flash map should be encoded in the
+>> tree, and this mapping driver is no longer needed. =A0See
+>> mtd/maps/physmap_of.c.
 >
-> When you say "retrieve the system-wide id from the aliases node" you mean
-> at platform_device register time =A0in the OF layer (ie of_device_registe=
-r),
-> right ?
+> BTW, I managed to get the RealView boards working with physmap.c instead
+> of the integrator flash (same functionality, just different drivers). We
+> could do the same for Versatile Express and get rid of the integrator
+> flash entirely.
 
-Not necessarily.  Where possible, I'd rather modify the drivers to not
-strictly enforce a 1:1 relationship between the pdev->id, and the
-driver's internal enumeration.  Hmmm, that was a little dense, so let
-me try again...  In the specific case where id =3D=3D -1, I'd like to
-driver to be able to handle it gracefully and allow the probe routine
-to either dynamically assign, or to deduce an appropriate enumeration
-value from the aliases node.
+Nice!  It should just drop in then (although there may be some endian
+issues to tidy up).
 
-I don't have an example of the implementation to show you though.  We
-should probably discuss on IRC or have a conf call.  There are a
-number of subtleties and details that need to be agreed on here.
-
-Cheers,
 g.
