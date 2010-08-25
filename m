@@ -1,207 +1,127 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 13/14] ARM: vexpress: Definition of vexpress dts
-	specification
-Date: Wed, 25 Aug 2010 02:24:42 -0600
-Message-ID: <AANLkTimQOLNPfB1d=1wfCWfgEWOmwHW0OM=fw8-gfgWL@mail.gmail.com>
-References: <1282158000-23081-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-2-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-3-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-4-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-5-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-6-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-7-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-8-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-9-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-10-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-11-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-12-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-13-git-send-email-lorenzo.pieralisi@arm.com>
-	<1282158000-23081-14-git-send-email-lorenzo.pieralisi@arm.com>
-	<AANLkTimb1vgf1v3TQKsBFBPGrxr9iPpKY3Z6fzfAEPgZ@mail.gmail.com>
-	<977313260285850582@unknownmsgid>
-	<AANLkTi=WiHd06=e4d_WdCe+HMfFhj-Q=xRS_4f-TzGUs@mail.gmail.com>
-	<1086814508538526416@unknownmsgid>
+From: Christian Riesch <christian.riesch@omicron.at>
+Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
+Date: Wed, 25 Aug 2010 11:40:40 +0200
+Message-ID: <AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+	<363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
+	<AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
+	<20100817085324.GB3330@riccoc20.at.omicron.at>
+	<1282090963.1734.97.camel@localhost>
+	<20100818071942.GA4096@riccoc20.at.omicron.at>
+	<1282176776.2865.100.camel@localhost.localdomain>
+	<20100819055518.GA4084@riccoc20.at.omicron.at>
+	<1282594125.3111.344.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1086814508538526416@unknownmsgid>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philippe Robin <Philippe.Robin-5wv7dgnIgG8@public.gmane.org>, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1282594125.3111.344.camel@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: john stultz <johnstul@us.ibm.com>
+Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 23, 2010 at 9:47 AM, Lorenzo Pieralisi
-<Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Grant,
+On Mon, Aug 23, 2010 at 10:08 PM, john stultz <johnstul@us.ibm.com> wro=
+te:
+> On Thu, 2010-08-19 at 07:55 +0200, Richard Cochran wrote:
+>> On Wed, Aug 18, 2010 at 05:12:56PM -0700, john stultz wrote:
+>> > Again, my knowledge in the networking stack is pretty limited. But=
+ it
+>> > would seem that having an interface that does something to the eff=
+ect of
+>> > "adjust the timestamp clock on the hardware that generated it from=
+ this
+>> > packet by Xppb" would feel like the right level of abstraction. It=
+s
+>> > closely related to SO_TIMESTAMP, option right? Would something lik=
+e
+>> > using the setsockopt/getsockopt interface with
+>> > SO_TIMESTAMP_ADJUST/OFFSET/SET/etc be reasonable?
+>>
+>> The clock and its adjustment have nothing to do with a network
+>> socket. The current PTP hacks floating around all add private ioctls
+>> to the MAC driver. That is the *wrong* way to do it.
 >
->> -----Original Message-----
->> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Gr=
-ant
->> Likely
->> Sent: 20 August 2010 21:32
->> To: Lorenzo Pieralisi
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Philippe Robin; nico-vtqb6HGKxmxNg+MwTxZMZA@public.gmane.org=
-t;
->> linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org; Catalin Marinas; jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
->> Subject: Re: [RFC PATCH 13/14] ARM: vexpress: Definition of vexpress dts
->> specification
->>
->> Hi Lorenzo,
->>
->> On Fri, Aug 20, 2010 at 11:51 AM, Lorenzo Pieralisi
->> <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
->> >> > +
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 smsc@4e000000 {
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "smc,s=
-msc-911";
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x4e00000=
-0 0x1000>;
->> >> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <47>;
->> >>
->> >> I suspect this interrupts property is wrong. =A0An interrupts specifi=
-er
->> >> is specific to the interrupt controller node; so this should always
->> >> specify the interrupt input on a specific controller (either gic-cpu
->> >> or gic-dist in this system). =A0It looks like '47' is the global irq
->> >> number. =A0Am I correct?
->> >>
->> >
->> > Strictly related to the previous point.
->> >
->> > When you say input Grant you mean input HW pin or interrupt HW ID ?
->> >
->> > I think you mean the irq ID specific to a given interrupt controller,
->> > because that is what SW sees and controls.
->>
->> I mean HW pin, but see discussion below to make sure we're talking
->> about the same thing.
->>
->> > 47 is the eth interrupt ID on the gic-dist, that in this particular
->> > case becomes the global IRQ number as well if I am not mistaken.
->> > (it is retrieved through the platform device resource).
->> > I think it is correct as it is, but I will countercheck.
->>
->> Okay. =A0Just to make sure I understand... I see two interrupt
->> controllers in this device tree; gic-cpu and gic-dist. =A0I'm assuming
->> that each irq controller has N interrupt inputs numbered 0..N-1. =A0My
->> expectation would be that each device is wired to a single interrupt
->> pin on one of the two controllers. =A0I also would expect that (unless
->> there are two interrupt input pins on the CPU) one of the irq
->> controllers is cascaded to the other. =A0Am I correct so far?
->>
+> Could you clarify on *why* that is the wrong approach?
 >
-> Well, it is the fact that I coded them as two controllers which is the
-> source of confusion, I apologise but it is good to start discussing
-> a proper binding.
-> The gic-cpu and gic-dist are two subcomponents of a single
-> interrupt controller called GIC. Devices are wired to the gic-dist which
-> is in charge of distributing interrupts to the gic-cpu (per cpu IRQ IF).
-
-Ah, so this is really just one device.  It probably makes sense to
-describe it with only one interrupt-controller node then.  (Or if it
-is a couple of nodes, only one should be declared as an
-interrupt-controller.
-
->> So, if 47 was the hardware input number, that would mean irq-dist had
->> least 48 discrete interrupt inputs (this is actually what had me
->> suspicious; I assumed that that are only 32 inputs on the gic
->> controller but I didn't go and check).
+> Maybe this is where some of the confusion is coming from? The subtlet=
+ies
+> of the more generic PTP algorithm and how the existence of PTP hardwa=
+re
+> clocks change things are not clear to me. My understanding of ptp and
+> the networking details around it is limited, so your expertise is
+> appreciated. =C2=A0Might you consider covering some of this via a
+> Documentation/ptp/overview.txt file in a future version of your patch=
+?
 >
-> The GIC deals with interrupts through ID numbers, and yes the gic-dist
-> can have more than 48 discrete interrupts lines.
-> The point is that HW input pin numbers or wires map to irq ID through a s=
-hift
-> (e.g. HW ID 37 means interrupt pin 5, because the first 32 irq IDs are
-> used for SW IRQs and private (to one core) peripheral IRQs).
-> That's why I asked if =A0"interrupts" should represent the HW input pin/l=
-ine.
-> Ethernet interrupt GIC HW ID is 47 (vexpress), but that does not mean
-> the eth device irq line is connected to the 47th irq input line in
-> the gic-dist because interrupt ID for peripherals start at ID 16
-> (and there are two kinds of peripherals, private to a core (ID 16..31)
-> or common to all cores, ID 32 onwards).
-
-In general, using the HW input pin number is a good idea because the
-device tree data is supposed to describe the hardware.
-
-> TO be honest I do not think we should think in HW interrupt pin terms, in
-> this context it is the GIC HW ID that should go into "interrupts"
-
-Hmmm.  You've lost me here.  I'm not catching how HW ID is lining up
-with HW interrupt pin number, and so having trouble determining which
-is the better value to specify.
-
-> (which in
-> turn means we may well end up having two identical "interrupts" values
-> on different GICs (cascaded), and that's perfectly fine because
-> they are relative to a given controller).
-
-Correct.
-
->> From the Linux perspective, the hw irq numbers for each controller
->> needs to be mapped onto the flat Linux irq space. =A0So if gic-cpu has N
->> irqs and gic-dist has M irqs, then the mapping might look something
->> like this:
->>
->> linux irq
->> (0) =A0 =3D=3D gic-cpu:0
->> (1) =A0 =3D=3D gic-cpu:1
->> ...
->> (N-2) =3D=3D gpi-cpu:N-2
->> (N-1) =3D=3D gpi-cpu:N-1
->> (N) =A0 =3D=3D gic-dist:0
->> (N+1) =3D=3D gic-dist:1
->> ...
->> (N+M-2) =3D=3D gpi-dist:M-2
->> (N+M-1) =3D=3D gpi-dist:M-1
->>
->> Am I still correct, or have I misunderstood the versatile interrupt
->> controller architecture?
+> Here's a summary of what I understand:
+> So from:
+> http://en.wikipedia.org/wiki/Precision_Time_Protocol#Synchronization
 >
-> The two components have to be seen as one interrupt controller.
-> It is possible we need two "reg" properties since the offset between
-> gic-cpu registers and gic-dist ones may differ.
-> If there is a board/SoC with two cascaded GICs your reasoning
-> above applies, agreed, sorry for having split the single GIC in two
-> interrupt controllers, that caused confusion (but it is a RFC
-> to define a proper binding 8-) ).
-
-:-)
-
->> Regardless though, the linux mapping doesn't actually have any bearing
->> on the device tree because the mapping from HW to linux irq number is
->> all internal to the kernel. =A0The kernel could choose to start the
->> mapping at 42 or somewhere else and it would all still work. =A0The
->> of_irq support code has all the information it needs to translate an
->> interrupt specifier to an interrupt controller, and then map the
->> number to the linux irq number.
->>
+> We see the message exchange of Sync/Delay_Req/Delay_Resp, and the
+> calculation of the local offset from the server (and then a frequency
+> adjustment over time as offsets values are accumulated).
 >
-> Agreed, and took your point and Warner's. I did not want to code the
-> Linux global number in the interrupts property. IMHO that should define
-> the GIC HW irq ID and it is not Linux specific, see above.
-> But due to the current mapping 47 ends up being the Linux IRQ number
-> as well.
-
-"accidental" congruity is perfectly fine; as long as the software
-doesn't depend on the congruity continuing to exist in the future.
-
-> It is time I started writing a GIC binding since it is likely to be
-> reused for different boards (and gic init code should be factored out
-> of board specific dirs).
+> Without the hardware clock, this all of these messages and their
+> corresponding timestamps are likely created by PTPd, using clock_gett=
+ime
+> and then adjtimex() to correct for the calculated offset or freq
+> adjustment. No extra interfaces are necessary, and PTPd is syncing th=
+e
+> system time as accurately as it can. This is how the existing ptpd
+> projects on the web seem to function.
 >
-> I hope it helps.
+> Now, with PTP hardware on the system, my understanding of what you're
+> trying to enable with your patches is that the PTP hardware does the
+> timestamping on both incoming and outgoing messages. PTPd then reads =
+the
+> pre-timestamped messages, calculates the offset and freq correction, =
+and
+> then feeds that back into the PTP hardware via your interface. No tim=
+e
+> correction is done at all by PTPd.
 
-I think so; but I'm still a little confused.  HW documentation would help.
+John,
+What you describe here is only one of the use cases. If the hardware
+has a single network port and operates as a PTP slave, it timestamps
+the PTP packets that are sent and received and subsequently uses these
+timestamps and the information it received from the master in the
+packets to steer its clock to align it with the master clock. In such
+a case the timestamping hardware and the clock hardware work together
+closely and it seems to be okay to use the same interface to control
+both the timestamping and the PTP clock.
 
-g.
+But we have to consider other use cases, e.g.,
+
+1) Boundary clocks:
+We have more than one network port. One port operates as a slave
+clock, our system gets time information via this port and steers its
+PTP clock to align with the master clock. The other network ports of
+our system operate as master clocks and redistribute the time
+information we got from the master to other clocks on these networks.
+In such a case we do timestamping on each of the network ports, but we
+only have a single PTP clock. Each network port's timestamping
+hardware uses the same hardware clock to generate time stamps.
+
+2) Master clock:
+We have one or more network ports. Our system has a really good clock
+(ovenized quartz crystal, an atomic clock, a GPS timing receiver...)
+and it distributes this time on the network. In such a case we do not
+steer our clock based on the (packet) timestamps we get from our
+timestamping unit. Instead, we directly drive our clock hardware with
+a very stable frequency that we get from the OCXO or the atomic
+clock... or we use one of the ancillary features of the PTP clock that
+Richard mentioned to timestamp not network packets but a 1pps signal
+and use these timestamps to steer the clock. Packet time stamping is
+used to distribute the time to the slaves, but it is not part of the
+control loop in this case.
+
+So in the first case we have one PTP clock but several network packet
+timestamping units, whereas in the second case the packet timestamping
+is done but it is not part of the control loop that steers the clock.
+Of course in most hardware implementations both the PTP clock and the
+timestamping unit sit on the same chip and often use the same means of
+communication to the cpu, e.g., the MDIO bus, but I think we need some
+logical separation here.
+
+Christian
