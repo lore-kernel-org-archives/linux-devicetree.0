@@ -1,161 +1,171 @@
-From: john stultz <johnstul@us.ibm.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Thu, 26 Aug 2010 18:57:49 -0700
-Message-ID: <1282874269.4371.74.camel@localhost.localdomain>
-References: <cover.1281956490.git.richard.cochran@omicron.at>
-	 <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
-	 <AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
-	 <20100817085324.GB3330@riccoc20.at.omicron.at>
-	 <1282090963.1734.97.camel@localhost>
-	 <20100818071942.GA4096@riccoc20.at.omicron.at>
-	 <1282176776.2865.100.camel@localhost.localdomain>
-	 <20100819055518.GA4084@riccoc20.at.omicron.at>
-	 <1282594125.3111.344.camel@localhost.localdomain>
-	 <AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>
+Date: Fri, 27 Aug 2010 09:57:27 +0200
+Message-ID: <20100827075727.GA3818@riccoc20.at.omicron.at>
+References: <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
+	<AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
+	<20100817085324.GB3330@riccoc20.at.omicron.at>
+	<1282090963.1734.97.camel@localhost>
+	<20100818071942.GA4096@riccoc20.at.omicron.at>
+	<1282176776.2865.100.camel@localhost.localdomain>
+	<20100819055518.GA4084@riccoc20.at.omicron.at>
+	<1282594125.3111.344.camel@localhost.localdomain>
+	<AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>
+	<1282874269.4371.74.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Riesch <christian.riesch@omicron.at>
-Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1282874269.4371.74.camel-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: john stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Cc: Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Riesch <christian.riesch-3mrvs1K0uXizZXS1Dc/lvw@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2010-08-25 at 11:40 +0200, Christian Riesch wrote:
-> What you describe here is only one of the use cases. If the hardware
-> has a single network port and operates as a PTP slave, it timestamps
-> the PTP packets that are sent and received and subsequently uses these
-> timestamps and the information it received from the master in the
-> packets to steer its clock to align it with the master clock. In such
-> a case the timestamping hardware and the clock hardware work together
-> closely and it seems to be okay to use the same interface to control
-> both the timestamping and the PTP clock.
-> 
-> But we have to consider other use cases, e.g.,
-> 
-> 1) Boundary clocks:
-> We have more than one network port. One port operates as a slave
-> clock, our system gets time information via this port and steers its
-> PTP clock to align with the master clock. The other network ports of
-> our system operate as master clocks and redistribute the time
-> information we got from the master to other clocks on these networks.
-> In such a case we do timestamping on each of the network ports, but we
-> only have a single PTP clock. Each network port's timestamping
-> hardware uses the same hardware clock to generate time stamps.
-> 
-> 2) Master clock:
-> We have one or more network ports. Our system has a really good clock
-> (ovenized quartz crystal, an atomic clock, a GPS timing receiver...)
-> and it distributes this time on the network. In such a case we do not
-> steer our clock based on the (packet) timestamps we get from our
-> timestamping unit. Instead, we directly drive our clock hardware with
-> a very stable frequency that we get from the OCXO or the atomic
-> clock... 
+On Thu, Aug 26, 2010 at 06:57:49PM -0700, john stultz wrote:
+> On Wed, 2010-08-25 at 11:40 +0200, Christian Riesch wrote:
+> > 2) Master clock:
+> > We have one or more network ports. Our system has a really good clock
+> > (ovenized quartz crystal, an atomic clock, a GPS timing receiver...)
+> > and it distributes this time on the network. In such a case we do not
+> > steer our clock based on the (packet) timestamps we get from our
+> > timestamping unit. Instead, we directly drive our clock hardware with
+> > a very stable frequency that we get from the OCXO or the atomic
+> > clock...
+>
+> Ok. Following you here...
+>
+> > or we use one of the ancillary features of the PTP clock that
+> > Richard mentioned to timestamp not network packets but a 1pps signal
+> > and use these timestamps to steer the clock.
+>
+> Wait.. I thought we weren't using PTP to steer the clock? But now we're
+> using the pps signal from it to do so? Do I misunderstand you? Or did
+> you just not mean this?
 
-Ok. Following you here...
+The master node in a PTP network probably takes its time from a
+precise external time source, like GPS. The GPS provides a 1 PPS
+directly to the PTP clock hardware, which latches the PTP hardware
+clock time on the PPS edge. This provides one sample as input to a
+clock servo (in the PTPd) that, in turn, regulates the PTP clock
+hardware.
 
-> or we use one of the ancillary features of the PTP clock that
-> Richard mentioned to timestamp not network packets but a 1pps signal
-> and use these timestamps to steer the clock. 
+> > Packet time stamping is
+> > used to distribute the time to the slaves, but it is not part of the
+> > control loop in this case.
+>
+> I assume here you mean PTPd is steering the PTP clock according to the
+> system time (which is NTP/GPS/whatever sourced)? And then the PTP clock
+> distributes that time through the network?
 
-Wait.. I thought we weren't using PTP to steer the clock? But now we're
-using the pps signal from it to do so? Do I misunderstand you? Or did
-you just not mean this?
+Yes, but in this case, "system time" has nothing to do with the Linux
+system time. For a PTP master clock, it really doesn't matter whether
+the Linux time is correct, or not. It doesn't hurt either (but see
+below about chaining servos).
 
-> Packet time stamping is
-> used to distribute the time to the slaves, but it is not part of the
-> control loop in this case.
+> So first of all, thanks for the extra explanation and context here! I
+> really appreciate it, as I'm not familiar with all the hardware details
+> and possible use cases, but I'm trying to learn.
+>
+> So in the two cases you mention, the time "flow" is something like:
+>
+> #1) [Master Clock on Network1] => [PTP Clock] => [PTPd] =>
+> 	[PTP Clock] => [PTP Clients on Network2]
 
-I assume here you mean PTPd is steering the PTP clock according to the
-system time (which is NTP/GPS/whatever sourced)? And then the PTP clock
-distributes that time through the network?
+I would only draw the PTP clock once, perhaps like this:
 
-> So in the first case we have one PTP clock but several network packet
-> timestamping units, whereas in the second case the packet timestamping
-> is done but it is not part of the control loop that steers the clock.
-> Of course in most hardware implementations both the PTP clock and the
-> timestamping unit sit on the same chip and often use the same means of
-> communication to the cpu, e.g., the MDIO bus, but I think we need some
-> logical separation here.
+                                +------------------------------+
+                                |                              ^
+                                V                              |
+[Master Clock on NW 1]--->[HW timestamp]--->[PTPd]--adj-->[PTP Clock]
+[Slaves on NW 2,3,...]<---[HW timestamp]<---[    ]
 
+>
+> #2) [GPS] => [NTPd] => [System Time] => [PTPd] => [PTP clock] =>
+> 	[PTP clients on Network]
 
-So first of all, thanks for the extra explanation and context here! I
-really appreciate it, as I'm not familiar with all the hardware details
-and possible use cases, but I'm trying to learn.
+Nope. More like this:
 
-So in the two cases you mention, the time "flow" is something like:
+                                      +------------------------------+
+                                      |                              ^
+                                      V                              |
+[GPS]----------PPS--------->[Latch  timestamp]--->[PTPd]--adj-->[PTP Clock]
+[Slaves on NW 1,2,3,...]<---[HW pkt timestamp]<---[    ]
 
-#1) [Master Clock on Network1] => [PTP Clock] => [PTPd] =>
-	[PTP Clock] => [PTP Clients on Network2]
+> And the original case:
+> #3) [Master Clock on Network] => [PTP clock] => [PTPd] => [PTP clock]
 
-#2) [GPS] => [NTPd] => [System Time] => [PTPd] => [PTP clock] =>
-	[PTP clients on Network]
+More like:
 
-And the original case:
-#3) [Master Clock on Network] => [PTP clock] => [PTPd] => [PTP clock]
+[Master Clock on NW 1]--->[HW timestamp]--->[PTPd]--adj-->[PTP Clock]
 
-With a secondary control flow:
-	[PPS signal from PTP clock] => [NTPd] => [System Time]
+> With a secondary control flow:
+> 	[PPS signal from PTP clock] => [NTPd] => [System Time]
 
-
-Right?
+Yes.
 
 
-So, just brainstorming here, I guess the question I'm trying to figure
-out here, is can the "System Time" and "PTP clock" be merged/globbed
-into a single "Time" interface from the userspace point of view?
+> So, just brainstorming here, I guess the question I'm trying to figure
+> out here, is can the "System Time" and "PTP clock" be merged/globbed
+> into a single "Time" interface from the userspace point of view?
 
-In other words, if internal to the kernel, the PTP clock was always
-synced to the system time, couldn't the flow look something like:
+This is the core issue and source of misunderstanding, in my view. The
+fact of the matter is, the current generation of computers has
+multiple clocks, and these are usually unsynchronized. I think we
+should not try too hard to cover up or work around this. It is a fact
+of life.
 
-#3') [Master clock on network] => [PTP clock] => [PTPd] =>
-	 [System Time] => [in-kernel sync thread] => [PTP clock]
+It would be nice if there were only one clock, and that clock could do
+everything that we need. Indeed, the next generation of SoC computers may
+all have PTP build in to the main CPU. Well, one can always wish.
 
-So PTPd sees the offset adjustment from the PTP clock, and then feeds
-that offset correction right into (a possibly enhanced) adjtimex. The
-kernel would then immediately steer the PTP clock by the same amount to
-keep it in sync with system time (along with a periodic offset/freq
-correction step to deal with crystal drift).
+If we can make it appear that multiple clocks are just one clock, then
+I agree that we should do it. But I would not want to sacrifice
+synchronization accuracy or application features just to keep that
+illusion.
 
-Similarly:
+> In other words, if internal to the kernel, the PTP clock was always
+> synced to the system time, couldn't the flow look something like:
+>
+> #3') [Master clock on network] => [PTP clock] => [PTPd] =>
+> 	 [System Time] => [in-kernel sync thread] => [PTP clock]
+>
+> So PTPd sees the offset adjustment from the PTP clock, and then feeds
+> that offset correction right into (a possibly enhanced) adjtimex. The
+> kernel would then immediately steer the PTP clock by the same amount to
+> keep it in sync with system time (along with a periodic offset/freq
+> correction step to deal with crystal drift).
+>
+> Similarly:
+>
+> #2') [GPS] => [NTPd] => [System Time] => [in-kernel sync thread] =>
+> 		[PTP clock] => [PTP clients on Network]
+>
+> and
+>
+> #1') [Master Clock on Network1] => [PTP Clock] => [PTPd] =>
+> 	[System Time] => [in-kernel sync thread] => [PTP Clock] =>
+> 	[PTP Clients on Network2]
+>
+> Now, I realize PTP purists probably won't like this, because it
+> effectively makes the in-kernel sync thread similar to a PTP boundary
+> clock (or worse, since the control loop isn't exactly direct).
 
-#2') [GPS] => [NTPd] => [System Time] => [in-kernel sync thread] => 
-		[PTP clock] => [PTP clients on Network]
+I don't like it. The experience with PTP boundary clocks already shows
+that the errors in servo loops cascade. It worsens the PTP performance.
 
-and 
+However, I think it would fine just to synch the Linux system time to
+the PTP clock using the PPS interface, which is what my patch set
+implements. Linux user applications would not be able to detect the
+difference.
 
-#1') [Master Clock on Network1] => [PTP Clock] => [PTPd] =>
-	[System Time] => [in-kernel sync thread] => [PTP Clock] => 
-	[PTP Clients on Network2]
-
-Now, I realize PTP purists probably won't like this, because it
-effectively makes the in-kernel sync thread similar to a PTP boundary
-clock (or worse, since the control loop isn't exactly direct).
-
-But considering that the kernel (internally) allows for *very*
-fine-grained adjustments (we keep our long-term offset error in
-(nanoseconds << 32)  ie: ~quarter-*billion*ths of a nanosecond - I think
-that's sub-attosecond, if I recall the unit). And even the existing
-external adjtimex interface allows for adjustments of 1ppm<<16 which is
-a granularity of ~15 parts-per-trillion (assuming i'm doing the math
-right).
-
-These are all much greater then the parts-per-billion adjustment
-granularity proposed for the direct PTP clock steering, so I suspect any
-error caused by the indirection in the control flow could be minimized
-significantly.
-
-Additionally my suggestion here has the benefit of:
-A: Avoiding the fragmented time domains (ie CLOCK_REALTIME vs CLOCK_PTP)
-caused by adding a new clock_id.
-
-B: Avoiding the indirect system time sync through the PPS interface,
-which isn't completely terrible, but just feels a little ugly
-configuration wise from a users-perspective.
-
-I'm sure I still have lots to learn about PTP, so please let me know
-where I'm off-base.
-
-thanks
--john
+Richard
