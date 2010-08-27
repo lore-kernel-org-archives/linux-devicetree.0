@@ -1,75 +1,53 @@
-From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+From: Patrick Loschmidt <Patrick.Loschmidt@gmx.net>
 Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Fri, 27 Aug 2010 16:06:24 +0100
-Message-ID: <20100827160624.433b3374@lxorguk.ukuu.org.uk>
-References: <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
-	<AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
-	<20100817085324.GB3330@riccoc20.at.omicron.at>
-	<1282090963.1734.97.camel@localhost>
-	<20100818071942.GA4096@riccoc20.at.omicron.at>
-	<1282176776.2865.100.camel@localhost.localdomain>
-	<20100819055518.GA4084@riccoc20.at.omicron.at>
-	<1282594125.3111.344.camel@localhost.localdomain>
-	<20100827123849.GC11657@riccoc20.at.omicron.at>
-	<20100827143844.646eccf6@lxorguk.ukuu.org.uk>
-	<20100827143437.GB3293@riccoc20.at.omicron.at>
+Date: Fri, 27 Aug 2010 17:21:40 +0200
+Message-ID: <4C77D804.9060500@gmx.net>
+References: <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>	<AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>	<20100817085324.GB3330@riccoc20.at.omicron.at>	<1282090963.1734.97.camel@localhost>	<20100818071942.GA4096@riccoc20.at.omicron.at>	<1282176776.2865.100.camel@localhost.localdomain>	<20100819055518.GA4084@riccoc20.at.omicron.at>	<1282594125.3111.344.camel@localhost.localdomain>	<20100827123849.GC11657@riccoc20.at.omicron.at>	<20100827143844.646eccf6@lxorguk.ukuu.org.uk>	<20100827143437.GB3293@riccoc20.at.omicron.at> <20100827160624.433b3374@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100827143437.GB3293-7KxsofuKt4IfAd9E5cN8NEzG7cXyKsk/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, john stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20100827160624.433b3374@lxorguk.ukuu.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, john stultz <johnstul@us.ibm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-> Sorry for causing confusion, but please understand "a hardware clock
-> with timestamping capabilities than can be used for PTP support"
-> whenever I wrote "PTP" or "PTP clock."
+Hi!
 
-Ok that makes sense.
-> 
-> Well, what I just said is not entirely true.
-> most are bound to the PTP protocol. That may change in the future...
+I'd like to add my two cents about the discussion. Just to shortly
+introduce myself: I'm working with PTP since version 2002 (now 2008 or
+PTPv2) and I'm developing matching network cards, drivers, and also
+sometimes a bit of the stack.
 
-Which seems fine to me too - its an implementation detail of that time
-source.
+I always had the problem of different HW implementations (even my own)
+and how to access the clocks there. So reading this thread, I strongly
+support the idea to provide a driver class, which allows the userspace
+to run certain standard operations (settime, gettime, adjtime, ...) as
+proposed and leave the detailed implementation to a specific PTP clock
+driver. I always made my own char device, but I don't want to open this
+discussion again as for me it doesn't matter.
 
-> > Specialist applications will presumably need to know which time source or
-> > sources they are tracking and synchronizing too out of multiple potential
-> > PTP sources
-> 
-> Yes, the PTPd will have some special knowledge.
+Concerning the long discussion about PTP clock, system time, etc. I'd
+like to say, that from a point of view of PTP every node/host has only
+one clock. That means, that if you have a NIC with integrated clock
+(required for HW timestamping) it is counted as a node. As soon as you
+want to use multiple NICs this is actually outside the PTP protocol
+definition, unless you have only one clock available to both network
+interfaces (which is hard to achieve).
 
-Not only that but consumers of different time synchronizations will need
-to be able to describe which time source they want to talk about from a
-selection of PTP or similar things.
+So the solution to treat a PTP enabled NIC as a time source for the
+system time is in general sufficient, unless for applications that
+require precise timestamps in applications. I know of use cases where
+code gets instrumented to measure time delays, processing time, and
+sequence in SW, e.g. distributed databases for trading systems at the
+stock exchange.
 
-> > system time bimble track a source makes sense just as with NTP but making
-> > it a new clock seems the wrong model extending a non-too-bright API when
-> > you can just put the time sources in a file tree.
-> 
-> Don't get your meaning here, what did you mean by "file tree?"
+Summarizing I think it would be a huge step forward, if all the
+different HW implementations could be controlled via a standardised
+interface through the kernel. I need timestamps from my network card
+with ps resolution and to steer the onboard clock from user space. Then
+I would be happy already. :-)
 
-Something like
-
-	/sys/class/timesource/<name>/...
-
-at which point we don't have to enumerate them all, add special system
-calls and then fret about the fact you can't access them from things like
-shell scripts.
-
-The fact SYS5.4 Unix and SuS got obsessed with numbering things
-rather than using names unlike Unix doesn't mean it's the right model to
-number them - usually the reverse is true, a heirarchy of file names is
-rather more future proof.
-
-Alan
+Thanks,
+Patrick
