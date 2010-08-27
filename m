@@ -1,110 +1,130 @@
-From: Jacob Keller <jacob.keller@gmail.com>
+From: John Stultz <johnstul@us.ibm.com>
 Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Fri, 27 Aug 2010 09:17:10 -0700
-Message-ID: <AANLkTimG+cMnGL=K9Cf1Xjhnh3HKyH3k-scXRHLQdh7Y@mail.gmail.com>
-References: <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
-	<AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
-	<20100817085324.GB3330@riccoc20.at.omicron.at>
-	<1282090963.1734.97.camel@localhost>
-	<20100818071942.GA4096@riccoc20.at.omicron.at>
-	<1282176776.2865.100.camel@localhost.localdomain>
-	<20100819055518.GA4084@riccoc20.at.omicron.at>
-	<1282594125.3111.344.camel@localhost.localdomain>
-	<20100827123849.GC11657@riccoc20.at.omicron.at>
-	<20100827143844.646eccf6@lxorguk.ukuu.org.uk>
-	<20100827143437.GB3293@riccoc20.at.omicron.at>
-	<20100827160624.433b3374@lxorguk.ukuu.org.uk>
-	<4C77D804.9060500@gmx.net>
+Date: Fri, 27 Aug 2010 13:14:11 -0700
+Message-ID: <1282940051.2268.18.camel@jstultz-laptop>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+	 <1282176776.2865.100.camel@localhost.localdomain>
+	 <20100819055518.GA4084@riccoc20.at.omicron.at>
+	 <201008191428.04546.arnd@arndb.de>
+	 <20100819153847.GA10695@riccoc20.at.omicron.at>
+	 <1282594899.3111.358.camel@localhost.localdomain>
+	 <20100827110855.GA11657@riccoc20.at.omicron.at>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3431470555409960244=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4C77D804.9060500@gmx.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Patrick Loschmidt <Patrick.Loschmidt@gmx.net>
-Cc: Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>, john stultz <johnstul@us.ibm.com>, Richard Cochran <richardcochran@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Krzysztof Halasa <khc@pm.waw.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20100827110855.GA11657@riccoc20.at.omicron.at>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>
 List-Id: devicetree@vger.kernel.org
 
---===============3431470555409960244==
-Content-Type: multipart/alternative; boundary=001517478b50a36814048ed07392
+On Fri, 2010-08-27 at 13:08 +0200, Richard Cochran wrote:
+> On Mon, Aug 23, 2010 at 01:21:39PM -0700, john stultz wrote:
+> > On Thu, 2010-08-19 at 17:38 +0200, Richard Cochran wrote:
+> > > On Thu, Aug 19, 2010 at 02:28:04PM +0200, Arnd Bergmann wrote:
+> > > > My point was that a syscall is better than an ioctl based interface here,
+> > > > which I definitely still think. Given that John knows much more about
+> > > > clocks than I do, we still need to get agreement on the question that
+> > > > he raised, which is whether we actually need to expose this clock to the
+> > > > user or not.
+> > > > 
+> > > > If we can find a way to sync system time accurate enough with PTP and
+> > > > PPS, user applications may not need to see two separate clocks at all.
+> > > 
+> > > At the very least, one user application (the PTPd) needs to see the
+> > > PTP clock.
+> > > 
+> > > > > SYSCALL_DEFINE3(clock_adjtime, const clockid_t, clkid,
+> > > > > 		int, ppb, struct timespec __user *, ts)
+> > > > > 
+> > > > > ppb - desired frequency adjustment in parts per billion
+> > > > > ts  - desired time step (or jump) in <sec,nsec> to correct
+> > > > >       a measured offset
+> > > > > 
+> > > > > Arguably, this syscall might be useful for other clocks, too.
+> > > > 
+> > > > This is a mix of adjtime and adjtimex with the addition of
+> > > > the clkid parameter, right?
+> > > 
+> > > Sort of, but not really. ADJTIME(3) takes an offset and slowly
+> > > corrects the clock using a servo in the kernel, over hours.
+> > > 
+> > > For this function, the offset passed in the 'ts' parameter will be
+> > > immediately corrected, by jumping to the new time. This reflects the
+> > > way that PTP works. After the first few samples, the PTPd has an
+> > > estimate of the offset to the master and the rate difference. The PTPd
+> > > can proceed in one of two ways.
+> > > 
+> > > 1. If resetting the clock is not desired, then the clock is set to the
+> > >    maximum adjustment (in the right direction) until the clock time is
+> > >    close to the master's time.
+> > > 
+> > > 2. The estimated offset is added to the current time, resulting in a
+> > >    jump in time.
+> > > 
+> > > We need clock_adjtime(id, 0, ts) for the second case.
+> > >
+> > > > Have you considered passing a struct timex instead of ppb and ts?
+> > > 
+> > > Yes, but the timex is not suitable, IMHO.
+> > 
+> > Could you expand on this?
+> 
+> We need to able to specify that the call is for a PTP clock. We could
+> add that to the modes flag, like this:
+> 
+> /*timex.h*/
+> #define ADJ_PTP_0 0x10000
+> #define ADJ_PTP_1 0x20000
+> #define ADJ_PTP_2 0x30000
+> #define ADJ_PTP_3 0x40000
+> 
+> I can live with this, if everyone else can, too.
 
---001517478b50a36814048ed07392
-Content-Type: text/plain; charset=ISO-8859-1
+I wasn't suggesting adding the clock multiplexing to the timex, just
+using the timex to specify the adjustments in the clock_adjtime call. 
 
-On Fri, Aug 27, 2010 at 8:06 AM, Alan Cox <alan@lxorguk.ukuu.org.uk> wrote
+So I was asking why a timex was not suitable instead of using just the
+ppb and timespec.
 
-> > > system time bimble track a source makes sense just as with NTP but
-> making
-> > > it a new clock seems the wrong model extending a non-too-bright API
-> when
-> > > you can just put the time sources in a file tree.
-> >
-> > Don't get your meaning here, what did you mean by "file tree?"
->
-> Something like
->
->        /sys/class/timesource/<name>/...
->
-> at which point we don't have to enumerate them all, add special system
-> calls and then fret about the fact you can't access them from things like
-> shell scripts.
->
 
-I agree that this interface is the best way to be future proof. This appears
-to allow for multiple "clocks" or nodes, and doesn't get messed up when we
-add more than one NIC with separate clocks to a machine.
+> > Could we not add a adjustment mode ADJ_SETOFFSET or something that would
+> > provide the instantaneous offset correction?
+> 
+> Yes, but we would also need to add a struct timespec to the struct
+> timex, in order to get nanosecond resolution. I think it would be
+> possible to do in the padding at the end?
 
---001517478b50a36814048ed07392
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 27, 2010 at 8:06 AM, Alan Cox <span dir=3D"ltr">&lt;<a href=3D"=
-mailto:alan@lxorguk.ukuu.org.uk">alan@lxorguk.ukuu.org.uk</a>&gt;</span> wr=
-ote<br>
-<blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; borde=
-r-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;"><div class=3D"im"=
->
-&gt; &gt; system time bimble track a source makes sense just as with NTP bu=
-t making<br>
-&gt; &gt; it a new clock seems the wrong model extending a non-too-bright A=
-PI when<br>
-&gt; &gt; you can just put the time sources in a file tree.<br>
-&gt;<br>
-&gt; Don&#39;t get your meaning here, what did you mean by &quot;file tree?=
-&quot;<br>
-<br>
-</div>Something like<br>
-<br>
- =A0 =A0 =A0 =A0/sys/class/timesource/&lt;name&gt;/...<br>
-<br>
-at which point we don&#39;t have to enumerate them all, add special system<=
-br>
-calls and then fret about the fact you can&#39;t access them from things li=
-ke<br>
-shell scripts.<br>
-</blockquote><br>
-I agree that this interface is the best way to be future proof. This=20
-appears to allow for multiple &quot;clocks&quot; or nodes, and doesn&#39;t =
-get messed=20
-up when we add more than one NIC with separate clocks to a machine.<br>
+The existing struct timeval in the timex can be also used as a timespec.
+NTPv4 uses it that way specifying the ADJ_NANO flag.
 
---001517478b50a36814048ed07392--
 
---===============3431470555409960244==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> > You're right that the timex is a little crufty. But its legacy that we
+> > will support indefinitely. So following the established interface helps
+> > maintainability.
+> 
+> We can use it for PTP, with the modifications suggested above. Or we
+> can just introduce the clock_adjtime method, instead.
 
-_______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/linuxppc-dev
---===============3431470555409960244==--
+Again, I think you misunderstood my suggestion. I was suggesting
+something like clock_adjtime(clock_id, struct timex*).
+
+
+> > So if the clock_adjtime interface is needed, it would seem best for it
+> > to be generic enough to support not only PTP, but also the NTP kernel
+> > PLL.
+> 
+> For the proposed clock_adjime, what else is needed to support clock
+> adjustment in general?
+> 
+> I don't mind making the interface generic enough to support any
+> (realistic) conceivable clock adjustment scheme, but beyond the
+> present PTP hardware clocks, I don't know what else might be needed.
+
+I think using the timex struct covers most of the existing knowledge of
+what is needed. 
+
+thanks
+-john
