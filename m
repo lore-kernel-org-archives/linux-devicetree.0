@@ -1,207 +1,161 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] drivers/net/: ll_temac_main.c & ll_temac.h: Adding
-	ethtool interface
-Date: Thu, 26 Aug 2010 13:26:22 -0600
-Message-ID: <AANLkTimrAq_eBjt7h+PQbMuiDYypt7Pd618Xbq0R70HA@mail.gmail.com>
-References: <1282846407.2081.79.camel@ville-desktop>
+From: john stultz <johnstul@us.ibm.com>
+Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
+Date: Thu, 26 Aug 2010 18:57:49 -0700
+Message-ID: <1282874269.4371.74.camel@localhost.localdomain>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+	 <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>
+	 <AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>
+	 <20100817085324.GB3330@riccoc20.at.omicron.at>
+	 <1282090963.1734.97.camel@localhost>
+	 <20100818071942.GA4096@riccoc20.at.omicron.at>
+	 <1282176776.2865.100.camel@localhost.localdomain>
+	 <20100819055518.GA4084@riccoc20.at.omicron.at>
+	 <1282594125.3111.344.camel@localhost.localdomain>
+	 <AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1282846407.2081.79.camel@ville-desktop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ville Sundell <ville.sundell-PRfGYHLb4FmhKNWrAYCRhA@public.gmane.org>
-Cc: jpirko-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Joshua Pederson <josh-PRfGYHLb4FmqndwCJWfcng@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dkirjanov-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Riesch <christian.riesch@omicron.at>
+Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 26, 2010 at 12:13 PM, Ville Sundell
-<ville.sundell-PRfGYHLb4FmhKNWrAYCRhA@public.gmane.org> wrote:
-> This patch adds an interface to the ethtool subsystem and
-> implements read/write functionality for handling settings with the
-> ethtool_cmd structure. "Speed" is the only setting implemented so far.
-> Other settings (like reading the duplex value) can be easily implemented
-> later on.
->
-> One can read the speed of the link by reading /sys/class/net/eth0/speed.
-> It seems that you can't write to /sys/class/net/eth0/speed, so the
-> "ethtool" command line utility must be used to set the speed.
->
-> So far, it is tested only in the DMA mode, since I don't have hardware
-> with DCR available.
->
-> Signed-off-by: Ville Sundell <ville.sundell-PRfGYHLb4FmhKNWrAYCRhA@public.gmane.org>
+On Wed, 2010-08-25 at 11:40 +0200, Christian Riesch wrote:
+> What you describe here is only one of the use cases. If the hardware
+> has a single network port and operates as a PTP slave, it timestamps
+> the PTP packets that are sent and received and subsequently uses these
+> timestamps and the information it received from the master in the
+> packets to steer its clock to align it with the master clock. In such
+> a case the timestamping hardware and the clock hardware work together
+> closely and it seems to be okay to use the same interface to control
+> both the timestamping and the PTP clock.
+> 
+> But we have to consider other use cases, e.g.,
+> 
+> 1) Boundary clocks:
+> We have more than one network port. One port operates as a slave
+> clock, our system gets time information via this port and steers its
+> PTP clock to align with the master clock. The other network ports of
+> our system operate as master clocks and redistribute the time
+> information we got from the master to other clocks on these networks.
+> In such a case we do timestamping on each of the network ports, but we
+> only have a single PTP clock. Each network port's timestamping
+> hardware uses the same hardware clock to generate time stamps.
+> 
+> 2) Master clock:
+> We have one or more network ports. Our system has a really good clock
+> (ovenized quartz crystal, an atomic clock, a GPS timing receiver...)
+> and it distributes this time on the network. In such a case we do not
+> steer our clock based on the (packet) timestamps we get from our
+> timestamping unit. Instead, we directly drive our clock hardware with
+> a very stable frequency that we get from the OCXO or the atomic
+> clock... 
 
-The ll_temac driver uses phylib.  The Ethtool ops should then also be
-implemented using phylib and not by writing to the ll_temac registers
-directly.  Otherwise changes to the ll_temac speed will not be
-reflected in the PHY.
+Ok. Following you here...
 
-g.
+> or we use one of the ancillary features of the PTP clock that
+> Richard mentioned to timestamp not network packets but a 1pps signal
+> and use these timestamps to steer the clock. 
 
+Wait.. I thought we weren't using PTP to steer the clock? But now we're
+using the pps signal from it to do so? Do I misunderstand you? Or did
+you just not mean this?
 
-> ---
->
-> When using a non-static PHY and 100Mbit connection in Temac, the speed
-> is not changed and stays at the reset value (1000Mbit). This leads to a
-> situation where data is not sent or received correctly since
-> temac_adjust_link() is not called due to lack of static PHY. =A0Therefore
-> the link speed retains the reset value.
->
-> There is also no possibility to read or set the link speed from the user
-> space.
->
-> The patch is done against the newest version of ll_temac_main.cc and
-> ll_temac.h of the linux-next tree.
->
-> Thanks to Michal Simek for his feedback on this patch!
->
-> Regards,
-> Ville Sundell
-> Digilent Inc.
->
-> =A0drivers/net/ll_temac.h =A0 =A0 =A0| =A0 =A03 ++
-> =A0drivers/net/ll_temac_main.c | =A0 76 +++++++++++++++++++++++++++++++++=
-++++++++++
-> =A02 files changed, 79 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/net/ll_temac.h b/drivers/net/ll_temac.h
-> index 522abe2..ddd00cc 100644
-> --- a/drivers/net/ll_temac.h
-> +++ b/drivers/net/ll_temac.h
-> @@ -247,6 +247,9 @@ This option defaults to enabled (set) */
-> =A0#define XTE_EMCFG_LINKSPD_10 =A0 =A0 =A0 =A0 =A0 0x00000000 /* 10 Mbit=
- LINKSPD_MASK */
-> =A0#define XTE_EMCFG_LINKSPD_100 =A0 =A0 =A0 =A0 =A0(1 << 30) =A0/* 100 M=
-bit LINKSPD_MASK */
-> =A0#define XTE_EMCFG_LINKSPD_1000 =A0 =A0 =A0 =A0 (1 << 31) =A0/* 1000 Mb=
-it LINKSPD_MASK */
-> +#define XTE_EMCFG_LINKSPD_NA =A0 =A0 =A0 =A0 =A0 0xC0000000 /* For undef=
-ined speed */
-> +
-> +#define TEMAC_SPEED_NA =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 /* To indicate =
-XTE_EMCFG_LINKSPD_NA */
->
-> =A0#define XTE_GMIC_OFFSET =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A00x00000320 /* RGMII/SGMII config */
-> =A0#define XTE_MC_OFFSET =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00x00000340 /*=
- MDIO configuration */
-> diff --git a/drivers/net/ll_temac_main.c b/drivers/net/ll_temac_main.c
-> index bdf2149..ae08fd4 100644
-> --- a/drivers/net/ll_temac_main.c
-> +++ b/drivers/net/ll_temac_main.c
-> @@ -951,6 +951,81 @@ static const struct attribute_group temac_attr_group=
- =3D {
-> =A0 =A0 =A0 =A0.attrs =3D temac_device_attrs,
-> =A0};
->
-> +/* Ethtool interface implementation
-> + * SETTINGS
-> + * With the following functions below, you can
-> + * read and set following settings:
-> + * Speed:
-> + * =A0 =A0 Speed of the TEMAC controller is indicated by two most signif=
-icant bits
-> + * =A0 =A0 in the XTE_EMCFG_OFFSET register in the follwoing way:
-> + * =A0 =A0 00 =3D 10 Mbit connection
-> + * =A0 =A0 01 =3D 100 Mbit connection
-> + * =A0 =A0 10 =3D 1000 Mbit connection
-> + * =A0 =A0 11 =3D Undefined connection speed
-> +*/
-> +
-> +static int temac_get_settings(struct net_device *ndev, struct ethtool_cm=
-d *cmd)
-> +{
-> + =A0 =A0 =A0 struct temac_local *lp =3D netdev_priv(ndev);
-> + =A0 =A0 =A0 u32 reg =3D temac_indirect_in32(lp, XTE_EMCFG_OFFSET);
-> +
-> + =A0 =A0 =A0 switch (reg & XTE_EMCFG_LINKSPD_MASK) {
-> + =A0 =A0 =A0 case XTE_EMCFG_LINKSPD_10:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmd->speed =3D SPEED_10;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 case XTE_EMCFG_LINKSPD_100:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmd->speed =3D SPEED_100;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 case XTE_EMCFG_LINKSPD_1000:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmd->speed =3D SPEED_1000;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 default:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmd->speed =3D TEMAC_SPEED_NA; /* Undefined=
- speed */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 /* TODO: Insert more setting reading code here */
-> +
-> + =A0 =A0 =A0 return 0;
-> +}
-> +
-> +static int temac_set_settings(struct net_device *ndev, struct ethtool_cm=
-d *cmd)
-> +{
-> + =A0 =A0 =A0 struct temac_local *lp =3D netdev_priv(ndev);
-> + =A0 =A0 =A0 u32 reg =3D temac_indirect_in32(lp, XTE_EMCFG_OFFSET);
-> +
-> + =A0 =A0 =A0 reg &=3D ~XTE_EMCFG_LINKSPD_MASK;
-> + =A0 =A0 =A0 switch (cmd->speed) {
-> + =A0 =A0 =A0 case SPEED_10:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg |=3D XTE_EMCFG_LINKSPD_10;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 case SPEED_100:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg |=3D XTE_EMCFG_LINKSPD_100;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 case SPEED_1000:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg |=3D XTE_EMCFG_LINKSPD_1000;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 default:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg |=3D XTE_EMCFG_LINKSPD_NA; /* Undefined=
- speed */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 /* TODO: Insert more setting writing code here */
-> +
-> + =A0 =A0 =A0 temac_indirect_out32(lp, XTE_EMCFG_OFFSET, reg);
-> +
-> + =A0 =A0 =A0 return 0;
-> +}
-> +
-> +/*
-> + * Defining the ethtool operations.
-> + * This will be passed to the ethtool subsystem in the probe function
-> + */
-> +static const struct ethtool_ops temac_ethtool_ops =3D {
-> + =A0 =A0 =A0 .get_settings =3D temac_get_settings,
-> + =A0 =A0 =A0 .set_settings =3D temac_set_settings,
-> +};
-> +
-> =A0static int __init
-> =A0temac_of_probe(struct platform_device *op, const struct of_device_id *=
-match)
-> =A0{
-> @@ -970,6 +1045,7 @@ temac_of_probe(struct platform_device *op, const str=
-uct of_device_id *match)
-> =A0 =A0 =A0 =A0ether_setup(ndev);
-> =A0 =A0 =A0 =A0dev_set_drvdata(&op->dev, ndev);
-> =A0 =A0 =A0 =A0SET_NETDEV_DEV(ndev, &op->dev);
-> + =A0 =A0 =A0 SET_ETHTOOL_OPS(ndev, &temac_ethtool_ops);
-> =A0 =A0 =A0 =A0ndev->flags &=3D ~IFF_MULTICAST; =A0/* clear multicast */
-> =A0 =A0 =A0 =A0ndev->features =3D NETIF_F_SG | NETIF_F_FRAGLIST;
-> =A0 =A0 =A0 =A0ndev->netdev_ops =3D &temac_netdev_ops;
->
->
->
+> Packet time stamping is
+> used to distribute the time to the slaves, but it is not part of the
+> control loop in this case.
+
+I assume here you mean PTPd is steering the PTP clock according to the
+system time (which is NTP/GPS/whatever sourced)? And then the PTP clock
+distributes that time through the network?
+
+> So in the first case we have one PTP clock but several network packet
+> timestamping units, whereas in the second case the packet timestamping
+> is done but it is not part of the control loop that steers the clock.
+> Of course in most hardware implementations both the PTP clock and the
+> timestamping unit sit on the same chip and often use the same means of
+> communication to the cpu, e.g., the MDIO bus, but I think we need some
+> logical separation here.
 
 
+So first of all, thanks for the extra explanation and context here! I
+really appreciate it, as I'm not familiar with all the hardware details
+and possible use cases, but I'm trying to learn.
 
--- =
+So in the two cases you mention, the time "flow" is something like:
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+#1) [Master Clock on Network1] => [PTP Clock] => [PTPd] =>
+	[PTP Clock] => [PTP Clients on Network2]
+
+#2) [GPS] => [NTPd] => [System Time] => [PTPd] => [PTP clock] =>
+	[PTP clients on Network]
+
+And the original case:
+#3) [Master Clock on Network] => [PTP clock] => [PTPd] => [PTP clock]
+
+With a secondary control flow:
+	[PPS signal from PTP clock] => [NTPd] => [System Time]
+
+
+Right?
+
+
+So, just brainstorming here, I guess the question I'm trying to figure
+out here, is can the "System Time" and "PTP clock" be merged/globbed
+into a single "Time" interface from the userspace point of view?
+
+In other words, if internal to the kernel, the PTP clock was always
+synced to the system time, couldn't the flow look something like:
+
+#3') [Master clock on network] => [PTP clock] => [PTPd] =>
+	 [System Time] => [in-kernel sync thread] => [PTP clock]
+
+So PTPd sees the offset adjustment from the PTP clock, and then feeds
+that offset correction right into (a possibly enhanced) adjtimex. The
+kernel would then immediately steer the PTP clock by the same amount to
+keep it in sync with system time (along with a periodic offset/freq
+correction step to deal with crystal drift).
+
+Similarly:
+
+#2') [GPS] => [NTPd] => [System Time] => [in-kernel sync thread] => 
+		[PTP clock] => [PTP clients on Network]
+
+and 
+
+#1') [Master Clock on Network1] => [PTP Clock] => [PTPd] =>
+	[System Time] => [in-kernel sync thread] => [PTP Clock] => 
+	[PTP Clients on Network2]
+
+Now, I realize PTP purists probably won't like this, because it
+effectively makes the in-kernel sync thread similar to a PTP boundary
+clock (or worse, since the control loop isn't exactly direct).
+
+But considering that the kernel (internally) allows for *very*
+fine-grained adjustments (we keep our long-term offset error in
+(nanoseconds << 32)  ie: ~quarter-*billion*ths of a nanosecond - I think
+that's sub-attosecond, if I recall the unit). And even the existing
+external adjtimex interface allows for adjustments of 1ppm<<16 which is
+a granularity of ~15 parts-per-trillion (assuming i'm doing the math
+right).
+
+These are all much greater then the parts-per-billion adjustment
+granularity proposed for the direct PTP clock steering, so I suspect any
+error caused by the indirection in the control flow could be minimized
+significantly.
+
+Additionally my suggestion here has the benefit of:
+A: Avoiding the fragmented time domains (ie CLOCK_REALTIME vs CLOCK_PTP)
+caused by adding a new clock_id.
+
+B: Avoiding the indirect system time sync through the PPS interface,
+which isn't completely terrible, but just feels a little ugly
+configuration wise from a users-perspective.
+
+I'm sure I still have lots to learn about PTP, so please let me know
+where I'm off-base.
+
+thanks
+-john
