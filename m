@@ -1,12 +1,19 @@
-From: "Lorenzo Pieralisi" <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC] smsc911x device tree binding questions
-Date: Fri, 27 Aug 2010 12:01:58 +0100
-Message-ID: <20444.9551566087$1282906935@news.gmane.org>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
+Date: Fri, 27 Aug 2010 13:08:55 +0200
+Message-ID: <20100827110855.GA11657@riccoc20.at.omicron.at>
+References: <cover.1281956490.git.richard.cochran@omicron.at>
+	<1282176776.2865.100.camel@localhost.localdomain>
+	<20100819055518.GA4084@riccoc20.at.omicron.at>
+	<201008191428.04546.arnd@arndb.de>
+	<20100819153847.GA10695@riccoc20.at.omicron.at>
+	<1282594899.3111.358.camel@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Language: en-gb
+Content-Disposition: inline
+In-Reply-To: <1282594899.3111.358.camel-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,83 +23,95 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: steve.glendinning-sdUf+H5yV5I@public.gmane.org
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: john stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Cc: Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve, all
+On Mon, Aug 23, 2010 at 01:21:39PM -0700, john stultz wrote:
+> On Thu, 2010-08-19 at 17:38 +0200, Richard Cochran wrote:
+> > On Thu, Aug 19, 2010 at 02:28:04PM +0200, Arnd Bergmann wrote:
+> > > My point was that a syscall is better than an ioctl based interface here,
+> > > which I definitely still think. Given that John knows much more about
+> > > clocks than I do, we still need to get agreement on the question that
+> > > he raised, which is whether we actually need to expose this clock to the
+> > > user or not.
+> > > 
+> > > If we can find a way to sync system time accurate enough with PTP and
+> > > PPS, user applications may not need to see two separate clocks at all.
+> > 
+> > At the very least, one user application (the PTPd) needs to see the
+> > PTP clock.
+> > 
+> > > > SYSCALL_DEFINE3(clock_adjtime, const clockid_t, clkid,
+> > > > 		int, ppb, struct timespec __user *, ts)
+> > > > 
+> > > > ppb - desired frequency adjustment in parts per billion
+> > > > ts  - desired time step (or jump) in <sec,nsec> to correct
+> > > >       a measured offset
+> > > > 
+> > > > Arguably, this syscall might be useful for other clocks, too.
+> > > 
+> > > This is a mix of adjtime and adjtimex with the addition of
+> > > the clkid parameter, right?
+> > 
+> > Sort of, but not really. ADJTIME(3) takes an offset and slowly
+> > corrects the clock using a servo in the kernel, over hours.
+> > 
+> > For this function, the offset passed in the 'ts' parameter will be
+> > immediately corrected, by jumping to the new time. This reflects the
+> > way that PTP works. After the first few samples, the PTPd has an
+> > estimate of the offset to the master and the rate difference. The PTPd
+> > can proceed in one of two ways.
+> > 
+> > 1. If resetting the clock is not desired, then the clock is set to the
+> >    maximum adjustment (in the right direction) until the clock time is
+> >    close to the master's time.
+> > 
+> > 2. The estimated offset is added to the current time, resulting in a
+> >    jump in time.
+> > 
+> > We need clock_adjtime(id, 0, ts) for the second case.
+> >
+> > > Have you considered passing a struct timex instead of ppb and ts?
+> > 
+> > Yes, but the timex is not suitable, IMHO.
+> 
+> Could you expand on this?
 
-I am in the process of defining a binding and relative code to parse it,
-in order to initialize the smsc911x series of controllers through the device
-tree instead of resorting to static data instantiated within the platform
-device struct (of course static config will still be there for platforms which
-do not rely on device tree probing, no worries, it is not disruptive at all).
-I have a couple of questions on the flags passed with the platform_data pointer
-(smsc911x_platform_config - flags member) and the way we may encode these bits
-of information in the tree:
+We need to able to specify that the call is for a PTP clock. We could
+add that to the modes flag, like this:
 
-/* Constants for flags */
-#define SMSC911X_USE_16BIT 			(BIT(0))
-#define SMSC911X_USE_32BIT 			(BIT(1))
-#define SMSC911X_FORCE_INTERNAL_PHY		(BIT(2))
-#define SMSC911X_FORCE_EXTERNAL_PHY		(BIT(3))
-#define SMSC911X_SAVE_MAC_ADDRESS		(BIT(4))
+/*timex.h*/
+#define ADJ_PTP_0 0x10000
+#define ADJ_PTP_1 0x20000
+#define ADJ_PTP_2 0x30000
+#define ADJ_PTP_3 0x40000
 
-* 16-32bit bus IF
+I can live with this, if everyone else can, too.
+ 
+> Could we not add a adjustment mode ADJ_SETOFFSET or something that would
+> provide the instantaneous offset correction?
 
-#define SMSC911X_USE_16BIT		(BIT(0))
-#define SMSC911X_USE_32BIT		(BIT(1))
+Yes, but we would also need to add a struct timespec to the struct
+timex, in order to get nanosecond resolution. I think it would be
+possible to do in the padding at the end?
 
-- the SMSC911x host bus size can be retrieved from the chip idrev (for
-chip idrev having just 16-bit bus IF) or for controllers like 9118 that
-can have both (32/16), there is a D32/D16 HW strap readable from HW_CFG.
-The problem with these flags is that they define bus size from a CPU
-perspective if I got it right, in particular if the CPU can access
-the SMSC with 32-bit load/store to access 32 bit registers or
-have to resort to two "locked" 16-bit accesses to ensure
-atomicity. I think it is possible on some architectures to use a 32-bit
-load/store even if the smsc911x IF is 16-bit (e.g. bus downsize converters,
-which ensure 16-bit load/store locking).
-It depends on the bus interconnect architecture. I think we
-need a property to define this, thoughts much appreciated.
+> You're right that the timex is a little crufty. But its legacy that we
+> will support indefinitely. So following the established interface helps
+> maintainability.
 
-* forcing internal/ext PHY
+We can use it for PTP, with the modifications suggested above. Or we
+can just introduce the clock_adjtime method, instead.
+ 
+> So if the clock_adjtime interface is needed, it would seem best for it
+> to be generic enough to support not only PTP, but also the NTP kernel
+> PLL.
 
-#define SMSC911X_FORCE_INTERNAL_PHY		(BIT(2))
-#define SMSC911X_FORCE_EXTERNAL_PHY 	(BIT(3))
+For the proposed clock_adjime, what else is needed to support clock
+adjustment in general?
 
-- The device tree allows to describe the mdio bus and all PHYs which are present
-on a given controller. Again for controllers having just an internal PHY there
-is nothing to force, just use the internal PHY and that's it, that's what
-the driver does. If the controller supports both EXT and internal PHY,
-since the internal PHY is always at address 0x1 (am I correct ?), we may define 
-something like: 
-if the tree defines a PHY @ 0x1 ("reg" property) let's use it (force it or at
-least higher priority than ext phy if both are defined), otherwise if the tree
-defines a PHY which is not @ 0x1 let's use it (force ext).
-If no PHY is specified in the tree, let's resort to HW probing (EXT_PHY_DET in 
-HW_CFG reg).
+I don't mind making the interface generic enough to support any
+(realistic) conceivable clock adjustment scheme, but beyond the
+present PTP hardware clocks, I don't know what else might be needed.
 
-All in all, this means: just use the info from the tree, if there are no
-PHYs specified resort to HW probing for EXT PHY, if it fails use internal.
-
-Acceptable ?
-
-* save MAC ADDRESS
-
-#define SMSC911X_SAVE_MAC_ADDRESS		(BIT(4))
-
--  Since we can encode the mac address in the device tree ("local-mac-address" 
-property) I am not sure this flag is useful if probing from the tree is enabled.
-It is used if the chip is not fitted with an EEPROM, to save the MAC address 
-set by a boot-loader before resetting the chip (at probe). Since we can still 
-retrieve the MAC from the tree and reprogram it when the content of the 
-registers is gone at reset, maybe there is no point in using the option 
-(if probing from the tree) or at least no point in defining the flag in
-the tree.
-
-
-Comments very much welcome, thank you very much indeed.
-
-Cheers,
-Lorenzo
+Richard
