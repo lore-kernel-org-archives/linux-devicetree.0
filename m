@@ -1,17 +1,29 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 7/7] arch/powerpc/platforms/cell: Add of_node_put to avoid memory leak
-Date: Sun, 29 Aug 2010 11:52:46 +0200
-Message-ID: <1283075566-27441-8-git-send-email-julia@diku.dk>
+From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+Subject: [PATCH 6/7] arch/powerpc/platforms/maple/setup.c: Add of_node_put to
+	avoid memory leak
+Date: Sun, 29 Aug 2010 11:52:45 +0200
+Message-ID: <1283075566-27441-7-git-send-email-julia@diku.dk>
 References: <1283075566-27441-1-git-send-email-julia@diku.dk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1283075566-27441-1-git-send-email-julia@diku.dk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: kernel-janitors@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, cbe-oss-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1283075566-27441-1-git-send-email-julia-dAYI7NvHqcQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add calls to of_node_put in the error handling code following calls to
-of_find_node_by_path and of_find_node_by_phandle.
+Add a call to of_node_put in the error handling code following a call to
+of_find_node_by_path.
 
 The semantic match that finds this problem is as follows:
 (http://coccinelle.lip6.fr/)
@@ -49,42 +61,20 @@ if (x == NULL) S
 of_node_put(x);
 // </smpl>
 
-Signed-off-by: Julia Lawall <julia@diku.dk>
+Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
 
 ---
- arch/powerpc/platforms/cell/ras.c        |    4 +++-
- arch/powerpc/platforms/cell/spider-pic.c |    4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/maple/setup.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/cell/ras.c b/arch/powerpc/platforms/cell/ras.c
-index 1d3c4ef..5ec1e47 100644
---- a/arch/powerpc/platforms/cell/ras.c
-+++ b/arch/powerpc/platforms/cell/ras.c
-@@ -173,8 +173,10 @@ static int __init cbe_ptcal_enable(void)
- 		return -ENODEV;
- 
- 	size = of_get_property(np, "ibm,cbe-ptcal-size", NULL);
--	if (!size)
-+	if (!size) {
+diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
+index 3fff8d9..fe34c3d 100644
+--- a/arch/powerpc/platforms/maple/setup.c
++++ b/arch/powerpc/platforms/maple/setup.c
+@@ -358,6 +358,7 @@ static int __init maple_cpc925_edac_setup(void)
+ 	model = (const unsigned char *)of_get_property(np, "model", NULL);
+ 	if (!model) {
+ 		printk(KERN_ERR "%s: Unabel to get model info\n", __func__);
 +		of_node_put(np);
  		return -ENODEV;
-+	}
- 
- 	pr_debug("%s: enabling PTCAL, size = 0x%x\n", __func__, *size);
- 	order = get_order(*size);
-diff --git a/arch/powerpc/platforms/cell/spider-pic.c b/arch/powerpc/platforms/cell/spider-pic.c
-index 5876e88..3f2e557 100644
---- a/arch/powerpc/platforms/cell/spider-pic.c
-+++ b/arch/powerpc/platforms/cell/spider-pic.c
-@@ -258,8 +258,10 @@ static unsigned int __init spider_find_cascade_and_node(struct spider_pic *pic)
- 		return NO_IRQ;
- 	imap += intsize + 1;
- 	tmp = of_get_property(iic, "#interrupt-cells", NULL);
--	if (tmp == NULL)
-+	if (tmp == NULL) {
-+		of_node_put(iic);
- 		return NO_IRQ;
-+	}
- 	intsize = *tmp;
- 	/* Assume unit is last entry of interrupt specifier */
- 	unit = imap[intsize - 1];
+ 	}
