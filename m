@@ -1,55 +1,130 @@
-From: walter harms <wharms@bfs.de>
-Subject: Re: [PATCH 1/7] drivers/macintosh/via-pmu-led.c: Add of_node_put
- to avoid memory leak
-Date: Wed, 01 Sep 2010 17:03:06 +0200
-Message-ID: <4C7E6B2A.6030907@bfs.de>
-References: <1283075566-27441-1-git-send-email-julia@diku.dk> <1283075566-27441-2-git-send-email-julia@diku.dk> <4C7D247F.4060500@bfs.de> <Pine.LNX.4.64.1008311807470.2668@ask.diku.dk> <20100831161644.GA14505@albatros> <AANLkTi=3b0NY5pFepv-TmjFDmPUBK9Ew16HyTn-+YguX@mail.gmail.com>
-Reply-To: wharms@bfs.de
+From: Steve.Glendinning-sdUf+H5yV5I@public.gmane.org
+Subject: Re: [RFC] smsc911x device tree binding questions
+Date: Sun, 29 Aug 2010 12:59:55 +0100
+Message-ID: <OFD2329EF8.8EA10F32-ON8025778E.0040004D-8025778E.0041E981@smsc.com>
+References: <7948893881024232337@unknownmsgid>
+	<AANLkTinC64uvCMzMnso5Bkvut0H3yFekG8SgwGWwX_qY@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AANLkTi=3b0NY5pFepv-TmjFDmPUBK9Ew16HyTn-+YguX@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Vasiliy Kulikov <segooon@gmail.com>, Julia Lawall <julia@diku.dk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kernel-janitors@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTinC64uvCMzMnso5Bkvut0H3yFekG8SgwGWwX_qY-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Ian.Saturley-sdUf+H5yV5I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Lorenzo,
 
+> > - the SMSC911x host bus size can be retrieved from the chip idrev (for
+> > chip idrev having just 16-bit bus IF) or for controllers like 9118 
+that
+> > can have both (32/16), there is a D32/D16 HW strap readable from 
+HW_CFG.
+> > The problem with these flags is that they define bus size from a CPU
+> > perspective if I got it right, in particular if the CPU can access
+> > the SMSC with 32-bit load/store to access 32 bit registers or
+> > have to resort to two "locked" 16-bit accesses to ensure
+> > atomicity. I think it is possible on some architectures to use a 
+32-bit
+> > load/store even if the smsc911x IF is 16-bit (e.g. bus downsize 
+converters,
+> > which ensure 16-bit load/store locking).
+> > It depends on the bus interconnect architecture. I think we
+> > need a property to define this, thoughts much appreciated.
 
-Grant Likely schrieb:
-> On Tue, Aug 31, 2010 at 10:16 AM, Vasiliy Kulikov <segooon@gmail.com> wrote:
->> On Tue, Aug 31, 2010 at 18:08 +0200, Julia Lawall wrote:
->>> On Tue, 31 Aug 2010, walter harms wrote:
->>>>>   if (strncmp(model, "PowerBook", strlen("PowerBook")) != 0 &&
->>>>>       strncmp(model, "iBook", strlen("iBook")) != 0 &&
->>>>>       strcmp(model, "PowerMac7,2") != 0 &&
->>>>>
->>>> is there any rule that says when to use strncmp ? it seems perfecly valid to use strcpy here
->>>> (what is done in the last cmp).
->>> Perhaps there are some characters after eg PowerBook that one doesn't want
->>> to compare with?
->> It seems to me that model has no '\0' in the end. If model is got from
->> the hardware then we should double check it - maybe harware is buggy.
->> Otherwise we'll overflow model.
-> 
-> Model does have \0 at the end.  This code is using strncmp to
-> purposefully ignore the model suffix.
-> 
->> But why strcmp(model, "PowerMac7,2")? IMO it should be replaced
->> with strncmp().
-> 
-> We use strcmp when parsing the device tree because the the length of
-> the model property string is unknown and in most cases we *must* match
-> the exact entire string, such as with this PowerMac7,2 example.  Using
-> strncmp would also happen to match with something like
-> "PowerMac7,2345" which is not the desired behaviour.
-> 
+Absolutely right - this flag defines whether the DRIVER has to use 16
+or 32 bit accesses in order to succesfully access the chip.  If the bus
+hardware is capable of performing atomic pairs of 16-bit operations
+when we make a 32-bit read then this is very much preferred.  The 16-bit
+path is MUCH slower as it has to take a spinlock on every access to
+ensure the two reads/writes are atomic.  It's there as a last resort,
+and its use is discouraged if avoidable.
 
-hi Grant,
-whould you mind to use you explanation as comment in the code ?
-Tthat the strncpy/strcpy difference is important should be noted. that would be clearly a
-bonos with further audits.
+Autodetecting the bus width from register values is interesting, you'd
+have to test that you can reliably read the registers in all of the above
+modes.  It's my understanding that if the device is strapped for 16-bit
+access it expects to see atomic pairs of reads, so I guess you could make
+a pair of 32-bit reads (of something known like BYTE_TEST) and analyse
+what you get back to determine how you're connected?
+ 
+> > * forcing internal/ext PHY
+> >
+> > #define SMSC911X_FORCE_INTERNAL_PHY             (BIT(2))
+> > #define SMSC911X_FORCE_EXTERNAL_PHY     (BIT(3))
+> >
+> > - The device tree allows to describe the mdio bus and all PHYs which 
+are present
+> > on a given controller. Again for controllers having just an internal 
+PHY there
+> > is nothing to force, just use the internal PHY and that's it, that's 
+what
+> > the driver does. If the controller supports both EXT and internal PHY,
+> > since the internal PHY is always at address 0x1 (am I correct ?), we 
+may define
+> > something like:
+> > if the tree defines a PHY @ 0x1 ("reg" property) let's use it (force 
+it or at
+> > least higher priority than ext phy if both are defined), otherwise if 
+the tree
+> > defines a PHY which is not @ 0x1 let's use it (force ext).
+> > If no PHY is specified in the tree, let's resort to HW probing 
+(EXT_PHY_DET in
+> > HW_CFG reg).
+> 
+> I'd say, if there is no phy data provided in the tree then default to
+> the internal phy.  Otherwise, use the phy pointed to by the phy-device
+> property.  It is also possible to specify a phy in the tree without an
+> address to make the kernel probe for the address (although I need to
+> double check that the support for it has actually been merged).
+> 
+> > All in all, this means: just use the info from the tree, if there are 
+no
+> > PHYs specified resort to HW probing for EXT PHY, if it fails use 
+internal.
+> >
+> > Acceptable ?
 
-re,
- wh
+Yes, bearing in mind that the majority of users do use the internal PHY 
+this
+sounds like a sensible plan.
+
+> > * save MAC ADDRESS
+> >
+> > #define SMSC911X_SAVE_MAC_ADDRESS               (BIT(4))
+> >
+> > -  Since we can encode the mac address in the device tree 
+("local-mac-address"
+> > property) I am not sure this flag is useful if probing from the tree 
+is enabled.
+> > It is used if the chip is not fitted with an EEPROM, to save the MAC 
+address
+> > set by a boot-loader before resetting the chip (at probe). Since we 
+can still
+> > retrieve the MAC from the tree and reprogram it when the content of 
+the
+> > registers is gone at reset, maybe there is no point in using the 
+option
+> > (if probing from the tree) or at least no point in defining the flag 
+in
+> > the tree.
+> 
+> I'd agree, this isn't really useful in the device tree use case; but a
+> property can be added for it if it was really necessary.
+
+Yes, this is just a workaround for a specific use case: the bootloader 
+"owns" the
+MAC address configuration data and it's relatively hard to access this 
+storage once
+Linux boots.
+
+--
+Steve
