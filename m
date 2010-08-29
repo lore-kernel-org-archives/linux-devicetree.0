@@ -1,41 +1,161 @@
-From: Christian Riesch <christian@riesch.at>
-Subject: Re: [PATCH 1/5] ptp: Added a brand new class driver for ptp clocks.
-Date: Sun, 29 Aug 2010 15:32:20 +0200
-Message-ID: <4C7A6164.60208@riesch.at>
-References: <363bd749a38d0b785d8431e591bf54c38db4c2d7.1281956490.git.richard.cochran@omicron.at>	<AANLkTik_2MKMhOuDGOmu8Kzyq-ipLe+Bxrb3FaD+Tv4U@mail.gmail.com>	<20100817085324.GB3330@riccoc20.at.omicron.at>	<1282090963.1734.97.camel@localhost>	<20100818071942.GA4096@riccoc20.at.omicron.at>	<1282176776.2865.100.camel@localhost.localdomain>	<20100819055518.GA4084@riccoc20.at.omicron.at>	<1282594125.3111.344.camel@localhost.localdomain>	<AANLkTi=nKrRHH6+9mvny718gov8Q+u7DHFikdgNY8YdX@mail.gmail.com>	<1282874269.4371.74.camel@localhost.localdomain>	<20100827075727.GA3818@riccoc20.at.omicron.at>
-	<20100827134154.50eef56c@lxorguk.ukuu.org.uk>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/7] drivers/mtd/nand/mpc5121_nfc.c: Add of_node_put to
+	avoid memory leak
+Date: Sun, 29 Aug 2010 17:47:44 +0200
+Message-ID: <20100829154744.GB4647@pengutronix.de>
+References: <1283075566-27441-1-git-send-email-julia@diku.dk>
+	<1283075566-27441-4-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20100827134154.50eef56c@lxorguk.ukuu.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>, john stultz <johnstul@us.ibm.com>, Richard Cochran <richardcochran@gmail.com>, linux-kernel@vger.kernel.org, Christian Riesch <christian.riesch@omicron.at>, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
+Content-Type: multipart/mixed; boundary="===============6233245376563251941=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1283075566-27441-4-git-send-email-julia-dAYI7NvHqcQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Alan Cox wrote:
->> The master node in a PTP network probably takes its time from a
->> precise external time source, like GPS. The GPS provides a 1 PPS
->> directly to the PTP clock hardware, which latches the PTP hardware
->> clock time on the PPS edge. This provides one sample as input to a
->> clock servo (in the PTPd) that, in turn, regulates the PTP clock
->> hardware.
-> 
-> A PTP clock is TAI, Unix time is UTC.
 
-Not necessarily. AFAIK, the time distributed by IEEE1588v2 can either be 
-based on the "PTP epoch" (timePropertiesDS.ptpTimescale=TRUE) and thus 
-represent TAI or be based on an implementation specific arbitrary epoch 
-(timePropertiesDS.ptpTimescale=FALSE) and represent time on some 
-arbitrary time scale.
+--===============6233245376563251941==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p4qYPpj5QlsIQJ0K"
+Content-Disposition: inline
 
-Christian
+
+--p4qYPpj5QlsIQJ0K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Aug 29, 2010 at 11:52:42AM +0200, Julia Lawall wrote:
+> Add a call to of_node_put in the error handling code following a call to
+> of_find_compatible_node.
+>=20
+> The semantic match that finds this problem is as follows:
+> (http://coccinelle.lip6.fr/)
+>=20
+> // <smpl>
+> @r exists@
+> local idexpression x;
+> expression E,E1;
+> statement S;
+> @@
+>=20
+> *x =3D=20
+> (of_find_node_by_path
+> |of_find_node_by_name
+> |of_find_node_by_phandle
+> |of_get_parent
+> |of_get_next_parent
+> |of_get_next_child
+> |of_find_compatible_node
+> |of_match_node
+> )(...);
+> ...
+> if (x =3D=3D NULL) S
+> <... when !=3D x =3D E
+> *if (...) {
+>   ... when !=3D of_node_put(x)
+>       when !=3D if (...) { ... of_node_put(x); ... }
+> (
+>   return <+...x...+>;
+> |
+> *  return ...;
+> )
+> }
+> ...>
+> of_node_put(x);
+> // </smpl>
+>=20
+> Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+
+Acked-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+adding ppc-list to cc.
+
+>=20
+> ---
+>  drivers/mtd/nand/mpc5121_nfc.c |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/mtd/nand/mpc5121_nfc.c b/drivers/mtd/nand/mpc5121_nf=
+c.c
+> index df0c1da..f4610bc 100644
+> --- a/drivers/mtd/nand/mpc5121_nfc.c
+> +++ b/drivers/mtd/nand/mpc5121_nfc.c
+> @@ -568,6 +568,7 @@ static int mpc5121_nfc_read_hw_config(struct mtd_info=
+ *mtd)
+>  	uint rcw_width;
+>  	uint rcwh;
+>  	uint romloc, ps;
+> +	int ret =3D 0;
+> =20
+>  	rmnode =3D of_find_compatible_node(NULL, NULL, "fsl,mpc5121-reset");
+>  	if (!rmnode) {
+> @@ -579,7 +580,8 @@ static int mpc5121_nfc_read_hw_config(struct mtd_info=
+ *mtd)
+>  	rm =3D of_iomap(rmnode, 0);
+>  	if (!rm) {
+>  		dev_err(prv->dev, "Error mapping reset module node!\n");
+> -		return -EBUSY;
+> +		ret =3D -EBUSY;
+> +		goto out;
+>  	}
+> =20
+>  	rcwh =3D in_be32(&rm->rcwhr);
+> @@ -628,8 +630,9 @@ static int mpc5121_nfc_read_hw_config(struct mtd_info=
+ *mtd)
+>  				rcw_width * 8, rcw_pagesize,
+>  				rcw_sparesize);
+>  	iounmap(rm);
+> +out:
+>  	of_node_put(rmnode);
+> -	return 0;
+> +	return ret;
+>  }
+> =20
+>  /* Free driver resources */
+>=20
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--p4qYPpj5QlsIQJ0K
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAkx6gSAACgkQD27XaX1/VRu0AgCgtucFBgSniN12c8AQGNzYv0jp
+B0AAnRHH0tAw2XCxIB4aR3p+Gk3D0luH
+=0rXz
+-----END PGP SIGNATURE-----
+
+--p4qYPpj5QlsIQJ0K--
+
+--===============6233245376563251941==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6233245376563251941==--
