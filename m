@@ -1,8 +1,8 @@
 From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-Subject: [PATCH 4/7] arch/powerpc/platforms/powermac/pfunc_core.c: Add
-	of_node_put to avoid memory leak
-Date: Sun, 29 Aug 2010 11:52:43 +0200
-Message-ID: <1283075566-27441-5-git-send-email-julia@diku.dk>
+Subject: [PATCH 5/7] arch/powerpc/sysdev/qe_lib/qe.c: Add of_node_put to avoid
+	memory leak
+Date: Sun, 29 Aug 2010 11:52:44 +0200
+Message-ID: <1283075566-27441-6-git-send-email-julia@diku.dk>
 References: <1283075566-27441-1-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,12 +18,12 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Add a call to of_node_put in the error handling code following a call to
-of_find_node_by_phandle.
+of_find_compatible_node.
 
 The semantic match that finds this problem is as follows:
 (http://coccinelle.lip6.fr/)
@@ -64,33 +64,18 @@ of_node_put(x);
 Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
 
 ---
- arch/powerpc/platforms/powermac/pfunc_core.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/powerpc/sysdev/qe_lib/qe.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/powermac/pfunc_core.c b/arch/powerpc/platforms/powermac/pfunc_core.c
-index cec6359..b0c3777 100644
---- a/arch/powerpc/platforms/powermac/pfunc_core.c
-+++ b/arch/powerpc/platforms/powermac/pfunc_core.c
-@@ -837,8 +837,10 @@ struct pmf_function *__pmf_find_function(struct device_node *target,
- 		return NULL;
-  find_it:
- 	dev = pmf_find_device(actor);
--	if (dev == NULL)
--		return NULL;
-+	if (dev == NULL) {
-+		result = NULL;
-+		goto out;
-+	}
- 
- 	list_for_each_entry(func, &dev->functions, link) {
- 		if (name && strcmp(name, func->name))
-@@ -850,8 +852,9 @@ struct pmf_function *__pmf_find_function(struct device_node *target,
- 		result = func;
- 		break;
+diff --git a/arch/powerpc/sysdev/qe_lib/qe.c b/arch/powerpc/sysdev/qe_lib/qe.c
+index 3da8014..90020de 100644
+--- a/arch/powerpc/sysdev/qe_lib/qe.c
++++ b/arch/powerpc/sysdev/qe_lib/qe.c
+@@ -640,6 +640,7 @@ unsigned int qe_get_num_of_snums(void)
+ 		if ((num_of_snums < 28) || (num_of_snums > QE_NUM_OF_SNUM)) {
+ 			/* No QE ever has fewer than 28 SNUMs */
+ 			pr_err("QE: number of snum is invalid\n");
++			of_node_put(qe);
+ 			return -EINVAL;
+ 		}
  	}
--	of_node_put(actor);
- 	pmf_put_device(dev);
-+out:
-+	of_node_put(actor);
- 	return result;
- }
