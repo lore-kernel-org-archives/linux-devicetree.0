@@ -1,47 +1,32 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 1/9] of: move phandle/ihandle into types.h
-Date: Mon, 30 Aug 2010 07:06:27 +0200
-Message-ID: <20100830050627.GA12153@merkur.ravnborg.org>
-References: <20100628215407.2017bf2f@debian> <20100829235100.6dcedcb8@debxo> <20100829235352.1744e7e3@debxo>
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Subject: Re: [PATCH 3/7] drivers/mtd/nand/mpc5121_nfc.c: Add of_node_put to
+ avoid memory leak
+Date: Mon, 30 Aug 2010 16:13:40 +0300
+Message-ID: <1283174020.12995.77.camel@brekeke>
+References: <1283075566-27441-1-git-send-email-julia@diku.dk>
+	 <1283075566-27441-4-git-send-email-julia@diku.dk>
+Reply-To: dedekind1@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20100829235352.1744e7e3@debxo>
+In-Reply-To: <1283075566-27441-4-git-send-email-julia@diku.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andres Salomon <dilinger@queued.net>
-Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, grant.likely@secretlab.ca, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
+To: Julia Lawall <julia@diku.dk>
+Cc: David Woodhouse <dwmw2@infradead.org>, kernel-janitors@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 29, 2010 at 11:53:52PM -0400, Andres Salomon wrote:
-> 
-> We need phandle for some exported sparc headers; of.h isn't an
-> exported header, and it would be silly to export it when all we
-> really need is one or two types from it.  So, move the phandle/ihandle
-> definitions into types.h.
-> 
-> diff --git a/include/linux/types.h b/include/linux/types.h
-> index 01a082f..26526ea 100644
-> --- a/include/linux/types.h
-> +++ b/include/linux/types.h
-> @@ -219,6 +219,10 @@ struct ustat {
->  	char			f_fpack[6];
->  };
->  
-> +/* Basic openboot/openfirmware types */
-> +typedef u32 phandle;
-> +typedef u32 ihandle;
-> +
->  #endif	/* __KERNEL__ */
+On Sun, 2010-08-29 at 11:52 +0200, Julia Lawall wrote:
+> Add a call to of_node_put in the error handling code following a call=
+ to
+> of_find_compatible_node.
+>=20
+> The semantic match that finds this problem is as follows:
+> (http://coccinelle.lip6.fr/)
 
-The above is inside #ifdef __KERNEL__ / #endif
-so it is not exported as we drop code protected
-by __KERNEL__ when we prepare for export.
+Pushed to l2-mtd-2.6.git / master, thanks.
 
-Id addition "phandle" and "ihandle" needs to have
-two underscores apended as we cannot just add the above
-to the userspace namespace and expect it to be OK.
-
-We do this for many other typers already, see __u32 for example.
-
-	Sam
+--=20
+Best Regards,
+Artem Bityutskiy (=D0=91=D0=B8=D1=82=D1=8E=D1=86=D0=BA=D0=B8=D0=B9 =D0=90=
+=D1=80=D1=82=D1=91=D0=BC)
