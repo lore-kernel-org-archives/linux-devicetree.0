@@ -1,17 +1,34 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 4/4] arch/powerpc/platforms/chrp/nvram.c: Add of_node_put to avoid memory leak
-Date: Tue, 31 Aug 2010 17:48:58 +0200
-Message-ID: <1283269738-14612-5-git-send-email-julia@diku.dk>
+From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+Subject: [PATCH 3/4] drivers/net/can/mscan/mpc5xxx_can.c: Add of_node_put to
+	avoid memory leak
+Date: Tue, 31 Aug 2010 17:48:57 +0200
+Message-ID: <1283269738-14612-4-git-send-email-julia@diku.dk>
 References: <1283269738-14612-1-git-send-email-julia@diku.dk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1283269738-14612-1-git-send-email-julia@diku.dk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: kernel-janitors@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1283269738-14612-1-git-send-email-julia-dAYI7NvHqcQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Add a call to of_node_put in the error handling code following a call to
-of_find_node_by_type.
+of_find_matching_node.
+
+This patch also moves the existing call to of_node_put after the call to
+iounmap in the error handling code, to make it possible to jump to
+of_node_put without doing iounmap.  These appear to be disjoint operations,
+so the ordering doesn't matter.
 
 The semantic match that finds this problem is as follows:
 (http://coccinelle.lip6.fr/)
@@ -57,25 +74,34 @@ of_node_put(x);
 )
 // </smpl>
 
-Signed-off-by: Julia Lawall <julia@diku.dk>
+Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
 
 ---
- arch/powerpc/platforms/chrp/nvram.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/can/mscan/mpc5xxx_can.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/chrp/nvram.c b/arch/powerpc/platforms/chrp/nvram.c
-index ba3588f..d3ceff0 100644
---- a/arch/powerpc/platforms/chrp/nvram.c
-+++ b/arch/powerpc/platforms/chrp/nvram.c
-@@ -74,8 +74,10 @@ void __init chrp_nvram_init(void)
- 		return;
+diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
+index b1bdc90..883959c 100644
+--- a/drivers/net/can/mscan/mpc5xxx_can.c
++++ b/drivers/net/can/mscan/mpc5xxx_can.c
+@@ -148,7 +148,7 @@ static u32 __devinit mpc512x_can_get_clock(struct platform_device *ofdev,
+ 	clockctl = of_iomap(np_clock, 0);
+ 	if (!clockctl) {
+ 		dev_err(&ofdev->dev, "couldn't map clock registers\n");
+-		return 0;
++		goto exit_put;
+ 	}
  
- 	nbytes_p = of_get_property(nvram, "#bytes", &proplen);
--	if (nbytes_p == NULL || proplen != sizeof(unsigned int))
-+	if (nbytes_p == NULL || proplen != sizeof(unsigned int)) {
-+		of_node_put(nvram);
- 		return;
-+	}
+ 	/* Determine the MSCAN device index from the physical address */
+@@ -233,9 +233,9 @@ static u32 __devinit mpc512x_can_get_clock(struct platform_device *ofdev,
+ 		clocksrc == 1 ? "ref_clk" : "sys_clk", clockdiv);
  
- 	nvram_size = *nbytes_p;
- 
+ exit_unmap:
+-	of_node_put(np_clock);
+ 	iounmap(clockctl);
+-
++exit_put:
++	of_node_put(np_clock);
+ 	return freq;
+ }
+ #else /* !CONFIG_PPC_MPC512x */
