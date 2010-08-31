@@ -1,15 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Start adding checks for reg property and unit name
-Date: Tue, 31 Aug 2010 10:53:35 +1000
-Message-ID: <20100831005335.GD5210@yookeroo>
-References: <20100830040305.GB5210@yookeroo>
-	<20100830131418.47fcd392@schlenkerla.am.freescale.net>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [Power.org:parch] ePAPR 1.1 to do list
+Date: Tue, 31 Aug 2010 11:00:10 +1000
+Message-ID: <20100831010010.GE5210@yookeroo>
+References: <9696D7A991D0824DBA8DFAC74A9C5FA306688C2F@az33exm25.fsl.freescale.net>
+	<20100830173314.446aae02@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20100830131418.47fcd392-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+In-Reply-To: <20100830173314.446aae02-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,91 +20,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 30, 2010 at 01:14:18PM -0500, Scott Wood wrote:
-> On Mon, 30 Aug 2010 14:03:05 +1000
-> David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+On Mon, Aug 30, 2010 at 05:33:14PM -0500, Scott Wood wrote:
+> On Mon, 30 Aug 2010 14:34:44 -0700
+> Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> > In device trees, the unit name portion of any node (the part after the
-> > "@") is supposed to be derived from the value of the node's 'reg'
-> > property.  However, this is not enforced by the structure of a dtb
-> > file, nor is it checked by dtc.  Checking is non-trivial, because the
-> > manned in which the 'reg' property is encoded into a unit address can
-> > vary from bus to bus.
+> > I've consolidated what I am aware of with respect to errors found in
+> > 1.0,
+> > clarifications needed, and new mechanisms to go into ePAPR 1.1 into
+> > a single list.
 > > 
-> > This patch starts adding the infrastructure for making such checks to
-> > dtc.  At present, it will only check the unit addresses on immediate
-> > children of the root bus (which is assumed to have a unit addresses
-> > encoded in plain hex) and that any other node has a unit address if
-> > and only if it has a 'reg' property.  However, it should be relatively
-> > straightforward to add more detailed checking for other sorts of
-> > busses from this point.
+> > Let me know if you are aware of anything else.
 > 
-> Is there any way for a user to disable this check?
+> 2.2.1.1 should perhaps have a stronger connection between unit addresses
+> and reg -- if you don't have the latter, you can't have the former.
+> This is required for bindings to work on real Open Firmware.  David
+> Gibson just posted a patch to dtc yesterday that verifies this.
 
-Well, it's only a warning, so you can just ignore it.
+Unsurprisingly, I also think this would be a good idea.
 
-> First, ePAPR recommends, but does not insist on this for unit addresses,
-> except to the extent that a particular bus binding requires it:
+> Disambiguation without reg can still be achieved by appending numbers
+> to the node names, without @.
 
-Right.. and the unit address checking is already set up to be per-bus
-type.
+And since this is already a standard practice in a bunch of 4xx device
+trees, we should at least include mention of it as a programmer's note
+in ePAPR.
 
-> > The unit-address component of the name is specific to the bus type on which the node sits. It consists
-> > of one or more ASCII characters from the set of characters in Table 2-1. The fundamental requirement
-> > is that at any level of the device tree the unit-address be unique in order to differentiate nodes with the
-> > same name at the same level in the tree. The binding for a particular bus may specify additional, more
-> > specific requirements for the format of a unit-address.
-> > The unit-address should match the first address specified in the reg property of the node. If the node
-> > has no reg property, the unit-address may be omitted if the node name alone differentiates the node
-> > from other nodes at the same level in the tree.
+> One use case to consider is nodes that have no reg, but do have
+> ranges, such as the somewhat misnamed "soc" nodes.  The unit address
+> mechanism has similar advantages here as with reg (a standardized way
+> to disambiguate based on child-bus address, and ability to omit the unit
+> address to get the first one).  We could make the rule be "first reg
+> address, if no reg then first ranges child-bus address, if no reg or
+> ranges then no unit address".
+> 
+> Such unit addresses may not work on true OF as is, but bindings should
+> not require the use of unit addresses -- and if people using real OF
+> find them useful, it doesn't seem like it would be unreasonable to
+> modify OF to support ranges-based unit addresses in the absence of reg.
 
-Hrm, yeah.  The intent of that was to emphasize the uniqueness
-requirement, rather than to remove the unit address requirement.  I
-was thinking of "should" in the IETF RFC sense - that is: there may be
-some peculiar circumstances in which you need to do something else,
-but unless you know you have one of those cases, this is a
-requirement.
+Yeah, the ranges-based unit address convention is already used in some
+fsl trees.  Some IBM firmware people (with something that has both
+real OF and ePAPR aspects) came up with an interesting approach to
+this one.  On a bus bridge with no-MMIO they created a dummy 'reg'
+property with zero length (at the same address as the first 'ranges'
+entry, IIRC).  This had the advantage of Just Working with the
+existing internal OF code, and doesn't appear to confuse anything, so
+far.
 
-> That was probably a mistake that should be corrected in the next ePAPR
-> revision (keeping bindings implementable on true OF is generally a good
-> thing), but until then it would be nice if there were at least some
-> mode whereby dtc could accept any valid ePAPR input.
-
-Right.  Well, it will accept it - just with a warning.
-
-> Second, dtc is sometimes used for things that aren't semantically
-> device trees, and semantic checks that can't be turned off can
-> interfere with that usage.  We use it to compile a configuration tree
-> for our hypervisor, for example, and it's also used for a U-Boot image
-> format (with incbin).  Both of those currently use unit address syntax
-> without reg, and while it may a bad habit, it's not clearly wrong since
-> it's a different semantic domain from OF.
-
-Right, the structure of the semantic checking stuff is designed so
-that you can still get dtc to produce useful output, even on a
-semantically invalid tree.  Warnings produce output anyway, and you
-can get output even with errors using -f.
-
-> I guess I should write up a patch that allows individual checks to be
-> enabled/disabled from the command line...
-
-I also designed the checking structure to allow that.  Apparently I
-never got around to actually implementing the command line option,
-but I certainly thought about it, so it should be pretty easy to do:
-just scan the checks table for the name and poke the "level" field to
-IGNORE.  So, patches welcome :).  If you want to go the whole hog,
-make it so you can also upgrade usually ignored checks, and set which
-checks are warnings and which errors.
-
-> Eventually a way to explicitly support alternate semantic domains, with
-> their own set of checks, would be nice too.
-
-Good idea.  That's more complicated, but still not fundamentally
-difficult.  You'll just need a table of semantic domains, each with a
-canned set of ignore/warning/error values.
+Not sure which way is the better option for estabishing a firm
+convention.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
