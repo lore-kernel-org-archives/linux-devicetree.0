@@ -1,107 +1,88 @@
-From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-Subject: [PATCH 3/4] drivers/net/can/mscan/mpc5xxx_can.c: Add of_node_put to
-	avoid memory leak
-Date: Tue, 31 Aug 2010 17:48:57 +0200
-Message-ID: <1283269738-14612-4-git-send-email-julia@diku.dk>
-References: <1283269738-14612-1-git-send-email-julia@diku.dk>
+From: walter harms <wharms@bfs.de>
+Subject: Re: [PATCH 1/7] drivers/macintosh/via-pmu-led.c: Add of_node_put
+ to avoid memory leak
+Date: Tue, 31 Aug 2010 17:49:19 +0200
+Message-ID: <4C7D247F.4060500@bfs.de>
+References: <1283075566-27441-1-git-send-email-julia@diku.dk> <1283075566-27441-2-git-send-email-julia@diku.dk>
+Reply-To: wharms@bfs.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1283269738-14612-1-git-send-email-julia-dAYI7NvHqcQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1283075566-27441-2-git-send-email-julia@diku.dk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julia Lawall <julia@diku.dk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kernel-janitors@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add a call to of_node_put in the error handling code following a call to
-of_find_matching_node.
 
-This patch also moves the existing call to of_node_put after the call to
-iounmap in the error handling code, to make it possible to jump to
-of_node_put without doing iounmap.  These appear to be disjoint operations,
-so the ordering doesn't matter.
 
-The semantic match that finds this problem is as follows:
-(http://coccinelle.lip6.fr/)
+Julia Lawall schrieb:
+> Add a call to of_node_put in the error handling code following a call to
+> of_find_node_by_path.
+> 
+> The semantic match that finds this problem is as follows:
+> (http://coccinelle.lip6.fr/)
+> 
+> // <smpl>
+> @r exists@
+> local idexpression x;
+> expression E,E1;
+> statement S;
+> @@
+> 
+> *x = 
+> (of_find_node_by_path
+> |of_find_node_by_name
+> |of_find_node_by_phandle
+> |of_get_parent
+> |of_get_next_parent
+> |of_get_next_child
+> |of_find_compatible_node
+> |of_match_node
+> )(...);
+> ...
+> if (x == NULL) S
+> <... when != x = E
+> *if (...) {
+>   ... when != of_node_put(x)
+>       when != if (...) { ... of_node_put(x); ... }
+> (
+>   return <+...x...+>;
+> |
+> *  return ...;
+> )
+> }
+> ...>
+> of_node_put(x);
+> // </smpl>
+> 
+> Signed-off-by: Julia Lawall <julia@diku.dk>
+> 
+> ---
+>  drivers/macintosh/via-pmu-led.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/macintosh/via-pmu-led.c b/drivers/macintosh/via-pmu-led.c
+> index d242976..19c3718 100644
+> --- a/drivers/macintosh/via-pmu-led.c
+> +++ b/drivers/macintosh/via-pmu-led.c
+> @@ -92,8 +92,10 @@ static int __init via_pmu_led_init(void)
+>  	if (dt == NULL)
+>  		return -ENODEV;
+>  	model = of_get_property(dt, "model", NULL);
+> -	if (model == NULL)
+> +	if (model == NULL) {
+> +		of_node_put(dt);
+>  		return -ENODEV;
+> +	}
+>  	if (strncmp(model, "PowerBook", strlen("PowerBook")) != 0 &&
+>  	    strncmp(model, "iBook", strlen("iBook")) != 0 &&
+>  	    strcmp(model, "PowerMac7,2") != 0 &&
+> 
 
-// <smpl>
-@r exists@
-local idexpression x;
-expression E,E1,E2;
-statement S;
-@@
+is there any rule that says when to use strncmp ? it seems perfecly valid to use strcpy here
+(what is done in the last cmp).
 
-*x = 
-(of_find_node_by_path
-|of_find_node_by_name
-|of_find_node_by_phandle
-|of_get_parent
-|of_get_next_parent
-|of_get_next_child
-|of_find_compatible_node
-|of_match_node
-|of_find_node_by_type
-|of_find_node_with_property
-|of_find_matching_node
-|of_parse_phandle
-)(...);
-...
-if (x == NULL) S
-<... when != x = E
-*if (...) {
-  ... when != of_node_put(x)
-      when != if (...) { ... of_node_put(x); ... }
-(
-  return <+...x...+>;
-|
-*  return ...;
-)
-}
-...>
-(
-E2 = x;
-|
-of_node_put(x);
-)
-// </smpl>
-
-Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-
----
- drivers/net/can/mscan/mpc5xxx_can.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
-index b1bdc90..883959c 100644
---- a/drivers/net/can/mscan/mpc5xxx_can.c
-+++ b/drivers/net/can/mscan/mpc5xxx_can.c
-@@ -148,7 +148,7 @@ static u32 __devinit mpc512x_can_get_clock(struct platform_device *ofdev,
- 	clockctl = of_iomap(np_clock, 0);
- 	if (!clockctl) {
- 		dev_err(&ofdev->dev, "couldn't map clock registers\n");
--		return 0;
-+		goto exit_put;
- 	}
- 
- 	/* Determine the MSCAN device index from the physical address */
-@@ -233,9 +233,9 @@ static u32 __devinit mpc512x_can_get_clock(struct platform_device *ofdev,
- 		clocksrc == 1 ? "ref_clk" : "sys_clk", clockdiv);
- 
- exit_unmap:
--	of_node_put(np_clock);
- 	iounmap(clockctl);
--
-+exit_put:
-+	of_node_put(np_clock);
- 	return freq;
- }
- #else /* !CONFIG_PPC_MPC512x */
+re,
+ wh
