@@ -1,122 +1,101 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/4] sound/soc/fsl/p1022_ds.c: Add
- of_node_put to avoid memory leak
-Date: Tue, 31 Aug 2010 16:59:48 +0100
-Message-ID: <20100831155948.GB30599@rakim.wolfsonmicro.main>
-References: <1283269738-14612-1-git-send-email-julia@diku.dk>
-	<1283269738-14612-3-git-send-email-julia@diku.dk>
+From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+Subject: Re: [PATCH 1/7] drivers/macintosh/via-pmu-led.c: Add of_node_put to
+	avoid memory leak
+Date: Tue, 31 Aug 2010 18:08:19 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1008311807470.2668@ask.diku.dk>
+References: <1283075566-27441-1-git-send-email-julia@diku.dk>
+	<1283075566-27441-2-git-send-email-julia@diku.dk>
+	<4C7D247F.4060500@bfs.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1283269738-14612-3-git-send-email-julia@diku.dk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Julia Lawall <julia@diku.dk>
-Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Timur Tabi <timur@freescale.com>, Liam Girdwood <lrg@slimlogic.co.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4C7D247F.4060500-fPG8STNUNVg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: walter harms <wharms-fPG8STNUNVg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 31, 2010 at 05:48:56PM +0200, Julia Lawall wrote:
-> Add a call to of_node_put in the error handling code following a call to
-> of_parse_phandle.
-> 
-> This patch also moves the existing call to of_node_put tothe end of the
-> error handling code, to make it possible to jump to of_node_put without
-> doing the other cleanup operations.  These appear to be disjoint
-> operations, so the ordering doesn't matter.
-
-CCing in Timur who wrote and maintains that driver - looks OK to me.
+On Tue, 31 Aug 2010, walter harms wrote:
 
 > 
-> The semantic match that finds this problem is as follows:
-> (http://coccinelle.lip6.fr/)
 > 
-> // <smpl>
-> @r exists@
-> local idexpression x;
-> expression E,E1,E2;
-> statement S;
-> @@
+> Julia Lawall schrieb:
+> > Add a call to of_node_put in the error handling code following a call to
+> > of_find_node_by_path.
+> > 
+> > The semantic match that finds this problem is as follows:
+> > (http://coccinelle.lip6.fr/)
+> > 
+> > // <smpl>
+> > @r exists@
+> > local idexpression x;
+> > expression E,E1;
+> > statement S;
+> > @@
+> > 
+> > *x = 
+> > (of_find_node_by_path
+> > |of_find_node_by_name
+> > |of_find_node_by_phandle
+> > |of_get_parent
+> > |of_get_next_parent
+> > |of_get_next_child
+> > |of_find_compatible_node
+> > |of_match_node
+> > )(...);
+> > ...
+> > if (x == NULL) S
+> > <... when != x = E
+> > *if (...) {
+> >   ... when != of_node_put(x)
+> >       when != if (...) { ... of_node_put(x); ... }
+> > (
+> >   return <+...x...+>;
+> > |
+> > *  return ...;
+> > )
+> > }
+> > ...>
+> > of_node_put(x);
+> > // </smpl>
+> > 
+> > Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+> > 
+> > ---
+> >  drivers/macintosh/via-pmu-led.c |    4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/macintosh/via-pmu-led.c b/drivers/macintosh/via-pmu-led.c
+> > index d242976..19c3718 100644
+> > --- a/drivers/macintosh/via-pmu-led.c
+> > +++ b/drivers/macintosh/via-pmu-led.c
+> > @@ -92,8 +92,10 @@ static int __init via_pmu_led_init(void)
+> >  	if (dt == NULL)
+> >  		return -ENODEV;
+> >  	model = of_get_property(dt, "model", NULL);
+> > -	if (model == NULL)
+> > +	if (model == NULL) {
+> > +		of_node_put(dt);
+> >  		return -ENODEV;
+> > +	}
+> >  	if (strncmp(model, "PowerBook", strlen("PowerBook")) != 0 &&
+> >  	    strncmp(model, "iBook", strlen("iBook")) != 0 &&
+> >  	    strcmp(model, "PowerMac7,2") != 0 &&
+> > 
 > 
-> *x = 
-> (of_find_node_by_path
-> |of_find_node_by_name
-> |of_find_node_by_phandle
-> |of_get_parent
-> |of_get_next_parent
-> |of_get_next_child
-> |of_find_compatible_node
-> |of_match_node
-> |of_find_node_by_type
-> |of_find_node_with_property
-> |of_find_matching_node
-> |of_parse_phandle
-> )(...);
-> ...
-> if (x == NULL) S
-> <... when != x = E
-> *if (...) {
->   ... when != of_node_put(x)
->       when != if (...) { ... of_node_put(x); ... }
-> (
->   return <+...x...+>;
-> |
-> *  return ...;
-> )
-> }
-> ...>
-> (
-> E2 = x;
-> |
-> of_node_put(x);
-> )
-> // </smpl>
-> 
-> Signed-off-by: Julia Lawall <julia@diku.dk>
-> 
-> ---
->  sound/soc/fsl/p1022_ds.c |   11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/p1022_ds.c b/sound/soc/fsl/p1022_ds.c
-> index f8176e8..63b9eaa 100644
-> --- a/sound/soc/fsl/p1022_ds.c
-> +++ b/sound/soc/fsl/p1022_ds.c
-> @@ -346,8 +346,10 @@ static int p1022_ds_probe(struct platform_device *pdev)
->  	}
->  
->  	mdata = kzalloc(sizeof(struct machine_data), GFP_KERNEL);
-> -	if (!mdata)
-> -		return -ENOMEM;
-> +	if (!mdata) {
-> +		ret = -ENOMEM;
-> +		goto error_put;
-> +	}
->  
->  	mdata->dai[0].cpu_dai_name = dev_name(&ssi_pdev->dev);
->  	mdata->dai[0].ops = &p1022_ds_ops;
-> @@ -502,13 +504,12 @@ static int p1022_ds_probe(struct platform_device *pdev)
->  	return 0;
->  
->  error:
-> -	of_node_put(codec_np);
-> -
->  	if (sound_device)
->  		platform_device_unregister(sound_device);
->  
->  	kfree(mdata);
-> -
-> +error_put:
-> +	of_node_put(codec_np);
->  	return ret;
->  }
->  
-> 
+> is there any rule that says when to use strncmp ? it seems perfecly valid to use strcpy here
+> (what is done in the last cmp).
+
+Perhaps there are some characters after eg PowerBook that one doesn't want 
+to compare with?
+
+julia
