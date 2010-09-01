@@ -1,96 +1,54 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Request review of device tree documentation
-Date: Wed, 1 Sep 2010 10:19:25 -0600
-Message-ID: <20100901161925.GG13421@angua.secretlab.ca>
-References: <AANLkTilK4YkRMJqlcRDOAlGBzpdlZuSo9NF5NrRNocHT@mail.gmail.com>
-	<20100805044325.GC25458@yookeroo>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 3/4] drivers/net/can/mscan/mpc5xxx_can.c: Add
+	of_node_put to avoid memory leak
+Date: Wed, 01 Sep 2010 10:59:55 -0700 (PDT)
+Message-ID: <20100901.105955.176668287.davem@davemloft.net>
+References: <Pine.LNX.4.64.1008311943280.2668@ask.diku.dk>
+	<20100831191014.GA9603@pengutronix.de>
+	<4C7D565F.307@grandegger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20100805044325.GC25458@yookeroo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Rigby <jcrigby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, microblaze-u
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <4C7D565F.307-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, julia-dAYI7NvHqcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 05, 2010 at 02:43:25PM +1000, David Gibson wrote:
-> On Fri, Jun 11, 2010 at 04:59:46PM -0600, Grant Likely wrote:
-> > I've been doing a bit of work on some introductory level documentation
-> > of the flattened device tree.  I've got a rough copy up on the
-> > devicetree.org wiki, and I could use some feedback.  If anyone has
-> > some time to look at it, you can find it here:
-> > 
-> > http://devicetree.org/Device_Tree_Usage
-> 
-> Sorry I haven't replied sooner, I've been away, then sick and
-> generally preoccupied.  Still here are some comments now.
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Date: Tue, 31 Aug 2010 21:22:07 +0200
 
-Thanks David.  Reworked as per comments.  You can see the diff here:
+> On 08/31/2010 09:10 PM, Wolfram Sang wrote:
+>> On Tue, Aug 31, 2010 at 07:44:00PM +0200, Julia Lawall wrote:
+>>> Add a call to of_node_put in the error handling code following a call to
+>>> of_find_matching_node.
+>>>
+>>> This patch also moves the existing call to of_node_put after the call to
+>>> iounmap in the error handling code, to make it possible to jump to
+>>> of_node_put without doing iounmap.  These appear to be disjoint operations,
+>>> so the ordering doesn't matter.
+>>>
+>>> This patch furthermore changes the -ENODEV result in the error handling
+>>> code for of_find_matching_node to a return of 0, as found in the error
+>>> handling code for of_iomap, because the return type of the function is
+>>> unsigned.
+>>>
+>>> The semantic match that finds this problem is as follows:
+>>> (http://coccinelle.lip6.fr/)
+ ...
+>>> Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+>> 
+>> Reviewed-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Acked-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 
-http://www.devicetree.org/mediawiki/index.php?title=Device_Tree_Usage&diff=228&oldid=227
-
-g.
-
-> 
-> How Addressing Works:
-> 
->  * Small inconsistency you use "address1", "address2" then "unit-address3".
-> 
->  * Perhaps re-emphasise that a parent's #*-cells properties govern the
->    children's reg properties, not its own, since this is a common
->    misunderstanding..
-> 
-> Non Memory Mapped Devices:
-> 
->  * Your phrasing here suggests that non-memory-maped == zero
->    size-cells, which is not always true.
-> 
-> Ranges (Address Translation):
-> 
->  * Third paragraph, first sentence is a grammatical dogs' breakfast,
-> 
-> How Interrupts Work:
-> 
->  * Bogus paragraph break partway through first sentence.
-> 
->  * At the end you say the second cell indicates the interrupt's
->    polarity, but you don't specify how this is encoded.  It might be
->    worth emphasising that while most interrupt specifiers do include
->    trigger and polarity type information, the encoding of it can and
->    does vary between interrupt controllers.
-> 
-> Advanced Sample Machine:
-> 
->  * The unit address in the name shouldn't have a "0x" prefix
-> 
-> Advanced Interrupt Mapping:
-> 
->  * Perhaps worth noting that while a PCI *card* will use INTA..INTD,
->    on-board PCI devices can, and frequently do, have interrupts wired
->    side-band to the PCI bus, directly to the main interrupt
->    controller.
-> 
->  * In your example, you're muddying the waters of your previous usage
->    of interrupt-parent.  The PCI child nodes have the PCI top-level
->    node as their implicit interrupt parent, because its their first
->    ancestor with an interrupt-map, and we hit that before the
->    interrupt-parent property specified at the very top level.  This
->    means amongst other things that if there are PCI devices with
->    seperately wired interrupts, they must explicitly set
->    interrupt-parent to bypass the normal PCI interrupt mapping.
-> 
-> 
-> -- 
-> David Gibson			| I'll have my music baroque, and my code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
+Applied.
