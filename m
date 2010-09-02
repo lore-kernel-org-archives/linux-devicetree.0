@@ -1,16 +1,16 @@
-From: Liam Girdwood <lrg@slimlogic.co.uk>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [PATCH 2/4] sound/soc/fsl/p1022_ds.c: Add
  of_node_put to avoid memory leak
-Date: Wed, 01 Sep 2010 19:49:36 +0100
-Message-ID: <1283366976.3081.248.camel@odin>
+Date: Thu, 2 Sep 2010 16:30:56 +0100
+Message-ID: <20100902153056.GE5809@rakim.wolfsonmicro.main>
 References: <1283269738-14612-1-git-send-email-julia@diku.dk>
 	<1283269738-14612-3-git-send-email-julia@diku.dk>
-	<AANLkTinpRVStYfHHaGTyLusMCjMQDH=MvcGVVKaxvHtN@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <AANLkTinpRVStYfHHaGTyLusMCjMQDH=MvcGVVKaxvHtN@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1283269738-14612-3-git-send-email-julia@diku.dk>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
@@ -20,24 +20,12 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Sender: alsa-devel-bounces@alsa-project.org
 Errors-To: alsa-devel-bounces@alsa-project.org
-To: Timur Tabi <timur@freescale.com>
-Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Julia Lawall <julia@diku.dk>
+To: Julia Lawall <julia@diku.dk>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Liam Girdwood <lrg@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2010-09-01 at 13:39 -0500, Timur Tabi wrote:
-> On Tue, Aug 31, 2010 at 10:48 AM, Julia Lawall <julia@diku.dk> wrote:
-> > Add a call to of_node_put in the error handling code following a call to
-> > of_parse_phandle.
-> >
-> > This patch also moves the existing call to of_node_put tothe end of the
-> > error handling code, to make it possible to jump to of_node_put without
-> > doing the other cleanup operations.  These appear to be disjoint
-> > operations, so the ordering doesn't matter.
-> 
-> Acked-by: Timur Tabi <timur@freescale.com>
+On Tue, Aug 31, 2010 at 05:48:56PM +0200, Julia Lawall wrote:
+> Add a call to of_node_put in the error handling code following a call to
+> of_parse_phandle.
 
-Acked-by: Liam Girdwood <lrg@slimlogic.uo.uk>
--- 
-Freelance Developer, SlimLogic Ltd
-ASoC and Voltage Regulator Maintainer.
-http://www.slimlogic.co.uk
+Applied, thanks.
