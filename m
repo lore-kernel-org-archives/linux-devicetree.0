@@ -1,43 +1,62 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: How to define an I2C-to-SPI bridge device ?
-Date: Fri, 3 Sep 2010 16:08:58 +0400
-Message-ID: <20100903120858.GA19380@oksana.dev.rtsoft.ru>
-References: <1283502979.17812.22.camel@swa-m460>
+From: Steve.Glendinning-sdUf+H5yV5I@public.gmane.org
+Subject: RE: [RFC] smsc911x device tree binding questions
+Date: Fri, 3 Sep 2010 15:06:43 +0100
+Message-ID: <OF34464B3E.5795F010-ON80257793.004C9683-80257793.004D8554@smsc.com>
+References: <7948893881024232337@unknownmsgid>
+	<AANLkTinC64uvCMzMnso5Bkvut0H3yFekG8SgwGWwX_qY@mail.gmail.com>
+	<OFD2329EF8.8EA10F32-ON8025778E.0040004D-8025778E.0041E981@smsc.com>
+	<000201cb4b5f$db36a940$91a3fbc0$@Pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1283502979.17812.22.camel@swa-m460>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: =?utf-8?B?QW5kcsOp?= Schwarz <andre.schwarz@matrix-vision.de>
-Cc: LinuxPPC List <linuxppc-dev@ozlabs.org>, DevTreeDiscuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <000201cb4b5f$db36a940$91a3fbc0$@Pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ian.Saturley-sdUf+H5yV5I@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBTZXAgMDMsIDIwMTAgYXQgMTA6MzY6MTlBTSArMDIwMCwgQW5kcsOpIFNjaHdhcnog
-d3JvdGU6Cj4gSGksCj4gCj4gd2UncmUgYWJvdXQgdG8gZ2V0IG5ldyBNUEM4Mzc3IGJhc2VkIGhh
-cmR3YXJlIHdpdGggdmFyaW91cyBwZXJpcGhlcmFscy4KPiBUaGVyZSBhcmUgdHdvIEkyQy10by1T
-UEkgYnJpZGdlIGRldmljZXMgKE5YUCBTQzE4SVM2MDIpIGFuZCBJJ20gbm90IHN1cmUKPiBob3cg
-dG8gZGVmaW5lIGEgcHJvcGVyIGR0cy4uLgo+IAo+IE9mIGNvdXJzZSBpdCdzIGFuIGVhc3kgdGhp
-bmcgY3JlYXRpbmcgMiBjaGlsZCBub2RlcyBvbiB0aGUgQ1BVJ3MgSTJDCj4gZGV2aWNlIC0gYnV0
-IGhvdyBjYW4gSSByZXByZXNlbnQgdGhlIGNyZWF0ZWQgU1BJIGJ1cyA/CgpVbS4uIHRoZSBzYW1l
-IGFzIHRoZSBvdGhlciBTUEkgYnVzZXM/IEkuZS4KCmkyYy1jb250cm9sbGVyIHsgIC8qIFNPQyBJ
-MkMgY29udHJvbGxlciAqLwoJc3BpLWNvbnRyb2xsZXIgeyAgLyogVGhlIEkyQy10by1TUEkgYnJp
-ZGdlICovCgkJc3BpLWRldmljZUAwIHsKCQl9OwoJCXNwaS1kZXZpY2VAMSB7CgkJfTsKCX07Cn07
-Cgo+IElzIHRoZSAocG9zc2libHkpIHJlcXVpcmVkIGRyaXZlciAob2Zfc2MxOGlzNjB4X3NwaSA/
-KSBzdXBwb3NlZCB0byBiZSBhbgo+IEkyQyBzbGF2ZSBvciBhbiBTUEkgaG9zdCBkcml2ZXIgPwoK
-SXQgc2hvdWxkIGJlIGFuIEkyQyBkcml2ZXIgdGhhdCByZWdpc3RlcnMgYW4gU1BJIG1hc3RlciAo
-aS5lLgpjYWxscyBzcGlfYWxsb2NfbWFzdGVyKCkgYW5kIHNwaV9yZWdpc3Rlcl9tYXN0ZXIoKSku
-CgpUaGFua3MsCgotLSAKQW50b24gVm9yb250c292CmVtYWlsOiBjYm91YXRtYWlscnVAZ21haWwu
-Y29tCmlyYzovL2lyYy5mcmVlbm9kZS5uZXQvYmQyCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMt
-ZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xp
-bnV4cHBjLWRldg==
+> A question though(16-bit/32-bit controllers, e.g. 9118):
+> 
+> If the device is strapped to 16-bit host bus mode, a single read 32-bit 
+would 
+> reveal us if the bus converts the load 32-bit to two load 16-bit or
+> not because the D[31:16] data bus lines are left in a high impedance 
+state. 
+> Right ?
+
+Right.
+
+> Maybe a pair of reads - same address -  is safer, the controller 
+invalidate 
+> the read (what does it mean in terms of bytes read ?) if it samples the 
+same 
+> address (load 32 not split in 16-bit loads) on consecutive reads.
+> If the conversion is correct the smsc returns the BYTE_TEST value 
+otherwise 
+> we would notice the problem. 
+
+If the device is strapped for 16-bit we must ALWAYS read or write in 
+pairs.
+Actually, one of the two reads is *supposed* to have A[1] set and one is 
+supposed
+to have it cleared to read the two halves.  The data sheet says that 
+reading
+the same 16-bit word twice gives invalid results but is not fatal.
+
+> I can write the code in the DT port context, but I do not have any
+> 16-bit strapped smsc lan controller at hand, so I cannot test it, but I 
+can post
+> the patch for review and testing on the list.
+
+Quite a few device variants are 16-bit only (e.g. 9221), so there are 
+plenty out
+there.
