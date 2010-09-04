@@ -1,106 +1,82 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] smsc911x device tree binding questions
-Date: Fri, 3 Sep 2010 08:07:13 -0600
-Message-ID: <AANLkTi=46562KE1rWOHzD=SAg3BLbf2j7+YLoOEPckN6@mail.gmail.com>
-References: <7948893881024232337@unknownmsgid>
-	<AANLkTinC64uvCMzMnso5Bkvut0H3yFekG8SgwGWwX_qY@mail.gmail.com>
-	<OFD2329EF8.8EA10F32-ON8025778E.0040004D-8025778E.0041E981@smsc.com>
-	<2228456483530699700@unknownmsgid>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2228456483530699700@unknownmsgid>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Steve.Glendinning-sdUf+H5yV5I@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ian.Saturley-sdUf+H5yV5I@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH] arch/powerpc/platforms/52xx/efika.c: Add of_node_put to avoid memory leak
+Date: Sat,  4 Sep 2010 09:13:17 +0200
+Message-ID: <1283584397-7697-1-git-send-email-julia@diku.dk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: kernel-janitors@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 3, 2010 at 6:02 AM, Lorenzo Pieralisi
-<Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
->> -----Original Message-----
->> From: Steve.Glendinning-sdUf+H5yV5I@public.gmane.org [mailto:Steve.Glendinning-sdUf+H5yV5I@public.gmane.org]
->> Sent: 29 August 2010 13:00
->> To: Grant Likely; Lorenzo Pieralisi
->> Cc: Catalin Marinas; David Miller; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
->> glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; Ian.Saturley-sdUf+H5yV5I@public.gmane.org
->> Subject: Re: [RFC] smsc911x device tree binding questions
->>
->> Hi Lorenzo,
->>
->> > > - the SMSC911x host bus size can be retrieved from the chip idrev (f=
-or
->> > > chip idrev having just 16-bit bus IF) or for controllers like 9118
->> that
->> > > can have both (32/16), there is a D32/D16 HW strap readable from
->> HW_CFG.
->> > > The problem with these flags is that they define bus size from a CPU
->> > > perspective if I got it right, in particular if the CPU can access
->> > > the SMSC with 32-bit load/store to access 32 bit registers or
->> > > have to resort to two "locked" 16-bit accesses to ensure
->> > > atomicity. I think it is possible on some architectures to use a
->> 32-bit
->> > > load/store even if the smsc911x IF is 16-bit (e.g. bus downsize
->> converters,
->> > > which ensure 16-bit load/store locking).
->> > > It depends on the bus interconnect architecture. I think we
->> > > need a property to define this, thoughts much appreciated.
->>
->> Absolutely right - this flag defines whether the DRIVER has to use 16
->> or 32 bit accesses in order to succesfully access the chip. =A0If the bus
->> hardware is capable of performing atomic pairs of 16-bit operations
->> when we make a 32-bit read then this is very much preferred. =A0The 16-b=
-it
->> path is MUCH slower as it has to take a spinlock on every access to
->> ensure the two reads/writes are atomic. =A0It's there as a last resort,
->> and its use is discouraged if avoidable.
->>
->> Autodetecting the bus width from register values is interesting, you'd
->> have to test that you can reliably read the registers in all of the above
->> modes. =A0It's my understanding that if the device is strapped for 16-bit
->> access it expects to see atomic pairs of reads, so I guess you could make
->> a pair of 32-bit reads (of something known like BYTE_TEST) and analyse
->> what you get back to determine how you're connected?
->
-> Yes, we could try something like the code in smsc911x_init
-> (BYTE_TEST pair of reads) but more generic to "probe" for the interconnec=
-tion
-> and set the flags accordingly.
->
-> A question though(16-bit/32-bit controllers, e.g. 9118):
->
-> If the device is strapped to 16-bit host bus mode, a single read 32-bit w=
-ould
-> reveal us if the bus converts the load 32-bit to two load 16-bit or
-> not because the D[31:16] data bus lines are left in a high impedance stat=
-e.
-> Right ?
->
-> Maybe a pair of reads - same address - =A0is safer, the controller invali=
-date
-> the read (what does it mean in terms of bytes read ?) if it samples the s=
-ame
-> address (load 32 not split in 16-bit loads) on consecutive reads.
-> If the conversion is correct the smsc returns the BYTE_TEST value otherwi=
-se
-> we would notice the problem.
->
-> I can write the code in the DT port context, but I do not have any
-> 16-bit strapped smsc lan controller at hand, so I cannot test it, but I c=
-an post
-> the patch for review and testing on the list.
+This function is implemented as though the function of_get_next_child does
+not increment the reference count of its result, but actually it does.
+Thus the patch adds of_node_put in error handling code and drops a call to
+of_node_get.
 
-It probably is not worth the effort.  Anyone bringing up this driver
-on a new board will know what the bus access width is, and that will
-never change.  Just encode it into a device tree property and be done
-with it.
+The semantic match that finds this problem is as follows:
+(http://coccinelle.lip6.fr/)
 
-g.
+// <smpl>
+@r exists@
+local idexpression x;
+expression E1;
+position p1,p2;
+@@
+
+x@p1 = of_get_next_child(...);
+... when != x = E1
+of_node_get@p2(x)
+
+@script:python@
+p1 << r.p1;
+p2 << r.p2;
+@@
+
+cocci.print_main("call",p1)
+cocci.print_secs("get",p2)
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+
+---
+ arch/powerpc/platforms/52xx/efika.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/platforms/52xx/efika.c b/arch/powerpc/platforms/52xx/efika.c
+index 45c0cb9..18c1048 100644
+--- a/arch/powerpc/platforms/52xx/efika.c
++++ b/arch/powerpc/platforms/52xx/efika.c
+@@ -99,7 +99,7 @@ static void __init efika_pcisetup(void)
+ 	if (bus_range == NULL || len < 2 * sizeof(int)) {
+ 		printk(KERN_WARNING EFIKA_PLATFORM_NAME
+ 		       ": Can't get bus-range for %s\n", pcictrl->full_name);
+-		return;
++		goto out_put;
+ 	}
+ 
+ 	if (bus_range[1] == bus_range[0])
+@@ -111,12 +111,12 @@ static void __init efika_pcisetup(void)
+ 	printk(" controlled by %s\n", pcictrl->full_name);
+ 	printk("\n");
+ 
+-	hose = pcibios_alloc_controller(of_node_get(pcictrl));
++	hose = pcibios_alloc_controller(pcictrl);
+ 	if (!hose) {
+ 		printk(KERN_WARNING EFIKA_PLATFORM_NAME
+ 		       ": Can't allocate PCI controller structure for %s\n",
+ 		       pcictrl->full_name);
+-		return;
++		goto out_put;
+ 	}
+ 
+ 	hose->first_busno = bus_range[0];
+@@ -124,6 +124,9 @@ static void __init efika_pcisetup(void)
+ 	hose->ops = &rtas_pci_ops;
+ 
+ 	pci_process_bridge_OF_ranges(hose, pcictrl, 0);
++	return;
++out_put:
++	of_node_put(pcictrl);
+ }
+ 
+ #else
