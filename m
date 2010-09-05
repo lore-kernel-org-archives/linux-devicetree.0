@@ -1,109 +1,66 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH 1/2] drivers/net/fs_enet/fs_enet-main.c: Add
-	of_node_put to avoid memory leak
-Date: Sat, 4 Sep 2010 17:48:10 +0200
-Message-ID: <20100904154810.GB1762@pengutronix.de>
-References: <1283595164-29146-1-git-send-email-julia@diku.dk>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/9] of: move phandle/ihandle into types.h
+Date: Sun, 5 Sep 2010 08:22:07 +0200
+Message-ID: <20100905062207.GA31275@merkur.ravnborg.org>
+References: <20100628215407.2017bf2f@debian> <20100829235100.6dcedcb8@debxo> <20100829235352.1744e7e3@debxo> <20100830050627.GA12153@merkur.ravnborg.org> <20100903041715.573471e4@debxo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <sparclinux-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1283595164-29146-1-git-send-email-julia@diku.dk>
-Sender: netdev-owner@vger.kernel.org
-To: Julia Lawall <julia@diku.dk>
-Cc: Pantelis Antoniou <pantelis.antoniou@gmail.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Vitaly Bordug <vbordug@ru.mvista.com>, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <20100903041715.573471e4@debxo>
+Sender: sparclinux-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, cjb@laptop.org, Mitch Bradley <wmb@laptop.org>, pgf@laptop.org, linux-kernel@vger.kernel.org, davem@davemloft.net, grant.likely@secretlab.ca, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 03, 2010 at 04:17:15AM -0400, Andres Salomon wrote:
+> On Mon, 30 Aug 2010 07:06:27 +0200
+> Sam Ravnborg <sam@ravnborg.org> wrote:
+> 
+> > On Sun, Aug 29, 2010 at 11:53:52PM -0400, Andres Salomon wrote:
+> > > 
+> > > We need phandle for some exported sparc headers; of.h isn't an
+> > > exported header, and it would be silly to export it when all we
+> > > really need is one or two types from it.  So, move the
+> > > phandle/ihandle definitions into types.h.
+> > > 
+> > > diff --git a/include/linux/types.h b/include/linux/types.h
+> > > index 01a082f..26526ea 100644
+> > > --- a/include/linux/types.h
+> > > +++ b/include/linux/types.h
+> > > @@ -219,6 +219,10 @@ struct ustat {
+> > >  	char			f_fpack[6];
+> > >  };
+> > >  
+> > > +/* Basic openboot/openfirmware types */
+> > > +typedef u32 phandle;
+> > > +typedef u32 ihandle;
+> > > +
+> > >  #endif	/* __KERNEL__ */
+> > 
+> > The above is inside #ifdef __KERNEL__ / #endif
+> > so it is not exported as we drop code protected
+> > by __KERNEL__ when we prepare for export.
+> 
+> 
+> 
+> At least for me, that's fine; I don't need phandle/ihandle to be
+> available to userspace.  The folks who work on the userspace fdt code
+> may feel differently, however.
+> 
+> (I'm not sure if you're suggesting it be outside the __KERNEL__ ifdef
+> or not..)
 
---mxv5cy4qt+RJ9ypb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the goal is to get ihandle/phandle exported to userspace then
+they have to be moved outside __KERNEL__.
 
-On Sat, Sep 04, 2010 at 12:12:43PM +0200, Julia Lawall wrote:
-> In this case, a device_node structure is stored in another structure that
-> is then freed without first decrementing the reference count of the
-> device_node structure.
->=20
-> The semantic match that finds this problem is as follows:
-> (http://coccinelle.lip6.fr/)
->=20
-> // <smpl>
-> @r exists@
-> expression x;
-> identifier f;
-> position p1,p2;
-> @@
->=20
-> x@p1->f =3D \(of_find_node_by_path\|of_find_node_by_name\|of_find_node_by=
-_phandle\|of_get_parent\|of_get_next_parent\|of_get_next_child\|of_find_com=
-patible_node\|of_match_node\|of_find_node_by_type\|of_find_node_with_proper=
-ty\|of_find_matching_node\|of_parse_phandle\|of_node_get\)(...);
-> ... when !=3D of_node_put(x)
-> kfree@p2(x)
->=20
-> @script:python@
-> p1 << r.p1;
-> p2 << r.p2;
-> @@
-> cocci.print_main("call",p1)
-> cocci.print_secs("free",p2)
-> // </smpl>
->=20
-> Signed-off-by: Julia Lawall <julia@diku.dk>
+I just tried to export sparc64 headers,
+and here I found references to ihandle/phandle in a comment
+only sparc does not need these types today.
 
-Acked-by: Wolfram Sang <w.sang@pengutronix.de>
+The relevant function took and returns an int btw.
 
->=20
-> ---
->  drivers/net/fs_enet/fs_enet-main.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/fs_enet/fs_enet-main.c b/drivers/net/fs_enet/fs_=
-enet-main.c
-> index d6e3111..d684f18 100644
-> --- a/drivers/net/fs_enet/fs_enet-main.c
-> +++ b/drivers/net/fs_enet/fs_enet-main.c
-> @@ -1036,7 +1036,7 @@ static int __devinit fs_enet_probe(struct platform_=
-device *ofdev,
->  	ndev =3D alloc_etherdev(privsize);
->  	if (!ndev) {
->  		ret =3D -ENOMEM;
-> -		goto out_free_fpi;
-> +		goto out_put;
->  	}
-> =20
->  	SET_NETDEV_DEV(ndev, &ofdev->dev);
-> @@ -1099,6 +1099,7 @@ out_cleanup_data:
->  out_free_dev:
->  	free_netdev(ndev);
->  	dev_set_drvdata(&ofdev->dev, NULL);
-> +out_put:
->  	of_node_put(fpi->phy_node);
->  out_free_fpi:
->  	kfree(fpi);
->=20
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+So the above looks good considerign that userspace
+so far does not require ihanlde/phandle.
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---mxv5cy4qt+RJ9ypb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAkyCajoACgkQD27XaX1/VRu5vgCfREXOviRDjNDTDtIw9Ntvqa1q
-wBAAn1X1kzVQIZhnTZDgbsSGMlwigmI6
-=uVgu
------END PGP SIGNATURE-----
-
---mxv5cy4qt+RJ9ypb--
+	Sam
