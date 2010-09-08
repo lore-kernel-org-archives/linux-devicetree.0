@@ -1,38 +1,23 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] arch/powerpc/platforms/52xx/efika.c: Add of_node_put
-	to avoid memory leak
-Date: Wed, 8 Sep 2010 11:45:47 -0600
-Message-ID: <20100908174547.GN3686@angua.secretlab.ca>
-References: <1283584397-7697-1-git-send-email-julia@diku.dk>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 7/7] arch/powerpc/platforms/cell: Add of_node_put to
+ avoid memory leak
+Date: Wed, 8 Sep 2010 13:46:58 -0600
+Message-ID: <20100908194658.GA7065@angua.secretlab.ca>
+References: <1283075566-27441-1-git-send-email-julia@diku.dk>
+ <1283075566-27441-8-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1283584397-7697-1-git-send-email-julia-dAYI7NvHqcQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1283075566-27441-8-git-send-email-julia@diku.dk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julia Lawall <julia@diku.dk>
+Cc: Arnd Bergmann <arnd@arndb.de>, kernel-janitors@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, cbe-oss-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 04, 2010 at 09:13:17AM +0200, Julia Lawall wrote:
-> This function is implemented as though the function of_get_next_child does
-> not increment the reference count of its result, but actually it does.
-> Thus the patch adds of_node_put in error handling code and drops a call to
-> of_node_get.
-
-applied, thanks.
-
-g.
-
+On Sun, Aug 29, 2010 at 11:52:46AM +0200, Julia Lawall wrote:
+> Add calls to of_node_put in the error handling code following calls to
+> of_find_node_by_path and of_find_node_by_phandle.
 > 
 > The semantic match that finds this problem is as follows:
 > (http://coccinelle.lip6.fr/)
@@ -40,65 +25,76 @@ g.
 > // <smpl>
 > @r exists@
 > local idexpression x;
-> expression E1;
-> position p1,p2;
+> expression E,E1;
+> statement S;
 > @@
 > 
-> x@p1 = of_get_next_child(...);
-> ... when != x = E1
-> of_node_get@p2(x)
-> 
-> @script:python@
-> p1 << r.p1;
-> p2 << r.p2;
-> @@
-> 
-> cocci.print_main("call",p1)
-> cocci.print_secs("get",p2)
+> *x = 
+> (of_find_node_by_path
+> |of_find_node_by_name
+> |of_find_node_by_phandle
+> |of_get_parent
+> |of_get_next_parent
+> |of_get_next_child
+> |of_find_compatible_node
+> |of_match_node
+> )(...);
+> ...
+> if (x == NULL) S
+> <... when != x = E
+> *if (...) {
+>   ... when != of_node_put(x)
+>       when != if (...) { ... of_node_put(x); ... }
+> (
+>   return <+...x...+>;
+> |
+> *  return ...;
+> )
+> }
+> ...>
+> of_node_put(x);
 > // </smpl>
 > 
-> Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+> Signed-off-by: Julia Lawall <julia@diku.dk>
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
 > 
 > ---
->  arch/powerpc/platforms/52xx/efika.c |    9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  arch/powerpc/platforms/cell/ras.c        |    4 +++-
+>  arch/powerpc/platforms/cell/spider-pic.c |    4 +++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/powerpc/platforms/52xx/efika.c b/arch/powerpc/platforms/52xx/efika.c
-> index 45c0cb9..18c1048 100644
-> --- a/arch/powerpc/platforms/52xx/efika.c
-> +++ b/arch/powerpc/platforms/52xx/efika.c
-> @@ -99,7 +99,7 @@ static void __init efika_pcisetup(void)
->  	if (bus_range == NULL || len < 2 * sizeof(int)) {
->  		printk(KERN_WARNING EFIKA_PLATFORM_NAME
->  		       ": Can't get bus-range for %s\n", pcictrl->full_name);
-> -		return;
-> +		goto out_put;
->  	}
+> diff --git a/arch/powerpc/platforms/cell/ras.c b/arch/powerpc/platforms/cell/ras.c
+> index 1d3c4ef..5ec1e47 100644
+> --- a/arch/powerpc/platforms/cell/ras.c
+> +++ b/arch/powerpc/platforms/cell/ras.c
+> @@ -173,8 +173,10 @@ static int __init cbe_ptcal_enable(void)
+>  		return -ENODEV;
 >  
->  	if (bus_range[1] == bus_range[0])
-> @@ -111,12 +111,12 @@ static void __init efika_pcisetup(void)
->  	printk(" controlled by %s\n", pcictrl->full_name);
->  	printk("\n");
+>  	size = of_get_property(np, "ibm,cbe-ptcal-size", NULL);
+> -	if (!size)
+> +	if (!size) {
+> +		of_node_put(np);
+>  		return -ENODEV;
+> +	}
 >  
-> -	hose = pcibios_alloc_controller(of_node_get(pcictrl));
-> +	hose = pcibios_alloc_controller(pcictrl);
->  	if (!hose) {
->  		printk(KERN_WARNING EFIKA_PLATFORM_NAME
->  		       ": Can't allocate PCI controller structure for %s\n",
->  		       pcictrl->full_name);
-> -		return;
-> +		goto out_put;
->  	}
->  
->  	hose->first_busno = bus_range[0];
-> @@ -124,6 +124,9 @@ static void __init efika_pcisetup(void)
->  	hose->ops = &rtas_pci_ops;
->  
->  	pci_process_bridge_OF_ranges(hose, pcictrl, 0);
-> +	return;
-> +out_put:
-> +	of_node_put(pcictrl);
->  }
->  
->  #else
+>  	pr_debug("%s: enabling PTCAL, size = 0x%x\n", __func__, *size);
+>  	order = get_order(*size);
+> diff --git a/arch/powerpc/platforms/cell/spider-pic.c b/arch/powerpc/platforms/cell/spider-pic.c
+> index 5876e88..3f2e557 100644
+> --- a/arch/powerpc/platforms/cell/spider-pic.c
+> +++ b/arch/powerpc/platforms/cell/spider-pic.c
+> @@ -258,8 +258,10 @@ static unsigned int __init spider_find_cascade_and_node(struct spider_pic *pic)
+>  		return NO_IRQ;
+>  	imap += intsize + 1;
+>  	tmp = of_get_property(iic, "#interrupt-cells", NULL);
+> -	if (tmp == NULL)
+> +	if (tmp == NULL) {
+> +		of_node_put(iic);
+>  		return NO_IRQ;
+> +	}
+>  	intsize = *tmp;
+>  	/* Assume unit is last entry of interrupt specifier */
+>  	unit = imap[intsize - 1];
 > 
