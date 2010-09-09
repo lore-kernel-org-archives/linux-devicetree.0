@@ -1,118 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: How to define an I2C-to-SPI bridge device ?
-Date: Thu, 9 Sep 2010 11:06:46 -0600
-Message-ID: <20100909170646.GD6273@angua.secretlab.ca>
+Date: Thu, 09 Sep 2010 12:23:14 -0600
+Message-ID: <c843f864-2a5a-4146-bd95-13c2fb91f430@email.android.com>
 References: <1283502979.17812.22.camel@swa-m460>
+	<20100903120858.GA19380@oksana.dev.rtsoft.ru>
+	<4C84D334.6060008@matrix-vision.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1283502979.17812.22.camel@swa-m460>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: =?iso-8859-1?Q?Andr=E9?= Schwarz <andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org>
-Cc: LinuxPPC List <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DevTreeDiscuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4C84D334.6060008@matrix-vision.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Andre Schwarz <andre.schwarz@matrix-vision.de>, Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: LinuxPPC List <linuxppc-dev@ozlabs.org>, DevTreeDiscuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 03, 2010 at 10:36:19AM +0200, Andr=E9 Schwarz wrote:
-> Hi,
-> =
-
-> we're about to get new MPC8377 based hardware with various peripherals.
-> There are two I2C-to-SPI bridge devices (NXP SC18IS602) and I'm not sure
-> how to define a proper dts...
-> =
-
-> Of course it's an easy thing creating 2 child nodes on the CPU's I2C
-> device - but how can I represent the created SPI bus ?
-> =
-
-> Is the (possibly) required driver (of_sc18is60x_spi ?) supposed to be an
-> I2C slave or an SPI host driver ?
-
-Both!  The driver would get probed from the i2c bus, and it would
-create and register an spi master.  If the spi bus registration
-includes a pointer to the device tree node, then the child nodes will
-automatically be registered as spi_devices.
-
-The dts is also fairly straight forward:
-
-i2c-bus: i2c@80001000 {
-	compatible =3D <blah>;
-	#address-cells =3D <1>;
-	#size-cells =3D <0>;
-
-	spi-bus: spi@28{
-		compatible =3D "nxp,sc18is602";
-		#address-cells =3D <1>;
-		#size-cells =3D <0x28>;
-		reg =3D <0>;
-
-		spi-device@0 {
-			compatible =3D <blah>;
-			reg =3D <0>;
-		};
-		spi-device@1 {
-			compatible =3D <blah>;
-			reg =3D <1>;
-		};
-		spi-device@2 {
-			compatible =3D <blah>;
-			reg =3D <2>;
-		};
-	};
-};
-
-Cheers,
-g.
-
-> =
-
-> =
-
-> Any help is welcome.
-> =
-
-> =
-
-> -- =
-
-> Mit freundlichen Gr=FC=DFen / Best regards
-> =
-
-> Andr=E9 Schwarz
-> =
-
-> ___________________________________________
-> =
-
-> MATRIX VISION GmbH
-> - Entwicklung / Development -
-> Talstra=DFe 16
-> D-71570 Oppenweiler
-> =
-
-> Fon: ++49-07191-9432-420
-> Fax: ++49-07191-9432-288
-> eMail: andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org
-> web: www.matrix-vision.de
-> =
-
-> =
-
-> MATRIX VISION GmbH, Talstrasse 16, DE-71570 Oppenweiler
-> Registergericht: Amtsgericht Stuttgart, HRB 271090
-> Geschaeftsfuehrer: Gerhard Thullner, Werner Armingeon, Uwe Furtner, Hans-=
-Joachim Reich
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
+CgoiQW5kcmUgU2Nod2FyeiIgPGFuZHJlLnNjaHdhcnpAbWF0cml4LXZpc2lvbi5kZT4gd3JvdGU6
+Cgo+ICBBbnRvbiwKPgo+PiB3ZSdyZSBhYm91dCB0byBnZXQgbmV3IE1QQzgzNzcgYmFzZWQgaGFy
+ZHdhcmUgd2l0aCB2YXJpb3VzIHBlcmlwaGVyYWxzLgo+Pj4gVGhlcmUgYXJlIHR3byBJMkMtdG8t
+U1BJIGJyaWRnZSBkZXZpY2VzIChOWFAgU0MxOElTNjAyKSBhbmQgSSdtIG5vdCBzdXJlCj4+PiBo
+b3cgdG8gZGVmaW5lIGEgcHJvcGVyIGR0cy4uLgo+Pj4KPj4+IE9mIGNvdXJzZSBpdCdzIGFuIGVh
+c3kgdGhpbmcgY3JlYXRpbmcgMiBjaGlsZCBub2RlcyBvbiB0aGUgQ1BVJ3MgSTJDCj4+PiBkZXZp
+Y2UgLSBidXQgaG93IGNhbiBJIHJlcHJlc2VudCB0aGUgY3JlYXRlZCBTUEkgYnVzID8KPj4gVW0u
+LiB0aGUgc2FtZSBhcyB0aGUgb3RoZXIgU1BJIGJ1c2VzPyBJLmUuCj4+Cj4+IGkyYy1jb250cm9s
+bGVyIHsgIC8qIFNPQyBJMkMgY29udHJvbGxlciAqLwo+PiAJc3BpLWNvbnRyb2xsZXIgeyAgLyog
+VGhlIEkyQy10by1TUEkgYnJpZGdlICovCj4+IAkJc3BpLWRldmljZUAwIHsKPj4gCQl9Owo+PiAJ
+CXNwaS1kZXZpY2VAMSB7Cj4+IAkJfTsKPj4gCX07Cj4+IH07Cj4+Cj5vayAsIHRoYW5rcyAtIGxv
+b2tzIHN0cmFpZ2h0IGZvcndhcmQuCj5JcyB0aGlzIGFueSBtb3JlIHRoYW4gcGxhaW4gZGVmaW5p
+dGlvbiwgaS5lLiB3aWxsIHRoaXMgdHJpZ2dlciBhbnkgSTJDIAo+b3IgU1BJIGRldmljZSByZWdp
+c3RyYXRpb24vbGlua2luZyA/Cj4+PiBJcyB0aGUgKHBvc3NpYmx5KSByZXF1aXJlZCBkcml2ZXIg
+KG9mX3NjMThpczYweF9zcGkgPykgc3VwcG9zZWQgdG8gYmUgYW4KPj4+IEkyQyBzbGF2ZSBvciBh
+biBTUEkgaG9zdCBkcml2ZXIgPwo+PiBJdCBzaG91bGQgYmUgYW4gSTJDIGRyaXZlciB0aGF0IHJl
+Z2lzdGVycyBhbiBTUEkgbWFzdGVyIChpLmUuCj4+IGNhbGxzIHNwaV9hbGxvY19tYXN0ZXIoKSBh
+bmQgc3BpX3JlZ2lzdGVyX21hc3RlcigpKS4KPmhtbSAtIG9rLiBXaWxsIGhhdmUgdG8gZG8gaXQg
+bWFudWFsbHkgdGhlbiAuLi4KClllcywgYnV0IHRoaXMgaXMgdGhlIGNhc2UgZm9yIG5vbi1vZiBk
+cml2ZXJzIHRvby4gIFRoZSBpMmMgdG8gc3BpIGRldmljZSBkcml2ZXIgbXVzdCBhbHdheXMgY3Jl
+YXRlIChhbmQgdHJpZ2dlciBwb3B1bGF0aW9uIG9mKSB0aGUgc3BpIGJ1cyBpbnN0YW5jZS4KCj4K
+Pkkgc3RpbGwgd29uZGVyIGhvdyB0byBtYWtlIHRoZSBkcml2ZXIgYXJjaC1nZW5lcmljICphbmQq
+IG9mLWNhcGFibGUuCj5EbyB3ZSBuZWVkIGEgZ2VuZXJpYyBJMkMgc2xhdmUgZHJpdmVyIHRoYXQg
+Y2FuIGJlIHByb2JlZCBhbG9uZyB3aXRoIGFuIAo+Im9mIGdsdWUgZHJpdmVyIiBvciBzaG91bGQg
+dGhlIG9mLWJpbmRpbmcgYmUgcGFydCBvZiBhIHNpbmdsZSBkZXZpY2UgCj5kcml2ZXIgPwoKVGhl
+cmUgaXMgbm8gbG9uZ2VyIGFueSBuZWVkIGZvciBzZXBhcmF0ZSBvZiBhbmQgbm9uLW9mIGRyaXZl
+cnMgZm9yIHRoZSBzYW1lIGhhcmR3YXJlLiAgQW55IGRldmljZSBtYXkgaGF2ZSB0aGUgb2Zfbm9k
+ZSBwb2ludGVyIGluIHN0cnVjdCBkZXZpY2Ugc2V0LCBhbmQgZHJpdmVycyBjYW4gdXNlIHRoZSBw
+b2ludGVyIGFzIGFuIGFsdGVybmF0aXZlIHRvIHBsYXRmb3JtX2RhdGEgdG8gZ2V0IGluZm9ybWF0
+aW9uIGFib3V0IHRoZSBoYXJkd2FyZSBjb25maWd1cmF0aW9uLgoKSnVzdCByZWFkIHRoZSBkYXRh
+IG91dCBvZiB0aGUgbm9kZSBpbiB0aGUgZHJpdmVyJ3MgcHJvYmUgaG9vay4KCkZvciBpMmMgYW5k
+IChzb29uKSBzcGksIHRoZSBjb3JlIGNvZGUgd2lsbCBldmVuIHJlZ2lzdGVyIGNoaWxkIGRldmlj
+ZXMgZm9yIHlvdS4KCmcuCgo+Cj5Tb3JyeSBmb3IgdGhlIGR1bWIgcXVlc3Rpb25zIC0gbG9va3Mg
+bGlrZSBJIGV4cGVjdGVkIGEgbGl0dGxlIHRvbyBtdWNoIAo+ZnVuY3Rpb25hbGl0eSBhbHJlYWR5
+IGV4aXN0aW5nLgo+Cj4KPlJlZ2FyZHMsCj5BbmRyw6kKPgo+Cj5NQVRSSVggVklTSU9OIEdtYkgs
+IFRhbHN0cmFzc2UgMTYsIERFLTcxNTcwIE9wcGVud2VpbGVyCj5SZWdpc3RlcmdlcmljaHQ6IEFt
+dHNnZXJpY2h0IFN0dXR0Z2FydCwgSFJCIDI3MTA5MAo+R2VzY2hhZWZ0c2Z1ZWhyZXI6IEdlcmhh
+cmQgVGh1bGxuZXIsIFdlcm5lciBBcm1pbmdlb24sIFV3ZSBGdXJ0bmVyLCBIYW5zLUpvYWNoaW0g
+UmVpY2gKPl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj5M
+aW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Cj5MaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwo+
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldgotLSAKU2VudCBm
+cm9tIG15IEFuZHJvaWQgcGhvbmUgd2l0aCBLLTkgTWFpbC4gUGxlYXNlIGV4Y3VzZSBteSBicmV2
+aXR5LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
+eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
