@@ -1,13 +1,16 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: ARM machine specific DT probing
-Date: Thu, 09 Sep 2010 09:07:59 +0800
-Message-ID: <1283994479.4420.6.camel@pororo>
-References: <alpine.LFD.2.00.1009081523500.19366@xanadu.home>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC] dtc: Optionally sort nodes and properties
+Date: Wed, 8 Sep 2010 22:49:25 -0600
+Message-ID: <20100909044925.GB11833@angua.secretlab.ca>
+References: <20100901024718.GA4828@yookeroo>
+	<20100908202530.GH7065@angua.secretlab.ca>
+	<20100908153952.43fbc856@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.00.1009081523500.19366-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20100908153952.43fbc856-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,46 +20,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
-
-> What Jeremy did is to add a probe_dt method in the mdesc structure, and 
-> then the core is calling them in sequence until one of them returns 
-> success.
+On Wed, Sep 08, 2010 at 03:39:52PM -0500, Scott Wood wrote:
+> On Wed, 8 Sep 2010 14:25:30 -0600
+> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 > 
-> now, the "compatible" property is explained here:
+> > On Wed, Sep 01, 2010 at 12:47:18PM +1000, David Gibson wrote:
+> > > Hi folks,
+> > > 
+> > > Here's a patch I made for dtc a little while ago, and I'm not sure if
+> > > it's something that sensibly ought to be merged into mainline dtc.
+> > > 
+> > > The patch adds a '-s' option to dtc, which causes it to "sort" the
+> > > tree before output.  That is, it sorts the reserve entries, it sorts
+> > > the properties within each node by name, and it sorts nodes by name
+> > > within their parent.
+> > > 
+> > > The main use for this is when looking at the differences between two
+> > > device trees which are similar, except for semantically null internal
+> > > rearrangements.  Directly diffing the dts files will give a lot of
+> > > noise due to the order changes, but running both trees through dtc -s
+> > > then diffing will usually give a pretty sensible summary of the
+> > > changes (it can still be confused by node name changes, of course).
+> > 
+> > As discussed on IRC, I'm not thrilled with adding this as a
+> > user-visible option because sorted trees aren't actually useful or
+> > desirable (and in some cases undesireable) except for the use-case of
+> > comparing trees.  However, being able to compare unsorted trees is
+> > still a use case that is very much needed, so I'm okay with this patch
+> > until we come up with something better.
+> > 
+> > Although maybe the -s option should remain undocumented; or at least
+> > warn people away from using it.
 > 
-> http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property
-> 
-> From my understanding, this could allow for a kernel that doesn't yet 
-> support the specifics of a particular board to still be able to work 
-> using basic common support.  But for this to work, wouldn't it be 
-> necessary for the core code to try to find the best match itself rather 
-> than letting each machine's  probe_dt decide on their own?
+> If it's undocumented, how would people find out how to compare device
+> trees?
 
-At present, the probe_dt function is a binary match/no-match indicator,
-so the core code just selects the first match it finds. This means that
-we'll need one mdesc per machine; I'm intending to keep it simple to
-start with.
+Comparing trees should be its own documented command.  If it happens
+to be implemented as a shell script using this option, then that is
+just fine by me.
 
-My intention in the longer-term is to allow probe_dt to indicate
-less-specific matches (eg, match on the SoC family), and change the core
-code to not break out of the loop on the first match, but continue to
-look for a better match. This way, we can have one mdesc to support a
-SoC family, but still allow that to be overridden if there's a more
-specific (eg, single machine) mdesc compiled in.
+What I don't want is people thinking that sorting their trees by
+default is a good idea.  (Although the idea of randomly sorting trees
+is vaguely interesting.  It would certainly expose all kinds of weird
+bugs in the kernel where we depend on the natural sorting for driver
+probe order)
 
-The reason I do this in the machine-specific code (rather than the core
-code checking the compatible property) is to allow the probe_dt function
-to check arbitrary data in the device tree. Perhaps we have two
-variations of a machine - both with the same compatible property, but
-distinguishable in some other way, and we need a separate mdesc for
-whatever reason.
+> Maybe just add a "(for comparing trees)" note in the help text to
+> clarify the intended purpose?
 
-Cheers,
+That's fine too.  It's not something worth debating a long time over.
 
-
-Jeremy
+g.
