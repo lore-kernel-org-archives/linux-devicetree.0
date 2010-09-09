@@ -1,70 +1,39 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: How to define an I2C-to-SPI bridge device ?
-Date: Thu, 09 Sep 2010 12:23:14 -0600
-Message-ID: <c843f864-2a5a-4146-bd95-13c2fb91f430@email.android.com>
-References: <1283502979.17812.22.camel@swa-m460>
-	<20100903120858.GA19380@oksana.dev.rtsoft.ru>
-	<4C84D334.6060008@matrix-vision.de>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC] dtc: Optionally sort nodes and properties
+Date: Thu, 9 Sep 2010 13:44:52 -0500
+Message-ID: <AANLkTinQuvzK9Rit9C=hJo8v2VaFH2as3o=Hh-6_VhJj@mail.gmail.com>
+References: <20100901024718.GA4828@yookeroo>
+	<20100908202530.GH7065@angua.secretlab.ca>
+	<20100908153952.43fbc856@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4C84D334.6060008@matrix-vision.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Andre Schwarz <andre.schwarz@matrix-vision.de>, Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: LinuxPPC List <linuxppc-dev@ozlabs.org>, DevTreeDiscuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20100908153952.43fbc856-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgoiQW5kcmUgU2Nod2FyeiIgPGFuZHJlLnNjaHdhcnpAbWF0cml4LXZpc2lvbi5kZT4gd3JvdGU6
-Cgo+ICBBbnRvbiwKPgo+PiB3ZSdyZSBhYm91dCB0byBnZXQgbmV3IE1QQzgzNzcgYmFzZWQgaGFy
-ZHdhcmUgd2l0aCB2YXJpb3VzIHBlcmlwaGVyYWxzLgo+Pj4gVGhlcmUgYXJlIHR3byBJMkMtdG8t
-U1BJIGJyaWRnZSBkZXZpY2VzIChOWFAgU0MxOElTNjAyKSBhbmQgSSdtIG5vdCBzdXJlCj4+PiBo
-b3cgdG8gZGVmaW5lIGEgcHJvcGVyIGR0cy4uLgo+Pj4KPj4+IE9mIGNvdXJzZSBpdCdzIGFuIGVh
-c3kgdGhpbmcgY3JlYXRpbmcgMiBjaGlsZCBub2RlcyBvbiB0aGUgQ1BVJ3MgSTJDCj4+PiBkZXZp
-Y2UgLSBidXQgaG93IGNhbiBJIHJlcHJlc2VudCB0aGUgY3JlYXRlZCBTUEkgYnVzID8KPj4gVW0u
-LiB0aGUgc2FtZSBhcyB0aGUgb3RoZXIgU1BJIGJ1c2VzPyBJLmUuCj4+Cj4+IGkyYy1jb250cm9s
-bGVyIHsgIC8qIFNPQyBJMkMgY29udHJvbGxlciAqLwo+PiAJc3BpLWNvbnRyb2xsZXIgeyAgLyog
-VGhlIEkyQy10by1TUEkgYnJpZGdlICovCj4+IAkJc3BpLWRldmljZUAwIHsKPj4gCQl9Owo+PiAJ
-CXNwaS1kZXZpY2VAMSB7Cj4+IAkJfTsKPj4gCX07Cj4+IH07Cj4+Cj5vayAsIHRoYW5rcyAtIGxv
-b2tzIHN0cmFpZ2h0IGZvcndhcmQuCj5JcyB0aGlzIGFueSBtb3JlIHRoYW4gcGxhaW4gZGVmaW5p
-dGlvbiwgaS5lLiB3aWxsIHRoaXMgdHJpZ2dlciBhbnkgSTJDIAo+b3IgU1BJIGRldmljZSByZWdp
-c3RyYXRpb24vbGlua2luZyA/Cj4+PiBJcyB0aGUgKHBvc3NpYmx5KSByZXF1aXJlZCBkcml2ZXIg
-KG9mX3NjMThpczYweF9zcGkgPykgc3VwcG9zZWQgdG8gYmUgYW4KPj4+IEkyQyBzbGF2ZSBvciBh
-biBTUEkgaG9zdCBkcml2ZXIgPwo+PiBJdCBzaG91bGQgYmUgYW4gSTJDIGRyaXZlciB0aGF0IHJl
-Z2lzdGVycyBhbiBTUEkgbWFzdGVyIChpLmUuCj4+IGNhbGxzIHNwaV9hbGxvY19tYXN0ZXIoKSBh
-bmQgc3BpX3JlZ2lzdGVyX21hc3RlcigpKS4KPmhtbSAtIG9rLiBXaWxsIGhhdmUgdG8gZG8gaXQg
-bWFudWFsbHkgdGhlbiAuLi4KClllcywgYnV0IHRoaXMgaXMgdGhlIGNhc2UgZm9yIG5vbi1vZiBk
-cml2ZXJzIHRvby4gIFRoZSBpMmMgdG8gc3BpIGRldmljZSBkcml2ZXIgbXVzdCBhbHdheXMgY3Jl
-YXRlIChhbmQgdHJpZ2dlciBwb3B1bGF0aW9uIG9mKSB0aGUgc3BpIGJ1cyBpbnN0YW5jZS4KCj4K
-Pkkgc3RpbGwgd29uZGVyIGhvdyB0byBtYWtlIHRoZSBkcml2ZXIgYXJjaC1nZW5lcmljICphbmQq
-IG9mLWNhcGFibGUuCj5EbyB3ZSBuZWVkIGEgZ2VuZXJpYyBJMkMgc2xhdmUgZHJpdmVyIHRoYXQg
-Y2FuIGJlIHByb2JlZCBhbG9uZyB3aXRoIGFuIAo+Im9mIGdsdWUgZHJpdmVyIiBvciBzaG91bGQg
-dGhlIG9mLWJpbmRpbmcgYmUgcGFydCBvZiBhIHNpbmdsZSBkZXZpY2UgCj5kcml2ZXIgPwoKVGhl
-cmUgaXMgbm8gbG9uZ2VyIGFueSBuZWVkIGZvciBzZXBhcmF0ZSBvZiBhbmQgbm9uLW9mIGRyaXZl
-cnMgZm9yIHRoZSBzYW1lIGhhcmR3YXJlLiAgQW55IGRldmljZSBtYXkgaGF2ZSB0aGUgb2Zfbm9k
-ZSBwb2ludGVyIGluIHN0cnVjdCBkZXZpY2Ugc2V0LCBhbmQgZHJpdmVycyBjYW4gdXNlIHRoZSBw
-b2ludGVyIGFzIGFuIGFsdGVybmF0aXZlIHRvIHBsYXRmb3JtX2RhdGEgdG8gZ2V0IGluZm9ybWF0
-aW9uIGFib3V0IHRoZSBoYXJkd2FyZSBjb25maWd1cmF0aW9uLgoKSnVzdCByZWFkIHRoZSBkYXRh
-IG91dCBvZiB0aGUgbm9kZSBpbiB0aGUgZHJpdmVyJ3MgcHJvYmUgaG9vay4KCkZvciBpMmMgYW5k
-IChzb29uKSBzcGksIHRoZSBjb3JlIGNvZGUgd2lsbCBldmVuIHJlZ2lzdGVyIGNoaWxkIGRldmlj
-ZXMgZm9yIHlvdS4KCmcuCgo+Cj5Tb3JyeSBmb3IgdGhlIGR1bWIgcXVlc3Rpb25zIC0gbG9va3Mg
-bGlrZSBJIGV4cGVjdGVkIGEgbGl0dGxlIHRvbyBtdWNoIAo+ZnVuY3Rpb25hbGl0eSBhbHJlYWR5
-IGV4aXN0aW5nLgo+Cj4KPlJlZ2FyZHMsCj5BbmRyw6kKPgo+Cj5NQVRSSVggVklTSU9OIEdtYkgs
-IFRhbHN0cmFzc2UgMTYsIERFLTcxNTcwIE9wcGVud2VpbGVyCj5SZWdpc3RlcmdlcmljaHQ6IEFt
-dHNnZXJpY2h0IFN0dXR0Z2FydCwgSFJCIDI3MTA5MAo+R2VzY2hhZWZ0c2Z1ZWhyZXI6IEdlcmhh
-cmQgVGh1bGxuZXIsIFdlcm5lciBBcm1pbmdlb24sIFV3ZSBGdXJ0bmVyLCBIYW5zLUpvYWNoaW0g
-UmVpY2gKPl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj5M
-aW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Cj5MaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwo+
-aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldgotLSAKU2VudCBm
-cm9tIG15IEFuZHJvaWQgcGhvbmUgd2l0aCBLLTkgTWFpbC4gUGxlYXNlIGV4Y3VzZSBteSBicmV2
-aXR5LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
-eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
-Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On Wed, Sep 8, 2010 at 3:39 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> If it's undocumented, how would people find out how to compare device
+> trees?
+>
+> Maybe just add a "(for comparing trees)" note in the help text to
+> clarify the intended purpose?
+
+I agree with Scott.  It should be documented, but we should clearly
+state everywhere when this option should not be used.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
