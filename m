@@ -1,18 +1,18 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: =?ISO-8859-1?Q?Andr=E9?= Schwarz <andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org>
 Subject: Re: How to define an I2C-to-SPI bridge device ?
-Date: Fri, 10 Sep 2010 11:37:06 -0600
-Message-ID: <20100910173706.GD11284@angua.secretlab.ca>
+Date: Fri, 10 Sep 2010 20:14:44 +0200
+Message-ID: <1284142484.2152.18.camel@swa-e6500>
 References: <1283502979.17812.22.camel@swa-m460>
 	<20100903120858.GA19380@oksana.dev.rtsoft.ru>
 	<4C84D334.6060008@matrix-vision.de>
 	<c843f864-2a5a-4146-bd95-13c2fb91f430@email.android.com>
 	<1284106293.2267.42.camel@swa-m460>
+	<20100910173706.GD11284@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1284106293.2267.42.camel@swa-m460>
+In-Reply-To: <20100910173706.GD11284-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,96 +22,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: =?iso-8859-1?Q?Andr=E9?= Schwarz <andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: LinuxPPC List <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DevTreeDiscuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 10, 2010 at 10:11:33AM +0200, Andr=E9 Schwarz wrote:
-> Grant, Anton,
-> =
-
-> =
-
-> > =
-
-> > There is no longer any need for separate of and non-of drivers for the =
-same hardware.  Any device may have the of_node pointer in struct device se=
-t, and drivers can use the pointer as an alternative to platform_data to ge=
-t information about the hardware configuration.
-> =
-
-> > Just read the data out of the node in the driver's probe hook.
-> =
-
-> ok - will do it that way.
-> =
-
-> > =
-
-> > For i2c and (soon) spi, the core code will even register child devices =
-for you.
-> =
-
-> excellent.
-> =
-
-> =
-
-> =
-
-> Thinking about this device raises even more questions. Since there are
-> several possible solutions I'd like to hear your opinions :
-> =
-
-> 1.
-> The SC18IS602 is capable of generating interrupts which is *extremely*
-> useful triggering on the end of the actual SPI transaction and not the
-> end of I2C chip access. Since we need an IRQ_ACK over I2C (which takes
-> loooong with IRQ being still asserted) I'm thinking about using an edge
-> triggered interrupt.
-> Since all transactions are in-order there's no risk of missing multiple
-> edges ... what do you think about this ? Any known issues with edge
-> triggered IRQs ?
-
-Does the device actually generate edge interrupts?  Or is it a level
-irq device?  If it is a level irq device, then the correct way to
-handle this is to disable the irq line so that the event can be
-handled at non-irq context, and then reenable it when finished.
-
-> 2.
-> chips select generations is a little tricky.
-> The device has up to four cs# lines with their assertion being encoded
-> as subaddr representing a bitfield, i.e. Subaddr 0x01 generates cs0,
-> 0x04 asserts cs3 and 0x07 asserts cs0-2.
-
-I'm really not sure what is tricky about this.  The spi layer handles
-multiple CS lines on a single bus just fine.
-
-To start, how the CS lines are manipulated is only a hardware
-implementation detail.  The driver can and should do the work of
-translate Linux CS line numbers into the format/bitfield expected by
-the hardware.  Other drivers do the same thing.
-
-> At first I thought about registering 4 SPI busses representing the 4 cs#
-> lines and hide the cs# generation from the user. This would make
-> multiple cs# assertions for a single write impossible which is a very
-> useful feature.
-
-The SPI subsystem doesn't directly support this use-case.  If you want
-to do this, then assign another chip select number for the purpose of
-enabling multiple CS lines at once... and be careful which drivers you
-allow to be bound to the oddball CS number.  The in-kernel drivers
-certainly don't support this use-case, and care must be taken to
-ensure only one device is writing to the input line at a time.
-
-What specific hardware do you need this feature for?
-
-> Exposing the desired cs# setting for the next transaction via sysfs or
-> libGPIO requires the user to serialize cs# config and actual SPI
-> read/write. I also wouldn't know how to properly present the cs# lines
-> from multiple chips to the user in a clear and unambiguous way.
-
-Exposing via sysfs or discrete GPIO manipulations is completely the
-wrong thing to do.
-
-g.
+R3JhbnQsCgpbc25pcF0KPiA+IAo+ID4gMS4KPiA+IFRoZSBTQzE4SVM2MDIgaXMgY2FwYWJsZSBv
+ZiBnZW5lcmF0aW5nIGludGVycnVwdHMgd2hpY2ggaXMgKmV4dHJlbWVseSoKPiA+IHVzZWZ1bCB0
+cmlnZ2VyaW5nIG9uIHRoZSBlbmQgb2YgdGhlIGFjdHVhbCBTUEkgdHJhbnNhY3Rpb24gYW5kIG5v
+dCB0aGUKPiA+IGVuZCBvZiBJMkMgY2hpcCBhY2Nlc3MuIFNpbmNlIHdlIG5lZWQgYW4gSVJRX0FD
+SyBvdmVyIEkyQyAod2hpY2ggdGFrZXMKPiA+IGxvb29vbmcgd2l0aCBJUlEgYmVpbmcgc3RpbGwg
+YXNzZXJ0ZWQpIEknbSB0aGlua2luZyBhYm91dCB1c2luZyBhbiBlZGdlCj4gPiB0cmlnZ2VyZWQg
+aW50ZXJydXB0Lgo+ID4gU2luY2UgYWxsIHRyYW5zYWN0aW9ucyBhcmUgaW4tb3JkZXIgdGhlcmUn
+cyBubyByaXNrIG9mIG1pc3NpbmcgbXVsdGlwbGUKPiA+IGVkZ2VzIC4uLiB3aGF0IGRvIHlvdSB0
+aGluayBhYm91dCB0aGlzID8gQW55IGtub3duIGlzc3VlcyB3aXRoIGVkZ2UKPiA+IHRyaWdnZXJl
+ZCBJUlFzID8KPiAKPiBEb2VzIHRoZSBkZXZpY2UgYWN0dWFsbHkgZ2VuZXJhdGUgZWRnZSBpbnRl
+cnJ1cHRzPyAgT3IgaXMgaXQgYSBsZXZlbAo+IGlycSBkZXZpY2U/ICBJZiBpdCBpcyBhIGxldmVs
+IGlycSBkZXZpY2UsIHRoZW4gdGhlIGNvcnJlY3Qgd2F5IHRvCj4gaGFuZGxlIHRoaXMgaXMgdG8g
+ZGlzYWJsZSB0aGUgaXJxIGxpbmUgc28gdGhhdCB0aGUgZXZlbnQgY2FuIGJlCj4gaGFuZGxlZCBh
+dCBub24taXJxIGNvbnRleHQsIGFuZCB0aGVuIHJlZW5hYmxlIGl0IHdoZW4gZmluaXNoZWQuCgpU
+aGUgaXJxIGlzIGxldmVsLWxvdyBhY3RpdmUuCldpbGwgZG8gaXQgdmlhIGRpc2FibGUvcmUtZW5h
+YmxlIHRoZW4uCgo+IAo+ID4gMi4KPiA+IGNoaXBzIHNlbGVjdCBnZW5lcmF0aW9ucyBpcyBhIGxp
+dHRsZSB0cmlja3kuCj4gPiBUaGUgZGV2aWNlIGhhcyB1cCB0byBmb3VyIGNzIyBsaW5lcyB3aXRo
+IHRoZWlyIGFzc2VydGlvbiBiZWluZyBlbmNvZGVkCj4gPiBhcyBzdWJhZGRyIHJlcHJlc2VudGlu
+ZyBhIGJpdGZpZWxkLCBpLmUuIFN1YmFkZHIgMHgwMSBnZW5lcmF0ZXMgY3MwLAo+ID4gMHgwNCBh
+c3NlcnRzIGNzMyBhbmQgMHgwNyBhc3NlcnRzIGNzMC0yLgo+IAo+IEknbSByZWFsbHkgbm90IHN1
+cmUgd2hhdCBpcyB0cmlja3kgYWJvdXQgdGhpcy4gIFRoZSBzcGkgbGF5ZXIgaGFuZGxlcwo+IG11
+bHRpcGxlIENTIGxpbmVzIG9uIGEgc2luZ2xlIGJ1cyBqdXN0IGZpbmUuCgpodWggLSBvayAuLi4g
+ZGlkbid0IGtub3cgdGhhdCwgc29ycnkuCgo+IAo+IFRvIHN0YXJ0LCBob3cgdGhlIENTIGxpbmVz
+IGFyZSBtYW5pcHVsYXRlZCBpcyBvbmx5IGEgaGFyZHdhcmUKPiBpbXBsZW1lbnRhdGlvbiBkZXRh
+aWwuICBUaGUgZHJpdmVyIGNhbiBhbmQgc2hvdWxkIGRvIHRoZSB3b3JrIG9mCj4gdHJhbnNsYXRl
+IExpbnV4IENTIGxpbmUgbnVtYmVycyBpbnRvIHRoZSBmb3JtYXQvYml0ZmllbGQgZXhwZWN0ZWQg
+YnkKPiB0aGUgaGFyZHdhcmUuICBPdGhlciBkcml2ZXJzIGRvIHRoZSBzYW1lIHRoaW5nLgoKb2sg
+LSB3aWxsIGRvIGl0LgoKPiAKPiA+IEF0IGZpcnN0IEkgdGhvdWdodCBhYm91dCByZWdpc3Rlcmlu
+ZyA0IFNQSSBidXNzZXMgcmVwcmVzZW50aW5nIHRoZSA0IGNzIwo+ID4gbGluZXMgYW5kIGhpZGUg
+dGhlIGNzIyBnZW5lcmF0aW9uIGZyb20gdGhlIHVzZXIuIFRoaXMgd291bGQgbWFrZQo+ID4gbXVs
+dGlwbGUgY3MjIGFzc2VydGlvbnMgZm9yIGEgc2luZ2xlIHdyaXRlIGltcG9zc2libGUgd2hpY2gg
+aXMgYSB2ZXJ5Cj4gPiB1c2VmdWwgZmVhdHVyZS4KPiAKPiBUaGUgU1BJIHN1YnN5c3RlbSBkb2Vz
+bid0IGRpcmVjdGx5IHN1cHBvcnQgdGhpcyB1c2UtY2FzZS4gIElmIHlvdSB3YW50Cj4gdG8gZG8g
+dGhpcywgdGhlbiBhc3NpZ24gYW5vdGhlciBjaGlwIHNlbGVjdCBudW1iZXIgZm9yIHRoZSBwdXJw
+b3NlIG9mCj4gZW5hYmxpbmcgbXVsdGlwbGUgQ1MgbGluZXMgYXQgb25jZS4uLiBhbmQgYmUgY2Fy
+ZWZ1bCB3aGljaCBkcml2ZXJzIHlvdQo+IGFsbG93IHRvIGJlIGJvdW5kIHRvIHRoZSBvZGRiYWxs
+IENTIG51bWJlci4gIFRoZSBpbi1rZXJuZWwgZHJpdmVycwo+IGNlcnRhaW5seSBkb24ndCBzdXBw
+b3J0IHRoaXMgdXNlLWNhc2UsIGFuZCBjYXJlIG11c3QgYmUgdGFrZW4gdG8KPiBlbnN1cmUgb25s
+eSBvbmUgZGV2aWNlIGlzIHdyaXRpbmcgdG8gdGhlIGlucHV0IGxpbmUgYXQgYSB0aW1lLgo+IAo+
+IFdoYXQgc3BlY2lmaWMgaGFyZHdhcmUgZG8geW91IG5lZWQgdGhpcyBmZWF0dXJlIGZvcj8KCldl
+IGhhdmUgYSBib2FyZCB3aXRoIG11bHRpcGxlIHBhcmFsbGVsIHZpZGVvIHRyYW5zbWl0dGVycyBj
+b25uZWN0ZWQgdG8KYW4gRlBHQS4gVmlkZW8gdGltaW5nIGFuZCBnZW5lcmFsIHBhcmFtZXRlcnMg
+YXJlIGFsd2F5cyB0aGUgc2FtZSBhbmQKdGhlcmUgYXJlIHF1aXRlIGEgbG90IG9mIHNldHRpbmdz
+IHRvIHdyaXRlIGR1cmluZyBpbml0L21vZGUgY2hhbmdlLgoKRG9pbmcgdGhpcyBpbiBwYXJhbGxl
+bCB3aWxsIHNwZWVkIHRoaW5ncyB1cCBzaWduaWZpY2FudGx5LgoKT2YgY291cnNlIHRoaXMgaXMg
+YSB3cml0ZS1vbmx5IHNjZW5hcmlvLCBpLmUuIG5vIGNvbWJpbmVkIHJlYWRzLgoKPiAKPiA+IEV4
+cG9zaW5nIHRoZSBkZXNpcmVkIGNzIyBzZXR0aW5nIGZvciB0aGUgbmV4dCB0cmFuc2FjdGlvbiB2
+aWEgc3lzZnMgb3IKPiA+IGxpYkdQSU8gcmVxdWlyZXMgdGhlIHVzZXIgdG8gc2VyaWFsaXplIGNz
+IyBjb25maWcgYW5kIGFjdHVhbCBTUEkKPiA+IHJlYWQvd3JpdGUuIEkgYWxzbyB3b3VsZG4ndCBr
+bm93IGhvdyB0byBwcm9wZXJseSBwcmVzZW50IHRoZSBjcyMgbGluZXMKPiA+IGZyb20gbXVsdGlw
+bGUgY2hpcHMgdG8gdGhlIHVzZXIgaW4gYSBjbGVhciBhbmQgdW5hbWJpZ3VvdXMgd2F5Lgo+IAo+
+IEV4cG9zaW5nIHZpYSBzeXNmcyBvciBkaXNjcmV0ZSBHUElPIG1hbmlwdWxhdGlvbnMgaXMgY29t
+cGxldGVseSB0aGUKPiB3cm9uZyB0aGluZyB0byBkby4KClRoYW5rcyBmb3IgcG9pbnRpbmcgdGhp
+cyBvdXQuCgoKQlRXOiB3b3VsZCAiZHJpdmVycy9taXNjIiBiZSBhIHByb3BlciBsb2NhdGlvbiA/
+CldobydzIHN1cHBvc2VkIHRvIHBpY2sgdGhhdCBkcml2ZXIgdXAgYW5kIG9uIHdoYXQgbGlzdCBz
+aGFsbCBJIHBvc3QgaXQKZm9yIHJldmlldyA/CgoKV2lsbCB0cnkgdG8gZ2V0IG1vcmUgc3BpIGtu
+b3dsZWRnZSBiZWZvcmUgbW92aW5nIG9uIGFuZCBhc2tpbmcgc3R1cGlkCnF1ZXN0aW9ucy4gVGhh
+bmtzIGZvciB5b3VyIGhlbHAgc28gZmFyLgoKClJlZ2FyZHMsCkFuZHLDqQoKCgpNQVRSSVggVklT
+SU9OIEdtYkgsIFRhbHN0cmFzc2UgMTYsIERFLTcxNTcwIE9wcGVud2VpbGVyClJlZ2lzdGVyZ2Vy
+aWNodDogQW10c2dlcmljaHQgU3R1dHRnYXJ0LCBIUkIgMjcxMDkwCkdlc2NoYWVmdHNmdWVocmVy
+OiBHZXJoYXJkIFRodWxsbmVyLCBXZXJuZXIgQXJtaW5nZW9uLCBVd2UgRnVydG5lcgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1
+c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
