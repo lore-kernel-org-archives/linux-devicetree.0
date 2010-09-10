@@ -1,92 +1,38 @@
-From: =?ISO-8859-1?Q?Andr=E9?= Schwarz <andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org>
-Subject: Re: How to define an I2C-to-SPI bridge device ?
-Date: Fri, 10 Sep 2010 20:14:44 +0200
-Message-ID: <1284142484.2152.18.camel@swa-e6500>
-References: <1283502979.17812.22.camel@swa-m460>
-	<20100903120858.GA19380@oksana.dev.rtsoft.ru>
-	<4C84D334.6060008@matrix-vision.de>
-	<c843f864-2a5a-4146-bd95-13c2fb91f430@email.android.com>
-	<1284106293.2267.42.camel@swa-m460>
-	<20100910173706.GD11284@angua.secretlab.ca>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH 2/2] x86: of: define irq functions to allow drivers/of/*
+ to build on x86
+Date: Fri, 10 Sep 2010 20:14:58 +0200
+Message-ID: <20100910181458.GA7243@elte.hu>
+References: <20100910060151.6613e9c3@debxo>
+ <20100910172538.GC11284@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20100910173706.GD11284-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: LinuxPPC List <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DevTreeDiscuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20100910172538.GC11284@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Andres Salomon <dilinger@queued.net>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, Mitch Bradley <wmb@laptop.org>, linux-kernel@vger.kernel.org, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-R3JhbnQsCgpbc25pcF0KPiA+IAo+ID4gMS4KPiA+IFRoZSBTQzE4SVM2MDIgaXMgY2FwYWJsZSBv
-ZiBnZW5lcmF0aW5nIGludGVycnVwdHMgd2hpY2ggaXMgKmV4dHJlbWVseSoKPiA+IHVzZWZ1bCB0
-cmlnZ2VyaW5nIG9uIHRoZSBlbmQgb2YgdGhlIGFjdHVhbCBTUEkgdHJhbnNhY3Rpb24gYW5kIG5v
-dCB0aGUKPiA+IGVuZCBvZiBJMkMgY2hpcCBhY2Nlc3MuIFNpbmNlIHdlIG5lZWQgYW4gSVJRX0FD
-SyBvdmVyIEkyQyAod2hpY2ggdGFrZXMKPiA+IGxvb29vbmcgd2l0aCBJUlEgYmVpbmcgc3RpbGwg
-YXNzZXJ0ZWQpIEknbSB0aGlua2luZyBhYm91dCB1c2luZyBhbiBlZGdlCj4gPiB0cmlnZ2VyZWQg
-aW50ZXJydXB0Lgo+ID4gU2luY2UgYWxsIHRyYW5zYWN0aW9ucyBhcmUgaW4tb3JkZXIgdGhlcmUn
-cyBubyByaXNrIG9mIG1pc3NpbmcgbXVsdGlwbGUKPiA+IGVkZ2VzIC4uLiB3aGF0IGRvIHlvdSB0
-aGluayBhYm91dCB0aGlzID8gQW55IGtub3duIGlzc3VlcyB3aXRoIGVkZ2UKPiA+IHRyaWdnZXJl
-ZCBJUlFzID8KPiAKPiBEb2VzIHRoZSBkZXZpY2UgYWN0dWFsbHkgZ2VuZXJhdGUgZWRnZSBpbnRl
-cnJ1cHRzPyAgT3IgaXMgaXQgYSBsZXZlbAo+IGlycSBkZXZpY2U/ICBJZiBpdCBpcyBhIGxldmVs
-IGlycSBkZXZpY2UsIHRoZW4gdGhlIGNvcnJlY3Qgd2F5IHRvCj4gaGFuZGxlIHRoaXMgaXMgdG8g
-ZGlzYWJsZSB0aGUgaXJxIGxpbmUgc28gdGhhdCB0aGUgZXZlbnQgY2FuIGJlCj4gaGFuZGxlZCBh
-dCBub24taXJxIGNvbnRleHQsIGFuZCB0aGVuIHJlZW5hYmxlIGl0IHdoZW4gZmluaXNoZWQuCgpU
-aGUgaXJxIGlzIGxldmVsLWxvdyBhY3RpdmUuCldpbGwgZG8gaXQgdmlhIGRpc2FibGUvcmUtZW5h
-YmxlIHRoZW4uCgo+IAo+ID4gMi4KPiA+IGNoaXBzIHNlbGVjdCBnZW5lcmF0aW9ucyBpcyBhIGxp
-dHRsZSB0cmlja3kuCj4gPiBUaGUgZGV2aWNlIGhhcyB1cCB0byBmb3VyIGNzIyBsaW5lcyB3aXRo
-IHRoZWlyIGFzc2VydGlvbiBiZWluZyBlbmNvZGVkCj4gPiBhcyBzdWJhZGRyIHJlcHJlc2VudGlu
-ZyBhIGJpdGZpZWxkLCBpLmUuIFN1YmFkZHIgMHgwMSBnZW5lcmF0ZXMgY3MwLAo+ID4gMHgwNCBh
-c3NlcnRzIGNzMyBhbmQgMHgwNyBhc3NlcnRzIGNzMC0yLgo+IAo+IEknbSByZWFsbHkgbm90IHN1
-cmUgd2hhdCBpcyB0cmlja3kgYWJvdXQgdGhpcy4gIFRoZSBzcGkgbGF5ZXIgaGFuZGxlcwo+IG11
-bHRpcGxlIENTIGxpbmVzIG9uIGEgc2luZ2xlIGJ1cyBqdXN0IGZpbmUuCgpodWggLSBvayAuLi4g
-ZGlkbid0IGtub3cgdGhhdCwgc29ycnkuCgo+IAo+IFRvIHN0YXJ0LCBob3cgdGhlIENTIGxpbmVz
-IGFyZSBtYW5pcHVsYXRlZCBpcyBvbmx5IGEgaGFyZHdhcmUKPiBpbXBsZW1lbnRhdGlvbiBkZXRh
-aWwuICBUaGUgZHJpdmVyIGNhbiBhbmQgc2hvdWxkIGRvIHRoZSB3b3JrIG9mCj4gdHJhbnNsYXRl
-IExpbnV4IENTIGxpbmUgbnVtYmVycyBpbnRvIHRoZSBmb3JtYXQvYml0ZmllbGQgZXhwZWN0ZWQg
-YnkKPiB0aGUgaGFyZHdhcmUuICBPdGhlciBkcml2ZXJzIGRvIHRoZSBzYW1lIHRoaW5nLgoKb2sg
-LSB3aWxsIGRvIGl0LgoKPiAKPiA+IEF0IGZpcnN0IEkgdGhvdWdodCBhYm91dCByZWdpc3Rlcmlu
-ZyA0IFNQSSBidXNzZXMgcmVwcmVzZW50aW5nIHRoZSA0IGNzIwo+ID4gbGluZXMgYW5kIGhpZGUg
-dGhlIGNzIyBnZW5lcmF0aW9uIGZyb20gdGhlIHVzZXIuIFRoaXMgd291bGQgbWFrZQo+ID4gbXVs
-dGlwbGUgY3MjIGFzc2VydGlvbnMgZm9yIGEgc2luZ2xlIHdyaXRlIGltcG9zc2libGUgd2hpY2gg
-aXMgYSB2ZXJ5Cj4gPiB1c2VmdWwgZmVhdHVyZS4KPiAKPiBUaGUgU1BJIHN1YnN5c3RlbSBkb2Vz
-bid0IGRpcmVjdGx5IHN1cHBvcnQgdGhpcyB1c2UtY2FzZS4gIElmIHlvdSB3YW50Cj4gdG8gZG8g
-dGhpcywgdGhlbiBhc3NpZ24gYW5vdGhlciBjaGlwIHNlbGVjdCBudW1iZXIgZm9yIHRoZSBwdXJw
-b3NlIG9mCj4gZW5hYmxpbmcgbXVsdGlwbGUgQ1MgbGluZXMgYXQgb25jZS4uLiBhbmQgYmUgY2Fy
-ZWZ1bCB3aGljaCBkcml2ZXJzIHlvdQo+IGFsbG93IHRvIGJlIGJvdW5kIHRvIHRoZSBvZGRiYWxs
-IENTIG51bWJlci4gIFRoZSBpbi1rZXJuZWwgZHJpdmVycwo+IGNlcnRhaW5seSBkb24ndCBzdXBw
-b3J0IHRoaXMgdXNlLWNhc2UsIGFuZCBjYXJlIG11c3QgYmUgdGFrZW4gdG8KPiBlbnN1cmUgb25s
-eSBvbmUgZGV2aWNlIGlzIHdyaXRpbmcgdG8gdGhlIGlucHV0IGxpbmUgYXQgYSB0aW1lLgo+IAo+
-IFdoYXQgc3BlY2lmaWMgaGFyZHdhcmUgZG8geW91IG5lZWQgdGhpcyBmZWF0dXJlIGZvcj8KCldl
-IGhhdmUgYSBib2FyZCB3aXRoIG11bHRpcGxlIHBhcmFsbGVsIHZpZGVvIHRyYW5zbWl0dGVycyBj
-b25uZWN0ZWQgdG8KYW4gRlBHQS4gVmlkZW8gdGltaW5nIGFuZCBnZW5lcmFsIHBhcmFtZXRlcnMg
-YXJlIGFsd2F5cyB0aGUgc2FtZSBhbmQKdGhlcmUgYXJlIHF1aXRlIGEgbG90IG9mIHNldHRpbmdz
-IHRvIHdyaXRlIGR1cmluZyBpbml0L21vZGUgY2hhbmdlLgoKRG9pbmcgdGhpcyBpbiBwYXJhbGxl
-bCB3aWxsIHNwZWVkIHRoaW5ncyB1cCBzaWduaWZpY2FudGx5LgoKT2YgY291cnNlIHRoaXMgaXMg
-YSB3cml0ZS1vbmx5IHNjZW5hcmlvLCBpLmUuIG5vIGNvbWJpbmVkIHJlYWRzLgoKPiAKPiA+IEV4
-cG9zaW5nIHRoZSBkZXNpcmVkIGNzIyBzZXR0aW5nIGZvciB0aGUgbmV4dCB0cmFuc2FjdGlvbiB2
-aWEgc3lzZnMgb3IKPiA+IGxpYkdQSU8gcmVxdWlyZXMgdGhlIHVzZXIgdG8gc2VyaWFsaXplIGNz
-IyBjb25maWcgYW5kIGFjdHVhbCBTUEkKPiA+IHJlYWQvd3JpdGUuIEkgYWxzbyB3b3VsZG4ndCBr
-bm93IGhvdyB0byBwcm9wZXJseSBwcmVzZW50IHRoZSBjcyMgbGluZXMKPiA+IGZyb20gbXVsdGlw
-bGUgY2hpcHMgdG8gdGhlIHVzZXIgaW4gYSBjbGVhciBhbmQgdW5hbWJpZ3VvdXMgd2F5Lgo+IAo+
-IEV4cG9zaW5nIHZpYSBzeXNmcyBvciBkaXNjcmV0ZSBHUElPIG1hbmlwdWxhdGlvbnMgaXMgY29t
-cGxldGVseSB0aGUKPiB3cm9uZyB0aGluZyB0byBkby4KClRoYW5rcyBmb3IgcG9pbnRpbmcgdGhp
-cyBvdXQuCgoKQlRXOiB3b3VsZCAiZHJpdmVycy9taXNjIiBiZSBhIHByb3BlciBsb2NhdGlvbiA/
-CldobydzIHN1cHBvc2VkIHRvIHBpY2sgdGhhdCBkcml2ZXIgdXAgYW5kIG9uIHdoYXQgbGlzdCBz
-aGFsbCBJIHBvc3QgaXQKZm9yIHJldmlldyA/CgoKV2lsbCB0cnkgdG8gZ2V0IG1vcmUgc3BpIGtu
-b3dsZWRnZSBiZWZvcmUgbW92aW5nIG9uIGFuZCBhc2tpbmcgc3R1cGlkCnF1ZXN0aW9ucy4gVGhh
-bmtzIGZvciB5b3VyIGhlbHAgc28gZmFyLgoKClJlZ2FyZHMsCkFuZHLDqQoKCgpNQVRSSVggVklT
-SU9OIEdtYkgsIFRhbHN0cmFzc2UgMTYsIERFLTcxNTcwIE9wcGVud2VpbGVyClJlZ2lzdGVyZ2Vy
-aWNodDogQW10c2dlcmljaHQgU3R1dHRnYXJ0LCBIUkIgMjcxMDkwCkdlc2NoYWVmdHNmdWVocmVy
-OiBHZXJoYXJkIFRodWxsbmVyLCBXZXJuZXIgQXJtaW5nZW9uLCBVd2UgRnVydG5lcgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1
-c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBz
-Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+
+* Grant Likely <grant.likely@secretlab.ca> wrote:
+
+> On Fri, Sep 10, 2010 at 06:01:51AM -0700, Andres Salomon wrote:
+> > 
+> >  - Define a stub irq_create_of_mapping for x86 as a stop-gap solution until
+> >    drivers/of/irq is further along.
+> >  - Define irq_dispose_mapping for x86 to appease of_i2c.c
+> > 
+> > Signed-off-by: Andres Salomon <dilinger@queued.net>
+> 
+> Applied to my test-devicetree branch.  I'll need an ack from the x86 
+> maintainers before I put it into my -next branch.
+
+The purpose of the patch is not clear to me. What does it do and why? 
+The changelog says it's a stopgap measure - what exactly is the long 
+term plan and how long will it take?
+
+Thanks,
+
+	Ingo
