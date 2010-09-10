@@ -1,15 +1,18 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] x86: of: define irq functions to allow
-	drivers/of/* to build on x86
-Date: Fri, 10 Sep 2010 11:25:38 -0600
-Message-ID: <20100910172538.GC11284@angua.secretlab.ca>
-References: <20100910060151.6613e9c3@debxo>
+Subject: Re: How to define an I2C-to-SPI bridge device ?
+Date: Fri, 10 Sep 2010 11:37:06 -0600
+Message-ID: <20100910173706.GD11284@angua.secretlab.ca>
+References: <1283502979.17812.22.camel@swa-m460>
+	<20100903120858.GA19380@oksana.dev.rtsoft.ru>
+	<4C84D334.6060008@matrix-vision.de>
+	<c843f864-2a5a-4146-bd95-13c2fb91f430@email.android.com>
+	<1284106293.2267.42.camel@swa-m460>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20100910060151.6613e9c3@debxo>
+In-Reply-To: <1284106293.2267.42.camel@swa-m460>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,81 +22,96 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitch Bradley <wmb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+To: =?iso-8859-1?Q?Andr=E9?= Schwarz <andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org>
+Cc: LinuxPPC List <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DevTreeDiscuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 10, 2010 at 06:01:51AM -0700, Andres Salomon wrote:
-> 
->  - Define a stub irq_create_of_mapping for x86 as a stop-gap solution until
->    drivers/of/irq is further along.
->  - Define irq_dispose_mapping for x86 to appease of_i2c.c
-> 
-> Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+On Fri, Sep 10, 2010 at 10:11:33AM +0200, Andr=E9 Schwarz wrote:
+> Grant, Anton,
+> =
 
-Applied to my test-devicetree branch.  I'll need an ack from the x86
-maintainers before I put it into my -next branch.
+> =
+
+> > =
+
+> > There is no longer any need for separate of and non-of drivers for the =
+same hardware.  Any device may have the of_node pointer in struct device se=
+t, and drivers can use the pointer as an alternative to platform_data to ge=
+t information about the hardware configuration.
+> =
+
+> > Just read the data out of the node in the driver's probe hook.
+> =
+
+> ok - will do it that way.
+> =
+
+> > =
+
+> > For i2c and (soon) spi, the core code will even register child devices =
+for you.
+> =
+
+> excellent.
+> =
+
+> =
+
+> =
+
+> Thinking about this device raises even more questions. Since there are
+> several possible solutions I'd like to hear your opinions :
+> =
+
+> 1.
+> The SC18IS602 is capable of generating interrupts which is *extremely*
+> useful triggering on the end of the actual SPI transaction and not the
+> end of I2C chip access. Since we need an IRQ_ACK over I2C (which takes
+> loooong with IRQ being still asserted) I'm thinking about using an edge
+> triggered interrupt.
+> Since all transactions are in-order there's no risk of missing multiple
+> edges ... what do you think about this ? Any known issues with edge
+> triggered IRQs ?
+
+Does the device actually generate edge interrupts?  Or is it a level
+irq device?  If it is a level irq device, then the correct way to
+handle this is to disable the irq line so that the event can be
+handled at non-irq context, and then reenable it when finished.
+
+> 2.
+> chips select generations is a little tricky.
+> The device has up to four cs# lines with their assertion being encoded
+> as subaddr representing a bitfield, i.e. Subaddr 0x01 generates cs0,
+> 0x04 asserts cs3 and 0x07 asserts cs0-2.
+
+I'm really not sure what is tricky about this.  The spi layer handles
+multiple CS lines on a single bus just fine.
+
+To start, how the CS lines are manipulated is only a hardware
+implementation detail.  The driver can and should do the work of
+translate Linux CS line numbers into the format/bitfield expected by
+the hardware.  Other drivers do the same thing.
+
+> At first I thought about registering 4 SPI busses representing the 4 cs#
+> lines and hide the cs# generation from the user. This would make
+> multiple cs# assertions for a single write impossible which is a very
+> useful feature.
+
+The SPI subsystem doesn't directly support this use-case.  If you want
+to do this, then assign another chip select number for the purpose of
+enabling multiple CS lines at once... and be careful which drivers you
+allow to be bound to the oddball CS number.  The in-kernel drivers
+certainly don't support this use-case, and care must be taken to
+ensure only one device is writing to the input line at a time.
+
+What specific hardware do you need this feature for?
+
+> Exposing the desired cs# setting for the next transaction via sysfs or
+> libGPIO requires the user to serialize cs# config and actual SPI
+> read/write. I also wouldn't know how to properly present the cs# lines
+> from multiple chips to the user in a clear and unambiguous way.
+
+Exposing via sysfs or discrete GPIO manipulations is completely the
+wrong thing to do.
 
 g.
-
-> ---
->  arch/x86/include/asm/irq.h |    3 +++
->  arch/x86/kernel/irq.c      |    8 ++++++++
->  include/linux/of_irq.h     |    1 +
->  3 files changed, 12 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
-> index 5458380..8ffa06f 100644
-> --- a/arch/x86/include/asm/irq.h
-> +++ b/arch/x86/include/asm/irq.h
-> @@ -10,6 +10,9 @@
->  #include <asm/apicdef.h>
->  #include <asm/irq_vectors.h>
->  
-> +/* Even though we don't support this, supply it to appease OF */
-> +static inline void irq_dispose_mapping(unsigned int virq) { }
-> +
->  static inline int irq_canonicalize(int irq)
->  {
->  	return ((irq == 2) ? 9 : irq);
-> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-> index 91fd0c7..b78bb6f 100644
-> --- a/arch/x86/kernel/irq.c
-> +++ b/arch/x86/kernel/irq.c
-> @@ -4,6 +4,7 @@
->  #include <linux/cpu.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel_stat.h>
-> +#include <linux/of.h>
->  #include <linux/seq_file.h>
->  #include <linux/smp.h>
->  #include <linux/ftrace.h>
-> @@ -275,6 +276,13 @@ void smp_x86_platform_ipi(struct pt_regs *regs)
->  
->  EXPORT_SYMBOL_GPL(vector_used_by_percpu_irq);
->  
-> +unsigned int irq_create_of_mapping(struct device_node *controller,
-> +		const u32 *intspec, unsigned int intsize)
-> +{
-> +	return intspec[0] + 1;
-> +}
-> +EXPORT_SYMBOL_GPL(irq_create_of_mapping);
-> +
->  #ifdef CONFIG_HOTPLUG_CPU
->  /* A cpu has been removed from cpu_online_mask.  Reset irq affinities. */
->  void fixup_irqs(void)
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 090cbaa..109e013 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -5,6 +5,7 @@
->  struct of_irq;
->  #include <linux/types.h>
->  #include <linux/errno.h>
-> +#include <linux/irq.h>
->  #include <linux/ioport.h>
->  #include <linux/of.h>
->  
-> -- 
-> 1.5.6.5
-> 
