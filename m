@@ -1,15 +1,22 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: ARM machine specific DT probing
-Date: Mon, 13 Sep 2010 12:20:36 +1000
-Message-ID: <20100913022036.GD5505@yookeroo>
-References: <alpine.LFD.2.00.1009081523500.19366@xanadu.home>
-	<1283994479.4420.6.camel@pororo>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: How to define an I2C-to-SPI bridge device ?
+Date: Sun, 12 Sep 2010 22:39:57 -0600
+Message-ID: <20100913043957.GA2144@angua.secretlab.ca>
+References: <1283502979.17812.22.camel@swa-m460>
+	<20100903120858.GA19380@oksana.dev.rtsoft.ru>
+	<4C84D334.6060008@matrix-vision.de>
+	<c843f864-2a5a-4146-bd95-13c2fb91f430@email.android.com>
+	<1284106293.2267.42.camel@swa-m460>
+	<20100910173706.GD11284@angua.secretlab.ca>
+	<1284142484.2152.18.camel@swa-e6500>
+	<20100910182815.GH11284@angua.secretlab.ca>
+	<1284304235.2913.8.camel@swa-e6500>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1283994479.4420.6.camel@pororo>
+In-Reply-To: <1284304235.2913.8.camel@swa-e6500>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,65 +26,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+To: =?iso-8859-1?Q?Andr=E9?= Schwarz <andre.schwarz-P0pTl12WyEgpBod+wgzj8A@public.gmane.org>
+Cc: LinuxPPC List <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DevTreeDiscuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 09, 2010 at 09:07:59AM +0800, Jeremy Kerr wrote:
-> Hi Nicolas,
-> 
-> > What Jeremy did is to add a probe_dt method in the mdesc structure, and 
-> > then the core is calling them in sequence until one of them returns 
-> > success.
-> > 
-> > now, the "compatible" property is explained here:
-> > 
-> > http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property
-> > 
-> > From my understanding, this could allow for a kernel that doesn't yet 
-> > support the specifics of a particular board to still be able to work 
-> > using basic common support.  But for this to work, wouldn't it be 
-> > necessary for the core code to try to find the best match itself rather 
-> > than letting each machine's  probe_dt decide on their own?
-> 
-> At present, the probe_dt function is a binary match/no-match indicator,
-> so the core code just selects the first match it finds. This means that
-> we'll need one mdesc per machine; I'm intending to keep it simple to
-> start with.
-> 
-> My intention in the longer-term is to allow probe_dt to indicate
-> less-specific matches (eg, match on the SoC family), and change the core
-> code to not break out of the loop on the first match, but continue to
-> look for a better match. This way, we can have one mdesc to support a
-> SoC family, but still allow that to be overridden if there's a more
-> specific (eg, single machine) mdesc compiled in.
+On Sun, Sep 12, 2010 at 05:10:35PM +0200, Andr=E9 Schwarz wrote:
+> > > BTW: would "drivers/misc" be a proper location ?
+> > > Who's supposed to pick that driver up and on what list shall I post it
+> > > for review ?
+> > =
 
-Hrm.  The trouble with this idea is that it needs some measure of
-"specificness of match", and I'm not sure you can come up with an
-encoding of that which is better than just order in the match
-table. i.e. if you construct your match table such that more specific
-matches precede less specific ones, you don't need to keep scanning
-the table and then work out which is the "best" match.
+> > You should cc spi-devel-general, and feel free to cc me.  drivers/misc
+> > would probably be an okay place for it to live; but if it only appears
+> > on a single machine, then it may make more sense in
+> > arch/*/<board-directory>.  What arch or SoC is this running on?
+> =
 
-> The reason I do this in the machine-specific code (rather than the core
-> code checking the compatible property) is to allow the probe_dt function
-> to check arbitrary data in the device tree. Perhaps we have two
-> variations of a machine - both with the same compatible property, but
-> distinguishable in some other way, and we need a separate mdesc for
-> whatever reason.
+> ok - currently I'm preparing bring up of a MPC8377 based system.
+> But we have this chips on multiple boards and also on generic PCIe
+> grabber cards running on any desktop PC.
+> =
 
-Exactly: you do need to cover this unfortunate, but inevitable case.
-The trouble is I don't see how you can have a specificness measure
-without starting to make assumptions about what the probe function is
-checking.
+> Since we could use the driver directly after registering the various I2C
+> masters I'd prefer to go with drivers/misc. After all it's a simple I2C
+> slave device usable by anyone ...
 
-Getting the probe table ordered by specificness will be fiddly in some
-cases, but not, I suspect more so than the hard cases would be anyway
-with a specificness measure.  And I think it's as versatile an
-encoding of specificness as you're likely to get.
+If it is a video capture device, then wouldn't drivers/video
+or drivers/media make sense?  Search for "MEDIA INPUT" in the
+MAINTAINERS file.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+g.
