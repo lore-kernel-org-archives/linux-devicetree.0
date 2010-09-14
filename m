@@ -1,13 +1,11 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [Power.org:parch] ePAPR 1.1 to do list
-Date: Mon, 13 Sep 2010 13:17:52 -0500
-Message-ID: <20100913131752.54981fb1@schlenkerla.am.freescale.net>
-References: <9696D7A991D0824DBA8DFAC74A9C5FA306688C2F@az33exm25.fsl.freescale.net>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: [PATCH] drivers/of: use __be32 types for big-endian device tree data
+Date: Tue, 14 Sep 2010 11:13:51 +0800
+Message-ID: <1284434031.863044.443635323150.1.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9696D7A991D0824DBA8DFAC74A9C5FA306688C2F-ofAVchDyotYzzZk0BCvKg5jmvxFtTJ+o0e7PPNI6Mm0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,38 +15,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Aug 2010 14:34:44 -0700
-Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+Use the sparse annotations so we can keep track of endianness.
 
-> I've consolidated what I am aware of with respect to errors found in
-> 1.0,
-> clarifications needed, and new mechanisms to go into ePAPR 1.1 into
-> a single list.
-> 
-> Let me know if you are aware of anything else.
-> 
-> ePAPR 1.1 To Do
-> ---------------
-> 
-> 1. Fix typos, misc cleanup
-> 
->    -device_type="simple-bus" in 8572 soc node example (p.96)
->    -p.51, line 27-- ET_EXEC is 0x2 not 0x1
->    -p.41, broken cross reference
->    -missing period on virtual reg on ns16550
+Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-2.3.11 says device_type should only be present for cpu and memory
-nodes, but the example trees in the appendices contain device_type =
-"serial", "network", "pci", and "open-pic" (as well as the simple-bus
-error mentioned above).
+---
+ drivers/of/address.c |    2 +-
+ drivers/of/base.c    |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-In general the examples should be checked for compliance and current
-best practices (e.g. the 8572ds tree has a node named "soc8572") -- and
-perhaps should show what the tree looks like after "filled in by
-u-boot" has taken place.
-
--Scott
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index fcadb72..3a1c7e7 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -163,7 +163,7 @@ static int of_bus_pci_translate(u32 *addr, u64 offset, int na)
+ const u32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+ 			unsigned int *flags)
+ {
+-	const u32 *prop;
++	const __be32 *prop;
+ 	unsigned int psize;
+ 	struct device_node *parent;
+ 	struct of_bus *bus;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index aa80525..710b53b 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -33,7 +33,7 @@ DEFINE_RWLOCK(devtree_lock);
+ 
+ int of_n_addr_cells(struct device_node *np)
+ {
+-	const int *ip;
++	const __be32 *ip;
+ 
+ 	do {
+ 		if (np->parent)
+@@ -49,7 +49,7 @@ EXPORT_SYMBOL(of_n_addr_cells);
+ 
+ int of_n_size_cells(struct device_node *np)
+ {
+-	const int *ip;
++	const __be32 *ip;
+ 
+ 	do {
+ 		if (np->parent)
