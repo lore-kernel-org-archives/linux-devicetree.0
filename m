@@ -1,56 +1,53 @@
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: use __be32 types for big-endian device
-	tree data
-Date: Tue, 14 Sep 2010 11:29:52 +0800
-Message-ID: <1284434992.2877.143.camel@pororo>
-References: <1284434031.863044.443635323150.1.gpush@pororo>
-	<AANLkTi=ODinhAG6L62FGiA61nZkDEYweSThWW9J8BwXb@mail.gmail.com>
+From: Stefan Roese <stefan.roese@gmail.com>
+Subject: Question on of_address_to_resource() with offset != 0
+Date: Tue, 14 Sep 2010 16:29:06 +0200
+Message-ID: <201009141629.06825.stefan.roese@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi=ODinhAG6L62FGiA61nZkDEYweSThWW9J8BwXb-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linuxppc-dev@lists.ozlabs.org, Detlev Zundel <dzu@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
+Hi,
 
-> Does this mean that I should be using be32_to_cpu() whenever I
-> dereference a pointer to a u32 in the device tree?  Currently, I do
-> this:
-> 
-> const u32 *iprop;
-> const u32 num;
-> iprop = of_get_property(np, ...)
-> num = *iprop;
-> 
-> Should I be doing this instead?
-> 
-> const __be32 *iprop;
-> const u32 num;
-> iprop = of_get_property(np, ...)
-> num = be32_to_cpu(*iprop);
+I'm stumbling upon a problem noticed on the Ebony (440GP) eval board.
+Here the first chip-select is connected to 512KiB of SRAM and 512KiB
+NOR flash. The dts part look this way:
 
- 
-If your code will be run on little-endian platforms, you'll need to do
-this, yes. It may also be prudent to do this on BE platforms too, as
-we'll undoubtedly have someone copy code from one to another. But I
-don't think anyone is suggesting that we modify existing BE-only code.
+				small-flash@0,80000 {
+					compatible = "jedec-flash";
+					bank-width = <1>;
+					reg = <0x00000000 0x00080000 0x00080000>;
+					#address-cells = <1>;
+					#size-cells = <1>;
+					partition@0 {
+						label = "OpenBIOS";
+						reg = <0x00000000 0x00080000>;
+						read-only;
+					};
+				};
 
-Also, in the example you have given, I think be32_to_cpup(iprop) is
-preferred.
+Chip-select 0 has this setup:
+base-addr = 0xfff00000, size = 0x100000 (phys addr 0x1fff00000 .. 0x1ffffffff)
+
+The problem/crash happens in the physmap_of driver, when the the driver
+calls do_map_probe() with the following range:
+base-addr = 0xfff80000, size = 0x100000 (phys addr 0x1fff80000 .. 0x20007ffff)
+
+My question now is, should of_address_to_resource() subtract the
+offset (here 0x80000) from the size? Is this is bug here? Or should
+the physmap_of driver take care of this issue somehow?
 
 Cheers,
-
-
-Jeremy
+Stefan
