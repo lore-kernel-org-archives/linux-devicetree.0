@@ -1,53 +1,69 @@
-From: Stefan Roese <stefan.roese@gmail.com>
-Subject: Question on of_address_to_resource() with offset != 0
-Date: Tue, 14 Sep 2010 16:29:06 +0200
-Message-ID: <201009141629.06825.stefan.roese@gmail.com>
+From: Madhu Iyengar <madhu.iyengar@qlogic.com>
+Subject: RE: [patch] qla2xxx: locking problem in qla2x00_init_rings()
+Date: Tue, 14 Sep 2010 16:52:15 -0700
+Message-ID: <5E4F49720D0BAD499EE1F01232234BA8712925CF9B@AVEXMB1.qlogic.org>
+References: <20100912214033.GF25351@bicker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linuxppc-dev@lists.ozlabs.org, Detlev Zundel <dzu@denx.de>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20100912214033.GF25351@bicker>
+Content-Language: en-US
+Sender: linux-scsi-owner@vger.kernel.org
+To: Dan Carpenter <error27@gmail.com>, Andrew Vasquez <andrew.vasquez@qlogic.com>
+Cc: Linux Driver <Linux-Driver@qlogic.com>, "James E.J. Bottomley" <James.Bottomley@suse.de>, Giridhar Malavali <giridhar.malavali@qlogic.com>, Lalit Chandivade <lalit.chandivade@qlogic.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>, Arun Easi <arun.easi@qlogic.com>, Madhu Iyengar <madhu.iyengar@qlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dan,
 
-I'm stumbling upon a problem noticed on the Ebony (440GP) eval board.
-Here the first chip-select is connected to 512KiB of SRAM and 512KiB
-NOR flash. The dts part look this way:
+Thanks. We'll test this patch.
 
-				small-flash@0,80000 {
-					compatible = "jedec-flash";
-					bank-width = <1>;
-					reg = <0x00000000 0x00080000 0x00080000>;
-					#address-cells = <1>;
-					#size-cells = <1>;
-					partition@0 {
-						label = "OpenBIOS";
-						reg = <0x00000000 0x00080000>;
-						read-only;
-					};
-				};
-
-Chip-select 0 has this setup:
-base-addr = 0xfff00000, size = 0x100000 (phys addr 0x1fff00000 .. 0x1ffffffff)
-
-The problem/crash happens in the physmap_of driver, when the the driver
-calls do_map_probe() with the following range:
-base-addr = 0xfff80000, size = 0x100000 (phys addr 0x1fff80000 .. 0x20007ffff)
-
-My question now is, should of_address_to_resource() subtract the
-offset (here 0x80000) from the size? Is this is bug here? Or should
-the physmap_of driver take care of this issue somehow?
+Patch-reviewed-by: Giridhar Malavali <giridhar.malavali@qlogic.com>
+Acked-by: Madhu Iyengar <madhu.iyengar@qlogic.com>
 
 Cheers,
-Stefan
+Madhu
+
+-----Original Message-----
+From: linux-scsi-owner@vger.kernel.org [mailto:linux-scsi-owner@vger.kernel.org] On Behalf Of Dan Carpenter
+Sent: Sunday, September 12, 2010 2:41 PM
+To: Andrew Vasquez
+Cc: Linux Driver; James E.J. Bottomley; Giridhar Malavali; Lalit Chandivade; Grant Likely; linux-scsi@vger.kernel.org; devicetree-discuss@lists.ozlabs.org; kernel-janitors@vger.kernel.org; Arun Easi
+Subject: [patch] qla2xxx: locking problem in qla2x00_init_rings()
+
+IRQs are already disabled here so we don't need to disable them again.
+But more importantly, the spin_lock_irqsave() overwrites "flags" and
+that breaks things when we want to re-enable the IRQs when we call
+spin_unlock_irqrestore(&ha->hardware_lock, flags);
+
+Signed-off-by: Dan Carpenter <error27@gmail.com>
+---
+This seems like an important bug.  I don't have this hardware but could
+someone from QLogic test this out and maybe queue it up for 2.6.36?
+
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 9c383ba..9f4ba28 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -1787,14 +1787,14 @@ qla2x00_init_rings(scsi_qla_host_t *vha)
+ 		qla2x00_init_response_q_entries(rsp);
+ 	}
+ 
+-	spin_lock_irqsave(&ha->vport_slock, flags);
++	spin_lock(&ha->vport_slock);
+ 	/* Clear RSCN queue. */
+ 	list_for_each_entry(vp, &ha->vp_list, list) {
+ 		vp->rscn_in_ptr = 0;
+ 		vp->rscn_out_ptr = 0;
+ 	}
+ 
+-	spin_unlock_irqrestore(&ha->vport_slock, flags);
++	spin_unlock(&ha->vport_slock);
+ 
+ 	ha->isp_ops->config_rings(vha);
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
