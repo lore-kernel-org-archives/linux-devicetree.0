@@ -1,69 +1,38 @@
-From: Madhu Iyengar <madhu.iyengar@qlogic.com>
-Subject: RE: [patch] qla2xxx: locking problem in qla2x00_init_rings()
-Date: Tue, 14 Sep 2010 16:52:15 -0700
-Message-ID: <5E4F49720D0BAD499EE1F01232234BA8712925CF9B@AVEXMB1.qlogic.org>
-References: <20100912214033.GF25351@bicker>
+From: Stefan Roese <sr@denx.de>
+Subject: Re: Question on of_address_to_resource() with offset != 0
+Date: Wed, 15 Sep 2010 14:59:42 +0200
+Message-ID: <201009151459.43087.sr@denx.de>
+References: <201009141629.06825.stefan.roese@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20100912214033.GF25351@bicker>
-Content-Language: en-US
-Sender: linux-scsi-owner@vger.kernel.org
-To: Dan Carpenter <error27@gmail.com>, Andrew Vasquez <andrew.vasquez@qlogic.com>
-Cc: Linux Driver <Linux-Driver@qlogic.com>, "James E.J. Bottomley" <James.Bottomley@suse.de>, Giridhar Malavali <giridhar.malavali@qlogic.com>, Lalit Chandivade <lalit.chandivade@qlogic.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>, Arun Easi <arun.easi@qlogic.com>, Madhu Iyengar <madhu.iyengar@qlogic.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <201009141629.06825.stefan.roese@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linuxppc-dev@lists.ozlabs.org, Detlev Zundel <dzu@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Dan,
+On Tuesday 14 September 2010 16:29:06 Stefan Roese wrote:
+> I'm stumbling upon a problem noticed on the Ebony (440GP) eval board.
+> Here the first chip-select is connected to 512KiB of SRAM and 512KiB
+> NOR flash.
 
-Thanks. We'll test this patch.
-
-Patch-reviewed-by: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Acked-by: Madhu Iyengar <madhu.iyengar@qlogic.com>
+"Brown paper bag" time for me. Problem was located in U-Boot. Sorry for the 
+noise.
 
 Cheers,
-Madhu
+Stefan
 
------Original Message-----
-From: linux-scsi-owner@vger.kernel.org [mailto:linux-scsi-owner@vger.kernel.org] On Behalf Of Dan Carpenter
-Sent: Sunday, September 12, 2010 2:41 PM
-To: Andrew Vasquez
-Cc: Linux Driver; James E.J. Bottomley; Giridhar Malavali; Lalit Chandivade; Grant Likely; linux-scsi@vger.kernel.org; devicetree-discuss@lists.ozlabs.org; kernel-janitors@vger.kernel.org; Arun Easi
-Subject: [patch] qla2xxx: locking problem in qla2x00_init_rings()
-
-IRQs are already disabled here so we don't need to disable them again.
-But more importantly, the spin_lock_irqsave() overwrites "flags" and
-that breaks things when we want to re-enable the IRQs when we call
-spin_unlock_irqrestore(&ha->hardware_lock, flags);
-
-Signed-off-by: Dan Carpenter <error27@gmail.com>
----
-This seems like an important bug.  I don't have this hardware but could
-someone from QLogic test this out and maybe queue it up for 2.6.36?
-
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 9c383ba..9f4ba28 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -1787,14 +1787,14 @@ qla2x00_init_rings(scsi_qla_host_t *vha)
- 		qla2x00_init_response_q_entries(rsp);
- 	}
- 
--	spin_lock_irqsave(&ha->vport_slock, flags);
-+	spin_lock(&ha->vport_slock);
- 	/* Clear RSCN queue. */
- 	list_for_each_entry(vp, &ha->vp_list, list) {
- 		vp->rscn_in_ptr = 0;
- 		vp->rscn_out_ptr = 0;
- 	}
- 
--	spin_unlock_irqrestore(&ha->vport_slock, flags);
-+	spin_unlock(&ha->vport_slock);
- 
- 	ha->isp_ops->config_rings(vha);
- 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
+DENX Software Engineering GmbH,      MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich,  Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-0 Fax: (+49)-8142-66989-80 Email: office@denx.de
