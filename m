@@ -1,37 +1,75 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Question on of_address_to_resource() with offset != 0
-Date: Wed, 15 Sep 2010 12:43:39 -0600
-Message-ID: <20100915184339.GB4446@angua.secretlab.ca>
-References: <201009141629.06825.stefan.roese@gmail.com>
-	<201009151459.43087.sr@denx.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: use __be32 types for big-endian device
+	tree data
+Date: Wed, 15 Sep 2010 12:57:05 -0600
+Message-ID: <20100915185705.GE4446@angua.secretlab.ca>
+References: <1284434031.863044.443635323150.1.gpush@pororo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201009151459.43087.sr@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Stefan Roese <sr@denx.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, Detlev Zundel <dzu@denx.de>
+In-Reply-To: <1284434031.863044.443635323150.1.gpush@pororo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 15, 2010 at 02:59:42PM +0200, Stefan Roese wrote:
-> On Tuesday 14 September 2010 16:29:06 Stefan Roese wrote:
-> > I'm stumbling upon a problem noticed on the Ebony (440GP) eval board.
-> > Here the first chip-select is connected to 512KiB of SRAM and 512KiB
-> > NOR flash.
+On Tue, Sep 14, 2010 at 11:13:51AM +0800, Jeremy Kerr wrote:
+> Use the sparse annotations so we can keep track of endianness.
 > 
-> "Brown paper bag" time for me. Problem was located in U-Boot. Sorry for the 
-> noise.
+> Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-:-)
+Added to my test-devicetree branch
 
 g.
+
+> 
+> ---
+>  drivers/of/address.c |    2 +-
+>  drivers/of/base.c    |    4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index fcadb72..3a1c7e7 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -163,7 +163,7 @@ static int of_bus_pci_translate(u32 *addr, u64 offset, int na)
+>  const u32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+>  			unsigned int *flags)
+>  {
+> -	const u32 *prop;
+> +	const __be32 *prop;
+>  	unsigned int psize;
+>  	struct device_node *parent;
+>  	struct of_bus *bus;
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index aa80525..710b53b 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -33,7 +33,7 @@ DEFINE_RWLOCK(devtree_lock);
+>  
+>  int of_n_addr_cells(struct device_node *np)
+>  {
+> -	const int *ip;
+> +	const __be32 *ip;
+>  
+>  	do {
+>  		if (np->parent)
+> @@ -49,7 +49,7 @@ EXPORT_SYMBOL(of_n_addr_cells);
+>  
+>  int of_n_size_cells(struct device_node *np)
+>  {
+> -	const int *ip;
+> +	const __be32 *ip;
+>  
+>  	do {
+>  		if (np->parent)
