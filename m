@@ -1,19 +1,14 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH 2/7] Serial: Samsung: Fix uart clock init order The
-	clk_get API returns -ENOENT when invoked from
-	s3c24xx_serial_initconsole. This happens since the
-	serial_console gets registered before the platform driver is
-	registered.Defer the call to clk_get to s3c24xx_serial_probe so
-	that the API returns a valid clock. Signed-off-by: Shaju
-	Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Mon, 20 Sep 2010 09:26:11 -0500
-Message-ID: <E1OxhJr-00061f-VJ@jdl.com>
-References: <1284977963-30717-1-git-send-email-shaju.abraham@linaro.org>
+Subject: Re: [grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org: Re: [PATCH] Add merging of labelled
+	subnodes. This patch allows the following]
+Date: Mon, 20 Sep 2010 09:49:03 -0500
+Message-ID: <E1Oxhfz-0006np-W9@jdl.com>
+References: <20100920033255.GB6762@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1284977963-30717-1-git-send-email-shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> 
+In-reply-to: <20100920033255.GB6762@yookeroo> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,28 +18,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> ---
->  drivers/serial/samsung.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> Done.  I think the testcase we have for it is not ideal, but that's
+> easily fixed later.
 
+Guys,
 
-A patch Subject: line should be a concise summary of the patch.
-The details are separated into a new paragraph formatted to a
-maximum 80-col width.
+Any chance I can get a clean patch that has clean tabs
+and doesn't have high-bit-set characters embedded in it?
 
-    Subject: Re: [PATCH 2/7] Serial: Samsung: Fix uart clock init order
-
-    The clk_get API returns -ENOENT when invoked from
-    s3c24xx_serial_initconsole.  This happens since the serial_console
-    gets registered before the platform driver is registered.  Defer the
-    call to clk_get to s3c24xx_serial_probe so that the API returns a
-    valid clock.
-
-    Signed-off-by: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Thanks.
+Thanks!
 jdl
+
+
+> From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> 
+> syntax:
+> 
+> / {
+> =A0 =A0 =A0 =A0child {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0label: subchild {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+> =A0 =A0 =A0 =A0};
+> };
+> 
+> &label {
+> =A0 =A0 =A0 =A0prop =3D "value";
+> };
+> 
+> which will result in the following tree:
+> 
+> / {
+> =A0 =A0 =A0 =A0child {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0label: subchild {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0prop =3D "value";
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+> =A0 =A0 =A0 =A0};
+> };
+> 
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
