@@ -1,15 +1,15 @@
 From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [Power.org:parch] cpu nodes and Power ISA categories
-Date: Mon, 20 Sep 2010 12:01:05 +1000
-Message-ID: <20100920020105.GE5045@yookeroo>
-References: <9696D7A991D0824DBA8DFAC74A9C5FA306631B4F@az33exm25.fsl.freescale.net>
-	<2A9CCDDDAE41C446A006170FF0C786313BEE192E14@express.ghs.com>
+Subject: Re: [Power.org:parch] ePAPR 1.1 to do list
+Date: Mon, 20 Sep 2010 12:44:55 +1000
+Message-ID: <20100920024455.GG5045@yookeroo>
+References: <9696D7A991D0824DBA8DFAC74A9C5FA306688C2F@az33exm25.fsl.freescale.net>
+	<20100913131752.54981fb1@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2A9CCDDDAE41C446A006170FF0C786313BEE192E14-W7/FcDFGA5PmPQGcmWacsw@public.gmane.org>
+In-Reply-To: <20100913131752.54981fb1-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,76 +19,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dan Hettena <danh-5j0BnJlmnLM@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org" <parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 24, 2010 at 06:25:21PM -0700, Dan Hettena wrote:
-> As requested, here is a proposal for how cpu nodes could specify what Power ISA categories are implemented. Jimi doesn't like string lists and Ben doesn't like large numbers of Boolean properties, so I'm doing whatever happens to be most convenient for me right this second (always a great way to make difficult decisions).
+On Mon, Sep 13, 2010 at 01:17:52PM -0500, Scott Wood wrote:
+> On Mon, 30 Aug 2010 14:34:44 -0700
+> Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> In section 3.7.1 (General Properties of CPU nodes), add the following properties to the table in ePAPR 1.1:
+> > I've consolidated what I am aware of with respect to errors found in
+> > 1.0,
+> > clarifications needed, and new mechanisms to go into ePAPR 1.1 into
+> > a single list.
+> > 
+> > Let me know if you are aware of anything else.
+> > 
+> > ePAPR 1.1 To Do
+> > ---------------
+> > 
+> > 1. Fix typos, misc cleanup
+> > 
+> >    -device_type="simple-bus" in 8572 soc node example (p.96)
+> >    -p.51, line 27-- ET_EXEC is 0x2 not 0x1
+> >    -p.41, broken cross reference
+> >    -missing period on virtual reg on ns16550
 > 
-> (1)
-> 
-> Property Name: power-isa-impl-version
-> Usage: O
-> Value Type: <string>
-> Definition: Specifies the architecture version number (e.g., "2.06") with which this cpu is compliant.
-> 
-> Note: The cpu must be fully compliant with all requirements of the
-> indicated architecture version, except for any errata indicated by
-> the power-isa-impl-errata property. A later architecture version may
-> not be reported merely on account of the cpu having implemented
-> additional features that were later incorporated into the
-> architecture.
+> 2.3.11 says device_type should only be present for cpu and memory
+> nodes, but the example trees in the appendices contain device_type =
+> "serial", "network", "pci", and "open-pic" (as well as the simple-bus
+> error mentioned above).
 
-Rather than a separate property, I'd suggest here we define a
-convention for strings which can go into the compatible property of
-the cpu nodes.  So for example:
-	cpu@0 {
-		compatible = "ibm,POWER6", "powerpc,ISA-2.06";
-		....
-	};
+Ugh, yeah.  This is a little complicated.  So, the rule of thumb we've
+been using in the wild is slightly more nuanced than ePAPR states.  It
+is basically:
+	- *do* use device_type on cpu and memory nodes
+	- use of existing real-OF defined device types ("serial",
+"network" and "pci") is acceptable, but not required.  It's quite
+likely that existing OSes may use "pci" in particular, so this is
+somewhat important for compatibility with OF practice
+	- absolutely *don't* define and use any new, not already OF
+established device_type values
 
-(I'm not sure if that example is actually correct, but you get the idea).
+"open-pic" has its own complications.  It's very nasty to have it in
+an ePAPR context, but of course the open-pic binding is an old real-OF
+binding that will specify "device_type", and existing open-pic drivers
+may expect it.
 
-> (2)
-> 
-> Property Name: power-isa-impl-categories
-> Usage: O
-> Value Type: <stringlist>
-> Definition: Specifies all the implemented architectural categories,
-> in their abbreviated form, as specified in Book I of the selected
-> ISA version (e.g., "B","E","ECL","E.HV").
+I'm not sure how best to deal with these.
 
-This sounds ok, but I'd suggest some minor changes to the naming.  It
-seems to me to make sense to treat "powerpc" as a quasi-vendor, and I
-think we want to avoid abbreviations in property name.  So perhaps:
-	powerpc,implementation-categories = "E.HV";
+> In general the examples should be checked for compliance and current
+> best practices (e.g. the 8572ds tree has a node named "soc8572") -- and
+> perhaps should show what the tree looks like after "filled in by
+> u-boot" has taken place.
 
-I'm not really familiar with the Book I defined categories, so I can't
-comment on the content encoding at this point.
-
-> (3) For my amusement...
-> 
-> Property Name: power-isa-impl-errata
-> Usage: O
-> Value Type: <stringlist>
-> Definition: Specifies a list of exceptions to the cpu's compliance
-> with the architecture. Each exception consists of a pair of strings
-> where the first string in the pair is the most general architectural
-> category impacted by the exception and the second string is a name
-> for the erratum. For example, a cpu node for an e500v1 core might
-> include "ECL","fsl-icbtls-isync-itlb-miss" to indicate that
-> undefined behavior can result if the execution of an icbtls
-> instruction is not separated from a subsequent ITLB miss by an isync
-> instruction. An OS may choose to avoid making use of a category if
-> it does not have workarounds for all listed errata.
-
-Interesting idea, not sure if it's practical or not.  I think we'd
-need to pin down a bit more where the errata defintions would reside /
-who'd be responsible for the official list of defined errata and so
-forth.
+I think such a general audit is a very good idea, though.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
