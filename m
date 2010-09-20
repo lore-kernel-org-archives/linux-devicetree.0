@@ -1,13 +1,12 @@
 From: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/7] Serial: Samsung: Fix uart clock init order The clk_get API
-	returns -ENOENT when invoked from s3c24xx_serial_initconsole. This
-	happens
-	since the serial_console gets registered before the platform driver is
-	registered.Defer the call to clk_get to s3c24xx_serial_probe so that
-	the API returns a valid clock. Signed-off-by: Shaju Abraham
-	<shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Mon, 20 Sep 2010 15:49:23 +0530
-Message-ID: <1284977963-30717-1-git-send-email-shaju.abraham@linaro.org>
+Subject: [PATCH 3/7] Samsung: SMDKV210 - Add basic Device Tree Support This
+	patch enables the SMDKV210 to boot using the device tree method. The
+	board
+	initialisation routines are moved to a seperate file for device tree
+	probing.When device tree is not enabled,
+	the board boots with the normal boot mechanism.
+Date: Mon, 20 Sep 2010 15:49:34 +0530
+Message-ID: <1284977974-30747-1-git-send-email-shaju.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -24,29 +23,198 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/serial/samsung.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ arch/arm/Kconfig                         |    8 ++
+ arch/arm/mach-s5pv210/Kconfig            |   15 ++++
+ arch/arm/mach-s5pv210/Makefile           |    1 +
+ arch/arm/mach-s5pv210/mach-smdkv210_dt.c |  121 ++++++++++++++++++++++++++++++
+ 4 files changed, 145 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/mach-s5pv210/mach-smdkv210_dt.c
 
-diff --git a/drivers/serial/samsung.c b/drivers/serial/samsung.c
-index a9d6c56..4c5eea0 100644
---- a/drivers/serial/samsung.c
-+++ b/drivers/serial/samsung.c
-@@ -1110,7 +1110,6 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
- 	if (ret > 0)
- 		ourport->tx_irq = ret;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index a63f7c2..dd721fd 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1383,6 +1383,14 @@ endmenu
  
--	ourport->clk	= clk_get(&platdev->dev, "uart");
+ menu "Boot options"
  
- 	dbg("port: map=%08x, mem=%08x, irq=%d (%d,%d), clock=%ld\n",
- 	    port->mapbase, port->membase, port->irq,
-@@ -1154,6 +1153,7 @@ int s3c24xx_serial_probe(struct platform_device *dev,
- 	if (ret < 0)
- 		goto probe_err;
++config USE_OF
++        bool "Flattened Device Tree support"
++        select OF
++        select OF_FLATTREE
++        help
++          Include support for flattened device tree machine descriptions.
++
++
+ config ARM_EMBEDDED_DTB
+ 	string "Embedded device tree blob" if OF
+ 	default ""
+diff --git a/arch/arm/mach-s5pv210/Kconfig b/arch/arm/mach-s5pv210/Kconfig
+index 307a21d..74a6cbe 100644
+--- a/arch/arm/mach-s5pv210/Kconfig
++++ b/arch/arm/mach-s5pv210/Kconfig
+@@ -78,6 +78,21 @@ config MACH_SMDKV210
+ 	help
+ 	  Machine support for Samsung SMDKV210
  
-+	ourport->clk	= clk_get(&dev->dev, "uart");
- 	dbg("%s: adding port\n", __func__);
- 	uart_add_one_port(&s3c24xx_uart_drv, &ourport->port);
- 	platform_set_drvdata(dev, &ourport->port);
++config MACH_SMDKV210_DT
++       bool "SMDKV210-DT"
++       select OF
++       select OF_FLATTREE
++       select CPU_S5PV210
++       select ARCH_SPARSEMEM_ENABLE
++       select SAMSUNG_DEV_ADC
++       select SAMSUNG_DEV_TS
++       select S3C_DEV_WDT
++       select HAVE_S3C2410_WATCHDOG
++       help
++         Machine support for Samsung SMDKV210-Device Tree
++
++
++
+ config MACH_SMDKC110
+ 	bool "SMDKC110"
+ 	select CPU_S5PV210
+diff --git a/arch/arm/mach-s5pv210/Makefile b/arch/arm/mach-s5pv210/Makefile
+index 74dbd76..f0944a9 100644
+--- a/arch/arm/mach-s5pv210/Makefile
++++ b/arch/arm/mach-s5pv210/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_S5PV210_USE_NONCOMMON_STRUCT_CLK) += clock.o
+ 
+ obj-$(CONFIG_MACH_AQUILA)	+= mach-aquila.o
+ obj-$(CONFIG_MACH_SMDKV210)	+= mach-smdkv210.o
++obj-$(CONFIG_MACH_SMDKV210_DT) += mach-smdkv210_dt.o
+ obj-$(CONFIG_MACH_SMDKC110)	+= mach-smdkc110.o
+ obj-$(CONFIG_MACH_GONI)		+= mach-goni.o
+ 
+diff --git a/arch/arm/mach-s5pv210/mach-smdkv210_dt.c b/arch/arm/mach-s5pv210/mach-smdkv210_dt.c
+new file mode 100644
+index 0000000..679401b
+--- /dev/null
++++ b/arch/arm/mach-s5pv210/mach-smdkv210_dt.c
+@@ -0,0 +1,121 @@
++/* linux/arch/arm/mach-s5pv210/mach-smdkv210_dt.c
++ *
++ * Copyright (c) 2010 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/serial_core.h>
++#include <linux/dm9000.h>
++#include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/of_fdt.h>
++#include <linux/of_clk.h>
++
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++
++#include <asm/mach/arch.h>
++#include <asm/hardware/vic.h>
++#include <asm/mach/map.h>
++#include <asm/setup.h>
++#include <asm/mach-types.h>
++
++#include <mach/map.h>
++
++#include <mach/regs-clock.h>
++
++#include <plat/regs-serial.h>
++#include <plat/s5pv210.h>
++#include <plat/devs.h>
++#include <plat/cpu.h>
++#include <plat/adc.h>
++#include <plat/ts.h>
++
++
++
++/* Following are default values for UCON, ULCON and UFCON UART registers */
++#define SMDKV210_UCON_DEFAULT	(S3C2410_UCON_TXILEVEL |	\
++				 S3C2410_UCON_RXILEVEL |	\
++				 S3C2410_UCON_TXIRQMODE |	\
++				 S3C2410_UCON_RXIRQMODE |	\
++				 S3C2410_UCON_RXFIFO_TOI |	\
++				 S3C2443_UCON_RXERR_IRQEN)
++
++#define SMDKV210_ULCON_DEFAULT	S3C2410_LCON_CS8
++
++#define SMDKV210_UFCON_DEFAULT	(S3C2410_UFCON_FIFOMODE |	\
++				 S5PV210_UFCON_TXTRIG4 |	\
++				 S5PV210_UFCON_RXTRIG4)
++
++static struct s3c2410_uartcfg smdkv210_uartcfgs[] __initdata = {
++	[0] = {
++		.hwport		= 0,
++		.flags		= 0,
++		.ucon		= SMDKV210_UCON_DEFAULT,
++		.ulcon		= SMDKV210_ULCON_DEFAULT,
++		.ufcon		= SMDKV210_UFCON_DEFAULT,
++	},
++	[1] = {
++		.hwport		= 1,
++		.flags		= 0,
++		.ucon		= SMDKV210_UCON_DEFAULT,
++		.ulcon		= SMDKV210_ULCON_DEFAULT,
++		.ufcon		= SMDKV210_UFCON_DEFAULT,
++	},
++	[2] = {
++		.hwport		= 2,
++		.flags		= 0,
++		.ucon		= SMDKV210_UCON_DEFAULT,
++		.ulcon		= SMDKV210_ULCON_DEFAULT,
++		.ufcon		= SMDKV210_UFCON_DEFAULT,
++	},
++	[3] = {
++		.hwport		= 3,
++		.flags		= 0,
++		.ucon		= SMDKV210_UCON_DEFAULT,
++		.ulcon		= SMDKV210_ULCON_DEFAULT,
++		.ufcon		= SMDKV210_UFCON_DEFAULT,
++	},
++};
++
++
++
++static void __init smdkv210_map_io(void)
++{
++	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
++	s3c24xx_init_clocks(24000000);
++	s3c24xx_init_uarts(smdkv210_uartcfgs, ARRAY_SIZE(smdkv210_uartcfgs));
++}
++
++static void __init smdkv210_dt_init(void)
++{
++	struct device_node *node;
++	of_clk_fixed_parse();
++	of_platform_bus_probe(NULL, NULL, NULL);
++}
++
++static int __init smdkv210_dt_probe(unsigned long dt)
++{
++	if (!of_flat_dt_is_compatible(dt, "samsung,smdkv210"))
++		return 0;
++
++	return 1;
++}
++
++DT_MACHINE_START(SMDKV210, "SMDKV210 (Device Tree Support)")
++	.boot_params	= 0x00000100,
++	.map_io		= smdkv210_map_io,
++	.init_irq	= s5pv210_init_irq,
++	.init_machine	= smdkv210_dt_init,
++	.timer		= &s3c24xx_timer,
++	.probe_dt	= smdkv210_dt_probe,
++MACHINE_END
 -- 
 1.7.2
