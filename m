@@ -1,21 +1,13 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] x86: of: define irq functions to allow drivers/of/*
-	to build on x86
-Date: Tue, 21 Sep 2010 16:27:07 -0300
-Message-ID: <AANLkTikmnzi_3EihiOMJS+tvHFTnb0uu=L-ZmUPZnFDB@mail.gmail.com>
-References: <20100910060151.6613e9c3@debxo>
-	<20100910172538.GC11284@angua.secretlab.ca>
-	<20100910181458.GA7243@elte.hu>
-	<20100910182135.GG11284@angua.secretlab.ca>
-	<20100920190604.5a2118da@debxo>
-	<alpine.LFD.2.00.1009211144070.2416@localhost6.localdomain6>
-	<20100921091136.45f5f7fa@debxo>
-	<alpine.LFD.2.00.1009211826240.2416@localhost6.localdomain6>
+Subject: Re: Regarding hw irq to Linux irq mapping on ARM
+Date: Tue, 21 Sep 2010 16:57:45 -0300
+Message-ID: <AANLkTimp7+BLNBwZyBiPS0JgB_mno+gp8+mK=VdOd3+_@mail.gmail.com>
+References: <AANLkTi=6nCJnfLB1uc0uLGOvOm0CX_R=j-8GQWTzmmep@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.00.1009211826240.2416-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+In-Reply-To: <AANLkTi=6nCJnfLB1uc0uLGOvOm0CX_R=j-8GQWTzmmep-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,48 +17,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitch Bradley <wmb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, Ingo Molnar <mingo-X9Un+BFzKDI@public.gmane.org>
+To: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eric Miao <eric.miao-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 21, 2010 at 1:27 PM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
-> On Tue, 21 Sep 2010, Andres Salomon wrote:
->> On Tue, 21 Sep 2010 11:45:37 +0200 (CEST)
->> Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
->>
->> > > Any additional comments (ACKs, NACKs, etc) on the patches? =A0If I
->> > > need to rework it (or them), I can certainly make the patch
->> > > description longer.
->> >
->> > Fine with me, but you could make the "mapping" function an inline as
->> > well. While at it, some sensible changelog would be helpful :)
->> >
->> > Thanks,
->> >
->> > =A0 =A0 tglx
->>
->> Hm, inlining it would require some additional x86 #ifdefs in
->> include/linux/of_irq.h (where the mapping function is declared). =A0You'd
->> prefer that?
+On Tue, Sep 21, 2010 at 7:25 AM, Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> w=
+rote:
+> Hi Grant
 >
-> Urgh, no.
+> Since there does not exist a mechanism to map the hw irq to linux irq
+> on ARM (device tree), I would like to discuss =A0with you the plans or
+> ideas to implement the same.
 
-In OF code, I *have* been moving to the following pattern when the OF
-code has a sane default:
+I don't have any immediate plans, but this topic has come up a lot in
+the last two weeks, so I guess I need to focus on it.  :-)  [cc'ing
+devicetree-discuss and linux-arm-kernel as well as Lorenzo and Eric
+since this is a conversation that should be had publically]
 
-#ifndef <symbol>
-static inline <symbol>(...)
-{
-        <default implementation>
-}
-#define <symbol> <symbol>
-#endif
+> Can you share with me your thoughts on it?
+> I have browsed through the power pc code for the same. But not sure
+> the same approach is usable on ARM as well.
 
-I'd normally be totally okay with this in of_irq.h, except for the
-fact that this implementation is a temporary solution.  Once I've got
-the irq remapping code generalized for all architecture then the map
-function could become a static inline in this form.
+I haven't thought deeply about the powerpc implementation of virqs to
+determine if it is suitable for other architectures or not, but the
+concept behind it is sound.  We need a method of mapping controller
+specific IRQ (or hw irq) numbers into the global Linux irq space
+(referred to a virqs from this point on).  First it requires a
+per-controller reference which can be a pointer to a per-controller
+data structure, or any other unique identifier.  It could even be the
+interrupt controller device tree node pointer.  Just so long as there
+is a reliable method to derive the virq from the controller reference
++ hw irq number.
 
-Fortunately, this code should never be on a hot path.
+There also needs to be a method for each interrupt controller to
+register itself and allocate a portion of the virq range.  This
+shouldn't be too hard.  PowerPC handles this with the irq_map[] flat
+table.  This approach is limited to whatever NR_IRQs is set to, and
+could potentially be limited by that, but on the other hand the number
+of discrete IRQ sources in a system is limited so a flat table
+(instead of a dynamic hash table) is probably sufficient.  It is
+certainly simpler to implement.
+
+I think the first step is to simply try generalizing the code in
+arch/powerpc/kernel/irq.c.  It isn't very complex and it would give a
+better impression of what needs to be done.  The ARM interrupt
+controller drivers would need to be modified to register with the virq
+infrastructure.  None of this is either ARM or OF specific; it would
+be useful for any system than need to dynamically allocate IRQ
+numbers.  I could see some x86 use cases (Xilinx FPGAs) where this
+would be useful.
 
 g.
