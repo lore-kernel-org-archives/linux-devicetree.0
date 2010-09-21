@@ -1,62 +1,56 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 2/2] x86: of: define irq functions to allow drivers/of/*
- to build on x86
-Date: Tue, 21 Sep 2010 11:45:37 +0200 (CEST)
-Message-ID: <alpine.LFD.2.00.1009211144070.2416@localhost6.localdomain6>
-References: <20100910060151.6613e9c3@debxo> <20100910172538.GC11284@angua.secretlab.ca> <20100910181458.GA7243@elte.hu> <20100910182135.GG11284@angua.secretlab.ca> <20100920190604.5a2118da@debxo>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH] Add merging of labelled subnodes. This patch allows the
+	following
+Date: Tue, 21 Sep 2010 10:17:22 -0500
+Message-ID: <E1Oy4aw-0002P9-Tl@jdl.com>
+References: <20100920223334.32480.44239.stgit@angua>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100920190604.5a2118da@debxo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andres Salomon <dilinger@queued.net>
-Cc: Ingo Molnar <mingo@elte.hu>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, mingo@redhat.com, hpa@zytor.com, Mitch Bradley <wmb@laptop.org>, linux-kernel@vger.kernel.org, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20100920223334.32480.44239.stgit@angua> 
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Sep 2010, Andres Salomon wrote:
-> On Fri, 10 Sep 2010 12:21:35 -0600
-> Grant Likely <grant.likely@secretlab.ca> wrote:
+> From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 > 
-> > On Fri, Sep 10, 2010 at 08:14:58PM +0200, Ingo Molnar wrote:
-> > > 
-> > > * Grant Likely <grant.likely@secretlab.ca> wrote:
-> > > 
-> > > > On Fri, Sep 10, 2010 at 06:01:51AM -0700, Andres Salomon wrote:
-> > > > > 
-> > > > >  - Define a stub irq_create_of_mapping for x86 as a stop-gap
-> > > > > solution until drivers/of/irq is further along.
-> > > > >  - Define irq_dispose_mapping for x86 to appease of_i2c.c
-> > > > > 
-> > > > > Signed-off-by: Andres Salomon <dilinger@queued.net>
-> > > > 
-> > > > Applied to my test-devicetree branch.  I'll need an ack from the
-> > > > x86 maintainers before I put it into my -next branch.
-> > > 
-> > > The purpose of the patch is not clear to me. What does it do and
-> > > why? 
-> > 
-> > It allows CONFIG_OF to be enabled on x86 without a build failure.
-> > 
-> > > The changelog says it's a stopgap measure - what exactly is the
-> > > long term plan and how long will it take?
-> > 
-> > It is a stop gap because it performs a trivial direct map of an IRQ
-> > number in the device tree data structure to a Linux irq number.  This
-> > works for a single IRQ controller, but falls apart when cascaded
-> > controller are described in the device tree.  The long term plan is to
-> > have the drivers/of/ code handling the mapping intelligently like
-> > powerpc currently does.
-> > 
-> > g.
-> > 
+> syntax:
 > 
-> Any additional comments (ACKs, NACKs, etc) on the patches?  If I need
-> to rework it (or them), I can certainly make the patch description
-> longer.
+> / {
+> 	child {
+> 		label: subchild {
+> 		};
+> 	};
+> };
+> 
+> &label {
+> 	prop = "value";
+> };
+> 
+> which will result in the following tree:
+> 
+> / {
+> 	child {
+> 		label: subchild {
+> 			prop = "value";
+> 		};
+> 	};
+> };
+> 
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Fine with me, but you could make the "mapping" function an inline as
-well. While at it, some sensible changelog would be helpful :)
+Applied and pushed out.
 
-Thanks,
-
-	tglx
+Thanks!
+jdl
