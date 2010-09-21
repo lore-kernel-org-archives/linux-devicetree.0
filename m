@@ -1,44 +1,55 @@
-From: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: Fix device tree blob corruption.
-Date: Tue, 21 Sep 2010 11:54:52 +0530
-Message-ID: <1285050292-11216-1-git-send-email-shaju.abraham@linaro.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 2/2] x86: of: define irq functions to allow drivers/of/*
+ to build on x86
+Date: Tue, 21 Sep 2010 11:43:47 +0200 (CEST)
+Message-ID: <alpine.LFD.2.00.1009211141040.2416@localhost6.localdomain6>
+References: <20100910060151.6613e9c3@debxo> <20100910172538.GC11284@angua.secretlab.ca> <20100910181458.GA7243@elte.hu> <20100910182135.GG11284@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20100910182135.GG11284@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Ingo Molnar <mingo@elte.hu>, Andres Salomon <dilinger@queued.net>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, mingo@redhat.com, hpa@zytor.com, Mitch Bradley <wmb@laptop.org>, linux-kernel@vger.kernel.org, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-The device tree support for arm is broken in git://git.secretlab.ca/git/linux-2.6.git test-devtree. 
-due to not reserving the memory used by the device tree blob.The device tree blob gets corrupted
-as a result. The patch reserves the memblock used by device tree blob.
+On Fri, 10 Sep 2010, Grant Likely wrote:
 
-Signed-off-by: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/mm/init.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+> On Fri, Sep 10, 2010 at 08:14:58PM +0200, Ingo Molnar wrote:
+> > 
+> > * Grant Likely <grant.likely@secretlab.ca> wrote:
+> > 
+> > > On Fri, Sep 10, 2010 at 06:01:51AM -0700, Andres Salomon wrote:
+> > > > 
+> > > >  - Define a stub irq_create_of_mapping for x86 as a stop-gap solution until
+> > > >    drivers/of/irq is further along.
+> > > >  - Define irq_dispose_mapping for x86 to appease of_i2c.c
+> > > > 
+> > > > Signed-off-by: Andres Salomon <dilinger@queued.net>
+> > > 
+> > > Applied to my test-devicetree branch.  I'll need an ack from the x86 
+> > > maintainers before I put it into my -next branch.
+> > 
+> > The purpose of the patch is not clear to me. What does it do and why? 
+> 
+> It allows CONFIG_OF to be enabled on x86 without a build failure.
+> 
+> > The changelog says it's a stopgap measure - what exactly is the long 
+> > term plan and how long will it take?
+> 
+> It is a stop gap because it performs a trivial direct map of an IRQ
+> number in the device tree data structure to a Linux irq number.  This
+> works for a single IRQ controller, but falls apart when cascaded
+> controller are described in the device tree.  The long term plan is to
+> have the drivers/of/ code handling the mapping intelligently like
+> powerpc currently does.
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 018b76e..c03ceb9 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -310,6 +310,8 @@ void __init arm_memblock_init(struct meminfo *mi, struct machine_desc *mdesc)
- 	}
- #endif
- #ifdef CONFIG_OF_FLATTREE
-+	if (phys_devtree_size)
-+		memblock_reserve(phys_devtree_start, phys_devtree_size);
- 	if (phys_initrd_size)
- 		memblock_reserve(phys_initrd_start, phys_initrd_size);
- #endif
--- 
-1.7.2
+Sounds good. We need this for other embedded x86 platforms as well and
+I was looking into the powerpc code before and wondered how we can
+make that generic. The question is whether this should be tied into
+drivers/of/irq or just provided as an OF independent generic facility
+in kernel/irq.
+
+Thanks,
+
+	tglx
