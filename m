@@ -1,42 +1,68 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: Eric Miao <eric.miao@canonical.com>
 Subject: Re: Regarding hw irq to Linux irq mapping on ARM
-Date: Wed, 22 Sep 2010 15:31:21 +1000
-Message-ID: <1285133481.30449.170.camel@pasglop>
+Date: Wed, 22 Sep 2010 16:59:22 +0800
+Message-ID: <AANLkTik8tGUwbch4OLShac8AqMu5+A9XgOk4uAZsYjxs@mail.gmail.com>
 References: <AANLkTi=6nCJnfLB1uc0uLGOvOm0CX_R=j-8GQWTzmmep@mail.gmail.com>
 	<AANLkTimp7+BLNBwZyBiPS0JgB_mno+gp8+mK=VdOd3+_@mail.gmail.com>
 	<alpine.LFD.2.00.1009212342580.2416@localhost6.localdomain6>
 	<AANLkTinrfJkK85v2epOY95YWaVyMBcxSF2xakHqsM7vh@mail.gmail.com>
+	<1285133481.30449.170.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTinrfJkK85v2epOY95YWaVyMBcxSF2xakHqsM7vh-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Eric Miao <eric.miao-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1285133481.30449.170.camel@pasglop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Thomas Gleixner <tglx@linutronix.de>, Shaju Abraham <shaju.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2010-09-22 at 00:08 -0300, Grant Likely wrote:
-> > Add all the I2C, SPI based irq extenders to that list. They seem to
-> > pop up all over the place in rapid speed even in x86. We are happy
-> > citizens of the embedded horror^Wuniverse now.
-> 
-> *shudder*
-> 
-> What's the irq handling latency on those?  Glad I haven't had to deal
-> with any of them yet.
-
-And i2c in many cases want to be called from sleep'able context... might
-be a good idea to restrict some of these to threaded interrupts. A whole
-different discussion I suppose.
-
-Cheers,
-Ben.
+T24gV2VkLCBTZXAgMjIsIDIwMTAgYXQgMTozMSBQTSwgQmVuamFtaW4gSGVycmVuc2NobWlkdAo8
+YmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnPiB3cm90ZToKPiBPbiBXZWQsIDIwMTAtMDktMjIgYXQg
+MDA6MDggLTAzMDAsIEdyYW50IExpa2VseSB3cm90ZToKPj4gPiBBZGQgYWxsIHRoZSBJMkMsIFNQ
+SSBiYXNlZCBpcnEgZXh0ZW5kZXJzIHRvIHRoYXQgbGlzdC4gVGhleSBzZWVtIHRvCj4+ID4gcG9w
+IHVwIGFsbCBvdmVyIHRoZSBwbGFjZSBpbiByYXBpZCBzcGVlZCBldmVuIGluIHg4Ni4gV2UgYXJl
+IGhhcHB5Cj4+ID4gY2l0aXplbnMgb2YgdGhlIGVtYmVkZGVkIGhvcnJvcl5XdW5pdmVyc2Ugbm93
+Lgo+Pgo+PiAqc2h1ZGRlcioKPj4KPj4gV2hhdCdzIHRoZSBpcnEgaGFuZGxpbmcgbGF0ZW5jeSBv
+biB0aG9zZT8gwqBHbGFkIEkgaGF2ZW4ndCBoYWQgdG8gZGVhbAo+PiB3aXRoIGFueSBvZiB0aGVt
+IHlldC4KPgo+IEFuZCBpMmMgaW4gbWFueSBjYXNlcyB3YW50IHRvIGJlIGNhbGxlZCBmcm9tIHNs
+ZWVwJ2FibGUgY29udGV4dC4uLiBtaWdodAo+IGJlIGEgZ29vZCBpZGVhIHRvIHJlc3RyaWN0IHNv
+bWUgb2YgdGhlc2UgdG8gdGhyZWFkZWQgaW50ZXJydXB0cy4gQSB3aG9sZQo+IGRpZmZlcmVudCBk
+aXNjdXNzaW9uIEkgc3VwcG9zZS4KPgoKTXkgcHJvYmxlbSBpcyB0aGF0IEFSTSBoYXMgb25seSBv
+bmUgSVJRIGxpbmUsIGFuZCBub3JtYWxseSBjb25uZWN0ZWQgdG8KYSBTb0Mgc3BlY2lmaWMgSVJR
+IGNvbnRyb2xsZXIsIHRoZSBtYXBwaW5nIG9mIHRoZSBjb250cm9sbGVyIHN0YXR1cyBiaXRzCmlu
+dG8gdGhlIGxpbnV4IElSUSBudW1iZXIgaXMgY3VycmVudGx5IGhhbmRsZWQgaW4gYW4gYXNzZW1i
+bHkgbWFjcm8gZm9yCnBlcmZvcm1hbmNlIGNvbnNpZGVyYXRpb24uIFRoaXMgY2FuIGJlIGNoYW5n
+ZWQgdG8gdXNpbmcgYSBmdW5jdGlvbiBwb2ludGVyCmZvciB3aGVuIG11dGxpcGxlIFNvQ3MgYXJl
+IGNvbXBpbGVkIFsxXS4KCkFsbCB0aGUgb3RoZXIgSVJRcyBhcmUgYWN0dWFsbHkgY2hhaW5lZCB0
+byB0aGVzZSBmaXJzdCBsZXZlbCBJUlEgbnVtYmVycywKc28gdGhlIG90aGVyIHF1ZXN0aW9uIGlz
+IGhvdyB0aGVzZSBjYW4gYmUgcHJvcGVybHkgbWFwcGVkLiBDdXJyZW50bHksIG1vc3QKQVJNIHBs
+YXRmb3JtcyBoYW5kbGUgdGhpcyBpbiBib2FyZCBsZXZlbC4gVGFraW5nIGFuIGV4YW1wbGUgb2Yg
+STJDIEdQSU8KZXhwYW5kZXIgcGNhOTUzeC5jLCB0aGVyZSBpcyBhICdpcnFfYmFzZScgZmllbGQg
+aW4gaXRzIHBsYXRmb3JtIGRhdGEsIHRoaXMKdmFsdWUgY291bGQgYmUgZGlmZmVyZW50IGZyb20g
+Ym9hcmQgdG8gYm9hcmQsIGFuZCB0aGUgYm9hcmQgc2V0dXAgY29kZSBoYXMKdGhlIHJlc3BvbnNp
+YmlsaXR5IHRvIGdldCBpdCByaWdodC4gT3RoZXIgZGV2aWNlcyBoYXZpbmcgYSByZXNvdXJjZSBj
+YW4gYmUKcGFzc2VkIHRoZSBjb3JyZWN0IElSUSBudW1iZXIgaW4gaXRzIHJlc291cmNlIGFycmF5
+LgoKTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoaXMgc2ltcGxlc3Qgc2NoZW1lIHNob3VsZCB3
+b3JrIGluIG1vc3QgY2FzZXMsCnRoZSBhc3N1bXB0aW9uIGhlcmUgaXMgdGhhdCB0aGUgYm9hcmQg
+c2V0dXAgY29kZSBrbm93cyBob3cgdG8gaGFuZGxlIHRoZQpJUlFzLCBpLmUuIGhvdyBtYW55IElS
+UXMgYXJlIHVzZWQsIGFuZCBob3cgdGhleSBhcmUgYWN0dWFsbHkgbWFwcGVkLiBUaGUKb25seSBy
+ZXF1aXJlbWVudCBpcyB0aGF0IHRob3NlIGV4dGVybmFsIGNoaXAgZHJpdmVyIHdpdGggSVJRIGNh
+cGFiaWxpdHkKYXJlIHNhbmVseSB3cml0dGVuIHdpdGggZHluYW1pYyBjb25maWd1cmF0aW9uIG9m
+IGl0cyBJUlEgYmFzZSBhbmQgbnVtYmVyLgoKICBbMV0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9s
+aXN0cy9hcm0ta2VybmVsL21zZzg4ODE3Lmh0bWwuCgo+IENoZWVycywKPiBCZW4uCj4KPgo+IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
