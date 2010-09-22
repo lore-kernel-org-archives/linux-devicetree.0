@@ -1,82 +1,52 @@
-From: Shaju Abraham <shajuabraham@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: Regarding hw irq to Linux irq mapping on ARM
-Date: Wed, 22 Sep 2010 16:30:21 +0530
-Message-ID: <AANLkTik6Nwt3O9hG971nzzEtiCLobSaWasZ4hjWCketh@mail.gmail.com>
+Date: Wed, 22 Sep 2010 08:52:18 -0300
+Message-ID: <6ff62ca4-128a-436f-b85a-987849804a6e@email.android.com>
 References: <AANLkTi=6nCJnfLB1uc0uLGOvOm0CX_R=j-8GQWTzmmep@mail.gmail.com>
 	<AANLkTimp7+BLNBwZyBiPS0JgB_mno+gp8+mK=VdOd3+_@mail.gmail.com>
 	<1285106546.30449.158.camel@pasglop>
+	<AANLkTik6Nwt3O9hG971nzzEtiCLobSaWasZ4hjWCketh@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1285106546.30449.158.camel@pasglop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Eric Miao <eric.miao@canonical.com>, Thomas Gleixner <tglx@linutronix.de>, Shaju Abraham <shaju.abraham@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTik6Nwt3O9hG971nzzEtiCLobSaWasZ4hjWCketh-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shaju Abraham <shajuabraham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Eric Miao <eric.miao-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBTZXAgMjIsIDIwMTAgYXQgMzozMiBBTSwgQmVuamFtaW4gSGVycmVuc2NobWlkdAo8
-YmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnPiB3cm90ZToKPiBPbiBUdWUsIDIwMTAtMDktMjEgYXQg
-MTY6NTcgLTAzMDAsIEdyYW50IExpa2VseSB3cm90ZToKPj4gT24gVHVlLCBTZXAgMjEsIDIwMTAg
-YXQgNzoyNSBBTSwgU2hhanUgQWJyYWhhbSA8c2hhanUuYWJyYWhhbUBsaW5hcm8ub3JnPiB3cm90
-ZToKPj4gPiBIaSBHcmFudAo+PiA+Cj4+ID4gU2luY2UgdGhlcmUgZG9lcyBub3QgZXhpc3QgYSBt
-ZWNoYW5pc20gdG8gbWFwIHRoZSBodyBpcnEgdG8gbGludXggaXJxCj4+ID4gb24gQVJNIChkZXZp
-Y2UgdHJlZSksIEkgd291bGQgbGlrZSB0byBkaXNjdXNzIMKgd2l0aCB5b3UgdGhlIHBsYW5zIG9y
-Cj4+ID4gaWRlYXMgdG8gaW1wbGVtZW50IHRoZSBzYW1lLgo+Cj4gTm90ZSB0aGF0IHRoZSBwb3dl
-cnBjIGh3IC0+IGxpbnV4IElSUSBtYXBwaW5nICh2aXJ0dWFsaXplZCBpcnEgbnVtYmVyaW5nCj4g
-c2NoZW1lKSBpcyBvcnRob2dvbmFsIHRvIHRoZSBkZXZpY2UtdHJlZS4gSXQgY2FuIGJlIHVzZWQg
-d2l0aG91dCB0aGUKPiBkZXZpY2UtdHJlZSBhbmQgdGhlIGRldmljZS10cmVlIGRvZXNuJ3QgbWFu
-ZGF0ZSBzdWNoIGEgc2NoZW1lLgo+Cj4gSG93ZXZlciwgd2hlbiB1c2VkIHRvZ2V0aGVyLCBpdCBk
-b2VzIHByb3ZpZGUgc29tZSBuaWNlIGZlYXR1cmVzIHN1Y2ggYXMKPiBtYWtpbmcgbW9zdCBjYXNl
-cyBvZiBjYXNjYWRlZCBjb250cm9sbGVycyB0b3RhbGx5IHRyaXZpYWwuCj4KPj4gSSBkb24ndCBo
-YXZlIGFueSBpbW1lZGlhdGUgcGxhbnMsIGJ1dCB0aGlzIHRvcGljIGhhcyBjb21lIHVwIGEgbG90
-IGluCj4+IHRoZSBsYXN0IHR3byB3ZWVrcywgc28gSSBndWVzcyBJIG5lZWQgdG8gZm9jdXMgb24g
-aXQuIMKgOi0pIMKgW2NjJ2luZwo+PiBkZXZpY2V0cmVlLWRpc2N1c3MgYW5kIGxpbnV4LWFybS1r
-ZXJuZWwgYXMgd2VsbCBhcyBMb3JlbnpvIGFuZCBFcmljCj4+IHNpbmNlIHRoaXMgaXMgYSBjb252
-ZXJzYXRpb24gdGhhdCBzaG91bGQgYmUgaGFkIHB1YmxpY2FsbHldCj4+Cj4+ID4gQ2FuIHlvdSBz
-aGFyZSB3aXRoIG1lIHlvdXIgdGhvdWdodHMgb24gaXQ/Cj4+ID4gSSBoYXZlIGJyb3dzZWQgdGhy
-b3VnaCB0aGUgcG93ZXIgcGMgY29kZSBmb3IgdGhlIHNhbWUuIEJ1dCBub3Qgc3VyZQo+PiA+IHRo
-ZSBzYW1lIGFwcHJvYWNoIGlzIHVzYWJsZSBvbiBBUk0gYXMgd2VsbC4KPj4KPj4gSSBoYXZlbid0
-IHRob3VnaHQgZGVlcGx5IGFib3V0IHRoZSBwb3dlcnBjIGltcGxlbWVudGF0aW9uIG9mIHZpcnFz
-IHRvCj4+IGRldGVybWluZSBpZiBpdCBpcyBzdWl0YWJsZSBmb3Igb3RoZXIgYXJjaGl0ZWN0dXJl
-cyBvciBub3QsIGJ1dCB0aGUKPj4gY29uY2VwdCBiZWhpbmQgaXQgaXMgc291bmQuIMKgV2UgbmVl
-ZCBhIG1ldGhvZCBvZiBtYXBwaW5nIGNvbnRyb2xsZXIKPj4gc3BlY2lmaWMgSVJRIChvciBodyBp
-cnEpIG51bWJlcnMgaW50byB0aGUgZ2xvYmFsIExpbnV4IGlycSBzcGFjZQo+PiAocmVmZXJyZWQg
-dG8gYSB2aXJxcyBmcm9tIHRoaXMgcG9pbnQgb24pLiDCoEZpcnN0IGl0IHJlcXVpcmVzIGEKPj4g
-cGVyLWNvbnRyb2xsZXIgcmVmZXJlbmNlIHdoaWNoIGNhbiBiZSBhIHBvaW50ZXIgdG8gYSBwZXIt
-Y29udHJvbGxlcgo+PiBkYXRhIHN0cnVjdHVyZSwgb3IgYW55IG90aGVyIHVuaXF1ZSBpZGVudGlm
-aWVyLiDCoEl0IGNvdWxkIGV2ZW4gYmUgdGhlCj4+IGludGVycnVwdCBjb250cm9sbGVyIGRldmlj
-ZSB0cmVlIG5vZGUgcG9pbnRlci4gwqBKdXN0IHNvIGxvbmcgYXMgdGhlcmUKPj4gaXMgYSByZWxp
-YWJsZSBtZXRob2QgdG8gZGVyaXZlIHRoZSB2aXJxIGZyb20gdGhlIGNvbnRyb2xsZXIgcmVmZXJl
-bmNlCj4+ICsgaHcgaXJxIG51bWJlci4KPgo+IEkgbGlrZSBrZWVwaW5nIGl0IHNvbWV3aGF0IG9y
-dGhvZ29uYWwuIFNlZSBob3cgSSBkbyB0aGF0IG9uIHBvd2VycGMuCj4gVGhhdCB3YXksIHlvdSBj
-YW4gc3RpbGwgZXhwbG9pdCBpdCwgbWFwIGludGVycnVwdHMgZXRjLi4uIGV2ZW4gaWYgeW91cgo+
-IGRldmljZS10cmVlIGhhcHBlbnMgdG8gYmUgZGVmaWNpZW50IG9yIG1pc3NpbmcuCj4KPiBUaGUg
-bWFpbiBncmllZiBvbmUgY291bGQgaGF2ZSB3aXRoIG15IHNjaGVtZSBpcyB0aGUgbmFtaW5nIG9m
-IGlycV9ob3N0Cj4gd2hpY2ggaGFzIGNvbmZ1c2VkIHBlb3BsZSBpbiB0aGUgcGFzdC4gSXQgc2hv
-dWxkIHByb2JhYmx5IGJlIGlycV9kb21haW4KPiB0byBtYWtlIGNsZWFyIHdoYXQgaXQgaXMuIEl0
-IGdlbmVyYWxseSBoYXZlIGEgMToxIHJlbGF0aW9uc2hpcCB0byB0aGUKPiBpcnFfY2hpcCBidXQg
-dGhlcmUgYXJlIGNhc2VzIHdoZXJlIHRoYXQgaXNuJ3QgdGhlIGNhc2UgKGVzc2VudGlhbGx5Cj4g
-d2hlcmUgeW91IGhhdmUgbXVsdGlwbGUgaXJxX2NoaXAgcGVyIGRvbWFpbikgZm9yIHZhcmlvdXMg
-cmVhc29ucyBzbyBpdCdzCj4gYmV0dGVyIHRvIGtlZXAgdGhvc2Ugc2VwYXJhdGUuCj4KCkhvdyBk
-byB3ZSBoYW5kbGUgbXVsdGlwbGV4ZWQgaW50ZXJydXB0cyA/IEZvciBleGFtcGxlIGEgc2luZ2xl
-IGludGVycnVwdCBsaW5lCnJlcHJlc2VudGluZyBtdWx0cGxlIGlycSBzb3VyY2VzLgpXZSBoYXZl
-IEFSTSBzeXN0ZW1zIHdpdGggIHNpbmdsZSBpbnRlcnJ1cHQgbGluZSBvbiBhIFZJQyAgbXV4ZWQg
-dG8KMTkyIGRpZmZlcmVudCBHUElPIHNvdXJjZXMgKGVhY2ggY2FwYWJsZSBvZiBnZW5lcmF0aW5n
-IGludGVycnVwdHMpLiBGb3Igc3VjaCBhCnN5c3RlbSB0aGUgdmlycSB0byBodyBpcnEgbWFwcGlu
-ZyBjYW4gZ2V0IGNvbXBsZXguCgoKCgoKPiBCZW4uCj4KPgo+Cj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo+CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+
+
+"Shaju Abraham" <shajuabraham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+>On Wed, Sep 22, 2010 at 3:32 AM, Benjamin Herrenschmidt
+><benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+>> The main grief one could have with my scheme is the naming of irq_host
+>> which has confused people in the past. It should probably be irq_domain
+>> to make clear what it is. It generally have a 1:1 relationship to the
+>> irq_chip but there are cases where that isn't the case (essentially
+>> where you have multiple irq_chip per domain) for various reasons so it's
+>> better to keep those separate.
+>>
+>
+>How do we handle multiplexed interrupts ? For example a single interrupt line
+>representing multple irq sources.
+>We have ARM systems with  single interrupt line on a VIC  muxed to
+>192 different GPIO sources (each capable of generating interrupts). For such a
+>system the virq to hw irq mapping can get complex.
+
+Assign a separate irq number to each gpio.  In effect, this makes the gpio controller an irq controller.
+
+g.
+
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
