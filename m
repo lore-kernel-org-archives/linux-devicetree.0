@@ -1,18 +1,15 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Shaju Abraham <shajuabraham@gmail.com>
 Subject: Re: Regarding hw irq to Linux irq mapping on ARM
-Date: Wed, 22 Sep 2010 11:54:39 +0100
-Message-ID: <20100922105439.GB20986@sirena.org.uk>
+Date: Wed, 22 Sep 2010 16:30:21 +0530
+Message-ID: <AANLkTik6Nwt3O9hG971nzzEtiCLobSaWasZ4hjWCketh@mail.gmail.com>
 References: <AANLkTi=6nCJnfLB1uc0uLGOvOm0CX_R=j-8GQWTzmmep@mail.gmail.com>
 	<AANLkTimp7+BLNBwZyBiPS0JgB_mno+gp8+mK=VdOd3+_@mail.gmail.com>
-	<alpine.LFD.2.00.1009212342580.2416@localhost6.localdomain6>
-	<AANLkTinrfJkK85v2epOY95YWaVyMBcxSF2xakHqsM7vh@mail.gmail.com>
-	<20100922105111.GA20986@sirena.org.uk>
+	<1285106546.30449.158.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20100922105111.GA20986@sirena.org.uk>
+In-Reply-To: <1285106546.30449.158.camel@pasglop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,22 +19,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Eric Miao <eric.miao@canonical.com>, Thomas Gleixner <tglx@linutronix.de>, Shaju Abraham <shaju.abraham@linaro.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Eric Miao <eric.miao@canonical.com>, Thomas Gleixner <tglx@linutronix.de>, Shaju Abraham <shaju.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 22, 2010 at 11:51:11AM +0100, Mark Brown wrote:
-> On Wed, Sep 22, 2010 at 12:08:17AM -0300, Grant Likely wrote:
-
-> > What's the irq handling latency on those?  Glad I haven't had to deal
-> > with any of them yet.
-
-> Milisecondish, but depends on bus congestion and bus type.  You need to
-> schedule a thread which then does one but typically more register I/O
-> operations on the device (read one or more IRQ status registers, and
-> typically write back to acknowledge the interrupts as well).  These tend
-> for obvious reasons to be for low volume interrupts like jack detection.
-
-Incidentally, if you want to look at an implementation the wm831x
-contains an implementation of such a controller (in drivers/mfd/wm831x-irq.c)
-the structure of which has been cloned for quite a few of these chips.
+T24gV2VkLCBTZXAgMjIsIDIwMTAgYXQgMzozMiBBTSwgQmVuamFtaW4gSGVycmVuc2NobWlkdAo8
+YmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnPiB3cm90ZToKPiBPbiBUdWUsIDIwMTAtMDktMjEgYXQg
+MTY6NTcgLTAzMDAsIEdyYW50IExpa2VseSB3cm90ZToKPj4gT24gVHVlLCBTZXAgMjEsIDIwMTAg
+YXQgNzoyNSBBTSwgU2hhanUgQWJyYWhhbSA8c2hhanUuYWJyYWhhbUBsaW5hcm8ub3JnPiB3cm90
+ZToKPj4gPiBIaSBHcmFudAo+PiA+Cj4+ID4gU2luY2UgdGhlcmUgZG9lcyBub3QgZXhpc3QgYSBt
+ZWNoYW5pc20gdG8gbWFwIHRoZSBodyBpcnEgdG8gbGludXggaXJxCj4+ID4gb24gQVJNIChkZXZp
+Y2UgdHJlZSksIEkgd291bGQgbGlrZSB0byBkaXNjdXNzIMKgd2l0aCB5b3UgdGhlIHBsYW5zIG9y
+Cj4+ID4gaWRlYXMgdG8gaW1wbGVtZW50IHRoZSBzYW1lLgo+Cj4gTm90ZSB0aGF0IHRoZSBwb3dl
+cnBjIGh3IC0+IGxpbnV4IElSUSBtYXBwaW5nICh2aXJ0dWFsaXplZCBpcnEgbnVtYmVyaW5nCj4g
+c2NoZW1lKSBpcyBvcnRob2dvbmFsIHRvIHRoZSBkZXZpY2UtdHJlZS4gSXQgY2FuIGJlIHVzZWQg
+d2l0aG91dCB0aGUKPiBkZXZpY2UtdHJlZSBhbmQgdGhlIGRldmljZS10cmVlIGRvZXNuJ3QgbWFu
+ZGF0ZSBzdWNoIGEgc2NoZW1lLgo+Cj4gSG93ZXZlciwgd2hlbiB1c2VkIHRvZ2V0aGVyLCBpdCBk
+b2VzIHByb3ZpZGUgc29tZSBuaWNlIGZlYXR1cmVzIHN1Y2ggYXMKPiBtYWtpbmcgbW9zdCBjYXNl
+cyBvZiBjYXNjYWRlZCBjb250cm9sbGVycyB0b3RhbGx5IHRyaXZpYWwuCj4KPj4gSSBkb24ndCBo
+YXZlIGFueSBpbW1lZGlhdGUgcGxhbnMsIGJ1dCB0aGlzIHRvcGljIGhhcyBjb21lIHVwIGEgbG90
+IGluCj4+IHRoZSBsYXN0IHR3byB3ZWVrcywgc28gSSBndWVzcyBJIG5lZWQgdG8gZm9jdXMgb24g
+aXQuIMKgOi0pIMKgW2NjJ2luZwo+PiBkZXZpY2V0cmVlLWRpc2N1c3MgYW5kIGxpbnV4LWFybS1r
+ZXJuZWwgYXMgd2VsbCBhcyBMb3JlbnpvIGFuZCBFcmljCj4+IHNpbmNlIHRoaXMgaXMgYSBjb252
+ZXJzYXRpb24gdGhhdCBzaG91bGQgYmUgaGFkIHB1YmxpY2FsbHldCj4+Cj4+ID4gQ2FuIHlvdSBz
+aGFyZSB3aXRoIG1lIHlvdXIgdGhvdWdodHMgb24gaXQ/Cj4+ID4gSSBoYXZlIGJyb3dzZWQgdGhy
+b3VnaCB0aGUgcG93ZXIgcGMgY29kZSBmb3IgdGhlIHNhbWUuIEJ1dCBub3Qgc3VyZQo+PiA+IHRo
+ZSBzYW1lIGFwcHJvYWNoIGlzIHVzYWJsZSBvbiBBUk0gYXMgd2VsbC4KPj4KPj4gSSBoYXZlbid0
+IHRob3VnaHQgZGVlcGx5IGFib3V0IHRoZSBwb3dlcnBjIGltcGxlbWVudGF0aW9uIG9mIHZpcnFz
+IHRvCj4+IGRldGVybWluZSBpZiBpdCBpcyBzdWl0YWJsZSBmb3Igb3RoZXIgYXJjaGl0ZWN0dXJl
+cyBvciBub3QsIGJ1dCB0aGUKPj4gY29uY2VwdCBiZWhpbmQgaXQgaXMgc291bmQuIMKgV2UgbmVl
+ZCBhIG1ldGhvZCBvZiBtYXBwaW5nIGNvbnRyb2xsZXIKPj4gc3BlY2lmaWMgSVJRIChvciBodyBp
+cnEpIG51bWJlcnMgaW50byB0aGUgZ2xvYmFsIExpbnV4IGlycSBzcGFjZQo+PiAocmVmZXJyZWQg
+dG8gYSB2aXJxcyBmcm9tIHRoaXMgcG9pbnQgb24pLiDCoEZpcnN0IGl0IHJlcXVpcmVzIGEKPj4g
+cGVyLWNvbnRyb2xsZXIgcmVmZXJlbmNlIHdoaWNoIGNhbiBiZSBhIHBvaW50ZXIgdG8gYSBwZXIt
+Y29udHJvbGxlcgo+PiBkYXRhIHN0cnVjdHVyZSwgb3IgYW55IG90aGVyIHVuaXF1ZSBpZGVudGlm
+aWVyLiDCoEl0IGNvdWxkIGV2ZW4gYmUgdGhlCj4+IGludGVycnVwdCBjb250cm9sbGVyIGRldmlj
+ZSB0cmVlIG5vZGUgcG9pbnRlci4gwqBKdXN0IHNvIGxvbmcgYXMgdGhlcmUKPj4gaXMgYSByZWxp
+YWJsZSBtZXRob2QgdG8gZGVyaXZlIHRoZSB2aXJxIGZyb20gdGhlIGNvbnRyb2xsZXIgcmVmZXJl
+bmNlCj4+ICsgaHcgaXJxIG51bWJlci4KPgo+IEkgbGlrZSBrZWVwaW5nIGl0IHNvbWV3aGF0IG9y
+dGhvZ29uYWwuIFNlZSBob3cgSSBkbyB0aGF0IG9uIHBvd2VycGMuCj4gVGhhdCB3YXksIHlvdSBj
+YW4gc3RpbGwgZXhwbG9pdCBpdCwgbWFwIGludGVycnVwdHMgZXRjLi4uIGV2ZW4gaWYgeW91cgo+
+IGRldmljZS10cmVlIGhhcHBlbnMgdG8gYmUgZGVmaWNpZW50IG9yIG1pc3NpbmcuCj4KPiBUaGUg
+bWFpbiBncmllZiBvbmUgY291bGQgaGF2ZSB3aXRoIG15IHNjaGVtZSBpcyB0aGUgbmFtaW5nIG9m
+IGlycV9ob3N0Cj4gd2hpY2ggaGFzIGNvbmZ1c2VkIHBlb3BsZSBpbiB0aGUgcGFzdC4gSXQgc2hv
+dWxkIHByb2JhYmx5IGJlIGlycV9kb21haW4KPiB0byBtYWtlIGNsZWFyIHdoYXQgaXQgaXMuIEl0
+IGdlbmVyYWxseSBoYXZlIGEgMToxIHJlbGF0aW9uc2hpcCB0byB0aGUKPiBpcnFfY2hpcCBidXQg
+dGhlcmUgYXJlIGNhc2VzIHdoZXJlIHRoYXQgaXNuJ3QgdGhlIGNhc2UgKGVzc2VudGlhbGx5Cj4g
+d2hlcmUgeW91IGhhdmUgbXVsdGlwbGUgaXJxX2NoaXAgcGVyIGRvbWFpbikgZm9yIHZhcmlvdXMg
+cmVhc29ucyBzbyBpdCdzCj4gYmV0dGVyIHRvIGtlZXAgdGhvc2Ugc2VwYXJhdGUuCj4KCkhvdyBk
+byB3ZSBoYW5kbGUgbXVsdGlwbGV4ZWQgaW50ZXJydXB0cyA/IEZvciBleGFtcGxlIGEgc2luZ2xl
+IGludGVycnVwdCBsaW5lCnJlcHJlc2VudGluZyBtdWx0cGxlIGlycSBzb3VyY2VzLgpXZSBoYXZl
+IEFSTSBzeXN0ZW1zIHdpdGggIHNpbmdsZSBpbnRlcnJ1cHQgbGluZSBvbiBhIFZJQyAgbXV4ZWQg
+dG8KMTkyIGRpZmZlcmVudCBHUElPIHNvdXJjZXMgKGVhY2ggY2FwYWJsZSBvZiBnZW5lcmF0aW5n
+IGludGVycnVwdHMpLiBGb3Igc3VjaCBhCnN5c3RlbSB0aGUgdmlycSB0byBodyBpcnEgbWFwcGlu
+ZyBjYW4gZ2V0IGNvbXBsZXguCgoKCgoKPiBCZW4uCj4KPgo+Cj4gX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo+CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
