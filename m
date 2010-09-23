@@ -1,70 +1,54 @@
-From: john stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] ptp: IEEE 1588 hardware clock support
-Date: Thu, 23 Sep 2010 11:59:40 -0700
-Message-ID: <1285268380.2587.11.camel@localhost.localdomain>
-References: <cover.1285261533.git.richard.cochran@omicron.at>
-	 <alpine.DEB.2.00.1009231238170.2962@router.home>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] Fix the Kernel Crash if Initrd is not passed in Device
+	tree
+Date: Thu, 23 Sep 2010 13:16:32 -0600
+Message-ID: <20100923191631.GA17400@angua.secretlab.ca>
+References: <1284978534-30944-1-git-send-email-shaju.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.00.1009231238170.2962-sBS69tsa9Uj/9pzu0YdTqQ@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1284978534-30944-1-git-send-email-shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2010-09-23 at 12:53 -0500, Christoph Lameter wrote:
-> On Thu, 23 Sep 2010, Richard Cochran wrote:
-> >     In contrast to the standard Linux system clock, a PHC is
-> >     adjustable in hardware, for example using frequency compensation
-> >     registers or a VCO. The ability to directly tune the PHC is
-> >     essential to reap the benefit of hardware timestamping.
+On Mon, Sep 20, 2010 at 03:58:54PM +0530, Shaju Abraham wrote:
+> The code should check for the size of the phys_initrd_size rather than
+> phys_devtree_size before calling memblock_reserve().If initrd is not passed
+> from the Device Tree  the parameters phys_initrd_start, and phys_initrd_size are
+> zeros.The kernel complaints with a BUG if the arguments passed to memblock_reserve
+> are zeroes.
 > 
-> There is a reason for not being able to shift posix clocks: The system has
-> one time base. The various clocks are contributing to maintaining that
-> sytem wide time.
+> Signed-off-by: Shaju Abraham <shaju.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> This patch applies to Grant Likely's tree test-devtree branch
 > 
-> I do not understand why you want to maintain different clocks running at
-> different speeds. Certainly interesting for some uses I guess that I
-> do not have the energy to imagine right now. But can we get the PTP killer
-> feature of synchronized accurate system time first?
-
-This was my initial gut reaction as well, but in the end, I agree with
-Richard that in the case of one or multiple PTP hardware clocks, we
-really can't abstract over the different time domains.
-
-
-
-> > 3.3 Synchronizing the Linux System Time
-> > ========================================
-> >
-> >    One could offer a PHC as a combined clock source and clock event
-> >    device. The advantage of this approach would be that it obviates
-> >    the need for synchronization when the PHC is selected as the system
-> >    timer. However, some PHCs, namely the PHY based clocks, cannot be
-> >    used in this way.
+>  arch/arm/mm/init.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 > 
-> Why not? Do PHY based clock not at least provide a counter that increments
-> in synchronized intervals throughout the network?
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index 9ddace8..018b76e 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -310,7 +310,7 @@ void __init arm_memblock_init(struct meminfo *mi, struct machine_desc *mdesc)
+>  	}
+>  #endif
+>  #ifdef CONFIG_OF_FLATTREE
+> -	if (phys_devtree_size)
+> +	if (phys_initrd_size)
+>  		memblock_reserve(phys_initrd_start, phys_initrd_size);
 
-I really don't think the PTP clock can be used as a clocksource sanely.
-
-First, the hardware access is much to slow for system timekeeping.
-
-Second, there is the problem that the system time is a software clock,
-and adjustments made (like freq) are made in the layer that interprets
-the underlying hardware cycle counter. Adjustments made in PTP (in order
-to sync the network timestamps) are made at the hardware level. 
-
-This would cause a disconnect between the hardware freq understood by
-the system time management code and the actual hardware freq.
-
-Richard, I'd actually strike this paragraph from the rational, as I feel
-it has the tendency to confuse as it suggests having the PHC as a
-clocksource is feasible when really it isn't. Or alternatively, maybe
-express more clearly why its not feasible, so it doesn't just seem like
-a minor design choice.
-
-thanks
--john
+No, this is actually a bug in the memblock_reserve() line.
+phys_devtree_start and phys_devtree_size should have been passed to
+memblock_reserve().  This is now fixed in my tree.
