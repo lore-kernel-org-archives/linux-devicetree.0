@@ -1,21 +1,13 @@
-From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [Power.org:parch] cpu nodes and Power ISA categories
-Date: Wed, 29 Sep 2010 13:08:11 +1000
-Message-ID: <20100929030811.GB18268@yookeroo>
-References: <9696D7A991D0824DBA8DFAC74A9C5FA306631B4F@az33exm25.fsl.freescale.net>
-	<2A9CCDDDAE41C446A006170FF0C786313BEE192E14@express.ghs.com>
-	<20100920020105.GE5045@yookeroo>
-	<2A9CCDDDAE41C446A006170FF0C786313BEEEB5479@express.ghs.com>
-	<20100921025759.GF15500@yookeroo>
-	<2A9CCDDDAE41C446A006170FF0C786313BEF25AB4A@express.ghs.com>
-	<20100921222159.GA25226@yookeroo>
-	<OF01353076.E8131683-ON862577A6.004B88CB-862577A6.004BBD2E@us.ibm.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH 1/7] of: GPIO: Fix OF probing on little-endian systems
+Date: Wed, 29 Sep 2010 15:52:12 +1000
+Message-ID: <1285739538-29058-2-git-send-email-monstr@monstr.eu>
+References: <1285739538-29058-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <OF01353076.E8131683-ON862577A6.004B88CB-862577A6.004BBD2E-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1285739538-29058-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,21 +17,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Steve Thurber <sthurber-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Cc: Dan Hettena <danh-5j0BnJlmnLM@public.gmane.org>, "parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org" <parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, duyl-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, edgar.iglesias-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 22, 2010 at 08:47:11AM -0500, Steve Thurber wrote:
-> Specifically, I believe it is "Power" (upper case "P", lower case "ower"). 
->  Prior to sometime in history, it was POWER (all upper case).
+DTB is always big-endian that's why is necessary
+to convert it.
 
-Right, however in the device tree context I think we should use
-"power", not "Power" to match normal practice.  In particular
-uppercase vendor prefixes are supposed to be stock tickers, not other
-names.
+Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+CC: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+CC: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ drivers/gpio/xilinx_gpio.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpio/xilinx_gpio.c b/drivers/gpio/xilinx_gpio.c
+index 7096909..846fbd5 100644
+--- a/drivers/gpio/xilinx_gpio.c
++++ b/drivers/gpio/xilinx_gpio.c
+@@ -171,13 +171,13 @@ static int __devinit xgpio_of_probe(struct device_node *np)
+ 	/* Update GPIO state shadow register with default value */
+ 	tree_info = of_get_property(np, "xlnx,dout-default", NULL);
+ 	if (tree_info)
+-		chip->gpio_state = *tree_info;
++		chip->gpio_state = be32_to_cpup(tree_info);
+ 
+ 	/* Update GPIO direction shadow register with default value */
+ 	chip->gpio_dir = 0xFFFFFFFF; /* By default, all pins are inputs */
+ 	tree_info = of_get_property(np, "xlnx,tri-default", NULL);
+ 	if (tree_info)
+-		chip->gpio_dir = *tree_info;
++		chip->gpio_dir = be32_to_cpup(tree_info);
+ 
+ 	/* Check device node and parent device node for device width */
+ 	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
+@@ -186,7 +186,7 @@ static int __devinit xgpio_of_probe(struct device_node *np)
+ 		tree_info = of_get_property(np->parent,
+ 					    "xlnx,gpio-width", NULL);
+ 	if (tree_info)
+-		chip->mmchip.gc.ngpio = *tree_info;
++		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
+ 
+ 	spin_lock_init(&chip->gpio_lock);
+ 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.5.5.1
