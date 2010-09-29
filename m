@@ -1,15 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] of: GPIO: Fix OF probing on little-endian systems
-Date: Wed, 29 Sep 2010 15:30:11 +0900
-Message-ID: <20100929063011.GF2439@angua.secretlab.ca>
-References: <1285739538-29058-1-git-send-email-monstr@monstr.eu>
-	<1285739538-29058-2-git-send-email-monstr@monstr.eu>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 4/7] net: emaclite: Add support for little-endian platforms
+Date: Wed, 29 Sep 2010 17:33:23 +1000
+Message-ID: <4CA2EBC3.3030509@monstr.eu>
+References: <1285739538-29058-4-git-send-email-monstr@monstr.eu>	<1285739538-29058-5-git-send-email-monstr@monstr.eu>	<20100929061146.GA2439@angua.secretlab.ca>
+	<20100928.232722.189705899.davem@davemloft.net>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1285739538-29058-2-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20100928.232722.189705899.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,58 +19,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, duyl-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, edgar.iglesias-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
+To: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+Cc: eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, duyl-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linnj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, edgar.iglesias-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 29, 2010 at 03:52:12PM +1000, Michal Simek wrote:
-> DTB is always big-endian that's why is necessary
-> to convert it.
-> 
-> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> CC: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
-> CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 
-Applied, thanks.
 
-g.
+David Miller wrote:
+> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Date: Wed, 29 Sep 2010 15:11:46 +0900
+> 
+>> On Wed, Sep 29, 2010 at 03:52:15PM +1000, Michal Simek wrote:
+>>> Upcomming Microblaze is little endian that's why is necessary
+>>> to fix protocol and length loading.
+>>>
+>>> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+>>> CC: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+>>> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>>> CC: Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> CC: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> This should go via davem, but it looks correct to me.
+>>
+>> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> It doesn't need to, the microblaze guys can integrate this directly:
+> 
+> Acked-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 
-> ---
->  drivers/gpio/xilinx_gpio.c |    6 +++---
->  1 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/xilinx_gpio.c b/drivers/gpio/xilinx_gpio.c
-> index 7096909..846fbd5 100644
-> --- a/drivers/gpio/xilinx_gpio.c
-> +++ b/drivers/gpio/xilinx_gpio.c
-> @@ -171,13 +171,13 @@ static int __devinit xgpio_of_probe(struct device_node *np)
->  	/* Update GPIO state shadow register with default value */
->  	tree_info = of_get_property(np, "xlnx,dout-default", NULL);
->  	if (tree_info)
-> -		chip->gpio_state = *tree_info;
-> +		chip->gpio_state = be32_to_cpup(tree_info);
->  
->  	/* Update GPIO direction shadow register with default value */
->  	chip->gpio_dir = 0xFFFFFFFF; /* By default, all pins are inputs */
->  	tree_info = of_get_property(np, "xlnx,tri-default", NULL);
->  	if (tree_info)
-> -		chip->gpio_dir = *tree_info;
-> +		chip->gpio_dir = be32_to_cpup(tree_info);
->  
->  	/* Check device node and parent device node for device width */
->  	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
-> @@ -186,7 +186,7 @@ static int __devinit xgpio_of_probe(struct device_node *np)
->  		tree_info = of_get_property(np->parent,
->  					    "xlnx,gpio-width", NULL);
->  	if (tree_info)
-> -		chip->mmchip.gc.ngpio = *tree_info;
-> +		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
->  
->  	spin_lock_init(&chip->gpio_lock);
->  
-> -- 
-> 1.5.5.1
-> 
+Thanks for ACKs. I will add them and will take care about it.
+
+Michal
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
