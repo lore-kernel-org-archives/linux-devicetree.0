@@ -1,209 +1,193 @@
 From: "Ian Munsie" <imunsie@au1.ibm.com>
-Subject: [PATCH 09/18] powerpc: Support device tree regardless of CPU endianness
-Date: Fri,  1 Oct 2010 17:06:02 +1000
-Message-ID: <1285916771-18033-10-git-send-email-imunsie@au1.ibm.com>
+Subject: [PATCH 13/18] powerpc 44x: Make DCR endianness agnostic
+Date: Fri,  1 Oct 2010 17:06:06 +1000
+Message-ID: <1285916771-18033-14-git-send-email-imunsie@au1.ibm.com>
 References: <1285916771-18033-1-git-send-email-imunsie@au1.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1285916771-18033-1-git-send-email-imunsie@au1.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org
-Cc: paulus@samba.org, Ian Munsie <imunsie@au1.ibm.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Michal Simek <monstr@monstr.eu>, Jeremy Kerr <jeremy.kerr@canonical.com>, devicetree-discuss@lists.ozlabs.org
+Cc: paulus@samba.org, Ian Munsie <imunsie@au1.ibm.com>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, Stefan Roese <sr@denx.de>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Anton Blanchard <anton@samba.org>, Geoff Levand <geoffrey.levand@am.sony.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Ian Munsie <imunsie@au1.ibm.com>
 
-On PowerPC the device tree is always big endian, but the CPU could be
-either, so add be32_to_cpu where appropriate and change the types of
-device tree data to __be32 etc to allow sparse to locate endian issues.
+The Device Control Register accesses parse the device tree and therefore
+need to handle the possible differences of endianness between the CPU
+and device tree.
 
 Signed-off-by: Ian Munsie <imunsie@au1.ibm.com>
 ---
- arch/powerpc/kernel/prom.c |   60 ++++++++++++++++++++++----------------------
- 1 files changed, 30 insertions(+), 30 deletions(-)
+ arch/powerpc/sysdev/dcr.c        |   18 +++++++++---------
+ arch/powerpc/sysdev/ppc4xx_soc.c |   16 ++++++++--------
+ arch/powerpc/sysdev/uic.c        |    6 +++---
+ 3 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index fed9bf6..9b9ebb2 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -188,16 +188,16 @@ static void __init check_cpu_pa_features(unsigned long node)
- #ifdef CONFIG_PPC_STD_MMU_64
- static void __init check_cpu_slb_size(unsigned long node)
+diff --git a/arch/powerpc/sysdev/dcr.c b/arch/powerpc/sysdev/dcr.c
+index bb44aa9..7f91e8a 100644
+--- a/arch/powerpc/sysdev/dcr.c
++++ b/arch/powerpc/sysdev/dcr.c
+@@ -27,7 +27,7 @@
+ static struct device_node *find_dcr_parent(struct device_node *node)
  {
--	u32 *slb_size_ptr;
-+	__be32 *slb_size_ptr;
+ 	struct device_node *par, *tmp;
+-	const u32 *p;
++	const __be32 *p;
  
- 	slb_size_ptr = of_get_flat_dt_prop(node, "slb-size", NULL);
- 	if (slb_size_ptr != NULL) {
--		mmu_slb_size = *slb_size_ptr;
-+		mmu_slb_size = be32_to_cpup(slb_size_ptr);
- 		return;
+ 	for (par = of_node_get(node); par;) {
+ 		if (of_get_property(par, "dcr-controller", NULL))
+@@ -37,7 +37,7 @@ static struct device_node *find_dcr_parent(struct device_node *node)
+ 		if (p == NULL)
+ 			par = of_get_parent(par);
+ 		else
+-			par = of_find_node_by_phandle(*p);
++			par = of_find_node_by_phandle(be32_to_cpup(p));
+ 		of_node_put(tmp);
  	}
- 	slb_size_ptr = of_get_flat_dt_prop(node, "ibm,slb-size", NULL);
- 	if (slb_size_ptr != NULL) {
--		mmu_slb_size = *slb_size_ptr;
-+		mmu_slb_size = be32_to_cpup(slb_size_ptr);
- 	}
+ 	return par;
+@@ -128,24 +128,24 @@ unsigned int dcr_resource_start(const struct device_node *np,
+ 				unsigned int index)
+ {
+ 	unsigned int ds;
+-	const u32 *dr = of_get_property(np, "dcr-reg", &ds);
++	const __be32 *dr = of_get_property(np, "dcr-reg", &ds);
+ 
+ 	if (dr == NULL || ds & 1 || index >= (ds / 8))
+ 		return 0;
+ 
+-	return dr[index * 2];
++	return be32_to_cpu(dr[index * 2]);
  }
- #else
-@@ -252,11 +252,11 @@ static void __init check_cpu_feature_properties(unsigned long node)
+ EXPORT_SYMBOL_GPL(dcr_resource_start);
+ 
+ unsigned int dcr_resource_len(const struct device_node *np, unsigned int index)
  {
- 	unsigned long i;
- 	struct feature_property *fp = feature_properties;
+ 	unsigned int ds;
+-	const u32 *dr = of_get_property(np, "dcr-reg", &ds);
++	const __be32 *dr = of_get_property(np, "dcr-reg", &ds);
+ 
+ 	if (dr == NULL || ds & 1 || index >= (ds / 8))
+ 		return 0;
+ 
+-	return dr[index * 2 + 1];
++	return be32_to_cpu(dr[index * 2 + 1]);
+ }
+ EXPORT_SYMBOL_GPL(dcr_resource_len);
+ 
+@@ -156,7 +156,7 @@ u64 of_translate_dcr_address(struct device_node *dev,
+ 			     unsigned int *out_stride)
+ {
+ 	struct device_node *dp;
+-	const u32 *p;
++	const __be32 *p;
+ 	unsigned int stride;
+ 	u64 ret = OF_BAD_ADDR;
+ 
+@@ -166,7 +166,7 @@ u64 of_translate_dcr_address(struct device_node *dev,
+ 
+ 	/* Stride is not properly defined yet, default to 0x10 for Axon */
+ 	p = of_get_property(dp, "dcr-mmio-stride", NULL);
+-	stride = (p == NULL) ? 0x10 : *p;
++	stride = (p == NULL) ? 0x10 : be32_to_cpup(p);
+ 
+ 	/* XXX FIXME: Which property name is to use of the 2 following ? */
+ 	p = of_get_property(dp, "dcr-mmio-range", NULL);
+@@ -176,7 +176,7 @@ u64 of_translate_dcr_address(struct device_node *dev,
+ 		goto done;
+ 
+ 	/* Maybe could do some better range checking here */
+-	ret = of_translate_address(dp, p);
++	ret = of_translate_address(dp, be32_to_cpup(p));
+ 	if (ret != OF_BAD_ADDR)
+ 		ret += (u64)(stride) * (u64)dcr_n;
+ 	if (out_stride)
+diff --git a/arch/powerpc/sysdev/ppc4xx_soc.c b/arch/powerpc/sysdev/ppc4xx_soc.c
+index d3d6ce3..e5a7554 100644
+--- a/arch/powerpc/sysdev/ppc4xx_soc.c
++++ b/arch/powerpc/sysdev/ppc4xx_soc.c
+@@ -76,10 +76,10 @@ static int __init ppc4xx_l2c_probe(void)
+ 	u32 r;
+ 	unsigned long flags;
+ 	int irq;
+-	const u32 *dcrreg;
++	const __be32 *dcrreg;
+ 	u32 dcrbase_isram;
+ 	int len;
+-	const u32 *prop;
++	const __be32 *prop;
+ 	u32 l2_size;
+ 
+ 	np = of_find_compatible_node(NULL, NULL, "ibm,l2-cache");
+@@ -93,7 +93,7 @@ static int __init ppc4xx_l2c_probe(void)
+ 		of_node_put(np);
+ 		return -ENODEV;
+ 	}
+-	l2_size = prop[0];
++	l2_size = be32_to_cpu(prop[0]);
+ 
+ 	/* Map DCRs */
+ 	dcrreg = of_get_property(np, "dcr-reg", &len);
+@@ -103,8 +103,8 @@ static int __init ppc4xx_l2c_probe(void)
+ 		of_node_put(np);
+ 		return -ENODEV;
+ 	}
+-	dcrbase_isram = dcrreg[0];
+-	dcrbase_l2c = dcrreg[2];
++	dcrbase_isram = be32_to_cpu(dcrreg[0]);
++	dcrbase_l2c = be32_to_cpu(dcrreg[2]);
+ 
+ 	/* Get and map irq number from device tree */
+ 	irq = irq_of_parse_and_map(np, 0);
+@@ -198,7 +198,7 @@ void ppc4xx_reset_system(char *cmd)
+ {
+ 	struct device_node *np;
+ 	u32 reset_type = DBCR0_RST_SYSTEM;
 -	const u32 *prop;
 +	const __be32 *prop;
  
- 	for (i = 0; i < ARRAY_SIZE(feature_properties); ++i, ++fp) {
- 		prop = of_get_flat_dt_prop(node, fp->name, NULL);
--		if (prop && *prop >= fp->min_value) {
-+		if (prop && be32_to_cpup(prop) >= fp->min_value) {
- 			cur_cpu_spec->cpu_features |= fp->cpu_feature;
- 			cur_cpu_spec->cpu_user_features |= fp->cpu_user_ftr;
- 		}
-@@ -269,8 +269,8 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- {
- 	static int logical_cpuid = 0;
- 	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
--	const u32 *prop;
--	const u32 *intserv;
-+	const __be32 *prop;
-+	const __be32 *intserv;
- 	int i, nthreads;
- 	unsigned long len;
- 	int found = 0;
-@@ -297,9 +297,9 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 		 * version 2 of the kexec param format adds the phys cpuid of
- 		 * booted proc.
+ 	np = of_find_node_by_type(NULL, "cpu");
+ 	if (np) {
+@@ -210,8 +210,8 @@ void ppc4xx_reset_system(char *cmd)
+ 		 * 2 - PPC4xx chip reset
+ 		 * 3 - PPC4xx system reset (default)
  		 */
--		if (initial_boot_params && initial_boot_params->version >= 2) {
--			if (intserv[i] ==
--					initial_boot_params->boot_cpuid_phys) {
-+		if (initial_boot_params && be32_to_cpu(initial_boot_params->version) >= 2) {
-+			if (be32_to_cpu(intserv[i]) ==
-+					be32_to_cpu(initial_boot_params->boot_cpuid_phys)) {
- 				found = 1;
- 				break;
- 			}
-@@ -324,9 +324,9 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 
- 	if (found) {
- 		DBG("boot cpu: logical %d physical %d\n", logical_cpuid,
--			intserv[i]);
-+			be32_to_cpu(intserv[i]));
- 		boot_cpuid = logical_cpuid;
--		set_hard_smp_processor_id(boot_cpuid, intserv[i]);
-+		set_hard_smp_processor_id(boot_cpuid, be32_to_cpu(intserv[i]));
- 
- 		/*
- 		 * PAPR defines "logical" PVR values for cpus that
-@@ -343,8 +343,8 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 		 * it uses 0x0f000001.
- 		 */
- 		prop = of_get_flat_dt_prop(node, "cpu-version", NULL);
--		if (prop && (*prop & 0xff000000) == 0x0f000000)
--			identify_cpu(0, *prop);
-+		if (prop && (be32_to_cpup(prop) & 0xff000000) == 0x0f000000)
-+			identify_cpu(0, be32_to_cpup(prop));
- 
- 		identical_pvr_fixup(node);
+-		if ((prop) && ((prop[0] >= 1) && (prop[0] <= 3)))
+-			reset_type = prop[0] << 28;
++		if ((prop) && ((be32_to_cpu(prop[0]) >= 1) && (be32_to_cpu(prop[0]) <= 3)))
++			reset_type = be32_to_cpu(prop[0]) << 28;
  	}
-@@ -365,7 +365,7 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
  
- void __init early_init_dt_scan_chosen_arch(unsigned long node)
+ 	mtspr(SPRN_DBCR0, mfspr(SPRN_DBCR0) | reset_type);
+diff --git a/arch/powerpc/sysdev/uic.c b/arch/powerpc/sysdev/uic.c
+index 0038fb7..e2f7de8 100644
+--- a/arch/powerpc/sysdev/uic.c
++++ b/arch/powerpc/sysdev/uic.c
+@@ -253,7 +253,7 @@ uic_irq_ret:
+ static struct uic * __init uic_init_one(struct device_node *node)
  {
--	unsigned long *lprop;
-+	unsigned long *lprop; /* All these set by kernel, so no need to convert endian */
+ 	struct uic *uic;
+-	const u32 *indexp, *dcrreg;
++	const __be32 *indexp, *dcrreg;
+ 	int len;
  
- #ifdef CONFIG_PPC64
- 	/* check if iommu is forced on or off */
-@@ -524,16 +524,16 @@ void __init early_init_dt_setup_initrd_arch(unsigned long start,
- static void __init early_reserve_mem(void)
- {
- 	u64 base, size;
--	u64 *reserve_map;
-+	__be64 *reserve_map;
- 	unsigned long self_base;
- 	unsigned long self_size;
- 
--	reserve_map = (u64 *)(((unsigned long)initial_boot_params) +
--					initial_boot_params->off_mem_rsvmap);
-+	reserve_map = (__be64 *)(((unsigned long)initial_boot_params) +
-+			be32_to_cpu(initial_boot_params->off_mem_rsvmap));
- 
- 	/* before we do anything, lets reserve the dt blob */
- 	self_base = __pa((unsigned long)initial_boot_params);
--	self_size = initial_boot_params->totalsize;
-+	self_size = be32_to_cpu(initial_boot_params->totalsize);
- 	memblock_reserve(self_base, self_size);
- 
- #ifdef CONFIG_BLK_DEV_INITRD
-@@ -547,13 +547,13 @@ static void __init early_reserve_mem(void)
- 	 * Handle the case where we might be booting from an old kexec
- 	 * image that setup the mem_rsvmap as pairs of 32-bit values
- 	 */
--	if (*reserve_map > 0xffffffffull) {
-+	if (be64_to_cpup(reserve_map) > 0xffffffffull) {
- 		u32 base_32, size_32;
--		u32 *reserve_map_32 = (u32 *)reserve_map;
-+		__be32 *reserve_map_32 = (__be32 *)reserve_map;
- 
- 		while (1) {
--			base_32 = *(reserve_map_32++);
--			size_32 = *(reserve_map_32++);
-+			base_32 = be32_to_cpup(reserve_map_32++);
-+			size_32 = be32_to_cpup(reserve_map_32++);
- 			if (size_32 == 0)
- 				break;
- 			/* skip if the reservation is for the blob */
-@@ -566,8 +566,8 @@ static void __init early_reserve_mem(void)
+ 	BUG_ON(! of_device_is_compatible(node, "ibm,uic"));
+@@ -269,7 +269,7 @@ static struct uic * __init uic_init_one(struct device_node *node)
+ 		       "cell-index property\n", node->full_name);
+ 		return NULL;
  	}
- #endif
- 	while (1) {
--		base = *(reserve_map++);
--		size = *(reserve_map++);
-+		base = be64_to_cpup(reserve_map++);
-+		size = be64_to_cpup(reserve_map++);
- 		if (size == 0)
- 			break;
- 		DBG("reserving: %llx -> %llx\n", base, size);
-@@ -860,7 +860,7 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- 	hardid = get_hard_smp_processor_id(cpu);
+-	uic->index = *indexp;
++	uic->index = be32_to_cpup(indexp);
  
- 	for_each_node_by_type(np, "cpu") {
--		const u32 *intserv;
-+		const __be32 *intserv;
- 		unsigned int plen, t;
+ 	dcrreg = of_get_property(node, "dcr-reg", &len);
+ 	if (!dcrreg || (len != 2*sizeof(u32))) {
+@@ -277,7 +277,7 @@ static struct uic * __init uic_init_one(struct device_node *node)
+ 		       "dcr-reg property\n", node->full_name);
+ 		return NULL;
+ 	}
+-	uic->dcrbase = *dcrreg;
++	uic->dcrbase = be32_to_cpup(dcrreg);
  
- 		/* Check for ibm,ppc-interrupt-server#s. If it doesn't exist
-@@ -869,10 +869,10 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- 		intserv = of_get_property(np, "ibm,ppc-interrupt-server#s",
- 				&plen);
- 		if (intserv == NULL) {
--			const u32 *reg = of_get_property(np, "reg", NULL);
-+			const __be32 *reg = of_get_property(np, "reg", NULL);
- 			if (reg == NULL)
- 				continue;
--			if (*reg == hardid) {
-+			if (be32_to_cpup(reg) == hardid) {
- 				if (thread)
- 					*thread = 0;
- 				return np;
-@@ -880,7 +880,7 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- 		} else {
- 			plen /= sizeof(u32);
- 			for (t = 0; t < plen; t++) {
--				if (hardid == intserv[t]) {
-+				if (hardid == be32_to_cpu(intserv[t])) {
- 					if (thread)
- 						*thread = t;
- 					return np;
-@@ -900,7 +900,7 @@ static int __init export_flat_device_tree(void)
- 	struct dentry *d;
- 
- 	flat_dt_blob.data = initial_boot_params;
--	flat_dt_blob.size = initial_boot_params->totalsize;
-+	flat_dt_blob.size = be32_to_cpu(initial_boot_params->totalsize);
- 
- 	d = debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
- 				powerpc_debugfs_root, &flat_dt_blob);
+ 	uic->irqhost = irq_alloc_host(node, IRQ_HOST_MAP_LINEAR,
+ 				      NR_UIC_INTS, &uic_host_ops, -1);
 -- 
 1.7.1
