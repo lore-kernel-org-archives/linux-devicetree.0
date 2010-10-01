@@ -1,193 +1,292 @@
 From: "Ian Munsie" <imunsie@au1.ibm.com>
-Subject: [PATCH 13/18] powerpc 44x: Make DCR endianness agnostic
-Date: Fri,  1 Oct 2010 17:06:06 +1000
-Message-ID: <1285916771-18033-14-git-send-email-imunsie@au1.ibm.com>
+Subject: [PATCH 17/18] net: Fix endianess issues in IBM newemac driver
+Date: Fri,  1 Oct 2010 17:06:10 +1000
+Message-ID: <1285916771-18033-18-git-send-email-imunsie@au1.ibm.com>
 References: <1285916771-18033-1-git-send-email-imunsie@au1.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1285916771-18033-1-git-send-email-imunsie@au1.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org
-Cc: paulus@samba.org, Ian Munsie <imunsie@au1.ibm.com>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, Stefan Roese <sr@denx.de>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Anton Blanchard <anton@samba.org>, Geoff Levand <geoffrey.levand@am.sony.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Cc: paulus@samba.org, Ian Munsie <imunsie@au1.ibm.com>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@secretlab.ca>, Jiri Pirko <jpirko@redhat.com>, Sean MacLennan <smaclennan@pikatech.com>, Tejun Heo <tj@kernel.org>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Ian Munsie <imunsie@au1.ibm.com>
 
-The Device Control Register accesses parse the device tree and therefore
-need to handle the possible differences of endianness between the CPU
-and device tree.
+This patch fixes all the device tree and ring buffer accesses in the IBM
+newemac driver.
 
 Signed-off-by: Ian Munsie <imunsie@au1.ibm.com>
 ---
- arch/powerpc/sysdev/dcr.c        |   18 +++++++++---------
- arch/powerpc/sysdev/ppc4xx_soc.c |   16 ++++++++--------
- arch/powerpc/sysdev/uic.c        |    6 +++---
- 3 files changed, 20 insertions(+), 20 deletions(-)
+ drivers/net/ibm_newemac/core.c |   68 ++++++++++++++++++++--------------------
+ drivers/net/ibm_newemac/mal.c  |    6 ++--
+ drivers/net/ibm_newemac/mal.h  |    6 ++--
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-diff --git a/arch/powerpc/sysdev/dcr.c b/arch/powerpc/sysdev/dcr.c
-index bb44aa9..7f91e8a 100644
---- a/arch/powerpc/sysdev/dcr.c
-+++ b/arch/powerpc/sysdev/dcr.c
-@@ -27,7 +27,7 @@
- static struct device_node *find_dcr_parent(struct device_node *node)
- {
- 	struct device_node *par, *tmp;
--	const u32 *p;
-+	const __be32 *p;
+diff --git a/drivers/net/ibm_newemac/core.c b/drivers/net/ibm_newemac/core.c
+index 3506fd6..67238b8 100644
+--- a/drivers/net/ibm_newemac/core.c
++++ b/drivers/net/ibm_newemac/core.c
+@@ -981,12 +981,12 @@ static int emac_resize_rx_ring(struct emac_instance *dev, int new_mtu)
+ 	 * to simplify error recovery in the case of allocation failure later.
+ 	 */
+ 	for (i = 0; i < NUM_RX_BUFF; ++i) {
+-		if (dev->rx_desc[i].ctrl & MAL_RX_CTRL_FIRST)
++		if (dev->rx_desc[i].ctrl & cpu_to_be16(MAL_RX_CTRL_FIRST))
+ 			++dev->estats.rx_dropped_resize;
  
- 	for (par = of_node_get(node); par;) {
- 		if (of_get_property(par, "dcr-controller", NULL))
-@@ -37,7 +37,7 @@ static struct device_node *find_dcr_parent(struct device_node *node)
- 		if (p == NULL)
- 			par = of_get_parent(par);
- 		else
--			par = of_find_node_by_phandle(*p);
-+			par = of_find_node_by_phandle(be32_to_cpup(p));
- 		of_node_put(tmp);
+ 		dev->rx_desc[i].data_len = 0;
+-		dev->rx_desc[i].ctrl = MAL_RX_CTRL_EMPTY |
+-		    (i == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0);
++		dev->rx_desc[i].ctrl = cpu_to_be16(MAL_RX_CTRL_EMPTY |
++		    (i == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0));
  	}
- 	return par;
-@@ -128,24 +128,24 @@ unsigned int dcr_resource_start(const struct device_node *np,
- 				unsigned int index)
- {
- 	unsigned int ds;
--	const u32 *dr = of_get_property(np, "dcr-reg", &ds);
-+	const __be32 *dr = of_get_property(np, "dcr-reg", &ds);
  
- 	if (dr == NULL || ds & 1 || index >= (ds / 8))
- 		return 0;
+ 	/* Reallocate RX ring only if bigger skb buffers are required */
+@@ -1005,9 +1005,9 @@ static int emac_resize_rx_ring(struct emac_instance *dev, int new_mtu)
+ 		dev_kfree_skb(dev->rx_skb[i]);
  
--	return dr[index * 2];
-+	return be32_to_cpu(dr[index * 2]);
+ 		skb_reserve(skb, EMAC_RX_SKB_HEADROOM + 2);
+-		dev->rx_desc[i].data_ptr =
++		dev->rx_desc[i].data_ptr = cpu_to_be32(
+ 		    dma_map_single(&dev->ofdev->dev, skb->data - 2, rx_sync_size,
+-				   DMA_FROM_DEVICE) + 2;
++				   DMA_FROM_DEVICE) + 2);
+ 		dev->rx_skb[i] = skb;
+ 	}
+  skip:
+@@ -1067,7 +1067,7 @@ static void emac_clean_tx_ring(struct emac_instance *dev)
+ 		if (dev->tx_skb[i]) {
+ 			dev_kfree_skb(dev->tx_skb[i]);
+ 			dev->tx_skb[i] = NULL;
+-			if (dev->tx_desc[i].ctrl & MAL_TX_CTRL_READY)
++			if (dev->tx_desc[i].ctrl & cpu_to_be16(MAL_TX_CTRL_READY))
+ 				++dev->estats.tx_dropped;
+ 		}
+ 		dev->tx_desc[i].ctrl = 0;
+@@ -1104,12 +1104,12 @@ static inline int emac_alloc_rx_skb(struct emac_instance *dev, int slot,
+ 	dev->rx_desc[slot].data_len = 0;
+ 
+ 	skb_reserve(skb, EMAC_RX_SKB_HEADROOM + 2);
+-	dev->rx_desc[slot].data_ptr =
++	dev->rx_desc[slot].data_ptr = cpu_to_be32(
+ 	    dma_map_single(&dev->ofdev->dev, skb->data - 2, dev->rx_sync_size,
+-			   DMA_FROM_DEVICE) + 2;
++			   DMA_FROM_DEVICE) + 2);
+ 	wmb();
+-	dev->rx_desc[slot].ctrl = MAL_RX_CTRL_EMPTY |
+-	    (slot == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0);
++	dev->rx_desc[slot].ctrl = cpu_to_be16(MAL_RX_CTRL_EMPTY |
++	    (slot == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0));
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(dcr_resource_start);
+@@ -1373,12 +1373,12 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	DBG2(dev, "xmit(%u) %d" NL, len, slot);
  
- unsigned int dcr_resource_len(const struct device_node *np, unsigned int index)
- {
- 	unsigned int ds;
--	const u32 *dr = of_get_property(np, "dcr-reg", &ds);
-+	const __be32 *dr = of_get_property(np, "dcr-reg", &ds);
+ 	dev->tx_skb[slot] = skb;
+-	dev->tx_desc[slot].data_ptr = dma_map_single(&dev->ofdev->dev,
++	dev->tx_desc[slot].data_ptr = cpu_to_be32(dma_map_single(&dev->ofdev->dev,
+ 						     skb->data, len,
+-						     DMA_TO_DEVICE);
+-	dev->tx_desc[slot].data_len = (u16) len;
++						     DMA_TO_DEVICE));
++	dev->tx_desc[slot].data_len = cpu_to_be16(len);
+ 	wmb();
+-	dev->tx_desc[slot].ctrl = ctrl;
++	dev->tx_desc[slot].ctrl = cpu_to_be16(ctrl);
  
- 	if (dr == NULL || ds & 1 || index >= (ds / 8))
- 		return 0;
- 
--	return dr[index * 2 + 1];
-+	return be32_to_cpu(dr[index * 2 + 1]);
+ 	return emac_xmit_finish(dev, len);
  }
- EXPORT_SYMBOL_GPL(dcr_resource_len);
+@@ -1399,9 +1399,9 @@ static inline int emac_xmit_split(struct emac_instance *dev, int slot,
+ 			ctrl |= MAL_TX_CTRL_WRAP;
  
-@@ -156,7 +156,7 @@ u64 of_translate_dcr_address(struct device_node *dev,
- 			     unsigned int *out_stride)
+ 		dev->tx_skb[slot] = NULL;
+-		dev->tx_desc[slot].data_ptr = pd;
+-		dev->tx_desc[slot].data_len = (u16) chunk;
+-		dev->tx_desc[slot].ctrl = ctrl;
++		dev->tx_desc[slot].data_ptr = cpu_to_be32(pd);
++		dev->tx_desc[slot].data_len = cpu_to_be16(chunk);
++		dev->tx_desc[slot].ctrl = cpu_to_be16(ctrl);
+ 		++dev->tx_cnt;
+ 
+ 		if (!len)
+@@ -1442,9 +1442,9 @@ static int emac_start_xmit_sg(struct sk_buff *skb, struct net_device *ndev)
+ 	/* skb data */
+ 	dev->tx_skb[slot] = NULL;
+ 	chunk = min(len, MAL_MAX_TX_SIZE);
+-	dev->tx_desc[slot].data_ptr = pd =
+-	    dma_map_single(&dev->ofdev->dev, skb->data, len, DMA_TO_DEVICE);
+-	dev->tx_desc[slot].data_len = (u16) chunk;
++	dev->tx_desc[slot].data_ptr = cpu_to_be32(pd =
++	    dma_map_single(&dev->ofdev->dev, skb->data, len, DMA_TO_DEVICE));
++	dev->tx_desc[slot].data_len = cpu_to_be16(chunk);
+ 	len -= chunk;
+ 	if (unlikely(len))
+ 		slot = emac_xmit_split(dev, slot, pd + chunk, len, !nr_frags,
+@@ -1473,7 +1473,7 @@ static int emac_start_xmit_sg(struct sk_buff *skb, struct net_device *ndev)
+ 	if (dev->tx_slot == NUM_TX_BUFF - 1)
+ 		ctrl |= MAL_TX_CTRL_WRAP;
+ 	wmb();
+-	dev->tx_desc[dev->tx_slot].ctrl = ctrl;
++	dev->tx_desc[dev->tx_slot].ctrl = cpu_to_be16(ctrl);
+ 	dev->tx_slot = (slot + 1) % NUM_TX_BUFF;
+ 
+ 	return emac_xmit_finish(dev, skb->len);
+@@ -1541,7 +1541,7 @@ static void emac_poll_tx(void *param)
+ 		u16 ctrl;
+ 		int slot = dev->ack_slot, n = 0;
+ 	again:
+-		ctrl = dev->tx_desc[slot].ctrl;
++		ctrl = be16_to_cpu(dev->tx_desc[slot].ctrl);
+ 		if (!(ctrl & MAL_TX_CTRL_READY)) {
+ 			struct sk_buff *skb = dev->tx_skb[slot];
+ 			++n;
+@@ -1583,8 +1583,8 @@ static inline void emac_recycle_rx_skb(struct emac_instance *dev, int slot,
+ 
+ 	dev->rx_desc[slot].data_len = 0;
+ 	wmb();
+-	dev->rx_desc[slot].ctrl = MAL_RX_CTRL_EMPTY |
+-	    (slot == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0);
++	dev->rx_desc[slot].ctrl = cpu_to_be16(MAL_RX_CTRL_EMPTY |
++	    (slot == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0));
+ }
+ 
+ static void emac_parse_rx_error(struct emac_instance *dev, u16 ctrl)
+@@ -1628,7 +1628,7 @@ static inline void emac_rx_csum(struct emac_instance *dev,
+ static inline int emac_rx_sg_append(struct emac_instance *dev, int slot)
  {
- 	struct device_node *dp;
--	const u32 *p;
-+	const __be32 *p;
- 	unsigned int stride;
- 	u64 ret = OF_BAD_ADDR;
+ 	if (likely(dev->rx_sg_skb != NULL)) {
+-		int len = dev->rx_desc[slot].data_len;
++		int len = be16_to_cpu(dev->rx_desc[slot].data_len);
+ 		int tot_len = dev->rx_sg_skb->len + len;
  
-@@ -166,7 +166,7 @@ u64 of_translate_dcr_address(struct device_node *dev,
+ 		if (unlikely(tot_len + 2 > dev->rx_skb_size)) {
+@@ -1659,14 +1659,14 @@ static int emac_poll_rx(void *param, int budget)
+ 	while (budget > 0) {
+ 		int len;
+ 		struct sk_buff *skb;
+-		u16 ctrl = dev->rx_desc[slot].ctrl;
++		u16 ctrl = be16_to_cpu(dev->rx_desc[slot].ctrl);
  
- 	/* Stride is not properly defined yet, default to 0x10 for Axon */
- 	p = of_get_property(dp, "dcr-mmio-stride", NULL);
--	stride = (p == NULL) ? 0x10 : *p;
-+	stride = (p == NULL) ? 0x10 : be32_to_cpup(p);
+ 		if (ctrl & MAL_RX_CTRL_EMPTY)
+ 			break;
  
- 	/* XXX FIXME: Which property name is to use of the 2 following ? */
- 	p = of_get_property(dp, "dcr-mmio-range", NULL);
-@@ -176,7 +176,7 @@ u64 of_translate_dcr_address(struct device_node *dev,
- 		goto done;
+ 		skb = dev->rx_skb[slot];
+ 		mb();
+-		len = dev->rx_desc[slot].data_len;
++		len = be16_to_cpu(dev->rx_desc[slot].data_len);
  
- 	/* Maybe could do some better range checking here */
--	ret = of_translate_address(dp, p);
-+	ret = of_translate_address(dp, be32_to_cpup(p));
- 	if (ret != OF_BAD_ADDR)
- 		ret += (u64)(stride) * (u64)dcr_n;
- 	if (out_stride)
-diff --git a/arch/powerpc/sysdev/ppc4xx_soc.c b/arch/powerpc/sysdev/ppc4xx_soc.c
-index d3d6ce3..e5a7554 100644
---- a/arch/powerpc/sysdev/ppc4xx_soc.c
-+++ b/arch/powerpc/sysdev/ppc4xx_soc.c
-@@ -76,10 +76,10 @@ static int __init ppc4xx_l2c_probe(void)
- 	u32 r;
- 	unsigned long flags;
- 	int irq;
--	const u32 *dcrreg;
-+	const __be32 *dcrreg;
- 	u32 dcrbase_isram;
+ 		if (unlikely(!MAL_IS_SINGLE_RX(ctrl)))
+ 			goto sg;
+@@ -1757,7 +1757,7 @@ static int emac_poll_rx(void *param, int budget)
+ 
+ 	if (unlikely(budget && test_bit(MAL_COMMAC_RX_STOPPED, &dev->commac.flags))) {
+ 		mb();
+-		if (!(dev->rx_desc[slot].ctrl & MAL_RX_CTRL_EMPTY)) {
++		if (!(dev->rx_desc[slot].ctrl & cpu_to_be16(MAL_RX_CTRL_EMPTY))) {
+ 			DBG2(dev, "rx restart" NL);
+ 			received = 0;
+ 			goto again;
+@@ -1783,7 +1783,7 @@ static int emac_peek_rx(void *param)
+ {
+ 	struct emac_instance *dev = param;
+ 
+-	return !(dev->rx_desc[dev->rx_slot].ctrl & MAL_RX_CTRL_EMPTY);
++	return !(dev->rx_desc[dev->rx_slot].ctrl & cpu_to_be16(MAL_RX_CTRL_EMPTY));
+ }
+ 
+ /* NAPI poll context */
+@@ -1793,7 +1793,7 @@ static int emac_peek_rx_sg(void *param)
+ 
+ 	int slot = dev->rx_slot;
+ 	while (1) {
+-		u16 ctrl = dev->rx_desc[slot].ctrl;
++		u16 ctrl = be16_to_cpu(dev->rx_desc[slot].ctrl);
+ 		if (ctrl & MAL_RX_CTRL_EMPTY)
+ 			return 0;
+ 		else if (ctrl & MAL_RX_CTRL_LAST)
+@@ -2367,14 +2367,14 @@ static int __devinit emac_read_uint_prop(struct device_node *np, const char *nam
+ 					 u32 *val, int fatal)
+ {
  	int len;
--	const u32 *prop;
-+	const __be32 *prop;
- 	u32 l2_size;
- 
- 	np = of_find_compatible_node(NULL, NULL, "ibm,l2-cache");
-@@ -93,7 +93,7 @@ static int __init ppc4xx_l2c_probe(void)
- 		of_node_put(np);
+-	const u32 *prop = of_get_property(np, name, &len);
++	const __be32 *prop = of_get_property(np, name, &len);
+ 	if (prop == NULL || len < sizeof(u32)) {
+ 		if (fatal)
+ 			printk(KERN_ERR "%s: missing %s property\n",
+ 			       np->full_name, name);
  		return -ENODEV;
  	}
--	l2_size = prop[0];
-+	l2_size = be32_to_cpu(prop[0]);
+-	*val = *prop;
++	*val = be32_to_cpup(prop);
+ 	return 0;
+ }
  
- 	/* Map DCRs */
- 	dcrreg = of_get_property(np, "dcr-reg", &len);
-@@ -103,8 +103,8 @@ static int __init ppc4xx_l2c_probe(void)
- 		of_node_put(np);
- 		return -ENODEV;
- 	}
--	dcrbase_isram = dcrreg[0];
--	dcrbase_l2c = dcrreg[2];
-+	dcrbase_isram = be32_to_cpu(dcrreg[0]);
-+	dcrbase_l2c = be32_to_cpu(dcrreg[2]);
+@@ -3013,7 +3013,7 @@ static void __init emac_make_bootlist(void)
  
- 	/* Get and map irq number from device tree */
- 	irq = irq_of_parse_and_map(np, 0);
-@@ -198,7 +198,7 @@ void ppc4xx_reset_system(char *cmd)
- {
- 	struct device_node *np;
- 	u32 reset_type = DBCR0_RST_SYSTEM;
+ 	/* Collect EMACs */
+ 	while((np = of_find_all_nodes(np)) != NULL) {
+-		const u32 *idx;
++		const __be32 *idx;
+ 
+ 		if (of_match_node(emac_match, np) == NULL)
+ 			continue;
+@@ -3022,7 +3022,7 @@ static void __init emac_make_bootlist(void)
+ 		idx = of_get_property(np, "cell-index", NULL);
+ 		if (idx == NULL)
+ 			continue;
+-		cell_indices[i] = *idx;
++		cell_indices[i] = be32_to_cpup(idx);
+ 		emac_boot_list[i++] = of_node_get(np);
+ 		if (i >= EMAC_BOOT_LIST_SIZE) {
+ 			of_node_put(np);
+diff --git a/drivers/net/ibm_newemac/mal.c b/drivers/net/ibm_newemac/mal.c
+index d5717e2..9e4939e 100644
+--- a/drivers/net/ibm_newemac/mal.c
++++ b/drivers/net/ibm_newemac/mal.c
+@@ -524,7 +524,7 @@ static int __devinit mal_probe(struct platform_device *ofdev,
+ 	int err = 0, i, bd_size;
+ 	int index = mal_count++;
+ 	unsigned int dcr_base;
 -	const u32 *prop;
 +	const __be32 *prop;
- 
- 	np = of_find_node_by_type(NULL, "cpu");
- 	if (np) {
-@@ -210,8 +210,8 @@ void ppc4xx_reset_system(char *cmd)
- 		 * 2 - PPC4xx chip reset
- 		 * 3 - PPC4xx system reset (default)
- 		 */
--		if ((prop) && ((prop[0] >= 1) && (prop[0] <= 3)))
--			reset_type = prop[0] << 28;
-+		if ((prop) && ((be32_to_cpu(prop[0]) >= 1) && (be32_to_cpu(prop[0]) <= 3)))
-+			reset_type = be32_to_cpu(prop[0]) << 28;
+ 	u32 cfg;
+ 	unsigned long irqflags;
+ 	irq_handler_t hdlr_serr, hdlr_txde, hdlr_rxde;
+@@ -550,7 +550,7 @@ static int __devinit mal_probe(struct platform_device *ofdev,
+ 		err = -ENODEV;
+ 		goto fail;
  	}
+-	mal->num_tx_chans = prop[0];
++	mal->num_tx_chans = be32_to_cpu(prop[0]);
  
- 	mtspr(SPRN_DBCR0, mfspr(SPRN_DBCR0) | reset_type);
-diff --git a/arch/powerpc/sysdev/uic.c b/arch/powerpc/sysdev/uic.c
-index 0038fb7..e2f7de8 100644
---- a/arch/powerpc/sysdev/uic.c
-+++ b/arch/powerpc/sysdev/uic.c
-@@ -253,7 +253,7 @@ uic_irq_ret:
- static struct uic * __init uic_init_one(struct device_node *node)
- {
- 	struct uic *uic;
--	const u32 *indexp, *dcrreg;
-+	const __be32 *indexp, *dcrreg;
- 	int len;
- 
- 	BUG_ON(! of_device_is_compatible(node, "ibm,uic"));
-@@ -269,7 +269,7 @@ static struct uic * __init uic_init_one(struct device_node *node)
- 		       "cell-index property\n", node->full_name);
- 		return NULL;
+ 	prop = of_get_property(ofdev->dev.of_node, "num-rx-chans", NULL);
+ 	if (prop == NULL) {
+@@ -560,7 +560,7 @@ static int __devinit mal_probe(struct platform_device *ofdev,
+ 		err = -ENODEV;
+ 		goto fail;
  	}
--	uic->index = *indexp;
-+	uic->index = be32_to_cpup(indexp);
+-	mal->num_rx_chans = prop[0];
++	mal->num_rx_chans = be32_to_cpu(prop[0]);
  
- 	dcrreg = of_get_property(node, "dcr-reg", &len);
- 	if (!dcrreg || (len != 2*sizeof(u32))) {
-@@ -277,7 +277,7 @@ static struct uic * __init uic_init_one(struct device_node *node)
- 		       "dcr-reg property\n", node->full_name);
- 		return NULL;
- 	}
--	uic->dcrbase = *dcrreg;
-+	uic->dcrbase = be32_to_cpup(dcrreg);
+ 	dcr_base = dcr_resource_start(ofdev->dev.of_node, 0);
+ 	if (dcr_base == 0) {
+diff --git a/drivers/net/ibm_newemac/mal.h b/drivers/net/ibm_newemac/mal.h
+index 6608421..b8ee413 100644
+--- a/drivers/net/ibm_newemac/mal.h
++++ b/drivers/net/ibm_newemac/mal.h
+@@ -147,9 +147,9 @@ static inline int mal_tx_chunks(int len)
  
- 	uic->irqhost = irq_alloc_host(node, IRQ_HOST_MAP_LINEAR,
- 				      NR_UIC_INTS, &uic_host_ops, -1);
+ /* MAL Buffer Descriptor structure */
+ struct mal_descriptor {
+-	u16 ctrl;		/* MAL / Commac status control bits */
+-	u16 data_len;		/* Max length is 4K-1 (12 bits)     */
+-	u32 data_ptr;		/* pointer to actual data buffer    */
++	__be16 ctrl;		/* MAL / Commac status control bits */
++	__be16 data_len;	/* Max length is 4K-1 (12 bits)     */
++	__be32 data_ptr;	/* pointer to actual data buffer    */
+ };
+ 
+ /* the following defines are for the MadMAL status and control registers. */
 -- 
 1.7.1
