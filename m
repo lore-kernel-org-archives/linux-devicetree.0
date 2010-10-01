@@ -1,12 +1,12 @@
 From: "Lorenzo Pieralisi" <Lorenzo.Pieralisi@arm.com>
 Subject: RE: [RFC] irq: Migrate powerpc virq subsystem into generic code
 Date: Fri, 1 Oct 2010 13:44:10 +0100
-Message-ID: <17507.8631415547$1285978187@news.gmane.org>
+Message-ID: <18833.0837445848$1285978197@news.gmane.org>
 References: <20100922203117.10426.69278.stgit@angua>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <20100922203117.10426.69278.stgit@angua>
 Content-Language: en-gb
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
@@ -16,8 +16,8 @@ List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
 List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 To: 'Grant Likely' <grant.likely@secretlab.ca>, benh@kernel.crashing.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
