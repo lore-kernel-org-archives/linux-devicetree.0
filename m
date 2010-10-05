@@ -1,63 +1,96 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] Globally s/struct irq_host/struct irq_domain/
-Date: Tue, 5 Oct 2010 09:25:44 +0200 (CEST)
-Message-ID: <alpine.LFD.2.00.1010050925260.2556@localhost6.localdomain6>
-References: <E1P2Tqn-0004gj-W1@jdl.com> <20101004165212.GC13749@angua.secretlab.ca> <1286233776.2463.329.camel@pasglop> <AANLkTimGtuq8+yA121xg0tVQ=Z=nqfzUG6BC8YqzX3Qh@mail.gmail.com>
+From: Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] When dumping from file system show results in sane order
+Date: Tue, 5 Oct 2010 14:07:21 -0500
+Message-ID: <1286305641-23388-1-git-send-email-msm@freescale.com>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="-1463795968-79811929-1286263567=:2556"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AANLkTimGtuq8+yA121xg0tVQ=Z=nqfzUG6BC8YqzX3Qh@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jon Loeliger <jdl@jdl.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Currently, when we run the following
 
----1463795968-79811929-1286263567=:2556
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+$> dtc -I fs -O dts /proc/device-tree
 
-On Mon, 4 Oct 2010, Grant Likely wrote:
+We get the output in a "reverse order", this patch will reverse that
+output order and should resemble your initial device more closely
 
-> On Mon, Oct 4, 2010 at 5:09 PM, Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> > On Mon, 2010-10-04 at 10:52 -0600, Grant Likely wrote:
-> >> On Sun, Oct 03, 2010 at 02:03:57PM -0500, Jon Loeliger wrote:
-> >> >
-> >> > Just rename the irq_host structure as irq_domain to lessen the
-> >> > confusion around the word "host".  Updated a few comments and
-> >> > error messages to use "irq_domain" when refering to the structure.
-> >> >
-> >> > Suggested by Ben Herrenschmidt on the device-tree mailing list.
-> >> >
-> >> > Signed-off-by: Jon Loeliger <jdl@jdl.com>
-> >> > ---
-> >> >
-> >> > Grant requested one giant patch simply renaming the structure.
-> >>
-> >> Thanks Jon,
-> >>
-> >> However, considering that tglx has already embarked on his Grand IRQ
-> >> Subsystem Cleanup, I suspect that this will end up just getting in the
-> >> way unless he picks it up into his queue.  It may even by that the
-> >> need for irq_host will disappear once Thomas is finished by merging it
-> >> into the core code.  I'd like to sit tight on this until the details
-> >> of what powerpc virqs can be worked out with Ben and Thomas.
-> >
-> > I doubt the need for irq_host will disappear. However I don't see that
-> > going into the core under that name, so I think the rename is a very
-> > valid thing to do now. We just need to sync the patches to avoid pure
-> > mechanical clash.
-> >
-> > Thomas initial series doesn't yet generalize the virq layer and that
-> > will take a bit longer, so I'm happy to see Jon stuff go upstream first.
-> 
-> Alright, should tglx pick up this patch, or do you want to carry it in
-> the powerpc tree?
+Code copied over from kexec-tools
 
-Should go through powerpc.
+Signed-off-by: Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ fstree.c |   29 ++++++++++++++++++++++-------
+ 1 files changed, 22 insertions(+), 7 deletions(-)
 
-       tglx
----1463795968-79811929-1286263567=:2556--
+diff --git a/fstree.c b/fstree.c
+index f377453..fd2658d 100644
+--- a/fstree.c
++++ b/fstree.c
+@@ -23,21 +23,35 @@
+ #include <dirent.h>
+ #include <sys/stat.h>
+ 
++static int comparefunc(const void *dentry1, const void *dentry2)
++{
++	const char *str1 = (*(struct dirent * const *)dentry1)->d_name;
++	const char *str2 = (*(struct dirent * const *)dentry2)->d_name;
++
++	if (strchr(str1, '@') && strchr(str2, '@') &&
++		(strlen(str1) > strlen(str2)))
++		return 1;
++
++	return strcmp(str1, str2);
++}
++
+ static struct node *read_fstree(const char *dirname)
+ {
+-	DIR *d;
+-	struct dirent *de;
+ 	struct stat st;
+ 	struct node *tree;
++	struct dirent **namelist;
++	int numlist, i;
+ 
+-	d = opendir(dirname);
+-	if (!d)
+-		die("Couldn't opendir() \"%s\": %s\n", dirname, strerror(errno));
++	numlist = scandir(dirname, &namelist, 0, comparefunc);
++	if (numlist <= 0)
++		die("unrecoverable error: could not scan \"%s\": %s\n",
++                    dirname, strerror(errno));
+ 
+ 	tree = build_node(NULL, NULL);
+ 
+-	while ((de = readdir(d)) != NULL) {
++	for (i = 0; i < numlist; i++) {
+ 		char *tmpnam;
++		struct dirent *de = namelist[i];
+ 
+ 		if (streq(de->d_name, ".")
+ 		    || streq(de->d_name, ".."))
+@@ -72,10 +86,11 @@ static struct node *read_fstree(const char *dirname)
+ 			add_child(tree, newchild);
+ 		}
+ 
++		free(de);
+ 		free(tmpnam);
+ 	}
++	free(namelist);
+ 
+-	closedir(d);
+ 	return tree;
+ }
+ 
+-- 
+1.6.0.6
