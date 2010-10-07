@@ -1,168 +1,189 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: PPC: Possible bug in prom_parse.c:of_irq_map_raw?
-Date: Thu, 7 Oct 2010 12:34:09 -0600
-Message-ID: <AANLkTi=dU4oYfqrBGYmSCmYf2cRsBX-Pf6A9X9N0YaZA@mail.gmail.com>
-References: <1d3f23371002091921m7f47a1fbt1cf7fd2ef0a927fa@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 14/18] powerpc, of_serial: Endianness issues setting up
+	the serial ports
+Date: Thu, 7 Oct 2010 17:23:42 -0600
+Message-ID: <20101007232342.GB4213@angua.secretlab.ca>
+References: <1285916771-18033-1-git-send-email-imunsie@au1.ibm.com>
+	<1285916771-18033-15-git-send-email-imunsie@au1.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d3f23371002091921m7f47a1fbt1cf7fd2ef0a927fa@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Williams <john.williams@petalogix.com>
-Cc: Linux Kernel list <linux-kernel@vger.kernel.org>, linuxppc-dev@ozlabs.org, Michal Simek <michal.simek@petalogix.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1285916771-18033-15-git-send-email-imunsie-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Ian Munsie <imunsie-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sean MacLennan <smaclennan-Qtffpm9i2AVWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Weil <weil-XecQL68PM4x789tOGE2Ojw@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Reaching way back into the past....
+On Fri, Oct 01, 2010 at 05:06:07PM +1000, Ian Munsie wrote:
+> From: Ian Munsie <imunsie-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+> 
+> The speed and clock of the serial ports is retrieved from the device
+> tree in both the PowerPC legacy serial code and the Open Firmware serial
+> driver, therefore they need to handle the fact that the device tree is
+> always big endian, while the CPU may not be.
+> 
+> Also fix other device tree references in the legacy serial code.
+> 
+> Signed-off-by: Ian Munsie <imunsie-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 
-John, did you ever solve your issue here?  Comments below.
+Applied, thanks.
 
-On Tue, Feb 9, 2010 at 8:21 PM, John Williams
-<john.williams@petalogix.com> wrote:
-> Hi,
->
-> Perhaps this is my misunderstanding, but I'm looking at the bit of
-> code in of_irq_map_raw() that iterates the interrupt-map DTS node,
-> which I am seeing to behave strangely when handling the interrupt-map
-> property on a PCI bridge node.
->
-> Early in the function, we get the #address-cells value from the node =
--
-> in this case the PCI bridge, and store it in local var addrsize:
->
-> =A0 =A0 =A0 =A0/* Look for this #address-cells. We have to implement =
-the old linux
-> =A0 =A0 =A0 =A0 * trick of looking for the parent here as some device=
--trees rely on it
-> =A0 =A0 =A0 =A0 */
-> =A0 =A0 =A0 =A0old =3D of_node_get(ipar);
-> =A0 =A0 =A0 =A0do {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_property(old, "#address=
--cells", NULL);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tnode =3D of_get_parent(old);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0of_node_put(old);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0old =3D tnode;
-> =A0 =A0 =A0 =A0} while(old && tmp =3D=3D NULL);
-> =A0 =A0 =A0 =A0of_node_put(old);
-> =A0 =A0 =A0 =A0old =3D NULL;
-> =A0 =A0 =A0 =A0addrsize =3D (tmp =3D=3D NULL) ? 2 : *tmp;
->
-> =A0 =A0 =A0 =A0DBG(" -> addrsize=3D%d\n", addrsize);
->
->
-> Later, once we've found the interrupt-map and are iterating over it
-> attempting to match on PCI device addresses, there is this little
-> fragment:
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* Get the interrupt p=
-arent */
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (of_irq_workarounds=
- & OF_IMAP_NO_PHANDLE)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newpar=
- =3D of_node_get(of_irq_dflt_pic);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0else
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newpar=
- =3D
-> of_find_node_by_phandle((phandle)*imap);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0imap++;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0--imaplen;
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* Check if not found =
-*/
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (newpar =3D=3D NULL=
-) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0DBG(" =
--> imap parent not found !\n");
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto f=
-ail;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* Get #interrupt-cell=
-s and #address-cells of new
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * parent
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_propert=
-y(newpar, "#interrupt-cells", NULL);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (tmp =3D=3D NULL) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0DBG(" =
--> parent lacks #interrupt-cells !\n");
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto f=
-ail;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newintsize =3D *tmp;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_propert=
-y(newpar, "#address-cells", NULL);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newaddrsize =3D (tmp =3D=
-=3D NULL) ? 0 : *tmp;
->
-> Finally, later in the loop we update addrsize=3Dnewaddrsize
->
-> As I read this code, and the behaviour I'm seeing, is that if the
-> interrupt controller parent device doesn't have an #address-cells
-> entry, then this get_property will return fail, therefore setting
-> newaddrsize =A0to zero. =A0This then means that subsequent match atte=
-mpts
-> when iterating the interrupt-map always fail, because the match lengt=
-h
-> (addrsize) is 0.
+I'm picking up this one because it is also needed by Microblaze.
+Michal Simek also posted a patch that does the same thing, but this
+one is better so I'm dropping his in favour of this one.
 
-Correct.  The interrupt-map property contains the following fields:
-
-child-unit-address child-irq irq-controller irq-parent-unit-address par=
-ent-irq
-
-In the *vast majority* of cases, the irq-parent-unit-address is a
-zero-length field because #address-cells isn't present on the
-interrupt controller parent.  So effectively interrupt-map becomes:
-
-child-unit-address child-irq irq-controller parent-irq
-
-See epapr 1.0 for a full discussion
-
->
-> Maybe I'm missing something here, but shouldn't this last bit of code
-> instead be:
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_propert=
-y(newpar, "#address-cells", NULL);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newaddrsize =3D (tmp =3D=
-=3D NULL) ? addrsize : *tmp;
->
-> =A0^^^^^^^^^
-> ?
->
-> In other words, if the parent node has an #address-cells value, then
-> use it, otherwise stick to the #address-cells value we picked up for
-> the actual node in question (ie the PCI bridge).
-
-No, because at this point we absolutely do want to know how big the
-parent #address-cells is, and if it is missing, we need to use 0.  If
-the child's addrsize continued to be used, then the interrupt-map
-parsing would get unaligned.
-
-The inner loop is over the entries in interrupt-map.  addrsize and
-intsize are only updated in the case where a match is found in the
-table.  If a match isn't found, then it should bail out to the 'fail'
-label.
-
-> The way this is manifesting itself in the system I'm looking at is
-> that only the PCI device matching the first entry in the PCI bridge
-> interrupt-map property is correctly matching. For PCI devices that
-> require more than one pass through the interrupt-map loop, addrsize
-> goes to zero and no further match is possible.
-
-Something sounds fishy.  If you're still having problems, can you
-enable #define DEBUG in drivers/of/irq.c and post the output?
-
-> I might be able to hack around this in the device-tree by setting
-> #address-cells=3D<3> in the interrupt controller node, but that doesn=
-'t
-> smell right either - it's only true for PCI devices for a start,
-> whereas this controller handles interrupts from many sources on the
-> 32-bit PLB bus as well. =A0I looked at the ML510 DTS in boot/dts and
-> it's not doing anything like this.
-
-Yeah, that's not right, and it would mess up the interrupt-map
-parsing.  You'd end up with more hard to debug problems.
+As for the other patches, they all look good to me (at least for the
+bits that I care about), but I'll leave them for Ben to pick up so the
+series doesn't get too fragmented.
 
 g.
+
+> ---
+>  arch/powerpc/kernel/legacy_serial.c |   22 +++++++++++-----------
+>  drivers/serial/of_serial.c          |   12 ++++++------
+>  2 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kernel/legacy_serial.c
+> index c1fd0f9..c834757 100644
+> --- a/arch/powerpc/kernel/legacy_serial.c
+> +++ b/arch/powerpc/kernel/legacy_serial.c
+> @@ -52,14 +52,14 @@ static int __init add_legacy_port(struct device_node *np, int want_index,
+>  				  phys_addr_t taddr, unsigned long irq,
+>  				  upf_t flags, int irq_check_parent)
+>  {
+> -	const u32 *clk, *spd;
+> +	const __be32 *clk, *spd;
+>  	u32 clock = BASE_BAUD * 16;
+>  	int index;
+>  
+>  	/* get clock freq. if present */
+>  	clk = of_get_property(np, "clock-frequency", NULL);
+>  	if (clk && *clk)
+> -		clock = *clk;
+> +		clock = be32_to_cpup(clk);
+>  
+>  	/* get default speed if present */
+>  	spd = of_get_property(np, "current-speed", NULL);
+> @@ -109,7 +109,7 @@ static int __init add_legacy_port(struct device_node *np, int want_index,
+>  	legacy_serial_infos[index].taddr = taddr;
+>  	legacy_serial_infos[index].np = of_node_get(np);
+>  	legacy_serial_infos[index].clock = clock;
+> -	legacy_serial_infos[index].speed = spd ? *spd : 0;
+> +	legacy_serial_infos[index].speed = spd ? be32_to_cpup(spd) : 0;
+>  	legacy_serial_infos[index].irq_check_parent = irq_check_parent;
+>  
+>  	printk(KERN_DEBUG "Found legacy serial port %d for %s\n",
+> @@ -168,7 +168,7 @@ static int __init add_legacy_soc_port(struct device_node *np,
+>  static int __init add_legacy_isa_port(struct device_node *np,
+>  				      struct device_node *isa_brg)
+>  {
+> -	const u32 *reg;
+> +	const __be32 *reg;
+>  	const char *typep;
+>  	int index = -1;
+>  	u64 taddr;
+> @@ -181,7 +181,7 @@ static int __init add_legacy_isa_port(struct device_node *np,
+>  		return -1;
+>  
+>  	/* Verify it's an IO port, we don't support anything else */
+> -	if (!(reg[0] & 0x00000001))
+> +	if (!(be32_to_cpu(reg[0]) & 0x00000001))
+>  		return -1;
+>  
+>  	/* Now look for an "ibm,aix-loc" property that gives us ordering
+> @@ -202,7 +202,7 @@ static int __init add_legacy_isa_port(struct device_node *np,
+>  		taddr = 0;
+>  
+>  	/* Add port, irq will be dealt with later */
+> -	return add_legacy_port(np, index, UPIO_PORT, reg[1], taddr,
+> +	return add_legacy_port(np, index, UPIO_PORT, be32_to_cpu(reg[1]), taddr,
+>  			       NO_IRQ, UPF_BOOT_AUTOCONF, 0);
+>  
+>  }
+> @@ -251,9 +251,9 @@ static int __init add_legacy_pci_port(struct device_node *np,
+>  	 * we get to their "reg" property
+>  	 */
+>  	if (np != pci_dev) {
+> -		const u32 *reg = of_get_property(np, "reg", NULL);
+> -		if (reg && (*reg < 4))
+> -			index = lindex = *reg;
+> +		const __be32 *reg = of_get_property(np, "reg", NULL);
+> +		if (reg && (be32_to_cpup(reg) < 4))
+> +			index = lindex = be32_to_cpup(reg);
+>  	}
+>  
+>  	/* Local index means it's the Nth port in the PCI chip. Unfortunately
+> @@ -507,7 +507,7 @@ static int __init check_legacy_serial_console(void)
+>  	struct device_node *prom_stdout = NULL;
+>  	int i, speed = 0, offset = 0;
+>  	const char *name;
+> -	const u32 *spd;
+> +	const __be32 *spd;
+>  
+>  	DBG(" -> check_legacy_serial_console()\n");
+>  
+> @@ -547,7 +547,7 @@ static int __init check_legacy_serial_console(void)
+>  	}
+>  	spd = of_get_property(prom_stdout, "current-speed", NULL);
+>  	if (spd)
+> -		speed = *spd;
+> +		speed = be32_to_cpup(spd);
+>  
+>  	if (strcmp(name, "serial") != 0)
+>  		goto not_found;
+> diff --git a/drivers/serial/of_serial.c b/drivers/serial/of_serial.c
+> index 2af8fd1..17849dc 100644
+> --- a/drivers/serial/of_serial.c
+> +++ b/drivers/serial/of_serial.c
+> @@ -31,8 +31,8 @@ static int __devinit of_platform_serial_setup(struct platform_device *ofdev,
+>  {
+>  	struct resource resource;
+>  	struct device_node *np = ofdev->dev.of_node;
+> -	const unsigned int *clk, *spd;
+> -	const u32 *prop;
+> +	const __be32 *clk, *spd;
+> +	const __be32 *prop;
+>  	int ret, prop_size;
+>  
+>  	memset(port, 0, sizeof *port);
+> @@ -55,23 +55,23 @@ static int __devinit of_platform_serial_setup(struct platform_device *ofdev,
+>  	/* Check for shifted address mapping */
+>  	prop = of_get_property(np, "reg-offset", &prop_size);
+>  	if (prop && (prop_size == sizeof(u32)))
+> -		port->mapbase += *prop;
+> +		port->mapbase += be32_to_cpup(prop);
+>  
+>  	/* Check for registers offset within the devices address range */
+>  	prop = of_get_property(np, "reg-shift", &prop_size);
+>  	if (prop && (prop_size == sizeof(u32)))
+> -		port->regshift = *prop;
+> +		port->regshift = be32_to_cpup(prop);
+>  
+>  	port->irq = irq_of_parse_and_map(np, 0);
+>  	port->iotype = UPIO_MEM;
+>  	port->type = type;
+> -	port->uartclk = *clk;
+> +	port->uartclk = be32_to_cpup(clk);
+>  	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
+>  		| UPF_FIXED_PORT | UPF_FIXED_TYPE;
+>  	port->dev = &ofdev->dev;
+>  	/* If current-speed was set, then try not to change it. */
+>  	if (spd)
+> -		port->custom_divisor = *clk / (16 * (*spd));
+> +		port->custom_divisor = be32_to_cpup(clk) / (16 * (be32_to_cpup(spd)));
+>  
+>  	return 0;
+>  }
+> -- 
+> 1.7.1
+> 
