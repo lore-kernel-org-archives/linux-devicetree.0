@@ -1,47 +1,45 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 1/2 v2] of: move phandle/ihandle into types.h and
- export to userspace
-Date: Fri, 08 Oct 2010 10:17:59 -0700 (PDT)
-Message-ID: <20101008.101759.193728130.davem@davemloft.net>
-References: <20101008004354.13b5b254@debxo>
-	<20101008171210.GE3863@angua.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20101008171210.GE3863@angua.secretlab.ca>
-Sender: sparclinux-owner@vger.kernel.org
-To: grant.likely@secretlab.ca
-Cc: dilinger@queued.net, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, sam@ravnborg.org, devicetree-discuss@lists.ozlabs.org
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: [RFC PATCH 00/11] ppc: enable dynamic dma window support
+Date: Fri,  8 Oct 2010 10:33:01 -0700
+Message-ID: <1286559192-10898-1-git-send-email-nacc@us.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nacc@us.ibm.com
+Cc: miltonm@bga.com, linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely@secretlab.ca>
-Date: Fri, 8 Oct 2010 11:12:10 -0600
+Hi,
 
-> On Fri, Oct 08, 2010 at 12:43:54AM -0700, Andres Salomon wrote:
->> 
->> We need phandle for some exported sparc headers; of.h isn't an
->> exported header, and it would be silly to export it when all we
->> really need is one or two types from it.  Also, later patches
->> use phandle in structs that are exported to userspace, so export
->> a __kernel_phandle type.
->> 
->> Signed-off-by: Andres Salomon <dilinger@queued.net>
-> 
-> Looks okay to me.  I'm build testing it now on powerpc and
-> microblaze.  If davem agrees, then I'll pick it up into my
-> devicetree-next branch.
-> 
-> Question though; since sparc userspace is the only user of this,
-> should the types.h header avoid exposing it on non-sparc?
+The following series, which builds upon the series of cleanups I posted
+on 9/15 as "ppc iommu cleanups", enables the pseries firmware feature
+dynamic dma windows. This feature will allow future devices to have a
+64-bit DMA mapping covering all memory, coexisting with a smaller IOMMU
+window in 32-bit PCI space.
 
-I can't think of anything in Sparc userspace that needs the
-phandle_t type.
+Comments requested and welcome!
 
-In fact I was a bit confused when you asked Andres to expose
-it to userspace.
+Nishanth Aravamudan (11):
+  macio: ensure all dma routines get copied over
+  ppc: allow direct and iommu to coexist
+  ppc: Create ops to choose between direct window and iommu based on
+    device mask
+  ppc: add memory_hotplug_max
+  ppc: do not search for dma-window property on dlpar remove
+  ppc: checking for pdn->parent is redundant
+  ppc/iommu: do not need to check for dma_window == NULL
+  ppc/iommu: remove unneeded pci_dma_bus_setup_pSeriesLP
+  ppc/iommu: pass phb only to iommu_table_setparms_lpar
+  ppc/iommu: add routines to pseries iommu to map tces 1-1
+  ppc: add dynamic dma window support
 
-What I remember from a previous thread is that some other platforms
-use the type in their DT device-tree building tools or whatever, but
-they define phandle_t for themselves I remember specifically
-mentioning sparc has no use for this currently.
+ arch/powerpc/include/asm/device.h      |   20 +-
+ arch/powerpc/include/asm/dma-mapping.h |    6 +-
+ arch/powerpc/include/asm/iommu.h       |    6 +-
+ arch/powerpc/include/asm/mmzone.h      |    5 +
+ arch/powerpc/kernel/Makefile           |    2 +-
+ arch/powerpc/kernel/dma-choose64.c     |  167 +++++++++++
+ arch/powerpc/mm/numa.c                 |   26 ++
+ arch/powerpc/platforms/pseries/iommu.c |  475 +++++++++++++++++++++++++++----
+ drivers/macintosh/macio_asic.c         |    7 +-
+ 9 files changed, 635 insertions(+), 79 deletions(-)
+ create mode 100644 arch/powerpc/kernel/dma-choose64.c
