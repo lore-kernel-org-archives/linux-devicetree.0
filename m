@@ -1,14 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] When dumping from file system show results in sane order
-Date: Sun, 10 Oct 2010 23:54:48 -0600
-Message-ID: <20101011055448.GL23588@angua.secretlab.ca>
-References: <1286305641-23388-1-git-send-email-msm@freescale.com>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 1/7] sparc: make drivers/of/pdt.c no longer sparc-only
+Date: Sun, 10 Oct 2010 23:50:15 -0700
+Message-ID: <20101010235015.2954811f@uxo>
+References: <20101010014358.30cb74b5@debxo> <20101010020905.1e27c1b4@debxo>
+	<20101011040443.GA23588@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1286305641-23388-1-git-send-email-msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20101011040443.GA23588-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,97 +18,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 05, 2010 at 02:07:21PM -0500, Matthew McClintock wrote:
-> Currently, when we run the following
-> 
-> $> dtc -I fs -O dts /proc/device-tree
-> 
-> We get the output in a "reverse order", this patch will reverse that
-> output order and should resemble your initial device more closely
-> 
-> Code copied over from kexec-tools
-> 
-> Signed-off-by: Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Sun, 10 Oct 2010 22:04:43 -0600
+Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 
-Hi Matthew.  David just posted a patch implementing a generic search
-option when outputting a tree in dts format which would be applicable
-to more use cases than just sucking up the fstree.  Would that do the
-job for you?
+> On Sun, Oct 10, 2010 at 02:09:05AM -0700, Andres Salomon wrote:
+> > Whoops, that should've been 1/5, not 1/7.  Two additional x86
+> > patches snuck in there that are already in Grant's test-devicetree
+> > branch.
+> 
+> Note that of the two patches I'm carrying in test-devicetree, only one
+> of them is actually able to move into linux-next at this present time.
+> 
+> 1) of/irq: remove references to NO_IRQ in drivers/of/platform.c
+> 
+> I'm putting this one into next-devicetree now
+> 
+> 2) x86/of: define irq functions to allow drivers/of/* to build on x86
+> 
+> I've not yet received an ack from the x86 maintainers on this, so I
+> cannot put it into my next branch.  (Sorry I didn't notice this
+> earlier; it just dawned on me as I was looking over which patches I
+> needed to move over).  The same goes for the patch that actaully adds
+> OF support for x86 OLPC.  I'll need an ack from x86 folks before I
+> merge it.
+> 
+> g.
 
-g.
+Okay.  For reference, that patch is:
 
-> ---
->  fstree.c |   29 ++++++++++++++++++++++-------
->  1 files changed, 22 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fstree.c b/fstree.c
-> index f377453..fd2658d 100644
-> --- a/fstree.c
-> +++ b/fstree.c
-> @@ -23,21 +23,35 @@
->  #include <dirent.h>
->  #include <sys/stat.h>
->  
-> +static int comparefunc(const void *dentry1, const void *dentry2)
-> +{
-> +	const char *str1 = (*(struct dirent * const *)dentry1)->d_name;
-> +	const char *str2 = (*(struct dirent * const *)dentry2)->d_name;
-> +
-> +	if (strchr(str1, '@') && strchr(str2, '@') &&
-> +		(strlen(str1) > strlen(str2)))
-> +		return 1;
-> +
-> +	return strcmp(str1, str2);
-> +}
-> +
->  static struct node *read_fstree(const char *dirname)
->  {
-> -	DIR *d;
-> -	struct dirent *de;
->  	struct stat st;
->  	struct node *tree;
-> +	struct dirent **namelist;
-> +	int numlist, i;
->  
-> -	d = opendir(dirname);
-> -	if (!d)
-> -		die("Couldn't opendir() \"%s\": %s\n", dirname, strerror(errno));
-> +	numlist = scandir(dirname, &namelist, 0, comparefunc);
-> +	if (numlist <= 0)
-> +		die("unrecoverable error: could not scan \"%s\": %s\n",
-> +                    dirname, strerror(errno));
->  
->  	tree = build_node(NULL, NULL);
->  
-> -	while ((de = readdir(d)) != NULL) {
-> +	for (i = 0; i < numlist; i++) {
->  		char *tmpnam;
-> +		struct dirent *de = namelist[i];
->  
->  		if (streq(de->d_name, ".")
->  		    || streq(de->d_name, ".."))
-> @@ -72,10 +86,11 @@ static struct node *read_fstree(const char *dirname)
->  			add_child(tree, newchild);
->  		}
->  
-> +		free(de);
->  		free(tmpnam);
->  	}
-> +	free(namelist);
->  
-> -	closedir(d);
->  	return tree;
->  }
->  
-> -- 
-> 1.6.0.6
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+https://patchwork.kernel.org/patch/168662/
+
+x86 folks, mind reviewing and providing an Ack or Nack?
