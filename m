@@ -1,318 +1,312 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 5/5] x86: OLPC: add OLPC device-tree support
-Date: Sun, 10 Oct 2010 22:13:12 -0600
-Message-ID: <20101011041312.GF23588@angua.secretlab.ca>
-References: <20101010020626.102437f5@debxo>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: dtc: Add code to make diffing trees easier
+Date: Sun, 10 Oct 2010 23:52:19 -0600
+Message-ID: <20101011055219.GK23588@angua.secretlab.ca>
+References: <20101011003738.GA5463@yookeroo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101010020626.102437f5@debxo>
-Sender: sparclinux-owner@vger.kernel.org
-To: Andres Salomon <dilinger@queued.net>
-Cc: devicetree-discuss@lists.ozlabs.org, David Miller <davem@davemloft.net>, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20101011003738.GA5463@yookeroo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 10, 2010 at 02:06:26AM -0700, Andres Salomon wrote:
+On Mon, Oct 11, 2010 at 11:37:38AM +1100, David Gibson wrote:
+> This patch adds a "dtdiff" script to do a useful form diff of two
+> device trees.  This automatically converts the tree to dts form (if
+> it's not already) and uses a new "-s" option in dtc to "sort" the
+> tree.  That is, it sorts the reserve entries, it sorts the properties
+> within each node by name, and it sorts nodes by name within their
+> parent.
 > 
-> Make use of PROC_DEVICETREE to export the tree, and sparc's PROMTREE code to
-> call into OLPC's Open Firmware to build the tree.
+> This gives a pretty sensible diff between the trees, which will ignore
+> semantically null internal rearrangements (directly diffing the dts
+> files can give a lot of noise due to the order changes).
 > 
-> Signed-off-by: Andres Salomon <dilinger@queued.net>
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Holding off on this one until I hear from the x86 maintainers [cc'd].
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-g.
-
-> ---
->  arch/x86/Kconfig                |    2 +
->  arch/x86/include/asm/olpc_ofw.h |    4 +
->  arch/x86/include/asm/prom.h     |    1 +
->  arch/x86/kernel/Makefile        |    1 +
->  arch/x86/kernel/olpc_ofw.c      |    8 ++
->  arch/x86/kernel/olpc_prom.c     |  152 +++++++++++++++++++++++++++++++++++++++
->  drivers/of/pdt.c                |    2 +
->  fs/proc/proc_devtree.c          |    4 +
->  include/linux/of_pdt.h          |    1 +
->  9 files changed, 175 insertions(+), 0 deletions(-)
->  create mode 100644 arch/x86/include/asm/prom.h
->  create mode 100644 arch/x86/kernel/olpc_prom.c
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index cea0cd9..7d4ef72 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2069,6 +2069,8 @@ config OLPC_OPENFIRMWARE
->  	bool "Support for OLPC's Open Firmware"
->  	depends on !X86_64 && !X86_PAE
->  	default y if OLPC
-> +	select OF
-> +	select OF_PROMTREE
->  	help
->  	  This option adds support for the implementation of Open Firmware
->  	  that is used on the OLPC XO-1 Children's Machine.
-> diff --git a/arch/x86/include/asm/olpc_ofw.h b/arch/x86/include/asm/olpc_ofw.h
-> index 08fde47..13075df 100644
-> --- a/arch/x86/include/asm/olpc_ofw.h
-> +++ b/arch/x86/include/asm/olpc_ofw.h
-> @@ -28,4 +28,8 @@ static inline void setup_olpc_ofw_pgd(void) { }
+> Index: dtc/dtc.c
+> ===================================================================
+> --- dtc.orig/dtc.c	2010-10-11 11:11:52.527359928 +1100
+> +++ dtc/dtc.c	2010-10-11 11:11:53.675376132 +1100
+> @@ -81,6 +81,8 @@ static void  __attribute__ ((noreturn)) 
+>  	fprintf(stderr, "\t\tSet the physical boot cpu\n");
+>  	fprintf(stderr, "\t-f\n");
+>  	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
+> +	fprintf(stderr, "\t-s\n");
+> +	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
+>  	fprintf(stderr, "\t-v\n");
+>  	fprintf(stderr, "\t\tPrint DTC version and exit\n");
+>  	fprintf(stderr, "\t-H <phandle format>\n");
+> @@ -97,7 +99,7 @@ int main(int argc, char *argv[])
+>  	const char *inform = "dts";
+>  	const char *outform = "dts";
+>  	const char *outname = "-";
+> -	int force = 0, check = 0;
+> +	int force = 0, check = 0, sort = 0;
+>  	const char *arg;
+>  	int opt;
+>  	FILE *outf = NULL;
+> @@ -109,7 +111,7 @@ int main(int argc, char *argv[])
+>  	minsize    = 0;
+>  	padsize    = 0;
 >  
->  #endif /* !CONFIG_OLPC_OPENFIRMWARE */
+> -	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fcqb:vH:")) != EOF) {
+> +	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fcqb:vH:s")) != EOF) {
+>  		switch (opt) {
+>  		case 'I':
+>  			inform = optarg;
+> @@ -159,6 +161,10 @@ int main(int argc, char *argv[])
+>  				    optarg);
+>  			break;
 >  
-> +#ifdef CONFIG_PROC_DEVICETREE
-> +extern void olpc_prom_build_devicetree(void);
-> +#endif /* CONFIG_PROC_DEVICETREE */
+> +		case 's':
+> +			sort = 1;
+> +			break;
 > +
->  #endif /* _ASM_X86_OLPC_OFW_H */
-> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-> new file mode 100644
-> index 0000000..b4ec95f
-> --- /dev/null
-> +++ b/arch/x86/include/asm/prom.h
-> @@ -0,0 +1 @@
-> +/* dummy prom.h; here to make linux/of.h's #includes happy */
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index fedf32a..ced0c9a 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -107,6 +107,7 @@ scx200-y			+= scx200_32.o
+>  		case 'h':
+>  		default:
+>  			usage();
+> @@ -197,6 +203,8 @@ int main(int argc, char *argv[])
+>  	fill_fullpaths(bi->dt, "");
+>  	process_checks(force, bi);
 >  
->  obj-$(CONFIG_OLPC)		+= olpc.o
->  obj-$(CONFIG_OLPC_OPENFIRMWARE)	+= olpc_ofw.o
-> +obj-$(CONFIG_PROC_DEVICETREE)	+= olpc_prom.o
->  obj-$(CONFIG_X86_MRST)		+= mrst.o
+> +	if (sort)
+> +		sort_tree(bi);
 >  
->  microcode-y				:= microcode_core.o
-> diff --git a/arch/x86/kernel/olpc_ofw.c b/arch/x86/kernel/olpc_ofw.c
-> index 3218aa7..6c4d243 100644
-> --- a/arch/x86/kernel/olpc_ofw.c
-> +++ b/arch/x86/kernel/olpc_ofw.c
-> @@ -1,5 +1,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_pdt.h>
->  #include <linux/init.h>
->  #include <asm/page.h>
->  #include <asm/setup.h>
-> @@ -38,6 +40,12 @@ void __init setup_olpc_ofw_pgd(void)
->  	/* implicit optimization barrier here due to uninline function return */
+>  	if (streq(outname, "-")) {
+>  		outf = stdout;
+> Index: dtc/dtc.h
+> ===================================================================
+> --- dtc.orig/dtc.h	2010-10-11 11:11:52.555383604 +1100
+> +++ dtc/dtc.h	2010-10-11 11:11:53.675376132 +1100
+> @@ -220,6 +220,7 @@ struct boot_info {
 >  
->  	early_iounmap(base, sizeof(olpc_ofw_pgd) * PTRS_PER_PGD);
+>  struct boot_info *build_boot_info(struct reserve_info *reservelist,
+>  				  struct node *tree, uint32_t boot_cpuid_phys);
+> +void sort_tree(struct boot_info *bi);
+>  
+>  /* Checks */
+>  
+> Index: dtc/livetree.c
+> ===================================================================
+> --- dtc.orig/livetree.c	2010-10-11 11:11:52.567361045 +1100
+> +++ dtc/livetree.c	2010-10-11 11:11:53.679382348 +1100
+> @@ -470,3 +470,140 @@ uint32_t guess_boot_cpuid(struct node *t
+>  
+>  	return propval_cell(reg);
+>  }
 > +
-> +#ifdef CONFIG_PROC_DEVICETREE
-> +	/* OFW set up succesfully; use it for the device tree */
-> +	of_pdt_init_devicetree = olpc_prom_build_devicetree;
-> +#endif
+> +static int cmp_reserve_info(const void *ax, const void *bx)
+> +{
+> +	const struct reserve_info *a, *b;
 > +
+> +	a = *((const struct reserve_info * const *)ax);
+> +	b = *((const struct reserve_info * const *)bx);
+> +
+> +	if (a->re.address < b->re.address)
+> +		return -1;
+> +	else if (a->re.address > b->re.address)
+> +		return 1;
+> +	else if (a->re.size < b->re.size)
+> +		return -1;
+> +	else if (a->re.size > b->re.size)
+> +		return 1;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static void sort_reserve_entries(struct boot_info *bi)
+> +{
+> +	struct reserve_info *ri, **tbl;
+> +	int n = 0, i = 0;
+> +
+> +	for (ri = bi->reservelist;
+> +	     ri;
+> +	     ri = ri->next)
+> +		n++;
+> +
+> +	if (n == 0)
+> +		return;
+> +
+> +	tbl = xmalloc(n * sizeof(*tbl));
+> +
+> +	for (ri = bi->reservelist;
+> +	     ri;
+> +	     ri = ri->next)
+> +		tbl[i++] = ri;
+> +
+> +	qsort(tbl, n, sizeof(*tbl), cmp_reserve_info);
+> +
+> +	bi->reservelist = tbl[0];
+> +	for (i = 0; i < (n-1); i++)
+> +		tbl[i]->next = tbl[i+1];
+> +	tbl[n-1]->next = NULL;
+> +
+> +	free(tbl);
+> +}
+> +
+> +static int cmp_prop(const void *ax, const void *bx)
+> +{
+> +	const struct property *a, *b;
+> +
+> +	a = *((const struct property * const *)ax);
+> +	b = *((const struct property * const *)bx);
+> +
+> +	return strcmp(a->name, b->name);
+> +}
+> +
+> +static void sort_properties(struct node *node)
+> +{
+> +	int n = 0, i = 0;
+> +	struct property *prop, **tbl;
+> +
+> +	for_each_property(node, prop)
+> +		n++;
+> +
+> +	if (n == 0)
+> +		return;
+> +
+> +	tbl = xmalloc(n * sizeof(*tbl));
+> +
+> +	for_each_property(node, prop)
+> +		tbl[i++] = prop;
+> +
+> +	qsort(tbl, n, sizeof(*tbl), cmp_prop);
+> +
+> +	node->proplist = tbl[0];
+> +	for (i = 0; i < (n-1); i++)
+> +		tbl[i]->next = tbl[i+1];
+> +	tbl[n-1]->next = NULL;
+> +
+> +	free(tbl);
+> +}
+> +
+> +static int cmp_subnode(const void *ax, const void *bx)
+> +{
+> +	const struct node *a, *b;
+> +
+> +	a = *((const struct node * const *)ax);
+> +	b = *((const struct node * const *)bx);
+> +
+> +	return strcmp(a->name, b->name);
+> +}
+> +
+> +static void sort_subnodes(struct node *node)
+> +{
+> +	int n = 0, i = 0;
+> +	struct node *subnode, **tbl;
+> +
+> +	for_each_child(node, subnode)
+> +		n++;
+> +
+> +	if (n == 0)
+> +		return;
+> +
+> +	tbl = xmalloc(n * sizeof(*tbl));
+> +
+> +	for_each_child(node, subnode)
+> +		tbl[i++] = subnode;
+> +
+> +	qsort(tbl, n, sizeof(*tbl), cmp_subnode);
+> +
+> +	node->children = tbl[0];
+> +	for (i = 0; i < (n-1); i++)
+> +		tbl[i]->next_sibling = tbl[i+1];
+> +	tbl[n-1]->next_sibling = NULL;
+> +
+> +	free(tbl);
+> +}
+> +
+> +static void sort_node(struct node *node)
+> +{
+> +	struct node *c;
+> +
+> +	sort_properties(node);
+> +	sort_subnodes(node);
+> +	for_each_child(node, c)
+> +		sort_node(c);
+> +}
+> +
+> +void sort_tree(struct boot_info *bi)
+> +{
+> +	sort_reserve_entries(bi);
+> +	sort_node(bi->dt);
+> +}
+> Index: dtc/tests/run_tests.sh
+> ===================================================================
+> --- dtc.orig/tests/run_tests.sh	2010-10-11 11:11:52.583359649 +1100
+> +++ dtc/tests/run_tests.sh	2010-10-11 11:11:53.679382348 +1100
+> @@ -368,6 +368,13 @@ cmp_tests () {
+>      for tree in $wrongtrees; do
+>  	run_test dtbs_equal_unordered -n $basetree $tree
+>      done
+> +
+> +    # now dtc --sort
+> +    run_dtc_test -I dtb -O dtb -s -o $basetree.sorted.test.dtb $basetree
+> +    run_test dtbs_equal_unordered $basetree $basetree.sorted.test.dtb
+> +    run_dtc_test -I dtb -O dtb -s -o $basetree.reversed.sorted.test.dtb $basetree.reversed.test.dtb
+> +    run_test dtbs_equal_unordered $basetree.reversed.test.dtb $basetree.reversed.sorted.test.dtb
+> +    run_test dtbs_equal_ordered $basetree.sorted.test.dtb $basetree.reversed.sorted.test.dtb
 >  }
 >  
->  int __olpc_ofw(const char *name, int nr_args, const void **args, int nr_res,
-> diff --git a/arch/x86/kernel/olpc_prom.c b/arch/x86/kernel/olpc_prom.c
-> new file mode 100644
-> index 0000000..e2ecaf2
-> --- /dev/null
-> +++ b/arch/x86/kernel/olpc_prom.c
-> @@ -0,0 +1,152 @@
-> +/*
-> + * olpc_prom.c: OLPC-specific OFW device tree support code.
-> + *
-> + * Paul Mackerras	August 1996.
-> + * Copyright (C) 1996-2005 Paul Mackerras.
-> + *
-> + *  Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergner.
-> + *    {engebret|bergner}@us.ibm.com
-> + *
-> + *  Adapted for sparc by David S. Miller davem@davemloft.net
-> + *  Adapted for x86/OLPC by Andres Salomon <dilinger@queued.net>
-> + *
-> + *      This program is free software; you can redistribute it and/or
-> + *      modify it under the terms of the GNU General Public License
-> + *      as published by the Free Software Foundation; either version
-> + *      2 of the License, or (at your option) any later version.
-> + */
+>  dtbs_equal_tests () {
+> Index: dtc/dtdiff
+> ===================================================================
+> --- /dev/null	1970-01-01 00:00:00.000000000 +0000
+> +++ dtc/dtdiff	2010-10-11 11:10:57.969901146 +1100
+> @@ -0,0 +1,33 @@
+> +#! /bin/bash
 > +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/errno.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_pdt.h>
-> +#include <asm/olpc_ofw.h>
+> +# This script uses the bash <(...) extension.
+> +# If you want to change this to work with a generic /bin/sh, make sure
+> +# you fix that.
 > +
-> +static phandle __init olpc_prom_getsibling(phandle node)
-> +{
-> +	const void *args[] = { (void *)node };
-> +	void *res[] = { &node };
 > +
-> +	if (node == -1)
-> +		return 0;
+> +DTC=dtc
 > +
-> +	if (olpc_ofw("peer", args, res) || node == -1)
-> +		return 0;
+> +source_and_sort () {
+> +    DT="$1"
+> +    if [ -d "$DT" ]; then
+> +	IFORMAT=fs
+> +    elif [ -f "$DT" ]; then
+> +	case "$DT" in
+> +	    *.dts)
+> +		IFORMAT=dts
+> +		;;
+> +	    *.dtb)
+> +		IFORMAT=dtb
+> +		;;
+> +	esac
+> +    fi
 > +
-> +	return node;
+> +    if [ -z "$IFORMAT" ]; then
+> +	echo "Unrecognized format for $DT" >&2
+> +	exit 2
+> +    fi
+> +
+> +    $DTC -I $IFORMAT -O dts -qq -f -s -o - "$DT"
 > +}
 > +
-> +static phandle __init olpc_prom_getchild(phandle node)
-> +{
-> +	const void *args[] = { (void *)node };
-> +	void *res[] = { &node };
-> +
-> +	if (node == -1)
-> +		return 0;
-> +
-> +	if (olpc_ofw("child", args, res) || node == -1) {
-> +		pr_err("PROM: %s: fetching child failed!\n", __func__);
-> +		return 0;
-> +	}
-> +
-> +	return node;
-> +}
-> +
-> +static int __init olpc_prom_getproplen(phandle node, const char *prop)
-> +{
-> +	const void *args[] = { (void *)node, prop };
-> +	int len;
-> +	void *res[] = { &len };
-> +
-> +	if (node == -1)
-> +		return -1;
-> +
-> +	if (olpc_ofw("getproplen", args, res)) {
-> +		pr_err("PROM: %s: getproplen failed!\n", __func__);
-> +		return -1;
-> +	}
-> +
-> +	return len;
-> +}
-> +
-> +static int __init olpc_prom_getproperty(phandle node, const char *prop,
-> +		char *buf, int bufsize)
-> +{
-> +	int plen;
-> +
-> +	plen = olpc_prom_getproplen(node, prop);
-> +	if (plen > bufsize || plen < 1)
-> +		return -1;
-> +	else {
-> +		const void *args[] = { (void *)node, prop, buf, (void *)plen };
-> +		void *res[] = { &plen };
-> +
-> +		if (olpc_ofw("getprop", args, res)) {
-> +			pr_err("PROM: %s: getprop failed!\n", __func__);
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	return plen;
-> +}
-> +
-> +static int __init olpc_prom_nextprop(phandle node, char *prev, char *buf)
-> +{
-> +	const void *args[] = { (void *)node, prev, buf };
-> +	int success;
-> +	void *res[] = { &success };
-> +
-> +	buf[0] = '\0';
-> +
-> +	if (node == -1)
-> +		return -1;
-> +
-> +	if (olpc_ofw("nextprop", args, res) || success != 1)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init olpc_prom_pkg2path(phandle node, char *buf,
-> +		const int buflen, int *len)
-> +{
-> +	const void *args[] = { (void *)node, buf, (void *)buflen };
-> +	void *res[] = { len };
-> +
-> +	if (node == -1)
-> +		return -1;
-> +
-> +	if (olpc_ofw("package-to-path", args, res) || *len < 1)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
-> +void * __init prom_early_alloc(unsigned long size)
-> +{
-> +	/* this is called late enough that we can alloc normally */
-> +	return kzalloc(size, GFP_KERNEL);
-> +}
-> +
-> +static struct of_pdt_ops prom_olpc_ops __initdata = {
-> +	.nextprop = olpc_prom_nextprop,
-> +	.getproplen = olpc_prom_getproplen,
-> +	.getproperty = olpc_prom_getproperty,
-> +	.getchild = olpc_prom_getchild,
-> +	.getsibling = olpc_prom_getsibling,
-> +	.pkg2path = olpc_prom_pkg2path,
-> +};
-> +
-> +void __init olpc_prom_build_devicetree(void)
-> +{
-> +	phandle root;
-> +
-> +	root = olpc_prom_getsibling(0);
-> +	if (root < 0) {
-> +		pr_err("PROM: unable to get root node from OFW!\n");
-> +		return;
-> +	}
-> +	of_pdt_build_devicetree(root, &prom_olpc_ops);
-> +}
-> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-> index 28295d0..07e3daa 100644
-> --- a/drivers/of/pdt.c
-> +++ b/drivers/of/pdt.c
-> @@ -29,6 +29,8 @@ static struct of_pdt_ops *of_pdt_prom_ops __initdata;
->  void __initdata (*of_pdt_build_more)(struct device_node *dp,
->  		struct device_node ***nextp);
->  
-> +void __initdata (*of_pdt_init_devicetree)(void);
-> +
->  #if defined(CONFIG_SPARC)
->  unsigned int of_pdt_unique_id __initdata;
->  
-> diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-> index d9396a4..9779039 100644
-> --- a/fs/proc/proc_devtree.c
-> +++ b/fs/proc/proc_devtree.c
-> @@ -11,6 +11,7 @@
->  #include <linux/stat.h>
->  #include <linux/string.h>
->  #include <linux/of.h>
-> +#include <linux/of_pdt.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <asm/prom.h>
-> @@ -228,6 +229,9 @@ void __init proc_device_tree_init(void)
->  {
->  	struct device_node *root;
->  
-> +	if (of_pdt_init_devicetree)
-> +		of_pdt_init_devicetree();
-> +
->  	proc_device_tree = proc_mkdir("device-tree", NULL);
->  	if (proc_device_tree == NULL)
->  		return;
-> diff --git a/include/linux/of_pdt.h b/include/linux/of_pdt.h
-> index c65a18a..5b29aef 100644
-> --- a/include/linux/of_pdt.h
-> +++ b/include/linux/of_pdt.h
-> @@ -38,6 +38,7 @@ extern void *prom_early_alloc(unsigned long size);
->  
->  /* for building the device tree */
->  extern void of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops);
-> +extern void (*of_pdt_init_devicetree)(void);
->  
->  extern void (*of_pdt_build_more)(struct device_node *dp,
->  		struct device_node ***nextp);
-> -- 
-> 1.5.6.5
+> +diff -u <(source_and_sort "$1") <(source_and_sort "$2")
 > 
+> 
+> -- 
+> David Gibson			| I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
