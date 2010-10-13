@@ -1,14 +1,12 @@
-From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Subject: Re: PPC: Possible bug in prom_parse.c:of_irq_map_raw?
-Date: Tue, 12 Oct 2010 13:02:16 +1000
-Message-ID: <AANLkTimAKXb=iRGOZKDOcELBdNhrDs8pd_yLMt1MD10Y@mail.gmail.com>
-References: <1d3f23371002091921m7f47a1fbt1cf7fd2ef0a927fa@mail.gmail.com>
-	<AANLkTi=dU4oYfqrBGYmSCmYf2cRsBX-Pf6A9X9N0YaZA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH 1/2] of/flattree: Eliminate need to provide
+	early_init_dt_scan_chosen_arch
+Date: Wed, 13 Oct 2010 00:44:11 -0600
+Message-ID: <20101013064352.2743.80378.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi=dU4oYfqrBGYmSCmYf2cRsBX-Pf6A9X9N0YaZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,157 +16,106 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+This patch refactors the early init parsing of the chosen node so that
+architectures aren't forced to provide an empty implementation of
+early_init_dt_scan_chosen_arch.  Instead, if an architecture wants to
+do something different, it can either use a wrapper function around
+early_init_dt_scan_chosen(), or it can replace it altogether.
 
-On Fri, Oct 8, 2010 at 4:34 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wr=
-ote:
-> Reaching way back into the past....
+This patch was written in preparation to adding device tree support to
+both x86 ad MIPS.
 
-Indeed
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ arch/microblaze/kernel/prom.c |    5 -----
+ arch/powerpc/kernel/prom.c    |   12 ++++++++++--
+ drivers/of/fdt.c              |    2 --
+ include/linux/of_fdt.h        |    2 +-
+ 4 files changed, 11 insertions(+), 10 deletions(-)
 
-> John, did you ever solve your issue here? =A0Comments below.
-
-The fix in our case was to explicitly add child nodes to the PCI
-controller, with interrupt-parent and interrupts properties. The
-product in question had a fixed set of devices on the PCI bus, so this
-was not a problem.
-
-So, it's not really resolved so much as avoided.
-
-Other comments below:
-
->> Perhaps this is my misunderstanding, but I'm looking at the bit of
->> code in of_irq_map_raw() that iterates the interrupt-map DTS node,
->> which I am seeing to behave strangely when handling the interrupt-map
->> property on a PCI bridge node.
->>
->> Early in the function, we get the #address-cells value from the node -
->> in this case the PCI bridge, and store it in local var addrsize:
->>
->> =A0 =A0 =A0 =A0/* Look for this #address-cells. We have to implement the=
- old linux
->> =A0 =A0 =A0 =A0 * trick of looking for the parent here as some device-tr=
-ees rely on it
->> =A0 =A0 =A0 =A0 */
->> =A0 =A0 =A0 =A0old =3D of_node_get(ipar);
->> =A0 =A0 =A0 =A0do {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_property(old, "#address-ce=
-lls", NULL);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tnode =3D of_get_parent(old);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0of_node_put(old);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0old =3D tnode;
->> =A0 =A0 =A0 =A0} while(old && tmp =3D=3D NULL);
->> =A0 =A0 =A0 =A0of_node_put(old);
->> =A0 =A0 =A0 =A0old =3D NULL;
->> =A0 =A0 =A0 =A0addrsize =3D (tmp =3D=3D NULL) ? 2 : *tmp;
->>
->> =A0 =A0 =A0 =A0DBG(" -> addrsize=3D%d\n", addrsize);
->>
->>
->> Later, once we've found the interrupt-map and are iterating over it
->> attempting to match on PCI device addresses, there is this little
->> fragment:
->>
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* Get the interrupt pare=
-nt */
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (of_irq_workarounds & =
-OF_IMAP_NO_PHANDLE)
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newpar =
-=3D of_node_get(of_irq_dflt_pic);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0else
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newpar =
-=3D
->> of_find_node_by_phandle((phandle)*imap);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0imap++;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0--imaplen;
->>
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* Check if not found */
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (newpar =3D=3D NULL) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0DBG(" -> =
-imap parent not found !\n");
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto fail;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
->>
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* Get #interrupt-cells a=
-nd #address-cells of new
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * parent
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_property(n=
-ewpar, "#interrupt-cells", NULL);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (tmp =3D=3D NULL) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0DBG(" -> =
-parent lacks #interrupt-cells !\n");
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto fail;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newintsize =3D *tmp;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_property(n=
-ewpar, "#address-cells", NULL);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newaddrsize =3D (tmp =3D=
-=3D NULL) ? 0 : *tmp;
->>
->> Finally, later in the loop we update addrsize=3Dnewaddrsize
->>
->> As I read this code, and the behaviour I'm seeing, is that if the
->> interrupt controller parent device doesn't have an #address-cells
->> entry, then this get_property will return fail, therefore setting
->> newaddrsize =A0to zero. =A0This then means that subsequent match attempts
->> when iterating the interrupt-map always fail, because the match length
->> (addrsize) is 0.
->
-> Correct. =A0The interrupt-map property contains the following fields:
->
-> child-unit-address child-irq irq-controller irq-parent-unit-address paren=
-t-irq
->
-> In the *vast majority* of cases, the irq-parent-unit-address is a
-> zero-length field because #address-cells isn't present on the
-> interrupt controller parent. =A0So effectively interrupt-map becomes:
->
-> child-unit-address child-irq irq-controller parent-irq
->
-> See epapr 1.0 for a full discussion
->
->>
->> Maybe I'm missing something here, but shouldn't this last bit of code
->> instead be:
->>
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0tmp =3D of_get_property(n=
-ewpar, "#address-cells", NULL);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0newaddrsize =3D (tmp =3D=
-=3D NULL) ? addrsize : *tmp;
->>
->> =A0^^^^^^^^^
->> ?
->>
->> In other words, if the parent node has an #address-cells value, then
->> use it, otherwise stick to the #address-cells value we picked up for
->> the actual node in question (ie the PCI bridge).
->
-> No, because at this point we absolutely do want to know how big the
-> parent #address-cells is, and if it is missing, we need to use 0. =A0If
-> the child's addrsize continued to be used, then the interrupt-map
-> parsing would get unaligned.
->
-> The inner loop is over the entries in interrupt-map. =A0addrsize and
-> intsize are only updated in the case where a match is found in the
-> table. =A0If a match isn't found, then it should bail out to the 'fail'
-> label.
->
->> The way this is manifesting itself in the system I'm looking at is
->> that only the PCI device matching the first entry in the PCI bridge
->> interrupt-map property is correctly matching. For PCI devices that
->> require more than one pass through the interrupt-map loop, addrsize
->> goes to zero and no further match is possible.
->
-> Something sounds fishy. =A0If you're still having problems, can you
-> enable #define DEBUG in drivers/of/irq.c and post the output?
-
-OK, this may take me a lilttle while as the test system is in storage!
-
-Thanks,
-
-John
+diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+index 427b13b..bacbd3d 100644
+--- a/arch/microblaze/kernel/prom.c
++++ b/arch/microblaze/kernel/prom.c
+@@ -42,11 +42,6 @@
+ #include <asm/sections.h>
+ #include <asm/pci-bridge.h>
+ 
+-void __init early_init_dt_scan_chosen_arch(unsigned long node)
+-{
+-	/* No Microblaze specific code here */
+-}
+-
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ {
+ 	memblock_add(base, size);
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index fed9bf6..e296aae 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -363,10 +363,15 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+ 	return 0;
+ }
+ 
+-void __init early_init_dt_scan_chosen_arch(unsigned long node)
++int __init early_init_dt_scan_chosen_ppc(unsigned long node, const char *uname,
++					 int depth, void *data)
+ {
+ 	unsigned long *lprop;
+ 
++	/* Use common scan routine to determine if this is the chosen node */
++	if (early_init_dt_scan_chosen(node, uname, depth, data) == 0)
++		return 0;
++
+ #ifdef CONFIG_PPC64
+ 	/* check if iommu is forced on or off */
+ 	if (of_get_flat_dt_prop(node, "linux,iommu-off", NULL) != NULL)
+@@ -398,6 +403,9 @@ void __init early_init_dt_scan_chosen_arch(unsigned long node)
+ 	if (lprop)
+ 		crashk_res.end = crashk_res.start + *lprop - 1;
+ #endif
++
++	/* break now */
++	return 1;
+ }
+ 
+ #ifdef CONFIG_PPC_PSERIES
+@@ -679,7 +687,7 @@ void __init early_init_devtree(void *params)
+ 	 * device-tree, including the platform type, initrd location and
+ 	 * size, TCE reserve, and more ...
+ 	 */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, NULL);
++	of_scan_flat_dt(early_init_dt_scan_chosen_ppc, NULL);
+ 
+ 	/* Scan memory nodes and rebuild MEMBLOCKs */
+ 	memblock_init();
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 65da5ae..c1360e0 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -533,8 +533,6 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 		strlcpy(cmd_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+ #endif /* CONFIG_CMDLINE */
+ 
+-	early_init_dt_scan_chosen_arch(node);
+-
+ 	pr_debug("Command line is: %s\n", cmd_line);
+ 
+ 	/* break now */
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 71e1a91..7bbf5b3 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -72,7 +72,7 @@ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
+ 				 unsigned long *size);
+ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+ extern unsigned long of_get_flat_dt_root(void);
+-extern void early_init_dt_scan_chosen_arch(unsigned long node);
++
+ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern void early_init_dt_check_for_initrd(unsigned long node);
