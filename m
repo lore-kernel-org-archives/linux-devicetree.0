@@ -1,13 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 2/2 RFC] of/mips: Add device tree support to MIPS
-Date: Wed, 13 Oct 2010 00:48:36 -0600
-Message-ID: <20101013064416.2743.42892.stgit@localhost6.localdomain6>
-References: <20101013064352.2743.80378.stgit@localhost6.localdomain6>
+Subject: Re: Proposal: new device-tree syntax and semantics for extending
+	information from included dts files
+Date: Wed, 13 Oct 2010 17:17:47 -0600
+Message-ID: <20101013231747.GD15286@angua.secretlab.ca>
+References: <1286920561.4535.1315.camel@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101013064352.2743.80378.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1286920561.4535.1315.camel@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,280 +19,445 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
+To: John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+On Tue, Oct 12, 2010 at 02:56:01PM -0700, John Bonesio wrote:
+> Objective:
+> The primary problem is that the same information gets repeated in
+> various dts file that describe variations on the same base SOC. The
+> information becomes redundant and when changes to the device tree
+> syntax is made, extra work is necessary to update the same
+> information in multiple files.
 
-Add the ability to enable CONFIG_OF on the MIPS architecture.
+Thanks John.  Some comments below, but a reasonable proposal.  Next
+you need to post the proposal to the devicetree-discuss list and cc:
+David Gibson, Jon Loeliger and me.
 
-Signed-off-by: Dezhong Diao <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-[grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org: cleared out obsolete hooks,
-	removed ARCH_HAS_DEVTREE_MEM from being manually selected,
-	remove __init tags from header file]
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
----
+... actually, this discussion is important enough that I don't want to
+send this reply without David and Jon seeing it; otherwise we just end
+up repeating the same rationals over again.  I'm going to cc the
+list right now.
 
-I've not tested this on anything, but I picked up the MIPS device tree
-patch written by Dezhong and updated it to match the changes in
-mainline.  I also half-heartedly tried to rebase the powertv support
-patch, didn't get very far due to the refactoring in
-arch/mips/powertv/memory.c
+> 
+> A solution needs to allow:
+> a) nodes to be updated
+> b) nodes to be overridden
+> c) nodes to be removed
+> d) properties to be overridden
+> e) properties to be removed
+> 
+> Overview:
+> The main thrust of this proposal is to suggest an overlay system
+> where existing device tree nodes can be modified by dts statements
+> later on in the "file". The "file" is defined as a file in memory
+> after all /include/ statements have been processed.
+> 
+> Much of the functionality described in this proposal is already
+> present in a test version of the device tree compiler (dtc). This
+> proposal describes
 
-Anyway, please take a look and give it a spin.  If it looks good, then
-I can add it into my -next branch.
+s/test/unreleased/
+
+> the functionality in it's entirety so that the changed parts can be
+> viewed in light of the whole. This proposal suggests extensions, and
+> might inadvertently suggest small modifications to this existing
+> functionality.
+> 
+> The main idea of this proposal suggests that when duplicate nodes are
+> encountered, later nodes seen by the compiler will update or in some way
+> modify the node already encountered.
+> 
+> This proposal suggest that there be 3 ways in which an existing node
+> can be modified. The node can be merged with the new information, it
+> can be superseded by the new information, or it can be deleted. The
+> method used would be defined by a new directive.
+> 
+> This proposal recommends that properties are not updated directly but
+> that this overlay functionality only apply to nodes.
+
+I'm not sure what you mean by this.  There will be situations when a
+single property needs to be removed without affecting the rest of the
+node contents (as you state in the requirements).
+
+> 
+> Proposal:
+> 
+> 1) Add a new keyword constant for property values, <Undefined>.
+
+Personally, I'd prefer all lowercase: <undefined>.  There may be some
+dickering over the exact keyword name, but I think the concept is
+sound.
+
+> 
+> 	The constant means 'not defined'. If a property is assigned
+> 	the value of <Undefined>, then it's as if the property was
+> 	never defined. [Solves requirement (e)]
+
+Ack.
+
+> 
+> 	Rationale:
+> 		When we want to use /include/ and then modify or
+> 		extend an existing base dts (.dtsi) file, using
+> 		<Undefined> provides a clear indication to anyone
+> 		reading the dts file that this property is being
+> 		removed.  By using <Undefined> as a value, this syntax
+> 		become a part of the device tree language rather than
+> 		a command telling the compiler to do something.
+> 
+> 	Example:
+> 		#size-cells = <Undefined>;
+> 
+> 2) Allow 3 directives for modifying existing nodes in the
+> system: /extend/,
+>    /replace/, /remove/
+> 
+> 	The test version of the dtc already provides the /extend/
+> 	method of merging
+
+s/test/unreleased/
+
+> 	existing nodes. The version of the dtc may provide a way to
+> 	extend properties as well, but this proposal suggest that
+> 	individual properties should not be allowed to be updated.
+
+Again, I'm not sure what you mean by not allowing properties to be
+updated.  The current behaviour, which I think is sane, is that a
+redefinition of a property will replace the value.
+
+> 
+> 	[Solves requirements (a-d)]
+> 
+> 	A) /extend/
+
+"/extend-node/" is possibly a clearer naming to avoid confusion with
+working with properties.
+
+> 
+> 	This is the default directive. When no directive is provided,
+> 	it is assumed that /extend/ is to be used. If a node is
+> 	described twice in the system, the second instance of the node
+> 	merges with the first. If the second node has duplicate
+> 	properties, the property in the last instance of the node is
+> 	the value used.
+> 
+> 	Example:
+> 		/ {
+> 			...
+> 			memory {
+> 				device_type = "memory";
+> 				reg = <0x00000000 0x04000000>;	// 64MB
+> 			};
+> 			...
+> 
+> 			memory /extend/ {
+> 				reg = <0x00000000 0x08000000>;	// 128MB RAM
+> 			}
+> 
+> 			memory {
+> 				reg = <0x00000000 0x10000000>;	// 256MB RAM
+> 			}
+> 
+> 		};
+
+This example isn't correct.  In the current design, nodes will only
+get merged at the top-level and the same node cannot be redefined
+within the same top-level tree structure.  In essence, device tree
+nodes are unordered sets of properties and child nodes.  Overriding
+a node within the same tree has been explicitly avoided.  This example
+should be:
+
+	/ {
+		...
+		memory {
+			device_type = "memory";
+			reg = <0x00000000 0x04000000>;	// 64MB
+		};
+		...
+	};
+
+	/ {
+		memory /extend/ {
+			reg = <0x00000000 0x08000000>;	// 128MB RAM
+		};
+	};
+
+	/ {
+		memory {
+			reg = <0x00000000 0x10000000>;	// 256MB RAM
+		};
+	};
+
+Each subsequent tree is merged into the main tree before going on to
+process the next one.
+
+Or alternately:
+
+	/ {
+		...
+		memorynode: memory {
+			device_type = "memory";
+			reg = <0x00000000 0x04000000>;	// 64MB
+		};
+		...
+	};
+
+	&memorynode {
+		reg = <0x00000000 0x08000000>;	// 128MB RAM
+	};
+
+Which is a shortcut to a particular place in the tree
+
+> 
+> 		In this example, first the 2nd instance of the node,
+> 		memory, is merged with the first with the /extend/
+> 		directive. The reg property is overridden to 128MB.
+> 		Then the 3rd instance of the node, memory, is also
+> 		merged. The reg property is overridden to 256MB. In
+> 		this second case, /extend/ is assumed since it is the
+> 		default method of modifying an existing node.
+> 
+> 	B) /replace/
+
+/replace-node/ perhaps?
+
+> 
+> 	This directive tells the device tree compiler to drop all
+> 	existing properties from the node and replace them with the
+> 	new node information.
+> 
+> 	Example:
+> 		/ {
+> 			soc: soc5200@f0000000 {
+> 				#address-cells = <1>;
+> 				#size-cells = <1>;
+> 				compatible = "fsl,mpc5200b-immr";
+> 				...
+> 
+> 				timer@600 {	// General Purpose Timer
+> 					compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
+> 					reg = <0x600 0x10>;
+> 					interrupts = <1 9 0>;
+> 					fsl,has-wdt;
+> 				};
+> 
+> 				timer@600 /replace/ {	// General Purpose Timer
+> 					compatible = "fsl,mpc5200-gpt";
+> 					reg = <0x600 0x10>;
+> 					interrupts = <1 15 0>;
+> 					fsl,has-wdt;
+> 				};
+> 		};
+
+Ditto on example needs to be fixed.
+
+> 
+> 		In this simple example, all of the properties are
+> 		dropped from the first definition of 'timer' and are
+> 		replaced by the second instance.  The second instance
+> 		in this example, has different compatible and
+> 		interrupts properties.
+
+What about the child nodes?  Do they get dropped too (I think they
+should)?
+
+> 
+> 	C) /remove/
+
+/remove-node/?
+
+> 
+> 	This directive provides a simple clear method for removing nodes that
+> 	were previously defined.
+> 
+> 	Exmaple:
+> 		/ {
+> 			soc: soc5200@f0000000 {
+> 				#address-cells = <1>;
+> 				#size-cells = <1>;
+> 				compatible = "fsl,mpc5200b-immr";
+> 				...
+> 
+> 				serial@2600 {		// PSC4
+> 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> 					reg = <0x2600 0x100>;
+> 					interrupts = <2 11 0>;
+> 				};
+> 
+> 				serial@2800 {		// PSC5
+> 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> 					reg = <0x2800 0x100>;
+> 					interrupts = <2 12 0>;
+> 				};
+> 
+> 
+> 				serial@2600 /remove/ { };		// PSC4
+> 
+> 				serial@2800 /remove/ { };		// PSC5
+> 		};
+
+Ditto on fixing example.
+
+I'm not thrilled with the example because it still shows the empty
+braces which could be construed as the node still being present.  How
+about this syntax instead:
+	serial@2800 /remove-node/;
+
+I also wonder if it would be better to have the directives before the
+node name.  ie:
+	/extend/ node1 { ... };
+	/replace/ node1 { ... };
+	/remove/ node1;
+
+> 
+> 		In this example, two serial devices are removed.
+> 
+> 	Rationale:
+> 
+> 		By specifying the method for combining, overriding, or
+> 		removing nodes, it should be easy to understand what
+> 		is taking place.  /extend/ allows new properties to be
+> 		added, existing properties to be replaced, and
+> 		existing properties to be removed if the <Undefined>
+> 		value is used.
+> 
+> 		/replace/ provides a convenient way of substituting
+> 		node properties without having to remove each property
+> 		by name with the /extend/ directive.
+>
+> 		/remove/ allows a method a node to be removed
+> 		completely. /replace/ with an empty property list
+> 		could be used, but this leaves an empty node still
+> 		being defined.
+> 
+> 		The reason that only nodes are to be modified by the
+> 		overlay system is that updates to specific properties
+> 		will likely be confusing to a reader, especially when
+> 		labels are used (which will be the common case). By
+> 		updating whole nodes, a reader can more easily figure
+> 		out what information is being updated.
+> 
+> 		For example, one might have:
+> 			&reg5 = <3 0 0x10000>;
+> 		A reader might be wonder which reg is this, it might be updated to:
+> 			&uart3_reg = <3 0 0x10000>;
+> 
+> 		At this point we might as well just specify the node:
+> 			&uart3 /extends/ {
+> 				reg = <3 0 0x10000>;
+> 			};
+
+Ah, yes. I see.  Yes, I don't at all want to reference properties by
+label for purpose of overlays.  It must always be done from the node
+context.
+
+> 
+> 3) Use labels to specify node updates.
+> 	This functionality is already present in the test dtc. The
+> 	idea is that nodes can be specified by their label rather than
+> 	their full path.
+> 
+> 	Rationale:
+> 		In some systems (in FPGAs in particular) a node might
+> 		be located in different places in the device tree, but
+> 		be the same basic node. In this instance, the base
+> 		device tree can still be generated by the FPGA tools
+> 		and the node can still be overridden by referring them
+> 		with the label
+> 
+> 		In addition, it is just a lot nicer to be able to
+> 		specify labels rather than having to specify the full
+> 		path all over again.
+> 
+> 	Example:
+> 		Here is the serial example again, but not inlined with labels:
+> 
+> 		/ {
+> 			soc: soc5200@f0000000 {
+> 				#address-cells = <1>;
+> 				#size-cells = <1>;
+> 				compatible = "fsl,mpc5200b-immr";
+> 				...
+> 
+> 				psc4: serial@2600 {		// PSC4
+> 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> 					reg = <0x2600 0x100>;
+> 					interrupts = <2 11 0>;
+> 				};
+> 
+> 				psc5: serial@2800 {		// PSC5
+> 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> 					reg = <0x2800 0x100>;
+> 					interrupts = <2 12 0>;
+> 				};
+> 		};
+> 
+> 		&psc4 /remove/ { };		// PSC4
+> 		&psc5 /remove/ { };		// PSC5
+> 
+> 4) Allow full paths to be used to override nodes.
+> 
+> 	This suggest that labels aren't required. Most people will
+> 	want to use labels, but for the device tree syntax to be
+> 	orthogonal, full paths should still be allowed.
+> 
+> 	Example:
+> 		Here is the serial example again. Not inlined with paths:
+> 
+> 		/ {
+> 			soc: soc5200@f0000000 {
+> 				#address-cells = <1>;
+> 				#size-cells = <1>;
+> 				compatible = "fsl,mpc5200b-immr";
+> 				...
+> 
+> 				psc4: serial@2600 {		// PSC4
+> 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> 					reg = <0x2600 0x100>;
+> 					interrupts = <2 11 0>;
+> 				};
+> 
+> 				psc5: serial@2800 {		// PSC5
+> 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> 					reg = <0x2800 0x100>;
+> 					interrupts = <2 12 0>;
+> 				};
+> 		};
+> 
+> 		/soc5200@f0000000/serial@2600 /remove/ { };		// PSC4
+> 		/soc5200@f0000000/serial@2800 /remove/ { };		// PSC5
+
+I've thought about this too, and I'd like to implement it, but there
+are some nasty gotchas here because /.../ is already used as the
+keyword delimiter.  There would need to be a way to ensure the grammer
+is unambiguous about which are keywords and which are node names.
+
+On that line, it might also be possible to specify a node by both
+label and path:
+
+	/ {
+		soc: soc5200@f0000000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "fsl,mpc5200b-immr";
+			...
+
+			psc4: serial@2600 {		// PSC4
+				compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+				reg = <0x2600 0x100>;
+				interrupts = <2 11 0>;
+			};
+
+			psc5: serial@2800 {		// PSC5
+				compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+				reg = <0x2800 0x100>;
+				interrupts = <2 12 0>;
+			};
+	};
+
+	&soc/serial@2600 { current-speed = <115200>; };
+	&soc/serial@2800 /remove-node/;
 
 g.
-
- arch/mips/Kconfig            |   13 ++++
- arch/mips/include/asm/prom.h |   35 +++++++++++
- arch/mips/kernel/Makefile    |    2 +
- arch/mips/kernel/prom.c      |  135 ++++++++++++++++++++++++++++++++++++++++++
- arch/mips/kernel/setup.c     |    2 +
- 5 files changed, 187 insertions(+), 0 deletions(-)
- create mode 100644 arch/mips/include/asm/prom.h
- create mode 100644 arch/mips/kernel/prom.c
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 3ad59dd..15e364d 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2107,6 +2107,19 @@ config SECCOMP
- 
- 	  If unsure, say Y. Only embedded should say N here.
- 
-+config USE_OF
-+	bool "Flattened Device Tree support"
-+	select OF
-+	select OF_FLATTREE
-+	help
-+	  Include support for flattened device tree machine descriptions.
-+
-+config ARCH_HAS_DEVTREE_MEM
-+	bool
-+	depends on OF
-+	help
-+	  The user has a customized function to parse memory nodes.
-+
- endmenu
- 
- config LOCKDEP_SUPPORT
-diff --git a/arch/mips/include/asm/prom.h b/arch/mips/include/asm/prom.h
-new file mode 100644
-index 0000000..23f8237
---- /dev/null
-+++ b/arch/mips/include/asm/prom.h
-@@ -0,0 +1,35 @@
-+/*
-+ *  arch/mips/include/asm/prom.h
-+ *
-+ *  Copyright (C) 2010 Cisco Systems Inc. <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#ifndef __ASM_MIPS_PROM_H
-+#define __ASM_MIPS_PROM_H
-+
-+#ifdef CONFIG_OF
-+#include <linux/init.h>
-+
-+#include <asm/setup.h>
-+#include <asm/irq.h>
-+#include <asm/bootinfo.h>
-+
-+/* which is compatible with the flattened device tree (FDT) */
-+#define cmd_line arcs_cmdline
-+
-+extern int early_init_dt_scan_memory_arch(unsigned long node,
-+	const char *uname, int depth, void *data);
-+
-+extern int reserve_mem_mach(unsigned long addr, unsigned long size);
-+extern void free_mem_mach(unsigned long addr, unsigned long size);
-+
-+extern void __init device_tree_init(void);
-+#else /* CONFIG_OF */
-+static inline void __init device_tree_init(void) { }
-+#endif /* CONFIG_OF */
-+
-+#endif /* _ASM_MIPS_PROM_H */
-diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
-index 06f8482..8088498 100644
---- a/arch/mips/kernel/Makefile
-+++ b/arch/mips/kernel/Makefile
-@@ -96,6 +96,8 @@ obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
- obj-$(CONFIG_SPINLOCK_TEST)	+= spinlock_test.o
- 
-+obj-$(CONFIG_OF)		+= prom.o
-+
- CFLAGS_cpu-bugs64.o	= $(shell if $(CC) $(KBUILD_CFLAGS) -Wa,-mdaddi -c -o /dev/null -xc /dev/null >/dev/null 2>&1; then echo "-DHAVE_AS_SET_DADDI"; fi)
- 
- obj-$(CONFIG_HAVE_STD_PC_SERIAL_PORT)	+= 8250-platform.o
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-new file mode 100644
-index 0000000..6378834
---- /dev/null
-+++ b/arch/mips/kernel/prom.c
-@@ -0,0 +1,135 @@
-+/*
-+ *  linux/arch/mips/kernel/prom.c
-+ *
-+ *  Copyright (C) 2010 Cisco Systems Inc. <dediao-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/errno.h>
-+#include <linux/types.h>
-+#include <linux/bootmem.h>
-+#include <linux/initrd.h>
-+#include <linux/debugfs.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+
-+#include <asm/page.h>
-+#include <asm/prom.h>
-+
-+#ifndef CONFIG_ARCH_HAS_DEVTREE_MEM
-+int __init early_init_dt_scan_memory_arch(unsigned long node,
-+					  const char *uname, int depth,
-+					  void *data)
-+{
-+	return early_init_dt_scan_memory(node, uname, depth, data);
-+}
-+
-+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
-+{
-+	return add_memory_region(base, size, BOOT_MEM_RAM);
-+}
-+
-+int __init reserve_mem_mach(unsigned long addr, unsigned long size)
-+{
-+	return reserve_bootmem(addr, size, BOOTMEM_DEFAULT);
-+}
-+
-+void __init free_mem_mach(unsigned long addr, unsigned long size)
-+{
-+	return free_bootmem(addr, size);
-+}
-+#endif
-+
-+u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
-+{
-+	return virt_to_phys(
-+		__alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS))
-+		);
-+}
-+
-+#ifdef CONFIG_BLK_DEV_INITRD
-+void __init early_init_dt_setup_initrd_arch(unsigned long start,
-+					    unsigned long end)
-+{
-+	initrd_start = (unsigned long)__va(start);
-+	initrd_end = (unsigned long)__va(end);
-+	initrd_below_start_ok = 1;
-+}
-+#endif
-+
-+/*
-+ * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux irq#
-+ *
-+ * Currently the mapping mechanism is trivial; simple flat hwirq numbers are
-+ * mapped 1:1 onto Linux irq numbers.  Cascaded irq controllers are not
-+ * supported.
-+ */
-+unsigned int irq_create_of_mapping(struct device_node *controller,
-+				   const u32 *intspec, unsigned int intsize)
-+{
-+	return intspec[0];
-+}
-+EXPORT_SYMBOL_GPL(irq_create_of_mapping);
-+
-+void __init early_init_devtree(void *params)
-+{
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = params;
-+
-+	/* Retrieve various informations from the /chosen node of the
-+	 * device-tree, including the platform type, initrd location and
-+	 * size, and more ...
-+	 */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, NULL);
-+
-+	/* Scan memory nodes */
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-+	of_scan_flat_dt(early_init_dt_scan_memory_arch, NULL);
-+}
-+
-+void __init device_tree_init(void)
-+{
-+	unsigned long base, size;
-+
-+	if (!initial_boot_params)
-+		return;
-+
-+	base = virt_to_phys((void *)initial_boot_params);
-+	size = initial_boot_params->totalsize;
-+
-+	/* Before we do anything, lets reserve the dt blob */
-+	reserve_mem_mach(base, size);
-+
-+	unflatten_device_tree();
-+
-+	/* free the space reserved for the dt blob */
-+	free_mem_mach(base, size);
-+}
-+
-+#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
-+static struct dentry *of_debugfs_root;
-+static struct debugfs_blob_wrapper flat_dt_blob;
-+
-+static int __init export_flat_device_tree(void)
-+{
-+	struct dentry *d;
-+
-+	flat_dt_blob.data = initial_boot_params;
-+	flat_dt_blob.size = initial_boot_params->totalsize;
-+
-+	d = debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
-+				of_debugfs_root, &flat_dt_blob);
-+	if (!d)
-+		return 1;
-+
-+	return 0;
-+}
-+device_initcall(export_flat_device_tree);
-+#endif
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 85aef3f..a6b900f 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -31,6 +31,7 @@
- #include <asm/setup.h>
- #include <asm/smp-ops.h>
- #include <asm/system.h>
-+#include <asm/prom.h>
- 
- struct cpuinfo_mips cpu_data[NR_CPUS] __read_mostly;
- 
-@@ -487,6 +488,7 @@ static void __init arch_mem_init(char **cmdline_p)
- 	}
- 
- 	bootmem_init();
-+	device_tree_init();
- 	sparse_init();
- 	paging_init();
- }
