@@ -1,12 +1,18 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH] of/device: Rework to use common platform_device_alloc() for
-	allocating devices
-Date: Wed, 13 Oct 2010 21:59:00 -0600
-Message-ID: <20101014035900.9218.54675.stgit@localhost6.localdomain6>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Proposal: new device-tree syntax and semantics for extending
+	information from included dts files
+Date: Thu, 14 Oct 2010 14:48:21 +1100
+Message-ID: <20101014034821.GH4456@yookeroo>
+References: <1286920561.4535.1315.camel@riker>
+	<20101013231747.GD15286@angua.secretlab.ca>
+	<20101014003833.GB4456@yookeroo>
+	<20101014014036.GE15286@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20101014014036.GE15286-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,207 +22,207 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current code allocates and manages platform_devices created from
-the device tree manually.  It also uses an unsafe shortcut for
-allocating the platform_device and the resource table at the same
-time. (which I added in the last rework; sorry).
+On Wed, Oct 13, 2010 at 07:40:36PM -0600, Grant Likely wrote:
+> On Thu, Oct 14, 2010 at 11:38:33AM +1100, David Gibson wrote:
+> > On Wed, Oct 13, 2010 at 05:17:47PM -0600, Grant Likely wrote:
+> > > On Tue, Oct 12, 2010 at 02:56:01PM -0700, John Bonesio wrote:
+[snip]
+> > > > Proposal:
+> > > > 
+> > > > 1) Add a new keyword constant for property values, <Undefined>.
+> > > 
+> > > Personally, I'd prefer all lowercase: <undefined>.  There may be some
+> > > dickering over the exact keyword name, but I think the concept is
+> > > sound.
+> > 
+> > It should be /undefined/ to match existing keywords.  Or possibly
+> > /delete/ or /remove-property/ or some such.  As Grant says there is
+> > some dickering to be done there.
+> 
+> ah, of course.  I missed that.  <...> already has a meaning in dts
+> syntax, so that should definitely be avoided.  /.../ it is.
+> 
+> > > > 	B) /replace/
+> > > 
+> > > /replace-node/ perhaps?
+> > 
+> > There is no need for this.  It's equivalent to a /remove/ then an
+> > /extend/, which is barely more verbose.
+> 
+> Need to flush this out.  What would this look like then?  This?
+> 
+> &some-node {
+> 	node-to-remove /remove/;
+> 
+> 	node-to-replace /remove/;
+> 	node-to-replace { prop = "blah"; };
+> };
+> 
+> I don't like this one because it implies ordering between the first
+> and second 'node-to-replace' definitions, and to this point the syntax
+> has not imposed any order assumptions.
 
-This patch refactors the code to use platform_device_alloc() for
-allocating new devices.  This reduces the amount of custom code
-implemented by of_platform, eliminates the unsafe alloc trick, and has
-the side benefit of letting the platform_bus code manage freeing the
-device data and resources when the device is freed.
+Hrm.  Well, more precisely I was thinking of:
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
----
- arch/powerpc/kernel/ibmebus.c |   11 ++++-------
- drivers/base/platform.c       |    1 +
- drivers/of/device.c           |   27 +++++++--------------------
- drivers/of/platform.c         |   24 +++++++++++++-----------
- include/linux/of_device.h     |   13 +++++++------
- 5 files changed, 32 insertions(+), 44 deletions(-)
+&{/some/node} /remove/;
 
-diff --git a/arch/powerpc/kernel/ibmebus.c b/arch/powerpc/kernel/ibmebus.c
-index 9b626cf..f62efdf 100644
---- a/arch/powerpc/kernel/ibmebus.c
-+++ b/arch/powerpc/kernel/ibmebus.c
-@@ -162,13 +162,10 @@ static int ibmebus_create_device(struct device_node *dn)
- 	dev->dev.bus = &ibmebus_bus_type;
- 	dev->dev.archdata.dma_ops = &ibmebus_dma_ops;
- 
--	ret = of_device_register(dev);
--	if (ret) {
--		of_device_free(dev);
--		return ret;
--	}
--
--	return 0;
-+	ret = of_device_add(dev);
-+	if (ret)
-+		platform_device_put(dev);
-+	return ret;
- }
- 
- static int ibmebus_create_devices(const struct of_device_id *matches)
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index c6c933f..2fff59c 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -147,6 +147,7 @@ static void platform_device_release(struct device *dev)
- 	struct platform_object *pa = container_of(dev, struct platform_object,
- 						  pdev.dev);
- 
-+	of_device_node_put(&pa->pdev.dev);
- 	kfree(pa->pdev.dev.platform_data);
- 	kfree(pa->pdev.resource);
- 	kfree(pa);
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 92de0eb..45d8653 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -81,29 +81,10 @@ struct device_attribute of_platform_device_attrs[] = {
- 	__ATTR_NULL
- };
- 
--/**
-- * of_release_dev - free an of device structure when all users of it are finished.
-- * @dev: device that's been disconnected
-- *
-- * Will be called only by the device core when all users of this of device are
-- * done.
-- */
--void of_release_dev(struct device *dev)
--{
--	struct platform_device *ofdev;
--
--	ofdev = to_platform_device(dev);
--	of_node_put(ofdev->dev.of_node);
--	kfree(ofdev);
--}
--EXPORT_SYMBOL(of_release_dev);
--
--int of_device_register(struct platform_device *ofdev)
-+int of_device_add(struct platform_device *ofdev)
- {
- 	BUG_ON(ofdev->dev.of_node == NULL);
- 
--	device_initialize(&ofdev->dev);
--
- 	/* name and id have to be set so that the platform bus doesn't get
- 	 * confused on matching */
- 	ofdev->name = dev_name(&ofdev->dev);
-@@ -117,6 +98,12 @@ int of_device_register(struct platform_device *ofdev)
- 
- 	return device_add(&ofdev->dev);
- }
-+
-+int of_device_register(struct platform_device *pdev)
-+{
-+	device_initialize(&pdev->dev);
-+	return of_device_add(pdev);
-+}
- EXPORT_SYMBOL(of_device_register);
- 
- void of_device_unregister(struct platform_device *ofdev)
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 30726c8..5b4a07f 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -587,20 +587,23 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	int rc, i, num_reg = 0, num_irq;
- 	struct resource *res, temp_res;
- 
--	/* First count how many resources are needed */
-+	dev = platform_device_alloc("", -1);
-+	if (!dev)
-+		return NULL;
-+
-+	/* count the io and irq resources */
- 	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
- 		num_reg++;
- 	num_irq = of_irq_count(np);
- 
--	/* Allocate memory for both the struct device and the resource table */
--	dev = kzalloc(sizeof(*dev) + (sizeof(*res) * (num_reg + num_irq)),
--		      GFP_KERNEL);
--	if (!dev)
--		return NULL;
--	res = (struct resource *) &dev[1];
--
- 	/* Populate the resource table */
- 	if (num_irq || num_reg) {
-+		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
-+		if (!res) {
-+			platform_device_put(dev);
-+			return NULL;
-+		}
-+
- 		dev->num_resources = num_reg + num_irq;
- 		dev->resource = res;
- 		for (i = 0; i < num_reg; i++, res++) {
-@@ -615,7 +618,6 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	dev->dev.dma_mask = &dev->archdata.dma_mask;
- #endif
- 	dev->dev.parent = parent;
--	dev->dev.release = of_release_dev;
- 
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
-@@ -653,8 +655,8 @@ struct platform_device *of_platform_device_create(struct device_node *np,
- 	 * to do such, possibly using a device notifier
- 	 */
- 
--	if (of_device_register(dev) != 0) {
--		of_device_free(dev);
-+	if (of_device_add(dev) != 0) {
-+		platform_device_put(dev);
- 		return NULL;
- 	}
- 
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 835f85e..975d347 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -27,20 +27,19 @@ static inline int of_driver_match_device(const struct device *dev,
- extern struct platform_device *of_dev_get(struct platform_device *dev);
- extern void of_dev_put(struct platform_device *dev);
- 
-+extern int of_device_add(struct platform_device *pdev);
- extern int of_device_register(struct platform_device *ofdev);
- extern void of_device_unregister(struct platform_device *ofdev);
--extern void of_release_dev(struct device *dev);
--
--static inline void of_device_free(struct platform_device *dev)
--{
--	of_release_dev(&dev->dev);
--}
- 
- extern ssize_t of_device_get_modalias(struct device *dev,
- 					char *str, ssize_t len);
- 
- extern int of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
- 
-+static inline void of_device_node_put(struct device *dev)
-+{
-+	of_node_put(dev->of_node);
-+}
- 
- #else /* CONFIG_OF_DEVICE */
- 
-@@ -56,6 +55,8 @@ static inline int of_device_uevent(struct device *dev,
- 	return -ENODEV;
- }
- 
-+static inline void of_device_node_put(struct device *dev) { }
-+
- #endif /* CONFIG_OF_DEVICE */
- 
- #endif /* _LINUX_OF_DEVICE_H */
+&{/some/node} {
+	new-contents;
+};
+
+Since I thought the original proposal was that these node /replace/,
+/extend/ whatnot were only valid at the top level (for the reasons
+we've discussed on previous occasions).  We do already have ordering
+amongst the top level items, since the last one wins.  Now, if using
+labels rather than full paths it does get a bit curlier on the
+implementation side.  But I don't think it would be that hard to make
+labels stick around attached to a path, even when the path itself is
+removed.
+
+> Perhaps this:
+> 
+> &some-node {
+> 	node-to-remove /remove/;
+> 	node-to-replace /remove/ { prop = "blah"; };
+> };
+> 
+> Here the keyword essentially becomes a flag to drop the previous
+> definition of the node with the option to also provide a replacement
+> defintion.  I like this better, and the (lack of) ordering assumptions
+> are preserved.
+
+Urg.  I think that is confusing for much the same reasons John Bonesio
+states in his later mail.  But, I can see a case for:
+
+	node-to-replace /replace/ { prop = "blah"; };
+
+and allowing removal with:
+
+	node-to-replace /replace/ /undefined/;
+
+So instead of substituting "remove+extend" for replace, we substitute
+"replace with nothing" for remove.  Either way we remove one syntactic
+element.  Have to think more about which I prefer.
+
+> How then would it look when compared with removing properties?
+> 
+> &some-node {
+> 	property-to-remove = /remove/;
+> 	property-to-replace = "new value";
+> 	property-to-replace-with-empty-prop;
+> 
+> 	node-to-remove /remove/;
+> 	node-to-replace /remove/ { prop = "blah"; };
+> };
+> 
+> In this form, the only syntactic difference between removing
+> properties and removing nodes is that removing properties has an '='
+> token between them.  I think that this has the potential to be
+> confusing to users, and probably a common source of defects.  That is
+> part of why I like the idea of different keywords when dealing with
+> nodes and properties.  What about this?
+> 
+> &some-node {
+> 	property-to-remove /remove-prop/;
+> 	property-to-replace = "new value";
+> 	property-to-replace-with-empty-prop;
+> 
+> 	node-to-remove /remove-node/;
+> 	node-to-replace /remove-node/ { prop = "blah"; };
+> };
+> 
+> Or perhaps with the keyword preceding:
+> 
+> &some-node {
+> 	/remove-prop/ property-to-remove;
+> 	property-to-replace = "new value";
+> 	property-to-replace-with-empty-prop;
+> 
+> 	/remove-node/ node-to-remove;
+> 	/remove-node/ node-to-replace { prop = "blah"; };
+> };
+
+
+I prefer this last example to the two previous ones.
+
+> And the following construct would be forbidden:
+> 
+> 	/remove-prop/ property-to-remove = "new value;
+> 
+> 
+> Also, /remove-node/ feels awkward when working with replacing a node.
+> Would /clear-node/ or /trim-node/ be better?  '/replace-node/'
+
+/clear-node/ suggests to me that it would leave the node in place,
+just removing subnodes and properties.  /trim-node/ might work.
+
+> wouldn't be very because it doesn't make sense in the removal case,
+> and /delete-node/ has the same problem as /remove-node/.
+> /undefine-node/ as you suggested has possibilities too.  Anyone have
+> other suggestions for intuitive keyword names?
+
+Well.. the "try not to surprise C programmers" rule of thumb has
+served us well so far for dtc, so /undef-node/ has some merit.  In
+principle I'd kind of like to use just preceding /undef/ for both, but
+that will cause some parsing problems.
+
+[snip]
+> > > I've thought about this too, and I'd like to implement it, but there
+> > > are some nasty gotchas here because /.../ is already used as the
+> > > keyword delimiter.  There would need to be a way to ensure the grammer
+> > > is unambiguous about which are keywords and which are node names.
+> > 
+> > Yeah.  But I think there's an obvious way to fix it.  We already have
+> > a full-path reference syntax we can use for inserting phandles.  So I
+> > think we should make the syntax here:
+> > 
+> > &{/full/path/to/node} {
+> > 	property-to-override = "something";
+> > };
+> 
+> True.  That would work.  And I like the reuse of existing syntax
+> elements.
+> 
+> > 
+> > Or of course you can already do
+> > 
+> > / {
+> > 	full {
+> > 		path {
+> > 			to {
+> > 				node {
+> > 					etc.
+> 
+> Right.
+> 
+> > > On that line, it might also be possible to specify a node by both
+> > > label and path:
+> > 
+> > Well, this is sort of already possible:
+> > 
+> > &soc {
+> > 	serial@2600 {
+> > 		current-speed = <115200>;
+> > 	};
+> > };
+> > 
+> > Directly allowing a label+relative path could be useful enough to
+> > reduce verbosity, but it will require careful thinking about the
+> > syntax.
+> 
+> Yes, (as discussed previously) this is just syntactic sugar.  The
+> syntax already supports the functionality, but it would be nice to be
+> less verbose.
+
+Right, but I think that can wait until after we've decided and
+implemented on the core functionality.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
