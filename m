@@ -1,19 +1,12 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Proposal: new device-tree syntax and semantics for extending
-	information from included dts files
-Date: Wed, 13 Oct 2010 21:37:58 -0600
-Message-ID: <20101014033758.GJ15286@angua.secretlab.ca>
-References: <1286920561.4535.1315.camel@riker>
-	<20101013231747.GD15286@angua.secretlab.ca>
-	<20101014003833.GB4456@yookeroo>
-	<20101014014036.GE15286@angua.secretlab.ca>
-	<1287025692.4535.1348.camel@riker>
+Subject: [PATCH] of/device: Rework to use common platform_device_alloc() for
+	allocating devices
+Date: Wed, 13 Oct 2010 21:59:00 -0600
+Message-ID: <20101014035900.9218.54675.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1287025692.4535.1348.camel@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,100 +16,207 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 13, 2010 at 08:08:12PM -0700, John Bonesio wrote:
-> On Wed, 2010-10-13 at 19:40 -0600, Grant Likely wrote:
-> > On Thu, Oct 14, 2010 at 11:38:33AM +1100, David Gibson wrote:
-> > > On Wed, Oct 13, 2010 at 05:17:47PM -0600, Grant Likely wrote:
-> > > > On Tue, Oct 12, 2010 at 02:56:01PM -0700, John Bonesio wrote:
-> The dts syntax is meant for humans to read, otherwise, we'd just encode
-> the bits in the dtb file by hand. The new syntax and semantics doesn't
-> have to be reduced to provide only one way to do each thing. I believe
-> we should optimize for human readability.
-> 
-> My vote is to go ahead with the 3 methods of modifying existing nodes
-> which is /extend/, /replace/, and /remove/. Use of the /extend/ syntax,
-> while optional as this is the default, should still be allowed in the
-> case where most of the updates are using the other methods and for
-> clarity, the writer wants to make /extend/ explicit.
-> 
-> So the syntax would be:
-> &some-node {
-> 	node-to-remove /remove/;
-> 	node-to-replace /replace/ { prop = "blah"; };
-> }
-> 
-> or even
-> 
-> &node-to-remove /remove/;
-> &node-to-replace /replace/ { prop = "blah"; };
-> // assumes &node-to-remove and &node-to-replace are labels
+The current code allocates and manages platform_devices created from
+the device tree manually.  It also uses an unsafe shortcut for
+allocating the platform_device and the resource table at the same
+time. (which I added in the last rework; sorry).
 
-I suppose by making /replace/ and /extend/ explicit would provide a
-mechanism for dtc to throw a warning/error if the node it is supposed
-to be replacing doesn't exist.  I'm not yet convinced it is a necessary
-use case though.
+This patch refactors the code to use platform_device_alloc() for
+allocating new devices.  This reduces the amount of custom code
+implemented by of_platform, eliminates the unsafe alloc trick, and has
+the side benefit of letting the platform_bus code manage freeing the
+device data and resources when the device is freed.
 
-> > &some-node {
-> > 	property-to-remove /remove-prop/;
-> > 	property-to-replace = "new value";
-> > 	property-to-replace-with-empty-prop;
-> > 
-> > 	node-to-remove /remove-node/;
-> > 	node-to-replace /remove-node/ { prop = "blah"; };
-> > };
-> > 
-> > Or perhaps with the keyword preceding:
-> > 
-> > &some-node {
-> > 	/remove-prop/ property-to-remove;
-> > 	property-to-replace = "new value";
-> > 	property-to-replace-with-empty-prop;
-> > 
-> > 	/remove-node/ node-to-remove;
-> > 	/remove-node/ node-to-replace { prop = "blah"; };
-> > };
-> > 
-> > And the following construct would be forbidden:
-> > 
-> > 	/remove-prop/ property-to-remove = "new value;
-> 
-> Do we need to be able to set a property with an empty value?
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+---
+ arch/powerpc/kernel/ibmebus.c |   11 ++++-------
+ drivers/base/platform.c       |    1 +
+ drivers/of/device.c           |   27 +++++++--------------------
+ drivers/of/platform.c         |   24 +++++++++++++-----------
+ include/linux/of_device.h     |   13 +++++++------
+ 5 files changed, 32 insertions(+), 44 deletions(-)
 
-Yes.  They are used all the time.  Best example I can think of in this
-case is if a board wanted to replace a detailed 'ranges' property with
-an empty one to enable full address range translation.
-
-> I'm wondering if we have /remove-node/ and /remove-property/ if it
-> will lead people to make errors by accidentally using the wrong
-> syntax for the node or property.
-
-The problem is that it is legal (though rare) for a child node to have
-the same name as a property in a single node.  There needs to be a
-difference in the grammer to show which type the operation is intended
-to be performed on.  I like encoding 'node' and 'property' into the
-keyword because then it is blatantly obvious what is intended.  If a
-user uses /remove-node/ on a property, or /remove-property/ on a node,
-then dtc won't find the target and it can righteously pitch a fit.  :-)
-
-Also, if someone does use the wrong keyword, anyone familiar with the
-english language can probably guess that /remove-property/ won't work
-on nodes and visa versa.
-
-> 
-> If we're not going to use
-> 	property-to-remove = /undefined/;
-> 
-> then I'd prefer if we used /remove/ for both nodes and properties.
-> 
-> I'm not sure about having the keyword in front for properties and
-> afterwards for nodes. I think we want the syntactic rules to be very
-> simple and easy to remember.
-
-Yeah, I'm not sure which is best either.  I need to mull over it some
-more.  I agree that the rules need to be simple and easy to remember.
-
-g.
+diff --git a/arch/powerpc/kernel/ibmebus.c b/arch/powerpc/kernel/ibmebus.c
+index 9b626cf..f62efdf 100644
+--- a/arch/powerpc/kernel/ibmebus.c
++++ b/arch/powerpc/kernel/ibmebus.c
+@@ -162,13 +162,10 @@ static int ibmebus_create_device(struct device_node *dn)
+ 	dev->dev.bus = &ibmebus_bus_type;
+ 	dev->dev.archdata.dma_ops = &ibmebus_dma_ops;
+ 
+-	ret = of_device_register(dev);
+-	if (ret) {
+-		of_device_free(dev);
+-		return ret;
+-	}
+-
+-	return 0;
++	ret = of_device_add(dev);
++	if (ret)
++		platform_device_put(dev);
++	return ret;
+ }
+ 
+ static int ibmebus_create_devices(const struct of_device_id *matches)
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index c6c933f..2fff59c 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -147,6 +147,7 @@ static void platform_device_release(struct device *dev)
+ 	struct platform_object *pa = container_of(dev, struct platform_object,
+ 						  pdev.dev);
+ 
++	of_device_node_put(&pa->pdev.dev);
+ 	kfree(pa->pdev.dev.platform_data);
+ 	kfree(pa->pdev.resource);
+ 	kfree(pa);
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 92de0eb..45d8653 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -81,29 +81,10 @@ struct device_attribute of_platform_device_attrs[] = {
+ 	__ATTR_NULL
+ };
+ 
+-/**
+- * of_release_dev - free an of device structure when all users of it are finished.
+- * @dev: device that's been disconnected
+- *
+- * Will be called only by the device core when all users of this of device are
+- * done.
+- */
+-void of_release_dev(struct device *dev)
+-{
+-	struct platform_device *ofdev;
+-
+-	ofdev = to_platform_device(dev);
+-	of_node_put(ofdev->dev.of_node);
+-	kfree(ofdev);
+-}
+-EXPORT_SYMBOL(of_release_dev);
+-
+-int of_device_register(struct platform_device *ofdev)
++int of_device_add(struct platform_device *ofdev)
+ {
+ 	BUG_ON(ofdev->dev.of_node == NULL);
+ 
+-	device_initialize(&ofdev->dev);
+-
+ 	/* name and id have to be set so that the platform bus doesn't get
+ 	 * confused on matching */
+ 	ofdev->name = dev_name(&ofdev->dev);
+@@ -117,6 +98,12 @@ int of_device_register(struct platform_device *ofdev)
+ 
+ 	return device_add(&ofdev->dev);
+ }
++
++int of_device_register(struct platform_device *pdev)
++{
++	device_initialize(&pdev->dev);
++	return of_device_add(pdev);
++}
+ EXPORT_SYMBOL(of_device_register);
+ 
+ void of_device_unregister(struct platform_device *ofdev)
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 30726c8..5b4a07f 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -587,20 +587,23 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 	int rc, i, num_reg = 0, num_irq;
+ 	struct resource *res, temp_res;
+ 
+-	/* First count how many resources are needed */
++	dev = platform_device_alloc("", -1);
++	if (!dev)
++		return NULL;
++
++	/* count the io and irq resources */
+ 	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+ 		num_reg++;
+ 	num_irq = of_irq_count(np);
+ 
+-	/* Allocate memory for both the struct device and the resource table */
+-	dev = kzalloc(sizeof(*dev) + (sizeof(*res) * (num_reg + num_irq)),
+-		      GFP_KERNEL);
+-	if (!dev)
+-		return NULL;
+-	res = (struct resource *) &dev[1];
+-
+ 	/* Populate the resource table */
+ 	if (num_irq || num_reg) {
++		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
++		if (!res) {
++			platform_device_put(dev);
++			return NULL;
++		}
++
+ 		dev->num_resources = num_reg + num_irq;
+ 		dev->resource = res;
+ 		for (i = 0; i < num_reg; i++, res++) {
+@@ -615,7 +618,6 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 	dev->dev.dma_mask = &dev->archdata.dma_mask;
+ #endif
+ 	dev->dev.parent = parent;
+-	dev->dev.release = of_release_dev;
+ 
+ 	if (bus_id)
+ 		dev_set_name(&dev->dev, "%s", bus_id);
+@@ -653,8 +655,8 @@ struct platform_device *of_platform_device_create(struct device_node *np,
+ 	 * to do such, possibly using a device notifier
+ 	 */
+ 
+-	if (of_device_register(dev) != 0) {
+-		of_device_free(dev);
++	if (of_device_add(dev) != 0) {
++		platform_device_put(dev);
+ 		return NULL;
+ 	}
+ 
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 835f85e..975d347 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -27,20 +27,19 @@ static inline int of_driver_match_device(const struct device *dev,
+ extern struct platform_device *of_dev_get(struct platform_device *dev);
+ extern void of_dev_put(struct platform_device *dev);
+ 
++extern int of_device_add(struct platform_device *pdev);
+ extern int of_device_register(struct platform_device *ofdev);
+ extern void of_device_unregister(struct platform_device *ofdev);
+-extern void of_release_dev(struct device *dev);
+-
+-static inline void of_device_free(struct platform_device *dev)
+-{
+-	of_release_dev(&dev->dev);
+-}
+ 
+ extern ssize_t of_device_get_modalias(struct device *dev,
+ 					char *str, ssize_t len);
+ 
+ extern int of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
+ 
++static inline void of_device_node_put(struct device *dev)
++{
++	of_node_put(dev->of_node);
++}
+ 
+ #else /* CONFIG_OF_DEVICE */
+ 
+@@ -56,6 +55,8 @@ static inline int of_device_uevent(struct device *dev,
+ 	return -ENODEV;
+ }
+ 
++static inline void of_device_node_put(struct device *dev) { }
++
+ #endif /* CONFIG_OF_DEVICE */
+ 
+ #endif /* _LINUX_OF_DEVICE_H */
