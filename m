@@ -1,8 +1,8 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
 Subject: Re: Proposal: new device-tree syntax and semantics for extending
 	information from included dts files
-Date: Wed, 13 Oct 2010 19:49:58 -0600
-Message-ID: <20101014014958.GG15286@angua.secretlab.ca>
+Date: Wed, 13 Oct 2010 20:08:12 -0700
+Message-ID: <1287025692.4535.1348.camel@riker>
 References: <1286920561.4535.1315.camel@riker>
 	<20101013231747.GD15286@angua.secretlab.ca>
 	<20101014003833.GB4456@yookeroo>
@@ -11,7 +11,6 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
 In-Reply-To: <20101014014036.GE15286-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -22,14 +21,164 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 13, 2010 at 07:40:36PM -0600, Grant Likely wrote:
+On Wed, 2010-10-13 at 19:40 -0600, Grant Likely wrote:
 > On Thu, Oct 14, 2010 at 11:38:33AM +1100, David Gibson wrote:
 > > On Wed, Oct 13, 2010 at 05:17:47PM -0600, Grant Likely wrote:
 > > > On Tue, Oct 12, 2010 at 02:56:01PM -0700, John Bonesio wrote:
+> > > > Objective:
+> > > > The primary problem is that the same information gets repeated in
+> > > > various dts file that describe variations on the same base SOC. The
+> > > > information becomes redundant and when changes to the device tree
+> > > > syntax is made, extra work is necessary to update the same
+> > > > information in multiple files.
+> > > 
+> > > Thanks John.  Some comments below, but a reasonable proposal.  Next
+> > > you need to post the proposal to the devicetree-discuss list and cc:
+> > > David Gibson, Jon Loeliger and me.
+> > > 
+> > > ... actually, this discussion is important enough that I don't want to
+> > > send this reply without David and Jon seeing it; otherwise we just end
+> > > up repeating the same rationals over again.  I'm going to cc the
+> > > list right now.
+> > 
+> > Excellent :)
+> 
+> :-D
+> 
+> > 
+> > > > A solution needs to allow:
+> > > > a) nodes to be updated
+> > > > b) nodes to be overridden
+> > > > c) nodes to be removed
+> > > > d) properties to be overridden
+> > > > e) properties to be removed
+> > > > 
+> > > > Overview:
+> > > > The main thrust of this proposal is to suggest an overlay system
+> > > > where existing device tree nodes can be modified by dts statements
+> > > > later on in the "file". The "file" is defined as a file in memory
+> > > > after all /include/ statements have been processed.
+> > 
+> > Um, I know what you mean, but the wording is incorrect on a
+> > technicality - parsing and include processing are done at the same
+> > time, so the full include-expanded "file" never exists as a whole in
+> > memory, only conceptually.
+> > 
+> > > > Much of the functionality described in this proposal is already
+> > > > present in a test version of the device tree compiler (dtc). This
+> > > > proposal describes
+> > > 
+> > > s/test/unreleased/
+> > 
+> > Do you mean you have a test branch of your own, or do you mean the
+> > partial overlay functionality that's already upstream?
+> 
+> We're talking about the already upstreamed bits.
+> 
+> > > > Proposal:
+> > > > 
+> > > > 1) Add a new keyword constant for property values, <Undefined>.
+> > > 
+> > > Personally, I'd prefer all lowercase: <undefined>.  There may be some
+> > > dickering over the exact keyword name, but I think the concept is
+> > > sound.
+> > 
+> > It should be /undefined/ to match existing keywords.  Or possibly
+> > /delete/ or /remove-property/ or some such.  As Grant says there is
+> > some dickering to be done there.
+> 
+> ah, of course.  I missed that.  <...> already has a meaning in dts
+> syntax, so that should definitely be avoided.  /.../ it is.
+> 
+> > > > 	B) /replace/
+> > > 
+> > > /replace-node/ perhaps?
+> > 
+> > There is no need for this.  It's equivalent to a /remove/ then an
+> > /extend/, which is barely more verbose.
+> 
+> Need to flush this out.  What would this look like then?  This?
+> 
+> &some-node {
+> 	node-to-remove /remove/;
+> 
+> 	node-to-replace /remove/;
+> 	node-to-replace { prop = "blah"; };
+> };
+> 
+> I don't like this one because it implies ordering between the first
+> and second 'node-to-replace' definitions, and to this point the syntax
+> has not imposed any order assumptions.
+> 
+> Perhaps this:
+> 
+> &some-node {
+> 	node-to-remove /remove/;
+> 	node-to-replace /remove/ { prop = "blah"; };
+> };
+
+I think this is going to be really confusing. A person looking at this
+for the first time will be wondering, "Why are we removing property,
+'prop'. I thought we needed that one?"
+
+I believe that if we want to be able to replace nodes, we should stick
+with the /replace/ syntax.
+
+The dts syntax is meant for humans to read, otherwise, we'd just encode
+the bits in the dtb file by hand. The new syntax and semantics doesn't
+have to be reduced to provide only one way to do each thing. I believe
+we should optimize for human readability.
+
+My vote is to go ahead with the 3 methods of modifying existing nodes
+which is /extend/, /replace/, and /remove/. Use of the /extend/ syntax,
+while optional as this is the default, should still be allowed in the
+case where most of the updates are using the other methods and for
+clarity, the writer wants to make /extend/ explicit.
+
+So the syntax would be:
+&some-node {
+	node-to-remove /remove/;
+	node-to-replace /replace/ { prop = "blah"; };
+}
+
+or even
+
+&node-to-remove /remove/;
+&node-to-replace /replace/ { prop = "blah"; };
+// assumes &node-to-remove and &node-to-replace are labels
+
+> 
+> Here the keyword essentially becomes a flag to drop the previous
+> definition of the node with the option to also provide a replacement
+> defintion.  I like this better, and the (lack of) ordering assumptions
+> are preserved.
+> 
+> How then would it look when compared with removing properties?
+> 
+> &some-node {
+> 	property-to-remove = /remove/;
+> 	property-to-replace = "new value";
+> 	property-to-replace-with-empty-prop;
+> 
+> 	node-to-remove /remove/;
+> 	node-to-replace /remove/ { prop = "blah"; };
+> };
+
+> In this form, the only syntactic difference between removing
+> properties and removing nodes is that removing properties has an '='
+> token between them.  I think that this has the potential to be
+> confusing to users, and probably a common source of defects.
+
+I agree with this assessment.
+
+> That is
+> part of why I like the idea of different keywords when dealing with
+> nodes and properties.  What about this?
+> 
 > &some-node {
 > 	property-to-remove /remove-prop/;
 > 	property-to-replace = "new value";
@@ -49,22 +198,149 @@ On Wed, Oct 13, 2010 at 07:40:36PM -0600, Grant Likely wrote:
 > 	/remove-node/ node-to-remove;
 > 	/remove-node/ node-to-replace { prop = "blah"; };
 > };
+> 
+> And the following construct would be forbidden:
+> 
+> 	/remove-prop/ property-to-remove = "new value;
 
-I should probably also mock-up what it would look like when the target
-node is at the top level.  With keyword after the node name:
+Do we need to be able to set a property with an empty value?
 
-/ {
-	...
+I'm wondering if we have /remove-node/ and /remove-property/ if it
+will lead people to make errors by accidentally using the wrong
+syntax for the node or property.
+
+If we're not going to use
+	property-to-remove = /undefined/;
+
+then I'd prefer if we used /remove/ for both nodes and properties.
+
+I'm not sure about having the keyword in front for properties and
+afterwards for nodes. I think we want the syntactic rules to be very
+simple and easy to remember.
+
+> 
+> 
+> Also, /remove-node/ feels awkward when working with replacing a node.
+> Would /clear-node/ or /trim-node/ be better?  '/replace-node/'
+> wouldn't be very because it doesn't make sense in the removal case,
+> and /delete-node/ has the same problem as /remove-node/.
+> /undefine-node/ as you suggested has possibilities too.  Anyone have
+> other suggestions for intuitive keyword names?
+> 
+> > > I also wonder if it would be better to have the directives before the
+> > > node name.  ie:
+> > > 	/extend/ node1 { ... };
+> > > 	/replace/ node1 { ... };
+> > > 	/remove/ node1;
+> > 
+> > Maybe, yes, although I think the first two should go away anyway.
+> > 
+> > Actually, how about:
+> > 	node1 /undefine/;
+> > 
+> > Using the same /undefine/ keyword as for removing individual
+> > properties (but without the =).
+> 
+> See discussion above.  :-)
+
+I think having the keywords in front work fine, especially if we're
+consistent about it.
+
+It could be like this:
+
+For nodes:
+/extend/ &node-to-extend { ... };
+/replace/ &node-to-replace { ... };
+/remove/ &node-to-remove;
+
+For properties:
+/extend/ &node-to-extend {
+	/remove/ property-to-remove;
 };
-&some-node-to-remove /remove-node/;
-&some-node-to-replace /remove-node/ { prop = "blah"; };
 
-And with keywords preceeding:
 
-/ {
-	...
-};
-/remove-node/ &some-node-to-remove;
-/remove-node/ &some-node-to-replace { prop = "blah"; };
 
-g.
+> 
+> > 
+> > [snip]
+> > > > 4) Allow full paths to be used to override nodes.
+> > > > 
+> > > > 	This suggest that labels aren't required. Most people will
+> > > > 	want to use labels, but for the device tree syntax to be
+> > > > 	orthogonal, full paths should still be allowed.
+> > > > 
+> > > > 	Example:
+> > > > 		Here is the serial example again. Not inlined with paths:
+> > > > 
+> > > > 		/ {
+> > > > 			soc: soc5200@f0000000 {
+> > > > 				#address-cells = <1>;
+> > > > 				#size-cells = <1>;
+> > > > 				compatible = "fsl,mpc5200b-immr";
+> > > > 				...
+> > > > 
+> > > > 				psc4: serial@2600 {		// PSC4
+> > > > 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> > > > 					reg = <0x2600 0x100>;
+> > > > 					interrupts = <2 11 0>;
+> > > > 				};
+> > > > 
+> > > > 				psc5: serial@2800 {		// PSC5
+> > > > 					compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+> > > > 					reg = <0x2800 0x100>;
+> > > > 					interrupts = <2 12 0>;
+> > > > 				};
+> > > > 		};
+> > > > 
+> > > > 		/soc5200@f0000000/serial@2600 /remove/ { };		// PSC4
+> > > > 		/soc5200@f0000000/serial@2800 /remove/ { };		// PSC5
+> > > 
+> > > I've thought about this too, and I'd like to implement it, but there
+> > > are some nasty gotchas here because /.../ is already used as the
+> > > keyword delimiter.  There would need to be a way to ensure the grammer
+> > > is unambiguous about which are keywords and which are node names.
+> > 
+> > Yeah.  But I think there's an obvious way to fix it.  We already have
+> > a full-path reference syntax we can use for inserting phandles.  So I
+> > think we should make the syntax here:
+> > 
+> > &{/full/path/to/node} {
+> > 	property-to-override = "something";
+> > };
+> 
+> True.  That would work.  And I like the reuse of existing syntax
+> elements.
+> 
+> > 
+> > Or of course you can already do
+> > 
+> > / {
+> > 	full {
+> > 		path {
+> > 			to {
+> > 				node {
+> > 					etc.
+> 
+> Right.
+> 
+> > > On that line, it might also be possible to specify a node by both
+> > > label and path:
+> > 
+> > Well, this is sort of already possible:
+> > 
+> > &soc {
+> > 	serial@2600 {
+> > 		current-speed = <115200>;
+> > 	};
+> > };
+> > 
+> > Directly allowing a label+relative path could be useful enough to
+> > reduce verbosity, but it will require careful thinking about the
+> > syntax.
+> 
+> Yes, (as discussed previously) this is just syntactic sugar.  The
+> syntax already supports the functionality, but it would be nice to be
+> less verbose.
+> 
+> g.
+> 
