@@ -1,8 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: Proposal: new device-tree syntax and semantics for
 	extendinginformation from included dts files
-Date: Fri, 15 Oct 2010 17:51:20 -0600
-Message-ID: <AANLkTik73W-btJsx4rLtuEgKYiOBvuA9iX6jim=0uF2j@mail.gmail.com>
+Date: Fri, 15 Oct 2010 17:58:06 -0600
+Message-ID: <AANLkTinzf3vhs_OUUeiVYOFbOPLFHA+dei810H2gyDGS@mail.gmail.com>
 References: <1286920561.4535.1315.camel@riker>
 	<20101013231747.GD15286@angua.secretlab.ca>
 	<d223e561-ed6e-44c2-8a99-8959e85ae022@VA3EHSMHS031.ehs.local>
@@ -15,12 +15,12 @@ References: <1286920561.4535.1315.camel@riker>
 	<AANLkTikWfMXEbdwFY6FNoMwuD6fC74Kohtr3QRJqSrM0@mail.gmail.com>
 	<ed27a45d-3607-41e3-831f-1d7e3dd44379@SG2EHSMHS003.ehs.local>
 	<AANLkTikzyDFiQZzPmeos6pf_DS33RvkfER+Mz0jceSJy@mail.gmail.com>
-	<1287174956.4535.1414.camel@riker>
+	<4da0557a-d204-4e38-8a82-b0996a9a5af1@SG2EHSMHS007.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1287174956.4535.1414.camel@riker>
+In-Reply-To: <4da0557a-d204-4e38-8a82-b0996a9a5af1-RaUQJvECHitCYczPSvLbDrjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -30,28 +30,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 15, 2010 at 2:35 PM, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org> wrote:
-[snip]
-> If we had:
-> /remove-node/ foo;
+On Fri, Oct 15, 2010 at 2:20 PM, Stephen Neuendorffer
+<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> The ambiguity between
+> bar; (referring to a property)
+> and
+> /trim-node/ bar; (referring to a node)
 >
-> Then we could make the parser give an error on:
-> /remove-node/ foo {};
+> Seems awkward, but perhaps unavoidable. =A0At the very least, I don't hav=
+e anything better to suggest.. :)
 >
-> We could even possibly make
-> /trim-node/ foo;
-> an error.
+> perhaps in an ideal world, open firmware would originally have distinguis=
+hed these by
+> having
 >
-> This way there is less room for confusion or trip-ups.
+> bar =3D; =A0 // Create an empty property
+> bar {}; =A0// Create an empty node
 >
-> What are your thoughts?
+> or something...
 
-I'm still partial to using a single keyword for both use-cases, but
-most of the implementation will be the same regardless of which is
-chosen.  Go ahead and code it and post a patch.
+Actually, none of this is OpenFirmware related.  This syntax was
+created for use with dtc which is completely independent of
+OpenFirmware.  Only the device tree structure and usage conventions
+are shared with dtc.
+
+However, we've already got a large userbase so making an incompatible
+source file format change would be unbelievably painful.
 
 g.
