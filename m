@@ -1,14 +1,20 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] mtd: m25p80 -- parse partitions from OF tree
-Date: Fri, 15 Oct 2010 09:31:45 -0600
-Message-ID: <20101015153145.GD2429@angua.secretlab.ca>
-References: <1287147208-11588-1-git-send-email-jonas@southpole.se>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Proposal: new device-tree syntax and semantics for
+	extendinginformation from included dts files
+Date: Fri, 15 Oct 2010 09:10:55 -0700
+Message-ID: <b04d95cc-c35b-4597-8fbe-f7c48f23ef92@VA3EHSMHS036.ehs.local>
+References: <1286920561.4535.1315.camel@riker>
+	<20101013231747.GD15286@angua.secretlab.ca>
+	<d223e561-ed6e-44c2-8a99-8959e85ae022@VA3EHSMHS031.ehs.local>
+	<20101014004550.GC4456@yookeroo>
+	<21eeaef0-fc78-47c9-b1c5-bfefaa55fb85@SG2EHSMHS003.ehs.local>
+	<20101015151840.GB32705@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1287147208-11588-1-git-send-email-jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+Content-Class: urn:content-classes:message
+In-Reply-To: <20101015151840.GB32705-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,78 +24,77 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 15, 2010 at 02:53:28PM +0200, Jonas Bonn wrote:
-> It needs to be possible to define the partitions of an MTD device from an OF
-> devicetree.  This patch adds a call to of_mtd_parse_partitions if:
 
-Thanks Jonas.  I've actually already got a patch that does the exact
-ame thing in my private tree.  However, it requires an ugly #ifdef
-statement because the of_node pointer is not available when CONFIG_OF
-is not selected.  Before I commit to this patch, I want to see if I
-can come up with a cleaner way for drivers to reference of_node when
-CONFIG_OF is not set.  I could use a macro, but I'd rather not have to
-wrap every reference with a macro.
 
-Regardless, it is on my radar, and I hope to settle on a solution
-sometime in the next week.
+> -----Original Message-----
+> From: Grant Likely [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Grant
+Likely
+> Sent: Friday, October 15, 2010 8:19 AM
+> To: Stephen Neuendorffer
+> Cc: David Gibson; John Bonesio; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: Proposal: new device-tree syntax and semantics for
+extendinginformation from included dts
+> files
+> 
+> On Thu, Oct 14, 2010 at 09:38:44AM -0700, Stephen Neuendorffer wrote:
+> [fixed quoting header]
+> > On Wed, Oct 13, 2010 5:46 PM, David Gibson wrote:
+> > > On Wed, Oct 13, 2010 at 04:41:59PM -0700, Stephen Neuendorffer
+wrote:
+> > > [snip]
+> > > > Or better yet, outside of the braces?
+> [...]
+> > > >             /remove/ {
+> > > >  				serial@2600 { };
+// PSC4
+> > > >
+> > > >  				serial@2800 { };
+// PSC5
+> > > >  		};
+> > >
+> > > Um.. no.  That makes even less sense in the conceptual framework
+of a
+> > > stack of overlays.
+> >
+> > Why exactly?  Instead of being a stack of overlays, it seems to me
+like
+> > a stack of trees with operators..
+> > The point is exactly that operators make most sense at the stack of
+> > trees level and not
+> > at the individual node level.
+> 
+> I don't think I'm understanding what you're trying to say.  How do you
+differentiate "stack of
+> overlays" and "stack of trees"?
+> 
+> The reason I don't like this approach is that in many cases many
+> things will need to be changed by a single overlay, and not all those
+> changes will be the same operation.  For example, an overlay for a
+> board could add a bunch of nodes for i2c devices, and at the same time
+> remove an unused spi bus device.
 
-g.
+So why not have two trees stacked to do the job? 
+ 
+> The "stack of overlays" conceptual model that we've settled on uses
+> the concept that subsequent top level trees stack on top of the
+> preceding tree and can mask out or add/change nodes and properties.
+> The trees are merged together before going on to the next top level
+> tree.
+> 
+> g.
+> 
 
-> 
-> i)   there are no commandline partitions defined
-> ii)  there are no partitions set up by platform_data
-> iii) and an of_node is present on the device
-> 
-> This permits the following devicetree structure:
-> 
-> flash0: mtd@0 {
-> 	compatible = "st,m25p10";
-> 	reg = <0>;
-> 	spi-max-frequency = <100000000>;
-> 
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
-> 
-> 	partition@0 {
-> 		label = "bootloader";
-> 		reg = <0x00000000 0x00018000>;
-> 		read-only;
-> 	}
-> 
-> 	partition@18000 {
-> 		label = "data";
-> 		reg = <0x00018000 0x00008000>;
-> 	};
-> };
-> 
-> Signed-off-by: Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
-> ---
->  drivers/mtd/devices/m25p80.c |    4 ++++
->  1 files changed, 4 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index 6f512b5..a349498 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -924,6 +924,10 @@ static int __devinit m25p_probe(struct spi_device *spi)
->  			nr_parts = data->nr_parts;
->  		}
->  
-> +		if (nr_parts <= 0 && spi->dev.of_node) {
-> +			nr_parts = of_mtd_parse_partitions(&spi->dev, spi->dev.of_node, &parts);
-> +		}
-> +
->  		if (nr_parts > 0) {
->  			for (i = 0; i < nr_parts; i++) {
->  				DEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
-> -- 
-> 1.7.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+I guess I'm stuck on 'overlay' to me implies '/extend/', so I associate
+the operations being on trees, not individual nodes.
+(Although, there's still the tough part about /remove-node/ vs
+/remove-property/,
+which might meant that the operations have to be in the trees to
+distinguish that).
+
+Steve
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
