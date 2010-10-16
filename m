@@ -1,21 +1,20 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Proposal: new device-tree syntax and semantics for
-	extendinginformation from included dts files
-Date: Sat, 16 Oct 2010 18:05:46 +1100
-Message-ID: <20101016070546.GF5036@yookeroo>
+Subject: Re: Proposal: new device-tree syntax and semantics for extending
+	information from included dts files
+Date: Sat, 16 Oct 2010 18:02:38 +1100
+Message-ID: <20101016070238.GE5036@yookeroo>
 References: <1286920561.4535.1315.camel@riker>
 	<20101013231747.GD15286@angua.secretlab.ca>
-	<d223e561-ed6e-44c2-8a99-8959e85ae022@VA3EHSMHS031.ehs.local>
-	<20101014004550.GC4456@yookeroo>
-	<21eeaef0-fc78-47c9-b1c5-bfefaa55fb85@SG2EHSMHS003.ehs.local>
-	<20101015151840.GB32705@angua.secretlab.ca>
-	<b04d95cc-c35b-4597-8fbe-f7c48f23ef92@VA3EHSMHS036.ehs.local>
+	<20101014003833.GB4456@yookeroo>
+	<20101014014036.GE15286@angua.secretlab.ca>
+	<20101014034821.GH4456@yookeroo>
+	<20101014045413.GK15286@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b04d95cc-c35b-4597-8fbe-f7c48f23ef92-+Ck8Kgl/v09DUMyIFHz4objjLBE8jN/0@public.gmane.org>
+In-Reply-To: <20101014045413.GK15286-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,51 +24,112 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 15, 2010 at 09:10:55AM -0700, Stephen Neuendorffer wrote:
+On Wed, Oct 13, 2010 at 10:54:13PM -0600, Grant Likely wrote:
+> On Thu, Oct 14, 2010 at 02:48:21PM +1100, David Gibson wrote:
+> > On Wed, Oct 13, 2010 at 07:40:36PM -0600, Grant Likely wrote:
+> > > &some-node {
+> > > 	node-to-remove /remove/;
+> > > 
+> > > 	node-to-replace /remove/;
+> > > 	node-to-replace { prop = "blah"; };
+> > > };
+> > > 
+> > > I don't like this one because it implies ordering between the first
+> > > and second 'node-to-replace' definitions, and to this point the syntax
+> > > has not imposed any order assumptions.
+> > 
+> > Hrm.  Well, more precisely I was thinking of:
+> > 
+> > &{/some/node} /remove/;
+> > 
+> > &{/some/node} {
+> > 	new-contents;
+> > };
+> > 
+> > Since I thought the original proposal was that these node /replace/,
+> > /extend/ whatnot were only valid at the top level (for the reasons
+> > we've discussed on previous occasions).
+> 
+> Hmmm, I thought we had figured out how to solve those issues by using
+> a flag to indicate that a node or property "masks out" the same node
+> or property in a preceding top-level tree.
+
+Um.. I don't follow.
+
+> > We do already have ordering
+> > amongst the top level items, since the last one wins.
+> 
+> Right, but the ordering has been explicitly restricted to the top
+> level trees using the "stack of overlays" conceptual model.
+
+Right, my point exactly.  I'm suggesting we keep it restricted to the
+top level by only allowing these replace/remove operators (whatever
+they look like) at the top level.
+
+> > Now, if using
+> > labels rather than full paths it does get a bit curlier on the
+> > implementation side.  But I don't think it would be that hard to make
+> > labels stick around attached to a path, even when the path itself is
+> > removed.
+> 
+> Ah right, the issue here was that a previous tree could be holding a
+> label reference that gets deleted in an overlay.  And there are
+> questions about what happens if a label is removed and then the same
+> label attached to a new node, specifically because labels aren't
+> resolved until after the trees are fully parsed.  (let me know if I'm
+> remembering incorrectly).  I think this is solvable though, but we're
+> going to need to define the semantics.
+> 
+> I need to review the details though.  I can't remember all the ways
+> that the code handles label resolution.
+
+Right.  Having labels move around seriously muddies the waters, since
+the whole idea of labels is to unambiguously refer to a node.  I think
+the sanest thing is to prohibit duplicate labels, even if the labelled
+nodes have been removed between the duplicate declarations.  In the
+later stages of processing, then, referring to a deleted label would
+be detectable and trigger an error at that point.
+
 [snip]
-> > > Why exactly?  Instead of being a stack of overlays, it seems to me
-> like
-> > > a stack of trees with operators..
-> > > The point is exactly that operators make most sense at the stack of
-> > > trees level and not
-> > > at the individual node level.
+> > > Or perhaps with the keyword preceding:
+> > > 
+> > > &some-node {
+> > > 	/remove-prop/ property-to-remove;
+> > > 	property-to-replace = "new value";
+> > > 	property-to-replace-with-empty-prop;
+> > > 
+> > > 	/remove-node/ node-to-remove;
+> > > 	/remove-node/ node-to-replace { prop = "blah"; };
+> > > };
 > > 
-> > I don't think I'm understanding what you're trying to say.  How do you
-> differentiate "stack of
-> > overlays" and "stack of trees"?
 > > 
-> > The reason I don't like this approach is that in many cases many
-> > things will need to be changed by a single overlay, and not all those
-> > changes will be the same operation.  For example, an overlay for a
-> > board could add a bunch of nodes for i2c devices, and at the same time
-> > remove an unused spi bus device.
+> > I prefer this last example to the two previous ones.
 > 
-> So why not have two trees stacked to do the job? 
->  
-> > The "stack of overlays" conceptual model that we've settled on uses
-> > the concept that subsequent top level trees stack on top of the
-> > preceding tree and can mask out or add/change nodes and properties.
-> > The trees are merged together before going on to the next top level
-> > tree.
+> Combining your last suggestion with this would give:
+
+Uh, sorry, not all of my suggestions were intended to be used in
+conjuction.  Some were alternate possibilities which do not mix well.
+
+> &some-node {
+> 	/remove-prop/ property-to-remove;
+
+For example if we're doing node removal as a "replace with nothing",
+then we'd certainly do the same for properties, i.e. "prop =
+/undefine/;" not a /remove-prop/ keyword.
+
+> 	property-to-replace = "new value";
+> 	property-to-replace-with-empty-prop;
 > 
-> I guess I'm stuck on 'overlay' to me implies '/extend/', so I associate
-> the operations being on trees, not individual nodes.
-> (Although, there's still the tough part about /remove-node/ vs
-> /remove-property/,
-> which might meant that the operations have to be in the trees to
-> distinguish that).
-
-I'm with Steve here, even though I still don't follow his reasoning
-from here to the syntax he proposed earlier.  But I think we've
-kind of moved past that option now, anyway.
-
-There can be multiple overlays / top-level items per-file so there's
-no reason the example above can't be done as multiple overlays with
-different operaitons.
+> 	/replace-node/ node-to-remove /undefined/;
+> 	/replace-node/ node-to-replace { prop = "blah"; };
+> };
+> 
+> I'm not sure.  It feels a little muddy.  It's late though.  I'm going
+> to go sleep on it, and take a fresh look in the morning.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
