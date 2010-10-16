@@ -1,20 +1,24 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Proposal: new device-tree syntax and semantics for extending
-	information from included dts files
-Date: Sat, 16 Oct 2010 18:02:38 +1100
-Message-ID: <20101016070238.GE5036@yookeroo>
-References: <1286920561.4535.1315.camel@riker>
-	<20101013231747.GD15286@angua.secretlab.ca>
-	<20101014003833.GB4456@yookeroo>
-	<20101014014036.GE15286@angua.secretlab.ca>
-	<20101014034821.GH4456@yookeroo>
-	<20101014045413.GK15286@angua.secretlab.ca>
+Subject: Re: Proposal: new device-tree syntax and semantics for
+	extendinginformation from included dts files
+Date: Sat, 16 Oct 2010 18:10:10 +1100
+Message-ID: <20101016071010.GG5036@yookeroo>
+References: <21eeaef0-fc78-47c9-b1c5-bfefaa55fb85@SG2EHSMHS003.ehs.local>
+	<20101015151840.GB32705@angua.secretlab.ca>
+	<b04d95cc-c35b-4597-8fbe-f7c48f23ef92@VA3EHSMHS036.ehs.local>
+	<AANLkTinPWv94Xoz+mDxiE=KujQYAyQj9PsPWHEORypJ3@mail.gmail.com>
+	<eba820f8-3e4f-4d57-9024-39cc562a99eb@VA3EHSMHS012.ehs.local>
+	<AANLkTikWfMXEbdwFY6FNoMwuD6fC74Kohtr3QRJqSrM0@mail.gmail.com>
+	<ed27a45d-3607-41e3-831f-1d7e3dd44379@SG2EHSMHS003.ehs.local>
+	<AANLkTikzyDFiQZzPmeos6pf_DS33RvkfER+Mz0jceSJy@mail.gmail.com>
+	<4da0557a-d204-4e38-8a82-b0996a9a5af1@SG2EHSMHS007.ehs.local>
+	<AANLkTinzf3vhs_OUUeiVYOFbOPLFHA+dei810H2gyDGS@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101014045413.GK15286-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <AANLkTinzf3vhs_OUUeiVYOFbOPLFHA+dei810H2gyDGS-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,110 +32,44 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 13, 2010 at 10:54:13PM -0600, Grant Likely wrote:
-> On Thu, Oct 14, 2010 at 02:48:21PM +1100, David Gibson wrote:
-> > On Wed, Oct 13, 2010 at 07:40:36PM -0600, Grant Likely wrote:
-> > > &some-node {
-> > > 	node-to-remove /remove/;
-> > > 
-> > > 	node-to-replace /remove/;
-> > > 	node-to-replace { prop = "blah"; };
-> > > };
-> > > 
-> > > I don't like this one because it implies ordering between the first
-> > > and second 'node-to-replace' definitions, and to this point the syntax
-> > > has not imposed any order assumptions.
-> > 
-> > Hrm.  Well, more precisely I was thinking of:
-> > 
-> > &{/some/node} /remove/;
-> > 
-> > &{/some/node} {
-> > 	new-contents;
-> > };
-> > 
-> > Since I thought the original proposal was that these node /replace/,
-> > /extend/ whatnot were only valid at the top level (for the reasons
-> > we've discussed on previous occasions).
-> 
-> Hmmm, I thought we had figured out how to solve those issues by using
-> a flag to indicate that a node or property "masks out" the same node
-> or property in a preceding top-level tree.
+On Fri, Oct 15, 2010 at 05:58:06PM -0600, Grant Likely wrote:
+> On Fri, Oct 15, 2010 at 2:20 PM, Stephen Neuendorffer
+> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> > The ambiguity between
+> > bar; (referring to a property)
+> > and
+> > /trim-node/ bar; (referring to a node)
+> >
+> > Seems awkward, but perhaps unavoidable. =A0At the very least, I don't h=
+ave anything better to suggest.. :)
+> >
+> > perhaps in an ideal world, open firmware would originally have distingu=
+ished these by
+> > having
+> >
+> > bar =3D; =A0 // Create an empty property
+> > bar {}; =A0// Create an empty node
+> >
+> > or something...
+> =
 
-Um.. I don't follow.
+> Actually, none of this is OpenFirmware related.  This syntax was
+> created for use with dtc which is completely independent of
+> OpenFirmware.  Only the device tree structure and usage conventions
+> are shared with dtc.
 
-> > We do already have ordering
-> > amongst the top level items, since the last one wins.
-> 
-> Right, but the ordering has been explicitly restricted to the top
-> level trees using the "stack of overlays" conceptual model.
+That's true.  However, I'm pretty sure there was actually a reason
+related to existing OF usage why I made the syntax for an empty
+property 'thing;' rather than 'thing =3D;'.  I no longer remember what
+it was, though.
 
-Right, my point exactly.  I'm suggesting we keep it restricted to the
-top level by only allowing these replace/remove operators (whatever
-they look like) at the top level.
+> However, we've already got a large userbase so making an incompatible
+> source file format change would be unbelievably painful.
 
-> > Now, if using
-> > labels rather than full paths it does get a bit curlier on the
-> > implementation side.  But I don't think it would be that hard to make
-> > labels stick around attached to a path, even when the path itself is
-> > removed.
-> 
-> Ah right, the issue here was that a previous tree could be holding a
-> label reference that gets deleted in an overlay.  And there are
-> questions about what happens if a label is removed and then the same
-> label attached to a new node, specifically because labels aren't
-> resolved until after the trees are fully parsed.  (let me know if I'm
-> remembering incorrectly).  I think this is solvable though, but we're
-> going to need to define the semantics.
-> 
-> I need to review the details though.  I can't remember all the ways
-> that the code handles label resolution.
+That too.
 
-Right.  Having labels move around seriously muddies the waters, since
-the whole idea of labels is to unambiguously refer to a node.  I think
-the sanest thing is to prohibit duplicate labels, even if the labelled
-nodes have been removed between the duplicate declarations.  In the
-later stages of processing, then, referring to a deleted label would
-be detectable and trigger an error at that point.
+-- =
 
-[snip]
-> > > Or perhaps with the keyword preceding:
-> > > 
-> > > &some-node {
-> > > 	/remove-prop/ property-to-remove;
-> > > 	property-to-replace = "new value";
-> > > 	property-to-replace-with-empty-prop;
-> > > 
-> > > 	/remove-node/ node-to-remove;
-> > > 	/remove-node/ node-to-replace { prop = "blah"; };
-> > > };
-> > 
-> > 
-> > I prefer this last example to the two previous ones.
-> 
-> Combining your last suggestion with this would give:
-
-Uh, sorry, not all of my suggestions were intended to be used in
-conjuction.  Some were alternate possibilities which do not mix well.
-
-> &some-node {
-> 	/remove-prop/ property-to-remove;
-
-For example if we're doing node removal as a "replace with nothing",
-then we'd certainly do the same for properties, i.e. "prop =
-/undefine/;" not a /remove-prop/ keyword.
-
-> 	property-to-replace = "new value";
-> 	property-to-replace-with-empty-prop;
-> 
-> 	/replace-node/ node-to-remove /undefined/;
-> 	/replace-node/ node-to-replace { prop = "blah"; };
-> };
-> 
-> I'm not sure.  It feels a little muddy.  It's late though.  I'm going
-> to go sleep on it, and take a fresh look in the morning.
-
--- 
 David Gibson			| I'll have my music baroque, and my code
 david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
