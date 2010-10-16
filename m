@@ -1,24 +1,17 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Proposal: new device-tree syntax and semantics for
-	extendinginformation from included dts files
-Date: Sat, 16 Oct 2010 18:10:10 +1100
-Message-ID: <20101016071010.GG5036@yookeroo>
-References: <21eeaef0-fc78-47c9-b1c5-bfefaa55fb85@SG2EHSMHS003.ehs.local>
-	<20101015151840.GB32705@angua.secretlab.ca>
-	<b04d95cc-c35b-4597-8fbe-f7c48f23ef92@VA3EHSMHS036.ehs.local>
-	<AANLkTinPWv94Xoz+mDxiE=KujQYAyQj9PsPWHEORypJ3@mail.gmail.com>
-	<eba820f8-3e4f-4d57-9024-39cc562a99eb@VA3EHSMHS012.ehs.local>
-	<AANLkTikWfMXEbdwFY6FNoMwuD6fC74Kohtr3QRJqSrM0@mail.gmail.com>
-	<ed27a45d-3607-41e3-831f-1d7e3dd44379@SG2EHSMHS003.ehs.local>
-	<AANLkTikzyDFiQZzPmeos6pf_DS33RvkfER+Mz0jceSJy@mail.gmail.com>
-	<4da0557a-d204-4e38-8a82-b0996a9a5af1@SG2EHSMHS007.ehs.local>
-	<AANLkTinzf3vhs_OUUeiVYOFbOPLFHA+dei810H2gyDGS@mail.gmail.com>
+Subject: Re: [PATCH] Implements new features for updating existing device
+	tree nodes.
+Date: Sat, 16 Oct 2010 17:47:44 +1100
+Message-ID: <20101016064744.GD5036@yookeroo>
+References: <20101016010732.4855.52273.stgit@riker>
+	<AANLkTimx4z-YkH+PXcnKYJpq3MEd3oJZ+ow7mWJzn1BN@mail.gmail.com>
+	<1287199277.4535.1423.camel@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AANLkTinzf3vhs_OUUeiVYOFbOPLFHA+dei810H2gyDGS-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1287199277.4535.1423.camel@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,48 +21,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
+To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 15, 2010 at 05:58:06PM -0600, Grant Likely wrote:
-> On Fri, Oct 15, 2010 at 2:20 PM, Stephen Neuendorffer
-> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> > The ambiguity between
-> > bar; (referring to a property)
-> > and
-> > /trim-node/ bar; (referring to a node)
-> >
-> > Seems awkward, but perhaps unavoidable. =A0At the very least, I don't h=
-ave anything better to suggest.. :)
-> >
-> > perhaps in an ideal world, open firmware would originally have distingu=
-ished these by
-> > having
-> >
-> > bar =3D; =A0 // Create an empty property
-> > bar {}; =A0// Create an empty node
-> >
-> > or something...
-> =
+On Fri, Oct 15, 2010 at 08:21:17PM -0700, John Bonesio wrote:
+> On Fri, 2010-10-15 at 20:35 -0600, Grant Likely wrote:
+[snip]
+> > > +       | devicetree DT_REMOVENODE DT_REF ';'
+> > > +               {
+> > > +                       struct node *target;
+> > > +
+> > > +                       target = get_node_by_label($1, $3);
+> > > +                       if (target)
+> > > +                               remove_nodes(target);
+> > > +                       else
+> > > +                               yyerror("label, '%s' does not exist in"
+> > > +                                       " node removal", $3);
+> > >        ;
+> > 
+> > This handles the syntax at the top level, but doesn't deal with the
+> > /*-node/ keywords when they are within the overlay tree.
+> > 
+> > Also, I don't know if you'll be able to handle it in the same way when
+> > it comes to handling the new tokens embedded within an overlay tree
+> > because it isn't so easy to resolve the node to be removed.  In order
+> > to handle both cases in the same way, it might be better to set a
+> > 'replace' flag in struct node that defers the actual remove of the
+> > original node until merge_nodes() time.
+> 
+> Ok, so maybe I misunderstood. I thought we had decided that node
+> modifications would only happen at the top level, but now that I'm
+> looking back through your examples earlier today, and I see this isn't
+> true.
 
-> Actually, none of this is OpenFirmware related.  This syntax was
-> created for use with dtc which is completely independent of
-> OpenFirmware.  Only the device tree structure and usage conventions
-> are shared with dtc.
+Um.. that part of the discussion got confusing.  I think only allowing
+the operations (and I still don't think the set implemented here are
+quite right, though they're close) at the top-level is a better idea.
 
-That's true.  However, I'm pretty sure there was actually a reason
-related to existing OF usage why I made the syntax for an empty
-property 'thing;' rather than 'thing =3D;'.  I no longer remember what
-it was, though.
+Grant, is there a reason you think we need to have replacement as an
+option within each tree, rather than a "per-overlay-sheet" option.
 
-> However, we've already got a large userbase so making an incompatible
-> source file format change would be unbelievably painful.
-
-That too.
-
--- =
-
+-- 
 David Gibson			| I'll have my music baroque, and my code
 david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
