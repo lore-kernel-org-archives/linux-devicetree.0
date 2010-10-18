@@ -1,20 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [PATCH] Implements new features for updating existing device
 	tree nodes.
-Date: Mon, 18 Oct 2010 11:11:35 +1100
-Message-ID: <20101018001135.GA4922@yookeroo>
+Date: Mon, 18 Oct 2010 11:51:32 +1100
+Message-ID: <20101018005132.GC4922@yookeroo>
 References: <20101016010732.4855.52273.stgit@riker>
 	<AANLkTimx4z-YkH+PXcnKYJpq3MEd3oJZ+ow7mWJzn1BN@mail.gmail.com>
-	<1287199277.4535.1423.camel@riker> <20101016064744.GD5036@yookeroo>
-	<20101016081012.GH653@angua.secretlab.ca>
-	<1287236747.4535.1424.camel@riker>
-	<20101016183217.GA3774@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101016183217.GA3774-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <AANLkTimx4z-YkH+PXcnKYJpq3MEd3oJZ+ow7mWJzn1BN-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,42 +24,74 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 16, 2010 at 12:32:17PM -0600, Grant Likely wrote:
-> On Sat, Oct 16, 2010 at 06:45:47AM -0700, John Bonesio wrote:
-> > On Sat, 2010-10-16 at 02:10 -0600, Grant Likely wrote:
-> > > On Sat, Oct 16, 2010 at 05:47:44PM +1100, David Gibson wrote:
-> > > > On Fri, Oct 15, 2010 at 08:21:17PM -0700, John Bonesio wrote:
+On Fri, Oct 15, 2010 at 08:35:56PM -0600, Grant Likely wrote:
+> Hi John.
+> =
+
+> On Fri, Oct 15, 2010 at 7:07 PM, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > This is interesting when the /include/ "<filename>" feature is used. Th=
+is way
+> > we can create base device tree source files for a family of systems and=
+ modify
+> > the device tree for a specific system.
+> >
+> > The current sytem allows an existing node to be extended with new prope=
+rties
+> > and subnodes.
+> >
+> > The new features allow an existing node to be replaced completely by th=
+e new
+> > properties and subnodes. The new features also allow an existing node t=
+o be
+> > deleted.
+> >
+> > This patch does not yet provide a way to remove properties.
+> >
+> > - John
+> =
+
+> Also need s-o-b line, and anything that doesn't belong as part of the
+> commit message, such as '- John', needs to be below the '---' line so
+> that git will ignore it.
+> =
+
+> The patch looks pretty good, but I cannot comment fully until the
+> keyword handling works when deeper in the tree (see below).
+
 [snip]
-> > > For example; I could have a labelled spi bus node with child nodes for
-> > > each of the spi devices.  I want to be able to remove/replace the
-> > > child nodes without having to label them first.
-> > > 
-> > > g.
-> > 
-> > Why not just add the label to the node you need first?
-> 
-> That may not be possible and/or desirable.  For instance, when the
-> tree is extracted from /proc.  Or if the base tree in stored in the
-> kernel source and an external tool is modifying it for a specific
-> purpose (when unable to patch the kernel tree).  Or for generated
-> device trees from the Xilinx toolchain for FPGAs.  Modifying the
-> source data isn't always an option.
+> > + =A0 =A0 =A0 struct property *prop;
+> > + =A0 =A0 =A0 struct node *child, *parent;
+> > +
+> > + =A0 =A0 =A0 while (node->proplist) {
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Pop the property off the list */
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D node->proplist;
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 node->proplist =3D prop->next;
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop->next =3D NULL;
+> > +
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 free(prop);
+> > + =A0 =A0 =A0 }
+> =
 
-You can apply your overlays by path in this case..
+> It would be useful to have a 'pop_property()' macro so this could be
+> simplified to:
+> =
 
-> Plus I want the ability to logically group related changes.  ie.
-> delete a device and add a device to the same bus at the same time.
-> Or delete a phy node, add a replacement phy node at a different
-> address, and update the ethernet phy-device phandle in the same
-> block.
+> 	while (prop =3D pop_child_node(&node->proplist))
+> 		free(prop);
+> =
 
-Hrm, I really don't think this is a good argument.  You're conflating
-the grouping of logically related changes with the tree structure
-which I think is a mistake.  Putting the changes in the same file
-and/or adjusting your spacing and comments to show the logical
-grouping seems less likely to cause other problems.
+> But then on the other hand, most of the list management is open coded
+> in dtc. It would be nice to use the list_head macros like used in the
+> kernel, but that is probably work for another day. (if it is even worth
+> the effort).
 
--- 
+I had a look into this at one point.  The way we build up the tree in
+a kinda-sorta functional programming like way in dts parsing actually
+makes using the list.h form kind of hard.  At least without a fancier
+allocator (maybe I should bite the bullet and do a talloc conversion).
+
+-- =
+
 David Gibson			| I'll have my music baroque, and my code
 david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
