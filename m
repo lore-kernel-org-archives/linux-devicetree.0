@@ -1,42 +1,58 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] Implements new features for updating existing device tree
-	nodes.
-Date: Mon, 18 Oct 2010 21:42:01 -0600
-Message-ID: <AANLkTikHgYTukj+K1=5WB7AsODb-aAJgUaRO9982xZU=@mail.gmail.com>
-References: <AANLkTimx4z-YkH+PXcnKYJpq3MEd3oJZ+ow7mWJzn1BN@mail.gmail.com>
-	<1287199277.4535.1423.camel@riker> <20101016064744.GD5036@yookeroo>
-	<20101016081012.GH653@angua.secretlab.ca>
-	<1287236747.4535.1424.camel@riker>
-	<20101016183217.GA3774@angua.secretlab.ca>
-	<20101018001135.GA4922@yookeroo>
-	<20101018160115.GN19399@angua.secretlab.ca>
-	<20101018124220.50a4c097@udp111988uds.am.freescale.net>
-	<20101018195629.GB2259@angua.secretlab.ca>
-	<20101019010243.GF5512@yookeroo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101019010243.GF5512@yookeroo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 1/4] drivers/scsi/qla2xxx/qla_init.c: convert nested spin_lock_irqsave to spin_lock
+Date: Tue, 19 Oct 2010 11:43:53 +0200
+Message-ID: <1287481436-26656-1-git-send-email-julia@diku.dk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Vasquez <andrew.vasquez@qlogic.com>
+Cc: kernel-janitors@vger.kernel.org, linux-driver@qlogic.com, "James E.J. Bottomley" <James.Bottomley@suse.de>, Grant Likely <grant.likely@secretlab.ca>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 18, 2010 at 7:02 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> Specifically, I'd happily ack a patch which implemented
-> =A0 =A0 =A0 =A0someprop =3D /undef-prop/;
-> immediately.
+From: Julia Lawall <julia@diku.dk>
 
-I would to.
+If spin_lock_irqsave is called twice in a row with the same second
+argument, the interrupt state at the point of the second call overwrites
+the value saved by the first call.  Indeed, the second call does not need
+to save the interrupt state, so it is changed to a simple spin_lock.
 
-g.
+The semantic match that finds this problem is as follows:
+(http://coccinelle.lip6.fr/)
+
+// <smpl>
+@@
+expression lock1,lock2;
+expression flags;
+@@
+
+*spin_lock_irqsave(lock1,flags)
+... when != flags
+*spin_lock_irqsave(lock2,flags)
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+
+---
+ drivers/scsi/qla2xxx/qla_init.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 3cafbef..c8d0b12 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -1818,14 +1818,14 @@ qla2x00_init_rings(scsi_qla_host_t *vha)
+ 		qla2x00_init_response_q_entries(rsp);
+ 	}
+ 
+-	spin_lock_irqsave(&ha->vport_slock, flags);
++	spin_lock(&ha->vport_slock);
+ 	/* Clear RSCN queue. */
+ 	list_for_each_entry(vp, &ha->vp_list, list) {
+ 		vp->rscn_in_ptr = 0;
+ 		vp->rscn_out_ptr = 0;
+ 	}
+ 
+-	spin_unlock_irqrestore(&ha->vport_slock, flags);
++	spin_unlock(&ha->vport_slock);
+ 
+ 	ha->isp_ops->config_rings(vha);
+ 
