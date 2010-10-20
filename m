@@ -1,7 +1,8 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 4/4] Create a new property value that means 'undefined'.
-Date: Wed, 20 Oct 2010 14:45:22 -0700
-Message-ID: <20101020214522.2985.97224.stgit@riker>
+Subject: [PATCH 2/4] Implements new features for updating existing device tree
+	nodes.
+Date: Wed, 20 Oct 2010 14:45:06 -0700
+Message-ID: <20101020214506.2985.32859.stgit@riker>
 References: <20101020214419.2985.51068.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,185 +22,110 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David G
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When updating existing nodes in a device tree merge operation, properties
-can be removed by setting the value to /undef-prop/.
+This is interesting when the /include/ "<filename>" feature is used. This way
+we can create base device tree source files for a family of systems and modify
+the device tree for a specific system.
 
-if /undef-prop/ is assigned to a property that doesn't exist, the property
-is treated the same as if it had not been declared.
+The current sytem allows an existing node to be extended with new properties
+and subnodes.
+
+The new features allow an existing node to be replaced completely by the new
+properties and subnodes. The new features also allow an existing node to be
+deleted.
 
 Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- dtc-lexer.l  |   14 ++++++++++----
- dtc-parser.y |    6 ++++++
- dtc.h        |    7 +++++++
- flattree.c   |    3 +++
- livetree.c   |   38 +++++++++++++++++++++++++++++++++-----
- 5 files changed, 59 insertions(+), 9 deletions(-)
+ dtc-lexer.l  |    6 ++++++
+ dtc-parser.y |   11 +++++++++++
+ dtc.h        |    1 +
+ livetree.c   |   18 ++++++++++++++++++
+ 4 files changed, 36 insertions(+), 0 deletions(-)
 
 diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 216a3d2..efa89b4 100644
+index 081e13a..80a886a 100644
 --- a/dtc-lexer.l
 +++ b/dtc-lexer.l
-@@ -102,6 +102,12 @@ static int pop_input_file(void);
- 			return DT_REMOVENODE;
+@@ -96,6 +96,12 @@ static int pop_input_file(void);
+ 			return DT_MEMRESERVE;
  		}
  
-+<*>"/undef-prop/"	{
-+			DPRINT("Keyword: /undef-prop/\n");
++<*>"/remove-node/"	{
++			DPRINT("Keyword: /remove-node/\n");
 +			BEGIN_DEFAULT();
-+			return DT_UNDEFINED;
++			return DT_REMOVENODE;
 +		}
 +
  <*>{LABEL}:	{
  			DPRINT("Label: %s\n", yytext);
  			yylval.labelref = xstrdup(yytext);
-@@ -116,10 +122,10 @@ static int pop_input_file(void);
- 		}
- 
- 
--<*>\&{LABEL}    {       /* label reference without the braces*/
--                        DPRINT("Ref: %s\n", yytext+1);
--                        yylval.labelref = xstrdup(yytext+1);
--                        return DT_REF;
-+<*>\&{LABEL}	{       /* label reference without the braces*/
-+			DPRINT("Ref: %s\n", yytext+1);
-+			yylval.labelref = xstrdup(yytext+1);
-+	    		return DT_REF;
- 		}
- 
- <*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
 diff --git a/dtc-parser.y b/dtc-parser.y
-index 0a74c86..ac9cfd7 100644
+index b58ba8e..1ba0478 100644
 --- a/dtc-parser.y
 +++ b/dtc-parser.y
-@@ -56,6 +56,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+@@ -55,6 +55,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+ 
  %token DT_V1
  %token DT_MEMRESERVE
- %token DT_REMOVENODE
-+%token DT_UNDEFINED
++%token DT_REMOVENODE
  %token <propnodename> DT_PROPNODENAME
  %token <literal> DT_LITERAL
  %token <cbase> DT_BASE
-@@ -178,6 +179,11 @@ propdef:
- 		{
- 			$$ = build_property($1, empty_data);
+@@ -140,6 +141,16 @@ devicetree:
+ 				print_error("label, '%s' not found", $2);
+ 			$$ = $1;
  		}
-+	| DT_PROPNODENAME '=' DT_UNDEFINED ';'
++	| devicetree DT_REMOVENODE DT_REF ';'
 +		{
-+			$$ = build_property($1, empty_data);
-+			undefine_property($$)
++			struct node *target;
++
++			target = get_node_by_label($1, $3);
++			if (target)
++				remove_child(target->parent, target);
++			else
++				print_error("label, '%s' not found", $3);
 +		}
- 	| DT_LABEL propdef
- 		{
- 			add_label(&$2->labels, $1);
+ 	;
+ 
+ nodedef:
 diff --git a/dtc.h b/dtc.h
-index a7f3667..b3fca6e 100644
+index b36ac5d..a7f3667 100644
 --- a/dtc.h
 +++ b/dtc.h
-@@ -130,7 +130,12 @@ struct label {
- 	struct label *next;
- };
- 
-+#define PROP_DEFINED (0)
-+#define PROP_UNDEFINED (1)
-+
- struct property {
-+	int undefined;  /* if the property is set to undefined, this feild is
-+	                   set to PROP_UNDEFINED */
- 	char *name;
- 	struct data val;
- 
-@@ -170,6 +175,7 @@ void add_label(struct label **labels, char *label);
- struct property *build_property(char *name, struct data val);
- struct property *chain_property(struct property *first, struct property *list);
- struct property *reverse_properties(struct property *first);
-+void undefine_property(struct property *prop);
- 
- struct node *build_node(struct property *proplist, struct node *children);
- struct node *name_node(struct node *node, char *name);
-@@ -177,6 +183,7 @@ struct node *chain_node(struct node *first, struct node *list);
- struct node *merge_nodes(struct node *old_node, struct node *new_node);
+@@ -178,6 +178,7 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node);
  
  void add_property(struct node *node, struct property *prop);
-+void remove_property(struct node *node, struct property *prop);
  void add_child(struct node *parent, struct node *child);
- void remove_child(struct node *parent, struct node *child);
++void remove_child(struct node *parent, struct node *child);
  
-diff --git a/flattree.c b/flattree.c
-index ead0332..00439e9 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -275,6 +275,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 	for_each_property(tree, prop) {
- 		int nameoff;
- 
-+		if (prop->undefined)
-+			continue;
-+
- 		if (streq(prop->name, "name"))
- 			seen_name_prop = 1;
- 
+ const char *get_unitname(struct node *node);
+ struct property *get_property(struct node *node, const char *propname);
 diff --git a/livetree.c b/livetree.c
-index bf8796b..2ef734d 100644
+index 13c5f10..21a4c48 100644
 --- a/livetree.c
 +++ b/livetree.c
-@@ -51,6 +51,11 @@ struct property *build_property(char *name, struct data val)
- 	return new;
+@@ -202,6 +202,24 @@ void add_child(struct node *parent, struct node *child)
+ 	*p = child;
  }
  
-+void undefine_property(struct property *prop)
++void remove_child(struct node *parent, struct node *child)
 +{
-+	prop->undefined = 1;
-+}
++	struct node **p;
 +
- struct property *chain_property(struct property *first, struct property *list)
- {
- 	assert(first->next == NULL);
-@@ -121,11 +126,15 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
- 		/* Look for a collision, set new value if there is */
- 		for_each_property(old_node, old_prop) {
- 			if (streq(old_prop->name, new_prop->name)) {
--				/* Add new labels to old property */
--				for_each_label(new_prop->labels, l)
--					add_label(&old_prop->labels, l->label);
--
--				old_prop->val = new_prop->val;
-+				if (new_prop->undefined) {
-+					remove_property(old_node, old_prop);
-+				} else {
-+					/* Add new labels to old property */
-+					for_each_label(new_prop->labels, l)
-+						add_label(&old_prop->labels, l->label);
++	/* Make sure we've got a consistent tree here */
++	assert(child->parent == parent);
 +
-+					old_prop->val = new_prop->val;
-+				}
- 				free(new_prop);
- 				new_prop = NULL;
- 				break;
-@@ -188,6 +197,25 @@ void add_property(struct node *node, struct property *prop)
- 	*p = prop;
- }
- 
-+void remove_property(struct node *node, struct property *prop)
-+{
-+	struct property **p;
-+	int found = 0;
-+
-+	p = &node->proplist;
++	p = &parent->children;
 +	while (*p) {
-+		if (*p == prop) {
-+			*p = (*p)->next;
-+			found = 1;
++		if (*p == child) {
++			*p = (*p)->next_sibling;
 +			break;
 +		}
-+		p = &((*p)->next);
++		p = &((*p)->next_sibling);
 +	}
-+	/* property not in the node? it's probably an error, so flag it. */
-+	assert(found);
++	child->parent = NULL;
 +}
 +
-+
- void add_child(struct node *parent, struct node *child)
+ struct reserve_info *build_reserve_entry(uint64_t address, uint64_t size)
  {
- 	struct node **p;
+ 	struct reserve_info *new = xmalloc(sizeof(*new));
