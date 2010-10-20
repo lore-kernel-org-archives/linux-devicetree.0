@@ -1,15 +1,14 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/mips: Cleanup some include directives/files.
-Date: Wed, 20 Oct 2010 12:03:32 -0600
-Message-ID: <20101020180332.GO7285@angua.secretlab.ca>
-References: <1287528631-31797-1-git-send-email-ddaney@caviumnetworks.com>
-	<20101020065830.GA12565@linux-mips.org>
+Subject: Re: [PATCH 5/5] x86: OLPC: add OLPC device-tree support
+Date: Wed, 20 Oct 2010 12:56:21 -0600
+Message-ID: <AANLkTikg-HOM3EVQiPvuDahLuUWvhg_VeBBXLtJu6Tzo@mail.gmail.com>
+References: <20101010020626.102437f5@debxo>
+	<20101011041312.GF23588@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20101020065830.GA12565-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+In-Reply-To: <20101011041312.GF23588-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,29 +18,345 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 07:58:30AM +0100, Ralf Baechle wrote:
-> On Tue, Oct 19, 2010 at 03:50:31PM -0700, David Daney wrote:
-> 
-> > The __init directives should go on the definitions of things, not the
-> > declaration, also __init is meaningless for inline functions, so
-> > remove it from prom.h.  This allows us to get rid of a useless
-> > #include, but most of the rest of them are useless too, so kill them
-> > as well.
-> > 
-> > If of_i2c.c needs irq definitions, it should include linux/irq.h
-> > directly, not assume indirect inclusion via asm/prom.h.
-> 
-> Grant, I assume you're going to merge this one.
-> 
-> Acked-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+On Sun, Oct 10, 2010 at 10:13 PM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Sun, Oct 10, 2010 at 02:06:26AM -0700, Andres Salomon wrote:
+>>
+>> Make use of PROC_DEVICETREE to export the tree, and sparc's PROMTREE cod=
+e to
+>> call into OLPC's Open Firmware to build the tree.
+>>
+>> Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+>
+> Holding off on this one until I hear from the x86 maintainers [cc'd].
 
-Yes, I'll pick it up.  I'm compile testing now.
+Oops, and it appears that patch breaks the build on other
+architectures when CONFIG_OF is enabled and CONFIG_PROMTREE is not due
+to how of_pdt_init_devicetree is defined.
 
 g.
 
-> 
->   Ralf
+>
+> g.
+>
+>> ---
+>> =A0arch/x86/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A02 +
+>> =A0arch/x86/include/asm/olpc_ofw.h | =A0 =A04 +
+>> =A0arch/x86/include/asm/prom.h =A0 =A0 | =A0 =A01 +
+>> =A0arch/x86/kernel/Makefile =A0 =A0 =A0 =A0| =A0 =A01 +
+>> =A0arch/x86/kernel/olpc_ofw.c =A0 =A0 =A0| =A0 =A08 ++
+>> =A0arch/x86/kernel/olpc_prom.c =A0 =A0 | =A0152 ++++++++++++++++++++++++=
++++++++++++++++
+>> =A0drivers/of/pdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A02 +
+>> =A0fs/proc/proc_devtree.c =A0 =A0 =A0 =A0 =A0| =A0 =A04 +
+>> =A0include/linux/of_pdt.h =A0 =A0 =A0 =A0 =A0| =A0 =A01 +
+>> =A09 files changed, 175 insertions(+), 0 deletions(-)
+>> =A0create mode 100644 arch/x86/include/asm/prom.h
+>> =A0create mode 100644 arch/x86/kernel/olpc_prom.c
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index cea0cd9..7d4ef72 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -2069,6 +2069,8 @@ config OLPC_OPENFIRMWARE
+>> =A0 =A0 =A0 bool "Support for OLPC's Open Firmware"
+>> =A0 =A0 =A0 depends on !X86_64 && !X86_PAE
+>> =A0 =A0 =A0 default y if OLPC
+>> + =A0 =A0 select OF
+>> + =A0 =A0 select OF_PROMTREE
+>> =A0 =A0 =A0 help
+>> =A0 =A0 =A0 =A0 This option adds support for the implementation of Open =
+Firmware
+>> =A0 =A0 =A0 =A0 that is used on the OLPC XO-1 Children's Machine.
+>> diff --git a/arch/x86/include/asm/olpc_ofw.h b/arch/x86/include/asm/olpc=
+_ofw.h
+>> index 08fde47..13075df 100644
+>> --- a/arch/x86/include/asm/olpc_ofw.h
+>> +++ b/arch/x86/include/asm/olpc_ofw.h
+>> @@ -28,4 +28,8 @@ static inline void setup_olpc_ofw_pgd(void) { }
+>>
+>> =A0#endif /* !CONFIG_OLPC_OPENFIRMWARE */
+>>
+>> +#ifdef CONFIG_PROC_DEVICETREE
+>> +extern void olpc_prom_build_devicetree(void);
+>> +#endif /* CONFIG_PROC_DEVICETREE */
+>> +
+>> =A0#endif /* _ASM_X86_OLPC_OFW_H */
+>> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+>> new file mode 100644
+>> index 0000000..b4ec95f
+>> --- /dev/null
+>> +++ b/arch/x86/include/asm/prom.h
+>> @@ -0,0 +1 @@
+>> +/* dummy prom.h; here to make linux/of.h's #includes happy */
+>> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+>> index fedf32a..ced0c9a 100644
+>> --- a/arch/x86/kernel/Makefile
+>> +++ b/arch/x86/kernel/Makefile
+>> @@ -107,6 +107,7 @@ scx200-y =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0+=3D scx=
+200_32.o
+>>
+>> =A0obj-$(CONFIG_OLPC) =A0 =A0 =A0 =A0 =A0 +=3D olpc.o
+>> =A0obj-$(CONFIG_OLPC_OPENFIRMWARE) =A0 =A0 =A0+=3D olpc_ofw.o
+>> +obj-$(CONFIG_PROC_DEVICETREE) =A0 =A0 =A0 =A0+=3D olpc_prom.o
+>> =A0obj-$(CONFIG_X86_MRST) =A0 =A0 =A0 =A0 =A0 =A0 =A0 +=3D mrst.o
+>>
+>> =A0microcode-y =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0:=3D m=
+icrocode_core.o
+>> diff --git a/arch/x86/kernel/olpc_ofw.c b/arch/x86/kernel/olpc_ofw.c
+>> index 3218aa7..6c4d243 100644
+>> --- a/arch/x86/kernel/olpc_ofw.c
+>> +++ b/arch/x86/kernel/olpc_ofw.c
+>> @@ -1,5 +1,7 @@
+>> =A0#include <linux/kernel.h>
+>> =A0#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_pdt.h>
+>> =A0#include <linux/init.h>
+>> =A0#include <asm/page.h>
+>> =A0#include <asm/setup.h>
+>> @@ -38,6 +40,12 @@ void __init setup_olpc_ofw_pgd(void)
+>> =A0 =A0 =A0 /* implicit optimization barrier here due to uninline functi=
+on return */
+>>
+>> =A0 =A0 =A0 early_iounmap(base, sizeof(olpc_ofw_pgd) * PTRS_PER_PGD);
+>> +
+>> +#ifdef CONFIG_PROC_DEVICETREE
+>> + =A0 =A0 /* OFW set up succesfully; use it for the device tree */
+>> + =A0 =A0 of_pdt_init_devicetree =3D olpc_prom_build_devicetree;
+>> +#endif
+>> +
+>> =A0}
+>>
+>> =A0int __olpc_ofw(const char *name, int nr_args, const void **args, int =
+nr_res,
+>> diff --git a/arch/x86/kernel/olpc_prom.c b/arch/x86/kernel/olpc_prom.c
+>> new file mode 100644
+>> index 0000000..e2ecaf2
+>> --- /dev/null
+>> +++ b/arch/x86/kernel/olpc_prom.c
+>> @@ -0,0 +1,152 @@
+>> +/*
+>> + * olpc_prom.c: OLPC-specific OFW device tree support code.
+>> + *
+>> + * Paul Mackerras =A0 =A0August 1996.
+>> + * Copyright (C) 1996-2005 Paul Mackerras.
+>> + *
+>> + * =A0Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergner.
+>> + * =A0 =A0{engebret|bergner}@us.ibm.com
+>> + *
+>> + * =A0Adapted for sparc by David S. Miller davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+>> + * =A0Adapted for x86/OLPC by Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+>> + *
+>> + * =A0 =A0 =A0This program is free software; you can redistribute it an=
+d/or
+>> + * =A0 =A0 =A0modify it under the terms of the GNU General Public Licen=
+se
+>> + * =A0 =A0 =A0as published by the Free Software Foundation; either vers=
+ion
+>> + * =A0 =A0 =A02 of the License, or (at your option) any later version.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_pdt.h>
+>> +#include <asm/olpc_ofw.h>
+>> +
+>> +static phandle __init olpc_prom_getsibling(phandle node)
+>> +{
+>> + =A0 =A0 const void *args[] =3D { (void *)node };
+>> + =A0 =A0 void *res[] =3D { &node };
+>> +
+>> + =A0 =A0 if (node =3D=3D -1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>> +
+>> + =A0 =A0 if (olpc_ofw("peer", args, res) || node =3D=3D -1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>> +
+>> + =A0 =A0 return node;
+>> +}
+>> +
+>> +static phandle __init olpc_prom_getchild(phandle node)
+>> +{
+>> + =A0 =A0 const void *args[] =3D { (void *)node };
+>> + =A0 =A0 void *res[] =3D { &node };
+>> +
+>> + =A0 =A0 if (node =3D=3D -1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>> +
+>> + =A0 =A0 if (olpc_ofw("child", args, res) || node =3D=3D -1) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pr_err("PROM: %s: fetching child failed!\n", _=
+_func__);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>> + =A0 =A0 }
+>> +
+>> + =A0 =A0 return node;
+>> +}
+>> +
+>> +static int __init olpc_prom_getproplen(phandle node, const char *prop)
+>> +{
+>> + =A0 =A0 const void *args[] =3D { (void *)node, prop };
+>> + =A0 =A0 int len;
+>> + =A0 =A0 void *res[] =3D { &len };
+>> +
+>> + =A0 =A0 if (node =3D=3D -1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> +
+>> + =A0 =A0 if (olpc_ofw("getproplen", args, res)) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pr_err("PROM: %s: getproplen failed!\n", __fun=
+c__);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> + =A0 =A0 }
+>> +
+>> + =A0 =A0 return len;
+>> +}
+>> +
+>> +static int __init olpc_prom_getproperty(phandle node, const char *prop,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 char *buf, int bufsize)
+>> +{
+>> + =A0 =A0 int plen;
+>> +
+>> + =A0 =A0 plen =3D olpc_prom_getproplen(node, prop);
+>> + =A0 =A0 if (plen > bufsize || plen < 1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> + =A0 =A0 else {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 const void *args[] =3D { (void *)node, prop, b=
+uf, (void *)plen };
+>> + =A0 =A0 =A0 =A0 =A0 =A0 void *res[] =3D { &plen };
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 if (olpc_ofw("getprop", args, res)) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pr_err("PROM: %s: getprop fail=
+ed!\n", __func__);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 }
+>> + =A0 =A0 }
+>> +
+>> + =A0 =A0 return plen;
+>> +}
+>> +
+>> +static int __init olpc_prom_nextprop(phandle node, char *prev, char *bu=
+f)
+>> +{
+>> + =A0 =A0 const void *args[] =3D { (void *)node, prev, buf };
+>> + =A0 =A0 int success;
+>> + =A0 =A0 void *res[] =3D { &success };
+>> +
+>> + =A0 =A0 buf[0] =3D '\0';
+>> +
+>> + =A0 =A0 if (node =3D=3D -1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> +
+>> + =A0 =A0 if (olpc_ofw("nextprop", args, res) || success !=3D 1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> +
+>> + =A0 =A0 return 0;
+>> +}
+>> +
+>> +static int __init olpc_prom_pkg2path(phandle node, char *buf,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 const int buflen, int *len)
+>> +{
+>> + =A0 =A0 const void *args[] =3D { (void *)node, buf, (void *)buflen };
+>> + =A0 =A0 void *res[] =3D { len };
+>> +
+>> + =A0 =A0 if (node =3D=3D -1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> +
+>> + =A0 =A0 if (olpc_ofw("package-to-path", args, res) || *len < 1)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> +
+>> + =A0 =A0 return 0;
+>> +}
+>> +
+>> +void * __init prom_early_alloc(unsigned long size)
+>> +{
+>> + =A0 =A0 /* this is called late enough that we can alloc normally */
+>> + =A0 =A0 return kzalloc(size, GFP_KERNEL);
+>> +}
+>> +
+>> +static struct of_pdt_ops prom_olpc_ops __initdata =3D {
+>> + =A0 =A0 .nextprop =3D olpc_prom_nextprop,
+>> + =A0 =A0 .getproplen =3D olpc_prom_getproplen,
+>> + =A0 =A0 .getproperty =3D olpc_prom_getproperty,
+>> + =A0 =A0 .getchild =3D olpc_prom_getchild,
+>> + =A0 =A0 .getsibling =3D olpc_prom_getsibling,
+>> + =A0 =A0 .pkg2path =3D olpc_prom_pkg2path,
+>> +};
+>> +
+>> +void __init olpc_prom_build_devicetree(void)
+>> +{
+>> + =A0 =A0 phandle root;
+>> +
+>> + =A0 =A0 root =3D olpc_prom_getsibling(0);
+>> + =A0 =A0 if (root < 0) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pr_err("PROM: unable to get root node from OFW=
+!\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return;
+>> + =A0 =A0 }
+>> + =A0 =A0 of_pdt_build_devicetree(root, &prom_olpc_ops);
+>> +}
+>> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+>> index 28295d0..07e3daa 100644
+>> --- a/drivers/of/pdt.c
+>> +++ b/drivers/of/pdt.c
+>> @@ -29,6 +29,8 @@ static struct of_pdt_ops *of_pdt_prom_ops __initdata;
+>> =A0void __initdata (*of_pdt_build_more)(struct device_node *dp,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node ***nextp);
+>>
+>> +void __initdata (*of_pdt_init_devicetree)(void);
+>> +
+>> =A0#if defined(CONFIG_SPARC)
+>> =A0unsigned int of_pdt_unique_id __initdata;
+>>
+>> diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
+>> index d9396a4..9779039 100644
+>> --- a/fs/proc/proc_devtree.c
+>> +++ b/fs/proc/proc_devtree.c
+>> @@ -11,6 +11,7 @@
+>> =A0#include <linux/stat.h>
+>> =A0#include <linux/string.h>
+>> =A0#include <linux/of.h>
+>> +#include <linux/of_pdt.h>
+>> =A0#include <linux/module.h>
+>> =A0#include <linux/slab.h>
+>> =A0#include <asm/prom.h>
+>> @@ -228,6 +229,9 @@ void __init proc_device_tree_init(void)
+>> =A0{
+>> =A0 =A0 =A0 struct device_node *root;
+>>
+>> + =A0 =A0 if (of_pdt_init_devicetree)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 of_pdt_init_devicetree();
+>> +
+>> =A0 =A0 =A0 proc_device_tree =3D proc_mkdir("device-tree", NULL);
+>> =A0 =A0 =A0 if (proc_device_tree =3D=3D NULL)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
+>> diff --git a/include/linux/of_pdt.h b/include/linux/of_pdt.h
+>> index c65a18a..5b29aef 100644
+>> --- a/include/linux/of_pdt.h
+>> +++ b/include/linux/of_pdt.h
+>> @@ -38,6 +38,7 @@ extern void *prom_early_alloc(unsigned long size);
+>>
+>> =A0/* for building the device tree */
+>> =A0extern void of_pdt_build_devicetree(phandle root_node, struct of_pdt_=
+ops *ops);
+>> +extern void (*of_pdt_init_devicetree)(void);
+>>
+>> =A0extern void (*of_pdt_build_more)(struct device_node *dp,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node ***nextp);
+>> --
+>> 1.5.6.5
+>>
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
