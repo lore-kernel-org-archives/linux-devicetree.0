@@ -1,8 +1,8 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 2/4] Implements new features for updating existing device tree
-	nodes.
-Date: Wed, 20 Oct 2010 14:45:06 -0700
-Message-ID: <20101020214506.2985.32859.stgit@riker>
+Subject: [PATCH 3/4] Allow nodes at the root to be specified by path as well
+	as by label.
+Date: Wed, 20 Oct 2010 14:45:13 -0700
+Message-ID: <20101020214513.2985.76446.stgit@riker>
 References: <20101020214419.2985.51068.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,110 +22,126 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David G
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is interesting when the /include/ "<filename>" feature is used. This way
-we can create base device tree source files for a family of systems and modify
-the device tree for a specific system.
+Changes to allow us to specify a node by it's path. A path can be used in
+place of a label.
 
-The current sytem allows an existing node to be extended with new properties
-and subnodes.
-
-The new features allow an existing node to be replaced completely by the new
-properties and subnodes. The new features also allow an existing node to be
-deleted.
+This is particularly useful when overriding existing nodes.
+This way we don't have to label every possible node in a device tree we know
+is a base device tree for a class of systems, and we know the tree will be
+modified for the specific systems.
 
 Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- dtc-lexer.l  |    6 ++++++
- dtc-parser.y |   11 +++++++++++
- dtc.h        |    1 +
- livetree.c   |   18 ++++++++++++++++++
- 4 files changed, 36 insertions(+), 0 deletions(-)
+ dtc-lexer.l  |   26 ++++++++++++++++++++++----
+ dtc-parser.y |   10 ++++------
+ livetree.c   |   20 +++++++++++++++++++-
+ 3 files changed, 45 insertions(+), 11 deletions(-)
 
 diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 081e13a..80a886a 100644
+index 80a886a..216a3d2 100644
 --- a/dtc-lexer.l
 +++ b/dtc-lexer.l
-@@ -96,6 +96,12 @@ static int pop_input_file(void);
- 			return DT_MEMRESERVE;
+@@ -115,13 +115,31 @@ static int pop_input_file(void);
+ 			return DT_LITERAL;
  		}
  
-+<*>"/remove-node/"	{
-+			DPRINT("Keyword: /remove-node/\n");
-+			BEGIN_DEFAULT();
-+			return DT_REMOVENODE;
+-<*>\&{LABEL}	{	/* label reference */
+-			DPRINT("Ref: %s\n", yytext+1);
+-			yylval.labelref = xstrdup(yytext+1);
++
++<*>\&{LABEL}    {       /* label reference without the braces*/
++                        DPRINT("Ref: %s\n", yytext+1);
++                        yylval.labelref = xstrdup(yytext+1);
++                        return DT_REF;
 +		}
 +
- <*>{LABEL}:	{
- 			DPRINT("Label: %s\n", yytext);
- 			yylval.labelref = xstrdup(yytext);
++<*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
++			/*
++			 * Possibly this could be parsed by the parser rather
++			 * than as a lexical element.
++			 *
++			 * What is intended here is to support the following
++			 * type of references:
++			 * a) &{/path/to/the/node/reference}
++			 * b) &{label}
++			 * c) &{label/path/from/labeled/node/to/reference}
++			 */
++			yytext[yyleng-1] = '\0';
++			DPRINT("Ref: %s\n", yytext+2);
++			yylval.labelref = xstrdup(yytext+2);
+ 			return DT_REF;
+ 		}
+ 
+-"&{/"{PATHCHAR}+\}	{	/* new-style path reference */
++<*>"&{/"{PATHCHAR}+\}	{	/* new-style path reference (with braces) */
+ 			yytext[yyleng-1] = '\0';
+ 			DPRINT("Ref: %s\n", yytext+2);
+ 			yylval.labelref = xstrdup(yytext+2);
 diff --git a/dtc-parser.y b/dtc-parser.y
-index b58ba8e..1ba0478 100644
+index 1ba0478..0a74c86 100644
 --- a/dtc-parser.y
 +++ b/dtc-parser.y
-@@ -55,6 +55,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+@@ -132,24 +132,22 @@ devicetree:
+ 		}
+ 	| devicetree DT_REF nodedef
+ 		{
+-			struct node *target;
++			struct node *target = get_node_by_ref($1, $2);
  
- %token DT_V1
- %token DT_MEMRESERVE
-+%token DT_REMOVENODE
- %token <propnodename> DT_PROPNODENAME
- %token <literal> DT_LITERAL
- %token <cbase> DT_BASE
-@@ -140,6 +141,16 @@ devicetree:
- 				print_error("label, '%s' not found", $2);
+-			target = get_node_by_label($1, $2);
+ 			if (target)
+ 				merge_nodes(target, $3);
+ 			else
+-				print_error("label, '%s' not found", $2);
++				print_error("label or path, '%s', not found", $2);
  			$$ = $1;
  		}
-+	| devicetree DT_REMOVENODE DT_REF ';'
-+		{
-+			struct node *target;
-+
-+			target = get_node_by_label($1, $3);
-+			if (target)
-+				remove_child(target->parent, target);
-+			else
-+				print_error("label, '%s' not found", $3);
-+		}
+ 	| devicetree DT_REMOVENODE DT_REF ';'
+ 		{
+-			struct node *target;
++			struct node *target = get_node_by_ref($1, $3);
+ 
+-			target = get_node_by_label($1, $3);
+ 			if (target)
+ 				remove_child(target->parent, target);
+ 			else
+-				print_error("label, '%s' not found", $3);
++				print_error("label or path, '%s', not found", $3);
+ 		}
  	;
  
- nodedef:
-diff --git a/dtc.h b/dtc.h
-index b36ac5d..a7f3667 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -178,6 +178,7 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node);
- 
- void add_property(struct node *node, struct property *prop);
- void add_child(struct node *parent, struct node *child);
-+void remove_child(struct node *parent, struct node *child);
- 
- const char *get_unitname(struct node *node);
- struct property *get_property(struct node *node, const char *propname);
 diff --git a/livetree.c b/livetree.c
-index 13c5f10..21a4c48 100644
+index 21a4c48..bf8796b 100644
 --- a/livetree.c
 +++ b/livetree.c
-@@ -202,6 +202,24 @@ void add_child(struct node *parent, struct node *child)
- 	*p = child;
+@@ -429,10 +429,28 @@ struct node *get_node_by_phandle(struct node *tree, cell_t phandle)
+ 
+ struct node *get_node_by_ref(struct node *tree, const char *ref)
+ {
++	struct node *node;
++
+ 	if (ref[0] == '/')
+ 		return get_node_by_path(tree, ref);
+-	else
++	else {
++		/*
++		 * Support finding a node reference that is rooted by
++		 * a label reference.
++		 *
++		 * References rooted by a label have a '/' in them.
++		 */
++		char *p = strchr(ref, '/');
++
++		if (p) {
++			*p = '\0';
++			node = get_node_by_label(tree, ref);
++			*p = '/';
++			return get_node_by_path(node, p+1);
++		}
++
+ 		return get_node_by_label(tree, ref);
++	}
  }
  
-+void remove_child(struct node *parent, struct node *child)
-+{
-+	struct node **p;
-+
-+	/* Make sure we've got a consistent tree here */
-+	assert(child->parent == parent);
-+
-+	p = &parent->children;
-+	while (*p) {
-+		if (*p == child) {
-+			*p = (*p)->next_sibling;
-+			break;
-+		}
-+		p = &((*p)->next_sibling);
-+	}
-+	child->parent = NULL;
-+}
-+
- struct reserve_info *build_reserve_entry(uint64_t address, uint64_t size)
- {
- 	struct reserve_info *new = xmalloc(sizeof(*new));
+ cell_t get_node_phandle(struct node *root, struct node *node)
