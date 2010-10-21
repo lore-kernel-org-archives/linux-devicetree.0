@@ -1,16 +1,17 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: dts and dtsi files on which I tested the syntax for my recent
 	patch set.
-Date: Wed, 20 Oct 2010 23:40:24 -0600
-Message-ID: <20101021054024.GB2252@angua.secretlab.ca>
+Date: Thu, 21 Oct 2010 16:53:47 +1100
+Message-ID: <20101021055347.GG6227@yookeroo>
 References: <1287626916.4535.1511.camel@riker> <20101021031439.GE6227@yookeroo>
 	<1287637560.4535.1524.camel@riker>
+	<20101021054024.GB2252@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1287637560.4535.1524.camel@riker>
+In-Reply-To: <20101021054024.GB2252-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,55 +21,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 10:06:00PM -0700, John Bonesio wrote:
-> On Thu, 2010-10-21 at 14:14 +1100, David Gibson wrote:
-> > On Wed, Oct 20, 2010 at 07:08:36PM -0700, John Bonesio wrote:
-> > > On Wed, 2010-10-20 at 17:46 -0600, Grant Likely wrote:
-> > > > On Wed, Oct 20, 2010 at 03:22:17PM -0700, John Bonesio wrote:
-> > > > > Hi,
+On Wed, Oct 20, 2010 at 11:40:24PM -0600, Grant Likely wrote:
+> On Wed, Oct 20, 2010 at 10:06:00PM -0700, John Bonesio wrote:
+> > On Thu, 2010-10-21 at 14:14 +1100, David Gibson wrote:
+> > > On Wed, Oct 20, 2010 at 07:08:36PM -0700, John Bonesio wrote:
+> > > > On Wed, 2010-10-20 at 17:46 -0600, Grant Likely wrote:
+> > > > > On Wed, Oct 20, 2010 at 03:22:17PM -0700, John Bonesio wrote:
+> > > > > > Hi,
+> > > > > > 
+> > > > > > I have attached the two file I've used to test the new syntax from my
+> > > > > > patch set. These might help get a feel for how the syntax and the
+> > > > > > features work.
 > > > > > 
-> > > > > I have attached the two file I've used to test the new syntax from my
-> > > > > patch set. These might help get a feel for how the syntax and the
-> > > > > features work.
+> > > > > heh, what you should actually do (because you have to anyway) is add
+> > > > > testcases for the new features to dtc in the tests directory.  'make
+> > > > > check' runs the test cases.
+> > > > > 
+> > > > > > /remove-node/ &{soc/serial@2400};                  /* an example of using a label rooted path */
+> > > > > 
+> > > > > As previously mentioned by David, this conflicts with the already
+> > > > > established convention of a path that does not start with a '/' means
+> > > > > use a value from the /aliases node.  That ambiguity needs to
+> > > > > be avoided, so the syntax still needs some massaging.
 > > > > 
-> > > > heh, what you should actually do (because you have to anyway) is add
-> > > > testcases for the new features to dtc in the tests directory.  'make
-> > > > check' runs the test cases.
+> > > > I think we should explore this a bit further. I just don't see in the
+> > > > lexer code where it would parse anything with the syntax
+> > > > &{alias/node/path} (except for my recent patch).
 > > > > 
-> > > > > /remove-node/ &{soc/serial@2400};                  /* an example of using a label rooted path */
+> > > > I looked through the parser too, and it wasn't obvious where it would
+> > > > match '&' directly.
 > > > > 
-> > > > As previously mentioned by David, this conflicts with the already
-> > > > established convention of a path that does not start with a '/' means
-> > > > use a value from the /aliases node.  That ambiguity needs to
-> > > > be avoided, so the syntax still needs some massaging.
+> > > > Maybe I'm just missing it.
 > > > 
-> > > I think we should explore this a bit further. I just don't see in the
-> > > lexer code where it would parse anything with the syntax
-> > > &{alias/node/path} (except for my recent patch).
+> > > No, we just weren't being clear.  dtc does not itself expand aliases
+> > > in this way.  However, it's a common convention in existing device
+> > > tree stuff.  The OF interface will expand aliases in this way, as will
+> > > fdt_path_offset().
 > > > 
-> > > I looked through the parser too, and it wasn't obvious where it would
-> > > match '&' directly.
-> > > 
-> > > Maybe I'm just missing it.
+> > > So it's not an actual ambiguity with existing syntax, but the fact
+> > > that your proposed syntax is subtley different from a common existing
+> > > device tree convention would violate least-surprise.
 > > 
-> > No, we just weren't being clear.  dtc does not itself expand aliases
-> > in this way.  However, it's a common convention in existing device
-> > tree stuff.  The OF interface will expand aliases in this way, as will
-> > fdt_path_offset().
-> > 
-> > So it's not an actual ambiguity with existing syntax, but the fact
-> > that your proposed syntax is subtley different from a common existing
-> > device tree convention would violate least-surprise.
-> 
-> Would it really? Isn't an alias and a label on a node pretty much the
-> same concept?
+> > Would it really? Isn't an alias and a label on a node pretty much the
+> > same concept?
 
-Nope, because an alias is a property in the /aliases node with very
-well defined conventions.  A label uses an entirely different namespace,
-so it should use a different syntax to avoid being ambiguous.
+Well, it's a pretty similar concept, but with some significant
+differences in the details.  Which makes it all the more important not
+to lead users into confusing the two.
 
-g.
+> Nope, because an alias is a property in the /aliases node with very
+> well defined conventions.  A label uses an entirely different namespace,
+> so it should use a different syntax to avoid being ambiguous.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
