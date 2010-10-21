@@ -1,15 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [PATCH 4/4] Create a new property value that means 'undefined'.
-Date: Thu, 21 Oct 2010 17:14:09 +1100
-Message-ID: <20101021061409.GJ6227@yookeroo>
+Date: Thu, 21 Oct 2010 17:19:08 +1100
+Message-ID: <20101021061908.GK6227@yookeroo>
 References: <20101020214419.2985.51068.stgit@riker>
 	<20101020214522.2985.97224.stgit@riker>
+	<20101021052053.GF13335@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101020214522.2985.97224.stgit@riker>
+In-Reply-To: <20101021052053.GF13335-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,142 +20,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
-> When updating existing nodes in a device tree merge operation, properties
-> can be removed by setting the value to /undef-prop/.
+On Wed, Oct 20, 2010 at 11:20:53PM -0600, Grant Likely wrote:
+> On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
+> > When updating existing nodes in a device tree merge operation, properties
+> > can be removed by setting the value to /undef-prop/.
+> > 
+> > if /undef-prop/ is assigned to a property that doesn't exist, the property
+> > is treated the same as if it had not been declared.
+> > 
+> > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > 
-> if /undef-prop/ is assigned to a property that doesn't exist, the property
-> is treated the same as if it had not been declared.
+> Implementation looks good.
+> > ---
+> > 
+> >  dtc-lexer.l  |   14 ++++++++++----
+> >  dtc-parser.y |    6 ++++++
+> >  dtc.h        |    7 +++++++
+> >  flattree.c   |    3 +++
+> >  livetree.c   |   38 +++++++++++++++++++++++++++++++++-----
+> >  5 files changed, 59 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/dtc-lexer.l b/dtc-lexer.l
+> > index 216a3d2..efa89b4 100644
+> > --- a/dtc-lexer.l
+> > +++ b/dtc-lexer.l
+> > @@ -102,6 +102,12 @@ static int pop_input_file(void);
+> >  			return DT_REMOVENODE;
+> >  		}
+> >  
+> > +<*>"/undef-prop/"	{
+> > +			DPRINT("Keyword: /undef-prop/\n");
+> > +			BEGIN_DEFAULT();
+> > +			return DT_UNDEFINED;
+> > +		}
+> > +
+> 
+> Does /undef-prop/ really need to be using <*> to match in all start
+> conditions?
+
+It doesn't need to, but it's a good idea for it to do so, because if
+the keyword is lexed as a keyword everywhere, it will lead to more
+meaningful error messages if it's put somewhere it shouldn't be.
+
+In fact, something I've learnt writing dtc is that in general you
+should make your lexical tokens as wide as they can without colliding
+with each other, then check that they have the right contents later.
+That way you get a clear error message from the checking code
+("such-and-so contained an illegal character"), rather than the lexer
+breaking it into different tokens instead and the parser generating
+some cryptic error.
 
 [snip]
-> diff --git a/dtc.h b/dtc.h
-> index a7f3667..b3fca6e 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -130,7 +130,12 @@ struct label {
->  	struct label *next;
->  };
->  
-> +#define PROP_DEFINED (0)
-> +#define PROP_UNDEFINED (1)
-
-You never actually use these constants.
-
-> +
->  struct property {
-> +	int undefined;  /* if the property is set to undefined, this feild is
-> +	                   set to PROP_UNDEFINED */
->  	char *name;
->  	struct data val;
->  
-> @@ -170,6 +175,7 @@ void add_label(struct label **labels, char *label);
->  struct property *build_property(char *name, struct data val);
->  struct property *chain_property(struct property *first, struct property *list);
->  struct property *reverse_properties(struct property *first);
-> +void undefine_property(struct property *prop);
->  
->  struct node *build_node(struct property *proplist, struct node *children);
->  struct node *name_node(struct node *node, char *name);
-> @@ -177,6 +183,7 @@ struct node *chain_node(struct node *first, struct node *list);
->  struct node *merge_nodes(struct node *old_node, struct node *new_node);
->  
->  void add_property(struct node *node, struct property *prop);
-> +void remove_property(struct node *node, struct property *prop);
->  void add_child(struct node *parent, struct node *child);
->  void remove_child(struct node *parent, struct node *child);
->  
-> diff --git a/flattree.c b/flattree.c
-> index ead0332..00439e9 100644
-> --- a/flattree.c
-> +++ b/flattree.c
-> @@ -275,6 +275,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
->  	for_each_property(tree, prop) {
->  		int nameoff;
->  
-> +		if (prop->undefined)
-> +			continue;
-> +
->  		if (streq(prop->name, "name"))
->  			seen_name_prop = 1;
->  
-> diff --git a/livetree.c b/livetree.c
-> index bf8796b..2ef734d 100644
-> --- a/livetree.c
-> +++ b/livetree.c
-> @@ -51,6 +51,11 @@ struct property *build_property(char *name, struct data val)
->  	return new;
->  }
->  
-> +void undefine_property(struct property *prop)
-> +{
-> +	prop->undefined = 1;
-> +}
-> +
->  struct property *chain_property(struct property *first, struct property *list)
->  {
->  	assert(first->next == NULL);
-> @@ -121,11 +126,15 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
->  		/* Look for a collision, set new value if there is */
->  		for_each_property(old_node, old_prop) {
->  			if (streq(old_prop->name, new_prop->name)) {
-> -				/* Add new labels to old property */
-> -				for_each_label(new_prop->labels, l)
-> -					add_label(&old_prop->labels, l->label);
-> -
-> -				old_prop->val = new_prop->val;
-> +				if (new_prop->undefined) {
-> +					remove_property(old_node,
-> old_prop);
-
-This will lose property labels into the ether as your earlier patch
-lost node labels.
-
-> +				} else {
-> +					/* Add new labels to old property */
-> +					for_each_label(new_prop->labels, l)
-> +						add_label(&old_prop->labels, l->label);
-> +
-> +					old_prop->val = new_prop->val;
-> +				}
->  				free(new_prop);
->  				new_prop = NULL;
->  				break;
-> @@ -188,6 +197,25 @@ void add_property(struct node *node, struct property *prop)
->  	*p = prop;
->  }
->  
-> +void remove_property(struct node *node, struct property *prop)
-> +{
-> +	struct property **p;
-> +	int found = 0;
-> +
-> +	p = &node->proplist;
-> +	while (*p) {
-> +		if (*p == prop) {
-> +			*p = (*p)->next;
-> +			found = 1;
-> +			break;
-> +		}
-> +		p = &((*p)->next);
-> +	}
-> +	/* property not in the node? it's probably an error, so flag it. */
-> +	assert(found);
-
-assert()s are for finding bugs in code, not detecting errors in user
-input.  AFAICT this *can* be generated by usre input so it should
-print an error message and if possible continue, not cause a SIGABRT.
-
-> +}
-> +
-> +
->  void add_child(struct node *parent, struct node *child)
->  {
->  	struct node **p;
+> > @@ -178,6 +179,11 @@ propdef:
+> >  		{
+> >  			$$ = build_property($1, empty_data);
+> >  		}
+> > +	| DT_PROPNODENAME '=' DT_UNDEFINED ';'
 > 
+> Hmmm.  I'm going to make this comment once, but I'll shut-up if you
+> guys disagree with me because the details have already been hashed out
+> several times, and I've already said I'd be okay with the above form.
+> 
+> The more I look at it, the more I prefer the form 
+> 	/undef-prop/ property;
+> instead of
+> 	property = /undef-prop/;
+> 
+> The reason being is that while the assignment form does work, it isn't
+> a very natural construct.  Removal is not logically the same as
+> assignment.  /undef-prop/ is something that is performed on a
+> property.  Syntax that shows /undef-prop/ being assigned as a property
+> value doesn't ring true for me as the right thing to do.
+> 
+> So, my vote is for the "/undef-prop/ property;" form, but I hold my
+> piece if you both disagree with me.
+
+I.. yeah.. I'm not sure.  I was leaning towards prop = /undef-prop/;
+before, but you've more-or-less persuaded me here.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
