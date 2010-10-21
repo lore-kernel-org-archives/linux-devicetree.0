@@ -1,15 +1,16 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: dts and dtsi files on which I tested the syntax for my recent
-	patch set.
-Date: Thu, 21 Oct 2010 14:14:39 +1100
-Message-ID: <20101021031439.GE6227@yookeroo>
-References: <1287626916.4535.1511.camel@riker>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] Allow nodes at the root to be specified by path as
+	well as by label.
+Date: Wed, 20 Oct 2010 22:36:00 -0600
+Message-ID: <20101021043600.GC13335@angua.secretlab.ca>
+References: <20101020214419.2985.51068.stgit@riker>
+	<20101020214513.2985.76446.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1287626916.4535.1511.camel@riker>
+In-Reply-To: <20101020214513.2985.76446.stgit@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,49 +21,145 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 07:08:36PM -0700, John Bonesio wrote:
-> On Wed, 2010-10-20 at 17:46 -0600, Grant Likely wrote:
-> > On Wed, Oct 20, 2010 at 03:22:17PM -0700, John Bonesio wrote:
-> > > Hi,
-> > > 
-> > > I have attached the two file I've used to test the new syntax from my
-> > > patch set. These might help get a feel for how the syntax and the
-> > > features work.
-> > 
-> > heh, what you should actually do (because you have to anyway) is add
-> > testcases for the new features to dtc in the tests directory.  'make
-> > check' runs the test cases.
-> > 
-> > > /remove-node/ &{soc/serial@2400};                  /* an example of using a label rooted path */
-> > 
-> > As previously mentioned by David, this conflicts with the already
-> > established convention of a path that does not start with a '/' means
-> > use a value from the /aliases node.  That ambiguity needs to
-> > be avoided, so the syntax still needs some massaging.
+On Wed, Oct 20, 2010 at 02:45:13PM -0700, John Bonesio wrote:
+> Changes to allow us to specify a node by it's path. A path can be used in
+> place of a label.
 > 
-> I think we should explore this a bit further. I just don't see in the
-> lexer code where it would parse anything with the syntax
-> &{alias/node/path} (except for my recent patch).
+> This is particularly useful when overriding existing nodes.
+> This way we don't have to label every possible node in a device tree we know
+> is a base device tree for a class of systems, and we know the tree will be
+> modified for the specific systems.
 > 
-> I looked through the parser too, and it wasn't obvious where it would
-> match '&' directly.
+> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+As already mentioned, but I'm reposting here for the list archive
+record, this syntax conflicts with existing convention for referencing
+nodes by names defined in the /aliases node.
+
+One more comment below.
+
+> ---
 > 
-> Maybe I'm just missing it.
+>  dtc-lexer.l  |   26 ++++++++++++++++++++++----
+>  dtc-parser.y |   10 ++++------
+>  livetree.c   |   20 +++++++++++++++++++-
+>  3 files changed, 45 insertions(+), 11 deletions(-)
+> 
+> diff --git a/dtc-lexer.l b/dtc-lexer.l
+> index 80a886a..216a3d2 100644
+> --- a/dtc-lexer.l
+> +++ b/dtc-lexer.l
+> @@ -115,13 +115,31 @@ static int pop_input_file(void);
+>  			return DT_LITERAL;
+>  		}
+>  
+> -<*>\&{LABEL}	{	/* label reference */
+> -			DPRINT("Ref: %s\n", yytext+1);
+> -			yylval.labelref = xstrdup(yytext+1);
+> +
+> +<*>\&{LABEL}    {       /* label reference without the braces*/
+> +                        DPRINT("Ref: %s\n", yytext+1);
+> +                        yylval.labelref = xstrdup(yytext+1);
+> +                        return DT_REF;
+> +		}
+> +
+> +<*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
+> +			/*
+> +			 * Possibly this could be parsed by the parser rather
+> +			 * than as a lexical element.
+> +			 *
+> +			 * What is intended here is to support the following
+> +			 * type of references:
+> +			 * a) &{/path/to/the/node/reference}
+> +			 * b) &{label}
+> +			 * c) &{label/path/from/labeled/node/to/reference}
+> +			 */
+> +			yytext[yyleng-1] = '\0';
+> +			DPRINT("Ref: %s\n", yytext+2);
+> +			yylval.labelref = xstrdup(yytext+2);
+>  			return DT_REF;
+>  		}
+>  
+> -"&{/"{PATHCHAR}+\}	{	/* new-style path reference */
+> +<*>"&{/"{PATHCHAR}+\}	{	/* new-style path reference (with braces) */
+>  			yytext[yyleng-1] = '\0';
+>  			DPRINT("Ref: %s\n", yytext+2);
+>  			yylval.labelref = xstrdup(yytext+2);
+> diff --git a/dtc-parser.y b/dtc-parser.y
+> index 1ba0478..0a74c86 100644
+> --- a/dtc-parser.y
+> +++ b/dtc-parser.y
+> @@ -132,24 +132,22 @@ devicetree:
+>  		}
+>  	| devicetree DT_REF nodedef
+>  		{
+> -			struct node *target;
+> +			struct node *target = get_node_by_ref($1, $2);
+>  
+> -			target = get_node_by_label($1, $2);
+>  			if (target)
+>  				merge_nodes(target, $3);
+>  			else
+> -				print_error("label, '%s' not found", $2);
+> +				print_error("label or path, '%s', not found", $2);
 
-No, we just weren't being clear.  dtc does not itself expand aliases
-in this way.  However, it's a common convention in existing device
-tree stuff.  The OF interface will expand aliases in this way, as will
-fdt_path_offset().
+For clarity, the above hunk should be in a separate patch applied
+between patches #1 and #2.  That will avoid having one patch introduce
+the DT_REMOVENODE hunk below, and then immediately modify it again in
+this patch.  The switch to get_node_by_ref() is useful even without
+the label+path syntax, and it should also include a matching testcase.
 
-So it's not an actual ambiguity with existing syntax, but the fact
-that your proposed syntax is subtley different from a common existing
-device tree convention would violate least-surprise.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+>  			$$ = $1;
+>  		}
+>  	| devicetree DT_REMOVENODE DT_REF ';'
+>  		{
+> -			struct node *target;
+> +			struct node *target = get_node_by_ref($1, $3);
+>  
+> -			target = get_node_by_label($1, $3);
+>  			if (target)
+>  				remove_child(target->parent, target);
+>  			else
+> -				print_error("label, '%s' not found", $3);
+> +				print_error("label or path, '%s', not found", $3);
+>  		}
+>  	;
+>  
+> diff --git a/livetree.c b/livetree.c
+> index 21a4c48..bf8796b 100644
+> --- a/livetree.c
+> +++ b/livetree.c
+> @@ -429,10 +429,28 @@ struct node *get_node_by_phandle(struct node *tree, cell_t phandle)
+>  
+>  struct node *get_node_by_ref(struct node *tree, const char *ref)
+>  {
+> +	struct node *node;
+> +
+>  	if (ref[0] == '/')
+>  		return get_node_by_path(tree, ref);
+> -	else
+> +	else {
+> +		/*
+> +		 * Support finding a node reference that is rooted by
+> +		 * a label reference.
+> +		 *
+> +		 * References rooted by a label have a '/' in them.
+> +		 */
+> +		char *p = strchr(ref, '/');
+> +
+> +		if (p) {
+> +			*p = '\0';
+> +			node = get_node_by_label(tree, ref);
+> +			*p = '/';
+> +			return get_node_by_path(node, p+1);
+> +		}
+> +
+>  		return get_node_by_label(tree, ref);
+> +	}
+>  }
+>  
+>  cell_t get_node_phandle(struct node *root, struct node *node)
+> 
