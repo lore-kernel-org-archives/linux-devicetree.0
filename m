@@ -1,17 +1,15 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: dts and dtsi files on which I tested the syntax for my recent
-	patch set.
-Date: Thu, 21 Oct 2010 16:53:47 +1100
-Message-ID: <20101021055347.GG6227@yookeroo>
-References: <1287626916.4535.1511.camel@riker> <20101021031439.GE6227@yookeroo>
-	<1287637560.4535.1524.camel@riker>
-	<20101021054024.GB2252@angua.secretlab.ca>
+Subject: Re: [PATCH 4/4] Create a new property value that means 'undefined'.
+Date: Thu, 21 Oct 2010 17:14:09 +1100
+Message-ID: <20101021061409.GJ6227@yookeroo>
+References: <20101020214419.2985.51068.stgit@riker>
+	<20101020214522.2985.97224.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101021054024.GB2252-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <20101020214522.2985.97224.stgit@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,61 +19,142 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 11:40:24PM -0600, Grant Likely wrote:
-> On Wed, Oct 20, 2010 at 10:06:00PM -0700, John Bonesio wrote:
-> > On Thu, 2010-10-21 at 14:14 +1100, David Gibson wrote:
-> > > On Wed, Oct 20, 2010 at 07:08:36PM -0700, John Bonesio wrote:
-> > > > On Wed, 2010-10-20 at 17:46 -0600, Grant Likely wrote:
-> > > > > On Wed, Oct 20, 2010 at 03:22:17PM -0700, John Bonesio wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > I have attached the two file I've used to test the new syntax from my
-> > > > > > patch set. These might help get a feel for how the syntax and the
-> > > > > > features work.
-> > > > > 
-> > > > > heh, what you should actually do (because you have to anyway) is add
-> > > > > testcases for the new features to dtc in the tests directory.  'make
-> > > > > check' runs the test cases.
-> > > > > 
-> > > > > > /remove-node/ &{soc/serial@2400};                  /* an example of using a label rooted path */
-> > > > > 
-> > > > > As previously mentioned by David, this conflicts with the already
-> > > > > established convention of a path that does not start with a '/' means
-> > > > > use a value from the /aliases node.  That ambiguity needs to
-> > > > > be avoided, so the syntax still needs some massaging.
-> > > > 
-> > > > I think we should explore this a bit further. I just don't see in the
-> > > > lexer code where it would parse anything with the syntax
-> > > > &{alias/node/path} (except for my recent patch).
-> > > > 
-> > > > I looked through the parser too, and it wasn't obvious where it would
-> > > > match '&' directly.
-> > > > 
-> > > > Maybe I'm just missing it.
-> > > 
-> > > No, we just weren't being clear.  dtc does not itself expand aliases
-> > > in this way.  However, it's a common convention in existing device
-> > > tree stuff.  The OF interface will expand aliases in this way, as will
-> > > fdt_path_offset().
-> > > 
-> > > So it's not an actual ambiguity with existing syntax, but the fact
-> > > that your proposed syntax is subtley different from a common existing
-> > > device tree convention would violate least-surprise.
-> > 
-> > Would it really? Isn't an alias and a label on a node pretty much the
-> > same concept?
+On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
+> When updating existing nodes in a device tree merge operation, properties
+> can be removed by setting the value to /undef-prop/.
+> 
+> if /undef-prop/ is assigned to a property that doesn't exist, the property
+> is treated the same as if it had not been declared.
 
-Well, it's a pretty similar concept, but with some significant
-differences in the details.  Which makes it all the more important not
-to lead users into confusing the two.
+[snip]
+> diff --git a/dtc.h b/dtc.h
+> index a7f3667..b3fca6e 100644
+> --- a/dtc.h
+> +++ b/dtc.h
+> @@ -130,7 +130,12 @@ struct label {
+>  	struct label *next;
+>  };
+>  
+> +#define PROP_DEFINED (0)
+> +#define PROP_UNDEFINED (1)
 
-> Nope, because an alias is a property in the /aliases node with very
-> well defined conventions.  A label uses an entirely different namespace,
-> so it should use a different syntax to avoid being ambiguous.
+You never actually use these constants.
+
+> +
+>  struct property {
+> +	int undefined;  /* if the property is set to undefined, this feild is
+> +	                   set to PROP_UNDEFINED */
+>  	char *name;
+>  	struct data val;
+>  
+> @@ -170,6 +175,7 @@ void add_label(struct label **labels, char *label);
+>  struct property *build_property(char *name, struct data val);
+>  struct property *chain_property(struct property *first, struct property *list);
+>  struct property *reverse_properties(struct property *first);
+> +void undefine_property(struct property *prop);
+>  
+>  struct node *build_node(struct property *proplist, struct node *children);
+>  struct node *name_node(struct node *node, char *name);
+> @@ -177,6 +183,7 @@ struct node *chain_node(struct node *first, struct node *list);
+>  struct node *merge_nodes(struct node *old_node, struct node *new_node);
+>  
+>  void add_property(struct node *node, struct property *prop);
+> +void remove_property(struct node *node, struct property *prop);
+>  void add_child(struct node *parent, struct node *child);
+>  void remove_child(struct node *parent, struct node *child);
+>  
+> diff --git a/flattree.c b/flattree.c
+> index ead0332..00439e9 100644
+> --- a/flattree.c
+> +++ b/flattree.c
+> @@ -275,6 +275,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
+>  	for_each_property(tree, prop) {
+>  		int nameoff;
+>  
+> +		if (prop->undefined)
+> +			continue;
+> +
+>  		if (streq(prop->name, "name"))
+>  			seen_name_prop = 1;
+>  
+> diff --git a/livetree.c b/livetree.c
+> index bf8796b..2ef734d 100644
+> --- a/livetree.c
+> +++ b/livetree.c
+> @@ -51,6 +51,11 @@ struct property *build_property(char *name, struct data val)
+>  	return new;
+>  }
+>  
+> +void undefine_property(struct property *prop)
+> +{
+> +	prop->undefined = 1;
+> +}
+> +
+>  struct property *chain_property(struct property *first, struct property *list)
+>  {
+>  	assert(first->next == NULL);
+> @@ -121,11 +126,15 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
+>  		/* Look for a collision, set new value if there is */
+>  		for_each_property(old_node, old_prop) {
+>  			if (streq(old_prop->name, new_prop->name)) {
+> -				/* Add new labels to old property */
+> -				for_each_label(new_prop->labels, l)
+> -					add_label(&old_prop->labels, l->label);
+> -
+> -				old_prop->val = new_prop->val;
+> +				if (new_prop->undefined) {
+> +					remove_property(old_node,
+> old_prop);
+
+This will lose property labels into the ether as your earlier patch
+lost node labels.
+
+> +				} else {
+> +					/* Add new labels to old property */
+> +					for_each_label(new_prop->labels, l)
+> +						add_label(&old_prop->labels, l->label);
+> +
+> +					old_prop->val = new_prop->val;
+> +				}
+>  				free(new_prop);
+>  				new_prop = NULL;
+>  				break;
+> @@ -188,6 +197,25 @@ void add_property(struct node *node, struct property *prop)
+>  	*p = prop;
+>  }
+>  
+> +void remove_property(struct node *node, struct property *prop)
+> +{
+> +	struct property **p;
+> +	int found = 0;
+> +
+> +	p = &node->proplist;
+> +	while (*p) {
+> +		if (*p == prop) {
+> +			*p = (*p)->next;
+> +			found = 1;
+> +			break;
+> +		}
+> +		p = &((*p)->next);
+> +	}
+> +	/* property not in the node? it's probably an error, so flag it. */
+> +	assert(found);
+
+assert()s are for finding bugs in code, not detecting errors in user
+input.  AFAICT this *can* be generated by usre input so it should
+print an error message and if possible continue, not cause a SIGABRT.
+
+> +}
+> +
+> +
+>  void add_child(struct node *parent, struct node *child)
+>  {
+>  	struct node **p;
+> 
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
