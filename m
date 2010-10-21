@@ -1,16 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 2/4] Implements new features for updating existing
-	device tree nodes.
-Date: Thu, 21 Oct 2010 16:58:04 +1100
-Message-ID: <20101021055804.GH6227@yookeroo>
+Subject: Re: [PATCH 3/4] Allow nodes at the root to be specified by path as
+	well as by label.
+Date: Thu, 21 Oct 2010 17:03:48 +1100
+Message-ID: <20101021060348.GI6227@yookeroo>
 References: <20101020214419.2985.51068.stgit@riker>
-	<20101020214506.2985.32859.stgit@riker>
+	<20101020214513.2985.76446.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101020214506.2985.32859.stgit@riker>
+In-Reply-To: <20101020214513.2985.76446.stgit@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,76 +24,59 @@ To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 02:45:06PM -0700, John Bonesio wrote:
-> This is interesting when the /include/ "<filename>" feature is used. This way
-> we can create base device tree source files for a family of systems and modify
-> the device tree for a specific system.
+On Wed, Oct 20, 2010 at 02:45:13PM -0700, John Bonesio wrote:
+> Changes to allow us to specify a node by it's path. A path can be used in
+> place of a label.
 > 
-> The current sytem allows an existing node to be extended with new properties
-> and subnodes.
-> 
-> The new features allow an existing node to be replaced completely by the new
-> properties and subnodes. The new features also allow an existing node to be
-> deleted.
+> This is particularly useful when overriding existing nodes.
+> This way we don't have to label every possible node in a device tree we know
+> is a base device tree for a class of systems, and we know the tree will be
+> modified for the specific systems.
 
 [snip]
-> +	| devicetree DT_REMOVENODE DT_REF ';'
-> +		{
-> +			struct node *target;
-> +
-> +			target = get_node_by_label($1, $3);
-> +			if (target)
-> +				remove_child(target->parent, target);
-> +			else
-> +				print_error("label, '%s' not found", $3);
-> +		}
-
-This still has the problem of labels disappearing into the ether.
-
->  	;
->  
->  nodedef:
-> diff --git a/dtc.h b/dtc.h
-> index b36ac5d..a7f3667 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -178,6 +178,7 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node);
->  
->  void add_property(struct node *node, struct property *prop);
->  void add_child(struct node *parent, struct node *child);
-> +void remove_child(struct node *parent, struct node *child);
->  
->  const char *get_unitname(struct node *node);
->  struct property *get_property(struct node *node, const char *propname);
 > diff --git a/livetree.c b/livetree.c
-> index 13c5f10..21a4c48 100644
+> index 21a4c48..bf8796b 100644
 > --- a/livetree.c
 > +++ b/livetree.c
-> @@ -202,6 +202,24 @@ void add_child(struct node *parent, struct node *child)
->  	*p = child;
+> @@ -429,10 +429,28 @@ struct node *get_node_by_phandle(struct node *tree, cell_t phandle)
+>  
+>  struct node *get_node_by_ref(struct node *tree, const char *ref)
+>  {
+> +	struct node *node;
+> +
+>  	if (ref[0] == '/')
+>  		return get_node_by_path(tree, ref);
+> -	else
+> +	else {
+> +		/*
+> +		 * Support finding a node reference that is rooted by
+> +		 * a label reference.
+> +		 *
+> +		 * References rooted by a label have a '/' in them.
+> +		 */
+> +		char *p = strchr(ref, '/');
+
+So, this line is effectively un-const-ing part of the string that ref
+points to.
+
+> +
+> +		if (p) {
+> +			*p = '\0';
+
+And, then you write to it.  Not good at all.  I'm afraid you're going
+to have to use a strndup() here.  Or else modify get_node_by_label()
+to ignore text after a /.
+
+> +			node = get_node_by_label(tree, ref);
+> +			*p = '/';
+> +			return get_node_by_path(node, p+1);
+> +		}
+> +
+>  		return get_node_by_label(tree, ref);
+> +	}
 >  }
 >  
-> +void remove_child(struct node *parent, struct node *child)
-> +{
-> +	struct node **p;
-> +
-> +	/* Make sure we've got a consistent tree here */
-> +	assert(child->parent == parent);
-> +
-> +	p = &parent->children;
-> +	while (*p) {
-> +		if (*p == child) {
-> +			*p = (*p)->next_sibling;
-> +			break;
-> +		}
-> +		p = &((*p)->next_sibling);
-> +	}
-> +	child->parent = NULL;
-> +}
-> +
->  struct reserve_info *build_reserve_entry(uint64_t address, uint64_t size)
->  {
->  	struct reserve_info *new = xmalloc(sizeof(*new));
+>  cell_t get_node_phandle(struct node *root, struct node *node)
 > 
 
 -- 
