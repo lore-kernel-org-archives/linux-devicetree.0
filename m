@@ -1,16 +1,16 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 3/4] Allow nodes at the root to be specified by path as
-	well as by label.
-Date: Thu, 21 Oct 2010 17:03:48 +1100
-Message-ID: <20101021060348.GI6227@yookeroo>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] Create a new property value that means 'undefined'.
+Date: Thu, 21 Oct 2010 08:20:59 -0700
+Message-ID: <1287674459.4535.1555.camel@riker>
 References: <20101020214419.2985.51068.stgit@riker>
-	<20101020214513.2985.76446.stgit@riker>
+	<20101020214522.2985.97224.stgit@riker>
+	<20101021052053.GF13335@angua.secretlab.ca>
+	<20101021061908.GK6227@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20101020214513.2985.76446.stgit@riker>
+In-Reply-To: <20101021061908.GK6227@yookeroo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,67 +20,98 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 20, 2010 at 02:45:13PM -0700, John Bonesio wrote:
-> Changes to allow us to specify a node by it's path. A path can be used in
-> place of a label.
+On Thu, 2010-10-21 at 17:19 +1100, David Gibson wrote:
+> On Wed, Oct 20, 2010 at 11:20:53PM -0600, Grant Likely wrote:
+> > On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
+> > > When updating existing nodes in a device tree merge operation, properties
+> > > can be removed by setting the value to /undef-prop/.
+> > > 
+> > > if /undef-prop/ is assigned to a property that doesn't exist, the property
+> > > is treated the same as if it had not been declared.
+> > > 
+> > > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > 
+> > Implementation looks good.
+> > > ---
+> > > 
+> > >  dtc-lexer.l  |   14 ++++++++++----
+> > >  dtc-parser.y |    6 ++++++
+> > >  dtc.h        |    7 +++++++
+> > >  flattree.c   |    3 +++
+> > >  livetree.c   |   38 +++++++++++++++++++++++++++++++++-----
+> > >  5 files changed, 59 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/dtc-lexer.l b/dtc-lexer.l
+> > > index 216a3d2..efa89b4 100644
+> > > --- a/dtc-lexer.l
+> > > +++ b/dtc-lexer.l
+> > > @@ -102,6 +102,12 @@ static int pop_input_file(void);
+> > >  			return DT_REMOVENODE;
+> > >  		}
+> > >  
+> > > +<*>"/undef-prop/"	{
+> > > +			DPRINT("Keyword: /undef-prop/\n");
+> > > +			BEGIN_DEFAULT();
+> > > +			return DT_UNDEFINED;
+> > > +		}
+> > > +
+> > 
+> > Does /undef-prop/ really need to be using <*> to match in all start
+> > conditions?
 > 
-> This is particularly useful when overriding existing nodes.
-> This way we don't have to label every possible node in a device tree we know
-> is a base device tree for a class of systems, and we know the tree will be
-> modified for the specific systems.
-
-[snip]
-> diff --git a/livetree.c b/livetree.c
-> index 21a4c48..bf8796b 100644
-> --- a/livetree.c
-> +++ b/livetree.c
-> @@ -429,10 +429,28 @@ struct node *get_node_by_phandle(struct node *tree, cell_t phandle)
->  
->  struct node *get_node_by_ref(struct node *tree, const char *ref)
->  {
-> +	struct node *node;
-> +
->  	if (ref[0] == '/')
->  		return get_node_by_path(tree, ref);
-> -	else
-> +	else {
-> +		/*
-> +		 * Support finding a node reference that is rooted by
-> +		 * a label reference.
-> +		 *
-> +		 * References rooted by a label have a '/' in them.
-> +		 */
-> +		char *p = strchr(ref, '/');
-
-So, this line is effectively un-const-ing part of the string that ref
-points to.
-
-> +
-> +		if (p) {
-> +			*p = '\0';
-
-And, then you write to it.  Not good at all.  I'm afraid you're going
-to have to use a strndup() here.  Or else modify get_node_by_label()
-to ignore text after a /.
-
-> +			node = get_node_by_label(tree, ref);
-> +			*p = '/';
-> +			return get_node_by_path(node, p+1);
-> +		}
-> +
->  		return get_node_by_label(tree, ref);
-> +	}
->  }
->  
->  cell_t get_node_phandle(struct node *root, struct node *node)
+> It doesn't need to, but it's a good idea for it to do so, because if
+> the keyword is lexed as a keyword everywhere, it will lead to more
+> meaningful error messages if it's put somewhere it shouldn't be.
 > 
+> In fact, something I've learnt writing dtc is that in general you
+> should make your lexical tokens as wide as they can without colliding
+> with each other, then check that they have the right contents later.
+> That way you get a clear error message from the checking code
+> ("such-and-so contained an illegal character"), rather than the lexer
+> breaking it into different tokens instead and the parser generating
+> some cryptic error.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+This is probably what David is saying. Generally you want the lexer to
+be context free - meaning everything gets tokenized the same way
+everywhere.
+
+The fact that we're using various start conditions in the dtc, is a
+little unsettling to me. It makes me wonder if we've got functionality
+in the lexer that really should be in the parser.
+
+Most lexers for the 'C' language have only one start condition to kick
+things off.
+
+
+> [snip]
+> > > @@ -178,6 +179,11 @@ propdef:
+> > >  		{
+> > >  			$$ = build_property($1, empty_data);
+> > >  		}
+> > > +	| DT_PROPNODENAME '=' DT_UNDEFINED ';'
+> > 
+> > Hmmm.  I'm going to make this comment once, but I'll shut-up if you
+> > guys disagree with me because the details have already been hashed out
+> > several times, and I've already said I'd be okay with the above form.
+> > 
+> > The more I look at it, the more I prefer the form 
+> > 	/undef-prop/ property;
+> > instead of
+> > 	property = /undef-prop/;
+> > 
+> > The reason being is that while the assignment form does work, it isn't
+> > a very natural construct.  Removal is not logically the same as
+> > assignment.  /undef-prop/ is something that is performed on a
+> > property.  Syntax that shows /undef-prop/ being assigned as a property
+> > value doesn't ring true for me as the right thing to do.
+> > 
+> > So, my vote is for the "/undef-prop/ property;" form, but I hold my
+> > piece if you both disagree with me.
+> 
+> I.. yeah.. I'm not sure.  I was leaning towards prop = /undef-prop/;
+> before, but you've more-or-less persuaded me here.
+> 
