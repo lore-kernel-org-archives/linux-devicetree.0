@@ -1,15 +1,15 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 4/4] Create a new property value that means 'undefined'.
-Date: Fri, 22 Oct 2010 12:42:08 -0700
-Message-ID: <1287776528.4535.1562.camel@riker>
+Date: Fri, 22 Oct 2010 12:50:58 -0700
+Message-ID: <1287777058.4535.1571.camel@riker>
 References: <20101020214419.2985.51068.stgit@riker>
 	<20101020214522.2985.97224.stgit@riker>
-	<20101021052053.GF13335@angua.secretlab.ca>
+	<20101021061409.GJ6227@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101021052053.GF13335-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <20101021061409.GJ6227@yookeroo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,128 +19,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2010-10-20 at 23:20 -0600, Grant Likely wrote:
+On Thu, 2010-10-21 at 17:14 +1100, David Gibson wrote:
 > On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
 > > When updating existing nodes in a device tree merge operation, properties
 > > can be removed by setting the value to /undef-prop/.
 > > 
 > > if /undef-prop/ is assigned to a property that doesn't exist, the property
 > > is treated the same as if it had not been declared.
-> > 
-> > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > 
-> Implementation looks good.
-> > ---
-> > 
-> >  dtc-lexer.l  |   14 ++++++++++----
-> >  dtc-parser.y |    6 ++++++
-> >  dtc.h        |    7 +++++++
-> >  flattree.c   |    3 +++
-> >  livetree.c   |   38 +++++++++++++++++++++++++++++++++-----
-> >  5 files changed, 59 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/dtc-lexer.l b/dtc-lexer.l
-> > index 216a3d2..efa89b4 100644
-> > --- a/dtc-lexer.l
-> > +++ b/dtc-lexer.l
-> > @@ -102,6 +102,12 @@ static int pop_input_file(void);
-> >  			return DT_REMOVENODE;
-> >  		}
-> >  
-> > +<*>"/undef-prop/"	{
-> > +			DPRINT("Keyword: /undef-prop/\n");
-> > +			BEGIN_DEFAULT();
-> > +			return DT_UNDEFINED;
-> > +		}
-> > +
-> 
-> Does /undef-prop/ really need to be using <*> to match in all start
-> conditions?
-> 
-> >  <*>{LABEL}:	{
-> >  			DPRINT("Label: %s\n", yytext);
-> >  			yylval.labelref = xstrdup(yytext);
-> > @@ -116,10 +122,10 @@ static int pop_input_file(void);
-> >  		}
-> >  
-> >  
-> > -<*>\&{LABEL}    {       /* label reference without the braces*/
-> > -                        DPRINT("Ref: %s\n", yytext+1);
-> > -                        yylval.labelref = xstrdup(yytext+1);
-> > -                        return DT_REF;
-> > +<*>\&{LABEL}	{       /* label reference without the braces*/
-> > +			DPRINT("Ref: %s\n", yytext+1);
-> > +			yylval.labelref = xstrdup(yytext+1);
-> > +	    		return DT_REF;
-> >  		}
-> 
-> Unrelated whitespace change.  In general, patches should avoid making
-> unrelated changes in the same patch, even if they are correct, because
-> they decrease the signal-to-noise ratio for patch reviewers.
-> Whitespace changes are particularly offensive because the can end up
-> masking (to a reviewer) functional changes in the same block.
-> 
-> >  
-> >  <*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
-> > diff --git a/dtc-parser.y b/dtc-parser.y
-> > index 0a74c86..ac9cfd7 100644
-> > --- a/dtc-parser.y
-> > +++ b/dtc-parser.y
-> > @@ -56,6 +56,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
-> >  %token DT_V1
-> >  %token DT_MEMRESERVE
-> >  %token DT_REMOVENODE
-> > +%token DT_UNDEFINED
-> >  %token <propnodename> DT_PROPNODENAME
-> >  %token <literal> DT_LITERAL
-> >  %token <cbase> DT_BASE
-> > @@ -178,6 +179,11 @@ propdef:
-> >  		{
-> >  			$$ = build_property($1, empty_data);
-> >  		}
-> > +	| DT_PROPNODENAME '=' DT_UNDEFINED ';'
-> 
-> Hmmm.  I'm going to make this comment once, but I'll shut-up if you
-> guys disagree with me because the details have already been hashed out
-> several times, and I've already said I'd be okay with the above form.
-> 
-> The more I look at it, the more I prefer the form 
-> 	/undef-prop/ property;
-> instead of
-> 	property = /undef-prop/;
-> 
-> The reason being is that while the assignment form does work, it isn't
-> a very natural construct.  Removal is not logically the same as
-> assignment.  /undef-prop/ is something that is performed on a
-> property.  Syntax that shows /undef-prop/ being assigned as a property
-> value doesn't ring true for me as the right thing to do.
-> 
-> So, my vote is for the "/undef-prop/ property;" form, but I hold my
-> piece if you both disagree with me.
-
-I'd be ok with /undef-prop/ property;
-
-This seems to fit with our /remove-node/ node; syntax. If we do this, I
-think it would be better to use
-	/remove-prop/ property;
-
-
-> > +		{
-> > +			$$ = build_property($1, empty_data);
-> > +			undefine_property($$)
-> 
-> Don't bother with the undefine_property function.  Just do:
-> 			$$->undefined = 1;
-> 
-> > +		}
-> 
-> >  	| DT_LABEL propdef
-> >  		{
-> >  			add_label(&$2->labels, $1);
+> [snip]
 > > diff --git a/dtc.h b/dtc.h
 > > index a7f3667..b3fca6e 100644
 > > --- a/dtc.h
@@ -152,9 +43,7 @@ think it would be better to use
 > > +#define PROP_DEFINED (0)
 > > +#define PROP_UNDEFINED (1)
 > 
-> No need for the #defines. Just use 0 and 1 in the code when working
-> with boolean flags.  Besides, these #defines aren't used anywhere
-> anyway.  :-)
+> You never actually use these constants.
 > 
 > > +
 > >  struct property {
@@ -219,7 +108,12 @@ think it would be better to use
 > > -
 > > -				old_prop->val = new_prop->val;
 > > +				if (new_prop->undefined) {
-> > +					remove_property(old_node, old_prop);
+> > +					remove_property(old_node,
+> > old_prop);
+> 
+> This will lose property labels into the ether as your earlier patch
+> lost node labels.
+> 
 > > +				} else {
 > > +					/* Add new labels to old property */
 > > +					for_each_label(new_prop->labels, l)
@@ -245,15 +139,29 @@ think it would be better to use
 > > +			*p = (*p)->next;
 > > +			found = 1;
 > > +			break;
-> 
-> You could just return at this point, and assert unconditionally if the
-> loop exits.  That would be slightly more concise.
-> 
 > > +		}
 > > +		p = &((*p)->next);
 > > +	}
 > > +	/* property not in the node? it's probably an error, so flag it. */
 > > +	assert(found);
+> 
+> assert()s are for finding bugs in code, not detecting errors in user
+> input.  AFAICT this *can* be generated by usre input so it should
+> print an error message and if possible continue, not cause a SIGABRT.
+
+I agree that assert() shouldn't be used if it can be caused by user
+input, but I don't see how the assert can be triggered by user input. In
+my mind this is a programming error.
+
+I the only way I see this being triggered by user input is if the user
+specifies that a property be deleted but it doesn't exist in the current
+in-memory merged tree. I believe the merge_nodes() routine takes care
+to avoid problems here by making sure the property already exists in the
+in-memory merged tree before calling remove_property() on it.
+
+Maybe there's a case I'm not considering.
+
+> 
 > > +}
 > > +
 > > +
@@ -261,3 +169,4 @@ think it would be better to use
 > >  {
 > >  	struct node **p;
 > > 
+> 
