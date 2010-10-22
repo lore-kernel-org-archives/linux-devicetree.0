@@ -1,17 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 4/4] Create a new property value that means 'undefined'.
-Date: Fri, 22 Oct 2010 11:38:41 +1100
-Message-ID: <20101022003841.GA5355@yookeroo>
+Date: Fri, 22 Oct 2010 12:42:08 -0700
+Message-ID: <1287776528.4535.1562.camel@riker>
 References: <20101020214419.2985.51068.stgit@riker>
 	<20101020214522.2985.97224.stgit@riker>
 	<20101021052053.GF13335@angua.secretlab.ca>
-	<20101021061908.GK6227@yookeroo> <1287674459.4535.1555.camel@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1287674459.4535.1555.camel@riker>
+In-Reply-To: <20101021052053.GF13335-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,65 +19,245 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 21, 2010 at 08:20:59AM -0700, John Bonesio wrote:
-> On Thu, 2010-10-21 at 17:19 +1100, David Gibson wrote:
-> > On Wed, Oct 20, 2010 at 11:20:53PM -0600, Grant Likely wrote:
-> > > On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
-[snip]
-> > > Does /undef-prop/ really need to be using <*> to match in all start
-> > > conditions?
+On Wed, 2010-10-20 at 23:20 -0600, Grant Likely wrote:
+> On Wed, Oct 20, 2010 at 02:45:22PM -0700, John Bonesio wrote:
+> > When updating existing nodes in a device tree merge operation, properties
+> > can be removed by setting the value to /undef-prop/.
 > > 
-> > It doesn't need to, but it's a good idea for it to do so, because if
-> > the keyword is lexed as a keyword everywhere, it will lead to more
-> > meaningful error messages if it's put somewhere it shouldn't be.
+> > if /undef-prop/ is assigned to a property that doesn't exist, the property
+> > is treated the same as if it had not been declared.
 > > 
-> > In fact, something I've learnt writing dtc is that in general you
-> > should make your lexical tokens as wide as they can without colliding
-> > with each other, then check that they have the right contents later.
-> > That way you get a clear error message from the checking code
-> > ("such-and-so contained an illegal character"), rather than the lexer
-> > breaking it into different tokens instead and the parser generating
-> > some cryptic error.
+> > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > 
-> This is probably what David is saying. Generally you want the lexer to
-> be context free - meaning everything gets tokenized the same way
-> everywhere.
+> Implementation looks good.
+> > ---
+> > 
+> >  dtc-lexer.l  |   14 ++++++++++----
+> >  dtc-parser.y |    6 ++++++
+> >  dtc.h        |    7 +++++++
+> >  flattree.c   |    3 +++
+> >  livetree.c   |   38 +++++++++++++++++++++++++++++++++-----
+> >  5 files changed, 59 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/dtc-lexer.l b/dtc-lexer.l
+> > index 216a3d2..efa89b4 100644
+> > --- a/dtc-lexer.l
+> > +++ b/dtc-lexer.l
+> > @@ -102,6 +102,12 @@ static int pop_input_file(void);
+> >  			return DT_REMOVENODE;
+> >  		}
+> >  
+> > +<*>"/undef-prop/"	{
+> > +			DPRINT("Keyword: /undef-prop/\n");
+> > +			BEGIN_DEFAULT();
+> > +			return DT_UNDEFINED;
+> > +		}
+> > +
+> 
+> Does /undef-prop/ really need to be using <*> to match in all start
+> conditions?
+> 
+> >  <*>{LABEL}:	{
+> >  			DPRINT("Label: %s\n", yytext);
+> >  			yylval.labelref = xstrdup(yytext);
+> > @@ -116,10 +122,10 @@ static int pop_input_file(void);
+> >  		}
+> >  
+> >  
+> > -<*>\&{LABEL}    {       /* label reference without the braces*/
+> > -                        DPRINT("Ref: %s\n", yytext+1);
+> > -                        yylval.labelref = xstrdup(yytext+1);
+> > -                        return DT_REF;
+> > +<*>\&{LABEL}	{       /* label reference without the braces*/
+> > +			DPRINT("Ref: %s\n", yytext+1);
+> > +			yylval.labelref = xstrdup(yytext+1);
+> > +	    		return DT_REF;
+> >  		}
+> 
+> Unrelated whitespace change.  In general, patches should avoid making
+> unrelated changes in the same patch, even if they are correct, because
+> they decrease the signal-to-noise ratio for patch reviewers.
+> Whitespace changes are particularly offensive because the can end up
+> masking (to a reviewer) functional changes in the same block.
+> 
+> >  
+> >  <*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
+> > diff --git a/dtc-parser.y b/dtc-parser.y
+> > index 0a74c86..ac9cfd7 100644
+> > --- a/dtc-parser.y
+> > +++ b/dtc-parser.y
+> > @@ -56,6 +56,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+> >  %token DT_V1
+> >  %token DT_MEMRESERVE
+> >  %token DT_REMOVENODE
+> > +%token DT_UNDEFINED
+> >  %token <propnodename> DT_PROPNODENAME
+> >  %token <literal> DT_LITERAL
+> >  %token <cbase> DT_BASE
+> > @@ -178,6 +179,11 @@ propdef:
+> >  		{
+> >  			$$ = build_property($1, empty_data);
+> >  		}
+> > +	| DT_PROPNODENAME '=' DT_UNDEFINED ';'
+> 
+> Hmmm.  I'm going to make this comment once, but I'll shut-up if you
+> guys disagree with me because the details have already been hashed out
+> several times, and I've already said I'd be okay with the above form.
+> 
+> The more I look at it, the more I prefer the form 
+> 	/undef-prop/ property;
+> instead of
+> 	property = /undef-prop/;
+> 
+> The reason being is that while the assignment form does work, it isn't
+> a very natural construct.  Removal is not logically the same as
+> assignment.  /undef-prop/ is something that is performed on a
+> property.  Syntax that shows /undef-prop/ being assigned as a property
+> value doesn't ring true for me as the right thing to do.
+> 
+> So, my vote is for the "/undef-prop/ property;" form, but I hold my
+> piece if you both disagree with me.
 
-Part of what I was saying, yes.
+I'd be ok with /undef-prop/ property;
 
-> The fact that we're using various start conditions in the dtc, is a
-> little unsettling to me. It makes me wonder if we've got functionality
-> in the lexer that really should be in the parser.
+This seems to fit with our /remove-node/ node; syntax. If we do this, I
+think it would be better to use
+	/remove-prop/ property;
 
-Yeah, it bothered me when it went in, too.  And I've reworked the way
-it was done at least once, because it was confusing me.  But I'm
-pretty sure it's necessary.
 
-It's basically all because property and node names are lexically
-awkward.  They can and do contain a bunch of characters that would
-usually be operators or delimiters in a language that's lexically like
-C.  But being able to have those property and node names bare means we
-have a syntax that's more readable and concise.  But we want the rest
-of the syntax to be lexically like C, so we can use C-ish delimiters
-and so forth.  So, start conditions it is.
-
-There's also the BYTESTRING start condition.  That's one's also a
-convenience / conciseness feature to allow hex blobs of data to be
-entered easily.  It's well localized, so again, a reasonable tradeoff
-I think.
-
-I just noticed that the INCLUDE state is no longer used, we should
-remove it.  And V1 is a hangover from when we supported both dts-v0
-and dts-v1 input, which are lexically different, due to the changed
-format for integer literals.  We could probably remove that too,
-though it would require a bit more care.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> > +		{
+> > +			$$ = build_property($1, empty_data);
+> > +			undefine_property($$)
+> 
+> Don't bother with the undefine_property function.  Just do:
+> 			$$->undefined = 1;
+> 
+> > +		}
+> 
+> >  	| DT_LABEL propdef
+> >  		{
+> >  			add_label(&$2->labels, $1);
+> > diff --git a/dtc.h b/dtc.h
+> > index a7f3667..b3fca6e 100644
+> > --- a/dtc.h
+> > +++ b/dtc.h
+> > @@ -130,7 +130,12 @@ struct label {
+> >  	struct label *next;
+> >  };
+> >  
+> > +#define PROP_DEFINED (0)
+> > +#define PROP_UNDEFINED (1)
+> 
+> No need for the #defines. Just use 0 and 1 in the code when working
+> with boolean flags.  Besides, these #defines aren't used anywhere
+> anyway.  :-)
+> 
+> > +
+> >  struct property {
+> > +	int undefined;  /* if the property is set to undefined, this feild is
+> > +	                   set to PROP_UNDEFINED */
+> >  	char *name;
+> >  	struct data val;
+> >  
+> > @@ -170,6 +175,7 @@ void add_label(struct label **labels, char *label);
+> >  struct property *build_property(char *name, struct data val);
+> >  struct property *chain_property(struct property *first, struct property *list);
+> >  struct property *reverse_properties(struct property *first);
+> > +void undefine_property(struct property *prop);
+> >  
+> >  struct node *build_node(struct property *proplist, struct node *children);
+> >  struct node *name_node(struct node *node, char *name);
+> > @@ -177,6 +183,7 @@ struct node *chain_node(struct node *first, struct node *list);
+> >  struct node *merge_nodes(struct node *old_node, struct node *new_node);
+> >  
+> >  void add_property(struct node *node, struct property *prop);
+> > +void remove_property(struct node *node, struct property *prop);
+> >  void add_child(struct node *parent, struct node *child);
+> >  void remove_child(struct node *parent, struct node *child);
+> >  
+> > diff --git a/flattree.c b/flattree.c
+> > index ead0332..00439e9 100644
+> > --- a/flattree.c
+> > +++ b/flattree.c
+> > @@ -275,6 +275,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
+> >  	for_each_property(tree, prop) {
+> >  		int nameoff;
+> >  
+> > +		if (prop->undefined)
+> > +			continue;
+> > +
+> >  		if (streq(prop->name, "name"))
+> >  			seen_name_prop = 1;
+> >  
+> > diff --git a/livetree.c b/livetree.c
+> > index bf8796b..2ef734d 100644
+> > --- a/livetree.c
+> > +++ b/livetree.c
+> > @@ -51,6 +51,11 @@ struct property *build_property(char *name, struct data val)
+> >  	return new;
+> >  }
+> >  
+> > +void undefine_property(struct property *prop)
+> > +{
+> > +	prop->undefined = 1;
+> > +}
+> > +
+> >  struct property *chain_property(struct property *first, struct property *list)
+> >  {
+> >  	assert(first->next == NULL);
+> > @@ -121,11 +126,15 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
+> >  		/* Look for a collision, set new value if there is */
+> >  		for_each_property(old_node, old_prop) {
+> >  			if (streq(old_prop->name, new_prop->name)) {
+> > -				/* Add new labels to old property */
+> > -				for_each_label(new_prop->labels, l)
+> > -					add_label(&old_prop->labels, l->label);
+> > -
+> > -				old_prop->val = new_prop->val;
+> > +				if (new_prop->undefined) {
+> > +					remove_property(old_node, old_prop);
+> > +				} else {
+> > +					/* Add new labels to old property */
+> > +					for_each_label(new_prop->labels, l)
+> > +						add_label(&old_prop->labels, l->label);
+> > +
+> > +					old_prop->val = new_prop->val;
+> > +				}
+> >  				free(new_prop);
+> >  				new_prop = NULL;
+> >  				break;
+> > @@ -188,6 +197,25 @@ void add_property(struct node *node, struct property *prop)
+> >  	*p = prop;
+> >  }
+> >  
+> > +void remove_property(struct node *node, struct property *prop)
+> > +{
+> > +	struct property **p;
+> > +	int found = 0;
+> > +
+> > +	p = &node->proplist;
+> > +	while (*p) {
+> > +		if (*p == prop) {
+> > +			*p = (*p)->next;
+> > +			found = 1;
+> > +			break;
+> 
+> You could just return at this point, and assert unconditionally if the
+> loop exits.  That would be slightly more concise.
+> 
+> > +		}
+> > +		p = &((*p)->next);
+> > +	}
+> > +	/* property not in the node? it's probably an error, so flag it. */
+> > +	assert(found);
+> > +}
+> > +
+> > +
+> >  void add_child(struct node *parent, struct node *child)
+> >  {
+> >  	struct node **p;
+> > 
