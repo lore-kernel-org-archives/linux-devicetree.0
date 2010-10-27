@@ -1,16 +1,14 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: question about dma-ranges
-Date: Wed, 27 Oct 2010 14:46:02 -0500
-Message-ID: <20101027144602.2c5ef098@udp111988uds.am.freescale.net>
-References: <9696D7A991D0824DBA8DFAC74A9C5FA306911C5F@az33exm25.fsl.freescale.net>
-	<4CC77784.2070701@firmworks.com>
-	<AANLkTikTu_p0-Uk7=FuUay4mvCEEU0e9V5eY6bjuK5RQ@mail.gmail.com>
-	<20101027024227.GD7023@yookeroo>
+Date: Wed, 27 Oct 2010 14:47:37 -0500
+Message-ID: <4CC881D9.6020808@freescale.com>
+References: <9696D7A991D0824DBA8DFAC74A9C5FA306911C5F@az33exm25.fsl.freescale.net>	<4CC77784.2070701@firmworks.com>	<AANLkTikTu_p0-Uk7=FuUay4mvCEEU0e9V5eY6bjuK5RQ@mail.gmail.com>	<20101027024227.GD7023@yookeroo>
+	<20101027144602.2c5ef098@udp111988uds.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101027024227.GD7023@yookeroo>
+In-Reply-To: <20101027144602.2c5ef098-N/eSCTBpGwP7j4BuCOFQISmX4OfbXNuMKnGXBo5VDl8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,32 +18,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyNyBPY3QgMjAxMCAxMzo0MjoyNyArMTEwMApEYXZpZCBHaWJzb24gPGRhdmlkQGdp
-YnNvbi5kcm9wYmVhci5pZC5hdT4gd3JvdGU6Cgo+IE9uIFR1ZSwgT2N0IDI2LCAyMDEwIGF0IDA4
-OjM3OjU1UE0gLTA1MDAsIFRpbXVyIFRhYmkgd3JvdGU6Cj4gPiBPbiBUdWUsIE9jdCAyNiwgMjAx
-MCBhdCA3OjUxIFBNLCBNaXRjaCBCcmFkbGV5IDx3bWJAZmlybXdvcmtzLmNvbT4gd3JvdGU6Cj4g
-PiA+IMKgSXQncyBwcm9iYWJseSB1bm5lY2Vzc2FyeSBvbiBtb2Rlcm4gbWFjaGluZXMsIGJ1dCBv
-bGQgUENzIHdlcmUgZmFpcmx5Cj4gPiA+IHJlc3RyaWN0aXZlIGFib3V0IERNQSBhZGRyZXNzZXMg
-ZHVlIHRvIHNob3J0IGNvdW50ZXJzLiDCoFRoZSBidXNlcyBvbiB3aGljaAo+ID4gPiBzdWNoIHJl
-c3RyaWN0aW9ucyBhcHBsaWVkIGFyZSBubyBsb25nZXIgYXQgdGhlIHJvb3QgbGV2ZWwsIGJ1dCB0
-aGV5IHdlcmUKPiA+ID4gb25jZSB0aGVyZS4uLgo+ID4gCj4gPiBJdCdzIHN0aWxsIG5lY2Vzc2Fy
-eS4gIFRoZSBRRSwgd2hpY2ggd2Ugc2hpcCBvbiBzZXZlcmFsIG9mIG91ciBjdXJyZW50Cj4gPiBw
-YXJ0cywgY2FuIG9ubHkgRE1BIHRvL2Zyb20gMzItYml0IGFkZHJlc3NlcywgZXZlbiBvbiBTT0Nz
-IHRoYXQKPiA+IHN1cHBvcnQgMzYtYml0IGFkZHJlc3NpbmcgZm9yIGV2ZXJ5dGhpbmcgZWxzZS4K
-PiAKPiBCdXQgdGhlIFFFIGlzIG5vdCBhdCB0aGUgdG9wLWxldmVsLCBJSVJDLCBzbyBpdHMgcmVz
-dHJpY3Rpb25zIGNhbiBiZQo+IGVuY29kZWQgaW4gdGhlIGRtYS1yYW5nZXMgb24gaXRzIG93biBi
-dXMuICBXZSdyZSB0YWxraW5nIHNwZWNpZmljYWxseQo+IGFib3V0IHRoZSBzcGVjaWFsIGNhc2Ug
-b2YgZG1hLXJhbmdlcyBpbiB0aGUgcm9vdCBub2RlLCBub3QgdGhlIHV0aWxpdHkKPiBvZiBkbWEt
-cmFuZ2VzIGluIGdlbmVyYWwgd2hpY2ggaXMgY2xlYXIuCgpQbHVzLCBpbiB0aGlzIGNhc2UgZG9l
-cyB0aGF0IG5lZWQgdG8gYmUgZXhwcmVzc2VkIGluIHRoZSBkZXZpY2UgdHJlZT8KCk9yIGNhbiB0
-aGUgUUUgY29kZSBqdXN0IGtub3cgYWJvdXQgdGhhdCBiZWNhdXNlIGl0IG9ubHkgaGFzIDMyLWJp
-dApyZWdpc3RlcnMvZGVzY3JpcHRvciBmaWVsZHMgZm9yIERNQSBhZGRyZXNzZXM/ICBJLmUuIGl0
-IGlzIGEgbGltaXRhdGlvbgpvZiBhbGwgaW5zdGFuY2VzIG9mIFFFLCBub3QganVzdCBhcyBpbnRl
-Z3JhdGVkIGluIHRoaXMgc3lzdGVtLgoKLVNjb3R0CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRl
-dmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9y
-Zy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Scott Wood wrote:
+> Or can the QE code just know about that because it only has 32-bit
+> registers/descriptor fields for DMA addresses?  I.e. it is a limitation
+> of all instances of QE, not just as integrated in this system.
+
+It's a limitation of the QE registers -- they're only 32-bit.  If we ever
+produce a new QE that has bigger registers, we can use the compatible property
+to distinguish between them.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
