@@ -1,12 +1,14 @@
-From: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: question about dma-ranges
-Date: Tue, 26 Oct 2010 17:48:47 -0700
-Message-ID: <9696D7A991D0824DBA8DFAC74A9C5FA306911C5F@az33exm25.fsl.freescale.net>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: question about dma-ranges
+Date: Tue, 26 Oct 2010 20:37:55 -0500
+Message-ID: <AANLkTikTu_p0-Uk7=FuUay4mvCEEU0e9V5eY6bjuK5RQ@mail.gmail.com>
+References: <9696D7A991D0824DBA8DFAC74A9C5FA306911C5F@az33exm25.fsl.freescale.net>
+	<4CC77784.2070701@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
+In-Reply-To: <4CC77784.2070701-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,27 +19,21 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mitch,
+On Tue, Oct 26, 2010 at 7:51 PM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
+> =A0It's probably unnecessary on modern machines, but old PCs were fairly
+> restrictive about DMA addresses due to short counters. =A0The buses on wh=
+ich
+> such restrictions applied are no longer at the root level, but they were
+> once there...
 
-In the dma-ranges proposal:
+It's still necessary.  The QE, which we ship on several of our current
+parts, can only DMA to/from 32-bit addresses, even on SOCs that
+support 36-bit addressing for everything else.
 
-http://playground.sun.com/1275/proposals/Closed/Accepted/410-it.txt
+-- =
 
-...there is the following special case described:
-
-   As a special case, a "dma-ranges" property may be present in the
-   root node of the device tree.  In this case, the property value
-   describes the ranges of DMA addresses that the system bus can
-   accept.  In this case, the length of the parent-address portion
-   of each entry in the property value is 0 (because the root node
-   has no parent), so the format reduces to...
-
-A few of us in the ePAPR committee were discussing this and
-were wondering what the use case for a dma-ranges on the
-root is.   Is this special case really needed?
-
-Thanks,
-Stuart Yoder
+Timur Tabi
+Linux kernel developer at Freescale
