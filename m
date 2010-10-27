@@ -1,15 +1,12 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] x86: OLPC: speed up device tree creation during boot
-Date: Wed, 27 Oct 2010 10:50:52 -0700
-Message-ID: <20101027105052.23aa1c17@queued.net>
-References: <20101022155846.66cde32f@queued.net>
-	<20101022172247.76cb3049@queued.net>
-	<20101027103924.GB7822@angua.secretlab.ca>
+From: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Subject: Device tree with early buffer allocations and aliased memory
+Date: Wed, 27 Oct 2010 11:49:08 -0700
+Message-ID: <20101027184908.GA7669@dvomlehn-lnx2.corp.sa.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101027103924.GB7822-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,114 +16,91 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
+To: Device Tree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Oct 2010 11:39:24 +0100
-Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+This is a very long question and appreciate your forebearance--I'm using
+Linux and I have a pretty complicated memory structure for which I'm
+trying to define a device tree and I need some help making sense out
+it all. The basic scenario:
+1	I'm using a MIPS processor, which has low memory from 0x0 to
+	0x1fffffff.
+2.	I have two banks of memory with the following DMA addresses:
+		Bank 0	0x20000000-0x3fffffff
+		Bank 1	0x60000000-0x7fffffff
+	With a page map, the processor can also get to these so they
+	are also physical addresses.
+3.	All device registers are at physical addresses < 0x10000000.
+4.	Since the processor needs memory to run, the first 0x0fc00000
+	bytes also appear at 0x10000000. Our hardware guys call this
+	a memory "alias". These addresses are physical, but not DMA
+	addresses. (The hole is so we can alias the reset vector)
+5.	We need huge buffers (up to 80 MiB) that are way too large to
+	allocate with the usual functions, so we allocate them very
+	early through the bootmem allocator. Some of these must be
+	at a fixed address and some may be allocated in one or the
+	other bank of memory. Dynamic address assignment is generally
+	preferred to avoid overlapping static assignments.
 
-> On Fri, Oct 22, 2010 at 05:22:47PM -0700, Andres Salomon wrote:
-> > 
-> > Calling alloc_bootmem() for tiny chunks of memory over and over is
-> > really slow; on an XO-1, it caused the time between when the kernel
-> > started booting and when the display came alive (post-lxfb probe)
-> > to increase to 44s.  This patch optimizes the prom_early_alloc
-> > function by calling alloc_bootmem for 4k-sized blocks of memory,
-> > and handing out chunks of that to callers.  With this hack, the
-> > time between kernel load and display initialization decreased to
-> > 23s.  If there's a better way to do this early in the boot process,
-> > please let me know.
-> > 
-> > (Note: increasing the chunk size to 16k didn't noticably affect
-> > boot time, and wasted 9k.)
-> > 
-> > Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-> > ---
-> >  arch/x86/kernel/olpc_dt.c |   27 +++++++++++++++++++++++----
-> >  1 files changed, 23 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/olpc_dt.c b/arch/x86/kernel/olpc_dt.c
-> > index f660a11..44dd2ae 100644
-> > --- a/arch/x86/kernel/olpc_dt.c
-> > +++ b/arch/x86/kernel/olpc_dt.c
-> > @@ -123,16 +123,35 @@ static int __init olpc_dt_pkg2path(phandle
-> > node, char *buf, }
-> >  
-> >  static unsigned int prom_early_allocated __initdata;
-> > +#define DT_CHUNK_SIZE (1<<12)
-> 
-> PAGE_SIZE perhaps?
-> 
+Memory seems straight-forward-just use the process physical addresses
+wherever possible:
 
-I'd rather not imply that it's anything but completely arbitrary..
+	memories {
+		memory@10000000 {
+			device_type = "memory";
+			reg = <10000000 0x0fc00000>;
+		};
+		memory@20000000 {
+			device_type = "memory";
+			reg = <2fc00000 10400000>;
+		};
+		memory@60000000 {
+			default_type = "memory";
+			reg = <60000000 20000000>;
+		};
+	};
 
+For a device with buffers allocated at a static address in memory
+without an alias I use a new property, cisco,memory-buffers, which
+specifies triples for buffers where:
+	item 1	Lowest allowable address of the first byte of the buffer
+	item 2	Highest allowable address of the last byte of the buffer
+	item 3	Number of bytes in the buffer.
+If item 1 = item 2 - item 3 this buffer must be allocated at the address
+given in item 1, i.e. it has a static address. Otherwise it may be
+dynamically allocated within the given range:
 
+	static-dev-noalias@08000000 {
+		compatible = "cisco,static-dev-noalias";
+		reg = <0x08000000>;
+		cisco,memory-buffers=<0x60000000 0x60200000 0x00200000>;
+	};
 
-> >  
-> >  void * __init prom_early_alloc(unsigned long size)
-> >  {
-> > +	static u8 *mem = NULL;
-> > +	static size_t free_mem = 0;
-> >  	void *res;
-> >  
-> > -	res = alloc_bootmem(size);
-> > -	if (res)
-> > -		memset(res, 0, size);
-> > +	if (free_mem >= size) {
-> > +		/* allocate from the local cache */
-> > +		free_mem -= size;
-> > +		res = mem;
-> > +		mem += size;
-> > +		return res;
-> > +	}
-> >  
-> > -	prom_early_allocated += size;
-> > +	/*
-> > +	 * To mimimize the number of allocations, grab 4k of
-> > memory (that's
-> > +	 * an arbitrary choice that matches PAGE_SIZE on the
-> > platforms we care
-> > +	 * about, and minimizes wasted bootmem) and hand off
-> > chunks of it to
-> > +	 * callers.
-> > +	 */
-> > +	res = alloc_bootmem(DT_CHUNK_SIZE);
-> > +	if (res) {
-> > +		prom_early_allocated += DT_CHUNK_SIZE;
-> > +		memset(res, 0, DT_CHUNK_SIZE);
-> > +		free_mem = DT_CHUNK_SIZE - size;
-> > +		mem = res + size;
-> > +	}
-> 
-> These two hunks should be flipped around so that only one chunk does
-> the allocation from the pool.  As so:
-> 
-> 	/*
-> 	 * To mimimize the number of allocations, grab 4k of memory
-> (that's
-> 	 * an arbitrary choice that matches PAGE_SIZE on the
-> platforms we care
-> 	 * about, and minimizes wasted bootmem) and hand off chunks
-> of it to
-> 	 * callers.
-> 	 */
-> 	if (free_mem < size) {
-> 		free_mem = max(DT_CHUNK_SIZE, size);
-> 		mem = alloc_bootmem(free_mem);
-> 		if (!mem) {
-> 			free_mem = 0;
-> 			return NULL;
-> 		}
-> 		memset(mem, 0, free_mem);
-> 		prom_early_allocated += free_mem;
-> 	}
-> 
-> 	res = mem;
-> 	free_mem -= size;
-> 	mem += size;
-> 	return res;
-> 
-> g.
+I think this is reasonable, though I'd prefer a standard way to specify
+memory buffers allocation parameters. Things get complicated for a device
+with buffers dynamically allocated in the part of memory with an alias.
+The device registers are still in non-aliased memory, so this isn't a
+completely independent bus:
 
-Makes sense, thanks.
+	dyn-dev-alias@08001000 {
+		compatible = "cisco,dyn-dev-alias";
+		reg = <0x08001000>;
+		cisco,memory-buffers = <0x10000000 0x1fb00000 0x00100000>;
+	};
+
+The problem is that I haven't supplied enough information to turn the
+memory buffer physical addresses into DMA addresses, but if I wrap this
+in something like a simple-bus, the address for the reg property will
+be wrong. I could simply adjust it, but then it gets a lot harder to
+read and maintain.
+
+So, questions:
+1.	Is there a better way to specify parameters for very early
+	buffer allocations?
+2.	Is there a better way to handle devices whose device registers
+	live nicely in physical address space but whose buffers live
+	in different physical and DMA address spaces?
+
+I'm open to any and all suggestions.
+-- 
+David VL
