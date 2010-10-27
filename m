@@ -1,14 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] [PATCH] Adding DTB to architecture independent vmlinux
-Date: Wed, 27 Oct 2010 12:09:37 +0100
-Message-ID: <20101027110937.GD7822@angua.secretlab.ca>
-References: <4CC6E491.7060304@gmail.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH] x86: OLPC: add OLPC device-tree support (v3)
+Date: Wed, 27 Oct 2010 15:35:31 +0200 (CEST)
+Message-ID: <alpine.LFD.2.00.1010271534330.2691@localhost6.localdomain6>
+References: <20101022155846.66cde32f@queued.net>
+	<20101027101933.GD6797@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4CC6E491.7060304-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20101027101933.GD6797-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,208 +18,354 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dirk Brandewie <dirk.j.brandewie-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 26, 2010 at 07:24:17AM -0700, Dirk Brandewie wrote:
-> Hi All,
-> 
-> I am working on working on adding support device tree support to an
-> x86 based platform, hpa pointed out that the device tree blob is
-> architecture independent and should be part of the generic kernel.
-> 
-> The patch below is a first cut at adding dtb support to the architecture
-> independent kernel and adding a generic dts->dtb build rule.
-> 
-> This has only been tested on x86.
-> 
-> Comments/suggestions gratefully accepted.
-> 
-> --Dirk
-> 
-> of: add support for linking platform dtb into vmlinux
-> 
-> From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This patch adds support for linking a device tree blob into
-> vmlinux. The platform DTB to be built and linked into the kernel is
-> specified by passing PLATFORM_DTB=<platform name> to make.
+On Wed, 27 Oct 2010, Grant Likely wrote:
 
-I don't think it is worth trying to do this in a cross-architecture
-way.  The powerpc zImage wrappers are already very platform-specific
-code, and there are no assumptions made about how a dtb image is
-linked into the wrapper.  A wrapper could even link in multiple dtb
-images.
+> On Fri, Oct 22, 2010 at 03:58:46PM -0700, Andres Salomon wrote:
+> > 
+> > Make use of PROC_DEVICETREE to export the tree, and sparc's PROMTREE code to
+> > call into OLPC's Open Firmware to build the tree.
+> > 
+> > v3: rename olpc_prom to olpc_dt
+> >   - rework Kconfig entries
+> >   - drop devtree build hook from proc, instead adding a call to x86's
+> >     paging_init (similarly to how sparc64 does it)
+> >   - switch allocation from using slab to alloc_bootmem.  this allows
+> >     the DT to be built earlier during boot (during setup_arch); the
+> >     downside is that there are some 1200 bootmem reservations that are
+> >     done during boot.  Not ideal..
+> >   - add a helper olpc_ofw_is_installed function to test for the
+> >     existence and successful detection of OLPC's OFW.
+> > 
+> > Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> 
+> Overall this patch looks fine, but it needs to be acked from the x86
+> maintainers, and I'd like it to have a cycle through linux-next before
+> it gets merged, so that means 2.6.38 because the 2.6.37 merge window
+> has already been open for almost a week.
+
+Fine with me. That's sufficiently self contained :) So
+
+Acked-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 
 
-For the x86 code, linking the dtb into the vmlinux itself is not
-something that is desired without the option of selecting it between
-multiple linked-in dtb files if firmware doesn't pass one in for you.
-This will require some discussion about how best to manage dtbs before
-merging a patch like this.
-
+> The promtree patches have been merged though.
 > 
-> The command:
-> make PLATFORM_DTB=ce4100
+> Comments below.
 > 
-> will link the device tree blob into vmlinux
+> g.
 > 
-> Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/powerpc/boot/zImage.coff.lds.S |    5 ++---
->  arch/powerpc/boot/zImage.lds.S      |    5 ++---
->  arch/powerpc/boot/zImage.ps3.lds.S  |    5 ++---
->  arch/x86/kernel/Makefile            |   15 +++++++++++++++
->  include/asm-generic/vmlinux.lds.h   |   12 ++++++++++++
->  scripts/Makefile.lib                |    7 +++++++
->  7 files changed, 42 insertions(+), 9 deletions(-)
+> > ---
+> >  arch/x86/Kconfig                |    6 ++
+> >  arch/x86/include/asm/olpc_ofw.h |    9 ++
+> >  arch/x86/include/asm/prom.h     |    1 +
+> >  arch/x86/kernel/Makefile        |    1 +
+> >  arch/x86/kernel/olpc_dt.c       |  165 +++++++++++++++++++++++++++++++++++++++
+> >  arch/x86/kernel/olpc_ofw.c      |    5 +
+> >  arch/x86/mm/init_32.c           |    2 +
+> >  7 files changed, 189 insertions(+), 0 deletions(-)
+> >  create mode 100644 arch/x86/include/asm/prom.h
+> >  create mode 100644 arch/x86/kernel/olpc_dt.c
+> > 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index cea0cd9..1d57e2b 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -2069,11 +2069,17 @@ config OLPC_OPENFIRMWARE
+> >  	bool "Support for OLPC's Open Firmware"
+> >  	depends on !X86_64 && !X86_PAE
+> >  	default y if OLPC
+> > +	select OF
+> >  	help
+> >  	  This option adds support for the implementation of Open Firmware
+> >  	  that is used on the OLPC XO-1 Children's Machine.
+> >  	  If unsure, say N here.
+> >  
+> > +config OLPC_OPENFIRMWARE_DT
+> > +	bool
+> > +	default y if OLPC_OPENFIRMWARE && PROC_DEVICETREE
+> > +	select OF_PROMTREE
+> > +
+> >  endif # X86_32
+> >  
+> >  config K8_NB
+> > diff --git a/arch/x86/include/asm/olpc_ofw.h b/arch/x86/include/asm/olpc_ofw.h
+> > index 08fde47..a41250e 100644
+> > --- a/arch/x86/include/asm/olpc_ofw.h
+> > +++ b/arch/x86/include/asm/olpc_ofw.h
+> > @@ -8,6 +8,8 @@
+> >  
+> >  #ifdef CONFIG_OLPC_OPENFIRMWARE
+> >  
+> > +extern bool olpc_ofw_is_installed(void);
+> > +
+> >  /* run an OFW command by calling into the firmware */
+> >  #define olpc_ofw(name, args, res) \
+> >  	__olpc_ofw((name), ARRAY_SIZE(args), args, ARRAY_SIZE(res), res)
+> > @@ -23,9 +25,16 @@ extern void setup_olpc_ofw_pgd(void);
+> >  
+> >  #else /* !CONFIG_OLPC_OPENFIRMWARE */
+> >  
+> > +static inline bool olpc_ofw_is_installed(void) { return false; }
+> >  static inline void olpc_ofw_detect(void) { }
+> >  static inline void setup_olpc_ofw_pgd(void) { }
+> >  
+> >  #endif /* !CONFIG_OLPC_OPENFIRMWARE */
+> >  
+> > +#ifdef CONFIG_OLPC_OPENFIRMWARE_DT
+> > +extern void olpc_dt_build_devicetree(void);
+> > +#else
+> > +static inline void olpc_dt_build_devicetree(void) { }
+> > +#endif /* CONFIG_OLPC_OPENFIRMWARE_DT */
+> > +
+> >  #endif /* _ASM_X86_OLPC_OFW_H */
+> > diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+> > new file mode 100644
+> > index 0000000..b4ec95f
+> > --- /dev/null
+> > +++ b/arch/x86/include/asm/prom.h
+> > @@ -0,0 +1 @@
+> > +/* dummy prom.h; here to make linux/of.h's #includes happy */
+> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> > index fedf32a..519539a 100644
+> > --- a/arch/x86/kernel/Makefile
+> > +++ b/arch/x86/kernel/Makefile
+> > @@ -107,6 +107,7 @@ scx200-y			+= scx200_32.o
+> >  
+> >  obj-$(CONFIG_OLPC)		+= olpc.o
+> >  obj-$(CONFIG_OLPC_OPENFIRMWARE)	+= olpc_ofw.o
+> > +obj-$(CONFIG_OLPC_OPENFIRMWARE_DT)	+= olpc_dt.o
 > 
-> diff --git a/arch/powerpc/boot/zImage.coff.lds.S
-> b/arch/powerpc/boot/zImage.coff.lds.S
-> index 856dc78..c23145f 100644
-> --- a/arch/powerpc/boot/zImage.coff.lds.S
-> +++ b/arch/powerpc/boot/zImage.coff.lds.S
-> @@ -1,3 +1,4 @@
-> +#include <asm-generic/vmlinux.lds.h>
->  OUTPUT_ARCH(powerpc:common)
->  ENTRY(_zimage_start_opd)
->  EXTERN(_zimage_start_opd)
-> @@ -21,9 +22,7 @@ SECTIONS
->      *(.got2)
->      __got2_end = .;
+> olpc_ofw_dt.o perhaps?
 > 
-> -    _dtb_start = .;
-> -    *(.kernel:dtb)
-> -    _dtb_end = .;
-> +    KERNEL_DTB()
-
-Has this been compile tested?  I don't believe the powerpc boot
-wrapper code (arch/powerpc/boot/*) will include stuff from
-linux/asm-generic because it is intended to be a completely
-independent C environment.
-
+> >  obj-$(CONFIG_X86_MRST)		+= mrst.o
+> >  
+> >  microcode-y				:= microcode_core.o
+> > diff --git a/arch/x86/kernel/olpc_dt.c b/arch/x86/kernel/olpc_dt.c
+> > new file mode 100644
+> > index 0000000..f660a11
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/olpc_dt.c
+> > @@ -0,0 +1,165 @@
+> > +/*
+> > + * olpc_dt.c: OLPC-specific OFW device tree support code.
 > 
->      _vmlinux_start =  .;
->      *(.kernel:vmlinux.strip)
-> diff --git a/arch/powerpc/boot/zImage.lds.S b/arch/powerpc/boot/zImage.lds.S
-> index 0962d62..f5b9c56 100644
-> --- a/arch/powerpc/boot/zImage.lds.S
-> +++ b/arch/powerpc/boot/zImage.lds.S
-> @@ -1,3 +1,4 @@
-> +#include <asm-generic/vmlinux.lds.h>
->  OUTPUT_ARCH(powerpc:common)
->  ENTRY(_zimage_start)
->  EXTERN(_zimage_start)
-> @@ -22,9 +23,7 @@ SECTIONS
->    }
+> Nit: I personally prefer not to see the file name encoded in the
+> header block.
 > 
->    . = ALIGN(8);
-> -  _dtb_start = .;
-> -  .kernel:dtb : { *(.kernel:dtb) }
-> -  _dtb_end = .;
-> +  KERNEL_DTB()
+> > + *
+> > + * Paul Mackerras	August 1996.
+> > + * Copyright (C) 1996-2005 Paul Mackerras.
+> > + *
+> > + *  Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergner.
+> > + *    {engebret|bergner}@us.ibm.com
+> > + *
+> > + *  Adapted for sparc by David S. Miller davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+> > + *  Adapted for x86/OLPC by Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> > + *
+> > + *      This program is free software; you can redistribute it and/or
+> > + *      modify it under the terms of the GNU General Public License
+> > + *      as published by the Free Software Foundation; either version
+> > + *      2 of the License, or (at your option) any later version.
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/bootmem.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_pdt.h>
+> > +#include <asm/olpc_ofw.h>
+> > +
+> > +static phandle __init olpc_dt_getsibling(phandle node)
+> > +{
+> > +	const void *args[] = { (void *)node };
+> > +	void *res[] = { &node };
+> > +
+> > +	if (node == -1)
+> > +		return 0;
 > 
->    . = ALIGN(4096);
->    _vmlinux_start =  .;
-> diff --git a/arch/powerpc/boot/zImage.ps3.lds.S b/arch/powerpc/boot/zImage.ps3.lds.S
-> index aaa469c..246d227 100644
-> --- a/arch/powerpc/boot/zImage.ps3.lds.S
-> +++ b/arch/powerpc/boot/zImage.ps3.lds.S
-> @@ -1,3 +1,4 @@
-> +#include <asm-generic/vmlinux.lds.h>
->  OUTPUT_ARCH(powerpc:common)
->  ENTRY(_zimage_start)
->  EXTERN(_zimage_start)
-> @@ -8,9 +9,7 @@ SECTIONS
->    _vmlinux_end =  .;
+> phandle is a u32, so testing against a negative value is not sane.
 > 
->    . = ALIGN(4096);
-> -  _dtb_start = .;
-> -  .kernel:dtb : { *(.kernel:dtb) }
-> -  _dtb_end = .;
-> +  KERNEL_DTB()
+> > +
+> > +	if (olpc_ofw("peer", args, res) || node == -1)
+> > +		return 0;
+> > +
+> > +	return node;
+> > +}
+> > +
+> > +static phandle __init olpc_dt_getchild(phandle node)
+> > +{
+> > +	const void *args[] = { (void *)node };
+> > +	void *res[] = { &node };
+> > +
+> > +	if (node == -1)
+> > +		return 0;
+> > +
+> > +	if (olpc_ofw("child", args, res) || node == -1) {
+> > +		pr_err("PROM: %s: fetching child failed!\n", __func__);
+> > +		return 0;
+> > +	}
+> > +
+> > +	return node;
+> > +}
+> > +
+> > +static int __init olpc_dt_getproplen(phandle node, const char *prop)
+> > +{
+> > +	const void *args[] = { (void *)node, prop };
+> > +	int len;
+> > +	void *res[] = { &len };
+> > +
+> > +	if (node == -1)
+> > +		return -1;
+> > +
+> > +	if (olpc_ofw("getproplen", args, res)) {
+> > +		pr_err("PROM: %s: getproplen failed!\n", __func__);
+> > +		return -1;
+> > +	}
+> > +
+> > +	return len;
+> > +}
+> > +
+> > +static int __init olpc_dt_getproperty(phandle node, const char *prop,
+> > +		char *buf, int bufsize)
+> > +{
+> > +	int plen;
+> > +
+> > +	plen = olpc_dt_getproplen(node, prop);
+> > +	if (plen > bufsize || plen < 1)
+> > +		return -1;
+> > +	else {
 > 
->    . = ALIGN(4096);
->    _initrd_start =  .;
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index 3068e1e..992b3dd 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -120,6 +120,21 @@ obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
->  obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
->  obj-$(CONFIG_X86_OF)			+= prom.o
+> Nit: If there are braces on the else clause, then please use them on
+> the if() clause also.
 > 
-> +ifeq ($(CONFIG_X86_OF),y)
-> +ifneq ($(PLATFORM_DTB),)
-> +obj-y += $(PLATFORM_DTB).dtb.o
-> +endif
-> +endif
-> +
-> +dtstree	:= $(srctree)/arch/x86/boot/dts
-> +
-> +$(obj)/%.dtb: $(dtstree)/%.dts
-> +	$(call if_changed,dtc)
-> +
-> +$(obj)/%.dtb.S: $(obj)/%.dtb
-> +	@echo '.section .kernel:dtb,"a"' > $@
-> +	@echo '.incbin "$<" ' >> $@
-> +
-
-Hmmm, I wonder if this hunk can be common for all architectures.
-
->  ###
->  # 64 bit specific files
->  ifeq ($(CONFIG_X86_64),y)
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 8a92a17..5729a24 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -146,6 +146,14 @@
->  #define TRACE_SYSCALLS()
->  #endif
+> > +		const void *args[] = { (void *)node, prop, buf, (void *)plen };
+> > +		void *res[] = { &plen };
+> > +
+> > +		if (olpc_ofw("getprop", args, res)) {
+> > +			pr_err("PROM: %s: getprop failed!\n", __func__);
+> > +			return -1;
+> > +		}
+> > +	}
+> > +
+> > +	return plen;
+> > +}
+> > +
+> > +static int __init olpc_dt_nextprop(phandle node, char *prev, char *buf)
+> > +{
+> > +	const void *args[] = { (void *)node, prev, buf };
 > 
-> +#ifdef CONFIG_OF
-> +#define KERNEL_DTB() _dtb_start = .;	    				\
-> +		   *(.kernel:dtb)					\
-> +		   _dtb_end = .;					
-> +#else
-> + KERNEL_DTB()
-> +#endif
-> +
->  /* .data section */
->  #define DATA_DATA							\
->  	*(.data)							\
-> @@ -245,6 +253,10 @@
->  		VMLINUX_SYMBOL(__end_pci_fixups_suspend) = .;		\
->  	}								\
->  									\
-> +	.dtb : AT(ADDR(.dtb) - LOAD_OFFSET) {				\
-> +	     KERNEL_DTB()      		    				\
-> +	}		   						\
-> +								\
->  	/* Built-in firmware blobs */					\
->  	.builtin_fw        : AT(ADDR(.builtin_fw) - LOAD_OFFSET) {	\
->  		VMLINUX_SYMBOL(__start_builtin_fw) = .;			\
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 54fd1b7..ce32644 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -207,6 +207,13 @@ quiet_cmd_gzip = GZIP    $@
->  cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
->  	(rm -f $@ ; false)
+> This looks wrong.  It does not look sane to cast node as a pointer
+> (which won't be the same size on x86_64), and then recast it to an int
+> inside __olpc_ofw().  Do you know why the api is implemented in this
+> way?
 > 
-> +# DTC
-> +#  ---------------------------------------------------------------------------
-> +
-> +DTC = $(objtree)/scripts/dtc/dtc
-> +
-> +quiet_cmd_dtc = DTC	$@
-> +      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0 -p 1024 $(dtstree)/$*.dts
+> > +	int success;
+> > +	void *res[] = { &success };
+> > +
+> > +	buf[0] = '\0';
+> > +
+> > +	if (node == -1)
+> > +		return -1;
+> > +
+> > +	if (olpc_ofw("nextprop", args, res) || success != 1)
+> > +		return -1;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int __init olpc_dt_pkg2path(phandle node, char *buf,
+> > +		const int buflen, int *len)
+> > +{
+> > +	const void *args[] = { (void *)node, buf, (void *)buflen };
+> > +	void *res[] = { len };
+> > +
+> > +	if (node == -1)
+> > +		return -1;
+> > +
+> > +	if (olpc_ofw("package-to-path", args, res) || *len < 1)
+> > +		return -1;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static unsigned int prom_early_allocated __initdata;
+> > +
+> > +void * __init prom_early_alloc(unsigned long size)
+> > +{
+> > +	void *res;
+> > +
+> > +	res = alloc_bootmem(size);
+> > +	if (res)
+> > +		memset(res, 0, size);
+> > +
+> > +	prom_early_allocated += size;
+> > +
+> > +	return res;
+> > +}
+> > +
+> > +static struct of_pdt_ops prom_olpc_ops __initdata = {
+> > +	.nextprop = olpc_dt_nextprop,
+> > +	.getproplen = olpc_dt_getproplen,
+> > +	.getproperty = olpc_dt_getproperty,
+> > +	.getchild = olpc_dt_getchild,
+> > +	.getsibling = olpc_dt_getsibling,
+> > +	.pkg2path = olpc_dt_pkg2path,
+> > +};
+> > +
+> > +void __init olpc_dt_build_devicetree(void)
+> > +{
+> > +	phandle root;
+> > +
+> > +	if (!olpc_ofw_is_installed())
+> > +		return;
+> > +
+> > +	root = olpc_dt_getsibling(0);
+> > +	if (root < 0) {
+> > +		pr_err("PROM: unable to get root node from OFW!\n");
+> > +		return;
+> > +	}
+> > +	of_pdt_build_devicetree(root, &prom_olpc_ops);
+> > +
+> > +	pr_info("PROM DT: Built device tree with %u bytes of memory.\n",
+> > +			prom_early_allocated);
+> > +}
+> > diff --git a/arch/x86/kernel/olpc_ofw.c b/arch/x86/kernel/olpc_ofw.c
+> > index 3218aa7..2176048 100644
+> > --- a/arch/x86/kernel/olpc_ofw.c
+> > +++ b/arch/x86/kernel/olpc_ofw.c
+> > @@ -104,3 +104,8 @@ void __init olpc_ofw_detect(void)
+> >  			(unsigned long)olpc_ofw_cif, (-start) >> 20);
+> >  	reserve_top_address(-start);
+> >  }
+> > +
+> > +bool __init olpc_ofw_is_installed(void)
+> > +{
+> > +	return olpc_ofw_cif != NULL;
+> > +}
+> > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> > index bca7909..41bf85f 100644
+> > --- a/arch/x86/mm/init_32.c
+> > +++ b/arch/x86/mm/init_32.c
+> > @@ -44,6 +44,7 @@
+> >  #include <asm/bugs.h>
+> >  #include <asm/tlb.h>
+> >  #include <asm/tlbflush.h>
+> > +#include <asm/olpc_ofw.h>
+> >  #include <asm/pgalloc.h>
+> >  #include <asm/sections.h>
+> >  #include <asm/paravirt.h>
+> > @@ -833,6 +834,7 @@ void __init paging_init(void)
+> >  	/*
+> >  	 * NOTE: at this point the bootmem allocator is fully available.
+> >  	 */
+> > +	olpc_dt_build_devicetree();
+> >  	sparse_init();
+> >  	zone_sizes_init();
+> >  }
+> > -- 
+> > 1.5.6.5
+> > 
 > 
->  # Bzip2
->  # ---------------------------------------------------------------------------
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
