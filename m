@@ -1,9 +1,9 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] of: of_mdio: Fix some endianness problems.
-Date: Wed, 27 Oct 2010 18:03:47 -0700
-Message-ID: <1288227827-5447-1-git-send-email-ddaney@caviumnetworks.com>
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] [PATCH V2] Adding DTB to architecture independent vmlinux
+Date: Thu, 28 Oct 2010 08:26:32 -0700
+Message-ID: <4CC99628.6000002@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
@@ -15,79 +15,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In of_mdiobus_register(), the __be32 *addr variable is dereferenced.
-This will not work on little-endian targets.  Also since it is
-unsigned, checking for less than zero is redundant.
+Hi David,
 
-Fix these two issues.
+Thanks for looking at the patch.
 
-Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
----
- drivers/of/of_mdio.c |   23 ++++++++++++++---------
- 1 files changed, 14 insertions(+), 9 deletions(-)
+On 10/27/2010 05:57 PM, David VomLehn wrote:
+> On Wed, Oct 27, 2010 at 05:30:27PM -0700, Dirk Brandewie wrote:
+>> Here is V2 of the patch.
+> ...
+>> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+>> index 3068e1e..0f5eb1d 100644
+>> --- a/arch/x86/kernel/Makefile
+>> +++ b/arch/x86/kernel/Makefile
+>> @@ -120,6 +120,21 @@ obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
+>>   obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
+>>   obj-$(CONFIG_X86_OF)			+= prom.o
+>>
+>> +ifeq ($(CONFIG_KERNEL_DTB),y)
+>> +ifneq ($(PLATFORM_DTB),)
+>> +obj-y += $(PLATFORM_DTB).dtb.o
+>> +endif
+>> +endif
+>> +
+>> +dtstree	:= $(srctree)/arch/x86/boot/dts
+>> +
+>> +$(obj)/%.dtb: $(dtstree)/%.dts
+>> +	$(call if_changed,dtc)
+>> +
+>> +$(obj)/%.dtb.S: $(obj)/%.dtb
+>> +	@echo '.section .dtb,"a"'>  $@
+>> +	@echo '.incbin "$<" '>>  $@
+>> +
+>
+> I've been playing a bit with the patch, and would suggest something
+> like the following for the second target:
+>
+> 	$(obj)/%.dtb.S: $(obj)/%.dtb
+> 		@echo '#include<asm/page.h>'>$@
+> 		@echo '.balign PAGE_SIZE'>>  $@
+> 		@echo '.section .kernel:dtb,"a"'>>  $@
+> 		@echo '.global __$(*F)_dtb'>>  $@
+> 		@echo '__$(*F)_dtb:'>>  $@
+> 		@echo '.incbin "$<" '>>  $@
+> 		@echo '.balign PAGE_SIZE'>>  $@
+>
+> Advantages:
+> 1.	Each blob gets a name that can be used to refer to it. This
+> 	allows multiple blobs to be built into a kernel, each with
+> 	its own name.  The name of each blob is taken from the file
+> 	name, so a source
+> 	file abc.dts would produce a blob referred to as __abc_dtb.
+> 2.	Blobs are aligned on a page boundary and extend to the nearest
+> 	page boundary. Any blobs you don't care about can then easily
+> 	be completely freed.
+>
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 1fce00e..b370306 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -52,27 +52,32 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 
- 	/* Loop over the child nodes and register a phy_device for each one */
- 	for_each_child_of_node(np, child) {
--		const __be32 *addr;
-+		const __be32 *paddr;
-+		u32 addr;
- 		int len;
- 
- 		/* A PHY must have a reg property in the range [0-31] */
--		addr = of_get_property(child, "reg", &len);
--		if (!addr || len < sizeof(*addr) || *addr >= 32 || *addr < 0) {
-+		paddr = of_get_property(child, "reg", &len);
-+		if (!paddr || len < sizeof(*paddr)) {
-+addr_err:
- 			dev_err(&mdio->dev, "%s has invalid PHY address\n",
- 				child->full_name);
- 			continue;
- 		}
-+		addr = be32_to_cpup(paddr);
-+		if (addr >= 32)
-+			goto addr_err;
- 
- 		if (mdio->irq) {
--			mdio->irq[*addr] = irq_of_parse_and_map(child, 0);
--			if (!mdio->irq[*addr])
--				mdio->irq[*addr] = PHY_POLL;
-+			mdio->irq[addr] = irq_of_parse_and_map(child, 0);
-+			if (!mdio->irq[addr])
-+				mdio->irq[addr] = PHY_POLL;
- 		}
- 
--		phy = get_phy_device(mdio, be32_to_cpup(addr));
-+		phy = get_phy_device(mdio, addr);
- 		if (!phy || IS_ERR(phy)) {
- 			dev_err(&mdio->dev, "error probing PHY at address %i\n",
--				*addr);
-+				addr);
- 			continue;
- 		}
- 		phy_scan_fixups(phy);
-@@ -91,7 +96,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 		}
- 
- 		dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
--			child->name, *addr);
-+			child->name, addr);
- 	}
- 
- 	return 0;
--- 
-1.7.2.3
+I like this idea in general but I have to admit I don't completely understand
+all the implications of adding multiple blobs.  I can see a use case where a
+vendor would want to make a single static image that supported multiple
+platforms.  I am not sure how common this would be.  One issue I see with
+linking multiple DTB's into the image is now the platform init code is back to
+trying to detect which hardware it is running on to select the correct blob to
+get its configuration from.
+
+As part of the complete DTB story on x86 I am adding the ability to pass the DTB
+in from the boot loader.  I think this mechanism would be the more common case
+for supporting multiple platforms with a single vmlinux image.
+
+
+> You might then use:
+>
+> 	obj-y += $(addprefix .dtb.o,$(PLATFORM_DTB))
+>
+> to add blob names, but I'm not completely confident this is the way to go.
+I am still trying to settle on the right way to specify the DTB to be linked in
+that won't generate a lot of hate from the build/distribution people where they
+are supporting multiple platforms with/without the need of the DTB.
+
+--Dirk
