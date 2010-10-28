@@ -1,14 +1,15 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: question about dma-ranges
-Date: Wed, 27 Oct 2010 14:47:37 -0500
-Message-ID: <4CC881D9.6020808@freescale.com>
-References: <9696D7A991D0824DBA8DFAC74A9C5FA306911C5F@az33exm25.fsl.freescale.net>	<4CC77784.2070701@firmworks.com>	<AANLkTikTu_p0-Uk7=FuUay4mvCEEU0e9V5eY6bjuK5RQ@mail.gmail.com>	<20101027024227.GD7023@yookeroo>
-	<20101027144602.2c5ef098@udp111988uds.am.freescale.net>
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC] [PATCH V2] Adding DTB to architecture independent vmlinux
+Date: Wed, 27 Oct 2010 17:30:27 -0700
+Message-ID: <4CC8C423.9050600@gmail.com>
+References: <4CC6E491.7060304@gmail.com>
+	<20101027110937.GD7822@angua.secretlab.ca>
+	<4CC860EF.6060503@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101027144602.2c5ef098-N/eSCTBpGwP7j4BuCOFQISmX4OfbXNuMKnGXBo5VDl8@public.gmane.org>
+In-Reply-To: <4CC860EF.6060503-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,19 +19,141 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Scott Wood wrote:
-> Or can the QE code just know about that because it only has 32-bit
-> registers/descriptor fields for DMA addresses?  I.e. it is a limitation
-> of all instances of QE, not just as integrated in this system.
+Here is V2 of the patch.
 
-It's a limitation of the QE registers -- they're only 32-bit.  If we ever
-produce a new QE that has bigger registers, we can use the compatible property
-to distinguish between them.
+The support for linking in the DTB is now a config option. The location
+of the config option is completely arbitrary.
 
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+The name of the added section has been changed to avoid possible collision
+with the powerpc linkage of the DTB into the final image.
+
+ATM this patch would add a redundant/unused section (without name collision) to 
+the microblaze if configured in since I do not understand why the padding added 
+to _fdt_start.
+
+This has only been tested on x86.
+
+Comments Suggestions?
+
+--Dirk
+
+of: add support for linking platform dtb into vmlinux
+
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+This patch adds support for linking a device tree blob into
+vmlinux. The platform DTB to be built and linked into the kernel is
+specified by passing PLATFORM_DTB=<platform name> to make.
+
+The command:
+make PLATFORM_DTB=ce4100
+
+will link the device tree blob into vmlinux
+
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+  arch/x86/kernel/Makefile          |   15 +++++++++++++++
+  include/asm-generic/vmlinux.lds.h |   15 +++++++++++++++
+  init/Kconfig                      |    7 +++++++
+  scripts/Makefile.lib              |    7 +++++++
+  5 files changed, 48 insertions(+), 0 deletions(-)
+
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 3068e1e..0f5eb1d 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -120,6 +120,21 @@ obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
+  obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
+  obj-$(CONFIG_X86_OF)			+= prom.o
+
++ifeq ($(CONFIG_KERNEL_DTB),y)
++ifneq ($(PLATFORM_DTB),)
++obj-y += $(PLATFORM_DTB).dtb.o
++endif
++endif
++
++dtstree	:= $(srctree)/arch/x86/boot/dts
++
++$(obj)/%.dtb: $(dtstree)/%.dts
++	$(call if_changed,dtc)
++
++$(obj)/%.dtb.S: $(obj)/%.dtb
++	@echo '.section .dtb,"a"' > $@
++	@echo '.incbin "$<" ' >> $@
++
+  ###
+  # 64 bit specific files
+  ifeq ($(CONFIG_X86_64),y)
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 8a92a17..b18123a 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -146,6 +146,19 @@
+  #define TRACE_SYSCALLS()
+  #endif
+
++#ifdef CONFIG_KERNEL_DTB
++#define KERNEL_DTB							\
++	. = ALIGN(4);							\
++	.dtb : AT(ADDR(.dtb) - LOAD_OFFSET) {				\
++		VMLINUX_SYMBOL(__dtb_start) = .;			\
++		*(.dtb)							\
++		VMLINUX_SYMBOL(__dtb_end) = .;				\
++	}
++
++#else
++#define KERNEL_DTB
++#endif
++
+  /* .data section */
+  #define DATA_DATA							\
+  	*(.data)							\
+@@ -245,6 +258,8 @@
+  		VMLINUX_SYMBOL(__end_pci_fixups_suspend) = .;		\
+  	}								\
+  									\
++	KERNEL_DTB							\
++									\
+  	/* Built-in firmware blobs */					\
+  	.builtin_fw        : AT(ADDR(.builtin_fw) - LOAD_OFFSET) {	\
+  		VMLINUX_SYMBOL(__start_builtin_fw) = .;			\
+diff --git a/init/Kconfig b/init/Kconfig
+index 2de5b1c..4a8802e 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1055,6 +1055,13 @@ config PCI_QUIRKS
+            bugs/quirks. Disable this only if your target machine is
+            unaffected by PCI quirks.
+
++config KERNEL_DTB
++       bool "Support linking a device tree blob into vmlinux"
++       default n
++       help
++         This option provides support for adding a device tree blob
++	 directly to vmlinux
++
+  config SLUB_DEBUG
+  	default y
+  	bool "Enable SLUB debugging support" if EMBEDDED
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 54fd1b7..ce32644 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -207,6 +207,13 @@ quiet_cmd_gzip = GZIP    $@
+  cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
+  	(rm -f $@ ; false)
+
++# DTC
++#  ---------------------------------------------------------------------------
++
++DTC = $(objtree)/scripts/dtc/dtc
++
++quiet_cmd_dtc = DTC	$@
++      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0 -p 1024 $(dtstree)/$*.dts
+
+  # Bzip2
+  # ---------------------------------------------------------------------------
