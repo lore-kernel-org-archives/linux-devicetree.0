@@ -1,19 +1,11 @@
-From: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [RFC] [PATCH V2] Adding DTB to architecture independent vmlinux
-Date: Fri, 29 Oct 2010 13:29:07 -0700
-Message-ID: <4CCB2E93.2010809@linux.intel.com>
-References: <4CC6E491.7060304@gmail.com>
-	<20101027110937.GD7822@angua.secretlab.ca>
-	<4CC860EF.6060503@linux.intel.com> <4CC8C423.9050600@gmail.com>
-	<20101028005754.GA27386@dvomlehn-lnx2.corp.sa.net>
-	<4CC99441.4030307@linux.intel.com>
-	<20101028173202.GA25771@dvomlehn-lnx2.corp.sa.net>
-	<4CC9EECF.9020208@linux.intel.com> <20101029040456.GB5250@yookeroo>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: mtd: fix build error in m25p80.c
+Date: Fri, 29 Oct 2010 21:04:19 -0700
+Message-ID: <20101029210419.70f99e96@queued.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101029040456.GB5250@yookeroo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,32 +15,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mingkai Hu <Mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2010 09:04 PM, David Gibson wrote:
-> On Thu, Oct 28, 2010 at 02:44:47PM -0700, H. Peter Anvin wrote:
->> On 10/28/2010 10:32 AM, David VomLehn wrote:
->>>
->>> In my case, where there are a lot of up-front reservations of memory
->>> at a static address, there is a fair amount of work to do before
->>> it's possible to do the dynamic address allocation for the blob's
->>> ultimate destination, but I'm okay with either doing blob size and address
->>> rounding or copying it from init. I don't see a benefit of supporting
->>> multiple approaches for Linux.
->>>
->>
->> The reason I mentioned dynamic allocation is that you still need to do
->> dynamic allocation if you're using a blob from an external source.  If
->> you don't end up with pointers *into* the blob, though, then you don't
->> need to do the relocation until some time before you jettison the init
->> section.
-> 
-> The way the dtb format is designed, you should almost never work with
-> pointers into the the middle of the blob.
-> 
 
-"Almost never"?  That scares me when I hear it...
+While building an x86 distro kernel, I hit the following:
 
-	-hpa
+Kernel: arch/x86/boot/bzImage is ready  (#7)
+ERROR: "of_mtd_parse_partitions" [drivers/mtd/devices/m25p80.ko]
+undefined!
+
+of_mtd_parse_partitions is defined with MTD_OF_PARTS, and that's only
+built on PPC and microblaze.  The code in question should be wrapped w/
+a stricter #ifdef.
+
+Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+---
+ drivers/mtd/devices/m25p80.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index ea22520..184ddd5 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -924,7 +924,7 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 			nr_parts = data->nr_parts;
+ 		}
+ 
+-#ifdef CONFIG_OF
++#ifdef CONFIG_MTD_OF_PARTS
+ 		if (nr_parts <= 0 && spi->dev.of_node) {
+ 			nr_parts = of_mtd_parse_partitions(&spi->dev,
+ 					spi->dev.of_node, &parts);
+-- 
+1.7.1
