@@ -1,14 +1,14 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: mtd: fix build error in m25p80.c
-Date: Sat, 30 Oct 2010 06:57:37 +0100
-Message-ID: <20101030055737.GA2456@angua.secretlab.ca>
-References: <20101029210419.70f99e96@queued.net>
+Subject: Re: [PATCH] of: of_mdio: Fix some endianness problems.
+Date: Sat, 30 Oct 2010 07:32:37 +0100
+Message-ID: <20101030063237.GC2456@angua.secretlab.ca>
+References: <1288227827-5447-1-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20101029210419.70f99e96-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <1288227827-5447-1-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,42 +18,99 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mingkai Hu <Mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 29, 2010 at 09:04:19PM -0700, Andres Salomon wrote:
+On Wed, Oct 27, 2010 at 06:03:47PM -0700, David Daney wrote:
+> In of_mdiobus_register(), the __be32 *addr variable is dereferenced.
+> This will not work on little-endian targets.  Also since it is
+> unsigned, checking for less than zero is redundant.
 > 
-> While building an x86 distro kernel, I hit the following:
+> Fix these two issues.
 > 
-> Kernel: arch/x86/boot/bzImage is ready  (#7)
-> ERROR: "of_mtd_parse_partitions" [drivers/mtd/devices/m25p80.ko]
-> undefined!
-> 
-> of_mtd_parse_partitions is defined with MTD_OF_PARTS, and that's only
-> built on PPC and microblaze.  The code in question should be wrapped w/
-> a stricter #ifdef.
-> 
-> Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
 > ---
->  drivers/mtd/devices/m25p80.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+>  drivers/of/of_mdio.c |   23 ++++++++++++++---------
+>  1 files changed, 14 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index ea22520..184ddd5 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -924,7 +924,7 @@ static int __devinit m25p_probe(struct spi_device *spi)
->  			nr_parts = data->nr_parts;
->  		}
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 1fce00e..b370306 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -52,27 +52,32 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
 >  
-> -#ifdef CONFIG_OF
-> +#ifdef CONFIG_MTD_OF_PARTS
->  		if (nr_parts <= 0 && spi->dev.of_node) {
->  			nr_parts = of_mtd_parse_partitions(&spi->dev,
->  					spi->dev.of_node, &parts);
+>  	/* Loop over the child nodes and register a phy_device for each one */
+>  	for_each_child_of_node(np, child) {
+> -		const __be32 *addr;
+> +		const __be32 *paddr;
+> +		u32 addr;
+>  		int len;
+>  
+>  		/* A PHY must have a reg property in the range [0-31] */
+> -		addr = of_get_property(child, "reg", &len);
+> -		if (!addr || len < sizeof(*addr) || *addr >= 32 || *addr < 0) {
+> +		paddr = of_get_property(child, "reg", &len);
+> +		if (!paddr || len < sizeof(*paddr)) {
+> +addr_err:
+>  			dev_err(&mdio->dev, "%s has invalid PHY address\n",
+>  				child->full_name);
+>  			continue;
+>  		}
+> +		addr = be32_to_cpup(paddr);
+> +		if (addr >= 32)
+> +			goto addr_err;
 
-True; but CONFIG_MTD_OF_PARTS should be built on all architectures
-when CONFIG_OF & CONFIG_MTD_PARTITIONS is set.  I'll craft a patch.
+goto's are fine for jumping to the end of a function to unwind
+allocations, but please don't use it in this manner.  The original
+structure will actually work just fine if you do it thusly:
+
+		if (!paddr || len < sizeof(*paddr) ||
+		    *(addr = be32_to_cpup(paddr)) >= 32) {
+			dev_err(&mdio->dev, "%s has invalid PHY address\n",
+				child->full_name);
+			continue;
+		}
+
+Otherwise this patch looks good. After you've reworked and retested
+I'll pick it up for 2.6.37 (or dave will).
 
 g.
+
+
+>  
+>  		if (mdio->irq) {
+> -			mdio->irq[*addr] = irq_of_parse_and_map(child, 0);
+> -			if (!mdio->irq[*addr])
+> -				mdio->irq[*addr] = PHY_POLL;
+> +			mdio->irq[addr] = irq_of_parse_and_map(child, 0);
+> +			if (!mdio->irq[addr])
+> +				mdio->irq[addr] = PHY_POLL;
+>  		}
+>  
+> -		phy = get_phy_device(mdio, be32_to_cpup(addr));
+> +		phy = get_phy_device(mdio, addr);
+>  		if (!phy || IS_ERR(phy)) {
+>  			dev_err(&mdio->dev, "error probing PHY at address %i\n",
+> -				*addr);
+> +				addr);
+>  			continue;
+>  		}
+>  		phy_scan_fixups(phy);
+> @@ -91,7 +96,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  		}
+>  
+>  		dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
+> -			child->name, *addr);
+> +			child->name, addr);
+>  	}
+>  
+>  	return 0;
+> -- 
+> 1.7.2.3
+> 
