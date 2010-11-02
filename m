@@ -1,8 +1,8 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 2/4] Implements a new feature for deleting existing device
-	tree nodes.
-Date: Tue, 02 Nov 2010 15:55:13 -0700
-Message-ID: <20101102225513.1707.63945.stgit@riker>
+Subject: [PATCH 3/4] Implements a new feature for deleting existing properties
+	in device tree nodes.
+Date: Tue, 02 Nov 2010 15:55:21 -0700
+Message-ID: <20101102225521.1707.50854.stgit@riker>
 References: <20101102225243.1707.23433.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,276 +22,173 @@ To: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is interesting when the /include/ "<filename>" feature is used. This way
-we can create base device tree source files for a family of systems and modify
-the device tree for a specific system.
+When updating existing nodes in a device tree merge operation, properties
+can be removed by using
+	/remove-prop/ <property>;
 
-The current sytem allows an existing node to be extended with new properties
-and subnodes.
-
-The new features allow an existing node to be replaced completely by the new
-properties and subnodes. The new features also allow an existing node to be
-deleted.
+If a property has been removed, it is treated the same as if it had not been
+declared.
 
 Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- Makefile.dtc       |    1 +
- checks.c           |   20 ++++++++++++++++++++
- dtc-lexer.l        |    6 ++++++
- dtc-parser.y       |   15 +++++++++++++++
- dtc.h              |    5 +++++
- livetree.c         |   39 +++++++++++++++++++++++++++++++++++++++
- tests/run_tests.sh |    2 ++
- util.h             |   10 ++++++++++
- 8 files changed, 98 insertions(+), 0 deletions(-)
+ dtc-lexer.l             |    6 ++++++
+ dtc-parser.y            |    6 ++++++
+ dtc.h                   |    3 +++
+ flattree.c              |    3 +++
+ livetree.c              |   31 ++++++++++++++++++++++++++-----
+ tests/dtc-checkfails.sh |    2 +-
+ tests/run_tests.sh      |    2 ++
+ 7 files changed, 47 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile.dtc b/Makefile.dtc
-index bece49b..0fe3186 100644
---- a/Makefile.dtc
-+++ b/Makefile.dtc
-@@ -12,6 +12,7 @@ DTC_SRCS = \
- 	livetree.c \
- 	srcpos.c \
- 	treesource.c \
-+	strtbl.c \
- 	util.c
- 
- DTC_GEN_SRCS = dtc-lexer.lex.c dtc-parser.tab.c
-diff --git a/checks.c b/checks.c
-index a662a00..56e8817 100644
---- a/checks.c
-+++ b/checks.c
-@@ -19,6 +19,7 @@
-  */
- 
- #include "dtc.h"
-+#include "srcpos.h"
- 
- #ifdef TRACE_CHECKS
- #define TRACE(c, ...) \
-@@ -292,6 +293,25 @@ static void check_duplicate_label(struct check *c, struct node *dt,
- 	struct node *othernode = NULL;
- 	struct property *otherprop = NULL;
- 	struct marker *othermark = NULL;
-+	struct srcpos *pos;
-+
-+	pos = strtbl_str_data(removed_labels, label);
-+
-+	if (pos) {
-+		/* Then the label did exist, but the node it's in was removed */
-+		if (pos->file)
-+			FAIL(c, "Duplicate label '%s' on " DESCLABEL_FMT
-+			     " and removed node defined at line %d in file %s",
-+			     label, DESCLABEL_ARGS(node, prop, mark),
-+			     pos->first_line, pos->file->name);
-+		else
-+			FAIL(c, "Duplicate label '%s' on " DESCLABEL_FMT
-+			     " and removed node defined at line %d",
-+			     label, DESCLABEL_ARGS(node, prop, mark),
-+			     pos->first_line);
-+	} else {
-+		/* Check to see if the label is already in another node */
-+	}
- 
- 	othernode = get_node_by_label(dt, label);
- 
 diff --git a/dtc-lexer.l b/dtc-lexer.l
-index e866ea5..bcabbfe 100644
+index bcabbfe..4b07236 100644
 --- a/dtc-lexer.l
 +++ b/dtc-lexer.l
-@@ -96,6 +96,12 @@ static int pop_input_file(void);
- 			return DT_MEMRESERVE;
+@@ -102,6 +102,12 @@ static int pop_input_file(void);
+ 			return DT_REMOVENODE;
  		}
  
-+<*>"/remove-node/"	{
-+			DPRINT("Keyword: /remove-node/\n");
-+			BEGIN_DEFAULT();
-+			return DT_REMOVENODE;
++<*>"/remove-prop/"	{
++			DPRINT("Keyword: /undef-prop/\n");
++			BEGIN(PROPNODENAME);
++			return DT_REMOVEPROP;
 +		}
 +
  <*>{LABEL}:	{
  			DPRINT("Label: %s\n", yytext);
  			yylval.labelref = xstrdup(yytext);
 diff --git a/dtc-parser.y b/dtc-parser.y
-index 5e84a67..4814d34 100644
+index 4814d34..2a9736a 100644
 --- a/dtc-parser.y
 +++ b/dtc-parser.y
-@@ -33,6 +33,8 @@ extern void yyerror(char const *s);
- extern struct boot_info *the_boot_info;
- extern int treesource_error;
- 
-+strtbl label_table = NULL;
-+
- static unsigned long long eval_literal(const char *s, int base, int bits);
- %}
- 
-@@ -55,6 +57,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
- 
+@@ -58,6 +58,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
  %token DT_V1
  %token DT_MEMRESERVE
-+%token DT_REMOVENODE
+ %token DT_REMOVENODE
++%token <propnodename> DT_REMOVEPROP
  %token <propnodename> DT_PROPNODENAME
  %token <literal> DT_LITERAL
  %token <cbase> DT_BASE
-@@ -108,6 +111,7 @@ memreserve:
- 		}
- 	| DT_LABEL memreserve
+@@ -181,6 +182,11 @@ propdef:
  		{
-+			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
- 			add_label(&$2->labels, $1);
- 			$$ = $2;
+ 			$$ = build_property($1, empty_data);
  		}
-@@ -139,6 +143,15 @@ devicetree:
- 				print_error("label or path, '%s', not found", $2);
- 			$$ = $1;
- 		}
-+	| devicetree DT_REMOVENODE DT_REF ';'
++	| DT_REMOVEPROP propdef
 +		{
-+			struct node *target = get_node_by_ref($1, $3);
-+
-+			if (target)
-+				remove_child(target->parent, target);
-+			else
-+				print_error("label or path, '%s', not found", $3);
++			$2->undefined = 1;
++			$$ = $2;
 +		}
- 	;
- 
- nodedef:
-@@ -170,6 +183,7 @@ propdef:
- 		}
  	| DT_LABEL propdef
  		{
-+			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
- 			add_label(&$2->labels, $1);
- 			$$ = $2;
- 		}
-@@ -305,6 +319,7 @@ subnode:
- 		}
- 	| DT_LABEL subnode
- 		{
-+			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
- 			add_label(&$2->labels, $1);
- 			$$ = $2;
- 		}
+ 			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
 diff --git a/dtc.h b/dtc.h
-index b36ac5d..95e3bd1 100644
+index 95e3bd1..764b3a9 100644
 --- a/dtc.h
 +++ b/dtc.h
-@@ -35,6 +35,7 @@
- #include <fdt.h>
+@@ -132,6 +132,8 @@ struct label {
+ };
  
- #include "util.h"
-+#include "strtbl.h"
+ struct property {
++	int undefined;  /* when this feild is set to 1, the property is to be
++	                   treated as undefined */
+ 	char *name;
+ 	struct data val;
  
- #ifdef DEBUG
- #define debug(fmt,args...)	printf(fmt, ##args)
-@@ -178,6 +179,7 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node);
+@@ -178,6 +180,7 @@ struct node *chain_node(struct node *first, struct node *list);
+ struct node *merge_nodes(struct node *old_node, struct node *new_node);
  
  void add_property(struct node *node, struct property *prop);
++void remove_property(struct node *node, struct property *prop);
  void add_child(struct node *parent, struct node *child);
-+void remove_child(struct node *parent, struct node *child);
+ void remove_child(struct node *parent, struct node *child);
  
- const char *get_unitname(struct node *node);
- struct property *get_property(struct node *node, const char *propname);
-@@ -221,6 +223,9 @@ struct boot_info {
- struct boot_info *build_boot_info(struct reserve_info *reservelist,
- 				  struct node *tree, uint32_t boot_cpuid_phys);
+diff --git a/flattree.c b/flattree.c
+index ead0332..00439e9 100644
+--- a/flattree.c
++++ b/flattree.c
+@@ -275,6 +275,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
+ 	for_each_property(tree, prop) {
+ 		int nameoff;
  
-+extern strtbl label_table;
-+extern strtbl removed_labels;
++		if (prop->undefined)
++			continue;
 +
- /* Checks */
+ 		if (streq(prop->name, "name"))
+ 			seen_name_prop = 1;
  
- void process_checks(int force, struct boot_info *bi);
 diff --git a/livetree.c b/livetree.c
-index 13c5f10..88de3c3 100644
+index 88de3c3..f1b235c 100644
 --- a/livetree.c
 +++ b/livetree.c
-@@ -20,6 +20,8 @@
- 
- #include "dtc.h"
- 
-+strtbl removed_labels = NULL;
+@@ -123,11 +123,15 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
+ 		/* Look for a collision, set new value if there is */
+ 		for_each_property(old_node, old_prop) {
+ 			if (streq(old_prop->name, new_prop->name)) {
+-				/* Add new labels to old property */
+-				for_each_label(new_prop->labels, l)
+-					add_label(&old_prop->labels, l->label);
+-
+-				old_prop->val = new_prop->val;
++				if (new_prop->undefined) {
++					remove_property(old_node, old_prop);
++				} else {
++					/* Add new labels to old property */
++					for_each_label(new_prop->labels, l)
++						add_label(&old_prop->labels, l->label);
 +
- /*
-  * Tree building functions
-  */
-@@ -202,6 +204,43 @@ void add_child(struct node *parent, struct node *child)
- 	*p = child;
++					old_prop->val = new_prop->val;
++				}
+ 				free(new_prop);
+ 				new_prop = NULL;
+ 				break;
+@@ -190,6 +194,23 @@ void add_property(struct node *node, struct property *prop)
+ 	*p = prop;
  }
  
-+void remove_child(struct node *parent, struct node *child)
++void remove_property(struct node *node, struct property *prop)
 +{
-+	struct node **p;
-+	struct property *prop;
-+	struct label *l;
-+	void *data;
++	struct property **p;
 +
-+	/* Make sure we've got a consistent tree here */
-+	assert(child->parent == parent);
-+
-+	/* Keep track of removed node labels, maintaining the original
-+	 * data associated with the label collected by the parser */
-+	for_each_label(child->labels, l) {
-+		data = strtbl_str_data(label_table, l->label);
-+		strtbl_insert(&removed_labels, l->label, data);
-+	}
-+
-+	/* Keep track of removed property labels, maintaining the original
-+	 * data associated with the label collected by the parser */
-+	for_each_property(child, prop) {
-+		for_each_label(prop->labels, l) {
-+			data = strtbl_str_data(label_table, l->label);
-+			strtbl_insert(&removed_labels, l->label, data);
-+		}
-+	}
-+
-+	p = &parent->children;
++	p = &node->proplist;
 +	while (*p) {
-+		if (*p == child) {
-+			*p = (*p)->next_sibling;
-+			break;
++		if (*p == prop) {
++			*p = (*p)->next;
++			return;
 +		}
-+		p = &((*p)->next_sibling);
++		p = &((*p)->next);
 +	}
-+	child->parent = NULL;
++	/* property not in the node? it's probably an error, so flag it. */
++	assert(0);
 +}
 +
- struct reserve_info *build_reserve_entry(uint64_t address, uint64_t size)
++
+ void add_child(struct node *parent, struct node *child)
  {
- 	struct reserve_info *new = xmalloc(sizeof(*new));
+ 	struct node **p;
+diff --git a/tests/dtc-checkfails.sh b/tests/dtc-checkfails.sh
+index c58694f..a13eb28 100755
+--- a/tests/dtc-checkfails.sh
++++ b/tests/dtc-checkfails.sh
+@@ -23,7 +23,7 @@ if [ "$ret" -gt 127 ]; then
+ fi
+ 
+ for c in $CHECKS; do
+-    if ! grep -E "^(ERROR)|(Warning) \($c\):" $LOG > /dev/null; then
++    if ! grep -E "^(ERROR)|(Error)|(Warning) \($c\):" $LOG > /dev/null; then
+ 	FAIL "Failed to trigger check \"$c\""
+     fi
+ done
 diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index a887254..495e759 100755
+index 495e759..912a19b 100755
 --- a/tests/run_tests.sh
 +++ b/tests/run_tests.sh
-@@ -307,6 +307,8 @@ dtc_tests () {
-     run_test dtbs_equal_ordered multilabel.test.dtb multilabel_merge.test.dtb
-     run_dtc_test -I dts -O dtb -o dtc_tree1_merge_path.test.dtb test_tree1_merge_path.dts
+@@ -309,6 +309,8 @@ dtc_tests () {
      tree1_tests dtc_tree1_merge_path.test.dtb test_tree1.dtb
-+    run_dtc_test -I dts -O dtb -o dtc_tree1_merge_remove.test.dtb test_tree1_merge_remove.dts
-+    tree1_tests dtc_tree1_merge_remove.test.dtb test_tree1.dtb
+     run_dtc_test -I dts -O dtb -o dtc_tree1_merge_remove.test.dtb test_tree1_merge_remove.dts
+     tree1_tests dtc_tree1_merge_remove.test.dtb test_tree1.dtb
++    run_dtc_test -I dts -O dtb -o dtc_tree1_merge_remove_prop.test.dtb test_tree1_merge_remove_prop.dts
++    tree1_tests dtc_tree1_merge_remove_prop.test.dtb test_tree1.dtb
  
      # Check some checks
      check_tests dup-nodename.dts duplicate_node_names
-diff --git a/util.h b/util.h
-index 9cead84..b544cbc 100644
---- a/util.h
-+++ b/util.h
-@@ -40,6 +40,16 @@ static inline void *xmalloc(size_t len)
- 	return new;
- }
- 
-+static inline void *xcalloc(size_t nmemb, size_t len) {
-+	void *new = calloc(nmemb, len);
-+
-+	if (!new)
-+		die("calloc() failed\n");
-+
-+	return new;
-+}
-+
-+
- static inline void *xrealloc(void *p, size_t len)
- {
- 	void *new = realloc(p, len);
