@@ -1,8 +1,8 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 3/4] Implements a new feature for deleting existing properties
-	in device tree nodes.
-Date: Tue, 02 Nov 2010 15:55:21 -0700
-Message-ID: <20101102225521.1707.50854.stgit@riker>
+Subject: [PATCH 4/4] Allow nodes at the root to be specified by path as well
+	as by label.
+Date: Tue, 02 Nov 2010 15:55:30 -0700
+Message-ID: <20101102225530.1707.29792.stgit@riker>
 References: <20101102225243.1707.23433.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,173 +22,257 @@ To: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When updating existing nodes in a device tree merge operation, properties
-can be removed by using
-	/remove-prop/ <property>;
+Changes to allow us to specify a node by it's path. A path can be used in
+place of a label.
 
-If a property has been removed, it is treated the same as if it had not been
-declared.
+This is particularly useful when overriding existing nodes.
+This way we don't have to label every possible node in a device tree we know
+is a base device tree for a class of systems, and we know the tree will be
+modified for the specific systems.
 
 Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
- dtc-lexer.l             |    6 ++++++
- dtc-parser.y            |    6 ++++++
- dtc.h                   |    3 +++
- flattree.c              |    3 +++
- livetree.c              |   31 ++++++++++++++++++++++++++-----
- tests/dtc-checkfails.sh |    2 +-
- tests/run_tests.sh      |    2 ++
- 7 files changed, 47 insertions(+), 6 deletions(-)
+ dtc-lexer.l  |   24 +++++++++++++++++++++++
+ dtc-parser.y |   60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ dtc.h        |    2 ++
+ livetree.c   |   48 +++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 133 insertions(+), 1 deletions(-)
 
 diff --git a/dtc-lexer.l b/dtc-lexer.l
-index bcabbfe..4b07236 100644
+index 4b07236..087a51f 100644
 --- a/dtc-lexer.l
 +++ b/dtc-lexer.l
-@@ -102,6 +102,12 @@ static int pop_input_file(void);
- 			return DT_REMOVENODE;
+@@ -127,6 +127,23 @@ static int pop_input_file(void);
+ 			return DT_REF;
  		}
  
-+<*>"/remove-prop/"	{
-+			DPRINT("Keyword: /undef-prop/\n");
-+			BEGIN(PROPNODENAME);
-+			return DT_REMOVEPROP;
++<*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
++			/*
++			 * Possibly this could be parsed by the parser rather
++			 * than as a lexical element.
++			 *
++			 * What is intended here is to support the following
++			 * type of references:
++			 * a) &{/path/to/the/node/reference}
++			 * b) &{label}
++			 * c) &{label/path/from/labeled/node/to/reference}
++			 */
++			yytext[yyleng-1] = '\0';
++			DPRINT("Ref: %s\n", yytext+2);
++			yylval.labelref = xstrdup(yytext+2);
++			return DT_REF;
 +		}
 +
- <*>{LABEL}:	{
- 			DPRINT("Label: %s\n", yytext);
- 			yylval.labelref = xstrdup(yytext);
+ <*>"&{/"{PATHCHAR}+\}	{	/* new-style path reference */
+ 			yytext[yyleng-1] = '\0';
+ 			DPRINT("Ref: %s\n", yytext+2);
+@@ -146,6 +163,13 @@ static int pop_input_file(void);
+ 			return ']';
+ 		}
+ 
++<PROPNODENAME>"aliases" {
++			DPRINT("Aliases: %s\n", yytext);
++			yylval.propnodename = xstrdup(yytext);
++			BEGIN_DEFAULT();
++			return DT_ALIASES;
++		}
++
+ <PROPNODENAME>{PROPNODECHAR}+ {
+ 			DPRINT("PropNodeName: %s\n", yytext);
+ 			yylval.propnodename = xstrdup(yytext);
 diff --git a/dtc-parser.y b/dtc-parser.y
-index 4814d34..2a9736a 100644
+index 2a9736a..8718f07 100644
 --- a/dtc-parser.y
 +++ b/dtc-parser.y
-@@ -58,6 +58,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
- %token DT_V1
- %token DT_MEMRESERVE
+@@ -60,6 +60,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
  %token DT_REMOVENODE
-+%token <propnodename> DT_REMOVEPROP
+ %token <propnodename> DT_REMOVEPROP
  %token <propnodename> DT_PROPNODENAME
++%token <propnodename> DT_ALIASES
  %token <literal> DT_LITERAL
  %token <cbase> DT_BASE
-@@ -181,6 +182,11 @@ propdef:
+ %token <byte> DT_BYTE
+@@ -77,10 +78,13 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+ %type <cell> cellval
+ %type <data> bytestring
+ %type <prop> propdef
++%type <prop> aliasespropdef
+ %type <proplist> proplist
++%type <proplist> aliasesproplist
+ 
+ %type <node> devicetree
+ %type <node> nodedef
++%type <node> aliasesnodedef
+ %type <node> subnode
+ %type <nodelist> subnodes
+ 
+@@ -128,11 +132,33 @@ addr:
+ devicetree:
+ 	  '/' nodedef
  		{
- 			$$ = build_property($1, empty_data);
++			/*
++			 * We need to wait until the whole tree is parsed so we
++			 * can assign aliases as labels on forward reference
++			 * nodes.
++			 */
++			struct node *aliases_node = get_node_by_ref($2, "/aliases");
++
++			if (aliases_node) {
++				make_aliases_labels($2, aliases_node);
++			}
++
+ 			$$ = name_node($2, "");
  		}
-+	| DT_REMOVEPROP propdef
+ 	| devicetree '/' nodedef
+ 		{
+ 			$$ = merge_nodes($1, $3);
++
++			/*
++			 * We need to wait until the whole tree is parsed so we
++			 * can assign aliases as labels on forward reference
++			 * nodes.
++			 */
++			struct node *aliases_node = get_node_by_ref($$, "/aliases");
++
++			if (aliases_node) {
++				make_aliases_labels($$, aliases_node);
++			}
+ 		}
+ 	| devicetree DT_REF nodedef
+ 		{
+@@ -162,6 +188,13 @@ nodedef:
+ 		}
+ 	;
+ 
++aliasesnodedef:
++	  '{' aliasesproplist '}' ';'
 +		{
-+			$2->undefined = 1;
-+			$$ = $2;
++			$$ = build_node($2, NULL);
 +		}
- 	| DT_LABEL propdef
++	;
++
+ proplist:
+ 	  /* empty */
+ 		{
+@@ -173,6 +206,17 @@ proplist:
+ 		}
+ 	;
+ 
++aliasesproplist:
++	  /* empty */
++		{
++			$$ = NULL;
++		}
++	| aliasesproplist aliasespropdef
++		{
++			$$ = chain_property($2, $1);
++		}
++	;
++
+ propdef:
+ 	  DT_PROPNODENAME '=' propdata ';'
+ 		{
+@@ -195,6 +239,18 @@ propdef:
+ 		}
+ 	;
+ 
++aliasespropdef:
++	  DT_PROPNODENAME '=' DT_REF ';'
++		{
++			struct data d = empty_data;
++
++			d = data_add_marker(d, REF_PATH, $3);
++			$$ = build_property($1, d);
++
++			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
++		}
++	;
++
+ propdata:
+ 	  propdataprefix DT_STRING
+ 		{
+@@ -323,6 +379,10 @@ subnode:
+ 		{
+ 			$$ = name_node($2, $1);
+ 		}
++	| DT_ALIASES aliasesnodedef
++		{
++			$$ = name_node($2, "aliases");
++		}
+ 	| DT_LABEL subnode
  		{
  			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
 diff --git a/dtc.h b/dtc.h
-index 95e3bd1..764b3a9 100644
+index 764b3a9..1c3632c 100644
 --- a/dtc.h
 +++ b/dtc.h
-@@ -132,6 +132,8 @@ struct label {
- };
- 
- struct property {
-+	int undefined;  /* when this feild is set to 1, the property is to be
-+	                   treated as undefined */
- 	char *name;
- 	struct data val;
- 
-@@ -178,6 +180,7 @@ struct node *chain_node(struct node *first, struct node *list);
+@@ -179,6 +179,8 @@ struct node *name_node(struct node *node, char *name);
+ struct node *chain_node(struct node *first, struct node *list);
  struct node *merge_nodes(struct node *old_node, struct node *new_node);
  
- void add_property(struct node *node, struct property *prop);
-+void remove_property(struct node *node, struct property *prop);
- void add_child(struct node *parent, struct node *child);
- void remove_child(struct node *parent, struct node *child);
- 
-diff --git a/flattree.c b/flattree.c
-index ead0332..00439e9 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -275,6 +275,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 	for_each_property(tree, prop) {
- 		int nameoff;
- 
-+		if (prop->undefined)
-+			continue;
++void make_aliases_labels(struct node *root, struct node *aliases);
 +
- 		if (streq(prop->name, "name"))
- 			seen_name_prop = 1;
- 
+ void add_property(struct node *node, struct property *prop);
+ void remove_property(struct node *node, struct property *prop);
+ void add_child(struct node *parent, struct node *child);
 diff --git a/livetree.c b/livetree.c
-index 88de3c3..f1b235c 100644
+index f1b235c..357d762 100644
 --- a/livetree.c
 +++ b/livetree.c
-@@ -123,11 +123,15 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
- 		/* Look for a collision, set new value if there is */
- 		for_each_property(old_node, old_prop) {
- 			if (streq(old_prop->name, new_prop->name)) {
--				/* Add new labels to old property */
--				for_each_label(new_prop->labels, l)
--					add_label(&old_prop->labels, l->label);
--
--				old_prop->val = new_prop->val;
-+				if (new_prop->undefined) {
-+					remove_property(old_node, old_prop);
-+				} else {
-+					/* Add new labels to old property */
-+					for_each_label(new_prop->labels, l)
-+						add_label(&old_prop->labels, l->label);
+@@ -473,8 +473,54 @@ struct node *get_node_by_ref(struct node *tree, const char *ref)
+ {
+ 	if (ref[0] == '/')
+ 		return get_node_by_path(tree, ref);
+-	else
++	else {
++		/*
++		 * Support finding a node reference that is rooted by
++		 * a label reference.
++		 *
++		 * References rooted by a label have a '/' in them.
++		 */
++		char *ref_cpy = xstrdup(ref);
++		char *p = strchr(ref_cpy, '/');
++		struct node *node;
 +
-+					old_prop->val = new_prop->val;
-+				}
- 				free(new_prop);
- 				new_prop = NULL;
- 				break;
-@@ -190,6 +194,23 @@ void add_property(struct node *node, struct property *prop)
- 	*p = prop;
- }
- 
-+void remove_property(struct node *node, struct property *prop)
-+{
-+	struct property **p;
++		if (p) {
++			*p = '\0';
++			node = get_node_by_label(tree, ref_cpy);
++			*p = '/';
++			node = get_node_by_path(node, p+1);
 +
-+	p = &node->proplist;
-+	while (*p) {
-+		if (*p == prop) {
-+			*p = (*p)->next;
-+			return;
++			free(ref_cpy);
++
++			return node;
 +		}
-+		p = &((*p)->next);
++
+ 		return get_node_by_label(tree, ref);
 +	}
-+	/* property not in the node? it's probably an error, so flag it. */
-+	assert(0);
 +}
 +
++void make_aliases_labels(struct node *root, struct node *aliases) {
++	struct property *prop;
++	
++	for_each_property(aliases, prop) {
++		struct marker *m = prop->val.markers;
++		struct node *refnode;
 +
- void add_child(struct node *parent, struct node *child)
- {
- 	struct node **p;
-diff --git a/tests/dtc-checkfails.sh b/tests/dtc-checkfails.sh
-index c58694f..a13eb28 100755
---- a/tests/dtc-checkfails.sh
-+++ b/tests/dtc-checkfails.sh
-@@ -23,7 +23,7 @@ if [ "$ret" -gt 127 ]; then
- fi
++		for_each_marker_of_type(m, REF_PATH) {
++			refnode = get_node_by_ref(root, m->ref);
++			if (refnode)
++				/*
++				 * Right here we might be insertting labels
++				 * with illegal characters, but we won't be
++				 * able to reference them in the dts file
++				 * (sytnax error).
++				 *
++				 * We could possibly check for this and spit
++				 * out a warning.
++				 */
++				add_label(&refnode->labels, prop->name);
++		}
++	}
+ }
  
- for c in $CHECKS; do
--    if ! grep -E "^(ERROR)|(Warning) \($c\):" $LOG > /dev/null; then
-+    if ! grep -E "^(ERROR)|(Error)|(Warning) \($c\):" $LOG > /dev/null; then
- 	FAIL "Failed to trigger check \"$c\""
-     fi
- done
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 495e759..912a19b 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -309,6 +309,8 @@ dtc_tests () {
-     tree1_tests dtc_tree1_merge_path.test.dtb test_tree1.dtb
-     run_dtc_test -I dts -O dtb -o dtc_tree1_merge_remove.test.dtb test_tree1_merge_remove.dts
-     tree1_tests dtc_tree1_merge_remove.test.dtb test_tree1.dtb
-+    run_dtc_test -I dts -O dtb -o dtc_tree1_merge_remove_prop.test.dtb test_tree1_merge_remove_prop.dts
-+    tree1_tests dtc_tree1_merge_remove_prop.test.dtb test_tree1.dtb
- 
-     # Check some checks
-     check_tests dup-nodename.dts duplicate_node_names
+ cell_t get_node_phandle(struct node *root, struct node *node)
