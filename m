@@ -1,14 +1,15 @@
-From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 4/4] Allow nodes at the root to be specified by path as well
-	as by label.
-Date: Tue, 02 Nov 2010 15:55:30 -0700
-Message-ID: <20101102225530.1707.29792.stgit@riker>
-References: <20101102225243.1707.23433.stgit@riker>
+From: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Subject: Re: Device tree with early buffer allocations and aliased memory
+Date: Wed, 3 Nov 2010 13:50:37 -0700
+Message-ID: <20101103205037.GA15096@dvomlehn-lnx2.corp.sa.net>
+References: <20101027184908.GA7669@dvomlehn-lnx2.corp.sa.net>
+	<AANLkTi=OWBbB8vPNapxkBDiVRCoGS-sZ5-CXcKK0n8iv@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101102225243.1707.23433.stgit@riker>
+Content-Disposition: inline
+In-Reply-To: <AANLkTi=OWBbB8vPNapxkBDiVRCoGS-sZ5-CXcKK0n8iv-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,261 +19,143 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Device Tree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes to allow us to specify a node by it's path. A path can be used in
-place of a label.
+This got eaten as junk mail, so pardon the slow response. Also, Stuart
+Y. has been giving me some feedback, so I think I've made some
+progress.
 
-This is particularly useful when overriding existing nodes.
-This way we don't have to label every possible node in a device tree we know
-is a base device tree for a class of systems, and we know the tree will be
-modified for the specific systems.
+On Sat, Oct 30, 2010 at 10:57:34PM -0500, Grant Likely wrote:
+> On Wed, Oct 27, 2010 at 2:49 PM, David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org> wrote:
+...
+> > 3. =A0 =A0 =A0All device registers are at physical addresses < 0x100000=
+00.
+> =
 
-Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+> Inside of the low memory region?
 
- dtc-lexer.l  |   24 +++++++++++++++++++++++
- dtc-parser.y |   60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- dtc.h        |    2 ++
- livetree.c   |   48 +++++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 133 insertions(+), 1 deletions(-)
+Yes. Those wacky hardware guys...
 
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 4b07236..087a51f 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -127,6 +127,23 @@ static int pop_input_file(void);
- 			return DT_REF;
- 		}
- 
-+<*>"&{"{LABEL}{PATHCHAR}*\} { /* label and/or path refererence with braces */
-+			/*
-+			 * Possibly this could be parsed by the parser rather
-+			 * than as a lexical element.
-+			 *
-+			 * What is intended here is to support the following
-+			 * type of references:
-+			 * a) &{/path/to/the/node/reference}
-+			 * b) &{label}
-+			 * c) &{label/path/from/labeled/node/to/reference}
-+			 */
-+			yytext[yyleng-1] = '\0';
-+			DPRINT("Ref: %s\n", yytext+2);
-+			yylval.labelref = xstrdup(yytext+2);
-+			return DT_REF;
-+		}
-+
- <*>"&{/"{PATHCHAR}+\}	{	/* new-style path reference */
- 			yytext[yyleng-1] = '\0';
- 			DPRINT("Ref: %s\n", yytext+2);
-@@ -146,6 +163,13 @@ static int pop_input_file(void);
- 			return ']';
- 		}
- 
-+<PROPNODENAME>"aliases" {
-+			DPRINT("Aliases: %s\n", yytext);
-+			yylval.propnodename = xstrdup(yytext);
-+			BEGIN_DEFAULT();
-+			return DT_ALIASES;
-+		}
-+
- <PROPNODENAME>{PROPNODECHAR}+ {
- 			DPRINT("PropNodeName: %s\n", yytext);
- 			yylval.propnodename = xstrdup(yytext);
-diff --git a/dtc-parser.y b/dtc-parser.y
-index 2a9736a..8718f07 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -60,6 +60,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
- %token DT_REMOVENODE
- %token <propnodename> DT_REMOVEPROP
- %token <propnodename> DT_PROPNODENAME
-+%token <propnodename> DT_ALIASES
- %token <literal> DT_LITERAL
- %token <cbase> DT_BASE
- %token <byte> DT_BYTE
-@@ -77,10 +78,13 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
- %type <cell> cellval
- %type <data> bytestring
- %type <prop> propdef
-+%type <prop> aliasespropdef
- %type <proplist> proplist
-+%type <proplist> aliasesproplist
- 
- %type <node> devicetree
- %type <node> nodedef
-+%type <node> aliasesnodedef
- %type <node> subnode
- %type <nodelist> subnodes
- 
-@@ -128,11 +132,33 @@ addr:
- devicetree:
- 	  '/' nodedef
- 		{
-+			/*
-+			 * We need to wait until the whole tree is parsed so we
-+			 * can assign aliases as labels on forward reference
-+			 * nodes.
-+			 */
-+			struct node *aliases_node = get_node_by_ref($2, "/aliases");
-+
-+			if (aliases_node) {
-+				make_aliases_labels($2, aliases_node);
-+			}
-+
- 			$$ = name_node($2, "");
- 		}
- 	| devicetree '/' nodedef
- 		{
- 			$$ = merge_nodes($1, $3);
-+
-+			/*
-+			 * We need to wait until the whole tree is parsed so we
-+			 * can assign aliases as labels on forward reference
-+			 * nodes.
-+			 */
-+			struct node *aliases_node = get_node_by_ref($$, "/aliases");
-+
-+			if (aliases_node) {
-+				make_aliases_labels($$, aliases_node);
-+			}
- 		}
- 	| devicetree DT_REF nodedef
- 		{
-@@ -162,6 +188,13 @@ nodedef:
- 		}
- 	;
- 
-+aliasesnodedef:
-+	  '{' aliasesproplist '}' ';'
-+		{
-+			$$ = build_node($2, NULL);
-+		}
-+	;
-+
- proplist:
- 	  /* empty */
- 		{
-@@ -173,6 +206,17 @@ proplist:
- 		}
- 	;
- 
-+aliasesproplist:
-+	  /* empty */
-+		{
-+			$$ = NULL;
-+		}
-+	| aliasesproplist aliasespropdef
-+		{
-+			$$ = chain_property($2, $1);
-+		}
-+	;
-+
- propdef:
- 	  DT_PROPNODENAME '=' propdata ';'
- 		{
-@@ -195,6 +239,18 @@ propdef:
- 		}
- 	;
- 
-+aliasespropdef:
-+	  DT_PROPNODENAME '=' DT_REF ';'
-+		{
-+			struct data d = empty_data;
-+
-+			d = data_add_marker(d, REF_PATH, $3);
-+			$$ = build_property($1, d);
-+
-+			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
-+		}
-+	;
-+
- propdata:
- 	  propdataprefix DT_STRING
- 		{
-@@ -323,6 +379,10 @@ subnode:
- 		{
- 			$$ = name_node($2, $1);
- 		}
-+	| DT_ALIASES aliasesnodedef
-+		{
-+			$$ = name_node($2, "aliases");
-+		}
- 	| DT_LABEL subnode
- 		{
- 			strtbl_insert(&label_table, $1, srcpos_copy(&yylloc));
-diff --git a/dtc.h b/dtc.h
-index 764b3a9..1c3632c 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -179,6 +179,8 @@ struct node *name_node(struct node *node, char *name);
- struct node *chain_node(struct node *first, struct node *list);
- struct node *merge_nodes(struct node *old_node, struct node *new_node);
- 
-+void make_aliases_labels(struct node *root, struct node *aliases);
-+
- void add_property(struct node *node, struct property *prop);
- void remove_property(struct node *node, struct property *prop);
- void add_child(struct node *parent, struct node *child);
-diff --git a/livetree.c b/livetree.c
-index f1b235c..357d762 100644
---- a/livetree.c
-+++ b/livetree.c
-@@ -473,8 +473,54 @@ struct node *get_node_by_ref(struct node *tree, const char *ref)
- {
- 	if (ref[0] == '/')
- 		return get_node_by_path(tree, ref);
--	else
-+	else {
-+		/*
-+		 * Support finding a node reference that is rooted by
-+		 * a label reference.
-+		 *
-+		 * References rooted by a label have a '/' in them.
-+		 */
-+		char *ref_cpy = xstrdup(ref);
-+		char *p = strchr(ref_cpy, '/');
-+		struct node *node;
-+
-+		if (p) {
-+			*p = '\0';
-+			node = get_node_by_label(tree, ref_cpy);
-+			*p = '/';
-+			node = get_node_by_path(node, p+1);
-+
-+			free(ref_cpy);
-+
-+			return node;
-+		}
-+
- 		return get_node_by_label(tree, ref);
-+	}
-+}
-+
-+void make_aliases_labels(struct node *root, struct node *aliases) {
-+	struct property *prop;
-+	
-+	for_each_property(aliases, prop) {
-+		struct marker *m = prop->val.markers;
-+		struct node *refnode;
-+
-+		for_each_marker_of_type(m, REF_PATH) {
-+			refnode = get_node_by_ref(root, m->ref);
-+			if (refnode)
-+				/*
-+				 * Right here we might be insertting labels
-+				 * with illegal characters, but we won't be
-+				 * able to reference them in the dts file
-+				 * (sytnax error).
-+				 *
-+				 * We could possibly check for this and spit
-+				 * out a warning.
-+				 */
-+				add_label(&refnode->labels, prop->name);
-+		}
-+	}
- }
- 
- cell_t get_node_phandle(struct node *root, struct node *node)
+> > 4. =A0 =A0 =A0Since the processor needs memory to run, the first 0x0fc0=
+0000
+> > =A0 =A0 =A0 =A0bytes also appear at 0x10000000. Our hardware guys call =
+this
+> > =A0 =A0 =A0 =A0a memory "alias". These addresses are physical, but not =
+DMA
+> > =A0 =A0 =A0 =A0addresses. (The hole is so we can alias the reset vector)
+> =
+
+> Not sure I'm clear.  How does the hole work?  It might be useful to
+> draw a map of the various ranges rather than trying to describe it in
+> prose.  So is phys address range 0x00000000-0x0fc00000 aliased to
+> 0x10000000-0x1fc00000?
+
+I can see I wasn't quite accurate here. The only things in the first
+0x10000000 bytes of memory are device registers. Real memory starts at
+0x10000000 and runs for 0x0fc00000 bytes. The same memory also appears
+at 0x20000000-0x2fbfffff. Memory above 0x2fc00000 only appears at one
+address.
+
+> You don't need three separate nodes here.  Just do it thusly:
+> =
+
+> memory@10000000 {
+>         device_type =3D "memory";
+>         reg =3D <0x10000000 0x0fc00000
+>                0x2fc00000 0x10400000
+>                0x60000000 0x20000000>;
+> }
+> =
+
+> Since (I assume) both #address-cells and #size-cells are 1, the OS can
+> interpret three memory ranges from a single node.
+
+This is good to know, though I might want to label each node. See below.
+
+...
+> dma-ranges is probably what you want.
+
+I think this is a big part of the solution. My current thinking is to
+have something like:
+
+	platform-bus {
+		compatible =3D "simple-bus";
+		#address-cells =3D <1>;
+		#size-cells =3D <1>;
+		dma-ranges =3D <0x10000000 0x1000000 0x0fc00000
+			0x20000000 0x10000000 0x0fc00000
+			0x2fc00000 0x2fc00000 0x10400000
+			0x60000000 0x60000000 0x20000000>;
+		...
+
+I'm not sure whether I need to specify all those 1:1 mappings or just
+the range starting at 0x20000000 that doesn't map identically to the
+physical address range. Assuming this is correct, my DMA mapping issue
+is solved.
+
+This still leaves the question of buffers. Buffers with statically and
+dynamically assigned addresses need some sort of identifier so that
+they can be referenced by device drivers. There may be more than one
+buffer per device and a single device may use buffers with statically
+assigned addresses and buffers with dynamically assigned addresses.
+Buffers with statically assigned buffers addresses could be handled
+with something like:
+
+	device-s {
+		compatible =3D "cisco,device-s";
+		cisco,static-buffers =3D =
+
+			"device-s-b1",<0x24000000 0x00100000>,
+			"device-s-b2",<0x60000000 0x00200000>;
+	};
+
+The first buffer, device-s-b1, is in the area where physical and DMA
+address differ. I'm using the DMA address to specify it, but the
+the physical address may make more sense since the device tree is
+more oriented around the processor's view.
+
+Buffers with dynamically assigned addresses must be assigned within
+a given range of memory. Using labeled memory nodes could help:
+
+	device-d {
+		compatible =3D "cisco,device-d";
+		cisco,dynamic-buffers =3D
+			"device-d-b1",<&node0-lowmem 0x00210000>,
+			"device-d-b2",<&node0-highmem 0x00220000>,
+			"device-d-b3",<&node1-highmem 0x00230000>;
+	};
+
+I could have separate memory nodes and label each:
+
+	bank0_lowmem: memory@10000000 {
+		device_type =3D "memory";
+		reg =3D <0x10000000 0x0fc00000>;
+	};
+	bank0_highmem: memory@2c00000 {
+		device_type =3D "memory";
+		reg =3D <0x2fc00000 0x10400000>;
+	};
+	bank1_highmem: memory@60000000 {
+		device_type =3D "memory";
+		reg =3D <0x60000000 0x20000000>;
+	};
+
+or label the 2-tuple for each node:
+
+	memory@10000000 {
+		device_type =3D "memory";
+		reg =3D <node0-lowmem: 0x10000000 0x0fc00000
+		       node0-highmem: 0x2fc00000 0x10400000
+		       node0-highlowmem: 0x60000000 0x20000000>;
+	}
+
+The only advantage to the former is that, should it be necessary to
+decouple allocation restrictions from memory nodes, a second type
+of node could be introduced to do that.
+
+> g.
+-- =
+
+David VL
