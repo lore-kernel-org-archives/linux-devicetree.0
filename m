@@ -1,11 +1,13 @@
 From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [RFC] [PATCH V3 0/2] Adding DTB to architecture independent vmlinux
-Date: Wed, 10 Nov 2010 10:52:36 -0800
-Message-ID: <cover.1289411770.git.dirk.brandewie@gmail.com>
+Subject: [PATCH 1/3] of: Add support for linking device tree blobs into vmlinux
+Date: Wed, 10 Nov 2010 10:52:37 -0800
+Message-ID: <ca28b9851147dd33c69e57e1ff75d3496adeeb1a.1289411770.git.dirk.brandewie@gmail.com>
+References: <cover.1289411770.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1289411770.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,51 +23,89 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-These patches add support for linking device tree blob(s) into
-vmlinux.
+This patch adds support for linking device tree blobs into
+vmlinux. The device tree blobs are placed in the init.data
+section.
 
-The changes since V2:
-patch has been split into architecture independent and x86 specific
-parts.
-
-The DTB's have been moved into the .init.data section.
-
-The DTB's linked into vmlinux is controlled by kernel config
-variables. Specifying the DTB on the make command line is gone.
-
-Linking multiple DTB's into image is supported. (suggested by David
-VomLehn and refined with the help of HPA and Grant Likely)
-
-Specific issues I would like feed back on:
-Is the padding added on the dtc invocation needed since the paltform
-code will have to copy the tree out of the init section?
-
-Setting $(dtstree) in the arch specific makefile is required is there
-a better write the cmd_dtc in Makefile.lib?
-
-Things on the TODO list:
-[generic]
-Pass DTB name/compatible string on the kernel command line.
-Add funciton to find "compatible" root node in the set of DTB's linked
-in.
-[x86]
-Add function to relocate DTB whose address is passed in via setup_data
-ala init_rd.
-
-Comments/Suggestions?
-
-Dirk Brandewie (2):
-  of: Add support for linking device tree blobs into vmlinux
-  x86/of:  Support building device tree blob(s) into image.
-
- arch/x86/Kconfig                  |    6 +++++-
- arch/x86/boot/dts/Kconfig         |    8 ++++++++
- arch/x86/kernel/Makefile          |   11 +++++++++++
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
  include/asm-generic/vmlinux.lds.h |   12 ++++++++++++
  init/Kconfig                      |    7 +++++++
  scripts/Makefile.lib              |   14 ++++++++++++++
- 6 files changed, 57 insertions(+), 1 deletions(-)
- create mode 100644 arch/x86/boot/dts/Kconfig
+ 3 files changed, 33 insertions(+), 0 deletions(-)
 
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index bd69d79..a36dab5 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -146,6 +146,17 @@
+ #define TRACE_SYSCALLS()
+ #endif
+ 
++#ifdef CONFIG_KERNEL_DTB
++#define KERNEL_DTB							\
++	. = ALIGN(4);							\
++	VMLINUX_SYMBOL(__dtb_start) = .;				\
++	*(.dtb)			      					\
++	VMLINUX_SYMBOL(__dtb_end) = .;
++
++#else
++#define KERNEL_DTB
++#endif
++
+ /* .data section */
+ #define DATA_DATA							\
+ 	*(.data)							\
+@@ -772,6 +783,7 @@
+ 		CON_INITCALL						\
+ 		SECURITY_INITCALL					\
+ 		INIT_RAM_FS						\
++		KERNEL_DTB						\
+ 	}
+ 
+ #define BSS_SECTION(sbss_align, bss_align, stop_align)			\
+diff --git a/init/Kconfig b/init/Kconfig
+index 88c1046..fddfc0f 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1083,6 +1083,13 @@ config PCI_QUIRKS
+           bugs/quirks. Disable this only if your target machine is
+           unaffected by PCI quirks.
+ 
++config KERNEL_DTB
++       bool "Support linking a device tree blob into vmlinux"
++       default n
++       help
++         This option provides support for adding a device tree blob(s)
++	 directly to vmlinux
++
+ config SLUB_DEBUG
+ 	default y
+ 	bool "Enable SLUB debugging support" if EMBEDDED
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 4c72c11..6481f27 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -200,6 +200,20 @@ quiet_cmd_gzip = GZIP    $@
+ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
+ 	(rm -f $@ ; false)
+ 
++# DTC
++#  ---------------------------------------------------------------------------
++$(obj)/%.dtb.S: $(obj)/%.dtb
++	@echo '.section .dtb,"a"' > $@
++	@echo '.global __$(*F)_dtb_begin' >> $@
++	@echo '__$(*F)_dtb_begin:' >> $@
++	@echo '.incbin "$<" ' >> $@
++	@echo '.global __$(*F)_dtb_end' >> $@
++	@echo '__$(*F)_dtb_end:' >> $@
++
++DTC = $(objtree)/scripts/dtc/dtc
++
++quiet_cmd_dtc = DTC	$@
++      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0 -p 1024 $(dtstree)/$*.dts
+ 
+ # Bzip2
+ # ---------------------------------------------------------------------------
 -- 
 1.7.2.3
