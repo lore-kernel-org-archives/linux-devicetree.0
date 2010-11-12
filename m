@@ -1,16 +1,12 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [sodaville] [PATCH 3/4] of/dtc: force dtb size to modulo 32 bytes
-Date: Fri, 12 Nov 2010 12:16:17 +1100
-Message-ID: <20101112011617.GA3102@yookeroo>
-References: <cover.1289520079.git.dirk.brandewie@gmail.com>
-	<a7e6885535e6c930560f3d79a8a55ae922499752.1289520079.git.dirk.brandewie@gmail.com>
-	<4CDC8EA3.6080608@linux.intel.com> <4CDC91DC.7030407@gmail.com>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 1/3] x86: of: define irq functions to allow drivers/of/* to
+	build on x86
+Date: Thu, 11 Nov 2010 21:45:26 -0800
+Message-ID: <20101111214526.5de7121b@queued.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4CDC91DC.7030407-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,50 +16,69 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 11, 2010 at 05:01:16PM -0800, Dirk Brandewie wrote:
-> On 11/11/2010 04:47 PM, H. Peter Anvin wrote:
-> >On 11/11/2010 04:03 PM, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> >>From: Dirk Brandewie<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>
-> >>This patch forces the size of the DTB to be modulo 32 bytes. This is
-> >>needed to support linking multiple DTB's into a single section in the
-> >>image. GCC wants structures to be 32 byte aligned without this change
-> >>DTB's after the first in the section may not be properly aligned so
-> >>the flat tree parsing code will fall over.
-> >>
-> >>Signed-off-by: Dirk Brandewie<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> >I don't think 32 is a universal number; it should depend on the ABI.  On
-> >x86, for one thing, I'm pretty sure that there is no particular
-> >alignment requirements beyond the natural alignment of the data items,
-> >for example.
-> >
-> >Although 32 is probably conservative on any platform, please flag the
-> >origin of this with a comment, or make it a constant defined in a header
-> >file... otherwise, if this breaks for whatever reason it'll be near
-> >impossible to find.
-> >
-> 
-> I will change . = ALIGN(32); to STRUCT_ALIGN();
-> 
-> from vmlinux.lds.h:
-> /*
->  * Align to a 32 byte boundary equal to the
->  * alignment gcc 4.5 uses for a struct
->  */
-> #define STRUCT_ALIGN() . = ALIGN(32)
 
-I also think this is the wrong place to do this.  scripts/dtc is a
-mirror of copy of upstream dtc, designed for making dtb images for
-general purposes.  I think the alignment should instead go into the
-linker script fragments you generate to incbin the dtbs.
+ - Define a stub irq_create_of_mapping for x86 as a stop-gap solution until
+   drivers/of/irq is further along.
+ - Define irq_dispose_mapping for x86 to appease of_i2c.c
 
+These are needed to allow stuff in drivers/of/ to build on x86.  This stuff
+will eventually get replaced; quoting Grant,
+
+"The long term plan is to have the drivers/of/ code handling the mapping
+intelligently like powerpc currently does."  But for now, just provide
+these functions.
+
+Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+---
+ arch/x86/include/asm/irq.h |    3 +++
+ arch/x86/kernel/irq.c      |   10 ++++++++++
+ 2 files changed, 13 insertions(+), 0 deletions(-)
+
+diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
+index 13b0eba..8d2c671 100644
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -10,6 +10,9 @@
+ #include <asm/apicdef.h>
+ #include <asm/irq_vectors.h>
+ 
++/* Even though we don't support this, supply it to appease OF */
++static inline void irq_dispose_mapping(unsigned int virq) { }
++
+ static inline int irq_canonicalize(int irq)
+ {
+ 	return ((irq == 2) ? 9 : irq);
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 83ec017..d833d1b 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -4,6 +4,7 @@
+ #include <linux/cpu.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel_stat.h>
++#include <linux/of.h>
+ #include <linux/seq_file.h>
+ #include <linux/smp.h>
+ #include <linux/ftrace.h>
+@@ -275,6 +276,15 @@ void smp_x86_platform_ipi(struct pt_regs *regs)
+ 
+ EXPORT_SYMBOL_GPL(vector_used_by_percpu_irq);
+ 
++#ifdef CONFIG_OF
++unsigned int irq_create_of_mapping(struct device_node *controller,
++		const u32 *intspec, unsigned int intsize)
++{
++	return intspec[0];
++}
++EXPORT_SYMBOL_GPL(irq_create_of_mapping);
++#endif
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ /* A cpu has been removed from cpu_online_mask.  Reset irq affinities. */
+ void fixup_irqs(void)
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.2.3
