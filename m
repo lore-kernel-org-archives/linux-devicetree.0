@@ -1,7 +1,7 @@
 From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 2/4] of: Add support for linking device tree blobs into vmlinux
-Date: Thu, 11 Nov 2010 16:03:48 -0800
-Message-ID: <7d0a9d70f1616340115c187547006c76b0135ca7.1289520079.git.dirk.brandewie@gmail.com>
+Subject: [PATCH 3/4] of/dtc: force dtb size to modulo 32 bytes
+Date: Thu, 11 Nov 2010 16:03:49 -0800
+Message-ID: <a7e6885535e6c930560f3d79a8a55ae922499752.1289520079.git.dirk.brandewie@gmail.com>
 References: <cover.1289520079.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -25,90 +25,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This patch adds support for linking device tree blobs into
-vmlinux. The device tree blobs are placed in the init.data
-section.
+This patch forces the size of the DTB to be modulo 32 bytes. This is
+needed to support linking multiple DTB's into a single section in the
+image. GCC wants structures to be 32 byte aligned without this change
+DTB's after the first in the section may not be properly aligned so
+the flat tree parsing code will fall over.
 
 Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- include/asm-generic/vmlinux.lds.h |   13 ++++++++++++-
- init/Kconfig                      |    7 +++++++
- scripts/Makefile.lib              |   14 ++++++++++++++
- 3 files changed, 33 insertions(+), 1 deletions(-)
+ scripts/dtc/flattree.c |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index bd69d79..c8f600e 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -146,6 +146,16 @@
- #define TRACE_SYSCALLS()
- #endif
+diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
+index 76acd28..ccca797 100644
+--- a/scripts/dtc/flattree.c
++++ b/scripts/dtc/flattree.c
+@@ -358,6 +358,7 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
+ 	struct data strbuf     = empty_data;
+ 	struct fdt_header fdt;
+ 	int padlen = 0;
++	int align_size;
  
-+#ifdef CONFIG_KERNEL_DTB
-+#define KERNEL_DTB							\
-+	. = ALIGN(32);							\
-+	VMLINUX_SYMBOL(__dtb_start) = .;				\
-+	*(.dtb)			       					\
-+	VMLINUX_SYMBOL(__dtb_end) = .;
-+#else
-+#define KERNEL_DTB
-+#endif
+ 	for (i = 0; i < ARRAY_SIZE(version_table); i++) {
+ 		if (version_table[i].version == version)
+@@ -395,6 +396,9 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
+ 		fdt.totalsize = cpu_to_fdt32(tsize);
+ 	}
+ 
++	align_size = ALIGN(fdt32_to_cpu(fdt.totalsize), 32);
++	fdt.totalsize = cpu_to_fdt32(align_size);
 +
- /* .data section */
- #define DATA_DATA							\
- 	*(.data)							\
-@@ -468,7 +478,8 @@
- 	MCOUNT_REC()							\
- 	DEV_DISCARD(init.rodata)					\
- 	CPU_DISCARD(init.rodata)					\
--	MEM_DISCARD(init.rodata)
-+	MEM_DISCARD(init.rodata)					\
-+	KERNEL_DTB
+ 	/*
+ 	 * Assemble the blob: start with the header, add with alignment
+ 	 * the reserve buffer, add the reserve map terminating zeroes,
+@@ -412,7 +416,7 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
+ 	 */
+ 	if (padlen > 0)
+ 		blob = data_append_zeroes(blob, padlen);
+-
++	blob = data_append_align(blob, 32);
+ 	fwrite(blob.val, blob.len, 1, f);
  
- #define INIT_TEXT							\
- 	*(.init.text)							\
-diff --git a/init/Kconfig b/init/Kconfig
-index 88c1046..fddfc0f 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1083,6 +1083,13 @@ config PCI_QUIRKS
-           bugs/quirks. Disable this only if your target machine is
-           unaffected by PCI quirks.
- 
-+config KERNEL_DTB
-+       bool "Support linking a device tree blob into vmlinux"
-+       default n
-+       help
-+         This option provides support for adding a device tree blob(s)
-+	 directly to vmlinux
-+
- config SLUB_DEBUG
- 	default y
- 	bool "Enable SLUB debugging support" if EMBEDDED
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 4c72c11..c4487b2 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -200,6 +200,20 @@ quiet_cmd_gzip = GZIP    $@
- cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
- 	(rm -f $@ ; false)
- 
-+# DTC
-+#  ---------------------------------------------------------------------------
-+$(obj)/%.dtb.S: $(obj)/%.dtb FORCE
-+	@echo '.section .dtb,"a"' > $@
-+	@echo '.global __dtb_$(*F)_begin' >> $@
-+	@echo '__dtb_$(*F)_begin:' >> $@
-+	@echo '.incbin "$<" ' >> $@
-+	@echo '__dtb_$(*F)_end:' >> $@
-+	@echo '.global __dtb_$(*F)_end' >> $@
-+
-+DTC = $(objtree)/scripts/dtc/dtc
-+
-+quiet_cmd_dtc = DTC	$@
-+      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0  $(dtstree)/$*.dts
- 
- # Bzip2
- # ---------------------------------------------------------------------------
+ 	if (ferror(f))
 -- 
 1.7.2.3
