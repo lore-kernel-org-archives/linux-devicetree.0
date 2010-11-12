@@ -1,7 +1,7 @@
 From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 1/4] x86/of: Support building device tree blob(s) into image.
-Date: Thu, 11 Nov 2010 16:03:47 -0800
-Message-ID: <1b004c685c67c07a5a0b2b16b3a00dd016e2b759.1289520079.git.dirk.brandewie@gmail.com>
+Subject: [PATCH 2/4] of: Add support for linking device tree blobs into vmlinux
+Date: Thu, 11 Nov 2010 16:03:48 -0800
+Message-ID: <7d0a9d70f1616340115c187547006c76b0135ca7.1289520079.git.dirk.brandewie@gmail.com>
 References: <cover.1289520079.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -25,76 +25,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This patch adds support for linking device tree blobs into vmlinux.
-The blobs linked into the image is controlled via kernel config
-variables
+This patch adds support for linking device tree blobs into
+vmlinux. The device tree blobs are placed in the init.data
+section.
 
 Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/Kconfig          |    6 +++++-
- arch/x86/boot/dts/Kconfig |    8 ++++++++
- arch/x86/kernel/Makefile  |   11 +++++++++++
- 3 files changed, 24 insertions(+), 1 deletions(-)
- create mode 100644 arch/x86/boot/dts/Kconfig
+ include/asm-generic/vmlinux.lds.h |   13 ++++++++++++-
+ init/Kconfig                      |    7 +++++++
+ scripts/Makefile.lib              |   14 ++++++++++++++
+ 3 files changed, 33 insertions(+), 1 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5904f38..62c195d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -299,13 +299,17 @@ config X86_BIGSMP
- 	---help---
- 	  This option is needed for the systems that have more than 8 CPUs
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index bd69d79..c8f600e 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -146,6 +146,16 @@
+ #define TRACE_SYSCALLS()
+ #endif
  
--config X86_OF
-+menuconfig X86_OF
- 	bool "Support for device tree"
- 	select OF
- 	select OF_FLATTREE
- 	---help---
- 	  Device tree support on X86.
++#ifdef CONFIG_KERNEL_DTB
++#define KERNEL_DTB							\
++	. = ALIGN(32);							\
++	VMLINUX_SYMBOL(__dtb_start) = .;				\
++	*(.dtb)			       					\
++	VMLINUX_SYMBOL(__dtb_end) = .;
++#else
++#define KERNEL_DTB
++#endif
++
+ /* .data section */
+ #define DATA_DATA							\
+ 	*(.data)							\
+@@ -468,7 +478,8 @@
+ 	MCOUNT_REC()							\
+ 	DEV_DISCARD(init.rodata)					\
+ 	CPU_DISCARD(init.rodata)					\
+-	MEM_DISCARD(init.rodata)
++	MEM_DISCARD(init.rodata)					\
++	KERNEL_DTB
  
-+if X86_OF
-+source "arch/x86/boot/dts/Kconfig
-+endif
-+
- if X86_32
- config X86_EXTENDED_PLATFORM
- 	bool "Support for extended (non-PC) x86 platforms"
-diff --git a/arch/x86/boot/dts/Kconfig b/arch/x86/boot/dts/Kconfig
-new file mode 100644
-index 0000000..5380b6b
---- /dev/null
-+++ b/arch/x86/boot/dts/Kconfig
-@@ -0,0 +1,8 @@
-+config CE4100_DTB
-+       bool "Intel CE4100"
-+       depends on X86_OF && KERNEL_DTB
-+
-+config TEST_DTB
-+       bool "Test DTS"
-+       depends on  X86_OF && KERNEL_DTB
-+
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 586df14..cf15e8c 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -113,6 +113,17 @@ obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
- obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
- obj-$(CONFIG_X86_OF)			+= prom.o
+ #define INIT_TEXT							\
+ 	*(.init.text)							\
+diff --git a/init/Kconfig b/init/Kconfig
+index 88c1046..fddfc0f 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1083,6 +1083,13 @@ config PCI_QUIRKS
+           bugs/quirks. Disable this only if your target machine is
+           unaffected by PCI quirks.
  
-+ifeq ($(CONFIG_KERNEL_DTB),y)
-+obj-$(CONFIG_CE4100_DTB) += ce4100.dtb.o
-+obj-$(CONFIG_TEST_DTB) += test.dtb.o
-+endif
++config KERNEL_DTB
++       bool "Support linking a device tree blob into vmlinux"
++       default n
++       help
++         This option provides support for adding a device tree blob(s)
++	 directly to vmlinux
 +
-+dtstree	:= $(srctree)/arch/x86/boot/dts
+ config SLUB_DEBUG
+ 	default y
+ 	bool "Enable SLUB debugging support" if EMBEDDED
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 4c72c11..c4487b2 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -200,6 +200,20 @@ quiet_cmd_gzip = GZIP    $@
+ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
+ 	(rm -f $@ ; false)
+ 
++# DTC
++#  ---------------------------------------------------------------------------
++$(obj)/%.dtb.S: $(obj)/%.dtb FORCE
++	@echo '.section .dtb,"a"' > $@
++	@echo '.global __dtb_$(*F)_begin' >> $@
++	@echo '__dtb_$(*F)_begin:' >> $@
++	@echo '.incbin "$<" ' >> $@
++	@echo '__dtb_$(*F)_end:' >> $@
++	@echo '.global __dtb_$(*F)_end' >> $@
 +
-+$(obj)/%.dtb: $(dtstree)/%.dts
-+	$(call if_changed,dtc)
++DTC = $(objtree)/scripts/dtc/dtc
 +
-+
- ###
- # 64 bit specific files
- ifeq ($(CONFIG_X86_64),y)
++quiet_cmd_dtc = DTC	$@
++      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0  $(dtstree)/$*.dts
+ 
+ # Bzip2
+ # ---------------------------------------------------------------------------
 -- 
 1.7.2.3
