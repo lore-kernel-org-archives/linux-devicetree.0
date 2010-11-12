@@ -1,14 +1,16 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 3/3] x86: OLPC: speed up device tree creation during
-	boot (v2)
-Date: Fri, 12 Nov 2010 00:27:04 -0800
-Message-ID: <20101112002704.50c629e2@queued.net>
-References: <20101111214546.4e573cad@queued.net> <reply-olpc-3-v2@mdm.bga.com>
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [sodaville] [PATCH 3/4] of/dtc: force dtb size to modulo 32 bytes
+Date: Fri, 12 Nov 2010 08:24:53 -0800
+Message-ID: <4CDD6A55.6040603@gmail.com>
+References: <cover.1289520079.git.dirk.brandewie@gmail.com>
+	<a7e6885535e6c930560f3d79a8a55ae922499752.1289520079.git.dirk.brandewie@gmail.com>
+	<4CDC8EA3.6080608@linux.intel.com> <4CDC91DC.7030407@gmail.com>
+	<20101112011617.GA3102@yookeroo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <reply-olpc-3-v2-kM9DGJe42AJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20101112011617.GA3102@yookeroo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,87 +20,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Nov 2010 01:48:30 -0600
-Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org> wrote:
+Hi David,
+On 11/11/2010 05:16 PM, David Gibson wrote:
+> On Thu, Nov 11, 2010 at 05:01:16PM -0800, Dirk Brandewie wrote:
+>> On 11/11/2010 04:47 PM, H. Peter Anvin wrote:
+>>> On 11/11/2010 04:03 PM, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>>> From: Dirk Brandewie<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> This patch forces the size of the DTB to be modulo 32 bytes. This is
+>>>> needed to support linking multiple DTB's into a single section in the
+>>>> image. GCC wants structures to be 32 byte aligned without this change
+>>>> DTB's after the first in the section may not be properly aligned so
+>>>> the flat tree parsing code will fall over.
+>>>>
+>>>> Signed-off-by: Dirk Brandewie<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> I don't think 32 is a universal number; it should depend on the ABI.  On
+>>> x86, for one thing, I'm pretty sure that there is no particular
+>>> alignment requirements beyond the natural alignment of the data items,
+>>> for example.
+>>>
+>>> Although 32 is probably conservative on any platform, please flag the
+>>> origin of this with a comment, or make it a constant defined in a header
+>>> file... otherwise, if this breaks for whatever reason it'll be near
+>>> impossible to find.
+>>>
+>>
+>> I will change . = ALIGN(32); to STRUCT_ALIGN();
+>>
+>> from vmlinux.lds.h:
+>> /*
+>>   * Align to a 32 byte boundary equal to the
+>>   * alignment gcc 4.5 uses for a struct
+>>   */
+>> #define STRUCT_ALIGN() . = ALIGN(32)
+>
+> I also think this is the wrong place to do this.  scripts/dtc is a
+> mirror of copy of upstream dtc, designed for making dtb images for
+> general purposes.  I think the alignment should instead go into the
+> linker script fragments you generate to incbin the dtbs.
+>
 
-> On Thu, 11 Nov 2010 around 21:45:46 -0800, Andres Salomon wrote:
-> > diff --git a/arch/x86/platform/olpc/olpc_dt.c
-> > b/arch/x86/platform/olpc/olpc_dt.c index b8c8ff9..0ab824d 100644
-> > --- a/arch/x86/platform/olpc/olpc_dt.c
-> > +++ b/arch/x86/platform/olpc/olpc_dt.c
-> > @@ -126,14 +126,31 @@  static unsigned int prom_early_allocated
-> > __initdata; 
-> >  void * __init prom_early_alloc(unsigned long size)
-> >  {
-> > +	static u8 *mem = NULL;
-> > +	static size_t free_mem = 0;
-> 
-> Static variables are implicitly 0 and NULL
+I was sleep deprived when I responded to HPA I thought he had replied to the 
+patch modifying vmlinux.lds.h since we had talked about that file a fair amount. 
+So my first response had little bearing on patch in question.
 
-That's true for global static variables; is it also true for static
-variables that are local to a function?
+I am trying to solve two issues with this change.
 
+The structure needs to be 32 byte aligned for the code in fdt.c to be able parse 
+the blob.  You are right I can force this alignment in the assembly fragment.
 
-> 
-> >  	void *res;
-> >  
-> > -	res = alloc_bootmem(size);
-> > -	if (res)
-> > -		memset(res, 0, size);
-> > -
-> > -	prom_early_allocated += size;
-> > +	if (free_mem < size) {
-> > +		const size_t chunk_size = max(PAGE_SIZE, size);
-> > +
-> > +		/*
-> > +		 * To mimimize the number of allocations, grab at
-> > least 4k of
-> > +		 * memory (that's an arbitrary choice that matches
-> > PAGE_SIZE on
-> > +		 * the platforms we care about, and minimizes
-> > wasted bootmem)
-> > +		 * and hand off chunks of it to callers.
-> > +		 */
-> > +		res = mem = alloc_bootmem(chunk_size);
-> > +		if (!res)
-> > +			return NULL;
-> 
-> Oops.  If alloc_bootmem fails, we loose mem but don't reset free_mem,
-> so a later call (possibly for a smaller chunk) may return memory
-> starting at NULL.
+The second issue is being able to parse the section in the kernel image to find 
+each of the blobs that have been concatenated together.  If the DTB size is 
+modulo 32 bytes I can use  blob = blob+be32_to_cpu(blob->totalsize) to find the 
+next blob in the section and use that address directly to have fdt.c parse the 
+blob.  Otherwise I would need to search for the signature of the next blob 
+somewhere past the end of the current blob which is knid of messy IMHO.
 
-You're right, good catch.  Thanks!
+I have two questions,
+Do you think this acceptable if I made forcing the alignment a command line 
+argument?
 
+Where is the DTC git tree I should be delivering patches against?  is 
+git://www.jdl.com/software/dtc.git the correct tree?
 
-> 
-> I suggest just assinging res above and then add mem = res inside this
-> if.
-> 
-> Oh, this is alloc_bootmem not alloc_bootmem_nopainc ... should it be?
-> 
-
-Currently, nothing in drivers/of/pdt.c actually checks alloc_bootmem
-results.. so we're panicking whether we like it or not.  It would be
-good to actually handle memory failures gracefully and not oops (the DT
-certainly isn't essential to booting in OLPC's case), but that's a
-separate patch (series).
-
-
-> > +		prom_early_allocated += chunk_size;
-> > +		memset(res, 0, chunk_size);
-> > +		free_mem = chunk_size;
-> > +	}
-> >  
-> > +	/* allocate from the local cache */
-> > +	free_mem -= size;
-> > +	res = mem;
-> > +	mem += size;
-> >  	return res;
-> >  }
-> >  
-> 
-> milton
+Thanks
+--Dirk
