@@ -1,16 +1,16 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [sodaville] [PATCH 3/4] of/dtc: force dtb size to modulo 32 bytes
-Date: Fri, 12 Nov 2010 16:20:10 -0600
-Message-ID: <E1PH1yc-0005jx-Ud@jdl.com>
-References: <cover.1289520079.git.dirk.brandewie@gmail.com>
-	<a7e6885535e6c930560f3d79a8a55ae922499752.1289520079.git.dirk.brandewie@gmail.com>
-	<4CDC8EA3.6080608@linux.intel.com> <4CDC91DC.7030407@gmail.com>
-	<20101112011617.GA3102@yookeroo> <4CDD6A55.6040603@gmail.com>
+Subject: Re: [PATCH 1/4] Create new and use new print_error that uses printf
+	style formatting.
+Date: Sat, 13 Nov 2010 14:40:09 -0600
+Message-ID: <E1PHMtN-0000Gk-I9@jdl.com>
+References: <20101020214419.2985.51068.stgit@riker>
+	<20101020214457.2985.90434.stgit@riker>
+	<20101021044410.GD13335@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <4CDD6A55.6040603-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
+In-reply-to: <20101021044410.GD13335-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,15 +20,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> On Wed, Oct 20, 2010 at 02:44:58PM -0700, John Bonesio wrote:
+> > yyerror is meant to be called by the parser internal code, and it's interface
+> > is limited. Instead create and call a new error message routine that allows
+> > formatted strings to be used.
+> > 
+> > yyerror uses the new routine so error formatting remains consistent.
+> > 
+> > Signed-of-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > 
-> Where is the DTC git tree I should be delivering patches against?  is 
-> git://www.jdl.com/software/dtc.git the correct tree?
+> Picked up and pushed out to my git tree.  Jon is a little tied up for
+> the moment, so I'll maintain a working tree at
+> git://git.secretlab.ca/git/dtc.git until we've got this work finished
+> and we can ask him to merge it.
+> 
+> g.
 
-Yep.  On this list.
 
-Thanks!
+Thanks, Grant.  I'll pick this patch up now too, and the
+subsequent patch 1/4 from the next series about labels refs.
+
 jdl
