@@ -1,15 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] dtc: Add command line option to force size alignment
-	of blob.
-Date: Sat, 13 Nov 2010 23:24:28 -0700
-Message-ID: <20101114062428.GE2355@angua.secretlab.ca>
-References: <1289584920-4703-1-git-send-email-dirk.brandewie@gmail.com>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 4/4] of/fdt: add kernel command line option for dtb_compat
+	string
+Date: Sat, 13 Nov 2010 22:26:15 -0800
+Message-ID: <2573ead1-944d-4ba5-ace3-12936693d872@SG2EHSMHS006.ehs.local>
+References: <cover.1289520079.git.dirk.brandewie@gmail.com>
+	<855a5a11d04a7c1883675b6a77992c4af85222fd.1289520079.git.dirk.brandewie@gmail.com>
+	<20101114062246.GD2355@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5776879029175674458=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1289584920-4703-1-git-send-email-dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Class: urn:content-classes:message
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,127 +19,103 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dirk Brandewie <dirk.j.brandewie-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 12, 2010 at 10:02:00AM -0800, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This patch adds a command line argument to allow the user to request
-> the that the blob be padded out to modulo <bytes> size.
-> 
-> Signed-off-by: Dirk Brandewie <dirk.j.brandewie-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+--===============5776879029175674458==
+Content-Class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01CB83C5.14C297AA"
 
-As commented elsewhere; this option isn't needed.  The kernel should
-handle its own alignment requirements.  Nack.
+------_=_NextPart_001_01CB83C5.14C297AA
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-g.
 
-> ---
->  Documentation/manual.txt |    3 +++
->  dtc.c                    |   10 ++++++++--
->  flattree.c               |   20 +++++++++++++++++++-
->  3 files changed, 30 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-> index f8a8a7b..c899396 100644
-> --- a/Documentation/manual.txt
-> +++ b/Documentation/manual.txt
-> @@ -117,6 +117,9 @@ Options:
->  	Ensure the blob at least <bytes> long, adding additional
->  	space if needed.
->  
-> +    -a <bytes>
-> +        Ensure the blob is modulo <bytes> in length.
-> + 
->      -v
->  	Print DTC version and exit.
->  
-> diff --git a/dtc.c b/dtc.c
-> index 8b31d20..4e1abd4 100644
-> --- a/dtc.c
-> +++ b/dtc.c
-> @@ -77,6 +77,8 @@ static void  __attribute__ ((noreturn)) usage(void)
->  	fprintf(stderr, "\t\tMake the blob at least <bytes> long (extra space)\n");
->  	fprintf(stderr, "\t-p <bytes>\n");
->  	fprintf(stderr, "\t\tAdd padding to the blob of <bytes> long (extra space)\n");
-> +	fprintf(stderr, "\t-a <bytes>\n");
-> +	fprintf(stderr, "\t\t Add padding make the blob modulo <bytes> in size\n");
->  	fprintf(stderr, "\t-b <number>\n");
->  	fprintf(stderr, "\t\tSet the physical boot cpu\n");
->  	fprintf(stderr, "\t-f\n");
-> @@ -108,8 +110,9 @@ int main(int argc, char *argv[])
->  	reservenum = 0;
->  	minsize    = 0;
->  	padsize    = 0;
-> -
-> -	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fcqb:vH:")) != EOF) {
-> +	align_size = 0;
-> +	
-> +	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:a:fcqb:vH:")) != EOF) {
->  		switch (opt) {
->  		case 'I':
->  			inform = optarg;
-> @@ -132,6 +135,9 @@ int main(int argc, char *argv[])
->  		case 'p':
->  			padsize = strtol(optarg, NULL, 0);
->  			break;
-> +		case 'a':
-> +			alignsize = strtol(optarg, NULL, 0);
-> +			break;
->  		case 'f':
->  			force = 1;
->  			break;
-> diff --git a/flattree.c b/flattree.c
-> index ead0332..e908609 100644
-> --- a/flattree.c
-> +++ b/flattree.c
-> @@ -373,7 +373,8 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
->  	struct data strbuf     = empty_data;
->  	struct fdt_header fdt;
->  	int padlen = 0;
-> -
-> +	int align_len = 0;
-> +	
->  	for (i = 0; i < ARRAY_SIZE(version_table); i++) {
->  		if (version_table[i].version == version)
->  			vi = &version_table[i];
-> @@ -411,6 +412,20 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
->  	}
->  
->  	/*
-> +	 * If the user asked for alignment of the end of the blob,
-> +	 * adjust the totalsize. 
-> +	 */
-> +
-> +	if (align_size > 0)
-> +		align_len = align_size;
-> +
-> +	if (align_len > 0) {
-> +		int tsize = fdt32_to_cpu(fdt.totalsize);
-> +		tsize += alignlen;
-> +		fdt.totalsize = cpu_to_fdt32(tsize);
-> +	}
-> +
-> +	/*
->  	 * Assemble the blob: start with the header, add with alignment
->  	 * the reserve buffer, add the reserve map terminating zeroes,
->  	 * the device tree itself, and finally the strings.
-> @@ -427,6 +442,9 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
->  	 */
->  	if (padlen > 0)
->  		blob = data_append_zeroes(blob, padlen);
-> +	
-> +	if (align_len > 0)
-> +		blob = data_append_align(blob, align_len);
->  
->  	if (fwrite(blob.val, blob.len, 1, f) != 1) {
->  		if (ferror(f))
-> -- 
-> 1.7.2.3
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+> > +			initial_boot_params =3D blob;
+
+> Blech!  I really need to get Stephen (cc'd) to respin his "of/fdt: Add
+> unflatten_partial_device_tree" patch that decouples the flattree
+> functions from initial_boot_params.  Having to do it this way is just
+> plain ugly.
+
+> Stephen: nudge, nudge.
+
+If things have settled down, I'll dust them off again.
+Don't know if it will happen this week: I'm called for jury duty.
+
+Steve
+
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
+
+
+------_=_NextPart_001_01CB83C5.14C297AA
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; charset=3Diso-8859-=
+1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version 6.5.7655.4">=
+
+<TITLE>RE: [PATCH 4/4] of/fdt: add kernel command line option for dtb_compa=
+t string</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
+<BR>
+<BR>
+
+<P><FONT SIZE=3D2>&gt; &gt; +&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; initial_boot_params =
+=3D blob;<BR>
+<BR>
+&gt; Blech!&nbsp; I really need to get Stephen (cc'd) to respin his &quot;o=
+f/fdt: Add<BR>
+&gt; unflatten_partial_device_tree&quot; patch that decouples the flattree<=
+BR>
+&gt; functions from initial_boot_params.&nbsp; Having to do it this way is =
+just<BR>
+&gt; plain ugly.<BR>
+<BR>
+&gt; Stephen: nudge, nudge.<BR>
+<BR>
+If things have settled down, I'll dust them off again.<BR>
+Don't know if it will happen this week: I'm called for jury duty.<BR>
+<BR>
+Steve</FONT>
+</P>
+
+<br clear=3Dall> This email and any attachments are intended for the sole u=
+se of the named recipient(s) and contain(s) confidential information that m=
+ay be proprietary, privileged or copyrighted under applicable law. If you a=
+re not the intended recipient, do not read, copy, or forward this email mes=
+sage or any attachments. Delete this email message and any attachments imme=
+diately.
+</BODY>
+</HTML>
+
+
+------_=_NextPart_001_01CB83C5.14C297AA--
+
+--===============5776879029175674458==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5776879029175674458==--
