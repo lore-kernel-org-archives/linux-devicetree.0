@@ -1,47 +1,49 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] of/fdt: add kernel command line option for dtb_compat
-	string
-Date: Sat, 13 Nov 2010 23:33:35 -0700
-Message-ID: <AANLkTikue3exN3XKdR6QRGA69c6vn1KiVdOmxxqtEkd9@mail.gmail.com>
-References: <cover.1289520079.git.dirk.brandewie@gmail.com>
-	<855a5a11d04a7c1883675b6a77992c4af85222fd.1289520079.git.dirk.brandewie@gmail.com>
-	<20101114062246.GD2355@angua.secretlab.ca>
-	<2573ead1-944d-4ba5-ace3-12936693d872@SG2EHSMHS006.ehs.local>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH 3/3] x86: OLPC: speed up device tree creation during boot
+ (v2)
+Date: Sun, 14 Nov 2010 10:50:13 +0100
+Message-ID: <20101114095013.GB24206@elte.hu>
+References: <20101111214546.4e573cad@queued.net>
+ <reply-olpc-3-v2@mdm.bga.com>
+ <20101112002704.50c629e2@queued.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2573ead1-944d-4ba5-ace3-12936693d872-RaUQJvECHiv5op9OF0Koj7jjLBE8jN/0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20101112002704.50c629e2@queued.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: Milton Miller <miltonm@bga.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 13, 2010 at 11:26 PM, Stephen Neuendorffer
-<stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->
->
->> > +=A0=A0 =A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0 initial_boot_param=
-s =3D blob;
->
->> Blech!=A0 I really need to get Stephen (cc'd) to respin his "of/fdt: Add
->> unflatten_partial_device_tree" patch that decouples the flattree
->> functions from initial_boot_params.=A0 Having to do it this way is just
->> plain ugly.
->
->> Stephen: nudge, nudge.
->
-> If things have settled down, I'll dust them off again.
-> Don't know if it will happen this week: I'm called for jury duty.
 
-Ouch!  Have fun.
+* Andres Salomon <dilinger@queued.net> wrote:
 
-g.
+> On Fri, 12 Nov 2010 01:48:30 -0600
+> Milton Miller <miltonm@bga.com> wrote:
+> 
+> > On Thu, 11 Nov 2010 around 21:45:46 -0800, Andres Salomon wrote:
+> > > diff --git a/arch/x86/platform/olpc/olpc_dt.c
+> > > b/arch/x86/platform/olpc/olpc_dt.c index b8c8ff9..0ab824d 100644
+> > > --- a/arch/x86/platform/olpc/olpc_dt.c
+> > > +++ b/arch/x86/platform/olpc/olpc_dt.c
+> > > @@ -126,14 +126,31 @@  static unsigned int prom_early_allocated
+> > > __initdata; 
+> > >  void * __init prom_early_alloc(unsigned long size)
+> > >  {
+> > > +	static u8 *mem = NULL;
+> > > +	static size_t free_mem = 0;
+> > 
+> > Static variables are implicitly 0 and NULL
+> 
+> That's true for global static variables; is it also true for static
+> variables that are local to a function?
+
+It is the same allocation and initialization wise - just not visible to functions 
+outside this one.
+
+It's being frowned upon btw, because it's easy to overlook (and for other reasons) - 
+please dont use statics inside functions - please put them in front of the function 
+or further up into file scope.
+
+	Ingo
