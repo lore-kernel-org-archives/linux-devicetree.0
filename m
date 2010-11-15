@@ -1,69 +1,47 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH 2/2] powerpc: pcm030/032: add pagesize to dts
-Date: Tue, 16 Nov 2010 00:24:32 +0300
-Message-ID: <20101115212432.GA17754@oksana.dev.rtsoft.ru>
-References: <1289841916-3825-1-git-send-email-w.sang@pengutronix.de>
-	<1289841916-3825-2-git-send-email-w.sang@pengutronix.de>
-	<20101115173250.GA22104@oksana.dev.rtsoft.ru>
-	<4CE1A0E4.5030505@firmworks.com>
+From: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [sodaville] [PATCH 2/4] of: Add support for linking device tree
+	blobs into vmlinux
+Date: Mon, 15 Nov 2010 13:27:32 -0800
+Message-ID: <4CE1A5C4.5090200@linux.intel.com>
+References: <cover.1289520079.git.dirk.brandewie@gmail.com>	<7d0a9d70f1616340115c187547006c76b0135ca7.1289520079.git.dirk.brandewie@gmail.com>	<20101114052525.GC2355@angua.secretlab.ca>
+	<4CE161AE.4030103@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <4CE1A0E4.5030505@firmworks.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4CE161AE.4030103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 15, 2010 at 11:06:44AM -1000, Mitch Bradley wrote:
-[...]
-> >>  			eeprom@52 {
-> >>  				compatible = "catalyst,24c32";
-> >>  				reg =<0x52>;
-> >>+				pagesize =<32>;
-> >
-> >I think you'd better drop the pagesize property altogether, and
-> >instead make the compatible string more specific (if needed at
-> >all. are there any 'catalyst,24c32' chips with pagesize != 32?)
+On 11/15/2010 08:37 AM, Dirk Brandewie wrote:
+>>
+>> To match other definitions in this file, this should be defined with
+>> parentheses: #define KERNEL_DTB()
+>>
+>>> +	. = ALIGN(32);							\
+>>> +	VMLINUX_SYMBOL(__dtb_start) = .;				\
+>>> +	*(.dtb)			       					\
+>>
+>> I wonder if .meminit.rodata.dtb be a better section name.  Could use
+>> some input from more experienced kernel hackers here.  hpa, what say
+>> you?
 > 
-> Microchip makes a 24c32 part that looks pretty similar to the
-> catalyst part, but Microchip's has a 64-byte page size compared to
-> Catalyst's 32.
+> I will use what ever name seems reasonable,  It turns out that the sections that 
+> are named *.init.rodata are really in a R/W section :-( so that name is really a 
+> misnomer.  I will check with HPA on name again.
+> 
 
-Well, when using microchip part, the compatible string would be
-"microchip,24c32", correct? Then we have all the information
-already, no need for the pagesize.
+I think they should be named *rodata* just to indicate that they should
+eventually be moved to a readonly section.
 
-> It would probably be feasible to have a generic I2C EEPROM driver
-> that could handle many different parts, parameterized by total size,
-> block size, and page size.
-
-I guess it can do this already via I2C ID table. The problem
-is that I2C core is only using part ID (no vendor ID matching).
-
-So, the current driver may just implement quirks like this:
-
-if (of_device_is_compatible(np, "catalyst,24c32"))
-	pagesize = 32;
-
-Or, if it's some generic pattern, something like
-
-if (of_device_is_compatible_vendor(np, "catalyst"))
-	pagesize /= 2;
-
-Thanks,
-
--- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+	-hpa
