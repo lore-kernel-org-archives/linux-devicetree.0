@@ -1,52 +1,56 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH 2/2] powerpc: pcm030/032: add pagesize to dts
-Date: Mon, 15 Nov 2010 20:32:50 +0300
-Message-ID: <20101115173250.GA22104@oksana.dev.rtsoft.ru>
-References: <1289841916-3825-1-git-send-email-w.sang@pengutronix.de>
-	<1289841916-3825-2-git-send-email-w.sang@pengutronix.de>
+From: "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] x86: OLPC: speed up device tree creation during boot
+	(v2)
+Date: Mon, 15 Nov 2010 09:43:15 -0800
+Message-ID: <4CE17133.2050101@zytor.com>
+References: <20101111214546.4e573cad@queued.net> <reply-olpc-3-v2@mdm.bga.com>
+	<20101112002704.50c629e2@queued.net>
+	<20101114095013.GB24206@elte.hu> <4CE0B54E.6000101@zytor.com>
+	<20101115070254.GA25243@elte.hu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1289841916-3825-2-git-send-email-w.sang@pengutronix.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20101115070254.GA25243-X9Un+BFzKDI@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Ingo Molnar <mingo-X9Un+BFzKDI@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 15, 2010 at 06:25:16PM +0100, Wolfram Sang wrote:
-> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
-> ---
->  arch/powerpc/boot/dts/pcm030.dts |    1 +
->  arch/powerpc/boot/dts/pcm032.dts |    3 ++-
->  2 files changed, 3 insertions(+), 1 deletions(-)
+On 11/14/2010 11:02 PM, Ingo Molnar wrote:
 > 
-> diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
-> index 8a4ec30..e7c36bc 100644
-> --- a/arch/powerpc/boot/dts/pcm030.dts
-> +++ b/arch/powerpc/boot/dts/pcm030.dts
-> @@ -259,6 +259,7 @@
->  			eeprom@52 {
->  				compatible = "catalyst,24c32";
->  				reg = <0x52>;
-> +				pagesize = <32>;
+> * H. Peter Anvin <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> What?  What is wrong with static variables in functions?  It really doesn't seem 
+>> to be a good idea to make them file-scope if they don't need to be.
+> 
+> They are very easy to overlook and mix up with regular stack variables and i've seen 
+> (and introduced myself) a number of bugs due to them.
+> 
+> They also often are used in buggy ways (with SMP not taken into consideration), so 
+> overlooking them during review compounds their negative effects. Putting them in 
+> front of the function isnt a big deal in exchange.
+> 
+> There are people who never overlook them (like yourself), but my brain is wired up 
+> differently.
+> 
 
-I think you'd better drop the pagesize property altogether, and
-instead make the compatible string more specific (if needed at
-all. are there any 'catalyst,24c32' chips with pagesize != 32?)
+However, I have to vehemently object to putting them in a wider scope
+than is otherwise necessary.  I agree that static variables should be
+used sparsely if at all (there really are vary few uses of them that are
+valid), but putting them in a larger scope screams "I'm used in more
+than one function", and that is *not* a good thing.
 
-Thanks,
+	-hpa
 
 -- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+H. Peter Anvin, Intel Open Source Technology Center
+I work for Intel.  I don't speak on their behalf.
