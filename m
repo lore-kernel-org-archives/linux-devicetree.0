@@ -1,16 +1,15 @@
-From: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 4/4] of/fdt: add kernel command line option for dtb_compat
-	string
-Date: Mon, 15 Nov 2010 16:27:06 -0800
-Message-ID: <4CE1CFDA.7030900@linux.intel.com>
-References: <cover.1289520079.git.dirk.brandewie@gmail.com>
-	<855a5a11d04a7c1883675b6a77992c4af85222fd.1289520079.git.dirk.brandewie@gmail.com>
-	<20101114062246.GD2355@angua.secretlab.ca>
+From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 1/2] of: Add support for linking device tree blobs into vmlinux
+Date: Mon, 15 Nov 2010 20:01:20 -0800
+Message-ID: <ca5555dd665a668bf4e2b2256ccf4bb5d010cde1.1289877715.git.dirk.brandewie@gmail.com>
+References: <cover.1289877715.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101114062246.GD2355-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,24 +19,93 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2010 10:22 PM, Grant Likely wrote:
-> 
-> 'char' is completely bogus in this context.  Either void or struct
-> boot_param_header would be more accurate and useful.  I believe you
-> can do:
-> 
-> 	extern void __dtb_start;
-> 	extern_void __dtb_end;
-> 
-> And then reference the addresses with &__dtb_start and &__dtb_end.
-> That would eliminate a lot of the casting below.
-> 
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Except that doesn't work with gcc 4.5+; you really need to use an array
-type.
+This patch adds support for linking device tree blobs into
+vmlinux. The device tree blobs are placed in the init.data
+section.
 
-	-hpa
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ include/asm-generic/vmlinux.lds.h |   19 +++++++++++++++++--
+ scripts/Makefile.lib              |   17 +++++++++++++++++
+ 2 files changed, 34 insertions(+), 2 deletions(-)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index bd69d79..ea671e7 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -67,7 +67,14 @@
+  * Align to a 32 byte boundary equal to the
+  * alignment gcc 4.5 uses for a struct
+  */
+-#define STRUCT_ALIGN() . = ALIGN(32)
++#define STRUCT_ALIGNMENT 32
++#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
++
++/* Device tree blobs linked into the kernel need to have proper
++ * structure alignment to be parsed by the flat device tree library
++ * used in early boot
++*/
++#define DTB_ALIGNMENT STRUCT_ALIGNMENT
+ 
+ /* The actual configuration determine if the init/exit sections
+  * are handled as text/data or they can be discarded (which
+@@ -146,6 +153,13 @@
+ #define TRACE_SYSCALLS()
+ #endif
+ 
++
++#define KERNEL_DTB()							\
++	. = ALIGN(DTB_ALIGNMENT);					\
++	VMLINUX_SYMBOL(__dtb_start) = .;				\
++	*(.dtb.init.rodata)						\
++	VMLINUX_SYMBOL(__dtb_end) = .;
++
+ /* .data section */
+ #define DATA_DATA							\
+ 	*(.data)							\
+@@ -468,7 +482,8 @@
+ 	MCOUNT_REC()							\
+ 	DEV_DISCARD(init.rodata)					\
+ 	CPU_DISCARD(init.rodata)					\
+-	MEM_DISCARD(init.rodata)
++	MEM_DISCARD(init.rodata)					\
++	KERNEL_DTB()
+ 
+ #define INIT_TEXT							\
+ 	*(.init.text)							\
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 4c72c11..a8a4774 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -200,6 +200,23 @@ quiet_cmd_gzip = GZIP    $@
+ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
+ 	(rm -f $@ ; false)
+ 
++# DTC
++#  ---------------------------------------------------------------------------
++$(obj)/%.dtb.S: $(obj)/%.dtb FORCE
++	@echo '#include <asm-generic/vmlinux.lds.h>' > $@
++	@echo '.section .dtb.init.rodata,"a"' >> $@
++	@echo '.balign DTB_ALIGNMENT' >> $@
++	@echo '.global __dtb_$(*F)_begin' >> $@
++	@echo '__dtb_$(*F)_begin:' >> $@
++	@echo '.incbin "$<" ' >> $@
++	@echo '__dtb_$(*F)_end:' >> $@
++	@echo '.global __dtb_$(*F)_end' >> $@
++	@echo '.balign DTB_ALIGNMENT' >> $@
++
++DTC = $(objtree)/scripts/dtc/dtc
++
++quiet_cmd_dtc = DTC	$@
++      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0  $(src)/$*.dts
+ 
+ # Bzip2
+ # ---------------------------------------------------------------------------
+-- 
+1.7.2.3
