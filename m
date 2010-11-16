@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/7] ipmi: explicitly include of_address.h and of_irq.h
-Date: Tue, 16 Nov 2010 14:33:51 -0600
-Message-ID: <1289939635-30742-4-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 5/7] mmc: sdhci-of: support generic OF controllers
+Date: Tue, 16 Nov 2010 14:33:53 -0600
+Message-ID: <1289939635-30742-6-git-send-email-robherring2@gmail.com>
 References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,26 +23,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-of_address.h and of_irq.h are implicitly included on powerpc. Adding
-them fixes builds on non-powerpc platforms.
+The base sdhci driver requires a valid ops struct. Add empty struct to
+sdhci-of to allow generic controllers which don't need custom ops functions.
 
 Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ drivers/mmc/host/sdhci-of-core.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 8842044..51b33cf 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -69,6 +69,8 @@
- #ifdef CONFIG_OF
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #endif
+diff --git a/drivers/mmc/host/sdhci-of-core.c b/drivers/mmc/host/sdhci-of-core.c
+index dd84124..de292fe 100644
+--- a/drivers/mmc/host/sdhci-of-core.c
++++ b/drivers/mmc/host/sdhci-of-core.c
+@@ -30,6 +30,9 @@
+ #include "sdhci-of.h"
+ #include "sdhci.h"
  
- #define PFX "ipmi_si: "
++static struct sdhci_ops sdhci_of_ops = {
++};
++
+ #ifdef CONFIG_MMC_SDHCI_BIG_ENDIAN_32BIT_BYTE_SWAPPER
+ 
+ /*
+@@ -161,6 +164,8 @@ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
+ 	if (sdhci_of_data) {
+ 		host->quirks = sdhci_of_data->quirks;
+ 		host->ops = &sdhci_of_data->ops;
++	} else {
++		host->ops = &sdhci_of_ops;
+ 	}
+ 
+ 	if (of_get_property(np, "sdhci,auto-cmd12", NULL))
 -- 
 1.7.1
