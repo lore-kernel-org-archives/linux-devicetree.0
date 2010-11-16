@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/7] mmc: sdhci-of: support generic OF controllers
-Date: Tue, 16 Nov 2010 14:33:53 -0600
-Message-ID: <1289939635-30742-6-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 7/7] OF: set dma_mask for ARM
+Date: Tue, 16 Nov 2010 14:33:55 -0600
+Message-ID: <1289939635-30742-8-git-send-email-robherring2@gmail.com>
 References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,36 +23,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-The base sdhci driver requires a valid ops struct. Add empty struct to
-sdhci-of to allow generic controllers which don't need custom ops functions.
+Various drivers require dma_mask to be valid, so it needs to be setup
+when doing OF probing on ARM.
 
 Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/mmc/host/sdhci-of-core.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+ drivers/of/platform.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-core.c b/drivers/mmc/host/sdhci-of-core.c
-index dd84124..de292fe 100644
---- a/drivers/mmc/host/sdhci-of-core.c
-+++ b/drivers/mmc/host/sdhci-of-core.c
-@@ -30,6 +30,9 @@
- #include "sdhci-of.h"
- #include "sdhci.h"
- 
-+static struct sdhci_ops sdhci_of_ops = {
-+};
-+
- #ifdef CONFIG_MMC_SDHCI_BIG_ENDIAN_32BIT_BYTE_SWAPPER
- 
- /*
-@@ -161,6 +164,8 @@ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
- 	if (sdhci_of_data) {
- 		host->quirks = sdhci_of_data->quirks;
- 		host->ops = &sdhci_of_data->ops;
-+	} else {
-+		host->ops = &sdhci_of_ops;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 5b4a07f..fe2669a 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -614,7 +614,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
  	}
  
- 	if (of_get_property(np, "sdhci,auto-cmd12", NULL))
+ 	dev->dev.of_node = of_node_get(np);
+-#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE)
++#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE) || defined(CONFIG_ARM)
+ 	dev->dev.dma_mask = &dev->archdata.dma_mask;
+ #endif
+ 	dev->dev.parent = parent;
+@@ -644,7 +644,7 @@ struct platform_device *of_platform_device_create(struct device_node *np,
+ 	if (!dev)
+ 		return NULL;
+ 
+-#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE)
++#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE) || defined(CONFIG_ARM)
+ 	dev->archdata.dma_mask = 0xffffffffUL;
+ #endif
+ 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
 -- 
 1.7.1
