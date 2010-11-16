@@ -1,36 +1,50 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 4/7] mmc: sdhci-of: fix build on non-powerpc platforms
-Date: Tue, 16 Nov 2010 16:34:56 -0600
-Message-ID: <4CE30710.6050302@gmail.com>
-References: <1289939635-30742-1-git-send-email-robherring2@gmail.com> <1289939635-30742-5-git-send-email-robherring2@gmail.com> <20101116214409.GC19893@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20101116214409.GC19893@pengutronix.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-mmc@vger.kernel.org
+From: dirk.brandewie@gmail.com
+Subject: [PATCH 0/5] Add the ability to link device blobs into vmlinux
+Date: Tue, 16 Nov 2010 14:41:35 -0800
+Message-ID: <cover.1289943240.git.dirk.brandewie@gmail.com>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: sodaville@linutronix.de, arjan@linux.intel.com, dirk.brandewie@gmail.com, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2010 03:44 PM, Wolfram Sang wrote:
-> On Tue, Nov 16, 2010 at 02:33:52PM -0600, Rob Herring wrote:
->> From: Rob Herring<rob.herring@calxeda.com>
->>
->> Explicitly include err.h, of_address.h and of_irq.h.
->> Make use of machine_is() conditional on PPC.
->>
->> Signed-off-by: Rob Herring<rob.herring@calxeda.com>
->
-> Hmm, sins of the past :/ I wonder if we can get away with less #ifdeffery, will
-> think about it...
->
+From: Dirk Brandewie <dirk.brandewie@gmail.com>
 
-I don't want to start a long debate, but is updating a kernel without 
-updating the dtb really something to worry about? Isn't a year enough of 
-a transition period.
+This patch set adds the ability to link device tree blob(s)
+directly into the vmlinux image and specify the blob to be used via a
+kernel command line option.
 
-Do these machines have a machine level compatible property that could be 
-used instead?
+Patch 1 implements the changes to include/asm-generic/vmlinux.lds.h,
+add generic rules for building and linking the DTB's into vmlinux.
 
-Rob
+Patch 2 adds the command line option, the functions for the
+platform code to retrieve the value passed in and locate the matching
+blob in the image.  This patch has been tested on x86.
+
+Patch 3-5 show using the generic dts->dtb rule in x86, microblaze and
+powerpc. The microblaze and powerpc patches have only been compile
+tested.
+
+Dirk Brandewie (5):
+  of: Add support for linking device tree blobs into vmlinux
+  of/fdt: add kernel command line option for dtb_compat string
+  x86/of:  Add building device tree blob(s) into image.
+  of/powerpc: Move build to use generic dts->dtb rule
+  of/microblaze: Move build to use generic dts->dtb rule
+
+ Documentation/kernel-parameters.txt |    7 +++++
+ arch/microblaze/boot/Makefile       |   13 +--------
+ arch/powerpc/boot/Makefile          |    7 -----
+ arch/x86/Kconfig                    |    6 +++-
+ arch/x86/kernel/Makefile            |    6 ++++
+ arch/x86/kernel/dts/Kconfig         |    7 +++++
+ drivers/of/fdt.c                    |   52 +++++++++++++++++++++++++++++++++++
+ include/asm-generic/vmlinux.lds.h   |   19 +++++++++++-
+ include/linux/of_fdt.h              |    4 +++
+ scripts/Makefile.lib                |   20 +++++++++++++
+ 10 files changed, 119 insertions(+), 22 deletions(-)
+ create mode 100644 arch/x86/kernel/dts/Kconfig
+
+-- 
+1.7.2.3
+
