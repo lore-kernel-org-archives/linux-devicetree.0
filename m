@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/7] of: Fixes for OF probing on little endian systems
-Date: Tue, 16 Nov 2010 14:33:50 -0600
-Message-ID: <1289939635-30742-3-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 4/7] mmc: sdhci-of: fix build on non-powerpc platforms
+Date: Tue, 16 Nov 2010 14:33:52 -0600
+Message-ID: <1289939635-30742-5-git-send-email-robherring2@gmail.com>
 References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,64 +23,50 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Fixes for sdhci-of and ipmi drivers.
-
-Auditing all drivers using of_get_property did not find other
-occurrences likely to be used on LE platforms.
+Explicitly include err.h, of_address.h and of_irq.h.
+Make use of machine_is() conditional on PPC.
 
 Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c |    8 ++++----
- drivers/mmc/host/sdhci-of-core.c |    4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/mmc/host/sdhci-of-core.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 1b33a42..8842044 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -2546,7 +2546,7 @@ static int __devinit ipmi_of_probe(struct platform_device *dev,
- {
- 	struct smi_info *info;
- 	struct resource resource;
--	const int *regsize, *regspacing, *regshift;
-+	const __be32 *regsize, *regspacing, *regshift;
- 	struct device_node *np = dev->dev.of_node;
- 	int ret;
- 	int proplen;
-@@ -2599,9 +2599,9 @@ static int __devinit ipmi_of_probe(struct platform_device *dev,
- 
- 	info->io.addr_data	= resource.start;
- 
--	info->io.regsize	= regsize ? *regsize : DEFAULT_REGSIZE;
--	info->io.regspacing	= regspacing ? *regspacing : DEFAULT_REGSPACING;
--	info->io.regshift	= regshift ? *regshift : 0;
-+	info->io.regsize	= regsize ? be32_to_cpup(regsize) : DEFAULT_REGSIZE;
-+	info->io.regspacing	= regspacing ? be32_to_cpup(regspacing) : DEFAULT_REGSPACING;
-+	info->io.regshift	= regshift ? be32_to_cpup(regshift) : 0;
- 
- 	info->irq		= irq_of_parse_and_map(dev->dev.of_node, 0);
- 	info->dev		= &dev->dev;
 diff --git a/drivers/mmc/host/sdhci-of-core.c b/drivers/mmc/host/sdhci-of-core.c
-index c51b711..fa19d84 100644
+index fa19d84..dd84124 100644
 --- a/drivers/mmc/host/sdhci-of-core.c
 +++ b/drivers/mmc/host/sdhci-of-core.c
-@@ -122,7 +122,7 @@ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
- 	struct sdhci_of_data *sdhci_of_data = match->data;
- 	struct sdhci_host *host;
- 	struct sdhci_of_host *of_host;
--	const u32 *clk;
-+	const __be32 *clk;
- 	int size;
- 	int ret;
+@@ -13,6 +13,7 @@
+  * your option) any later version.
+  */
  
-@@ -166,7 +166,7 @@ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
++#include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+@@ -20,8 +21,12 @@
+ #include <linux/delay.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/mmc/host.h>
++#ifdef CONFIG_PPC
+ #include <asm/machdep.h>
++#endif
+ #include "sdhci-of.h"
+ #include "sdhci.h"
  
- 	clk = of_get_property(np, "clock-frequency", &size);
- 	if (clk && size == sizeof(*clk) && *clk)
--		of_host->clock = *clk;
-+		of_host->clock = be32_to_cpup(clk);
+@@ -112,7 +117,11 @@ static bool __devinit sdhci_of_wp_inverted(struct device_node *np)
+ 		return true;
  
- 	ret = sdhci_add_host(host);
- 	if (ret)
+ 	/* Old device trees don't have the wp-inverted property. */
++#ifdef CONFIG_PPC
+ 	return machine_is(mpc837x_rdb) || machine_is(mpc837x_mds);
++#else
++	return false;
++#endif
+ }
+ 
+ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
 -- 
 1.7.1
