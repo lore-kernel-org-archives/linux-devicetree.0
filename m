@@ -1,51 +1,36 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH 2/2] powerpc: pcm030/032: add pagesize to dts
-Date: Wed, 17 Nov 2010 01:03:31 +0300
-Message-ID: <20101116220331.GA29681@oksana.dev.rtsoft.ru>
-References: <1289841916-3825-1-git-send-email-w.sang@pengutronix.de>
-	<1289841916-3825-2-git-send-email-w.sang@pengutronix.de>
-	<20101115173250.GA22104@oksana.dev.rtsoft.ru>
-	<4CE1A0E4.5030505@firmworks.com>
-	<20101115212432.GA17754@oksana.dev.rtsoft.ru>
-	<20101115221156.GA25167@pengutronix.de>
-	<20101116214537.GD19893@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 4/7] mmc: sdhci-of: fix build on non-powerpc platforms
+Date: Tue, 16 Nov 2010 16:34:56 -0600
+Message-ID: <4CE30710.6050302@gmail.com>
+References: <1289939635-30742-1-git-send-email-robherring2@gmail.com> <1289939635-30742-5-git-send-email-robherring2@gmail.com> <20101116214409.GC19893@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <20101116214537.GD19893@pengutronix.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20101116214409.GC19893@pengutronix.de>
+Sender: linux-mmc-owner@vger.kernel.org
 To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 16, 2010 at 10:45:37PM +0100, Wolfram Sang wrote:
-> 
-> > Even worse, I seem to recall that I had once seen a manufacturer increasing the
-> > page-size from one charge to the next without changing the part-number, so I
-> > got this feeling "you can't map pagesize to manufacturer/type" which I still
-> > have. Sadly, this was long ago, so I can't proof it right now. Will try to dig
-> > up some datasheets when in the office tomorrow.
-> 
-> Had a look, couldn't find anything :( And now?
+On 11/16/2010 03:44 PM, Wolfram Sang wrote:
+> On Tue, Nov 16, 2010 at 02:33:52PM -0600, Rob Herring wrote:
+>> From: Rob Herring<rob.herring@calxeda.com>
+>>
+>> Explicitly include err.h, of_address.h and of_irq.h.
+>> Make use of machine_is() conditional on PPC.
+>>
+>> Signed-off-by: Rob Herring<rob.herring@calxeda.com>
+>
+> Hmm, sins of the past :/ I wonder if we can get away with less #ifdeffery, will
+> think about it...
+>
 
-Well, it seems that there are enough people in "pagesize" camp
-anyway, I'd say just go ahead with the current approach. :-)
+I don't want to start a long debate, but is updating a kernel without 
+updating the dtb really something to worry about? Isn't a year enough of 
+a transition period.
 
-It's an additional information, so won't do any harm anyway...
+Do these machines have a machine level compatible property that could be 
+used instead?
 
-Thanks,
-
--- 
-Anton Vorontsov
-email: cbouatmailru@gmail.com
-irc://irc.freenode.net/bd2
+Rob
