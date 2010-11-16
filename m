@@ -1,13 +1,11 @@
-From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 4/5] of/powerpc: Move build to use generic dts->dtb rule
-Date: Tue, 16 Nov 2010 14:41:39 -0800
-Message-ID: <dae91d8292876db96f96896b79076c32cd2bf467.1289943240.git.dirk.brandewie@gmail.com>
-References: <cover.1289943240.git.dirk.brandewie@gmail.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] of: Request module by alias in of_i2c.c
+Date: Tue, 16 Nov 2010 14:42:14 -0800
+Message-ID: <1289947334-14375-1-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1289943240.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,44 +15,56 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+If we are registering an i2c device that has a device tree node like
+this real-world example:
 
-This patch changes arch/powerpc/boot/Makefile to use the generic
-rule build the device tree blobs in scripts/Makefile.lib
+      rtc@68 {
+        compatible = "dallas,ds1337";
+        reg = <0x68>;
+      };
 
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+of_i2c_register_devices() will try to load a module called ds1337.ko.
+There is no such module, so it will fail.  If we look in modules.alias
+we will find entries like these:
+
+.
+.
+.
+alias i2c:ds1339 rtc_ds1307
+alias i2c:ds1338 rtc_ds1307
+alias i2c:ds1337 rtc_ds1307
+alias i2c:ds1307 rtc_ds1307
+alias i2c:ds1374 rtc_ds1374
+.
+.
+.
+
+The module we want is really called rtc_ds1307.ko.  If we request a
+module called "i2c:ds1337", the userspace module loader will do the
+right thing (unless it is busybox) and load rtc_ds1307.ko.  So we add
+the I2C_MODULE_PREFIX to the request_module() string.
+
+Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/boot/Makefile |    7 -------
- 1 files changed, 0 insertions(+), 7 deletions(-)
+ drivers/of/of_i2c.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index fae8192..d90c674 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -147,8 +147,6 @@ targets		+= $(patsubst $(obj)/%,%,$(obj-boot) wrapper.a)
- extra-y		:= $(obj)/wrapper.a $(obj-plat) $(obj)/empty.o \
- 		   $(obj)/zImage.lds $(obj)/zImage.coff.lds $(obj)/zImage.ps3.lds
+diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
+index c85d3c7..f37fbeb 100644
+--- a/drivers/of/of_i2c.c
++++ b/drivers/of/of_i2c.c
+@@ -61,7 +61,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+ 		info.of_node = of_node_get(node);
+ 		info.archdata = &dev_ad;
  
--dtstree		:= $(srctree)/$(src)/dts
--
- wrapper		:=$(srctree)/$(src)/wrapper
- wrapperbits	:= $(extra-y) $(addprefix $(obj)/,addnote hack-coff mktree) \
- 			$(wrapper) FORCE
-@@ -331,11 +329,6 @@ $(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- $(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- 	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
+-		request_module("%s", info.type);
++		request_module("%s%s", I2C_MODULE_PREFIX, info.type);
  
--# Rule to build device tree blobs
--DTC = $(objtree)/scripts/dtc/dtc
--
--$(obj)/%.dtb: $(dtstree)/%.dts
--	$(DTC) -O dtb -o $(obj)/$*.dtb -b 0 $(DTS_FLAGS) $(dtstree)/$*.dts
- 
- # If there isn't a platform selected then just strip the vmlinux.
- ifeq (,$(image-y))
+ 		result = i2c_new_device(adap, &info);
+ 		if (result == NULL) {
 -- 
 1.7.2.3
