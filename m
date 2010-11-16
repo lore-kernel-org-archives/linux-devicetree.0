@@ -1,179 +1,221 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] of: Add support for linking device tree blobs into
-	vmlinux
-Date: Mon, 15 Nov 2010 23:10:15 -0700
-Message-ID: <AANLkTinzYKUWsSA9tbunzvADKzqHacExQzBFoDmF2vm6@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/fdt: add kernel command line option for
+	dtb_compat string
+Date: Mon, 15 Nov 2010 23:32:53 -0700
+Message-ID: <20101116063253.GB4074@angua.secretlab.ca>
 References: <cover.1289877715.git.dirk.brandewie@gmail.com>
-	<ca5555dd665a668bf4e2b2256ccf4bb5d010cde1.1289877715.git.dirk.brandewie@gmail.com>
-	<20101116044110.GA4074@angua.secretlab.ca> <4CE21163.2070806@gmail.com>
-	<AANLkTi=G1TwfOHBVB2wpZHpafw_KB7S7yhj6syP339e1@mail.gmail.com>
-	<4CE2167B.3070101@gmail.com>
+	<bdb6f333aea69accf3ca3e74c1f01da0a8587aee.1289877715.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4CE2167B.3070101@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Dirk Brandewie <dirk.brandewie@gmail.com>
-Cc: sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, arjan@linux.intel.com, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bdb6f333aea69accf3ca3e74c1f01da0a8587aee.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 15, 2010 at 10:28 PM, Dirk Brandewie
-<dirk.brandewie@gmail.com> wrote:
-> On 11/15/2010 09:17 PM, Grant Likely wrote:
->>
->> On Mon, Nov 15, 2010 at 10:06 PM, Dirk Brandewie
->> <dirk.brandewie@gmail.com> =A0wrote:
->>>
->>> On 11/15/2010 08:41 PM, Grant Likely wrote:
->>>>
->>>> On Mon, Nov 15, 2010 at 08:01:20PM -0800, dirk.brandewie@gmail.com
->>>> wrote:
->>>>>
->>>>> From: Dirk Brandewie<dirk.brandewie@gmail.com>
->>>>>
->>>>> This patch adds support for linking device tree blobs into
->>>>> vmlinux. The device tree blobs are placed in the init.data
->>>>> section.
->>>>>
->>>>> Signed-off-by: Dirk Brandewie<dirk.brandewie@gmail.com>
->>>>> ---
->>>>> =A0include/asm-generic/vmlinux.lds.h | =A0 19 +++++++++++++++++--
->>>>> =A0scripts/Makefile.lib =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 17 +++++++++=
-++++++++
->>>>> =A02 files changed, 34 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/include/asm-generic/vmlinux.lds.h
->>>>> b/include/asm-generic/vmlinux.lds.h
->>>>> index bd69d79..ea671e7 100644
->>>>> --- a/include/asm-generic/vmlinux.lds.h
->>>>> +++ b/include/asm-generic/vmlinux.lds.h
->>>>> @@ -67,7 +67,14 @@
->>>>> =A0 * Align to a 32 byte boundary equal to the
->>>>> =A0 * alignment gcc 4.5 uses for a struct
->>>>> =A0 */
->>>>> -#define STRUCT_ALIGN() . =3D ALIGN(32)
->>>>> +#define STRUCT_ALIGNMENT 32
->>>>> +#define STRUCT_ALIGN() . =3D ALIGN(STRUCT_ALIGNMENT)
->>>>> +
->>>>> +/* Device tree blobs linked into the kernel need to have proper
->>>>> + * structure alignment to be parsed by the flat device tree library
->>>>> + * used in early boot
->>>>> +*/
->>>>> +#define DTB_ALIGNMENT STRUCT_ALIGNMENT
->>>>>
->>>>> =A0/* The actual configuration determine if the init/exit sections
->>>>> =A0 * are handled as text/data or they can be discarded (which
->>>>> @@ -146,6 +153,13 @@
->>>>> =A0#define TRACE_SYSCALLS()
->>>>> =A0#endif
->>>>>
->>>>> +
->>>>> +#define KERNEL_DTB()
->>>>> \
->>>>> + =A0 =A0 =A0 . =3D ALIGN(DTB_ALIGNMENT);
->>>>> \
->>>>> + =A0 =A0 =A0 VMLINUX_SYMBOL(__dtb_start) =3D .;
->>>>> =A0\
->>>>> + =A0 =A0 =A0 *(.dtb.init.rodata)
->>>>> \
->>>>> + =A0 =A0 =A0 VMLINUX_SYMBOL(__dtb_end) =3D .;
->>>>> +
->>>>> =A0/* .data section */
->>>>> =A0#define DATA_DATA
->>>>> \
->>>>> =A0 =A0 =A0 =A0*(.data)
->>>>> =A0\
->>>>> @@ -468,7 +482,8 @@
->>>>> =A0 =A0 =A0 =A0MCOUNT_REC()
->>>>> =A0\
->>>>> =A0 =A0 =A0 =A0DEV_DISCARD(init.rodata)
->>>>> =A0\
->>>>> =A0 =A0 =A0 =A0CPU_DISCARD(init.rodata)
->>>>> =A0\
->>>>> - =A0 =A0 =A0 MEM_DISCARD(init.rodata)
->>>>> + =A0 =A0 =A0 MEM_DISCARD(init.rodata)
->>>>> =A0\
->>>>> + =A0 =A0 =A0 KERNEL_DTB()
->>>>>
->>>>> =A0#define INIT_TEXT
->>>>> \
->>>>> =A0 =A0 =A0 =A0*(.init.text)
->>>>> \
->>>>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
->>>>> index 4c72c11..a8a4774 100644
->>>>> --- a/scripts/Makefile.lib
->>>>> +++ b/scripts/Makefile.lib
->>>>> @@ -200,6 +200,23 @@ quiet_cmd_gzip =3D GZIP =A0 =A0$@
->>>>> =A0cmd_gzip =3D (cat $(filter-out FORCE,$^) | gzip -f -9> =A0 =A0$@) =
-|| \
->>>>> =A0 =A0 =A0 =A0(rm -f $@ ; false)
->>>>>
->>>>> +# DTC
->>>>> +#
->>>>>
->>>>> =A0------------------------------------------------------------------=
----------
->>>>> +$(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->>>>> + =A0 =A0 =A0 @echo '#include<asm-generic/vmlinux.lds.h>'> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '.section .dtb.init.rodata,"a"'>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '.balign DTB_ALIGNMENT'>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '.global __dtb_$(*F)_begin'>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '__dtb_$(*F)_begin:'>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '.incbin "$<" '>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '__dtb_$(*F)_end:'>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '.global __dtb_$(*F)_end'>> =A0 =A0$@
->>>>> + =A0 =A0 =A0 @echo '.balign DTB_ALIGNMENT'>> =A0 =A0$@
->>>>> +
->>>>> +DTC =3D $(objtree)/scripts/dtc/dtc
->>>>> +
->>>>> +quiet_cmd_dtc =3D DTC =A0 =A0$@
->>>>> + =A0 =A0 =A0cmd_dtc =3D $(DTC) -O dtb -o $(obj)/$*.dtb -b 0 =A0$(src=
-)/$*.dts
->>>>
->>>> Missing the %.dtb: %.dts rule, but otherwise looks okay. =A0You will
->>>> need to make sure this doesn't break powerpc or microblaze when the
->>>> dts->dtb rule is added.
->>>>
->>> I have the rule
->>> =A0$(obj)/%.dtb: $(src)/%.dts
->>> =A0 =A0 =A0 =A0 =A0$(call if_changed,dtc)
->>> in the arch/x86/kernel/Makefile to prevent this sneaking into other oth=
-er
->>> architectures.
->>
->> This rule looks correct. =A0PowerPC and Microblaze need to be modified
->> to use it. =A0It should not be hard to do, give it a try. =A0Worst case,
->> your first attempt is wrong and the rest of us fix it up. =A0:-)
->>
->> Hint: PowerPC currently puts the .dtb file in a different directory
->> from the source .dts file. =A0It doesn't need to do it that way.
->> arch/powerpc/boot/Makefile will need to be modified.
->>
->
-> I will give it a shot. =A0The only real difference except for the directo=
-ry
-> structures is powerpc and microblaze add padding to the dtb with the -p 1=
-024
-> command line argument to dtc.
+On Mon, Nov 15, 2010 at 08:01:21PM -0800, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Add support for specifying a "compatible" string from the kernel
+> command line and functions for the platform to find the compatible
+> blob present in the kernel image if any.
+> 
+> Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-You could use a $(DTCFLAGS) variable to pass in arch specific flags.
+Hi Dirk,
 
-> =A0Is the padding needed when the blob are
-> linked into vmlinux proper?
+a couple of general comments:
 
-Maybe, maybe not.  Padding is required to be able to modify the .dtb
-data in-place, which is important when adapting data from other
-sources into the device tree structure.  However, when it is linked
-into the kernel, the adding of additional data /possibly/ can be
-deferred until after the tree is either copied or unflattened.
+A lot of the information in the cover letter should really be here in
+the actual patch description.  Use the cover letter to provide context
+for the entire series, but put the specifics with each patch.  Version
+changelog history should also appear in patch description, not the
+cover letter.
+
+For the next version, please cc: linux-kernel-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
+This series should have a wider review audience, particularly because
+it touches the linker sections and the kernel parameters.  You should
+also cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org and
+microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org for the patch that adds the common
+rules because it will affect both of those architectures directly.
+
+More comments below.
+
+> ---
+>  Documentation/kernel-parameters.txt |    7 ++++
+>  drivers/of/fdt.c                    |   55 +++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h              |    5 +++
+>  3 files changed, 67 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index ed45e98..f9b77fa 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -655,6 +655,13 @@ and is between 256 and 4096 characters. It is defined in the file
+>  
+>  	dscc4.setup=	[NET]
+>  
+> +	dtb_compat=	[KNL]
+> +			Specify the "compatible" string for the device
+> +			tree blob present in the kernel image.  This
+> +			string will be used to select the first device
+> +			tree blob whose compatible property matches
+> +			the string passed on the kernel commandline.
+> +
+>  	dynamic_printk	Enables pr_debug()/dev_dbg() calls if
+>  			CONFIG_DYNAMIC_PRINTK_DEBUG has been enabled.
+>  			These can also be switched on/off via
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index c1360e0..77ab091 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/of_fdt.h>
+>  #include <linux/string.h>
+>  #include <linux/errno.h>
+> +#include <asm-generic/vmlinux.lds.h>
+> +
+>  
+>  #ifdef CONFIG_PPC
+>  #include <asm/machdep.h>
+> @@ -604,3 +606,56 @@ void __init unflatten_device_tree(void)
+>  
+>  	pr_debug(" <- unflatten_device_tree()\n");
+>  }
+> +
+> +#ifndef MODULE
+
+fdt.c cannot be compiled as a module.  Is this necessary?
+
+> +#ifdef CONFIG_OF_FLATTREE
+
+Unnecessary #ifdef.  fdt.c is only compiled when CONFIG_OF_FLATTREE is
+set.
+
+> +char dtb_compat_name[MAX_DTB_COMPAT_STR] = "";
+> +
+> +char __init *of_get_dtb_compatible_string(void)
+> +{
+> +	return dtb_compat_name;
+> +}
+> +
+> +
+> +extern uint8_t __dtb_start[];
+> +extern uint8_t __dtb_end[];
+> +void *of_find_compatible_dtb(char *name)
+
+Please rename of_flat_dt_find_compatible_dtb() to match the naming
+conventions that I'm working to establish in this file.
+
+Also, it should have an __init annotation.
+
+> +{
+> +	void *rc = NULL;
+> +	unsigned long root, size;
+> +	struct boot_param_header  *orig_initial_boot_params;
+> +	uint8_t *blob;
+
+blob should be a void* here.  It is never used as a uint8.
+
+> +
+> +	orig_initial_boot_params = initial_boot_params;
+> +	blob = __dtb_start;
+> +	initial_boot_params = (struct boot_param_header *)blob;
+> +
+> +	do {
+
+Start the loop with "while (blob < __dtb_end) {" to protect against
+the possibility that __dtb_start == __dtb_end (no dtbs linked in).
+
+> +		root = of_get_flat_dt_root();
+
+Just to be defencive, should check the value of
+initial_boot_params->magic before dereferencing the rest of the
+structure or trying to parse nodes.
+
+> +		if (of_flat_dt_is_compatible(root, name) > 0) {
+> +			rc = (void *) blob;
+
+Unnecessary cast (regardless of whether blob is a void* or a uint8_t*).
+
+> +			break;
+> +		}
+> +
+> +		size =  be32_to_cpu(initial_boot_params->totalsize);
+> +		blob = (uint8_t *) ALIGN(((unsigned long)blob + size),
+> +					DTB_ALIGNMENT);
+
+I believe PTR_ALIGN() can be used and the casting removed.
+
+> +		initial_boot_params = (struct boot_param_header *)blob;
+> +	} while (blob < __dtb_end);
+> +
+> +	if (rc == NULL)
+> +		initial_boot_params = orig_initial_boot_params;
+> +	return rc;
+> +}
+> +
+> +
+> +static int __init dtb_compat_setup(char *line)
+
+Please rename of_flat_dt_compat_setup()
+
+> +{
+> +	strncpy(dtb_compat_name, line, MAX_DTB_COMPAT_STR);
+> +	return 1;
+> +}
+
+I don't remember getting a response about whether or not
+of_find_compatible_dtb can be called directly from dtb_compat_setup.
+Doing so would eliminate the arbitrary MAX_DTB_COMPAT_STR because
+there would be no need to keep around a copy of dtb_compat_name.  It
+also means that of_find_compatible_dtb() can be restricted to the file
+scope.
+
+Is there a use-case for calling of_find_compatible_dtb() anywhere
+other than in dtb_compat_setup?
+
+> +
+> +early_param("dtb_compat", dtb_compat_setup);
+> +#endif
+> +#endif
+> +
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 7bbf5b3..c696da3c 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -58,6 +58,8 @@ struct boot_param_header {
+>  };
+>  
+>  #if defined(CONFIG_OF_FLATTREE)
+> +#define MAX_DTB_COMPAT_STR 64
+> +
+
+Only used by drivers/of/fdt.c, so should not be in a header file.
+
+>  /* TBD: Temporary export of fdt globals - remove when code fully merged */
+>  extern int __initdata dt_root_addr_cells;
+>  extern int __initdata dt_root_size_cells;
+> @@ -82,6 +84,9 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+>  extern u64 early_init_dt_alloc_memory_arch(u64 size, u64 align);
+>  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+>  
+> +extern char *of_get_dtb_compatible_string(void);
+> +extern void *of_find_compatible_dtb(char *name);
+> +
+
+As commented above, I don't think either of these need to be visible
+outside of fdt.c
 
 g.
