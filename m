@@ -1,11 +1,16 @@
 From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 0/2] Adding DTB's to architecture independent vmlinux
-Date: Mon, 15 Nov 2010 20:01:19 -0800
-Message-ID: <cover.1289877715.git.dirk.brandewie@gmail.com>
+Subject: [PATCH 2/2] of/fdt: add kernel command line option for dtb_compat
+	string
+Date: Mon, 15 Nov 2010 20:01:21 -0800
+Message-ID: <bdb6f333aea69accf3ca3e74c1f01da0a8587aee.1289877715.git.dirk.brandewie@gmail.com>
+References: <cover.1289877715.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,54 +26,127 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This patch set adds support for linking an arbitrary number of device
-tree blobs into the kernel image and allow passing the "compatible"
-string for the platform on the kernel command line.
+Add support for specifying a "compatible" string from the kernel
+command line and functions for the platform to find the compatible
+blob present in the kernel image if any.
 
-Patch 1/2:
-modifies asm-generic/vmlinux.lds.h to add linking .dtb.init.rodata
-sections into the .init.data section of the vmlinux image. modifies
-scripts/Makefile.lib to add a kbuild command to compile DTS files to
-device tree blobs and a rule to create objects to wrap the blobs for
-linking into vmlinux. 
-
-A DTB is linked in by adding the DTB object to the list of objects to
-be linked into vmlinux in the archtecture specific Makefile using
-   obj-y += dts/foo.dtb.o
-   $(obj)/%.dtb: $(src)/%.dts
-       $(call if_changed,dtc)
-The location of the device tree DTS files is architecture specific.
-
-Patch 2/2:
-Adds a kernel command line option "dtb_compat=<string>" and functions
-for architecture/platform specific code to retrieve the command line
-string and locate the compatible DTB linked into the kernel
-e.g.
-    compat_string = of_get_dtb_compatible_string();
-    compat_dtb = of_find_compatible_dtb(compat_string);
-
-Changes from V4:
-Patch to device tree compiler dropped, alignment done in DTB wrapper
-object code.
-
-Name of DTB section changed to .dtb.init.rodata from .dtb
-
-Code cleanup in of_find_compatible_dtb() to remove redundant code and
-improve readabiility.
-
-Patch to arch/x86/kernel Makefile dropped from this set.
-  
-
-Dirk Brandewie (2):
-  of: Add support for linking device tree blobs into vmlinux
-  of/fdt: add kernel command line option for dtb_compat string
-
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
  Documentation/kernel-parameters.txt |    7 ++++
  drivers/of/fdt.c                    |   55 +++++++++++++++++++++++++++++++++++
- include/asm-generic/vmlinux.lds.h   |   19 +++++++++++-
  include/linux/of_fdt.h              |    5 +++
- scripts/Makefile.lib                |   17 +++++++++++
- 5 files changed, 101 insertions(+), 2 deletions(-)
+ 3 files changed, 67 insertions(+), 0 deletions(-)
 
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index ed45e98..f9b77fa 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -655,6 +655,13 @@ and is between 256 and 4096 characters. It is defined in the file
+ 
+ 	dscc4.setup=	[NET]
+ 
++	dtb_compat=	[KNL]
++			Specify the "compatible" string for the device
++			tree blob present in the kernel image.  This
++			string will be used to select the first device
++			tree blob whose compatible property matches
++			the string passed on the kernel commandline.
++
+ 	dynamic_printk	Enables pr_debug()/dev_dbg() calls if
+ 			CONFIG_DYNAMIC_PRINTK_DEBUG has been enabled.
+ 			These can also be switched on/off via
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index c1360e0..77ab091 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -15,6 +15,8 @@
+ #include <linux/of_fdt.h>
+ #include <linux/string.h>
+ #include <linux/errno.h>
++#include <asm-generic/vmlinux.lds.h>
++
+ 
+ #ifdef CONFIG_PPC
+ #include <asm/machdep.h>
+@@ -604,3 +606,56 @@ void __init unflatten_device_tree(void)
+ 
+ 	pr_debug(" <- unflatten_device_tree()\n");
+ }
++
++#ifndef MODULE
++#ifdef CONFIG_OF_FLATTREE
++char dtb_compat_name[MAX_DTB_COMPAT_STR] = "";
++
++char __init *of_get_dtb_compatible_string(void)
++{
++	return dtb_compat_name;
++}
++
++
++extern uint8_t __dtb_start[];
++extern uint8_t __dtb_end[];
++void *of_find_compatible_dtb(char *name)
++{
++	void *rc = NULL;
++	unsigned long root, size;
++	struct boot_param_header  *orig_initial_boot_params;
++	uint8_t *blob;
++
++	orig_initial_boot_params = initial_boot_params;
++	blob = __dtb_start;
++	initial_boot_params = (struct boot_param_header *)blob;
++
++	do {
++		root = of_get_flat_dt_root();
++		if (of_flat_dt_is_compatible(root, name) > 0) {
++			rc = (void *) blob;
++			break;
++		}
++
++		size =  be32_to_cpu(initial_boot_params->totalsize);
++		blob = (uint8_t *) ALIGN(((unsigned long)blob + size),
++					DTB_ALIGNMENT);
++		initial_boot_params = (struct boot_param_header *)blob;
++	} while (blob < __dtb_end);
++
++	if (rc == NULL)
++		initial_boot_params = orig_initial_boot_params;
++	return rc;
++}
++
++
++static int __init dtb_compat_setup(char *line)
++{
++	strncpy(dtb_compat_name, line, MAX_DTB_COMPAT_STR);
++	return 1;
++}
++
++early_param("dtb_compat", dtb_compat_setup);
++#endif
++#endif
++
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 7bbf5b3..c696da3c 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -58,6 +58,8 @@ struct boot_param_header {
+ };
+ 
+ #if defined(CONFIG_OF_FLATTREE)
++#define MAX_DTB_COMPAT_STR 64
++
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+ extern int __initdata dt_root_addr_cells;
+ extern int __initdata dt_root_size_cells;
+@@ -82,6 +84,9 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+ extern u64 early_init_dt_alloc_memory_arch(u64 size, u64 align);
+ extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+ 
++extern char *of_get_dtb_compatible_string(void);
++extern void *of_find_compatible_dtb(char *name);
++
+ /*
+  * If BLK_DEV_INITRD, the fdt early init code will call this function,
+  * to be provided by the arch code. start and end are specified as
 -- 
 1.7.2.3
