@@ -1,18 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device tree with early buffer allocations and aliased memory
-Date: Mon, 15 Nov 2010 23:57:18 -0700
-Message-ID: <20101116065718.GD4074@angua.secretlab.ca>
-References: <20101027184908.GA7669@dvomlehn-lnx2.corp.sa.net>
-	<AANLkTi=OWBbB8vPNapxkBDiVRCoGS-sZ5-CXcKK0n8iv@mail.gmail.com>
-	<20101103205037.GA15096@dvomlehn-lnx2.corp.sa.net>
-	<20101110042537.GA4110@angua.secretlab.ca>
-	<20101115231008.GA468@dvomlehn-lnx2.corp.sa.net>
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/fdt: add kernel command line option for dtb_compat
+	string
+Date: Tue, 16 Nov 2010 05:50:42 -0800
+Message-ID: <4CE28C32.3020807@gmail.com>
+References: <cover.1289877715.git.dirk.brandewie@gmail.com>
+	<bdb6f333aea69accf3ca3e74c1f01da0a8587aee.1289877715.git.dirk.brandewie@gmail.com>
+	<20101116063253.GB4074@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20101115231008.GA468-ZEW99E7oL/EiWxQNNj96ibh/4TqKg8J2XqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20101116063253.GB4074-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,139 +20,198 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 15, 2010 at 03:10:08PM -0800, David VomLehn wrote:
-> On Tue, Nov 09, 2010 at 10:25:37PM -0600, Grant Likely wrote:
-> > On Wed, Nov 03, 2010 at 01:50:37PM -0700, David VomLehn wrote:
-> ...
-> > Further note:  The memory node must only contain memory ranges that
-> > will actually be used by the operating system as system RAM.  If it is
-> > dedicated to DMA buffers or the like, then you don't want to identify
-> > it as a memory node.  You can create a new binding to describe your
-> > DMA buffer ranges, but make sure it doesn't specify device_type="memory".
-> 
-> This one confuses me a bit. Devices using DMA share memory with device
-> drivers; does this mean that memory is used by the kernel as system RAM?
-> Also, the buffers whose addresses are dynamically assigned have exactly
-> the same usage pattern as those whose addresses are statically assigned,
-> but there is no way to know where in the memory nodes they should be.
-> It is thus not possible to exclude them from memory nodes. This seems
-> inconsistent.
+On 11/15/2010 10:32 PM, Grant Likely wrote:
+> On Mon, Nov 15, 2010 at 08:01:21PM -0800, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Dirk Brandewie<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Add support for specifying a "compatible" string from the kernel
+>> command line and functions for the platform to find the compatible
+>> blob present in the kernel image if any.
+>>
+>> Signed-off-by: Dirk Brandewie<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Hi Dirk,
+>
+> a couple of general comments:
+>
+> A lot of the information in the cover letter should really be here in
+> the actual patch description.  Use the cover letter to provide context
+> for the entire series, but put the specifics with each patch.  Version
+> changelog history should also appear in patch description, not the
+> cover letter.
+>
 
-I'm not sure I completely follow you.  Any memory described in a
-device_type="memory" node will by default be used as system RAM by
-Linux.  If some of that region needs to be used for DMA buffers, then
-you'll need to make sure that when a driver allocates a buffer, that
-the buffer is made valid for DMA operations.  How you do this is
-architecture specific.
+OK
 
-> > > 	platform-bus {
-> > 
-> > It *appears* that you're conflating Linux-kernel internal details (the
-> > name "platform-bus") with the actual layout of the hardware.  I'd be
-> > surprised if your peripheral bus is named "platform-bus" in the
-> > hardware documentation.  Name things for what they are, with
-> > preference for names in the generic names list from ePAPR.
-> 
-> It looks like naming this node "soc" would be in accordance with
-> convention. Is this better than "stbus", "simple-bus", or "simple-bus@0"?
+> For the next version, please cc: linux-kernel-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
+> This series should have a wider review audience, particularly because
+> it touches the linker sections and the kernel parameters.  You should
+> also cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org and
+> microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org for the patch that adds the common
+> rules because it will affect both of those architectures directly.
+>
 
-what does 'stbus' mean?  If it is the hardware name for the bus, then
-it is probably a good choice.  'soc' is often used, but I'm not a big
-fan of that convention because it doesn't reflect the actual internal
-architecture of the chip.
+Will do
+> More comments below.
+>
 
-> > > 		compatible = "simple-bus";
-> > > 		#address-cells = <1>;
-> > > 		#size-cells = <1>;
-> > > 		dma-ranges = <0x10000000 0x1000000 0x0fc00000
-> > > 			0x20000000 0x10000000 0x0fc00000
-> > > 			0x2fc00000 0x2fc00000 0x10400000
-> > > 			0x60000000 0x60000000 0x20000000>;
-> > 
-> > I suspect the length field in the 3rd line is wrong.  Should be
-> > 0x400000?  I also suspect the 2nd and 3rd lines could be merged to
-> > give:
-> > 			0x20000000 0x20000000 0x10000000
-> 
-> The third line is for memory extending from 0x2fc00000-0x3fffffff, inclusive,
-> where the DMA and physical addresses are the same for the entire range. As
-> I understand it, the third parameter is the length, i.e. the length of the
-> area of memory shared between the device doing DMA and the device driver.
-> I don't see anything wrong with this, but would like to know if there is.
+>> +#ifndef MODULE
+>
+> fdt.c cannot be compiled as a module.  Is this necessary?
+>
+>> +#ifdef CONFIG_OF_FLATTREE
+>
+> Unnecessary #ifdef.  fdt.c is only compiled when CONFIG_OF_FLATTREE is
+> set.
+>
 
-Sorry, I believe you're right.  I misread your example.
+Both #ifdef's removed
+>> +char dtb_compat_name[MAX_DTB_COMPAT_STR] = "";
+>> +
+>> +char __init *of_get_dtb_compatible_string(void)
+>> +{
+>> +	return dtb_compat_name;
+>> +}
+>> +
+>> +
+>> +extern uint8_t __dtb_start[];
+>> +extern uint8_t __dtb_end[];
+>> +void *of_find_compatible_dtb(char *name)
+>
+> Please rename of_flat_dt_find_compatible_dtb() to match the naming
+> conventions that I'm working to establish in this file.
+>
+> Also, it should have an __init annotation.
+>
 
-> Though the third line has an identical mapping between physical and DMA
-> addresses, the second line has an offset of 0x10000000 between the two
-> addresses. Unless I misunderstand, I can't merge these.
+done
 
-<digress into details of hardware design>
-Is a device legally able to DMA into the address range
-0x20000000..0x2fbfffff instead of 0x10000000..0x1fbfffff?  What is the
-reason for dma'ing to base 0x10000000 for the first 0xfc00000, and to
-base 0x20000000 for the second if the two ranges are simple aliases of
-each other?
+>> +{
+>> +	void *rc = NULL;
+>> +	unsigned long root, size;
+>> +	struct boot_param_header  *orig_initial_boot_params;
+>> +	uint8_t *blob;
+>
+> blob should be a void* here.  It is never used as a uint8.
+>
 
->From your earlier description it sounded like the 0x10000000 alias is
-only to provide Linux with RAM to run out of, but the real ram base
-address is 0x20000000.  As such, it still sounds like the dma-ranges
-should cover the entire physical memory region from
-0x20000000..0x3fffffff, and not reference the 0x10000000 alias at all.
-</digress>
+I used uint8_t prevent compiler warning when blob is compared to __dtb_end
 
-> > > I'm not sure whether I need to specify all those 1:1 mappings or just
-> > > the range starting at 0x20000000 that doesn't map identically to the
-> > > physical address range. Assuming this is correct, my DMA mapping issue
-> > > is solved.
-> > 
-> > Unless you *actually* want to perform DMAs to both the real and
-> > aliased ranges, then you probably don't want specify both.
-> 
-> All of the physical addresses can be used with DMA, after translation to their
-> corresponding DMA addresses, so it sounds like I need to specify all
-> physical addresses.
-> 
-> > Since this sounds very device specific, doing custom properties are
-> > just fine *providing* you document it in the "cisco,device-s" binding.
-> 
-> Once I get this all nailed down, is there a standard place to publish
-> custom bindings?
+>> +
+>> +	orig_initial_boot_params = initial_boot_params;
+>> +	blob = __dtb_start;
+>> +	initial_boot_params = (struct boot_param_header *)blob;
+>> +
+>> +	do {
+>
+> Start the loop with "while (blob<  __dtb_end) {" to protect against
+> the possibility that __dtb_start == __dtb_end (no dtbs linked in).
+>
 
-devicetree.org
+Done
 
-> 
-> > > Buffers with dynamically assigned addresses must be assigned within
-> > > a given range of memory. Using labeled memory nodes could help:
-> > > 
-> > > 	device-d {
-> > > 		compatible = "cisco,device-d";
-> > > 		cisco,dynamic-buffers =
-> > > 			"device-d-b1",<&node0-lowmem 0x00210000>,
-> > > 			"device-d-b2",<&node0-highmem 0x00220000>,
-> > > 			"device-d-b3",<&node1-highmem 0x00230000>;
-> > 
-> > What is the meaning of the second cell in these properties
-> > (0x00210000, 0x220000, and 0x230000)?  This doesn't seem to be an
-> > optimal binding, although that is probably mainly due to the joint
-> > string+cell property values.  Having a phandle to another node is
-> > /okay/, but it might just be simpler and better to explicitly specify
-> > the address ranges that the device is able to DMA to/from.
-> 
-> Those second cells are the length of the DMA buffers. The phandles are
-> being used to indicate the range within which the beginning and ending
-> addresses of the buffers must lie.  I used phandles phandles because
-> all of the ranges will be within one of the three memory nodes and
-> this seemed like a nice way to simplify things and avoid potentially
-> subtle errors in specifying the range. But specifying ranges explicitly
-> for each buffer works fine.
+>> +		root = of_get_flat_dt_root();
+>
+> Just to be defencive, should check the value of
+> initial_boot_params->magic before dereferencing the rest of the
+> structure or trying to parse nodes.
+>
 
-I'd just go with the explicit ranges simply because it is simpler.  If
-it was a more common use-case, then I might have a different opinion,
-but since it is an oddball case I'd stick with familiar patterns for
-specifying dma constraints.
+Added as a condition to while loop
 
-g.
+>> +		if (of_flat_dt_is_compatible(root, name)>  0) {
+>> +			rc = (void *) blob;
+>
+> Unnecessary cast (regardless of whether blob is a void* or a uint8_t*).
+>
+
+done
+
+>> +			break;
+>> +		}
+>> +
+>> +		size =  be32_to_cpu(initial_boot_params->totalsize);
+>> +		blob = (uint8_t *) ALIGN(((unsigned long)blob + size),
+>> +					DTB_ALIGNMENT);
+>
+> I believe PTR_ALIGN() can be used and the casting removed.
+>
+
+done
+
+>> +		initial_boot_params = (struct boot_param_header *)blob;
+>> +	} while (blob<  __dtb_end);
+>> +
+>> +	if (rc == NULL)
+>> +		initial_boot_params = orig_initial_boot_params;
+>> +	return rc;
+>> +}
+>> +
+>> +
+>> +static int __init dtb_compat_setup(char *line)
+>
+> Please rename of_flat_dt_compat_setup()
+>
+
+done
+
+>> +{
+>> +	strncpy(dtb_compat_name, line, MAX_DTB_COMPAT_STR);
+>> +	return 1;
+>> +}
+>
+> I don't remember getting a response about whether or not
+> of_find_compatible_dtb can be called directly from dtb_compat_setup.
+> Doing so would eliminate the arbitrary MAX_DTB_COMPAT_STR because
+> there would be no need to keep around a copy of dtb_compat_name.  It
+> also means that of_find_compatible_dtb() can be restricted to the file
+> scope.
+>
+> Is there a use-case for calling of_find_compatible_dtb() anywhere
+> other than in dtb_compat_setup?
+>
+
+The use case for having these functions exposed is allowing the platfrom code 
+decide the policy for which dtb will be used in the case where a dtb might have 
+been passed in by the boot loader. These functions can be used as a fallback if 
+a dtb was not passed in or to override of the passed in dtb by the platform code.
+>> +
+>> +early_param("dtb_compat", dtb_compat_setup);
+>> +#endif
+>> +#endif
+>> +
+>> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+>> index 7bbf5b3..c696da3c 100644
+>> --- a/include/linux/of_fdt.h
+>> +++ b/include/linux/of_fdt.h
+>> @@ -58,6 +58,8 @@ struct boot_param_header {
+>>   };
+>>
+>>   #if defined(CONFIG_OF_FLATTREE)
+>> +#define MAX_DTB_COMPAT_STR 64
+>> +
+>
+> Only used by drivers/of/fdt.c, so should not be in a header file.
+>
+
+removed
+
+>>   /* TBD: Temporary export of fdt globals - remove when code fully merged */
+>>   extern int __initdata dt_root_addr_cells;
+>>   extern int __initdata dt_root_size_cells;
+>> @@ -82,6 +84,9 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+>>   extern u64 early_init_dt_alloc_memory_arch(u64 size, u64 align);
+>>   extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+>>
+>> +extern char *of_get_dtb_compatible_string(void);
+>> +extern void *of_find_compatible_dtb(char *name);
+>> +
+>
+> As commented above, I don't think either of these need to be visible
+> outside of fdt.c
+>
+> g.
