@@ -1,18 +1,15 @@
-From: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Subject: Re: Device tree with early buffer allocations and aliased memory
-Date: Tue, 16 Nov 2010 15:21:55 -0800
-Message-ID: <4CE31213.1040608@cisco.com>
-References: <20101027184908.GA7669@dvomlehn-lnx2.corp.sa.net>
-	<AANLkTi=OWBbB8vPNapxkBDiVRCoGS-sZ5-CXcKK0n8iv@mail.gmail.com>
-	<20101103205037.GA15096@dvomlehn-lnx2.corp.sa.net>
-	<20101110042537.GA4110@angua.secretlab.ca>
-	<20101115231008.GA468@dvomlehn-lnx2.corp.sa.net>
-	<20101116065718.GD4074@angua.secretlab.ca>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Re: [PATCH 1/7] OF: make drivers depend on CONFIG_OF instead of
+	CONFIG_PPC_OF
+Date: Wed, 17 Nov 2010 10:59:45 +1100
+Message-ID: <20101117105945.64b3b656.sfr@canb.auug.org.au>
+References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
+	<1289939635-30742-2-git-send-email-robherring2@gmail.com>
+	<20101116204058.GA5016@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6036175506860699955=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101116065718.GD4074-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <20101116204058.GA5016-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,58 +19,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2010 10:57 PM, Grant Likely wrote:
+--===============6036175506860699955==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA1";
+ boundary="Signature=_Wed__17_Nov_2010_10_59_45_+1100_EeOF3BvhwMwPn9ke"
 
-...
-> I'm not sure I completely follow you.  Any memory described in a
-> device_type="memory" node will by default be used as system RAM by
-> Linux.  If some of that region needs to be used for DMA buffers, then
-> you'll need to make sure that when a driver allocates a buffer, that
-> the buffer is made valid for DMA operations.  How you do this is
-> architecture specific.
-Okay, I think I've got this down
-...
-> what does 'stbus' mean?  If it is the hardware name for the bus, then
-> it is probably a good choice.  'soc' is often used, but I'm not a big
-> fan of that convention because it doesn't reflect the actual internal
-> architecture of the chip.
-Yes, this is what STMicroelectronics call their bus, specifically 
-"STBus". Which looks like what the device tree calls a simple- bus.
-...
->>>> 		compatible = "simple-bus";
->>>> 		#address-cells =<1>;
->>>> 		#size-cells =<1>;
->>>> 		dma-ranges =<0x10000000 0x1000000 0x0fc00000
->>>> 			0x20000000 0x10000000 0x0fc00000
->>>> 			0x2fc00000 0x2fc00000 0x10400000
->>>> 			0x60000000 0x60000000 0x20000000>;
-...
-> <digress into details of hardware design>
-> Is a device legally able to DMA into the address range
-> 0x20000000..0x2fbfffff instead of 0x10000000..0x1fbfffff?  What is the
-> reason for dma'ing to base 0x10000000 for the first 0xfc00000, and to
-> base 0x20000000 for the second if the two ranges are simple aliases of
-> each other?
+--Signature=_Wed__17_Nov_2010_10_59_45_+1100_EeOF3BvhwMwPn9ke
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Mitch,
+
+On Tue, 16 Nov 2010 13:40:58 -0700 Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
 >
->  From your earlier description it sounded like the 0x10000000 alias is
-> only to provide Linux with RAM to run out of, but the real ram base
-> address is 0x20000000.  As such, it still sounds like the dma-ranges
-> should cover the entire physical memory region from
-> 0x20000000..0x3fffffff, and not reference the 0x10000000 alias at all.
-> </digress>
-Think I've got it--the 0x10000000-0x1fc00000 is not visible to DMA 
-devices, so it doesn't belong in the dma-ranges, only those address that 
-can actually be given to DMA devices. So, I'll drop the first triplet 
-and keep the others.
-...
-> I'd just go with the explicit ranges simply because it is simpler.  If
-> it was a more common use-case, then I might have a different opinion,
-> but since it is an oddball case I'd stick with familiar patterns for
-> specifying dma constraints.
-Sounds good.
-> g.
-Thanks!
+> On Tue, Nov 16, 2010 at 02:33:49PM -0600, Rob Herring wrote:
+> > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >=20
+> > Some OF drivers could likely be used on non-powerpc OF based platforms,
+> > so fix the kconfig depends to be CONFIG_OF instead of CONFIG_PPC_OF
+> >=20
+> > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>=20
+> Which of these drivers are you actually using, or going to use in the
+> near future?
+
+And have you made sure that you haven't broken the allmodconfig builds on
+other architectures that enable CONFIG_OF?
+
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
+http://www.canb.auug.org.au/~sfr/
+
+--Signature=_Wed__17_Nov_2010_10_59_45_+1100_EeOF3BvhwMwPn9ke
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iQEcBAEBAgAGBQJM4xrxAAoJEDMEi1NhKgbsvTIIAJ6FDCg5WmthKhdBH4lJjJK2
+UDESR0omQ3gNf8MIrRTQW2aA+zuTWoYQvLv6jpj4E6yK1jcvKIuImiBH14pPTgQM
+hbCGxCqSZJs3UDpq3XglP0eov03Bju6snOsvgmrVRczp2N6M2eNo9Fl0E9Ymj1XI
+hh0jq9c05FRA2xdoarAIpeBL6NVMWcTzClB5T2YxRXmTKx9BAAkX3fGq4RmsdKyE
+/d5Vg6ivzfs5eYGHcy6Knq2+PWlgNN7sjL9h4GHpp6jxe8koHZi+QtiOEXGe311P
+hbwzI7rsZESFa9KncWInNg+czBe45mlHXc0lLEI6mLXNfndQ8hZtDy+yJ2NkHms=
+=LlDK
+-----END PGP SIGNATURE-----
+
+--Signature=_Wed__17_Nov_2010_10_59_45_+1100_EeOF3BvhwMwPn9ke--
+
+--===============6036175506860699955==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6036175506860699955==--
