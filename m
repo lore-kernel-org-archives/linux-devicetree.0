@@ -1,15 +1,11 @@
 From: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 1/2] of: Add support for linking device tree blobs into vmlinux
-Date: Mon, 15 Nov 2010 20:01:20 -0800
-Message-ID: <ca5555dd665a668bf4e2b2256ccf4bb5d010cde1.1289877715.git.dirk.brandewie@gmail.com>
-References: <cover.1289877715.git.dirk.brandewie@gmail.com>
+Subject: [PATCH 0/2] Adding DTB's to architecture independent vmlinux
+Date: Mon, 15 Nov 2010 20:01:19 -0800
+Message-ID: <cover.1289877715.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1289877715.git.dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,87 +21,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This patch adds support for linking device tree blobs into
-vmlinux. The device tree blobs are placed in the init.data
-section.
+This patch set adds support for linking an arbitrary number of device
+tree blobs into the kernel image and allow passing the "compatible"
+string for the platform on the kernel command line.
 
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- include/asm-generic/vmlinux.lds.h |   19 +++++++++++++++++--
- scripts/Makefile.lib              |   17 +++++++++++++++++
- 2 files changed, 34 insertions(+), 2 deletions(-)
+Patch 1/2:
+modifies asm-generic/vmlinux.lds.h to add linking .dtb.init.rodata
+sections into the .init.data section of the vmlinux image. modifies
+scripts/Makefile.lib to add a kbuild command to compile DTS files to
+device tree blobs and a rule to create objects to wrap the blobs for
+linking into vmlinux. 
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index bd69d79..ea671e7 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -67,7 +67,14 @@
-  * Align to a 32 byte boundary equal to the
-  * alignment gcc 4.5 uses for a struct
-  */
--#define STRUCT_ALIGN() . = ALIGN(32)
-+#define STRUCT_ALIGNMENT 32
-+#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
-+
-+/* Device tree blobs linked into the kernel need to have proper
-+ * structure alignment to be parsed by the flat device tree library
-+ * used in early boot
-+*/
-+#define DTB_ALIGNMENT STRUCT_ALIGNMENT
- 
- /* The actual configuration determine if the init/exit sections
-  * are handled as text/data or they can be discarded (which
-@@ -146,6 +153,13 @@
- #define TRACE_SYSCALLS()
- #endif
- 
-+
-+#define KERNEL_DTB()							\
-+	. = ALIGN(DTB_ALIGNMENT);					\
-+	VMLINUX_SYMBOL(__dtb_start) = .;				\
-+	*(.dtb.init.rodata)						\
-+	VMLINUX_SYMBOL(__dtb_end) = .;
-+
- /* .data section */
- #define DATA_DATA							\
- 	*(.data)							\
-@@ -468,7 +482,8 @@
- 	MCOUNT_REC()							\
- 	DEV_DISCARD(init.rodata)					\
- 	CPU_DISCARD(init.rodata)					\
--	MEM_DISCARD(init.rodata)
-+	MEM_DISCARD(init.rodata)					\
-+	KERNEL_DTB()
- 
- #define INIT_TEXT							\
- 	*(.init.text)							\
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 4c72c11..a8a4774 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -200,6 +200,23 @@ quiet_cmd_gzip = GZIP    $@
- cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
- 	(rm -f $@ ; false)
- 
-+# DTC
-+#  ---------------------------------------------------------------------------
-+$(obj)/%.dtb.S: $(obj)/%.dtb FORCE
-+	@echo '#include <asm-generic/vmlinux.lds.h>' > $@
-+	@echo '.section .dtb.init.rodata,"a"' >> $@
-+	@echo '.balign DTB_ALIGNMENT' >> $@
-+	@echo '.global __dtb_$(*F)_begin' >> $@
-+	@echo '__dtb_$(*F)_begin:' >> $@
-+	@echo '.incbin "$<" ' >> $@
-+	@echo '__dtb_$(*F)_end:' >> $@
-+	@echo '.global __dtb_$(*F)_end' >> $@
-+	@echo '.balign DTB_ALIGNMENT' >> $@
-+
-+DTC = $(objtree)/scripts/dtc/dtc
-+
-+quiet_cmd_dtc = DTC	$@
-+      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0  $(src)/$*.dts
- 
- # Bzip2
- # ---------------------------------------------------------------------------
+A DTB is linked in by adding the DTB object to the list of objects to
+be linked into vmlinux in the archtecture specific Makefile using
+   obj-y += dts/foo.dtb.o
+   $(obj)/%.dtb: $(src)/%.dts
+       $(call if_changed,dtc)
+The location of the device tree DTS files is architecture specific.
+
+Patch 2/2:
+Adds a kernel command line option "dtb_compat=<string>" and functions
+for architecture/platform specific code to retrieve the command line
+string and locate the compatible DTB linked into the kernel
+e.g.
+    compat_string = of_get_dtb_compatible_string();
+    compat_dtb = of_find_compatible_dtb(compat_string);
+
+Changes from V4:
+Patch to device tree compiler dropped, alignment done in DTB wrapper
+object code.
+
+Name of DTB section changed to .dtb.init.rodata from .dtb
+
+Code cleanup in of_find_compatible_dtb() to remove redundant code and
+improve readabiility.
+
+Patch to arch/x86/kernel Makefile dropped from this set.
+  
+
+Dirk Brandewie (2):
+  of: Add support for linking device tree blobs into vmlinux
+  of/fdt: add kernel command line option for dtb_compat string
+
+ Documentation/kernel-parameters.txt |    7 ++++
+ drivers/of/fdt.c                    |   55 +++++++++++++++++++++++++++++++++++
+ include/asm-generic/vmlinux.lds.h   |   19 +++++++++++-
+ include/linux/of_fdt.h              |    5 +++
+ scripts/Makefile.lib                |   17 +++++++++++
+ 5 files changed, 101 insertions(+), 2 deletions(-)
+
 -- 
 1.7.2.3
