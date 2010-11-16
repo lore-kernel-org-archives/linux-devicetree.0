@@ -1,93 +1,64 @@
 From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH 4/7] mmc: sdhci-of: fix build on non-powerpc platforms
-Date: Tue, 16 Nov 2010 22:44:09 +0100
-Message-ID: <20101116214409.GC19893@pengutronix.de>
-References: <1289939635-30742-1-git-send-email-robherring2@gmail.com> <1289939635-30742-5-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH 2/2] powerpc: pcm030/032: add pagesize to dts
+Date: Tue, 16 Nov 2010 22:45:37 +0100
+Message-ID: <20101116214537.GD19893@pengutronix.de>
+References: <1289841916-3825-1-git-send-email-w.sang@pengutronix.de>
+	<1289841916-3825-2-git-send-email-w.sang@pengutronix.de>
+	<20101115173250.GA22104@oksana.dev.rtsoft.ru>
+	<4CE1A0E4.5030505@firmworks.com>
+	<20101115212432.GA17754@oksana.dev.rtsoft.ru>
+	<20101115221156.GA25167@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tqI+Z3u+9OQ7kwn0"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1289939635-30742-5-git-send-email-robherring2@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-mmc@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0407083508882309312=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20101115221156.GA25167@pengutronix.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---tqI+Z3u+9OQ7kwn0
+--===============0407083508882309312==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NtwzykIc2mflq5ck"
+Content-Disposition: inline
+
+
+--NtwzykIc2mflq5ck
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 16, 2010 at 02:33:52PM -0600, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
->=20
-> Explicitly include err.h, of_address.h and of_irq.h.
-> Make use of machine_is() conditional on PPC.
->=20
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
-Hmm, sins of the past :/ I wonder if we can get away with less #ifdeffery, =
-will
-think about it...
+> Even worse, I seem to recall that I had once seen a manufacturer increasi=
+ng the
+> page-size from one charge to the next without changing the part-number, s=
+o I
+> got this feeling "you can't map pagesize to manufacturer/type" which I st=
+ill
+> have. Sadly, this was long ago, so I can't proof it right now. Will try t=
+o dig
+> up some datasheets when in the office tomorrow.
 
-> ---
->  drivers/mmc/host/sdhci-of-core.c |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/mmc/host/sdhci-of-core.c b/drivers/mmc/host/sdhci-of=
--core.c
-> index fa19d84..dd84124 100644
-> --- a/drivers/mmc/host/sdhci-of-core.c
-> +++ b/drivers/mmc/host/sdhci-of-core.c
-> @@ -13,6 +13,7 @@
->   * your option) any later version.
->   */
-> =20
-> +#include <linux/err.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> @@ -20,8 +21,12 @@
->  #include <linux/delay.h>
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  #include <linux/mmc/host.h>
-> +#ifdef CONFIG_PPC
->  #include <asm/machdep.h>
-> +#endif
->  #include "sdhci-of.h"
->  #include "sdhci.h"
-> =20
-> @@ -112,7 +117,11 @@ static bool __devinit sdhci_of_wp_inverted(struct de=
-vice_node *np)
->  		return true;
-> =20
->  	/* Old device trees don't have the wp-inverted property. */
-> +#ifdef CONFIG_PPC
->  	return machine_is(mpc837x_rdb) || machine_is(mpc837x_mds);
-> +#else
-> +	return false;
-> +#endif
->  }
-> =20
->  static int __devinit sdhci_of_probe(struct platform_device *ofdev,
-> --=20
-> 1.7.1
->=20
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Had a look, couldn't find anything :( And now?
+
+Regards,
+
+   Wolfram
 
 --=20
 Pengutronix e.K.                           | Wolfram Sang                |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
---tqI+Z3u+9OQ7kwn0
+--NtwzykIc2mflq5ck
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 Content-Disposition: inline
@@ -95,9 +66,21 @@ Content-Disposition: inline
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iEYEARECAAYFAkzi+ykACgkQD27XaX1/VRu9pgCgyn4Ot2V5Rz78y7F35oX3BcFP
-20gAoMVTlD6OMnWGIHkE/22GZ7KTgQpm
-=KQrA
+iEYEARECAAYFAkzi+4EACgkQD27XaX1/VRuXMACgi5OsaEhC/8mG76jCb8XuUgMz
+ZLAAoKzxF5e/s//xdyiououfF45L92Sr
+=EaNY
 -----END PGP SIGNATURE-----
 
---tqI+Z3u+9OQ7kwn0--
+--NtwzykIc2mflq5ck--
+
+--===============0407083508882309312==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============0407083508882309312==--
