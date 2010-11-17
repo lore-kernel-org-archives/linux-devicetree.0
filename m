@@ -1,13 +1,16 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 3/3] powerpc: pcm030/032: add pagesize to dts
-Date: Wed, 17 Nov 2010 13:00:50 +0100
-Message-ID: <1289995250-17927-4-git-send-email-w.sang@pengutronix.de>
-References: <1289995250-17927-1-git-send-email-w.sang@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] OF: make drivers depend on CONFIG_OF instead of
+	CONFIG_PPC_OF
+Date: Wed, 17 Nov 2010 08:53:47 -0600
+Message-ID: <4CE3EC7B.4020404@gmail.com>
+References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
+	<1289939635-30742-2-git-send-email-robherring2@gmail.com>
+	<20101117054337.GG12813@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1289995250-17927-1-git-send-email-w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20101117054337.GG12813-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,42 +20,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/powerpc/boot/dts/pcm030.dts |    1 +
- arch/powerpc/boot/dts/pcm032.dts |    3 ++-
- 2 files changed, 3 insertions(+), 1 deletions(-)
+Grant,
 
-diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
-index 8a4ec30..e7c36bc 100644
---- a/arch/powerpc/boot/dts/pcm030.dts
-+++ b/arch/powerpc/boot/dts/pcm030.dts
-@@ -259,6 +259,7 @@
- 			eeprom@52 {
- 				compatible = "catalyst,24c32";
- 				reg = <0x52>;
-+				pagesize = <32>;
- 			};
- 		};
- 
-diff --git a/arch/powerpc/boot/dts/pcm032.dts b/arch/powerpc/boot/dts/pcm032.dts
-index 85d857a..e175e2c 100644
---- a/arch/powerpc/boot/dts/pcm032.dts
-+++ b/arch/powerpc/boot/dts/pcm032.dts
-@@ -257,8 +257,9 @@
- 				reg = <0x51>;
- 			};
- 			eeprom@52 {
--				compatible = "at24,24c32";
-+				compatible = "catalyst,24c32";
- 				reg = <0x52>;
-+				pagesize = <32>;
- 			};
- 		};
- 
--- 
-1.7.2.3
+On 11/16/2010 11:43 PM, Grant Likely wrote:
+> On Tue, Nov 16, 2010 at 02:33:49PM -0600, Rob Herring wrote:
+>> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Some OF drivers could likely be used on non-powerpc OF based platforms,
+>> so fix the kconfig depends to be CONFIG_OF instead of CONFIG_PPC_OF
+>>
+>> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   drivers/char/ipmi/ipmi_si_intf.c |   14 +++++++-------
+>>   drivers/mmc/host/Kconfig         |    2 +-
+>>   drivers/mtd/Kconfig              |    2 +-
+>>   drivers/mtd/maps/Kconfig         |    2 +-
+>>   drivers/net/can/sja1000/Kconfig  |    4 ++--
+>>   drivers/serial/Kconfig           |    2 +-
+>>   drivers/usb/host/isp1760-if.c    |    8 ++++----
+>>   7 files changed, 17 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+>> index 035da9e..1b33a42 100644
+>> --- a/drivers/char/ipmi/ipmi_si_intf.c
+>> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+>> @@ -66,7 +66,7 @@
+>>   #include<linux/ctype.h>
+>>   #include<linux/pnp.h>
+>>
+>> -#ifdef CONFIG_PPC_OF
+>> +#ifdef CONFIG_OF
+>>   #include<linux/of_device.h>
+>>   #include<linux/of_platform.h>
+>>   #endif
+>> @@ -308,7 +308,7 @@ static int pci_registered;
+>>   #ifdef CONFIG_ACPI
+>>   static int pnp_registered;
+>>   #endif
+>> -#ifdef CONFIG_PPC_OF
+>> +#ifdef CONFIG_OF
+>>   static int of_registered;
+>>   #endif
+>>
+>> @@ -2540,7 +2540,7 @@ static struct pci_driver ipmi_pci_driver = {
+>>   #endif /* CONFIG_PCI */
+>>
+>>
+>> -#ifdef CONFIG_PPC_OF
+>> +#ifdef CONFIG_OF
+>>   static int __devinit ipmi_of_probe(struct platform_device *dev,
+>>   			 const struct of_device_id *match)
+>>   {
+>> @@ -2646,7 +2646,7 @@ static struct of_platform_driver ipmi_of_platform_driver = {
+>>   	.probe		= ipmi_of_probe,
+>>   	.remove		= __devexit_p(ipmi_of_remove),
+>>   };
+>> -#endif /* CONFIG_PPC_OF */
+>> +#endif /* CONFIG_OF */
+>
+> Nack on this hunk.  of_platform_drivers are now deprecated and the
+> regular platform_driver should be used instead.  Instead of extending
+> the of_platform_driver usage to all the architectures, please move the
+> of_match_table and the probe/remove routines into the platform_driver.
+>
+
+Okay, no problem. How do I get the match ptr or more importantly the 
+data ptr from the match table? Do I have to call of_match_device within 
+probe func?
+
+Rob
