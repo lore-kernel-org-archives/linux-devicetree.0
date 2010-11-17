@@ -1,41 +1,103 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] scripts: dtc: Merge in changes from the dtc repository
-Date: Tue, 16 Nov 2010 22:59:55 -0700
-Message-ID: <AANLkTinZ0yi-ZdwjG-KNcjXBuBzNMxrsFRJq4NZOiwk=@mail.gmail.com>
-References: <20101116204917.12146.39851.stgit@riker>
-	<20101116204951.12146.21084.stgit@riker>
-	<AANLkTimTks01SnjWJZFycSCQC+ZBEonPLLUwMRQkxLz2@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/5] x86/of:  Add building device tree blob(s) into
+ image.
+Date: Tue, 16 Nov 2010 23:02:27 -0700
+Message-ID: <20101117060227.GH12813@angua.secretlab.ca>
+References: <cover.1289943240.git.dirk.brandewie@gmail.com>
+ <35263573f57fd7e780dede628cf489212bfa1400.1289943240.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTimTks01SnjWJZFycSCQC+ZBEonPLLUwMRQkxLz2-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kyle Moffett <kyle-hoO6YkzgTuCM0SS3m2neIg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <35263573f57fd7e780dede628cf489212bfa1400.1289943240.git.dirk.brandewie@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: dirk.brandewie@gmail.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, sodaville@linutronix.de, microblaze-uclinux@itee.uq.edu.au, arjan@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 16, 2010 at 10:56 PM, Kyle Moffett <kyle-hoO6YkzgTuCM0SS3m2neIg@public.gmane.org> wrote:
-> On Tue, Nov 16, 2010 at 15:49, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> Pull in recent changes from the main dtc repository. These changes primarily
->> allow multiple device trees to be declared which are merged by dtc. This
->> feature allows us to include a basic dts file and then provide more information
->> for the specific system through the merging functionality.
->
-> Hmm, is there some documentation for how to use this feature?
-> Specifically I have a custom board with multiple discrete computers on
-> it which are only very slightly physically different from each other
-> and I'd like to be able to avoid maintaining 2 nearly-exact copies of
-> the same DTS file.
+On Tue, Nov 16, 2010 at 02:41:38PM -0800, dirk.brandewie@gmail.com wrote:
+> From: Dirk Brandewie <dirk.brandewie@gmail.com>
+> 
+> This patch adds linking device tree blobs into vmlinux. DTB's are
+> added by adding the blob object name to list of objects to be linked
+> into the image.
+> e.g:
+>   obj-$(CONFIG_TEST_DTB) += test.dtb.o
+> 
+> The set of DTB linked into the image is controlled the Kconfig file
+> in arch/x86/kernel/dts/Kconfig
+> 
+> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
+> ---
+>  arch/x86/Kconfig            |    6 +++++-
+>  arch/x86/kernel/Makefile    |    6 ++++++
+>  arch/x86/kernel/dts/Kconfig |    7 +++++++
+>  3 files changed, 18 insertions(+), 1 deletions(-)
+>  create mode 100644 arch/x86/kernel/dts/Kconfig
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5904f38..f2f516a 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -299,13 +299,17 @@ config X86_BIGSMP
+>  	---help---
+>  	  This option is needed for the systems that have more than 8 CPUs
+>  
+> -config X86_OF
+> +menuconfig X86_OF
+>  	bool "Support for device tree"
+>  	select OF
+>  	select OF_FLATTREE
+>  	---help---
+>  	  Device tree support on X86.
+>  
+> +if X86_OF
+> +source arch/x86/kernel/dts/Kconfig
+> +endif
+> +
+>  if X86_32
+>  config X86_EXTENDED_PLATFORM
+>  	bool "Support for extended (non-PC) x86 platforms"
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 586df14..49e017d 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -114,6 +114,12 @@ obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
+>  obj-$(CONFIG_X86_OF)			+= prom.o
+>  
+>  ###
+> +# device tree blobs
+> +obj-$(CONFIG_CE4100_DTB) += ce4100.dtb.o
+> +obj-$(CONFIG_TEST_DTB) += test.dtb.o
+> +
+> +
+> +###
+>  # 64 bit specific files
+>  ifeq ($(CONFIG_X86_64),y)
+>  	obj-$(CONFIG_AUDIT)		+= audit_64.o
+> diff --git a/arch/x86/kernel/dts/Kconfig b/arch/x86/kernel/dts/Kconfig
+> new file mode 100644
+> index 0000000..d3e5cd4
+> --- /dev/null
+> +++ b/arch/x86/kernel/dts/Kconfig
+> @@ -0,0 +1,7 @@
+> +config CE4100_DTB
+> +       bool "Intel CE4100"
+> +
+> +config TEST_DTB
+> +       bool "Test DTS"
+> +
+> +
 
-Not yet, but there will be.
+As previously mentioned, this isn't going to scale.  Need to look at
+allowing the user to specify a list of .dtbs that will be linked in.
 
 g.
+
+> -- 
+> 1.7.2.3
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
