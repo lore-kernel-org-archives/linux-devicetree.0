@@ -1,17 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] fdt.c: Add non-boottime device tree functions
-Date: Wed, 17 Nov 2010 13:00:12 -0700
-Message-ID: <20101117200012.GD2352@angua.secretlab.ca>
-References: <1290021345-4303-1-git-send-email-stephen.neuendorffer@xilinx.com>
-	<17453aae-47e7-4b69-b7f4-b4577456c637@VA3EHSMHS001.ehs.local>
-	<20101117194203.GA2352@angua.secretlab.ca>
-	<ed30f7b9-a1dd-4cd3-a6df-f2361e790185@VA3EHSMHS030.ehs.local>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add fdt_unflatten_tree
+Date: Wed, 17 Nov 2010 14:08:51 -0600
+Message-ID: <C0C124ED-5091-4AEE-8D2A-F6E84F8678A8@kernel.crashing.org>
+References: <5ca1cf50-4bc4-45ce-87d2-c499d981449b@VA3EHSMHS008.ehs.local>
+Mime-Version: 1.0 (Apple Message framework v1081)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ed30f7b9-a1dd-4cd3-a6df-f2361e790185-+Ck8Kgl/v08opVzHvkXDF7jjLBE8jN/0@public.gmane.org>
+In-Reply-To: <5ca1cf50-4bc4-45ce-87d2-c499d981449b-+Ck8Kgl/v0+siP+nND6G/7jjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,95 +21,27 @@ To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gma
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 17, 2010 at 11:46:07AM -0800, Stephen Neuendorffer wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Grant Likely [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Grant
-> Likely
-> > Sent: Wednesday, November 17, 2010 11:42 AM
-> > To: Stephen Neuendorffer
-> > Cc: dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Subject: Re: [PATCH 1/3] fdt.c: Add non-boottime device tree functions
-> > 
-> > On Wed, Nov 17, 2010 at 11:15:43AM -0800, Stephen Neuendorffer wrote:
-> > > In preparation for providing run-time handling of device trees,
-> factor
-> > > out some of the basic functions so that they take an arbitrary blob,
-> > > rather than relying on the single boot-time tree.
-> > >
-> > > Signed-off-by: Stephen Neuendorffer
-> <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > >  drivers/of/fdt.c       |  129
-> ++++++++++++++++++++++++++++++-----------------
-> > >  include/linux/of_fdt.h |    9 +++
-> > >  2 files changed, 91 insertions(+), 47 deletions(-)
-> > >
-> > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > > index c1360e0..6ae207a 100644
-> > > --- a/drivers/of/fdt.c
-> > > +++ b/drivers/of/fdt.c
-> > > @@ -22,6 +22,86 @@
-> > >
-> > >  #include <asm/page.h>
-> > >
-> > > +char *fdt_get_string(u32 offset,
-> > > +			  struct boot_param_header *blob)
-> > 
-> > nitpicking: Encouraged naming convention is of_flat_dt_* for this
-> > file.  Also, I think it makes more sense for blob to be the first
-> > argument in all of these functions.
-> 
-> OK... Half of the other functions don't follow that convention, tho...
-> :)
 
-I know.  It's a mess.  But I need to start with something to start
-regaining sanity.  :)
+On Nov 17, 2010, at 1:15 PM, Stephen Neuendorffer wrote:
 
->  
-> > > +{
-> > > +	return ((char *)blob) +
-> > > +		be32_to_cpu(blob->off_dt_strings) + offset;
-> > > +}
-> > > +
-> > > +/**
-> > > + * of_get_flat_dt_prop_blob - Given a node in the given flat blob,
-> return
-> > > + * the property ptr
-> > > + *
-> > > + * This function can be used within scan_flattened_dt callback to
-> get
-> > > + * access to properties
-> > > + */
-> > > +void *fdt_get_property(unsigned long node, const char *name,
-> > > +				 unsigned long *size,
-> > > +				 struct boot_param_header *blob)
-> > 
-> > Colocate this function with the defintiion of
-> > of_flat_dt_get_property()
+> 	Currently, fdt blobs are handled solely at boot time.  However,
+> it may be useful to parse blobs into device trees after boot time.  For
+> instance, a PCIe device may have an FPGA which includes a device
+> tree.  This set of patches locally refactors the existing code to enable
+> this.   The code has been compile-tested on X86 but has not been run in this
+> version.  However, the patch is rather straightforward.
 > 
-> I was trying to separate them lexically from the __init functions, to
-> avoid confusion
-> and with the perhaps later intention of putting the early stuff in a
-> separate file.
-
-Fair enough, but if so then split the reorg into a separate patch so
-that this patch shows only the functional changes.  Moving stuff
-around makes the diff much larger than it needs to be.
-
+> Stephen Neuendorffer (3):
+>  fdt.c: Add non-boottime device tree functions
+>  fdt.c: Refactor unflatten_dt_node
+>  fdt.c: Refactor unflatten_device_tree and add fdt_unflatten_tree
 > 
-> > > +{
-> > > +	unsigned long p = node;
-> > 
-> > I think 'p' can be made type void* to eliminate all the casting in
-> > this function (although I understand that this patch just moves code;
-> > so that change doesn't need to be in this patch.
-> 
-> I don't intend to make such changes.  (I agree that it would be nice
-> if the tree no longer references the blob, however).
+> drivers/of/fdt.c       |  393 +++++++++++++++++++++++++++++-------------------
+> include/linux/of_fdt.h |   11 ++
+> 2 files changed, 251 insertions(+), 153 deletions(-)
 
-I'm okay with that.  Mostly I was thinking out loud that it needs to
-be done.  It is *not* a blocker on this patch.
+It would be really nice if we could factor some of the live tree code into a library.  I have some need for this in another context.
 
-g.
+Not sure if we could actually build libfdt and link it into the kernel directly rather than what we do today.
+
+- k
