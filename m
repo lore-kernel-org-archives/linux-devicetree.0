@@ -1,61 +1,66 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add fdt_unflatten_tree
-Date: Wed, 17 Nov 2010 13:19:53 -0700
-Message-ID: <AANLkTi=n-Un4KAmZp1wdYm4_8PMABMnP4cNYF_Ua+Q1V@mail.gmail.com>
-References: <5ca1cf50-4bc4-45ce-87d2-c499d981449b@VA3EHSMHS008.ehs.local>
-	<C0C124ED-5091-4AEE-8D2A-F6E84F8678A8@kernel.crashing.org>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/5] of: Add support for linking device tree blobs into
+	vmlinux
+Date: Wed, 17 Nov 2010 21:24:34 +0100
+Message-ID: <20101117202434.GA20441@merkur.ravnborg.org>
+References: <cover.1289943240.git.dirk.brandewie@gmail.com> <9129f0a21ea48fb2dcb89cea290e88f3e8c0d8a2.1289943240.git.dirk.brandewie@gmail.com> <20101117092751.GA19781@merkur.ravnborg.org> <20101117180723.GA7550@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <C0C124ED-5091-4AEE-8D2A-F6E84F8678A8-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20101117180723.GA7550@angua.secretlab.ca>
+Sender: linux-arch-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: dirk.brandewie@gmail.com, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, arjan@linux.intel.com, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 17, 2010 at 1:08 PM, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wro=
-te:
->
-> On Nov 17, 2010, at 1:15 PM, Stephen Neuendorffer wrote:
->
->> =A0 =A0 =A0 Currently, fdt blobs are handled solely at boot time. =A0How=
-ever,
->> it may be useful to parse blobs into device trees after boot time. =A0For
->> instance, a PCIe device may have an FPGA which includes a device
->> tree. =A0This set of patches locally refactors the existing code to enab=
-le
->> this. =A0 The code has been compile-tested on X86 but has not been run i=
-n this
->> version. =A0However, the patch is rather straightforward.
->>
->> Stephen Neuendorffer (3):
->> =A0fdt.c: Add non-boottime device tree functions
->> =A0fdt.c: Refactor unflatten_dt_node
->> =A0fdt.c: Refactor unflatten_device_tree and add fdt_unflatten_tree
->>
->> drivers/of/fdt.c =A0 =A0 =A0 | =A0393 +++++++++++++++++++++++++++++-----=
---------------
->> include/linux/of_fdt.h | =A0 11 ++
->> 2 files changed, 251 insertions(+), 153 deletions(-)
->
-> It would be really nice if we could factor some of the live tree code int=
-o a library. =A0I have some need for this in another context.
+> > > +
+> > > +DTC = $(objtree)/scripts/dtc/dtc
+> > > +
+> > > +quiet_cmd_dtc = DTC	$@
+> > Please avoid tabs in the output - all other uses spaces. (There is a tab between DTC and $@)
+> > 
+> > > +      cmd_dtc = $(DTC) -O dtb -o $(obj)/$*.dtb -b 0 $(DTS_FLAGS) $(src)/dts/$*.dts
+> > 
+> > Looks strange. How about:
+> >       cmd_dtc = $(DTC) -O dtb -o $@ -b 0 $(DTS_FLAGS) $<
+> > 
+> > Then you avoid the hardcoded path in the rule too.
+> > 
+> > 
+> > > +
+> > > +$(obj)/%.dtb: $(src)/dts/%.dts
+> > > +	$(call if_changed,dtc)
+> 
+> The rule should be generic (not depend on the presence of a dts
+> subdirectory.  Basically, the .dtb really should be generated in the
+> same directory as the .dts file.  There is no reason for this rule to
+> have special behaviour.
+> 
+> > 
+> > This snippet belong in the file that uses this.
+> > This is how we do for other rules like bzip etc.
+> 
+> This rule is intended to be generic and usable anywhere in the tree.
+I understand this.
+But only few people will recognize this so they see something like this:
 
-I've got no problem with that if someone wants to do the legwork
+obj-y := foo.dtb.o
 
-> Not sure if we could actually build libfdt and link it into the kernel di=
-rectly rather than what we do today.
+And they look for a file named foo.dtb.S or foo.dtb.c.
 
-No reason why not, but it would mean refactoring all of the early init stuf=
-f.
+If we spell it out then we have a better chance to allow
+people to understand the relation ships between the files.
 
-g.
+
+If we really want to hide this in scipts/Makefile.* then Makefile.build
+is the logical places to do so.
+Makefile.lib is supposed to be stuff that is relavent for more than
+one Makefile in scripts/* but it has unfortunately also grown
+some of the boot support stuff.
+
+Today there is a single rule related to _shipped files.
+We should not fill it up with additional rules - put them
+Makefile.build if we really want to avoid them in boot/Makefile.
+
+	Sam
