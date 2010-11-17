@@ -1,81 +1,56 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] of/fdt: add kernel command line option for dtb_compat
-	string
-Date: Tue, 16 Nov 2010 17:12:09 -0700
-Message-ID: <AANLkTinwGh3HsLCfnfLLBHpu8UTy69JEYG17rkBn4nW4@mail.gmail.com>
-References: <cover.1289877715.git.dirk.brandewie@gmail.com>
-	<bdb6f333aea69accf3ca3e74c1f01da0a8587aee.1289877715.git.dirk.brandewie@gmail.com>
-	<20101116063253.GB4074@angua.secretlab.ca> <4CE28C32.3020807@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/5] of/fdt: add kernel command line option for dtb_compat string
+Date: Tue, 16 Nov 2010 17:16:14 -0700
+Message-ID: <AANLkTik2TP_DUWstn_qmq1oz4HaPHqkoGkN5f1oUiHQa@mail.gmail.com>
+References: <cover.1289943240.git.dirk.brandewie@gmail.com> <348d48851a244bbd60bbfc4d60bee330e5c91eae.1289943240.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4CE28C32.3020807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arjan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <348d48851a244bbd60bbfc4d60bee330e5c91eae.1289943240.git.dirk.brandewie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dirk.brandewie@gmail.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, sodaville@linutronix.de, microblaze-uclinux@itee.uq.edu.au, arjan@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 16, 2010 at 6:50 AM, Dirk Brandewie
-<dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/15/2010 10:32 PM, Grant Likely wrote:
->>
->> On Mon, Nov 15, 2010 at 08:01:21PM -0800, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>> +{
->>> + =A0 =A0 =A0 void *rc =3D NULL;
->>> + =A0 =A0 =A0 unsigned long root, size;
->>> + =A0 =A0 =A0 struct boot_param_header =A0*orig_initial_boot_params;
->>> + =A0 =A0 =A0 uint8_t *blob;
->>
->> blob should be a void* here. =A0It is never used as a uint8.
->>
+On Tue, Nov 16, 2010 at 3:41 PM,  <dirk.brandewie@gmail.com> wrote:
+> From: Dirk Brandewie <dirk.brandewie@gmail.com>
 >
-> I used uint8_t prevent compiler warning when blob is compared to __dtb_end
+> Adds a kernel command line option "dtb_compat=3D<string>" and functio=
+ns
+> for architecture/platform specific code to retrieve the command line
+> string and locate the compatible DTB linked into the kernel
 >
-
-okay
-
->>> +{
->>> + =A0 =A0 =A0 strncpy(dtb_compat_name, line, MAX_DTB_COMPAT_STR);
->>> + =A0 =A0 =A0 return 1;
->>> +}
->>
->> I don't remember getting a response about whether or not
->> of_find_compatible_dtb can be called directly from dtb_compat_setup.
->> Doing so would eliminate the arbitrary MAX_DTB_COMPAT_STR because
->> there would be no need to keep around a copy of dtb_compat_name. =A0It
->> also means that of_find_compatible_dtb() can be restricted to the file
->> scope.
->>
->> Is there a use-case for calling of_find_compatible_dtb() anywhere
->> other than in dtb_compat_setup?
->>
+> of_flat_dt_get_dtb_compatible_string() returns a pointer string passe=
+d
+> from the command line or a pointer to an empty string.
 >
-> The use case for having these functions exposed is allowing the platfrom
-> code decide the policy for which dtb will be used in the case where a dtb
-> might have been passed in by the boot loader. These functions can be used=
- as
-> a fallback if a dtb was not passed in or to override of the passed in dtb=
- by
-> the platform code.
+> of_flat_dt_find_compatible_dtb() returns a pointer to a DTB that is
+> compatible with the "compatible" string or a NULL pointer if no
+> matching DTB is present.
+>
+> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
+> ---
+[...]
+> +void __init *of_flat_dt_find_compatible_dtb(char *name)
+> +{
+> + =A0 =A0 =A0 void *rc =3D NULL;
+> + =A0 =A0 =A0 unsigned long root, size;
+> + =A0 =A0 =A0 struct boot_param_header =A0*orig_initial_boot_params;
+> + =A0 =A0 =A0 uint8_t *blob;
+> +
+> + =A0 =A0 =A0 orig_initial_boot_params =3D initial_boot_params;
+> + =A0 =A0 =A0 blob =3D __dtb_start;
+> + =A0 =A0 =A0 initial_boot_params =3D (struct boot_param_header *)blo=
+b;
+> +
+> + =A0 =A0 =A0 while (blob < __dtb_end &&
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 (be32_to_cpu(initial_boot_params->magic=
+) =3D=3D OF_DT_HEADER)) {
 
-Still this all looks very generic, even across architectures.  I say
-don't export the functions for now, and change it later if a use case
-shows up that requires it.  I'd really rather not let platform code
-muck about with it directly if there isn't a use case for it.
-
-However, thinking about it further.  You also need to make sure this
-code is excluded for the powerpc and microblaze architectures because
-the kernel command line is passed via the device tree blob in those
-cases.  By that time it gets called, it is too late to switch the
-device tree pointer.
+The kernel needs to complain *loudly* if this occurs because it
+represents a bug.  I'm tempted to say use BUG, but that would halt the
+kernel and prevent any possibility of kernel log output.  WARN_ON() is
+probably best.
 
 g.
