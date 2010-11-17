@@ -1,12 +1,16 @@
-From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Subject: Re: [PATCH 0/7] Various OF fixes for little-endian and ARM
-Date: Wed, 17 Nov 2010 11:07:06 +1100
-Message-ID: <20101117110706.74ea16df.sfr@canb.auug.org.au>
-References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 1/7] OF: make drivers depend on CONFIG_OF instead
+	ofCONFIG_PPC_OF
+Date: Tue, 16 Nov 2010 16:07:05 -0800
+Message-ID: <64244dc8-4564-42e1-802b-ae1a939ef3b6@SG2EHSMHS003.ehs.local>
+References: <1289939635-30742-1-git-send-email-robherring2@gmail.com><1289939635-30742-2-git-send-email-robherring2@gmail.com><20101116204058.GA5016@angua.secretlab.ca>
+	<20101117105945.64b3b656.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4296008808650335411=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1289939635-30742-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Class: urn:content-classes:message
+In-Reply-To: <20101117105945.64b3b656.sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,79 +20,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============4296008808650335411==
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA1";
- boundary="Signature=_Wed__17_Nov_2010_11_07_06_+1100_Jytv82HdiKqH5TIJ"
 
---Signature=_Wed__17_Nov_2010_11_07_06_+1100_Jytv82HdiKqH5TIJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
+> -----Original Message-----
+> From:
+devicetree-discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlaKREJ1Ck/qmQ@public.gmane.org
+org [mailto:devicetree-
+> discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On
+Behalf Of Stephen Rothwell
+> Sent: Tuesday, November 16, 2010 4:00 PM
+> To: Rob Herring
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Rob Herring
+> Subject: Re: [PATCH 1/7] OF: make drivers depend on CONFIG_OF instead
+ofCONFIG_PPC_OF
+> 
+> Hi Mitch,
+> 
+> On Tue, 16 Nov 2010 13:40:58 -0700 Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> >
+> > On Tue, Nov 16, 2010 at 02:33:49PM -0600, Rob Herring wrote:
+> > > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > >
+> > > Some OF drivers could likely be used on non-powerpc OF based
+platforms,
+> > > so fix the kconfig depends to be CONFIG_OF instead of
+CONFIG_PPC_OF
+> > >
+> > > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >
+> > Which of these drivers are you actually using, or going to use in
+the
+> > near future?
+> 
+> And have you made sure that you haven't broken the allmodconfig builds
+on
+> other architectures that enable CONFIG_OF?
 
-On Tue, 16 Nov 2010 14:33:48 -0600 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->=20
-> This is a mixture of driver fixes for OF on little-endian and ARM platfor=
-ms.
->=20
-> The last 2 patches need more thought. Currently, it's just copied from PP=
-C. There=20
-> are some ARM platforms which set 64-bit dma_masks (iop13xx and orion5x)
-> which is not handled. I would think 64-bit PPC would have a similar issue.
->=20
-> Rob Herring (7):
->   OF: make drivers depend on CONFIG_OF instead of CONFIG_PPC_OF
->   of: Fixes for OF probing on little endian systems
->   ipmi: explicitly include of_address.h and of_irq.h
->   mmc: sdhci-of: fix build on non-powerpc platforms
->   mmc: sdhci-of: support generic OF controllers
->   ARM: add dma_mask to pdev_archdata
->   OF: set dma_mask for ARM
+In general, is there an easy way to do this?  I can easily see a
+difficult to bound testing
+problem here, that might benefit from a build farm.
 
-I think you need to change the order of these patches so that the fixes
-for the bugs exposed by allowing the building of these drivers on other
-platforms are before the patch that allows the building.
+Steve
 
---=20
-Cheers,
-Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
-http://www.canb.auug.org.au/~sfr/
-
---Signature=_Wed__17_Nov_2010_11_07_06_+1100_Jytv82HdiKqH5TIJ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQEcBAEBAgAGBQJM4xyqAAoJEDMEi1NhKgbsP2MIAJfBLKHy2qHCchUC4BKyJPxB
-75ZI9IKRemXnSjL1mD1jWodDYUrIT+4mr5PejD0KVeZsrqlS4KPSZyFjafM9fenB
-v89Ukx1diW2222pxVq3byGkCob0UDNTJ0BKftPjpM5WX19xzfn9/dXA/WWL25LAk
-221rqNxXSaXwqf3WcWXUu5DMQ3p1OdeOPRxMcDbwaFMFUxgibJgSFA8dse6l/KMl
-OQDwPfBGL9LOYRPUzsSIOvulYToRQQ9LybUp9K8OkPgSH1daQlowhoGsCw/3DKnQ
-CdG3bVL8LkFChRFjLnH4stnRS3ICpr5UpTNrp255ZdDFTzT8HMiD89sSmyMWx4U=
-=ACJe
------END PGP SIGNATURE-----
-
---Signature=_Wed__17_Nov_2010_11_07_06_+1100_Jytv82HdiKqH5TIJ--
-
---===============4296008808650335411==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4296008808650335411==--
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
