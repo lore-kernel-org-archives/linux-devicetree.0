@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] of: Fixes for OF probing on little endian systems
-Date: Tue, 16 Nov 2010 22:23:31 -0700
-Message-ID: <20101117052331.GA12813@angua.secretlab.ca>
+Subject: Re: [PATCH 3/7] ipmi: explicitly include of_address.h and of_irq.h
+Date: Tue, 16 Nov 2010 22:23:44 -0700
+Message-ID: <20101117052344.GB12813@angua.secretlab.ca>
 References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
-	<1289939635-30742-3-git-send-email-robherring2@gmail.com>
+	<1289939635-30742-4-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1289939635-30742-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1289939635-30742-4-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,73 +23,33 @@ To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 16, 2010 at 02:33:50PM -0600, Rob Herring wrote:
+On Tue, Nov 16, 2010 at 02:33:51PM -0600, Rob Herring wrote:
 > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Fixes for sdhci-of and ipmi drivers.
-> 
-> Auditing all drivers using of_get_property did not find other
-> occurrences likely to be used on LE platforms.
+> of_address.h and of_irq.h are implicitly included on powerpc. Adding
+> them fixes builds on non-powerpc platforms.
 > 
 > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Merged, thanks.
-
-g.
+merged, thanks.
 
 > ---
->  drivers/char/ipmi/ipmi_si_intf.c |    8 ++++----
->  drivers/mmc/host/sdhci-of-core.c |    4 ++--
->  2 files changed, 6 insertions(+), 6 deletions(-)
+>  drivers/char/ipmi/ipmi_si_intf.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
 > diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-> index 1b33a42..8842044 100644
+> index 8842044..51b33cf 100644
 > --- a/drivers/char/ipmi/ipmi_si_intf.c
 > +++ b/drivers/char/ipmi/ipmi_si_intf.c
-> @@ -2546,7 +2546,7 @@ static int __devinit ipmi_of_probe(struct platform_device *dev,
->  {
->  	struct smi_info *info;
->  	struct resource resource;
-> -	const int *regsize, *regspacing, *regshift;
-> +	const __be32 *regsize, *regspacing, *regshift;
->  	struct device_node *np = dev->dev.of_node;
->  	int ret;
->  	int proplen;
-> @@ -2599,9 +2599,9 @@ static int __devinit ipmi_of_probe(struct platform_device *dev,
+> @@ -69,6 +69,8 @@
+>  #ifdef CONFIG_OF
+>  #include <linux/of_device.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+>  #endif
 >  
->  	info->io.addr_data	= resource.start;
->  
-> -	info->io.regsize	= regsize ? *regsize : DEFAULT_REGSIZE;
-> -	info->io.regspacing	= regspacing ? *regspacing : DEFAULT_REGSPACING;
-> -	info->io.regshift	= regshift ? *regshift : 0;
-> +	info->io.regsize	= regsize ? be32_to_cpup(regsize) : DEFAULT_REGSIZE;
-> +	info->io.regspacing	= regspacing ? be32_to_cpup(regspacing) : DEFAULT_REGSPACING;
-> +	info->io.regshift	= regshift ? be32_to_cpup(regshift) : 0;
->  
->  	info->irq		= irq_of_parse_and_map(dev->dev.of_node, 0);
->  	info->dev		= &dev->dev;
-> diff --git a/drivers/mmc/host/sdhci-of-core.c b/drivers/mmc/host/sdhci-of-core.c
-> index c51b711..fa19d84 100644
-> --- a/drivers/mmc/host/sdhci-of-core.c
-> +++ b/drivers/mmc/host/sdhci-of-core.c
-> @@ -122,7 +122,7 @@ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
->  	struct sdhci_of_data *sdhci_of_data = match->data;
->  	struct sdhci_host *host;
->  	struct sdhci_of_host *of_host;
-> -	const u32 *clk;
-> +	const __be32 *clk;
->  	int size;
->  	int ret;
->  
-> @@ -166,7 +166,7 @@ static int __devinit sdhci_of_probe(struct platform_device *ofdev,
->  
->  	clk = of_get_property(np, "clock-frequency", &size);
->  	if (clk && size == sizeof(*clk) && *clk)
-> -		of_host->clock = *clk;
-> +		of_host->clock = be32_to_cpup(clk);
->  
->  	ret = sdhci_add_host(host);
->  	if (ret)
+>  #define PFX "ipmi_si: "
 > -- 
 > 1.7.1
 > 
