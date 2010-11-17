@@ -1,44 +1,61 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: [PATCH V2 0/3] at24: parse OF-data
-Date: Wed, 17 Nov 2010 13:00:47 +0100
-Message-ID: <1289995250-17927-1-git-send-email-w.sang@pengutronix.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/3] misc: at24: add more sanity checks for parameters
+Date: Wed, 17 Nov 2010 13:00:49 +0100
+Message-ID: <1289995250-17927-3-git-send-email-w.sang@pengutronix.de>
+References: <1289995250-17927-1-git-send-email-w.sang@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: devicetree-discuss@ozlabs.org
-Cc: linuxppc-dev@ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1289995250-17927-1-git-send-email-w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Here is the second round of this series:
+Side-effects happen when passing 0 to either io_limit or page_size. Give
+an error in case of this misconfiguration.
 
-* 1/3 now uses __be32 instead of u32.
-* 2/3 is new and adds some more sanity checks
-* 3/3 is unchanged
+Signed-off-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/misc/eeprom/at24.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-Grant, I hope you can pick 2/3 as well. Should make things easier and it is
-just a misc-driver (which I maintain) :)
-
-Wolfram Sang (3):
-  misc: at24: parse OF-data, too
-  misc: at24: add more sanity checks for parameters
-  powerpc: pcm030/032: add pagesize to dts
-
- Documentation/powerpc/dts-bindings/eeprom.txt |   28 ++++++++++++++++
- arch/powerpc/boot/dts/pcm030.dts              |    1 +
- arch/powerpc/boot/dts/pcm032.dts              |    3 +-
- drivers/misc/eeprom/at24.c                    |   43 +++++++++++++++++++++---
- 4 files changed, 68 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/eeprom.txt
-
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 3a53efc..ab1ad41 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -517,6 +517,11 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (!is_power_of_2(chip.byte_len))
+ 		dev_warn(&client->dev,
+ 			"byte_len looks suspicious (no power of 2)!\n");
++	if (!chip.page_size) {
++		dev_err(&client->dev, "page_size must not be 0!\n");
++		err = -EINVAL;
++		goto err_out;
++	}
+ 	if (!is_power_of_2(chip.page_size))
+ 		dev_warn(&client->dev,
+ 			"page_size looks suspicious (no power of 2)!\n");
+@@ -681,6 +686,11 @@ static struct i2c_driver at24_driver = {
+ 
+ static int __init at24_init(void)
+ {
++	if (!io_limit) {
++		pr_err("at24: io_limit must not be 0!\n");
++		return -EINVAL;
++	}
++
+ 	io_limit = rounddown_pow_of_two(io_limit);
+ 	return i2c_add_driver(&at24_driver);
+ }
 -- 
 1.7.2.3
