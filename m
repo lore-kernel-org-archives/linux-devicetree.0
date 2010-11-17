@@ -1,13 +1,11 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/3] fdt.c: Add non-boottime device tree functions
-Date: Wed, 17 Nov 2010 11:15:43 -0800
-Message-ID: <17453aae-47e7-4b69-b7f4-b4577456c637@VA3EHSMHS001.ehs.local>
-References: <1290021345-4303-1-git-send-email-stephen.neuendorffer@xilinx.com>
+Subject: [PATCH 0/3] Add fdt_unflatten_tree
+Date: Wed, 17 Nov 2010 11:15:42 -0800
+Message-ID: <5ca1cf50-4bc4-45ce-87d2-c499d981449b@VA3EHSMHS008.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1290021345-4303-1-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,192 +18,21 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation for providing run-time handling of device trees, factor
-out some of the basic functions so that they take an arbitrary blob,
-rather than relying on the single boot-time tree.
+	Currently, fdt blobs are handled solely at boot time.  However,
+it may be useful to parse blobs into device trees after boot time.  For
+instance, a PCIe device may have an FPGA which includes a device
+tree.  This set of patches locally refactors the existing code to enable
+this.   The code has been compile-tested on X86 but has not been run in this
+version.  However, the patch is rather straightforward.
 
-Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/fdt.c       |  129 ++++++++++++++++++++++++++++++-----------------
- include/linux/of_fdt.h |    9 +++
- 2 files changed, 91 insertions(+), 47 deletions(-)
+Stephen Neuendorffer (3):
+  fdt.c: Add non-boottime device tree functions
+  fdt.c: Refactor unflatten_dt_node
+  fdt.c: Refactor unflatten_device_tree and add fdt_unflatten_tree
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c1360e0..6ae207a 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -22,6 +22,86 @@
- 
- #include <asm/page.h>
- 
-+char *fdt_get_string(u32 offset,
-+			  struct boot_param_header *blob)
-+{
-+	return ((char *)blob) +
-+		be32_to_cpu(blob->off_dt_strings) + offset;
-+}
-+
-+/**
-+ * of_get_flat_dt_prop_blob - Given a node in the given flat blob, return
-+ * the property ptr
-+ *
-+ * This function can be used within scan_flattened_dt callback to get
-+ * access to properties
-+ */
-+void *fdt_get_property(unsigned long node, const char *name,
-+				 unsigned long *size,
-+				 struct boot_param_header *blob)
-+{
-+	unsigned long p = node;
-+
-+	do {
-+		u32 tag = be32_to_cpup((__be32 *)p);
-+		u32 sz, noff;
-+		const char *nstr;
-+
-+		p += 4;
-+		if (tag == OF_DT_NOP)
-+			continue;
-+		if (tag != OF_DT_PROP)
-+			return NULL;
-+
-+		sz = be32_to_cpup((__be32 *)p);
-+		noff = be32_to_cpup((__be32 *)(p + 4));
-+		p += 8;
-+		if (be32_to_cpu(blob->version) < 0x10)
-+			p = ALIGN(p, sz >= 8 ? 8 : 4);
-+
-+		nstr = fdt_get_string(noff, blob);
-+		if (nstr == NULL) {
-+			pr_warning("Can't find property index name !\n");
-+			return NULL;
-+		}
-+		if (strcmp(name, nstr) == 0) {
-+			if (size)
-+				*size = sz;
-+			return (void *)p;
-+		}
-+		p += sz;
-+		p = ALIGN(p, 4);
-+	} while (1);
-+}
-+
-+/**
-+ * fdt_is_compatible - Return true if given node from the given blob has
-+ * compat in its compatible list
-+ * @node: node to test
-+ * @compat: compatible string to compare with compatible list.
-+ * @blob: A device tree blob
-+ */
-+int fdt_is_compatible(unsigned long node, const char *compat,
-+				 struct boot_param_header *blob)
-+{
-+	const char *cp;
-+	unsigned long cplen, l;
-+
-+	cp = fdt_get_property(node, "compatible", &cplen, blob);
-+	if (cp == NULL)
-+		return 0;
-+	while (cplen > 0) {
-+		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-+			return 1;
-+		l = strlen(cp) + 1;
-+		cp += l;
-+		cplen -= l;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Everything below here references initial_boot_params directly. */
- int __initdata dt_root_addr_cells;
- int __initdata dt_root_size_cells;
- 
-@@ -121,38 +201,7 @@ unsigned long __init of_get_flat_dt_root(void)
- void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
- 				 unsigned long *size)
- {
--	unsigned long p = node;
--
--	do {
--		u32 tag = be32_to_cpup((__be32 *)p);
--		u32 sz, noff;
--		const char *nstr;
--
--		p += 4;
--		if (tag == OF_DT_NOP)
--			continue;
--		if (tag != OF_DT_PROP)
--			return NULL;
--
--		sz = be32_to_cpup((__be32 *)p);
--		noff = be32_to_cpup((__be32 *)(p + 4));
--		p += 8;
--		if (be32_to_cpu(initial_boot_params->version) < 0x10)
--			p = ALIGN(p, sz >= 8 ? 8 : 4);
--
--		nstr = find_flat_dt_string(noff);
--		if (nstr == NULL) {
--			pr_warning("Can't find property index name !\n");
--			return NULL;
--		}
--		if (strcmp(name, nstr) == 0) {
--			if (size)
--				*size = sz;
--			return (void *)p;
--		}
--		p += sz;
--		p = ALIGN(p, 4);
--	} while (1);
-+	return fdt_get_property(node, name, size, initial_boot_params);
- }
- 
- /**
-@@ -162,21 +211,7 @@ void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
-  */
- int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
- {
--	const char *cp;
--	unsigned long cplen, l;
--
--	cp = of_get_flat_dt_prop(node, "compatible", &cplen);
--	if (cp == NULL)
--		return 0;
--	while (cplen > 0) {
--		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
--			return 1;
--		l = strlen(cp) + 1;
--		cp += l;
--		cplen -= l;
--	}
--
--	return 0;
-+	return fdt_is_compatible(node, compat, initial_boot_params);
- }
- 
- static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 7bbf5b3..864ec47 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -58,6 +58,15 @@ struct boot_param_header {
- };
- 
- #if defined(CONFIG_OF_FLATTREE)
-+/* For scanning an arbitrary device-tree at any time */
-+extern char *fdt_get_string(u32 offset,
-+			    struct boot_param_header *blob);
-+extern void *fdt_get_property(unsigned long node, const char *name,
-+			      unsigned long *size,
-+			      struct boot_param_header *blob);
-+extern int fdt_is_compatible(unsigned long node, const char *name,
-+			     struct boot_param_header *blob);
-+
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
- extern int __initdata dt_root_size_cells;
--- 
-1.5.6.6
+ drivers/of/fdt.c       |  393 +++++++++++++++++++++++++++++-------------------
+ include/linux/of_fdt.h |   11 ++
+ 2 files changed, 251 insertions(+), 153 deletions(-)
 
 
 
