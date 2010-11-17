@@ -1,72 +1,54 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 7/7] OF: set dma_mask for ARM
-Date: Tue, 16 Nov 2010 22:24:48 -0700
-Message-ID: <20101117052448.GC12813@angua.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 4/7] mmc: sdhci-of: fix build on non-powerpc platforms
+Date: Tue, 16 Nov 2010 22:32:18 -0700
+Message-ID: <20101117053218.GD12813@angua.secretlab.ca>
 References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
-	<1289939635-30742-8-git-send-email-robherring2@gmail.com>
+ <1289939635-30742-5-git-send-email-robherring2@gmail.com>
+ <20101116214409.GC19893@pengutronix.de>
+ <4CE30710.6050302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1289939635-30742-8-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <4CE30710.6050302@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 16, 2010 at 02:33:55PM -0600, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Tue, Nov 16, 2010 at 04:34:56PM -0600, Rob Herring wrote:
+> On 11/16/2010 03:44 PM, Wolfram Sang wrote:
+> >On Tue, Nov 16, 2010 at 02:33:52PM -0600, Rob Herring wrote:
+> >>From: Rob Herring<rob.herring@calxeda.com>
+> >>
+> >>Explicitly include err.h, of_address.h and of_irq.h.
+> >>Make use of machine_is() conditional on PPC.
+> >>
+> >>Signed-off-by: Rob Herring<rob.herring@calxeda.com>
+> >
+> >Hmm, sins of the past :/ I wonder if we can get away with less #ifdeffery, will
+> >think about it...
+> >
 > 
-> Various drivers require dma_mask to be valid, so it needs to be setup
-> when doing OF probing on ARM.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> I don't want to start a long debate, but is updating a kernel
+> without updating the dtb really something to worry about?
 
-I'll let patches 6 & 7 lay fallow for the moment.  I'm not hugely fond
-of the powerpc approach (which microblaze copies), but I haven't had a
-chance to look for a better solution.
+Yes, once a .dtb is merged we try very hard not to break it.  It may
+need to be updated to enable more features, but the goal is to not
+regress.  One of the reason being that firmware may provide a default,
+but old, dtb and it is important to still be able to boot on those
+systems, even if the dtb is immediately going to be updated.
+
+That's one of the reasons why it is so important to document and
+review bindings up front and make sure they make sense before we
+commit to them.
+
+That being said, there are other ways to deal with old dtbs, like
+fixing up the data at platform setup time.
+
+> Isn't a year enough of a transition period.
+
+No.
 
 g.
 
-> ---
->  drivers/of/platform.c |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 5b4a07f..fe2669a 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -614,7 +614,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  	}
->  
->  	dev->dev.of_node = of_node_get(np);
-> -#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE)
-> +#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE) || defined(CONFIG_ARM)
->  	dev->dev.dma_mask = &dev->archdata.dma_mask;
->  #endif
->  	dev->dev.parent = parent;
-> @@ -644,7 +644,7 @@ struct platform_device *of_platform_device_create(struct device_node *np,
->  	if (!dev)
->  		return NULL;
->  
-> -#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE)
-> +#if defined(CONFIG_PPC) || defined(CONFIG_MICROBLAZE) || defined(CONFIG_ARM)
->  	dev->archdata.dma_mask = 0xffffffffUL;
->  #endif
->  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> -- 
-> 1.7.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
