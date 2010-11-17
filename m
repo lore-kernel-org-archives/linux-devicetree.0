@@ -1,14 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: Request module by alias in of_i2c.c
-Date: Tue, 16 Nov 2010 23:24:12 -0700
-Message-ID: <20101117062412.GK12813@angua.secretlab.ca>
-References: <1289947334-14375-1-git-send-email-ddaney@caviumnetworks.com>
+From: John Bonesio <bones-RkXMcIGFT/TR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] scripts: dtc: Merge in changes from the dtc repository
+Date: Tue, 16 Nov 2010 22:29:55 -0800
+Message-ID: <4CE37663.2080806@bonesio.net>
+References: <20101116204917.12146.39851.stgit@riker>	<20101116204951.12146.21084.stgit@riker>
+	<AANLkTinYZYR_QtS5-Nodpaf2MBBuaw06SW9pDCNQ9ov3@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1289947334-14375-1-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <AANLkTinYZYR_QtS5-Nodpaf2MBBuaw06SW9pDCNQ9ov3-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,63 +18,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 16, 2010 at 02:42:14PM -0800, David Daney wrote:
-> If we are registering an i2c device that has a device tree node like
-> this real-world example:
-> 
->       rtc@68 {
->         compatible = "dallas,ds1337";
->         reg = <0x68>;
->       };
-> 
-> of_i2c_register_devices() will try to load a module called ds1337.ko.
-> There is no such module, so it will fail.  If we look in modules.alias
-> we will find entries like these:
-> 
-> .
-> .
-> .
-> alias i2c:ds1339 rtc_ds1307
-> alias i2c:ds1338 rtc_ds1307
-> alias i2c:ds1337 rtc_ds1307
-> alias i2c:ds1307 rtc_ds1307
-> alias i2c:ds1374 rtc_ds1374
-> .
-> .
-> .
-> 
-> The module we want is really called rtc_ds1307.ko.  If we request a
-> module called "i2c:ds1337", the userspace module loader will do the
-> right thing (unless it is busybox) and load rtc_ds1307.ko.  So we add
-> the I2C_MODULE_PREFIX to the request_module() string.
-> 
-> Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Arg!
 
-Applied, thanks.
+I had this working. I'll look into it.
 
-g.
+- John
 
-> ---
->  drivers/of/of_i2c.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> index c85d3c7..f37fbeb 100644
-> --- a/drivers/of/of_i2c.c
-> +++ b/drivers/of/of_i2c.c
-> @@ -61,7 +61,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  		info.of_node = of_node_get(node);
->  		info.archdata = &dev_ad;
->  
-> -		request_module("%s", info.type);
-> +		request_module("%s%s", I2C_MODULE_PREFIX, info.type);
->  
->  		result = i2c_new_device(adap, &info);
->  		if (result == NULL) {
-> -- 
-> 1.7.2.3
-> 
+On 11/16/2010 10:11 PM, Grant Likely wrote:
+> On Tue, Nov 16, 2010 at 1:49 PM, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> Pull in recent changes from the main dtc repository. These changes primarily
+>> allow multiple device trees to be declared which are merged by dtc. This
+>> feature allows us to include a basic dts file and then provide more information
+>> for the specific system through the merging functionality.
+>>
+>> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> ---
+>>
+>>  0 files changed, 0 insertions(+), 0 deletions(-)
+> ???  Something isn't right in patch generation.
+>
+> Also:
+>
+> ~/hacking/linux-2.6$ xc-6xx make -j3
+>   GEN     /home/grant/hacking/linux-2.6.build/6xx/Makefile
+>   HOSTCC  scripts/kconfig/zconf.tab.o
+>   HOSTLD  scripts/kconfig/conf
+> scripts/kconfig/conf --silentoldconfig Kconfig
+> #
+> # configuration written to .config
+> #
+>   GEN     /home/grant/hacking/linux-2.6.build/6xx/Makefile
+>   CHK     include/linux/version.h
+>   UPD     include/linux/version.h
+>   HOSTCC  scripts/dtc/checks.o
+> In file included from /home/grant/hacking/linux-2.6/scripts/dtc/checks.c:21:
+> /home/grant/hacking/linux-2.6/scripts/dtc/dtc.h:37: fatal error:
+> util.h: No such file or directory
+> compilation terminated.
+> make[3]: *** [scripts/dtc/checks.o] Error 1
+> make[2]: *** [scripts/dtc] Error 2
+> make[1]: *** [scripts] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [sub-make] Error 2
+> (devicetree/test) ~/hacking/linux-2.6$
+>
+> Looks like the updated dtc is broken.
+>
+> g.
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
