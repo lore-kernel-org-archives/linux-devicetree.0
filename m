@@ -1,16 +1,14 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] of/phylib: Use device tree properties to initialize
-	Marvell PHYs.
-Date: Thu, 18 Nov 2010 15:48:38 -0800
-Message-ID: <4CE5BB56.4040605@caviumnetworks.com>
-References: <1290038071-13296-1-git-send-email-ddaney@caviumnetworks.com>
-	<1290038071-13296-2-git-send-email-ddaney@caviumnetworks.com>
-	<20101118204036.GA16908@angua.secretlab.ca>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/7] fdt: Add Kconfig for EARLY_FLATTREE
+Date: Thu, 18 Nov 2010 15:54:56 -0800
+Message-ID: <d43cf8d1-8821-4400-9c58-692846dd37ac@SG2EHSMHS005.ehs.local>
+References: <1290021345-4303-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-1-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101118204036.GA16908-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <1290124502-13125-1-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,68 +18,104 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Cyril Chemparathy <cyril-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2010 12:40 PM, Grant Likely wrote:
-> On Wed, Nov 17, 2010 at 03:54:30PM -0800, David Daney wrote:
->> Some aspects of PHY initialization are board dependent, things like
->> indicator LED connections and some clocking modes cannot be determined
->> by probing.  The dev_flags element of struct phy_device can be used to
->> control these things if an appropriate value can be passed from the
->> Ethernet driver.  We run into problems however if the PHY connections
->> are specified by the device tree.  There is no way for the Ethernet
->> driver to know what flags it should pass.
->>
->> If we are using the device tree, the struct phy_device will be
->> populated with the device tree node corresponding to the PHY, and we
->> can extract extra configuration information from there.
->>
->> The next question is what should the format of that information be?
->> It is highly device specific, and the device tree representation
->> should not be tied to any arbitrary kernel defined constants.  A
->> straight forward representation is just to specify the exact bits that
->> should be set using the "marvell,reg-init" property:
->>
->>        phy5: ethernet-phy@5 {
->> 	reg =<5>;
->> 	device_type = "ethernet-phy";
->
-> Some notes:
-> - device_type is only relevant for real openfirmware platforms.  It
->    should not appear in dts files.
+The device tree code is now in two pieces: some which can be used generically
+on any platform which selects CONFIG_OF_FLATTREE, and some early which is used
+at boot time on only a few architectures.  This patch segregates the early
+code so that only those architectures which care about it need compile it.
+This also means that some of the requirements in the early code (such as
+a cmd_line variable) that most architectures (e.g. X86) don't provide
+can be ignored.
 
-Documentation/powerpc/dts-bindings/phy.txt says device_type should be 
-here.  I can remove it from my patch comment, but should it also be 
-removed from the phy.txt file?
+Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-> - This example phy node needs a compatible property
+----
 
-Ok, what would you suggest?  Something like:
+Grant,
+We had discussed doing something like this a loooong time ago.  This (or at
+least some other way of dealing with cmd_line) is
+actually necessary to compile on X86.  Do you still want to do it this way?
+Looking at my old email, you suggested only powerpc and microblaze need this.
+Is that still the case?
 
-      compatible = "marvell,88e1145";
+Conflicts:
 
-I can certainly do that, but I would note that the kernel probes these 
-things and would completely ignore the compatible property.
+	drivers/of/fdt.c
+---
+ arch/microblaze/Kconfig |    1 +
+ arch/powerpc/Kconfig    |    1 +
+ drivers/of/Kconfig      |    5 +++++
+ drivers/of/fdt.c        |    4 ++++
+ 4 files changed, 11 insertions(+), 0 deletions(-)
 
-> - This new binding needs to be documented.  You can use devicetree.org.
->
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index 692fdfc..384375c 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -20,6 +20,7 @@ config MICROBLAZE
+ 	select TRACING_SUPPORT
+ 	select OF
+ 	select OF_FLATTREE
++	select OF_EARLY_FLATTREE
+ 
+ config SWAP
+ 	def_bool n
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 631e5a0..2cd7b32 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -119,6 +119,7 @@ config PPC
+ 	default y
+ 	select OF
+ 	select OF_FLATTREE
++	select OF_EARLY_FLATTREE
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_DYNAMIC_FTRACE
+ 	select HAVE_FUNCTION_TRACER
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index aa675eb..0199157 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -19,6 +19,10 @@ config OF_FLATTREE
+ 	bool
+ 	select DTC
+ 
++config OF_EARLY_FLATTREE
++	bool
++	depends on OF_FLATTREE
++
+ config OF_PROMTREE
+ 	bool
+ 
+@@ -62,3 +66,4 @@ config OF_MDIO
+ 	  OpenFirmware MDIO bus (Ethernet PHY) accessors
+ 
+ endmenu # OF
++
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index c1360e0..4d71b29 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -27,6 +27,8 @@ int __initdata dt_root_size_cells;
+ 
+ struct boot_param_header *initial_boot_params;
+ 
++#ifdef CONFIG_EARLY_FLATTREE
++
+ char *find_flat_dt_string(u32 offset)
+ {
+ 	return ((char *)initial_boot_params) +
+@@ -604,3 +606,5 @@ void __init unflatten_device_tree(void)
+ 
+ 	pr_debug(" <- unflatten_device_tree()\n");
+ }
++
++#endif /* CONFIG_EARLY_FLATTREE */
+-- 
+1.5.6.6
 
-Agreed, I was planning to do that once the patch was approved.
-
-Where would that go?  Vendor:Marvell, or Type:PHY/compatible=marvell,* 
-... or somewhere else?
-
->> 	marvell,reg-init =
->> 		<0x00030010 0x5777>, /* Reg 3,16<- 0x5777 */
->> 		<0x00030011 0x00aa>, /* Reg 3,17<- 0x00aa */
->> 		<0x00030012 0x4105>, /* Reg 3,18<- 0x4105 */
->> 		<0x00030013 0x0060>; /* Reg 3,19<- 0x0060 */
->> 		<0x00020015 0x00300000>; /* clear bits 4..5 of Reg 2,21 */
->>        };
->>
 
 
-Thanks,
-David Daney
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
