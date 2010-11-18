@@ -1,15 +1,18 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/7] arch/x86: Add support for device tree code.
-Date: Thu, 18 Nov 2010 15:54:57 -0800
-Message-ID: <98608b2e-d138-4dc0-808d-3662ab2c9938@VA3EHSMHS025.ehs.local>
+Subject: [PATCH 5/7] fdt.c: Refactor unflatten_dt_node
+Date: Thu, 18 Nov 2010 15:55:00 -0800
+Message-ID: <e5face75-4978-4686-9d75-d92fa9ec7328@VA3EHSMHS013.ehs.local>
 References: <1290021345-4303-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1290124502-13125-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1290124502-13125-2-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-3-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-4-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-5-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1290124502-13125-2-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1290124502-13125-5-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,51 +25,101 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A few support device-tree related support functions that x86 didn't
-have before.
+unflatten_dt_node is a helper function that does most of the work to
+convert a device tree blob into tree of device nodes.  This code
+now uses a passed-in blob instead of using the single boot-time blob,
+allowing it to be called in more contexts.
 
 Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-----
-
-Looks like just some irq related junk left!
 ---
- arch/x86/include/asm/irq.h |    2 ++
- arch/x86/kernel/irq.c      |   11 +++++++++++
- 2 files changed, 13 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
-index 5458380..af4e630 100644
---- a/arch/x86/include/asm/irq.h
-+++ b/arch/x86/include/asm/irq.h
-@@ -10,6 +10,8 @@
- #include <asm/apicdef.h>
- #include <asm/irq_vectors.h>
- 
-+#define irq_dispose_mapping(...)
-+
- static inline int irq_canonicalize(int irq)
- {
- 	return ((irq == 2) ? 9 : irq);
-diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-index 91fd0c7..a3aaed4 100644
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -364,3 +364,14 @@ void fixup_irqs(void)
- 	}
+V2: don't reorder
+    blob argument first.
+---
+ drivers/of/fdt.c |   27 ++++++++++++++++-----------
+ 1 files changed, 16 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 190e26c..a07fd1a 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -206,7 +206,7 @@ int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
+ 	return of_fdt_is_compatible(initial_boot_params, node, compat);
  }
- #endif
-+
-+#ifdef CONFIG_OF
-+#include <linux/of_irq.h>
-+unsigned int irq_create_of_mapping(struct device_node *controller,
-+				   const u32 *intspec, unsigned int intsize)
-+{
-+	return intspec[0] + 1;
-+}
-+EXPORT_SYMBOL_GPL(irq_create_of_mapping);
-+
-+#endif
+ 
+-static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
++static void *unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+ 				       unsigned long align)
+ {
+ 	void *res;
+@@ -220,16 +220,18 @@ static void *__init unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+ 
+ /**
+  * unflatten_dt_node - Alloc and populate a device_node from the flat tree
++ * @blob: The parent device tree blob
+  * @p: pointer to node in flat tree
+  * @dad: Parent struct device_node
+  * @allnextpp: pointer to ->allnext from last allocated device_node
+  * @fpsize: Size of the node path up at the current depth.
+  */
+-unsigned long __init unflatten_dt_node(unsigned long mem,
+-					unsigned long *p,
+-					struct device_node *dad,
+-					struct device_node ***allnextpp,
+-					unsigned long fpsize)
++unsigned long unflatten_dt_node(struct boot_param_header *blob,
++				unsigned long mem,
++				unsigned long *p,
++				struct device_node *dad,
++				struct device_node ***allnextpp,
++				unsigned long fpsize)
+ {
+ 	struct device_node *np;
+ 	struct property *pp, **prev_pp = NULL;
+@@ -325,10 +327,10 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		sz = be32_to_cpup((__be32 *)(*p));
+ 		noff = be32_to_cpup((__be32 *)((*p) + 4));
+ 		*p += 8;
+-		if (be32_to_cpu(initial_boot_params->version) < 0x10)
++		if (be32_to_cpu(blob->version) < 0x10)
+ 			*p = ALIGN(*p, sz >= 8 ? 8 : 4);
+ 
+-		pname = of_fdt_get_string(initial_boot_params, noff);
++		pname = of_fdt_get_string(blob, noff);
+ 		if (pname == NULL) {
+ 			pr_info("Can't find property name in list !\n");
+ 			break;
+@@ -407,7 +409,8 @@ unsigned long __init unflatten_dt_node(unsigned long mem,
+ 		if (tag == OF_DT_NOP)
+ 			*p += 4;
+ 		else
+-			mem = unflatten_dt_node(mem, p, np, allnextpp, fpsize);
++			mem = unflatten_dt_node(blob, mem, p, np, allnextpp,
++						fpsize);
+ 		tag = be32_to_cpup((__be32 *)(*p));
+ 	}
+ 	if (tag != OF_DT_END_NODE) {
+@@ -599,7 +602,8 @@ void __init unflatten_device_tree(void)
+ 	/* First pass, scan for size */
+ 	start = ((unsigned long)initial_boot_params) +
+ 		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	size = unflatten_dt_node(0, &start, NULL, NULL, 0);
++	size = unflatten_dt_node(initial_boot_params, 0, &start,
++				 NULL, NULL, 0);
+ 	size = (size | 3) + 1;
+ 
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -616,7 +620,8 @@ void __init unflatten_device_tree(void)
+ 	/* Second pass, do actual unflattening */
+ 	start = ((unsigned long)initial_boot_params) +
+ 		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	unflatten_dt_node(mem, &start, NULL, &allnextp, 0);
++	unflatten_dt_node(initial_boot_params, mem, &start,
++			  NULL, &allnextp, 0);
+ 	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
+ 		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
+ 	if (be32_to_cpu(((__be32 *)mem)[size / 4]) != 0xdeadbeef)
 -- 
 1.5.6.6
 
