@@ -1,14 +1,21 @@
 From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/7] fdt: Add Kconfig for EARLY_FLATTREE
-Date: Thu, 18 Nov 2010 15:54:56 -0800
-Message-ID: <d43cf8d1-8821-4400-9c58-692846dd37ac@SG2EHSMHS005.ehs.local>
+Subject: [PATCH 7/7] fdt.c: Refactor unflatten_device_tree and add
+	fdt_unflatten_tree
+Date: Thu, 18 Nov 2010 15:55:02 -0800
+Message-ID: <8aead437-fb77-4e72-8b66-2b1626f6316d@SG2EHSMHS008.ehs.local>
 References: <1290021345-4303-1-git-send-email-stephen.neuendorffer@xilinx.com>
 	<1290124502-13125-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-2-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-3-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-4-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-5-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-6-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-7-git-send-email-stephen.neuendorffer@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1290124502-13125-1-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1290124502-13125-7-git-send-email-stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,98 +28,230 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The device tree code is now in two pieces: some which can be used generically
-on any platform which selects CONFIG_OF_FLATTREE, and some early which is used
-at boot time on only a few architectures.  This patch segregates the early
-code so that only those architectures which care about it need compile it.
-This also means that some of the requirements in the early code (such as
-a cmd_line variable) that most architectures (e.g. X86) don't provide
-can be ignored.
+unflatten_device_tree has two dependencies on things that happen
+during boot time.  Firstly, it references the initial device tree
+directly. Secondly, it allocates memory using the early boot
+allocator.  This patch factors out these dependencies and uses
+the new __unflatten_device_tree function to implement a driver-visible
+fdt_unflatten_tree function, which can be used to unflatten a
+blob after boot time.
 
 Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-----
+--
 
-Grant,
-We had discussed doing something like this a loooong time ago.  This (or at
-least some other way of dealing with cmd_line) is
-actually necessary to compile on X86.  Do you still want to do it this way?
-Looking at my old email, you suggested only powerpc and microblaze need this.
-Is that still the case?
-
-Conflicts:
-
-	drivers/of/fdt.c
+V2: remove extra __va() call
+	 make dt_alloc functions return void *.  This doesn't fix the general
+    strangeness in this code that constantly casts back and forth between
+    unsigned long and __be32 *
 ---
- arch/microblaze/Kconfig |    1 +
- arch/powerpc/Kconfig    |    1 +
- drivers/of/Kconfig      |    5 +++++
- drivers/of/fdt.c        |    4 ++++
- 4 files changed, 11 insertions(+), 0 deletions(-)
+ drivers/of/fdt.c       |  149 +++++++++++++++++++++++++++++++----------------
+ include/linux/of_fdt.h |    2 +
+ 2 files changed, 100 insertions(+), 51 deletions(-)
 
-diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-index 692fdfc..384375c 100644
---- a/arch/microblaze/Kconfig
-+++ b/arch/microblaze/Kconfig
-@@ -20,6 +20,7 @@ config MICROBLAZE
- 	select TRACING_SUPPORT
- 	select OF
- 	select OF_FLATTREE
-+	select OF_EARLY_FLATTREE
- 
- config SWAP
- 	def_bool n
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 631e5a0..2cd7b32 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -119,6 +119,7 @@ config PPC
- 	default y
- 	select OF
- 	select OF_FLATTREE
-+	select OF_EARLY_FLATTREE
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_FUNCTION_TRACER
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index aa675eb..0199157 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -19,6 +19,10 @@ config OF_FLATTREE
- 	bool
- 	select DTC
- 
-+config OF_EARLY_FLATTREE
-+	bool
-+	depends on OF_FLATTREE
-+
- config OF_PROMTREE
- 	bool
- 
-@@ -62,3 +66,4 @@ config OF_MDIO
- 	  OpenFirmware MDIO bus (Ethernet PHY) accessors
- 
- endmenu # OF
-+
 diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c1360e0..4d71b29 100644
+index 236a8c9..e29dbe2 100644
 --- a/drivers/of/fdt.c
 +++ b/drivers/of/fdt.c
-@@ -27,6 +27,8 @@ int __initdata dt_root_size_cells;
+@@ -11,10 +11,12 @@
  
- struct boot_param_header *initial_boot_params;
+ #include <linux/kernel.h>
+ #include <linux/initrd.h>
++#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/string.h>
+ #include <linux/errno.h>
++#include <linux/slab.h>
  
-+#ifdef CONFIG_EARLY_FLATTREE
-+
- char *find_flat_dt_string(u32 offset)
- {
- 	return ((char *)initial_boot_params) +
-@@ -604,3 +606,5 @@ void __init unflatten_device_tree(void)
- 
- 	pr_debug(" <- unflatten_device_tree()\n");
+ #ifdef CONFIG_PPC
+ #include <asm/machdep.h>
+@@ -312,6 +314,94 @@ unsigned long unflatten_dt_node(struct boot_param_header *blob,
+ 	return mem;
  }
+ 
++/**
++ * __unflatten_device_tree - create tree of device_nodes from flat blob
++ *
++ * unflattens a device-tree, creating the
++ * tree of struct device_node. It also fills the "name" and "type"
++ * pointers of the nodes so the normal device-tree walking functions
++ * can be used.
++ * @blob: The blob to expand
++ * @mynodes: The device_node tree created by the call
++ * @dt_alloc: An allocator that provides a virtual address to memory
++ * for the resulting tree
++ */
++void __unflatten_device_tree(struct boot_param_header *blob,
++			     struct device_node **mynodes,
++			     void * (*dt_alloc)(u64 size, u64 align))
++{
++	unsigned long start, mem, size;
++	struct device_node **allnextp = mynodes;
 +
-+#endif /* CONFIG_EARLY_FLATTREE */
++	pr_debug(" -> unflatten_device_tree()\n");
++
++	if (!blob) {
++		pr_debug("No device tree pointer\n");
++		return;
++	}
++
++	pr_debug("Unflattening device tree:\n");
++	pr_debug("magic: %08x\n", be32_to_cpu(blob->magic));
++	pr_debug("size: %08x\n", be32_to_cpu(blob->totalsize));
++	pr_debug("version: %08x\n", be32_to_cpu(blob->version));
++
++	if (be32_to_cpu(blob->magic) != OF_DT_HEADER) {
++		pr_err("Invalid device tree blob header\n");
++		return;
++	}
++
++	/* First pass, scan for size */
++	start = ((unsigned long)blob) +
++		be32_to_cpu(blob->off_dt_struct);
++	size = unflatten_dt_node(blob, 0, &start, NULL, NULL, 0);
++	size = (size | 3) + 1;
++
++	pr_debug("  size is %lx, allocating...\n", size);
++
++	/* Allocate memory for the expanded device tree */
++	mem = (unsigned long)
++		dt_alloc(size + 4, __alignof__(struct device_node));
++
++	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
++
++	pr_debug("  unflattening %lx...\n", mem);
++
++	/* Second pass, do actual unflattening */
++	start = ((unsigned long)blob) +
++		be32_to_cpu(blob->off_dt_struct);
++	unflatten_dt_node(blob, mem, &start, NULL, &allnextp, 0);
++	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
++		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
++	if (be32_to_cpu(((__be32 *)mem)[size / 4]) != 0xdeadbeef)
++		pr_warning("End of tree marker overwritten: %08x\n",
++			   be32_to_cpu(((__be32 *)mem)[size / 4]));
++	*allnextp = NULL;
++
++	pr_debug(" <- unflatten_device_tree()\n");
++}
++
++static void *kernel_tree_alloc(u64 size, u64 align)
++{
++	return kzalloc(size, GFP_KERNEL);
++}
++
++/**
++ * of_fdt_unflatten_tree - create tree of device_nodes from flat blob
++ *
++ * unflattens the device-tree passed by the firmware, creating the
++ * tree of struct device_node. It also fills the "name" and "type"
++ * pointers of the nodes so the normal device-tree walking functions
++ * can be used.
++ */
++void of_fdt_unflatten_tree(unsigned long *blob,
++			struct device_node **mynodes)
++{
++	struct boot_param_header *device_tree =
++		(struct boot_param_header *)blob;
++	__unflatten_device_tree(device_tree, mynodes, &kernel_tree_alloc);
++}
++EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
++
+ /* Everything below here references initial_boot_params directly. */
+ int __initdata dt_root_addr_cells;
+ int __initdata dt_root_size_cells;
+@@ -569,6 +659,12 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 	return 1;
+ }
+ 
++static void *__init early_device_tree_alloc(u64 size, u64 align)
++{
++	unsigned long mem = early_init_dt_alloc_memory_arch(size, align);
++	return __va(mem);
++}
++
+ /**
+  * unflatten_device_tree - create tree of device_nodes from flat blob
+  *
+@@ -579,62 +675,13 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+  */
+ void __init unflatten_device_tree(void)
+ {
+-	unsigned long start, mem, size;
+-	struct device_node **allnextp = &allnodes;
+-
+-	pr_debug(" -> unflatten_device_tree()\n");
+-
+-	if (!initial_boot_params) {
+-		pr_debug("No device tree pointer\n");
+-		return;
+-	}
+-
+-	pr_debug("Unflattening device tree:\n");
+-	pr_debug("magic: %08x\n", be32_to_cpu(initial_boot_params->magic));
+-	pr_debug("size: %08x\n", be32_to_cpu(initial_boot_params->totalsize));
+-	pr_debug("version: %08x\n", be32_to_cpu(initial_boot_params->version));
+-
+-	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+-		pr_err("Invalid device tree blob header\n");
+-		return;
+-	}
+-
+-	/* First pass, scan for size */
+-	start = ((unsigned long)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	size = unflatten_dt_node(initial_boot_params, 0, &start,
+-				 NULL, NULL, 0);
+-	size = (size | 3) + 1;
+-
+-	pr_debug("  size is %lx, allocating...\n", size);
+-
+-	/* Allocate memory for the expanded device tree */
+-	mem = early_init_dt_alloc_memory_arch(size + 4,
+-			__alignof__(struct device_node));
+-	mem = (unsigned long) __va(mem);
+-
+-	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
+-
+-	pr_debug("  unflattening %lx...\n", mem);
+-
+-	/* Second pass, do actual unflattening */
+-	start = ((unsigned long)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	unflatten_dt_node(initial_boot_params, mem, &start,
+-			  NULL, &allnextp, 0);
+-	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
+-		pr_warning("Weird tag at end of tree: %08x\n", *((u32 *)start));
+-	if (be32_to_cpu(((__be32 *)mem)[size / 4]) != 0xdeadbeef)
+-		pr_warning("End of tree marker overwritten: %08x\n",
+-			   be32_to_cpu(((__be32 *)mem)[size / 4]));
+-	*allnextp = NULL;
++	__unflatten_device_tree(initial_boot_params, &allnodes,
++				early_device_tree_alloc);
+ 
+ 	/* Get pointer to OF "/chosen" node for use everywhere */
+ 	of_chosen = of_find_node_by_path("/chosen");
+ 	if (of_chosen == NULL)
+ 		of_chosen = of_find_node_by_path("/chosen@0");
+-
+-	pr_debug(" <- unflatten_device_tree()\n");
+ }
+ 
+ #endif /* CONFIG_EARLY_FLATTREE */
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 70c5b73..9ce5dfd 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -68,6 +68,8 @@ extern void *of_fdt_get_property(struct boot_param_header *blob,
+ extern int of_fdt_is_compatible(struct boot_param_header *blob,
+ 				unsigned long node,
+ 				const char *compat);
++extern void of_fdt_unflatten_tree(unsigned long *blob,
++			       struct device_node **mynodes);
+ 
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+ extern int __initdata dt_root_addr_cells;
 -- 
 1.5.6.6
 
