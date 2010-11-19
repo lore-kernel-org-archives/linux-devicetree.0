@@ -1,18 +1,20 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] of/phylib: Use device tree properties to
-	initialize Marvell PHYs.
-Date: Thu, 18 Nov 2010 17:39:29 -0700
-Message-ID: <20101119003929.GA18558@angua.secretlab.ca>
-References: <1290038071-13296-1-git-send-email-ddaney@caviumnetworks.com>
-	<1290038071-13296-2-git-send-email-ddaney@caviumnetworks.com>
-	<20101118204036.GA16908@angua.secretlab.ca>
-	<4CE5BB56.4040605@caviumnetworks.com>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 3/3] x86: OLPC: speed up device tree creation during
+	boot (v2)
+Date: Fri, 19 Nov 2010 12:24:12 -0800
+Message-ID: <20101119122412.630da426@queued.net>
+References: <20101111214546.4e573cad@queued.net> <reply-olpc-3-v2@mdm.bga.com>
+	<20101112002704.50c629e2@queued.net>
+	<20101114095013.GB24206@elte.hu> <4CE0B54E.6000101@zytor.com>
+	<20101115070254.GA25243@elte.hu> <4CE17133.2050101@zytor.com>
+	<20101118083420.GC26398@elte.hu>
+	<1290078135.22575.4.camel@concordia> <4CE54064.6010702@zytor.com>
+	<20101118094153.4515cbc2@queued.net> <4CE5670B.1060300@zytor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4CE5BB56.4040605-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <4CE5670B.1060300-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,72 +24,49 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Cyril Chemparathy <cyril-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>
+To: "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ingo Molnar <mingo-X9Un+BFzKDI@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 18, 2010 at 03:48:38PM -0800, David Daney wrote:
-> On 11/18/2010 12:40 PM, Grant Likely wrote:
-> >On Wed, Nov 17, 2010 at 03:54:30PM -0800, David Daney wrote:
-> >>Some aspects of PHY initialization are board dependent, things like
-> >>indicator LED connections and some clocking modes cannot be determined
-> >>by probing.  The dev_flags element of struct phy_device can be used to
-> >>control these things if an appropriate value can be passed from the
-> >>Ethernet driver.  We run into problems however if the PHY connections
-> >>are specified by the device tree.  There is no way for the Ethernet
-> >>driver to know what flags it should pass.
+On Thu, 18 Nov 2010 09:48:59 -0800
+"H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org> wrote:
+
+> On 11/18/2010 09:41 AM, Andres Salomon wrote:
 > >>
-> >>If we are using the device tree, the struct phy_device will be
-> >>populated with the device tree node corresponding to the PHY, and we
-> >>can extract extra configuration information from there.
-> >>
-> >>The next question is what should the format of that information be?
-> >>It is highly device specific, and the device tree representation
-> >>should not be tied to any arbitrary kernel defined constants.  A
-> >>straight forward representation is just to specify the exact bits that
-> >>should be set using the "marvell,reg-init" property:
-> >>
-> >>       phy5: ethernet-phy@5 {
-> >>	reg =<5>;
-> >>	device_type = "ethernet-phy";
-> >
-> >Some notes:
-> >- device_type is only relevant for real openfirmware platforms.  It
-> >   should not appear in dts files.
+> >> No, sorry, this sounds like a personal preference that is well out
+> >> of line with the vast majority of C programmers I've ever come
+> >> across, not just in the Linux kernel world but outside of it.
+> > 
+> > 
+> > This is actually one of the reasons I specifically like initialized
+> > static variables (inside of functions).  Take the following code:
+> > 
+> > int foo(void)
+> > {
+> > 	static char *frob = NULL;
+> > 	int p;
+> > 
+> > 	if (frob) {
+> > 		...
+> > 	}
+> > 
+> > 
+> > Upon seeing that and thinking "whoa, how could frob be
+> > initialized and then checked?", I realize that it's either a bug or
+> > I look back at the initialization and realize that frob is static.
+> > It's less obvious (to me) with non-explicit initialization.
 > 
-> Documentation/powerpc/dts-bindings/phy.txt says device_type should
-> be here.  I can remove it from my patch comment, but should it also
-> be removed from the phy.txt file?
-
-Heh, I didn't realize it was there.  Yes, it should be removed from
-the phy.txt file.  It is clearly wrong.
-
+> I have to agree with this one.  In general I dislike relying on an
+> implicit (even well-defined) initialized value; unfortunately we
+> ripped out explicit initializations across the Linux kernel, not due
+> to readability but due to the fact that long-since-obsolete versions
+> of gcc would put explicitly-initialized variables in data rather than
+> bss even if the initial value is zero.
 > 
-> >- This example phy node needs a compatible property
+> 	-hpa
 > 
-> Ok, what would you suggest?  Something like:
 > 
->      compatible = "marvell,88e1145";
 
-Yes.
-
-> 
-> I can certainly do that, but I would note that the kernel probes
-> these things and would completely ignore the compatible property.
-
-That's okay.
-
-> 
-> >- This new binding needs to be documented.  You can use devicetree.org.
-> >
-> 
-> Agreed, I was planning to do that once the patch was approved.
-> 
-> Where would that go?  Vendor:Marvell, or
-> Type:PHY/compatible=marvell,* ... or somewhere else?
-
-The page name should be compatible=marvell,88e1145, and it should be
-have the vendor and type tags added so it appears in the category
-pages.
-
-g.
+Note that I sent another update for this patch the other day
+(Tuesday).  It uses implicit initialization.  Some Acks would be
+awesome if folks are happy w/ the way I've done things..  ;)
