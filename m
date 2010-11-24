@@ -1,33 +1,27 @@
-From: Thomas Chou <thomas@wytron.com.tw>
-Subject: [PATCH] of/mips: fix fdt size as be32
-Date: Wed, 24 Nov 2010 15:35:48 +0800
-Message-ID: <1290584148-23111-1-git-send-email-thomas@wytron.com.tw>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, ralf@linux-mips.org, grant.likely@secretlab.ca, David Daney <ddaney@caviumnetworks.com>, Dezhong Diao <dediao@cisco.com>, Thomas Chou <thomas@wytron.com.tw>
+From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH] of/mips: fix fdt size as be32
+Date: Wed, 24 Nov 2010 12:01:42 +0000
+Message-ID: <20101124120140.GA31923@linux-mips.org>
+References: <1290584148-23111-1-git-send-email-thomas@wytron.com.tw>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1290584148-23111-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The totalsize field was be32. And the reserve bootmem would cause
-failure.
+Thanks, applied!
 
-Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
----
- arch/mips/kernel/prom.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index e000b27..9dbe583 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -100,7 +100,7 @@ void __init device_tree_init(void)
- 		return;
- 
- 	base = virt_to_phys((void *)initial_boot_params);
--	size = initial_boot_params->totalsize;
-+	size = be32_to_cpu(initial_boot_params->totalsize);
- 
- 	/* Before we do anything, lets reserve the dt blob */
- 	reserve_mem_mach(base, size);
--- 
-1.7.3.2
+  Ralf
