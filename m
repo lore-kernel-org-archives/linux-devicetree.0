@@ -1,41 +1,26 @@
-From: Jon Loeliger <jdl@jdl.com>
-Subject: Re: [PATCH 04/11] x86/dtb: add irq host abstraction
-Date: Thu, 25 Nov 2010 13:30:27 -0600
-Message-ID: <E1PLhWV-0004y7-44@jdl.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de> <1290706801-7323-5-git-send-email-bigeasy@linutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1290706801-7323-5-git-send-email-bigeasy@linutronix.de> 
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: RFC: Mega rename of device tree routines from of_*() to dt_*()
+Date: Fri, 26 Nov 2010 07:52:04 +1100
+Message-ID: <1290718324.32570.127.camel@pasglop>
+References: <1290607413.12457.44.camel@concordia>
+	 <1290692075.689.20.camel@concordia>
+	 <AANLkTim9fPPWO-240dmavng+j=70G8Y4P-+j3Y+OZTL0@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <AANLkTim9fPPWO-240dmavng+j=70G8Y4P-+j3Y+OZTL0@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: michael@ellerman.id.au, linux-arch <linux-arch@vger.kernel.org>, linux-mips <linux-mips@linux-mips.org>, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> The here introduced irq_host abstraction represents a generic irq_host.
-> The xlate callback is resposible to parse irq informations like irq type
-> and number and returns the hardware irq number which is reported by the
-> hardware as active.
+On Thu, 2010-11-25 at 15:01 +0100, Geert Uytterhoeven wrote:
+> 
+> I always read it as "for each child-OF-node", so I would rename it to
+> "dt_for_each_child_node".
 
-> [...]
+Well, it was meant to be for_child_of_node not _OF_node :-)
 
-> diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include/asm/irq
-> _controller.h
-> new file mode 100644
-> index 0000000..1cbbfd0
-> --- /dev/null
-> +++ b/arch/x86/include/asm/irq_controller.h
-> @@ -0,0 +1,12 @@
-> +#ifndef __IRQ_CONTROLLER__
-> +#define __IRQ_CONTROLLER__
-> +
-> +struct irq_host {
-> +	int (*xlate)(struct irq_host *h, const u32 *intspec, u32 intsize,
-> +			u32 *out_hwirq, u32 *out_type);
-> +	void *priv;
-> +	struct device_node *controller;
-> +	struct list_head l;
-> +};
-
-I thought there was an intent and desire to rename the irq_host
-as irq_domain.
-
-jdl
+Cheers,
+Ben.
