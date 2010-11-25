@@ -1,90 +1,202 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Mega rename of device tree routines from of_*() to dt_*()
-Date: Wed, 24 Nov 2010 10:32:11 -0800
-Message-ID: <ee487d0b-ec9d-42a9-9c8e-39f83858cffc@SG2EHSMHS007.ehs.local>
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: RFC: Mega rename of device tree routines from of_*() to dt_*()
+Date: Fri, 26 Nov 2010 00:34:35 +1100
+Message-ID: <1290692075.689.20.camel@concordia>
 References: <1290607413.12457.44.camel@concordia>
-	<fa44e045-9600-4c46-939a-af246afab4f6@VA3EHSMHS019.ehs.local>
-	<4CED48CE.5060300@caviumnetworks.com>
+Reply-To: michael@ellerman.id.au
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <4CED48CE.5060300-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-p+YKHuejsCezzEZWkj0c"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1290607413.12457.44.camel@concordia>
+Sender: linux-arch-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: linux-mips <linux-mips@linux-mips.org>, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev list <linuxppc-dev@ozlabs.org>, sparclinux@vger.kernel.org, linux-arch <linux-arch@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--=-p+YKHuejsCezzEZWkj0c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: David Daney [mailto:ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org]
-> Sent: Wednesday, November 24, 2010 9:18 AM
-> To: Stephen Neuendorffer
-> Cc: michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org; LKML; linux-mips; microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org; devicetree-
-> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linuxppc-dev list; sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: Mega rename of device tree routines from of_*() to dt_*()
-> 
-> On 11/24/2010 09:02 AM, Stephen Neuendorffer wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: linuxppc-dev-bounces+stephen=neuendorffer.name-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org [mailto:linuxppc-dev-
-> >> bounces+stephen=neuendorffer.name-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Michael Ellerman
-> >> Sent: Wednesday, November 24, 2010 6:04 AM
-> >> To: LKML
-> >> Cc: linux-mips; microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linuxppc-
-> dev
-> >> list; sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Subject: RFC: Mega rename of device tree routines from of_*() to dt_*()
-> >>
-> >> Hi all,
-> >>
-> >> There were some murmurings on IRC last week about renaming the of_*()
-> >> routines. I was procrastinating at the time and said I'd have a look at
-> >> it, so here I am.
-> >>
-> >> The thinking is that on many platforms that use the of_() routines
-> >> OpenFirmware is not involved at all, this is true even on many powerpc
-> >> platforms. Also for folks who don't know the OpenFirmware connection it
-> >> reads as "of", as in "a can of worms".
-> >>
-> >> Personally I'm a bit ambivalent about it, the OF name is a bit wrong so
-> >> it would be nice to get rid of, but it's a lot of churn.
-> >>
-> >> So I'm hoping people with either say "YES this is a great idea", or "NO
-> >> this is stupid".
-> >
-> > Personally, I think it's a great idea, if only because I stared long and hard
-> > at the code once upon a time trying to figure out what is really OF-related
-> > and what isn't.  It's somewhat clearer now that drivers/of has been factored
-> > out (although, shouldn't it be drivers/dt???)
-> >
-> > That said, it *is* alot of code churn.  If it's going to be done, I think it should be
-> > done in concert with fixing a bunch of the function names which don't really follow any
-> > sane naming convention, so that the backporting discontinuity only happens once.
-> >
-> 
-> Oh, you mean things like:
-> 
-> of_{,un}register_platform_driver vs. platform_driver_{,un}register
-> 
-> That one is particularly annoying to me.
-> 
-> David Daney
+On Thu, 2010-11-25 at 01:03 +1100, Michael Ellerman wrote:
+> Hi all,
+>=20
+> There were some murmurings on IRC last week about renaming the of_*()
+> routines.
+...
+> The thinking is that on many platforms that use the of_() routines
+> OpenFirmware is not involved at all, this is true even on many powerpc
+> platforms. Also for folks who don't know the OpenFirmware connection
+> it reads as "of", as in "a can of worms".
+...
+> So I'm hoping people with either say "YES this is a great idea", or "NO
+> this is stupid".
 
-Actually, I was particularly thinking of drivers/of/fdt.c, which I was recently hacking around with,
-but I'm sure there are others... :)
+I'm still hoping, but so far it seems most people have got better things
+to do, and of those that do have an opinion the balance is slightly
+positive.
 
-Steve
+So here's a first cut of a patch to add the new names. I've not touched
+of_platform because that is supposed to go away. That will lead to some
+odd looking code in the interim, but I think is the right approach.
 
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+Most of these are straight renames, but some have changed more
+substantially. The routines for the flat tree have all become fdt_foo().
+I'd be inclined to drop "early_init" from them too, because they're
+basically all about early init, but Grant said he'd prefer not to I
+think. I've also renamed the flat tree tag constants to match libfdt.
+
+I've left for_each_child_of_node(), because I read it as "of", but maybe
+it's "OF"?
+
+cheers
+
+#ifndef __DT_H
+#define __DT_H
+
+/* include/linux/device.h */
+#define dt_match_table			of_match_table
+#define dt_node				of_node
+
+/* include/linux/mod_devicetable.h */
+#define dt_device_id			of_device_id
+
+/* include/linux/of.h */
+#define dt_node_to_nid			of_node_to_nid
+#define dt_chosen			of_chosen
+#define dt_node_is_root			of_node_is_root
+#define dt_node_check_flag		of_node_check_flag
+#define dt_node_set_flag		of_node_set_flag
+#define dt_find_all_nodes		of_find_all_nodes
+#define dt_node_get			of_node_get
+#define dt_node_put			of_node_put
+#define dt_read_number			of_read_number
+#define dt_read_ulong			of_read_ulong
+#define dt_find_node_by_name		of_find_node_by_name
+#define dt_find_node_by_type		of_find_node_by_type
+#define dt_find_compatible_node		of_find_compatible_node
+#define dt_find_matching_node		of_find_matching_node
+#define dt_find_node_by_path		of_find_node_by_path
+#define dt_find_node_by_phandle		of_find_node_by_phandle
+#define dt_get_parent			of_get_parent
+#define dt_get_next_parent		of_get_next_parent
+#define dt_get_next_child		of_get_next_child
+#define dt_find_node_with_property	of_find_node_with_property
+#define dt_device_is_compatible		of_device_is_compatible
+#define dt_device_is_available		of_device_is_available
+#define dt_get_property			of_get_property
+#define dt_n_addr_cells			of_n_addr_cells
+#define dt_n_size_cells			of_n_size_cells
+#define dt_match_node			of_match_node
+#define dt_modalias_node		of_modalias_node
+#define dt_parse_phandle		of_parse_phandle
+#define dt_parse_phandles_with_args	of_parse_phandles_with_args
+#define dt_machine_is_compatible	of_machine_is_compatible
+#define dt_attach_node			of_attach_node
+#define dt_detach_node			of_detach_node
+#define dt_find_property		of_find_property
+
+/* include/linux/of_fdt.h */
+#define fdt_find_string			find_flat_dt_string
+#define fdt_scan			of_scan_flat_dt
+#define fdt_get_prop			of_get_flat_dt_prop
+#define fdt_is_compatible		of_flat_dt_is_compatible
+#define fdt_get_root			of_get_flat_dt_root
+#define fdt_early_init_scan_chosen	early_init_dt_scan_chosen
+#define fdt_early_init_check_for_initrd	early_init_dt_check_for_initrd
+#define fdt_early_init_scan_memory	early_init_dt_scan_memory
+#define fdt_early_init_add_memory_arch	early_init_dt_add_memory_arch
+#define fdt_early_init_alloc_memory_arch early_init_dt_alloc_memory_arch
+#define fdt_early_init_setup_initrd_arch early_init_dt_setup_initrd_arch
+#define fdt_early_init_scan_root	early_init_dt_scan_root
+#define fdt_unflatten			unflatten_device_tree
+#define fdt_early_init			early_init_devtree
+#define FDT_MAGIC			OF_DT_HEADER
+#define FDT_BEGIN_NODE			OF_DT_BEGIN_NODE
+#define FDT_END_NODE			OF_DT_END_NODE
+#define FDT_PROP			OF_DT_PROP
+#define FDT_NOP				OF_DT_NOP
+#define FDT_END				OF_DT_END
+#define FDT_VERSION			OF_DT_VERSION
+
+/* include/linux/of_address.h */
+#define dt_translate_address		of_translate_address
+#define dt_address_to_resource		of_address_to_resource
+#define dt_iomap			of_iomap
+#define dt_get_address			of_get_address
+#define dt_get_pci_address		of_get_pci_address
+#define dt_pci_address_to_resource	of_pci_address_to_resource
+
+/* include/linux/of_device.h */
+#define dt_match_device			of_match_device
+#define dt_device_make_bus_id		of_device_make_bus_id
+#define dt_driver_match_device		of_driver_match_device
+#define dt_dev_get			of_dev_get
+#define dt_dev_put			of_dev_put
+#define dt_device_add			of_device_add
+#define dt_device_register		of_device_register
+#define dt_device_unregister		of_device_unregister
+#define dt_device_get_modalias		of_device_get_modalias
+#define dt_device_uevent		of_device_uevent
+#define dt_device_node_put		of_device_node_put
+
+/* include/linux/of_irq.h */
+#define dt_irq				of_irq
+#define dt_irq_parse_and_map		irq_of_parse_and_map
+#define dt_irq_workarounds		of_irq_workarounds
+#define dt_irq_dflt_pic			of_irq_dflt_pic
+#define dt_irq_map_oldworld		of_irq_map_oldworld
+#define dt_irq_map_raw			of_irq_map_raw
+#define dt_irq_map_one			of_irq_map_one
+#define dt_irq_create_mapping		irq_create_of_mapping
+#define dt_irq_to_resource		of_irq_to_resource
+#define dt_irq_count			of_irq_count
+#define dt_irq_to_resource_table	of_irq_to_resource_table
+#define DT_IRQ_MAX_SPEC			OF_MAX_IRQ_SPEC
+#define DT_IRQ_QUIRK_OLDWORLD_MAC	OF_IMAP_OLDWORLD_MAC
+#define DT_IRQ_QUIRK_NO_PHANDLE		OF_IMAP_NO_PHANDLE
+
+/* include/linux/of_mdio.h */
+#define dt_mdiobus_register		of_mdiobus_register
+#define dt_phy_find_device		of_phy_find_device
+#define dt_phy_connect			of_phy_connect
+#define dt_phy_connect_fixed_link	of_phy_connect_fixed_link
+
+/* include/linux/of_spi.h */
+#define dt_register_spi_devices		of_register_spi_devices
+
+/* include/linux/of_gpio.h */
+#define dt_gpio_flags			of_gpio_flags
+#define DT_GPIO_ACTIVE_LOW		OF_GPIO_ACTIVE_LOW
+#define dt_mm_gpio_chip			of_mm_gpio_chip
+#define to_dt_mm_gpio_chip		to_of_mm_gpio_chip
+#define dt_get_gpio_flags		of_get_gpio_flags
+#define dt_gpio_count			of_gpio_count
+#define dt_mm_gpiochip_add		of_mm_gpiochip_add
+#define dt_gpiochip_add			of_gpiochip_add
+#define dt_gpiochip_remove		of_gpiochip_remove
+#define dt_node_to_gpiochip		of_node_to_gpiochip
+#define dt_get_gpio			of_get_gpio
+
+/* include/linux/dt_i2c.h */
+#define dt_i2c_register_devices		of_i2c_register_devices
+#define dt_find_i2c_device_by_node	of_find_i2c_device_by_node
+
+#endif /* __DT_H */
+
+
+
+
+--=-p+YKHuejsCezzEZWkj0c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAkzuZesACgkQdSjSd0sB4dJHfgCfXCAL6ihrBdiwrq/VSMjHbtLI
+5UIAoI8I60bvedx34OXPBvU5w3BuE5m0
+=JES1
+-----END PGP SIGNATURE-----
+
+--=-p+YKHuejsCezzEZWkj0c--
