@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 08/11] x86/dtb: Add generic bus probe
-Date: Thu, 25 Nov 2010 18:39:58 +0100
-Message-ID: <1290706801-7323-9-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 06/11] x86/dtb: add support hpet
+Date: Thu, 25 Nov 2010 18:39:56 +0100
+Message-ID: <1290706801-7323-7-git-send-email-bigeasy@linutronix.de>
 References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,46 +21,63 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For now we probe these busses and we change is to board dependent probes
-once we have to.
+Set hpet_address based on information provied form DTB
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 CC: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/kernel/prom.c |   19 +++++++++++++++++++
- 1 files changed, 19 insertions(+), 0 deletions(-)
+ arch/x86/kernel/prom.c |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
 diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-index c02777d..bbd6064 100644
+index 9551f2f..f61c541 100644
 --- a/arch/x86/kernel/prom.c
 +++ b/arch/x86/kernel/prom.c
-@@ -102,6 +102,25 @@ void __init add_dtb(u64 data)
+@@ -9,6 +9,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/slab.h>
+ 
++#include <asm/hpet.h>
+ #include <asm/irq_controller.h>
+ #include <asm/io_apic.h>
+ 
+@@ -99,6 +100,27 @@ void __init add_dtb(u64 data)
  				offsetof(struct setup_data, data));
  }
  
-+/*
-+ * CE4100 ids. Will be moved to machine_device_initcall() once we have it.
-+ */
-+static struct of_device_id __initdata ce4100_ids[] = {
-+	{ .type = "soc", },
-+	{ .compatible = "soc", },
-+	{ .compatible = "simple-bus", },
-+	{},
-+};
-+
-+static int __init add_bus_probe(void)
++static int __init early_scan_hpet(unsigned long node, const char *uname,
++				   int depth, void *data)
 +{
-+	if (!initial_boot_params)
++	unsigned long l;
++	int ret;
++	__be32 *cell;
++
++	if (depth != 2)
 +		return 0;
 +
-+	return of_platform_bus_probe(NULL, ce4100_ids, NULL);
-+}
-+module_init(add_bus_probe);
++	ret = of_flat_dt_is_compatible(node, "intel,hpet");
++	if (!ret)
++		return 0;
 +
- static int of_irq_map_pci(struct pci_dev *dev, struct of_irq *oirq)
++	cell = of_get_flat_dt_prop(node, "phys_reg", &l);
++	if (!cell)
++		return 0;
++	hpet_address = of_read_ulong(cell, l / 4);
++	return 1;
++}
++
+ static void __init of_lapic_setup(void)
  {
- 	struct device_node *node;
+ #ifdef CONFIG_X86_LOCAL_APIC
+@@ -195,6 +217,7 @@ void __init x86_early_of_parse(void)
+ 
+ 	/* root level address cells */
+ 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++	of_scan_flat_dt(early_scan_hpet, NULL);
+ 	of_apic_setup();
+ 
+ 	early_iounmap(initial_boot_params, size);
 -- 
 1.7.3.2
