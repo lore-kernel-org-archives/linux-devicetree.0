@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 07/11] x86/dtb: add support for PCI devices backed by dtb nodes
-Date: Thu, 25 Nov 2010 18:39:57 +0100
-Message-ID: <1290706801-7323-8-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 09/11] x86/ioapic: Add OF bindings for IO-APIC
+Date: Thu, 25 Nov 2010 18:39:59 +0100
+Message-ID: <1290706801-7323-10-git-send-email-bigeasy@linutronix.de>
 References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,170 +21,209 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-x86_of_pci_init() does two things:
-- it provides a generic irq enable and disable function. enable queries
-  the device tree for the interrupt information, calls ->xlate on the
-  irq host and updates the pci->irq information for the device.
+ioapic_xlate provides a translation from the information in device tree
+to ioapic related informations. This includes
+- obtaining hw irq which is the vector number "=> pin number + gsi"
+- obtaining type (level/edge/..)
+- programming this information into ioapic
 
-- it walks through PCI buss(es) in the device tree and adds its children
-  (devices) nodes to appropriate pci_dev nodes in kernel. So the dtb
-  node information is available at probe time of the PCI device.
-
-Adding a PCI bus based on the information in the device tree is
-currently not supported. Right now direct access via ioports is used.
+ioapic_add_ofnode adds an irq_host based on informations from the device
+tree. The memory address is obtained from the phys_reg property instead
+of reg. On the PCI bus we use reg property for the PCI address. We can't
+use the PCI functions because we need the ioapic before the PCI bus is
+up. This information (irq_host) is required  in order to map a device to
+its proper interrupt controller.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 CC: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Tested-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/include/asm/prom.h |    1 +
- arch/x86/kernel/prom.c      |  110 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 111 insertions(+), 0 deletions(-)
+ arch/x86/include/asm/io_apic.h |    7 +++
+ arch/x86/kernel/apic/io_apic.c |  100 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/prom.c         |    8 +++
+ 3 files changed, 115 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-index b74a49f..794c6a1 100644
---- a/arch/x86/include/asm/prom.h
-+++ b/arch/x86/include/asm/prom.h
-@@ -28,6 +28,7 @@ extern void init_dtb(void);
- extern void add_dtb(u64 data);
- void x86_early_of_parse(void);
- void add_interrupt_host(struct irq_host *ih);
-+void __cpuinit x86_of_pci_init(void);
- #else
- static inline void init_dtb(void) { }
- static inline void add_dtb(u64 data) { }
+diff --git a/arch/x86/include/asm/io_apic.h b/arch/x86/include/asm/io_apic.h
+index d854b90..dc1169f 100644
+--- a/arch/x86/include/asm/io_apic.h
++++ b/arch/x86/include/asm/io_apic.h
+@@ -175,6 +175,13 @@ struct mp_ioapic_gsi{
+ 	u32 gsi_base;
+ 	u32 gsi_end;
+ };
++#ifdef CONFIG_X86_OF
++struct mp_of_ioapic {
++	struct device_node *node;
++};
++extern struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
++void __init ioapic_add_ofnode(struct device_node *np);
++#endif
+ extern struct mp_ioapic_gsi  mp_gsi_routing[];
+ extern u32 gsi_top;
+ int mp_find_ioapic(u32 gsi);
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index ea51151..27a5709 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -43,6 +43,7 @@
+ #include <linux/bootmem.h>
+ #include <linux/dmar.h>
+ #include <linux/hpet.h>
++#include <linux/of_address.h>
+ 
+ #include <asm/idle.h>
+ #include <asm/io.h>
+@@ -60,6 +61,7 @@
+ #include <asm/irq_remapping.h>
+ #include <asm/hpet.h>
+ #include <asm/hw_irq.h>
++#include <asm/irq_controller.h>
+ 
+ #include <asm/apic.h>
+ 
+@@ -88,6 +90,10 @@ int nr_ioapics;
+ /* IO APIC gsi routing info */
+ struct mp_ioapic_gsi  mp_gsi_routing[MAX_IO_APICS];
+ 
++#ifdef CONFIG_X86_OF
++/* OF -> IO APIC lookup */
++struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
++#endif
+ /* The one past the highest gsi number used */
+ u32 gsi_top;
+ 
+@@ -4052,6 +4058,100 @@ void __init mp_register_ioapic(int id, u32 address, u32 gsi_base)
+ 	nr_ioapics++;
+ }
+ 
++#ifdef CONFIG_X86_OF
++static int ioapic_xlate(struct irq_host *h, const u32 *intspec, u32 intsize,
++		u32 *out_hwirq, u32 *out_type)
++{
++	u32 line;
++	u32 idx;
++	u32 type;
++	u32 trigger;
++	u32 polarity;
++	struct irq_cfg *cfg;
++	struct irq_desc *desc;
++
++	if (intsize < 1)
++		return -EINVAL;
++
++	line = *intspec;
++	idx = (u32) h->priv;
++	*out_hwirq = line + mp_gsi_routing[idx].gsi_base;
++	if (intsize > 1) {
++		intspec++;
++		type = *intspec;
++		switch (type) {
++		case 0:
++			*out_type = IRQ_TYPE_EDGE_RISING;
++			trigger = IOAPIC_EDGE;
++			polarity = 1;
++			break;
++		case 1:
++			*out_type = IRQ_TYPE_LEVEL_LOW;
++			trigger = IOAPIC_LEVEL;
++			polarity = 0;
++			break;
++		case 2:
++			*out_type = IRQ_TYPE_LEVEL_HIGH;
++			trigger = IOAPIC_LEVEL;
++			polarity = 1;
++			break;
++		case 3:
++			*out_type = IRQ_TYPE_EDGE_FALLING;
++			trigger = IOAPIC_EDGE;
++			polarity = 0;
++			break;
++		default:
++			*out_type = IRQ_TYPE_NONE;
++			trigger = IOAPIC_AUTO;
++			polarity = 0;
++			break;
++		};
++	} else {
++		*out_type = IRQ_TYPE_NONE;
++		trigger = IOAPIC_AUTO;
++		polarity = 0;
++	}
++	/* And now tell the IO APIC to make the line ready */
++	desc = irq_to_desc_alloc_node(*out_hwirq, 0);
++	cfg = irq_cfg(*out_hwirq);
++	add_pin_to_irq_node(cfg, 0, idx, line);
++	/* make it edge by default, settype will update it */
++	setup_ioapic_irq(idx, line, *out_hwirq, cfg, trigger, polarity);
++	return 0;
++}
++
++void __init ioapic_add_ofnode(struct device_node *np)
++{
++	int i;
++	const __be32 *prop;
++	u32 addr;
++
++	prop = of_get_property(np, "phys_reg", NULL);
++	if (!prop) {
++		printk(KERN_ERR "IO APIC %s missing phys_reg property.\n",
++				np->full_name);
++		return;
++	}
++	addr = be32_to_cpup(prop);
++
++	for (i = 0; i < nr_ioapics; i++) {
++		if (addr == mp_ioapics[i].apicaddr) {
++			struct irq_host *ih;
++
++			mp_of_ioapic[i].node = np;
++			ih = kzalloc(sizeof(*ih), GFP_KERNEL);
++			BUG_ON(!ih);
++			ih->controller = np;
++			ih->xlate = ioapic_xlate;
++			ih->priv = (void *)i;
++			add_interrupt_host(ih);
++			return;
++		}
++	}
++	printk(KERN_ERR "IO APIC at 0x%08x is not registered.\n", addr);
++}
++#endif
++
+ /* Enable IOAPIC early just for system timer */
+ void __init pre_init_apic_IRQ0(void)
+ {
 diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-index f61c541..c02777d 100644
+index bbd6064..e9ff517 100644
 --- a/arch/x86/kernel/prom.c
 +++ b/arch/x86/kernel/prom.c
-@@ -8,10 +8,12 @@
- #include <linux/of.h>
+@@ -9,9 +9,11 @@
  #include <linux/of_platform.h>
  #include <linux/slab.h>
-+#include <linux/pci.h>
+ #include <linux/pci.h>
++#include <linux/of_fdt.h>
  
  #include <asm/hpet.h>
  #include <asm/irq_controller.h>
++#include <asm/apic.h>
  #include <asm/io_apic.h>
-+#include <asm/pci_x86.h>
+ #include <asm/pci_x86.h>
  
- char __initdata cmd_line[COMMAND_LINE_SIZE];
- static LIST_HEAD(irq_hosts);
-@@ -100,6 +102,114 @@ void __init add_dtb(u64 data)
- 				offsetof(struct setup_data, data));
- }
+@@ -355,8 +357,14 @@ void __init x86_early_of_parse(void)
  
-+static int of_irq_map_pci(struct pci_dev *dev, struct of_irq *oirq)
-+{
-+	struct device_node *node;
-+	__be32 laddr[3];
-+	__be32 lspec[2];
-+	int ret;
-+	u8 pin;
-+
-+	node = dev->dev.of_node;
-+	if (!node) {
-+		node = dev->bus->dev.of_node;
-+		if (node) {
-+			ret = of_irq_map_one(node, 0, oirq);
-+			if (!ret)
-+				return ret;
-+		}
-+	}
-+
-+	ret = pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
-+	if (ret)
-+		return ret;
-+	if (!pin)
-+		return -EINVAL;
-+
-+	laddr[0] = cpu_to_be32((dev->bus->number << 16) | (dev->devfn << 8));
-+	laddr[1] = 0;
-+	laddr[2] = 0;
-+
-+	lspec[0] = cpu_to_be32(pin);
-+	lspec[1] = cpu_to_be32(0);
-+	ret = of_irq_map_raw(node, lspec, 1, laddr, oirq);
-+	if (ret)
-+		return ret;
-+	return 0;
-+}
-+
-+static int x86_of_pci_irq_enable(struct pci_dev *dev)
-+{
-+	struct of_irq oirq;
-+	u32 virq;
-+	int ret;
-+	u8 pin;
-+
-+	ret = pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
-+	if (ret)
-+		return ret;
-+	if (!pin)
-+		return 0;
-+
-+	ret = of_irq_map_pci(dev, &oirq);
-+	if (ret)
-+		return ret;
-+
-+	virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
-+			oirq.size);
-+	if (virq == NO_IRQ)
-+		return -EINVAL;
-+	dev->irq = virq;
-+	return 0;
-+}
-+
-+static void x86_of_pci_irq_disable(struct pci_dev *dev)
-+{
-+}
-+
-+void __cpuinit x86_of_pci_init(void)
-+{
-+	struct device_node *np;
-+
-+	pcibios_enable_irq = x86_of_pci_irq_enable;
-+	pcibios_disable_irq = x86_of_pci_irq_disable;
-+
-+	for_each_node_by_type(np, "pci") {
-+		const void *prop;
-+		struct pci_bus *bus;
-+		unsigned int bus_min;
-+		struct device_node *child;
-+
-+		prop = of_get_property(np, "bus-range", NULL);
-+		if (!prop)
-+			continue;
-+		bus_min = be32_to_cpup(prop);
-+
-+		bus = pci_find_bus(0, bus_min);
-+		if (!bus) {
-+			printk(KERN_ERR "Can't find a node for bus %s.\n",
-+					np->full_name);
-+			continue;
-+		}
-+
-+		bus->dev.of_node = np;
-+		for_each_child_of_node(np, child) {
-+			struct pci_dev *dev;
-+			u32 devfn;
-+
-+			prop = of_get_property(child, "reg", NULL);
-+			if (!prop)
-+				continue;
-+
-+			devfn = (be32_to_cpup(prop) >> 8) & 0xff;
-+			dev = pci_get_slot(bus, devfn);
-+			if (!dev)
-+				continue;
-+			dev->dev.of_node = child;
-+		}
-+	}
-+}
-+
- static int __init early_scan_hpet(unsigned long node, const char *uname,
- 				   int depth, void *data)
+ void __init init_dtb(void)
  {
++	struct device_node *dp;
++
+ 	if (!initial_boot_params)
+ 		return;
+ 
+ 	unflatten_device_tree();
++	for_each_node_by_type(dp, "interrupt-controller") {
++		if (of_device_is_compatible(dp, "intel,ioapic"))
++			ioapic_add_ofnode(dp);
++	}
+ }
 -- 
 1.7.3.2
