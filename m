@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 09/11] x86/ioapic: Add OF bindings for IO-APIC
-Date: Thu, 25 Nov 2010 18:39:59 +0100
-Message-ID: <1290706801-7323-10-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 02/11] x86: Add device tree support
+Date: Thu, 25 Nov 2010 18:39:52 +0100
+Message-ID: <1290706801-7323-3-git-send-email-bigeasy@linutronix.de>
 References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,209 +21,288 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ioapic_xlate provides a translation from the information in device tree
-to ioapic related informations. This includes
-- obtaining hw irq which is the vector number "=> pin number + gsi"
-- obtaining type (level/edge/..)
-- programming this information into ioapic
+This patch adds minimal support for device tree support on x86. It will
+be passed to the kernel via setup_data which requires atleast boot
+protocol 2.09.
+Memory size, restricted memory regions, boot arguments are gathered the
+traditional way so things like cmd_line are just here to let the code
+compile.
+The current plan is use the device tree as an extension and to gather
+informations from it which can not be enumerated and have to be
+hardcoded otherwise. This includes things like
+- which devices are on this I2C/ SPI bus?
+- how are the interrupts wired to IO APIC?
+- where could my hpet be?
 
-ioapic_add_ofnode adds an irq_host based on informations from the device
-tree. The memory address is obtained from the phys_reg property instead
-of reg. On the PCI bus we use reg property for the PCI address. We can't
-use the PCI functions because we need the ioapic before the PCI bus is
-up. This information (irq_host) is required  in order to map a device to
-its proper interrupt controller.
+Dirk is working on some patches which provide generic infrastructure for
+linking the dtb into the kernel. Once this is it its final shape, we
+will relocate the device tree unconditionally. This will remove the
+requirement for the boot loader to locate the device tree within lowmem.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 CC: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/include/asm/io_apic.h |    7 +++
- arch/x86/kernel/apic/io_apic.c |  100 ++++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/prom.c         |    8 +++
- 3 files changed, 115 insertions(+), 0 deletions(-)
+ Documentation/x86/boot_with_dtb.txt |   20 +++++++++++
+ arch/x86/Kconfig                    |    7 ++++
+ arch/x86/include/asm/bootparam.h    |    1 +
+ arch/x86/include/asm/prom.h         |   60 +++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/Makefile            |    1 +
+ arch/x86/kernel/irqinit.c           |    7 ++++
+ arch/x86/kernel/prom.c              |   60 +++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/setup.c             |    4 ++
+ 8 files changed, 160 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/x86/boot_with_dtb.txt
+ create mode 100644 arch/x86/include/asm/prom.h
+ create mode 100644 arch/x86/kernel/prom.c
 
-diff --git a/arch/x86/include/asm/io_apic.h b/arch/x86/include/asm/io_apic.h
-index d854b90..dc1169f 100644
---- a/arch/x86/include/asm/io_apic.h
-+++ b/arch/x86/include/asm/io_apic.h
-@@ -175,6 +175,13 @@ struct mp_ioapic_gsi{
- 	u32 gsi_base;
- 	u32 gsi_end;
- };
-+#ifdef CONFIG_X86_OF
-+struct mp_of_ioapic {
-+	struct device_node *node;
-+};
-+extern struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
-+void __init ioapic_add_ofnode(struct device_node *np);
-+#endif
- extern struct mp_ioapic_gsi  mp_gsi_routing[];
- extern u32 gsi_top;
- int mp_find_ioapic(u32 gsi);
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index ea51151..27a5709 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -43,6 +43,7 @@
- #include <linux/bootmem.h>
- #include <linux/dmar.h>
- #include <linux/hpet.h>
-+#include <linux/of_address.h>
- 
- #include <asm/idle.h>
- #include <asm/io.h>
-@@ -60,6 +61,7 @@
- #include <asm/irq_remapping.h>
- #include <asm/hpet.h>
- #include <asm/hw_irq.h>
-+#include <asm/irq_controller.h>
- 
- #include <asm/apic.h>
- 
-@@ -88,6 +90,10 @@ int nr_ioapics;
- /* IO APIC gsi routing info */
- struct mp_ioapic_gsi  mp_gsi_routing[MAX_IO_APICS];
- 
-+#ifdef CONFIG_X86_OF
-+/* OF -> IO APIC lookup */
-+struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
-+#endif
- /* The one past the highest gsi number used */
- u32 gsi_top;
- 
-@@ -4052,6 +4058,100 @@ void __init mp_register_ioapic(int id, u32 address, u32 gsi_base)
- 	nr_ioapics++;
- }
- 
-+#ifdef CONFIG_X86_OF
-+static int ioapic_xlate(struct irq_host *h, const u32 *intspec, u32 intsize,
-+		u32 *out_hwirq, u32 *out_type)
-+{
-+	u32 line;
-+	u32 idx;
-+	u32 type;
-+	u32 trigger;
-+	u32 polarity;
-+	struct irq_cfg *cfg;
-+	struct irq_desc *desc;
+diff --git a/Documentation/x86/boot_with_dtb.txt b/Documentation/x86/boot_with_dtb.txt
+new file mode 100644
+index 0000000..3ba42b4
+--- /dev/null
++++ b/Documentation/x86/boot_with_dtb.txt
+@@ -0,0 +1,20 @@
++  Booting x86 with device tree
++=================================
 +
-+	if (intsize < 1)
-+		return -EINVAL;
++1. Introduction
++~~~~~~~~~~~~~~~
++This document contains device tree informations which are specific to
++the x86 platform. Generic informations as bindings can be found in
++Documentation/powerpc/dts-bindings/
 +
-+	line = *intspec;
-+	idx = (u32) h->priv;
-+	*out_hwirq = line + mp_gsi_routing[idx].gsi_base;
-+	if (intsize > 1) {
-+		intspec++;
-+		type = *intspec;
-+		switch (type) {
-+		case 0:
-+			*out_type = IRQ_TYPE_EDGE_RISING;
-+			trigger = IOAPIC_EDGE;
-+			polarity = 1;
-+			break;
-+		case 1:
-+			*out_type = IRQ_TYPE_LEVEL_LOW;
-+			trigger = IOAPIC_LEVEL;
-+			polarity = 0;
-+			break;
-+		case 2:
-+			*out_type = IRQ_TYPE_LEVEL_HIGH;
-+			trigger = IOAPIC_LEVEL;
-+			polarity = 1;
-+			break;
-+		case 3:
-+			*out_type = IRQ_TYPE_EDGE_FALLING;
-+			trigger = IOAPIC_EDGE;
-+			polarity = 0;
-+			break;
-+		default:
-+			*out_type = IRQ_TYPE_NONE;
-+			trigger = IOAPIC_AUTO;
-+			polarity = 0;
-+			break;
-+		};
-+	} else {
-+		*out_type = IRQ_TYPE_NONE;
-+		trigger = IOAPIC_AUTO;
-+		polarity = 0;
-+	}
-+	/* And now tell the IO APIC to make the line ready */
-+	desc = irq_to_desc_alloc_node(*out_hwirq, 0);
-+	cfg = irq_cfg(*out_hwirq);
-+	add_pin_to_irq_node(cfg, 0, idx, line);
-+	/* make it edge by default, settype will update it */
-+	setup_ioapic_irq(idx, line, *out_hwirq, cfg, trigger, polarity);
-+	return 0;
-+}
++2. Passing the device tree
++~~~~~~~~~~~~~~~~~~~~~~~~~~
++The pointer to the device tree block (dtb) is passed via setup_data
++(see [0]) which requires atleast boot protocol 2.09. The type filed is
++defined as
 +
-+void __init ioapic_add_ofnode(struct device_node *np)
-+{
-+	int i;
-+	const __be32 *prop;
-+	u32 addr;
++#define SETUP_DTB                      2
 +
-+	prop = of_get_property(np, "phys_reg", NULL);
-+	if (!prop) {
-+		printk(KERN_ERR "IO APIC %s missing phys_reg property.\n",
-+				np->full_name);
-+		return;
-+	}
-+	addr = be32_to_cpup(prop);
++The setup_data struct has to be placed in lowmem.
 +
-+	for (i = 0; i < nr_ioapics; i++) {
-+		if (addr == mp_ioapics[i].apicaddr) {
-+			struct irq_host *ih;
++[0] Documentation/x86/boot.txt
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 6ab6310..6c9ab9e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -299,6 +299,13 @@ config X86_BIGSMP
+ 	---help---
+ 	  This option is needed for the systems that have more than 8 CPUs
+ 
++config X86_OF
++	bool "Support for device tree"
++	select OF
++	select OF_FLATTREE
++	---help---
++	  Device tree support on X86.
 +
-+			mp_of_ioapic[i].node = np;
-+			ih = kzalloc(sizeof(*ih), GFP_KERNEL);
-+			BUG_ON(!ih);
-+			ih->controller = np;
-+			ih->xlate = ioapic_xlate;
-+			ih->priv = (void *)i;
-+			add_interrupt_host(ih);
-+			return;
-+		}
-+	}
-+	printk(KERN_ERR "IO APIC at 0x%08x is not registered.\n", addr);
-+}
+ if X86_32
+ config X86_EXTENDED_PLATFORM
+ 	bool "Support for extended (non-PC) x86 platforms"
+diff --git a/arch/x86/include/asm/bootparam.h b/arch/x86/include/asm/bootparam.h
+index c8bfe63..e020d88 100644
+--- a/arch/x86/include/asm/bootparam.h
++++ b/arch/x86/include/asm/bootparam.h
+@@ -12,6 +12,7 @@
+ /* setup data types */
+ #define SETUP_NONE			0
+ #define SETUP_E820_EXT			1
++#define SETUP_DTB			2
+ 
+ /* extensible setup data list node */
+ struct setup_data {
+diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+new file mode 100644
+index 0000000..8fdb0d2
+--- /dev/null
++++ b/arch/x86/include/asm/prom.h
+@@ -0,0 +1,60 @@
++/*
++ * Definitions for Device tree / OpenFirmware handling on X86
++ *
++ * based on arch/powerpc/include/asm/prom.h which is
++ *         Copyright (C) 1996-2005 Paul Mackerras.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++#ifndef _ASM_X86_PROM_H
++#define _ASM_X86_PROM_H
++#ifdef __KERNEL__
++#ifndef __ASSEMBLY__
++
++#include <linux/of.h>
++#include <linux/types.h>
++#include <asm/irq.h>
++#include <asm/atomic.h>
++#include <asm/setup.h>
++
++#ifdef CONFIG_OF
++extern void init_dtb(void);
++extern void add_dtb(u64 data);
++#else
++static inline void init_dtb(void) { }
++static inline void add_dtb(u64 data) { }
 +#endif
 +
- /* Enable IOAPIC early just for system timer */
- void __init pre_init_apic_IRQ0(void)
- {
-diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-index bbd6064..e9ff517 100644
---- a/arch/x86/kernel/prom.c
-+++ b/arch/x86/kernel/prom.c
-@@ -9,9 +9,11 @@
- #include <linux/of_platform.h>
- #include <linux/slab.h>
- #include <linux/pci.h>
++extern char cmd_line[COMMAND_LINE_SIZE];
++/* This number is used when no interrupt has been assigned */
++#define NO_IRQ		(-1)
++
++/**
++ * irq_dispose_mapping - Unmap an interrupt
++ * @virq: linux virq number of the interrupt to unmap
++ *
++ * FIXME: We really should implement proper virq handling like power,
++ * but that's going to be major surgery.
++ */
++static inline void irq_dispose_mapping(unsigned int virq) { }
++
++#define HAVE_ARCH_DEVTREE_FIXUPS
++
++#endif /* __ASSEMBLY__ */
++#endif /* __KERNEL__ */
++
++/*
++ * These includes are put at the bottom because they may contain things
++ * that are overridden by this file.  Ideally they shouldn't be included
++ * by this file, but there are a bunch of .c files that currently depend
++ * on it.  Eventually they will be cleaned up.
++ */
 +#include <linux/of_fdt.h>
- 
- #include <asm/hpet.h>
- #include <asm/irq_controller.h>
-+#include <asm/apic.h>
- #include <asm/io_apic.h>
- #include <asm/pci_x86.h>
- 
-@@ -355,8 +357,14 @@ void __init x86_early_of_parse(void)
- 
- void __init init_dtb(void)
- {
-+	struct device_node *dp;
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
 +
- 	if (!initial_boot_params)
- 		return;
++#endif
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 9e13763..e0a00c5 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -109,6 +109,7 @@ obj-$(CONFIG_MICROCODE)			+= microcode.o
+ obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
  
- 	unflatten_device_tree();
-+	for_each_node_by_type(dp, "interrupt-controller") {
-+		if (of_device_is_compatible(dp, "intel,ioapic"))
-+			ioapic_add_ofnode(dp);
-+	}
- }
+ obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
++obj-$(CONFIG_X86_OF)			+= prom.o
+ 
+ ###
+ # 64 bit specific files
+diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+index c752e97..d5970e2 100644
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -25,6 +25,7 @@
+ #include <asm/setup.h>
+ #include <asm/i8259.h>
+ #include <asm/traps.h>
++#include <asm/prom.h>
+ 
+ /*
+  * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
+@@ -118,6 +119,12 @@ void __init init_IRQ(void)
+ 	int i;
+ 
+ 	/*
++	 * We probably need a better place for this, but it works for
++	 * now ...
++	 */
++	init_dtb();
++
++	/*
+ 	 * On cpu 0, Assign IRQ0_VECTOR..IRQ15_VECTOR's to IRQ 0..15.
+ 	 * If these IRQ's are handled by legacy interrupt-controllers like PIC,
+ 	 * then this configuration will likely be static after the boot. If
+diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
+new file mode 100644
+index 0000000..ba9a096
+--- /dev/null
++++ b/arch/x86/kernel/prom.c
+@@ -0,0 +1,60 @@
++/*
++ * Architecture specific OF callbacks.
++ */
++
++#include <linux/io.h>
++#include <linux/list.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/slab.h>
++
++char __initdata cmd_line[COMMAND_LINE_SIZE];
++
++unsigned int irq_create_of_mapping(struct device_node *controller,
++		const u32 *intspec, unsigned int intsize)
++{
++	return intspec[0];
++
++}
++EXPORT_SYMBOL_GPL(irq_create_of_mapping);
++
++unsigned long pci_address_to_pio(phys_addr_t address)
++{
++	BUG();
++}
++EXPORT_SYMBOL_GPL(pci_address_to_pio);
++
++void __init early_init_dt_scan_chosen_arch(unsigned long node)
++{
++	BUG();
++}
++
++void __init early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	BUG();
++}
++
++u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
++{
++	void *mem;
++
++	mem = kmalloc(size + align, GFP_KERNEL);
++	BUG_ON(!mem);
++	mem = PTR_ALIGN(mem, align);
++	return virt_to_phys(mem);
++}
++
++void __init add_dtb(u64 data)
++{
++	initial_boot_params = (struct boot_param_header *)
++		phys_to_virt((u64) (u32) data +
++				offsetof(struct setup_data, data));
++}
++
++void __init init_dtb(void)
++{
++	if (!initial_boot_params)
++		return;
++
++	unflatten_device_tree();
++}
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 52f10e6..b1e1bcb 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -113,6 +113,7 @@
+ #endif
+ #include <asm/mce.h>
+ #include <asm/alternative.h>
++#include <asm/prom.h>
+ 
+ /*
+  * end_pfn only includes RAM, while max_pfn_mapped includes all e820 entries.
+@@ -441,6 +442,9 @@ static void __init parse_setup_data(void)
+ 		case SETUP_E820_EXT:
+ 			parse_e820_ext(data);
+ 			break;
++		case SETUP_DTB:
++			add_dtb(pa_data);
++			break;
+ 		default:
+ 			break;
+ 		}
 -- 
 1.7.3.2
