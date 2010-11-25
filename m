@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 04/11] x86/dtb: add irq host abstraction
-Date: Thu, 25 Nov 2010 18:39:54 +0100
-Message-ID: <1290706801-7323-5-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 05/11] x86/dtb: add early parsing of APIC and IO APIC
+Date: Thu, 25 Nov 2010 18:39:55 +0100
+Message-ID: <1290706801-7323-6-git-send-email-bigeasy@linutronix.de>
 References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,125 +21,184 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The here introduced irq_host abstraction represents a generic irq_host.
-The xlate callback is resposible to parse irq informations like irq type
-and number and returns the hardware irq number which is reported by the
-hardware as active.
+The apic & ioapic have to be added to system early because
+native_init_IRQ() requires it.
+The phys_reg preoperty is used instead of the reg property because in
+case of a PCI device this property is not holding the address of the
+chip. In this case we can't query the PCI bar information because the
+PCI bus is not (yet) up.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 CC: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Tested-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/include/asm/irq_controller.h |   12 ++++++++
- arch/x86/include/asm/prom.h           |    2 +
- arch/x86/kernel/prom.c                |   47 ++++++++++++++++++++++++++++++++-
- 3 files changed, 60 insertions(+), 1 deletions(-)
- create mode 100644 arch/x86/include/asm/irq_controller.h
+ arch/x86/include/asm/prom.h |    4 ++
+ arch/x86/kernel/irqinit.c   |    2 +-
+ arch/x86/kernel/prom.c      |  105 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 110 insertions(+), 1 deletions(-)
 
-diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include/asm/irq_controller.h
-new file mode 100644
-index 0000000..1cbbfd0
---- /dev/null
-+++ b/arch/x86/include/asm/irq_controller.h
-@@ -0,0 +1,12 @@
-+#ifndef __IRQ_CONTROLLER__
-+#define __IRQ_CONTROLLER__
-+
-+struct irq_host {
-+	int (*xlate)(struct irq_host *h, const u32 *intspec, u32 intsize,
-+			u32 *out_hwirq, u32 *out_type);
-+	void *priv;
-+	struct device_node *controller;
-+	struct list_head l;
-+};
-+
-+#endif
 diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-index 8fdb0d2..6c80e53 100644
+index 6c80e53..b74a49f 100644
 --- a/arch/x86/include/asm/prom.h
 +++ b/arch/x86/include/asm/prom.h
-@@ -20,10 +20,12 @@
- #include <asm/irq.h>
- #include <asm/atomic.h>
- #include <asm/setup.h>
-+#include <asm/irq_controller.h>
+@@ -23,12 +23,16 @@
+ #include <asm/irq_controller.h>
  
  #ifdef CONFIG_OF
++extern int of_ioapic;
  extern void init_dtb(void);
  extern void add_dtb(u64 data);
-+void add_interrupt_host(struct irq_host *ih);
++void x86_early_of_parse(void);
+ void add_interrupt_host(struct irq_host *ih);
  #else
  static inline void init_dtb(void) { }
  static inline void add_dtb(u64 data) { }
++static inline void x86_early_of_parse(void) { }
++#define of_ioapic 0
+ #endif
+ 
+ extern char cmd_line[COMMAND_LINE_SIZE];
+diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+index d5970e2..8030193 100644
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -250,7 +250,7 @@ void __init native_init_IRQ(void)
+ 			set_intr_gate(i, interrupt[i-FIRST_EXTERNAL_VECTOR]);
+ 	}
+ 
+-	if (!acpi_ioapic)
++	if (!acpi_ioapic && !of_ioapic)
+ 		setup_irq(2, &irq2);
+ 
+ #ifdef CONFIG_X86_32
 diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-index ba9a096..996fd05 100644
+index 996fd05..9551f2f 100644
 --- a/arch/x86/kernel/prom.c
 +++ b/arch/x86/kernel/prom.c
-@@ -3,18 +3,63 @@
-  */
- 
- #include <linux/io.h>
-+#include <linux/interrupt.h>
- #include <linux/list.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
+@@ -10,11 +10,14 @@
  #include <linux/slab.h>
  
-+#include <asm/irq_controller.h>
-+
+ #include <asm/irq_controller.h>
++#include <asm/io_apic.h>
+ 
  char __initdata cmd_line[COMMAND_LINE_SIZE];
-+static LIST_HEAD(irq_hosts);
-+static DEFINE_RAW_SPINLOCK(big_irq_lock);
-+
-+void add_interrupt_host(struct irq_host *ih)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&big_irq_lock, flags);
-+	list_add(&ih->l, &irq_hosts);
-+	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
-+}
-+
-+static struct irq_host *get_ih_from_node(struct device_node *controller)
-+{
-+	struct irq_host *ih, *found = NULL;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&big_irq_lock, flags);
-+	list_for_each_entry(ih, &irq_hosts, l) {
-+		if (ih->controller ==  controller) {
-+			found = ih;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
-+	return found;
-+}
+ static LIST_HEAD(irq_hosts);
+ static DEFINE_RAW_SPINLOCK(big_irq_lock);
  
- unsigned int irq_create_of_mapping(struct device_node *controller,
- 		const u32 *intspec, unsigned int intsize)
++int __initdata of_ioapic;
++
+ void add_interrupt_host(struct irq_host *ih)
  {
--	return intspec[0];
-+	struct irq_host *ih;
-+	u32 virq;
-+	u32 type;
-+	int ret;
- 
-+	ih = get_ih_from_node(controller);
-+	if (!ih)
-+		return -ENODEV;
-+	ret = ih->xlate(ih, intspec, intsize, &virq, &type);
-+	if (ret)
-+		return ret;
-+	if (type == IRQ_TYPE_NONE)
-+		return virq;
-+	/* set the mask if it is different from current */
-+	if (type == (irq_to_desc(virq)->status & IRQF_TRIGGER_MASK))
-+		set_irq_type(virq, type);
-+	return virq;
+ 	unsigned long flags;
+@@ -96,6 +99,108 @@ void __init add_dtb(u64 data)
+ 				offsetof(struct setup_data, data));
  }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
  
++static void __init of_lapic_setup(void)
++{
++#ifdef CONFIG_X86_LOCAL_APIC
++	if (apic_force_enable())
++		return ;
++
++	smp_found_config = 1;
++	pic_mode = 1;
++	/* Required for ioapic registration */
++	set_fixmap_nocache(FIX_APIC_BASE, mp_lapic_addr);
++	if (boot_cpu_physical_apicid == -1U)
++		boot_cpu_physical_apicid = read_apic_id();
++
++	generic_processor_info(boot_cpu_physical_apicid,
++			GET_APIC_VERSION(apic_read(APIC_LVR)));
++#endif
++}
++
++#ifdef CONFIG_X86_IO_APIC
++static int __init early_scan_ioapic(unsigned long node, const char *uname,
++				   int depth, void *data)
++{
++	unsigned long l;
++	int ret;
++	__be32 *cell;
++	int ioapic_id;
++	phys_addr_t ioapic_addr;
++
++	ret = of_flat_dt_is_compatible(node, "intel,ioapic");
++	if (!ret)
++		return 0;
++
++	cell = of_get_flat_dt_prop(node, "phys_reg", &l);
++	if (!cell)
++		return 0;
++
++	ioapic_addr = of_read_ulong(cell, l / 4);
++	cell = of_get_flat_dt_prop(node, "id", &l);
++	if (!cell)
++		return 0;
++	ioapic_id = of_read_ulong(cell, l / 4);
++
++	mp_register_ioapic(ioapic_id, ioapic_addr, gsi_top);
++	return 0;
++}
++
++static void __init of_ioapic_setup(void)
++{
++	if (!smp_found_config)
++		return;
++
++	of_scan_flat_dt(early_scan_ioapic, NULL);
++	if (nr_ioapics) {
++		of_ioapic = 1;
++		return;
++	}
++	printk(KERN_ERR "Error: No information about IO-APIC in OF.\n");
++	smp_found_config = 0;
++}
++#else
++static void __init of_ioapic_setup(void) {}
++#endif
++
++static void __init of_apic_setup(void)
++{
++	of_lapic_setup();
++	of_ioapic_setup();
++}
++
++void __init x86_early_of_parse(void)
++{
++	void *virt_dtb;
++	resource_size_t phys_dtb;
++	u32 size;
++
++	if (!initial_boot_params)
++		return;
++	/*
++	 * Here we grab some early informations before we the kernel mapping
++	 * covers the complete lowmem. We setup a temporary fixmap for it and
++	 * once we have what we were looking for we revert the address to its
++	 * initial value. It will be used during unflattering and later during
++	 * string lookups etc.
++	 */
++
++	virt_dtb = initial_boot_params;
++	phys_dtb = virt_to_phys(virt_dtb);
++
++	initial_boot_params = early_memremap(phys_dtb, PAGE_SIZE);
++	size = be32_to_cpu(initial_boot_params->totalsize);
++	early_iounmap(initial_boot_params, PAGE_SIZE);
++
++	initial_boot_params = early_memremap(phys_dtb, size);
++
++	/* root level address cells */
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++	of_apic_setup();
++
++	early_iounmap(initial_boot_params, size);
++	initial_boot_params = virt_dtb;
++}
++
+ void __init init_dtb(void)
+ {
+ 	if (!initial_boot_params)
 -- 
 1.7.3.2
