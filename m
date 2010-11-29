@@ -1,28 +1,54 @@
-From: "H. Peter Anvin" <hpa@linux.intel.com>
-Subject: Re: [sodaville] [PATCH 03/11] x86/dtb: Add a device tree for CE4100
-Date: Mon, 29 Nov 2010 10:26:23 -0800
-Message-ID: <4CF3F04F.6090202@linux.intel.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>		<1290706801-7323-4-git-send-email-bigeasy@linutronix.de>		<1290808645.32570.158.camel@pasglop>	<20101128160449.GC30784@www.tglx.de>	<1290984809.32570.208.camel@pasglop> <4CF30327.9020408@firmworks.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 03/11] x86/dtb: Add a device tree for CE4100
+Date: Mon, 29 Nov 2010 13:07:20 -0600
+Message-ID: <20101129130720.7d060e1c@udp111988uds.am.freescale.net>
+References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
+	<1290706801-7323-4-git-send-email-bigeasy@linutronix.de>
+	<1290808645.32570.158.camel@pasglop>
+	<20101128160449.GC30784@www.tglx.de>
+	<1290984809.32570.208.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4CF30327.9020408@firmworks.com>
+In-Reply-To: <1290984809.32570.208.camel@pasglop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, x86@kernel.org, linux-kernel@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2010 05:34 PM, Mitch Bradley wrote:
-> 
-> The OLPC interface might be of some use as a starting point, but would 
-> need some work.  It is currently in use on AMD Geode, Via C7, and Intel 
-> Atom based systems, but, among other issues, it conflicts with the 
-> Physical Address Extension feature.
-> 
+On Mon, 29 Nov 2010 09:53:29 +1100
+Benjamin Herrenschmidt <benh@kernel.crashing.org> wrote:
+> On Sun, 2010-11-28 at 17:04 +0100, Sebastian Andrzej Siewior wrote:
+> > >> +	isa@legacy {
 
-It conflicts with at least PAE, PAT and x86-64.  Since NX requires PAE,
-it also conflicts with that.  As such, I would think it would have to be
-considered obsolete.
+What is "@legacy"?  I don't think I've seen that in a unit address
+before, googling only turns up this device tree, and a quick grep
+through the ISA and base OF specs turns up nothing.
 
-	-hpa
+> > >> +		device_type = "isa";
+> > >> +		compatible = "simple-bus";
+> > >
+> > >What does "simple-bus" means ?
+> > I added simple bus in order to get probed. But I now I rember that this
+> > is also supported per device_type. I get rid of it.
+> 
+> device_type is a nasty bugger, we are trying to get rid of Linux
+> reliance on it.
+> 
+> Things like "simple-bus" don't rock my boat either, it's adding to the
+> device-tree "informations" that are specific to the way Linux will
+> interpret it, which is not how it should be.
+
+The motivation for simple-bus comes from Linux, but its definition is
+OS-neutral.  It indicates that no special bus knowledge is required to
+access the devices under it.
+
+I don't think it applies to ISA, though -- I/O space is special bus
+knowledge, and the "ranges" looks weird for memory-space as well.
+
+If we're going to get rid of device_type here, it would be nice to have
+some other way to indicate that this node follows the ISA binding,
+without having to recognize an implementation-specific compatible.
+
+-Scott
