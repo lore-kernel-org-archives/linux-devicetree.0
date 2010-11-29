@@ -1,69 +1,36 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: Re: [sodaville] [PATCH 03/11] x86/dtb: Add a device tree for CE4100
-Date: Mon, 29 Nov 2010 20:44:45 +0100
-Message-ID: <4CF402AD.2060000@linutronix.de>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>		<1290706801-7323-4-git-send-email-bigeasy@linutronix.de>		<1290808645.32570.158.camel@pasglop>	<20101128160449.GC30784@www.tglx.de>	<1290984809.32570.208.camel@pasglop>
-	<4CF30327.9020408@firmworks.com>
+Date: Tue, 30 Nov 2010 07:03:14 +1100
+Message-ID: <1291060994.32570.296.camel@pasglop>
+References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
+	 <1290706801-7323-4-git-send-email-bigeasy@linutronix.de>
+	 <1290808645.32570.158.camel@pasglop>	<20101128160449.GC30784@www.tglx.de>
+	 <1290984809.32570.208.camel@pasglop> <4CF30327.9020408@firmworks.com>
+	 <4CF3F04F.6090202@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4CF30327.9020408-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4CF3F04F.6090202@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Peter Anvin" <hpa@linux.intel.com>
+Cc: Mitch Bradley <wmb@firmworks.com>, devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, x86@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Mitch Bradley wrote:
-> On 11/28/2010 12:53 PM, Benjamin Herrenschmidt wrote:
->>> I wasn't aware of the OFW binding for X86. I will follow it once I find
->>> it.
->> Interesting, I though I would find it on
->> http://www.openfirmware.info/Bindings but it's not there...
->> CC'ing Mitch who might know where to find that.
+On Mon, 2010-11-29 at 10:26 -0800, H. Peter Anvin wrote:
+> > The OLPC interface might be of some use as a starting point, but would 
+> > need some work.  It is currently in use on AMD Geode, Via C7, and Intel 
+> > Atom based systems, but, among other issues, it conflicts with the 
+> > Physical Address Extension feature.
+> > 
 > 
-> I'd be happy to work with people to develop a new x86 binding.
+> It conflicts with at least PAE, PAT and x86-64.  Since NX requires PAE,
+> it also conflicts with that.  As such, I would think it would have to be
+> considered obsolete. 
 
-So for the CPU node I have so far:
+In any case, what is of interest to Sebastian here isn't the ABI for the
+client interface, but the properties to put in the /cpus/ nodes, so we
+could start with that...
 
-         cpus {
-                  #address-cells = <1>;
-                  #size-cells = <0>;
-
-                  cpu@0 {
-                          device_type = "cpu";
-			 compatible = "Intel,CE4100";
-                          reg = <0>;
-                          lapic = <&lapic0>;
-                  };
-          };
-
-This one should match ePARP 1.0. David mentioned threads. I have just one.
-No HyperThreading, nothing special. Should I just leave it as it or go
-for:
-         cpus {
-                  #address-cells = <1>;
-                  #size-cells = <0>;
-
-                  cpu@0 {
-                          device_type = "cpu";
-			 compatible = "Intel,CE4100";	
-			 reg = <0>;
-                	         lapic = <&lapic0>;
-
-			thread@0 {
-         	                 reg = <0>;
-                  	};
-		};
-          };
-?
-
-Sebastian
+Cheers,
+Ben.
