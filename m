@@ -1,49 +1,69 @@
-From: Mitch Bradley <wmb@firmworks.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [PATCH 03/11] x86/dtb: Add a device tree for CE4100
-Date: Sun, 28 Nov 2010 15:34:31 -1000
-Message-ID: <4CF30327.9020408@firmworks.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>	 <1290706801-7323-4-git-send-email-bigeasy@linutronix.de>	 <1290808645.32570.158.camel@pasglop>  <20101128160449.GC30784@www.tglx.de> <1290984809.32570.208.camel@pasglop>
+Date: Mon, 29 Nov 2010 13:22:08 +1100
+Message-ID: <20101129022208.GA3727@yookeroo>
+References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
+	<1290706801-7323-4-git-send-email-bigeasy@linutronix.de>
+	<1290808645.32570.158.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1290984809.32570.208.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1290808645.32570.158.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2010 12:53 PM, Benjamin Herrenschmidt wrote:
->> I wasn't aware of the OFW binding for X86. I will follow it once I find
->> it.
->
-> Interesting, I though I would find it on
-> http://www.openfirmware.info/Bindings but it's not there...
->
-> CC'ing Mitch who might know where to find that.
+On Sat, Nov 27, 2010 at 08:57:25AM +1100, Benjamin Herrenschmidt wrote:
+> 
+> > + */
+> > +/dts-v1/;
+> > +/ {
+> > +	model = "x86,CE4100";
+> > +	compatible = "x86,CE4100";
+> 
+> Use a vendor name rather than "x86" here.
+> 
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	cpus {
+> > +		x86,Atom@0 {
+> 
+> "Atom" would benefit from being more precise, like adding the model
+> number. Also you want some properties there defining maybe the mask, the
+> cache characteristics, etc... There's an exising OFW binding for x86, I
+> suppose you could follow it. A "reg" property at least is mandatory
+> here.
 
+In the PowerPC flat-tree world, the newly established convention is to
+extend the generic names convention to cpu nodes, so we name the nodes
+just "cpu@0" etc. and move the more specific cpu type ("PowerPC,970FX"
+/ "x86,Atom" / whatever) to the compatible property.  I'd recommend
+this convention to you, even though it's a bit of a break from earlier
+standard practice, it makes device tree manipulations by bootloaders
+and other intermediate things a bit easier.
 
-I can't find the x86 binding either, which is a little bit embarrassing 
-since I wrote it, albeit about 15 years ago...
+> Also how do you plan to expose threading capability ?
 
-If my memory is correct, it is not particularly useful now.  It 
-primarily dealt with the ABI for transferring control to the OS and for 
-calling back into the OFW client interface.  The only company that used 
-it was Network Appliance, back when they were building their own x86 
-motherboards (because most off-the-shelf mobo's of that era did not meet 
-their stability requirements).
+Unless the existing x86 bindings specify something different, I'd
+suggest the method we're planning to put into ePAPR 1.1 for PowerPC
+chips.  That is, threads sharing an MMU go in the same cpu node, with
+the individual thread numbers given as multiple entries in the "reg"
+property.
 
-There has been a fair amount of churn since then, in relevant areas like 
-x86 privileged architecture, compiler versions and code generation 
-policies, popular bootloaders, OSs, and Linux early startup code.  The 
-net result is that the ABI that the old binding specified probably isn't 
-right for today.
-
-I'd be happy to work with people to develop a new x86 binding.
-
-The OLPC interface might be of some use as a starting point, but would 
-need some work.  It is currently in use on AMD Geode, Via C7, and Intel 
-Atom based systems, but, among other issues, it conflicts with the 
-Physical Address Extension feature.
-
-Mitch
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
