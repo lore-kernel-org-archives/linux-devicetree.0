@@ -1,92 +1,79 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [sodaville] [PATCH 03/11] x86/dtb: Add a device tree for CE4100
-Date: Tue, 30 Nov 2010 07:14:34 +1100
-Message-ID: <1291061674.32570.307.camel@pasglop>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
-	 <1290706801-7323-4-git-send-email-bigeasy@linutronix.de>
-	 <1290808645.32570.158.camel@pasglop>	<20101128160449.GC30784@www.tglx.de>
-	 <1290984809.32570.208.camel@pasglop>  <4CF400B1.6060100@linutronix.de>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: [PATCH 03/11] x86/dtb: Add a device tree for CE4100
+Date: Mon, 29 Nov 2010 10:32:52 -1000
+Message-ID: <4CF40DF4.9060204@firmworks.com>
+References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>	<1290706801-7323-4-git-send-email-bigeasy@linutronix.de>	<1290808645.32570.158.camel@pasglop>	<20101128160449.GC30784@www.tglx.de>	<1290984809.32570.208.camel@pasglop>	<20101129130720.7d060e1c@udp111988uds.am.freescale.net> <1291061128.32570.298.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4CF400B1.6060100@linutronix.de>
+In-Reply-To: <1291061128.32570.298.camel@pasglop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Mitch Bradley <wmb@firmworks.com>, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@linux.intel.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Scott Wood <scottwood@freescale.com>, sodaville@linutronix.de, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, x86@kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2010-11-29 at 20:36 +0100, Sebastian Andrzej Siewior wrote:
-> 
-> This also works with the flat tree, right?
+The usual layout is that the PCI bus is a direct child of
+the root node, and the ISA bus is a child of the PCI bus.
+That reflects the "Northbridge + Southbridge" wiring that
+was common at the time that PCI was first introduced.
+It's usually the case that faster and wider buses are closer
+to the root, with speed and address width decreasing as you
+go away from the root.
 
-Yes, of course. You use similar references in your interrupt-map :-)
+The fact that PCI configuration accesses are done via I/O
+port 0x3fc doesn't make it a child of the ISA bus, because
+I/O space is inherent in the x86 CPU architecture and thus
+can be considered to be part of the root address space.
 
-> Okay, so we want this for a quirk at a later point in time. Now I
-> understand.
+In the systems that I have worked with, the ISA bridge is a
+first-class PCI device with a PCI config header, so it fits
+naturally underneath the PCI bus.
 
-More precisely, if something has to depend on a specific
-revision/errata/feature, in the future, it would be problematic to have
-to modify the device-tree.
+Here are the properties for PCI and ISA on the OLPC XO-1.5
+platform (Via C7 x86 CPU with Via VX855 IO chip):
 
-The "rule" for compatible is to be a list going from a reasonably
-precise description of the specific device to the more generic
-programming interface the device implements.
 
-> Would "isa-bridge" be acceptable? So I don't have to add a new bus to
-> the probe list for every new SoC.
+ok dev /pci
+ok .properties
+interrupt-map            00000800 00000000 00000000 00000001 ff86bf34 0000000a 00000000
+                         00006000 00000000 00000000 00000001 ff86bf34 0000000a 00000000
+                         00008000 00000000 00000000 00000001 ff86bf34 0000000a 00000000
+                         00008100 00000000 00000000 00000002 ff86bf34 00000009 00000000
+                         00008200 00000000 00000000 00000003 ff86bf34 0000000b 00000000
+                         00008400 00000000 00000000 00000004 ff86bf34 0000000a 00000000
+                         0000a000 00000000 00000000 00000001 ff86bf34 00000009 00000000
+interrupt-map-mask       0000ff00 00000000 00000000 00000007
+#interrupt-cells         00000001
+slot-names               00000000
+slave-only               00000000
+clock-frequency          01fca055
+bus-range                00000000 00000000
+#size-cells              00000002
+#address-cells           00000003
+device_type              pci
+name                     pci
 
-Just call it 'isa', as for device_type, we shouldn't need it.
+ok dev /pci/isa
+ok .properties
+devsel-speed             00000001
+class-code               00060100
+subsystem-vendor-id      0000152d
+subsystem-id             00000833
+max-latency              00000000
+min-grant                00000000
+revision-id              00000000
+device-id                00008409
+vendor-id                00001106
+interrupt-parent         ff86bf34
+#interrupt-cells         00000002
+ranges                   00000000 00000000 02000000 00000000 00000000 01000000
+                         00000001 00000000 01000000 00000000 00000000 00010000
+clock-frequency          007ea5e0
+reg                      00008800 00000000 00000000 00000000 00000000
+#size-cells              00000001
+#address-cells           00000002
+device_type              isa
+name                     isa
 
-The default "probe list" is crap. If you want to have platform devices
-instanciated for the ISA devices from the device-tree, I'd rather you
-explicitely do it from the architecture code. As Scott said, "isa"
-doesn't quite qualify as a "generic" simple bus.
-
-> Yes. of_address_to_resource() will do the right thing in this case. It
-> can only be used after unflatten_device_tree() and I need this
-> earlier.
-
-This probably means you are doing the unflattening too late...
-
-> Now using unflatten_device_tree() earlier isn't that easy, or is it.
-> I defered the ioapic init a little, so it is now called from
-> x86_init.mpparse.get_smp_config() so I have alloc_bootmem() working.
-
-You can probably do the unflattening way before alloc_bootmem is
-available.
-
-The unflattening does a first pass to scan for the size, so all you need
-is a way to get a single contiguous chunk of memory, I'm sure x86 has
-ways to provide that sort of thing really early before bootmem is
-initialized (what about memblock btw ?).
-
-> So unflatten_device_tree() seems to work here. The ugly part comes
-> now:
-> early_init_dt_alloc_memory_arch() expects u64 which works with
-> phys_to_virt() and the other way around. This isn't really the case
-> with
-> what __alloc_bootmem(). This looks like phys_map to me. Since the dtb
-> code
-> simply uses phys_to_virt() it doesn't really matter. So it works and
-> I 
-> probably can use of_address_to_resource().
-
-Yeah just __pa what alloc_bootmem returns but as I said, it should
-probably be unflattened earlier than that.
-
-Peter (CC) should be able to help finding the right spot/API there.
-
-Cheers,
-Ben.
-
-> > Cheers,
-> > Ben.
-> 
-> Sebastian
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/ 
+Note that the PCI node has no reg property.  On a system with multiple independent PCI buses at the top level, it would be necessary to distinguish them with reg properties reflecting their different addresses in the root address space.  PC-style architectures typically (always?) have a single top-level PCI domain, so I've never never needed to do that in x86 land.  It used to be pretty common on PPC "big iron".
