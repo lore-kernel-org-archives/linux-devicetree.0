@@ -1,14 +1,12 @@
-From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
-Subject: Re: [PATCH 1/3] i2c-ocores: Adapt for device tree
-Date: Wed, 01 Dec 2010 10:37:35 +0100
-Message-ID: <4CF6175F.2040305@home.nl>
-References: <1290615982-1028-1-git-send-email-jonas@southpole.se>
-	<1290615982-1028-2-git-send-email-jonas@southpole.se>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: [PATCH v2] rtc/cmos: add OF bindings
+Date: Wed, 1 Dec 2010 11:17:56 +0100
+Message-ID: <20101201101756.GA31624@www.tglx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1290615982-1028-2-git-send-email-jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,145 +16,212 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
+This allows to load the OF driver based informations from the device
+tree. Systems without BIOS may need to perform some initialization.
+PowerPC creates a PNP device from the OF information and performs this
+kind of initialization in their private PCI quirk. This looks more
+generic.
 
-Seems to work for me on Nios2. (Compile tested. Ran the kernel devices 
-were found, did not test functionality)
-I know Nios2 is not (yet) a supported platform but we're busy trying to 
-get fdt working...
-So an ack from my side!
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+CC: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v1 - v2:
+        - changed ctrl_reg & freq_reg to changed ctrl-reg & freq-reg as
+          recommended by Benh
+        - added missing get_rtc_time()
+        - set the default day to 1
+        - added binding info
 
-Walter
+ Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++
+ drivers/rtc/rtc-cmos.c                          |  108 +++++++++++++++++++++++
+ 2 files changed, 136 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
 
-On 11/24/10 5:26 PM, Jonas Bonn wrote:
-> This patch adapts the i2c-ocores driver for being defined and configured via
-> a device tree description.
->
-> The device tree bits need to be protected by CONFIG_OF guards as this is
-> still an optional feature.
->
-> Signed-off-by: Jonas Bonn<jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
-> ---
->   drivers/i2c/busses/i2c-ocores.c |   64 ++++++++++++++++++++++++++++++++++-----
->   1 files changed, 56 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> index 0070371..c05e8c4 100644
-> --- a/drivers/i2c/busses/i2c-ocores.c
-> +++ b/drivers/i2c/busses/i2c-ocores.c
-> @@ -210,6 +210,32 @@ static struct i2c_adapter ocores_adapter = {
->   	.algo		=&ocores_algorithm,
->   };
->
-> +#ifdef CONFIG_OF
-> +static int ocores_i2c_of_probe(struct platform_device* pdev,
-> +				struct ocores_i2c* i2c)
-> +{
-> +	__be32* val;
-> +
-> +	val = of_get_property(pdev->dev.of_node, "regstep", NULL);
-> +	if (!val) {
-> +		dev_err(&pdev->dev, "Missing required parameter 'regstep'");
-> +		return -ENODEV;
-> +	}
-> +	i2c->regstep = be32_to_cpup(val);
-> +
-> +	val = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
-> +	if (!val) {
-> +		dev_err(&pdev->dev,
-> +			"Missing required parameter 'clock-frequency'");
-> +		return -ENODEV;
-> +	}
-> +	i2c->clock_khz = be32_to_cpup(val) / 1000;
-> +
-> +	return 0;
-> +}
-> +#else
-> +#define ocores_i2c_of_probe(pdev,i2c) -ENODEV
-> +#endif
->
->   static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->   {
-> @@ -227,10 +253,6 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->   	if (!res2)
->   		return -ENODEV;
->
-> -	pdata = (struct ocores_i2c_platform_data*) pdev->dev.platform_data;
-> -	if (!pdata)
-> -		return -ENODEV;
-> -
->   	i2c = kzalloc(sizeof(*i2c), GFP_KERNEL);
->   	if (!i2c)
->   		return -ENOMEM;
-> @@ -249,8 +271,16 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->   		goto map_failed;
->   	}
->
-> -	i2c->regstep = pdata->regstep;
-> -	i2c->clock_khz = pdata->clock_khz;
-> +	pdata = pdev->dev.platform_data;
-> +	if (pdata) {
-> +		i2c->regstep = pdata->regstep;
-> +		i2c->clock_khz = pdata->clock_khz;
-> +	} else {
-> +		ret = ocores_i2c_of_probe(pdev, i2c);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->   	ocores_init(i2c);
->
->   	init_waitqueue_head(&i2c->wait);
-> @@ -265,6 +295,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->   	i2c->adap = ocores_adapter;
->   	i2c_set_adapdata(&i2c->adap, i2c);
->   	i2c->adap.dev.parent =&pdev->dev;
-> +#ifdef CONFIG_OF
-> +	i2c->adap.dev.of_node = pdev->dev.of_node;
-> +#endif
->
->   	/* add i2c adapter to i2c tree */
->   	ret = i2c_add_adapter(&i2c->adap);
-> @@ -274,8 +307,10 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->   	}
->
->   	/* add in known devices to the bus */
-> -	for (i = 0; i<  pdata->num_devices; i++)
-> -		i2c_new_device(&i2c->adap, pdata->devices + i);
-> +	if (pdata) {
-> +		for (i = 0; i<  pdata->num_devices; i++)
-> +			i2c_new_device(&i2c->adap, pdata->devices + i);
-> +	}
->
->   	return 0;
->
-> @@ -344,6 +379,16 @@ static int ocores_i2c_resume(struct platform_device *pdev)
->   #define ocores_i2c_resume	NULL
->   #endif
->
-> +#ifdef CONFIG_OF
-> +static struct of_device_id ocores_i2c_match[] = {
-> +        {
-> +                .compatible = "opencores,i2c-ocores",
-> +        },
-> +        {},
-> +};
-> +MODULE_DEVICE_TABLE(of, ocores_i2c_match);
-> +#endif
-> +
->   /* work with hotplug and coldplug */
->   MODULE_ALIAS("platform:ocores-i2c");
->
-> @@ -355,6 +400,9 @@ static struct platform_driver ocores_i2c_driver = {
->   	.driver  = {
->   		.owner = THIS_MODULE,
->   		.name = "ocores-i2c",
-> +#ifdef CONFIG_OF
-> +                .of_match_table = ocores_i2c_match,
-> +#endif
->   	},
->   };
->
+diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+new file mode 100644
+index 0000000..7382989
+--- /dev/null
++++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+@@ -0,0 +1,28 @@
++ Motorola mc146818 compatible RTC
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Required properties:
++  - compatible : "motorola,mc146818"
++  - reg : should contain registers location and length.
++
++Optional properties:
++  - interrupts : should contain interrupt.
++  - interrupt-parent : interrupt source phandle.
++  - ctrl-reg : Contains the initial value of the control register also
++    called "Register B".
++  - freq-reg : Contains the initial value of the frequency register also
++    called "Regsiter A".
++
++"Register A" and "B" are usually initialized by the firmware (BIOS for
++instance). If this is not done, it can be performed by the driver.
++
++ISA Example:
++
++	rtc@70 {
++	         compatible = "motorola,mc146818";
++	         interrupts = <8 3>;
++	         interrupt-parent = <&ioapic1>;
++	         ctrl-reg = <2>;
++	         freq-reg = <0x26>;
++	         reg = <1 0x70 2>;
++	 };
+diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+index 5856167..e516a4b 100644
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -36,6 +36,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/log2.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
+ 
+ /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
+ #include <asm-generic/rtc.h>
+@@ -1120,6 +1123,98 @@ static struct pnp_driver cmos_pnp_driver = {
+ };
+ 
+ #endif	/* CONFIG_PNP */
++#ifdef CONFIG_OF
++static bool of_driver_registered;
++
++static const struct of_device_id of_cmos_match[] = {
++	{
++		.compatible = "motorola,mc146818",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_cmos_match);
++
++static int __init of_cmos_probe(struct platform_device *dev,
++		const struct of_device_id *match)
++{
++	struct resource res;
++	struct device_node *node = dev->dev.of_node;
++	struct rtc_time time;
++	int ret;
++	int virq;
++	const __be32 *val;
++
++	ret = of_address_to_resource(node, 0, &res);
++	if (ret)
++		return ret;
++
++	virq = irq_of_parse_and_map(node, 0);
++
++	val = of_get_property(node, "ctrl-reg", NULL);
++	if (val)
++		CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
++
++	val = of_get_property(node, "freq-reg", NULL);
++	if (val)
++		CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
++
++	get_rtc_time(&time);
++	ret = rtc_valid_tm(&time);
++	if (ret) {
++		struct rtc_time def_time = {
++			.tm_year = 1,
++			.tm_mday = 1,
++		};
++		set_rtc_time(&def_time);
++	}
++
++	return cmos_do_probe(&dev->dev, &res, virq);
++}
++
++static int __exit of_cmos_remove(struct platform_device *dev)
++{
++	cmos_do_remove(&dev->dev);
++	return 0;
++}
++
++static int of_cmos_shutdown(struct platform_device *dev)
++{
++	if (system_state == SYSTEM_POWER_OFF && !cmos_poweroff(&dev->dev))
++		return 0;
++
++	cmos_do_shutdown();
++	return 0;
++}
++
++#ifdef	CONFIG_PM
++static int of_cmos_suspend(struct platform_device *dev, pm_message_t mesg)
++{
++	return cmos_suspend(&dev->dev, mesg);
++}
++
++static int of_cmos_resume(struct platform_device *dev)
++{
++	return cmos_resume(&dev->dev);
++}
++#else
++#define	of_cmos_suspend NULL
++#define	of_cmos_resume	NULL
++#endif
++
++static struct of_platform_driver cmos_of_driver_probe = {
++	.driver = {
++		.name = "motorola-mc146818",
++		.owner = THIS_MODULE,
++		.of_match_table = of_cmos_match,
++	},
++	.probe          = of_cmos_probe,
++	.remove         = of_cmos_remove,
++	.shutdown	= of_cmos_shutdown,
++	.suspend	= of_cmos_suspend,
++	.resume		= of_cmos_resume,
++};
++#endif
++
+ 
+ /*----------------------------------------------------------------*/
+ 
+@@ -1176,6 +1271,11 @@ static int __init cmos_init(void)
+ 	if (retval == 0)
+ 		pnp_driver_registered = true;
+ #endif
++#ifdef CONFIG_OF
++	retval = of_register_platform_driver(&cmos_of_driver_probe);
++	if (retval == 0)
++		of_driver_registered = true;
++#endif
+ 
+ 	if (!cmos_rtc.dev) {
+ 		retval = platform_driver_probe(&cmos_platform_driver,
+@@ -1191,6 +1291,10 @@ static int __init cmos_init(void)
+ 	if (pnp_driver_registered)
+ 		pnp_unregister_driver(&cmos_pnp_driver);
+ #endif
++#ifdef CONFIG_OF
++	if (of_driver_registered)
++		of_unregister_platform_driver(&cmos_of_driver_probe);
++#endif
+ 	return retval;
+ }
+ module_init(cmos_init);
+@@ -1201,6 +1305,10 @@ static void __exit cmos_exit(void)
+ 	if (pnp_driver_registered)
+ 		pnp_unregister_driver(&cmos_pnp_driver);
+ #endif
++#ifdef CONFIG_OF
++	if (of_driver_registered)
++		of_unregister_platform_driver(&cmos_of_driver_probe);
++#endif
+ 	if (platform_driver_registered)
+ 		platform_driver_unregister(&cmos_platform_driver);
+ }
+-- 
+1.7.3.2
