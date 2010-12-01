@@ -1,40 +1,162 @@
-From: "H. Peter Anvin" <hpa@linux.intel.com>
-Subject: Re: [sodaville] [PATCH 03/11] x86/dtb: Add a device tree for CE4100
-Date: Tue, 30 Nov 2010 13:18:32 -0800
-Message-ID: <4CF56A28.7070909@linux.intel.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>	<1290706801-7323-4-git-send-email-bigeasy@linutronix.de>	<1290808645.32570.158.camel@pasglop>	<20101128160449.GC30784@www.tglx.de>	<1290984809.32570.208.camel@pasglop>	<20101129130720.7d060e1c@udp111988uds.am.freescale.net>	<1291061128.32570.298.camel@pasglop>	<4CF40DF4.9060204@firmworks.com> <20101129234259.586eb27a@lxorguk.ukuu.org.uk>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: Re: [PATCH 1/3] i2c-ocores: Adapt for device tree
+Date: Wed, 01 Dec 2010 10:37:35 +0100
+Message-ID: <4CF6175F.2040305@home.nl>
+References: <1290615982-1028-1-git-send-email-jonas@southpole.se>
+	<1290615982-1028-2-git-send-email-jonas@southpole.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20101129234259.586eb27a@lxorguk.ukuu.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Mitch Bradley <wmb@firmworks.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Siewior <bigeasy@linutronix.de>, x86@kernel.org, linux-kernel@vger.kernel.org, sodaville@linutronix.de, Scott Wood <scottwood@freescale.com>, Sebastian@www.tglx.de, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1290615982-1028-2-git-send-email-jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2010 03:42 PM, Alan Cox wrote:
->> The usual layout is that the PCI bus is a direct child of
->> the root node, and the ISA bus is a child of the PCI bus.
->> That reflects the "Northbridge + Southbridge" wiring that
-> 
-> That isn't strictly true either. On many PC devices the ISA bus (or LPC
-> bus nowdays) has no heirarchy as such because ISA cycles get issued if
-> the PCI cycles don't generate a response. In addition some cycles go to
-> both busses on some chipsets and there are various bits of magic so the
-> I/O spaces and particularly the memory spaces are intertwined.
-> 
-> So it's not a subordinate bus really, its a bit weirder. PCMCIA is
-> probably a sub-bus when you've got a PCI/PCMCIA adapter but ISA in
-> general is a bit fuzzy.
-> 
+Hi Jonas,
 
-Actually, it can go both ways -- there are ISA/LPC busses which are true
-childs of PCI busses -- in particular, are subject to the decoding
-restrictions of the host bridge -- and there are those that aren't
-logically even if they are physically.  The reason for this is that
-subtractive decoding can be done either at the back end (as in a classic
-PCI/ISA system with a single PCI bus) or at the front end (as in
-HyperTransport for example.)
+Seems to work for me on Nios2. (Compile tested. Ran the kernel devices 
+were found, did not test functionality)
+I know Nios2 is not (yet) a supported platform but we're busy trying to 
+get fdt working...
+So an ack from my side!
 
-	-hpa
+Walter
+
+On 11/24/10 5:26 PM, Jonas Bonn wrote:
+> This patch adapts the i2c-ocores driver for being defined and configured via
+> a device tree description.
+>
+> The device tree bits need to be protected by CONFIG_OF guards as this is
+> still an optional feature.
+>
+> Signed-off-by: Jonas Bonn<jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+> ---
+>   drivers/i2c/busses/i2c-ocores.c |   64 ++++++++++++++++++++++++++++++++++-----
+>   1 files changed, 56 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+> index 0070371..c05e8c4 100644
+> --- a/drivers/i2c/busses/i2c-ocores.c
+> +++ b/drivers/i2c/busses/i2c-ocores.c
+> @@ -210,6 +210,32 @@ static struct i2c_adapter ocores_adapter = {
+>   	.algo		=&ocores_algorithm,
+>   };
+>
+> +#ifdef CONFIG_OF
+> +static int ocores_i2c_of_probe(struct platform_device* pdev,
+> +				struct ocores_i2c* i2c)
+> +{
+> +	__be32* val;
+> +
+> +	val = of_get_property(pdev->dev.of_node, "regstep", NULL);
+> +	if (!val) {
+> +		dev_err(&pdev->dev, "Missing required parameter 'regstep'");
+> +		return -ENODEV;
+> +	}
+> +	i2c->regstep = be32_to_cpup(val);
+> +
+> +	val = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
+> +	if (!val) {
+> +		dev_err(&pdev->dev,
+> +			"Missing required parameter 'clock-frequency'");
+> +		return -ENODEV;
+> +	}
+> +	i2c->clock_khz = be32_to_cpup(val) / 1000;
+> +
+> +	return 0;
+> +}
+> +#else
+> +#define ocores_i2c_of_probe(pdev,i2c) -ENODEV
+> +#endif
+>
+>   static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>   {
+> @@ -227,10 +253,6 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>   	if (!res2)
+>   		return -ENODEV;
+>
+> -	pdata = (struct ocores_i2c_platform_data*) pdev->dev.platform_data;
+> -	if (!pdata)
+> -		return -ENODEV;
+> -
+>   	i2c = kzalloc(sizeof(*i2c), GFP_KERNEL);
+>   	if (!i2c)
+>   		return -ENOMEM;
+> @@ -249,8 +271,16 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>   		goto map_failed;
+>   	}
+>
+> -	i2c->regstep = pdata->regstep;
+> -	i2c->clock_khz = pdata->clock_khz;
+> +	pdata = pdev->dev.platform_data;
+> +	if (pdata) {
+> +		i2c->regstep = pdata->regstep;
+> +		i2c->clock_khz = pdata->clock_khz;
+> +	} else {
+> +		ret = ocores_i2c_of_probe(pdev, i2c);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>   	ocores_init(i2c);
+>
+>   	init_waitqueue_head(&i2c->wait);
+> @@ -265,6 +295,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>   	i2c->adap = ocores_adapter;
+>   	i2c_set_adapdata(&i2c->adap, i2c);
+>   	i2c->adap.dev.parent =&pdev->dev;
+> +#ifdef CONFIG_OF
+> +	i2c->adap.dev.of_node = pdev->dev.of_node;
+> +#endif
+>
+>   	/* add i2c adapter to i2c tree */
+>   	ret = i2c_add_adapter(&i2c->adap);
+> @@ -274,8 +307,10 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>   	}
+>
+>   	/* add in known devices to the bus */
+> -	for (i = 0; i<  pdata->num_devices; i++)
+> -		i2c_new_device(&i2c->adap, pdata->devices + i);
+> +	if (pdata) {
+> +		for (i = 0; i<  pdata->num_devices; i++)
+> +			i2c_new_device(&i2c->adap, pdata->devices + i);
+> +	}
+>
+>   	return 0;
+>
+> @@ -344,6 +379,16 @@ static int ocores_i2c_resume(struct platform_device *pdev)
+>   #define ocores_i2c_resume	NULL
+>   #endif
+>
+> +#ifdef CONFIG_OF
+> +static struct of_device_id ocores_i2c_match[] = {
+> +        {
+> +                .compatible = "opencores,i2c-ocores",
+> +        },
+> +        {},
+> +};
+> +MODULE_DEVICE_TABLE(of, ocores_i2c_match);
+> +#endif
+> +
+>   /* work with hotplug and coldplug */
+>   MODULE_ALIAS("platform:ocores-i2c");
+>
+> @@ -355,6 +400,9 @@ static struct platform_driver ocores_i2c_driver = {
+>   	.driver  = {
+>   		.owner = THIS_MODULE,
+>   		.name = "ocores-i2c",
+> +#ifdef CONFIG_OF
+> +                .of_match_table = ocores_i2c_match,
+> +#endif
+>   	},
+>   };
+>
