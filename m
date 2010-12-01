@@ -1,82 +1,58 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 09/10] MCDE: Add build files and bus
-Date: Wed, 1 Dec 2010 16:39:03 +0100
-Message-ID: <201012011639.03904.arnd@arndb.de>
-References: <F45880696056844FA6A73F415B568C6953604E802E@EXDCVYMBSTM006.EQ1STM.local>
-	<20101130230533.GA11342@kroah.com>
-	<20101130234215.GE8521@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101130234215.GE8521-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jimmy RUBIN <jimmy.rubin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Dan JOHANSSON <dan.johansson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marcus LORENTZON <marcus.xm.lorentzon-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: dirk.brandewie@gmail.com
+Subject: [PATCH 0/4] V2 Add ability to link device blob(s) into vmlinux
+Date: Wed,  1 Dec 2010 11:41:31 -0800
+Message-ID: <cover.1291231792.git.dirk.brandewie@gmail.com>
+References: <cover.1289943240.git.dirk.brandewie@gmail.com>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <cover.1289943240.git.dirk.brandewie@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, mmarek@suse.cz, Dirk Brandewie <dirk.brandewie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 01 December 2010, Russell King - ARM Linux wrote:
-> Right, so saying to ARM developers that they can't submit code which
-> adds new static device structures is rather problematical then, and
-> effectively brings a section of kernel development to a complete
-> standstill - it means no support for additional ARM platforms until
-> this issue is resolved.  (This "condition" was mentioned by Arnd
-> earlier in this thread, and was put in such a way that it was now
-> a hard and fast rule.)
+From: Dirk Brandewie <dirk.brandewie@gmail.com>
 
-At the embedded developer BoF in Cambridge,MA we discussed this
-problem quite a bit, and my impression there was that it is a hard
-rule indeed, so I said this to the best of my knowledge.
+This patch set adds the ability to link device tree blobs into
+vmlinux. 
 
-> I feel it would be better to allow the current situation to continue.
-> If we start telling people that they can't use statically declared
-> devices without first having an alternative, we'll end up with people
-> inventing their own individual - and different - solutions to this
-> problem, which could actually make the problem harder to resolve in
-> the longer term.
+Patch 1 implements the changes to include/asm-generic/vmlinux.lds.h and
+adds a generic rule for generating DTB objects to be linked vmlinux.
 
-Yes, that makes sense. We should probably start thinking about the
-migration plan though. There does not seem to be a shortage of
-alternatives for registering new platform devices already and once
-we can get to agree on how we want it done, we can start mandating
-that new drivers do it that way, while we phase out some of the
-other ones.
+Patch 2 implements linking a DTB into an x86 image.
 
-Among the architectures that use platform devices extensively, the
-various ways to register them I could find are:
+Patch 3-4 move {powerpc,microblaze}/boot/Makefile to use the dtc rule
+in patch 1.
 
-* static platform_register_device:
-  arm, avr32, frv, mips, m32r, sparc, sh and xtensa
+This patch set has been tested on x86.
 
-* static platform_add_devices:
-  arm, blackfin, m68knommu, mips, sh
+Powerpc and Microblaze have been compile tested with and without patch
+3 and 4 applied.
 
-* dynamic platform_device_register_simple:
-  m68k, mips, powerpc, sh and x86
+Changes from V1:
 
-* dynamic platform_device_alloc/platform_device_add:
-  arm, avr32, mips, powerpc, lots of drivers
+Documentation added for dtc command in Makefile.lib to
+Documentation/kbuild/makefiles.txt
+Separate DTB_ALIGNMENT define removed.
+FORCE removed from dtc rule.
+Removed hardcoded path to dts files from dtc command.  
+Moved %.dtb: %.dts rule to arch specific makefiles. 
+ 
+Patch for adding kernel command line option to pass in dtb_compat
+string dropped from this set will be submitted seperately.
 
-* dynamic of_platform_bus_probe:
-  powerpc, microblaze
+Dirk Brandewie (4):
+  of: Add support for linking device tree blobs into vmlinux
+  x86/of: Add building device tree blob(s) into image.
+  of/powerpc: Use generic rule to build dtb's
+  microblaze/of: Use generic rule to build dtb's
 
-* dynamic platform_device_register_resndata:
-  not currently used
+ Documentation/kbuild/makefiles.txt |   15 +++++++++++++++
+ arch/microblaze/boot/Makefile      |   10 ++--------
+ arch/powerpc/boot/Makefile         |    8 +++-----
+ arch/x86/platform/ce4100/Makefile  |   10 ++++++++++
+ include/asm-generic/vmlinux.lds.h  |   15 ++++++++++++---
+ scripts/Makefile.lib               |   21 ++++++++++++++++++++-
+ 6 files changed, 62 insertions(+), 17 deletions(-)
 
-I was under the impression that platform_device_register_resndata is
-the function that was actually meant to solve this, but there are
-exactly zero users of this, except for the
-platform_device_register_simple wrapper. The fact that it's currently
-not used probably means either that nobody heard about it or that
-the interface is lacking in some way and is actually useless for
-replacing the static definitions.
-
-	Arnd
+-- 
+1.7.2.3
