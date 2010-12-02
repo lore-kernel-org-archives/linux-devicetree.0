@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH v3] rtc/cmos: add OF bindings
-Date: Thu, 2 Dec 2010 14:35:29 +0100
-Message-ID: <20101202133529.GA10365@www.tglx.de>
+Subject: [PATCH] x86/rtc: don't register rtc if we have an OF node for it
+Date: Thu, 2 Dec 2010 14:38:50 +0100
+Message-ID: <20101202133850.GB10365@www.tglx.de>
 References: <20101201101756.GA31624@www.tglx.de>
 	<AANLkTinF8GVv-HwKWCRx2jJoCZVWwNzBou3shi8OJj3S@mail.gmail.com>
 Mime-Version: 1.0
@@ -20,127 +20,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This allows to load the OF driver based informations from the device
-tree. Systems without BIOS may need to perform some initialization.
-PowerPC creates a PNP device from the OF information and performs this
-kind of initialization in their private PCI quirk. This looks more
-generic.
+or the rtc driver will probe for two devices: the static platform device
+the OF device.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-CC: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 ---
- Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++++
- drivers/rtc/rtc-cmos.c                          |   39 +++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
+ arch/x86/kernel/rtc.c |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-new file mode 100644
-index 0000000..7382989
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-@@ -0,0 +1,28 @@
-+ Motorola mc146818 compatible RTC
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Required properties:
-+  - compatible : "motorola,mc146818"
-+  - reg : should contain registers location and length.
-+
-+Optional properties:
-+  - interrupts : should contain interrupt.
-+  - interrupt-parent : interrupt source phandle.
-+  - ctrl-reg : Contains the initial value of the control register also
-+    called "Register B".
-+  - freq-reg : Contains the initial value of the frequency register also
-+    called "Regsiter A".
-+
-+"Register A" and "B" are usually initialized by the firmware (BIOS for
-+instance). If this is not done, it can be performed by the driver.
-+
-+ISA Example:
-+
-+	rtc@70 {
-+	         compatible = "motorola,mc146818";
-+	         interrupts = <8 3>;
-+	         interrupt-parent = <&ioapic1>;
-+	         ctrl-reg = <2>;
-+	         freq-reg = <0x26>;
-+	         reg = <1 0x70 2>;
-+	 };
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index 5856167..dbb95b3 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -36,6 +36,8 @@
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/log2.h>
+diff --git a/arch/x86/kernel/rtc.c b/arch/x86/kernel/rtc.c
+index 1cfbbfc..382c6cb 100644
+--- a/arch/x86/kernel/rtc.c
++++ b/arch/x86/kernel/rtc.c
+@@ -6,6 +6,7 @@
+ #include <linux/acpi.h>
+ #include <linux/bcd.h>
+ #include <linux/pnp.h>
 +#include <linux/of.h>
-+#include <linux/of_platform.h>
  
- /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
- #include <asm-generic/rtc.h>
-@@ -1121,6 +1123,15 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- #endif	/* CONFIG_PNP */
+ #include <asm/vsyscall.h>
+ #include <asm/x86_init.h>
+@@ -218,6 +219,25 @@ static struct platform_device rtc_device = {
+ 	.num_resources	= ARRAY_SIZE(rtc_resources),
+ };
  
 +#ifdef CONFIG_OF
-+static const struct of_device_id of_cmos_match[] = {
-+	{
-+		.compatible = "motorola,mc146818",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_cmos_match);
-+#endif
- /*----------------------------------------------------------------*/
- 
- /* Platform setup should have set up an RTC device, when PNP is
-@@ -1129,6 +1140,31 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- static int __init cmos_platform_probe(struct platform_device *pdev)
- {
-+	if (pdev->dev.of_node) {
-+		struct device_node *node = pdev->dev.of_node;
-+		struct rtc_time time;
-+		int ret;
-+		const __be32 *val;
++static __init int have_rtc_of_node(void)
++{
++	struct device_node *n;
 +
-+		val = of_get_property(node, "ctrl-reg", NULL);
-+		if (val)
-+			CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
-+
-+		val = of_get_property(node, "freq-reg", NULL);
-+		if (val)
-+			CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
-+
-+		get_rtc_time(&time);
-+		ret = rtc_valid_tm(&time);
-+		if (ret) {
-+			struct rtc_time def_time = {
-+				.tm_year = 1,
-+				.tm_mday = 1,
-+			};
-+			set_rtc_time(&def_time);
-+		}
++	n = of_find_compatible_node(NULL, NULL, "motorola,mc146818");
++	if (n) {
++		of_node_put(n);
++		return 1;
 +	}
-+
- 	cmos_wake_setup(&pdev->dev);
- 	return cmos_do_probe(&pdev->dev,
- 			platform_get_resource(pdev, IORESOURCE_IO, 0),
-@@ -1157,6 +1193,9 @@ static struct platform_driver cmos_platform_driver = {
- 	.shutdown	= cmos_platform_shutdown,
- 	.driver = {
- 		.name		= (char *) driver_name,
-+#if defined(CONFIG_OF)
-+		.of_match_table = of_cmos_match,
++	return 0;
++}
++#else
++static inline int have_rtc_of_node(void)
++{
++	return 0;
++}
 +#endif
- 		.suspend	= cmos_suspend,
- 		.resume		= cmos_resume,
++
+ static __init int add_rtc_cmos(void)
+ {
+ #ifdef CONFIG_PNP
+@@ -237,6 +257,9 @@ static __init int add_rtc_cmos(void)
  	}
+ #endif
+ 
++	if (have_rtc_of_node())
++		return 0;
++
+ 	platform_device_register(&rtc_device);
+ 	dev_info(&rtc_device.dev,
+ 		 "registered platform RTC device (no PNP device found)\n");
 -- 
 1.7.3.2
