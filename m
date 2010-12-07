@@ -1,82 +1,70 @@
-From: Dirk Brandewie <dirk.brandewie@gmail.com>
-Subject: Re: [PATCH 1/4] of: Add support for linking device tree blobs into
- vmlinux
-Date: Mon, 06 Dec 2010 19:19:11 -0800
-Message-ID: <4CFDA7AF.2060201@gmail.com>
-References: <cover.1291656753.git.dirk.brandewie@gmail.com> <76a37fa459aeadce5d11db8a7cc044687a2e0e8c.1291656753.git.dirk.brandewie@gmail.com> <20101206190251.GB20882@merkur.ravnborg.org>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH 2/2 v2] powerpc, video: add SM501 support for charon board.
+Date: Tue,  7 Dec 2010 07:59:20 +0100
+Message-ID: <1291705160-26847-1-git-send-email-hs@denx.de>
+References: <1291451028-22532-2-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20101206190251.GB20882@merkur.ravnborg.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, mmarek@suse.cz
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1291451028-22532-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2010 11:02 AM, Sam Ravnborg wrote:
-> On Mon, Dec 06, 2010 at 09:35:59AM -0800, dirk.brandewie@gmail.com wrote:
->> From: Dirk Brandewie<dirk.brandewie@gmail.com>
->> -
->> +# DTC
->> +#  ---------------------------------------------------------------------------
->> +
->> +# Generate an assembly file to wrap the output of the device tree compiler
->> +$(obj)/%.dtb.S: $(obj)/%.dtb
->> +	@echo '#include<asm-generic/vmlinux.lds.h>'>  $@
->> +	@echo '.section .dtb.init.rodata,"a"'>>  $@
->> +	@echo '.balign STRUCT_ALIGNMENT'>>  $@
->> +	@echo '.global __dtb_$(*F)_begin'>>  $@
->> +	@echo '__dtb_$(*F)_begin:'>>  $@
->> +	@echo '.incbin "$<" '>>  $@
->> +	@echo '__dtb_$(*F)_end:'>>  $@
->> +	@echo '.global __dtb_$(*F)_end'>>  $@
->> +	@echo '.balign STRUCT_ALIGNMENT'>>  $@
->> +
->
-> If we really want this rule in Makefile.lib then at least make it less verbose,
-> and more secure.
+Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+---
+- based against 2.6.37-rc4
 
-I started with the change in Makefile.lib because it made sense to me, is there 
-a more appropriate place for these rules/commands?
+./scripts/checkpatch.pl 0003-powerpc-video-add-SM501-support-for-charon-board.patch
+total: 0 errors, 0 warnings, 21 lines checked
 
-> Something like this:
-> quiet_dt_S_dtb_cmd = DTB    $@
->        dt_S_dtb_cmd =                                      \
-> (                                                         \
-> 	@echo '#include<asm-generic/vmlinux.lds.h>';     \
-> 	@echo '.section .dtb.init.rodata,"a"';            \
-> 	@echo '.balign STRUCT_ALIGNMENT';                 \
-> 	echo '.global __dtb_$(*F)_begin';                 \
-> 	echo '__dtb_$(*F)_begin:';                        \
-> 	echo '.incbin "$<" ';                             \
-> 	echo '__dtb_$(*F)_end:';                          \
-> 	echo '.global __dtb_$(*F)_end';                   \
-> 	echo '.balign STRUCT_ALIGNMENT';                  \
-> )>  $@
->
-> $(obj)/%.dtb.S: $(obj)/%.dtb
-> 	$(call cmd,dt_S_dtb)
->
+0003-powerpc-video-add-SM501-support-for-charon-board.patch has no obvious style problems and is ready for submission.
 
-I will make the changes in next version.
+- changes since v1:
+  - no board specific defconfig file for mpc52xx based boards as suggested
+    from Wolfram Sang
 
->
->> +DTC = $(objtree)/scripts/dtc/dtc
->
-> If this is the only spot where we use DTC then drop the variable.
->
->> +
->> +quiet_cmd_dtc = DTC $@
->> +      cmd_dtc = $(DTC) -O dtb -o $@ -b 0 $(DTC_FLAGS) $<
->
->
->> +ooo
->
-> What is the purpose of these "ooo"? A debugging left-over?
->
+ arch/powerpc/boot/dts/charon.dts |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-Yep sorry
-
->
-> 	Sam
+diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
+index 9776889..d9af022 100644
+--- a/arch/powerpc/boot/dts/charon.dts
++++ b/arch/powerpc/boot/dts/charon.dts
+@@ -186,6 +186,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+ 		ranges = <	0 0 0xfc000000 0x02000000
++				1 0 0xe0000000 0x04000000 // CS1 range, SM501
+ 				3 0 0xe8000000 0x00080000>;
+ 
+ 		flash@0,0 {
+@@ -197,6 +198,14 @@
+ 			#address-cells = <1>;
+ 		};
+ 
++		display@1,0 {
++			compatible = "smi,sm501";
++			reg = <1 0x00000000 0x00800000
++			       1 0x03e00000 0x00200000>;
++			mode = "640x480-32@60";
++			interrupts = <1 1 3>;
++		};
++
+ 		mram0@3,0 {
+ 			compatible = "mtd-ram";
+ 			reg = <3 0x00000 0x80000>;
+-- 
+1.7.2.3
