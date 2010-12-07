@@ -1,123 +1,82 @@
 From: Dirk Brandewie <dirk.brandewie@gmail.com>
-Subject: Re: [PATCH] of/fdt: add kernel command line option for dtb_compat
- string
-Date: Mon, 06 Dec 2010 19:08:50 -0800
-Message-ID: <4CFDA542.309@gmail.com>
-References: <1291658059-383-1-git-send-email-dirk.brandewie@gmail.com> <4bb36a12-8d95-4d4e-936c-c1c74a9372cc@VA3EHSMHS025.ehs.local> <4CFD3322.1000503@gmail.com> <4CFD3371.3080807@gmail.com> <805e9139-7c09-45f5-a5a9-0ed0cbf64f2f@VA3EHSMHS025.ehs.local>
+Subject: Re: [PATCH 1/4] of: Add support for linking device tree blobs into
+ vmlinux
+Date: Mon, 06 Dec 2010 19:19:11 -0800
+Message-ID: <4CFDA7AF.2060201@gmail.com>
+References: <cover.1291656753.git.dirk.brandewie@gmail.com> <76a37fa459aeadce5d11db8a7cc044687a2e0e8c.1291656753.git.dirk.brandewie@gmail.com> <20101206190251.GB20882@merkur.ravnborg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <805e9139-7c09-45f5-a5a9-0ed0cbf64f2f@VA3EHSMHS025.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, grant.likely@secretlab.ca
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20101206190251.GB20882@merkur.ravnborg.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, mmarek@suse.cz
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2010 01:50 PM, Stephen Neuendorffer wrote:
+On 12/06/2010 11:02 AM, Sam Ravnborg wrote:
+> On Mon, Dec 06, 2010 at 09:35:59AM -0800, dirk.brandewie@gmail.com wrote:
+>> From: Dirk Brandewie<dirk.brandewie@gmail.com>
+>> -
+>> +# DTC
+>> +#  ---------------------------------------------------------------------------
+>> +
+>> +# Generate an assembly file to wrap the output of the device tree compiler
+>> +$(obj)/%.dtb.S: $(obj)/%.dtb
+>> +	@echo '#include<asm-generic/vmlinux.lds.h>'>  $@
+>> +	@echo '.section .dtb.init.rodata,"a"'>>  $@
+>> +	@echo '.balign STRUCT_ALIGNMENT'>>  $@
+>> +	@echo '.global __dtb_$(*F)_begin'>>  $@
+>> +	@echo '__dtb_$(*F)_begin:'>>  $@
+>> +	@echo '.incbin "$<" '>>  $@
+>> +	@echo '__dtb_$(*F)_end:'>>  $@
+>> +	@echo '.global __dtb_$(*F)_end'>>  $@
+>> +	@echo '.balign STRUCT_ALIGNMENT'>>  $@
+>> +
 >
->
->> -----Original Message-----
->> From: Dirk Brandewie [mailto:dirk.brandewie@gmail.com]
->> Sent: Monday, December 06, 2010 11:03 AM
->> To: Stephen Neuendorffer
->> Cc: linux-kernel@vger.kernel.org; Randy Dunlap;
-> devicetree-discuss@lists.ozlabs.org; linux-
->> doc@vger.kernel.org; grant.likely@secretlab.ca
->> Subject: Re: [PATCH] of/fdt: add kernel command line option for
-> dtb_compat string
->>
->> On 12/06/2010 11:01 AM, Dirk Brandewie wrote:
->>> On 12/06/2010 10:37 AM, Stephen Neuendorffer wrote:
->>>>
->>>>
->>>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->>>>> index c1360e0..ca1318c 100644
->>>>> --- a/drivers/of/fdt.c
->>>>> +++ b/drivers/of/fdt.c
->>>>> @@ -15,6 +15,8 @@
->>>>> #include<linux/of_fdt.h>
->>>>> #include<linux/string.h>
->>>>> #include<linux/errno.h>
->>>>> +#include<asm-generic/vmlinux.lds.h>
->>>>> +
->>>>>
->>>>> #ifdef CONFIG_PPC
->>>>> #include<asm/machdep.h>
->>>>> @@ -604,3 +606,49 @@ void __init unflatten_device_tree(void)
->>>>>
->>>>> pr_debug("<- unflatten_device_tree()\n");
->>>>> }
->>>>> +
->>>>> +extern uint8_t __dtb_start[];
->>>>> +extern uint8_t __dtb_end[];
->>>>> +static void __init *of_flat_dt_find_compatible_dtb(char *name)
->>>>> +{
->>>>> + void *rc = NULL;
->>>>> + unsigned long root, size;
->>>>> + struct boot_param_header *orig_initial_boot_params;
->>>>> + uint8_t *blob;
->>>>> +
->>>>> + orig_initial_boot_params = initial_boot_params;
->>>>> + blob = __dtb_start;
->>>>> + initial_boot_params = (struct boot_param_header *)blob;
->>>>
->>>> Oy... can you avoid the pointer dance by using
-> of_fdt_is_compatible()
->>>> from my recent set of patches?
->>>
->>> I would like to get rid of the pointer dance. Is your patch set
-> going to make it
->>> into .37? I didn't see any acks.
->>>
->> Obviously I meant .38 :-)
->
-> I'd like it too, but that's up to Grant.  I imagine some of the
-> bottleneck is that I don't have
-> an easy way to test on powerpc or microblaze at the moment, so it's not
-> clear that the code doesn't
-> break anything.
->
->>>> It takes a blob argument. Then the loop below goes away.
->>>>
->>>
->>> The loop will still be needed since multiple DTBs may be linked into
-> the image.
->>> using your of_fdt_is_compatible() will make the loop a lot more
-> readable though.
->
-> Yeah, right.  Is the format just the binary concatenation of the device
-> trees?
+> If we really want this rule in Makefile.lib then at least make it less verbose,
+> and more secure.
 
-No each blob starts on a STRUCT_ALIGNMENT boundary.  If the blob does not have 
-the correct alignment the code that GCC generates to reference into the 
-structure breaks.
+I started with the change in Makefile.lib because it made sense to me, is there 
+a more appropriate place for these rules/commands?
 
-part of why I ask
-> is the PTR_ALIGN code: It seems like different blob functions make
-> different assumptions about the
-> location of the blob. In some cases, it is assumed to be the passed
-> pointer, in others,
-> the pointer is scanned for OF_DT_BEGIN_NODE (using of_get_flat_dt_root).
-> Is the concern about
-> STRUCT_ALIGNMENT necessary if you call of_get_flat_dt_root() afterwards?
-> Would it make sense to
-> always call of_get_flat_dt_root in the 'generic' functions I added or
-> not?
-The padding between blobs is added in the assembly wrapper (zero fill) 
-of_get_flat_dt_root() assumes the blob pointer (initial_boot_params) is the head 
-of the blob and only skips OF_DT_NOP (0x4).  If we always hand in the pointer to 
-the head of the blob the rest of fdt.c should be happy with it.
-
+> Something like this:
+> quiet_dt_S_dtb_cmd = DTB    $@
+>        dt_S_dtb_cmd =                                      \
+> (                                                         \
+> 	@echo '#include<asm-generic/vmlinux.lds.h>';     \
+> 	@echo '.section .dtb.init.rodata,"a"';            \
+> 	@echo '.balign STRUCT_ALIGNMENT';                 \
+> 	echo '.global __dtb_$(*F)_begin';                 \
+> 	echo '__dtb_$(*F)_begin:';                        \
+> 	echo '.incbin "$<" ';                             \
+> 	echo '__dtb_$(*F)_end:';                          \
+> 	echo '.global __dtb_$(*F)_end';                   \
+> 	echo '.balign STRUCT_ALIGNMENT';                  \
+> )>  $@
 >
-> BTW, PTR_ALIGN should probably be ALIGN.
-Originally I used ALIGN but needed to cast the result of ALIGN blob to get rid 
-of a compiler warning Grant suggested PTR_ALIGN which does the cast for you.
-
->
-> Steve
->
-> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
->
+> $(obj)/%.dtb.S: $(obj)/%.dtb
+> 	$(call cmd,dt_S_dtb)
 >
 
+I will make the changes in next version.
+
+>
+>> +DTC = $(objtree)/scripts/dtc/dtc
+>
+> If this is the only spot where we use DTC then drop the variable.
+>
+>> +
+>> +quiet_cmd_dtc = DTC $@
+>> +      cmd_dtc = $(DTC) -O dtb -o $@ -b 0 $(DTC_FLAGS) $<
+>
+>
+>> +ooo
+>
+> What is the purpose of these "ooo"? A debugging left-over?
+>
+
+Yep sorry
+
+>
+> 	Sam
