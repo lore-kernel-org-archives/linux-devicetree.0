@@ -1,64 +1,64 @@
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [PATCH 1/2] video, sm501: add OF binding to support SM501
-Date: Wed, 8 Dec 2010 14:36:35 +0900
-Message-ID: <20101208053635.GB31508@linux-sh.org>
-References: <1291451028-22532-1-git-send-email-hs@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1291451028-22532-1-git-send-email-hs@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, linuxppc-dev@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Ben Dooks <ben-linux@fluff.org>
+From: dirk.brandewie@gmail.com
+Subject: [PATCH 0/4] V3 Add ability to link device blob(s) into vmlinux
+Date: Wed,  8 Dec 2010 07:01:12 -0800
+Message-ID: <cover.1291820033.git.dirk.brandewie@gmail.com>
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, mmarek@suse.cz, Dirk Brandewie <dirk.brandewie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 04, 2010 at 09:23:47AM +0100, Heiko Schocher wrote:
-> - add binding to OF, compatible name "smi,sm501"
-> 
-> - add read/write functions for using this driver
->   also on powerpc plattforms
-> 
-> - add commandline options:
->   sm501.fb_mode:
->     Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
->   sm501.bpp:
->     Specify bit-per-pixel if not specified mode
-> 
-> - Add support for encoding display mode information
->   in the device tree using verbatim EDID block.
-> 
->   If the "edid" entry in the "smi,sm501" node is present,
->   the driver will build mode database using EDID data
->   and allow setting the display modes from this database.
-> 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> cc: linux-fbdev@vger.kernel.org
-> cc: devicetree-discuss@ozlabs.org
-> ---
-> based against 2.6.37-rc4
-> 
-> ./scripts/checkpatch.pl 0003-video-sm501-add-OF-binding-to-support-SM501.patch lems and is ready for
-> total: 0 errors, 0 warnings, 1067 lines checked
-> 
-> 0003-video-sm501-add-OF-binding-to-support-SM501.patch has no obvious style problems and is ready for submission.
-> 
->  Documentation/kernel-parameters.txt          |    7 +
->  Documentation/powerpc/dts-bindings/sm501.txt |   30 +++
->  drivers/mfd/sm501.c                          |  141 ++++++++------
->  drivers/video/sm501fb.c                      |  264 +++++++++++++++++---------
->  include/linux/sm501.h                        |    8 +
->  5 files changed, 299 insertions(+), 151 deletions(-)
->  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
-> 
-Given that this is all SM501 dependent, is there some particular reason
-why you neglected to Cc the author or the MFD folks?
+From: Dirk Brandewie <dirk.brandewie@gmail.com>
+
+This patch set adds the ability to link device tree blobs into
+vmlinux. 
+
+Patch 1 implements the changes to include/asm-generic/vmlinux.lds.h and
+adds a generic rule for generating DTB objects to be linked vmlinux.
+
+Patch 2 implements linking a DTB into an x86 image.
+
+Patch 3-4 move {powerpc,microblaze}/boot/Makefile to use the dtc rule
+in patch 1.
+
+This patch set has been tested on x86.
+
+Powerpc and Microblaze have been compile tested with and without patch
+3 and 4 applied.
+
+Changes from V1:
+
+Documentation added for dtc command in Makefile.lib to
+Documentation/kbuild/makefiles.txt
+Separate DTB_ALIGNMENT define removed.
+FORCE removed from dtc rule.
+Removed hardcoded path to dts files from dtc command.  
+Moved %.dtb: %.dts rule to arch specific makefiles. 
+ 
+Patch for adding kernel command line option to pass in dtb_compat
+string dropped from this set will be submitted seperately.
+
+Changes from V2:
+
+Rule to create assembly wrapper for blob changed to use Sam Ravnborgs
+suggested implementation.
+
+Rules in architecture specific Makefiles changed to use the cmd
+function instead of the if_changed function.
+
+Dirk Brandewie (4):
+  of: Add support for linking device tree blobs into vmlinux
+  x86/of: Add building device tree blob(s) into image.
+  of/powerpc: Use generic rule to build dtb's
+  microblaze/of: Use generic rule to build dtb's
+
+ Documentation/kbuild/makefiles.txt |   15 +++++++++++++++
+ arch/microblaze/boot/Makefile      |   12 +++---------
+ arch/powerpc/boot/Makefile         |    8 +++-----
+ arch/x86/platform/ce4100/Makefile  |   10 ++++++++++
+ include/asm-generic/vmlinux.lds.h  |   13 +++++++++++--
+ scripts/Makefile.lib               |   23 +++++++++++++++++++++++
+ 6 files changed, 65 insertions(+), 16 deletions(-)
+
+-- 
+1.7.2.3
