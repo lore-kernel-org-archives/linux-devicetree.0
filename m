@@ -1,70 +1,64 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH 2/2 v2] powerpc, video: add SM501 support for charon board.
-Date: Tue,  7 Dec 2010 07:59:20 +0100
-Message-ID: <1291705160-26847-1-git-send-email-hs@denx.de>
-References: <1291451028-22532-2-git-send-email-hs@denx.de>
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [PATCH 1/2] video, sm501: add OF binding to support SM501
+Date: Wed, 8 Dec 2010 14:36:35 +0900
+Message-ID: <20101208053635.GB31508@linux-sh.org>
+References: <1291451028-22532-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1291451028-22532-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <1291451028-22532-1-git-send-email-hs@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, linuxppc-dev@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
----
-- based against 2.6.37-rc4
-
-./scripts/checkpatch.pl 0003-powerpc-video-add-SM501-support-for-charon-board.patch
-total: 0 errors, 0 warnings, 21 lines checked
-
-0003-powerpc-video-add-SM501-support-for-charon-board.patch has no obvious style problems and is ready for submission.
-
-- changes since v1:
-  - no board specific defconfig file for mpc52xx based boards as suggested
-    from Wolfram Sang
-
- arch/powerpc/boot/dts/charon.dts |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
-
-diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
-index 9776889..d9af022 100644
---- a/arch/powerpc/boot/dts/charon.dts
-+++ b/arch/powerpc/boot/dts/charon.dts
-@@ -186,6 +186,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <1>;
- 		ranges = <	0 0 0xfc000000 0x02000000
-+				1 0 0xe0000000 0x04000000 // CS1 range, SM501
- 				3 0 0xe8000000 0x00080000>;
- 
- 		flash@0,0 {
-@@ -197,6 +198,14 @@
- 			#address-cells = <1>;
- 		};
- 
-+		display@1,0 {
-+			compatible = "smi,sm501";
-+			reg = <1 0x00000000 0x00800000
-+			       1 0x03e00000 0x00200000>;
-+			mode = "640x480-32@60";
-+			interrupts = <1 1 3>;
-+		};
-+
- 		mram0@3,0 {
- 			compatible = "mtd-ram";
- 			reg = <3 0x00000 0x80000>;
--- 
-1.7.2.3
+On Sat, Dec 04, 2010 at 09:23:47AM +0100, Heiko Schocher wrote:
+> - add binding to OF, compatible name "smi,sm501"
+> 
+> - add read/write functions for using this driver
+>   also on powerpc plattforms
+> 
+> - add commandline options:
+>   sm501.fb_mode:
+>     Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
+>   sm501.bpp:
+>     Specify bit-per-pixel if not specified mode
+> 
+> - Add support for encoding display mode information
+>   in the device tree using verbatim EDID block.
+> 
+>   If the "edid" entry in the "smi,sm501" node is present,
+>   the driver will build mode database using EDID data
+>   and allow setting the display modes from this database.
+> 
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> cc: linux-fbdev@vger.kernel.org
+> cc: devicetree-discuss@ozlabs.org
+> ---
+> based against 2.6.37-rc4
+> 
+> ./scripts/checkpatch.pl 0003-video-sm501-add-OF-binding-to-support-SM501.patch lems and is ready for
+> total: 0 errors, 0 warnings, 1067 lines checked
+> 
+> 0003-video-sm501-add-OF-binding-to-support-SM501.patch has no obvious style problems and is ready for submission.
+> 
+>  Documentation/kernel-parameters.txt          |    7 +
+>  Documentation/powerpc/dts-bindings/sm501.txt |   30 +++
+>  drivers/mfd/sm501.c                          |  141 ++++++++------
+>  drivers/video/sm501fb.c                      |  264 +++++++++++++++++---------
+>  include/linux/sm501.h                        |    8 +
+>  5 files changed, 299 insertions(+), 151 deletions(-)
+>  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
+> 
+Given that this is all SM501 dependent, is there some particular reason
+why you neglected to Cc the author or the MFD folks?
