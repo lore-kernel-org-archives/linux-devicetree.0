@@ -1,16 +1,16 @@
-From: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [PATCH 3/5] of/device: Make of_get_next_child() check status
 	properties
-Date: Thu, 09 Dec 2010 12:33:22 +1100
-Message-ID: <1291858402.2962.2.camel@concordia>
+Date: Thu, 9 Dec 2010 14:09:24 +1100
+Message-ID: <20101209030924.GC11856@yookeroo>
 References: <cover.1291799069.git.deepak_saxena@mentor.com>
 	<20101208192944.GE32473@mentor.com>
 	<20101208150102.69b8062b@udp111988uds.am.freescale.net>
-Reply-To: michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org
+	<1291858402.2962.2.camel@concordia>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0260119508425912923=="
+Content-Type: multipart/mixed; boundary="===============8907081178320601925=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101208150102.69b8062b-N/eSCTBpGwP7j4BuCOFQISmX4OfbXNuMKnGXBo5VDl8@public.gmane.org>
+In-Reply-To: <1291858402.2962.2.camel@concordia>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,87 +20,101 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0260119508425912923==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-g4gQv5IEbk++n+xcg5Q1"
+--===============8907081178320601925==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
+Content-Disposition: inline
 
 
---=-g4gQv5IEbk++n+xcg5Q1
-Content-Type: text/plain; charset="UTF-8"
+--b5gNqxB1S1yM7hjW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2010-12-08 at 15:01 -0600, Scott Wood wrote:
-> On Wed, 8 Dec 2010 11:29:44 -0800
-> Deepak Saxena <deepak_saxena-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
->=20
-> > We only return the next child if the device is available.
+On Thu, Dec 09, 2010 at 12:33:22PM +1100, Michael Ellerman wrote:
+> On Wed, 2010-12-08 at 15:01 -0600, Scott Wood wrote:
+> > On Wed, 8 Dec 2010 11:29:44 -0800
+> > Deepak Saxena <deepak_saxena-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
 > >=20
-> > Signed-off-by: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Deepak Saxena <deepak_saxena-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/of/base.c |    4 +++-
-> >  1 files changed, 3 insertions(+), 1 deletions(-)
+> > > We only return the next child if the device is available.
+> > >=20
+> > > Signed-off-by: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > > Signed-off-by: Deepak Saxena <deepak_saxena-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  drivers/of/base.c |    4 +++-
+> > >  1 files changed, 3 insertions(+), 1 deletions(-)
+> > >=20
+> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > > index 5d269a4..81b2601 100644
+> > > --- a/drivers/of/base.c
+> > > +++ b/drivers/of/base.c
+> > > @@ -321,6 +321,8 @@ struct device_node *of_get_next_parent(struct dev=
+ice_node *node)
+> > >   *
+> > >   *	Returns a node pointer with refcount incremented, use
+> > >   *	of_node_put() on it when done.
+> > > + *
+> > > + *	Does not return nodes marked unavailable by a status property.
+> > >   */
+> > >  struct device_node *of_get_next_child(const struct device_node *node,
+> > >  	struct device_node *prev)
+> > > @@ -330,7 +332,7 @@ struct device_node *of_get_next_child(const struc=
+t device_node *node,
+> > >  	read_lock(&devtree_lock);
+> > >  	next =3D prev ? prev->sibling : node->child;
+> > >  	for (; next; next =3D next->sibling)
+> > > -		if (of_node_get(next))
+> > > +		if (of_device_is_available(next) && of_node_get(next))
+> > >  			break;
+> > >  	of_node_put(prev);
+> > >  	read_unlock(&devtree_lock);
 > >=20
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 5d269a4..81b2601 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -321,6 +321,8 @@ struct device_node *of_get_next_parent(struct devic=
-e_node *node)
-> >   *
-> >   *	Returns a node pointer with refcount incremented, use
-> >   *	of_node_put() on it when done.
-> > + *
-> > + *	Does not return nodes marked unavailable by a status property.
-> >   */
-> >  struct device_node *of_get_next_child(const struct device_node *node,
-> >  	struct device_node *prev)
-> > @@ -330,7 +332,7 @@ struct device_node *of_get_next_child(const struct =
-device_node *node,
-> >  	read_lock(&devtree_lock);
-> >  	next =3D prev ? prev->sibling : node->child;
-> >  	for (; next; next =3D next->sibling)
-> > -		if (of_node_get(next))
-> > +		if (of_device_is_available(next) && of_node_get(next))
-> >  			break;
-> >  	of_node_put(prev);
-> >  	read_unlock(&devtree_lock);
+> > This seems like too low-level a place to put this.  Some code may know
+> > how to un-disable a device in certain situations, or it may be part of
+> > debug code trying to dump the whole device tree, etc.  Looking
+> > further[1], I see a raw version of this function, but not other things
+> > like of_find_compatible_node.
 >=20
-> This seems like too low-level a place to put this.  Some code may know
-> how to un-disable a device in certain situations, or it may be part of
-> debug code trying to dump the whole device tree, etc.  Looking
-> further[1], I see a raw version of this function, but not other things
-> like of_find_compatible_node.
+> Yeah I agree. I think we'll eventually end up with __ versions of all or
+> lots of them. Not to mention there might be cases you've missed where
+> code expects to see unavailable nodes. The right approach is to add
+> _new_ routines that don't return unavailable nodes, and convert code
+> that you know wants to use them.
 
-Yeah I agree. I think we'll eventually end up with __ versions of all or
-lots of them. Not to mention there might be cases you've missed where
-code expects to see unavailable nodes. The right approach is to add
-_new_ routines that don't return unavailable nodes, and convert code
-that you know wants to use them.
-
-cheers
+Actually, I don't think we really want these status-skipping
+iterators at all.  The device tree iterators should give us the device
+tree, as it is.  Those old-style drivers which seach for a node rather
+than using the bus probing logic can keep individual checks of the
+status property until they're converted to the new scheme.
 
 
---=-g4gQv5IEbk++n+xcg5Q1
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--b5gNqxB1S1yM7hjW
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+Content-Description: Digital signature
+Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEABECAAYFAk0AMeAACgkQdSjSd0sB4dLHQACgvV076SSf06vhnGraJVr2F0eV
-EgcAn1dS4ifJXTIRL5S8fiqPTcrG1Mka
-=5nUg
+iEYEARECAAYFAk0ASGQACgkQaILKxv3ab8ay4ACfVgFG07+PBXRMUzt9qEceCEK+
+A5kAn1v90EKf6K9Gyj13MBwPU5OQEeIc
+=6k3z
 -----END PGP SIGNATURE-----
 
---=-g4gQv5IEbk++n+xcg5Q1--
+--b5gNqxB1S1yM7hjW--
 
-
---===============0260119508425912923==
+--===============8907081178320601925==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -111,4 +125,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============0260119508425912923==--
+--===============8907081178320601925==--
