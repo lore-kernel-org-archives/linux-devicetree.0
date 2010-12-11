@@ -1,75 +1,81 @@
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: Re: [PATCH v2 1/2] video, sm501: add OF binding to support SM501
-Date: Sat, 11 Dec 2010 10:28:58 -0800
-Message-ID: <20101211102858.fd1b5426.rdunlap@xenotime.net>
-References: <1291451028-22532-1-git-send-email-hs@denx.de>
-	<1292049075-1809-1-git-send-email-hs@denx.de>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: microblaze console init
+Date: Sat, 11 Dec 2010 22:50:33 +0100
+Message-ID: <4D03F229.9070403@home.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1292049075-1809-1-git-send-email-hs@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Vincent Sanders <vince@simtec.co.uk>, linux-kernel@vger.kernel.org, Ben Dooks <ben@simtec.co.uk>, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="------------070908040400010701010609"
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 11 Dec 2010 07:31:15 +0100 Heiko Schocher wrote:
+This is a multi-part message in MIME format.
+--------------070908040400010701010609
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> - add commandline options:
->   sm501.fb_mode:
+Hi list,
 
-    sm501.mode:
+while working on fdt support for the nios2 I was reading some code for 
+other archs I also looked at the microblaze code and I believe I found 
+some leftovers from a copy/paste action, attached is a small patch 
+(untested) to fix a debug print and (more important) remove a useless 
+call to early_init_dt_check_for_initrd.
 
->     Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
->   sm501.bpp:
->     Specify bit-per-pixel if not specified mode
-> 
-> ---
-> 
->  Documentation/kernel-parameters.txt          |    7 +
->  Documentation/powerpc/dts-bindings/sm501.txt |   30 +++
->  drivers/mfd/sm501.c                          |  141 ++++++++------
->  drivers/video/sm501fb.c                      |  264 +++++++++++++++++---------
->  include/linux/sm501.h                        |    8 +
->  5 files changed, 299 insertions(+), 151 deletions(-)
->  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
-> 
-> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> index cdd2a6e..6341541 100644
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -2301,6 +2301,13 @@ and is between 256 and 4096 characters. It is defined in the file
->  			merging on their own.
->  			For more information see Documentation/vm/slub.txt.
->  
-> +	sm501.bpp=	SM501 Display driver:
-> +			Specify bit-per-pixel if not specified mode
+I do still have one concern, do I understand correctly that there is no 
+way to do address-translation (the "ranges" stuff) on a flattenend tree, 
+using the of_get_flat_dt_* functions? This would mean that this code 
+would fail to get the correct address for a uartlite connected to a bus 
+that has address-translation.
 
-			Specifiy bits-per-pixel if not specified by 'mode'
+Greetingz
+Walter
 
-> +
-> +	sm501fb.mode=	SM501 Display driver:
-> +			Specify resolution as
-> +			"<xres>x<yres>[-<bpp>][@<refresh>]"
-> +
->  	smart2=		[HW]
->  			Format: <io1>[,<io2>[,...,<io8>]]
+--------------070908040400010701010609
+Content-Type: text/plain; x-mac-type="0"; x-mac-creator="0";
+ name="microblaze_prom_copy_paste_fix.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="microblaze_prom_copy_paste_fix.patch"
 
+diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+index a105301..c881393 100644
+--- a/arch/microblaze/kernel/prom.c
++++ b/arch/microblaze/kernel/prom.c
+@@ -61,14 +61,12 @@ static int __init early_init_dt_scan_serial(unsigned long node,
+ 	char *p;
+ 	int *addr;
+ 
+-	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
++	pr_debug("search \"serial\", depth: %d, uname: %s\n", depth, uname);
+ 
+ /* find all serial nodes */
+ 	if (strncmp(uname, "serial", 6) != 0)
+ 		return 0;
+ 
+-	early_init_dt_check_for_initrd(node);
+-
+ /* find compatible node with uartlite */
+ 	p = of_get_flat_dt_prop(node, "compatible", &l);
+ 	if ((strncmp(p, "xlnx,xps-uartlite", 17) != 0) &&
 
-However, I think that these shouldn't be added to Documentation/kernel-parameters.txt
-but should be added to the Documentation/fb/ sub-directory either by adding to
-Documentation/fb/modedb.txt or by adding a new file Documentation/fb/sm501.txt.
+--------------070908040400010701010609
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
----
-~Randy
-*** Remember to use Documentation/SubmitChecklist when testing your code ***
+--------------070908040400010701010609--
