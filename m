@@ -1,80 +1,75 @@
-From: Matt Tyrlik <tyrlik-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Subject: AUTO: Matt Tyrlik/Raleigh/IBM is out of the office until 01/05/2011.
-	(returning 01/05/2011)
-Date: Sat, 11 Dec 2010 04:02:44 -0700
-Message-ID: <OF9C0714D1.CBEEC85B-ON872577F6.003CACEE-872577F6.003CACEE@us.ibm.com>
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: Re: [PATCH v2 1/2] video, sm501: add OF binding to support SM501
+Date: Sat, 11 Dec 2010 10:28:58 -0800
+Message-ID: <20101211102858.fd1b5426.rdunlap@xenotime.net>
+References: <1291451028-22532-1-git-send-email-hs@denx.de>
+	<1292049075-1809-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7349754500067916494=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1292049075-1809-1-git-send-email-hs@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Vincent Sanders <vince@simtec.co.uk>, linux-kernel@vger.kernel.org, Ben Dooks <ben@simtec.co.uk>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---===============7349754500067916494==
-Content-type: multipart/alternative;
-	Boundary="0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E"
-Content-Disposition: inline
+On Sat, 11 Dec 2010 07:31:15 +0100 Heiko Schocher wrote:
 
---0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E
-Content-type: text/plain; charset=US-ASCII
-Content-transfer-encoding: quoted-printable
+> - add commandline options:
+>   sm501.fb_mode:
 
+    sm501.mode:
 
+>     Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
+>   sm501.bpp:
+>     Specify bit-per-pixel if not specified mode
+> 
+> ---
+> 
+>  Documentation/kernel-parameters.txt          |    7 +
+>  Documentation/powerpc/dts-bindings/sm501.txt |   30 +++
+>  drivers/mfd/sm501.c                          |  141 ++++++++------
+>  drivers/video/sm501fb.c                      |  264 +++++++++++++++++---------
+>  include/linux/sm501.h                        |    8 +
+>  5 files changed, 299 insertions(+), 151 deletions(-)
+>  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
+> 
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index cdd2a6e..6341541 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2301,6 +2301,13 @@ and is between 256 and 4096 characters. It is defined in the file
+>  			merging on their own.
+>  			For more information see Documentation/vm/slub.txt.
+>  
+> +	sm501.bpp=	SM501 Display driver:
+> +			Specify bit-per-pixel if not specified mode
 
-I am out of the office until 01/05/2011.
+			Specifiy bits-per-pixel if not specified by 'mode'
 
-Vacation.  Please contact my Manager Laura Lenery with urgent requests.=
-
-
-
-Note: This is an automated response to your message  "devicetree-discus=
-s
-Digest, Vol 30, Issue 14" sent on 12/10/10 23:31:22.
-
-This is the only notification you will receive while this person is awa=
-y.=
-
---0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E
-Content-type: text/html; charset=US-ASCII
-Content-Disposition: inline
-Content-transfer-encoding: quoted-printable
-
-<html><body>
-<p><font size=3D"2">I am out of the office until 01/05/2011.<br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2">Vacation.  Please contact my Manager Laura Lene=
-ry with urgent requests.<br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2"><br>
-</font><font size=3D"2" color=3D"#808080">Note: This is an automated re=
-sponse to your message  &quot;</font><b><font size=3D"2">devicetree-dis=
-cuss Digest, Vol 30, Issue 14&quot;</font></b><font size=3D"2" color=3D=
-"#808080"> sent on </font><b><font size=3D"2">12/10/10 23:31:22</font><=
-/b><font size=3D"2" color=3D"#808080">. <br>
-</font><font size=3D"2" color=3D"#808080"><br>
-</font><font size=3D"2" color=3D"#808080">This is the only notification=
- you will receive while this person is away.</font></body></html>=
-
---0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E--
+> +
+> +	sm501fb.mode=	SM501 Display driver:
+> +			Specify resolution as
+> +			"<xres>x<yres>[-<bpp>][@<refresh>]"
+> +
+>  	smart2=		[HW]
+>  			Format: <io1>[,<io2>[,...,<io8>]]
 
 
---===============7349754500067916494==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+However, I think that these shouldn't be added to Documentation/kernel-parameters.txt
+but should be added to the Documentation/fb/ sub-directory either by adding to
+Documentation/fb/modedb.txt or by adding a new file Documentation/fb/sm501.txt.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============7349754500067916494==--
+---
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code ***
