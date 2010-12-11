@@ -1,68 +1,80 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH v3 2/2] powerpc, video: add SM501 support for charon board.
-Date: Sat, 11 Dec 2010 07:31:36 +0100
-Message-ID: <1292049096-1852-1-git-send-email-hs@denx.de>
-References: <1291451028-22532-2-git-send-email-hs@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1291451028-22532-2-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Heiko Schocher <hs@denx.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org
+From: Matt Tyrlik <tyrlik-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Subject: AUTO: Matt Tyrlik/Raleigh/IBM is out of the office until 01/05/2011.
+	(returning 01/05/2011)
+Date: Sat, 11 Dec 2010 04:02:44 -0700
+Message-ID: <OF9C0714D1.CBEEC85B-ON872577F6.003CACEE-872577F6.003CACEE@us.ibm.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7349754500067916494=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
-cc: linux-fbdev@vger.kernel.org
-cc: devicetree-discuss@ozlabs.org
-cc: Ben Dooks <ben@simtec.co.uk>
-cc: Vincent Sanders <vince@simtec.co.uk>
-cc: Samuel Ortiz <sameo@linux.intel.com>
-cc: linux-kernel@vger.kernel.org
+--===============7349754500067916494==
+Content-type: multipart/alternative;
+	Boundary="0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E"
+Content-Disposition: inline
 
----
-- based against 2.6.37-rc4
+--0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E
+Content-type: text/plain; charset=US-ASCII
+Content-transfer-encoding: quoted-printable
 
-./scripts/checkpatch.pl 0003-powerpc-video-add-SM501-support-for-charon-board.patch
-total: 0 errors, 0 warnings, 21 lines checked
 
-0003-powerpc-video-add-SM501-support-for-charon-board.patch has no obvious style problems and is ready for submission.
 
-- changes since v1:
-  - no board specific defconfig file for mpc52xx based boards as suggested
-    from Wolfram Sang
+I am out of the office until 01/05/2011.
 
-- changes since v2:
-  add Ben Dooks, Vincent Sanders and Samuel Ortiz and lkml to cc, as
-  suggested from Paul Mundt.
+Vacation.  Please contact my Manager Laura Lenery with urgent requests.=
 
- arch/powerpc/boot/dts/charon.dts |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
-index 9776889..d9af022 100644
---- a/arch/powerpc/boot/dts/charon.dts
-+++ b/arch/powerpc/boot/dts/charon.dts
-@@ -186,6 +186,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <1>;
- 		ranges = <	0 0 0xfc000000 0x02000000
-+				1 0 0xe0000000 0x04000000 // CS1 range, SM501
- 				3 0 0xe8000000 0x00080000>;
- 
- 		flash@0,0 {
-@@ -197,6 +198,14 @@
- 			#address-cells = <1>;
- 		};
- 
-+		display@1,0 {
-+			compatible = "smi,sm501";
-+			reg = <1 0x00000000 0x00800000
-+			       1 0x03e00000 0x00200000>;
-+			mode = "640x480-32@60";
-+			interrupts = <1 1 3>;
-+		};
-+
- 		mram0@3,0 {
- 			compatible = "mtd-ram";
- 			reg = <3 0x00000 0x80000>;
--- 
-1.7.2.3
+
+Note: This is an automated response to your message  "devicetree-discus=
+s
+Digest, Vol 30, Issue 14" sent on 12/10/10 23:31:22.
+
+This is the only notification you will receive while this person is awa=
+y.=
+
+--0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
+Content-transfer-encoding: quoted-printable
+
+<html><body>
+<p><font size=3D"2">I am out of the office until 01/05/2011.<br>
+</font><font size=3D"2"><br>
+</font><font size=3D"2">Vacation.  Please contact my Manager Laura Lene=
+ry with urgent requests.<br>
+</font><font size=3D"2"><br>
+</font><font size=3D"2"><br>
+</font><font size=3D"2" color=3D"#808080">Note: This is an automated re=
+sponse to your message  &quot;</font><b><font size=3D"2">devicetree-dis=
+cuss Digest, Vol 30, Issue 14&quot;</font></b><font size=3D"2" color=3D=
+"#808080"> sent on </font><b><font size=3D"2">12/10/10 23:31:22</font><=
+/b><font size=3D"2" color=3D"#808080">. <br>
+</font><font size=3D"2" color=3D"#808080"><br>
+</font><font size=3D"2" color=3D"#808080">This is the only notification=
+ you will receive while this person is away.</font></body></html>=
+
+--0__=08BBFD65DFAF2A7E8f9e8a93df938690918c08BBFD65DFAF2A7E--
+
+
+--===============7349754500067916494==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7349754500067916494==--
