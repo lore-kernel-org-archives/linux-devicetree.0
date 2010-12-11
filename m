@@ -1,64 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: microblaze console init
-Date: Sat, 11 Dec 2010 15:18:32 -0700
-Message-ID: <AANLkTi=Ys++TwYA_Z6-s_bsDbyw+wKgvPitwRahYmB3=@mail.gmail.com>
-References: <4D03F229.9070403@home.nl>
-	<AANLkTinw3mqpmiUkzf9Drgg+f+b3hFBUoHLmtWSO75GY@mail.gmail.com>
-	<4D03F803.6060903@home.nl>
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: Re: [PATCH v2 1/2] video, sm501: add OF binding to support SM501
+Date: Sat, 11 Dec 2010 14:34:54 -0800
+Message-ID: <20101211143454.ccc5e296.rdunlap@xenotime.net>
+References: <1291451028-22532-1-git-send-email-hs@denx.de>
+	<1292049075-1809-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D03F803.6060903-CmkmPbn3yAE@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1292049075-1809-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 11, 2010 at 3:15 PM, Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org> w=
-rote:
-> On 12/11/10 10:59 PM, Grant Likely wrote:
->>
->> On Sat, Dec 11, 2010 at 2:50 PM, Walter Goossens<waltergoossens-CmkmPbn3yAE@public.gmane.org>
->> =A0wrote:
->>>
->>> I do still have one concern, do I understand correctly that there is no
->>> way
->>> to do address-translation (the "ranges" stuff) on a flattenend tree,
->>> using
->>> the of_get_flat_dt_* functions? This would mean that this code would fa=
-il
->>> to
->>> get the correct address for a uartlite connected to a bus that has
->>> address-translation.
->>
->> Correct, none of the flat tree core code tries to do any range
->> translation. =A0In fact, it does very little in the way of looking at
->> reg properties at all. =A0Only the absolute bare minimum required to get
->> through early boot. =A0It could be done, but there really hasn't been a
->> use case for it up to this point. =A0Instead, ranges can be translated
->> after the tree has been unflattened into the live form.
->>
->> g.
->>
-> thanks for the quick response!
-> I was afraid of this... I'm affraid I do need to use it in the nios code,
-> well I don't need to but in order to be flexible (and use the design I'm
-> working with right now) but I would prefer it. The way around this I
-> currently use is a special parameter in chosen with the address of the
-> "early uart" (it's only used for early printk).
-> What's cleanest approach here? An extra property in "chosen" or range
-> translation in the flatttened tree?
+On Sat, 11 Dec 2010 07:31:15 +0100 Heiko Schocher wrote:
 
-Implement ranges translation in the flat tree code.  It wouldn't be
-very hard, and will be a lot more maintainable in the long run.
+> - add commandline options:
+>   sm501.fb_mode:
 
-g.
+    sm501.mode:
+
+>     Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
+>   sm501.bpp:
+>     Specify bit-per-pixel if not specified mode
+> 
+> ---
+> 
+>  Documentation/kernel-parameters.txt          |    7 +
+>  Documentation/powerpc/dts-bindings/sm501.txt |   30 +++
+>  drivers/mfd/sm501.c                          |  141 ++++++++------
+>  drivers/video/sm501fb.c                      |  264 +++++++++++++++++---------
+>  include/linux/sm501.h                        |    8 +
+>  5 files changed, 299 insertions(+), 151 deletions(-)
+>  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
+> 
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index cdd2a6e..6341541 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2301,6 +2301,13 @@ and is between 256 and 4096 characters. It is defined in the file
+>  			merging on their own.
+>  			For more information see Documentation/vm/slub.txt.
+>  
+> +	sm501.bpp=	SM501 Display driver:
+> +			Specify bit-per-pixel if not specified mode
+
+			Specifiy bits-per-pixel if not specified by 'mode'
+
+> +
+> +	sm501fb.mode=	SM501 Display driver:
+
+Shouldn't that be sm501.mode ?
+
+> +			Specify resolution as
+> +			"<xres>x<yres>[-<bpp>][@<refresh>]"
+> +
+>  	smart2=		[HW]
+>  			Format: <io1>[,<io2>[,...,<io8>]]
+
+
+However, I think that these shouldn't be added to Documentation/kernel-parameters.txt
+but should be added to the Documentation/fb/ sub-directory either by adding to
+Documentation/fb/modedb.txt or by adding a new file Documentation/fb/sm501.txt.
+
+
+---
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code ***
