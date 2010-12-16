@@ -1,25 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/3] spi: mpc512x_psc_spi: move probe-routine to __init
-Date: Thu, 16 Dec 2010 10:27:22 -0700
-Message-ID: <AANLkTikP9CiUXda0ENwNKfviAE6oDVqXwDUKgj8zvpGr@mail.gmail.com>
-References: <1292519639-21859-1-git-send-email-w.sang@pengutronix.de> <1292519639-21859-4-git-send-email-w.sang@pengutronix.de>
+From: Timur Tabi <timur@freescale.com>
+Subject: Re: [PATCH v4 5/5] fsl-diu-fb: Support setting display mode using EDID
+Date: Thu, 16 Dec 2010 11:28:24 -0600
+Message-ID: <4D0A4C38.3010105@freescale.com>
+References: <1279893639-24333-1-git-send-email-agust@denx.de>
+	<1279893639-24333-6-git-send-email-agust@denx.de>
+	<AANLkTin-TL5_TKnyHYtZdixosfqpkPNoarSTC+K4tTUb@mail.gmail.com>
+	<AANLkTi=NwY_gcBXeKXeGX-qist3tMQ4EWqj3twYGfeWD@mail.gmail.com>
+	<4D0A446E.5020600@freescale.com>
+	<AANLkTinOf__X0p3_5G90KkYS9PXpB2j0_06MFhFcZzqO@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1292519639-21859-4-git-send-email-w.sang@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <AANLkTinOf__X0p3_5G90KkYS9PXpB2j0_06MFhFcZzqO@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linuxppc-dev@ozlabs.org, linux-fbdev@vger.kernel.org, Anatolij Gustschin <agust@denx.de>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 16, 2010 at 10:13 AM, Wolfram Sang <w.sang@pengutronix.de> wrote:
-> Since of_probe_platform_driver(), this SoC-device can be moved from
-> __devinit to __init because it is not hotpluggable.
->
-> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
+Grant Likely wrote:
+> No.  It is a static property of the board/machine.  It is expected it
+> to be encoded into the board's .dts file.
 
-I really wouldn't bother.  You're counting pennies when the kernel
-uses upwards of 4 megabytes for .text alone, and I don't like fiddling
-with the driver model the way platform_bus_probe() does.
+Ok, but that only makes sense if the monitor is hard-wired to the board itself.
+ If a user can attach any monitor he wants, then the EDID data can't be known at
+compile time.
 
-g.
+I guess it's no different than using hard-coded memory controller programming
+instead of SPD.  You can safely avoid SPD only if the DDR chips are soldered on
+the board.
+
+It looks like I need to add board-specific EDID reading to the DIU driver.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
