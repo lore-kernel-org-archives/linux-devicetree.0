@@ -1,38 +1,44 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] fsl-diu-fb: Support setting display mode using EDID
-Date: Thu, 16 Dec 2010 10:06:59 -0700
-Message-ID: <AANLkTinOf__X0p3_5G90KkYS9PXpB2j0_06MFhFcZzqO@mail.gmail.com>
-References: <1279893639-24333-1-git-send-email-agust@denx.de>
-	<1279893639-24333-6-git-send-email-agust@denx.de>
-	<AANLkTin-TL5_TKnyHYtZdixosfqpkPNoarSTC+K4tTUb@mail.gmail.com>
-	<AANLkTi=NwY_gcBXeKXeGX-qist3tMQ4EWqj3twYGfeWD@mail.gmail.com>
-	<4D0A446E.5020600@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D0A446E.5020600-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: [PATCH 2/3] spi: mpc52xx_psc_spi: fix section mismatch warning
+Date: Thu, 16 Dec 2010 18:13:58 +0100
+Message-ID: <1292519639-21859-3-git-send-email-w.sang@pengutronix.de>
+References: <1292519639-21859-1-git-send-email-w.sang@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1292519639-21859-1-git-send-email-w.sang@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 16, 2010 at 9:55 AM, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Grant Likely wrote:
->> This is for devices which don't have an i2c edid channel.
->
-> So are we expecting board-specific code in U-Boot to add the data to the device
-> tree?
+Done by using of_probe_platform_driver() instead of
+of_register_platform_driver().
 
-No.  It is a static property of the board/machine.  It is expected it
-to be encoded into the board's .dts file.
+Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
+---
+ drivers/spi/mpc52xx_psc_spi.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-g.
+diff --git a/drivers/spi/mpc52xx_psc_spi.c b/drivers/spi/mpc52xx_psc_spi.c
+index 983fbbf..4bf6d37 100644
+--- a/drivers/spi/mpc52xx_psc_spi.c
++++ b/drivers/spi/mpc52xx_psc_spi.c
+@@ -509,7 +509,6 @@ static const struct of_device_id mpc52xx_psc_spi_of_match[] = {
+ MODULE_DEVICE_TABLE(of, mpc52xx_psc_spi_of_match);
+ 
+ static struct of_platform_driver mpc52xx_psc_spi_of_driver = {
+-	.probe = mpc52xx_psc_spi_of_probe,
+ 	.remove = __exit_p(mpc52xx_psc_spi_of_remove),
+ 	.driver = {
+ 		.name = "mpc52xx-psc-spi",
+@@ -520,7 +519,8 @@ static struct of_platform_driver mpc52xx_psc_spi_of_driver = {
+ 
+ static int __init mpc52xx_psc_spi_init(void)
+ {
+-	return of_register_platform_driver(&mpc52xx_psc_spi_of_driver);
++	return of_probe_platform_driver(&mpc52xx_psc_spi_of_driver,
++					mpc52xx_psc_spi_of_probe);
+ }
+ module_init(mpc52xx_psc_spi_init);
+ 
+-- 
+1.7.2.3
