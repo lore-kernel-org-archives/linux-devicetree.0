@@ -1,14 +1,13 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: platform: introduce of_probe_platform_driver()
-Date: Thu, 16 Dec 2010 19:26:20 +0100
-Message-ID: <20101216182620.GA28712@pengutronix.de>
-References: <1292519639-21859-1-git-send-email-w.sang@pengutronix.de>
-	<1292519639-21859-2-git-send-email-w.sang@pengutronix.de>
-	<AANLkTimxAGVkQF24YgDt+TxjbXvW+iCNJhqVLwXO6FXD@mail.gmail.com>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: [PATCH 04/15] x86/dtb: add irq domain abstraction
+Date: Fri, 17 Dec 2010 16:33:42 +0100
+Message-ID: <1292600033-12271-5-git-send-email-bigeasy@linutronix.de>
+References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8013438839106593485=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTimxAGVkQF24YgDt+TxjbXvW+iCNJhqVLwXO6FXD-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1292600033-12271-1-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,58 +17,131 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The here introduced irq_domain abstraction represents a generic irq
+controller. It is a subset of powerpc's irq_host which is going to be
+renamed to irq_domain and then become generic. This implementation will
+be removed once it is generic.
 
---===============8013438839106593485==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Content-Disposition: inline
+The xlate callback is resposible to parse irq informations like irq type
+and number and returns the hardware irq number which is reported by the
+hardware as active.
 
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Tested-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/x86/include/asm/irq_controller.h |   12 ++++++++
+ arch/x86/include/asm/prom.h           |    2 +
+ arch/x86/kernel/prom.c                |   47 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 60 insertions(+), 1 deletions(-)
+ create mode 100644 arch/x86/include/asm/irq_controller.h
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> 2- of_platform_driver is deprecated.  Drivers should be converted to
-> use platform_driver directly.
-
-Ouch, I really should have remembered that. /me grabs a brown paper bag. So=
-rry
-for the noise, dunno what carried me away.
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAk0KWcwACgkQD27XaX1/VRuRqACeIKQaLjKS2jbJo6e2Ysknb3G0
-G5oAoI2I/2nK+mzxbFWzcLm1fyIOolh4
-=3Lo0
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
-
---===============8013438839106593485==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8013438839106593485==--
+diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include/asm/irq_controller.h
+new file mode 100644
+index 0000000..423bbbd
+--- /dev/null
++++ b/arch/x86/include/asm/irq_controller.h
+@@ -0,0 +1,12 @@
++#ifndef __IRQ_CONTROLLER__
++#define __IRQ_CONTROLLER__
++
++struct irq_domain {
++	int (*xlate)(struct irq_domain *h, const u32 *intspec, u32 intsize,
++			u32 *out_hwirq, u32 *out_type);
++	void *priv;
++	struct device_node *controller;
++	struct list_head l;
++};
++
++#endif
+diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+index 2fbe3e8..9076ae4 100644
+--- a/arch/x86/include/asm/prom.h
++++ b/arch/x86/include/asm/prom.h
+@@ -19,9 +19,11 @@
+ #include <asm/irq.h>
+ #include <asm/atomic.h>
+ #include <asm/setup.h>
++#include <asm/irq_controller.h>
+ 
+ #ifdef CONFIG_OF
+ extern void add_dtb(u64 data);
++void add_interrupt_host(struct irq_domain *ih);
+ #else
+ static inline void add_dtb(u64 data) { }
+ #endif
+diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
+index 249ebd3..53948cb 100644
+--- a/arch/x86/kernel/prom.c
++++ b/arch/x86/kernel/prom.c
+@@ -3,18 +3,63 @@
+  */
+ #include <linux/bootmem.h>
+ #include <linux/io.h>
++#include <linux/interrupt.h>
+ #include <linux/list.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/slab.h>
+ 
++#include <asm/irq_controller.h>
++
+ char __initdata cmd_line[COMMAND_LINE_SIZE];
++static LIST_HEAD(irq_domains);
++static DEFINE_RAW_SPINLOCK(big_irq_lock);
++
++void add_interrupt_host(struct irq_domain *ih)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&big_irq_lock, flags);
++	list_add(&ih->l, &irq_domains);
++	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
++}
++
++static struct irq_domain *get_ih_from_node(struct device_node *controller)
++{
++	struct irq_domain *ih, *found = NULL;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&big_irq_lock, flags);
++	list_for_each_entry(ih, &irq_domains, l) {
++		if (ih->controller ==  controller) {
++			found = ih;
++			break;
++		}
++	}
++	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
++	return found;
++}
+ 
+ unsigned int irq_create_of_mapping(struct device_node *controller,
+ 		const u32 *intspec, unsigned int intsize)
+ {
+-	return intspec[0];
++	struct irq_domain *ih;
++	u32 virq;
++	u32 type;
++	int ret;
+ 
++	ih = get_ih_from_node(controller);
++	if (!ih)
++		return -ENODEV;
++	ret = ih->xlate(ih, intspec, intsize, &virq, &type);
++	if (ret)
++		return ret;
++	if (type == IRQ_TYPE_NONE)
++		return virq;
++	/* set the mask if it is different from current */
++	if (type == (irq_to_desc(virq)->status & IRQF_TRIGGER_MASK))
++		set_irq_type(virq, type);
++	return virq;
+ }
+ EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+ 
+-- 
+1.7.3.2
