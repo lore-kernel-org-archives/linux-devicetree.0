@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 14/15] rtc/cmos: add OF bindings
-Date: Fri, 17 Dec 2010 16:33:52 +0100
-Message-ID: <1292600033-12271-15-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 12/15] of/address: use propper endianess in get_flags
+Date: Fri, 17 Dec 2010 16:33:50 +0100
+Message-ID: <1292600033-12271-13-git-send-email-bigeasy@linutronix.de>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,131 +18,265 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This allows to load the OF driver based informations from the device
-tree. Systems without BIOS may need to perform some initialization.
-PowerPC creates a PNP device from the OF information and performs this
-kind of initialization in their private PCI quirk. This looks more
-generic.
+This patch changes u32 to __be32 for all "ranges", "prop" and "addr" and
+such. Those variables are pointing to the device tree which containts
+intergers in big endian format.
+Most functions are doing it right because they are using using
+of_read_number() which is doing the right thing. of_bus_isa_get_flags(),
+of_bus_pci_get_flags() and of_bus_isa_map() were accessing the data
+directly and were doing it wrong.
 
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++++
- drivers/rtc/rtc-cmos.c                          |   40 +++++++++++++++++++++++
- 2 files changed, 68 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
+ arch/powerpc/include/asm/prom.h |    2 +-
+ drivers/of/address.c            |   54 ++++++++++++++++++++------------------
+ include/linux/of_address.h      |    6 ++--
+ 3 files changed, 32 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-new file mode 100644
-index 0000000..7382989
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-@@ -0,0 +1,28 @@
-+ Motorola mc146818 compatible RTC
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Required properties:
-+  - compatible : "motorola,mc146818"
-+  - reg : should contain registers location and length.
-+
-+Optional properties:
-+  - interrupts : should contain interrupt.
-+  - interrupt-parent : interrupt source phandle.
-+  - ctrl-reg : Contains the initial value of the control register also
-+    called "Register B".
-+  - freq-reg : Contains the initial value of the frequency register also
-+    called "Regsiter A".
-+
-+"Register A" and "B" are usually initialized by the firmware (BIOS for
-+instance). If this is not done, it can be performed by the driver.
-+
-+ISA Example:
-+
-+	rtc@70 {
-+	         compatible = "motorola,mc146818";
-+	         interrupts = <8 3>;
-+	         interrupt-parent = <&ioapic1>;
-+	         ctrl-reg = <2>;
-+	         freq-reg = <0x26>;
-+	         reg = <1 0x70 2>;
-+	 };
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index 5856167..8cf0049 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -36,6 +36,8 @@
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/log2.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
+diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+index 01c3302..b891fdc 100644
+--- a/arch/powerpc/include/asm/prom.h
++++ b/arch/powerpc/include/asm/prom.h
+@@ -42,7 +42,7 @@ extern void pci_create_OF_bus_map(void);
  
- /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
- #include <asm-generic/rtc.h>
-@@ -1121,6 +1123,15 @@ static struct pnp_driver cmos_pnp_driver = {
+ /* Translate a DMA address from device space to CPU space */
+ extern u64 of_translate_dma_address(struct device_node *dev,
+-				    const u32 *in_addr);
++				    const __be32 *in_addr);
  
- #endif	/* CONFIG_PNP */
+ #ifdef CONFIG_PCI
+ extern unsigned long pci_address_to_pio(phys_addr_t address);
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 3a1c7e7..b4559c5 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -12,13 +12,13 @@
+ 			(ns) > 0)
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_cmos_match[] = {
-+	{
-+		.compatible = "motorola,mc146818",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_cmos_match);
-+#endif
- /*----------------------------------------------------------------*/
+ static struct of_bus *of_match_bus(struct device_node *np);
+-static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
+-				    u64 size, unsigned int flags,
++static int __of_address_to_resource(struct device_node *dev,
++		const __be32 *addrp, u64 size, unsigned int flags,
+ 				    struct resource *r);
  
- /* Platform setup should have set up an RTC device, when PNP is
-@@ -1129,6 +1140,32 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- static int __init cmos_platform_probe(struct platform_device *pdev)
+ /* Debug utility */
+ #ifdef DEBUG
+-static void of_dump_addr(const char *s, const u32 *addr, int na)
++static void of_dump_addr(const char *s, const __be32 *addr, int na)
  {
-+#ifdef CONFIG_OF
-+	if (pdev->dev.of_node) {
-+		struct device_node *node = pdev->dev.of_node;
-+		struct rtc_time time;
-+		int ret;
-+		const __be32 *val;
-+
-+		val = of_get_property(node, "ctrl-reg", NULL);
-+		if (val)
-+			CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
-+
-+		val = of_get_property(node, "freq-reg", NULL);
-+		if (val)
-+			CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
-+
-+		get_rtc_time(&time);
-+		ret = rtc_valid_tm(&time);
-+		if (ret) {
-+			struct rtc_time def_time = {
-+				.tm_year = 1,
-+				.tm_mday = 1,
-+			};
-+			set_rtc_time(&def_time);
-+		}
-+	}
-+#endif
- 	cmos_wake_setup(&pdev->dev);
- 	return cmos_do_probe(&pdev->dev,
- 			platform_get_resource(pdev, IORESOURCE_IO, 0),
-@@ -1157,6 +1194,9 @@ static struct platform_driver cmos_platform_driver = {
- 	.shutdown	= cmos_platform_shutdown,
- 	.driver = {
- 		.name		= (char *) driver_name,
-+#if defined(CONFIG_OF)
-+		.of_match_table = of_cmos_match,
-+#endif
- 		.suspend	= cmos_suspend,
- 		.resume		= cmos_resume,
- 	}
+ 	printk(KERN_DEBUG "%s", s);
+ 	while (na--)
+@@ -26,7 +26,7 @@ static void of_dump_addr(const char *s, const u32 *addr, int na)
+ 	printk("\n");
+ }
+ #else
+-static void of_dump_addr(const char *s, const u32 *addr, int na) { }
++static void of_dump_addr(const char *s, const __be32 *addr, int na) { }
+ #endif
+ 
+ /* Callbacks for bus specific translators */
+@@ -36,10 +36,10 @@ struct of_bus {
+ 	int		(*match)(struct device_node *parent);
+ 	void		(*count_cells)(struct device_node *child,
+ 				       int *addrc, int *sizec);
+-	u64		(*map)(u32 *addr, const u32 *range,
++	u64		(*map)(u32 *addr, const __be32 *range,
+ 				int na, int ns, int pna);
+ 	int		(*translate)(u32 *addr, u64 offset, int na);
+-	unsigned int	(*get_flags)(const u32 *addr);
++	unsigned int	(*get_flags)(const __be32 *addr);
+ };
+ 
+ /*
+@@ -55,7 +55,7 @@ static void of_bus_default_count_cells(struct device_node *dev,
+ 		*sizec = of_n_size_cells(dev);
+ }
+ 
+-static u64 of_bus_default_map(u32 *addr, const u32 *range,
++static u64 of_bus_default_map(u32 *addr, const __be32 *range,
+ 		int na, int ns, int pna)
+ {
+ 	u64 cp, s, da;
+@@ -85,7 +85,7 @@ static int of_bus_default_translate(u32 *addr, u64 offset, int na)
+ 	return 0;
+ }
+ 
+-static unsigned int of_bus_default_get_flags(const u32 *addr)
++static unsigned int of_bus_default_get_flags(const __be32 *addr)
+ {
+ 	return IORESOURCE_MEM;
+ }
+@@ -110,10 +110,10 @@ static void of_bus_pci_count_cells(struct device_node *np,
+ 		*sizec = 2;
+ }
+ 
+-static unsigned int of_bus_pci_get_flags(const u32 *addr)
++static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+ {
+ 	unsigned int flags = 0;
+-	u32 w = addr[0];
++	u32 w = be32_to_cpup(addr);
+ 
+ 	switch((w >> 24) & 0x03) {
+ 	case 0x01:
+@@ -129,7 +129,8 @@ static unsigned int of_bus_pci_get_flags(const u32 *addr)
+ 	return flags;
+ }
+ 
+-static u64 of_bus_pci_map(u32 *addr, const u32 *range, int na, int ns, int pna)
++static u64 of_bus_pci_map(u32 *addr, const __be32 *range, int na, int ns,
++		int pna)
+ {
+ 	u64 cp, s, da;
+ 	unsigned int af, rf;
+@@ -160,7 +161,7 @@ static int of_bus_pci_translate(u32 *addr, u64 offset, int na)
+ 	return of_bus_default_translate(addr + 1, offset, na - 1);
+ }
+ 
+-const u32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
++const __be32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+ 			unsigned int *flags)
+ {
+ 	const __be32 *prop;
+@@ -207,7 +208,7 @@ EXPORT_SYMBOL(of_get_pci_address);
+ int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 			       struct resource *r)
+ {
+-	const u32	*addrp;
++	const __be32	*addrp;
+ 	u64		size;
+ 	unsigned int	flags;
+ 
+@@ -237,12 +238,13 @@ static void of_bus_isa_count_cells(struct device_node *child,
+ 		*sizec = 1;
+ }
+ 
+-static u64 of_bus_isa_map(u32 *addr, const u32 *range, int na, int ns, int pna)
++static u64 of_bus_isa_map(u32 *addr, const __be32 *range, int na, int ns,
++		int pna)
+ {
+ 	u64 cp, s, da;
+ 
+ 	/* Check address type match */
+-	if ((addr[0] ^ range[0]) & 0x00000001)
++	if ((addr[0] ^ range[0]) & cpu_to_be32(1))
+ 		return OF_BAD_ADDR;
+ 
+ 	/* Read address values, skipping high cell */
+@@ -264,10 +266,10 @@ static int of_bus_isa_translate(u32 *addr, u64 offset, int na)
+ 	return of_bus_default_translate(addr + 1, offset, na - 1);
+ }
+ 
+-static unsigned int of_bus_isa_get_flags(const u32 *addr)
++static unsigned int of_bus_isa_get_flags(const __be32 *addr)
+ {
+ 	unsigned int flags = 0;
+-	u32 w = addr[0];
++	u32 w = be32_to_cpup(addr);
+ 
+ 	if (w & 1)
+ 		flags |= IORESOURCE_IO;
+@@ -330,7 +332,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 			    struct of_bus *pbus, u32 *addr,
+ 			    int na, int ns, int pna, const char *rprop)
+ {
+-	const u32 *ranges;
++	const __be32 *ranges;
+ 	unsigned int rlen;
+ 	int rone;
+ 	u64 offset = OF_BAD_ADDR;
+@@ -398,7 +400,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+  * that can be mapped to a cpu physical address). This is not really specified
+  * that way, but this is traditionally the way IBM at least do things
+  */
+-u64 __of_translate_address(struct device_node *dev, const u32 *in_addr,
++u64 __of_translate_address(struct device_node *dev, const __be32 *in_addr,
+ 			   const char *rprop)
+ {
+ 	struct device_node *parent = NULL;
+@@ -475,22 +477,22 @@ u64 __of_translate_address(struct device_node *dev, const u32 *in_addr,
+ 	return result;
+ }
+ 
+-u64 of_translate_address(struct device_node *dev, const u32 *in_addr)
++u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+ {
+ 	return __of_translate_address(dev, in_addr, "ranges");
+ }
+ EXPORT_SYMBOL(of_translate_address);
+ 
+-u64 of_translate_dma_address(struct device_node *dev, const u32 *in_addr)
++u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+ {
+ 	return __of_translate_address(dev, in_addr, "dma-ranges");
+ }
+ EXPORT_SYMBOL(of_translate_dma_address);
+ 
+-const u32 *of_get_address(struct device_node *dev, int index, u64 *size,
++const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+ 		    unsigned int *flags)
+ {
+-	const u32 *prop;
++	const __be32 *prop;
+ 	unsigned int psize;
+ 	struct device_node *parent;
+ 	struct of_bus *bus;
+@@ -525,8 +527,8 @@ const u32 *of_get_address(struct device_node *dev, int index, u64 *size,
+ }
+ EXPORT_SYMBOL(of_get_address);
+ 
+-static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
+-				    u64 size, unsigned int flags,
++static int __of_address_to_resource(struct device_node *dev,
++		const __be32 *addrp, u64 size, unsigned int flags,
+ 				    struct resource *r)
+ {
+ 	u64 taddr;
+@@ -564,7 +566,7 @@ static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
+ int of_address_to_resource(struct device_node *dev, int index,
+ 			   struct resource *r)
+ {
+-	const u32	*addrp;
++	const __be32	*addrp;
+ 	u64		size;
+ 	unsigned int	flags;
+ 
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 8aea06f..2feda6e 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -3,7 +3,7 @@
+ #include <linux/ioport.h>
+ #include <linux/of.h>
+ 
+-extern u64 of_translate_address(struct device_node *np, const u32 *addr);
++extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ extern void __iomem *of_iomap(struct device_node *device, int index);
+@@ -21,7 +21,7 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ #endif
+ 
+ #ifdef CONFIG_PCI
+-extern const u32 *of_get_pci_address(struct device_node *dev, int bar_no,
++extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
+ 			       u64 *size, unsigned int *flags);
+ extern int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				      struct resource *r);
+@@ -32,7 +32,7 @@ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 	return -ENOSYS;
+ }
+ 
+-static inline const u32 *of_get_pci_address(struct device_node *dev,
++static inline const __be32 *of_get_pci_address(struct device_node *dev,
+ 		int bar_no, u64 *size, unsigned int *flags)
+ {
+ 	return NULL;
 -- 
 1.7.3.2
