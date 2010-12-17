@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 03/15] x86/dtb: Add a device tree for CE4100
-Date: Fri, 17 Dec 2010 16:33:41 +0100
-Message-ID: <1292600033-12271-4-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 02/15] x86: Add device tree support
+Date: Fri, 17 Dec 2010 16:33:40 +0100
+Message-ID: <1292600033-12271-3-git-send-email-bigeasy@linutronix.de>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,231 +21,268 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds minimal support for device tree support on x86. It will
+be passed to the kernel via setup_data which requires atleast boot
+protocol 2.09.
+Memory size, restricted memory regions, boot arguments are gathered the
+traditional way so things like cmd_line are just here to let the code
+compile.
+The current plan is use the device tree as an extension and to gather
+informations from it which can not be enumerated and have to be
+hardcoded otherwise. This includes things like
+- which devices are on this I2C/ SPI bus?
+- how are the interrupts wired to IO APIC?
+- where could my hpet be?
+
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/platform/ce4100/falconfalls.dts |  212 ++++++++++++++++++++++++++++++
- 1 files changed, 212 insertions(+), 0 deletions(-)
- create mode 100644 arch/x86/platform/ce4100/falconfalls.dts
+ Documentation/x86/boot_with_dtb.txt |   26 +++++++++++++++
+ arch/x86/Kconfig                    |    7 ++++
+ arch/x86/include/asm/bootparam.h    |    1 +
+ arch/x86/include/asm/prom.h         |   59 +++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/Makefile            |    1 +
+ arch/x86/kernel/irqinit.c           |    1 +
+ arch/x86/kernel/prom.c              |   54 ++++++++++++++++++++++++++++++++
+ arch/x86/kernel/setup.c             |    4 ++
+ 8 files changed, 153 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/x86/boot_with_dtb.txt
+ create mode 100644 arch/x86/include/asm/prom.h
+ create mode 100644 arch/x86/kernel/prom.c
 
-diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
+diff --git a/Documentation/x86/boot_with_dtb.txt b/Documentation/x86/boot_with_dtb.txt
 new file mode 100644
-index 0000000..24e67ca
+index 0000000..6a357aa
 --- /dev/null
-+++ b/arch/x86/platform/ce4100/falconfalls.dts
-@@ -0,0 +1,212 @@
++++ b/Documentation/x86/boot_with_dtb.txt
+@@ -0,0 +1,26 @@
++  Booting x86 with device tree
++=================================
++
++1. Introduction
++~~~~~~~~~~~~~~~
++This document contains device tree information which are specific to
++the x86 platform. Generic informations as bindings can be found in
++Documentation/powerpc/dts-bindings/
++
++2. Passing the device tree
++~~~~~~~~~~~~~~~~~~~~~~~~~~
++The pointer to the device tree block (dtb) is passed via setup_data
++(see [0]) which requires at least boot protocol 2.09. The type filed is
++defined as
++
++#define SETUP_DTB                      2
++
++3. Purpose
++~~~~~~~~~~~
++The device tree is used as an extension to the "boot page". As such it does not
++parse / consider data which are already covered by the boot page. This includes
++memory size, command line arguments or initrd address.
++It simply holds information which can not be retrieved otherwise like interrupt
++routing or a list of devices behind an I2C bus.
++
++[0] Documentation/x86/boot.txt
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index b6fccb0..0522354 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -299,6 +299,13 @@ config X86_BIGSMP
+ 	---help---
+ 	  This option is needed for the systems that have more than 8 CPUs
+ 
++config X86_OF
++	bool "Support for device tree"
++	select OF
++	select OF_FLATTREE
++	---help---
++	  Device tree support on X86.
++
+ if X86_32
+ config X86_EXTENDED_PLATFORM
+ 	bool "Support for extended (non-PC) x86 platforms"
+diff --git a/arch/x86/include/asm/bootparam.h b/arch/x86/include/asm/bootparam.h
+index c8bfe63..e020d88 100644
+--- a/arch/x86/include/asm/bootparam.h
++++ b/arch/x86/include/asm/bootparam.h
+@@ -12,6 +12,7 @@
+ /* setup data types */
+ #define SETUP_NONE			0
+ #define SETUP_E820_EXT			1
++#define SETUP_DTB			2
+ 
+ /* extensible setup data list node */
+ struct setup_data {
+diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+new file mode 100644
+index 0000000..2fbe3e8
+--- /dev/null
++++ b/arch/x86/include/asm/prom.h
+@@ -0,0 +1,59 @@
 +/*
-+ * CE4100 on Falcon Falls
++ * Definitions for Device tree / OpenFirmware handling on X86
 + *
-+ * (c) Copyright 2010 Intel Corporation
++ * based on arch/powerpc/include/asm/prom.h which is
++ *         Copyright (C) 1996-2005 Paul Mackerras.
 + *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation; version 2 of the License.
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
 + */
-+/dts-v1/;
-+/ {
-+	model = "Intel,FalconFalls";
-+	compatible = "Intel,FalconFalls";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++#ifndef _ASM_X86_PROM_H
++#define _ASM_X86_PROM_H
++#ifndef __ASSEMBLY__
 +
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "Intel,ce4100";
-+			reg = <0>;
-+			lapic = <&lapic0>;
-+		};
-+	};
++#include <linux/of.h>
++#include <linux/types.h>
++#include <asm/irq.h>
++#include <asm/atomic.h>
++#include <asm/setup.h>
 +
-+	soc@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		device_type = "soc";
-+		compatible = "Intel,ce4100";
-+		ranges;
++#ifdef CONFIG_OF
++extern void add_dtb(u64 data);
++#else
++static inline void add_dtb(u64 data) { }
++#endif
 +
-+		ioapic1: pic@fec00000 {
-+			#interrupt-cells = <2>;
-+			compatible = "Intel,ioapic";
-+			interrupt-controller;
-+			device_type = "interrupt-controller";
-+			id = <1>;
-+			reg = <0xfec00000 0x1000>;
-+		};
++extern char cmd_line[COMMAND_LINE_SIZE];
++/* This number is used when no interrupt has been assigned */
++#define NO_IRQ		(-1)
 +
-+		hpet@fed00000 {
-+			compatible = "Intel,hpet-ce4100", "Intel,hpet";
-+			reg = <0xfed00000 0x200>;
-+		};
++#define pci_address_to_pio pci_address_to_pio
++unsigned long pci_address_to_pio(phys_addr_t addr);
 +
-+		lapic0: lapic@fee00000 {
-+			compatible = "Intel,lapic-ce4100", "Intel,lapic";
-+			reg = <0xfee00000 0x1000>;
-+		};
++/**
++ * irq_dispose_mapping - Unmap an interrupt
++ * @virq: linux virq number of the interrupt to unmap
++ *
++ * FIXME: We really should implement proper virq handling like power,
++ * but that's going to be major surgery.
++ */
++static inline void irq_dispose_mapping(unsigned int virq) { }
 +
-+		pci@3fc {
-+			#address-cells = <3>;
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			compatible = "Intel,ce4100-pci", "pci";
-+			device_type = "pci";
-+			bus-range = <0 0>;
-+			ranges = <0x2000000 0 0xbffff000 0xbffff000 0 0x1000
-+				  0x0000000 0 0x0	 0x0	    0 0x100>;
++#define HAVE_ARCH_DEVTREE_FIXUPS
 +
-+			isa@0 {
-+				#address-cells = <2>;
-+				#size-cells = <1>;
-+				compatible = "isa";
-+				ranges = <1 0 0 0 0 0x100>;
++#endif /* __ASSEMBLY__ */
 +
-+				rtc@70 {
-+					compatible = "motorola,mc146818";
-+					interrupts = <8 3>;
-+					interrupt-parent = <&ioapic1>;
-+					ctrl-reg = <2>;
-+					freq-reg = <0x26>;
-+					reg = <1 0x70 2>;
-+				};
-+			};
++/*
++ * These includes are put at the bottom because they may contain things
++ * that are overridden by this file.  Ideally they shouldn't be included
++ * by this file, but there are a bunch of .c files that currently depend
++ * on it.  Eventually they will be cleaned up.
++ */
++#include <linux/of_fdt.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
 +
-+			/* Secondary IO-APIC */
-+			ioapic2: pic@bffff000 {
-+				#interrupt-cells = <2>;
-+				compatible = "Intel,ioapic-ce4100", "Intel,ioapic";
-+				interrupt-controller;
-+				device_type = "interrupt-controller";
-+				id = <2>;
-+				reg = <0x100 0x0 0x0 0x0 0x0>;
-+				assigned-addresses = <0x02000000 0x0 0xbffff000 0x0 0x1000>;
-+			};
++#endif
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index f60153d..40bc33d 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -108,6 +108,7 @@ obj-$(CONFIG_MICROCODE)			+= microcode.o
+ obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
+ 
+ obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
++obj-$(CONFIG_X86_OF)			+= prom.o
+ 
+ ###
+ # 64 bit specific files
+diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+index c752e97..149c87f 100644
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -25,6 +25,7 @@
+ #include <asm/setup.h>
+ #include <asm/i8259.h>
+ #include <asm/traps.h>
++#include <asm/prom.h>
+ 
+ /*
+  * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
+diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
+new file mode 100644
+index 0000000..249ebd3
+--- /dev/null
++++ b/arch/x86/kernel/prom.c
+@@ -0,0 +1,54 @@
++/*
++ * Architecture specific OF callbacks.
++ */
++#include <linux/bootmem.h>
++#include <linux/io.h>
++#include <linux/list.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/slab.h>
 +
-+			pci@av {
-+				#address-cells = <3>;
-+				#interrupt-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "Intel,ce4100-pci";
-+				device_type = "pci";
-+				bus-range = <1 1>;
-+				interrupt-map-mask = <0xffffff 0x0 0x0 0x0>;
-+				interrupt-map = <
-+					/* GFX: 0x2E5B */
-+					0x11000 0x0 0x0 0x0 &ioapic2 0 0x1
-+					/* ***** FIXME ****** Compositing Engine: 0x2E72 */
-+					/* 0x11100 0x0 0x0 0x1 &ioapic2 0 0x1 */
-+					/* MFD: 0x2E5C */
-+					0x11800 0x0 0x0 0x0 &ioapic2 2 0x1
-+					/* TS Prefilter: 0x2E5D */
-+					0x12000 0x0 0x0 0x0 &ioapic2 4 0x1
-+					/* TS Demux: 0x2E5E */
-+					0x12100 0x0 0x0 0x0 &ioapic2 5 0x1
-+					/* ***** FIXME ***** Audio DSP: 0x2E5F */
-+					/* 0x13000 0x0 0x0 0x1 &ioapic2 0 0x1 */
-+					/* Audio Interfaces: 0x2E60 */
-+					0x13200 0x0 0x0 0x0 &ioapic2 8 0x1
-+					/* VDC: 0x2E61 */
-+					0x14000 0x0 0x0 0x0 &ioapic2 9 0x1
-+					/* DPE: 0x2E62 */
-+					0x14100 0x0 0x0 0x0 &ioapic2 10 0x1
-+					/* HDMI Tx: 0x2E63 */
-+					0x14200 0x0 0x0 0x0 &ioapic2 11 0x1
-+					/* SEC: 0x2E64 */
-+					0x14800 0x0 0x0 0x0 &ioapic2 12 0x1
-+					/* EXP: 0x2E65 */
-+					0x15000 0x0 0x0 0x0 &ioapic2 13 0x1
-+					/* UART0/1: 0x2E66 */
-+					0x15800 0x0 0x0 0x0 &ioapic2 14 0x1
-+					/* GPIO: 0x2E67 */
-+					0x15900 0x0 0x0 0x0 &ioapic2 15 0x1
-+					/* I2C0/1/2: 0x2E68 */
-+					0x15a00 0x0 0x0 0x0 &ioapic2 16 0x1
-+					/* Smart Card 0/1: 0x2E69 */
-+					0x15b00 0x0 0x0 0x0 &ioapic2 15 0x1
-+					/* SPI: 0x2E6A */
-+					0x15c00 0x0 0x0 0x0 &ioapic2 15 0x1
-+					/* MSPOD: 0x2E6B */
-+					0x15d00 0x0 0x0 0x0 &ioapic2 19 0x1
-+					/* IR: 0x2E6C */
-+					0x15e00 0x0 0x0 0x0 &ioapic2 16 0x1
-+					/* **** FIXME ***** DFX: 0x2E6D */
-+					/* 0x15f00 0x0 0x0 0x1 &ioapic2 0x0 0x1 */
-+					/* Gig Ethernet: 0x2E6E */
-+					0x16000 0x0 0x0 0x0 &ioapic2 21 0x1
-+					/* IEEE1588 and Clock Recovery Unit: 0x2E6F */
-+					0x16100 0x0 0x0 0x0 &ioapic2 3 0x1
-+					/* USB0: 0x2E70 */
-+					0x16800 0x0 0x0 0x0 &ioapic2 22 0x3
-+					/* USB1: 0x2E70 */
-+					0x16900 0x0 0x0 0x0 &ioapic2 22 0x3
-+					/* SATA: 0x2E71 */
-+					0x17000 0x0 0x0 0x0 &ioapic2 23 0x3
-+					>;
++char __initdata cmd_line[COMMAND_LINE_SIZE];
 +
-+				i2c@15a00 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0x15a00 0x0 0x0 0x0>;
++unsigned int irq_create_of_mapping(struct device_node *controller,
++		const u32 *intspec, unsigned int intsize)
++{
++	return intspec[0];
 +
++}
++EXPORT_SYMBOL_GPL(irq_create_of_mapping);
 +
-+					i2c@0 {
-+						reg = <0>;
-+					};
++unsigned long pci_address_to_pio(phys_addr_t address)
++{
++	/*
++	 * The ioport address can be directly used by inX / outX
++	 */
++	BUG_ON(address >= (1 << 16));
++	return (unsigned long)address;
++}
++EXPORT_SYMBOL_GPL(pci_address_to_pio);
 +
-+					i2c@1 {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						reg = <1>;
++void __init early_init_dt_scan_chosen_arch(unsigned long node)
++{
++	BUG();
++}
 +
-+						pcf8575@26 {
-+							compatible = "ti,pcf8575";
-+							reg = <0x26>;
-+						};
-+					};
++void __init early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	BUG();
++}
 +
-+					i2c@2 {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						reg = <2>;
++u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
++{
++	void *mem;
 +
-+						pcf8575@26 {
-+							compatible = "ti,pcf8575";
-+							reg = <0x26>;
-+						};
-+					};
-+				};
++	mem = __alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS));
++	return virt_to_phys(mem);
++}
 +
-+				spi@15c00 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0x15c00 0x0 0x0 0x0>;
-+
-+					pcm1755@0 {
-+						compatible = "ti,pcm1755";
-+						reg = <0>;
-+						spi-max-frequency = <115200>;
-+					};
-+
-+					pcm1609a@1 {
-+						compatible = "ti,pcm1609a";
-+						reg = <1>;
-+						spi-max-frequency = <115200>;
-+					};
-+
-+					at93c46@2 {
-+						compatible = "atmel,at93c46";
-+						reg = <2>;
-+						spi-max-frequency = <115200>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
++void __init add_dtb(u64 data)
++{
++	initial_boot_params = (struct boot_param_header *)
++		phys_to_virt((u64) (u32) data +
++				offsetof(struct setup_data, data));
++}
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 577d06b..26f2c9a 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -113,6 +113,7 @@
+ #endif
+ #include <asm/mce.h>
+ #include <asm/alternative.h>
++#include <asm/prom.h>
+ 
+ /*
+  * end_pfn only includes RAM, while max_pfn_mapped includes all e820 entries.
+@@ -445,6 +446,9 @@ static void __init parse_setup_data(void)
+ 		case SETUP_E820_EXT:
+ 			parse_e820_ext(data);
+ 			break;
++		case SETUP_DTB:
++			add_dtb(pa_data);
++			break;
+ 		default:
+ 			break;
+ 		}
 -- 
 1.7.3.2
