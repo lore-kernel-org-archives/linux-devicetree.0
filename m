@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 05/15] x86/dtb: add early parsing of APIC and IO APIC
-Date: Fri, 17 Dec 2010 16:33:43 +0100
-Message-ID: <1292600033-12271-6-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 03/15] x86/dtb: Add a device tree for CE4100
+Date: Fri, 17 Dec 2010 16:33:41 +0100
+Message-ID: <1292600033-12271-4-git-send-email-bigeasy@linutronix.de>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,205 +21,231 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The apic & ioapic have to be added to system early because
-native_init_IRQ() requires it. In order to obtain the address of the
-ioapic the device tree has to be unflattened because
-of_address_to_resource() has to work.
-The device tree is relocated to ensure it is always covered by the
-kernel and the boot loader does not have to make assumptions about
-kernel's memory layout.
-
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/include/asm/prom.h |    7 +++
- arch/x86/kernel/irqinit.c   |    2 +-
- arch/x86/kernel/prom.c      |  123 +++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 128 insertions(+), 4 deletions(-)
+ arch/x86/platform/ce4100/falconfalls.dts |  212 ++++++++++++++++++++++++++++++
+ 1 files changed, 212 insertions(+), 0 deletions(-)
+ create mode 100644 arch/x86/platform/ce4100/falconfalls.dts
 
-diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-index 9076ae4..3bc8ed5 100644
---- a/arch/x86/include/asm/prom.h
-+++ b/arch/x86/include/asm/prom.h
-@@ -22,10 +22,17 @@
- #include <asm/irq_controller.h>
- 
- #ifdef CONFIG_OF
-+extern int of_ioapic;
-+extern u64 initial_dtb;
- extern void add_dtb(u64 data);
-+void x86_dtb_find_config(void);
-+void x86_dtb_get_config(unsigned int unused);
- void add_interrupt_host(struct irq_domain *ih);
- #else
- static inline void add_dtb(u64 data) { }
-+#define x86_dtb_find_config x86_init_noop
-+#define x86_dtb_get_config x86_init_uint_noop
-+#define of_ioapic 0
- #endif
- 
- extern char cmd_line[COMMAND_LINE_SIZE];
-diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-index 149c87f..4cadf86 100644
---- a/arch/x86/kernel/irqinit.c
-+++ b/arch/x86/kernel/irqinit.c
-@@ -244,7 +244,7 @@ void __init native_init_IRQ(void)
- 			set_intr_gate(i, interrupt[i-FIRST_EXTERNAL_VECTOR]);
- 	}
- 
--	if (!acpi_ioapic)
-+	if (!acpi_ioapic && !of_ioapic)
- 		setup_irq(2, &irq2);
- 
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-index 53948cb..9cbb52b 100644
---- a/arch/x86/kernel/prom.c
-+++ b/arch/x86/kernel/prom.c
-@@ -6,15 +6,20 @@
- #include <linux/interrupt.h>
- #include <linux/list.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/slab.h>
- 
- #include <asm/irq_controller.h>
-+#include <asm/io_apic.h>
- 
-+__initdata u64 initial_dtb;
- char __initdata cmd_line[COMMAND_LINE_SIZE];
- static LIST_HEAD(irq_domains);
- static DEFINE_RAW_SPINLOCK(big_irq_lock);
- 
-+int __initdata of_ioapic;
+diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
+new file mode 100644
+index 0000000..24e67ca
+--- /dev/null
++++ b/arch/x86/platform/ce4100/falconfalls.dts
+@@ -0,0 +1,212 @@
++/*
++ * CE4100 on Falcon Falls
++ *
++ * (c) Copyright 2010 Intel Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; version 2 of the License.
++ */
++/dts-v1/;
++/ {
++	model = "Intel,FalconFalls";
++	compatible = "Intel,FalconFalls";
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
- void add_interrupt_host(struct irq_domain *ih)
- {
- 	unsigned long flags;
-@@ -93,7 +98,119 @@ u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
- 
- void __init add_dtb(u64 data)
- {
--	initial_boot_params = (struct boot_param_header *)
--		phys_to_virt((u64) (u32) data +
--				offsetof(struct setup_data, data));
-+	initial_dtb = data + offsetof(struct setup_data, data);
-+}
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+static void __init dtb_lapic_setup(void)
-+{
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	if (apic_force_enable())
-+		return;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "Intel,ce4100";
++			reg = <0>;
++			lapic = <&lapic0>;
++		};
++	};
 +
-+	smp_found_config = 1;
-+	pic_mode = 1;
-+	/* Required for ioapic registration */
-+	set_fixmap_nocache(FIX_APIC_BASE, mp_lapic_addr);
-+	if (boot_cpu_physical_apicid == -1U)
-+		boot_cpu_physical_apicid = read_apic_id();
++	soc@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		device_type = "soc";
++		compatible = "Intel,ce4100";
++		ranges;
 +
-+	generic_processor_info(boot_cpu_physical_apicid,
-+			GET_APIC_VERSION(apic_read(APIC_LVR)));
-+#endif
-+}
++		ioapic1: pic@fec00000 {
++			#interrupt-cells = <2>;
++			compatible = "Intel,ioapic";
++			interrupt-controller;
++			device_type = "interrupt-controller";
++			id = <1>;
++			reg = <0xfec00000 0x1000>;
++		};
 +
-+#ifdef CONFIG_X86_IO_APIC
-+static void __init dtb_add_ioapic(struct device_node *dn)
-+{
-+	unsigned int ioapic_id;
-+	const __be32 *cell;
-+	int len;
-+	struct resource r;
-+	int ret;
++		hpet@fed00000 {
++			compatible = "Intel,hpet-ce4100", "Intel,hpet";
++			reg = <0xfed00000 0x200>;
++		};
 +
-+	cell = of_get_property(dn, "id", &len);
-+	if (!cell) {
-+		printk(KERN_ERR "Node %s is missing id property.\n",
-+				dn->full_name);
-+		return;
-+	}
-+	ioapic_id = of_read_ulong(cell, len / 4);
++		lapic0: lapic@fee00000 {
++			compatible = "Intel,lapic-ce4100", "Intel,lapic";
++			reg = <0xfee00000 0x1000>;
++		};
 +
-+	ret = of_address_to_resource(dn, 0, &r);
-+	if (ret) {
-+		printk(KERN_ERR "Can't obtain address from node %s.\n",
-+				dn->full_name);
-+		return;
-+	}
-+	mp_register_ioapic(ioapic_id, r.start, gsi_top);
-+}
++		pci@3fc {
++			#address-cells = <3>;
++			#interrupt-cells = <1>;
++			#size-cells = <2>;
++			compatible = "Intel,ce4100-pci", "pci";
++			device_type = "pci";
++			bus-range = <0 0>;
++			ranges = <0x2000000 0 0xbffff000 0xbffff000 0 0x1000
++				  0x0000000 0 0x0	 0x0	    0 0x100>;
 +
-+static void __init dtb_ioapic_setup(void)
-+{
-+	struct device_node *dn;
++			isa@0 {
++				#address-cells = <2>;
++				#size-cells = <1>;
++				compatible = "isa";
++				ranges = <1 0 0 0 0 0x100>;
 +
-+	if (!smp_found_config)
-+		return;
++				rtc@70 {
++					compatible = "motorola,mc146818";
++					interrupts = <8 3>;
++					interrupt-parent = <&ioapic1>;
++					ctrl-reg = <2>;
++					freq-reg = <0x26>;
++					reg = <1 0x70 2>;
++				};
++			};
 +
-+	for_each_compatible_node(dn, NULL, "intel,ioapic")
-+		dtb_add_ioapic(dn);
++			/* Secondary IO-APIC */
++			ioapic2: pic@bffff000 {
++				#interrupt-cells = <2>;
++				compatible = "Intel,ioapic-ce4100", "Intel,ioapic";
++				interrupt-controller;
++				device_type = "interrupt-controller";
++				id = <2>;
++				reg = <0x100 0x0 0x0 0x0 0x0>;
++				assigned-addresses = <0x02000000 0x0 0xbffff000 0x0 0x1000>;
++			};
 +
-+	if (nr_ioapics) {
-+		of_ioapic = 1;
-+		return;
-+	}
-+	printk(KERN_ERR "Error: No information about IO-APIC in OF.\n");
-+	smp_found_config = 0;
-+}
-+#else
-+static void __init dtb_ioapic_setup(void) {}
-+#endif
++			pci@av {
++				#address-cells = <3>;
++				#interrupt-cells = <1>;
++				#size-cells = <1>;
++				compatible = "Intel,ce4100-pci";
++				device_type = "pci";
++				bus-range = <1 1>;
++				interrupt-map-mask = <0xffffff 0x0 0x0 0x0>;
++				interrupt-map = <
++					/* GFX: 0x2E5B */
++					0x11000 0x0 0x0 0x0 &ioapic2 0 0x1
++					/* ***** FIXME ****** Compositing Engine: 0x2E72 */
++					/* 0x11100 0x0 0x0 0x1 &ioapic2 0 0x1 */
++					/* MFD: 0x2E5C */
++					0x11800 0x0 0x0 0x0 &ioapic2 2 0x1
++					/* TS Prefilter: 0x2E5D */
++					0x12000 0x0 0x0 0x0 &ioapic2 4 0x1
++					/* TS Demux: 0x2E5E */
++					0x12100 0x0 0x0 0x0 &ioapic2 5 0x1
++					/* ***** FIXME ***** Audio DSP: 0x2E5F */
++					/* 0x13000 0x0 0x0 0x1 &ioapic2 0 0x1 */
++					/* Audio Interfaces: 0x2E60 */
++					0x13200 0x0 0x0 0x0 &ioapic2 8 0x1
++					/* VDC: 0x2E61 */
++					0x14000 0x0 0x0 0x0 &ioapic2 9 0x1
++					/* DPE: 0x2E62 */
++					0x14100 0x0 0x0 0x0 &ioapic2 10 0x1
++					/* HDMI Tx: 0x2E63 */
++					0x14200 0x0 0x0 0x0 &ioapic2 11 0x1
++					/* SEC: 0x2E64 */
++					0x14800 0x0 0x0 0x0 &ioapic2 12 0x1
++					/* EXP: 0x2E65 */
++					0x15000 0x0 0x0 0x0 &ioapic2 13 0x1
++					/* UART0/1: 0x2E66 */
++					0x15800 0x0 0x0 0x0 &ioapic2 14 0x1
++					/* GPIO: 0x2E67 */
++					0x15900 0x0 0x0 0x0 &ioapic2 15 0x1
++					/* I2C0/1/2: 0x2E68 */
++					0x15a00 0x0 0x0 0x0 &ioapic2 16 0x1
++					/* Smart Card 0/1: 0x2E69 */
++					0x15b00 0x0 0x0 0x0 &ioapic2 15 0x1
++					/* SPI: 0x2E6A */
++					0x15c00 0x0 0x0 0x0 &ioapic2 15 0x1
++					/* MSPOD: 0x2E6B */
++					0x15d00 0x0 0x0 0x0 &ioapic2 19 0x1
++					/* IR: 0x2E6C */
++					0x15e00 0x0 0x0 0x0 &ioapic2 16 0x1
++					/* **** FIXME ***** DFX: 0x2E6D */
++					/* 0x15f00 0x0 0x0 0x1 &ioapic2 0x0 0x1 */
++					/* Gig Ethernet: 0x2E6E */
++					0x16000 0x0 0x0 0x0 &ioapic2 21 0x1
++					/* IEEE1588 and Clock Recovery Unit: 0x2E6F */
++					0x16100 0x0 0x0 0x0 &ioapic2 3 0x1
++					/* USB0: 0x2E70 */
++					0x16800 0x0 0x0 0x0 &ioapic2 22 0x3
++					/* USB1: 0x2E70 */
++					0x16900 0x0 0x0 0x0 &ioapic2 22 0x3
++					/* SATA: 0x2E71 */
++					0x17000 0x0 0x0 0x0 &ioapic2 23 0x3
++					>;
 +
-+static void __init dtb_apic_setup(void)
-+{
-+	dtb_lapic_setup();
-+	dtb_ioapic_setup();
-+}
++				i2c@15a00 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0x15a00 0x0 0x0 0x0>;
 +
-+void __init x86_dtb_find_config(void)
-+{
-+	if (initial_dtb)
-+		smp_found_config = 1;
-+	else
-+		printk(KERN_ERR "Missing device tree!.\n");
-+}
 +
-+void __init x86_dtb_get_config(unsigned int unused)
-+{
-+	u32 size;
-+	u32 map_len;
-+	void *new_dtb;
++					i2c@0 {
++						reg = <0>;
++					};
 +
-+	if (!initial_dtb)
-+		return;
++					i2c@1 {
++						#address-cells = <1>;
++						#size-cells = <0>;
++						reg = <1>;
 +
-+	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
-+			(u64)sizeof(struct boot_param_header));
++						pcf8575@26 {
++							compatible = "ti,pcf8575";
++							reg = <0x26>;
++						};
++					};
 +
-+	initial_boot_params = early_memremap(initial_dtb, map_len);
-+	size = be32_to_cpu(initial_boot_params->totalsize);
-+	if (map_len < size) {
-+		early_iounmap(initial_boot_params, map_len);
-+		initial_boot_params = early_memremap(initial_dtb, size);
-+	}
++					i2c@2 {
++						#address-cells = <1>;
++						#size-cells = <0>;
++						reg = <2>;
 +
-+	new_dtb = alloc_bootmem(size);
-+	memcpy(new_dtb, initial_boot_params, size);
-+	if (map_len < size)
-+		early_iounmap(initial_boot_params, size);
-+	else
-+		early_iounmap(initial_boot_params, map_len);
++						pcf8575@26 {
++							compatible = "ti,pcf8575";
++							reg = <0x26>;
++						};
++					};
++				};
 +
-+	initial_boot_params = new_dtb;
++				spi@15c00 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0x15c00 0x0 0x0 0x0>;
 +
-+	/* root level address cells */
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++					pcm1755@0 {
++						compatible = "ti,pcm1755";
++						reg = <0>;
++						spi-max-frequency = <115200>;
++					};
 +
-+	unflatten_device_tree();
-+	dtb_apic_setup();
- }
++					pcm1609a@1 {
++						compatible = "ti,pcm1609a";
++						reg = <1>;
++						spi-max-frequency = <115200>;
++					};
++
++					at93c46@2 {
++						compatible = "atmel,at93c46";
++						reg = <2>;
++						spi-max-frequency = <115200>;
++					};
++				};
++			};
++		};
++	};
++};
 -- 
 1.7.3.2
