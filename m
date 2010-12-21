@@ -1,50 +1,50 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 07/15] of: move of_irq_map_pci() into generic code
-Date: Sat, 18 Dec 2010 08:16:37 +1100
-Message-ID: <1292620597.16694.541.camel@pasglop>
-References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	 <1292600033-12271-8-git-send-email-bigeasy@linutronix.de>
+From: Michal Marek <mmarek@suse.cz>
+Subject: Re: [PATCH 2/4] x86/of: Add building device tree blob(s) into image.
+Date: Tue, 21 Dec 2010 15:19:33 +0100
+Message-ID: <4D10B775.6040500@suse.cz>
+References: <cover.1291820033.git.dirk.brandewie@gmail.com> <abe67e5689fef1d94e57be68ec5ef47a8f13bf8e.1291820034.git.dirk.brandewie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-2
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1292600033-12271-8-git-send-email-bigeasy@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, dirk.brandewie@gmail.com, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <abe67e5689fef1d94e57be68ec5ef47a8f13bf8e.1291820034.git.dirk.brandewie@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: dirk.brandewie@gmail.com
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sodaville@linutronix.de, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2010-12-17 at 16:33 +0100, Sebastian Andrzej Siewior wrote:
+On 8.12.2010 16:01, dirk.brandewie@gmail.com wrote:
+> From: Dirk Brandewie <dirk.brandewie@gmail.com>
+> 
+> This patch adds linking device tree blob into vmlinux. DTB's are
+> added by adding the blob object name to list of objects to be linked
+> into the image.
+> 
+> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
+> ---
+>  arch/x86/platform/ce4100/Makefile |   10 ++++++++++
+>  1 files changed, 10 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/platform/ce4100/Makefile b/arch/x86/platform/ce4100/Makefile
+> index 91fc929..e5f3b7b 100644
+> --- a/arch/x86/platform/ce4100/Makefile
+> +++ b/arch/x86/platform/ce4100/Makefile
+> @@ -1 +1,11 @@
+>  obj-$(CONFIG_X86_INTEL_CE)	+= ce4100.o
+> +clean-files := *dtb.S
 > +
-> +#if defined(CONFIG_PPC64) || defined(CONFIG_X86)
-> +static struct device_node *pci_get_parent_node(struct pci_dev *pdev)
-> +{
-> +       return pci_bus_to_OF_node(pdev->bus);
-> +}
-> +#endif
+> +ifdef CONFIG_X86_OF
+> +###
+> +# device tree blob
+> +obj-$(CONFIG_X86_INTEL_CE) += ce4100.dtb.o
 > +
-> +#if defined(CONFIG_PPC32) || defined(CONFIG_MICROBLAZE)
-> +static struct device_node *pci_get_parent_node(struct pci_dev *pdev)
-> +{
-> +       struct pci_controller *host;
-> +
-> +       host = pci_bus_to_host(pdev->bus);
-> +       return host ? host->dn : NULL;
-> +}
-> +#endif
-> + 
+> +$(obj)/%.dtb: $(src)/%.dts
+> +	$(call cmd,dtc)
+> +endif
 
-I'd like it better if instead you added pci_bus_to_OF_node() to ppc32
-and microblaze.
+Hi,
 
-The easy way to do so is to do:
+CONFIG_X86_OF should be defined in some Kconfig file and there is no
+ce4100.dts??
 
-	struct pci_controller *host;
-
-	if (bus->self)
-		return pci_device_to_OF_node(bus->self);
-	host = pci_bus_to_host(pdev->bus);
-	return host ? host->dn : NULL;
-
-Cheers,
-Ben.
+Michal
