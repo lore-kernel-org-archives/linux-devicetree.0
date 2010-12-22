@@ -1,117 +1,158 @@
-From: Dirk Brandewie <dirk.brandewie@gmail.com>
-Subject: Re: [PATCH] of/fdt: add kernel command line option for dtb_compat
- string
-Date: Wed, 22 Dec 2010 12:04:56 -0800
-Message-ID: <4D1259E8.9030706@gmail.com>
-References: <1291658059-383-1-git-send-email-dirk.brandewie@gmail.com>
+From: Michal Marek <mmarek@suse.cz>
+Subject: Re: [PATCH 1/4] of: Add support for linking device tree blobs into
+ vmlinux
+Date: Wed, 22 Dec 2010 23:36:34 +0100
+Message-ID: <4D127D72.8050303@suse.cz>
+References: <1293047849-26078-1-git-send-email-dirk.brandewie@gmail.com> <1293047849-26078-2-git-send-email-dirk.brandewie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1291658059-383-1-git-send-email-dirk.brandewie@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1293047849-26078-2-git-send-email-dirk.brandewie@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
 To: dirk.brandewie@gmail.com
-Cc: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Grant Likely <grant.likely@secretlab.ca>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2010 09:54 AM, dirk.brandewie@gmail.com wrote:
+On 22.12.2010 20:57, dirk.brandewie@gmail.com wrote:
 > From: Dirk Brandewie<dirk.brandewie@gmail.com>
 >
-> Adds a kernel command line option "dtb_compat=<string>".  This string
-> will be used to select the first compatible device tree blob linked
-> into the kernel if a device tree blob is was *not* passed in by the
-> bootloader.
+> This patch adds support for linking device tree blob(s) into
+> vmlinux. Modifies asm-generic/vmlinux.lds.h to add linking
+> .dtb sections into vmlinux. To maintain compatiblity with the of/fdt
+> driver code platforms MUST copy the blob to a non-init memory location
+> before the kernel frees the .init.* sections in the image.
+>
+> Modifies scripts/Makefile.lib to add a kbuild command to
+> compile DTS files to device tree blobs and a rule to create objects to
+> wrap the blobs for linking.
+>
+> STRUCT_ALIGNMENT is defined in vmlinux.lds.h for use in the rule to
+> create wrapper objects for the dtb in Makefile.lib.  The
+> STRUCT_ALIGN() macro in vmlinux.lds.h is modified to use the
+> STRUCT_ALIGNMENT definition.
+>
+> The DTB's are placed on 32 byte boundries to allow parsing the blob
+> with driver/of/fdt.c during early boot without having to copy the blob
+> to get the structure alignment GCC expects.
+>
+> A DTB is linked in by adding the DTB object to the list of objects to
+> be linked into vmlinux in the archtecture specific Makefile using
+>     obj-y += foo.dtb.o
 >
 > Signed-off-by: Dirk Brandewie<dirk.brandewie@gmail.com>
+
+Hi,
+
+you can add
+Acked-by: Michal Marek <mmarek@suse.cz>
+but I thing this series should go through the tip tree, as your primary 
+target seems to be x86 and patch 2/4 depends on the ce4100 code that is 
+only in tip.
+
+Michal
+
 > ---
->   Documentation/kernel-parameters.txt |    8 ++++++
->   drivers/of/fdt.c                    |   48 +++++++++++++++++++++++++++++++++++
->   2 files changed, 56 insertions(+), 0 deletions(-)
+>   Documentation/kbuild/makefiles.txt |   15 +++++++++++++++
+>   include/asm-generic/vmlinux.lds.h  |   13 +++++++++++--
+>   scripts/Makefile.lib               |   23 +++++++++++++++++++++++
+>   3 files changed, 49 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> index 92e83e5..64093e5 100644
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -655,6 +655,14 @@ and is between 256 and 4096 characters. It is defined in the file
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 0ef00bd..86e3cd0 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -1136,6 +1136,21 @@ When kbuild executes, the following steps are followed (roughly):
+>   	      resulting in the target file being recompiled for no
+>   	      obvious reason.
 >
->   	dscc4.setup=	[NET]
+> +    dtc
+> +	Create flattend device tree blob object suitable for linking
+> +	into vmlinux. Device tree blobs linked into vmlinux are placed
+> +	in an init section in the image. Platform code *must* copy the
+> +	blob to non-init memory prior to calling unflatten_device_tree().
+> +
+> +	Example:
+> +		#arch/x86/platform/ce4100/Makefile
+> +		clean-files := *dtb.S
+> +
+> +		DTC_FLAGS := -p 1024
+> +		obj-y += foo.dtb.o
+> +
+> +		$(obj)/%.dtb: $(src)/%.dts
+> +			$(call cmd,dtc)
 >
-> +	dtb_compat=	[KNL]
-> +			Specify the "compatible" string for the device
-> +			tree blob present in the vmlinux image.  This
-> +			string will be used to select the first device
-> +			tree blob whose compatible property matches
-> +			the string if a dtb was NOT passed in by the
-> +			bootloader.
-> +
->   	dynamic_printk	Enables pr_debug()/dev_dbg() calls if
->   			CONFIG_DYNAMIC_PRINTK_DEBUG has been enabled.
->   			These can also be switched on/off via
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index c1360e0..ca1318c 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -15,6 +15,8 @@
->   #include<linux/of_fdt.h>
->   #include<linux/string.h>
->   #include<linux/errno.h>
-> +#include<asm-generic/vmlinux.lds.h>
-> +
+>   --- 6.7 Custom kbuild commands
 >
->   #ifdef CONFIG_PPC
->   #include<asm/machdep.h>
-> @@ -604,3 +606,49 @@ void __init unflatten_device_tree(void)
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index bd69d79..05cbad0 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -67,7 +67,8 @@
+>    * Align to a 32 byte boundary equal to the
+>    * alignment gcc 4.5 uses for a struct
+>    */
+> -#define STRUCT_ALIGN() . = ALIGN(32)
+> +#define STRUCT_ALIGNMENT 32
+> +#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
 >
->   	pr_debug("<- unflatten_device_tree()\n");
->   }
+>   /* The actual configuration determine if the init/exit sections
+>    * are handled as text/data or they can be discarded (which
+> @@ -146,6 +147,13 @@
+>   #define TRACE_SYSCALLS()
+>   #endif
+>
 > +
-> +extern uint8_t __dtb_start[];
-> +extern uint8_t __dtb_end[];
-> +static void __init *of_flat_dt_find_compatible_dtb(char *name)
-> +{
-> +	void *rc = NULL;
-> +	unsigned long root, size;
-> +	struct boot_param_header  *orig_initial_boot_params;
-> +	uint8_t *blob;
+> +#define KERNEL_DTB()							\
+> +	STRUCT_ALIGN();							\
+> +	VMLINUX_SYMBOL(__dtb_start) = .;				\
+> +	*(.dtb.init.rodata)						\
+> +	VMLINUX_SYMBOL(__dtb_end) = .;
 > +
-> +	orig_initial_boot_params = initial_boot_params;
-> +	blob = __dtb_start;
-> +	initial_boot_params = (struct boot_param_header *)blob;
+>   /* .data section */
+>   #define DATA_DATA							\
+>   	*(.data)							\
+> @@ -468,7 +476,8 @@
+>   	MCOUNT_REC()							\
+>   	DEV_DISCARD(init.rodata)					\
+>   	CPU_DISCARD(init.rodata)					\
+> -	MEM_DISCARD(init.rodata)
+> +	MEM_DISCARD(init.rodata)					\
+> +	KERNEL_DTB()
+>
+>   #define INIT_TEXT							\
+>   	*(.init.text)							\
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 4c72c11..7df8eb5 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -200,6 +200,29 @@ quiet_cmd_gzip = GZIP    $@
+>   cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9>  $@) || \
+>   	(rm -f $@ ; false)
+>
+> +# DTC
+> +#  ---------------------------------------------------------------------------
 > +
-> +	while (blob<  __dtb_end) {
-> +		if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
-> +			WARN(1, "Invalid device tree blob in vmlinux\n");
-> +			break;
-> +		}
+> +# Generate an assembly file to wrap the output of the device tree compiler
+> +quiet_cmd_dt_S_dtb= DTB    $@
+> +cmd_dt_S_dtb=						\
+> +(							\
+> +	echo '\#include<asm-generic/vmlinux.lds.h>'; 	\
+> +	echo '.section .dtb.init.rodata,"a"';		\
+> +	echo '.balign STRUCT_ALIGNMENT';                \
+> +	echo '.global __dtb_$(*F)_begin';               \
+> +	echo '__dtb_$(*F)_begin:';                      \
+> +	echo '.incbin "$<" ';                           \
+> +	echo '__dtb_$(*F)_end:';                        \
+> +	echo '.global __dtb_$(*F)_end';                 \
+> +	echo '.balign STRUCT_ALIGNMENT'; 		\
+> +)>  $@
 > +
-> +		root = of_get_flat_dt_root();
-> +		if (of_flat_dt_is_compatible(root, name)>  0) {
-> +			rc = blob;
-> +			break;
-> +		}
+> +$(obj)/%.dtb.S: $(obj)/%.dtb
+> +	$(call cmd,dt_S_dtb)
 > +
-> +		size =  be32_to_cpu(initial_boot_params->totalsize);
-> +		blob =  PTR_ALIGN(blob + size, STRUCT_ALIGNMENT);
-> +		initial_boot_params = (struct boot_param_header *)blob;
-> +	}
-> +
-> +	if (rc == NULL)
-> +		initial_boot_params = orig_initial_boot_params;
-> +	return rc;
-> +}
-> +
-> +
-> +static int __init of_flat_dtb_compat_setup(char *line)
-> +{
-> +	if (!initial_boot_params)
-> +		initial_boot_params = of_flat_dt_find_compatible_dtb(line);
-> +	return 1;
-> +}
-> +
-> +early_param("dtb_compat", of_flat_dtb_compat_setup);
-> +
-Any more comments on this patch? Is it good to go or DOA?
-
-Thanks
---Dirk
-
+> +quiet_cmd_dtc = DTC     $@
+> +      cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $<
+>
+>   # Bzip2
+>   # ---------------------------------------------------------------------------
