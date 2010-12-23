@@ -1,179 +1,160 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
-Date: Thu, 23 Dec 2010 11:56:23 -0700
-Message-ID: <20101223185623.GA20384@angua.secretlab.ca>
-References: <4D12F171.7010103@mentor.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/4] of: Add support for linking device tree blobs into
+ vmlinux
+Date: Thu, 23 Dec 2010 14:42:41 -0700
+Message-ID: <20101223214241.GF20384@angua.secretlab.ca>
+References: <1293047849-26078-1-git-send-email-dirk.brandewie@gmail.com>
+ <1293047849-26078-2-git-send-email-dirk.brandewie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4D12F171.7010103-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1293047849-26078-2-git-send-email-dirk.brandewie@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: dirk.brandewie@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, mmarek@suse.cz, linux-kbuild@vger.kernel.org, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 23, 2010 at 12:51:29AM -0600, Meador Inge wrote:
-> Hi All,
+On Wed, Dec 22, 2010 at 11:57:26AM -0800, dirk.brandewie@gmail.com wrote:
+> From: Dirk Brandewie <dirk.brandewie@gmail.com>
 > 
-> I am currently doing some work on Linux PPC AMP systems (with Hollis,
-> CC'd).  We are using device trees to partition resources between the
-> different OSes.  To help with this effort, we would like to introduce
-> some new bindings to the MPIC.
+> This patch adds support for linking device tree blob(s) into
+> vmlinux. Modifies asm-generic/vmlinux.lds.h to add linking
+> .dtb sections into vmlinux. To maintain compatiblity with the of/fdt
+> driver code platforms MUST copy the blob to a non-init memory location
+> before the kernel frees the .init.* sections in the image.
 > 
-> Currently, there are no bindings for the MPIC under
-> '.../Documentation/powerpc/dts-bindings/'.  I think most folks are
-> following the IEEE 1275 bindings for Open PIC.
+> Modifies scripts/Makefile.lib to add a kbuild command to
+> compile DTS files to device tree blobs and a rule to create objects to
+> wrap the blobs for linking.
 > 
-> It would be nice to check-in a binding for the MPIC that is a superset
-> of the 1275 bindings as a place to document extensions.  The already in
-> use property 'protected-sources', for example, could be placed there.
+> STRUCT_ALIGNMENT is defined in vmlinux.lds.h for use in the rule to
+> create wrapper objects for the dtb in Makefile.lib.  The
+> STRUCT_ALIGN() macro in vmlinux.lds.h is modified to use the
+> STRUCT_ALIGNMENT definition.
 > 
-> I have included a draft proposal of what this would like.  It includes
-> some properties ('no-reset') and a node (for message registers) that we
-> are currently using for our AMP implementation and we would really
-> like to push upstream.  If the general idea seems sound, then I will
-> clean up the proposal and submit a patch for the bindings.
+> The DTB's are placed on 32 byte boundries to allow parsing the blob
+> with driver/of/fdt.c during early boot without having to copy the blob
+> to get the structure alignment GCC expects.
 > 
-> Thoughts?
+> A DTB is linked in by adding the DTB object to the list of objects to
+> be linked into vmlinux in the archtecture specific Makefile using
+>    obj-y += foo.dtb.o
+> 
+> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
 
-Hi Meador.  Comments below.
+merged, thanks.
 
 g.
 
+> ---
+>  Documentation/kbuild/makefiles.txt |   15 +++++++++++++++
+>  include/asm-generic/vmlinux.lds.h  |   13 +++++++++++--
+>  scripts/Makefile.lib               |   23 +++++++++++++++++++++++
+>  3 files changed, 49 insertions(+), 2 deletions(-)
 > 
-> ===============
-> 
-> * MPIC Binding
-> 
-> This binding specifies what properties and child nodes must be
-> available on the device tree representation of the MPIC interrupt
-> controller.  This binding is a superset of the binding defined for
-> Open PIC in [1].
-> 
-> ** Required properties:
-> 
->     - All of the required properties mentioned in [1].
-
-You should probably list them here anyway to aid the reader.
-
-> 
-> ** Optional properties:
-> 
->     - no-reset : the presence of this property indicates that the
->                  interrupt controller should not be reset during OS
->                  initialization.
->     - protected-sources : a list of interrupt sources that are not
->                           available for use.
-
-What is the use case for the protected-sources property?  Wouldn't the
-irqs simply not be referenced by any device nodes?  Documenting the
-reason for this property would be useful here.
-
-> 
-> ** Example:
-> 
-> 	mpic: pic@40000 {
-> 		interrupt-controller;
-> 		#address-cells = <0>;
-> 		#interrupt-cells = <2>;
-> 		reg = <0x40000 0x40000>;
-> 		compatible = "chrp,open-pic";
-> 		device_type = "open-pic";
-> 		protected-sources = <0xb1 0xb2>;
-> 		no-reset;
-> 	};
-> 
-> * MPIC Message Registers
-> 
-> This binding specifies how the MPIC message registers implemented on
-> some Freescale platforms for interprocessor communication should be
-> represented.
-> 
-> ** Required parent:
-> 
->     - Message register nodes should always been nested under a MPIC
->       node.
-> 
-> ** Required properties:
-> 
->     - compatible : compatible list, contains 2 entries, first is
->                    "fsl,CHIP-msgr", where CHIP is the processor
->                    (p2020, mpc8572, etc ...) and the second is
->                    "fsl,mpic-msgr".
-
-I'd rather see the 'generic' value of mpic-msgr omitted and instead
-allow new parts to claim compatibility with an older chip.  Generic
-or wildcard compatible values can be troublesome because the meaning
-has a tendency to change over time.
-
->     - reg        : should contain the address and the length of the
->                    message register block.
->     - cell-index : the index of the message register block.
-
-?  This needs some more explanation.  cell-index often gets abused as
-a way to enumerate devices.  Typically, the address of the device
-itself is sufficient to identify the device.
-
->     - interrupts : each one of the interrupts here represents the
->                    interrupt line for one message register.  These
->                    interrupts are routed internally to the MPIC.
-> 
-> NOTE: The 'interrupt-parent' is implicit since message register nodes
->        are always children of interrupt controller nodes.
-> 
-> ** Example:
-> 
-> 	mpic: pic@40000 {
-> 		interrupt-controller;
-> 		#address-cells = <0>;
-> 		#interrupt-cells = <2>;
-> 		reg = <0x40000 0x40000>;
-> 		compatible = "chrp,open-pic";
-> 		device_type = "open-pic";
-> 		protected-sources = <0xb1>;
-> 
-> 		msgr@1400 {
-> 			compatible = "fsl,p2020-msgr", "fsl,mpic-msgr";
-> 			reg = <0x1400 0x200>;
-
-Are these registers memory mapped?  If so, then the parent node
-needs to have a 'ranges' property.
-
-> 			cell-index = <0>;
-> 			interrupts = <0xb0 0x2 0xb1 0x2
->                                       0xb2 0x2 0xb3 0x2>;
-> 		};
-> 
-> 		msgr@2400 {
-> 			compatible = "fsl,p2020-msgr", "fsl,mpic-msgr";
-> 			reg = <0x2400 0x200>;
-> 			cell-index = <1>;
-> 			interrupts = <0xb4 0x2 0xb5 0x2
->                                       0xb6 0x2 0xb7 0x2>;
-> 	         };	
-> 	};
-> 
-> * References
-> 
-> [1] PowerPC Microprocessor Common Hardware Reference Platform (CHRP)
->      Binding, Version 1.8, 1998. Published by the Open Firmware Working
->      Group. (http://playground.sun.com/1275/bindings/chrp/chrp1_8a.ps)
-> 
-> 
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 0ef00bd..86e3cd0 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -1136,6 +1136,21 @@ When kbuild executes, the following steps are followed (roughly):
+>  	      resulting in the target file being recompiled for no
+>  	      obvious reason.
+>  
+> +    dtc
+> +	Create flattend device tree blob object suitable for linking
+> +	into vmlinux. Device tree blobs linked into vmlinux are placed
+> +	in an init section in the image. Platform code *must* copy the
+> +	blob to non-init memory prior to calling unflatten_device_tree().
+> +
+> +	Example:
+> +		#arch/x86/platform/ce4100/Makefile
+> +		clean-files := *dtb.S
+> +
+> +		DTC_FLAGS := -p 1024
+> +		obj-y += foo.dtb.o
+> +
+> +		$(obj)/%.dtb: $(src)/%.dts
+> +			$(call cmd,dtc)
+>  
+>  --- 6.7 Custom kbuild commands
+>  
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index bd69d79..05cbad0 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -67,7 +67,8 @@
+>   * Align to a 32 byte boundary equal to the
+>   * alignment gcc 4.5 uses for a struct
+>   */
+> -#define STRUCT_ALIGN() . = ALIGN(32)
+> +#define STRUCT_ALIGNMENT 32
+> +#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
+>  
+>  /* The actual configuration determine if the init/exit sections
+>   * are handled as text/data or they can be discarded (which
+> @@ -146,6 +147,13 @@
+>  #define TRACE_SYSCALLS()
+>  #endif
+>  
+> +
+> +#define KERNEL_DTB()							\
+> +	STRUCT_ALIGN();							\
+> +	VMLINUX_SYMBOL(__dtb_start) = .;				\
+> +	*(.dtb.init.rodata)						\
+> +	VMLINUX_SYMBOL(__dtb_end) = .;
+> +
+>  /* .data section */
+>  #define DATA_DATA							\
+>  	*(.data)							\
+> @@ -468,7 +476,8 @@
+>  	MCOUNT_REC()							\
+>  	DEV_DISCARD(init.rodata)					\
+>  	CPU_DISCARD(init.rodata)					\
+> -	MEM_DISCARD(init.rodata)
+> +	MEM_DISCARD(init.rodata)					\
+> +	KERNEL_DTB()
+>  
+>  #define INIT_TEXT							\
+>  	*(.init.text)							\
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 4c72c11..7df8eb5 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -200,6 +200,29 @@ quiet_cmd_gzip = GZIP    $@
+>  cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
+>  	(rm -f $@ ; false)
+>  
+> +# DTC
+> +#  ---------------------------------------------------------------------------
+> +
+> +# Generate an assembly file to wrap the output of the device tree compiler
+> +quiet_cmd_dt_S_dtb= DTB    $@
+> +cmd_dt_S_dtb=						\
+> +(							\
+> +	echo '\#include <asm-generic/vmlinux.lds.h>'; 	\
+> +	echo '.section .dtb.init.rodata,"a"';		\
+> +	echo '.balign STRUCT_ALIGNMENT';                \
+> +	echo '.global __dtb_$(*F)_begin';               \
+> +	echo '__dtb_$(*F)_begin:';                      \
+> +	echo '.incbin "$<" ';                           \
+> +	echo '__dtb_$(*F)_end:';                        \
+> +	echo '.global __dtb_$(*F)_end';                 \
+> +	echo '.balign STRUCT_ALIGNMENT'; 		\
+> +) > $@
+> +
+> +$(obj)/%.dtb.S: $(obj)/%.dtb 
+> +	$(call cmd,dt_S_dtb)
+> +
+> +quiet_cmd_dtc = DTC     $@
+> +      cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $<
+>  
+>  # Bzip2
+>  # ---------------------------------------------------------------------------
 > -- 
-> Meador Inge     | meador_inge AT mentor.com
-> Mentor Embedded | http://www.mentor.com/embedded-software
+> 1.7.2.3
+> 
 > _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
