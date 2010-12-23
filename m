@@ -1,77 +1,144 @@
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 3/3] x86: OLPC: speed up device tree creation during boot
- (v2)
-Date: Thu, 23 Dec 2010 12:57:16 +0100
-Message-ID: <20101223115716.GA2108@elte.hu>
-References: <20101111214546.4e573cad@queued.net>
- <reply-olpc-3-v2@mdm.bga.com>
- <20101112002704.50c629e2@queued.net>
- <20101114095013.GB24206@elte.hu>
- <4CE0B54E.6000101@zytor.com>
- <20101115070254.GA25243@elte.hu>
- <4CE17133.2050101@zytor.com>
- <20101118083420.GC26398@elte.hu>
+From: Meador Inge <meador_inge@mentor.com>
+Subject: [RFC] MPIC Bindings and Bindings for AMP Systems
+Date: Wed, 22 Dec 2010 23:58:09 -0600
+Message-ID: <4D12E4F1.2030004@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20101118083420.GC26398@elte.hu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andres Salomon <dilinger@queued.net>, Milton Miller <miltonm@bga.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Hi All,
 
-* Ingo Molnar <mingo@elte.hu> wrote:
+I am currently doing some work on Linux PPC AMP systems (with Hollis,
+CC'd).  We are using device trees to partition resources between the
+different OSes.  To help with this effort, we would like to introduce
+some new bindings to the MPIC.
 
-> > However, I have to vehemently object to putting them in a wider scope
-> > than is otherwise necessary.  I agree that static variables should be
-> > used sparsely if at all (there really are vary few uses of them that are
-> > valid), but putting them in a larger scope screams "I'm used in more
-> > than one function", and that is *not* a good thing.
-> 
-> That's why we sometimes use the (imperfect) compromise to put them in front of 
-> that function, not at the top of the file.
-> 
-> Look at the general balance of hardship: very little harm is done (it's not a big 
-> deal if a variable is only used in a single function) but having it with local 
-> variables can be _really_ harmful - for example i overlooked them when i reviewed 
-> this patch. I dont like important details obscured - i like them to be apparent. 
-> Again, this is something that some people can parse immediately on the visual 
-> level - me and many others cannot.
+Currently, there are no bindings for the MPIC under
+'.../Documentation/powerpc/dts-bindings/'.  I think most folks are
+following the IEEE 1275 bindings for Open PIC.
 
-As an addendum, beyond my own bad experience with them, see below a recent upstream 
-fix that shows the kinds of problems that overlooked function scope statics can 
-cause.
+It would be nice to check-in a binding for the MPIC that is a superset
+of the 1275 bindings as a place to document extensions.  The already in
+use property 'protected-sources', for example, could be placed there.
 
-	Ingo
+I have included a draft proposal of what this would like.  It includes
+some properties ('no-reset') and a node (for message registers) that we
+are currently using for our AMP implementation and we would really
+like to push upstream.  If the general idea seems sound, then I will
+clean up the proposal and submit a patch for the bindings.
 
-------------->
->From 3cb50ddf97a0a1ca4c68bc12fa1e727a6b45fbf2 Mon Sep 17 00:00:00 2001
-From: Al Viro <viro@ZenIV.linux.org.uk>
-Date: Mon, 20 Dec 2010 15:53:18 +0000
-Subject: [PATCH] Fix btrfs b0rkage
+Thoughts?
 
-Buggered-in: 76dda93c6ae2 ("Btrfs: add snapshot/subvolume destroy
-ioctl")
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Acked-by: Chris Mason <chris.mason@oracle.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
----
- fs/btrfs/export.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+============================
 
-diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
-index 6f04444..659f532 100644
---- a/fs/btrfs/export.c
-+++ b/fs/btrfs/export.c
-@@ -166,7 +166,7 @@ static struct dentry *btrfs_fh_to_dentry(struct super_block *sb, struct fid *fh,
- static struct dentry *btrfs_get_parent(struct dentry *child)
- {
- 	struct inode *dir = child->d_inode;
--	static struct dentry *dentry;
-+	struct dentry *dentry;
- 	struct btrfs_root *root = BTRFS_I(dir)->root;
- 	struct btrfs_path *path;
- 	struct extent_buffer *leaf;
+* MPIC Binding
+
+This binding specifies what properties and child nodes must be available 
+on the device tree representation of the MPIC interrupt
+controller.  This binding is a superset of the binding defined for Open 
+PIC in [1].
+
+** Required properties:
+
+     - All of the required properties mentioned in [1].
+
+** Optional properties:
+
+     - no-reset : the presence of this property indicates that the
+                  interrupt controller should not be reset during OS
+                  initialization.
+     - protected-sources : a list of interrupt sources that are not
+                           available for use.
+
+** Example:
+
+	mpic: pic@40000 {
+		interrupt-controller;
+		#address-cells = <0>;
+		#interrupt-cells = <2>;
+		reg = <0x40000 0x40000>;
+		compatible = "chrp,open-pic";
+		device_type = "open-pic";
+		protected-sources = <0xb1 0xb2>;
+		no-reset;
+	};
+
+* MPIC Message Registers
+
+This binding specifies how the MPIC message registers implemented on
+some Freescale platforms for interprocessor communication should be
+represented.
+
+** Required parent:
+
+     - Message register nodes should always been nested under a MPIC
+       node.
+
+** Required properties:
+
+     - compatible : compatible list, contains 2 entries, first is
+                    "fsl,CHIP-msgr", where CHIP is the processor
+                    (p2020, mpc8572, etc ...) and the second is
+                    "fsl,mpic-msgr".
+     - reg        : should contain the address and the length of the
+                    message register block.
+     - cell-index : the index of the message register block.
+     - interrupts : each one of the interrupts here represents the
+                    interrupt line for one message register.  These
+                    interrupts are routed internally to the MPIC.
+
+NOTE: The 'interrupt-parent' is implicit since message register nodes
+        are always children of interrupt controller nodes.
+
+** Example:
+
+	mpic: pic@40000 {
+		interrupt-controller;
+		#address-cells = <0>;
+		#interrupt-cells = <2>;
+		reg = <0x40000 0x40000>;
+		compatible = "chrp,open-pic";
+		device_type = "open-pic";
+		protected-sources = <0xb1>;
+
+		msgr@1400 {
+			compatible = "fsl,p2020-msgr", "fsl,mpic-msgr";
+			reg = <0x1400 0x200>;
+			cell-index = <0>;
+			interrupts = <0xb0 0x2 0xb1 0x2
+                                       0xb2 0x2 0xb3 0x2>;
+		};
+
+		msgr@2400 {
+			compatible = "fsl,p2020-msgr", "fsl,mpic-msgr";
+			reg = <0x2400 0x200>;
+			cell-index = <1>;
+			interrupts = <0xb4 0x2 0xb5 0x2
+                                       0xb6 0x2 0xb7 0x2>;
+	         };	
+	};
+
+* References
+
+[1] PowerPC Microprocessor Common Hardware Reference Platform (CHRP)
+      Binding, Version 1.8, 1998. Published by the Open Firmware Working
+      Group. (http://playground.sun.com/1275/bindings/chrp/chrp1_8a.ps)
+
+
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
