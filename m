@@ -1,236 +1,286 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 05/15] x86/dtb: add early parsing of APIC and IO APIC
-Date: Thu, 30 Dec 2010 01:54:51 -0700
-Message-ID: <20101230085451.GF11721@angua.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 12/15] of/address: use propper endianess in get_flags
+Date: Thu, 30 Dec 2010 02:05:45 -0700
+Message-ID: <20101230090545.GH11721@angua.secretlab.ca>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	<1292600033-12271-6-git-send-email-bigeasy@linutronix.de>
+ <1292600033-12271-13-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1292600033-12271-6-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1292600033-12271-13-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 17, 2010 at 04:33:43PM +0100, Sebastian Andrzej Siewior wrote:
-> The apic & ioapic have to be added to system early because
-> native_init_IRQ() requires it. In order to obtain the address of the
-> ioapic the device tree has to be unflattened because
-> of_address_to_resource() has to work.
-> The device tree is relocated to ensure it is always covered by the
-> kernel and the boot loader does not have to make assumptions about
-> kernel's memory layout.
+On Fri, Dec 17, 2010 at 04:33:50PM +0100, Sebastian Andrzej Siewior wrote:
+> This patch changes u32 to __be32 for all "ranges", "prop" and "addr" and
+> such. Those variables are pointing to the device tree which containts
+> intergers in big endian format.
+> Most functions are doing it right because they are using using
+> of_read_number() which is doing the right thing. of_bus_isa_get_flags(),
+> of_bus_pci_get_flags() and of_bus_isa_map() were accessing the data
+> directly and were doing it wrong.
 > 
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+This one is already applied to my next-devicetree branch
+
+g.
+
 > ---
->  arch/x86/include/asm/prom.h |    7 +++
->  arch/x86/kernel/irqinit.c   |    2 +-
->  arch/x86/kernel/prom.c      |  123 +++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 128 insertions(+), 4 deletions(-)
+>  arch/powerpc/include/asm/prom.h |    2 +-
+>  drivers/of/address.c            |   54 ++++++++++++++++++++------------------
+>  include/linux/of_address.h      |    6 ++--
+>  3 files changed, 32 insertions(+), 30 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-> index 9076ae4..3bc8ed5 100644
-> --- a/arch/x86/include/asm/prom.h
-> +++ b/arch/x86/include/asm/prom.h
-> @@ -22,10 +22,17 @@
->  #include <asm/irq_controller.h>
+> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+> index 01c3302..b891fdc 100644
+> --- a/arch/powerpc/include/asm/prom.h
+> +++ b/arch/powerpc/include/asm/prom.h
+> @@ -42,7 +42,7 @@ extern void pci_create_OF_bus_map(void);
 >  
->  #ifdef CONFIG_OF
-> +extern int of_ioapic;
-> +extern u64 initial_dtb;
->  extern void add_dtb(u64 data);
-> +void x86_dtb_find_config(void);
-> +void x86_dtb_get_config(unsigned int unused);
->  void add_interrupt_host(struct irq_domain *ih);
+>  /* Translate a DMA address from device space to CPU space */
+>  extern u64 of_translate_dma_address(struct device_node *dev,
+> -				    const u32 *in_addr);
+> +				    const __be32 *in_addr);
+>  
+>  #ifdef CONFIG_PCI
+>  extern unsigned long pci_address_to_pio(phys_addr_t address);
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 3a1c7e7..b4559c5 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -12,13 +12,13 @@
+>  			(ns) > 0)
+>  
+>  static struct of_bus *of_match_bus(struct device_node *np);
+> -static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
+> -				    u64 size, unsigned int flags,
+> +static int __of_address_to_resource(struct device_node *dev,
+> +		const __be32 *addrp, u64 size, unsigned int flags,
+>  				    struct resource *r);
+>  
+>  /* Debug utility */
+>  #ifdef DEBUG
+> -static void of_dump_addr(const char *s, const u32 *addr, int na)
+> +static void of_dump_addr(const char *s, const __be32 *addr, int na)
+>  {
+>  	printk(KERN_DEBUG "%s", s);
+>  	while (na--)
+> @@ -26,7 +26,7 @@ static void of_dump_addr(const char *s, const u32 *addr, int na)
+>  	printk("\n");
+>  }
 >  #else
->  static inline void add_dtb(u64 data) { }
-> +#define x86_dtb_find_config x86_init_noop
-> +#define x86_dtb_get_config x86_init_uint_noop
-> +#define of_ioapic 0
+> -static void of_dump_addr(const char *s, const u32 *addr, int na) { }
+> +static void of_dump_addr(const char *s, const __be32 *addr, int na) { }
 >  #endif
 >  
->  extern char cmd_line[COMMAND_LINE_SIZE];
-> diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-> index 149c87f..4cadf86 100644
-> --- a/arch/x86/kernel/irqinit.c
-> +++ b/arch/x86/kernel/irqinit.c
-> @@ -244,7 +244,7 @@ void __init native_init_IRQ(void)
->  			set_intr_gate(i, interrupt[i-FIRST_EXTERNAL_VECTOR]);
->  	}
+>  /* Callbacks for bus specific translators */
+> @@ -36,10 +36,10 @@ struct of_bus {
+>  	int		(*match)(struct device_node *parent);
+>  	void		(*count_cells)(struct device_node *child,
+>  				       int *addrc, int *sizec);
+> -	u64		(*map)(u32 *addr, const u32 *range,
+> +	u64		(*map)(u32 *addr, const __be32 *range,
+>  				int na, int ns, int pna);
+>  	int		(*translate)(u32 *addr, u64 offset, int na);
+> -	unsigned int	(*get_flags)(const u32 *addr);
+> +	unsigned int	(*get_flags)(const __be32 *addr);
+>  };
 >  
-> -	if (!acpi_ioapic)
-> +	if (!acpi_ioapic && !of_ioapic)
->  		setup_irq(2, &irq2);
->  
->  #ifdef CONFIG_X86_32
-> diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-> index 53948cb..9cbb52b 100644
-> --- a/arch/x86/kernel/prom.c
-> +++ b/arch/x86/kernel/prom.c
-> @@ -6,15 +6,20 @@
->  #include <linux/interrupt.h>
->  #include <linux/list.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/slab.h>
->  
->  #include <asm/irq_controller.h>
-> +#include <asm/io_apic.h>
->  
-> +__initdata u64 initial_dtb;
->  char __initdata cmd_line[COMMAND_LINE_SIZE];
->  static LIST_HEAD(irq_domains);
->  static DEFINE_RAW_SPINLOCK(big_irq_lock);
->  
-> +int __initdata of_ioapic;
-> +
->  void add_interrupt_host(struct irq_domain *ih)
->  {
->  	unsigned long flags;
-> @@ -93,7 +98,119 @@ u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  
->  void __init add_dtb(u64 data)
->  {
-> -	initial_boot_params = (struct boot_param_header *)
-> -		phys_to_virt((u64) (u32) data +
-> -				offsetof(struct setup_data, data));
-> +	initial_dtb = data + offsetof(struct setup_data, data);
-> +}
-> +
-> +static void __init dtb_lapic_setup(void)
-> +{
-> +#ifdef CONFIG_X86_LOCAL_APIC
-> +	if (apic_force_enable())
-> +		return;
-> +
-> +	smp_found_config = 1;
-> +	pic_mode = 1;
-> +	/* Required for ioapic registration */
-> +	set_fixmap_nocache(FIX_APIC_BASE, mp_lapic_addr);
-> +	if (boot_cpu_physical_apicid == -1U)
-> +		boot_cpu_physical_apicid = read_apic_id();
-> +
-> +	generic_processor_info(boot_cpu_physical_apicid,
-> +			GET_APIC_VERSION(apic_read(APIC_LVR)));
-> +#endif
-> +}
-> +
-> +#ifdef CONFIG_X86_IO_APIC
-> +static void __init dtb_add_ioapic(struct device_node *dn)
-> +{
-> +	unsigned int ioapic_id;
-> +	const __be32 *cell;
-> +	int len;
-> +	struct resource r;
-> +	int ret;
-> +
-> +	cell = of_get_property(dn, "id", &len);
-> +	if (!cell) {
-> +		printk(KERN_ERR "Node %s is missing id property.\n",
-> +				dn->full_name);
-> +		return;
-> +	}
-> +	ioapic_id = of_read_ulong(cell, len / 4);
-> +
-> +	ret = of_address_to_resource(dn, 0, &r);
-> +	if (ret) {
-> +		printk(KERN_ERR "Can't obtain address from node %s.\n",
-> +				dn->full_name);
-> +		return;
-> +	}
-> +	mp_register_ioapic(ioapic_id, r.start, gsi_top);
-> +}
-> +
-> +static void __init dtb_ioapic_setup(void)
-> +{
-> +	struct device_node *dn;
-> +
-> +	if (!smp_found_config)
-> +		return;
-> +
-> +	for_each_compatible_node(dn, NULL, "intel,ioapic")
-> +		dtb_add_ioapic(dn);
-> +
-> +	if (nr_ioapics) {
-> +		of_ioapic = 1;
-> +		return;
-> +	}
-> +	printk(KERN_ERR "Error: No information about IO-APIC in OF.\n");
-> +	smp_found_config = 0;
-> +}
-> +#else
-> +static void __init dtb_ioapic_setup(void) {}
-> +#endif
-> +
-> +static void __init dtb_apic_setup(void)
-> +{
-> +	dtb_lapic_setup();
-> +	dtb_ioapic_setup();
-> +}
-> +
-> +void __init x86_dtb_find_config(void)
-> +{
-> +	if (initial_dtb)
-> +		smp_found_config = 1;
-> +	else
-> +		printk(KERN_ERR "Missing device tree!.\n");
-> +}
-> +
-> +void __init x86_dtb_get_config(unsigned int unused)
-> +{
-> +	u32 size;
-> +	u32 map_len;
-> +	void *new_dtb;
-> +
-> +	if (!initial_dtb)
-> +		return;
-> +
-> +	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
-> +			(u64)sizeof(struct boot_param_header));
-> +
-> +	initial_boot_params = early_memremap(initial_dtb, map_len);
-> +	size = be32_to_cpu(initial_boot_params->totalsize);
-> +	if (map_len < size) {
-> +		early_iounmap(initial_boot_params, map_len);
-> +		initial_boot_params = early_memremap(initial_dtb, size);
-
-Add "map_len = size;" here eliminate the early_iounmap() dance done below.
-
-> +	}
-> +
-> +	new_dtb = alloc_bootmem(size);
-> +	memcpy(new_dtb, initial_boot_params, size);
-> +	if (map_len < size)
-> +		early_iounmap(initial_boot_params, size);
-> +	else
-> +		early_iounmap(initial_boot_params, map_len);
-> +
-> +	initial_boot_params = new_dtb;
-> +
-> +	/* root level address cells */
-> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> +
-> +	unflatten_device_tree();
-> +	dtb_apic_setup();
+>  /*
+> @@ -55,7 +55,7 @@ static void of_bus_default_count_cells(struct device_node *dev,
+>  		*sizec = of_n_size_cells(dev);
 >  }
+>  
+> -static u64 of_bus_default_map(u32 *addr, const u32 *range,
+> +static u64 of_bus_default_map(u32 *addr, const __be32 *range,
+>  		int na, int ns, int pna)
+>  {
+>  	u64 cp, s, da;
+> @@ -85,7 +85,7 @@ static int of_bus_default_translate(u32 *addr, u64 offset, int na)
+>  	return 0;
+>  }
+>  
+> -static unsigned int of_bus_default_get_flags(const u32 *addr)
+> +static unsigned int of_bus_default_get_flags(const __be32 *addr)
+>  {
+>  	return IORESOURCE_MEM;
+>  }
+> @@ -110,10 +110,10 @@ static void of_bus_pci_count_cells(struct device_node *np,
+>  		*sizec = 2;
+>  }
+>  
+> -static unsigned int of_bus_pci_get_flags(const u32 *addr)
+> +static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+>  {
+>  	unsigned int flags = 0;
+> -	u32 w = addr[0];
+> +	u32 w = be32_to_cpup(addr);
+>  
+>  	switch((w >> 24) & 0x03) {
+>  	case 0x01:
+> @@ -129,7 +129,8 @@ static unsigned int of_bus_pci_get_flags(const u32 *addr)
+>  	return flags;
+>  }
+>  
+> -static u64 of_bus_pci_map(u32 *addr, const u32 *range, int na, int ns, int pna)
+> +static u64 of_bus_pci_map(u32 *addr, const __be32 *range, int na, int ns,
+> +		int pna)
+>  {
+>  	u64 cp, s, da;
+>  	unsigned int af, rf;
+> @@ -160,7 +161,7 @@ static int of_bus_pci_translate(u32 *addr, u64 offset, int na)
+>  	return of_bus_default_translate(addr + 1, offset, na - 1);
+>  }
+>  
+> -const u32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+> +const __be32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+>  			unsigned int *flags)
+>  {
+>  	const __be32 *prop;
+> @@ -207,7 +208,7 @@ EXPORT_SYMBOL(of_get_pci_address);
+>  int of_pci_address_to_resource(struct device_node *dev, int bar,
+>  			       struct resource *r)
+>  {
+> -	const u32	*addrp;
+> +	const __be32	*addrp;
+>  	u64		size;
+>  	unsigned int	flags;
+>  
+> @@ -237,12 +238,13 @@ static void of_bus_isa_count_cells(struct device_node *child,
+>  		*sizec = 1;
+>  }
+>  
+> -static u64 of_bus_isa_map(u32 *addr, const u32 *range, int na, int ns, int pna)
+> +static u64 of_bus_isa_map(u32 *addr, const __be32 *range, int na, int ns,
+> +		int pna)
+>  {
+>  	u64 cp, s, da;
+>  
+>  	/* Check address type match */
+> -	if ((addr[0] ^ range[0]) & 0x00000001)
+> +	if ((addr[0] ^ range[0]) & cpu_to_be32(1))
+>  		return OF_BAD_ADDR;
+>  
+>  	/* Read address values, skipping high cell */
+> @@ -264,10 +266,10 @@ static int of_bus_isa_translate(u32 *addr, u64 offset, int na)
+>  	return of_bus_default_translate(addr + 1, offset, na - 1);
+>  }
+>  
+> -static unsigned int of_bus_isa_get_flags(const u32 *addr)
+> +static unsigned int of_bus_isa_get_flags(const __be32 *addr)
+>  {
+>  	unsigned int flags = 0;
+> -	u32 w = addr[0];
+> +	u32 w = be32_to_cpup(addr);
+>  
+>  	if (w & 1)
+>  		flags |= IORESOURCE_IO;
+> @@ -330,7 +332,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+>  			    struct of_bus *pbus, u32 *addr,
+>  			    int na, int ns, int pna, const char *rprop)
+>  {
+> -	const u32 *ranges;
+> +	const __be32 *ranges;
+>  	unsigned int rlen;
+>  	int rone;
+>  	u64 offset = OF_BAD_ADDR;
+> @@ -398,7 +400,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+>   * that can be mapped to a cpu physical address). This is not really specified
+>   * that way, but this is traditionally the way IBM at least do things
+>   */
+> -u64 __of_translate_address(struct device_node *dev, const u32 *in_addr,
+> +u64 __of_translate_address(struct device_node *dev, const __be32 *in_addr,
+>  			   const char *rprop)
+>  {
+>  	struct device_node *parent = NULL;
+> @@ -475,22 +477,22 @@ u64 __of_translate_address(struct device_node *dev, const u32 *in_addr,
+>  	return result;
+>  }
+>  
+> -u64 of_translate_address(struct device_node *dev, const u32 *in_addr)
+> +u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+>  {
+>  	return __of_translate_address(dev, in_addr, "ranges");
+>  }
+>  EXPORT_SYMBOL(of_translate_address);
+>  
+> -u64 of_translate_dma_address(struct device_node *dev, const u32 *in_addr)
+> +u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+>  {
+>  	return __of_translate_address(dev, in_addr, "dma-ranges");
+>  }
+>  EXPORT_SYMBOL(of_translate_dma_address);
+>  
+> -const u32 *of_get_address(struct device_node *dev, int index, u64 *size,
+> +const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+>  		    unsigned int *flags)
+>  {
+> -	const u32 *prop;
+> +	const __be32 *prop;
+>  	unsigned int psize;
+>  	struct device_node *parent;
+>  	struct of_bus *bus;
+> @@ -525,8 +527,8 @@ const u32 *of_get_address(struct device_node *dev, int index, u64 *size,
+>  }
+>  EXPORT_SYMBOL(of_get_address);
+>  
+> -static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
+> -				    u64 size, unsigned int flags,
+> +static int __of_address_to_resource(struct device_node *dev,
+> +		const __be32 *addrp, u64 size, unsigned int flags,
+>  				    struct resource *r)
+>  {
+>  	u64 taddr;
+> @@ -564,7 +566,7 @@ static int __of_address_to_resource(struct device_node *dev, const u32 *addrp,
+>  int of_address_to_resource(struct device_node *dev, int index,
+>  			   struct resource *r)
+>  {
+> -	const u32	*addrp;
+> +	const __be32	*addrp;
+>  	u64		size;
+>  	unsigned int	flags;
+>  
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 8aea06f..2feda6e 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -3,7 +3,7 @@
+>  #include <linux/ioport.h>
+>  #include <linux/of.h>
+>  
+> -extern u64 of_translate_address(struct device_node *np, const u32 *addr);
+> +extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
+>  extern int of_address_to_resource(struct device_node *dev, int index,
+>  				  struct resource *r);
+>  extern void __iomem *of_iomap(struct device_node *device, int index);
+> @@ -21,7 +21,7 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+>  #endif
+>  
+>  #ifdef CONFIG_PCI
+> -extern const u32 *of_get_pci_address(struct device_node *dev, int bar_no,
+> +extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
+>  			       u64 *size, unsigned int *flags);
+>  extern int of_pci_address_to_resource(struct device_node *dev, int bar,
+>  				      struct resource *r);
+> @@ -32,7 +32,7 @@ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+>  	return -ENOSYS;
+>  }
+>  
+> -static inline const u32 *of_get_pci_address(struct device_node *dev,
+> +static inline const __be32 *of_get_pci_address(struct device_node *dev,
+>  		int bar_no, u64 *size, unsigned int *flags)
+>  {
+>  	return NULL;
 > -- 
 > 1.7.3.2
 > 
 > _______________________________________________
 > devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> devicetree-discuss@lists.ozlabs.org
 > https://lists.ozlabs.org/listinfo/devicetree-discuss
