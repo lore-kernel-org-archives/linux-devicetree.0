@@ -1,10 +1,16 @@
-From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
-Subject: [RFC][PATCH] add FDT address translation
-Date: Thu, 30 Dec 2010 00:38:00 +0100
-Message-ID: <4D1BC658.4040608@home.nl>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/7] fdt: Add Kconfig for EARLY_FLATTREE
+Date: Wed, 29 Dec 2010 17:15:41 -0700
+Message-ID: <20101230001541.GA32711@angua.secretlab.ca>
+References: <1290021345-4303-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<1290124502-13125-1-git-send-email-stephen.neuendorffer@xilinx.com>
+	<d43cf8d1-8821-4400-9c58-692846dd37ac@SG2EHSMHS005.ehs.local>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------050407080406090804030908"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d43cf8d1-8821-4400-9c58-692846dd37ac-RaUQJvECHitEus+KprP3J7jjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -14,220 +20,116 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------050407080406090804030908
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+On Thu, Nov 18, 2010 at 03:54:56PM -0800, Stephen Neuendorffer wrote:
+> The device tree code is now in two pieces: some which can be used generically
+> on any platform which selects CONFIG_OF_FLATTREE, and some early which is used
+> at boot time on only a few architectures.  This patch segregates the early
+> code so that only those architectures which care about it need compile it.
+> This also means that some of the requirements in the early code (such as
+> a cmd_line variable) that most architectures (e.g. X86) don't provide
+> can be ignored.
+> 
+> Signed-off-by: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-This patch adds address translations to fdt. Needed when the early 
-console is connected to a simple-bus that has address translation enabled.
+Applied, thanks.  I had to fix up the #ifdef which was testing for
+CONFIG_EARLY_FLATTREE instead of CONFIG_OF_EARLY_FLATTREE, and I
+reworked OF_EARLY_FLATTREE to select instead of depend on OF_FLATTREE.
 
-To be honest, I'm not too happy about this solution but it works and 
-most code is stolen from other parts of the fdt code, so I'm probably 
-not doing too weird stuff :)
-What do you guys think of this?
+Cheers,
+g.
 
-Greetz Walter
-
---------------050407080406090804030908
-Content-Type: text/plain; x-mac-type="0"; x-mac-creator="0";
- name="fdt_address_translation.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="fdt_address_translation.patch"
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c1360e0..d586efe 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -538,6 +538,161 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 	/* break now */
- 	return 1;
- }
-+/**
-+ * flat_dt_translate_address - Translate an address using the ranges property
-+ *
-+ * This function converts address from "node address-space" to "parent address-
-+ * space"
-+ */
-+static int __init flat_dt_translate_address(unsigned long node, unsigned long parent, u64 *address)
-+{
-+	unsigned long size = 0;
-+	__be32 *prop;
-+	__be32 *ranges;
-+	int size_cells = 0;
-+	int addr_cells = 0;
-+	int paddr_cells = OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
-+
-+	ranges = (u32 *)of_get_flat_dt_prop(node,"ranges",&size);
-+
-+	if(size==0) {
-+		pr_debug("No translation possible/necessary\n");
-+		return 0;
-+	}
-+
-+	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
-+	if (prop)
-+		size_cells = be32_to_cpup(prop);
-+	pr_debug("size_cells = %x\n", size_cells);
-+
-+	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
-+	if (prop)
-+		addr_cells = be32_to_cpup(prop);
-+	pr_debug("addr_cells = %x\n", addr_cells);
-+
-+	if(parent) {
-+		prop = of_get_flat_dt_prop(parent, "#address-cells", NULL);
-+		if (prop)
-+			paddr_cells = be32_to_cpup(prop);
-+		pr_debug("paddr_cells = %x\n", paddr_cells);
-+	}
-+	if((addr_cells<=0)||(size_cells<=0)||
-+		(addr_cells>2)||(size_cells>2)||(paddr_cells>2)) {
-+		pr_warn("Translation not possible in fdt. Invalid address.\n");
-+		*address = 0;
-+		return -1;
-+	}
-+	pr_debug("FDT-Ranges:\n");
-+	while(size>0) {
-+		u64 from,to,tsize;
-+		from = be32_to_cpup(ranges++);
-+		size-=4;
-+		if(addr_cells==2) {
-+			from += (((u64)be32_to_cpup(ranges++))<<32);
-+			size-=4;
-+		}
-+		to = be32_to_cpup(ranges++);
-+		size-=4;
-+		if(paddr_cells==2) {
-+			to += (((u64)be32_to_cpup(ranges++))<<32);
-+			size-=4;
-+		}
-+		tsize = be32_to_cpup(ranges++);
-+		size-=4;
-+		if(size_cells==2) {
-+			tsize += (((u64)be32_to_cpup(ranges++))<<32);
-+			size-=4;
-+		}
-+		pr_debug("  From %llX To %llX Size %llX\n", from, to, tsize);
-+		if((*address>=from)&&(*address<(from+tsize)))
-+			*address += (to - from);
-+	}
-+	return 1;
-+}
-+
-+static int __init of_scan_flat_dt_ranges(unsigned long *pnode, 
-+				unsigned long parent, unsigned long target, 
-+				u64 *address, int ignore)
-+{
-+	int rc = 0;
-+	int depth = -1;
-+	char *pathp;
-+	unsigned long p = *pnode;
-+	do {
-+		u32 tag = be32_to_cpup((__be32 *)p);
-+
-+		p += 4;
-+		if (tag == OF_DT_END_NODE) {
-+			if(depth--) {
-+				break;
-+			} else {
-+				continue;
-+			}
-+		}
-+		if (tag == OF_DT_NOP)
-+			continue;
-+		if (tag == OF_DT_END)
-+			break;
-+		if (tag == OF_DT_PROP) {
-+			u32 sz = be32_to_cpup((__be32 *)p);
-+			p += 8;
-+			if (be32_to_cpu(initial_boot_params->version) < 0x10)
-+				p = ALIGN(p, sz >= 8 ? 8 : 4);
-+			p += sz;
-+			p = ALIGN(p, 4);
-+			continue;
-+		}
-+		if (tag != OF_DT_BEGIN_NODE) {
-+			pr_err("Invalid tag %x in flat device tree!\n", tag);
-+			return -EINVAL;
-+		}
-+		pathp = (char *)p;
-+		p = ALIGN(p + strlen(pathp) + 1, 4);
-+		if ((*pathp) == '/') {
-+			char *lp, *np;
-+			for (lp = NULL, np = pathp; *np; np++)
-+				if ((*np) == '/')
-+					lp = np+1;
-+			if (lp != NULL)
-+				pathp = lp;
-+		}
-+		if((ignore==0) && (p == target)) {
-+			rc = 1;
-+			ignore++;
-+			pr_debug("Found target. Start address translation\n");
-+		}
-+		if(depth) {
-+			int res;
-+			*pnode=p;
-+			res = of_scan_flat_dt_ranges(pnode, p, target, 
-+							address,ignore);
-+			if(res<0) {
-+				/* Something bad happened */
-+				return -1;
-+			} else if(res>0) {
-+				/* Something gooed happened. Translate. */
-+				rc++;
-+				pr_debug("translate %08lX %s\n", p, pathp);
-+				if(flat_dt_translate_address(p, parent, 
-+						address)<0) {
-+					return -1;
-+				}
-+			}
-+			p=*pnode;
-+		} else {
-+			depth++;
-+		}
-+	} while (1);
-+	*pnode=p;
-+	return rc;
-+}
-+int __init early_init_dt_translate_address(unsigned long node, u64 *address)
-+{
-+	unsigned long p = ((unsigned long)initial_boot_params) +
-+			be32_to_cpu(initial_boot_params->off_dt_struct);
-+	return of_scan_flat_dt_ranges(&p, 0, node, address,0);
-+}
-+
- 
- /**
-  * unflatten_device_tree - create tree of device_nodes from flat blob
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 7bbf5b3..92e8694 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -82,6 +82,8 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
- extern u64 early_init_dt_alloc_memory_arch(u64 size, u64 align);
- extern u64 dt_mem_next_cell(int s, __be32 **cellp);
- 
-+extern int early_init_dt_translate_address(unsigned long node, u64 *address);
-+
- /*
-  * If BLK_DEV_INITRD, the fdt early init code will call this function,
-  * to be provided by the arch code. start and end are specified as
-
---------------050407080406090804030908
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---------------050407080406090804030908--
+> 
+> ----
+> 
+> Grant,
+> We had discussed doing something like this a loooong time ago.  This (or at
+> least some other way of dealing with cmd_line) is
+> actually necessary to compile on X86.  Do you still want to do it this way?
+> Looking at my old email, you suggested only powerpc and microblaze need this.
+> Is that still the case?
+> 
+> Conflicts:
+> 
+> 	drivers/of/fdt.c
+> ---
+>  arch/microblaze/Kconfig |    1 +
+>  arch/powerpc/Kconfig    |    1 +
+>  drivers/of/Kconfig      |    5 +++++
+>  drivers/of/fdt.c        |    4 ++++
+>  4 files changed, 11 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+> index 692fdfc..384375c 100644
+> --- a/arch/microblaze/Kconfig
+> +++ b/arch/microblaze/Kconfig
+> @@ -20,6 +20,7 @@ config MICROBLAZE
+>  	select TRACING_SUPPORT
+>  	select OF
+>  	select OF_FLATTREE
+> +	select OF_EARLY_FLATTREE
+>  
+>  config SWAP
+>  	def_bool n
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 631e5a0..2cd7b32 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -119,6 +119,7 @@ config PPC
+>  	default y
+>  	select OF
+>  	select OF_FLATTREE
+> +	select OF_EARLY_FLATTREE
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_FUNCTION_TRACER
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index aa675eb..0199157 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -19,6 +19,10 @@ config OF_FLATTREE
+>  	bool
+>  	select DTC
+>  
+> +config OF_EARLY_FLATTREE
+> +	bool
+> +	depends on OF_FLATTREE
+> +
+>  config OF_PROMTREE
+>  	bool
+>  
+> @@ -62,3 +66,4 @@ config OF_MDIO
+>  	  OpenFirmware MDIO bus (Ethernet PHY) accessors
+>  
+>  endmenu # OF
+> +
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index c1360e0..4d71b29 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -27,6 +27,8 @@ int __initdata dt_root_size_cells;
+>  
+>  struct boot_param_header *initial_boot_params;
+>  
+> +#ifdef CONFIG_EARLY_FLATTREE
+> +
+>  char *find_flat_dt_string(u32 offset)
+>  {
+>  	return ((char *)initial_boot_params) +
+> @@ -604,3 +606,5 @@ void __init unflatten_device_tree(void)
+>  
+>  	pr_debug(" <- unflatten_device_tree()\n");
+>  }
+> +
+> +#endif /* CONFIG_EARLY_FLATTREE */
+> -- 
+> 1.5.6.6
+> 
+> 
+> 
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+> 
+> 
