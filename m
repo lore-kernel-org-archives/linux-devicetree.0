@@ -1,17 +1,18 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 02/11] x86: Add device tree support
-Date: Thu, 30 Dec 2010 13:57:50 -0700
-Message-ID: <AANLkTimZoC+5zGY75aWB=x1Z1q+qcyyFgAHEvaEgzXyH@mail.gmail.com>
+Date: Thu, 30 Dec 2010 13:58:09 -0700
+Message-ID: <AANLkTinSr_KYkFNUmWbL2PUzS2Ose7cA5q8xUbLeUr=J@mail.gmail.com>
 References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
 	<1290706801-7323-3-git-send-email-bigeasy@linutronix.de>
 	<1290807736.32570.143.camel@pasglop>
 	<20101128134907.GA30784@www.tglx.de>
 	<20101230082654.GB11721@angua.secretlab.ca>
+	<AANLkTin2=T=v0ZNOpAGhwuM0i9Ts8Xr+kRtEJ95VGeOp@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101230082654.GB11721-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <AANLkTin2=T=v0ZNOpAGhwuM0i9Ts8Xr+kRtEJ95VGeOp-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,75 +22,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 30, 2010 at 1:26 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
-> On Sun, Nov 28, 2010 at 02:49:07PM +0100, Sebastian Andrzej Siewior wrote:
->> The reason why you have multiple .o wrapper files is because the specific
->> platform code is not simply passing the device tree but also adding /
->> updating nodes like MAC address, bus clocks, ... which are coming from
->> the (different) bd_t struct or something else. The simpleboot target is
->> covering the case where you just pass the embedded dtb to kernel without
->> changing it.
->>
->> On x86 we want to have the bootloader passing us the final dtb. The
->> in-kernel dtb is more like a generic simpleboot target.
+On Thu, Dec 30, 2010 at 1:45 AM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
+> On Thu, Dec 30, 2010 at 2:26 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
+>> What is the boot sequence for the embedded x86 platforms? =A0Is there
+>> still a bootloader?
 >
-> /me gets ready to dodge tomatoes thrown at him.
+> There's no one embedded setup on any platform, but one of the few
+> constants of embedded development is trying to eliminate unnecessary
+> requirements.
 >
-> Hmmm, back up a minute...
+> Just on standard-ish PC hardware I've seen people try to stick Linux in t=
+he
+> BIOS flash (generally not enough room), I've seen people try to stick
+> it as the first stage PXE payload, there's the fun and games with
+> kexec of emergency kernels for crash dumps...
 >
-> Since Linux on x86 has pretty much always depended on a two stage boot
-> (firmware boots a bootloader like grub which in turn boots the
-> kernel), then what is the use case for pursuing an in-kernel dtb
-> linkage? =A0simpleimage was used on powerpc for the use-case where there
-> is no 2nd stage bootloader, but instead only the kernel which is
-> booted from some firmware that is non-upgradeable (or at least too
-> risky to upgrade). =A0Same with the cuImages. =A0The wrapper is
-> effectively a 2nd stage bootloader to adapt from what older u-boot
-> provides and what the kernel needs.
->
-> What is the boot sequence for the embedded x86 platforms? =A0Is there
-> still a bootloader? =A0If so, what prevents always depending on the
-> bootloader to pass in the device tree blob? =A0If the bootloader is
-> software (not firmware) then it should be something we have control
-> over when shipping a distribution.
->
-> BTW, don't take microblaze as the example to be emulated. =A0Some of
-> the things it does for device tree support is not scalable, like
-> linking the .dtbs directly into the kernel.
->
-> John Bonesio has also prototyped doing a similar zImage bootwrapper on
-> arm which allows a dtb to be concatenated to the kernel image and
-> updated before passing it to the kernel. =A0As it stands, there are no
-> plans to use in-kernel .dtb linking on ARM.
+> If the capability to skip an unnecessary bootloader was available, people
+> would use it.
 
-Hmmm, I shouldn't be sending email at 1:30 in the morning.  The above
-statement is not really true.  One of the use-cases on ARM is using a
-device tree with existing firmware that doesn't pass a dt blob.  Right
-now there are two possible methods for doing this.  Option one is to
-link the .dtbs in the the kernel proper and point to them from the
-machine struct.  The dtb would be used when a matching machine id is
-passed by the firmware.  Option 2 is to select the correct .dtb with a
-kernel boot wrapper, which is exactly the method used by the powerpc
-boot wrappers and is the mechanism that John Bonesio is prototyping
-(hopefully will have patches out on the list early in the new year).
-
-Personally I prefer the boot wrapper method because it means there is
-exactly one mechanism for providing the kernel proper with a .dtb and
-it allows the set of dtbs to be provided at install time instead of
-kernel compile time.  Since the boot wrapper prototype is so-far
-successful, it is the approach that I'm going to pursue on ARM (but
-I'm not yet completely ruling out option 1).
-
-Peter & Dirk, I realize that this is different from what we talked
-about at Plumbers this year.  I'm not saying no to linking the .dtbs
-into the kernel proper on x86, and I don't pretend to know the details
-of the x86 Linux boot interface, but if dtb linking is merged, then
-x86 will probably be the only major architecture to use it (microblaze
-doesn't count as major)  :-).
+Right, but in all of those cases a boot wrapper provides the same
+functionality with better flexability, such as being able to provided
+the dtb image(s) at install time instead of compile time.
 
 g.
