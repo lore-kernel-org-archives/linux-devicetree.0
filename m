@@ -1,112 +1,301 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 02/11] x86: Add device tree support
-Date: Thu, 30 Dec 2010 01:26:54 -0700
-Message-ID: <20101230082654.GB11721@angua.secretlab.ca>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
-	<1290706801-7323-3-git-send-email-bigeasy@linutronix.de>
-	<1290807736.32570.143.camel@pasglop>
-	<20101128134907.GA30784@www.tglx.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 02/15] x86: Add device tree support
+Date: Thu, 30 Dec 2010 01:43:11 -0700
+Message-ID: <20101230084311.GD11721@angua.secretlab.ca>
+References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
+ <1292600033-12271-3-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20101128134907.GA30784-Hfxr4Dq0UpYb1SvskN2V4Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+In-Reply-To: <1292600033-12271-3-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 28, 2010 at 02:49:07PM +0100, Sebastian Andrzej Siewior wrote:
-> * Benjamin Herrenschmidt | 2010-11-27 08:42:16 [+1100]:
+On Fri, Dec 17, 2010 at 04:33:40PM +0100, Sebastian Andrzej Siewior wrote:
+> This patch adds minimal support for device tree support on x86. It will
+> be passed to the kernel via setup_data which requires atleast boot
+> protocol 2.09.
+> Memory size, restricted memory regions, boot arguments are gathered the
+> traditional way so things like cmd_line are just here to let the code
+> compile.
+> The current plan is use the device tree as an extension and to gather
+> informations from it which can not be enumerated and have to be
+> hardcoded otherwise. This includes things like
+> - which devices are on this I2C/ SPI bus?
+> - how are the interrupts wired to IO APIC?
+> - where could my hpet be?
 > 
-> >On Thu, 2010-11-25 at 18:39 +0100, Sebastian Andrzej Siewior wrote:
-> >> Dirk is working on some patches which provide generic infrastructure for
-> >> linking the dtb into the kernel. Once this is it its final shape, we
-> >> will relocate the device tree unconditionally. This will remove the
-> >> requirement for the boot loader to locate the device tree within lowmem.
-> >
-> >Linking the dtb into the kernel is something we prefer not doing on
-> >powerpc and I'm curious why you think that applies better on x86...
-> This is only for the case where we do not get a dtb from the bootloader
-> Microblaze also links dtb into the kernel in that case.
-> 
-> >We -do- have ways to include it in the zImage wrapper. However, this is
-> >different in subtle ways because of the way our zImage wrapper building
-> >works. Basically, we always build all the per-platform .o's of the
-> >wrapper that apply to supported platforms by the kernel. The
-> >binding/linking together of the final wrapper with a kernel image, an
-> >optional dtb and optional initrd is performed by a shell script that can
-> >be used outside of the normal build context.
-> 
-> The reason why you have multiple .o wrapper files is because the specific
-> platform code is not simply passing the device tree but also adding /
-> updating nodes like MAC address, bus clocks, ... which are coming from
-> the (different) bd_t struct or something else. The simpleboot target is
-> covering the case where you just pass the embedded dtb to kernel without
-> changing it.
-> 
-> On x86 we want to have the bootloader passing us the final dtb. The
-> in-kernel dtb is more like a generic simpleboot target.
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
 
-/me gets ready to dodge tomatoes thrown at him.
-
-Hmmm, back up a minute...
-
-Since Linux on x86 has pretty much always depended on a two stage boot
-(firmware boots a bootloader like grub which in turn boots the
-kernel), then what is the use case for pursuing an in-kernel dtb
-linkage?  simpleimage was used on powerpc for the use-case where there
-is no 2nd stage bootloader, but instead only the kernel which is
-booted from some firmware that is non-upgradeable (or at least too
-risky to upgrade).  Same with the cuImages.  The wrapper is
-effectively a 2nd stage bootloader to adapt from what older u-boot
-provides and what the kernel needs.
-
-What is the boot sequence for the embedded x86 platforms?  Is there
-still a bootloader?  If so, what prevents always depending on the
-bootloader to pass in the device tree blob?  If the bootloader is
-software (not firmware) then it should be something we have control
-over when shipping a distribution.
-
-BTW, don't take microblaze as the example to be emulated.  Some of
-the things it does for device tree support is not scalable, like
-linking the .dtbs directly into the kernel.
-
-John Bonesio has also prototyped doing a similar zImage bootwrapper on
-arm which allows a dtb to be concatenated to the kernel image and
-updated before passing it to the kernel.  As it stands, there are no
-plans to use in-kernel .dtb linking on ARM.
-
-I know it's not very fair to bring up these issues again right before
-the merge window opens.  I got myself overcommitted and dropped the
-ball over the last 1.5 months and I beg forgiveness.  However, I do
-want to make sure that the right decision is made and I'd be happier
-if a consistent scheme is used for passing the .dtb on all
-architectures.
-
-> 
-> >That means that it's possible for a distro for example to install a
-> >kernel image, all the wrapper .o files and that script, and at runtime
-> >rebuild zImage wrappers with the appropriate dtb without having the
-> >whole built kernel tree at hand.
-> For the distro reason the in-kernel dtb supports multiple dtbs. So a
-> distro kernel can include all of them into .init.data section and the
-> user can specify on the command line which device tree he wants. x86 gets
-> its command line via the bootpage so it is available before we have a
-> device tree. Microblaze should also be able to use this
-> mechanism.
-
-Should equally be able to support this as a boot wrapper with the
-added advantage that additional .dtbs could be added to the kernel
-image at install time without rebuilding the kernel.
+Mostly looks good. Some comments below.
 
 g.
+
+> ---
+>  Documentation/x86/boot_with_dtb.txt |   26 +++++++++++++++
+>  arch/x86/Kconfig                    |    7 ++++
+>  arch/x86/include/asm/bootparam.h    |    1 +
+>  arch/x86/include/asm/prom.h         |   59 +++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/Makefile            |    1 +
+>  arch/x86/kernel/irqinit.c           |    1 +
+>  arch/x86/kernel/prom.c              |   54 ++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/setup.c             |    4 ++
+>  8 files changed, 153 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/x86/boot_with_dtb.txt
+>  create mode 100644 arch/x86/include/asm/prom.h
+>  create mode 100644 arch/x86/kernel/prom.c
+> 
+> diff --git a/Documentation/x86/boot_with_dtb.txt b/Documentation/x86/boot_with_dtb.txt
+> new file mode 100644
+> index 0000000..6a357aa
+> --- /dev/null
+> +++ b/Documentation/x86/boot_with_dtb.txt
+> @@ -0,0 +1,26 @@
+> +  Booting x86 with device tree
+> +=================================
+> +
+> +1. Introduction
+> +~~~~~~~~~~~~~~~
+> +This document contains device tree information which are specific to
+> +the x86 platform. Generic informations as bindings can be found in
+> +Documentation/powerpc/dts-bindings/
+> +
+> +2. Passing the device tree
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +The pointer to the device tree block (dtb) is passed via setup_data
+> +(see [0]) which requires at least boot protocol 2.09. The type filed is
+> +defined as
+> +
+> +#define SETUP_DTB                      2
+> +
+> +3. Purpose
+> +~~~~~~~~~~~
+> +The device tree is used as an extension to the "boot page". As such it does not
+> +parse / consider data which are already covered by the boot page. This includes
+> +memory size, command line arguments or initrd address.
+> +It simply holds information which can not be retrieved otherwise like interrupt
+> +routing or a list of devices behind an I2C bus.
+> +
+> +[0] Documentation/x86/boot.txt
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index b6fccb0..0522354 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -299,6 +299,13 @@ config X86_BIGSMP
+>  	---help---
+>  	  This option is needed for the systems that have more than 8 CPUs
+>  
+> +config X86_OF
+> +	bool "Support for device tree"
+> +	select OF
+> +	select OF_FLATTREE
+> +	---help---
+> +	  Device tree support on X86.
+> +
+>  if X86_32
+>  config X86_EXTENDED_PLATFORM
+>  	bool "Support for extended (non-PC) x86 platforms"
+> diff --git a/arch/x86/include/asm/bootparam.h b/arch/x86/include/asm/bootparam.h
+> index c8bfe63..e020d88 100644
+> --- a/arch/x86/include/asm/bootparam.h
+> +++ b/arch/x86/include/asm/bootparam.h
+> @@ -12,6 +12,7 @@
+>  /* setup data types */
+>  #define SETUP_NONE			0
+>  #define SETUP_E820_EXT			1
+> +#define SETUP_DTB			2
+>  
+>  /* extensible setup data list node */
+>  struct setup_data {
+> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+> new file mode 100644
+> index 0000000..2fbe3e8
+> --- /dev/null
+> +++ b/arch/x86/include/asm/prom.h
+> @@ -0,0 +1,59 @@
+> +/*
+> + * Definitions for Device tree / OpenFirmware handling on X86
+> + *
+> + * based on arch/powerpc/include/asm/prom.h which is
+> + *         Copyright (C) 1996-2005 Paul Mackerras.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +
+> +#ifndef _ASM_X86_PROM_H
+> +#define _ASM_X86_PROM_H
+> +#ifndef __ASSEMBLY__
+> +
+> +#include <linux/of.h>
+> +#include <linux/types.h>
+> +#include <asm/irq.h>
+> +#include <asm/atomic.h>
+> +#include <asm/setup.h>
+> +
+> +#ifdef CONFIG_OF
+> +extern void add_dtb(u64 data);
+> +#else
+> +static inline void add_dtb(u64 data) { }
+> +#endif
+> +
+> +extern char cmd_line[COMMAND_LINE_SIZE];
+> +/* This number is used when no interrupt has been assigned */
+> +#define NO_IRQ		(-1)
+
+0 means NO_IRQ on x86 and most architectures.  I will change this when
+I pick up the patch.
+
+> +
+> +#define pci_address_to_pio pci_address_to_pio
+> +unsigned long pci_address_to_pio(phys_addr_t addr);
+> +
+> +/**
+> + * irq_dispose_mapping - Unmap an interrupt
+> + * @virq: linux virq number of the interrupt to unmap
+> + *
+> + * FIXME: We really should implement proper virq handling like power,
+> + * but that's going to be major surgery.
+> + */
+> +static inline void irq_dispose_mapping(unsigned int virq) { }
+> +
+> +#define HAVE_ARCH_DEVTREE_FIXUPS
+> +
+> +#endif /* __ASSEMBLY__ */
+> +
+> +/*
+> + * These includes are put at the bottom because they may contain things
+> + * that are overridden by this file.  Ideally they shouldn't be included
+> + * by this file, but there are a bunch of .c files that currently depend
+> + * on it.  Eventually they will be cleaned up.
+> + */
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +
+> +#endif
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index f60153d..40bc33d 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -108,6 +108,7 @@ obj-$(CONFIG_MICROCODE)			+= microcode.o
+>  obj-$(CONFIG_X86_CHECK_BIOS_CORRUPTION) += check.o
+>  
+>  obj-$(CONFIG_SWIOTLB)			+= pci-swiotlb.o
+> +obj-$(CONFIG_X86_OF)			+= prom.o
+>  
+>  ###
+>  # 64 bit specific files
+> diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+> index c752e97..149c87f 100644
+> --- a/arch/x86/kernel/irqinit.c
+> +++ b/arch/x86/kernel/irqinit.c
+> @@ -25,6 +25,7 @@
+>  #include <asm/setup.h>
+>  #include <asm/i8259.h>
+>  #include <asm/traps.h>
+> +#include <asm/prom.h>
+>  
+>  /*
+>   * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
+> diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
+> new file mode 100644
+> index 0000000..249ebd3
+> --- /dev/null
+> +++ b/arch/x86/kernel/prom.c
+> @@ -0,0 +1,54 @@
+> +/*
+> + * Architecture specific OF callbacks.
+> + */
+> +#include <linux/bootmem.h>
+> +#include <linux/io.h>
+> +#include <linux/list.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/slab.h>
+> +
+> +char __initdata cmd_line[COMMAND_LINE_SIZE];
+> +
+> +unsigned int irq_create_of_mapping(struct device_node *controller,
+> +		const u32 *intspec, unsigned int intsize)
+> +{
+> +	return intspec[0];
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+> +
+> +unsigned long pci_address_to_pio(phys_addr_t address)
+> +{
+> +	/*
+> +	 * The ioport address can be directly used by inX / outX
+> +	 */
+> +	BUG_ON(address >= (1 << 16));
+> +	return (unsigned long)address;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_address_to_pio);
+> +
+> +void __init early_init_dt_scan_chosen_arch(unsigned long node)
+> +{
+> +	BUG();
+> +}
+> +
+> +void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+> +{
+> +	BUG();
+> +}
+> +
+> +u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+> +{
+> +	void *mem;
+> +
+> +	mem = __alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS));
+> +	return virt_to_phys(mem);
+> +}
+> +
+> +void __init add_dtb(u64 data)
+> +{
+> +	initial_boot_params = (struct boot_param_header *)
+> +		phys_to_virt((u64) (u32) data +
+> +				offsetof(struct setup_data, data));
+> +}
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 577d06b..26f2c9a 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -113,6 +113,7 @@
+>  #endif
+>  #include <asm/mce.h>
+>  #include <asm/alternative.h>
+> +#include <asm/prom.h>
+>  
+>  /*
+>   * end_pfn only includes RAM, while max_pfn_mapped includes all e820 entries.
+> @@ -445,6 +446,9 @@ static void __init parse_setup_data(void)
+>  		case SETUP_E820_EXT:
+>  			parse_e820_ext(data);
+>  			break;
+> +		case SETUP_DTB:
+> +			add_dtb(pa_data);
+> +			break;
+
+Why is the physical address being passed in when the virtual address
+is needed to be stored in initial_boot_params by add_dtb()?
+
+
+>  		default:
+>  			break;
+>  		}
+> -- 
+> 1.7.3.2
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
