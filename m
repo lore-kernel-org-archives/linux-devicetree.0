@@ -1,123 +1,69 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of/fdt: add kernel command line option for dtb_compat
- string
-Date: Thu, 30 Dec 2010 14:34:24 -0700
-Message-ID: <20101230213424.GC3220@angua.secretlab.ca>
-References: <1291658059-383-1-git-send-email-dirk.brandewie@gmail.com>
- <4D1259E8.9030706@gmail.com>
+From: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [sodaville] [PATCH 02/11] x86: Add device tree support
+Date: Thu, 30 Dec 2010 16:51:05 -0800
+Message-ID: <4D1D28F9.7010808@linux.intel.com>
+References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>	<1290706801-7323-3-git-send-email-bigeasy@linutronix.de>	<1290807736.32570.143.camel@pasglop>	<20101128134907.GA30784@www.tglx.de>
+	<20101230082654.GB11721@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4D1259E8.9030706@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dirk Brandewie <dirk.brandewie@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20101230082654.GB11721-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 22, 2010 at 12:04:56PM -0800, Dirk Brandewie wrote:
-> On 12/06/2010 09:54 AM, dirk.brandewie@gmail.com wrote:
-> >From: Dirk Brandewie<dirk.brandewie@gmail.com>
-> >
-> >Adds a kernel command line option "dtb_compat=<string>".  This string
-> >will be used to select the first compatible device tree blob linked
-> >into the kernel if a device tree blob is was *not* passed in by the
-> >bootloader.
-> >
-> >Signed-off-by: Dirk Brandewie<dirk.brandewie@gmail.com>
-> >---
-> >  Documentation/kernel-parameters.txt |    8 ++++++
-> >  drivers/of/fdt.c                    |   48 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 56 insertions(+), 0 deletions(-)
-> >
-> >diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> >index 92e83e5..64093e5 100644
-> >--- a/Documentation/kernel-parameters.txt
-> >+++ b/Documentation/kernel-parameters.txt
-> >@@ -655,6 +655,14 @@ and is between 256 and 4096 characters. It is defined in the file
-> >
-> >  	dscc4.setup=	[NET]
-> >
-> >+	dtb_compat=	[KNL]
-> >+			Specify the "compatible" string for the device
-> >+			tree blob present in the vmlinux image.  This
-> >+			string will be used to select the first device
-> >+			tree blob whose compatible property matches
-> >+			the string if a dtb was NOT passed in by the
-> >+			bootloader.
-> >+
-> >  	dynamic_printk	Enables pr_debug()/dev_dbg() calls if
-> >  			CONFIG_DYNAMIC_PRINTK_DEBUG has been enabled.
-> >  			These can also be switched on/off via
-> >diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> >index c1360e0..ca1318c 100644
-> >--- a/drivers/of/fdt.c
-> >+++ b/drivers/of/fdt.c
-> >@@ -15,6 +15,8 @@
-> >  #include<linux/of_fdt.h>
-> >  #include<linux/string.h>
-> >  #include<linux/errno.h>
-> >+#include<asm-generic/vmlinux.lds.h>
-> >+
-> >
-> >  #ifdef CONFIG_PPC
-> >  #include<asm/machdep.h>
-> >@@ -604,3 +606,49 @@ void __init unflatten_device_tree(void)
-> >
-> >  	pr_debug("<- unflatten_device_tree()\n");
-> >  }
-> >+
-> >+extern uint8_t __dtb_start[];
-> >+extern uint8_t __dtb_end[];
-> >+static void __init *of_flat_dt_find_compatible_dtb(char *name)
-> >+{
-> >+	void *rc = NULL;
-> >+	unsigned long root, size;
-> >+	struct boot_param_header  *orig_initial_boot_params;
-> >+	uint8_t *blob;
-> >+
-> >+	orig_initial_boot_params = initial_boot_params;
-> >+	blob = __dtb_start;
-> >+	initial_boot_params = (struct boot_param_header *)blob;
-> >+
-> >+	while (blob<  __dtb_end) {
-> >+		if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
-> >+			WARN(1, "Invalid device tree blob in vmlinux\n");
-> >+			break;
-> >+		}
-> >+
-> >+		root = of_get_flat_dt_root();
-> >+		if (of_flat_dt_is_compatible(root, name)>  0) {
-> >+			rc = blob;
-> >+			break;
-> >+		}
-> >+
-> >+		size =  be32_to_cpu(initial_boot_params->totalsize);
-> >+		blob =  PTR_ALIGN(blob + size, STRUCT_ALIGNMENT);
-> >+		initial_boot_params = (struct boot_param_header *)blob;
-> >+	}
-> >+
-> >+	if (rc == NULL)
-> >+		initial_boot_params = orig_initial_boot_params;
-> >+	return rc;
-> >+}
-> >+
-> >+
-> >+static int __init of_flat_dtb_compat_setup(char *line)
-> >+{
-> >+	if (!initial_boot_params)
-> >+		initial_boot_params = of_flat_dt_find_compatible_dtb(line);
-> >+	return 1;
-> >+}
-> >+
-> >+early_param("dtb_compat", of_flat_dtb_compat_setup);
-> >+
-> Any more comments on this patch? Is it good to go or DOA?
+On 12/30/2010 12:26 AM, Grant Likely wrote:
+> 
+> Since Linux on x86 has pretty much always depended on a two stage boot
+> (firmware boots a bootloader like grub which in turn boots the
+> kernel), then what is the use case for pursuing an in-kernel dtb
+> linkage?  simpleimage was used on powerpc for the use-case where there
+> is no 2nd stage bootloader, but instead only the kernel which is
+> booted from some firmware that is non-upgradeable (or at least too
+> risky to upgrade).  Same with the cuImages.  The wrapper is
+> effectively a 2nd stage bootloader to adapt from what older u-boot
+> provides and what the kernel needs.
+> 
+> What is the boot sequence for the embedded x86 platforms?  Is there
+> still a bootloader?  If so, what prevents always depending on the
+> bootloader to pass in the device tree blob?  If the bootloader is
+> software (not firmware) then it should be something we have control
+> over when shipping a distribution.
+> 
+> BTW, don't take microblaze as the example to be emulated.  Some of
+> the things it does for device tree support is not scalable, like
+> linking the .dtbs directly into the kernel.
+> 
+> John Bonesio has also prototyped doing a similar zImage bootwrapper on
+> arm which allows a dtb to be concatenated to the kernel image and
+> updated before passing it to the kernel.  As it stands, there are no
+> plans to use in-kernel .dtb linking on ARM.
+> 
+> I know it's not very fair to bring up these issues again right before
+> the merge window opens.  I got myself overcommitted and dropped the
+> ball over the last 1.5 months and I beg forgiveness.  However, I do
+> want to make sure that the right decision is made and I'd be happier
+> if a consistent scheme is used for passing the .dtb on all
+> architectures.
+> 
 
-Not DOA, but I want to discuss the linking vs. wrapper issue again
-before I commit to merging it.  BTW, sorry for being MIA on this stuff
-for pretty much all December.  I got over committed, but things should
-be better now.
+There are a number of different boot loader solutions in use on embedded
+platforms, as much as we would like to avoid it.
 
-g.
+However, the ability to link in the dtb will provide a
+architecture-neutral option of last resort.  I'm not saying it's a good
+option, but it's better than random ad hoc stuff, and if that means that
+it will only ever be used during in-lab platform bringup, *that is still
+a huge win*.
 
+	-hpa
