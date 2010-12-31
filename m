@@ -1,14 +1,21 @@
-From: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [sodaville] [PATCH 02/11] x86: Add device tree support
-Date: Thu, 30 Dec 2010 16:51:05 -0800
-Message-ID: <4D1D28F9.7010808@linux.intel.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>	<1290706801-7323-3-git-send-email-bigeasy@linutronix.de>	<1290807736.32570.143.camel@pasglop>	<20101128134907.GA30784@www.tglx.de>
-	<20101230082654.GB11721@angua.secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/5] of/device: Make of_get_next_child() check status
+	properties
+Date: Fri, 31 Dec 2010 00:39:24 -0700
+Message-ID: <20101231073924.GA4195@angua.secretlab.ca>
+References: <cover.1291799069.git.deepak_saxena@mentor.com>
+	<20101208192944.GE32473@mentor.com>
+	<20101208150102.69b8062b@udp111988uds.am.freescale.net>
+	<1291858402.2962.2.camel@concordia>
+	<20101209030924.GC11856@yookeroo>
+	<AANLkTimPhs4AZ74e4SZfkyboeDJQaoybL+FGmwy_+bLJ@mail.gmail.com>
+	<1292452855.6133.5.camel@concordia>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101230082654.GB11721-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1292452855.6133.5.camel@concordia>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,52 +25,94 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/30/2010 12:26 AM, Grant Likely wrote:
+On Thu, Dec 16, 2010 at 09:40:55AM +1100, Michael Ellerman wrote:
+> On Wed, 2010-12-15 at 10:35 -0800, Hollis Blanchard wrote:
+> > On Wed, Dec 8, 2010 at 7:09 PM, David Gibson
+> > <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > > On Thu, Dec 09, 2010 at 12:33:22PM +1100, Michael Ellerman wrote:
+> > >> On Wed, 2010-12-08 at 15:01 -0600, Scott Wood wrote:
+> > >> > On Wed, 8 Dec 2010 11:29:44 -0800
+> > >> > Deepak Saxena <deepak_saxena-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+> > >> >
+> > >> > > We only return the next child if the device is available.
+> > >> > >
+> > >> > > Signed-off-by: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > >> > > Signed-off-by: Deepak Saxena <deepak_saxena-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > >> > > ---
+> > >> > >  drivers/of/base.c |    4 +++-
+> > >> > >  1 files changed, 3 insertions(+), 1 deletions(-)
+> > >> > >
+> > >> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > >> > > index 5d269a4..81b2601 100644
+> > >> > > --- a/drivers/of/base.c
+> > >> > > +++ b/drivers/of/base.c
+> > >> > > @@ -321,6 +321,8 @@ struct device_node *of_get_next_parent(struct device_node *node)
+> > >> > >   *
+> > >> > >   *       Returns a node pointer with refcount incremented, use
+> > >> > >   *       of_node_put() on it when done.
+> > >> > > + *
+> > >> > > + *       Does not return nodes marked unavailable by a status property.
+> > >> > >   */
+> > >> > >  struct device_node *of_get_next_child(const struct device_node *node,
+> > >> > >   struct device_node *prev)
+> > >> > > @@ -330,7 +332,7 @@ struct device_node *of_get_next_child(const struct device_node *node,
+> > >> > >   read_lock(&devtree_lock);
+> > >> > >   next = prev ? prev->sibling : node->child;
+> > >> > >   for (; next; next = next->sibling)
+> > >> > > -         if (of_node_get(next))
+> > >> > > +         if (of_device_is_available(next) && of_node_get(next))
+> > >> > >                   break;
+> > >> > >   of_node_put(prev);
+> > >> > >   read_unlock(&devtree_lock);
+> > >> >
+> > >> > This seems like too low-level a place to put this.  Some code may know
+> > >> > how to un-disable a device in certain situations, or it may be part of
+> > >> > debug code trying to dump the whole device tree, etc.  Looking
+> > >> > further[1], I see a raw version of this function, but not other things
+> > >> > like of_find_compatible_node.
+> > >>
+> > >> Yeah I agree. I think we'll eventually end up with __ versions of all or
+> > >> lots of them. Not to mention there might be cases you've missed where
+> > >> code expects to see unavailable nodes. The right approach is to add
+> > >> _new_ routines that don't return unavailable nodes, and convert code
+> > >> that you know wants to use them.
+> > >
+> > > Actually, I don't think we really want these status-skipping
+> > > iterators at all.  The device tree iterators should give us the device
+> > > tree, as it is.  Those old-style drivers which seach for a node rather
+> > > than using the bus probing logic can keep individual checks of the
+> > > status property until they're converted to the new scheme.
+> > 
+> > So the patch should look something like this?
+> > 
+> > @@ -321,6 +321,8 @@ struct device_node *of_get_next_parent(struct
+> > device_node *node)
+> >  *
+> >  *     Returns a node pointer with refcount incremented, use
+> >  *     of_node_put() on it when done.
+> > + *
+> > + *     Do not use this function.
+> >  */
+> >  struct device_node *of_get_next_child(const struct device_node *node,
+> >        struct device_node *prev)
 > 
-> Since Linux on x86 has pretty much always depended on a two stage boot
-> (firmware boots a bootloader like grub which in turn boots the
-> kernel), then what is the use case for pursuing an in-kernel dtb
-> linkage?  simpleimage was used on powerpc for the use-case where there
-> is no 2nd stage bootloader, but instead only the kernel which is
-> booted from some firmware that is non-upgradeable (or at least too
-> risky to upgrade).  Same with the cuImages.  The wrapper is
-> effectively a 2nd stage bootloader to adapt from what older u-boot
-> provides and what the kernel needs.
+> Haha. No it should say "this function doesn't lie to you".
 > 
-> What is the boot sequence for the embedded x86 platforms?  Is there
-> still a bootloader?  If so, what prevents always depending on the
-> bootloader to pass in the device tree blob?  If the bootloader is
-> software (not firmware) then it should be something we have control
-> over when shipping a distribution.
-> 
-> BTW, don't take microblaze as the example to be emulated.  Some of
-> the things it does for device tree support is not scalable, like
-> linking the .dtbs directly into the kernel.
-> 
-> John Bonesio has also prototyped doing a similar zImage bootwrapper on
-> arm which allows a dtb to be concatenated to the kernel image and
-> updated before passing it to the kernel.  As it stands, there are no
-> plans to use in-kernel .dtb linking on ARM.
-> 
-> I know it's not very fair to bring up these issues again right before
-> the merge window opens.  I got myself overcommitted and dropped the
-> ball over the last 1.5 months and I beg forgiveness.  However, I do
-> want to make sure that the right decision is made and I'd be happier
-> if a consistent scheme is used for passing the .dtb on all
-> architectures.
-> 
+> And the patch should say "this patch _doesn't_ subtly change all callers
+> of of_get_next_child() without carefully auditing them".
 
-There are a number of different boot loader solutions in use on embedded
-platforms, as much as we would like to avoid it.
+Heh, Yes. The comments made on this patch are totally on-base.  Not
+all nodes are devices, and not all callers will want to skip nodes;
+regardless of the reason for skipping.  Case in point: the
+/proc/device-tree support code.
 
-However, the ability to link in the dtb will provide a
-architecture-neutral option of last resort.  I'm not saying it's a good
-option, but it's better than random ad hoc stuff, and if that means that
-it will only ever be used during in-lab platform bringup, *that is still
-a huge win*.
+If a caller needs a version of the function that skips unavailable
+nodes, then that behaviour should be explicitly asked for.  In this
+case it should be a new function with a new name.  Don't change the
+behaviour out from under the existing users.
 
-	-hpa
+g.
