@@ -1,78 +1,36 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
-Date: Mon, 3 Jan 2011 13:51:20 -0600
-Message-ID: <20110103135120.32aeb60d@udp111988uds.am.freescale.net>
-References: <4D12F171.7010103@mentor.com>
-	<20101223185623.GA20384@angua.secretlab.ca>
-	<4D13C402.2090209@mentor.com>
-	<20101223223325.GK20384@angua.secretlab.ca>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] ll_temac: Fix section mismatch from the temac_of_probe
+Date: Mon, 03 Jan 2011 12:07:52 -0800 (PST)
+Message-ID: <20110103.120752.15260093.davem@davemloft.net>
+References: <1294050756-31099-1-git-send-email-monstr@monstr.eu>
+	<20110103170332.GB2522@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20101223223325.GK20384@angua.secretlab.ca>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Meador Inge <meador_inge@mentor.com>, "Blanchard,
-	Hollis" <Hollis_Blanchard@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110103170332.GB2522@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: monstr@monstr.eu, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Dec 2010 15:33:25 -0700
-Grant Likely <grant.likely@secretlab.ca> wrote:
+From: Grant Likely <grant.likely@secretlab.ca>
+Date: Mon, 3 Jan 2011 10:03:32 -0700
 
-> On Thu, Dec 23, 2010 at 03:49:54PM -0600, Meador Inge wrote:
-> > How do you
-> > see this working in terms of processing the data?  It seems like we
-> > are going to have to be aware of N values instead of 1, which seems
-> > worse.
+> On Mon, Jan 03, 2011 at 11:32:36AM +0100, Michal Simek wrote:
+>> Replace __init by __devinit.
+>> 
+>> Warning message:
+>> WARNING: vmlinux.o(.data+0xbc14): Section mismatch in reference from the variable
+>> temac_of_driver to the function .init.text:temac_of_probe()
+>> The variable temac_of_driver references
+>> the function __init temac_of_probe()
+>> If the reference is valid then annotate the
+>> variable with __init* or __refdata (see linux/init.h) or name the variable:
+>> *_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console,
+>> 
+>> Signed-off-by: Michal Simek <monstr@monstr.eu>
 > 
-> This argument has been rehashed many times, but it basically comes
-> down to compatible values should ideally be anchored to a real
-> implemented device, not to a family of devices, or to an unversioned
-> specification.
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-Freescale MPICs do have version numbers (version registers, even).  We
-should put that version (possibly along with a compatible version) in
-the compatible, though, for blocks such as this which don't include the
-main MPIC registers and thus the version registers.
-
-> In practise, the implementation doesn't actually look any different
-> except that the 'reference' version specifies a specific
-> implementation instead of a generic name.  To use a concrete example,
-> if there are two parts using this MPIC, like the freescale p2040 and
-> p4080, and say for argument that the p2040 was implemented first, then
-> the compatible values would look like:
-> 
-> for the p2040:   compatible = "fsl,p2040-msgr";
-> for the p4080:   compatible = "fsl,p4080-msgr", "fsl,p2040-msgr";
-
-While I don't think it affected the message unit, p4080 rev 1 has a
-different version of the MPIC from p4080 rev 2 (4.0 versus 4.1, IIRC).
-
-I don't think "mpic-" should be dropped, whether a specific chip is
-added or not.  "msgr" just seems too generic, and "mpic-" tells the
-reader where in the chip manual they can find information about it.
-
-> > >?  This needs some more explanation.  cell-index often gets abused as
-> > >a way to enumerate devices.  Typically, the address of the device
-> > >itself is sufficient to identify the device.
-> > 
-> > The message registers typically come in blocks of four memory mapped
-> > registers and may not be in contiguous memory (example [3]).  The
-> > intent of 'cell-index' is to put an ordering on the blocks (so, yes,
-> > enumeration).  We could order them by address as well I suppose.
-> > One less property to worry about :)
-
-But why do we care about ordering them?  What's important is just that
-you use the same one on both the sending partition and the receiving
-partition.
-
--Scott
+Applied, thanks everyone.
