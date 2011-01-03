@@ -1,34 +1,51 @@
-From: "H. Peter Anvin" <hpa@linux.intel.com>
-Subject: Re: [sodaville] [PATCH 02/11] x86: Add device tree support
-Date: Mon, 03 Jan 2011 08:19:36 -0800
-Message-ID: <4D21F718.8010600@linux.intel.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>	<1290706801-7323-3-git-send-email-bigeasy@linutronix.de>	<1290807736.32570.143.camel@pasglop>	<20101128134907.GA30784@www.tglx.de>	<20101230082654.GB11721@angua.secretlab.ca>	<AANLkTin2=T=v0ZNOpAGhwuM0i9Ts8Xr+kRtEJ95VGeOp@mail.gmail.com>	<AANLkTinSr_KYkFNUmWbL2PUzS2Ose7cA5q8xUbLeUr=J@mail.gmail.com> <4D21F3DB.90504@linux.intel.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] ll_temac: Fix section mismatch from the temac_of_probe
+Date: Mon, 3 Jan 2011 10:03:32 -0700
+Message-ID: <20110103170332.GB2522@angua.secretlab.ca>
+References: <1294050756-31099-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4D21F3DB.90504@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <1294050756-31099-1-git-send-email-monstr@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, x86@kernel.org, linux-kernel@vger.kernel.org, sodaville@linutronix.de, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2011 08:05 AM, H. Peter Anvin wrote:
-> On 12/30/2010 12:58 PM, Grant Likely wrote:
->>
->> Right, but in all of those cases a boot wrapper provides the same
->> functionality with better flexability, such as being able to provided
->> the dtb image(s) at install time instead of compile time.
->>
+On Mon, Jan 03, 2011 at 11:32:36AM +0100, Michal Simek wrote:
+> Replace __init by __devinit.
 > 
-> Assuming the boot wrapper is written correctly.  I have seen a number of
-> cases in which it was not, and it being "already locked into firmware"
-> and not changeable.
+> Warning message:
+> WARNING: vmlinux.o(.data+0xbc14): Section mismatch in reference from the variable
+> temac_of_driver to the function .init.text:temac_of_probe()
+> The variable temac_of_driver references
+> the function __init temac_of_probe()
+> If the reference is valid then annotate the
+> variable with __init* or __refdata (see linux/init.h) or name the variable:
+> *_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console,
 > 
-> It's a nice theory.  And in theory, theory and practice agree.
-> 
+> Signed-off-by: Michal Simek <monstr@monstr.eu>
 
-By the way, this is the same reason we also allow the initramfs and even
-the command line to be compiled in.
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-	-hpa
+> ---
+>  drivers/net/ll_temac_main.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/net/ll_temac_main.c b/drivers/net/ll_temac_main.c
+> index 9f8e702..beb6ed8 100644
+> --- a/drivers/net/ll_temac_main.c
+> +++ b/drivers/net/ll_temac_main.c
+> @@ -952,7 +952,7 @@ static const struct attribute_group temac_attr_group = {
+>  	.attrs = temac_device_attrs,
+>  };
+>  
+> -static int __init
+> +static int __devinit
+>  temac_of_probe(struct platform_device *op, const struct of_device_id *match)
+>  {
+>  	struct device_node *np;
+> -- 
+> 1.5.5.6
+> 
