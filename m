@@ -1,15 +1,15 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 03/15] x86/dtb: Add a device tree for CE4100
-Date: Mon, 03 Jan 2011 12:28:24 +0100
-Message-ID: <4D21B2D8.8040509@linutronix.de>
+Subject: Re: [PATCH 02/15] x86: Add device tree support
+Date: Mon, 03 Jan 2011 13:20:39 +0100
+Message-ID: <4D21BF17.6090209@linutronix.de>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	<1292600033-12271-4-git-send-email-bigeasy@linutronix.de>
-	<20101230085122.GE11721@angua.secretlab.ca>
+	<1292600033-12271-3-git-send-email-bigeasy@linutronix.de>
+	<20101230084311.GD11721@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20101230085122.GE11721-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <20101230084311.GD11721-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,62 +24,58 @@ Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06c
 List-Id: devicetree@vger.kernel.org
 
 Grant Likely wrote:
-
->> diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
->> new file mode 100644
->> index 0000000..24e67ca
->> --- /dev/null
->> +++ b/arch/x86/platform/ce4100/falconfalls.dts
->> +
->> +				i2c@15a00 {
->> +					#address-cells = <1>;
->> +					#size-cells = <0>;
->> +					reg = <0x15a00 0x0 0x0 0x0>;
->> +
->> +
->> +					i2c@0 {
->> +						reg = <0>;
->> +					};
->> +
->> +					i2c@1 {
->> +						#address-cells = <1>;
->> +						#size-cells = <0>;
->> +						reg = <1>;
->> +
->> +						pcf8575@26 {
->> +							compatible = "ti,pcf8575";
->> +							reg = <0x26>;
->> +						};
->> +					};
->> +
->> +					i2c@2 {
->> +						#address-cells = <1>;
->> +						#size-cells = <0>;
->> +						reg = <2>;
->> +
->> +						pcf8575@26 {
->> +							compatible = "ti,pcf8575";
->> +							reg = <0x26>;
->> +						};
->> +					};
+>> +extern char cmd_line[COMMAND_LINE_SIZE];
+>> +/* This number is used when no interrupt has been assigned */
+>> +#define NO_IRQ		(-1)
 > 
-> All these i2c bus controllers should have a compatible value so that
-> the OS knows what driver to bind to them.
+> 0 means NO_IRQ on x86 and most architectures.  I will change this when
+> I pick up the patch.
 
-The node i2c@15a00 is the PCI device. This PCI device has three bars, each
-bar is a complete i2c controller. All three controller share one IRQ. The
-device is probed via its pci-id and therefore I have no compatible value
-here. Do you want me to add compatible values based on "Vendor ID, Device
-ID, Subsystem Vendor ID, ..." as mention in the PCI-bindings?
+cat /proc/interrupts
+            CPU0
+   0:         40   IO-APIC-edge      timer
 
-The child nodes here (i2c@0,...) represent the bars. I probably should
-replace i2c@0 with bar@0 and the reg property with a bar property. Would
-that be okay?
+>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>> index 577d06b..26f2c9a 100644
+>> --- a/arch/x86/kernel/setup.c
+>> +++ b/arch/x86/kernel/setup.c
+>> @@ -113,6 +113,7 @@
+>>  #endif
+>>  #include <asm/mce.h>
+>>  #include <asm/alternative.h>
+>> +#include <asm/prom.h>
+>>  
+>>  /*
+>>   * end_pfn only includes RAM, while max_pfn_mapped includes all e820 entries.
+>> @@ -445,6 +446,9 @@ static void __init parse_setup_data(void)
+>>  		case SETUP_E820_EXT:
+>>  			parse_e820_ext(data);
+>>  			break;
+>> +		case SETUP_DTB:
+>> +			add_dtb(pa_data);
+>> +			break;
+> 
+> Why is the physical address being passed in when the virtual address
+> is needed to be stored in initial_boot_params by add_dtb()?
 
-> Also, the node names for the i2c devices should reflect what the
-> device does, not what the part number is (grep ePAPR for 'generic
-> names')
-Okay. This probably also means that I should replace pic@ with 
-interrupt-controller and so on.
+add_dtb() changes it via phys_to_virt() so it is stored as virtual. I
+can't touch this memory that early in the boot process so it is passed as
+phys. phys_to_virt() isn't working (yet) so you need a fixmap or an
+early_ioremap(). Earlier I used the device tree very late so the
+phys_to_virt() memory was working.
+
+Later in the series add_dtb() stores it in a custom u64 variable because I 
+might have to use the built-in dtb, I have to relocate the dtb (so the
+boot loader does not have to care about kernel's memory layout) and I have
+to use it "early" so I create a fixmap for it.
+
+The dtb is not usable before the ->get_config() hook (x86_dtb_get_config, 
+patch #5) is called. After that initial_boot_params is set and can be used.
+
+>>  		default:
+>>  			break;
+>>  		}
+>> -- 
+>> 1.7.3.2
 
 Sebastian
