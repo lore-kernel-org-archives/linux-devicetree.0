@@ -1,34 +1,43 @@
-From: "H. Peter Anvin" <hpa@linux.intel.com>
-Subject: Re: [sodaville] [PATCH 02/11] x86: Add device tree support
-Date: Mon, 03 Jan 2011 10:06:52 -0800
-Message-ID: <4D22103C.2080705@linux.intel.com>
-References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de> <1290706801-7323-3-git-send-email-bigeasy@linutronix.de> <1290807736.32570.143.camel@pasglop> <20101128134907.GA30784@www.tglx.de> <20101230082654.GB11721@angua.secretlab.ca> <AANLkTin2=T=v0ZNOpAGhwuM0i9Ts8Xr+kRtEJ95VGeOp@mail.gmail.com> <AANLkTinSr_KYkFNUmWbL2PUzS2Ose7cA5q8xUbLeUr=J@mail.gmail.com> <4D21F3DB.90504@linux.intel.com> <4D21F718.8010600@linux.intel.com> <20110103175254.GD2522@angua.secretlab.ca>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/7] of: Fixes for OF probing on little endian systems
+Date: Mon, 03 Jan 2011 12:08:20 -0600
+Message-ID: <4D221094.5070703@gmail.com>
+References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
+	<1289939635-30742-3-git-send-email-robherring2@gmail.com>
+	<20101117052331.GA12813@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110103175254.GD2522@angua.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, x86@kernel.org, linux-kernel@vger.kernel.org, sodaville@linutronix.de, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20101117052331.GA12813-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2011 09:52 AM, Grant Likely wrote:
-> 
-> I think we've got an impedance mismatch.
-> 
-> The whole point of the ppc boot wrapper, and the kind of boot wrapper
-> that I'm talking about here, is that it becomes part of the kernel
-> image and is *not* part of firmware.  ie. an executable wrapper which
-> carries the kernel as it's payload.  I'm wary too of depending of
-> firmware to get things right because it can be so painful to change.
-> 
+Grant,
 
-The problem with that kind of boot wrapper is that they are
-per-architecture, increasing the differences between architectures
-needlessly, and they are often implemented very poorly.
+On 11/16/2010 11:23 PM, Grant Likely wrote:
+> On Tue, Nov 16, 2010 at 02:33:50PM -0600, Rob Herring wrote:
+>> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Fixes for sdhci-of and ipmi drivers.
+>>
+>> Auditing all drivers using of_get_property did not find other
+>> occurrences likely to be used on LE platforms.
+>>
+>> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>
+> Merged, thanks.
 
-As such, it's nice to have an ultimate fallback that doesn't depend on
-anything outside ours -- the kernel community's -- control.
+I don't see this one in your tree. Are you still going to take this one?
 
-	-hpa
+Rob
