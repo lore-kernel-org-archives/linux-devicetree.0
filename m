@@ -1,100 +1,96 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
-Date: Mon, 3 Jan 2011 14:22:00 -0600
-Message-ID: <20110103142200.738c0b17@udp111988uds.am.freescale.net>
-References: <4D12E4F1.2030004@mentor.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] of/device: Don't register disabled devices
+Date: Mon, 03 Jan 2011 16:01:22 -0700
+Message-ID: <20110103230122.25772.72990.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D12E4F1.2030004-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Scott Wood <scottwood@freescale.com>, Deepak Saxena <deepak_saxena@mentor.com>, Hollis Blanchard <hollis_blanchard@mentor.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Dec 2010 23:58:09 -0600
-Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+Device nodes with the property status="disabled" are not usable and so
+don't register them when parsing the device tree for devices.
 
-> NOTE: The 'interrupt-parent' is implicit since message register nodes
->         are always children of interrupt controller nodes.
-> 
-> ** Example:
-> 
-> 	mpic: pic@40000 {
-> 		interrupt-controller;
-> 		#address-cells = <0>;
-> 		#interrupt-cells = <2>;
-> 		reg = <0x40000 0x40000>;
-> 		compatible = "chrp,open-pic";
-> 		device_type = "open-pic";
-> 		protected-sources = <0xb1>;
-> 
-> 		msgr@1400 {
-> 			compatible = "fsl,p2020-msgr", "fsl,mpic-msgr";
-> 			reg = <0x1400 0x200>;
-> 			cell-index = <0>;
-> 			interrupts = <0xb0 0x2 0xb1 0x2
->                                        0xb2 0x2 0xb3 0x2>;
-> 		};
-> 
-> 		msgr@2400 {
-> 			compatible = "fsl,p2020-msgr", "fsl,mpic-msgr";
-> 			reg = <0x2400 0x200>;
-> 			cell-index = <1>;
-> 			interrupts = <0xb4 0x2 0xb5 0x2
->                                        0xb6 0x2 0xb7 0x2>;
-> 	         };	
-> 	};
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Hollis Blanchard <hollis_blanchard@mentor.com>
+Cc: Deepak Saxena <deepak_saxena@mentor.com>
+Cc: Scott Wood <scottwood@freescale.com>,
+Cc: David Gibson <david@gibson.dropbear.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+ drivers/of/platform.c |   22 ++++++++++++++--------
+ 1 files changed, 14 insertions(+), 8 deletions(-)
 
-These nodes cannot go under the mpic node, because interrupt
-controllers need #address-cells = <0>.
-
-It would be nice if the binding provided some way of partitioning
-up individual message interrupts within a block.
-
-Interrupt generation could be exported as a "service", similar to
-(inbound) interrupts and gpios.
-
-Perhaps a something like this, with "doorbell" being a new standard
-hw-independent service with its own binding:
-
-msg1: mpic-msg@1400 {
-	compatible = "fsl,mpic-v3.0-msg";
-	reg = <0x1400 0x200>;
-	interrupts <176 2 178 2>;
-
-	// We have message registers 0 and 2 for sending,
-	// and 1 and 3 for receiving.
-	// If absent, we own all message registers in this block.
-	fsl,mpic-msg-send-mask = <0x5>;
-	fsl,mpic-msg-receive-mask = <0xa>;
-
-	doorbell-controller;
-
-	// split into #doorbell-send-cells and #doorbell-receive-cells?
-	#doorbell-cells = <1>;
-};
-
-some-amp-protocol-thingy {
-	send-doorbells = <&msg1 0>; // generate messages on MSGR0
-	receive-doorbells = <&msg1 0>; // receive messages on MSGR1
-};
-
-some-other-amp-protocol-thingy {
-	send-doorbells = <&msg1 1>; // generate messages on MSGR2
-	receive-doorbells = <&msg1 1>; // receive messages on MSGR3
-};
-
-Doorbell capabilities such as passing a 32-bit message can be negotiated
-between the drivers for the doorbell controller and the doorbell client.
-
--Scott
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 5b4a07f..c01cd1a 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -633,6 +633,9 @@ EXPORT_SYMBOL(of_device_alloc);
+  * @np: pointer to node to create device for
+  * @bus_id: name to assign device
+  * @parent: Linux device model parent device.
++ *
++ * Returns pointer to created platform device, or NULL if a device was not
++ * registered.  Unavailable devices will not get registered.
+  */
+ struct platform_device *of_platform_device_create(struct device_node *np,
+ 					    const char *bus_id,
+@@ -640,6 +643,9 @@ struct platform_device *of_platform_device_create(struct device_node *np,
+ {
+ 	struct platform_device *dev;
+ 
++	if (!of_device_is_available(np))
++		return NULL;
++
+ 	dev = of_device_alloc(np, bus_id, parent);
+ 	if (!dev)
+ 		return NULL;
+@@ -683,8 +689,9 @@ static int of_platform_bus_create(const struct device_node *bus,
+ 		pr_debug("   create child: %s\n", child->full_name);
+ 		dev = of_platform_device_create(child, NULL, parent);
+ 		if (dev == NULL)
+-			rc = -ENOMEM;
+-		else if (!of_match_node(matches, child))
++			continue;
++
++		if (!of_match_node(matches, child))
+ 			continue;
+ 		if (rc == 0) {
+ 			pr_debug("   and sub busses\n");
+@@ -733,10 +740,9 @@ int of_platform_bus_probe(struct device_node *root,
+ 	if (of_match_node(matches, root)) {
+ 		pr_debug(" root match, create all sub devices\n");
+ 		dev = of_platform_device_create(root, NULL, parent);
+-		if (dev == NULL) {
+-			rc = -ENOMEM;
++		if (dev == NULL)
+ 			goto bail;
+-		}
++
+ 		pr_debug(" create all sub busses\n");
+ 		rc = of_platform_bus_create(root, matches, &dev->dev);
+ 		goto bail;
+@@ -748,9 +754,9 @@ int of_platform_bus_probe(struct device_node *root,
+ 		pr_debug("  match: %s\n", child->full_name);
+ 		dev = of_platform_device_create(child, NULL, parent);
+ 		if (dev == NULL)
+-			rc = -ENOMEM;
+-		else
+-			rc = of_platform_bus_create(child, matches, &dev->dev);
++			continue;
++
++		rc = of_platform_bus_create(child, matches, &dev->dev);
+ 		if (rc) {
+ 			of_node_put(child);
+ 			break;
