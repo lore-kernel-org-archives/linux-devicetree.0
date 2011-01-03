@@ -1,173 +1,59 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 03/15] x86/dtb: Add a device tree for CE4100
-Date: Mon, 3 Jan 2011 10:45:00 -0700
-Message-ID: <20110103174500.GC2522@angua.secretlab.ca>
-References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
- <1292600033-12271-4-git-send-email-bigeasy@linutronix.de>
- <20101230085122.GE11721@angua.secretlab.ca>
- <4D21B2D8.8040509@linutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [sodaville] [PATCH 02/11] x86: Add device tree support
+Date: Mon, 3 Jan 2011 10:52:54 -0700
+Message-ID: <20110103175254.GD2522@angua.secretlab.ca>
+References: <1290706801-7323-1-git-send-email-bigeasy@linutronix.de>
+	<1290706801-7323-3-git-send-email-bigeasy@linutronix.de>
+	<1290807736.32570.143.camel@pasglop>
+	<20101128134907.GA30784@www.tglx.de>
+	<20101230082654.GB11721@angua.secretlab.ca>
+	<AANLkTin2=T=v0ZNOpAGhwuM0i9Ts8Xr+kRtEJ95VGeOp@mail.gmail.com>
+	<AANLkTinSr_KYkFNUmWbL2PUzS2Ose7cA5q8xUbLeUr=J@mail.gmail.com>
+	<4D21F3DB.90504@linux.intel.com> <4D21F718.8010600@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D21B2D8.8040509@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <4D21F718.8010600-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 03, 2011 at 12:28:24PM +0100, Sebastian Andrzej Siewior wrote:
-> Grant Likely wrote:
+On Mon, Jan 03, 2011 at 08:19:36AM -0800, H. Peter Anvin wrote:
+> On 01/03/2011 08:05 AM, H. Peter Anvin wrote:
+> > On 12/30/2010 12:58 PM, Grant Likely wrote:
+> >>
+> >> Right, but in all of those cases a boot wrapper provides the same
+> >> functionality with better flexability, such as being able to provided
+> >> the dtb image(s) at install time instead of compile time.
+> >>
+> > 
+> > Assuming the boot wrapper is written correctly.  I have seen a number of
+> > cases in which it was not, and it being "already locked into firmware"
+> > and not changeable.
+> > 
+> > It's a nice theory.  And in theory, theory and practice agree.
+> > 
 > 
-> >>diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
-> >>new file mode 100644
-> >>index 0000000..24e67ca
-> >>--- /dev/null
-> >>+++ b/arch/x86/platform/ce4100/falconfalls.dts
-> >>+
-> >>+				i2c@15a00 {
-> >>+					#address-cells = <1>;
-> >>+					#size-cells = <0>;
-> >>+					reg = <0x15a00 0x0 0x0 0x0>;
-> >>+
-> >>+
-> >>+					i2c@0 {
-> >>+						reg = <0>;
-> >>+					};
-> >>+
-> >>+					i2c@1 {
-> >>+						#address-cells = <1>;
-> >>+						#size-cells = <0>;
-> >>+						reg = <1>;
-> >>+
-> >>+						pcf8575@26 {
-> >>+							compatible = "ti,pcf8575";
-> >>+							reg = <0x26>;
-> >>+						};
-> >>+					};
-> >>+
-> >>+					i2c@2 {
-> >>+						#address-cells = <1>;
-> >>+						#size-cells = <0>;
-> >>+						reg = <2>;
-> >>+
-> >>+						pcf8575@26 {
-> >>+							compatible = "ti,pcf8575";
-> >>+							reg = <0x26>;
-> >>+						};
-> >>+					};
-> >
-> >All these i2c bus controllers should have a compatible value so that
-> >the OS knows what driver to bind to them.
-> 
-> The node i2c@15a00 is the PCI device. This PCI device has three bars, each
-> bar is a complete i2c controller. All three controller share one IRQ. The
-> device is probed via its pci-id and therefore I have no compatible value
-> here. Do you want me to add compatible values based on "Vendor ID, Device
-> ID, Subsystem Vendor ID, ..." as mention in the PCI-bindings?
+> By the way, this is the same reason we also allow the initramfs and even
+> the command line to be compiled in.
 
-If you have a node describing a device, then it *must* have a
-compatible value.  Use the OF PCI binding to determine what the
-compatible value should be something like:
+I think we've got an impedance mismatch.
 
-compatible = "pciVVVV,DDDD,SSSS,ssss", "pciVVVV,DDDD"
-
-See page 9 on this pdf: http://www.openbios.org/data/docs/bus.pci.pdf
-
-The list of possible formats in the binding doc is long, but most of
-them probably don't apply in your case (but include the other entries
-if they do).
-
-Also, since the i2c@15a00 is *not* an actual i2c bus, it should not be
-named 'i2c@...'.  Name it something like i2c-controller@15a00,0,0.
-
-You'll also note that I added ',0,0' to the end of the address.
-That's because the node address reflects the parent bus address format
-which uses 3 cells in this case.
-
-> The child nodes here (i2c@0,...) represent the bars. I probably should
-> replace i2c@0 with bar@0 and the reg property with a bar property. Would
-> that be okay?
-
-That depends.  Are the child nodes separately memory mapped devices?
-Or are all three controlled by a shared register bank in the
-controller?  If they are addressable (which they probably are) then
-you need to use a ranges property to describe the translation from the
-parent node to the child node.  Since you say that the registers
-define describe the bars, it probably makes sense to use a 2 cell
-addressing scheme: one cell for the bar# and one cell for the offset
-off the bar base address (which will be 0 for each I expect).
-Something like this:
-
-
-	i2c-controller@15a00 {
-		compatible = "intel,<blah>", "pciVVVV,DDDD,SSSS,ssss", "pciVVVV,DDDD";
-		#address-cells = <2>;
-		#size-cells = <1>;	// not 0!  0 is used for
-					// devices that cannot be
-					// memory mapped.
-		reg = <0x15a00 0x0 0x0 0x0>;
-
-		// Here's where the magic happens.  Each entry in
-		// ranges describes how the parent pci address space
-		// (middle group of 3) is translated to the local
-		// address space (first group of 2) and the size of
-		// each range (last cell).  In this particular case,
-		// the first cell of the local address is chosen to be
-		// 1:1 mapped to the BARs, and the second is the
-		// offset from be base of the BAR (which would be
-		// non-zero if you had 2 or more devices mapped off
-		// the same BAR)
-		//
-		// ranges allows the address mapping to be described
-		// in a way that the OS can interpret without
-		// requiring custom device driver code.
-		//
-		// This example assumes that each child node has it's
-		// own range of memory mapped registers.
-		ranges = <0 0   0x02000000 0 0xa0000000   0x1000>
-			 <1 0   0x02000000 0 0xa0002000   0x1000>
-			 <2 0   0x02000000 0 0xa0004000   0x1000>
-
-
-		i2c@0,0 {
-			#address-cells = <1>
-			#size-cells = <0>;
-			compatible = <need something here>;
-			reg = <1 0  0x1000>;
-		};
-
-		i2c@1,0 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			compatible = <need something here>;
-			reg = <1 0 0x1000>;
-
-			pcf8575@26 {
-				compatible = "ti,pcf8575";
-				reg = <0x26>;
-			};
-		};
-
-		i2c@2,0 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			compatible = <need something here>;
-			reg = <2 0 0x1000>;
-
-			pcf8575@26 {
-				compatible = "ti,pcf8575";
-				reg = <0x26>;
-			};
-		};
-
-> 
-> >Also, the node names for the i2c devices should reflect what the
-> >device does, not what the part number is (grep ePAPR for 'generic
-> >names')
-> Okay. This probably also means that I should replace pic@ with
-> interrupt-controller and so on.
-
-Correct.
+The whole point of the ppc boot wrapper, and the kind of boot wrapper
+that I'm talking about here, is that it becomes part of the kernel
+image and is *not* part of firmware.  ie. an executable wrapper which
+carries the kernel as it's payload.  I'm wary too of depending of
+firmware to get things right because it can be so painful to change.
 
 g.
