@@ -1,52 +1,78 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] of: Fixes for OF probing on little endian systems
-Date: Mon, 3 Jan 2011 12:24:12 -0700
-Message-ID: <20110103192412.GA4391@angua.secretlab.ca>
-References: <1289939635-30742-1-git-send-email-robherring2@gmail.com>
-	<1289939635-30742-3-git-send-email-robherring2@gmail.com>
-	<20101117052331.GA12813@angua.secretlab.ca>
-	<4D221094.5070703@gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
+Date: Mon, 3 Jan 2011 13:51:20 -0600
+Message-ID: <20110103135120.32aeb60d@udp111988uds.am.freescale.net>
+References: <4D12F171.7010103@mentor.com>
+	<20101223185623.GA20384@angua.secretlab.ca>
+	<4D13C402.2090209@mentor.com>
+	<20101223223325.GK20384@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4D221094.5070703-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20101223223325.GK20384@angua.secretlab.ca>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Meador Inge <meador_inge@mentor.com>, "Blanchard,
+	Hollis" <Hollis_Blanchard@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 03, 2011 at 12:08:20PM -0600, Rob Herring wrote:
-> Grant,
-> 
-> On 11/16/2010 11:23 PM, Grant Likely wrote:
-> >On Tue, Nov 16, 2010 at 02:33:50PM -0600, Rob Herring wrote:
-> >>From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >>
-> >>Fixes for sdhci-of and ipmi drivers.
-> >>
-> >>Auditing all drivers using of_get_property did not find other
-> >>occurrences likely to be used on LE platforms.
-> >>
-> >>Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >
-> >Merged, thanks.
+On Thu, 23 Dec 2010 15:33:25 -0700
+Grant Likely <grant.likely@secretlab.ca> wrote:
 
-Hmmm, I don't know what happened there, but I've re-merged it now and
-it will appear in my public tree after I run through sanity testing.
-
-g.
-
+> On Thu, Dec 23, 2010 at 03:49:54PM -0600, Meador Inge wrote:
+> > How do you
+> > see this working in terms of processing the data?  It seems like we
+> > are going to have to be aware of N values instead of 1, which seems
+> > worse.
 > 
-> I don't see this one in your tree. Are you still going to take this one?
+> This argument has been rehashed many times, but it basically comes
+> down to compatible values should ideally be anchored to a real
+> implemented device, not to a family of devices, or to an unversioned
+> specification.
+
+Freescale MPICs do have version numbers (version registers, even).  We
+should put that version (possibly along with a compatible version) in
+the compatible, though, for blocks such as this which don't include the
+main MPIC registers and thus the version registers.
+
+> In practise, the implementation doesn't actually look any different
+> except that the 'reference' version specifies a specific
+> implementation instead of a generic name.  To use a concrete example,
+> if there are two parts using this MPIC, like the freescale p2040 and
+> p4080, and say for argument that the p2040 was implemented first, then
+> the compatible values would look like:
 > 
-> Rob
+> for the p2040:   compatible = "fsl,p2040-msgr";
+> for the p4080:   compatible = "fsl,p4080-msgr", "fsl,p2040-msgr";
+
+While I don't think it affected the message unit, p4080 rev 1 has a
+different version of the MPIC from p4080 rev 2 (4.0 versus 4.1, IIRC).
+
+I don't think "mpic-" should be dropped, whether a specific chip is
+added or not.  "msgr" just seems too generic, and "mpic-" tells the
+reader where in the chip manual they can find information about it.
+
+> > >?  This needs some more explanation.  cell-index often gets abused as
+> > >a way to enumerate devices.  Typically, the address of the device
+> > >itself is sufficient to identify the device.
+> > 
+> > The message registers typically come in blocks of four memory mapped
+> > registers and may not be in contiguous memory (example [3]).  The
+> > intent of 'cell-index' is to put an ordering on the blocks (so, yes,
+> > enumeration).  We could order them by address as well I suppose.
+> > One less property to worry about :)
+
+But why do we care about ordering them?  What's important is just that
+you use the same one on both the sending partition and the receiving
+partition.
+
+-Scott
