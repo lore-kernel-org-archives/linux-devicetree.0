@@ -1,18 +1,16 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
-Date: Wed, 5 Jan 2011 16:09:18 -0600
-Message-ID: <20110105160918.2b530fea@udp111988uds.am.freescale.net>
+Date: Wed, 05 Jan 2011 16:20:48 -0600
+Message-ID: <4D24EEC0.2020909@mentor.com>
 References: <4D12F171.7010103@mentor.com>
 	<20101223185623.GA20384@angua.secretlab.ca>
 	<4D13C402.2090209@mentor.com>
 	<20101223223325.GK20384@angua.secretlab.ca>
-	<20110103135120.32aeb60d@udp111988uds.am.freescale.net>
-	<4D24E99F.90908@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D24E99F.90908-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20101223223325.GK20384-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,20 +20,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Jan 2011 15:58:55 -0600
-Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+On 12/23/2010 04:33 PM, Grant Likely wrote:
+> This argument has been rehashed many times, but it basically comes
+> down to compatible values should ideally be anchored to a real
+> implemented device, not to a family of devices, or to an unversioned
+> specification.
+>
+> In practise, the implementation doesn't actually look any different
+> except that the 'reference' version specifies a specific
+> implementation instead of a generic name.  To use a concrete example,
+> if there are two parts using this MPIC, like the freescale p2040 and
+> p4080, and say for argument that the p2040 was implemented first, then
+> the compatible values would look like:
+>
+> for the p2040:   compatible = "fsl,p2040-msgr";
+> for the p4080:   compatible = "fsl,p4080-msgr", "fsl,p2040-msgr";
+>
+> and the driver could simply bind on "fsl,p2040-msgr" to work with both
+> chips.  So, instead of an arbitrary "fsl,mpic-msgr" string,
+> "fsl,p2040-msgr" is used as the baseline value and there is no
+> ambiguity about which part it describes.
+>
+> If the p4080 is actually subtly different from the p2040, then
+> it would not claim compatibility with the former and the driver can
+> match against either string; adapting its behaviour as necessary.
 
-> We need some sort of mapping between a message register and a message 
-> register number so that the message registers can be referenced through 
-> some sort of API (e.g. 'mpic_msgr_read(0)').  One way to do that would 
-> be by putting an order on the registers.  Maybe there is a better way, 
-> though ...
+Thanks for the explanation.  I see now that there is a warning note in 
+'http://www.devicetree.org/Device_Tree_Usage' about this case.  Perhaps 
+a "best practices" guide for writing bindings might be useful as well. 
+I would be happy to contribute to that, but I am still learning the best 
+practices :)
 
-A message register is uniquely identified by a reference to the device
-tree node, plus a 0-3 index into that node's message registers.
-
--Scott
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
