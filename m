@@ -1,75 +1,52 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
-Date: Wed, 5 Jan 2011 17:07:25 -0600
-Message-ID: <20110105170725.1a82c5a6@udp111988uds.am.freescale.net>
-References: <4D12F171.7010103@mentor.com>
-	<20101223185623.GA20384@angua.secretlab.ca>
-	<4D13C402.2090209@mentor.com>
-	<20101223223325.GK20384@angua.secretlab.ca>
-	<20110103135120.32aeb60d@udp111988uds.am.freescale.net>
-	<4D24E99F.90908@mentor.com>
-	<20110105160918.2b530fea@udp111988uds.am.freescale.net>
-	<DD7A9A95166BF4418C4C1EB2033B6EE2038FA8E4@na3-mail.mgc.mentorg.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 03/15] x86/dtb: Add a device tree for CE4100
+Date: Thu, 6 Jan 2011 10:20:39 +1100
+Message-ID: <20110105232039.GA8846@yookeroo>
+References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
+	<1292600033-12271-4-git-send-email-bigeasy@linutronix.de>
+	<20101230085122.GE11721@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <DD7A9A95166BF4418C4C1EB2033B6EE2038FA8E4@na3-mail.mgc.mentorg.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>
-Cc: "Inge, Meador" <meador_inge@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20101230085122.GE11721-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Jan 2011 14:49:40 -0800
-"Blanchard, Hollis" <Hollis_Blanchard@mentor.com> wrote:
+On Thu, Dec 30, 2010 at 01:51:22AM -0700, Grant Likely wrote:
+> On Fri, Dec 17, 2010 at 04:33:41PM +0100, Sebastian Andrzej Siewior wrote:
+[snip]
+> > +/dts-v1/;
+> > +/ {
+> > +	model = "Intel,FalconFalls";
+> > +	compatible = "Intel,FalconFalls";
+> 
+> To-date the convention has been to use all lowercase in compatible
+> properties.  Ditto throughout this file.
 
-> On 01/05/2011 02:09 PM, Scott Wood wrote:
-> > On Wed, 5 Jan 2011 15:58:55 -0600
-> > Meador Inge<meador_inge@mentor.com>  wrote:
-> >
-> >> We need some sort of mapping between a message register and a message
-> >> register number so that the message registers can be referenced through
-> >> some sort of API (e.g. 'mpic_msgr_read(0)').  One way to do that would
-> >> be by putting an order on the registers.  Maybe there is a better way,
-> >> though ...
-> > A message register is uniquely identified by a reference to the device
-> > tree node, plus a 0-3 index into that node's message registers.
-> Really what we're talking about is software configuration, not hardware 
-> description.
+IEEE1275 actually explicitly gives the convention on p164, in the
+context of the "name" property.  The vendor string can either be all
+uppercase, in which case it must be a stock ticker symbol ("AAPL" is
+seen in the wild, for example), or it can be another string with no
+uppercase.
 
-Part of that software configuration involves identifying the hardware
-being referenced.
+I'm sure some intel peripheral chips must have been used on existing
+OF platforms at various points.  It might be worth seeking those out
+and double checking what was used in those cases.
 
-> We've gone back and forth on representing this information 
-> in the device tree, and most recently decided against it. Outside the 
-> kernel, a device node reference isn't really practical.
-
-Global enumeration isn't much fun either.  For something like this
-where it's very unlikely that additional MPIC message units will be
-added to the system dynamically, it's managable, but it's not a good
-habit to get into.  Look at the pain that's been caused by such
-assumptions in the i2c subsystem, in kernel interrupt management, etc.
-
-A reference to a node is just a pointer to a software message driver
-object, which can be obtained from looking up an alias.  It's a little
-less simple than just using a number, but it's not impractical. It also
-provides a natural place to put a layer of indirection in the code that
-isolates the upper-layer protocol from the details of what sort of
-message transport it is using.
-
-Now, if you don't care about this, and want to just use numbers in your
-application, go ahead.  But I don't think that such an assumption
-should go into the device tree binding.  Have the software number the
-message register banks in increasing physical address order, or based
-on numbered aliases similar to how U-Boot enumerates ethernet nodes, or
-something similar.
-
--Scott
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
