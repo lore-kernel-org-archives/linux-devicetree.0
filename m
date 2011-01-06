@@ -1,116 +1,104 @@
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [PATCH v2 1/2] video, sm501: add OF binding to support SM501
-Date: Thu, 6 Jan 2011 13:47:02 +0900
-Message-ID: <20110106044702.GO23889@linux-sh.org>
-References: <1291451028-22532-1-git-send-email-hs@denx.de> <1292049075-1809-1-git-send-email-hs@denx.de>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
+Date: Thu, 6 Jan 2011 14:10:23 -0600
+Message-ID: <20110106141023.43a0d35f@udp111988uds.am.freescale.net>
+References: <4D12E4F1.2030004@mentor.com>
+	<20110103142200.738c0b17@udp111988uds.am.freescale.net>
+	<4D252FDC.4090404@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1292049075-1809-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4D252FDC.4090404@mentor.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Meador Inge <meador_inge@mentor.com>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 11, 2010 at 07:31:15AM +0100, Heiko Schocher wrote:
-> - add binding to OF, compatible name "smi,sm501"
+On Wed, 5 Jan 2011 20:58:36 -0600
+Meador Inge <meador_inge@mentor.com> wrote:
+
+> On 01/03/2011 02:22 PM, Scott Wood wrote:
+> > On Wed, 22 Dec 2010 23:58:09 -0600
+> > Perhaps a something like this, with "doorbell" being a new standard
+> > hw-independent service with its own binding:
+> >
+> > msg1: mpic-msg@1400 {
+> > 	compatible = "fsl,mpic-v3.0-msg";
+> > 	reg =<0x1400 0x200>;
+> > 	interrupts<176 2 178 2>;
+> >
+> > 	// We have message registers 0 and 2 for sending,
+> > 	// and 1 and 3 for receiving.
+> > 	// If absent, we own all message registers in this block.
+> > 	fsl,mpic-msg-send-mask =<0x5>;
+> > 	fsl,mpic-msg-receive-mask =<0xa>;
+
+Alternatively, we could describe available ranges similarly to the
+existing MSI binding.
+
+> After thinking about it a little more, I like the idea of having a 
+> 'receive-mask' to further partition the message register blocks.  This 
+> would also allow us to remove IRQs from the 'interrupts' property that 
+> are not being used on a given node.  As for the 'send-mask', why would 
+> we want to block sending messages?  It seems to me that it would be 
+> reasonable to allow a node to send a message to any other node.
+
+The send-mask, like the receive-mask, is optional.  If for your
+application it makes sense to give all partitions send access to all
+doorbells, then you can do that.
+
+You might want to provide a send-mask if you are not specifying to the
+partition how to use the message registers, just splitting them up for
+their own internal use (especially if you have a larger multicore system
+where each partition has multiple CPUs).
+
+Or, you may want to add a layer of robustness against one partition
+interfering with a message register that is only supposed to be used by
+another partition, even if there are instructions elsewhere about which
+message register to use for what purpose.
+
+Plus, it provides symmetry between send and receive -- otherwise, you'd
+have a numberspace that is limited to your own resources on receive,
+but a global numberspace on send.
+
+> As an example, consider a four core system.  Then we might have 
+> something like (only relevant DTS bits shown):
 > 
-> - add read/write functions for using this driver
->   also on powerpc plattforms
-> 
-> - add commandline options:
->   sm501.fb_mode:
->     Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
->   sm501.bpp:
->     Specify bit-per-pixel if not specified mode
-> 
-> - Add support for encoding display mode information
->   in the device tree using verbatim EDID block.
-> 
->   If the "edid" entry in the "smi,sm501" node is present,
->   the driver will build mode database using EDID data
->   and allow setting the display modes from this database.
-> 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> cc: linux-fbdev@vger.kernel.org
-> cc: devicetree-discuss@ozlabs.org
-> cc: Ben Dooks <ben@simtec.co.uk>
-> cc: Vincent Sanders <vince@simtec.co.uk>
-> cc: Samuel Ortiz <sameo@linux.intel.com>
-> cc: linux-kernel@vger.kernel.org
-> 
-> ---
-> - changes since v1:
->   add Ben Dooks, Vincent Sanders and Samuel Ortiz to cc, as suggested from
->   Paul Mundt.
-> 
->  Documentation/kernel-parameters.txt          |    7 +
->  Documentation/powerpc/dts-bindings/sm501.txt |   30 +++
->  drivers/mfd/sm501.c                          |  141 ++++++++------
->  drivers/video/sm501fb.c                      |  264 +++++++++++++++++---------
->  include/linux/sm501.h                        |    8 +
->  5 files changed, 299 insertions(+), 151 deletions(-)
->  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
-> 
-So has this stalled out? If Samuel wants to ack the MFD bits I don't mind
-taking it through the fbdev tree. I can dust off an SM501 board to make
-sure it still works for the non-OF case, although most of the changes
-look fairly mechanical, so I don't forsee too much difficulty.
+> Core 0:
+>     mpic-msgr-block@1400 {
+>        // Receives messages on registers 1 and 3.
+>        interrupts = <0xb1 2 0xb3 2>;
+>        receive-mask = <0xa>;
+>     };
+> Core 1:
+>     mpic-msgr-block@1400 {
+>        // Receives messages on register 2.
+>        interrupts = <0xb2 2>;
+>        receive-mask = <0x4>;
+>     };
+> Core 2:
+>     mpic-msgr-block@1400 {
+>        // Receives messages on register 0.
+>        interrupts = <0xb0 2>;
+>        receive-mask = <0x1>;
+>     };
+> Core 3:
+>     mpic-msgr-block@1400 {
+>        // Receives no messages.
+>        interrupts = <>;
+>     };
 
-A few minor notes however. For starters, it would be nice to see this
-patch split out a bit more logically. All of the items in your changelog
-are more or less independent logical changes, and should really be
-independent patches. As such, I'd like to see the EDID support as one
-patch, the OF binding support layered on top of that, the documentation
-split out as a trivial patch, and the I/O routine thing dealt with
-separately. This should also make it easier for Samuel to simply ack the
-OF bindings part that touch the MFD driver without having to be bothered
-with any of the other stuff should regressions pop up at a later point in
-time via a bisection.
+For core 3 I'd just leave out the node entirely.  Note that the absence
+of a receive-mask indicates that all the registers are available (i.e.
+normal unpartitioned case), not none.
 
-As far as the DTS bindings documentation goes, I'm not sure what the best
-way to split that out is. Perhaps simply lumping it in with the OF
-bindings makes the most logical sense, and it's obviously a dependency
-for the architecture-specific portion as well.
-
-> @@ -1698,6 +1727,9 @@ static int sm501fb_init_fb(struct fb_info *fb,
->  	fb->fbops = &par->ops;
->  	fb->flags = FBINFO_FLAG_DEFAULT | FBINFO_READS_FAST |
->  		FBINFO_HWACCEL_COPYAREA | FBINFO_HWACCEL_FILLRECT |
-> +#if defined(CONFIG_PPC_MPC52xx)
-> +		FBINFO_FOREIGN_ENDIAN |
-> +#endif
->  		FBINFO_HWACCEL_XPAN | FBINFO_HWACCEL_YPAN;
->  
->  	/* fixed data */
-
-This is now getting in to deep hack territory. It's also not entirely
-obvious how you expect things like the imageblit op to work given that
-you're not selecting any of FB_{BIG,LITTLE,BOTH,FOREIGN}_ENDIAN, which
-leads me to suspect you are manually doing this in your .config in a
-relatively fragile way.
-
-In the OF case I suppose you probably want something like:
-
-#ifdef __BIG_ENDIAN
-        if (of_get_property(dp, "little-endian", NULL))
-                foreign_endian = FBINFO_FOREIGN_ENDIAN;
-#else
-        if (of_get_property(dp, "big-endian", NULL))
-                foreign_endian = FBINFO_FOREIGN_ENDIAN;
-#endif
-
-and then simply hide the details in the DTS file in order to get rid of
-CPU-specific hacks.
-
-> +#if defined(CONFIG_PPC_MPC52xx)
-> +#define smc501_readl(addr)	__do_readl_be((addr))
-> +#define smc501_writel(val, addr)	__do_writel_be((val), (addr))
-> +#else
-> +#define smc501_readl(addr)		readl(addr)
-> +#define smc501_writel(val, addr)	writel(val, addr)
-> +#endif
-
-Based on the Kconfig option for endianness you could probably just wrap these
-to ioread/write32{,be} and hide the semantics in your iomap implementation?
+-Scott
