@@ -1,15 +1,15 @@
-From: Scott Wood <scottwood@freescale.com>
+From: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>
 Subject: Re: [RFC] MPIC Bindings and Bindings for AMP Systems
-Date: Thu, 6 Jan 2011 14:10:23 -0600
-Message-ID: <20110106141023.43a0d35f@udp111988uds.am.freescale.net>
-References: <4D12E4F1.2030004@mentor.com>
-	<20110103142200.738c0b17@udp111988uds.am.freescale.net>
-	<4D252FDC.4090404@mentor.com>
+Date: Thu, 6 Jan 2011 13:52:30 -0800
+Message-ID: <DD7A9A95166BF4418C4C1EB2033B6EE2038FA8FD@na3-mail.mgc.mentorg.com>
+References: <4D12F171.7010103@mentor.com>	<20101223185623.GA20384@angua.secretlab.ca>	<4D13C402.2090209@mentor.com>	<20101223223325.GK20384@angua.secretlab.ca>	<20110103135120.32aeb60d@udp111988uds.am.freescale.net>	<4D24E99F.90908@mentor.com>	<20110105160918.2b530fea@udp111988uds.am.freescale.net>	<DD7A9A95166BF4418C4C1EB2033B6EE2038FA8E4@na3-mail.mgc.mentorg.com>
+	<20110105170725.1a82c5a6@udp111988uds.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4D252FDC.4090404@mentor.com>
+Content-class: urn:content-classes:message
+In-Reply-To: <20110105170725.1a82c5a6@udp111988uds.am.freescale.net>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -19,86 +19,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Meador Inge <meador_inge@mentor.com>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "Inge, Meador" <meador_inge@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Jan 2011 20:58:36 -0600
-Meador Inge <meador_inge@mentor.com> wrote:
+On 01/05/2011 03:07 PM, Scott Wood wrote:
+> On Wed, 5 Jan 2011 14:49:40 -0800
+> "Blanchard, Hollis"<Hollis_Blanchard@mentor.com>  wrote:
+>
+>> On 01/05/2011 02:09 PM, Scott Wood wrote:
+>>> On Wed, 5 Jan 2011 15:58:55 -0600
+>>> Meador Inge<meador_inge@mentor.com>   wrote:
+>>>
+>>>> We need some sort of mapping between a message register and a message
+>>>> register number so that the message registers can be referenced through
+>>>> some sort of API (e.g. 'mpic_msgr_read(0)').  One way to do that would
+>>>> be by putting an order on the registers.  Maybe there is a better way,
+>>>> though ...
+>>> A message register is uniquely identified by a reference to the device
+>>> tree node, plus a 0-3 index into that node's message registers.
+>> Really what we're talking about is software configuration, not hardware
+>> description.
+> Part of that software configuration involves identifying the hardware
+> being referenced.
+>
+>> We've gone back and forth on representing this information
+>> in the device tree, and most recently decided against it. Outside the
+>> kernel, a device node reference isn't really practical.
+> Global enumeration isn't much fun either.  For something like this
+> where it's very unlikely that additional MPIC message units will be
+> added to the system dynamically, it's managable, but it's not a good
+> habit to get into.  Look at the pain that's been caused by such
+> assumptions in the i2c subsystem, in kernel interrupt management, etc.
+>
+> A reference to a node is just a pointer to a software message driver
+> object, which can be obtained from looking up an alias.  It's a little
+> less simple than just using a number, but it's not impractical. It also
+> provides a natural place to put a layer of indirection in the code that
+> isolates the upper-layer protocol from the details of what sort of
+> message transport it is using.
+>
+> Now, if you don't care about this, and want to just use numbers in your
+> application, go ahead.  But I don't think that such an assumption
+> should go into the device tree binding.  Have the software number the
+> message register banks in increasing physical address order, or based
+> on numbered aliases similar to how U-Boot enumerates ethernet nodes, or
+> something similar.
+Using physical addresses doesn't solve the enumeration problem either, 
+but I think it's beside the point: userspace must refer to the device. 
+There is a rich history of userspace *not* walking /proc/device-tree in 
+order to refer to a physical device. Are you suggesting this case is 
+special?
 
-> On 01/03/2011 02:22 PM, Scott Wood wrote:
-> > On Wed, 22 Dec 2010 23:58:09 -0600
-> > Perhaps a something like this, with "doorbell" being a new standard
-> > hw-independent service with its own binding:
-> >
-> > msg1: mpic-msg@1400 {
-> > 	compatible = "fsl,mpic-v3.0-msg";
-> > 	reg =<0x1400 0x200>;
-> > 	interrupts<176 2 178 2>;
-> >
-> > 	// We have message registers 0 and 2 for sending,
-> > 	// and 1 and 3 for receiving.
-> > 	// If absent, we own all message registers in this block.
-> > 	fsl,mpic-msg-send-mask =<0x5>;
-> > 	fsl,mpic-msg-receive-mask =<0xa>;
-
-Alternatively, we could describe available ranges similarly to the
-existing MSI binding.
-
-> After thinking about it a little more, I like the idea of having a 
-> 'receive-mask' to further partition the message register blocks.  This 
-> would also allow us to remove IRQs from the 'interrupts' property that 
-> are not being used on a given node.  As for the 'send-mask', why would 
-> we want to block sending messages?  It seems to me that it would be 
-> reasonable to allow a node to send a message to any other node.
-
-The send-mask, like the receive-mask, is optional.  If for your
-application it makes sense to give all partitions send access to all
-doorbells, then you can do that.
-
-You might want to provide a send-mask if you are not specifying to the
-partition how to use the message registers, just splitting them up for
-their own internal use (especially if you have a larger multicore system
-where each partition has multiple CPUs).
-
-Or, you may want to add a layer of robustness against one partition
-interfering with a message register that is only supposed to be used by
-another partition, even if there are instructions elsewhere about which
-message register to use for what purpose.
-
-Plus, it provides symmetry between send and receive -- otherwise, you'd
-have a numberspace that is limited to your own resources on receive,
-but a global numberspace on send.
-
-> As an example, consider a four core system.  Then we might have 
-> something like (only relevant DTS bits shown):
-> 
-> Core 0:
->     mpic-msgr-block@1400 {
->        // Receives messages on registers 1 and 3.
->        interrupts = <0xb1 2 0xb3 2>;
->        receive-mask = <0xa>;
->     };
-> Core 1:
->     mpic-msgr-block@1400 {
->        // Receives messages on register 2.
->        interrupts = <0xb2 2>;
->        receive-mask = <0x4>;
->     };
-> Core 2:
->     mpic-msgr-block@1400 {
->        // Receives messages on register 0.
->        interrupts = <0xb0 2>;
->        receive-mask = <0x1>;
->     };
-> Core 3:
->     mpic-msgr-block@1400 {
->        // Receives no messages.
->        interrupts = <>;
->     };
-
-For core 3 I'd just leave out the node entirely.  Note that the absence
-of a receive-mask indicates that all the registers are available (i.e.
-normal unpartitioned case), not none.
-
--Scott
+Hollis Blanchard
+Mentor Graphics, Embedded Systems Division
