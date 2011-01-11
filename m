@@ -1,186 +1,103 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [git pull] device tree changes for 2.6.38
-Date: Sun, 9 Jan 2011 00:13:28 -0700
-Message-ID: <AANLkTi=qh90+i6HW3d=TJynAU57VreMrKOTsnqT5yUND@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 04/15] x86/dtb: add irq domain abstraction
+Date: Tue, 11 Jan 2011 15:03:17 -0700
+Message-ID: <20110111220317.GA2131@angua.secretlab.ca>
+References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
+ <1292600033-12271-5-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1292600033-12271-5-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Fri, Dec 17, 2010 at 04:33:42PM +0100, Sebastian Andrzej Siewior wrote:
+> The here introduced irq_domain abstraction represents a generic irq
+> controller. It is a subset of powerpc's irq_host which is going to be
+> renamed to irq_domain and then become generic. This implementation will
+> be removed once it is generic.
+> 
+> The xlate callback is resposible to parse irq informations like irq type
+> and number and returns the hardware irq number which is reported by the
+> hardware as active.
+> 
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Tested-by: Dirk Brandewie <dirk.brandewie@gmail.com>
+> ---
+>  arch/x86/include/asm/irq_controller.h |   12 ++++++++
+>  arch/x86/include/asm/prom.h           |    2 +
+>  arch/x86/kernel/prom.c                |   47 ++++++++++++++++++++++++++++++++-
+>  3 files changed, 60 insertions(+), 1 deletions(-)
+>  create mode 100644 arch/x86/include/asm/irq_controller.h
+> 
+> diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include/asm/irq_controller.h
+> new file mode 100644
+> index 0000000..423bbbd
+> --- /dev/null
+> +++ b/arch/x86/include/asm/irq_controller.h
+> @@ -0,0 +1,12 @@
+> +#ifndef __IRQ_CONTROLLER__
+> +#define __IRQ_CONTROLLER__
+> +
+> +struct irq_domain {
+> +	int (*xlate)(struct irq_domain *h, const u32 *intspec, u32 intsize,
+> +			u32 *out_hwirq, u32 *out_type);
+> +	void *priv;
+> +	struct device_node *controller;
+> +	struct list_head l;
+> +};
 
-Here are the queued up device tree support changes.  Please pull.
+True, it's not a full implementation, but I'd rather the same
+structure be used for both powerpc and x86.
 
-There will be one merge conflict in the sparc code where this tree
-modifies a function that has been removed from the sparc tree.  Simply
-removing the function is the right resolution.  It should be pretty
-obvious.
+Thomas, this only touches x86, so I have no objection to you merging
+it, but I'd like to see a follow up patch to merge the x86 and powerpc
+irq_host/irq_domain structures.
 
-Thanks,
-g.
+However, there is a defect below that must be fixed first....
 
-The following changes since commit 0c21e3aaf6ae85bee804a325aa29c325209180fd:
+>  unsigned int irq_create_of_mapping(struct device_node *controller,
+>  		const u32 *intspec, unsigned int intsize)
+>  {
+> -	return intspec[0];
+> +	struct irq_domain *ih;
+> +	u32 virq;
+> +	u32 type;
+> +	int ret;
+>  
+> +	ih = get_ih_from_node(controller);
+> +	if (!ih)
+> +		return -ENODEV;
 
-  Merge branch 'for-next' of
-git://git.kernel.org/pub/scm/linux/kernel/git/hch/hfsplus (2011-01-07
-17:16:27 -0800)
+Return value is an unsigned int.  0 or NO_IRQ is the correct thing to
+return if an IRQ cannot be mapped.
 
-are available in the git repository at:
+> +	ret = ih->xlate(ih, intspec, intsize, &virq, &type);
+> +	if (ret)
+> +		return ret;
 
-  git://git.secretlab.ca/git/linux-2.6 next-devicetree
+Ditto here.  xlate is also supposed to return a virq number, not an
+error code, so the failure condition must be "if (!ret)" or
+"if (reg == NO_IRQ)".  The former is preferred since we're trying to
+eliminate references to NO_IRQ, not add more of them.
 
-Andres Salomon (1):
-      sparc: explicitly cast negative phandle checks to s32
-
-David Daney (2):
-      of/net: Move of_get_mac_address() to a common source file.
-      of/mdio: Fix some endianness problems.
-
-Dirk Brandewie (3):
-      of: Add support for linking device tree blobs into vmlinux
-      of/powerpc: Use generic rule to build dtb's
-      microblaze/of: Use generic rule to build dtb's
-
-Grant Likely (6):
-      Merge commit 'v2.6.37-rc7' into devicetree/next
-      of/flattree: Add of_flat_dt_match() helper function
-      powerpc/dts: fix syntax bugs in bluestone.dts
-      of/device: Don't register disabled devices
-      powerpc/405: Fix missing #{address,size}-cells in i2c node
-      of/flattree: forward declare struct device_node in of_fdt.h
-
-John Bonesio (5):
-      of/flattree: Update dtc to current mainline.
-      powerpc/5200: dts: rename nodes to prepare for refactoring dts files
-      powerpc/5200: dts: remove unused properties
-      powerpc/5200: dts: Change combatible strings on localbus
-      powerpc/5200: dts: refactor dts files
-
-Rob Herring (4):
-      of_serial: explicitly include of_irq.h
-      of: make drivers depend on CONFIG_OF instead of CONFIG_PPC_OF
-      of: Fixes for OF probing on little endian systems
-      ipmi: explicitly include of_address.h and of_irq.h
-
-Sebastian Andrzej Siewior (1):
-      of/address: use proper endianess in get_flags
-
-Stephen Neuendorffer (5):
-      of/flattree: Add Kconfig for EARLY_FLATTREE
-      of/flattree: Add non-boottime device tree functions
-      of/flattree: Refactor unflatten_dt_node
-      of/flattree: Reorder unflatten_dt_node
-      of/flattree: Refactor unflatten_device_tree and add fdt_unflatten_tree
-
-Wolfram Sang (3):
-      misc/at24: parse device tree data
-      misc/at24: add more sanity checks for parameters
-      powerpc/pcm{030,032}: add pagesize to dts
-
- Documentation/kbuild/makefiles.txt            |   15 +
- Documentation/powerpc/dts-bindings/eeprom.txt |   28 +
- arch/microblaze/Kconfig                       |    2 +-
- arch/microblaze/boot/Makefile                 |   12 +-
- arch/microblaze/include/asm/prom.h            |    3 -
- arch/microblaze/kernel/prom_parse.c           |   38 -
- arch/mips/Kconfig                             |    2 +-
- arch/powerpc/Kconfig                          |    2 +-
- arch/powerpc/boot/Makefile                    |    8 +-
- arch/powerpc/boot/dts/bluestone.dts           |    8 +-
- arch/powerpc/boot/dts/cm5200.dts              |  194 +-----
- arch/powerpc/boot/dts/digsy_mtc.dts           |  177 +-----
- arch/powerpc/boot/dts/hotfoot.dts             |    2 +
- arch/powerpc/boot/dts/lite5200b.dts           |  220 +------
- arch/powerpc/boot/dts/media5200.dts           |  214 +------
- arch/powerpc/boot/dts/motionpro.dts           |  194 +-----
- arch/powerpc/boot/dts/mpc5200b.dtsi           |  275 ++++++++
- arch/powerpc/boot/dts/mucmc52.dts             |  174 ++----
- arch/powerpc/boot/dts/pcm030.dts              |  196 +-----
- arch/powerpc/boot/dts/pcm032.dts              |  242 +------
- arch/powerpc/boot/dts/uc101.dts               |  160 +----
- arch/powerpc/include/asm/prom.h               |    5 +-
- arch/powerpc/kernel/prom_parse.c              |   38 -
- arch/powerpc/platforms/40x/ppc40x_simple.c    |   13 +-
- arch/powerpc/platforms/512x/mpc5121_generic.c |   13 +-
- arch/powerpc/platforms/52xx/lite5200.c        |   16 +-
- arch/powerpc/platforms/52xx/media5200.c       |   13 +-
- arch/powerpc/platforms/52xx/mpc5200_simple.c  |   13 +-
- arch/powerpc/platforms/83xx/mpc830x_rdb.c     |   13 +-
- arch/powerpc/platforms/83xx/mpc831x_rdb.c     |   11 +-
- arch/powerpc/platforms/83xx/mpc837x_rdb.c     |   15 +-
- arch/powerpc/platforms/85xx/tqm85xx.c         |   20 +-
- arch/powerpc/sysdev/mv64x60_dev.c             |    1 +
- arch/powerpc/sysdev/tsi108_dev.c              |    1 +
- arch/sparc/kernel/auxio_32.c                  |    2 +-
- arch/sparc/kernel/starfire.c                  |    2 +-
- arch/sparc/prom/init_32.c                     |    2 +-
- arch/sparc/prom/init_64.c                     |    4 +-
- arch/sparc/prom/tree_32.c                     |   19 +-
- arch/sparc/prom/tree_64.c                     |   18 +-
- drivers/char/ipmi/ipmi_si_intf.c              |   10 +-
- drivers/misc/eeprom/at24.c                    |   43 +-
- drivers/mmc/host/Kconfig                      |    4 +-
- drivers/mmc/host/sdhci-of-core.c              |    4 +-
- drivers/mtd/Kconfig                           |    2 +-
- drivers/mtd/maps/Kconfig                      |    2 +-
- drivers/net/fs_enet/fs_enet-main.c            |    1 +
- drivers/net/gianfar.c                         |    1 +
- drivers/net/ucc_geth.c                        |    1 +
- drivers/net/xilinx_emaclite.c                 |    1 +
- drivers/of/Kconfig                            |    8 +
- drivers/of/Makefile                           |    1 +
- drivers/of/address.c                          |   54 +-
- drivers/of/fdt.c                              |  430 ++++++++-----
- drivers/of/of_mdio.c                          |   26 +-
- drivers/of/of_net.c                           |   48 ++
- drivers/of/platform.c                         |   22 +-
- drivers/sbus/char/jsflash.c                   |    2 +-
- drivers/serial/Kconfig                        |    2 +-
- drivers/serial/of_serial.c                    |    1 +
- include/asm-generic/vmlinux.lds.h             |   13 +-
- include/linux/of_address.h                    |    6 +-
- include/linux/of_fdt.h                        |   18 +
- include/linux/of_net.h                        |   15 +
- scripts/Makefile.lib                          |   23 +
- scripts/dtc/Makefile                          |    3 +-
- scripts/dtc/checks.c                          |  105 +++-
- scripts/dtc/dtc-lexer.l                       |  175 +-----
- scripts/dtc/dtc-lexer.lex.c_shipped           |  551 +++++-----------
- scripts/dtc/dtc-parser.tab.c_shipped          |  892 ++++++++++++-------------
- scripts/dtc/dtc-parser.tab.h_shipped          |   82 +--
- scripts/dtc/dtc-parser.y                      |  160 ++---
- scripts/dtc/dtc.c                             |   57 +-
- scripts/dtc/dtc.h                             |   77 +--
- scripts/dtc/flattree.c                        |  192 +++---
- scripts/dtc/fstree.c                          |   12 +-
- scripts/dtc/livetree.c                        |  345 +++++++++-
- scripts/dtc/srcpos.c                          |  258 ++++++--
- scripts/dtc/srcpos.h                          |   99 ++--
- scripts/dtc/treesource.c                      |   48 +-
- scripts/dtc/util.c                            |   59 ++
- scripts/dtc/util.h                            |   56 ++
- scripts/dtc/version_gen.h                     |    2 +-
- 83 files changed, 2891 insertions(+), 3405 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/eeprom.txt
- create mode 100644 arch/powerpc/boot/dts/mpc5200b.dtsi
- create mode 100644 drivers/of/of_net.c
- create mode 100644 include/linux/of_net.h
- create mode 100644 scripts/dtc/util.c
- create mode 100644 scripts/dtc/util.h
-
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> +	if (type == IRQ_TYPE_NONE)
+> +		return virq;
+> +	/* set the mask if it is different from current */
+> +	if (type == (irq_to_desc(virq)->status & IRQF_TRIGGER_MASK))
+> +		set_irq_type(virq, type);
+> +	return virq;
+>  }
+>  EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+>  
+> -- 
+> 1.7.3.2
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
