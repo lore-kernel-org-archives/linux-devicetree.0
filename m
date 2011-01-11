@@ -1,17 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 05/15] x86/dtb: add early parsing of APIC and IO APIC
-Date: Tue, 11 Jan 2011 15:14:01 -0700
-Message-ID: <20110111221401.GB2131@angua.secretlab.ca>
-References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	<1292600033-12271-6-git-send-email-bigeasy@linutronix.de>
-	<20101230085451.GF11721@angua.secretlab.ca>
-	<20110104132302.GB21359@www.tglx.de>
+From: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [Power.org:parch] ePAPR 1.1 to do list
+Date: Tue, 11 Jan 2011 22:14:53 +0000
+Message-ID: <9F6FE96B71CF29479FF1CDC8046E150301D94E@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <9696D7A991D0824DBA8DFAC74A9C5FA306688C2F@az33exm25.fsl.freescale.net>
+	<20100913131752.54981fb1@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110104132302.GB21359-Hfxr4Dq0UpYb1SvskN2V4Q@public.gmane.org>
+In-Reply-To: <20100913131752.54981fb1-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,230 +19,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org" <parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 04, 2011 at 02:23:02PM +0100, Sebastian Andrzej Siewior wrote:
-> The apic & ioapic have to be added to system early because
-> native_init_IRQ() requires it. In order to obtain the address of the
-> ioapic the device tree has to be unflattened because
-> of_address_to_resource() has to work.
-> The device tree is relocated to ensure it is always covered by the
-> kernel and the boot loader does not have to make assumptions about
-> kernel's memory layout.
 
-Hi Sebastian,
 
-Some comments below...
-
+> -----Original Message-----
+> From: Wood Scott-B07421
+> Sent: Monday, September 13, 2010 1:18 PM
+> To: Yoder Stuart-B08248
+> Cc: parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org; devicetree-discuss
+> Subject: Re: [Power.org:parch] ePAPR 1.1 to do list
 > 
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> ---
->  arch/x86/include/asm/prom.h |    7 +++
->  arch/x86/kernel/irqinit.c   |    2 +-
->  arch/x86/kernel/prom.c      |  121 +++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 126 insertions(+), 4 deletions(-)
+> On Mon, 30 Aug 2010 14:34:44 -0700
+> Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-> index 9076ae4..3bc8ed5 100644
-> --- a/arch/x86/include/asm/prom.h
-> +++ b/arch/x86/include/asm/prom.h
-> @@ -22,10 +22,17 @@
->  #include <asm/irq_controller.h>
->  
->  #ifdef CONFIG_OF
-> +extern int of_ioapic;
-> +extern u64 initial_dtb;
->  extern void add_dtb(u64 data);
-> +void x86_dtb_find_config(void);
-> +void x86_dtb_get_config(unsigned int unused);
->  void add_interrupt_host(struct irq_domain *ih);
->  #else
->  static inline void add_dtb(u64 data) { }
-> +#define x86_dtb_find_config x86_init_noop
-> +#define x86_dtb_get_config x86_init_uint_noop
-> +#define of_ioapic 0
-
-Nit: Personally, I prefer static inlines over preprocessor macros, but
-that isn't anything that will block this patch.
-
->  #endif
->  
->  extern char cmd_line[COMMAND_LINE_SIZE];
-> diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-> index 149c87f..4cadf86 100644
-> --- a/arch/x86/kernel/irqinit.c
-> +++ b/arch/x86/kernel/irqinit.c
-> @@ -244,7 +244,7 @@ void __init native_init_IRQ(void)
->  			set_intr_gate(i, interrupt[i-FIRST_EXTERNAL_VECTOR]);
->  	}
->  
-> -	if (!acpi_ioapic)
-> +	if (!acpi_ioapic && !of_ioapic)
->  		setup_irq(2, &irq2);
->  
->  #ifdef CONFIG_X86_32
-> diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-> index 53948cb..388fdff 100644
-> --- a/arch/x86/kernel/prom.c
-> +++ b/arch/x86/kernel/prom.c
-> @@ -6,15 +6,20 @@
->  #include <linux/interrupt.h>
->  #include <linux/list.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/slab.h>
->  
->  #include <asm/irq_controller.h>
-> +#include <asm/io_apic.h>
->  
-> +__initdata u64 initial_dtb;
->  char __initdata cmd_line[COMMAND_LINE_SIZE];
->  static LIST_HEAD(irq_domains);
->  static DEFINE_RAW_SPINLOCK(big_irq_lock);
->  
-> +int __initdata of_ioapic;
-> +
->  void add_interrupt_host(struct irq_domain *ih)
->  {
->  	unsigned long flags;
-> @@ -93,7 +98,117 @@ u64 __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  
->  void __init add_dtb(u64 data)
->  {
-> -	initial_boot_params = (struct boot_param_header *)
-> -		phys_to_virt((u64) (u32) data +
-> -				offsetof(struct setup_data, data));
-> +	initial_dtb = data + offsetof(struct setup_data, data);
-> +}
-> +
-> +static void __init dtb_lapic_setup(void)
-> +{
-> +#ifdef CONFIG_X86_LOCAL_APIC
-> +	if (apic_force_enable())
-> +		return;
-> +
-> +	smp_found_config = 1;
-> +	pic_mode = 1;
-> +	/* Required for ioapic registration */
-> +	set_fixmap_nocache(FIX_APIC_BASE, mp_lapic_addr);
-> +	if (boot_cpu_physical_apicid == -1U)
-> +		boot_cpu_physical_apicid = read_apic_id();
-> +
-> +	generic_processor_info(boot_cpu_physical_apicid,
-> +			GET_APIC_VERSION(apic_read(APIC_LVR)));
-> +#endif
-> +}
-> +
-> +#ifdef CONFIG_X86_IO_APIC
-> +static void __init dtb_add_ioapic(struct device_node *dn)
-> +{
-> +	unsigned int ioapic_id;
-> +	const __be32 *cell;
-> +	int len;
-> +	struct resource r;
-> +	int ret;
-> +
-> +	cell = of_get_property(dn, "id", &len);
-> +	if (!cell) {
-> +		printk(KERN_ERR "Node %s is missing id property.\n",
-> +				dn->full_name);
-> +		return;
-> +	}
-> +	ioapic_id = of_read_ulong(cell, len / 4);
-
-This looks like poor usage practise for the device tree.  'id' or any
-kind of enumeration property in a device tree node is strongly
-discouraged.  As much as possible, let Linux dynamically enumerate
-devices rather than trying to explicitly specify the numbering.  Since
-you can explicitly describe the relationship between device nodes in
-the tree, you should find that explicitly specifying numbers is almost
-never required.
-
-If you *really* need to enumerate devices in the device tree, then use
-properties in the /aliases node to assign globally unique numbers.
-
-> +
-> +	ret = of_address_to_resource(dn, 0, &r);
-> +	if (ret) {
-> +		printk(KERN_ERR "Can't obtain address from node %s.\n",
-> +				dn->full_name);
-> +		return;
-> +	}
-> +	mp_register_ioapic(ioapic_id, r.start, gsi_top);
-> +}
-> +
-> +static void __init dtb_ioapic_setup(void)
-> +{
-> +	struct device_node *dn;
-> +
-> +	if (!smp_found_config)
-> +		return;
-> +
-> +	for_each_compatible_node(dn, NULL, "intel,ioapic")
-> +		dtb_add_ioapic(dn);
-> +
-> +	if (nr_ioapics) {
-> +		of_ioapic = 1;
-> +		return;
-> +	}
-> +	printk(KERN_ERR "Error: No information about IO-APIC in OF.\n");
-> +	smp_found_config = 0;
-> +}
-> +#else
-> +static void __init dtb_ioapic_setup(void) {}
-> +#endif
-> +
-> +static void __init dtb_apic_setup(void)
-> +{
-> +	dtb_lapic_setup();
-> +	dtb_ioapic_setup();
-> +}
-> +
-> +void __init x86_dtb_find_config(void)
-> +{
-> +	if (initial_dtb)
-> +		smp_found_config = 1;
-> +	else
-> +		printk(KERN_ERR "Missing device tree!.\n");
-> +}
-> +
-> +void __init x86_dtb_get_config(unsigned int unused)
-> +{
-> +	u32 size;
-> +	u32 map_len;
-> +	void *new_dtb;
-> +
-> +	if (!initial_dtb)
-> +		return;
-> +
-> +	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
-> +			(u64)sizeof(struct boot_param_header));
-> +
-> +	initial_boot_params = early_memremap(initial_dtb, map_len);
-> +	size = be32_to_cpu(initial_boot_params->totalsize);
-> +	if (map_len < size) {
-> +		early_iounmap(initial_boot_params, map_len);
-> +		initial_boot_params = early_memremap(initial_dtb, size);
-> +		map_len = size;
-> +	}
-> +
-> +	new_dtb = alloc_bootmem(size);
-> +	memcpy(new_dtb, initial_boot_params, size);
-> +	early_iounmap(initial_boot_params, map_len);
-> +
-> +	initial_boot_params = new_dtb;
-> +
-> +	/* root level address cells */
-> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> +
-> +	unflatten_device_tree();
-> +	dtb_apic_setup();
->  }
-> -- 
-> 1.7.3.2
+> > I've consolidated what I am aware of with respect to errors found in
+> > 1.0, clarifications needed, and new mechanisms to go into ePAPR 1.1
+> > into a single list.
+> >
+> > Let me know if you are aware of anything else.
+> >
+> > ePAPR 1.1 To Do
+> > ---------------
+> >
+> > 1. Fix typos, misc cleanup
+> >
+> >    -device_type="simple-bus" in 8572 soc node example (p.96)
+> >    -p.51, line 27-- ET_EXEC is 0x2 not 0x1
+> >    -p.41, broken cross reference
+> >    -missing period on virtual reg on ns16550
 > 
+> 2.3.11 says device_type should only be present for cpu and memory nodes,
+> but the example trees in the appendices contain device_type = "serial",
+> "network", "pci", and "open-pic" (as well as the simple-bus error mentioned
+> above).
+
+Note-- the upstream device tree still has those device_type properties.
+Should we still remove them from the example?
+
+Stuart
