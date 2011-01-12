@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 10/15] x86/ioapic: Add OF bindings for IO-APIC
-Date: Tue, 11 Jan 2011 16:53:53 -0700
-Message-ID: <20110111235353.GG2131@angua.secretlab.ca>
+Subject: Re: [PATCH 14/15] rtc/cmos: add OF bindings
+Date: Tue, 11 Jan 2011 17:04:42 -0700
+Message-ID: <20110112000442.GJ2131@angua.secretlab.ca>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	<1292600033-12271-11-git-send-email-bigeasy@linutronix.de>
+	<1292600033-12271-15-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1292600033-12271-11-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+In-Reply-To: <1292600033-12271-15-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,259 +20,139 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 17, 2010 at 04:33:48PM +0100, Sebastian Andrzej Siewior wrote:
-> ioapic_xlate provides a translation from the information in device tree
-> to ioapic related informations. This includes
-> - obtaining hw irq which is the vector number "=> pin number + gsi"
-> - obtaining type (level/edge/..)
-> - programming this information into ioapic
+On Fri, Dec 17, 2010 at 04:33:52PM +0100, Sebastian Andrzej Siewior wrote:
+> This allows to load the OF driver based informations from the device
+> tree. Systems without BIOS may need to perform some initialization.
+> PowerPC creates a PNP device from the OF information and performs this
+> kind of initialization in their private PCI quirk. This looks more
+> generic.
 > 
-> ioapic_add_ofnode adds an irq_domain based on informations from the device
-> tree. This information (irq_domain) is required in order to map a device to
-> its proper interrupt controller.
-
-One question below, but otherwise looks okay to me.
-
-g.
-
-> 
+> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 > Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 > Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/x86/include/asm/io_apic.h |    7 +++
->  arch/x86/include/asm/prom.h    |    2 +
->  arch/x86/kernel/apic/io_apic.c |   99 ++++++++++++++++++++++++++++++++++++++++
->  arch/x86/kernel/irqinit.c      |    6 ++
->  arch/x86/kernel/prom.c         |   15 ++++++
->  5 files changed, 129 insertions(+), 0 deletions(-)
+>  Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++++
+>  drivers/rtc/rtc-cmos.c                          |   40 +++++++++++++++++++++++
+>  2 files changed, 68 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
 > 
-> diff --git a/arch/x86/include/asm/io_apic.h b/arch/x86/include/asm/io_apic.h
-> index f327d38..5a8b950 100644
-> --- a/arch/x86/include/asm/io_apic.h
-> +++ b/arch/x86/include/asm/io_apic.h
-> @@ -177,6 +177,13 @@ struct mp_ioapic_gsi{
->  	u32 gsi_base;
->  	u32 gsi_end;
->  };
-> +#ifdef CONFIG_X86_OF
-> +struct mp_of_ioapic {
-> +	struct device_node *node;
+> diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+> new file mode 100644
+> index 0000000..7382989
+> --- /dev/null
+> +++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+> @@ -0,0 +1,28 @@
+> + Motorola mc146818 compatible RTC
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +Required properties:
+> +  - compatible : "motorola,mc146818"
+> +  - reg : should contain registers location and length.
+> +
+> +Optional properties:
+> +  - interrupts : should contain interrupt.
+> +  - interrupt-parent : interrupt source phandle.
+> +  - ctrl-reg : Contains the initial value of the control register also
+> +    called "Register B".
+> +  - freq-reg : Contains the initial value of the frequency register also
+> +    called "Regsiter A".
+> +
+> +"Register A" and "B" are usually initialized by the firmware (BIOS for
+> +instance). If this is not done, it can be performed by the driver.
+> +
+> +ISA Example:
+> +
+> +	rtc@70 {
+> +	         compatible = "motorola,mc146818";
+> +	         interrupts = <8 3>;
+> +	         interrupt-parent = <&ioapic1>;
+> +	         ctrl-reg = <2>;
+> +	         freq-reg = <0x26>;
+> +	         reg = <1 0x70 2>;
+> +	 };
+> diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+> index 5856167..8cf0049 100644
+> --- a/drivers/rtc/rtc-cmos.c
+> +++ b/drivers/rtc/rtc-cmos.c
+> @@ -36,6 +36,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/log2.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+>  
+>  /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
+>  #include <asm-generic/rtc.h>
+> @@ -1121,6 +1123,15 @@ static struct pnp_driver cmos_pnp_driver = {
+>  
+>  #endif	/* CONFIG_PNP */
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_cmos_match[] = {
+> +	{
+> +		.compatible = "motorola,mc146818",
+> +	},
+> +	{ },
 > +};
-> +extern struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
-> +void __init ioapic_add_ofnode(struct device_node *np);
+> +MODULE_DEVICE_TABLE(of, of_cmos_match);
 > +#endif
->  extern struct mp_ioapic_gsi  mp_gsi_routing[];
->  extern u32 gsi_top;
->  int mp_find_ioapic(u32 gsi);
-> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-> index 9f7484e..8386685 100644
-> --- a/arch/x86/include/asm/prom.h
-> +++ b/arch/x86/include/asm/prom.h
-> @@ -26,6 +26,7 @@
->  extern int of_ioapic;
->  extern u64 initial_dtb;
->  extern void add_dtb(u64 data);
-> +extern void x86_add_irq_domains(void);
->  void x86_dtb_find_config(void);
->  void x86_dtb_get_config(unsigned int unused);
->  void add_interrupt_host(struct irq_domain *ih);
-> @@ -46,6 +47,7 @@ static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
+>  /*----------------------------------------------------------------*/
 >  
->  #else
->  static inline void add_dtb(u64 data) { }
-> +static inline void x86_add_irq_domains(void) { }
->  static inline void x86_of_pci_init(void) { }
->  #define x86_dtb_find_config x86_init_noop
->  #define x86_dtb_get_config x86_init_uint_noop
-> diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-> index 7eb0027..4dece80 100644
-> --- a/arch/x86/kernel/apic/io_apic.c
-> +++ b/arch/x86/kernel/apic/io_apic.c
-> @@ -43,6 +43,7 @@
->  #include <linux/bootmem.h>
->  #include <linux/dmar.h>
->  #include <linux/hpet.h>
-> +#include <linux/of_address.h>
+>  /* Platform setup should have set up an RTC device, when PNP is
+> @@ -1129,6 +1140,32 @@ static struct pnp_driver cmos_pnp_driver = {
 >  
->  #include <asm/idle.h>
->  #include <asm/io.h>
-> @@ -60,6 +61,7 @@
->  #include <asm/irq_remapping.h>
->  #include <asm/hpet.h>
->  #include <asm/hw_irq.h>
-> +#include <asm/irq_controller.h>
->  
->  #include <asm/apic.h>
->  
-> @@ -88,6 +90,10 @@ int nr_ioapics;
->  /* IO APIC gsi routing info */
->  struct mp_ioapic_gsi  mp_gsi_routing[MAX_IO_APICS];
->  
-> +#ifdef CONFIG_X86_OF
-> +/* OF -> IO APIC lookup */
-> +struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
-> +#endif
->  /* The one past the highest gsi number used */
->  u32 gsi_top;
->  
-> @@ -4080,6 +4086,99 @@ void __init mp_register_ioapic(int id, u32 address, u32 gsi_base)
->  	nr_ioapics++;
->  }
->  
-> +#ifdef CONFIG_X86_OF
-> +static int ioapic_xlate(struct irq_domain *id, const u32 *intspec, u32 intsize,
-> +		u32 *out_hwirq, u32 *out_type)
-> +{
-> +	u32 line;
-> +	u32 idx;
-> +	u32 type;
-> +	u32 trigger;
-> +	u32 polarity;
-> +	struct irq_cfg *cfg;
-> +	struct irq_desc *desc;
-> +
-> +	if (intsize < 1)
-> +		return -EINVAL;
-> +
-> +	line = *intspec;
-> +	idx = (u32) id->priv;
-> +	*out_hwirq = line + mp_gsi_routing[idx].gsi_base;
-> +	if (intsize > 1) {
-> +		intspec++;
-> +		type = *intspec;
-> +		switch (type) {
-> +		case 0:
-> +			*out_type = IRQ_TYPE_EDGE_RISING;
-> +			trigger = IOAPIC_EDGE;
-> +			polarity = 1;
-> +			break;
-> +		case 1:
-> +			*out_type = IRQ_TYPE_LEVEL_LOW;
-> +			trigger = IOAPIC_LEVEL;
-> +			polarity = 0;
-> +			break;
-> +		case 2:
-> +			*out_type = IRQ_TYPE_LEVEL_HIGH;
-> +			trigger = IOAPIC_LEVEL;
-> +			polarity = 1;
-> +			break;
-> +		case 3:
-> +			*out_type = IRQ_TYPE_EDGE_FALLING;
-> +			trigger = IOAPIC_EDGE;
-> +			polarity = 0;
-> +			break;
-> +		default:
-> +			*out_type = IRQ_TYPE_NONE;
-> +			trigger = IOAPIC_AUTO;
-> +			polarity = 0;
-> +			break;
-> +		};
-> +	} else {
-> +		*out_type = IRQ_TYPE_NONE;
-> +		trigger = IOAPIC_AUTO;
-> +		polarity = 0;
-> +	}
-> +	/* And now tell the IO APIC to make the line ready */
-> +	desc = irq_to_desc_alloc_node(*out_hwirq, 0);
-> +	cfg = irq_cfg(*out_hwirq);
-> +	add_pin_to_irq_node(cfg, 0, idx, line);
-> +	/* make it edge by default, settype will update it */
-> +	setup_ioapic_irq(idx, line, *out_hwirq, cfg, trigger, polarity);
-> +	return 0;
-> +}
-> +
-> +void __init ioapic_add_ofnode(struct device_node *np)
-> +{
-> +	int i;
-> +	int ret;
-> +	struct resource r;
-> +
-> +	ret = of_address_to_resource(np, 0, &r);
-> +	if (ret) {
-> +		printk(KERN_ERR "Failed to obtain address for %s\n",
-> +				np->full_name);
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < nr_ioapics; i++) {
-> +		if (r.start == mp_ioapics[i].apicaddr) {
-> +			struct irq_domain *id;
-> +
-> +			mp_of_ioapic[i].node = np;
-> +			id = kzalloc(sizeof(*id), GFP_KERNEL);
-> +			BUG_ON(!id);
-> +			id->controller = np;
-> +			id->xlate = ioapic_xlate;
-> +			id->priv = (void *)i;
-> +			add_interrupt_host(id);
-> +			return;
-> +		}
-
-I'm confused here.  Are there multiple ioapic's described by a single
-device tree node?
-
-> +	}
-> +	printk(KERN_ERR "IOxAPIC at %s is not registered.\n", np->full_name);
-> +}
-> +#endif
-> +
->  /* Enable IOAPIC early just for system timer */
->  void __init pre_init_apic_IRQ0(void)
+>  static int __init cmos_platform_probe(struct platform_device *pdev)
 >  {
-> diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-> index 4cadf86..9f76f89 100644
-> --- a/arch/x86/kernel/irqinit.c
-> +++ b/arch/x86/kernel/irqinit.c
-> @@ -119,6 +119,12 @@ void __init init_IRQ(void)
->  	int i;
->  
->  	/*
-> +	 * We probably need a better place for this, but it works for
-> +	 * now ...
-> +	 */
-> +	x86_add_irq_domains();
+> +#ifdef CONFIG_OF
+> +	if (pdev->dev.of_node) {
+> +		struct device_node *node = pdev->dev.of_node;
+> +		struct rtc_time time;
+> +		int ret;
+> +		const __be32 *val;
 > +
-> +	/*
->  	 * On cpu 0, Assign IRQ0_VECTOR..IRQ15_VECTOR's to IRQ 0..15.
->  	 * If these IRQ's are handled by legacy interrupt-controllers like PIC,
->  	 * then this configuration will likely be static after the boot. If
-> diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
-> index 6eddafd..edcaf1b 100644
-> --- a/arch/x86/kernel/prom.c
-> +++ b/arch/x86/kernel/prom.c
-> @@ -11,9 +11,11 @@
->  #include <linux/slab.h>
->  #include <linux/pci.h>
->  #include <linux/of_pci.h>
-> +#include <linux/of_fdt.h>
->  
->  #include <asm/hpet.h>
->  #include <asm/irq_controller.h>
-> +#include <asm/apic.h>
->  #include <asm/io_apic.h>
->  #include <asm/pci_x86.h>
->  
-> @@ -332,3 +334,16 @@ void __init x86_dtb_get_config(unsigned int unused)
->  	dtb_setup_hpet();
->  	dtb_apic_setup();
->  }
+> +		val = of_get_property(node, "ctrl-reg", NULL);
+> +		if (val)
+> +			CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
 > +
-> +void __init x86_add_irq_domains(void)
-> +{
-> +	struct device_node *dp;
+> +		val = of_get_property(node, "freq-reg", NULL);
+> +		if (val)
+> +			CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
 > +
-> +	if (!initial_boot_params)
-> +		return;
-> +
-> +	for_each_node_by_type(dp, "interrupt-controller") {
-> +		if (of_device_is_compatible(dp, "intel,ioapic"))
-> +			ioapic_add_ofnode(dp);
+> +		get_rtc_time(&time);
+> +		ret = rtc_valid_tm(&time);
+> +		if (ret) {
+> +			struct rtc_time def_time = {
+> +				.tm_year = 1,
+> +				.tm_mday = 1,
+> +			};
+> +			set_rtc_time(&def_time);
+> +		}
 > +	}
-> +}
+> +#endif
+
+It's usually cleaner to break the of-specific probe stuff into a
+separate function that can be #ifdef'ed out as a whole instead of
+having #ifdef blocks inside the probe functions.  Aside from that this
+patch looks good to me.
+
+>  	cmos_wake_setup(&pdev->dev);
+>  	return cmos_do_probe(&pdev->dev,
+>  			platform_get_resource(pdev, IORESOURCE_IO, 0),
+> @@ -1157,6 +1194,9 @@ static struct platform_driver cmos_platform_driver = {
+>  	.shutdown	= cmos_platform_shutdown,
+>  	.driver = {
+>  		.name		= (char *) driver_name,
+> +#if defined(CONFIG_OF)
+> +		.of_match_table = of_cmos_match,
+> +#endif
+>  		.suspend	= cmos_suspend,
+>  		.resume		= cmos_resume,
+>  	}
 > -- 
 > 1.7.3.2
 > 
