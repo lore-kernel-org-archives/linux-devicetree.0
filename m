@@ -1,18 +1,16 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [sodaville] [PATCH 10/15] x86/ioapic: Add OF bindings for	IO-APIC
-Date: Thu, 13 Jan 2011 11:38:48 +0100
-Message-ID: <20110113103848.GA23275@www.tglx.de>
+Subject: [PATCH v2] rtc/cmos: add OF bindings
+Date: Thu, 13 Jan 2011 11:50:42 +0100
+Message-ID: <20110113105042.GB23275@www.tglx.de>
 References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	<1292600033-12271-11-git-send-email-bigeasy@linutronix.de>
-	<20110111235353.GG2131@angua.secretlab.ca>
-	<20110112170707.GA6907@www.tglx.de>
-	<4D2DE2B9.2000607@linux.intel.com>
+	<1292600033-12271-15-git-send-email-bigeasy@linutronix.de>
+	<20110112000442.GJ2131@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D2DE2B9.2000607-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <20110112000442.GJ2131-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,42 +20,152 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* H. Peter Anvin | 2011-01-12 09:19:53 [-0800]:
+This allows to load the OF driver based informations from the device
+tree. Systems without BIOS may need to perform some initialization.
+PowerPC creates a PNP device from the OF information and performs this
+kind of initialization in their private PCI quirk. This looks more
+generic.
 
->On 01/12/2011 09:07 AM, Sebastian Andrzej Siewior wrote:
->>>
->>> I'm confused here.  Are there multiple ioapic's described by a single
->>> device tree node?
->
->That's normal multiple IOAPIC behavior (and multiple IOAPICs is a common
->thing), but why use the same device tree node for both?
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-I'm sorry, I miss understood Grant's question. The two io apics in the
-system are described by two nodes. ioapic_add_ofnode() is called for one
-node:
+* Grant Likely | 2011-01-11 17:04:42 [-0700]:
 
-> +     for (i = 0; i < nr_ioapics; i++) {
-> +             if (r.start == mp_ioapics[i].apicaddr) {
-> +                     struct irq_domain *id;
-> +
-> +                     mp_of_ioapic[i].node = np;
-> +                     id = kzalloc(sizeof(*id), GFP_KERNEL);
-> +                     BUG_ON(!id);
-> +                     id->controller = np;
-> +                     id->xlate = ioapic_xlate;
-> +                     id->priv = (void *)i;
-> +                     add_interrupt_host(id);
-> +                     return;
-> +             }
+>It's usually cleaner to break the of-specific probe stuff into a
+>separate function that can be #ifdef'ed out as a whole instead of
+>having #ifdef blocks inside the probe functions.  Aside from that this
+>patch looks good to me.
 
-and once it matches the previously registered io apic it calls
-add_interrupt_host() on it and returns. x86_add_irq_domains() calls it
-for every io apic node so it calls add_interrupt_host() twice.
+Done.
 
->	-hpa
+ Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++
+ drivers/rtc/rtc-cmos.c                          |   46 +++++++++++++++++++++++
+ 2 files changed, 74 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
+
+diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+new file mode 100644
+index 0000000..7382989
+--- /dev/null
++++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+@@ -0,0 +1,28 @@
++ Motorola mc146818 compatible RTC
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Required properties:
++  - compatible : "motorola,mc146818"
++  - reg : should contain registers location and length.
++
++Optional properties:
++  - interrupts : should contain interrupt.
++  - interrupt-parent : interrupt source phandle.
++  - ctrl-reg : Contains the initial value of the control register also
++    called "Register B".
++  - freq-reg : Contains the initial value of the frequency register also
++    called "Regsiter A".
++
++"Register A" and "B" are usually initialized by the firmware (BIOS for
++instance). If this is not done, it can be performed by the driver.
++
++ISA Example:
++
++	rtc@70 {
++	         compatible = "motorola,mc146818";
++	         interrupts = <8 3>;
++	         interrupt-parent = <&ioapic1>;
++	         ctrl-reg = <2>;
++	         freq-reg = <0x26>;
++	         reg = <1 0x70 2>;
++	 };
+diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+index 5856167..95a08dd 100644
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -36,6 +36,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/log2.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ 
+ /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
+ #include <asm-generic/rtc.h>
+@@ -1121,6 +1123,46 @@ static struct pnp_driver cmos_pnp_driver = {
+ 
+ #endif	/* CONFIG_PNP */
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id of_cmos_match[] = {
++	{
++		.compatible = "motorola,mc146818",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_cmos_match);
++
++static __init void cmos_of_init(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct rtc_time time;
++	int ret;
++	const __be32 *val;
++
++	if (!node)
++		return;
++
++	val = of_get_property(node, "ctrl-reg", NULL);
++	if (val)
++		CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
++
++	val = of_get_property(node, "freq-reg", NULL);
++	if (val)
++		CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
++
++	get_rtc_time(&time);
++	ret = rtc_valid_tm(&time);
++	if (ret) {
++		struct rtc_time def_time = {
++			.tm_year = 1,
++			.tm_mday = 1,
++		};
++		set_rtc_time(&def_time);
++	}
++}
++#else
++static inline void cmos_of_init(struct platform_device *pdev) {}
++#endif
+ /*----------------------------------------------------------------*/
+ 
+ /* Platform setup should have set up an RTC device, when PNP is
+@@ -1129,6 +1171,7 @@ static struct pnp_driver cmos_pnp_driver = {
+ 
+ static int __init cmos_platform_probe(struct platform_device *pdev)
+ {
++	cmos_of_init(pdev);
+ 	cmos_wake_setup(&pdev->dev);
+ 	return cmos_do_probe(&pdev->dev,
+ 			platform_get_resource(pdev, IORESOURCE_IO, 0),
+@@ -1157,6 +1200,9 @@ static struct platform_driver cmos_platform_driver = {
+ 	.shutdown	= cmos_platform_shutdown,
+ 	.driver = {
+ 		.name		= (char *) driver_name,
++#if defined(CONFIG_OF)
++		.of_match_table = of_cmos_match,
++#endif
+ 		.suspend	= cmos_suspend,
+ 		.resume		= cmos_resume,
+ 	}
+-- 
+1.7.3.2
+
+
 
 Sebastian
