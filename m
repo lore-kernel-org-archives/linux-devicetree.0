@@ -1,75 +1,59 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: drivers/mmc/host/sdhci-of-core.c on sparc64
-Date: Fri, 14 Jan 2011 00:57:07 -0700
-Message-ID: <AANLkTinkc0ejTpd5ZrXhDDejwojp2rgUy1NSFMYVqh+x@mail.gmail.com>
-References: <20110113151033.dbfd7524.akpm@linux-foundation.org>
- <20110113233828.GA21404@void.printf.net> <20110113154140.7176df4c.akpm@linux-foundation.org>
- <20110114011212.GA22374@void.printf.net>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Require guidance on ARM device tree
+Date: Fri, 14 Jan 2011 14:28:39 -0600
+Message-ID: <AANLkTikUdJTWg2qGw_AASZNW+yivAXCf4qzSd-yF6N=p@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20110114011212.GA22374@void.printf.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: multipart/mixed; boundary="===============1083562738018554522=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 13, 2011 at 6:12 PM, Chris Ball <cjb@laptop.org> wrote:
-> Hi,
->
-> On Thu, Jan 13, 2011 at 03:41:40PM -0800, Andrew Morton wrote:
->> > > drivers/mmc/host/sdhci-of-core.c:24:25: asm/machdep.h: No such f=
-ile or directory
->> > > drivers/mmc/host/sdhci-of-core.c: In function `sdhci_of_wp_inver=
-ted':
->> > > drivers/mmc/host/sdhci-of-core.c:115: error: implicit declaratio=
-n of function `machine_is'
->> > >
->> > > That code's been there for a while. =A0Did someone change Kconfi=
-g?
->> >
->> > Can you attach a .config? =A0<asm/machdep.h> is arch-specific, so =
-I'd
->> > suggest that you're building on an unsupported arch.
->> >
->>
->> sparc64 allmodconfig.
->
-> You're right, Andrew -- Rob (CC'd) changed the MMC Kconfig to build t=
-his
-> driver on Sparc. =A0Mainline commit 236cdc7bc71 ("of: make drivers de=
-pend
-> on CONFIG_OF instead of CONFIG_PPC_OF").
->
-> Rob also posted a patch to devicetree-discuss@, on top of the one abo=
-ve
-> ("mmc: sdhci-of: fix build on non-powerpc platforms"), to fix up the
-> Sparc build by ifdef'ing for PPC inside the driver. =A0Grant merged t=
-he
-> first patch but not the second, hence sparc64 allmodconfig is broken
-> now. =A0The reason Grant didn't merge the second patch may be that Wo=
-lfram
-> objected to #ifdef proliferation inside the driver.
->
-> Options, as I see it:
-> =A0* revert the commit such that MMC_SDHCI_OF once again depends on P=
-PC_OF
-> =A0* take the second patch as-is
-> =A0* come up with a less-#ifdeffy second patch
->
-> Wolfram, would appreciate your input on what we should do here. =A0Th=
-anks,
+--===============1083562738018554522==
+Content-Type: multipart/alternative; boundary=00151750d868950b5c0499d44705
 
-I've applied the 2nd patch.  I had applied it to my test tree, and
-indeed I replied saying I did, but I had a corrupt git tree event
-shortly after applying it to my test branch and evidently lost track
-of it.
+--00151750d868950b5c0499d44705
+Content-Type: text/plain; charset=ISO-8859-1
 
-It's been pushed out to my next-devicetree branch:
+Hi,
 
-git://git.secretlab.ca/git/linux-2.6.git next-devicetree
+I am currently working on device tree support for Samsung's S5PV310
+Cortex-A9 platform. This work is based on git://
+git.secretlab.ca/git/linux-2.6.git test-devicetree.
 
-I'll ask Linus to pull after doing some sanity testing.
+It would be very helpful to know if this is the correct place to start or if
+there is a better location. Any other suggestions on how to go about adding
+device tree support for a ARM platform would be very helpful.
 
-g.
+Thanks,
+Thomas.
+
+--00151750d868950b5c0499d44705
+Content-Type: text/html; charset=ISO-8859-1
+
+Hi,<br><br>I am currently working on device tree support for Samsung&#39;s S5PV310 Cortex-A9 platform. This work is based on git://<a href="http://git.secretlab.ca/git/linux-2.6.git">git.secretlab.ca/git/linux-2.6.git</a> test-devicetree. <br>
+<br>It would be very helpful to know if this is the correct place to start or if there is a better location. Any other suggestions on how to go about adding device tree support for a ARM platform would be very helpful.<br>
+<br>Thanks,<br>Thomas.<br><br>
+
+--00151750d868950b5c0499d44705--
+
+--===============1083562738018554522==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1083562738018554522==--
