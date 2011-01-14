@@ -1,171 +1,51 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH v2] rtc/cmos: add OF bindings
-Date: Thu, 13 Jan 2011 11:50:42 +0100
-Message-ID: <20110113105042.GB23275@www.tglx.de>
-References: <1292600033-12271-1-git-send-email-bigeasy@linutronix.de>
-	<1292600033-12271-15-git-send-email-bigeasy@linutronix.de>
-	<20110112000442.GJ2131@angua.secretlab.ca>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: drivers/mmc/host/sdhci-of-core.c on sparc64
+Date: Fri, 14 Jan 2011 01:12:13 +0000
+Message-ID: <20110114011212.GA22374@void.printf.net>
+References: <20110113151033.dbfd7524.akpm@linux-foundation.org> <20110113233828.GA21404@void.printf.net> <20110113154140.7176df4c.akpm@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110112000442.GJ2131-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20110113154140.7176df4c.akpm@linux-foundation.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This allows to load the OF driver based informations from the device
-tree. Systems without BIOS may need to perform some initialization.
-PowerPC creates a PNP device from the OF information and performs this
-kind of initialization in their private PCI quirk. This looks more
-generic.
+Hi,
 
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+On Thu, Jan 13, 2011 at 03:41:40PM -0800, Andrew Morton wrote:
+> > > drivers/mmc/host/sdhci-of-core.c:24:25: asm/machdep.h: No such file or directory
+> > > drivers/mmc/host/sdhci-of-core.c: In function `sdhci_of_wp_inverted':
+> > > drivers/mmc/host/sdhci-of-core.c:115: error: implicit declaration of function `machine_is'
+> > > 
+> > > That code's been there for a while.  Did someone change Kconfig?
+> > 
+> > Can you attach a .config?  <asm/machdep.h> is arch-specific, so I'd
+> > suggest that you're building on an unsupported arch.
+> > 
+> 
+> sparc64 allmodconfig.
 
-* Grant Likely | 2011-01-11 17:04:42 [-0700]:
+You're right, Andrew -- Rob (CC'd) changed the MMC Kconfig to build this
+driver on Sparc.  Mainline commit 236cdc7bc71 ("of: make drivers depend
+on CONFIG_OF instead of CONFIG_PPC_OF").
 
->It's usually cleaner to break the of-specific probe stuff into a
->separate function that can be #ifdef'ed out as a whole instead of
->having #ifdef blocks inside the probe functions.  Aside from that this
->patch looks good to me.
+Rob also posted a patch to devicetree-discuss@, on top of the one above
+("mmc: sdhci-of: fix build on non-powerpc platforms"), to fix up the
+Sparc build by ifdef'ing for PPC inside the driver.  Grant merged the
+first patch but not the second, hence sparc64 allmodconfig is broken
+now.  The reason Grant didn't merge the second patch may be that Wolfram
+objected to #ifdef proliferation inside the driver.
 
-Done.
+Options, as I see it:
+ * revert the commit such that MMC_SDHCI_OF once again depends on PPC_OF
+ * take the second patch as-is
+ * come up with a less-#ifdeffy second patch
 
- Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++
- drivers/rtc/rtc-cmos.c                          |   46 +++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
+Wolfram, would appreciate your input on what we should do here.  Thanks,
 
-diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-new file mode 100644
-index 0000000..7382989
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-@@ -0,0 +1,28 @@
-+ Motorola mc146818 compatible RTC
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Required properties:
-+  - compatible : "motorola,mc146818"
-+  - reg : should contain registers location and length.
-+
-+Optional properties:
-+  - interrupts : should contain interrupt.
-+  - interrupt-parent : interrupt source phandle.
-+  - ctrl-reg : Contains the initial value of the control register also
-+    called "Register B".
-+  - freq-reg : Contains the initial value of the frequency register also
-+    called "Regsiter A".
-+
-+"Register A" and "B" are usually initialized by the firmware (BIOS for
-+instance). If this is not done, it can be performed by the driver.
-+
-+ISA Example:
-+
-+	rtc@70 {
-+	         compatible = "motorola,mc146818";
-+	         interrupts = <8 3>;
-+	         interrupt-parent = <&ioapic1>;
-+	         ctrl-reg = <2>;
-+	         freq-reg = <0x26>;
-+	         reg = <1 0x70 2>;
-+	 };
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index 5856167..95a08dd 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -36,6 +36,8 @@
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/log2.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- 
- /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
- #include <asm-generic/rtc.h>
-@@ -1121,6 +1123,46 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- #endif	/* CONFIG_PNP */
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_cmos_match[] = {
-+	{
-+		.compatible = "motorola,mc146818",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_cmos_match);
-+
-+static __init void cmos_of_init(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct rtc_time time;
-+	int ret;
-+	const __be32 *val;
-+
-+	if (!node)
-+		return;
-+
-+	val = of_get_property(node, "ctrl-reg", NULL);
-+	if (val)
-+		CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
-+
-+	val = of_get_property(node, "freq-reg", NULL);
-+	if (val)
-+		CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
-+
-+	get_rtc_time(&time);
-+	ret = rtc_valid_tm(&time);
-+	if (ret) {
-+		struct rtc_time def_time = {
-+			.tm_year = 1,
-+			.tm_mday = 1,
-+		};
-+		set_rtc_time(&def_time);
-+	}
-+}
-+#else
-+static inline void cmos_of_init(struct platform_device *pdev) {}
-+#endif
- /*----------------------------------------------------------------*/
- 
- /* Platform setup should have set up an RTC device, when PNP is
-@@ -1129,6 +1171,7 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- static int __init cmos_platform_probe(struct platform_device *pdev)
- {
-+	cmos_of_init(pdev);
- 	cmos_wake_setup(&pdev->dev);
- 	return cmos_do_probe(&pdev->dev,
- 			platform_get_resource(pdev, IORESOURCE_IO, 0),
-@@ -1157,6 +1200,9 @@ static struct platform_driver cmos_platform_driver = {
- 	.shutdown	= cmos_platform_shutdown,
- 	.driver = {
- 		.name		= (char *) driver_name,
-+#if defined(CONFIG_OF)
-+		.of_match_table = of_cmos_match,
-+#endif
- 		.suspend	= cmos_suspend,
- 		.resume		= cmos_resume,
- 	}
 -- 
-1.7.3.2
-
-
-
-Sebastian
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
