@@ -1,61 +1,74 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 8/8] arm/dt: Basic tegra devicetree support
-Date: Tue, 18 Jan 2011 13:29:38 -0700
-Message-ID: <20110118202938.13011.35918.stgit@localhost6.localdomain6>
-References: <20110118195933.13011.56098.stgit@localhost6.localdomain6>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 1/2] powerpc: document the MPIC device tree binding
+Date: Tue, 18 Jan 2011 14:31:31 -0600
+Message-ID: <20110118143131.37811236@udp111988uds.am.freescale.net>
+References: <4D34E448.8000902@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110118195933.13011.56098.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Lennert Buijtenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4D34E448.8000902@mentor.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Meador Inge <meador_inge@mentor.com>
+Cc: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds adds very basic support for booting versatile with a
-device tree.  It simply allows the existing machine_descs to match
-against the tegra compatible values so that the kernel can boot.
-Kernel parameters and the initrd pointer is read out of the tree
-instead of atags.
+On Mon, 17 Jan 2011 18:52:24 -0600
+Meador Inge <meador_inge@mentor.com> wrote:
 
-This is not complete device tree support.  This change will be
-reverted when a new machine_desc is added that can populate the
-versatile device registrations directly from data in the tree instead
-of using hard coded data.  That change will be made in a future patch.
+> +** Required properties:
+> +
+> +   NOTE: Many of these descriptions were paraphrased from [1] to aid
+> +         readability.
+> +
+> +   - name : Specifies the name of the MPIC.
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
- arch/arm/mach-tegra/board-harmony.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+"name" isn't really a property with flat trees.  The appropriate
+node name, according to the Generic Names recommendation and ePAPR, is
+interrupt-controller.
 
-diff --git a/arch/arm/mach-tegra/board-harmony.c b/arch/arm/mach-tegra/board-harmony.c
-index b9dbdb1..99884e9 100644
---- a/arch/arm/mach-tegra/board-harmony.c
-+++ b/arch/arm/mach-tegra/board-harmony.c
-@@ -113,6 +113,11 @@ static void __init tegra_harmony_init(void)
- 	platform_add_devices(harmony_devices, ARRAY_SIZE(harmony_devices));
- }
- 
-+static const char * tegra_harmony_board_compat[] = {
-+	"nvidia,harmony",
-+	NULL
-+};
-+
- MACHINE_START(HARMONY, "harmony")
- 	.boot_params  = 0x00000100,
- 	.fixup		= tegra_harmony_fixup,
-@@ -120,4 +125,5 @@ MACHINE_START(HARMONY, "harmony")
- 	.init_machine   = tegra_harmony_init,
- 	.map_io         = tegra_map_common_io,
- 	.timer          = &tegra_timer,
-+	.dt_compat      = tegra_harmony_board_compat,
- MACHINE_END
+> +   - device_type : Specifies the device type of this MPIC.  The value 
+> of this
+> +                   property shall be "open-pic".
+
+Can we drop device_type, and fix the kernel to look for compatible
+instead?
+
+> +   - compatible : Specifies the compatibility list for the MPIC.  The 
+> property
+> +                  value shall include "chrp,open-pic".
+
+ePAPR wants just "open-pic".  And while chrp,open-pic is common in
+existing trees, only one platform currently checks for it.
+
+I'd make in "open-pic" in the binding, and have the kernel accept
+either one.
+
+> +** Optional properties:
+> +
+> +   - no-reset : The presence of this property indicates that the MPIC
+> +                should not be reset during runtime initialization.
+> +   - protected-sources : Specifies a list of interrupt sources that are 
+> not
+> +                         available for use and whose corresponding vectors
+> +                         should not be initialized.  A typical use case for
+> +                         this property is in AMP systems where multiple
+> +                         independent operating systems need to share 
+> the MPIC
+> +                         without clobbering each other.
+> +
+
+Can we define no-reset as meaning that all vectors are in a sane state
+(either directed at other cores, or masked)?
+
+If we do that, maybe we can get rid of protected-sources.
+
+-Scott
