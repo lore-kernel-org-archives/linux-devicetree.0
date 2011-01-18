@@ -1,74 +1,77 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/2] powerpc: document the MPIC device tree binding
-Date: Tue, 18 Jan 2011 14:31:31 -0600
-Message-ID: <20110118143131.37811236@udp111988uds.am.freescale.net>
-References: <4D34E448.8000902@mentor.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH 1/8] arm/dt: Make __vet_atags also accept a dtb image
+Date: Tue, 18 Jan 2011 16:26:17 -0500 (EST)
+Message-ID: <alpine.LFD.2.00.1101181621140.8580@xanadu.home>
+References: <20110118195933.13011.56098.stgit@localhost6.localdomain6> <20110118202902.13011.68847.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4D34E448.8000902@mentor.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Meador Inge <meador_inge@mentor.com>
-Cc: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110118202902.13011.68847.stgit@localhost6.localdomain6>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Jeremy Kerr <jeremy.kerr@canonical.com>, John Linn <John.Linn@xilinx.com>, Lennert Buijtenhek <buytenh@wantstofly.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jan 2011 18:52:24 -0600
-Meador Inge <meador_inge@mentor.com> wrote:
+On Tue, 18 Jan 2011, Grant Likely wrote:
 
-> +** Required properties:
-> +
-> +   NOTE: Many of these descriptions were paraphrased from [1] to aid
-> +         readability.
-> +
-> +   - name : Specifies the name of the MPIC.
+> The dtb is passed to the kernel via register r2, which is the same
+> method that is used to pass an atags pointer.  This patch modifies
+> __vet_atags to not clear r2 when it encounters a dtb image.
+> 
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  arch/arm/kernel/head-common.S |   19 +++++++++++++------
+>  arch/arm/kernel/head.S        |    8 ++++----
+>  2 files changed, 17 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/kernel/head-common.S b/arch/arm/kernel/head-common.S
+> index 8f57515..d9a9105 100644
+> --- a/arch/arm/kernel/head-common.S
+> +++ b/arch/arm/kernel/head-common.S
+> @@ -14,6 +14,7 @@
+>  #define ATAG_CORE 0x54410001
+>  #define ATAG_CORE_SIZE ((2*4 + 3*4) >> 2)
+>  #define ATAG_CORE_SIZE_EMPTY ((2*4) >> 2)
+> +#define OF_DT_MAGIC 0xedfe0dd0 /* 0xd00dfeed in big-endian */
 
-"name" isn't really a property with flat trees.  The appropriate
-node name, according to the Generic Names recommendation and ePAPR, is
-interrupt-controller.
+ARM can be big endian too.  Would be nice to make this endian 
+independent, or at least list this limitation in the commit log.
 
-> +   - device_type : Specifies the device type of this MPIC.  The value 
-> of this
-> +                   property shall be "open-pic".
+>  /*
+>   * Exception handling.  Something went wrong and we can't proceed.  We
+> @@ -105,22 +106,28 @@ __lookup_machine_type_data:
+>  
+>  /* Determine validity of the r2 atags pointer.  The heuristic requires
+>   * that the pointer be aligned, in the first 16k of physical RAM and
+> - * that the ATAG_CORE marker is first and present.  Future revisions
+> + * that the ATAG_CORE marker is first and present.  If CONFIG_OF_FLATTREE
+> + * is selected, then it will also accept a dtb pointer.  Future revisions
+>   * of this function may be more lenient with the physical address and
+>   * may also be able to move the ATAGS block if necessary.
+>   *
+>   * r8  = machinfo
+>   *
+>   * Returns:
+> - *  r2 either valid atags pointer, or zero
+> + *  r2 either valid atags pointer, valid dtb pointer, or zero
+>   *  r5, r6 corrupted
+>   */
+>  __vet_atags:
+>  	tst	r2, #0x3			@ aligned?
+>  	bne	1f
+>  
+> -	ldr	r5, [r2, #0]			@ is first tag ATAG_CORE?
+> -	cmp	r5, #ATAG_CORE_SIZE
+> +#ifdef CONFIG_OF_FLATTREE
+> +	ldr	r5, [r2, #0]			@ is it a DTB?
+> +	ldr	r6, =OF_DT_MAGIC
+> +	cmp	r5, r6
+> +	beq	2f
+> +#endif
+> +	cmp	r5, #ATAG_CORE_SIZE		@ is first tag ATAG_CORE?
 
-Can we drop device_type, and fix the kernel to look for compatible
-instead?
+The "ldr r5 ..." is now done only within #ifdef CONFIG_OF_FLATTREE.  So 
+if CONFIG_OF_FLATTREE is undefined then r5 will contain garbage.
 
-> +   - compatible : Specifies the compatibility list for the MPIC.  The 
-> property
-> +                  value shall include "chrp,open-pic".
 
-ePAPR wants just "open-pic".  And while chrp,open-pic is common in
-existing trees, only one platform currently checks for it.
-
-I'd make in "open-pic" in the binding, and have the kernel accept
-either one.
-
-> +** Optional properties:
-> +
-> +   - no-reset : The presence of this property indicates that the MPIC
-> +                should not be reset during runtime initialization.
-> +   - protected-sources : Specifies a list of interrupt sources that are 
-> not
-> +                         available for use and whose corresponding vectors
-> +                         should not be initialized.  A typical use case for
-> +                         this property is in AMP systems where multiple
-> +                         independent operating systems need to share 
-> the MPIC
-> +                         without clobbering each other.
-> +
-
-Can we define no-reset as meaning that all vectors are in a sane state
-(either directed at other cores, or masked)?
-
-If we do that, maybe we can get rid of protected-sources.
-
--Scott
+Nicolas
