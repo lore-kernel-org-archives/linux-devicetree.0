@@ -1,37 +1,44 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: Re: [PATCH v3] spi: New driver for Altera SPI
-Date: Tue, 18 Jan 2011 09:33:58 +0800
-Message-ID: <4D34EE06.8080305@wytron.com.tw>
-References: <AANLkTi=D4Rcxbei2oo+EHc6X1O-2Oo+VWHAasK_JLj5W@mail.gmail.com>
-	<1295247869-4968-1-git-send-email-thomas@wytron.com.tw>
-	<4D33EF7C.7030005@writeme.com>
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: Re: [PATCH] alter_ps2: Add devicetree support
+Date: Tue, 18 Jan 2011 22:26:15 +0800
+Message-ID: <4D35A307.5070706@wytron.com.tw>
+References: <4D040D1C.2020705@home.nl> <1295245760-4566-1-git-send-email-thomas@wytron.com.tw> <AANLkTi=8+Q5dm+5Pa-cYkmaBWQ4S7jgjZOL0ovtmrdxB@mail.gmail.com> <4D34AEC3.60801@home.nl> <20110117220244.GA17963@angua.secretlab.ca> <4D34D046.20708@home.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D33EF7C.7030005-w0xpxkV3uqlBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sinan Akman <sinan-w0xpxkV3uqlBDgjK7y7TUQ@public.gmane.org>
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <4D34D046.20708@home.nl>
+Sender: linux-input-owner@vger.kernel.org
+To: Walter Goossens <waltergoossens@home.nl>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2011 03:27 PM, Sinan Akman wrote:
->> + if (hw->irq >= 0) {
->> + init_completion(&hw->done);
->
-> I think you init this twice, once in altera_spi_probe
-> below as well.
+On 01/18/2011 07:27 AM, Walter Goossens wrote:
+>> so, instead of trying to us a 'generic' value like "altera,altera_ps2"
+>> which has a bunch of ambiguity about which hardware actually
+>> implements the behaviour, the values "altera,altera_ps2-1" and
+>> "altera,altera_ps2-3" become the de-facto 'generic' values without any
+>> messiness or ambiguity about what they mean.
+>>
+>> Plus, each .dts file still specifies the exact version that is
+>> implemented on the board so that the driver can still fixup
+>> version-specific bugs if any are discovered in the future.
+>>
+> Ahh ok.
+> That does look like a good solution. I'll try and cook something up for
+> that.
 
-Hi Sinan,
+Hi Walter,
 
-Thanks. I will remove this one.
+Can we use "kind" and "version" attribute of a sopcinfo file to build 
+the match string? This way, your dts converter won't need update for 
+each new component.
+
+eg,
+
+kind="altera_avalon_spi" version="9.0" ==> "altera","avalon-spi-9.0"
+
+kind="altera_up_avalon_ps2_classic" version="6.1" ==>
+   "altera","up-avalon-ps2-classic-6.1"
 
 - Thomas
