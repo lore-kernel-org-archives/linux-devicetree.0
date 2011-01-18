@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 7/8] arm/tegra: Fix tegra irq_data conversion
-Date: Tue, 18 Jan 2011 13:29:33 -0700
-Message-ID: <20110118202933.13011.50322.stgit@localhost6.localdomain6>
+Subject: [PATCH 8/8] arm/dt: Basic tegra devicetree support
+Date: Tue, 18 Jan 2011 13:29:38 -0700
+Message-ID: <20110118202938.13011.35918.stgit@localhost6.localdomain6>
 References: <20110118195933.13011.56098.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,28 +21,41 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Lennert Buijtenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 37337a8d5e68d6e19075dbdb3acf4f1011dae972, "ARM: tegra: irq_data
-conversion." missed changing one reference to 'irq' in the function
-tegra_gpio_irq_set_type().  This patch fixes the build error.
+This patch adds adds very basic support for booting versatile with a
+device tree.  It simply allows the existing machine_descs to match
+against the tegra compatible values so that the kernel can boot.
+Kernel parameters and the initrd pointer is read out of the tree
+instead of atags.
+
+This is not complete device tree support.  This change will be
+reverted when a new machine_desc is added that can populate the
+versatile device registrations directly from data in the tree instead
+of using hard coded data.  That change will be made in a future patch.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- arch/arm/mach-tegra/gpio.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mach-tegra/board-harmony.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-tegra/gpio.c b/arch/arm/mach-tegra/gpio.c
-index bd06620..ad80488 100644
---- a/arch/arm/mach-tegra/gpio.c
-+++ b/arch/arm/mach-tegra/gpio.c
-@@ -207,9 +207,9 @@ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	spin_unlock_irqrestore(&bank->lvl_lock[port], flags);
- 
- 	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
--		__set_irq_handler_unlocked(irq, handle_level_irq);
-+		__set_irq_handler_unlocked(d->irq, handle_level_irq);
- 	else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
--		__set_irq_handler_unlocked(irq, handle_edge_irq);
-+		__set_irq_handler_unlocked(d->irq, handle_edge_irq);
- 
- 	return 0;
+diff --git a/arch/arm/mach-tegra/board-harmony.c b/arch/arm/mach-tegra/board-harmony.c
+index b9dbdb1..99884e9 100644
+--- a/arch/arm/mach-tegra/board-harmony.c
++++ b/arch/arm/mach-tegra/board-harmony.c
+@@ -113,6 +113,11 @@ static void __init tegra_harmony_init(void)
+ 	platform_add_devices(harmony_devices, ARRAY_SIZE(harmony_devices));
  }
+ 
++static const char * tegra_harmony_board_compat[] = {
++	"nvidia,harmony",
++	NULL
++};
++
+ MACHINE_START(HARMONY, "harmony")
+ 	.boot_params  = 0x00000100,
+ 	.fixup		= tegra_harmony_fixup,
+@@ -120,4 +125,5 @@ MACHINE_START(HARMONY, "harmony")
+ 	.init_machine   = tegra_harmony_init,
+ 	.map_io         = tegra_map_common_io,
+ 	.timer          = &tegra_timer,
++	.dt_compat      = tegra_harmony_board_compat,
+ MACHINE_END
