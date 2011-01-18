@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 4/8] arm/dt: consolidate atags setup into setup_machine_atags
-Date: Tue, 18 Jan 2011 13:29:17 -0700
-Message-ID: <20110118202917.13011.85691.stgit@localhost6.localdomain6>
+Subject: [PATCH 6/8] arm/dt: Basic versatile devicetree support
+Date: Tue, 18 Jan 2011 13:29:28 -0700
+Message-ID: <20110118202928.13011.49282.stgit@localhost6.localdomain6>
 References: <20110118195933.13011.56098.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,115 +21,64 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Lennert Buijtenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In preparation for adding device tree support, this patch consolidates
-all of the atag-specific setup into a single function.
+This patch adds adds very basic support for booting versatile with a
+device tree.  It simply allows the existing machine_descs to match
+against the versatile ab & pb compatible values so that the kernel can
+boot.  Kernel parameters and the initrd pointer is read out of the
+tree instead of atags.
+
+This is not complete device tree support.  This change will be
+reverted when a new machine_desc is added that can populate the
+versatile device registrations directly from data in the tree instead
+of using hard coded data.  That change will be made in a future patch.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- arch/arm/kernel/setup.c |   68 ++++++++++++++++++++++++-----------------------
- 1 files changed, 35 insertions(+), 33 deletions(-)
+ arch/arm/mach-versatile/versatile_ab.c |    6 ++++++
+ arch/arm/mach-versatile/versatile_pb.c |    6 ++++++
+ 2 files changed, 12 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index d211609..cbc1836 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -424,25 +424,6 @@ void cpu_init(void)
- 	    : "r14");
- }
+diff --git a/arch/arm/mach-versatile/versatile_ab.c b/arch/arm/mach-versatile/versatile_ab.c
+index aa9730f..62053df 100644
+--- a/arch/arm/mach-versatile/versatile_ab.c
++++ b/arch/arm/mach-versatile/versatile_ab.c
+@@ -33,6 +33,11 @@
  
--static struct machine_desc * __init setup_machine(unsigned int nr)
--{
--	struct machine_desc *list;
--
--	/*
--	 * locate machine in the list of supported machines.
--	 */
--	list = lookup_machine_type(nr);
--	if (!list) {
--		printk("Machine configuration botched (nr %d), unable "
--		       "to continue.\n", nr);
--		while (1);
--	}
--
--	printk("Machine: %s\n", list->name);
--
--	return list;
--}
--
- int __init arm_add_memory(unsigned long start, unsigned long size)
- {
- 	struct membank *bank = &meminfo.bank[meminfo.nr_banks];
-@@ -796,21 +777,23 @@ static void __init squash_mem_tags(struct tag *tag)
- 			tag->hdr.tag = ATAG_NONE;
- }
+ #include "core.h"
  
--void __init setup_arch(char **cmdline_p)
-+static struct machine_desc * __init setup_machine_tags(unsigned int nr)
- {
- 	struct tag *tags = (struct tag *)&init_tags;
- 	struct machine_desc *mdesc;
- 	char *from = default_command_line;
- 
--	unwind_init();
--
--	setup_processor();
--	mdesc = setup_machine(machine_arch_type);
--	machine_desc = mdesc;
--	machine_name = mdesc->name;
-+	/*
-+	 * locate machine in the list of supported machines.
-+	 */
-+	mdesc = lookup_machine_type(nr);
-+	if (!mdesc) {
-+		printk("Machine configuration botched (nr %d), unable "
-+		       "to continue.\n", nr);
-+		while (1);
-+	}
- 
--	if (mdesc->soft_reboot)
--		reboot_setup("s");
-+	printk("Machine: %s\n", mdesc->name);
- 
- 	if (__atags_pointer)
- 		tags = phys_to_virt(__atags_pointer);
-@@ -838,16 +821,35 @@ void __init setup_arch(char **cmdline_p)
- 		parse_tags(tags);
++static const char *versatile_ab_match[] __initdata = {
++	"arm,versatile-ab",
++	NULL,
++};
++
+ MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
+ 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
+ 	.boot_params	= 0x00000100,
+@@ -40,4 +45,5 @@ MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
+ 	.init_irq	= versatile_init_irq,
+ 	.timer		= &versatile_timer,
+ 	.init_machine	= versatile_init,
++	.dt_compat	= versatile_ab_match,
+ MACHINE_END
+diff --git a/arch/arm/mach-versatile/versatile_pb.c b/arch/arm/mach-versatile/versatile_pb.c
+index bf46964..eba12fa 100644
+--- a/arch/arm/mach-versatile/versatile_pb.c
++++ b/arch/arm/mach-versatile/versatile_pb.c
+@@ -106,6 +106,11 @@ static void __init versatile_pb_init(void)
  	}
+ }
  
--	init_mm.start_code = (unsigned long) _text;
--	init_mm.end_code   = (unsigned long) _etext;
--	init_mm.end_data   = (unsigned long) _edata;
--	init_mm.brk	   = (unsigned long) _end;
--
- 	/* parse_early_param needs a boot_command_line */
- 	strlcpy(boot_command_line, from, COMMAND_LINE_SIZE);
- 
- 	/* populate cmd_line too for later use, preserving boot_command_line */
- 	strlcpy(cmd_line, boot_command_line, COMMAND_LINE_SIZE);
++static const char *versatile_pb_match[] __initdata = {
++	"arm,versatile-pb",
++	NULL,
++};
 +
-+	return mdesc;
-+}
-+
-+
-+void __init setup_arch(char **cmdline_p)
-+{
-+	struct machine_desc *mdesc;
-+
-+	unwind_init();
-+
-+	setup_processor();
-+	mdesc = setup_machine_tags(machine_arch_type);
-+	machine_desc = mdesc;
-+	machine_name = mdesc->name;
-+
-+	if (mdesc->soft_reboot)
-+		reboot_setup("s");
-+
-+	init_mm.start_code = (unsigned long) _text;
-+	init_mm.end_code   = (unsigned long) _etext;
-+	init_mm.end_data   = (unsigned long) _edata;
-+	init_mm.brk	   = (unsigned long) _end;
-+
- 	*cmdline_p = cmd_line;
- 
- 	parse_early_param();
+ MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
+ 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
+ 	.boot_params	= 0x00000100,
+@@ -113,4 +118,5 @@ MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
+ 	.init_irq	= versatile_init_irq,
+ 	.timer		= &versatile_timer,
+ 	.init_machine	= versatile_pb_init,
++	.dt_compat	= versatile_pb_match,
+ MACHINE_END
