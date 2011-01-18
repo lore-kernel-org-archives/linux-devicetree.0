@@ -1,15 +1,11 @@
-From: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/2] powerpc: document the MPIC device tree binding
-Date: Tue, 18 Jan 2011 20:21:33 +0000
-Message-ID: <9F6FE96B71CF29479FF1CDC8046E150306A7A2@039-SN1MPN1-004.039d.mgd.msft.net>
-References: <4D34E448.8000902@mentor.com>
-	<AANLkTi=QX4BfLvPfQDMOgmh90TtX4MQqio6AOZR8JKas@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH 0/8] Basic ARM device tree support
+Date: Tue, 18 Jan 2011 13:28:57 -0700
+Message-ID: <20110118195933.13011.56098.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi=QX4BfLvPfQDMOgmh90TtX4MQqio6AOZR8JKas-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,135 +15,99 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Lennert Buijtenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> Date: Mon, Jan 17, 2011 at 6:52 PM
-> Subject: [PATCH 1/2] powerpc: document the MPIC device tree binding
-> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: minge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>,
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Blanchard, Hollis"
-> <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> =
+It's been a while since these patches have been circulated for review.
+Much has changed since the last posting and there are no longer any
+ugly hacks or workarounds to it working.  From my viewpoint, these
+patches are complete and ready to be used.
 
-> =
+This patch series allows CONFIG_OF to be enabled on ARM and allows the
+kernel to accept a dtb pointer from boot firmware instead of atags.
+If a dtb is passed, then the kernel will use the root 'compatible'
+property to find a matching machine_desc, and it will use it to obtain
+the memory layout, initrd location and kernel parameters string.
 
-> This binding documents several properties that have been in use for quite
-> some time, and adds one new property 'no-reset', which controls whether t=
-he
-> MPIC should be reset during runtime initialization.
-> =
+Only limited device tree support is enabled here.  It does not perform
+any kind of device registration from device tree data.  That support
+will be enabled in a later patch set.  Right now those patches depend
+on the common struct clk patches that Jeremy is working on, so I'm not
+going to post them yet.  Rather, this series is a stable base that
+other engineers can use to start working on device tree support for
+their platforms.
 
-> Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> CC: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> ---
-> =A0Documentation/powerpc/dts-bindings/mpic.txt | =A0 78
+Tested on Versatile (qemu) and nVidia Tegra Harmony.  Kernel compiles
+an boot with CONFIG_OF both on and off, both with and without passing
+a device tree blob.
 
-This is really the binding for an open-pic interrupt controller
-and I think the name should reflect that-- open-pic.txt.
+I've published this series to a new branch on my git server:
 
-> +++++++++++++++++++++++++++
-> =A01 files changed, 78 insertions(+), 0 deletions(-)
-> =A0create mode 100644 Documentation/powerpc/dts-bindings/mpic.txt
-> =
+  git://git.secretlab.ca/git/linux-2.6 devicetree/arm
 
-> diff --git a/Documentation/powerpc/dts-bindings/mpic.txt
-> b/Documentation/powerpc/dts-bindings/mpic.txt
-> new file mode 100644
-> index 0000000..3a67919
-> --- /dev/null
-> +++ b/Documentation/powerpc/dts-bindings/mpic.txt
-> @@ -0,0 +1,78 @@
-> +* MPIC Binding
-> +
-> +This binding specifies what properties and child nodes must be
-> +available on the device tree representation of the "MPIC" interrupt
-> +controller. =A0This binding is based on the binding defined for Open PIC
-> +in [1] and is a superset of that binding.
+The way I've managed the devicetree/test branch in the past has made
+it hard for other engineers to work with the device tree support, so
+I'm changing the way I'm handling it.  I will *not* rebase this new
+branch.  My intention is to keep it in essentially 'merge-ready' state
+at all times.  ie. I'm only going to put patches into this branch that
+I consider complete and are required to enable arm device tree
+support.  ie. core dt infrastructure and dt board support.  Device
+drivers should be submitted directly to their respective
+lists/maintainers.  I'll also be soliciting acks from platform
+maintainers before I pick up board support patches into this branch.
 
-I think it would be better to base this on the ePAPR binding which
-was based on the original chrp binding.  Properties like "name"
-and "device_type" are deprecated not being used in flat device trees.
+Russell:  I'm not expecting you to merge these now, nor am I asking
+you to.  I won't do so until I've got a full implementation using the
+device tree to register devices on the machine and supporting multiple
+machines.  However, would you mind taking a look at these patches and
+commenting on the approach?  Particularly the early boot code.
+Thanks.
 
-<http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf>
-
-The proposed new properties really should go back into the ePAPR. =
+Cheers,
+g.
 
 
-> +
-> +** Required properties:
-> +
-> + =A0 NOTE: Many of these descriptions were paraphrased from [1] to aid
-> + =A0 =A0 =A0 =A0 readability.
-> +
-> + =A0 - name : Specifies the name of the MPIC.
+---
+The following changes since commit
+a25cecce88194b2edf38b8c3b1665e9318eb2d22:
 
-Drop this.  No DTS files use it.
+  Merge branch 'next' of git://git.monstr.eu/linux-2.6-microblaze (2011-01-18 08:06:22 -0800)
 
-> + =A0 - device_type : Specifies the device type of this MPIC. =A0The value
-> + of this
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 property shall be "open-pic".
+are available in the git repository at:
 
-device_type is deprecated, since this is not real open-firmware.  In
-practice the kernel is matching on device_type, but we want to move
-away from that to match on "compatible", just hasn't been implemented
-yet.
+  git://git.secretlab.ca/git/linux-2.6 devicetree/arm
 
-> + =A0 - reg : Specifies the base physical address(s) and size(s) of this
-> + MPIC's
-> + =A0 =A0 =A0 =A0 =A0 addressable register space.
-> + =A0 - compatible : Specifies the compatibility list for the MPIC. =A0The
-> + property
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0value shall include "chrp,open-pic".
+Grant Likely (7):
+      arm/dt: Make __vet_atags also accept a dtb image
+      arm/dt: allow bootmem reservation for device tree blob and initrd
+      arm/dt: consolidate atags setup into setup_machine_atags
+      arm/dt: probe for platforms via the device tree
+      arm/dt: Basic versatile devicetree support
+      arm/tegra: Fix tegra irq_data conversion
+      arm/dt: Basic tegra devicetree support
 
-In the ePAPR we modified this to just "open-pic", because this has
-nothing to do with chrp anymore.   I think just "open-pic" is
-what we want.
+Jeremy Kerr (1):
+      arm/dt: Allow CONFIG_OF on ARM
 
-> + =A0 - interrupt-controller : The presence of this property identifies
-> + the node
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0as a MPIC. =A0No=
- property value should be
-> defined.
-> + =A0 - #address-cells : Specifies the number of cells needed to encode an
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0address. =A0The value of thi=
-s property shall always
-> + be 0
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0so that 'interrupt-map' node=
-s do not have to
-> + specify a
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0parent unit address.
-> + =A0 - #interrupt-cells : Specifies the number of cells needed to encode
-> + an
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt source.
 
-Should be 2, correct?
+ arch/arm/Kconfig                       |    7 ++
+ arch/arm/include/asm/mach/arch.h       |    2 +
+ arch/arm/include/asm/prom.h            |   34 ++++++++++
+ arch/arm/include/asm/setup.h           |    4 +
+ arch/arm/kernel/Makefile               |    1 
+ arch/arm/kernel/devtree.c              |  107 ++++++++++++++++++++++++++++++++
+ arch/arm/kernel/head-common.S          |   19 ++++--
+ arch/arm/kernel/head.S                 |    8 +-
+ arch/arm/kernel/setup.c                |   78 +++++++++++++----------
+ arch/arm/mach-tegra/board-harmony.c    |    6 ++
+ arch/arm/mach-tegra/gpio.c             |    4 +
+ arch/arm/mach-versatile/versatile_ab.c |    6 ++
+ arch/arm/mach-versatile/versatile_pb.c |    6 ++
+ arch/arm/mm/init.c                     |   23 +++++++
+ 14 files changed, 258 insertions(+), 47 deletions(-)
+ create mode 100644 arch/arm/include/asm/prom.h
+ create mode 100644 arch/arm/kernel/devtree.c
 
-> +** Optional properties:
-> +
-> + =A0 - no-reset : The presence of this property indicates that the MPIC
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0should not be reset during runtime initi=
-alization.
-> + =A0 - protected-sources : Specifies a list of interrupt sources that are
-> + not
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 available for use and w=
-hose corresponding
-> + vectors
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 should not be initializ=
-ed. =A0A typical use case
-> + for
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 this property is in AMP=
- systems where multiple
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 independent operating s=
-ystems need to share
-> + the MPIC
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 without clobbering each=
- other.
-
-I do think you need to include the definition of interrupt
-specifiers here.   Feel free to cut/paste text from my
-Freescale mpic binding.
-
-Stuart
+-- 
+Signature
