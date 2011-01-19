@@ -1,15 +1,19 @@
-From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc: document the MPIC device tree binding
-Date: Wed, 19 Jan 2011 18:08:03 -0600
-Message-ID: <4D377CE3.6000608@mentor.com>
-References: <4D34E448.8000902@mentor.com>
-	<AANLkTi=QX4BfLvPfQDMOgmh90TtX4MQqio6AOZR8JKas@mail.gmail.com>
-	<9F6FE96B71CF29479FF1CDC8046E150306BF11@039-SN1MPN1-004.039d.mgd.msft.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: RFC: Host-endian device tree format
+Date: Thu, 20 Jan 2011 09:47:55 +1000
+Message-ID: <20110119234755.GA20128@yookeroo>
+References: <AANLkTi=AdwaW5vvm1TzNxcNrjYiJ3dOEjwoZrm-koxuw@mail.gmail.com>
+	<AANLkTikoZj1WSpE8QNSRiF3oFL4qAb68kNnCKdExvBz7@mail.gmail.com>
+	<AANLkTi=xdJ_c3LvCFkeqBRNDf6TSC40Fjxihm9eSeMmf@mail.gmail.com>
+	<alpine.LFD.2.00.1101191031481.8580@xanadu.home>
+	<AANLkTi==KLWXAv79u32ioQ9eSr7JEii7fW93WPPNdAez@mail.gmail.com>
+	<AANLkTim7F8PBd_4zmQY7717N7CoiGvvyX473CL=6qCaj@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E150306BF11-TcFNo7jSaXM0vywKSws3iq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AANLkTim7F8PBd_4zmQY7717N7CoiGvvyX473CL=6qCaj-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,42 +23,62 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2011 04:14 PM, Yoder Stuart-B08248 wrote:
->
->> +** Optional properties:
->> +
->> +   - no-reset : The presence of this property indicates that the MPIC
->> +                should not be reset during runtime initialization.
->> +   - protected-sources : Specifies a list of interrupt sources that are
->> + not
->> +                         available for use and whose corresponding
->> + vectors
->> +                         should not be initialized.  A typical use case
->> + for
->> +                         this property is in AMP systems where multiple
->> +                         independent operating systems need to share
->> + the MPIC
->> +                         without clobbering each other.
->
-> Is "protected-sources" really needed for AMP systems to
-> tell the OSes not to clobber each other?  Won't each
-> OS be given a device tree with only its interrupt
-> sources?  ...so you know what you are allowed to touch.
+On Wed, Jan 19, 2011 at 04:09:39PM +0000, Dave Martin wrote:
+> On Wed, Jan 19, 2011 at 3:52 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
+> > On Wed, Jan 19, 2011 at 8:41 AM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm5QFI55V6+gNQ@public.gmane.org=
+g> wrote:
+> >> On Wed, 19 Jan 2011, Dave Martin wrote:
+> >>> On Wed, Jan 19, 2011 at 1:41 PM, Grant Likely <grant.likely@secretlab=
+.ca> wrote:
+> >>> > The dtb isn't so much bigendian as it is network byte order.
+> >>>
+> >>> (For me, "network byte order" is a euphemism ... <insert
+> >>> unconstructive rant here>)
+> >>
+> >> I concur.
+> >
+> > meh. it's all about conventions. =A0When talking about external data, it
+> > is far more important for everyone to agree on the same representation
+> > than it is to tailor to each platforms preferences. =A0That said, rant
+> > away! =A0I love a good tangent.
+> =
 
-This was discussed a little bit already [1, 2].  The MPIC driver 
-currently initializes the VECPRI register for all interrupt sources, 
-which can lead to the aforementioned clobbering.
+> I guess a good example of what I mean is ELF - the endianness of an
+> ELF image is discoverable, and cross tools do exist -- but because ELF
+> images are strongly bound to their target platform, running the image
+> takes precedence over the simplicity of the tools: so the images are
+> specified in such a way that they can always be host-endian for the
+> machine they run on, without creating format ambiguities.
 
+Yes, there's no technical impediment to making a little-endian dtb
+format.  In fact dtc and libfdt were written with this possibility in
+mind, to the extent that there are hooks / functions in the right
+places to make this reasonably straightforward.
 
--- 
-Meador Inge     | meador_inge AT mentor.com
-Mentor Embedded | http://www.mentor.com/embedded-software
+The fact that there are actually two questions here - the endianness
+of the framing dtb format, and the endianness of the property values
+themselves complicates the issue.
 
-[1] 
-http://lists.ozlabs.org/pipermail/devicetree-discuss/2010-December/003850.html
-[2] 
-http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-January/003936.html
+> Of course, it's stretching things rather a lot to claim that fdt
+> parsing is performance critical ... or that ELF cross tools work well
+> in all host/target combinations ... rather it's a niggle.
+
+But, there is just no point in creating a variant format.  The
+performance cost is completely negligible (even using the rather
+stupid conversion macros from libfdt which gcc generates horrible code
+for).
+
+The simplicity of having only one variant for tools to deal with wins,
+no contest.
+
+-- =
+
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
