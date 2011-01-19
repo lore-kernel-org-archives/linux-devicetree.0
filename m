@@ -1,62 +1,69 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: RFC: Host-endian device tree format
-Date: Wed, 19 Jan 2011 16:09:39 +0000
-Message-ID: <AANLkTim7F8PBd_4zmQY7717N7CoiGvvyX473CL=6qCaj@mail.gmail.com>
-References: <AANLkTi=AdwaW5vvm1TzNxcNrjYiJ3dOEjwoZrm-koxuw@mail.gmail.com>
-	<AANLkTikoZj1WSpE8QNSRiF3oFL4qAb68kNnCKdExvBz7@mail.gmail.com>
-	<AANLkTi=xdJ_c3LvCFkeqBRNDf6TSC40Fjxihm9eSeMmf@mail.gmail.com>
-	<alpine.LFD.2.00.1101191031481.8580@xanadu.home>
-	<AANLkTi==KLWXAv79u32ioQ9eSr7JEii7fW93WPPNdAez@mail.gmail.com>
+From: Meador Inge <meador_inge@mentor.com>
+Subject: Re: [PATCH] define binding for fsl mpic interrupt controllers
+Date: Wed, 19 Jan 2011 11:26:12 -0600
+Message-ID: <4D371EB4.3000703@mentor.com>
+References: <1295306382-3246-1-git-send-email-stuart.yoder@freescale.com>
+	<AANLkTim5i89k4OpUBWw0UgMoa5vwN5eSZ1MCs34S0VXB@mail.gmail.com>
+	<4D34EB06.9040908@mentor.com>
+	<9F6FE96B71CF29479FF1CDC8046E150306A71F@039-SN1MPN1-004.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi==KLWXAv79u32ioQ9eSr7JEii7fW93WPPNdAez-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E150306A71F@039-SN1MPN1-004.039d.mgd.msft.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Yoder Stuart-B08248 <B08248@freescale.com>
+Cc: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 19, 2011 at 3:52 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
-> On Wed, Jan 19, 2011 at 8:41 AM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
- wrote:
->> On Wed, 19 Jan 2011, Dave Martin wrote:
->>> On Wed, Jan 19, 2011 at 1:41 PM, Grant Likely <grant.likely@secretlab.c=
-a> wrote:
->>> > The dtb isn't so much bigendian as it is network byte order.
->>>
->>> (For me, "network byte order" is a euphemism ... <insert
->>> unconstructive rant here>)
->>
->> I concur.
+On 01/18/2011 01:47 PM, Yoder Stuart-B08248 wrote:
 >
-> meh. it's all about conventions. =A0When talking about external data, it
-> is far more important for everyone to agree on the same representation
-> than it is to tailor to each platforms preferences. =A0That said, rant
-> away! =A0I love a good tangent.
+> I'm not sure a complete merge into one binding makes sense.  The thing that
+> motivated creating this new binding with 4 cells was a thread from
+> last year.  See:
+>
+> http://lists.ozlabs.org/pipermail/devicetree-discuss/2010-January/001489.html
 
-I guess a good example of what I mean is ELF - the endianness of an
-ELF image is discoverable, and cross tools do exist -- but because ELF
-images are strongly bound to their target platform, running the image
-takes precedence over the simplicity of the tools: so the images are
-specified in such a way that they can always be host-endian for the
-machine they run on, without creating format ambiguities.
+I agree that one binding may not make sense, but perhaps we could have 
+something like:
 
-Of course, it's stretching things rather a lot to claim that fdt
-parsing is performance critical ... or that ELF cross tools work well
-in all host/target combinations ... rather it's a niggle.
+    dts-bindings/
+    |-- mpic.txt
+    |-- fsl
+        |-- mpic.txt
 
-So, I'm happy as-is.  It was just tempting to rock the boat a bit to
-make sure everyone has their sea legs :)
+where '.../fsl/mpic.txt' only documents the overrides (and maybe refers 
+to '.../mpic.txt' in the intro).  For example, the 
+'interrupt-controller', '#address-cells', and 'reg' properties are 
+really not that different between the two bindings and could be placed 
+just in '.../mpic.txt'.  Where as the specific interrupt specifier 
+definition and the overrides for 'compatible' and '#interrupt-cells' 
+could go in .../fsl/mpic.txt'.
 
-Cheers
----Dave
+> Since Freescale had the need to represent additional information
+> in interrupt specifiers (error ints, timers, ipis), the suggestion
+> at the end was to add additional cells in a FSL-specific binding.
+> So this really is a Freescale specific thing and does belong in the
+> Freescale binding directory.
+
+Agreed.
+
+> That being said, if there is consensus on the AMP related properties,
+> I should probably incorporate those as well-- protected-sources
+> and no-reset.
+>
+> I'll separately comment on your mpic binding patch.
+
+Great, thanks.
+
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
