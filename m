@@ -1,35 +1,29 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: Re: [PATCH v3] spi: New driver for Altera SPI
-Date: Wed, 19 Jan 2011 09:36:13 +0800
-Message-ID: <4D36400D.6000202@wytron.com.tw>
-References: <AANLkTi=D4Rcxbei2oo+EHc6X1O-2Oo+VWHAasK_JLj5W@mail.gmail.com>
-	<1295247869-4968-1-git-send-email-thomas@wytron.com.tw>
-	<4D33EF7C.7030005@writeme.com>
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: Re: Antw:Re: [PATCH] alter_ps2: Add devicetree support
+Date: Wed, 19 Jan 2011 10:10:38 +0800
+Message-ID: <4D36481E.2090708@wytron.com.tw>
+References: <72c0b97741a709.4d35bf01@home.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D33EF7C.7030005-w0xpxkV3uqlBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sinan Akman <sinan-w0xpxkV3uqlBDgjK7y7TUQ@public.gmane.org>
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <72c0b97741a709.4d35bf01@home.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "W.A. GOOSSENS" <waltergoossens@home.nl>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2011 03:27 PM, Sinan Akman wrote:
->> + if (hw->irq >= 0) {
->> + init_completion(&hw->done);
->
-> I think you init this twice, once in altera_spi_probe
-> below as well.
+Hi Walter,
 
-I will remove this one, too. Thank you again.
+On 01/18/2011 11:25 PM, W.A. GOOSSENS wrote:
+> I can however create a "fallback" rule were unkown components are just
+> added with the names the sopcinfo file, but that should not be the
+> default in my opinion since this will very effectively polute the
+> namespace in an uncontrolable way.
 
-- Thomas
+Great! Do you have proposed name with version for ps2, altera_spi and 
+oc_tiny_spi? Then I can work on driver update. I guess we should ground 
+the version with "1.0" in driver match table.
+
+Cheers,
+Thomas
