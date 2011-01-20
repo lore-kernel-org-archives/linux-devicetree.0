@@ -1,86 +1,78 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: RFC: Host-endian device tree format
-Date: Thu, 20 Jan 2011 09:28:08 +0000
-Message-ID: <AANLkTi=EmCaTJ6esSZvJDe2-Z-GR8OvvBQ7k1_Qz7qMj@mail.gmail.com>
-References: <AANLkTi=AdwaW5vvm1TzNxcNrjYiJ3dOEjwoZrm-koxuw@mail.gmail.com>
-	<AANLkTikoZj1WSpE8QNSRiF3oFL4qAb68kNnCKdExvBz7@mail.gmail.com>
-	<AANLkTi=xdJ_c3LvCFkeqBRNDf6TSC40Fjxihm9eSeMmf@mail.gmail.com>
-	<alpine.LFD.2.00.1101191031481.8580@xanadu.home>
-	<AANLkTi==KLWXAv79u32ioQ9eSr7JEii7fW93WPPNdAez@mail.gmail.com>
-	<AANLkTim7F8PBd_4zmQY7717N7CoiGvvyX473CL=6qCaj@mail.gmail.com>
-	<20110119234755.GA20128@yookeroo>
+From: Yoder Stuart-B08248 <B08248@freescale.com>
+Subject: RE: [PATCH 1/2] powerpc: document the MPIC device tree binding
+Date: Thu, 20 Jan 2011 15:50:47 +0000
+Message-ID: <9F6FE96B71CF29479FF1CDC8046E150307A5C8@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <4D34E448.8000902@mentor.com>
+	<AANLkTi=QX4BfLvPfQDMOgmh90TtX4MQqio6AOZR8JKas@mail.gmail.com>
+	<9F6FE96B71CF29479FF1CDC8046E150306BF11@039-SN1MPN1-004.039d.mgd.msft.net>
+	<4D377CE3.6000608@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110119234755.GA20128@yookeroo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4D377CE3.6000608@mentor.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Meador Inge <meador_inge@mentor.com>
+Cc: "Blanchard, Hollis" <Hollis_Blanchard@mentor.com>, Wood Scott-B07421 <B07421@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 19, 2011 at 11:47 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Wed, Jan 19, 2011 at 04:09:39PM +0000, Dave Martin wrote:
->> On Wed, Jan 19, 2011 at 3:52 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org=
-> wrote:
->> > On Wed, Jan 19, 2011 at 8:41 AM, Nicolas Pitre <nicolas.pitre@linaro.o=
-rg> wrote:
->> >> On Wed, 19 Jan 2011, Dave Martin wrote:
->> >>> On Wed, Jan 19, 2011 at 1:41 PM, Grant Likely <grant.likely@secretla=
-b.ca> wrote:
->> >>> > The dtb isn't so much bigendian as it is network byte order.
->> >>>
->> >>> (For me, "network byte order" is a euphemism ... <insert
->> >>> unconstructive rant here>)
->> >>
->> >> I concur.
->> >
->> > meh. it's all about conventions. =A0When talking about external data, =
-it
->> > is far more important for everyone to agree on the same representation
->> > than it is to tailor to each platforms preferences. =A0That said, rant
->> > away! =A0I love a good tangent.
->>
->> I guess a good example of what I mean is ELF - the endianness of an
->> ELF image is discoverable, and cross tools do exist -- but because ELF
->> images are strongly bound to their target platform, running the image
->> takes precedence over the simplicity of the tools: so the images are
->> specified in such a way that they can always be host-endian for the
->> machine they run on, without creating format ambiguities.
->
-> Yes, there's no technical impediment to making a little-endian dtb
-> format. =A0In fact dtc and libfdt were written with this possibility in
-> mind, to the extent that there are hooks / functions in the right
-> places to make this reasonably straightforward.
->
-> The fact that there are actually two questions here - the endianness
-> of the framing dtb format, and the endianness of the property values
-> themselves complicates the issue.
->
->> Of course, it's stretching things rather a lot to claim that fdt
->> parsing is performance critical ... or that ELF cross tools work well
->> in all host/target combinations ... rather it's a niggle.
->
-> But, there is just no point in creating a variant format. =A0The
-> performance cost is completely negligible (even using the rather
-> stupid conversion macros from libfdt which gcc generates horrible code
-> for).
->
-> The simplicity of having only one variant for tools to deal with wins,
-> no contest.
 
-All good arguments, everyone-- thanks for the background.
 
-Like I said, I'm happy for things to stay the way they are.
+> -----Original Message-----
+> From: Meador Inge [mailto:meador_inge@mentor.com]
+> Sent: Wednesday, January 19, 2011 6:08 PM
+> To: Yoder Stuart-B08248
+> Cc: Wood Scott-B07421; linuxppc-dev@lists.ozlabs.org; devicetree-
+> discuss@lists.ozlabs.org; Blanchard, Hollis
+> Subject: Re: [PATCH 1/2] powerpc: document the MPIC device tree binding
+> 
+> On 01/19/2011 04:14 PM, Yoder Stuart-B08248 wrote:
+> >
+> >> +** Optional properties:
+> >> +
+> >> +   - no-reset : The presence of this property indicates that the MPIC
+> >> +                should not be reset during runtime initialization.
+> >> +   - protected-sources : Specifies a list of interrupt sources that
+> >> + are not
+> >> +                         available for use and whose corresponding
+> >> + vectors
+> >> +                         should not be initialized.  A typical use
+> >> + case for
+> >> +                         this property is in AMP systems where multiple
+> >> +                         independent operating systems need to share
+> >> + the MPIC
+> >> +                         without clobbering each other.
+> >
+> > Is "protected-sources" really needed for AMP systems to tell the OSes
+> > not to clobber each other?  Won't each OS be given a device tree with
+> > only its interrupt sources?  ...so you know what you are allowed to
+> > touch.
+> 
+> This was discussed a little bit already [1, 2].  The MPIC driver currently
+> initializes the VECPRI register for all interrupt sources, which can lead
+> to the aforementioned clobbering.
 
-Cheers
----Dave
+For sources that are protected and not to be touched, it seems
+that the other need is for the OS to know (be guaranteed?) that
+those sources have been put in state where the source is masked
+or directed to other cores.   You can't have interrupts occurring
+on sources that you are not allowed to initialize.
+
+So the "no-reset" property could potentially cover this as well-- if it was
+defined to mean "don't reset the mpic" and boot firmware has put all sources
+in a sane initial state.   And we wouldn't need the "protected-sources"
+property any longer.
+
+Stuart
+
+
+Right...so it would seem that the no-reset property if prop
