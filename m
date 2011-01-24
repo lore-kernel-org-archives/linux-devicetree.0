@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH TIP 11/14] x86/ce4100: use OF for ioapic
-Date: Mon, 24 Jan 2011 09:58:59 +0530
-Message-ID: <1295843342-1122-12-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH OF 12/14] x86/rtc: don't register rtc if we the DT blob
+Date: Mon, 24 Jan 2011 09:59:00 +0530
+Message-ID: <1295843342-1122-13-git-send-email-bigeasy@linutronix.de>
 References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,74 +18,67 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-and hpet and a few others things....
+or we might end up with two device nodes for the same hardware.
 
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 ---
- arch/x86/platform/ce4100/ce4100.c |   24 +++++++++++++++++-------
- 1 files changed, 17 insertions(+), 7 deletions(-)
+ arch/x86/kernel/rtc.c |    3 +++
+ include/linux/of.h    |   12 ++++++++++++
+ 2 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/platform/ce4100/ce4100.c b/arch/x86/platform/ce4100/ce4100.c
-index d2c0d51..7877453 100644
---- a/arch/x86/platform/ce4100/ce4100.c
-+++ b/arch/x86/platform/ce4100/ce4100.c
-@@ -15,21 +15,19 @@
- #include <linux/serial_reg.h>
- #include <linux/serial_8250.h>
+diff --git a/arch/x86/kernel/rtc.c b/arch/x86/kernel/rtc.c
+index 6f39cab..3f2ad26 100644
+--- a/arch/x86/kernel/rtc.c
++++ b/arch/x86/kernel/rtc.c
+@@ -6,6 +6,7 @@
+ #include <linux/acpi.h>
+ #include <linux/bcd.h>
+ #include <linux/pnp.h>
++#include <linux/of.h>
  
-+#include <asm/prom.h>
- #include <asm/setup.h>
-+#include <asm/i8259.h>
- #include <asm/io.h>
-+#include <asm/io_apic.h>
+ #include <asm/vsyscall.h>
+ #include <asm/x86_init.h>
+@@ -236,6 +237,8 @@ static __init int add_rtc_cmos(void)
+ 		}
+ 	}
+ #endif
++	if (of_have_populated_dt())
++		return 0;
  
- static int ce4100_i8042_detect(void)
- {
- 	return 0;
- }
+ 	platform_device_register(&rtc_device);
+ 	dev_info(&rtc_device.dev,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index cad7cf0..016968d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -70,6 +70,11 @@ extern struct device_node *allnodes;
+ extern struct device_node *of_chosen;
+ extern rwlock_t devtree_lock;
  
--static void __init sdv_find_smp_config(void)
--{
--}
--
- #ifdef CONFIG_SERIAL_8250
- 
--
- static unsigned int mem_serial_in(struct uart_port *p, int offset)
- {
- 	offset = offset << p->regshift;
-@@ -118,6 +116,13 @@ static void __init sdv_arch_setup(void)
- 	sdv_serial_fixup();
- }
- 
-+static void __cpuinit sdv_pci_init(void)
++static inline int of_have_populated_dt(void)
 +{
-+	x86_of_pci_init();
-+	/* We can't set this earlier, because we need calibrate the timer */
-+	legacy_pic = &null_legacy_pic;
++	return allnodes != NULL;
 +}
 +
- /*
-  * CE4100 specific x86_init function overrides and early setup
-  * calls.
-@@ -127,6 +132,11 @@ void __init x86_ce4100_early_setup(void)
- 	x86_init.oem.arch_setup = sdv_arch_setup;
- 	x86_platform.i8042_detect = ce4100_i8042_detect;
- 	x86_init.resources.probe_roms = x86_init_noop;
--	x86_init.mpparse.get_smp_config = x86_init_uint_noop;
--	x86_init.mpparse.find_smp_config = sdv_find_smp_config;
-+	x86_init.mpparse.get_smp_config = x86_dtb_get_config;
-+	x86_init.mpparse.find_smp_config = x86_dtb_find_config;
+ static inline bool of_node_is_root(const struct device_node *node)
+ {
+ 	return node && (node->parent == NULL);
+@@ -222,5 +227,12 @@ extern void of_attach_node(struct device_node *);
+ extern void of_detach_node(struct device_node *);
+ #endif
+ 
++#else
 +
-+#ifdef CONFIG_X86_IO_APIC
-+	x86_init.pci.init_irq = sdv_pci_init;
-+	x86_init.mpparse.setup_ioapic_ids = setup_ioapic_ids_from_mpc_nocheck;
-+#endif
- }
++static inline int of_have_populated_dt(void)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_OF */
+ #endif /* _LINUX_OF_H */
 -- 
 1.7.3.2
