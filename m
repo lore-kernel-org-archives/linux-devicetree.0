@@ -1,70 +1,60 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH 4/4 v4] powerpc, video: add SM501 support for charon board.
-Date: Mon, 24 Jan 2011 10:57:48 +0100
-Message-ID: <1295863068-11205-1-git-send-email-hs@denx.de>
-References: <1291451028-22532-2-git-send-email-hs@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1291451028-22532-2-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Heiko Schocher <hs@denx.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org
+From: Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+Subject: Re: [PATCH v2] spi: add OpenCores tiny SPI driver
+Date: Mon, 24 Jan 2011 11:59:54 +0100
+Message-ID: <1295866794.23825.100.camel@needafix>
+References: <1294800109-31603-1-git-send-email-thomas@wytron.com.tw>
+	<1295249542-26743-1-git-send-email-thomas@wytron.com.tw>
+	<20110120165430.GA24445@angua.secretlab.ca>
+	<4D38AAEB.7020308@wytron.com.tw> <1295612849.23825.26.camel@needafix>
+	<4D3CD38D.4080808@wytron.com.tw>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <4D3CD38D.4080808-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
-cc: linux-fbdev@vger.kernel.org
-cc: devicetree-discuss@ozlabs.org
-cc: Ben Dooks <ben@simtec.co.uk>
-cc: Vincent Sanders <vince@simtec.co.uk>
-cc: Samuel Ortiz <sameo@linux.intel.com>
-cc: linux-kernel@vger.kernel.org
+Hi Thomas,
 
----
-- changes since v1:
-  - no board specific defconfig file for mpc52xx based boards as suggested
-    from Wolfram Sang
+> > Versioning of OpenCores cores is not sorted yet.  In order to avoid
+> > clashing with the versioning/naming scheme that's decided on, please
+> > just use a neutral version number for now (especially as your core is so
+> > new).  e.g. "opencores,tiny-spi-0"
+> >
+> 
+> Thanks. I will update it to "opencores,tiny-spi-1.0".
+> 
 
-- changes since v2:
-  add Ben Dooks, Vincent Sanders and Samuel Ortiz and lkml to cc, as
-  suggested from Paul Mundt.
+We've discussed this a bit internally now and decided that the best way
+to version OpenCores cores is to use the SVN commit ID of the rtl/
+directory in the project's repository.  So, for your tiny-spi project,
+the last SVN commit to update the rtl/ directory was commit number 2;
+hence, I'd recommend you use the following device tree identifier:
 
-- changes since v3:
-  - rebased against v2.6.38-rc2
+opencores,tiny-spi-rtlsvn2
 
-./scripts/checkpatch.pl 0004-powerpc-video-add-SM501-support-for-charon-board.patch
-total: 0 errors, 0 warnings, 22 lines checked
+That's:  opencores,<project>-rtl<VCS><commit ID>
 
-0004-powerpc-video-add-SM501-support-for-charon-board.patch has no obvious style problems and is ready for submission.
+As projects are currently in SVN, VCS=svn.
 
- arch/powerpc/boot/dts/charon.dts |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+Linux drivers for other OpenCores cores will be updated accordingly.
 
-diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
-index 9776889..0e00e50 100644
---- a/arch/powerpc/boot/dts/charon.dts
-+++ b/arch/powerpc/boot/dts/charon.dts
-@@ -186,6 +186,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <1>;
- 		ranges = <	0 0 0xfc000000 0x02000000
-+				1 0 0xe0000000 0x04000000 // CS1 range, SM501
- 				3 0 0xe8000000 0x00080000>;
- 
- 		flash@0,0 {
-@@ -197,6 +198,15 @@
- 			#address-cells = <1>;
- 		};
- 
-+		display@1,0 {
-+			compatible = "smi,sm501";
-+			reg = <1 0x00000000 0x00800000
-+			       1 0x03e00000 0x00200000>;
-+			mode = "640x480-32@60";
-+			interrupts = <1 1 3>;
-+			little-endian;
-+		};
-+
- 		mram0@3,0 {
- 			compatible = "mtd-ram";
- 			reg = <3 0x00000 0x80000>;
--- 
-1.7.3.4
+/Jonas
+
+
+------------------------------------------------------------------------------
+Special Offer-- Download ArcSight Logger for FREE (a $49 USD value)!
+Finally, a world-class log management solution at an even better price-free!
+Download using promo code Free_Logger_4_Dev2Dev. Offer expires 
+February 28th, so secure your free ArcSight Logger TODAY! 
+http://p.sf.net/sfu/arcsight-sfd2d
