@@ -1,48 +1,73 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH OF 13/14] rtc/cmos: add OF bindings
-Date: Mon, 24 Jan 2011 10:08:12 +0530
-Message-ID: <20110124043812.GB20274@www.tglx.de>
-References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
-	<1295843342-1122-14-git-send-email-bigeasy@linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1295843342-1122-14-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: [PATCH v2] altera_ps2: Add devicetree support
+Date: Mon, 24 Jan 2011 13:58:13 +0800
+Message-ID: <1295848693-28472-1-git-send-email-thomas@wytron.com.tw>
+References: <20110117220415.GB17963@angua.secretlab.ca>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20110117220415.GB17963@angua.secretlab.ca>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Walter Goossens <waltergoossens@home.nl>, Thomas Chou <thomas@wytron.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Andrzej Siewior | 2011-01-24 09:59:01 [+0530]:
+From: Walter Goossens <waltergoossens@home.nl>
 
->diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
->index c7ff8df..2709e00 100644
->--- a/drivers/rtc/rtc-cmos.c
->+++ b/drivers/rtc/rtc-cmos.c
->@@ -1123,6 +1125,46 @@ static struct pnp_driver cmos_pnp_driver = {
-> 
-> #endif	/* CONFIG_PNP */
-> 
->+#ifdef CONFIG_OF
->+static const struct of_device_id of_cmos_match[] = {
->+	{
->+		.compatible = "motorola,mc146818",
->+	},
->+	{ },
->+};
+Signed-off-by: Walter Goossens <waltergoossens@home.nl>
+Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
+---
+v2 use const and add compat version.
 
-Andreas, this is the compatible string I'm using. Could you please tell
-me what is OLPC using? So maybe we could stick to the same compatible
-string.
+ drivers/input/serio/altera_ps2.c |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
 
-Sebastian
+diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
+index 7998560..63325ee 100644
+--- a/drivers/input/serio/altera_ps2.c
++++ b/drivers/input/serio/altera_ps2.c
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
+ 
+ #define DRV_NAME "altera_ps2"
+ 
+@@ -173,6 +174,12 @@ static int __devexit altera_ps2_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id altera_ps2_match[] = {
++	{ .compatible = "altr,ps2-1.0", },
++	{},
++}
++MODULE_DEVICE_TABLE(of, altera_ps2_match);
++
+ /*
+  * Our device driver structure
+  */
+@@ -182,6 +189,7 @@ static struct platform_driver altera_ps2_driver = {
+ 	.driver	= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = altera_ps2_match,
+ 	},
+ };
+ 
+@@ -189,13 +197,12 @@ static int __init altera_ps2_init(void)
+ {
+ 	return platform_driver_register(&altera_ps2_driver);
+ }
++module_init(altera_ps2_init);
+ 
+ static void __exit altera_ps2_exit(void)
+ {
+ 	platform_driver_unregister(&altera_ps2_driver);
+ }
+-
+-module_init(altera_ps2_init);
+ module_exit(altera_ps2_exit);
+ 
+ MODULE_DESCRIPTION("Altera University Program PS2 controller driver");
+-- 
+1.7.3.4
+
