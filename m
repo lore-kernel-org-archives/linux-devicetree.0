@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH OF 13/14] rtc/cmos: add OF bindings
-Date: Mon, 24 Jan 2011 09:59:01 +0530
-Message-ID: <1295843342-1122-14-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH TIP 14/14] x86/pci: remove warning
+Date: Mon, 24 Jan 2011 09:59:02 +0530
+Message-ID: <1295843342-1122-15-git-send-email-bigeasy@linutronix.de>
 References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,137 +18,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This allows to load the OF driver based informations from the device
-tree. Systems without BIOS may need to perform some initialization.
-PowerPC creates a PNP device from the OF information and performs this
-kind of initialization in their private PCI quirk. This looks more
-generic.
+|arch/x86/pci/ce4100.c: In function `ce4100_conf_read':
+|arch/x86/pci/ce4100.c:257:9: warning: unused variable `retval'
 
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++
- drivers/rtc/rtc-cmos.c                          |   46 +++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
+ arch/x86/pci/ce4100.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-new file mode 100644
-index 0000000..7382989
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-@@ -0,0 +1,28 @@
-+ Motorola mc146818 compatible RTC
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Required properties:
-+  - compatible : "motorola,mc146818"
-+  - reg : should contain registers location and length.
-+
-+Optional properties:
-+  - interrupts : should contain interrupt.
-+  - interrupt-parent : interrupt source phandle.
-+  - ctrl-reg : Contains the initial value of the control register also
-+    called "Register B".
-+  - freq-reg : Contains the initial value of the frequency register also
-+    called "Regsiter A".
-+
-+"Register A" and "B" are usually initialized by the firmware (BIOS for
-+instance). If this is not done, it can be performed by the driver.
-+
-+ISA Example:
-+
-+	rtc@70 {
-+	         compatible = "motorola,mc146818";
-+	         interrupts = <8 3>;
-+	         interrupt-parent = <&ioapic1>;
-+	         ctrl-reg = <2>;
-+	         freq-reg = <0x26>;
-+	         reg = <1 0x70 2>;
-+	 };
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index c7ff8df..2709e00 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -37,6 +37,8 @@
- #include <linux/mod_devicetable.h>
- #include <linux/log2.h>
- #include <linux/pm.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- 
- /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
- #include <asm-generic/rtc.h>
-@@ -1123,6 +1125,46 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- #endif	/* CONFIG_PNP */
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_cmos_match[] = {
-+	{
-+		.compatible = "motorola,mc146818",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_cmos_match);
-+
-+static __init void cmos_of_init(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct rtc_time time;
-+	int ret;
-+	const __be32 *val;
-+
-+	if (!node)
-+		return;
-+
-+	val = of_get_property(node, "ctrl-reg", NULL);
-+	if (val)
-+		CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
-+
-+	val = of_get_property(node, "freq-reg", NULL);
-+	if (val)
-+		CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
-+
-+	get_rtc_time(&time);
-+	ret = rtc_valid_tm(&time);
-+	if (ret) {
-+		struct rtc_time def_time = {
-+			.tm_year = 1,
-+			.tm_mday = 1,
-+		};
-+		set_rtc_time(&def_time);
-+	}
-+}
-+#else
-+static inline void cmos_of_init(struct platform_device *pdev) {}
-+#endif
- /*----------------------------------------------------------------*/
- 
- /* Platform setup should have set up an RTC device, when PNP is
-@@ -1131,6 +1173,7 @@ static struct pnp_driver cmos_pnp_driver = {
- 
- static int __init cmos_platform_probe(struct platform_device *pdev)
+diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
+index 85b68ef..c63c6d3 100644
+--- a/arch/x86/pci/ce4100.c
++++ b/arch/x86/pci/ce4100.c
+@@ -254,7 +254,7 @@ int bridge_read(unsigned int devfn, int reg, int len, u32 *value)
+ static int ce4100_conf_read(unsigned int seg, unsigned int bus,
+ 			    unsigned int devfn, int reg, int len, u32 *value)
  {
-+	cmos_of_init(pdev);
- 	cmos_wake_setup(&pdev->dev);
- 	return cmos_do_probe(&pdev->dev,
- 			platform_get_resource(pdev, IORESOURCE_IO, 0),
-@@ -1162,6 +1205,9 @@ static struct platform_driver cmos_platform_driver = {
- #ifdef CONFIG_PM
- 		.pm		= &cmos_pm_ops,
- #endif
-+#if defined(CONFIG_OF)
-+		.of_match_table = of_cmos_match,
-+#endif
- 	}
- };
+-	int i, retval = 1;
++	int i;
  
+ 	if (bus == 1) {
+ 		for (i = 0; i < ARRAY_SIZE(bus1_fixups); i++) {
 -- 
 1.7.3.2
