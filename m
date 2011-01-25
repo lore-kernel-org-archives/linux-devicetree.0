@@ -1,16 +1,16 @@
 From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 3/4 v4] video, sm501: add OF binding to support SM501
-Date: Tue, 25 Jan 2011 09:02:15 +0100
-Message-ID: <4D3E8387.10501@denx.de>
+Subject: Re: [PATCH 2/4 v4] video, sm501: add edid and commandline support
+Date: Tue, 25 Jan 2011 09:04:51 +0100
+Message-ID: <4D3E8423.1090106@denx.de>
 References: <1291451028-22532-1-git-send-email-hs@denx.de>
-	<1295940031-28268-1-git-send-email-hs@denx.de>
-	<20110125074820.GI11673@linux-sh.org>
+	<1295863047-11131-1-git-send-email-hs@denx.de>
+	<20110125075104.GJ11673@linux-sh.org>
 Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20110125074820.GI11673-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>
+In-reply-to: <20110125075104.GJ11673-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,66 +27,24 @@ List-Id: devicetree@vger.kernel.org
 Hello Paul,
 
 Paul Mundt wrote:
-> On Tue, Jan 25, 2011 at 08:20:31AM +0100, Heiko Schocher wrote:
->> @@ -1934,7 +1943,29 @@ static int __devinit sm501fb_probe(struct platform_device *pdev)
->>  	}
+> On Mon, Jan 24, 2011 at 10:57:27AM +0100, Heiko Schocher wrote:
+>> @@ -1884,7 +1935,6 @@ static int __devinit sm501fb_probe(struct platform_device *pdev)
 >>  
 >>  	if (info->pdata == NULL) {
->> -		dev_info(dev, "using default configuration data\n");
->> +		int found = 0;
->> +#if defined(CONFIG_OF)
->> +		struct device_node *np = pdev->dev.parent->of_node;
->> +		const u8 *prop;
->> +		const char *cp;
->> +		int len;
->> +
->> +		info->pdata = &sm501fb_def_pdata;
->> +		if (np) {
->> +			/* Get EDID */
->> +			cp = of_get_property(np, "mode", &len);
->> +			if (cp)
->> +				strcpy(fb_mode, cp);
->> +			prop = of_get_property(np, "edid", &len);
->> +			if (prop && len == EDID_LENGTH) {
->> +				info->edid_data = kmemdup(prop, EDID_LENGTH,
->> +							  GFP_KERNEL);
->> +				found = 1;
->> +			}
->> +		}
->> +#endif
->> +		if (!found)
->> +			dev_info(dev, "using default configuration data\n");
+>>  		dev_info(dev, "using default configuration data\n");
+>> -		info->pdata = &sm501fb_def_pdata;
 >>  	}
 >>  
 >>  	/* probe for the presence of each panel */
 > 
-> Starting to get a bit pedantic.. but kmemdup() tries to do a kmalloc(),
+> I assume this is accidental? I don't see how you're compensating for this
+> in any of the other patches at least, as it's orthogonal from the default
+> mode settings.
 
-No problem!
-
-> and so can fail. Your other patches handle the info->edid_data == NULL
-> case, in addition to the kfree(), but you're probably going to want to
-> chomp that found assignment incase of the allocation failing and falling
-> back on the default mode.
-> 
-> You also don't really have any need to keep the EDID block around after
-> probe as far as I can tell, so you should be able to rework this in to
-> something more like:
-> 
-> 	info->edid_data = kmemdup(..);
-> 	...
-> 	if (info->edid_data) {
-> 		fb_edid_to_monspecs(..);
-> 		kfree(info->edid_data);
-> 		fb_videomode_to_modelist(..);
-> 	}
-> 
-> 	...
-
-Ok, rework this part, thanks!
+Seems so, rework this too, thanks!
 
 bye,
-Heiko
+heiko
 -- 
 DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
 HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
