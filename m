@@ -1,78 +1,55 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] smc91x: add devicetree support
-Date: Mon, 24 Jan 2011 23:24:16 -0700
-Message-ID: <AANLkTikgsqJqdW2qh7h4yATCmGFb5MkHCosma_DOBq-Y@mail.gmail.com>
-References: <1295935170-19518-1-git-send-email-thomas@wytron.com.tw>
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [PATCH 3/4 v4] video, sm501: add OF binding to support SM501
+Date: Tue, 25 Jan 2011 15:38:35 +0900
+Message-ID: <20110125063834.GE11673@linux-sh.org>
+References: <1291451028-22532-1-git-send-email-hs@denx.de> <1295863058-11168-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1295935170-19518-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1295863058-11168-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 24, 2011 at 10:59 PM, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org> wrote:
-> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> ---
->  drivers/net/smc91x.c |   10 ++++++++++
->  1 files changed, 10 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/net/smc91x.c b/drivers/net/smc91x.c
-> index 726df61..d29e18d 100644
-> --- a/drivers/net/smc91x.c
-> +++ b/drivers/net/smc91x.c
-> @@ -81,6 +81,7 @@ static const char version[] =
->  #include <linux/ethtool.h>
->  #include <linux/mii.h>
->  #include <linux/workqueue.h>
-> +#include <linux/of.h>
->
->  #include <linux/netdevice.h>
->  #include <linux/etherdevice.h>
-> @@ -2394,6 +2395,12 @@ static int smc_drv_resume(struct device *dev)
->        return 0;
->  }
->
-> +static const struct of_device_id smc91x_match[] = {
-> +       { .compatible = "smsc,smc91x", },
+On Mon, Jan 24, 2011 at 10:57:38AM +0100, Heiko Schocher wrote:
+> - changes since v1:
+>   add Ben Dooks, Vincent Sanders and Samuel Ortiz to cc, as suggested from
+>   Paul Mundt.
+> - changes since v2:
+>   add comments from Randy Dunlap:
+>   - move parameter documentation to Documentation/fb/sm501.txt
+> - changes since v3:
+>   - rebased against v2.6.38-rc2
+>   - split in 3 patches
+>     - of support patch
+>       - get rid of "#if defined(CONFIG_PPC_MPC52xx)" usage
+>         hide this in DTS, as Paul suggested.
+>     - i/o routine patch
+>     - edid support patch
+> 
+[snip]
 
-Be specific.  What *exact* smsc device are you adding support for?
-Wildcards like smc91x tend to cause problems in the future.
-
-> +       {},
-> +}
-> +MODULE_DEVICE_TABLE(of, smc91x_match);
-> +
->  static struct dev_pm_ops smc_drv_pm_ops = {
->        .suspend        = smc_drv_suspend,
->        .resume         = smc_drv_resume,
-> @@ -2406,6 +2413,9 @@ static struct platform_driver smc_driver = {
->                .name   = CARDNAME,
->                .owner  = THIS_MODULE,
->                .pm     = &smc_drv_pm_ops,
-> +#ifdef CONFIG_OF
-> +               .of_match_table = smc91x_match,
+> diff --git a/drivers/video/sm501fb.c b/drivers/video/sm501fb.c
+> index 30b53ae..2ae57aa 100644
+> --- a/drivers/video/sm501fb.c
+> +++ b/drivers/video/sm501fb.c
+> @@ -1729,6 +1729,15 @@ static int sm501fb_init_fb(struct fb_info *fb,
+>  		FBINFO_HWACCEL_COPYAREA | FBINFO_HWACCEL_FILLRECT |
+>  		FBINFO_HWACCEL_XPAN | FBINFO_HWACCEL_YPAN;
+>  
+> +#if defined(CONFIG_PPC_MPC52xx)
+> +#ifdef __BIG_ENDIAN
+> +	if (of_get_property(info->dev->parent->of_node, "little-endian", NULL))
+> +		fb->flags |= FBINFO_FOREIGN_ENDIAN;
+> +#else
+> +	if (of_get_property(info->dev->parent->of_node, "big-endian", NULL))
+> +		fb->flags |= FBINFO_FOREIGN_ENDIAN;
 > +#endif
->        },
->  };
->
-> --
-> 1.7.3.5
->
->
+> +#endif
+>  	/* fixed data */
+>  
+>  	fb->fix.type		= FB_TYPE_PACKED_PIXELS;
 
-
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Missed one?
