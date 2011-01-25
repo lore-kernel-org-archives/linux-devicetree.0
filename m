@@ -1,55 +1,85 @@
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [PATCH 3/4 v4] video, sm501: add OF binding to support SM501
-Date: Tue, 25 Jan 2011 15:38:35 +0900
-Message-ID: <20110125063834.GE11673@linux-sh.org>
-References: <1291451028-22532-1-git-send-email-hs@denx.de> <1295863058-11168-1-git-send-email-hs@denx.de>
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH 4/4 v5] powerpc, video: add SM501 support for charon board.
+Date: Tue, 25 Jan 2011 07:45:46 +0100
+Message-ID: <1295937946-26934-1-git-send-email-hs@denx.de>
+References: <1291451028-22532-2-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1295863058-11168-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1291451028-22532-2-git-send-email-hs@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Vincent Sanders <vince@simtec.co.uk>, linux-kernel@vger.kernel.org, Ben Dooks <ben@simtec.co.uk>, Paul Mundt <lethal@linux-sh.org>, Heiko Schocher <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 24, 2011 at 10:57:38AM +0100, Heiko Schocher wrote:
-> - changes since v1:
->   add Ben Dooks, Vincent Sanders and Samuel Ortiz to cc, as suggested from
->   Paul Mundt.
-> - changes since v2:
->   add comments from Randy Dunlap:
->   - move parameter documentation to Documentation/fb/sm501.txt
-> - changes since v3:
->   - rebased against v2.6.38-rc2
->   - split in 3 patches
->     - of support patch
->       - get rid of "#if defined(CONFIG_PPC_MPC52xx)" usage
->         hide this in DTS, as Paul suggested.
->     - i/o routine patch
->     - edid support patch
-> 
-[snip]
+Signed-off-by: Heiko Schocher <hs@denx.de>
+cc: linux-fbdev@vger.kernel.org
+cc: devicetree-discuss@ozlabs.org
+cc: Ben Dooks <ben@simtec.co.uk>
+cc: Vincent Sanders <vince@simtec.co.uk>
+cc: Samuel Ortiz <sameo@linux.intel.com>
+cc: linux-kernel@vger.kernel.org
+cc: Paul Mundt <lethal@linux-sh.org>
 
-> diff --git a/drivers/video/sm501fb.c b/drivers/video/sm501fb.c
-> index 30b53ae..2ae57aa 100644
-> --- a/drivers/video/sm501fb.c
-> +++ b/drivers/video/sm501fb.c
-> @@ -1729,6 +1729,15 @@ static int sm501fb_init_fb(struct fb_info *fb,
->  		FBINFO_HWACCEL_COPYAREA | FBINFO_HWACCEL_FILLRECT |
->  		FBINFO_HWACCEL_XPAN | FBINFO_HWACCEL_YPAN;
->  
-> +#if defined(CONFIG_PPC_MPC52xx)
-> +#ifdef __BIG_ENDIAN
-> +	if (of_get_property(info->dev->parent->of_node, "little-endian", NULL))
-> +		fb->flags |= FBINFO_FOREIGN_ENDIAN;
-> +#else
-> +	if (of_get_property(info->dev->parent->of_node, "big-endian", NULL))
-> +		fb->flags |= FBINFO_FOREIGN_ENDIAN;
-> +#endif
-> +#endif
->  	/* fixed data */
->  
->  	fb->fix.type		= FB_TYPE_PACKED_PIXELS;
+---
+- changes since v1:
+  - no board specific defconfig file for mpc52xx based boards as suggested
+    from Wolfram Sang
 
-Missed one?
+- changes since v2:
+  add Ben Dooks, Vincent Sanders and Samuel Ortiz and lkml to cc, as
+  suggested from Paul Mundt.
+
+- changes since v3:
+  - rebased against v2.6.38-rc2
+
+- changes since v4:
+  - added Paul Mundt to cc (Sorry forgot this in series v4)
+
+./scripts/checkpatch.pl 0004-powerpc-video-add-SM501-support-for-charon-board.patch
+total: 0 errors, 0 warnings, 22 lines checked
+
+0004-powerpc-video-add-SM501-support-for-charon-board.patch has no obvious style problems and is ready for submission.
+
+ arch/powerpc/boot/dts/charon.dts |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
+index 9776889..0e00e50 100644
+--- a/arch/powerpc/boot/dts/charon.dts
++++ b/arch/powerpc/boot/dts/charon.dts
+@@ -186,6 +186,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+ 		ranges = <	0 0 0xfc000000 0x02000000
++				1 0 0xe0000000 0x04000000 // CS1 range, SM501
+ 				3 0 0xe8000000 0x00080000>;
+ 
+ 		flash@0,0 {
+@@ -197,6 +198,15 @@
+ 			#address-cells = <1>;
+ 		};
+ 
++		display@1,0 {
++			compatible = "smi,sm501";
++			reg = <1 0x00000000 0x00800000
++			       1 0x03e00000 0x00200000>;
++			mode = "640x480-32@60";
++			interrupts = <1 1 3>;
++			little-endian;
++		};
++
+ 		mram0@3,0 {
+ 			compatible = "mtd-ram";
+ 			reg = <3 0x00000 0x80000>;
+-- 
+1.7.3.4
