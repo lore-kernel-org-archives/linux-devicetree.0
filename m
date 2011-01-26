@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC PATCH 3/5] of: add clock providers
-Date: Tue, 25 Jan 2011 21:44:17 -0700
-Message-ID: <20110126044416.16410.68942.stgit@localhost6.localdomain6>
+Subject: [RFC PATCH 5/5] arm/versatile: add a device tree versatile platform
+Date: Tue, 25 Jan 2011 21:44:27 -0700
+Message-ID: <20110126044427.16410.89126.stgit@localhost6.localdomain6>
 References: <20110126043338.16410.75019.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,232 +21,376 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WL
 Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+For testing the dt work, define a dt-enabled versatile platform.
 
-Based on work by Ben Herrenschmidt, this patch adds an of_clk_get
-function to allow platforms to retrieve clock data from the device tree.
+This patch includes some fixed clk parsing logic that really would be
+better as common code, but that depends on the common struct clk
+getting merged.  In the mean time it is easy enough to implement it
+here.
 
-Platform register a provider through of_clk_add_provider, which will be
-called when a device references the provider's OF node for a clock
-reference.
-
-Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-[grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org: fix Kconfig conflict]
+Based on work originally written by Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- drivers/of/Kconfig     |    5 ++
- drivers/of/Makefile    |    1 
- drivers/of/clock.c     |  134 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_clk.h |   36 +++++++++++++
- 4 files changed, 176 insertions(+), 0 deletions(-)
- create mode 100644 drivers/of/clock.c
- create mode 100644 include/linux/of_clk.h
+ arch/arm/boot/dts/versatile.dts        |  138 ++++++++++++++++++++++++++++++++
+ arch/arm/mach-versatile/Kconfig        |    8 ++
+ arch/arm/mach-versatile/Makefile       |    1 
+ arch/arm/mach-versatile/versatile_ab.c |    6 -
+ arch/arm/mach-versatile/versatile_dt.c |  108 +++++++++++++++++++++++++
+ arch/arm/mach-versatile/versatile_pb.c |    6 -
+ arch/arm/plat-versatile/clock.c        |    2 
+ drivers/of/clock.c                     |    1 
+ 8 files changed, 257 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/versatile.dts
+ create mode 100644 arch/arm/mach-versatile/versatile_dt.c
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 3c6e100..6650583 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -69,4 +69,9 @@ config OF_MDIO
- 	help
- 	  OpenFirmware MDIO bus (Ethernet PHY) accessors
- 
-+config OF_CLOCK
-+	def_bool y
-+	depends on HAVE_CLK
-+	help
-+	  OpenFirmware clock accessors
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index 3ab21a0..c378c7b 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_OF_ADDRESS)  += address.o
- obj-$(CONFIG_OF_IRQ)    += irq.o
- obj-$(CONFIG_OF_DEVICE) += device.o platform.o
- obj-$(CONFIG_OF_GPIO)   += gpio.o
-+obj-$(CONFIG_OF_CLOCK)	+= clock.o
- obj-$(CONFIG_OF_I2C)	+= of_i2c.o
- obj-$(CONFIG_OF_NET)	+= of_net.o
- obj-$(CONFIG_OF_SPI)	+= of_spi.o
-diff --git a/drivers/of/clock.c b/drivers/of/clock.c
+diff --git a/arch/arm/boot/dts/versatile.dts b/arch/arm/boot/dts/versatile.dts
 new file mode 100644
-index 0000000..3e2b221
+index 0000000..6ff9ee2
 --- /dev/null
-+++ b/drivers/of/clock.c
-@@ -0,0 +1,134 @@
++++ b/arch/arm/boot/dts/versatile.dts
+@@ -0,0 +1,138 @@
++/dts-v1/;
++
++/ {
++	model = "ARM Versatile-PB";
++	compatible = "arm,versatile-pb";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&vic>;
++
++	aliases {
++		uart0 = &uart0;
++		uart1 = &uart1;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x08000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyAMA0 debug";
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ref24_clk: clock@0 {
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-outputs = "ref";
++		};
++
++		osc4_clk: clock@1 {
++			compatible = "ics,icst307";
++			ref = <24000>;
++			vco-max = <200000>;
++			vd-range = <12 519>;
++			rd-range = <3 129>;
++			clock-outputs = "osc4";
++		};
++	};
++
++	vic: intc {
++		compatible = "arm,versatile-vic";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		reg = <0x10140000 0x1000>;
++	};
++
++	sic: intc@10003000 {
++		compatible = "arm,versatile-vic";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		reg = <0x10003000 0x1000>;
++		interrupts = <31>; /* Cascaded to vic */
++	};
++
++	amba {
++		compatible = "arm,amba-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		fpga {
++			compatible = "arm,versatile-fpga", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x10000000 0x10000>;
++
++			fpga@5000 {
++				compatible = "arm,amba-device";
++				reg = < 0x5000 0x1000 >;
++			};
++			fpga@6000 {
++				compatible = "arm,pl050", "arm,amba-device";
++				reg = < 0x6000 0x1000 >;
++			};
++			fpga@7000 {
++				compatible = "arm,pl050", "arm,amba-device";
++				reg = < 0x7000 0x1000 >;
++			};
++			fpga@9000 {
++				compatible = "arm,pl011", "arm,amba-device";
++				reg = < 0x9000 0x1000 >;
++			};
++			fpga@b000 {
++				compatible = "arm,amba-device";
++				reg = < 0xb000 0x1000 >;
++			};
++		};
++
++		uart0: uart@101f1000 {
++			compatible = "arm,pl011", "arm,amba-device";
++			reg = <0x101f1000 0x1000>;
++			arm,amba-deviceid = <0x00141011>;
++			interrupts = <12>;
++			bus-clock = <&ref24_clk>, "ref";
++		};
++
++		uart1: uart@101f2000 {
++			compatible = "arm,pl011", "arm,amba-device";
++			reg = <0x101f2000 0x1000>;
++			arm,amba-deviceid = <0x00141011>;
++			interrupts = <13>;
++			bus-clock = <&ref24_clk>, "ref";
++		};
++	};
++
++	flash@34000000 {
++		compatible = "arm,versatile-flash";
++		reg = <0x34000000 0x4000000>;
++		bank-width = <4>;
++	};
++
++	net@10010000 {
++		compatible = "smsc,smc91c111";
++		reg = <0x10010000 0x10000>;
++		interrupts = <25>;
++	};
++
++	i2c@10002000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "arm,versatile-i2c";
++		reg = <0x10002000 0x1000>;
++
++		rtc@68 {
++			compatible = "dallas,ds1338";
++			reg = <0x68>;
++		};
++	};
++
++	lcd@10008000 {
++		compatible = "arm,versatile-lcd";
++		reg = <0x10008000 0x1000>;
++	};
++};
+diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
+index 3f7b5e9..3b417f4 100644
+--- a/arch/arm/mach-versatile/Kconfig
++++ b/arch/arm/mach-versatile/Kconfig
+@@ -15,4 +15,12 @@ config MACH_VERSATILE_AB
+ 	help
+ 	  Include support for the ARM(R) Versatile/AP platform.
+ 
++config MACH_VERSATILE_DT
++	bool "Support Versatile platform from device tree"
++	select USE_OF
++	select CPU_ARM926T
++	help
++	  Include support for the ARM(R) Versatile/PB platform,
++	  using the device tree for discovery
++
+ endmenu
+diff --git a/arch/arm/mach-versatile/Makefile b/arch/arm/mach-versatile/Makefile
+index 97cf4d8..81fa3fe 100644
+--- a/arch/arm/mach-versatile/Makefile
++++ b/arch/arm/mach-versatile/Makefile
+@@ -5,4 +5,5 @@
+ obj-y					:= core.o
+ obj-$(CONFIG_ARCH_VERSATILE_PB)		+= versatile_pb.o
+ obj-$(CONFIG_MACH_VERSATILE_AB)		+= versatile_ab.o
++obj-$(CONFIG_MACH_VERSATILE_DT)		+= versatile_dt.o
+ obj-$(CONFIG_PCI)			+= pci.o
+diff --git a/arch/arm/mach-versatile/versatile_ab.c b/arch/arm/mach-versatile/versatile_ab.c
+index 62053df..aa9730f 100644
+--- a/arch/arm/mach-versatile/versatile_ab.c
++++ b/arch/arm/mach-versatile/versatile_ab.c
+@@ -33,11 +33,6 @@
+ 
+ #include "core.h"
+ 
+-static const char *versatile_ab_match[] __initdata = {
+-	"arm,versatile-ab",
+-	NULL,
+-};
+-
+ MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
+ 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
+ 	.boot_params	= 0x00000100,
+@@ -45,5 +40,4 @@ MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
+ 	.init_irq	= versatile_init_irq,
+ 	.timer		= &versatile_timer,
+ 	.init_machine	= versatile_init,
+-	.dt_compat	= versatile_ab_match,
+ MACHINE_END
+diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
+new file mode 100644
+index 0000000..7eacc2d
+--- /dev/null
++++ b/arch/arm/mach-versatile/versatile_dt.c
+@@ -0,0 +1,108 @@
 +/*
-+ * Clock infrastructure for device tree platforms
++ *  linux/arch/arm/mach-versatile/versatile_dt.c
++ *
++ *  Copyright (C) 2009 Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
++ *  Copyright (C) 2004 ARM Limited
++ *  Copyright (C) 2000 Deep Blue Solutions Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_clk.h>
-+#include <linux/list.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
++#include <linux/init.h>
 +#include <linux/device.h>
++#include <linux/sysdev.h>
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/amba/bus.h>
++#include <linux/amba/pl061.h>
++#include <linux/amba/mmci.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/of_clk.h>
 +
-+struct of_clk_provider {
-+	struct list_head	link;
-+	struct device_node	*node;
++#include <mach/hardware.h>
++#include <asm/irq.h>
++#include <asm/mach-types.h>
 +
-+	/* Return NULL if no such clock output */
-+	struct clk		*(*get)(struct device_node *np,
-+					const char *output_id, void *data);
-+	void			*data;
++#include <asm/mach/arch.h>
++
++#include "core.h"
++
++/* Dummy AMBA bus clock; can be overridden */
++static struct clk versatile_dt_dummy_apb_pclk;
++static struct clk_lookup versatile_dt_dummy_apb_cl = {
++	.con_id = "apb_pclk",
++	.clk = &versatile_dt_dummy_apb_pclk,
 +};
 +
-+static LIST_HEAD(of_clk_providers);
-+static DEFINE_MUTEX(of_clk_lock);
-+
-+int of_clk_add_provider(struct device_node *np,
-+		struct clk *(*clk_src_get)(struct device_node *np,
-+			const char *output_id,
-+			void *data),
-+		void *data)
++/* Scan for fixed clocks */
++static struct clk *versatile_dt_clk_get(struct device_node *np,
++					const char *output_id, void *data)
 +{
-+	struct of_clk_provider *cp;
-+
-+	cp = kzalloc(sizeof(struct of_clk_provider), GFP_KERNEL);
-+	if (!cp)
-+		return -ENOMEM;
-+
-+	cp->node = of_node_get(np);
-+	cp->data = data;
-+	cp->get = clk_src_get;
-+
-+	mutex_lock(&of_clk_lock);
-+	list_add(&cp->link, &of_clk_providers);
-+	mutex_unlock(&of_clk_lock);
-+	pr_debug("Added clock from %s\n", np->full_name);
-+
-+	return 0;
++	return data;
 +}
 +
-+void of_clk_del_provider(struct device_node *np,
-+		struct clk *(*clk_src_get)(struct device_node *np,
-+			const char *output_id,
-+			void *data),
-+		void *data)
++static __init void versatile_dt_scan_clks(void)
 +{
-+	struct of_clk_provider *cp, *tmp;
++	struct device_node *node;
++	const __be32 *rate;
++	struct clk *clk;
++	int rc;
 +
-+	mutex_lock(&of_clk_lock);
-+	list_for_each_entry_safe(cp, tmp, &of_clk_providers, link) {
-+		if (cp->node == np && cp->get == clk_src_get &&
-+				cp->data == data) {
-+			list_del(&cp->link);
-+			of_node_put(cp->node);
-+			kfree(cp);
-+			break;
++	for_each_compatible_node(node, NULL, "fixed-clock") {
++		rate = of_get_property(node, "clock-frequency", NULL);
++		if (!rate)
++			continue;
++
++		clk = kzalloc(sizeof(*clk), GFP_KERNEL);
++		if (!clk)
++			panic("out of memory\n");
++		clk->rate = be32_to_cpup(rate);
++
++		rc = of_clk_add_provider(node, versatile_dt_clk_get, clk);
++		if (rc) {
++			kfree(clk);
++			pr_err("error adding fixed clk %s\n", node->name);
 +		}
 +	}
-+	mutex_unlock(&of_clk_lock);
 +}
-+
-+static struct clk *__of_clk_get_from_provider(struct device_node *np, const char *clk_output)
++static void __init versatile_dt_init(void)
 +{
-+	struct of_clk_provider *provider;
-+	struct clk *clk = NULL;
++	struct device_node *node;
 +
-+	/* Check if we have such a provider in our array */
-+	mutex_lock(&of_clk_lock);
-+	list_for_each_entry(provider, &of_clk_providers, link) {
-+		if (provider->node == np)
-+			clk = provider->get(np, clk_output, provider->data);
-+		if (clk)
-+			break;
-+	}
-+	mutex_unlock(&of_clk_lock);
++	clkdev_add(&versatile_dt_dummy_apb_cl);
++	versatile_dt_scan_clks();
 +
-+	return clk;
++	node = of_find_node_by_path("/amba");
++	if (node)
++		of_amba_bus_populate(node, NULL);
 +}
 +
-+struct clk *of_clk_get(struct device *dev, const char *id)
-+{
-+	struct device_node *provnode;
-+	u32 provhandle;
-+	int sz;
-+	struct clk *clk;
-+	char prop_name[32]; /* 32 is max size of property name */
-+	const void *prop;
++static const char *versatile_dt_match[] __initdata = {
++	"arm,versatile-ab",
++	"arm,versatile-pb",
++	NULL,
++};
 +
-+	dev_dbg(dev, "Looking up %s-clock from device tree\n", id);
-+
-+	snprintf(prop_name, 32, "%s-clock", id ? id : "bus");
-+	prop = of_get_property(dev->of_node, prop_name, &sz);
-+	if (!prop || sz < 4)
-+		return NULL;
-+
-+	/* Extract the phandle from the start of the property value */
-+	provhandle = be32_to_cpup(prop);
-+	prop += 4;
-+	sz -= 4;
-+
-+	/* Make sure the clock name is properly terminated and within the
-+	 * size of the property. */
-+	if (strlen(prop) + 1 > sz)
-+		return NULL;
-+
-+	/* Find the clock provider node; check if it is registered as a
-+	 * provider, and ask it for the relevant clk structure */
-+	provnode = of_find_node_by_phandle(provhandle);
-+	if (!provnode) {
-+		pr_warn("%s: %s property in node %s references invalid phandle",
-+			__func__, prop_name, dev->of_node->full_name);
-+		return NULL;
-+	}
-+	clk = __of_clk_get_from_provider(provnode, prop);
-+	if (clk)
-+		dev_dbg(dev, "Using clock from %s\n", provnode->full_name);
-+
-+	of_node_put(provnode);
-+
-+	return clk;
-+}
-+
-diff --git a/include/linux/of_clk.h b/include/linux/of_clk.h
-new file mode 100644
-index 0000000..c2f6b5a
---- /dev/null
-+++ b/include/linux/of_clk.h
-@@ -0,0 +1,36 @@
-+/*
-+ * Clock infrastructure for device tree platforms
-+ */
-+#ifndef __OF_CLK_H
-+#define __OF_CLK_H
-+
-+struct device;
-+struct clk;
-+
-+#ifdef CONFIG_OF_CLOCK
-+
-+struct device_node;
-+
-+int of_clk_add_provider(struct device_node *np,
-+		struct clk *(*clk_src_get)(struct device_node *np,
-+			const char *output_id,
-+			void *data),
-+		void *data);
-+
-+void of_clk_del_provider(struct device_node *np,
-+		struct clk *(*clk_src_get)(struct device_node *np,
-+			const char *output_id,
-+			void *data),
-+		void *data);
-+
-+struct clk *of_clk_get(struct device *dev, const char *id);
-+
-+#else
-+static inline struct clk *of_clk_get(struct device *dev, const char *id)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+#endif /* __OF_CLK_H */
-+
++DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
++	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
++	.boot_params	= 0x00000100,
++	.map_io		= versatile_map_io,
++	.init_irq	= versatile_init_irq,
++	.timer		= &versatile_timer,
++	.init_machine	= versatile_dt_init,
++	.dt_compat	= versatile_dt_match,
++MACHINE_END
+diff --git a/arch/arm/mach-versatile/versatile_pb.c b/arch/arm/mach-versatile/versatile_pb.c
+index eba12fa..bf46964 100644
+--- a/arch/arm/mach-versatile/versatile_pb.c
++++ b/arch/arm/mach-versatile/versatile_pb.c
+@@ -106,11 +106,6 @@ static void __init versatile_pb_init(void)
+ 	}
+ }
+ 
+-static const char *versatile_pb_match[] __initdata = {
+-	"arm,versatile-pb",
+-	NULL,
+-};
+-
+ MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
+ 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
+ 	.boot_params	= 0x00000100,
+@@ -118,5 +113,4 @@ MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
+ 	.init_irq	= versatile_init_irq,
+ 	.timer		= &versatile_timer,
+ 	.init_machine	= versatile_pb_init,
+-	.dt_compat	= versatile_pb_match,
+ MACHINE_END
+diff --git a/arch/arm/plat-versatile/clock.c b/arch/arm/plat-versatile/clock.c
+index 5c8b656..44545de 100644
+--- a/arch/arm/plat-versatile/clock.c
++++ b/arch/arm/plat-versatile/clock.c
+@@ -13,6 +13,8 @@
+ #include <linux/errno.h>
+ #include <linux/clk.h>
+ #include <linux/mutex.h>
++#include <linux/err.h>
++#include <linux/slab.h>
+ 
+ #include <asm/hardware/icst.h>
+ 
+diff --git a/drivers/of/clock.c b/drivers/of/clock.c
+index 3e2b221..7b5ea67 100644
+--- a/drivers/of/clock.c
++++ b/drivers/of/clock.c
+@@ -131,4 +131,3 @@ struct clk *of_clk_get(struct device *dev, const char *id)
+ 
+ 	return clk;
+ }
+-
