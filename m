@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC PATCH 2/5] drivers/amba: probe via device tree
-Date: Tue, 25 Jan 2011 21:44:11 -0700
-Message-ID: <20110126044411.16410.12.stgit@localhost6.localdomain6>
+Subject: [RFC PATCH 4/5] arm/clkdev: lookup clocks from OF clock providers
+Date: Tue, 25 Jan 2011 21:44:22 -0700
+Message-ID: <20110126044422.16410.78703.stgit@localhost6.localdomain6>
 References: <20110126043338.16410.75019.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,108 +23,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-Add functions to parse the AMBA bus through the device tree.
+Hook the OF clock provider infrastructure to clk_get.
 
 Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- drivers/amba/bus.c       |   67 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/amba/bus.h |    5 +++
- 2 files changed, 72 insertions(+), 0 deletions(-)
+ drivers/clk/clkdev.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index e7df019..e753fa9 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -13,6 +13,10 @@
- #include <linux/string.h>
- #include <linux/slab.h>
- #include <linux/io.h>
+diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+index 0fc0a79..a546763 100644
+--- a/drivers/clk/clkdev.c
++++ b/drivers/clk/clkdev.c
+@@ -19,6 +19,8 @@
+ #include <linux/mutex.h>
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
 +#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/amba/bus.h>
++#include <linux/of_clk.h>
  
- #include <asm/irq.h>
-@@ -486,3 +490,66 @@ EXPORT_SYMBOL(amba_device_unregister);
- EXPORT_SYMBOL(amba_find_device);
- EXPORT_SYMBOL(amba_request_regions);
- EXPORT_SYMBOL(amba_release_regions);
+ static LIST_HEAD(clocks);
+ static DEFINE_MUTEX(clocks_mutex);
+@@ -79,6 +81,11 @@ EXPORT_SYMBOL(clk_get_sys);
+ struct clk *clk_get(struct device *dev, const char *con_id)
+ {
+ 	const char *dev_id = dev ? dev_name(dev) : NULL;
++	struct clk *clk;
 +
-+#ifdef CONFIG_OF
-+static int of_amba_device_create(struct device_node *node,struct device *parent)
-+{
-+	struct amba_device *dev;
-+	const void *prop;
-+	int i, ret;
-+
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
-+
-+	/* setup generic device info */
-+	dev->dev.coherent_dma_mask = ~0;
-+	dev->dev.of_node = node;
-+	dev->dev.parent = parent;
-+	of_device_make_bus_id(&dev->dev);
-+
-+	/* setup amba-specific device info */
-+	dev->dma_mask = ~0;
-+
-+	/* Decode the IRQs and address ranges */
-+	for (i = 0; i < AMBA_NR_IRQS; i++)
-+		dev->irq[i] = irq_of_parse_and_map(node, i);
-+
-+	ret = of_address_to_resource(node, 0, &dev->res);
-+	if (ret)
-+		goto err_free;
-+
-+	ret = amba_device_register(dev, &iomem_resource);
-+	if (ret)
-+		goto err_free;
-+
-+	/* Sanity check the arm,amba-deviceid value */
-+	prop = of_get_property(node, "arm,amba-deviceid", NULL);
-+	if (!prop)
-+		dev_warn(&dev->dev, "arm,amba-deviceid property missing; "
-+				    "probe gives 0x%08x.\n", dev->periphid);
-+
-+	if (prop && (dev->periphid != of_read_ulong(prop, 1)))
-+		dev_warn(&dev->dev, "arm,amba-deviceid value (0x%08lx) and "
-+				    "probed value (0x%08x) don't agree.",
-+				    of_read_ulong(prop, 1), dev->periphid);
-+
-+	return 0;
-+
-+err_free:
-+	kfree(dev);
-+	return ret;
-+}
-+
-+void of_amba_bus_populate(struct device_node *node, struct device *parent)
-+{
-+	struct device_node *child;
-+
-+	for_each_child_of_node(node, child) {
-+		if (of_device_is_compatible(child, "arm,amba-device"))
-+			of_amba_device_create(child, parent);
-+	}
-+}
-+EXPORT_SYMBOL(of_amba_bus_populate);
-+
-+#endif /* CONFIG_OF */
-diff --git a/include/linux/amba/bus.h b/include/linux/amba/bus.h
-index 9e7f259..4baa4cf 100644
---- a/include/linux/amba/bus.h
-+++ b/include/linux/amba/bus.h
-@@ -90,4 +90,9 @@ void amba_release_regions(struct amba_device *);
- #define amba_manf(d)	AMBA_MANF_BITS((d)->periphid)
- #define amba_part(d)	AMBA_PART_BITS((d)->periphid)
++	clk = of_clk_get(dev, con_id);
++	if (clk && __clk_get(clk))
++		return clk;
  
-+#ifdef CONFIG_OF
-+struct device_node;
-+void of_amba_bus_populate(struct device_node *node, struct device *parent);
-+#endif
-+
- #endif
+ 	return clk_get_sys(dev_id, con_id);
+ }
