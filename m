@@ -1,14 +1,11 @@
-From: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 0/8] Basic ARM device tree support
-Date: Wed, 26 Jan 2011 13:04:39 -0700
-Message-ID: <00bcd596-2108-4c54-92d3-7fda39e333e3@VA3EHSMHS015.ehs.local>
-References: <20110118195933.13011.56098.stgit@localhost6.localdomain6>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [RFC 0/2] Appended Device Tree
+Date: Wed, 26 Jan 2011 13:22:51 -0800
+Message-ID: <20110126212220.6723.28773.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <20110118195933.13011.56098.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,119 +15,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Lennert Buijtenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Grant Likely [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Grant Likely
-> Sent: Tuesday, January 18, 2011 1:29 PM
-> To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Nicolas Pitre; Russell King; Catalin Marinas; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson; Jeremy Kerr; John Linn; Lennert Buijtenhek
-> Subject: [PATCH 0/8] Basic ARM device tree support
-> 
-> It's been a while since these patches have been circulated for review.
-> Much has changed since the last posting and there are no longer any
-> ugly hacks or workarounds to it working.  From my viewpoint, these
-> patches are complete and ready to be used.
-> 
-> This patch series allows CONFIG_OF to be enabled on ARM and allows the
-> kernel to accept a dtb pointer from boot firmware instead of atags.
-> If a dtb is passed, then the kernel will use the root 'compatible'
-> property to find a matching machine_desc, and it will use it to obtain
-> the memory layout, initrd location and kernel parameters string.
-> 
-> Only limited device tree support is enabled here.  It does not perform
-> any kind of device registration from device tree data.  That support
-> will be enabled in a later patch set.  Right now those patches depend
-> on the common struct clk patches that Jeremy is working on, so I'm not
-> going to post them yet.  Rather, this series is a stable base that
-> other engineers can use to start working on device tree support for
-> their platforms.
-> 
-> Tested on Versatile (qemu) and nVidia Tegra Harmony.  Kernel compiles
-> an boot with CONFIG_OF both on and off, both with and without passing
-> a device tree blob.
+This not intended to be merged. This is a request for comments on the approach
+being taken.
 
-Tested on Xilinx platform.  Did see an issue with loading the device
-tree blob into higher memory.  At address 0 there was no issue.  
+The following series implements a prototype/proof of concept for allowing a
+device-tree binary (dtb) to be appended to the end of zImage. The dtb can be
+appended with a command like:
+   cat zImage myboard.dtb > zImage_w_dtb.
 
-> 
-> I've published this series to a new branch on my git server:
-> 
->   git://git.secretlab.ca/git/linux-2.6 devicetree/arm
-> 
-> The way I've managed the devicetree/test branch in the past has made
-> it hard for other engineers to work with the device tree support, so
-> I'm changing the way I'm handling it.  I will *not* rebase this new
-> branch.  My intention is to keep it in essentially 'merge-ready' state
-> at all times.  ie. I'm only going to put patches into this branch that
-> I consider complete and are required to enable arm device tree
-> support.  ie. core dt infrastructure and dt board support.  Device
-> drivers should be submitted directly to their respective
-> lists/maintainers.  I'll also be soliciting acks from platform
-> maintainers before I pick up board support patches into this branch.
-> 
-> Russell:  I'm not expecting you to merge these now, nor am I asking
-> you to.  I won't do so until I've got a full implementation using the
-> device tree to register devices on the machine and supporting multiple
-> machines.  However, would you mind taking a look at these patches and
-> commenting on the approach?  Particularly the early boot code.
-> Thanks.
-> 
-> Cheers,
-> g.
-> 
+The purpose is to allow a single kernel to be built for multiple boards/systems
+and allow a simple process to apply the right device tree right before the
+kernel image is written into flash. This way the system that applies the
+device tree doesn't have to have the full gnu compiler set installed.
 
-Thanks for this patch set.  Device tree on ARM will be a great help to Xilinx.
+The old behavior has not changed. If a dtb is not appended, the kernel will
+still boot as expected.
 
-Tested-by: John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+The frst patch detects if a dtb is present at the end of the zImage and uses
+it, if present. The second patch merges in a couple of key atags, if present,
+into the appended device-tree, if found.
 
-> 
-> ---
-> The following changes since commit
-> a25cecce88194b2edf38b8c3b1665e9318eb2d22:
-> 
->   Merge branch 'next' of git://git.monstr.eu/linux-2.6-microblaze (2011-01-18 08:06:22 -0800)
-> 
-> are available in the git repository at:
-> 
->   git://git.secretlab.ca/git/linux-2.6 devicetree/arm
-> 
-> Grant Likely (7):
->       arm/dt: Make __vet_atags also accept a dtb image
->       arm/dt: allow bootmem reservation for device tree blob and initrd
->       arm/dt: consolidate atags setup into setup_machine_atags
->       arm/dt: probe for platforms via the device tree
->       arm/dt: Basic versatile devicetree support
->       arm/tegra: Fix tegra irq_data conversion
->       arm/dt: Basic tegra devicetree support
-> 
-> Jeremy Kerr (1):
->       arm/dt: Allow CONFIG_OF on ARM
-> 
-> 
->  arch/arm/Kconfig                       |    7 ++
->  arch/arm/include/asm/mach/arch.h       |    2 +
->  arch/arm/include/asm/prom.h            |   34 ++++++++++
->  arch/arm/include/asm/setup.h           |    4 +
->  arch/arm/kernel/Makefile               |    1
->  arch/arm/kernel/devtree.c              |  107 ++++++++++++++++++++++++++++++++
->  arch/arm/kernel/head-common.S          |   19 ++++--
->  arch/arm/kernel/head.S                 |    8 +-
->  arch/arm/kernel/setup.c                |   78 +++++++++++++----------
->  arch/arm/mach-tegra/board-harmony.c    |    6 ++
->  arch/arm/mach-tegra/gpio.c             |    4 +
->  arch/arm/mach-versatile/versatile_ab.c |    6 ++
->  arch/arm/mach-versatile/versatile_pb.c |    6 ++
->  arch/arm/mm/init.c                     |   23 +++++++
->  14 files changed, 258 insertions(+), 47 deletions(-)
->  create mode 100644 arch/arm/include/asm/prom.h
->  create mode 100644 arch/arm/kernel/devtree.c
-> 
-> --
-> Signature
+With the new kernel config option enabled, this patch adds 11400 bytes to
+zImage. The kernel code itself doesn't change size.
+The first patch in this series adds 96 bytes to zImage.
+The second patch in this series adds 11304 bytes to zImage.
+
+These numbers vary depending on the kernel version, probably due to alignment requirements.
 
 
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+---
+
+John Bonesio (2):
+      ARM:boot:device tree: Allow the device tree binary to be appended to zImage
+      ARM:boot:device tree: Merge specific atags into the device tree
+
+
+ arch/arm/Kconfig                  |    7 ++++
+ arch/arm/boot/compressed/Makefile |   31 ++++++++++++++++---
+ arch/arm/boot/compressed/atags.c  |   50 +++++++++++++++++++++++++++++++
+ arch/arm/boot/compressed/head.S   |   59 ++++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/compressed/misc.c   |   58 +++++++++++++++++++++++++++++++++++-
+ 5 files changed, 196 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm/boot/compressed/atags.c
+
+-- 
+Signature
