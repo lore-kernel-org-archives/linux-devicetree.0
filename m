@@ -1,11 +1,14 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC 0/2] Appended Device Tree
-Date: Wed, 26 Jan 2011 13:22:51 -0800
-Message-ID: <20110126212220.6723.28773.stgit@riker>
+Subject: [RFC 1/2] ARM:boot:device tree: Allow the device tree binary to be
+	appended to zImage
+Date: Wed, 26 Jan 2011 13:23:14 -0800
+Message-ID: <20110126212301.6723.89059.stgit@riker>
+References: <20110126212220.6723.28773.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110126212220.6723.28773.stgit@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,48 +22,132 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel
 Cc: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This not intended to be merged. This is a request for comments on the approach
-being taken.
+This patch provides the ability to boot using a device tree that is appended
+to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
 
-The following series implements a prototype/proof of concept for allowing a
-device-tree binary (dtb) to be appended to the end of zImage. The dtb can be
-appended with a command like:
-   cat zImage myboard.dtb > zImage_w_dtb.
+Constraints:
+1) A maximum 16k device tree binary is copied to memory at 0x0. If the device
+   tree is bigger than 16k, the kernel will probably fail ungracefully - unless
+   there is a device tree already embedded in the zImage.
 
-The purpose is to allow a single kernel to be built for multiple boards/systems
-and allow a simple process to apply the right device tree right before the
-kernel image is written into flash. This way the system that applies the
-device tree doesn't have to have the full gnu compiler set installed.
-
-The old behavior has not changed. If a dtb is not appended, the kernel will
-still boot as expected.
-
-The frst patch detects if a dtb is present at the end of the zImage and uses
-it, if present. The second patch merges in a couple of key atags, if present,
-into the appended device-tree, if found.
-
-With the new kernel config option enabled, this patch adds 11400 bytes to
-zImage. The kernel code itself doesn't change size.
-The first patch in this series adds 96 bytes to zImage.
-The second patch in this series adds 11304 bytes to zImage.
-
-These numbers vary depending on the kernel version, probably due to alignment requirements.
-
-
+Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
 
-John Bonesio (2):
-      ARM:boot:device tree: Allow the device tree binary to be appended to zImage
-      ARM:boot:device tree: Merge specific atags into the device tree
+ arch/arm/Kconfig                |    7 +++++
+ arch/arm/boot/compressed/head.S |   52 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 57 insertions(+), 2 deletions(-)
 
-
- arch/arm/Kconfig                  |    7 ++++
- arch/arm/boot/compressed/Makefile |   31 ++++++++++++++++---
- arch/arm/boot/compressed/atags.c  |   50 +++++++++++++++++++++++++++++++
- arch/arm/boot/compressed/head.S   |   59 ++++++++++++++++++++++++++++++++++++-
- arch/arm/boot/compressed/misc.c   |   58 +++++++++++++++++++++++++++++++++++-
- 5 files changed, 196 insertions(+), 9 deletions(-)
- create mode 100644 arch/arm/boot/compressed/atags.c
-
--- 
-Signature
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index d8a330f..e63a441 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1593,6 +1593,13 @@ config USE_OF
+ 	help
+ 	  Include support for flattened device tree machine descriptions.
+ 
++config ARM_APPENDED_DTB
++	bool "Use appended device tree blob" if OF
++	default n
++	help
++	  With this option, the boot code will look for a dtb bianry
++	  appended to zImage.
++
+ # Compressed boot loader in ROM.  Yes, we really want to ask about
+ # TEXT and BSS so we preserve their values in the config files.
+ config ZBOOT_ROM_TEXT
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index 7193884..db860b3 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -138,7 +138,7 @@ start:
+ 		b	1f
+ 		.word	0x016f2818		@ Magic numbers to help the loader
+ 		.word	start			@ absolute load/run zImage address
+-		.word	_edata			@ zImage end address
++DTB:		.word	_edata			@ zImage end address
+  THUMB(		.thumb			)
+ 1:		mov	r7, r1			@ save architecture ID
+ 		mov	r8, r2			@ save atags pointer
+@@ -173,6 +173,9 @@ not_angel:
+ 		 * by the linker here, but it should preserve r7, r8, and r9.
+ 		 */
+ 
++		/* Check if there is an appended device tree binary */
++		ldr	r10, DTB			@ get the address of _dtb
++
+ 		.text
+ 		adr	r0, LC0
+ 		ldmia	r0, {r1, r2, r3, r5, r6, r11, ip}
+@@ -196,10 +199,12 @@ not_angel:
+ 		 * up various pointers:
+ 		 *   r5 - zImage base address (_start)
+ 		 *   r6 - size of decompressed image
++		 *   r10 - zImage end
+ 		 *   r11 - GOT start
+ 		 *   ip - GOT end
+ 		 */
+ 		add	r5, r5, r0
++		add	r10, r10, r0
+ 		add	r11, r11, r0
+ 		add	ip, ip, r0
+ 
+@@ -215,6 +220,7 @@ not_angel:
+ 		add	r3, r3, r0
+ 		add	sp, sp, r0
+ 
++
+ 		/*
+ 		 * Relocate all entries in the GOT table.
+ 		 */
+@@ -238,7 +244,49 @@ not_angel:
+ 		blo	1b
+ #endif
+ 
+-not_relocated:	mov	r0, #0
++not_relocated:
++#ifdef CONFIG_ARM_APPENDED_DTB
++		/*
++		 * Check if there is an appended device tree binary, by testing
++		 * for the device tree magic signature
++		 *
++		 * An appended device tree will be at the end of the zImage
++		 */
++		ldr	r1, [r10, #0]
++		ldr	r9, =0xedfe0dd0	@ sig is 0xdoodfeed stored big endian
++		cmp	r1, r9
++		bne	keep_atags
++
++		/* copy the device tree binary to 0x0 */
++		ldr	r9, [r10, #4]	@ device tree size
++
++		/* convert r9 (dtb size) to little endian */
++		eor	r1, r9, r9, ror #16
++		bic	r1, r1, #0x00ff0000
++		mov	r9, r9, ror #8
++		eor	r9, r9, r1, lsr #8
++
++		/* make sure the device tree isn't too big */
++		mov	r0, #16384
++		cmp	r9, r0
++		bhi	keep_atags
++
++		mov	r0, r2
++		mov	r1, #0x0
++		add	r9, r1		@ size to address from target location
++1:
++		.rept	4
++		ldmia	r0!, {r10}	@ relocate device tree
++		stmia	r1!, {r10}
++		.endr
++		cmp	r1, r9
++		blo	1b
++		mov	r8, #0x0
++
++keep_atags:
++#endif
++
++__not_relocated:	mov	r0, #0
+ 1:		str	r0, [r2], #4		@ clear bss
+ 		str	r0, [r2], #4
+ 		str	r0, [r2], #4
