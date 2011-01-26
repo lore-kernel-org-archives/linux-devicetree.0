@@ -1,263 +1,69 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC PATCH 5/5] arm/versatile: add a device tree versatile platform
-Date: Tue, 25 Jan 2011 21:44:27 -0700
-Message-ID: <20110126044427.16410.89126.stgit@localhost6.localdomain6>
-References: <20110126043338.16410.75019.stgit@localhost6.localdomain6>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110126043338.16410.75019.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: [PATCH] gpio: add new Altera PIO driver
+Date: Wed, 26 Jan 2011 13:10:53 +0800
+Message-ID: <1296018653-17642-1-git-send-email-thomas@wytron.com.tw>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Thomas Chou <thomas@wytron.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-For testing the dt work, define a dt-enabled versatile platform.
+This driver supports the Altera PIO core.
 
-This patch includes some fixed clk parsing logic that really would be
-better as common code, but that depends on the common struct clk
-getting merged.  In the mean time it is easy enough to implement it
-here.
-
-Based on work originally written by Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
 ---
- arch/arm/boot/dts/versatile.dts        |  138 ++++++++++++++++++++++++++++++++
- arch/arm/mach-versatile/Kconfig        |    8 ++
- arch/arm/mach-versatile/Makefile       |    1 
- arch/arm/mach-versatile/versatile_ab.c |    6 -
- arch/arm/mach-versatile/versatile_dt.c |  108 +++++++++++++++++++++++++
- arch/arm/mach-versatile/versatile_pb.c |    6 -
- arch/arm/plat-versatile/clock.c        |    2 
- drivers/of/clock.c                     |    1 
- 8 files changed, 257 insertions(+), 13 deletions(-)
- create mode 100644 arch/arm/boot/dts/versatile.dts
- create mode 100644 arch/arm/mach-versatile/versatile_dt.c
+ drivers/gpio/Kconfig       |    6 +
+ drivers/gpio/Makefile      |    1 +
+ drivers/gpio/altera_gpio.c |  233 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 240 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/gpio/altera_gpio.c
 
-diff --git a/arch/arm/boot/dts/versatile.dts b/arch/arm/boot/dts/versatile.dts
-new file mode 100644
-index 0000000..6ff9ee2
---- /dev/null
-+++ b/arch/arm/boot/dts/versatile.dts
-@@ -0,0 +1,138 @@
-+/dts-v1/;
-+
-+/ {
-+	model = "ARM Versatile-PB";
-+	compatible = "arm,versatile-pb";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&vic>;
-+
-+	aliases {
-+		uart0 = &uart0;
-+		uart1 = &uart1;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyAMA0 debug";
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ref24_clk: clock@0 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			clock-outputs = "ref";
-+		};
-+
-+		osc4_clk: clock@1 {
-+			compatible = "ics,icst307";
-+			ref = <24000>;
-+			vco-max = <200000>;
-+			vd-range = <12 519>;
-+			rd-range = <3 129>;
-+			clock-outputs = "osc4";
-+		};
-+	};
-+
-+	vic: intc {
-+		compatible = "arm,versatile-vic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0x10140000 0x1000>;
-+	};
-+
-+	sic: intc@10003000 {
-+		compatible = "arm,versatile-vic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0x10003000 0x1000>;
-+		interrupts = <31>; /* Cascaded to vic */
-+	};
-+
-+	amba {
-+		compatible = "arm,amba-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		fpga {
-+			compatible = "arm,versatile-fpga", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x10000000 0x10000>;
-+
-+			fpga@5000 {
-+				compatible = "arm,amba-device";
-+				reg = < 0x5000 0x1000 >;
-+			};
-+			fpga@6000 {
-+				compatible = "arm,pl050", "arm,amba-device";
-+				reg = < 0x6000 0x1000 >;
-+			};
-+			fpga@7000 {
-+				compatible = "arm,pl050", "arm,amba-device";
-+				reg = < 0x7000 0x1000 >;
-+			};
-+			fpga@9000 {
-+				compatible = "arm,pl011", "arm,amba-device";
-+				reg = < 0x9000 0x1000 >;
-+			};
-+			fpga@b000 {
-+				compatible = "arm,amba-device";
-+				reg = < 0xb000 0x1000 >;
-+			};
-+		};
-+
-+		uart0: uart@101f1000 {
-+			compatible = "arm,pl011", "arm,amba-device";
-+			reg = <0x101f1000 0x1000>;
-+			arm,amba-deviceid = <0x00141011>;
-+			interrupts = <12>;
-+			bus-clock = <&ref24_clk>, "ref";
-+		};
-+
-+		uart1: uart@101f2000 {
-+			compatible = "arm,pl011", "arm,amba-device";
-+			reg = <0x101f2000 0x1000>;
-+			arm,amba-deviceid = <0x00141011>;
-+			interrupts = <13>;
-+			bus-clock = <&ref24_clk>, "ref";
-+		};
-+	};
-+
-+	flash@34000000 {
-+		compatible = "arm,versatile-flash";
-+		reg = <0x34000000 0x4000000>;
-+		bank-width = <4>;
-+	};
-+
-+	net@10010000 {
-+		compatible = "smsc,smc91c111";
-+		reg = <0x10010000 0x10000>;
-+		interrupts = <25>;
-+	};
-+
-+	i2c@10002000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "arm,versatile-i2c";
-+		reg = <0x10002000 0x1000>;
-+
-+		rtc@68 {
-+			compatible = "dallas,ds1338";
-+			reg = <0x68>;
-+		};
-+	};
-+
-+	lcd@10008000 {
-+		compatible = "arm,versatile-lcd";
-+		reg = <0x10008000 0x1000>;
-+	};
-+};
-diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
-index 3f7b5e9..3b417f4 100644
---- a/arch/arm/mach-versatile/Kconfig
-+++ b/arch/arm/mach-versatile/Kconfig
-@@ -15,4 +15,12 @@ config MACH_VERSATILE_AB
- 	help
- 	  Include support for the ARM(R) Versatile/AP platform.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 664660e..40271f0 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -70,6 +70,12 @@ config GPIO_MAX730X
  
-+config MACH_VERSATILE_DT
-+	bool "Support Versatile platform from device tree"
-+	select USE_OF
-+	select CPU_ARM926T
+ comment "Memory mapped GPIO expanders:"
+ 
++config GPIO_ALTERA
++	bool "Altera GPIO"
++	depends on OF
 +	help
-+	  Include support for the ARM(R) Versatile/PB platform,
-+	  using the device tree for discovery
++	  Say yes here to support the Altera PIO device
 +
- endmenu
-diff --git a/arch/arm/mach-versatile/Makefile b/arch/arm/mach-versatile/Makefile
-index 97cf4d8..81fa3fe 100644
---- a/arch/arm/mach-versatile/Makefile
-+++ b/arch/arm/mach-versatile/Makefile
-@@ -5,4 +5,5 @@
- obj-y					:= core.o
- obj-$(CONFIG_ARCH_VERSATILE_PB)		+= versatile_pb.o
- obj-$(CONFIG_MACH_VERSATILE_AB)		+= versatile_ab.o
-+obj-$(CONFIG_MACH_VERSATILE_DT)		+= versatile_dt.o
- obj-$(CONFIG_PCI)			+= pci.o
-diff --git a/arch/arm/mach-versatile/versatile_ab.c b/arch/arm/mach-versatile/versatile_ab.c
-index 62053df..aa9730f 100644
---- a/arch/arm/mach-versatile/versatile_ab.c
-+++ b/arch/arm/mach-versatile/versatile_ab.c
-@@ -33,11 +33,6 @@
+ config GPIO_BASIC_MMIO
+ 	tristate "Basic memory-mapped GPIO controllers support"
+ 	help
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 3351cf8..ed11932 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -8,6 +8,7 @@ ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
  
- #include "core.h"
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
  
--static const char *versatile_ab_match[] __initdata = {
--	"arm,versatile-ab",
--	NULL,
--};
--
- MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
- 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
- 	.boot_params	= 0x00000100,
-@@ -45,5 +40,4 @@ MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
- 	.init_irq	= versatile_init_irq,
- 	.timer		= &versatile_timer,
- 	.init_machine	= versatile_init,
--	.dt_compat	= versatile_ab_match,
- MACHINE_END
-diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
++obj-$(CONFIG_GPIO_ALTERA)	+= altera_gpio.o
+ obj-$(CONFIG_GPIO_ADP5520)	+= adp5520-gpio.o
+ obj-$(CONFIG_GPIO_ADP5588)	+= adp5588-gpio.o
+ obj-$(CONFIG_GPIO_BASIC_MMIO)	+= basic_mmio_gpio.o
+diff --git a/drivers/gpio/altera_gpio.c b/drivers/gpio/altera_gpio.c
 new file mode 100644
-index 0000000..7eacc2d
+index 0000000..b480561
 --- /dev/null
-+++ b/arch/arm/mach-versatile/versatile_dt.c
-@@ -0,0 +1,108 @@
++++ b/drivers/gpio/altera_gpio.c
+@@ -0,0 +1,233 @@
 +/*
-+ *  linux/arch/arm/mach-versatile/versatile_dt.c
++ * Altera GPIO driver
 + *
-+ *  Copyright (C) 2009 Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-+ *  Copyright (C) 2004 ARM Limited
-+ *  Copyright (C) 2000 Deep Blue Solutions Ltd
++ * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
++ *
++ * Based on Xilinx gpio driver, which is
++ * Copyright 2008 Xilinx, Inc.
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * it under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
 + *
 + * You should have received a copy of the GNU General Public License
 + * along with this program; if not, write to the Free Software
@@ -265,132 +71,220 @@ index 0000000..7eacc2d
 + */
 +
 +#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/sysdev.h>
-+#include <linux/clk.h>
-+#include <linux/clkdev.h>
-+#include <linux/amba/bus.h>
-+#include <linux/amba/pl061.h>
-+#include <linux/amba/mmci.h>
++#include <linux/errno.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
 +#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_clk.h>
-+
-+#include <mach/hardware.h>
-+#include <asm/irq.h>
-+#include <asm/mach-types.h>
-+
-+#include <asm/mach/arch.h>
-+
-+#include "core.h"
-+
-+/* Dummy AMBA bus clock; can be overridden */
-+static struct clk versatile_dt_dummy_apb_pclk;
-+static struct clk_lookup versatile_dt_dummy_apb_cl = {
-+	.con_id = "apb_pclk",
-+	.clk = &versatile_dt_dummy_apb_pclk,
-+};
-+
-+/* Scan for fixed clocks */
-+static struct clk *versatile_dt_clk_get(struct device_node *np,
-+					const char *output_id, void *data)
-+{
-+	return data;
-+}
-+
-+static __init void versatile_dt_scan_clks(void)
-+{
-+	struct device_node *node;
-+	const __be32 *rate;
-+	struct clk *clk;
-+	int rc;
-+
-+	for_each_compatible_node(node, NULL, "fixed-clock") {
-+		rate = of_get_property(node, "clock-frequency", NULL);
-+		if (!rate)
-+			continue;
-+
-+		clk = kzalloc(sizeof(*clk), GFP_KERNEL);
-+		if (!clk)
-+			panic("out of memory\n");
-+		clk->rate = be32_to_cpup(rate);
-+
-+		rc = of_clk_add_provider(node, versatile_dt_clk_get, clk);
-+		if (rc) {
-+			kfree(clk);
-+			pr_err("error adding fixed clk %s\n", node->name);
-+		}
-+	}
-+}
-+static void __init versatile_dt_init(void)
-+{
-+	struct device_node *node;
-+
-+	clkdev_add(&versatile_dt_dummy_apb_cl);
-+	versatile_dt_scan_clks();
-+
-+	node = of_find_node_by_path("/amba");
-+	if (node)
-+		of_amba_bus_populate(node, NULL);
-+}
-+
-+static const char *versatile_dt_match[] __initdata = {
-+	"arm,versatile-ab",
-+	"arm,versatile-pb",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
-+	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
-+	.boot_params	= 0x00000100,
-+	.map_io		= versatile_map_io,
-+	.init_irq	= versatile_init_irq,
-+	.timer		= &versatile_timer,
-+	.init_machine	= versatile_dt_init,
-+	.dt_compat	= versatile_dt_match,
-+MACHINE_END
-diff --git a/arch/arm/mach-versatile/versatile_pb.c b/arch/arm/mach-versatile/versatile_pb.c
-index eba12fa..bf46964 100644
---- a/arch/arm/mach-versatile/versatile_pb.c
-+++ b/arch/arm/mach-versatile/versatile_pb.c
-@@ -106,11 +106,6 @@ static void __init versatile_pb_init(void)
- 	}
- }
- 
--static const char *versatile_pb_match[] __initdata = {
--	"arm,versatile-pb",
--	NULL,
--};
--
- MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
- 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
- 	.boot_params	= 0x00000100,
-@@ -118,5 +113,4 @@ MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
- 	.init_irq	= versatile_init_irq,
- 	.timer		= &versatile_timer,
- 	.init_machine	= versatile_pb_init,
--	.dt_compat	= versatile_pb_match,
- MACHINE_END
-diff --git a/arch/arm/plat-versatile/clock.c b/arch/arm/plat-versatile/clock.c
-index 5c8b656..44545de 100644
---- a/arch/arm/plat-versatile/clock.c
-+++ b/arch/arm/plat-versatile/clock.c
-@@ -13,6 +13,8 @@
- #include <linux/errno.h>
- #include <linux/clk.h>
- #include <linux/mutex.h>
-+#include <linux/err.h>
++#include <linux/gpio.h>
 +#include <linux/slab.h>
- 
- #include <asm/hardware/icst.h>
- 
-diff --git a/drivers/of/clock.c b/drivers/of/clock.c
-index 3e2b221..7b5ea67 100644
---- a/drivers/of/clock.c
-+++ b/drivers/of/clock.c
-@@ -131,4 +131,3 @@ struct clk *of_clk_get(struct device *dev, const char *id)
- 
- 	return clk;
- }
--
++
++#define DRV_NAME "altera_gpio"
++
++/* Register Offset Definitions */
++#define ALTERA_GPIO_DATA_OFFSET   0x0	/* Data register  */
++#define ALTERA_GPIO_DIR_OFFSET    0x4	/* I/O direction register  */
++
++struct altera_gpio_instance {
++	struct of_mm_gpio_chip mmchip;
++	u32 gpio_state;		/* GPIO state shadow register */
++	u32 gpio_dir;		/* GPIO direction shadow register */
++	spinlock_t gpio_lock;	/* Lock used for synchronization */
++};
++
++/*
++ * altera_gpio_get - Read the specified signal of the GPIO device.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ *
++ * This function reads the specified signal of the GPIO device. It returns 0 if
++ * the signal clear, 1 if signal is set or negative value on error.
++ */
++static int altera_gpio_get(struct gpio_chip *gc, unsigned int gpio)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++
++	return (readl(mm_gc->regs + ALTERA_GPIO_DATA_OFFSET) >> gpio) & 1;
++}
++
++/*
++ * altera_gpio_set - Write the specified signal of the GPIO device.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ * @val:    Value to be written to specified signal.
++ *
++ * This function writes the specified value in to the specified signal of the
++ * GPIO device.
++ */
++static void altera_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
++{
++	unsigned long flags;
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_instance *chip =
++	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++
++	/* Write to shadow register and output */
++	if (val)
++		chip->gpio_state |= 1 << gpio;
++	else
++		chip->gpio_state &= ~(1 << gpio);
++	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++}
++
++/*
++ * altera_gpio_dir_in - Set the direction of the specified GPIO signal as input.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ *
++ * This function sets the direction of specified GPIO signal as input.
++ * It returns 0 if direction of GPIO signals is set as input otherwise it
++ * returns negative error value.
++ */
++static int altera_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
++{
++	unsigned long flags;
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_instance *chip =
++	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++
++	/* Clear the GPIO bit in shadow register and set direction as input */
++	chip->gpio_dir &= ~(1 << gpio);
++	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
++
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++
++	return 0;
++}
++
++/*
++ * altera_gpio_dir_out - Set the direction of the specified GPIO as output.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ * @val:    Value to be written to specified signal.
++ *
++ * This function sets the direction of specified GPIO signal as output. If all
++ * GPIO signals of GPIO chip is configured as input then it returns
++ * error otherwise it returns 0.
++ */
++static int altera_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
++{
++	unsigned long flags;
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_instance *chip =
++	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++
++	/* Write state of GPIO signal */
++	if (val)
++		chip->gpio_state |= 1 << gpio;
++	else
++		chip->gpio_state &= ~(1 << gpio);
++	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++
++	/* Set the GPIO bit in shadow register and set direction as output */
++	chip->gpio_dir |= (1 << gpio);
++	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
++
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++
++	return 0;
++}
++
++/*
++ * altera_gpio_save_regs - Set initial values of GPIO pins
++ * @mm_gc: pointer to memory mapped GPIO chip structure
++ */
++static void altera_gpio_save_regs(struct of_mm_gpio_chip *mm_gc)
++{
++	struct altera_gpio_instance *chip =
++	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
++
++	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
++}
++
++/*
++ * altera_gpio_of_probe - Probe method for the GPIO device.
++ * @np: pointer to device tree node
++ *
++ * This function probes the GPIO device in the device tree. It initializes the
++ * driver data structure. It returns 0, if the driver is bound to the GPIO
++ * device, or a negative value if there is an error.
++ */
++static int __devinit altera_gpio_of_probe(struct device_node *np)
++{
++	struct altera_gpio_instance *chip;
++	int status = 0;
++	const u32 *tree_info;
++
++	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	/* Update GPIO state shadow register with default value */
++	tree_info = of_get_property(np, "resetvalue", NULL);
++	if (tree_info)
++		chip->gpio_state = be32_to_cpup(tree_info);
++
++	/* Update GPIO direction shadow register with default value */
++	chip->gpio_dir = 0; /* By default, all pins are inputs */
++
++	/* Check device node for device width */
++	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
++	tree_info = of_get_property(np, "width", NULL);
++	if (tree_info)
++		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
++
++	spin_lock_init(&chip->gpio_lock);
++
++	chip->mmchip.gc.direction_input = altera_gpio_dir_in;
++	chip->mmchip.gc.direction_output = altera_gpio_dir_out;
++	chip->mmchip.gc.get = altera_gpio_get;
++	chip->mmchip.gc.set = altera_gpio_set;
++
++	chip->mmchip.save_regs = altera_gpio_save_regs;
++
++	/* Call the OF gpio helper to setup and register the GPIO device */
++	status = of_mm_gpiochip_add(np, &chip->mmchip);
++	if (status) {
++		kfree(chip);
++		pr_err("%s: error in probe function with status %d\n",
++		       np->full_name, status);
++		return status;
++	}
++	pr_info(DRV_NAME ": %s: registered\n", np->full_name);
++	return 0;
++}
++
++static struct of_device_id altera_gpio_of_match[] __devinitdata = {
++	{ .compatible = "altr,pio-1.0", },
++	{},
++};
++
++static int __init altera_gpio_init(void)
++{
++	struct device_node *np;
++
++	for_each_matching_node(np, altera_gpio_of_match)
++		altera_gpio_of_probe(np);
++
++	return 0;
++}
++
++/* Make sure we get initialized before anyone else tries to use us */
++subsys_initcall(altera_gpio_init);
++/* No exit call at the moment as we cannot unregister of GPIO chips */
++
++MODULE_DESCRIPTION("Altera GPIO driver");
++MODULE_AUTHOR("Thomas Chou <thomas@wytron.com.tw>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:" DRV_NAME);
+-- 
+1.7.3.5
