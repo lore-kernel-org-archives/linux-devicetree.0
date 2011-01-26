@@ -1,88 +1,385 @@
-From: "Lorenzo Pieralisi" <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: RE: [RFC] arm devicetree meeting/hacking day
-Date: Wed, 26 Jan 2011 14:32:56 -0000
-Message-ID: <1589.97208714045$1296058797@news.gmane.org>
-References: <AANLkTi=1kQR2yFY8xJw=XX0aH5PG53sVmZCXf5fuUOu0@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <AANLkTi=1kQR2yFY8xJw=XX0aH5PG53sVmZCXf5fuUOu0-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-gb
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: 'Grant Likely' <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jeremy
-Cc: =?iso-8859-1?Q?Lo=EFc_Minier?= <loic.minier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] dt: Move device tree documentation out of powerpc directory
+Date: Wed, 26 Jan 2011 10:20:34 -0700
+Message-ID: <1296062434-18027-1-git-send-email-grant.likely@secretlab.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org
+Cc: Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+The device tree is used by more than just PowerPC.  Make the documentation
+directory available to all.
 
-> -----Original Message-----
-> From: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org [mailto:linaro-dev-bounces@list=
-s.linaro.org] On Behalf Of
-> Grant Likely
-> Sent: Monday, January 24, 2011 8:26 PM
-> To: Thomas Abraham; Lennert Buytenhek; John Bonesio; Jeremy Kerr; Jason H=
-ui; Shawn Guo; Mounir
-> Bsaibes; arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; aneesh.v-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Meador Inge; Deep=
-ak Saxena; Jon Masters; John
-> Rigby
-> Cc: Lo=EFc Minier; devicetree-discuss; linaro-dev
-> Subject: [RFC] arm devicetree meeting/hacking day
-> =
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
 
-> Hi all,
-> =
+Assuming nobody has an issue with this, I'll push it out to Linus for
+2.6.38 since it is only a documentation change.
 
-> For those of you who are working, or are soon-to-be working, on device
-> tree support for ARM, I'm organizing a regular weekly status update
-> and a hacking day for getting device tree support added to several of
-> the ARM platforms.  I've already talked to some of you about this
-> briefly.  Basically the idea is to have a day when all of us working
-> on dt can coordinate and get problems solved.  I'll commit to being
-> available and focused on answering dt questions for that day so it
-> should be easier to get my help.  I'll also put together some
-> documents and guides for dt bringup on new platforms which will break
-> down the features that each platform needs to implement.
-> =
+g.
 
-> For the status update part, rather than scheduling yet another
-> meeting, I think it would be appropriate to tack it onto the end of
-> the Monday kernel working group status update call.  I'll dial into
-> both the west (1600UTC) and east (0400UTC-tuesday) calls so that I've
-> got a chance to talk with everyone..  Let me know if you don't have
-> the dial-in details for either of the calls and I'll ask Paul or Loic
-> to add you to the invite.
-> =
+ .../bindings}/4xx/cpm.txt                          |    0
+ .../bindings}/4xx/emac.txt                         |    0
+ .../bindings}/4xx/ndfc.txt                         |    0
+ .../bindings}/4xx/ppc440spe-adma.txt               |    0
+ .../bindings}/4xx/reboot.txt                       |    0
+ .../bindings}/can/sja1000.txt                      |    0
+ .../dts-bindings => devicetree/bindings}/ecm.txt   |    0
+ .../bindings}/eeprom.txt                           |    0
+ .../bindings}/fsl/83xx-512x-pci.txt                |    0
+ .../bindings}/fsl/8xxx_gpio.txt                    |    0
+ .../bindings}/fsl/board.txt                        |    0
+ .../bindings}/fsl/can.txt                          |    0
+ .../bindings}/fsl/cpm_qe/cpm.txt                   |    0
+ .../bindings}/fsl/cpm_qe/cpm/brg.txt               |    0
+ .../bindings}/fsl/cpm_qe/cpm/i2c.txt               |    0
+ .../bindings}/fsl/cpm_qe/cpm/pic.txt               |    0
+ .../bindings}/fsl/cpm_qe/cpm/usb.txt               |    0
+ .../bindings}/fsl/cpm_qe/gpio.txt                  |    0
+ .../bindings}/fsl/cpm_qe/network.txt               |    0
+ .../bindings}/fsl/cpm_qe/qe.txt                    |    0
+ .../bindings}/fsl/cpm_qe/qe/firmware.txt           |    0
+ .../bindings}/fsl/cpm_qe/qe/par_io.txt             |    0
+ .../bindings}/fsl/cpm_qe/qe/pincfg.txt             |    0
+ .../bindings}/fsl/cpm_qe/qe/ucc.txt                |    0
+ .../bindings}/fsl/cpm_qe/qe/usb.txt                |    0
+ .../bindings}/fsl/cpm_qe/serial.txt                |    0
+ .../bindings}/fsl/diu.txt                          |    0
+ .../bindings}/fsl/dma.txt                          |    0
+ .../bindings}/fsl/esdhc.txt                        |    0
+ .../bindings}/fsl/gtm.txt                          |    0
+ .../bindings}/fsl/guts.txt                         |    0
+ .../bindings}/fsl/i2c.txt                          |    0
+ .../bindings}/fsl/lbc.txt                          |    0
+ .../bindings}/fsl/mcm.txt                          |    0
+ .../bindings}/fsl/mcu-mpc8349emitx.txt             |    0
+ .../bindings}/fsl/mpc5121-psc.txt                  |    0
+ .../bindings}/fsl/mpc5200.txt                      |    0
+ .../bindings}/fsl/mpic.txt                         |    0
+ .../bindings}/fsl/msi-pic.txt                      |    0
+ .../bindings}/fsl/pmc.txt                          |    0
+ .../bindings}/fsl/sata.txt                         |    0
+ .../bindings}/fsl/sec.txt                          |    0
+ .../bindings}/fsl/spi.txt                          |    0
+ .../bindings}/fsl/ssi.txt                          |    0
+ .../bindings}/fsl/tsec.txt                         |    0
+ .../bindings}/fsl/upm-nand.txt                     |    0
+ .../bindings}/fsl/usb.txt                          |    0
+ .../bindings}/gpio/gpio.txt                        |    0
+ .../bindings}/gpio/led.txt                         |    0
+ .../bindings}/gpio/mdio.txt                        |    0
+ .../bindings}/marvell.txt                          |    0
+ .../bindings}/mmc-spi-slot.txt                     |    0
+ .../bindings}/mtd-physmap.txt                      |    0
+ .../bindings}/nintendo/gamecube.txt                |    0
+ .../bindings}/nintendo/wii.txt                     |    0
+ .../dts-bindings => devicetree/bindings}/phy.txt   |    0
+ .../bindings}/spi-bus.txt                          |    0
+ .../bindings}/usb-ehci.txt                         |    0
+ .../bindings}/xilinx.txt                           |    0
+ .../{powerpc => devicetree}/booting-without-of.txt |    0
+ 60 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/4xx/cpm.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/4xx/emac.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/4xx/ndfc.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/4xx/ppc440spe-adma.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/4xx/reboot.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/can/sja1000.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/ecm.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/eeprom.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/83xx-512x-pci.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/8xxx_gpio.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/board.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/can.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/cpm.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/cpm/brg.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/cpm/i2c.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/cpm/pic.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/cpm/usb.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/gpio.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/network.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/qe.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/qe/firmware.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/qe/par_io.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/qe/pincfg.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/qe/ucc.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/qe/usb.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/cpm_qe/serial.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/diu.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/dma.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/esdhc.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/gtm.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/guts.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/i2c.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/lbc.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/mcm.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/mcu-mpc8349emitx.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/mpc5121-psc.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/mpc5200.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/mpic.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/msi-pic.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/pmc.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/sata.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/sec.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/spi.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/ssi.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/tsec.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/upm-nand.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/fsl/usb.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/gpio/gpio.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/gpio/led.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/gpio/mdio.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/marvell.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/mmc-spi-slot.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/mtd-physmap.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/nintendo/gamecube.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/nintendo/wii.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/phy.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/spi-bus.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/usb-ehci.txt (100%)
+ rename Documentation/{powerpc/dts-bindings => devicetree/bindings}/xilinx.txt (100%)
+ rename Documentation/{powerpc => devicetree}/booting-without-of.txt (100%)
 
-> For the hacking day, how does Tuesday(west)/Wednesday(east) sound for
-> everyone?  I'll be available on IRC, and I'll also keep my schedule
-> clear so that I'll be available for phone calls.
-> =
-
-> Right now, here's the list of people that I know are or may be working
-> on DT support, and the platform they are working on (not exclusively
-> Linaro work):
-> =
-
-> Lennert Buytenhek (Core infrastructure & omap3)
-> Thomas Abraham (Samsung)
-> John Bonesio (nVidia Tegra)
-> Shawn Guo and Jason Hui (Freescale imx51)
-> Jon Masters (omap3, beagle board)
-> =
-
-> Anybody else want me to add them to this list?
-
-Please count me in for the Monday devtree kernel update as a starting point.
-Lorenzo Pieralisi (ARM - DT on vexpress and upcoming ARM dev platforms).
-
-Cheers,
-Lorenzo
+diff --git a/Documentation/powerpc/dts-bindings/4xx/cpm.txt b/Documentation/devicetree/bindings/4xx/cpm.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/4xx/cpm.txt
+rename to Documentation/devicetree/bindings/4xx/cpm.txt
+diff --git a/Documentation/powerpc/dts-bindings/4xx/emac.txt b/Documentation/devicetree/bindings/4xx/emac.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/4xx/emac.txt
+rename to Documentation/devicetree/bindings/4xx/emac.txt
+diff --git a/Documentation/powerpc/dts-bindings/4xx/ndfc.txt b/Documentation/devicetree/bindings/4xx/ndfc.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/4xx/ndfc.txt
+rename to Documentation/devicetree/bindings/4xx/ndfc.txt
+diff --git a/Documentation/powerpc/dts-bindings/4xx/ppc440spe-adma.txt b/Documentation/devicetree/bindings/4xx/ppc440spe-adma.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/4xx/ppc440spe-adma.txt
+rename to Documentation/devicetree/bindings/4xx/ppc440spe-adma.txt
+diff --git a/Documentation/powerpc/dts-bindings/4xx/reboot.txt b/Documentation/devicetree/bindings/4xx/reboot.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/4xx/reboot.txt
+rename to Documentation/devicetree/bindings/4xx/reboot.txt
+diff --git a/Documentation/powerpc/dts-bindings/can/sja1000.txt b/Documentation/devicetree/bindings/can/sja1000.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/can/sja1000.txt
+rename to Documentation/devicetree/bindings/can/sja1000.txt
+diff --git a/Documentation/powerpc/dts-bindings/ecm.txt b/Documentation/devicetree/bindings/ecm.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/ecm.txt
+rename to Documentation/devicetree/bindings/ecm.txt
+diff --git a/Documentation/powerpc/dts-bindings/eeprom.txt b/Documentation/devicetree/bindings/eeprom.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/eeprom.txt
+rename to Documentation/devicetree/bindings/eeprom.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/83xx-512x-pci.txt b/Documentation/devicetree/bindings/fsl/83xx-512x-pci.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/83xx-512x-pci.txt
+rename to Documentation/devicetree/bindings/fsl/83xx-512x-pci.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/8xxx_gpio.txt b/Documentation/devicetree/bindings/fsl/8xxx_gpio.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/8xxx_gpio.txt
+rename to Documentation/devicetree/bindings/fsl/8xxx_gpio.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/board.txt b/Documentation/devicetree/bindings/fsl/board.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/board.txt
+rename to Documentation/devicetree/bindings/fsl/board.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/can.txt b/Documentation/devicetree/bindings/fsl/can.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/can.txt
+rename to Documentation/devicetree/bindings/fsl/can.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/cpm.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/cpm.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/brg.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/cpm/brg.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/brg.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/cpm/brg.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/i2c.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/cpm/i2c.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/i2c.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/cpm/i2c.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/pic.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/cpm/pic.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/pic.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/cpm/pic.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/usb.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/cpm/usb.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/cpm/usb.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/cpm/usb.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/gpio.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/gpio.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/gpio.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/gpio.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/network.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/network.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/network.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/qe.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/qe.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/firmware.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/qe/firmware.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/firmware.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/qe/firmware.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/par_io.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/qe/par_io.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/par_io.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/qe/par_io.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/pincfg.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/qe/pincfg.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/pincfg.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/qe/pincfg.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/ucc.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/qe/ucc.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/ucc.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/qe/ucc.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/usb.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/qe/usb.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/qe/usb.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/qe/usb.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/cpm_qe/serial.txt b/Documentation/devicetree/bindings/fsl/cpm_qe/serial.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/cpm_qe/serial.txt
+rename to Documentation/devicetree/bindings/fsl/cpm_qe/serial.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/diu.txt b/Documentation/devicetree/bindings/fsl/diu.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/diu.txt
+rename to Documentation/devicetree/bindings/fsl/diu.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/dma.txt b/Documentation/devicetree/bindings/fsl/dma.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/dma.txt
+rename to Documentation/devicetree/bindings/fsl/dma.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/esdhc.txt b/Documentation/devicetree/bindings/fsl/esdhc.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/esdhc.txt
+rename to Documentation/devicetree/bindings/fsl/esdhc.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/gtm.txt b/Documentation/devicetree/bindings/fsl/gtm.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/gtm.txt
+rename to Documentation/devicetree/bindings/fsl/gtm.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/guts.txt b/Documentation/devicetree/bindings/fsl/guts.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/guts.txt
+rename to Documentation/devicetree/bindings/fsl/guts.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/i2c.txt b/Documentation/devicetree/bindings/fsl/i2c.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/i2c.txt
+rename to Documentation/devicetree/bindings/fsl/i2c.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/lbc.txt b/Documentation/devicetree/bindings/fsl/lbc.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/lbc.txt
+rename to Documentation/devicetree/bindings/fsl/lbc.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mcm.txt b/Documentation/devicetree/bindings/fsl/mcm.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/mcm.txt
+rename to Documentation/devicetree/bindings/fsl/mcm.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mcu-mpc8349emitx.txt b/Documentation/devicetree/bindings/fsl/mcu-mpc8349emitx.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/mcu-mpc8349emitx.txt
+rename to Documentation/devicetree/bindings/fsl/mcu-mpc8349emitx.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5121-psc.txt b/Documentation/devicetree/bindings/fsl/mpc5121-psc.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/mpc5121-psc.txt
+rename to Documentation/devicetree/bindings/fsl/mpc5121-psc.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mpc5200.txt b/Documentation/devicetree/bindings/fsl/mpc5200.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/mpc5200.txt
+rename to Documentation/devicetree/bindings/fsl/mpc5200.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/mpic.txt b/Documentation/devicetree/bindings/fsl/mpic.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/mpic.txt
+rename to Documentation/devicetree/bindings/fsl/mpic.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/msi-pic.txt b/Documentation/devicetree/bindings/fsl/msi-pic.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/msi-pic.txt
+rename to Documentation/devicetree/bindings/fsl/msi-pic.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/pmc.txt b/Documentation/devicetree/bindings/fsl/pmc.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/pmc.txt
+rename to Documentation/devicetree/bindings/fsl/pmc.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/sata.txt b/Documentation/devicetree/bindings/fsl/sata.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/sata.txt
+rename to Documentation/devicetree/bindings/fsl/sata.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/sec.txt b/Documentation/devicetree/bindings/fsl/sec.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/sec.txt
+rename to Documentation/devicetree/bindings/fsl/sec.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/spi.txt b/Documentation/devicetree/bindings/fsl/spi.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/spi.txt
+rename to Documentation/devicetree/bindings/fsl/spi.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/ssi.txt b/Documentation/devicetree/bindings/fsl/ssi.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/ssi.txt
+rename to Documentation/devicetree/bindings/fsl/ssi.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/tsec.txt b/Documentation/devicetree/bindings/fsl/tsec.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/tsec.txt
+rename to Documentation/devicetree/bindings/fsl/tsec.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/upm-nand.txt b/Documentation/devicetree/bindings/fsl/upm-nand.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/upm-nand.txt
+rename to Documentation/devicetree/bindings/fsl/upm-nand.txt
+diff --git a/Documentation/powerpc/dts-bindings/fsl/usb.txt b/Documentation/devicetree/bindings/fsl/usb.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/fsl/usb.txt
+rename to Documentation/devicetree/bindings/fsl/usb.txt
+diff --git a/Documentation/powerpc/dts-bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/gpio/gpio.txt
+rename to Documentation/devicetree/bindings/gpio/gpio.txt
+diff --git a/Documentation/powerpc/dts-bindings/gpio/led.txt b/Documentation/devicetree/bindings/gpio/led.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/gpio/led.txt
+rename to Documentation/devicetree/bindings/gpio/led.txt
+diff --git a/Documentation/powerpc/dts-bindings/gpio/mdio.txt b/Documentation/devicetree/bindings/gpio/mdio.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/gpio/mdio.txt
+rename to Documentation/devicetree/bindings/gpio/mdio.txt
+diff --git a/Documentation/powerpc/dts-bindings/marvell.txt b/Documentation/devicetree/bindings/marvell.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/marvell.txt
+rename to Documentation/devicetree/bindings/marvell.txt
+diff --git a/Documentation/powerpc/dts-bindings/mmc-spi-slot.txt b/Documentation/devicetree/bindings/mmc-spi-slot.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/mmc-spi-slot.txt
+rename to Documentation/devicetree/bindings/mmc-spi-slot.txt
+diff --git a/Documentation/powerpc/dts-bindings/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd-physmap.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/mtd-physmap.txt
+rename to Documentation/devicetree/bindings/mtd-physmap.txt
+diff --git a/Documentation/powerpc/dts-bindings/nintendo/gamecube.txt b/Documentation/devicetree/bindings/nintendo/gamecube.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/nintendo/gamecube.txt
+rename to Documentation/devicetree/bindings/nintendo/gamecube.txt
+diff --git a/Documentation/powerpc/dts-bindings/nintendo/wii.txt b/Documentation/devicetree/bindings/nintendo/wii.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/nintendo/wii.txt
+rename to Documentation/devicetree/bindings/nintendo/wii.txt
+diff --git a/Documentation/powerpc/dts-bindings/phy.txt b/Documentation/devicetree/bindings/phy.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/phy.txt
+rename to Documentation/devicetree/bindings/phy.txt
+diff --git a/Documentation/powerpc/dts-bindings/spi-bus.txt b/Documentation/devicetree/bindings/spi-bus.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/spi-bus.txt
+rename to Documentation/devicetree/bindings/spi-bus.txt
+diff --git a/Documentation/powerpc/dts-bindings/usb-ehci.txt b/Documentation/devicetree/bindings/usb-ehci.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/usb-ehci.txt
+rename to Documentation/devicetree/bindings/usb-ehci.txt
+diff --git a/Documentation/powerpc/dts-bindings/xilinx.txt b/Documentation/devicetree/bindings/xilinx.txt
+similarity index 100%
+rename from Documentation/powerpc/dts-bindings/xilinx.txt
+rename to Documentation/devicetree/bindings/xilinx.txt
+diff --git a/Documentation/powerpc/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+similarity index 100%
+rename from Documentation/powerpc/booting-without-of.txt
+rename to Documentation/devicetree/booting-without-of.txt
+-- 
+1.7.1
