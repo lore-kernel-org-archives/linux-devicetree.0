@@ -1,43 +1,190 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v4] smc91x: add devicetree support
-Date: Tue, 25 Jan 2011 22:42:09 -0800 (PST)
-Message-ID: <20110125.224209.183055030.davem@davemloft.net>
-References: <20110125.194532.71125517.davem@davemloft.net>
-	<1296019325-17801-1-git-send-email-thomas@wytron.com.tw>
-	<AANLkTindbigYzY0zJufpr-D25m_B5Gjqp09ZbcaN-aZ9@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTindbigYzY0zJufpr-D25m_B5Gjqp09ZbcaN-aZ9-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH 2/4 v5] video, sm501: add edid and commandline support
+Date: Wed, 26 Jan 2011 08:21:22 +0100
+Message-ID: <1296026482-14616-1-git-send-email-hs@denx.de>
+References: <1291451028-22532-1-git-send-email-hs@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1291451028-22532-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Heiko Schocher <hs@denx.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Paul Mundt <lethal@linux-sh.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Date: Tue, 25 Jan 2011 22:52:36 -0700
+- add commandline options:
+  sm501fb.mode:
+    Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
+  sm501fb.bpp:
+    Specify bit-per-pixel if not specified mode
 
-> On Tue, Jan 25, 2011 at 10:22 PM, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org> wrote:
->> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
->> ---
->> v2 specify part numbers in compat as Grant suggested.
->> v3 more specific part name.
->> v4 include match table only for OF as David suggested.
->>
->>  drivers/net/smc91x.c |   13 +++++++++++++
->>  1 files changed, 13 insertions(+), 0 deletions(-)
-> 
-> Looks okay to me.
-> 
-> Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+- Add support for encoding display mode information
+  in the device tree using verbatim EDID block.
 
-Applied to net-next-2.6, thanks.
+  If the "edid" entry in the "smi,sm501" node is present,
+  the driver will build mode database using EDID data
+  and allow setting the display modes from this database.
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+cc: linux-fbdev@vger.kernel.org
+cc: devicetree-discuss@ozlabs.org
+cc: Ben Dooks <ben@simtec.co.uk>
+cc: Vincent Sanders <vince@simtec.co.uk>
+cc: Samuel Ortiz <sameo@linux.intel.com>
+cc: linux-kernel@vger.kernel.org
+cc: Randy Dunlap <rdunlap@xenotime.net>
+cc: Paul Mundt <lethal@linux-sh.org>
+
+---
+- changes since v1:
+  add Ben Dooks, Vincent Sanders and Samuel Ortiz to cc, as suggested from
+  Paul Mundt.
+- changes since v2:
+  add comments from Randy Dunlap:
+  - move parameter documentation to Documentation/fb/sm501.txt
+- changes since v3:
+  - rebased against v2.6.38-rc2
+  - split in 3 patches
+    - of support patch
+    - i/o routine patch
+    - edid support patch
+- changes since v4:
+  - add "info->pdata = &sm501fb_def_pdata;" in sm501fb_probe()
+    as Paul Mundt suggested (and I wrongly deleted)
+  - move kfree(info->edid_data); to patch 3/4
+    as edid_data is only allocated in the CONFIG_OF case
+
+./scripts/checkpatch.pl 0002-video-sm501-add-edid-and-commandline-support.patch
+total: 0 errors, 0 warnings, 109 lines checked
+
+0002-video-sm501-add-edid-and-commandline-support.patch has no obvious style problems and is ready for submission.
+
+ Documentation/fb/sm501.txt |   10 +++++++
+ drivers/video/sm501fb.c    |   65 ++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 70 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/fb/sm501.txt
+
+diff --git a/Documentation/fb/sm501.txt b/Documentation/fb/sm501.txt
+new file mode 100644
+index 0000000..8d17aeb
+--- /dev/null
++++ b/Documentation/fb/sm501.txt
+@@ -0,0 +1,10 @@
++Configuration:
++
++You can pass the following kernel command line options to sm501 videoframebuffer:
++
++	sm501fb.bpp=	SM501 Display driver:
++			Specifiy bits-per-pixel if not specified by 'mode'
++
++	sm501fb.mode=	SM501 Display driver:
++			Specify resolution as
++			"<xres>x<yres>[-<bpp>][@<refresh>]"
+diff --git a/drivers/video/sm501fb.c b/drivers/video/sm501fb.c
+index c5b4b95..d60b2a2 100644
+--- a/drivers/video/sm501fb.c
++++ b/drivers/video/sm501fb.c
+@@ -41,6 +41,26 @@
+ #include <linux/sm501.h>
+ #include <linux/sm501-regs.h>
+ 
++#include "edid.h"
++
++static char *fb_mode = "640x480-16@60";
++static unsigned long default_bpp = 16;
++
++static struct fb_videomode __devinitdata sm501_default_mode = {
++	.refresh	= 60,
++	.xres		= 640,
++	.yres		= 480,
++	.pixclock	= 20833,
++	.left_margin	= 142,
++	.right_margin	= 13,
++	.upper_margin	= 21,
++	.lower_margin	= 1,
++	.hsync_len	= 69,
++	.vsync_len	= 3,
++	.sync		= FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
++	.vmode		= FB_VMODE_NONINTERLACED
++};
++
+ #define NR_PALETTE	256
+ 
+ enum sm501_controller {
+@@ -77,6 +97,7 @@ struct sm501fb_info {
+ 	void __iomem		*regs2d;	/* 2d remapped registers */
+ 	void __iomem		*fbmem;		/* remapped framebuffer */
+ 	size_t			 fbmem_len;	/* length of remapped region */
++	u8 *edid_data;
+ };
+ 
+ /* per-framebuffer private data */
+@@ -1725,9 +1746,16 @@ static int sm501fb_init_fb(struct fb_info *fb,
+ 	fb->var.vmode		= FB_VMODE_NONINTERLACED;
+ 	fb->var.bits_per_pixel  = 16;
+ 
++	if (info->edid_data) {
++			/* Now build modedb from EDID */
++			fb_edid_to_monspecs(info->edid_data, &fb->monspecs);
++			fb_videomode_to_modelist(fb->monspecs.modedb,
++						 fb->monspecs.modedb_len,
++						 &fb->modelist);
++	}
++
+ 	if (enable && (pd->flags & SM501FB_FLAG_USE_INIT_MODE) && 0) {
+ 		/* TODO read the mode from the current display */
+-
+ 	} else {
+ 		if (pd->def_mode) {
+ 			dev_info(info->dev, "using supplied mode\n");
+@@ -1737,12 +1765,34 @@ static int sm501fb_init_fb(struct fb_info *fb,
+ 			fb->var.xres_virtual = fb->var.xres;
+ 			fb->var.yres_virtual = fb->var.yres;
+ 		} else {
+-			ret = fb_find_mode(&fb->var, fb,
++			if (info->edid_data)
++				ret = fb_find_mode(&fb->var, fb, fb_mode,
++					fb->monspecs.modedb,
++					fb->monspecs.modedb_len,
++					&sm501_default_mode, default_bpp);
++			else
++				ret = fb_find_mode(&fb->var, fb,
+ 					   NULL, NULL, 0, NULL, 8);
+ 
+-			if (ret == 0 || ret == 4) {
+-				dev_err(info->dev,
+-					"failed to get initial mode\n");
++			switch (ret) {
++			case 1:
++				dev_info(info->dev, "using mode specified in "
++						"@mode\n");
++				break;
++			case 2:
++				dev_info(info->dev, "using mode specified in "
++					"@mode with ignored refresh rate\n");
++				break;
++			case 3:
++				dev_info(info->dev, "using mode default "
++					"mode\n");
++				break;
++			case 4:
++				dev_info(info->dev, "using mode from list\n");
++				break;
++			default:
++				dev_info(info->dev, "ret = %d\n", ret);
++				dev_info(info->dev, "failed to find mode\n");
+ 				return -EINVAL;
+ 			}
+ 		}
+@@ -2157,6 +2207,11 @@ static void __exit sm501fb_cleanup(void)
+ module_init(sm501fb_init);
+ module_exit(sm501fb_cleanup);
+ 
++module_param_named(mode, fb_mode, charp, 0);
++MODULE_PARM_DESC(mode,
++	"Specify resolution as \"<xres>x<yres>[-<bpp>][@<refresh>]\" ");
++module_param_named(bpp, default_bpp, ulong, 0);
++MODULE_PARM_DESC(bpp, "Specify bit-per-pixel if not specified mode");
+ MODULE_AUTHOR("Ben Dooks, Vincent Sanders");
+ MODULE_DESCRIPTION("SM501 Framebuffer driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+1.7.3.4
