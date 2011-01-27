@@ -1,16 +1,17 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: map ATAGs when not in first 1MB of RAM
-Date: Thu, 27 Jan 2011 17:46:03 +0000
-Message-ID: <20110127174603.GB605@n2100.arm.linux.org.uk>
-References: <1296143443-9442-1-git-send-email-robherring2@gmail.com>
-	<20110127163149.GF25968@n2100.arm.linux.org.uk>
-	<4D41AE4A.1000105@gmail.com>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] powerpc: document the MPIC device tree binding
+Date: Thu, 27 Jan 2011 17:50:32 -0600
+Message-ID: <4D4204C8.9040905@mentor.com>
+References: <4D34E448.8000902@mentor.com>
+	<AANLkTi=QX4BfLvPfQDMOgmh90TtX4MQqio6AOZR8JKas@mail.gmail.com>
+	<9F6FE96B71CF29479FF1CDC8046E150306BF11@039-SN1MPN1-004.039d.mgd.msft.net>
+	<4D377CE3.6000608@mentor.com>
+	<9F6FE96B71CF29479FF1CDC8046E150307A5C8@039-SN1MPN1-004.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4D41AE4A.1000105-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E150307A5C8-TcFNo7jSaXM0vywKSws3iq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,45 +21,74 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "Blanchard, Hollis" <Hollis_Blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 27, 2011 at 11:41:30AM -0600, Rob Herring wrote:
-> Russell,
+On 01/20/2011 09:50 AM, Yoder Stuart-B08248 wrote:
 >
-> On 01/27/2011 10:31 AM, Russell King - ARM Linux wrote:
->> On Thu, Jan 27, 2011 at 09:50:43AM -0600, Rob Herring wrote:
->>> +	/*
->>> +	 * Otherwise map the 1MB region r2 points to (atags or dtb)
->>> +	 */
->>> +1:	mov	r0, r2, lsr #20
->>> +	mov	r0, r0, lsl #20
->>> +	sub	r3, r0, #(PHYS_OFFSET&  0xff000000)
->>> +	.if	(PHYS_OFFSET&  0x00f00000)
->>> +	sub	r3, r3, #(PHYS_OFFSET&  0x00f00000)
+>
+>> -----Original Message-----
+>> From: Meador Inge [mailto:meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org]
+>> Sent: Wednesday, January 19, 2011 6:08 PM
+>> To: Yoder Stuart-B08248
+>> Cc: Wood Scott-B07421; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-
+>> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Blanchard, Hollis
+>> Subject: Re: [PATCH 1/2] powerpc: document the MPIC device tree binding
 >>
->> This introduces new PHYS_OFFSET uses which we're trying hard to get
->> rid of.  This will need to be reworked.
+>> On 01/19/2011 04:14 PM, Yoder Stuart-B08248 wrote:
+>>>
+>>>> +** Optional properties:
+>>>> +
+>>>> +   - no-reset : The presence of this property indicates that the MPIC
+>>>> +                should not be reset during runtime initialization.
+>>>> +   - protected-sources : Specifies a list of interrupt sources that
+>>>> + are not
+>>>> +                         available for use and whose corresponding
+>>>> + vectors
+>>>> +                         should not be initialized.  A typical use
+>>>> + case for
+>>>> +                         this property is in AMP systems where multiple
+>>>> +                         independent operating systems need to share
+>>>> + the MPIC
+>>>> +                         without clobbering each other.
+>>>
+>>> Is "protected-sources" really needed for AMP systems to tell the OSes
+>>> not to clobber each other?  Won't each OS be given a device tree with
+>>> only its interrupt sources?  ...so you know what you are allowed to
+>>> touch.
+>>
+>> This was discussed a little bit already [1, 2].  The MPIC driver currently
+>> initializes the VECPRI register for all interrupt sources, which can lead
+>> to the aforementioned clobbering.
 >
-> Yeah, I didn't really like that either. How about this? It's untested.  
-> It replaces the whole section mapping the 1st 1MB and should make  
-> replacing this instance of PHYS_OFFSET with a variable easier.
+> For sources that are protected and not to be touched, it seems
+> that the other need is for the OS to know (be guaranteed?) that
+> those sources have been put in state where the source is masked
+> or directed to other cores.   You can't have interrupts occurring
+> on sources that you are not allowed to initialize.
+>
+> So the "no-reset" property could potentially cover this as well-- if it was
+> defined to mean "don't reset the mpic" and boot firmware has put all sources
+> in a sane initial state.   And we wouldn't need the "protected-sources"
+> property any longer.
+>
 
-With the p2v patches, queued for the next merge window, PHYS_OFFSET
-becomes:
+This seems reasonable to me.  If "no-reset" is there, then we will not 
+reset the MPIC and *only* sources explicitly listed in "interrupts" 
+properties are up for any sort of initialization (e.g. the VECPRI init). 
+   If "no-reset" is not there, then anything is free game.
 
-extern unsigned long __pv_phys_offset;
-#define PHYS_OFFSET __pv_phys_offset
+In terms of implementation, I think we can (1) pull the protected 
+sources code, (2) keep the VECPRI initialization in 'mpic_init' from 
+happening when "no-reset" is present, and (3) "lazily" perform the 
+VECPRI initialization in 'mpic_host_map' (this way only sources 
+mentioned in the device tree are initialized).
 
-so using PHYS_OFFSET in any way in assembly isn't going to work too
-well.  Luckily, the p2v patches supply __create_page_tables with a
-value of PHYS_OFFSET in r8.
+I will send out a patch with these updates tomorrow.  I also CC'd Ben, 
+who wrote the original protected sources work, to make sure something 
+about the original use case is not being missed.
 
-What this means is that there's an fundamental interdependence between
-your patches and mine.  Your patches can work without the p2v patches.
-Or they can be made to work with the p2v patches applied.
-
-So I think this needs to wait until after the next merge window, or it
-needs to be prepared against the p2v patches (see my p2v branch) and
-applied there once everyone's happy with it.
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
