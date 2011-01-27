@@ -1,15 +1,11 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: Re: [uclinux-dist-devel] touch screen ads7846/7843 devicetree support
-Date: Thu, 27 Jan 2011 21:31:23 +0800
-Message-ID: <4D4173AB.3020809@wytron.com.tw>
-References: <4D410C4C.7070005@wytron.com.tw>	<AANLkTinJheHYyjUUAK7guNXqepp9KJ3xk6u-4JrmAbee@mail.gmail.com>
-	<4D414FED.706@wytron.com.tw>
-	<544AC56F16B56944AEC3BD4E3D591771324C105D75@LIMKCMBX1.ad.analog.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: map ATAGs when not in first 1MB of RAM
+Date: Thu, 27 Jan 2011 09:50:43 -0600
+Message-ID: <1296143443-9442-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <544AC56F16B56944AEC3BD4E3D591771324C105D75-gpnycfiEEVR7xzP2fcxY8GoKb0G9Rp+C@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,21 +15,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>, "uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Michael,
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-On 01/27/2011 08:24 PM, Hennerich, Michael wrote:
-> This driver is a SPI bus client driver. PPC is using devicetree for ages now,
-> and they don't have problems instantiating this or any other SPI bus driver..
+If ATAGs or DTB pointer is not within first 1MB of RAM, then the boot params
+will not be mapped early enough, so map the 1MB region that r2 points to. Only
+map the first 1MB when r2 is 0.
 
-Thanks for the pointer. I looked in powerpc dir and found one usage in
+Some assembly improvements from Nicolas Pitre.
 
-linux-2.6/arch/powerpc/platforms/512x/pdm360ng.c
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/kernel/head.S |   19 ++++++++++++++++++-
+ 1 files changed, 18 insertions(+), 1 deletions(-)
 
-I will try to follow it.
-
-Best regards,
-Thomas
+diff --git a/arch/arm/kernel/head.S b/arch/arm/kernel/head.S
+index 65d9489..9c688bf 100644
+--- a/arch/arm/kernel/head.S
++++ b/arch/arm/kernel/head.S
+@@ -205,15 +205,32 @@ __create_page_tables:
+ #endif
+ 
+ 	/*
+-	 * Then map first 1MB of ram in case it contains our boot params.
++	 * Then map first 1MB of ram if boot params address is not specified.
+ 	 */
++	cmp	r2, #0
++	bne	1f
+ 	add	r0, r4, #PAGE_OFFSET >> 18
+ 	orr	r6, r7, #(PHYS_OFFSET & 0xff000000)
+ 	.if	(PHYS_OFFSET & 0x00f00000)
+ 	orr	r6, r6, #(PHYS_OFFSET & 0x00f00000)
+ 	.endif
+ 	str	r6, [r0]
++	b	2f
+ 
++	/*
++	 * Otherwise map the 1MB region r2 points to (atags or dtb)
++	 */
++1:	mov	r0, r2, lsr #20
++	mov	r0, r0, lsl #20
++	sub	r3, r0, #(PHYS_OFFSET & 0xff000000)
++	.if	(PHYS_OFFSET & 0x00f00000)
++	sub	r3, r3, #(PHYS_OFFSET & 0x00f00000)
++	.endif
++	add	r3, r3, #PAGE_OFFSET
++	add	r3, r4, r3, lsr #18
++	orr	r6, r7, r0
++	str	r6, [r3]
++2:
+ #ifdef CONFIG_DEBUG_LL
+ #ifndef CONFIG_DEBUG_ICEDCC
+ 	/*
+-- 
+1.7.1
