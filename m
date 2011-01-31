@@ -1,29 +1,52 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH 3/4 v4] video, sm501: add OF binding to support SM501
-Date: Mon, 31 Jan 2011 11:52:40 +0100
-Message-ID: <20110131105239.GE5954@sortiz-mobl>
-References: <1291451028-22532-1-git-send-email-hs@denx.de>
- <1295863058-11168-1-git-send-email-hs@denx.de>
+From: Josh Boyer <jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3 RFC] dt: add documentation of ARM dt boot interface
+Date: Mon, 31 Jan 2011 06:24:00 -0500
+Message-ID: <20110131112400.GB13541@zod.rchland.ibm.com>
+References: <20110131073918.9058.37628.stgit@localhost6.localdomain6>
+	<20110131074510.9058.59071.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1295863058-11168-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Paul Mundt <lethal@linux-sh.org>
+In-Reply-To: <20110131074510.9058.59071.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Mon, Jan 31, 2011 at 12:45:41AM -0700, Grant Likely wrote:
+>Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>---
+>
+>For RFC only.  I do not plan to merge this change yet.
+>
+>g.
+>
+> Documentation/devicetree/booting-without-of.txt |   40 +++++++++++++++++++++++
+> 1 files changed, 40 insertions(+), 0 deletions(-)
+>
+>diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+>index 6bca668..3950aea 100644
+>--- a/Documentation/devicetree/booting-without-of.txt
+>+++ b/Documentation/devicetree/booting-without-of.txt
+>@@ -232,6 +233,45 @@ it with special cases.
+>   cannot support both configurations with Book E and configurations
+>   with classic Powerpc architectures.
+>
+>+2) Entry point for arch/arm
+>+---------------------------
+>+
+>+   There is one and one single entry point to the kernel, at the start
 
-On Mon, Jan 24, 2011 at 10:57:38AM +0100, Heiko Schocher wrote:
-> - add binding to OF, compatible name "smi,sm501"
-The MFD part looks fine to me:
-Acked-by: Samuel Ortiz <sameo@linux.intel.com>
+"one and one" ?
 
-Cheers,
-Samuel.
-
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+josh
