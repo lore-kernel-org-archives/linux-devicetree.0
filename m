@@ -1,79 +1,40 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] i2c-gpio: add devicetree support
-Date: Mon, 31 Jan 2011 07:54:52 -0700
-Message-ID: <AANLkTi=h8YEVwVNhN8f1zodKc2-5JY1zpmUfNLNTpvaE@mail.gmail.com>
-References: <1296403013-6058-1-git-send-email-thomas@wytron.com.tw>
-	<AANLkTi=5Uik+EwBRfYs_Pa77+qHngY03ezC63RC0WLQ8@mail.gmail.com>
-	<AANLkTimS70uHqmv3jhr+7mPz4QFKXRXuFnWj8s3EpKsO@mail.gmail.com>
-	<E1PjuE3-0002Xy-6z@jdl.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3714237071175846916=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1PjuE3-0002Xy-6z-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?ISO-8859-1?Q?H=E5vard_Skinnemoen?= <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Subject: [PATCH 1/3] of: define dummy of_get_property if not CONFIG_OF
+Date: Mon, 31 Jan 2011 23:25:49 +0800
+Message-ID: <1296487551-30938-1-git-send-email-thomas@wytron.com.tw>
+References: <AANLkTimS70uHqmv3jhr+7mPz4QFKXRXuFnWj8s3EpKsO@mail.gmail.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <AANLkTimS70uHqmv3jhr+7mPz4QFKXRXuFnWj8s3EpKsO-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============3714237071175846916==
-Content-Type: multipart/alternative; boundary=00032557525226e33d049b2599a7
+This will help to reduce the ifdef CONFIG_OF needed in most
+platform data probing.
 
---00032557525226e33d049b2599a7
-Content-Type: text/plain; charset=ISO-8859-1
+Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+---
+ include/linux/of.h |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
-On Jan 31, 2011 6:55 AM, "Jon Loeliger" <jdl-CYoMK+44s/E@public.gmane.org> wrote:
->
-> > > Is this field always present even when of is disabled?
-> >
-> > No, not yet.  It will be in 2.6.29.
->
-> Perhaps even 2.6.39? :-)
-
-Gah!  Yes.  I keep doing that, I don't know why.
-
-g.
-
->
-> jdl
-
---00032557525226e33d049b2599a7
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<p><br>
-On Jan 31, 2011 6:55 AM, &quot;Jon Loeliger&quot; &lt;<a href=3D"mailto:jdl=
-@jdl.com">jdl-CYoMK+44s/E@public.gmane.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; &gt; &gt; Is this field always present even when of is disabled?<br>
-&gt; &gt;<br>
-&gt; &gt; No, not yet. =A0It will be in 2.6.29.<br>
-&gt;<br>
-&gt; Perhaps even 2.6.39? :-)</p>
-<p>Gah!=A0 Yes.=A0 I keep doing that, I don&#39;t know why.</p>
-<p>g.</p>
-<p>&gt;<br>
-&gt; jdl<br>
-</p>
-
---00032557525226e33d049b2599a7--
-
---===============3714237071175846916==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3714237071175846916==--
+diff --git a/include/linux/of.h b/include/linux/of.h
+index cad7cf0..5e122cb 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -222,5 +222,13 @@ extern void of_attach_node(struct device_node *);
+ extern void of_detach_node(struct device_node *);
+ #endif
+ 
++#else /* !CONFIG_OF */
++
++static inline const void *of_get_property(const struct device_node *node,
++				const char *name, int *lenp)
++{
++	return NULL;
++}
++
+ #endif /* CONFIG_OF */
+ #endif /* _LINUX_OF_H */
+-- 
+1.7.3.5
