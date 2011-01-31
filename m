@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH v2 5/6] arm/dt: Basic versatile devicetree support
-Date: Mon, 31 Jan 2011 14:04:16 -0700
-Message-ID: <20110131210416.15105.58045.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 6/6] arm/dt: Basic tegra devicetree support
+Date: Mon, 31 Jan 2011 14:04:21 -0700
+Message-ID: <20110131210421.15105.61900.stgit@localhost6.localdomain6>
 References: <20110131203626.15105.64302.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,64 +20,43 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, buytenh@
 List-Id: devicetree@vger.kernel.org
 
-This patch adds adds very basic support for booting versatile with a
+This patch adds adds very basic support for booting tegra with a
 device tree.  It simply allows the existing machine_descs to match
-against the versatile ab & pb compatible values so that the kernel can
-boot.  Kernel parameters and the initrd pointer is read out of the
-tree instead of atags.
+against the tegra compatible values so that the kernel can boot.
+Kernel parameters and the initrd pointer is read out of the tree
+instead of atags.
 
 This is not complete device tree support.  This change will be
 reverted when a new machine_desc is added that can populate the
-versatile device registrations directly from data in the tree instead
-of using hard coded data.  That change will be made in a future patch.
+device registrations directly from data in the tree instead of using
+hard coded data.  That change will be made in a future patch.
+
+v2: Fixed cut-and-paste error in commit text
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- arch/arm/mach-versatile/versatile_ab.c |    6 ++++++
- arch/arm/mach-versatile/versatile_pb.c |    6 ++++++
- 2 files changed, 12 insertions(+), 0 deletions(-)
+ arch/arm/mach-tegra/board-harmony.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-versatile/versatile_ab.c b/arch/arm/mach-versatile/versatile_ab.c
-index aa9730f..62053df 100644
---- a/arch/arm/mach-versatile/versatile_ab.c
-+++ b/arch/arm/mach-versatile/versatile_ab.c
-@@ -33,6 +33,11 @@
- 
- #include "core.h"
- 
-+static const char *versatile_ab_match[] __initdata = {
-+	"arm,versatile-ab",
-+	NULL,
-+};
-+
- MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
- 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
- 	.boot_params	= 0x00000100,
-@@ -40,4 +45,5 @@ MACHINE_START(VERSATILE_AB, "ARM-Versatile AB")
- 	.init_irq	= versatile_init_irq,
- 	.timer		= &versatile_timer,
- 	.init_machine	= versatile_init,
-+	.dt_compat	= versatile_ab_match,
- MACHINE_END
-diff --git a/arch/arm/mach-versatile/versatile_pb.c b/arch/arm/mach-versatile/versatile_pb.c
-index bf46964..eba12fa 100644
---- a/arch/arm/mach-versatile/versatile_pb.c
-+++ b/arch/arm/mach-versatile/versatile_pb.c
-@@ -106,6 +106,11 @@ static void __init versatile_pb_init(void)
- 	}
+diff --git a/arch/arm/mach-tegra/board-harmony.c b/arch/arm/mach-tegra/board-harmony.c
+index b9dbdb1..99884e9 100644
+--- a/arch/arm/mach-tegra/board-harmony.c
++++ b/arch/arm/mach-tegra/board-harmony.c
+@@ -113,6 +113,11 @@ static void __init tegra_harmony_init(void)
+ 	platform_add_devices(harmony_devices, ARRAY_SIZE(harmony_devices));
  }
  
-+static const char *versatile_pb_match[] __initdata = {
-+	"arm,versatile-pb",
-+	NULL,
++static const char * tegra_harmony_board_compat[] = {
++	"nvidia,harmony",
++	NULL
 +};
 +
- MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
- 	/* Maintainer: ARM Ltd/Deep Blue Solutions Ltd */
- 	.boot_params	= 0x00000100,
-@@ -113,4 +118,5 @@ MACHINE_START(VERSATILE_PB, "ARM-Versatile PB")
- 	.init_irq	= versatile_init_irq,
- 	.timer		= &versatile_timer,
- 	.init_machine	= versatile_pb_init,
-+	.dt_compat	= versatile_pb_match,
+ MACHINE_START(HARMONY, "harmony")
+ 	.boot_params  = 0x00000100,
+ 	.fixup		= tegra_harmony_fixup,
+@@ -120,4 +125,5 @@ MACHINE_START(HARMONY, "harmony")
+ 	.init_machine   = tegra_harmony_init,
+ 	.map_io         = tegra_map_common_io,
+ 	.timer          = &tegra_timer,
++	.dt_compat      = tegra_harmony_board_compat,
  MACHINE_END
