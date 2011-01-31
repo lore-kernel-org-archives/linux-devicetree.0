@@ -1,126 +1,154 @@
-From: =?ISO-8859-1?Q?H=E5vard_Skinnemoen?= <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c-gpio: add devicetree support
-Date: Sun, 30 Jan 2011 19:26:24 -0800
-Message-ID: <AANLkTi=5Uik+EwBRfYs_Pa77+qHngY03ezC63RC0WLQ8@mail.gmail.com>
-References: <1296403013-6058-1-git-send-email-thomas@wytron.com.tw>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH 0/3] dt: documentation reorganization
+Date: Mon, 31 Jan 2011 00:44:41 -0700
+Message-ID: <20110131073918.9058.37628.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1296403013-6058-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: jwboyer@linux.vnet.ibm.com, sam@ravnborg.org, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series reorganizes and cleans up the device tree documentation
+to make the directory useful for non-powerpc users.
 
-On Sun, Jan 30, 2011 at 7:56 AM, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org> wro=
-te:
-> From: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
->
-> This patch is based on an earlier patch from Albert Herranz,
-> http://git.infradead.org/users/herraa1/gc-linux-2.6.git/commit/
-> 9854eb78607c641ab5ae85bcbe3c9d14ac113733
+Patch 3 of this series adds some documentation about the ARM device
+tree boot interface, but I'm posting this one for RFC only at the
+moment.  I'll not merge this until dt support for ARM is also merged.
 
-That commit has a single-line description of which I don't understand
-a single word (unless "wii" is what I think it is, which seems
-likely). Could you please explain how that commit relates to this
-patch?
+g.
 
-> The dts binding is modified as Grant suggested. The of probing
-> is merged inline instead of a separate file. It uses the newer
-> of gpio probe.
+---
 
-It seems like a terrible idea to merge firmware-specific code into the
-driver. Is there are reason why of-based platforms can't just pass the
-data they need in pdata like everyone else?
+Grant Likely (3):
+      dt: Move device tree documentation out of powerpc directory
+      dt: Remove obsolete description of powerpc boot interface
+      dt: add documentation of ARM dt boot interface
 
-Not saying that it necessarily _is_ a terrible idea, but I think the
-reasoning behind it needs to be included in the patch description.
 
-> Signed-off-by: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
-> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> ---
-> =A0Documentation/devicetree/bindings/gpio/i2c.txt | =A0 39 ++++++++++=
-++++
-> =A0drivers/i2c/busses/i2c-gpio.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0|=
- =A0 67 ++++++++++++++++++++++-
-> =A02 files changed, 103 insertions(+), 3 deletions(-)
-> =A0create mode 100644 Documentation/devicetree/bindings/gpio/i2c.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/i2c.txt b/Documen=
-tation/devicetree/bindings/gpio/i2c.txt
-> new file mode 100644
-> index 0000000..402569e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/i2c.txt
+ Documentation/devicetree/bindings/ata/fsl-sata.txt |    0 
+ Documentation/devicetree/bindings/eeprom.txt       |    0 
+ .../devicetree/bindings/gpio/8xxx_gpio.txt         |    0 
+ Documentation/devicetree/bindings/gpio/gpio.txt    |    0 
+ Documentation/devicetree/bindings/gpio/led.txt     |    0 
+ Documentation/devicetree/bindings/i2c/fsl-i2c.txt  |    0 
+ Documentation/devicetree/bindings/marvell.txt      |    0 
+ .../devicetree/bindings/mmc/fsl-esdhc.txt          |    0 
+ .../devicetree/bindings/mmc/mmc-spi-slot.txt       |    0 
+ .../devicetree/bindings/mtd/fsl-upm-nand.txt       |    0 
+ .../devicetree/bindings/mtd/mtd-physmap.txt        |    0 
+ .../devicetree/bindings/net/can/mpc5xxx-mscan.txt  |    0 
+ .../devicetree/bindings/net/can/sja1000.txt        |    0 
+ .../devicetree/bindings/net/fsl-tsec-phy.txt       |    0 
+ .../devicetree/bindings/net/mdio-gpio.txt          |    0 
+ Documentation/devicetree/bindings/net/phy.txt      |    0 
+ .../devicetree/bindings/pci/83xx-512x-pci.txt      |    0 
+ .../devicetree/bindings/powerpc/4xx/cpm.txt        |    0 
+ .../devicetree/bindings/powerpc/4xx/emac.txt       |    0 
+ .../devicetree/bindings/powerpc/4xx/ndfc.txt       |    0 
+ .../bindings/powerpc/4xx/ppc440spe-adma.txt        |    0 
+ .../devicetree/bindings/powerpc/4xx/reboot.txt     |    0 
+ .../devicetree/bindings/powerpc/fsl/board.txt      |    0 
+ .../devicetree/bindings/powerpc/fsl/cpm_qe/cpm.txt |    0 
+ .../bindings/powerpc/fsl/cpm_qe/cpm/brg.txt        |    0 
+ .../bindings/powerpc/fsl/cpm_qe/cpm/i2c.txt        |    0 
+ .../bindings/powerpc/fsl/cpm_qe/cpm/pic.txt        |    0 
+ .../bindings/powerpc/fsl/cpm_qe/cpm/usb.txt        |    0 
+ .../bindings/powerpc/fsl/cpm_qe/gpio.txt           |    0 
+ .../bindings/powerpc/fsl/cpm_qe/network.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  |    0 
+ .../bindings/powerpc/fsl/cpm_qe/qe/firmware.txt    |    0 
+ .../bindings/powerpc/fsl/cpm_qe/qe/par_io.txt      |    0 
+ .../bindings/powerpc/fsl/cpm_qe/qe/pincfg.txt      |    0 
+ .../bindings/powerpc/fsl/cpm_qe/qe/ucc.txt         |    0 
+ .../bindings/powerpc/fsl/cpm_qe/qe/usb.txt         |    0 
+ .../bindings/powerpc/fsl/cpm_qe/serial.txt         |    0 
+ .../devicetree/bindings/powerpc/fsl/diu.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/ecm.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/gtm.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/guts.txt       |    0 
+ .../devicetree/bindings/powerpc/fsl/lbc.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/mcm.txt        |    0 
+ .../bindings/powerpc/fsl/mcu-mpc8349emitx.txt      |    0 
+ .../bindings/powerpc/fsl/mpc5121-psc.txt           |    0 
+ .../devicetree/bindings/powerpc/fsl/mpc5200.txt    |    0 
+ .../devicetree/bindings/powerpc/fsl/mpic.txt       |    0 
+ .../devicetree/bindings/powerpc/fsl/msi-pic.txt    |    0 
+ .../devicetree/bindings/powerpc/fsl/pmc.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/sec.txt        |    0 
+ .../devicetree/bindings/powerpc/fsl/ssi.txt        |    0 
+ .../bindings/powerpc/nintendo/gamecube.txt         |    0 
+ .../devicetree/bindings/powerpc/nintendo/wii.txt   |    0 
+ Documentation/devicetree/bindings/spi/fsl-spi.txt  |    0 
+ Documentation/devicetree/bindings/spi/spi-bus.txt  |    0 
+ Documentation/devicetree/bindings/usb/fsl-usb.txt  |    0 
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |    0 
+ Documentation/devicetree/bindings/xilinx.txt       |    0 
+ Documentation/devicetree/booting-without-of.txt    |   86 +++++++++-----------
+ 60 files changed, 40 insertions(+), 46 deletions(-)
+ rename Documentation/{powerpc/dts-bindings/fsl/sata.txt => devicetree/bindings/ata/fsl-sata.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/eeprom.txt => devicetree/bindings/eeprom.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/8xxx_gpio.txt => devicetree/bindings/gpio/8xxx_gpio.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/gpio/gpio.txt => devicetree/bindings/gpio/gpio.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/gpio/led.txt => devicetree/bindings/gpio/led.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/i2c.txt => devicetree/bindings/i2c/fsl-i2c.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/marvell.txt => devicetree/bindings/marvell.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/esdhc.txt => devicetree/bindings/mmc/fsl-esdhc.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/mmc-spi-slot.txt => devicetree/bindings/mmc/mmc-spi-slot.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/upm-nand.txt => devicetree/bindings/mtd/fsl-upm-nand.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/mtd-physmap.txt => devicetree/bindings/mtd/mtd-physmap.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/can.txt => devicetree/bindings/net/can/mpc5xxx-mscan.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/can/sja1000.txt => devicetree/bindings/net/can/sja1000.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/tsec.txt => devicetree/bindings/net/fsl-tsec-phy.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/gpio/mdio.txt => devicetree/bindings/net/mdio-gpio.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/phy.txt => devicetree/bindings/net/phy.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/83xx-512x-pci.txt => devicetree/bindings/pci/83xx-512x-pci.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/4xx/cpm.txt => devicetree/bindings/powerpc/4xx/cpm.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/4xx/emac.txt => devicetree/bindings/powerpc/4xx/emac.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/4xx/ndfc.txt => devicetree/bindings/powerpc/4xx/ndfc.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/4xx/ppc440spe-adma.txt => devicetree/bindings/powerpc/4xx/ppc440spe-adma.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/4xx/reboot.txt => devicetree/bindings/powerpc/4xx/reboot.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/board.txt => devicetree/bindings/powerpc/fsl/board.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/cpm.txt => devicetree/bindings/powerpc/fsl/cpm_qe/cpm.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/cpm/brg.txt => devicetree/bindings/powerpc/fsl/cpm_qe/cpm/brg.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/cpm/i2c.txt => devicetree/bindings/powerpc/fsl/cpm_qe/cpm/i2c.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/cpm/pic.txt => devicetree/bindings/powerpc/fsl/cpm_qe/cpm/pic.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/cpm/usb.txt => devicetree/bindings/powerpc/fsl/cpm_qe/cpm/usb.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/gpio.txt => devicetree/bindings/powerpc/fsl/cpm_qe/gpio.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/network.txt => devicetree/bindings/powerpc/fsl/cpm_qe/network.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/qe.txt => devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/qe/firmware.txt => devicetree/bindings/powerpc/fsl/cpm_qe/qe/firmware.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/qe/par_io.txt => devicetree/bindings/powerpc/fsl/cpm_qe/qe/par_io.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/qe/pincfg.txt => devicetree/bindings/powerpc/fsl/cpm_qe/qe/pincfg.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/qe/ucc.txt => devicetree/bindings/powerpc/fsl/cpm_qe/qe/ucc.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/qe/usb.txt => devicetree/bindings/powerpc/fsl/cpm_qe/qe/usb.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/cpm_qe/serial.txt => devicetree/bindings/powerpc/fsl/cpm_qe/serial.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/diu.txt => devicetree/bindings/powerpc/fsl/diu.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/dma.txt => devicetree/bindings/powerpc/fsl/dma.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/ecm.txt => devicetree/bindings/powerpc/fsl/ecm.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/gtm.txt => devicetree/bindings/powerpc/fsl/gtm.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/guts.txt => devicetree/bindings/powerpc/fsl/guts.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/lbc.txt => devicetree/bindings/powerpc/fsl/lbc.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/mcm.txt => devicetree/bindings/powerpc/fsl/mcm.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/mcu-mpc8349emitx.txt => devicetree/bindings/powerpc/fsl/mcu-mpc8349emitx.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/mpc5121-psc.txt => devicetree/bindings/powerpc/fsl/mpc5121-psc.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/mpc5200.txt => devicetree/bindings/powerpc/fsl/mpc5200.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/mpic.txt => devicetree/bindings/powerpc/fsl/mpic.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/msi-pic.txt => devicetree/bindings/powerpc/fsl/msi-pic.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/pmc.txt => devicetree/bindings/powerpc/fsl/pmc.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/sec.txt => devicetree/bindings/powerpc/fsl/sec.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/ssi.txt => devicetree/bindings/powerpc/fsl/ssi.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/nintendo/gamecube.txt => devicetree/bindings/powerpc/nintendo/gamecube.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/nintendo/wii.txt => devicetree/bindings/powerpc/nintendo/wii.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/spi.txt => devicetree/bindings/spi/fsl-spi.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/spi-bus.txt => devicetree/bindings/spi/spi-bus.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/fsl/usb.txt => devicetree/bindings/usb/fsl-usb.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/usb-ehci.txt => devicetree/bindings/usb/usb-ehci.txt} (100%)
+ rename Documentation/{powerpc/dts-bindings/xilinx.txt => devicetree/bindings/xilinx.txt} (100%)
+ rename Documentation/{powerpc/booting-without-of.txt => devicetree/booting-without-of.txt} (96%)
 
-This looks a bit backwards. i2c-gpio is a i2c driver which happens to
-utilize the gpio framework, not the other way around.
-
-> @@ -0,0 +1,39 @@
-> +GPIO-based I2C
-> +
-> +Required properties:
-> +- compatible : should be "i2c-gpio".
-> +- gpios : should specify GPIOs used for SDA and SCL lines, in that o=
-rder.
-> +Optional properties:
-> +- sda-is-open-drain : present if SDA gpio is open-drain.
-> +- scl-is-open-drain : present if SCL gpio is open-drain.
-> +- scl-is-output-only : present if SCL is an output gpio only.
-
-I think "present if the output driver for SCL cannot be turned off" is
-more accurate. Might also be worth mentioning that this will prevent
-clock stretching from working.
-
-> --- a/drivers/i2c/busses/i2c-gpio.c
-> +++ b/drivers/i2c/busses/i2c-gpio.c
-> @@ -14,6 +14,9 @@
-> =A0#include <linux/module.h>
-> =A0#include <linux/slab.h>
-> =A0#include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_i2c.h>
-
-Do these headers provide stubs so non-of platforms won't break?
-
-> @@ -83,11 +86,52 @@ static int __devinit i2c_gpio_probe(struct platfo=
-rm_device *pdev)
-> =A0 =A0 =A0 =A0struct i2c_gpio_platform_data *pdata;
-> =A0 =A0 =A0 =A0struct i2c_algo_bit_data *bit_data;
-> =A0 =A0 =A0 =A0struct i2c_adapter *adap;
-> + =A0 =A0 =A0 struct device_node *np =3D pdev->dev.of_node;
-
-Would be nice if this could be eliminated on non-of platforms.
-
-> =A0 =A0 =A0 =A0int ret;
->
-> =A0 =A0 =A0 =A0pdata =3D pdev->dev.platform_data;
-> - =A0 =A0 =A0 if (!pdata)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENXIO;
-> + =A0 =A0 =A0 if (!pdata) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (np && of_gpio_count(np) >=3D 2) {
-
-If that expression somehow always evaluates to false on non-of
-platforms, this might be ok. But please confirm if this is the case;
-otherwise, it looks like a pretty large addition to an otherwise very
-small driver.
-
-How about a tiny bit of restructuring: Move the block below into a
-separate function, which is only called if some constant expression
-says that of is enabled. Then you can move the declaration above
-either into the if block or into the function, depending on where you
-want to do the conditional above.
-
-> =A0static struct platform_driver i2c_gpio_driver =3D {
-> =A0 =A0 =A0 =A0.driver =A0 =A0 =A0 =A0 =3D {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =A0 =3D "i2c-gpio",
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =A0=3D THIS_MODULE,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D i2c_gpio_match,
-
-Is this field always present even when of is disabled?
-
-Havard
+-- 
+Signature
