@@ -1,73 +1,47 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/3 RFC] dt: add documentation of ARM dt boot interface
-Date: Mon, 31 Jan 2011 11:03:21 -0700
-Message-ID: <AANLkTinU7GOpDt83BHYfbzkbifW1yH3OMFS-2+6XCCe4@mail.gmail.com>
-References: <20110131073918.9058.37628.stgit@localhost6.localdomain6>
- <20110131074510.9058.59071.stgit@localhost6.localdomain6> <44dc88e7-3086-4762-8789-f455f3b265ec@VA3EHSMHS027.ehs.local>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 0/8] Basic ARM device tree support
+Date: Mon, 31 Jan 2011 11:05:12 -0700
+Message-ID: <20110131180512.GA15429@angua.secretlab.ca>
+References: <20110118195933.13011.56098.stgit@localhost6.localdomain6>
+	<00bcd596-2108-4c54-92d3-7fda39e333e3@VA3EHSMHS015.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <44dc88e7-3086-4762-8789-f455f3b265ec@VA3EHSMHS027.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, sam@ravnborg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <00bcd596-2108-4c54-92d3-7fda39e333e3-+Ck8Kgl/v091zOOwW4IIhbjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lennert Buijtenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 31, 2011 at 11:00 AM, Stephen Neuendorffer
-<stephen.neuendorffer@xilinx.com> wrote:
->
->
->> -----Original Message-----
->> From: linuxppc-dev-bounces+stephen=3Dneuendorffer.name@lists.ozlabs.=
-org
-> [mailto:linuxppc-dev-
->> bounces+stephen=3Dneuendorffer.name@lists.ozlabs.org] On Behalf Of G=
-rant
-> Likely
->> Sent: Sunday, January 30, 2011 11:46 PM
->> To: devicetree-discuss@lists.ozlabs.org;
-> linuxppc-dev@lists.ozlabs.org; linux-kernel@vger.kernel.org
->> Cc: sam@ravnborg.org
->> Subject: [PATCH 3/3 RFC] dt: add documentation of ARM dt boot
-> interface
->>
->> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
->> ---
->>
->> For RFC only. =A0I do not plan to merge this change yet.
->>
->> g.
->>
->> =A0Documentation/devicetree/booting-without-of.txt | =A0 40
-> +++++++++++++++++++++++
->> =A01 files changed, 40 insertions(+), 0 deletions(-)
->>
->> diff --git a/Documentation/devicetree/booting-without-of.txt
-> b/Documentation/devicetree/booting-
->> without-of.txt
->> index 6bca668..3950aea 100644
->> --- a/Documentation/devicetree/booting-without-of.txt
->> +++ b/Documentation/devicetree/booting-without-of.txt
->
-> In order to make this more generic, perhaps it should change names, s=
-o
-> that it is actually a description of what the file
-> describes, as opposed to what it doesn't describe. =A0"booting.txt"?
+On Wed, Jan 26, 2011 at 01:04:39PM -0700, John Linn wrote:
+> > -----Original Message-----
+> > From: Grant Likely [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of Grant Likely
+> > Sent: Tuesday, January 18, 2011 1:29 PM
+> > To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Cc: Nicolas Pitre; Russell King; Catalin Marinas; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
+> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson; Jeremy Kerr; John Linn; Lennert Buijtenhek
+> > Subject: [PATCH 0/8] Basic ARM device tree support
+> > 
+> 
+> Thanks for this patch set.  Device tree on ARM will be a great help to Xilinx.
+> 
+> Tested-by: John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-I though about that, but I think I'd like to leave it as-is for the
-time being so that it is easier for people to find where it has moved
-to.
+Thanks John,
 
->
->> @@ -13,6 +13,7 @@ Table of Contents
->>
->> =A0 =A0I - Introduction
->> =A0 =A0 =A01) Entry point for arch/powerpc
->> + =A0 =A02) Entry point for arch/arm
->
-> We should probably include microblaze here too...
+I've had to rework the early init code to be safer, but it turned out
+to be a significant change, so I won't add your tested-by line to the
+patch yet.  Would you mind retesting when I repost later today?
 
-Awesome, thanks for volunteering to write the patch!  :-)
-
+Thanks,
 g.
