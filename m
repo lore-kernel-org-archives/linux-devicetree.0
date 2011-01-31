@@ -1,134 +1,135 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v2 1/6] arm/dt: Make __vet_atags also accept a dtb image
-Date: Mon, 31 Jan 2011 14:03:55 -0700
-Message-ID: <20110131210355.15105.55634.stgit@localhost6.localdomain6>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH v2 3/6] arm/dt: consolidate atags setup into
+	setup_machine_atags
+Date: Mon, 31 Jan 2011 14:04:05 -0700
+Message-ID: <20110131210405.15105.37881.stgit@localhost6.localdomain6>
 References: <20110131203626.15105.64302.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110131203626.15105.64302.stgit@localhost6.localdomain6>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.pitre@linaro.org, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, buytenh@
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110131203626.15105.64302.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, buytenh@
 List-Id: devicetree@vger.kernel.org
 
-The dtb is passed to the kernel via register r2, which is the same
-method that is used to pass an atags pointer.  This patch modifies
-__vet_atags to not clear r2 when it encounters a dtb image.
+In preparation for adding device tree support, this patch consolidates
+all of the atag-specific setup into a single function.
 
-v2: fixed bugs pointed out by Nicolas Pitre
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- arch/arm/kernel/head-common.S |   24 ++++++++++++++++++------
- arch/arm/kernel/head.S        |    8 ++++----
- 2 files changed, 22 insertions(+), 10 deletions(-)
+ arch/arm/kernel/setup.c |   68 ++++++++++++++++++++++++-----------------------
+ 1 files changed, 35 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm/kernel/head-common.S b/arch/arm/kernel/head-common.S
-index 8f57515..882c292 100644
---- a/arch/arm/kernel/head-common.S
-+++ b/arch/arm/kernel/head-common.S
-@@ -15,6 +15,12 @@
- #define ATAG_CORE_SIZE ((2*4 + 3*4) >> 2)
- #define ATAG_CORE_SIZE_EMPTY ((2*4) >> 2)
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index d211609..cbc1836 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -424,25 +424,6 @@ void cpu_init(void)
+ 	    : "r14");
+ }
  
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+#define OF_DT_MAGIC 0xd00dfeed
-+#else
-+#define OF_DT_MAGIC 0xedfe0dd0 /* 0xd00dfeed in big-endian */
-+#endif
+-static struct machine_desc * __init setup_machine(unsigned int nr)
+-{
+-	struct machine_desc *list;
+-
+-	/*
+-	 * locate machine in the list of supported machines.
+-	 */
+-	list = lookup_machine_type(nr);
+-	if (!list) {
+-		printk("Machine configuration botched (nr %d), unable "
+-		       "to continue.\n", nr);
+-		while (1);
+-	}
+-
+-	printk("Machine: %s\n", list->name);
+-
+-	return list;
+-}
+-
+ int __init arm_add_memory(unsigned long start, unsigned long size)
+ {
+ 	struct membank *bank = &meminfo.bank[meminfo.nr_banks];
+@@ -796,21 +777,23 @@ static void __init squash_mem_tags(struct tag *tag)
+ 			tag->hdr.tag = ATAG_NONE;
+ }
+ 
+-void __init setup_arch(char **cmdline_p)
++static struct machine_desc * __init setup_machine_tags(unsigned int nr)
+ {
+ 	struct tag *tags = (struct tag *)&init_tags;
+ 	struct machine_desc *mdesc;
+ 	char *from = default_command_line;
+ 
+-	unwind_init();
+-
+-	setup_processor();
+-	mdesc = setup_machine(machine_arch_type);
+-	machine_desc = mdesc;
+-	machine_name = mdesc->name;
++	/*
++	 * locate machine in the list of supported machines.
++	 */
++	mdesc = lookup_machine_type(nr);
++	if (!mdesc) {
++		printk("Machine configuration botched (nr %d), unable "
++		       "to continue.\n", nr);
++		while (1);
++	}
+ 
+-	if (mdesc->soft_reboot)
+-		reboot_setup("s");
++	printk("Machine: %s\n", mdesc->name);
+ 
+ 	if (__atags_pointer)
+ 		tags = phys_to_virt(__atags_pointer);
+@@ -838,16 +821,35 @@ void __init setup_arch(char **cmdline_p)
+ 		parse_tags(tags);
+ 	}
+ 
+-	init_mm.start_code = (unsigned long) _text;
+-	init_mm.end_code   = (unsigned long) _etext;
+-	init_mm.end_data   = (unsigned long) _edata;
+-	init_mm.brk	   = (unsigned long) _end;
+-
+ 	/* parse_early_param needs a boot_command_line */
+ 	strlcpy(boot_command_line, from, COMMAND_LINE_SIZE);
+ 
+ 	/* populate cmd_line too for later use, preserving boot_command_line */
+ 	strlcpy(cmd_line, boot_command_line, COMMAND_LINE_SIZE);
 +
- /*
-  * Exception handling.  Something went wrong and we can't proceed.  We
-  * ought to tell the user, but since we don't have any guarantee that
-@@ -105,22 +111,28 @@ __lookup_machine_type_data:
++	return mdesc;
++}
++
++
++void __init setup_arch(char **cmdline_p)
++{
++	struct machine_desc *mdesc;
++
++	unwind_init();
++
++	setup_processor();
++	mdesc = setup_machine_tags(machine_arch_type);
++	machine_desc = mdesc;
++	machine_name = mdesc->name;
++
++	if (mdesc->soft_reboot)
++		reboot_setup("s");
++
++	init_mm.start_code = (unsigned long) _text;
++	init_mm.end_code   = (unsigned long) _etext;
++	init_mm.end_data   = (unsigned long) _edata;
++	init_mm.brk	   = (unsigned long) _end;
++
+ 	*cmdline_p = cmd_line;
  
- /* Determine validity of the r2 atags pointer.  The heuristic requires
-  * that the pointer be aligned, in the first 16k of physical RAM and
-- * that the ATAG_CORE marker is first and present.  Future revisions
-+ * that the ATAG_CORE marker is first and present.  If CONFIG_OF_FLATTREE
-+ * is selected, then it will also accept a dtb pointer.  Future revisions
-  * of this function may be more lenient with the physical address and
-  * may also be able to move the ATAGS block if necessary.
-  *
-  * r8  = machinfo
-  *
-  * Returns:
-- *  r2 either valid atags pointer, or zero
-+ *  r2 either valid atags pointer, valid dtb pointer, or zero
-  *  r5, r6 corrupted
-  */
- __vet_atags:
- 	tst	r2, #0x3			@ aligned?
- 	bne	1f
- 
--	ldr	r5, [r2, #0]			@ is first tag ATAG_CORE?
--	cmp	r5, #ATAG_CORE_SIZE
-+	ldr	r5, [r2, #0]
-+#ifdef CONFIG_OF_FLATTREE
-+	ldr	r6, =OF_DT_MAGIC		@ is it a DTB?
-+	cmp	r5, r6
-+	beq	2f
-+#endif
-+	cmp	r5, #ATAG_CORE_SIZE		@ is first tag ATAG_CORE?
- 	cmpne	r5, #ATAG_CORE_SIZE_EMPTY
- 	bne	1f
- 	ldr	r5, [r2, #4]
-@@ -128,7 +140,7 @@ __vet_atags:
- 	cmp	r5, r6
- 	bne	1f
- 
--	mov	pc, lr				@ atag pointer is ok
-+2:	mov	pc, lr				@ atag/dtb pointer is ok
- 
- 1:	mov	r2, #0
- 	mov	pc, lr
-@@ -140,7 +152,7 @@ ENDPROC(__vet_atags)
-  *
-  *  r0  = cp#15 control register
-  *  r1  = machine ID
-- *  r2  = atags pointer
-+ *  r2  = atags/dtb pointer
-  *  r9  = processor ID
-  */
- 	__INIT
-diff --git a/arch/arm/kernel/head.S b/arch/arm/kernel/head.S
-index f17d9a0..65d9489 100644
---- a/arch/arm/kernel/head.S
-+++ b/arch/arm/kernel/head.S
-@@ -66,7 +66,7 @@
-  *
-  * This is normally called from the decompressor code.  The requirements
-  * are: MMU = off, D-cache = off, I-cache = dont care, r0 = 0,
-- * r1 = machine nr, r2 = atags pointer.
-+ * r1 = machine nr, r2 = atags or dtb pointer.
-  *
-  * This code is mostly position independent, so if you link the kernel at
-  * 0xc0008000, you call this at __pa(0xc0008000).
-@@ -93,7 +93,7 @@ ENTRY(stext)
- 	beq	__error_a			@ yes, error 'a'
- 
- 	/*
--	 * r1 = machine no, r2 = atags,
-+	 * r1 = machine no, r2 = atags or dtb,
- 	 * r8 = machinfo, r9 = cpuid, r10 = procinfo
- 	 */
- 	bl	__vet_atags
-@@ -335,7 +335,7 @@ __secondary_data:
-  *
-  *  r0  = cp#15 control register
-  *  r1  = machine ID
-- *  r2  = atags pointer
-+ *  r2  = atags or dtb pointer
-  *  r4  = page table pointer
-  *  r9  = processor ID
-  *  r13 = *virtual* address to jump to upon completion
-@@ -372,7 +372,7 @@ ENDPROC(__enable_mmu)
-  *
-  *  r0  = cp#15 control register
-  *  r1  = machine ID
-- *  r2  = atags pointer
-+ *  r2  = atags or dtb pointer
-  *  r9  = processor ID
-  *  r13 = *virtual* address to jump to upon completion
-  *
+ 	parse_early_param();
