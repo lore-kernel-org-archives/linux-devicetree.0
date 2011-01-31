@@ -1,14 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] dt: add of_platform_bus_snoop() which attaches nodes to
-	devices
-Date: Mon, 31 Jan 2011 15:07:49 -0700
-Message-ID: <AANLkTimpjCtaksHCURsZX9JDLd+1+ivPN7Zeq9A4RxMs@mail.gmail.com>
-References: <20110131215935.26336.32719.stgit@localhost6.localdomain6>
+Subject: Re: [PATCH 1/3] of: define dummy of_get_property if not CONFIG_OF
+Date: Mon, 31 Jan 2011 15:10:47 -0700
+Message-ID: <20110131221047.GA27856@angua.secretlab.ca>
+References: <AANLkTimS70uHqmv3jhr+7mPz4QFKXRXuFnWj8s3EpKsO@mail.gmail.com>
+	<1296487551-30938-1-git-send-email-thomas@wytron.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110131215935.26336.32719.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1296487551-30938-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,41 +19,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 31, 2011 at 3:01 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
-> This patch implements an alternate method for using device tree data
-> for populating machine device registration. =A0Traditionally, board
-> support has directly generated and registered devices based on nodes
-> in the device tree. =A0The board support code starts at the root of the
-> tree and begins allocating devices for each device node it finds.
-> Similarly, bus drivers (i2c, spi, etc.) use their child nodes to
-> register child devices. =A0This model can be seen in almost all the power=
-pc
-> board ports (arch/powerpc/platforms/*).
->
-> However, for many of the ARM SoCs, there already exists complete board
-> support for many SoCs that have their own code for registering the
-> basic set of platform devices with non-trivial dependencies on clock
-> structure and machine specific platform code. =A0While starting at the
-> base of the tree and working up is certainly possible, it requires
-> modifying a lot of machine support code to get it working.
->
-> Instead, this patch provides an alternate approach. =A0Instead of
-> starting at the root of the tree and working up, this patch allows the
-> SoC support code to register its standard set of platform devices in
-> the normal way. =A0However, it also registers a platform_bus notifier
-> function which compares platform_device registrations with data in the
-> device tree. =A0Whenever it finds a matching node, it increments the
-> node reference count and assigns it to the device's of_node pointer so
-> that it is available for the device driver to use and bind against.
-> For example, an spi master driver would have access to the spi node
-> which contains information about all the spi slaves on the bus.
+On Mon, Jan 31, 2011 at 11:25:49PM +0800, Thomas Chou wrote:
+> This will help to reduce the ifdef CONFIG_OF needed in most
+> platform data probing.
+> 
+> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
 
-One more note.  It might also be a good idea to do something like this
-for the PCI and AMBA buses.  I've not yet looked at how much code
-could be made common for implementing that.
+With moving the dt reading into a separate function protected by
+CONFIG_OF, this patch shouldn't be necessary.
 
 g.
+
+> ---
+>  include/linux/of.h |    8 ++++++++
+>  1 files changed, 8 insertions(+), 0 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index cad7cf0..5e122cb 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -222,5 +222,13 @@ extern void of_attach_node(struct device_node *);
+>  extern void of_detach_node(struct device_node *);
+>  #endif
+>  
+> +#else /* !CONFIG_OF */
+> +
+> +static inline const void *of_get_property(const struct device_node *node,
+> +				const char *name, int *lenp)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #endif /* CONFIG_OF */
+>  #endif /* _LINUX_OF_H */
+> -- 
+> 1.7.3.5
+> 
