@@ -1,54 +1,73 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH] SDHCI: S3C: Add support for retrieving memory and irq
-	resource information from device tree.
-Date: Mon, 31 Jan 2011 11:00:26 -0700
-Message-ID: <AANLkTim30eZH_yLRgi05wVyuuiQ0bhVKqZnHrDnb4gAc@mail.gmail.com>
-References: <1296491294-11030-1-git-send-email-thomas.abraham@linaro.org>
-	<4D46EABD.8010903@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/3 RFC] dt: add documentation of ARM dt boot interface
+Date: Mon, 31 Jan 2011 11:03:21 -0700
+Message-ID: <AANLkTinU7GOpDt83BHYfbzkbifW1yH3OMFS-2+6XCCe4@mail.gmail.com>
+References: <20110131073918.9058.37628.stgit@localhost6.localdomain6>
+ <20110131074510.9058.59071.stgit@localhost6.localdomain6> <44dc88e7-3086-4762-8789-f455f3b265ec@VA3EHSMHS027.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <4D46EABD.8010903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Abraham <thomas.abraham-68IGFXMjmZ7QT0dZR+AlfA@public.gmane.org>, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22LR7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <44dc88e7-3086-4762-8789-f455f3b265ec@VA3EHSMHS027.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, sam@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 31, 2011 at 10:00 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Thomas,
+On Mon, Jan 31, 2011 at 11:00 AM, Stephen Neuendorffer
+<stephen.neuendorffer@xilinx.com> wrote:
 >
-> On 01/31/2011 10:28 AM, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>
+>> -----Original Message-----
+>> From: linuxppc-dev-bounces+stephen=3Dneuendorffer.name@lists.ozlabs.=
+org
+> [mailto:linuxppc-dev-
+>> bounces+stephen=3Dneuendorffer.name@lists.ozlabs.org] On Behalf Of G=
+rant
+> Likely
+>> Sent: Sunday, January 30, 2011 11:46 PM
+>> To: devicetree-discuss@lists.ozlabs.org;
+> linuxppc-dev@lists.ozlabs.org; linux-kernel@vger.kernel.org
+>> Cc: sam@ravnborg.org
+>> Subject: [PATCH 3/3 RFC] dt: add documentation of ARM dt boot
+> interface
 >>
->> From: Thomas Abraham<thomas.abraham-68IGFXMjmZ7QT0dZR+AlfA@public.gmane.org>
->>
->> Add support for retrieving memory and irq resource information
->> from device tree for Samsung's SDHCI controller driver.
->>
->> Signed-off-by: Thomas Abraham<thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 >> ---
 >>
->> The modification will be made more generic to support both
->> DT and non-DT versions of the driver without the #ifdef's.
->> For now, this patch is for review and to understand if the
->> approach adopted to obtain resource information from the
->> device tree is appropriate.
+>> For RFC only. =A0I do not plan to merge this change yet.
 >>
+>> g.
+>>
+>> =A0Documentation/devicetree/booting-without-of.txt | =A0 40
+> +++++++++++++++++++++++
+>> =A01 files changed, 40 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/booting-without-of.txt
+> b/Documentation/devicetree/booting-
+>> without-of.txt
+>> index 6bca668..3950aea 100644
+>> --- a/Documentation/devicetree/booting-without-of.txt
+>> +++ b/Documentation/devicetree/booting-without-of.txt
+>
+> In order to make this more generic, perhaps it should change names, s=
+o
+> that it is actually a description of what the file
+> describes, as opposed to what it doesn't describe. =A0"booting.txt"?
 
-> You are missing an of_match_table. This patch could not work without it.
+I though about that, but I think I'd like to leave it as-is for the
+time being so that it is easier for people to find where it has moved
+to.
 
-Actually, the way he is implementing it the of_match_table would have
-absolutely no effect.  However, you are right, it *should* be
-implemented so that it binds via the of_match_table.  I suspect Thomas
-did it this way because he doesn't yet have an easy way to get his
-platform devices registered from the device tree.
+>
+>> @@ -13,6 +13,7 @@ Table of Contents
+>>
+>> =A0 =A0I - Introduction
+>> =A0 =A0 =A01) Entry point for arch/powerpc
+>> + =A0 =A02) Entry point for arch/arm
+>
+> We should probably include microblaze here too...
+
+Awesome, thanks for volunteering to write the patch!  :-)
 
 g.
