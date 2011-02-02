@@ -1,91 +1,92 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: map ATAGs when not in first 1MB of RAM
-Date: Tue, 1 Feb 2011 20:26:03 -0700
-Message-ID: <20110202032603.GA29148@angua.secretlab.ca>
-References: <1296143443-9442-1-git-send-email-robherring2@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2] altera_ps2: Add devicetree support
+Date: Tue, 1 Feb 2011 21:31:21 -0700
+Message-ID: <20110202043121.GF29148@angua.secretlab.ca>
+References: <20110117220415.GB17963@angua.secretlab.ca>
+ <1295848693-28472-1-git-send-email-thomas@wytron.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1296143443-9442-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1295848693-28472-1-git-send-email-thomas@wytron.com.tw>
+Sender: linux-input-owner@vger.kernel.org
+To: Thomas Chou <thomas@wytron.com.tw>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Walter Goossens <waltergoossens@home.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 27, 2011 at 09:50:43AM -0600, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Mon, Jan 24, 2011 at 01:58:13PM +0800, Thomas Chou wrote:
+> From: Walter Goossens <waltergoossens@home.nl>
 > 
-> If ATAGs or DTB pointer is not within first 1MB of RAM, then the boot params
-> will not be mapped early enough, so map the 1MB region that r2 points to. Only
-> map the first 1MB when r2 is 0.
+> Signed-off-by: Walter Goossens <waltergoossens@home.nl>
+> Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
+> ---
+> v2 use const and add compat version.
 > 
-> Some assembly improvements from Nicolas Pitre.
+>  drivers/input/serio/altera_ps2.c |   11 +++++++++--
+>  1 files changed, 9 insertions(+), 2 deletions(-)
 > 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
+> index 7998560..63325ee 100644
+> --- a/drivers/input/serio/altera_ps2.c
+> +++ b/drivers/input/serio/altera_ps2.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>  
+>  #define DRV_NAME "altera_ps2"
+>  
+> @@ -173,6 +174,12 @@ static int __devexit altera_ps2_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id altera_ps2_match[] = {
+> +	{ .compatible = "altr,ps2-1.0", },
 
-I'll try temporarily picking this one up into my devicetree/test
-branch until Russell's p2v patches get merged into mainline.
+I thought I had seen 'altera' instead of an abbreviation being used in
+a previous patch.  I don't care much whether 'altr' or 'altera' is
+used, but I'd like to know that there is consensus from the Altera
+users so that all the drivers use the same prefix.
 
-Thanks!
+> +	{},
+> +}
+> +MODULE_DEVICE_TABLE(of, altera_ps2_match);
+> +
+>  /*
+>   * Our device driver structure
+>   */
+> @@ -182,6 +189,7 @@ static struct platform_driver altera_ps2_driver = {
+>  	.driver	= {
+>  		.name	= DRV_NAME,
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = altera_ps2_match,
+
+At the moment, this patch can only be applied against my
+devicetree/next branch since there is a #ifdef CONFIG_OF around
+of_match_table in mainline, and the patch to remove it is in my next
+branch.  I'm okay with taking it through my tree if Dmitry agrees.
+
 g.
 
-> ---
->  arch/arm/kernel/head.S |   19 ++++++++++++++++++-
->  1 files changed, 18 insertions(+), 1 deletions(-)
-> 
-> diff --git a/arch/arm/kernel/head.S b/arch/arm/kernel/head.S
-> index 65d9489..9c688bf 100644
-> --- a/arch/arm/kernel/head.S
-> +++ b/arch/arm/kernel/head.S
-> @@ -205,15 +205,32 @@ __create_page_tables:
->  #endif
+>  	},
+>  };
 >  
->  	/*
-> -	 * Then map first 1MB of ram in case it contains our boot params.
-> +	 * Then map first 1MB of ram if boot params address is not specified.
->  	 */
-> +	cmp	r2, #0
-> +	bne	1f
->  	add	r0, r4, #PAGE_OFFSET >> 18
->  	orr	r6, r7, #(PHYS_OFFSET & 0xff000000)
->  	.if	(PHYS_OFFSET & 0x00f00000)
->  	orr	r6, r6, #(PHYS_OFFSET & 0x00f00000)
->  	.endif
->  	str	r6, [r0]
-> +	b	2f
+> @@ -189,13 +197,12 @@ static int __init altera_ps2_init(void)
+>  {
+>  	return platform_driver_register(&altera_ps2_driver);
+>  }
+> +module_init(altera_ps2_init);
 >  
-> +	/*
-> +	 * Otherwise map the 1MB region r2 points to (atags or dtb)
-> +	 */
-> +1:	mov	r0, r2, lsr #20
-> +	mov	r0, r0, lsl #20
-> +	sub	r3, r0, #(PHYS_OFFSET & 0xff000000)
-> +	.if	(PHYS_OFFSET & 0x00f00000)
-> +	sub	r3, r3, #(PHYS_OFFSET & 0x00f00000)
-> +	.endif
-> +	add	r3, r3, #PAGE_OFFSET
-> +	add	r3, r4, r3, lsr #18
-> +	orr	r6, r7, r0
-> +	str	r6, [r3]
-> +2:
->  #ifdef CONFIG_DEBUG_LL
->  #ifndef CONFIG_DEBUG_ICEDCC
->  	/*
+>  static void __exit altera_ps2_exit(void)
+>  {
+>  	platform_driver_unregister(&altera_ps2_driver);
+>  }
+> -
+> -module_init(altera_ps2_init);
+>  module_exit(altera_ps2_exit);
+>  
+>  MODULE_DESCRIPTION("Altera University Program PS2 controller driver");
 > -- 
-> 1.7.1
+> 1.7.3.4
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
