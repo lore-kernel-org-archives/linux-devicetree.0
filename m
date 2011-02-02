@@ -1,38 +1,53 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2] altera_ps2: Add devicetree support
-Date: Wed, 2 Feb 2011 08:39:59 -0700
-Message-ID: <20110202153959.GD20275@angua.secretlab.ca>
-References: <20110117220415.GB17963@angua.secretlab.ca>
- <1295848693-28472-1-git-send-email-thomas@wytron.com.tw>
- <20110202043121.GF29148@angua.secretlab.ca>
- <4D4944AA.5040900@wytron.com.tw>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [uclinux-dist-devel] touch screen ads7846/7843 devicetree support
+Date: Wed, 2 Feb 2011 09:03:55 -0700
+Message-ID: <20110202160355.GE20275@angua.secretlab.ca>
+References: <4D410C4C.7070005@wytron.com.tw>
+	<AANLkTinJheHYyjUUAK7guNXqepp9KJ3xk6u-4JrmAbee@mail.gmail.com>
+	<4D414FED.706@wytron.com.tw>
+	<544AC56F16B56944AEC3BD4E3D591771324C105D75@LIMKCMBX1.ad.analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D4944AA.5040900@wytron.com.tw>
-Sender: linux-input-owner@vger.kernel.org
-To: Thomas Chou <thomas@wytron.com.tw>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Walter Goossens <waltergoossens@home.nl>
+In-Reply-To: <544AC56F16B56944AEC3BD4E3D591771324C105D75-gpnycfiEEVR7xzP2fcxY8GoKb0G9Rp+C@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Cc: Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>, "uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 02, 2011 at 07:48:58PM +0800, Thomas Chou wrote:
-> On 02/02/2011 12:31 PM, Grant Likely wrote:
-> >>+static const struct of_device_id altera_ps2_match[] = {
-> >>+	{ .compatible = "altr,ps2-1.0", },
+On Thu, Jan 27, 2011 at 12:24:01PM +0000, Hennerich, Michael wrote:
+> Thomas Chou wrote on 2011-01-27:
+> > On 01/27/2011 02:18 PM, Mike Frysinger wrote:
+> >> On Thu, Jan 27, 2011 at 01:10, Thomas Chou wrote:
+> >>> We need devicetree support on ads7846/7843 touch screen driver. Do
+> >>> you have plan on it? We are moving to devicetree on nios2, so do
+> > arm/mips/x86.
+> >>
+> >> what part are you using exactly ?
+> >> -mike
+> >>
 > >
-> >I thought I had seen 'altera' instead of an abbreviation being used in
-> >a previous patch.  I don't care much whether 'altr' or 'altera' is
-> >used, but I'd like to know that there is consensus from the Altera
-> >users so that all the drivers use the same prefix.
-> >
+> > ad7843 is used in a popular nios2 dev kit, NEEK.
 > 
-> We had discussed on nios2-dev mailing list, and decided to use
-> 'altr' as Walter suggested that it saves space.
+> This driver is a SPI bus client driver. PPC is using devicetree for ages now,
+> and they don't have problems instantiating this or any other SPI bus driver.
 
-Is altr the stock ticker symbol?  The convention is to either use the
-stock ticker in all uppercase (although the uppercase bit hasn't been
-consistently applied), or to use the full name in lowercase.
+However, the method used is by applying a heuristic (of_modalias_node)
+which tries to name the device in a way that will match an existing
+device driver.  It works for a lot of spi drivers, but it isn't
+always reliable.
+
+Alternatively, if of_match_table is populated in the spi_driver, then
+the normal device tree match behaviour will always work.
 
 g.
-
