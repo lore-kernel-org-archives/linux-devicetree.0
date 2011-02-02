@@ -1,17 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [uclinux-dist-devel] touch screen ads7846/7843 devicetree support
-Date: Wed, 2 Feb 2011 09:03:55 -0700
-Message-ID: <20110202160355.GE20275@angua.secretlab.ca>
-References: <4D410C4C.7070005@wytron.com.tw>
-	<AANLkTinJheHYyjUUAK7guNXqepp9KJ3xk6u-4JrmAbee@mail.gmail.com>
-	<4D414FED.706@wytron.com.tw>
-	<544AC56F16B56944AEC3BD4E3D591771324C105D75@LIMKCMBX1.ad.analog.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: clock bindings
+Date: Wed, 02 Feb 2011 10:47:40 -0600
+Message-ID: <4D498AAC.3090009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <544AC56F16B56944AEC3BD4E3D591771324C105D75-gpnycfiEEVR7xzP2fcxY8GoKb0G9Rp+C@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,33 +15,20 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>, "uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>
+To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 27, 2011 at 12:24:01PM +0000, Hennerich, Michael wrote:
-> Thomas Chou wrote on 2011-01-27:
-> > On 01/27/2011 02:18 PM, Mike Frysinger wrote:
-> >> On Thu, Jan 27, 2011 at 01:10, Thomas Chou wrote:
-> >>> We need devicetree support on ads7846/7843 touch screen driver. Do
-> >>> you have plan on it? We are moving to devicetree on nios2, so do
-> > arm/mips/x86.
-> >>
-> >> what part are you using exactly ?
-> >> -mike
-> >>
-> >
-> > ad7843 is used in a popular nios2 dev kit, NEEK.
-> 
-> This driver is a SPI bus client driver. PPC is using devicetree for ages now,
-> and they don't have problems instantiating this or any other SPI bus driver.
+I've started looking at the DT clock bindings in more depth. To what 
+level should the clock tree be defined in the DT? Should it be a 
+one-to-one correlation of current struct clk nodes to node in DT where 
+each node is a single input and output? Or only define a single (or few) 
+node with the inputs (oscillators) and many outputs for SOC's clock 
+controller (i.e. MX51 CCM).
 
-However, the method used is by applying a heuristic (of_modalias_node)
-which tries to name the device in a way that will match an existing
-device driver.  It works for a lot of spi drivers, but it isn't
-always reliable.
+If the DT itself does not have a hierarchical construction of nodes that 
+matches the clock tree hierarchy, then creating the hierarchy at 
+run-time will be a challenge and not be very efficient. It would require 
+1 pass for each clock node type to create all the nodes, and then 
+another pass to setup the hierarchy.
 
-Alternatively, if of_match_table is populated in the spi_driver, then
-the normal device tree match behaviour will always work.
-
-g.
+Rob
