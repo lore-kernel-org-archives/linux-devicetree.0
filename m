@@ -1,308 +1,438 @@
 From: Thomas Chou <thomas@wytron.com.tw>
-Subject: [PATCH v2] gpio: add new Altera PIO driver
-Date: Thu,  3 Feb 2011 15:56:57 +0800
-Message-ID: <1296719817-3007-1-git-send-email-thomas@wytron.com.tw>
-References: <201101262237.p0QMb95f008734@imap1.linux-foundation.org>
+Subject: [PATCH v6] spi: New driver for Altera SPI
+Date: Thu,  3 Feb 2011 18:02:06 +0800
+Message-ID: <1296727326-2581-1-git-send-email-thomas@wytron.com.tw>
+References: <1295851114-12488-1-git-send-email-thomas@wytron.com.tw>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201101262237.p0QMb95f008734@imap1.linux-foundation.org>
+In-Reply-To: <1295851114-12488-1-git-send-email-thomas@wytron.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Thomas Chou <thomas@wytron.com.tw>
+To: David Brownell <dbrownell@users.sourceforge.net>, Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, Thomas Chou <thomas@wytron.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-This driver supports the Altera PIO core.
+This patch adds a new SPI driver to support the Altera SOPC Builder
+SPI component. It uses the bitbanging library.
 
 Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
 ---
-v2 change compatible vendor to uppercase, ALTR.
+v2 add devicetree support
+v3 remove platform header, as Grant suggested.
+   no irq resource means polling.
+v4 minor cleanup, as Grant suggested.
+v5 add compat version.
+v6 change compatible vendor to uppercase, ALTR.
    add dts binding doc.
 
- .../devicetree/bindings/gpio/altera_gpio.txt       |    7 +
- drivers/gpio/Kconfig                               |    6 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/altera_gpio.c                         |  233 ++++++++++++++++++++
- 4 files changed, 247 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/altera_gpio.txt
- create mode 100644 drivers/gpio/altera_gpio.c
+ .../devicetree/bindings/spi/spi_altera.txt         |    4 +
+ drivers/spi/Kconfig                                |    6 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi_altera.c                           |  360 ++++++++++++++++++++
+ 4 files changed, 371 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi_altera.txt
+ create mode 100644 drivers/spi/spi_altera.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/altera_gpio.txt b/Documentation/devicetree/bindings/gpio/altera_gpio.txt
+diff --git a/Documentation/devicetree/bindings/spi/spi_altera.txt b/Documentation/devicetree/bindings/spi/spi_altera.txt
 new file mode 100644
-index 0000000..5ab751a
+index 0000000..dda3759
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/altera_gpio.txt
-@@ -0,0 +1,7 @@
-+Altera GPIO
++++ b/Documentation/devicetree/bindings/spi/spi_altera.txt
+@@ -0,0 +1,4 @@
++Altera SPI
 +
 +Required properties:
-+- compatible : should be "ALTR,pio-1.0".
-+Optional properties:
-+- resetvalue : the reset value of the output port.
-+- width : the width of the port in number of bits.
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 664660e..40271f0 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -70,6 +70,12 @@ config GPIO_MAX730X
++- compatible : should be "ALTR,spi-1.0".
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index bb233a9..e791579 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -53,6 +53,12 @@ if SPI_MASTER
  
- comment "Memory mapped GPIO expanders:"
+ comment "SPI Master Controller Drivers"
  
-+config GPIO_ALTERA
-+	bool "Altera GPIO"
-+	depends on OF
++config SPI_ALTERA
++	tristate "Altera SPI Controller"
++	select SPI_BITBANG
 +	help
-+	  Say yes here to support the Altera PIO device
++	  This is the driver for the Altera SPI Controller.
 +
- config GPIO_BASIC_MMIO
- 	tristate "Basic memory-mapped GPIO controllers support"
- 	help
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 3351cf8..ed11932 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -8,6 +8,7 @@ ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
+ config SPI_ATH79
+ 	tristate "Atheros AR71XX/AR724X/AR913X SPI controller driver"
+ 	depends on ATH79 && GENERIC_GPIO
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 86d1b5f..4d2e35a 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -9,6 +9,7 @@ ccflags-$(CONFIG_SPI_DEBUG) := -DDEBUG
+ obj-$(CONFIG_SPI_MASTER)		+= spi.o
  
- obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
- 
-+obj-$(CONFIG_GPIO_ALTERA)	+= altera_gpio.o
- obj-$(CONFIG_GPIO_ADP5520)	+= adp5520-gpio.o
- obj-$(CONFIG_GPIO_ADP5588)	+= adp5588-gpio.o
- obj-$(CONFIG_GPIO_BASIC_MMIO)	+= basic_mmio_gpio.o
-diff --git a/drivers/gpio/altera_gpio.c b/drivers/gpio/altera_gpio.c
+ # SPI master controller drivers (bus)
++obj-$(CONFIG_SPI_ALTERA)		+= spi_altera.o
+ obj-$(CONFIG_SPI_ATMEL)			+= atmel_spi.o
+ obj-$(CONFIG_SPI_ATH79)			+= ath79_spi.o
+ obj-$(CONFIG_SPI_BFIN)			+= spi_bfin5xx.o
+diff --git a/drivers/spi/spi_altera.c b/drivers/spi/spi_altera.c
 new file mode 100644
-index 0000000..a173eb3
+index 0000000..1056ded
 --- /dev/null
-+++ b/drivers/gpio/altera_gpio.c
-@@ -0,0 +1,233 @@
++++ b/drivers/spi/spi_altera.c
+@@ -0,0 +1,360 @@
 +/*
-+ * Altera GPIO driver
++ * Altera SPI driver
 + *
-+ * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
++ * Copyright (C) 2008 Thomas Chou <thomas@wytron.com.tw>
 + *
-+ * Based on Xilinx gpio driver, which is
-+ * Copyright 2008 Xilinx, Inc.
++ * Based on spi_s3c24xx.c, which is:
++ * Copyright (c) 2006 Ben Dooks
++ * Copyright (c) 2006 Simtec Electronics
++ *	Ben Dooks <ben@simtec.co.uk>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
 +#include <linux/init.h>
++#include <linux/spinlock.h>
++#include <linux/workqueue.h>
++#include <linux/interrupt.h>
++#include <linux/delay.h>
 +#include <linux/errno.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
++#include <linux/err.h>
++#include <linux/clk.h>
++#include <linux/platform_device.h>
++#include <linux/spi/spi.h>
++#include <linux/spi/spi_bitbang.h>
 +#include <linux/io.h>
-+#include <linux/gpio.h>
-+#include <linux/slab.h>
++#include <linux/of.h>
 +
-+#define DRV_NAME "altera_gpio"
++#define DRV_NAME "spi_altera"
 +
-+/* Register Offset Definitions */
-+#define ALTERA_GPIO_DATA_OFFSET   0x0	/* Data register  */
-+#define ALTERA_GPIO_DIR_OFFSET    0x4	/* I/O direction register  */
++#define ALTERA_SPI_RXDATA	0
++#define ALTERA_SPI_TXDATA	4
++#define ALTERA_SPI_STATUS	8
++#define ALTERA_SPI_CONTROL	12
++#define ALTERA_SPI_SLAVE_SEL	20
 +
-+struct altera_gpio_instance {
-+	struct of_mm_gpio_chip mmchip;
-+	u32 gpio_state;		/* GPIO state shadow register */
-+	u32 gpio_dir;		/* GPIO direction shadow register */
-+	spinlock_t gpio_lock;	/* Lock used for synchronization */
++#define ALTERA_SPI_STATUS_ROE_MSK	0x8
++#define ALTERA_SPI_STATUS_TOE_MSK	0x10
++#define ALTERA_SPI_STATUS_TMT_MSK	0x20
++#define ALTERA_SPI_STATUS_TRDY_MSK	0x40
++#define ALTERA_SPI_STATUS_RRDY_MSK	0x80
++#define ALTERA_SPI_STATUS_E_MSK		0x100
++
++#define ALTERA_SPI_CONTROL_IROE_MSK	0x8
++#define ALTERA_SPI_CONTROL_ITOE_MSK	0x10
++#define ALTERA_SPI_CONTROL_ITRDY_MSK	0x40
++#define ALTERA_SPI_CONTROL_IRRDY_MSK	0x80
++#define ALTERA_SPI_CONTROL_IE_MSK	0x100
++#define ALTERA_SPI_CONTROL_SSO_MSK	0x400
++
++struct altera_spi {
++	/* bitbang has to be first */
++	struct spi_bitbang bitbang;
++	struct completion done;
++
++	void __iomem *base;
++	int irq;
++	int len;
++	int count;
++	int bytes_per_word;
++	unsigned long imr;
++
++	/* data buffers */
++	const unsigned char *tx;
++	unsigned char *rx;
 +};
 +
-+/*
-+ * altera_gpio_get - Read the specified signal of the GPIO device.
-+ * @gc:     Pointer to gpio_chip device structure.
-+ * @gpio:   GPIO signal number.
-+ *
-+ * This function reads the specified signal of the GPIO device. It returns 0 if
-+ * the signal clear, 1 if signal is set or negative value on error.
-+ */
-+static int altera_gpio_get(struct gpio_chip *gc, unsigned int gpio)
++static inline struct altera_spi *altera_spi_to_hw(struct spi_device *sdev)
 +{
-+	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-+
-+	return (readl(mm_gc->regs + ALTERA_GPIO_DATA_OFFSET) >> gpio) & 1;
++	return spi_master_get_devdata(sdev->master);
 +}
 +
-+/*
-+ * altera_gpio_set - Write the specified signal of the GPIO device.
-+ * @gc:     Pointer to gpio_chip device structure.
-+ * @gpio:   GPIO signal number.
-+ * @val:    Value to be written to specified signal.
-+ *
-+ * This function writes the specified value in to the specified signal of the
-+ * GPIO device.
-+ */
-+static void altera_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
++static void altera_spi_chipsel(struct spi_device *spi, int value)
 +{
-+	unsigned long flags;
-+	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-+	struct altera_gpio_instance *chip =
-+	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
++	struct altera_spi *hw = altera_spi_to_hw(spi);
 +
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
++	if (spi->mode & SPI_CS_HIGH) {
++		switch (value) {
++		case BITBANG_CS_INACTIVE:
++			writel(1 << spi->chip_select,
++			       hw->base + ALTERA_SPI_SLAVE_SEL);
++			hw->imr |= ALTERA_SPI_CONTROL_SSO_MSK;
++			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++			break;
 +
-+	/* Write to shadow register and output */
-+	if (val)
-+		chip->gpio_state |= 1 << gpio;
-+	else
-+		chip->gpio_state &= ~(1 << gpio);
-+	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++		case BITBANG_CS_ACTIVE:
++			hw->imr &= ~ALTERA_SPI_CONTROL_SSO_MSK;
++			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++			writel(0, hw->base + ALTERA_SPI_SLAVE_SEL);
++			break;
++		}
++	} else {
++		switch (value) {
++		case BITBANG_CS_INACTIVE:
++			hw->imr &= ~ALTERA_SPI_CONTROL_SSO_MSK;
++			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++			break;
 +
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+}
-+
-+/*
-+ * altera_gpio_dir_in - Set the direction of the specified GPIO signal as input.
-+ * @gc:     Pointer to gpio_chip device structure.
-+ * @gpio:   GPIO signal number.
-+ *
-+ * This function sets the direction of specified GPIO signal as input.
-+ * It returns 0 if direction of GPIO signals is set as input otherwise it
-+ * returns negative error value.
-+ */
-+static int altera_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	unsigned long flags;
-+	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-+	struct altera_gpio_instance *chip =
-+	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+
-+	/* Clear the GPIO bit in shadow register and set direction as input */
-+	chip->gpio_dir &= ~(1 << gpio);
-+	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-+
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+/*
-+ * altera_gpio_dir_out - Set the direction of the specified GPIO as output.
-+ * @gc:     Pointer to gpio_chip device structure.
-+ * @gpio:   GPIO signal number.
-+ * @val:    Value to be written to specified signal.
-+ *
-+ * This function sets the direction of specified GPIO signal as output. If all
-+ * GPIO signals of GPIO chip is configured as input then it returns
-+ * error otherwise it returns 0.
-+ */
-+static int altera_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
-+{
-+	unsigned long flags;
-+	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-+	struct altera_gpio_instance *chip =
-+	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+
-+	/* Write state of GPIO signal */
-+	if (val)
-+		chip->gpio_state |= 1 << gpio;
-+	else
-+		chip->gpio_state &= ~(1 << gpio);
-+	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
-+
-+	/* Set the GPIO bit in shadow register and set direction as output */
-+	chip->gpio_dir |= (1 << gpio);
-+	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-+
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+/*
-+ * altera_gpio_save_regs - Set initial values of GPIO pins
-+ * @mm_gc: pointer to memory mapped GPIO chip structure
-+ */
-+static void altera_gpio_save_regs(struct of_mm_gpio_chip *mm_gc)
-+{
-+	struct altera_gpio_instance *chip =
-+	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-+
-+	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
-+	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-+}
-+
-+/*
-+ * altera_gpio_of_probe - Probe method for the GPIO device.
-+ * @np: pointer to device tree node
-+ *
-+ * This function probes the GPIO device in the device tree. It initializes the
-+ * driver data structure. It returns 0, if the driver is bound to the GPIO
-+ * device, or a negative value if there is an error.
-+ */
-+static int __devinit altera_gpio_of_probe(struct device_node *np)
-+{
-+	struct altera_gpio_instance *chip;
-+	int status = 0;
-+	const u32 *tree_info;
-+
-+	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	/* Update GPIO state shadow register with default value */
-+	tree_info = of_get_property(np, "resetvalue", NULL);
-+	if (tree_info)
-+		chip->gpio_state = be32_to_cpup(tree_info);
-+
-+	/* Update GPIO direction shadow register with default value */
-+	chip->gpio_dir = 0; /* By default, all pins are inputs */
-+
-+	/* Check device node for device width */
-+	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
-+	tree_info = of_get_property(np, "width", NULL);
-+	if (tree_info)
-+		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
-+
-+	spin_lock_init(&chip->gpio_lock);
-+
-+	chip->mmchip.gc.direction_input = altera_gpio_dir_in;
-+	chip->mmchip.gc.direction_output = altera_gpio_dir_out;
-+	chip->mmchip.gc.get = altera_gpio_get;
-+	chip->mmchip.gc.set = altera_gpio_set;
-+
-+	chip->mmchip.save_regs = altera_gpio_save_regs;
-+
-+	/* Call the OF gpio helper to setup and register the GPIO device */
-+	status = of_mm_gpiochip_add(np, &chip->mmchip);
-+	if (status) {
-+		kfree(chip);
-+		pr_err("%s: error in probe function with status %d\n",
-+		       np->full_name, status);
-+		return status;
++		case BITBANG_CS_ACTIVE:
++			writel(1 << spi->chip_select,
++			       hw->base + ALTERA_SPI_SLAVE_SEL);
++			hw->imr |= ALTERA_SPI_CONTROL_SSO_MSK;
++			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++			break;
++		}
 +	}
-+	pr_info(DRV_NAME ": %s: registered\n", np->full_name);
++}
++
++static int altera_spi_setupxfer(struct spi_device *spi, struct spi_transfer *t)
++{
 +	return 0;
 +}
 +
-+static struct of_device_id altera_gpio_of_match[] __devinitdata = {
-+	{ .compatible = "ALTR,pio-1.0", },
++static int altera_spi_setup(struct spi_device *spi)
++{
++	return 0;
++}
++
++static inline unsigned int hw_txbyte(struct altera_spi *hw, int count)
++{
++	if (hw->tx) {
++		switch (hw->bytes_per_word) {
++		case 1:
++			return hw->tx[count];
++		case 2:
++			return (hw->tx[count * 2]
++				| (hw->tx[count * 2 + 1] << 8));
++		}
++	}
++	return 0;
++}
++
++static int altera_spi_txrx(struct spi_device *spi, struct spi_transfer *t)
++{
++	struct altera_spi *hw = altera_spi_to_hw(spi);
++
++	hw->tx = t->tx_buf;
++	hw->rx = t->rx_buf;
++	hw->count = 0;
++	hw->bytes_per_word = (t->bits_per_word ? : spi->bits_per_word) / 8;
++	hw->len = t->len / hw->bytes_per_word;
++
++	if (hw->irq >= 0) {
++		/* enable receive interrupt */
++		hw->imr |= ALTERA_SPI_CONTROL_IRRDY_MSK;
++		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++
++		/* send the first byte */
++		writel(hw_txbyte(hw, 0), hw->base + ALTERA_SPI_TXDATA);
++
++		wait_for_completion(&hw->done);
++		/* disable receive interrupt */
++		hw->imr &= ~ALTERA_SPI_CONTROL_IRRDY_MSK;
++		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++	} else {
++		/* send the first byte */
++		writel(hw_txbyte(hw, 0), hw->base + ALTERA_SPI_TXDATA);
++
++		while (1) {
++			unsigned int rxd;
++
++			while (!(readl(hw->base + ALTERA_SPI_STATUS) &
++				 ALTERA_SPI_STATUS_RRDY_MSK))
++				cpu_relax();
++
++			rxd = readl(hw->base + ALTERA_SPI_RXDATA);
++			if (hw->rx) {
++				switch (hw->bytes_per_word) {
++				case 1:
++					hw->rx[hw->count] = rxd;
++					break;
++				case 2:
++					hw->rx[hw->count * 2] = rxd;
++					hw->rx[hw->count * 2 + 1] = rxd >> 8;
++					break;
++				}
++			}
++
++			hw->count++;
++
++			if (hw->count < hw->len)
++				writel(hw_txbyte(hw, hw->count),
++				       hw->base + ALTERA_SPI_TXDATA);
++			else
++				break;
++		}
++
++	}
++
++	return hw->count * hw->bytes_per_word;
++}
++
++static irqreturn_t altera_spi_irq(int irq, void *dev)
++{
++	struct altera_spi *hw = dev;
++	unsigned int rxd;
++
++	rxd = readl(hw->base + ALTERA_SPI_RXDATA);
++	if (hw->rx) {
++		switch (hw->bytes_per_word) {
++		case 1:
++			hw->rx[hw->count] = rxd;
++			break;
++		case 2:
++			hw->rx[hw->count * 2] = rxd;
++			hw->rx[hw->count * 2 + 1] = rxd >> 8;
++			break;
++		}
++	}
++
++	hw->count++;
++
++	if (hw->count < hw->len)
++		writel(hw_txbyte(hw, hw->count), hw->base + ALTERA_SPI_TXDATA);
++	else
++		complete(&hw->done);
++
++	return IRQ_HANDLED;
++}
++
++static int __devinit altera_spi_probe(struct platform_device *pdev)
++{
++	struct altera_spi_platform_data *platp = pdev->dev.platform_data;
++	struct altera_spi *hw;
++	struct spi_master *master;
++	struct resource *res;
++	int err = 0;
++
++	master = spi_alloc_master(&pdev->dev, sizeof(struct altera_spi));
++	if (master == NULL) {
++		dev_err(&pdev->dev, "No memory for spi_master\n");
++		err = -ENOMEM;
++		goto err_no_mem;
++	}
++
++	/* setup the master state. */
++	master->bus_num = pdev->id;
++	master->num_chipselect = 16;
++	master->mode_bits = SPI_CS_HIGH;
++	master->setup = altera_spi_setup;
++
++	hw = spi_master_get_devdata(master);
++	platform_set_drvdata(pdev, hw);
++
++	/* setup the state for the bitbang driver */
++	hw->bitbang.master = spi_master_get(master);
++	if (hw->bitbang.master == NULL) {
++		dev_err(&pdev->dev, "Cannot get device\n");
++		err = -ENODEV;
++		goto err_no_dev;
++	}
++	hw->bitbang.setup_transfer = altera_spi_setupxfer;
++	hw->bitbang.chipselect = altera_spi_chipsel;
++	hw->bitbang.txrx_bufs = altera_spi_txrx;
++
++	/* find and map our resources */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (res == NULL) {
++		dev_err(&pdev->dev, "Cannot get IORESOURCE_MEM\n");
++		err = -ENOENT;
++		goto err_no_iores;
++	}
++	hw->base = ioremap(res->start, (res->end - res->start) + 1);
++	if (hw->base == 0) {
++		dev_err(&pdev->dev, "Cannot map IO\n");
++		err = -ENXIO;
++		goto err_no_iomap;
++	}
++	/* program defaults into the registers */
++	hw->imr = 0;		/* disable spi interrupts */
++	writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
++	writel(0, hw->base + ALTERA_SPI_STATUS);	/* clear status reg */
++	if (readl(hw->base + ALTERA_SPI_STATUS) & ALTERA_SPI_STATUS_RRDY_MSK)
++		readl(hw->base + ALTERA_SPI_RXDATA);	/* flush rxdata */
++	/* irq is optional */
++	hw->irq = platform_get_irq(pdev, 0);
++	if (hw->irq >= 0) {
++		init_completion(&hw->done);
++		err = request_irq(hw->irq, altera_spi_irq, 0, pdev->name, hw);
++		if (err) {
++			dev_err(&pdev->dev, "Cannot claim IRQ\n");
++			goto err_no_irq;
++		}
++	}
++	/* find platform data */
++	if (!platp)
++		hw->bitbang.master->dev.of_node = pdev->dev.of_node;
++
++	/* register our spi controller */
++	err = spi_bitbang_start(&hw->bitbang);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to register SPI master\n");
++		goto err_register;
++	}
++	dev_info(&pdev->dev, "base %p, irq %d\n", hw->base, hw->irq);
++
++	return 0;
++
++err_register:
++	if (hw->irq >= 0)
++		free_irq(hw->irq, hw);
++err_no_irq:
++	iounmap(hw->base);
++err_no_iomap:
++err_no_iores:
++err_no_dev:
++	spi_master_put(master);
++err_no_mem:
++	return err;
++}
++
++static int __devexit altera_spi_remove(struct platform_device *dev)
++{
++	struct altera_spi *hw = platform_get_drvdata(dev);
++	struct spi_master *master = hw->bitbang.master;
++
++	spi_bitbang_stop(&hw->bitbang);
++
++	if (hw->irq >= 0)
++		free_irq(hw->irq, hw);
++	iounmap(hw->base);
++
++	platform_set_drvdata(dev, NULL);
++	spi_master_put(master);
++	return 0;
++}
++
++static const struct of_device_id altera_spi_match[] = {
++	{ .compatible = "ALTR,spi-1.0", },
 +	{},
++}
++MODULE_DEVICE_TABLE(of, altera_spi_match);
++
++static struct platform_driver altera_spidrv = {
++	.remove = __devexit_p(altera_spi_remove),
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++		.pm = NULL,
++		.of_match_table = altera_spi_match,
++	},
 +};
 +
-+static int __init altera_gpio_init(void)
++static int __init altera_spi_init(void)
 +{
-+	struct device_node *np;
-+
-+	for_each_matching_node(np, altera_gpio_of_match)
-+		altera_gpio_of_probe(np);
-+
-+	return 0;
++	return platform_driver_probe(&altera_spidrv, altera_spi_probe);
 +}
++module_init(altera_spi_init);
 +
-+/* Make sure we get initialized before anyone else tries to use us */
-+subsys_initcall(altera_gpio_init);
-+/* No exit call at the moment as we cannot unregister of GPIO chips */
++static void __exit altera_spi_exit(void)
++{
++	platform_driver_unregister(&altera_spidrv);
++}
++module_exit(altera_spi_exit);
 +
-+MODULE_DESCRIPTION("Altera GPIO driver");
++MODULE_DESCRIPTION("Altera SPI driver");
 +MODULE_AUTHOR("Thomas Chou <thomas@wytron.com.tw>");
 +MODULE_LICENSE("GPL");
 +MODULE_ALIAS("platform:" DRV_NAME);
