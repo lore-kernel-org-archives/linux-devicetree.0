@@ -1,64 +1,134 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: Re: [uclinux-dist-devel] touch screen ads7846/7843 devicetree support
-Date: Thu, 03 Feb 2011 08:07:53 +0800
-Message-ID: <4D49F1D9.70909@wytron.com.tw>
-References: <4D410C4C.7070005@wytron.com.tw>
-	<AANLkTinJheHYyjUUAK7guNXqepp9KJ3xk6u-4JrmAbee@mail.gmail.com>
-	<4D414FED.706@wytron.com.tw>
-	<544AC56F16B56944AEC3BD4E3D591771324C105D75@LIMKCMBX1.ad.analog.com>
-	<20110202160355.GE20275@angua.secretlab.ca>
+From: Meador Inge <meador_inge@mentor.com>
+Subject: [PATCH v2 1/3] powerpc: Removing support for 'protected-sources'
+Date: Wed,  2 Feb 2011 19:51:38 -0600
+Message-ID: <1296697900-14004-2-git-send-email-meador_inge@mentor.com>
+References: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110202160355.GE20275-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, "Hennerich,
-	Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>, "uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org, Hollis Blanchard <hollis_blanchard@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2011 12:03 AM, Grant Likely wrote:
-> On Thu, Jan 27, 2011 at 12:24:01PM +0000, Hennerich, Michael wrote:
->> Thomas Chou wrote on 2011-01-27:
->>> On 01/27/2011 02:18 PM, Mike Frysinger wrote:
->>>> On Thu, Jan 27, 2011 at 01:10, Thomas Chou wrote:
->>>>> We need devicetree support on ads7846/7843 touch screen driver. Do
->>>>> you have plan on it? We are moving to devicetree on nios2, so do
->>> arm/mips/x86.
->>>>
->>>> what part are you using exactly ?
->>>> -mike
->>>>
->>>
->>> ad7843 is used in a popular nios2 dev kit, NEEK.
->>
->> This driver is a SPI bus client driver. PPC is using devicetree for ages now,
->> and they don't have problems instantiating this or any other SPI bus driver.
->
-> However, the method used is by applying a heuristic (of_modalias_node)
-> which tries to name the device in a way that will match an existing
-> device driver.  It works for a lot of spi drivers, but it isn't
-> always reliable.
->
-> Alternatively, if of_match_table is populated in the spi_driver, then
-> the normal device tree match behaviour will always work.
+In a recent discussion [1, 2] concerning device trees for AMP systems, the
+question of whether we really need 'protected-sources' arose.  The general
+consensus was that if you don't want a source to be used, then it should *not*
+be mentioned in an 'interrupts' property.  If a source really needs to be
+mentioned, then it should be put in a property other than 'interrupts' with
+a specific binding for that use case.
 
-Thanks. The driver did match with the heuristic. But it needs to 
-determine pen state. I will try to bind a gpio node in dts.
+[1] http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-January/004038.html
+[2] http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-January/003991.html
 
-linux/spi/ads7846.h
+Signed-off-by: Meador Inge <meador_inge@mentor.com>
+CC: Hollis Blanchard <hollis_blanchard@mentor.com>
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+ arch/powerpc/include/asm/mpic.h |    3 ---
+ arch/powerpc/sysdev/mpic.c      |   38 --------------------------------------
+ 2 files changed, 0 insertions(+), 41 deletions(-)
 
-int	gpio_pendown;		/* the GPIO used to decide the pendown
-				 * state if get_pendown_state == NULL
-				 */
-
-- Thomas
+diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
+index e000cce..9b94f18 100644
+--- a/arch/powerpc/include/asm/mpic.h
++++ b/arch/powerpc/include/asm/mpic.h
+@@ -301,9 +301,6 @@ struct mpic
+ 	struct mpic_reg_bank	cpuregs[MPIC_MAX_CPUS];
+ 	struct mpic_reg_bank	isus[MPIC_MAX_ISU];
+ 
+-	/* Protected sources */
+-	unsigned long		*protected;
+-
+ #ifdef CONFIG_MPIC_WEIRD
+ 	/* Pointer to HW info array */
+ 	u32			*hw_set;
+diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+index 7c13426..a98f41d 100644
+--- a/arch/powerpc/sysdev/mpic.c
++++ b/arch/powerpc/sysdev/mpic.c
+@@ -947,8 +947,6 @@ static int mpic_host_map(struct irq_host *h, unsigned int virq,
+ 
+ 	if (hw == mpic->spurious_vec)
+ 		return -EINVAL;
+-	if (mpic->protected && test_bit(hw, mpic->protected))
+-		return -EINVAL;
+ 
+ #ifdef CONFIG_SMP
+ 	else if (hw >= mpic->ipi_vecs[0]) {
+@@ -1095,26 +1093,6 @@ struct mpic * __init mpic_alloc(struct device_node *node,
+ 	if (node && of_get_property(node, "big-endian", NULL) != NULL)
+ 		mpic->flags |= MPIC_BIG_ENDIAN;
+ 
+-	/* Look for protected sources */
+-	if (node) {
+-		int psize;
+-		unsigned int bits, mapsize;
+-		const u32 *psrc =
+-			of_get_property(node, "protected-sources", &psize);
+-		if (psrc) {
+-			psize /= 4;
+-			bits = intvec_top + 1;
+-			mapsize = BITS_TO_LONGS(bits) * sizeof(unsigned long);
+-			mpic->protected = kzalloc(mapsize, GFP_KERNEL);
+-			BUG_ON(mpic->protected == NULL);
+-			for (i = 0; i < psize; i++) {
+-				if (psrc[i] > intvec_top)
+-					continue;
+-				__set_bit(psrc[i], mpic->protected);
+-			}
+-		}
+-	}
+-
+ #ifdef CONFIG_MPIC_WEIRD
+ 	mpic->hw_set = mpic_infos[MPIC_GET_REGSET(flags)];
+ #endif
+@@ -1321,9 +1299,6 @@ void __init mpic_init(struct mpic *mpic)
+ 		u32 vecpri = MPIC_VECPRI_MASK | i |
+ 			(8 << MPIC_VECPRI_PRIORITY_SHIFT);
+ 		
+-		/* check if protected */
+-		if (mpic->protected && test_bit(i, mpic->protected))
+-			continue;
+ 		/* init hw */
+ 		mpic_irq_write(i, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
+ 		mpic_irq_write(i, MPIC_INFO(IRQ_DESTINATION), 1 << cpu);
+@@ -1492,13 +1467,6 @@ static unsigned int _mpic_get_one_irq(struct mpic *mpic, int reg)
+ 			mpic_eoi(mpic);
+ 		return NO_IRQ;
+ 	}
+-	if (unlikely(mpic->protected && test_bit(src, mpic->protected))) {
+-		if (printk_ratelimit())
+-			printk(KERN_WARNING "%s: Got protected source %d !\n",
+-			       mpic->name, (int)src);
+-		mpic_eoi(mpic);
+-		return NO_IRQ;
+-	}
+ 
+ 	return irq_linear_revmap(mpic->irqhost, src);
+ }
+@@ -1532,12 +1500,6 @@ unsigned int mpic_get_coreint_irq(void)
+ 			mpic_eoi(mpic);
+ 		return NO_IRQ;
+ 	}
+-	if (unlikely(mpic->protected && test_bit(src, mpic->protected))) {
+-		if (printk_ratelimit())
+-			printk(KERN_WARNING "%s: Got protected source %d !\n",
+-			       mpic->name, (int)src);
+-		return NO_IRQ;
+-	}
+ 
+ 	return irq_linear_revmap(mpic->irqhost, src);
+ #else
+-- 
+1.6.3.3
