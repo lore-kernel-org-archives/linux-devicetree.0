@@ -1,163 +1,233 @@
-From: Meador Inge <meador_inge@mentor.com>
-Subject: [PATCH v2 3/3] powerpc: make MPIC honor the 'no-reset' device tree
-	property
-Date: Wed,  2 Feb 2011 19:51:40 -0600
-Message-ID: <1296697900-14004-4-git-send-email-meador_inge@mentor.com>
-References: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org, Hollis Blanchard <hollis_blanchard@mentor.com>
+From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Subject: [PATCH] i2c-gpio: add devicetree support
+Date: Thu,  3 Feb 2011 10:26:20 +0800
+Message-ID: <1296699980-30234-1-git-send-email-thomas@wytron.com.tw>
+References: <AANLkTimoaJKy-WTTHmRXFMmM6=e7uvzhjwRcDtNqGAPj@mail.gmail.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <AANLkTimoaJKy-WTTHmRXFMmM6=e7uvzhjwRcDtNqGAPj-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This property, defined in the Open PIC binding, tells the kernel not to use the
-reset bit in the global configuration register.  Additionally, its presence
-mandates that only sources which are actually used (i.e. appear in the device
-tree) should have their VECPRI bits initialized.
+This patch adds devicetree support to i2c-gpio driver. It converts
+dts bindings and allocates a struct i2c_gpio_platform_data, which
+will be freed on driver removal.
 
-Signed-off-by: Meador Inge <meador_inge@mentor.com>
-CC: Hollis Blanchard <hollis_blanchard@mentor.com>
-CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
+Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
 ---
- arch/powerpc/include/asm/mpic.h |    4 ++-
- arch/powerpc/sysdev/mpic.c      |   54 ++++++++++++++++++++++++++++++--------
- 2 files changed, 45 insertions(+), 13 deletions(-)
+for v2.6.39
+v2 move of nodes probing to a hook, which will be optimized out
+     when devicetree is not used.
+   use linux/gpio.h.
+   move binding doc to i2c/i2c-gpio.txt.
+v3 use speed-hz instead of udelay in dts binding.
+   condition the devicetree probe.
 
-diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
-index 9b94f18..688e3e0 100644
---- a/arch/powerpc/include/asm/mpic.h
-+++ b/arch/powerpc/include/asm/mpic.h
-@@ -322,6 +322,8 @@ struct mpic
- #ifdef CONFIG_PM
- 	struct mpic_irq_save	*save_data;
- #endif
+ Documentation/devicetree/bindings/i2c/i2c-gpio.txt |   40 ++++++++++
+ drivers/i2c/busses/i2c-gpio.c                      |   83 +++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+new file mode 100644
+index 0000000..38ef4f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+@@ -0,0 +1,40 @@
++GPIO-based I2C
 +
-+	int cpu;
- };
++Required properties:
++- compatible : should be "i2c-gpio".
++- gpios : should specify GPIOs used for SDA and SCL lines, in that order.
++Optional properties:
++- sda-is-open-drain : present if SDA gpio is open-drain.
++- scl-is-open-drain : present if SCL gpio is open-drain.
++- scl-is-output-only : present if the output driver for SCL cannot be
++	turned off. this will prevent clock stretching from working.
++- speed-hz : SCL frequency.
++- timeout : clock stretching timeout in milliseconds.
++
++Example:
++
++gpio0: starlet-gpio@0d8000c0 {
++	compatible = "nintendo,starlet-gpio";
++	reg = <0d8000c0 4>;
++	gpio-controller;
++	#gpio-cells = <2>;
++};
++
++i2c-video {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "i2c-gpio";
++
++	gpios = <&gpio0 10 0	/* SDA line */
++		 &gpio0 11 0	/* SCL line */
++		>;
++	sda-is-open-drain;
++	scl-is-open-drain;
++	scl-is-output-only;
++	speed-hz = <250000>;
++
++	audio-video-encoder {
++		compatible = "nintendo,wii-ave-rvl";
++		reg = <70>;
++	};
++};
+diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+index d9aa9a6..4b31bbe 100644
+--- a/drivers/i2c/busses/i2c-gpio.c
++++ b/drivers/i2c/busses/i2c-gpio.c
+@@ -14,8 +14,8 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
+-
+-#include <asm/gpio.h>
++#include <linux/gpio.h>
++#include <linux/of_i2c.h>
  
- /*
-@@ -333,7 +335,7 @@ struct mpic
-  */
- 
- /* This is the primary controller, only that one has IPIs and
-- * has afinity control. A non-primary MPIC always uses CPU0
-+ * has affinity control. A non-primary MPIC always uses CPU0
-  * registers only
-  */
- #define MPIC_PRIMARY			0x00000001
-diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
-index a98f41d..5f17022 100644
---- a/arch/powerpc/sysdev/mpic.c
-+++ b/arch/powerpc/sysdev/mpic.c
-@@ -308,6 +308,15 @@ static inline void mpic_map(struct mpic *mpic, struct device_node *node,
- #define mpic_map(m,n,p,b,o,s)	_mpic_map_mmio(m,p,b,o,s)
- #endif /* !CONFIG_PPC_DCR */
- 
-+static inline void mpic_init_vector(struct mpic *mpic, int source)
-+{
-+	/* start with vector = source number, and masked */
-+	u32 vecpri = MPIC_VECPRI_MASK | source | (8 << MPIC_VECPRI_PRIORITY_SHIFT);
-+		
-+	/* init hw */
-+	mpic_irq_write(source, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
-+	mpic_irq_write(source, MPIC_INFO(IRQ_DESTINATION), 1 << mpic->cpu);
-+}
- 
- 
- /* Check if we have one of those nice broken MPICs with a flipped endian on
-@@ -622,6 +631,14 @@ static unsigned int mpic_is_ipi(struct mpic *mpic, unsigned int irq)
- 	return (src >= mpic->ipi_vecs[0] && src <= mpic->ipi_vecs[3]);
+ /* Toggle SDA by changing the direction of the pin */
+ static void i2c_gpio_setsda_dir(void *data, int state)
+@@ -78,15 +78,74 @@ static int i2c_gpio_getscl(void *data)
+ 	return gpio_get_value(pdata->scl_pin);
  }
  
-+/* Determine if the linux irq is a timer interrupt */
-+static unsigned int mpic_is_timer_interrupt(struct mpic *mpic, unsigned int irq)
++#ifdef CONFIG_OF
++#include <linux/of_gpio.h>
++
++/* Check if devicetree nodes exist and build platform data */
++static struct i2c_gpio_platform_data *i2c_gpio_of_probe(
++	struct platform_device *pdev)
 +{
-+	unsigned int src = mpic_irq_to_hw(irq);
++	struct i2c_gpio_platform_data *pdata = NULL;
++	struct device_node *np = pdev->dev.of_node;
++	const __be32 *prop;
++	int sda_pin, scl_pin;
 +
-+	return (src >= mpic->timer_vecs[0] && src <= mpic->timer_vecs[3]);
-+}
++	if (!np || of_gpio_count(np) < 2)
++		goto err;
 +
- 
- /* Convert a cpu mask from logical to physical cpu numbers. */
- static inline u32 mpic_physmask(u32 cpumask)
-@@ -963,6 +980,15 @@ static int mpic_host_map(struct irq_host *h, unsigned int virq,
- 	if (hw >= mpic->irq_count)
- 		return -EINVAL;
- 
-+	/* If the MPIC was reset, then all vectors have already been
-+	 * initialized.  Otherwise, the appropriate vector needs to be
-+	 * initialized here to ensure that only used sources are setup with
-+	 * a vector.
-+	 */
-+	if (!(mpic->flags & MPIC_WANTS_RESET))
-+		if (!(mpic_is_ipi(mpic, hw) || mpic_is_timer_interrupt(mpic, hw)))
-+			mpic_init_vector(mpic, hw);
-+
- 	mpic_msi_reserve_hwirq(mpic, hw);
- 
- 	/* Default chip */
-@@ -1129,7 +1155,16 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 	mpic_map(mpic, node, paddr, &mpic->tmregs, MPIC_INFO(TIMER_BASE), 0x1000);
- 
- 	/* Reset */
--	if (flags & MPIC_WANTS_RESET) {
-+
-+	/* When using a device-node, reset requests are only honored if the MPIC
-+	 * is allowed to reset.
-+	 */
-+	if (node && of_get_property(node, "no-reset", NULL)) {
-+		mpic->flags &= ~MPIC_WANTS_RESET;
++	sda_pin = of_get_gpio_flags(np, 0, NULL);
++	scl_pin = of_get_gpio_flags(np, 1, NULL);
++	if (sda_pin < 0 || scl_pin < 0) {
++		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
++		       np->full_name, sda_pin, scl_pin);
++		goto err;
 +	}
 +
-+	if (mpic->flags & MPIC_WANTS_RESET) {
-+		printk(KERN_DEBUG "mpic: Resetting\n");
- 		mpic_write(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0),
- 			   mpic_read(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0))
- 			   | MPIC_GREG_GCONF_RESET);
-@@ -1246,7 +1281,6 @@ void __init mpic_set_default_senses(struct mpic *mpic, u8 *senses, int count)
- void __init mpic_init(struct mpic *mpic)
++	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		goto err;
++
++	pdata->sda_pin = sda_pin;
++	pdata->scl_pin = scl_pin;
++	prop = of_get_property(np, "sda-is-open-drain", NULL);
++	if (prop)
++		pdata->sda_is_open_drain = 1;
++	prop = of_get_property(np, "scl-is-open-drain", NULL);
++	if (prop)
++		pdata->scl_is_open_drain = 1;
++	prop = of_get_property(np, "scl-is-output-only", NULL);
++	if (prop)
++		pdata->scl_is_output_only = 1;
++	prop = of_get_property(np, "speed-hz", NULL);
++	if (prop)
++		pdata->udelay = DIV_ROUND_UP(1000000, be32_to_cpup(prop) * 2);
++	prop = of_get_property(np, "timeout", NULL);
++	if (prop) {
++		pdata->timeout =
++			msecs_to_jiffies(be32_to_cpup(prop));
++	}
++err:
++	return pdata;
++}
++#else
++static struct i2c_gpio_platform_data *i2c_gpio_of_probe(
++	struct platform_device *pdev)
++{
++	return NULL;
++}
++#endif
++
+ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
  {
- 	int i;
--	int cpu;
+-	struct i2c_gpio_platform_data *pdata;
++	struct i2c_gpio_platform_data *pdata, *pdata_of = NULL;
+ 	struct i2c_algo_bit_data *bit_data;
+ 	struct i2c_adapter *adap;
+ 	int ret;
  
- 	BUG_ON(mpic->num_sources == 0);
+ 	pdata = pdev->dev.platform_data;
+ 	if (!pdata)
++		pdata = pdata_of = i2c_gpio_of_probe(pdev);
++	if (!pdata)
+ 		return -ENXIO;
  
-@@ -1290,18 +1324,14 @@ void __init mpic_init(struct mpic *mpic)
- 	mpic_pasemi_msi_init(mpic);
+ 	ret = -ENOMEM;
+@@ -143,6 +202,8 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+ 	adap->algo_data = bit_data;
+ 	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+ 	adap->dev.parent = &pdev->dev;
++	if (pdata_of)
++		adap->dev.of_node = pdev->dev.of_node;
  
- 	if (mpic->flags & MPIC_PRIMARY)
--		cpu = hard_smp_processor_id();
-+		mpic->cpu = hard_smp_processor_id();
- 	else
--		cpu = 0;
-+		mpic->cpu = 0;
+ 	/*
+ 	 * If "dev->id" is negative we consider it as zero.
+@@ -161,6 +222,9 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+ 		 pdata->scl_is_output_only
+ 		 ? ", no clock stretching" : "");
  
--	for (i = 0; i < mpic->num_sources; i++) {
--		/* start with vector = source number, and masked */
--		u32 vecpri = MPIC_VECPRI_MASK | i |
--			(8 << MPIC_VECPRI_PRIORITY_SHIFT);
--		
--		/* init hw */
--		mpic_irq_write(i, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
--		mpic_irq_write(i, MPIC_INFO(IRQ_DESTINATION), 1 << cpu);
-+	if (mpic->flags & MPIC_WANTS_RESET) {
-+		for (i = 0; i < mpic->num_sources; i++) {
-+			mpic_init_vector(mpic, i);
-+		}
- 	}
- 	
- 	/* Init spurious vector */
++	/* Now register all the child nodes */
++	of_i2c_register_devices(adap);
++
+ 	return 0;
+ 
+ err_add_bus:
+@@ -172,6 +236,7 @@ err_request_sda:
+ err_alloc_bit_data:
+ 	kfree(adap);
+ err_alloc_adap:
++	kfree(pdata_of);
+ 	return ret;
+ }
+ 
+@@ -179,23 +244,33 @@ static int __devexit i2c_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct i2c_gpio_platform_data *pdata;
+ 	struct i2c_adapter *adap;
++	struct i2c_algo_bit_data *bit_data;
+ 
+ 	adap = platform_get_drvdata(pdev);
+-	pdata = pdev->dev.platform_data;
++	bit_data = adap->algo_data;
++	pdata = bit_data->data;
+ 
+ 	i2c_del_adapter(adap);
+ 	gpio_free(pdata->scl_pin);
+ 	gpio_free(pdata->sda_pin);
+ 	kfree(adap->algo_data);
++	if (adap->dev.of_node)
++		kfree(pdata);
+ 	kfree(adap);
+ 
+ 	return 0;
+ }
+ 
++static const struct of_device_id i2c_gpio_match[] = {
++	{ .compatible = "i2c-gpio", },
++	{},
++};
++
+ static struct platform_driver i2c_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "i2c-gpio",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = i2c_gpio_match,
+ 	},
+ 	.probe		= i2c_gpio_probe,
+ 	.remove		= __devexit_p(i2c_gpio_remove),
 -- 
-1.6.3.3
+1.7.3.5
