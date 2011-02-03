@@ -1,371 +1,95 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: add new Altera PIO driver
-Date: Thu, 3 Feb 2011 09:54:06 -0700
-Message-ID: <20110203165406.GA6180@angua.secretlab.ca>
-References: <201101262237.p0QMb95f008734@imap1.linux-foundation.org>
-	<1296719817-3007-1-git-send-email-thomas@wytron.com.tw>
+From: Yoder Stuart-B08248 <B08248@freescale.com>
+Subject: RE: [PATCH v2 2/3] powerpc: document the Open PIC device tree binding
+Date: Thu, 3 Feb 2011 17:02:14 +0000
+Message-ID: <9F6FE96B71CF29479FF1CDC8046E15030BE4F7@039-SN1MPN1-002.039d.mgd.msft.net>
+References: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
+	<1296697900-14004-3-git-send-email-meador_inge@mentor.com>
+	<AANLkTinVak_ukf0wP8=zbGTq8ENV4d88hNuzW_tqvCFf@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1296719817-3007-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <AANLkTinVak_ukf0wP8=zbGTq8ENV4d88hNuzW_tqvCFf@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>, Meador Inge <meador_inge@mentor.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Hollis Blanchard <hollis_blanchard@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 03, 2011 at 03:56:57PM +0800, Thomas Chou wrote:
-> This driver supports the Altera PIO core.
-> 
-> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> ---
-> v2 change compatible vendor to uppercase, ALTR.
->    add dts binding doc.
-> 
->  .../devicetree/bindings/gpio/altera_gpio.txt       |    7 +
->  drivers/gpio/Kconfig                               |    6 +
->  drivers/gpio/Makefile                              |    1 +
->  drivers/gpio/altera_gpio.c                         |  233 ++++++++++++++++++++
->  4 files changed, 247 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/altera_gpio.txt
->  create mode 100644 drivers/gpio/altera_gpio.c
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/altera_gpio.txt b/Documentation/devicetree/bindings/gpio/altera_gpio.txt
-> new file mode 100644
-> index 0000000..5ab751a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/altera_gpio.txt
-> @@ -0,0 +1,7 @@
-> +Altera GPIO
-> +
-> +Required properties:
-> +- compatible : should be "ALTR,pio-1.0".
-> +Optional properties:
-> +- resetvalue : the reset value of the output port.
-> +- width : the width of the port in number of bits.
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 664660e..40271f0 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -70,6 +70,12 @@ config GPIO_MAX730X
->  
->  comment "Memory mapped GPIO expanders:"
->  
-> +config GPIO_ALTERA
-> +	bool "Altera GPIO"
-> +	depends on OF
-> +	help
-> +	  Say yes here to support the Altera PIO device
-> +
->  config GPIO_BASIC_MMIO
->  	tristate "Basic memory-mapped GPIO controllers support"
->  	help
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 3351cf8..ed11932 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -8,6 +8,7 @@ ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
->  
->  obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
->  
-> +obj-$(CONFIG_GPIO_ALTERA)	+= altera_gpio.o
 
-This list is mostly alphabetized.  Please move down 2 lines below the
-ADP5588 line.
+> > + =A0- no-reset
+> > + =A0 =A0 =A0Usage: optional
+> > + =A0 =A0 =A0Value type: <empty>
+> > + =A0 =A0 =A0Definition: The presence of this property indicates that t=
+he
+> > + PIC
+> > + =A0 =A0 =A0 =A0 =A0should not be reset during runtime initialization.=
+ =A0The
+> > + presence of
+> > + =A0 =A0 =A0 =A0 =A0this property also mandates that any initializatio=
+n related
+> > + to
+> > + =A0 =A0 =A0 =A0 =A0interrupt sources shall be limited to sources expl=
+icitly
+> > + referenced
+> > + =A0 =A0 =A0 =A0 =A0in the device tree.
+> =
 
->  obj-$(CONFIG_GPIO_ADP5520)	+= adp5520-gpio.o
->  obj-$(CONFIG_GPIO_ADP5588)	+= adp5588-gpio.o
->  obj-$(CONFIG_GPIO_BASIC_MMIO)	+= basic_mmio_gpio.o
-> diff --git a/drivers/gpio/altera_gpio.c b/drivers/gpio/altera_gpio.c
-> new file mode 100644
-> index 0000000..a173eb3
-> --- /dev/null
-> +++ b/drivers/gpio/altera_gpio.c
-> @@ -0,0 +1,233 @@
-> +/*
-> + * Altera GPIO driver
-> + *
-> + * Copyright (C) 2011 Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> + *
-> + * Based on Xilinx gpio driver, which is
-> + * Copyright 2008 Xilinx, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/errno.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/io.h>
-> +#include <linux/gpio.h>
-> +#include <linux/slab.h>
-> +
-> +#define DRV_NAME "altera_gpio"
-> +
-> +/* Register Offset Definitions */
-> +#define ALTERA_GPIO_DATA_OFFSET   0x0	/* Data register  */
-> +#define ALTERA_GPIO_DIR_OFFSET    0x4	/* I/O direction register  */
-> +
-> +struct altera_gpio_instance {
-> +	struct of_mm_gpio_chip mmchip;
-> +	u32 gpio_state;		/* GPIO state shadow register */
-> +	u32 gpio_dir;		/* GPIO direction shadow register */
-> +	spinlock_t gpio_lock;	/* Lock used for synchronization */
-> +};
-> +
-> +/*
-> + * altera_gpio_get - Read the specified signal of the GPIO device.
+> Please follow the lead set by the other binding documentation which is mo=
+re
+> concise and tends to be of the form:
+> =
 
-Kerneldoc format is 2 asterisks on the first line of a function
-documentation block, like this:
+>     Required properties:
+>         - reg : <description>
+>         - interrupt-controller : <description>
+> =
 
-/**
- * altera_gpio_get - Read the specified signal of the GPIO device.
+>     Optional Properties:
+>         - no-reset : blah
+> =
 
-> + * @gc:     Pointer to gpio_chip device structure.
-> + * @gpio:   GPIO signal number.
-> + *
-> + * This function reads the specified signal of the GPIO device. It returns 0 if
-> + * the signal clear, 1 if signal is set or negative value on error.
-> + */
-> +static int altera_gpio_get(struct gpio_chip *gc, unsigned int gpio)
-> +{
-> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> +
-> +	return (readl(mm_gc->regs + ALTERA_GPIO_DATA_OFFSET) >> gpio) & 1;
-> +}
-> +
-> +/*
-> + * altera_gpio_set - Write the specified signal of the GPIO device.
-> + * @gc:     Pointer to gpio_chip device structure.
-> + * @gpio:   GPIO signal number.
-> + * @val:    Value to be written to specified signal.
-> + *
-> + * This function writes the specified value in to the specified signal of the
-> + * GPIO device.
-> + */
-> +static void altera_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
-> +{
-> +	unsigned long flags;
-> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> +	struct altera_gpio_instance *chip =
-> +	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +
-> +	spin_lock_irqsave(&chip->gpio_lock, flags);
-> +
-> +	/* Write to shadow register and output */
-> +	if (val)
-> +		chip->gpio_state |= 1 << gpio;
-> +	else
-> +		chip->gpio_state &= ~(1 << gpio);
-> +	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
-> +
-> +	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-> +}
-> +
-> +/*
-> + * altera_gpio_dir_in - Set the direction of the specified GPIO signal as input.
-> + * @gc:     Pointer to gpio_chip device structure.
-> + * @gpio:   GPIO signal number.
-> + *
-> + * This function sets the direction of specified GPIO signal as input.
-> + * It returns 0 if direction of GPIO signals is set as input otherwise it
-> + * returns negative error value.
-> + */
-> +static int altera_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
-> +{
-> +	unsigned long flags;
-> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> +	struct altera_gpio_instance *chip =
-> +	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +
-> +	spin_lock_irqsave(&chip->gpio_lock, flags);
-> +
-> +	/* Clear the GPIO bit in shadow register and set direction as input */
-> +	chip->gpio_dir &= ~(1 << gpio);
-> +	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-> +
-> +	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * altera_gpio_dir_out - Set the direction of the specified GPIO as output.
-> + * @gc:     Pointer to gpio_chip device structure.
-> + * @gpio:   GPIO signal number.
-> + * @val:    Value to be written to specified signal.
-> + *
-> + * This function sets the direction of specified GPIO signal as output. If all
-> + * GPIO signals of GPIO chip is configured as input then it returns
-> + * error otherwise it returns 0.
-> + */
-> +static int altera_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
-> +{
-> +	unsigned long flags;
-> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> +	struct altera_gpio_instance *chip =
-> +	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +
-> +	spin_lock_irqsave(&chip->gpio_lock, flags);
-> +
-> +	/* Write state of GPIO signal */
-> +	if (val)
-> +		chip->gpio_state |= 1 << gpio;
-> +	else
-> +		chip->gpio_state &= ~(1 << gpio);
-> +	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
-> +
-> +	/* Set the GPIO bit in shadow register and set direction as output */
-> +	chip->gpio_dir |= (1 << gpio);
-> +	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-> +
-> +	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * altera_gpio_save_regs - Set initial values of GPIO pins
-> + * @mm_gc: pointer to memory mapped GPIO chip structure
-> + */
-> +static void altera_gpio_save_regs(struct of_mm_gpio_chip *mm_gc)
-> +{
-> +	struct altera_gpio_instance *chip =
-> +	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
+> I'm considering formalizing the binding format so that fully specified and
+> cross-referenced documentation can be generated from the bindings
+> directory.
 
-This container_of is used several times.  It would be worth creating a
-to_altera_gpio() macro.
+Regarding the format-- The definition should also to specify the value
+type.  I don't see this being consistently done in existing bindings.  =
 
-> +
-> +	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
-> +	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-> +}
-> +
-> +/*
-> + * altera_gpio_of_probe - Probe method for the GPIO device.
-> + * @np: pointer to device tree node
-> + *
-> + * This function probes the GPIO device in the device tree. It initializes the
-> + * driver data structure. It returns 0, if the driver is bound to the GPIO
-> + * device, or a negative value if there is an error.
-> + */
-> +static int __devinit altera_gpio_of_probe(struct device_node *np)
-> +{
-> +	struct altera_gpio_instance *chip;
-> +	int status = 0;
-> +	const u32 *tree_info;
+They are not completely unclear, but using consistent terms might help.
 
-const __be32 *tree_info;
+The ePAPR uses this convention:
 
-> +
-> +	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	/* Update GPIO state shadow register with default value */
-> +	tree_info = of_get_property(np, "resetvalue", NULL);
-> +	if (tree_info)
-> +		chip->gpio_state = be32_to_cpup(tree_info);
+    <empty>      # no value, a Boolean
+     <u32>       # A 32-bit integer in big-endian format
+     <u64>       # A 64-bit integer in big-endian format
+   <string>      # null terminated
+ <prop-encoded-array>    # format specific to the property
+   <phandle>    # A <u32> value, referecnes another node
+  <stringlist>    # A list of <string> values concatenated together.
 
-This would be better:
-	tree_info = of_get_property(np, "resetvalue", &len);
-	if (tree_info & len >= sizeof(u32))
-		chip->gpio_state = be32_to_cpup(tree_info);
+The identifier prop-encoded-array came from precedence in other
+of binding and ieee1275.   prop-encoded-arrays should be
+be specifically defined in terms of # of cells and the =
 
-> +
-> +	/* Update GPIO direction shadow register with default value */
-> +	chip->gpio_dir = 0; /* By default, all pins are inputs */
-> +
-> +	/* Check device node for device width */
-> +	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
-> +	tree_info = of_get_property(np, "width", NULL);
-> +	if (tree_info)
-> +		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
-> +
-> +	spin_lock_init(&chip->gpio_lock);
-> +
-> +	chip->mmchip.gc.direction_input = altera_gpio_dir_in;
-> +	chip->mmchip.gc.direction_output = altera_gpio_dir_out;
-> +	chip->mmchip.gc.get = altera_gpio_get;
-> +	chip->mmchip.gc.set = altera_gpio_set;
-> +
-> +	chip->mmchip.save_regs = altera_gpio_save_regs;
-> +
-> +	/* Call the OF gpio helper to setup and register the GPIO device */
-> +	status = of_mm_gpiochip_add(np, &chip->mmchip);
-> +	if (status) {
-> +		kfree(chip);
-> +		pr_err("%s: error in probe function with status %d\n",
-> +		       np->full_name, status);
-> +		return status;
-> +	}
-> +	pr_info(DRV_NAME ": %s: registered\n", np->full_name);
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id altera_gpio_of_match[] __devinitdata = {
-> +	{ .compatible = "ALTR,pio-1.0", },
-> +	{},
-> +};
-> +
-> +static int __init altera_gpio_init(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	for_each_matching_node(np, altera_gpio_of_match)
-> +		altera_gpio_of_probe(np);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Make sure we get initialized before anyone else tries to use us */
-> +subsys_initcall(altera_gpio_init);
+meaning of each cell.
 
-Ugh.  I'd *really* rather see this implemented as a platform_driver,
-but I understand the dependency requirements that it be done before
-anyone tries to use it and there isn't a generic solution for
-dependency management yet.
+If you use the above types identifiers, there is no ambiguity.
 
-However, calling the subsys_initcall() from inside the driver code and
-blindly looking for gpio chips is definitely not a good idea because
-it doesn't provide architecture code the opportunity to override the
-device registration if it needs to.  The altera_gpio_init() and
-subsys_initcall() functions should be omitted from this patch and
-instead be explicitly called from the board support code.
+Also, there are properties that don't necessarily fall in 'required'
+and 'optional', but may be required depending on the context.  Thus
+the 'Usage' identifier which Meador derived from my mpic binding
+posted.   Usage could be:
+               Required
+               Optional
+               See Definition
 
-Otherwise the driver looks good.
-
-g.
-
-> +/* No exit call at the moment as we cannot unregister of GPIO chips */
-> +
-> +MODULE_DESCRIPTION("Altera GPIO driver");
-> +MODULE_AUTHOR("Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> -- 
-> 1.7.3.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Stuart
