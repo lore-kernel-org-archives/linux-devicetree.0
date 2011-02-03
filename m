@@ -1,138 +1,49 @@
-From: Dirk Brandewie <dirk.brandewie@gmail.com>
-Subject: Re: [PATCH v4] spi: add OpenCores tiny SPI driver
-Date: Thu, 03 Feb 2011 07:20:32 -0800
-Message-ID: <4D4AC7C0.4050608@gmail.com>
-References: <1295925450-28550-1-git-send-email-thomas@wytron.com.tw> <1296729466-2936-1-git-send-email-thomas@wytron.com.tw>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] powerpc: Open PIC binding and 'no-reset'
+	implementation
+Date: Thu, 3 Feb 2011 09:22:53 -0600
+Message-ID: <D6C286E3-9D14-4C11-9974-61DDAB7CB6E2@kernel.crashing.org>
+References: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
+Mime-Version: 1.0 (Apple Message framework v1082)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1296729466-2936-1-git-send-email-thomas@wytron.com.tw>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Chou <thomas@wytron.com.tw>
-Cc: David Brownell <dbrownell@users.sourceforge.net>, Grant Likely <grant.likely@secretlab.ca>, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1296697900-14004-1-git-send-email-meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2011 02:37 AM, Thomas Chou wrote:
-> This patch adds support of OpenCores tiny SPI driver.
->
-> http://opencores.org/project,tiny_spi
->
 
-> +static int tiny_spi_txrx_bufs(struct spi_device *spi, struct spi_transfer *t)
-> +{
-> +	struct tiny_spi *hw = tiny_spi_to_hw(spi);
-> +	const u8 *txp = t->tx_buf;
-> +	u8 *rxp = t->rx_buf;
-> +	unsigned int i;
-> +
-> +	if (hw->irq>= 0) {
-> +		/* use intrrupt driven data transfer */
-> +		hw->len = t->len;
-> +		hw->txp = t->tx_buf;
-> +		hw->rxp = t->rx_buf;
-> +		hw->txc = 0;
-> +		hw->rxc = 0;
-> +
-> +		/* send the first byte */
-> +		if (t->len>  1) {
-> +			writeb(hw->txp ? *hw->txp++ : 0,
-> +			       hw->base + TINY_SPI_TXDATA);
-> +			hw->txc++;
-> +			writeb(hw->txp ? *hw->txp++ : 0,
-> +			       hw->base + TINY_SPI_TXDATA);
-> +			hw->txc++;
-> +			writeb(TINY_SPI_STATUS_TXR, hw->base + TINY_SPI_STATUS);
-> +		} else {
-> +			writeb(hw->txp ? *hw->txp++ : 0,
-> +			       hw->base + TINY_SPI_TXDATA);
-> +			hw->txc++;
-> +			writeb(TINY_SPI_STATUS_TXE, hw->base + TINY_SPI_STATUS);
-> +		}
-> +
-> +		wait_for_completion(&hw->done);
-> +	} else if (txp&&  rxp) {
-> +		/* we need to tighten the transfer loop */
-> +		writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-> +		if (t->len>  1) {
-> +			writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-> +			for (i = 2; i<  t->len; i++) {
-> +				u8 rx, tx = *txp++;
-> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +					 TINY_SPI_STATUS_TXR))
-> +					cpu_relax();
+On Feb 2, 2011, at 7:51 PM, Meador Inge wrote:
 
-Putting the read status, cpu releax in an inline function would make this 
-function a lot easier to read.
+> This patch set provides a binding for Open PIC and implements support for
+> a new property, specified by that binding, called 'no-reset'.  With 'no-reset'
+> in place the 'protected-sources' property is no longer needed and was removed.
+> 
+> Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> CC: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> 
+> Meador Inge (3):
+>  powerpc: Removing support for 'protected-sources'
+>  powerpc: document the Open PIC device tree binding
+>  powerpc: make MPIC honor the 'no-reset' device tree property
+> 
+> Documentation/powerpc/dts-bindings/open-pic.txt |  115 +++++++++++++++++++++++
+> arch/powerpc/include/asm/mpic.h                 |    7 +-
+> arch/powerpc/sysdev/mpic.c                      |   92 ++++++++----------
+> 3 files changed, 160 insertions(+), 54 deletions(-)
+> create mode 100644 Documentation/powerpc/dts-bindings/open-pic.txt
+> 
 
-> +				rx = readb(hw->base + TINY_SPI_TXDATA);
-> +				writeb(tx, hw->base + TINY_SPI_TXDATA);
-> +				*rxp++ = rx;
-> +			}
-> +			while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +				 TINY_SPI_STATUS_TXR))
-> +				cpu_relax();
-> +			*rxp++ = readb(hw->base + TINY_SPI_TXDATA);
-> +		}
-> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +			 TINY_SPI_STATUS_TXE))
-> +			cpu_relax();
-> +		*rxp++ = readb(hw->base + TINY_SPI_RXDATA);
-> +	} else if (rxp) {
-> +		writeb(0, hw->base + TINY_SPI_TXDATA);
-> +		if (t->len>  1) {
-> +			writeb(0,
-> +			       hw->base + TINY_SPI_TXDATA);
-> +			for (i = 2; i<  t->len; i++) {
-> +				u8 rx;
-> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +					 TINY_SPI_STATUS_TXR))
-> +					cpu_relax();
-> +				rx = readb(hw->base + TINY_SPI_TXDATA);
-> +				writeb(0,
-> +				       hw->base + TINY_SPI_TXDATA);
-> +				*rxp++ = rx;
-> +			}
-> +			while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +				 TINY_SPI_STATUS_TXR))
-> +				cpu_relax();
-> +			*rxp++ = readb(hw->base + TINY_SPI_TXDATA);
-> +		}
-> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +			 TINY_SPI_STATUS_TXE))
-> +			cpu_relax();
-> +		*rxp++ = readb(hw->base + TINY_SPI_RXDATA);
-> +	} else if (txp) {
-> +		writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-> +		if (t->len>  1) {
-> +			writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-> +			for (i = 2; i<  t->len; i++) {
-> +				u8 tx = *txp++;
-> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +					 TINY_SPI_STATUS_TXR))
-> +					cpu_relax();
-> +				writeb(tx, hw->base + TINY_SPI_TXDATA);
-> +			}
-> +		}
-> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +			 TINY_SPI_STATUS_TXE))
-> +			cpu_relax();
-> +	} else {
-> +		writeb(0, hw->base + TINY_SPI_TXDATA);
-> +		if (t->len>  1) {
-> +			writeb(0,
-> +			       hw->base + TINY_SPI_TXDATA);
-> +			for (i = 2; i<  t->len; i++) {
-> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +					 TINY_SPI_STATUS_TXR))
-> +					cpu_relax();
-> +				writeb(0,
-> +				       hw->base + TINY_SPI_TXDATA);
-> +			}
-> +		}
-> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
-> +			 TINY_SPI_STATUS_TXE))
-> +			cpu_relax();
-> +	}
-> +	return t->len;
-> +}
+Please cleanup all the .dts that are impacted by this.
+
+- k
