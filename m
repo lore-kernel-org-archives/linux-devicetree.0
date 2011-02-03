@@ -1,79 +1,138 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
+From: Dirk Brandewie <dirk.brandewie@gmail.com>
 Subject: Re: [PATCH v4] spi: add OpenCores tiny SPI driver
-Date: Thu, 3 Feb 2011 12:03:53 +0100
-Message-ID: <20110203110353.GC6508@pengutronix.de>
-References: <1295925450-28550-1-git-send-email-thomas@wytron.com.tw>
- <1296729466-2936-1-git-send-email-thomas@wytron.com.tw>
+Date: Thu, 03 Feb 2011 07:20:32 -0800
+Message-ID: <4D4AC7C0.4050608@gmail.com>
+References: <1295925450-28550-1-git-send-email-thomas@wytron.com.tw> <1296729466-2936-1-git-send-email-thomas@wytron.com.tw>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0IvGJv3f9h+YhkrH"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <1296729466-2936-1-git-send-email-thomas@wytron.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Chou <thomas@wytron.com.tw>
 Cc: David Brownell <dbrownell@users.sourceforge.net>, Grant Likely <grant.likely@secretlab.ca>, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-
---0IvGJv3f9h+YhkrH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 03, 2011 at 06:37:46PM +0800, Thomas Chou wrote:
-
+On 02/03/2011 02:37 AM, Thomas Chou wrote:
 > This patch adds support of OpenCores tiny SPI driver.
+>
+> http://opencores.org/project,tiny_spi
+>
 
-A few comments to probe().
+> +static int tiny_spi_txrx_bufs(struct spi_device *spi, struct spi_transfer *t)
+> +{
+> +	struct tiny_spi *hw = tiny_spi_to_hw(spi);
+> +	const u8 *txp = t->tx_buf;
+> +	u8 *rxp = t->rx_buf;
+> +	unsigned int i;
+> +
+> +	if (hw->irq>= 0) {
+> +		/* use intrrupt driven data transfer */
+> +		hw->len = t->len;
+> +		hw->txp = t->tx_buf;
+> +		hw->rxp = t->rx_buf;
+> +		hw->txc = 0;
+> +		hw->rxc = 0;
+> +
+> +		/* send the first byte */
+> +		if (t->len>  1) {
+> +			writeb(hw->txp ? *hw->txp++ : 0,
+> +			       hw->base + TINY_SPI_TXDATA);
+> +			hw->txc++;
+> +			writeb(hw->txp ? *hw->txp++ : 0,
+> +			       hw->base + TINY_SPI_TXDATA);
+> +			hw->txc++;
+> +			writeb(TINY_SPI_STATUS_TXR, hw->base + TINY_SPI_STATUS);
+> +		} else {
+> +			writeb(hw->txp ? *hw->txp++ : 0,
+> +			       hw->base + TINY_SPI_TXDATA);
+> +			hw->txc++;
+> +			writeb(TINY_SPI_STATUS_TXE, hw->base + TINY_SPI_STATUS);
+> +		}
+> +
+> +		wait_for_completion(&hw->done);
+> +	} else if (txp&&  rxp) {
+> +		/* we need to tighten the transfer loop */
+> +		writeb(*txp++, hw->base + TINY_SPI_TXDATA);
+> +		if (t->len>  1) {
+> +			writeb(*txp++, hw->base + TINY_SPI_TXDATA);
+> +			for (i = 2; i<  t->len; i++) {
+> +				u8 rx, tx = *txp++;
+> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +					 TINY_SPI_STATUS_TXR))
+> +					cpu_relax();
 
-> +	/* find and map our resources */
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (res =3D=3D NULL) {
-> +		dev_err(&pdev->dev, "Cannot get IORESOURCE_MEM\n");
-> +		err =3D -ENOENT;
-> +		goto err_no_iores;
+Putting the read status, cpu releax in an inline function would make this 
+function a lot easier to read.
+
+> +				rx = readb(hw->base + TINY_SPI_TXDATA);
+> +				writeb(tx, hw->base + TINY_SPI_TXDATA);
+> +				*rxp++ = rx;
+> +			}
+> +			while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +				 TINY_SPI_STATUS_TXR))
+> +				cpu_relax();
+> +			*rxp++ = readb(hw->base + TINY_SPI_TXDATA);
+> +		}
+> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +			 TINY_SPI_STATUS_TXE))
+> +			cpu_relax();
+> +		*rxp++ = readb(hw->base + TINY_SPI_RXDATA);
+> +	} else if (rxp) {
+> +		writeb(0, hw->base + TINY_SPI_TXDATA);
+> +		if (t->len>  1) {
+> +			writeb(0,
+> +			       hw->base + TINY_SPI_TXDATA);
+> +			for (i = 2; i<  t->len; i++) {
+> +				u8 rx;
+> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +					 TINY_SPI_STATUS_TXR))
+> +					cpu_relax();
+> +				rx = readb(hw->base + TINY_SPI_TXDATA);
+> +				writeb(0,
+> +				       hw->base + TINY_SPI_TXDATA);
+> +				*rxp++ = rx;
+> +			}
+> +			while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +				 TINY_SPI_STATUS_TXR))
+> +				cpu_relax();
+> +			*rxp++ = readb(hw->base + TINY_SPI_TXDATA);
+> +		}
+> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +			 TINY_SPI_STATUS_TXE))
+> +			cpu_relax();
+> +		*rxp++ = readb(hw->base + TINY_SPI_RXDATA);
+> +	} else if (txp) {
+> +		writeb(*txp++, hw->base + TINY_SPI_TXDATA);
+> +		if (t->len>  1) {
+> +			writeb(*txp++, hw->base + TINY_SPI_TXDATA);
+> +			for (i = 2; i<  t->len; i++) {
+> +				u8 tx = *txp++;
+> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +					 TINY_SPI_STATUS_TXR))
+> +					cpu_relax();
+> +				writeb(tx, hw->base + TINY_SPI_TXDATA);
+> +			}
+> +		}
+> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +			 TINY_SPI_STATUS_TXE))
+> +			cpu_relax();
+> +	} else {
+> +		writeb(0, hw->base + TINY_SPI_TXDATA);
+> +		if (t->len>  1) {
+> +			writeb(0,
+> +			       hw->base + TINY_SPI_TXDATA);
+> +			for (i = 2; i<  t->len; i++) {
+> +				while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +					 TINY_SPI_STATUS_TXR))
+> +					cpu_relax();
+> +				writeb(0,
+> +				       hw->base + TINY_SPI_TXDATA);
+> +			}
+> +		}
+> +		while (!(readb(hw->base + TINY_SPI_STATUS)&
+> +			 TINY_SPI_STATUS_TXE))
+> +			cpu_relax();
 > +	}
-> +	hw->base =3D ioremap(res->start, (res->end - res->start) + 1);
-
-No request_mem_region?
-Maybe ioremap_nocache?
-Please use the resource_size()-macro.
-
-> +err_register:
-> +	if (hw->irq >=3D 0)
-> +		free_irq(hw->irq, hw);
-> +err_no_irq:
-> +	iounmap(hw->base);
-> +err_no_iomap:
-> +err_no_iores:
-> +	spi_master_put(master);
-> +err_no_mem:
-> +err_no_dev:
-> +	return err;
-
-It may pay off to use managed devices (devm_*), so this part will become
-very simple.
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---0IvGJv3f9h+YhkrH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk1Ki5kACgkQD27XaX1/VRsjWACgkGCZiZmnBP199dPrM7XlWFoT
-OCcAoMPnjZqLyfKrpqzZONhCnyb4e6M4
-=/8Wg
------END PGP SIGNATURE-----
-
---0IvGJv3f9h+YhkrH--
+> +	return t->len;
+> +}
