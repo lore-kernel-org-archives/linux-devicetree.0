@@ -1,14 +1,17 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH TIP 03/14] x86/dtb: Add a device tree for CE4100
-Date: Thu, 03 Feb 2011 11:32:45 -1000
-Message-ID: <4D4B1EFD.4060305@firmworks.com>
-References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>	<1295843342-1122-4-git-send-email-bigeasy@linutronix.de>	<20110127050027.GB23443@yookeroo>	<20110127091147.GA9770@www.tglx.de>
-	<20110203205928.GH6180@angua.secretlab.ca>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: Re: [PATCH v2] altera_ps2: Add devicetree support
+Date: Thu, 03 Feb 2011 23:27:21 +0100
+Message-ID: <4D4B2BC9.1030000@home.nl>
+References: <20110117220415.GB17963@angua.secretlab.ca>
+	<1295848693-28472-1-git-send-email-thomas@wytron.com.tw>
+	<20110202043121.GF29148@angua.secretlab.ca>
+	<4D4944AA.5040900@wytron.com.tw>
+	<20110202153959.GD20275@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110203205928.GH6180-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <20110202153959.GD20275-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,62 +22,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/3/2011 10:59 AM, Grant Likely wrote:
-> On Thu, Jan 27, 2011 at 02:41:47PM +0530, Sebastian Andrzej Siewior wrote:
->> * David Gibson | 2011-01-27 15:00:27 [+1000]:
->>>> +					>;
->>>> +
->>>> +				i2c-controller@15a00,0,0 {
+On 2/2/11 4:39 PM, Grant Likely wrote:
+> On Wed, Feb 02, 2011 at 07:48:58PM +0800, Thomas Chou wrote:
+>> On 02/02/2011 12:31 PM, Grant Likely wrote:
+>>>> +static const struct of_device_id altera_ps2_match[] = {
+>>>> +	{ .compatible = "altr,ps2-1.0", },
+>>> I thought I had seen 'altera' instead of an abbreviation being used in
+>>> a previous patch.  I don't care much whether 'altr' or 'altera' is
+>>> used, but I'd like to know that there is consensus from the Altera
+>>> users so that all the drivers use the same prefix.
 >>>
->>> Uh.. that unit address does not look right.  The encoding of PCI
->>> 3-cell addresses into a unit address string is not simply comma
->>> separated cells.  I forget the details, so you'll need to check the OF
->>> PCI binding.
->>
->> Grant wrote [0]:
->> |You'll also note that I added ',0,0' to the end of the address.
->> |That's because the node address reflects the parent bus address format
->> |which uses 3 cells in this case.
->
-> It is quite possible I was mistaken on this point.  The PCI binding is
-> not my area of strength.
-
-
-In real OF, the unit address of a PCI device is the first entry in the 
-reg property, which is the config space address.  For the config space 
-address, only the most significant of the three cells is significant; 
-the other two must be 0.
-
-The numerical representation of that cell in binary is 
-0000.0000.0000.0000.dddd.dfff.0000.0000, where d is the device number on 
-its bus segment and fff is the function number.
-
-The text representation is "D,F" , where D is the hexadecimal ASCII 
-representation of the binary number ddddd and F is the hexadecimal ASCII 
-representation of the binary number fff .  So "show-devs" will display 
-names like  "/pci/ethernet@12,e" - device number 0x12, function number 
-0xe.
-
-(In the general case, there are more fields in both the numerical and 
-text representations, but the unit address usage is restricted to just 
-the device and function numbers.  Bus numbers are handled by the 
-hierarchy of PCI-to-PCI bridges.)
-
-In real OF, there are "encode-unit" and "decode-unit" methods in the 
-parent (PCI bus) node to convert between the numerical and text 
-representations.
-
-I don't know how this plays out in the flattened DT world, but the above 
-is a summary of what the PCI bus binding stipulates.
-
+>> We had discussed on nios2-dev mailing list, and decided to use
+>> 'altr' as Walter suggested that it saves space.
+> Is altr the stock ticker symbol?  The convention is to either use the
+> stock ticker in all uppercase (although the uppercase bit hasn't been
+> consistently applied), or to use the full name in lowercase.
 >
 > g.
 >
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
 >
+Risking my limbs here by breaking in this late in the discussion... (I 
+wasn't able to reply earlier) but where does it state it needs to be 
+uppercase? I found a bunch of microblaze code which seems to use the 
+lowercase xlnx and freescale seems happy with fsl. Unless I'm missing 
+something obvious here I guess ALTR would actually be the first to use 
+uppercase.
+The only reference to uppercase I found in the ePAPR docs was chapter 
+1.6 that talks about uppercase hex-characters as an OUI.
+Not that I terribly mind either way, but I want to double-check before 
+we go ahead and change all altera-related devicetree stuff to uppercase.
+
+Greetz
+Walter
