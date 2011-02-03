@@ -1,24 +1,153 @@
-From: =?ISO-8859-1?Q?H=E5vard_Skinnemoen?= <hskinnemoen@gmail.com>
-Subject: Re: [PATCH] i2c-gpio: add devicetree support
-Date: Wed, 2 Feb 2011 20:24:06 -0800
-Message-ID: <AANLkTinOZxbuZ7EpG6uT3vJdY_9LwgEg5G30_M4TEceA@mail.gmail.com>
-References: <AANLkTimoaJKy-WTTHmRXFMmM6=e7uvzhjwRcDtNqGAPj@mail.gmail.com>
-	<1296699980-30234-1-git-send-email-thomas@wytron.com.tw>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Updates to devicetree/arm branch
+Date: Wed, 2 Feb 2011 22:49:45 -0700
+Message-ID: <AANLkTikOe21SPAtUY+5KhgpCFaK8g3mRS1GkG4uaDXL=@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1296699980-30234-1-git-send-email-thomas@wytron.com.tw>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Chou <thomas@wytron.com.tw>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben-linux@fluff.org>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, linux-i2c@vger.kernel.org, Jean Delvare <khali@linux-fr.org>, Albert Herranz <albert_herranz@yahoo.es>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 2, 2011 at 6:26 PM, Thomas Chou <thomas@wytron.com.tw> wrote:
-> This patch adds devicetree support to i2c-gpio driver. It converts
-> dts bindings and allocates a struct i2c_gpio_platform_data, which
-> will be freed on driver removal.
->
-> Signed-off-by: Albert Herranz <albert_herranz@yahoo.es>
-> Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
+Hi all,
 
-Acked-by: Haavard Skinnemoen <hskinnemoen@gmail.com>
+I've just push a few more commits out to devicetree/arm which picks up
+the removal of early machine_type lookup, picks up Rob's
+atags-anywhere patch (an earlier version, not the one rebased on
+Russell's p2v branch; I'll update to Rob's latest in the 2.6.39
+timeframe), and fixes the dtb corruption issue that I ran into (Thanks
+to John Bonesio for the debug help).  I was trying to use
+memblock_alloc() for early memory allocation when I should have been
+using alloc_bootmem_align().  Oops.
+
+Anyway, it seems to be working well for me, but it needs more testing.
+Give it a try if you're interested.  The tree details are below:
+
+John, hopefully this will solve all the dtb base address issues you
+were having.  You *should* be able to locate the dtb anywhere in ram
+now, except in a region used by the kernel and it cannot be based at
+physical address 0.
+
+I'll leave it out there for a day or two and clean some stuff up
+before posting the rebased series for a 3rd round of review.
+
+Cheers,
+g.
+
+The following changes since commit ebf53826e105f488f4f628703a108e98940d1dc5:
+
+  Linux 2.6.38-rc3 (2011-02-01 13:05:49 +1000)
+
+are available in the git repository at:
+  git://git.secretlab.ca/git/linux-2.6.git devicetree/arm
+
+Grant Likely (14):
+      arm/dt: Make __vet_atags also accept a dtb image
+      arm/dt: allow bootmem reservation for device tree blob and initrd
+      arm/dt: consolidate atags setup into setup_machine_atags
+      arm/dt: probe for platforms via the device tree
+      arm/dt: Basic versatile devicetree support
+      arm/tegra: Fix tegra irq_data conversion
+      arm/dt: Basic tegra devicetree support
+      arm/dt: Fixup bugs in device tree __vet_atags changes
+      Merge v2.6.38-rc1 into devicetree/arm
+      Merge v2.6.38-rc2 into devicetree/arm
+      dt/arm: Save dtb in allocated buffer instead of reserved region
+      Merge commit 'v2.6.38-rc3' into devicetree/arm
+      arm/dt: Fixed memory allocation and missing of_fdt.h header
+      Revert "dt/arm: Save dtb in allocated buffer instead of reserved regi=
+on"
+
+Jeremy Kerr (1):
+      arm/dt: Allow CONFIG_OF on ARM
+
+Rob Herring (1):
+      ARM/dt: map ATAGs when not in first 1MB of RAM
+
+Russell King (1):
+      arm: Defer lookup of machine_type and vet of atags to setup.c
+
+ arch/arm/Kconfig                       |    7 ++
+ arch/arm/include/asm/mach/arch.h       |    2 +
+ arch/arm/include/asm/prom.h            |   34 +++++++++
+ arch/arm/include/asm/setup.h           |    4 +
+ arch/arm/kernel/Makefile               |    1 +
+ arch/arm/kernel/devtree.c              |  107 +++++++++++++++++++++++++++++
+ arch/arm/kernel/head-common.S          |  114 +++++-----------------------=
+---
+ arch/arm/kernel/head-nommu.S           |    3 -
+ arch/arm/kernel/head.S                 |   36 +++++++---
+ arch/arm/kernel/setup.c                |  117 ++++++++++++++++++++++------=
+----
+ arch/arm/mach-tegra/board-harmony.c    |    6 ++
+ arch/arm/mach-versatile/versatile_ab.c |    6 ++
+ arch/arm/mach-versatile/versatile_pb.c |    6 ++
+ arch/arm/mm/init.c                     |   22 ++++++
+ 14 files changed, 318 insertions(+), 147 deletions(-)
+ create mode 100644 arch/arm/include/asm/prom.h
+ create mode 100644 arch/arm/kernel/devtree.c
+
+
+On Tue, Feb 1, 2011 at 11:21 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+> [restored cc: list]
+>
+> On Tue, Feb 01, 2011 at 08:11:15AM -0700, John Linn wrote:
+>> OK, I see your changes don't really help the problem with device
+>> trees up higher.
+>>
+>> The problem is that in setup_machine_fdt the kernel can't get to the
+>> memory where the device tree is located if it's up higher.
+>
+> No, there is another patch to solve that problem from Rob Herring.
+> I've not yet picked it up into my tree, but I will be doing so soon.
+> For now the dtb needs to be located inside the first 16k of ram.
+>
+> However, it can no longer be based at 0 either. =A0I discovered that if
+> the dt is based at zero, then the kernel is unable to tell the
+> different between no atags/dtb passed and a dtb passed at physical
+> address 0. =A0At the very least it needs to be offset about 16 bytes.
+> Since it is common to put atags at address 0x100, it is also
+> reasonable to use 0x100 as the dtb base address too.
+>
+> This problem doesn't exist for machines with ram based at physical
+> address !=3D 0.
+>
+> Sorry I wasn't clear when I posted this. =A0There is still a bit of flux
+> to get the interface correct and I accidentally glossed over this
+> detail.
+>
+>> The new stuff you added doesn't run early enough to take care of this pr=
+oblem.
+>
+> The problem I was trying to solve is that I was seeing device tree
+> corruption later in the boot process, but it now seems that I might
+> have misdiagnosed it. =A0I'm still investigation, but I may end up
+> reverting the memblock_reserve() change.
+>
+>>
+>> I probably should have reviewed the patches instead of testing as I
+>> would have realized that.
+>>
+>> I'm looking to see if I can understand how to help the problem.
+>>
+>> Should I really just respond to the mailing list instead of this
+>> back channel? =A0I don't know good behavior from bad sometimes.
+>
+> Yes, please feel totally free to respond on the mailing list (I went
+> ahead and restored the cc list on this reply). =A0Just remember to
+> bottom post when replying on-list.
+>
+> g.
+>
+>>
