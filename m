@@ -1,95 +1,466 @@
-From: Yoder Stuart-B08248 <B08248@freescale.com>
-Subject: RE: [PATCH v2 2/3] powerpc: document the Open PIC device tree binding
-Date: Thu, 3 Feb 2011 17:02:14 +0000
-Message-ID: <9F6FE96B71CF29479FF1CDC8046E15030BE4F7@039-SN1MPN1-002.039d.mgd.msft.net>
-References: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
-	<1296697900-14004-3-git-send-email-meador_inge@mentor.com>
-	<AANLkTinVak_ukf0wP8=zbGTq8ENV4d88hNuzW_tqvCFf@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v6] spi: New driver for Altera SPI
+Date: Thu, 3 Feb 2011 10:34:30 -0700
+Message-ID: <20110203173430.GC6180@angua.secretlab.ca>
+References: <1295851114-12488-1-git-send-email-thomas@wytron.com.tw>
+	<1296727326-2581-1-git-send-email-thomas@wytron.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <AANLkTinVak_ukf0wP8=zbGTq8ENV4d88hNuzW_tqvCFf@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Grant Likely <grant.likely@secretlab.ca>, Meador Inge <meador_inge@mentor.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Hollis Blanchard <hollis_blanchard@mentor.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1296727326-2581-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 03, 2011 at 06:02:06PM +0800, Thomas Chou wrote:
+> This patch adds a new SPI driver to support the Altera SOPC Builder
+> SPI component. It uses the bitbanging library.
+> 
+> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+> ---
+> v2 add devicetree support
+> v3 remove platform header, as Grant suggested.
+>    no irq resource means polling.
+> v4 minor cleanup, as Grant suggested.
+> v5 add compat version.
+> v6 change compatible vendor to uppercase, ALTR.
+>    add dts binding doc.
 
-> > + =A0- no-reset
-> > + =A0 =A0 =A0Usage: optional
-> > + =A0 =A0 =A0Value type: <empty>
-> > + =A0 =A0 =A0Definition: The presence of this property indicates that t=
-he
-> > + PIC
-> > + =A0 =A0 =A0 =A0 =A0should not be reset during runtime initialization.=
- =A0The
-> > + presence of
-> > + =A0 =A0 =A0 =A0 =A0this property also mandates that any initializatio=
-n related
-> > + to
-> > + =A0 =A0 =A0 =A0 =A0interrupt sources shall be limited to sources expl=
-icitly
-> > + referenced
-> > + =A0 =A0 =A0 =A0 =A0in the device tree.
-> =
+Hi Thomas, comments below, but looking pretty close.
 
-> Please follow the lead set by the other binding documentation which is mo=
-re
-> concise and tends to be of the form:
-> =
+> 
+>  .../devicetree/bindings/spi/spi_altera.txt         |    4 +
+>  drivers/spi/Kconfig                                |    6 +
+>  drivers/spi/Makefile                               |    1 +
+>  drivers/spi/spi_altera.c                           |  360 ++++++++++++++++++++
+>  4 files changed, 371 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi_altera.txt
+>  create mode 100644 drivers/spi/spi_altera.c
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi_altera.txt b/Documentation/devicetree/bindings/spi/spi_altera.txt
+> new file mode 100644
+> index 0000000..dda3759
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi_altera.txt
+> @@ -0,0 +1,4 @@
+> +Altera SPI
+> +
+> +Required properties:
+> +- compatible : should be "ALTR,spi-1.0".
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index bb233a9..e791579 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -53,6 +53,12 @@ if SPI_MASTER
+>  
+>  comment "SPI Master Controller Drivers"
+>  
+> +config SPI_ALTERA
+> +	tristate "Altera SPI Controller"
+> +	select SPI_BITBANG
 
->     Required properties:
->         - reg : <description>
->         - interrupt-controller : <description>
-> =
+Will this compile on all architectures?  Will it break allyesconfig
+on anything other than nios?
 
->     Optional Properties:
->         - no-reset : blah
-> =
+> +	help
+> +	  This is the driver for the Altera SPI Controller.
+> +
+>  config SPI_ATH79
+>  	tristate "Atheros AR71XX/AR724X/AR913X SPI controller driver"
+>  	depends on ATH79 && GENERIC_GPIO
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index 86d1b5f..4d2e35a 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -9,6 +9,7 @@ ccflags-$(CONFIG_SPI_DEBUG) := -DDEBUG
+>  obj-$(CONFIG_SPI_MASTER)		+= spi.o
+>  
+>  # SPI master controller drivers (bus)
+> +obj-$(CONFIG_SPI_ALTERA)		+= spi_altera.o
+>  obj-$(CONFIG_SPI_ATMEL)			+= atmel_spi.o
+>  obj-$(CONFIG_SPI_ATH79)			+= ath79_spi.o
+>  obj-$(CONFIG_SPI_BFIN)			+= spi_bfin5xx.o
+> diff --git a/drivers/spi/spi_altera.c b/drivers/spi/spi_altera.c
+> new file mode 100644
+> index 0000000..1056ded
+> --- /dev/null
+> +++ b/drivers/spi/spi_altera.c
+> @@ -0,0 +1,360 @@
+> +/*
+> + * Altera SPI driver
+> + *
+> + * Copyright (C) 2008 Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+> + *
+> + * Based on spi_s3c24xx.c, which is:
+> + * Copyright (c) 2006 Ben Dooks
+> + * Copyright (c) 2006 Simtec Electronics
+> + *	Ben Dooks <ben-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/err.h>
+> +#include <linux/clk.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/spi/spi_bitbang.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +
+> +#define DRV_NAME "spi_altera"
+> +
+> +#define ALTERA_SPI_RXDATA	0
+> +#define ALTERA_SPI_TXDATA	4
+> +#define ALTERA_SPI_STATUS	8
+> +#define ALTERA_SPI_CONTROL	12
+> +#define ALTERA_SPI_SLAVE_SEL	20
+> +
+> +#define ALTERA_SPI_STATUS_ROE_MSK	0x8
+> +#define ALTERA_SPI_STATUS_TOE_MSK	0x10
+> +#define ALTERA_SPI_STATUS_TMT_MSK	0x20
+> +#define ALTERA_SPI_STATUS_TRDY_MSK	0x40
+> +#define ALTERA_SPI_STATUS_RRDY_MSK	0x80
+> +#define ALTERA_SPI_STATUS_E_MSK		0x100
+> +
+> +#define ALTERA_SPI_CONTROL_IROE_MSK	0x8
+> +#define ALTERA_SPI_CONTROL_ITOE_MSK	0x10
+> +#define ALTERA_SPI_CONTROL_ITRDY_MSK	0x40
+> +#define ALTERA_SPI_CONTROL_IRRDY_MSK	0x80
+> +#define ALTERA_SPI_CONTROL_IE_MSK	0x100
+> +#define ALTERA_SPI_CONTROL_SSO_MSK	0x400
+> +
+> +struct altera_spi {
+> +	/* bitbang has to be first */
+> +	struct spi_bitbang bitbang;
+> +	struct completion done;
+> +
+> +	void __iomem *base;
+> +	int irq;
+> +	int len;
+> +	int count;
+> +	int bytes_per_word;
+> +	unsigned long imr;
+> +
+> +	/* data buffers */
+> +	const unsigned char *tx;
+> +	unsigned char *rx;
+> +};
+> +
+> +static inline struct altera_spi *altera_spi_to_hw(struct spi_device *sdev)
+> +{
+> +	return spi_master_get_devdata(sdev->master);
+> +}
+> +
+> +static void altera_spi_chipsel(struct spi_device *spi, int value)
+> +{
+> +	struct altera_spi *hw = altera_spi_to_hw(spi);
+> +
+> +	if (spi->mode & SPI_CS_HIGH) {
+> +		switch (value) {
+> +		case BITBANG_CS_INACTIVE:
+> +			writel(1 << spi->chip_select,
+> +			       hw->base + ALTERA_SPI_SLAVE_SEL);
+> +			hw->imr |= ALTERA_SPI_CONTROL_SSO_MSK;
+> +			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +			break;
+> +
+> +		case BITBANG_CS_ACTIVE:
+> +			hw->imr &= ~ALTERA_SPI_CONTROL_SSO_MSK;
+> +			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +			writel(0, hw->base + ALTERA_SPI_SLAVE_SEL);
+> +			break;
+> +		}
+> +	} else {
+> +		switch (value) {
+> +		case BITBANG_CS_INACTIVE:
+> +			hw->imr &= ~ALTERA_SPI_CONTROL_SSO_MSK;
+> +			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +			break;
+> +
+> +		case BITBANG_CS_ACTIVE:
+> +			writel(1 << spi->chip_select,
+> +			       hw->base + ALTERA_SPI_SLAVE_SEL);
+> +			hw->imr |= ALTERA_SPI_CONTROL_SSO_MSK;
+> +			writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +static int altera_spi_setupxfer(struct spi_device *spi, struct spi_transfer *t)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int altera_spi_setup(struct spi_device *spi)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline unsigned int hw_txbyte(struct altera_spi *hw, int count)
+> +{
+> +	if (hw->tx) {
+> +		switch (hw->bytes_per_word) {
+> +		case 1:
+> +			return hw->tx[count];
+> +		case 2:
+> +			return (hw->tx[count * 2]
+> +				| (hw->tx[count * 2 + 1] << 8));
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int altera_spi_txrx(struct spi_device *spi, struct spi_transfer *t)
+> +{
+> +	struct altera_spi *hw = altera_spi_to_hw(spi);
+> +
+> +	hw->tx = t->tx_buf;
+> +	hw->rx = t->rx_buf;
+> +	hw->count = 0;
+> +	hw->bytes_per_word = (t->bits_per_word ? : spi->bits_per_word) / 8;
+> +	hw->len = t->len / hw->bytes_per_word;
+> +
+> +	if (hw->irq >= 0) {
+> +		/* enable receive interrupt */
+> +		hw->imr |= ALTERA_SPI_CONTROL_IRRDY_MSK;
+> +		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +
+> +		/* send the first byte */
+> +		writel(hw_txbyte(hw, 0), hw->base + ALTERA_SPI_TXDATA);
+> +
+> +		wait_for_completion(&hw->done);
+> +		/* disable receive interrupt */
+> +		hw->imr &= ~ALTERA_SPI_CONTROL_IRRDY_MSK;
+> +		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +	} else {
+> +		/* send the first byte */
+> +		writel(hw_txbyte(hw, 0), hw->base + ALTERA_SPI_TXDATA);
+> +
+> +		while (1) {
+> +			unsigned int rxd;
+> +
+> +			while (!(readl(hw->base + ALTERA_SPI_STATUS) &
+> +				 ALTERA_SPI_STATUS_RRDY_MSK))
+> +				cpu_relax();
+> +
+> +			rxd = readl(hw->base + ALTERA_SPI_RXDATA);
+> +			if (hw->rx) {
+> +				switch (hw->bytes_per_word) {
+> +				case 1:
+> +					hw->rx[hw->count] = rxd;
+> +					break;
+> +				case 2:
+> +					hw->rx[hw->count * 2] = rxd;
+> +					hw->rx[hw->count * 2 + 1] = rxd >> 8;
+> +					break;
+> +				}
+> +			}
+> +
+> +			hw->count++;
+> +
+> +			if (hw->count < hw->len)
+> +				writel(hw_txbyte(hw, hw->count),
+> +				       hw->base + ALTERA_SPI_TXDATA);
+> +			else
+> +				break;
+> +		}
+> +
+> +	}
+> +
+> +	return hw->count * hw->bytes_per_word;
+> +}
+> +
+> +static irqreturn_t altera_spi_irq(int irq, void *dev)
+> +{
+> +	struct altera_spi *hw = dev;
+> +	unsigned int rxd;
+> +
+> +	rxd = readl(hw->base + ALTERA_SPI_RXDATA);
+> +	if (hw->rx) {
+> +		switch (hw->bytes_per_word) {
+> +		case 1:
+> +			hw->rx[hw->count] = rxd;
+> +			break;
+> +		case 2:
+> +			hw->rx[hw->count * 2] = rxd;
+> +			hw->rx[hw->count * 2 + 1] = rxd >> 8;
+> +			break;
+> +		}
+> +	}
+> +
+> +	hw->count++;
+> +
+> +	if (hw->count < hw->len)
+> +		writel(hw_txbyte(hw, hw->count), hw->base + ALTERA_SPI_TXDATA);
+> +	else
+> +		complete(&hw->done);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int __devinit altera_spi_probe(struct platform_device *pdev)
+> +{
+> +	struct altera_spi_platform_data *platp = pdev->dev.platform_data;
+> +	struct altera_spi *hw;
+> +	struct spi_master *master;
+> +	struct resource *res;
+> +	int err = 0;
+> +
+> +	master = spi_alloc_master(&pdev->dev, sizeof(struct altera_spi));
+> +	if (master == NULL) {
+> +		dev_err(&pdev->dev, "No memory for spi_master\n");
+> +		err = -ENOMEM;
+> +		goto err_no_mem;
+> +	}
+> +
+> +	/* setup the master state. */
+> +	master->bus_num = pdev->id;
+> +	master->num_chipselect = 16;
+> +	master->mode_bits = SPI_CS_HIGH;
+> +	master->setup = altera_spi_setup;
+> +
+> +	hw = spi_master_get_devdata(master);
+> +	platform_set_drvdata(pdev, hw);
+> +
+> +	/* setup the state for the bitbang driver */
+> +	hw->bitbang.master = spi_master_get(master);
+> +	if (hw->bitbang.master == NULL) {
+> +		dev_err(&pdev->dev, "Cannot get device\n");
+> +		err = -ENODEV;
+> +		goto err_no_dev;
+> +	}
+> +	hw->bitbang.setup_transfer = altera_spi_setupxfer;
+> +	hw->bitbang.chipselect = altera_spi_chipsel;
+> +	hw->bitbang.txrx_bufs = altera_spi_txrx;
+> +
+> +	/* find and map our resources */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (res == NULL) {
+> +		dev_err(&pdev->dev, "Cannot get IORESOURCE_MEM\n");
+> +		err = -ENOENT;
+> +		goto err_no_iores;
+> +	}
+> +	hw->base = ioremap(res->start, (res->end - res->start) + 1);
+> +	if (hw->base == 0) {
+> +		dev_err(&pdev->dev, "Cannot map IO\n");
+> +		err = -ENXIO;
+> +		goto err_no_iomap;
+> +	}
+> +	/* program defaults into the registers */
+> +	hw->imr = 0;		/* disable spi interrupts */
+> +	writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
+> +	writel(0, hw->base + ALTERA_SPI_STATUS);	/* clear status reg */
+> +	if (readl(hw->base + ALTERA_SPI_STATUS) & ALTERA_SPI_STATUS_RRDY_MSK)
+> +		readl(hw->base + ALTERA_SPI_RXDATA);	/* flush rxdata */
+> +	/* irq is optional */
+> +	hw->irq = platform_get_irq(pdev, 0);
+> +	if (hw->irq >= 0) {
+> +		init_completion(&hw->done);
+> +		err = request_irq(hw->irq, altera_spi_irq, 0, pdev->name, hw);
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Cannot claim IRQ\n");
+> +			goto err_no_irq;
+> +		}
+> +	}
+> +	/* find platform data */
+> +	if (!platp)
+> +		hw->bitbang.master->dev.of_node = pdev->dev.of_node;
+> +
+> +	/* register our spi controller */
+> +	err = spi_bitbang_start(&hw->bitbang);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Failed to register SPI master\n");
+> +		goto err_register;
+> +	}
+> +	dev_info(&pdev->dev, "base %p, irq %d\n", hw->base, hw->irq);
+> +
+> +	return 0;
+> +
+> +err_register:
+> +	if (hw->irq >= 0)
+> +		free_irq(hw->irq, hw);
+> +err_no_irq:
+> +	iounmap(hw->base);
+> +err_no_iomap:
+> +err_no_iores:
+> +err_no_dev:
+> +	spi_master_put(master);
+> +err_no_mem:
+> +	return err;
+> +}
+> +
+> +static int __devexit altera_spi_remove(struct platform_device *dev)
+> +{
+> +	struct altera_spi *hw = platform_get_drvdata(dev);
+> +	struct spi_master *master = hw->bitbang.master;
+> +
+> +	spi_bitbang_stop(&hw->bitbang);
+> +
+> +	if (hw->irq >= 0)
+> +		free_irq(hw->irq, hw);
+> +	iounmap(hw->base);
+> +
+> +	platform_set_drvdata(dev, NULL);
+> +	spi_master_put(master);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id altera_spi_match[] = {
+> +	{ .compatible = "ALTR,spi-1.0", },
+> +	{},
+> +}
+> +MODULE_DEVICE_TABLE(of, altera_spi_match);
+> +
+> +static struct platform_driver altera_spidrv = {
+> +	.remove = __devexit_p(altera_spi_remove),
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.owner = THIS_MODULE,
+> +		.pm = NULL,
+> +		.of_match_table = altera_spi_match,
+> +	},
+> +};
+> +
+> +static int __init altera_spi_init(void)
+> +{
+> +	return platform_driver_probe(&altera_spidrv, altera_spi_probe);
 
-> I'm considering formalizing the binding format so that fully specified and
-> cross-referenced documentation can be generated from the bindings
-> directory.
+platform_driver_register() please, and put the altera_spi_probe()
+routine into the driver structure.
 
-Regarding the format-- The definition should also to specify the value
-type.  I don't see this being consistently done in existing bindings.  =
-
-They are not completely unclear, but using consistent terms might help.
-
-The ePAPR uses this convention:
-
-    <empty>      # no value, a Boolean
-     <u32>       # A 32-bit integer in big-endian format
-     <u64>       # A 64-bit integer in big-endian format
-   <string>      # null terminated
- <prop-encoded-array>    # format specific to the property
-   <phandle>    # A <u32> value, referecnes another node
-  <stringlist>    # A list of <string> values concatenated together.
-
-The identifier prop-encoded-array came from precedence in other
-of binding and ieee1275.   prop-encoded-arrays should be
-be specifically defined in terms of # of cells and the =
-
-meaning of each cell.
-
-If you use the above types identifiers, there is no ambiguity.
-
-Also, there are properties that don't necessarily fall in 'required'
-and 'optional', but may be required depending on the context.  Thus
-the 'Usage' identifier which Meador derived from my mpic binding
-posted.   Usage could be:
-               Required
-               Optional
-               See Definition
-
-Stuart
+> +}
+> +module_init(altera_spi_init);
+> +
+> +static void __exit altera_spi_exit(void)
+> +{
+> +	platform_driver_unregister(&altera_spidrv);
+> +}
+> +module_exit(altera_spi_exit);
+> +
+> +MODULE_DESCRIPTION("Altera SPI driver");
+> +MODULE_AUTHOR("Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:" DRV_NAME);
+> -- 
+> 1.7.3.5
+> 
