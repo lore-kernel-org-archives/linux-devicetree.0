@@ -1,284 +1,123 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] i2c-gpio: add devicetree support
-Date: Thu, 3 Feb 2011 11:07:07 -0700
-Message-ID: <20110203180707.GE6180@angua.secretlab.ca>
-References: <AANLkTimoaJKy-WTTHmRXFMmM6=e7uvzhjwRcDtNqGAPj@mail.gmail.com>
- <1296699980-30234-1-git-send-email-thomas@wytron.com.tw>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH TIP 01/14] x86/e820: remove conditional early mapping
+ in parse_e820_ext
+Date: Thu, 3 Feb 2011 13:57:07 -0700
+Message-ID: <20110203205707.GG6180@angua.secretlab.ca>
+References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
+ <1295843342-1122-2-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1296699980-30234-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Cc: Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
+In-Reply-To: <1295843342-1122-2-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 03, 2011 at 10:26:20AM +0800, Thomas Chou wrote:
-> This patch adds devicetree support to i2c-gpio driver. It converts
-> dts bindings and allocates a struct i2c_gpio_platform_data, which
-> will be freed on driver removal.
+On Mon, Jan 24, 2011 at 09:58:49AM +0530, Sebastian Andrzej Siewior wrote:
+> This patch ensures that the memory passed from parse_setup_data() is
+> large enough to cover the complete data structure. That means that the
+> conditional mapping in parse_e820_ext() can go.
 > 
-> Signed-off-by: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
-> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> ---
-> for v2.6.39
-> v2 move of nodes probing to a hook, which will be optimized out
->      when devicetree is not used.
->    use linux/gpio.h.
->    move binding doc to i2c/i2c-gpio.txt.
-> v3 use speed-hz instead of udelay in dts binding.
->    condition the devicetree probe.
+> While here, I also attempt not to map two pages if the address is not
+> aligned to a page boundary.
 > 
->  Documentation/devicetree/bindings/i2c/i2c-gpio.txt |   40 ++++++++++
->  drivers/i2c/busses/i2c-gpio.c                      |   83 +++++++++++++++++++-
->  2 files changed, 119 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-> new file mode 100644
-> index 0000000..38ef4f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-> @@ -0,0 +1,40 @@
-> +GPIO-based I2C
-> +
-> +Required properties:
-> +- compatible : should be "i2c-gpio".
-> +- gpios : should specify GPIOs used for SDA and SCL lines, in that order.
-> +Optional properties:
-> +- sda-is-open-drain : present if SDA gpio is open-drain.
-> +- scl-is-open-drain : present if SCL gpio is open-drain.
-> +- scl-is-output-only : present if the output driver for SCL cannot be
-> +	turned off. this will prevent clock stretching from working.
-> +- speed-hz : SCL frequency.
-> +- timeout : clock stretching timeout in milliseconds.
-> +
-> +Example:
-> +
-> +gpio0: starlet-gpio@0d8000c0 {
-> +	compatible = "nintendo,starlet-gpio";
-> +	reg = <0d8000c0 4>;
-> +	gpio-controller;
-> +	#gpio-cells = <2>;
-> +};
-> +
-> +i2c-video {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "i2c-gpio";
-> +
-> +	gpios = <&gpio0 10 0	/* SDA line */
-> +		 &gpio0 11 0	/* SCL line */
-> +		>;
-> +	sda-is-open-drain;
-> +	scl-is-open-drain;
-> +	scl-is-output-only;
-> +	speed-hz = <250000>;
-> +
-> +	audio-video-encoder {
-> +		compatible = "nintendo,wii-ave-rvl";
-> +		reg = <70>;
-> +	};
-> +};
-> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-> index d9aa9a6..4b31bbe 100644
-> --- a/drivers/i2c/busses/i2c-gpio.c
-> +++ b/drivers/i2c/busses/i2c-gpio.c
-> @@ -14,8 +14,8 @@
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
-> -
-> -#include <asm/gpio.h>
-> +#include <linux/gpio.h>
-> +#include <linux/of_i2c.h>
->  
->  /* Toggle SDA by changing the direction of the pin */
->  static void i2c_gpio_setsda_dir(void *data, int state)
-> @@ -78,15 +78,74 @@ static int i2c_gpio_getscl(void *data)
->  	return gpio_get_value(pdata->scl_pin);
->  }
->  
-> +#ifdef CONFIG_OF
-> +#include <linux/of_gpio.h>
-> +
-> +/* Check if devicetree nodes exist and build platform data */
-> +static struct i2c_gpio_platform_data *i2c_gpio_of_probe(
-> +	struct platform_device *pdev)
-> +{
-> +	struct i2c_gpio_platform_data *pdata = NULL;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	const __be32 *prop;
-> +	int sda_pin, scl_pin;
-> +
-> +	if (!np || of_gpio_count(np) < 2)
-> +		goto err;
-> +
-> +	sda_pin = of_get_gpio_flags(np, 0, NULL);
-> +	scl_pin = of_get_gpio_flags(np, 1, NULL);
-> +	if (sda_pin < 0 || scl_pin < 0) {
-> +		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
-> +		       np->full_name, sda_pin, scl_pin);
-> +		goto err;
-> +	}
-> +
-> +	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		goto err;
-> +
-> +	pdata->sda_pin = sda_pin;
-> +	pdata->scl_pin = scl_pin;
-> +	prop = of_get_property(np, "sda-is-open-drain", NULL);
-> +	if (prop)
-> +		pdata->sda_is_open_drain = 1;
-> +	prop = of_get_property(np, "scl-is-open-drain", NULL);
-> +	if (prop)
-> +		pdata->scl_is_open_drain = 1;
-> +	prop = of_get_property(np, "scl-is-output-only", NULL);
-> +	if (prop)
-> +		pdata->scl_is_output_only = 1;
-> +	prop = of_get_property(np, "speed-hz", NULL);
-> +	if (prop)
-> +		pdata->udelay = DIV_ROUND_UP(1000000, be32_to_cpup(prop) * 2);
-> +	prop = of_get_property(np, "timeout", NULL);
-> +	if (prop) {
-> +		pdata->timeout =
-> +			msecs_to_jiffies(be32_to_cpup(prop));
-> +	}
-> +err:
-> +	return pdata;
-> +}
-> +#else
-> +static struct i2c_gpio_platform_data *i2c_gpio_of_probe(
-> +	struct platform_device *pdev)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  static int __devinit i2c_gpio_probe(struct platform_device *pdev)
->  {
-> -	struct i2c_gpio_platform_data *pdata;
-> +	struct i2c_gpio_platform_data *pdata, *pdata_of = NULL;
->  	struct i2c_algo_bit_data *bit_data;
->  	struct i2c_adapter *adap;
->  	int ret;
->  
->  	pdata = pdev->dev.platform_data;
->  	if (!pdata)
-> +		pdata = pdata_of = i2c_gpio_of_probe(pdev);
-> +	if (!pdata)
->  		return -ENXIO;
->  
->  	ret = -ENOMEM;
-> @@ -143,6 +202,8 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
->  	adap->algo_data = bit_data;
->  	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
->  	adap->dev.parent = &pdev->dev;
-> +	if (pdata_of)
-> +		adap->dev.of_node = pdev->dev.of_node;
->  
->  	/*
->  	 * If "dev->id" is negative we consider it as zero.
-> @@ -161,6 +222,9 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
->  		 pdata->scl_is_output_only
->  		 ? ", no clock stretching" : "");
->  
-> +	/* Now register all the child nodes */
-> +	of_i2c_register_devices(adap);
-> +
->  	return 0;
->  
->  err_add_bus:
-> @@ -172,6 +236,7 @@ err_request_sda:
->  err_alloc_bit_data:
->  	kfree(adap);
->  err_alloc_adap:
-> +	kfree(pdata_of);
->  	return ret;
->  }
->  
-> @@ -179,23 +244,33 @@ static int __devexit i2c_gpio_remove(struct platform_device *pdev)
->  {
->  	struct i2c_gpio_platform_data *pdata;
->  	struct i2c_adapter *adap;
-> +	struct i2c_algo_bit_data *bit_data;
->  
->  	adap = platform_get_drvdata(pdev);
-> -	pdata = pdev->dev.platform_data;
-> +	bit_data = adap->algo_data;
-> +	pdata = bit_data->data;
->  
->  	i2c_del_adapter(adap);
->  	gpio_free(pdata->scl_pin);
->  	gpio_free(pdata->sda_pin);
->  	kfree(adap->algo_data);
-> +	if (adap->dev.of_node)
-> +		kfree(pdata);
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
 
-Oh, wow.  Okay, so this driver does an odd thing.  It doesn't have
-its own private data structure and instead uses pdata as private data.
-Rather than doing these gymnastics with the pdata pointer, may I
-suggest the following refactorization:
-
-1) Add a private data structure:
-struct i2c_gpio_private_data {
-	struct i2c_adapter adap;
-	struct i2c_algo_bit_data bit_data;
-	struct i2c_gpio_platform_data pdata;
-}
-
-2) simplify the alloc/free of data in probe/remove:
-
-alloc:
-	struct i2c_gpio_private_data *priv;
-	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-	if (!priv)
-		return -ENOMEM;
-	adap = &priv->adap;
-	bit_data = &priv->bit_data;
-	pdata = &priv->pdata;
-	...
-	platform_set_drvdata(pdev, priv);
-
-free:
-	priv = platform_get_drvdata(pdev);
-	kfree(priv);
-
-3) Copy pdata into the allocated private data
-
-	if (pdev->dev.platform_data)
-		adap->pdata = *pdev->dev.platform_data;
-	else
-		if (i2c_gpio_of_probe(pdev, &adap->pdata))
-			return -ENXIO;
-
-Which should make the driver simpler and gets it away from using
-platform_data directly.  It also gets rid of the pdata pointer
-management gymnastics.
+I'm going through the dt patches now.  If I decide they are ready to
+go, should I pick this one up too?  hpa, does this look like something
+you can ack?
 
 g.
 
-
->  	kfree(adap);
+> ---
+>  arch/x86/include/asm/e820.h |    2 +-
+>  arch/x86/kernel/e820.c      |    8 +-------
+>  arch/x86/kernel/setup.c     |   18 +++++++++++++++---
+>  3 files changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/e820.h b/arch/x86/include/asm/e820.h
+> index e99d55d..908b969 100644
+> --- a/arch/x86/include/asm/e820.h
+> +++ b/arch/x86/include/asm/e820.h
+> @@ -96,7 +96,7 @@ extern void e820_setup_gap(void);
+>  extern int e820_search_gap(unsigned long *gapstart, unsigned long *gapsize,
+>  			unsigned long start_addr, unsigned long long end_addr);
+>  struct setup_data;
+> -extern void parse_e820_ext(struct setup_data *data, unsigned long pa_data);
+> +extern void parse_e820_ext(struct setup_data *data);
 >  
->  	return 0;
+>  #if defined(CONFIG_X86_64) || \
+>  	(defined(CONFIG_X86_32) && defined(CONFIG_HIBERNATION))
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 294f26d..5fad626 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -667,21 +667,15 @@ __init void e820_setup_gap(void)
+>   * boot_params.e820_map, others are passed via SETUP_E820_EXT node of
+>   * linked list of struct setup_data, which is parsed here.
+>   */
+> -void __init parse_e820_ext(struct setup_data *sdata, unsigned long pa_data)
+> +void __init parse_e820_ext(struct setup_data *sdata)
+>  {
+> -	u32 map_len;
+>  	int entries;
+>  	struct e820entry *extmap;
+>  
+>  	entries = sdata->len / sizeof(struct e820entry);
+> -	map_len = sdata->len + sizeof(struct setup_data);
+> -	if (map_len > PAGE_SIZE)
+> -		sdata = early_ioremap(pa_data, map_len);
+>  	extmap = (struct e820entry *)(sdata->data);
+>  	__append_e820_map(extmap, entries);
+>  	sanitize_e820_map(e820.map, ARRAY_SIZE(e820.map), &e820.nr_map);
+> -	if (map_len > PAGE_SIZE)
+> -		early_iounmap(sdata, map_len);
+>  	printk(KERN_INFO "extended physical RAM map:\n");
+>  	e820_print_map("extended");
+>  }
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index d3cfe26..f8e7152 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -429,16 +429,28 @@ static void __init parse_setup_data(void)
+>  		return;
+>  	pa_data = boot_params.hdr.setup_data;
+>  	while (pa_data) {
+> -		data = early_memremap(pa_data, PAGE_SIZE);
+> +		u32 data_len;
+> +		u32 map_len;
+> +
+> +		map_len = max(PAGE_SIZE - (pa_data & ~PAGE_MASK),
+> +				(u64)sizeof(struct setup_data));
+> +		data = early_memremap(pa_data, map_len);
+> +		data_len = data->len + sizeof(struct setup_data);
+> +		if (data_len > map_len) {
+> +			early_iounmap(data, map_len);
+> +			data = early_memremap(pa_data, data_len);
+> +			map_len = data_len;
+> +		}
+> +
+>  		switch (data->type) {
+>  		case SETUP_E820_EXT:
+> -			parse_e820_ext(data, pa_data);
+> +			parse_e820_ext(data);
+>  			break;
+>  		default:
+>  			break;
+>  		}
+>  		pa_data = data->next;
+> -		early_iounmap(data, PAGE_SIZE);
+> +		early_iounmap(data, map_len);
+>  	}
 >  }
 >  
-> +static const struct of_device_id i2c_gpio_match[] = {
-> +	{ .compatible = "i2c-gpio", },
-> +	{},
-> +};
-> +
->  static struct platform_driver i2c_gpio_driver = {
->  	.driver		= {
->  		.name	= "i2c-gpio",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = i2c_gpio_match,
->  	},
->  	.probe		= i2c_gpio_probe,
->  	.remove		= __devexit_p(i2c_gpio_remove),
 > -- 
-> 1.7.3.5
+> 1.7.3.2
 > 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
