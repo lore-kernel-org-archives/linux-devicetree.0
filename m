@@ -1,14 +1,11 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] powerpc: Removing support for 'protected-sources'
-Date: Fri, 4 Feb 2011 13:17:32 +0100
-Message-ID: <201102041317.32739.arnd@arndb.de>
-References: <1296697900-14004-1-git-send-email-meador_inge@mentor.com>
-	<201102031656.38222.arnd@arndb.de> <4D4B3A4E.2070106@mentor.com>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
+Date: Fri,  4 Feb 2011 17:25:37 -0600
+Message-ID: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D4B3A4E.2070106-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,33 +15,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 04 February 2011, Meador Inge wrote:
-> On 02/03/2011 09:56 AM, Arnd Bergmann wrote:
+This patch set provides a binding for Open PIC and implements support for
+a new property, specified by that binding, called "pic-no-reset".  With
+"pic-no-reset" in place the "protected-sources" property is no longer needed
+and its full implementation was removed.  "protected-sources" is still checked
+for, however, for legacy purposes.
 
-> So in 'mpic_init' we don't initialize anything and then in 
-> 'mpic_host_map' we lazily do the VECPRI and CPU binding initialization with:
-> 
-> 	if (!(mpic->flags & MPIC_WANTS_RESET))
-> 		if (!(mpic_is_ipi(mpic, hw)
-> 			|| mpic_is_timer_interrupt(mpic, hw)))
-> 			mpic_init_vector(mpic, hw);
-> 
-> Thus when 'no-reset' is thrown it ensures that only the sources which 
-> are mentioned in the device tree are actually initialized.  The net 
-> effect should be the same as what 'protected-sources' was accomplishing, 
-> but without having to maintain the list of sources in the property cell.
+For v3 of this patch the Open PIC binding was changed to be more consistent
+with existing bindings, several DTS files were cleaned up, "no-reset" was
+changed to "pic-no-reset", and a check to treat "protected-sources" as a
+synonym for "pic-no-reset" was added.
 
-That sounds like a good idea, but unfortunately, it's not what SLOF
-implements on QS21/QS22. It's a legacy product and there won't be
-any firmware updates. Moreover, it relies on the open firmware
-implementation and cannot boot with a flattened device tree image,
-so I don't see how your patch can work on the old systems.
+Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
-Maybe you can treat the presence of a 'protected-sources' property
-the same way that you treat the no-reset property?
+Meador Inge (4):
+  powerpc: Removing support for 'protected-sources'
+  powerpc: document the Open PIC device tree binding
+  powerpc: make MPIC honor the "pic-no-reset" device tree property
+  powerpc: Replacing "protected-sources" with "pic-no-reset" in DTS
+    files
 
-	Arnd
+ Documentation/powerpc/dts-bindings/open-pic.txt |   98 ++++++++++++++++++++++
+ arch/powerpc/boot/dts/mpc8572ds_camp_core0.dts  |    6 +-
+ arch/powerpc/boot/dts/mpc8572ds_camp_core1.dts  |   11 +--
+ arch/powerpc/boot/dts/p2020rdb_camp_core0.dts   |    7 +--
+ arch/powerpc/boot/dts/p2020rdb_camp_core1.dts   |    7 +--
+ arch/powerpc/include/asm/mpic.h                 |    7 +-
+ arch/powerpc/sysdev/mpic.c                      |  102 ++++++++++++-----------
+ 7 files changed, 157 insertions(+), 81 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/open-pic.txt
