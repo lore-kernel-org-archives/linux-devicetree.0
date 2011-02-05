@@ -1,115 +1,43 @@
-From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 4/4] powerpc: Replacing "protected-sources" with
-	"pic-no-reset" in DTS files
-Date: Fri,  4 Feb 2011 17:25:41 -0600
-Message-ID: <1296861941-3370-5-git-send-email-meador_inge@mentor.com>
-References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: Re: [PATCH v6] spi: New driver for Altera SPI
+Date: Sat, 05 Feb 2011 21:08:38 +0800
+Message-ID: <4D4D4BD6.3040909@wytron.com.tw>
+References: <1295851114-12488-1-git-send-email-thomas@wytron.com.tw> <1296727326-2581-1-git-send-email-thomas@wytron.com.tw> <20110203173430.GC6180@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1296861941-3370-1-git-send-email-meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110203173430.GC6180@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: David Brownell <dbrownell@users.sourceforge.net>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-The "protected-sources" property was being used in the AMP configured
-MPC8572DS and P2020RDB DTS files.  This changeset modifies those files
-to use "pic-no-reset" instead.
+On 02/04/2011 01:34 AM, Grant Likely wrote:
+> Hi Thomas, comments below, but looking pretty close.
 
-Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
----
- arch/powerpc/boot/dts/mpc8572ds_camp_core0.dts |    6 +-----
- arch/powerpc/boot/dts/mpc8572ds_camp_core1.dts |   11 +----------
- arch/powerpc/boot/dts/p2020rdb_camp_core0.dts  |    7 +------
- arch/powerpc/boot/dts/p2020rdb_camp_core1.dts  |    7 +------
- 4 files changed, 4 insertions(+), 27 deletions(-)
+Thanks a lot.
 
-diff --git a/arch/powerpc/boot/dts/mpc8572ds_camp_core0.dts b/arch/powerpc/boot/dts/mpc8572ds_camp_core0.dts
-index 3375c2a..4f7ee6d 100644
---- a/arch/powerpc/boot/dts/mpc8572ds_camp_core0.dts
-+++ b/arch/powerpc/boot/dts/mpc8572ds_camp_core0.dts
-@@ -252,11 +252,7 @@
- 			reg = <0x40000 0x40000>;
- 			compatible = "chrp,open-pic";
- 			device_type = "open-pic";
--			protected-sources = <
--			31 32 33 37 38 39       /* enet2 enet3 */
--			76 77 78 79 26 42	/* dma2 pci2 serial*/
--			0xe4 0xe5 0xe6 0xe7	/* msi */
--			>;
-+			pic-no-reset;
- 		};
- 	};
- 
-diff --git a/arch/powerpc/boot/dts/mpc8572ds_camp_core1.dts b/arch/powerpc/boot/dts/mpc8572ds_camp_core1.dts
-index e7b477f..62fd64f 100644
---- a/arch/powerpc/boot/dts/mpc8572ds_camp_core1.dts
-+++ b/arch/powerpc/boot/dts/mpc8572ds_camp_core1.dts
-@@ -178,16 +178,7 @@
- 			reg = <0x40000 0x40000>;
- 			compatible = "chrp,open-pic";
- 			device_type = "open-pic";
--			protected-sources = <
--			18 16 10 42 45 58	/* MEM L2 mdio serial crypto */
--			29 30 34 35 36 40	/* enet0 enet1 */
--			24 25 20 21 22 23	/* pci0 pci1 dma1 */
--			43			/* i2c */
--			0x1 0x2 0x3 0x4         /* pci slot */
--			0x9 0xa 0xb 0xc         /* usb */
--			0x6 0x7 0xe 0x5         /* Audio elgacy SATA */
--			0xe0 0xe1 0xe2 0xe3	/* msi */
--			>;
-+			pic-no-reset;
- 		};
- 	};
- 
-diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
-index 0fe93d0..f749cbb 100644
---- a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
-+++ b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
-@@ -318,12 +318,7 @@
- 			reg = <0x40000 0x40000>;
- 			compatible = "chrp,open-pic";
- 			device_type = "open-pic";
--			protected-sources = <
--			42 76 77 78 79 /* serial1 , dma2 */
--			29 30 34 26 /* enet0, pci1 */
--			0xe0 0xe1 0xe2 0xe3 /* msi */
--			0xe4 0xe5 0xe6 0xe7
--			>;
-+			pic-no-reset;
- 		};
- 
- 		global-utilities@e0000 {
-diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
-index e95a512..6ef2e64 100644
---- a/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
-+++ b/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
-@@ -129,12 +129,7 @@
- 			reg = <0x40000 0x40000>;
- 			compatible = "chrp,open-pic";
- 			device_type = "open-pic";
--			protected-sources = <
--			17 18 43 42 59 47 /*ecm, mem, i2c, serial0, spi,gpio */
--			16 20 21 22 23 28 	/* L2, dma1, USB */
--			03 35 36 40 31 32 33 	/* mdio, enet1, enet2 */
--			72 45 58 25 		/* sdhci, crypto , pci */
--			>;
-+			pic-no-reset;
- 		};
- 
- 		msi@41600 {
--- 
-1.6.3.3
+>> +config SPI_ALTERA
+>> +	tristate "Altera SPI Controller"
+>> +	select SPI_BITBANG
+>
+> Will this compile on all architectures?  Will it break allyesconfig
+> on anything other than nios?
+
+Yes, it compile on other architectures. I will add 'default n' though.
+
+There are soft-core arm, mips and coldfire running on altera fpga. 
+Others might use fpga as peripheral extender, too. So we shouldn't limit 
+it to nios2.
+
+>> +static int __init altera_spi_init(void)
+>> +{
+>> +	return platform_driver_probe(&altera_spidrv, altera_spi_probe);
+>
+> platform_driver_register() please, and put the altera_spi_probe()
+> routine into the driver structure.
+
+I will change it to register as you suggested.
+
+- Thomas
