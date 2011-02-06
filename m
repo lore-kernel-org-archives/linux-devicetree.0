@@ -1,13 +1,11 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: [PATCH v6] spi: add OpenCores tiny SPI driver
-Date: Sun,  6 Feb 2011 11:48:16 +0800
-Message-ID: <1296964096-30760-1-git-send-email-thomas@wytron.com.tw>
-References: <1296960998-19116-1-git-send-email-thomas@wytron.com.tw>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Device Tree on ARM status report
+Date: Sat, 5 Feb 2011 21:42:57 -0700
+Message-ID: <AANLkTikLvO0Y44nCxEfCsNxU-Na+PzcLXZUjOsMUM1_A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1296960998-19116-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,539 +15,136 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Brownell <dbrownell-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support of OpenCores tiny SPI driver.
+Hi all,
 
-http://opencores.org/project,tiny_spi
+With several more engineers working on ARM device tree support, I'm
+going to start collecting the status of all the work that is going on
+(and I know about) and posting it in a regular status report,
+hopefully weekly, for the next few months until the all of the major
+features are implemented and working on several arm platforms.  I'll
+try to use roughly the following format:
 
-Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
----
-v2 minor cleanup, same as Grant suggest for spi_altera.
-v3 rename driver to spi_oc_tiny as Grant suggested.
-   set version to tiny-spi-rtlsvn2 as Jonas suggested.
-v4 add dts binding doc.
-v5 use devm_* to help cleanup.
-   add of gpio support.
-v6 check len from of_get_property.
-   fix kerneldoc in header.
+1) latest news and status updates
+2) list of tasks with current state and who is responsible for them in
+the same format as Launchpad blueprint whiteboards[1]. (In fact, I'll
+probably move much, if not all, of this into Launchpad anyway, in
+which case these emails will be a summary of all the blueprints. not
+all of us work with Linaro, but it is a useful method for tracking
+progress).
+3) List of active engineers
 
- .../devicetree/bindings/spi/spi_oc_tiny.txt        |   12 +
- drivers/spi/Kconfig                                |    8 +
- drivers/spi/Makefile                               |    1 +
- drivers/spi/spi_oc_tiny.c                          |  424 ++++++++++++++++++++
- include/linux/spi/spi_oc_tiny.h                    |   20 +
- 5 files changed, 465 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/spi_oc_tiny.txt
- create mode 100644 drivers/spi/spi_oc_tiny.c
- create mode 100644 include/linux/spi/spi_oc_tiny.h
+[1] https://wiki.linaro.org/Process/Blueprints
 
-diff --git a/Documentation/devicetree/bindings/spi/spi_oc_tiny.txt b/Documentation/devicetree/bindings/spi/spi_oc_tiny.txt
-new file mode 100644
-index 0000000..d95c0b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi_oc_tiny.txt
-@@ -0,0 +1,12 @@
-+OpenCores tiny SPI
-+
-+Required properties:
-+- compatible : should be "opencores,tiny-spi-rtlsvn2".
-+- gpios : should specify GPIOs used for chipselect.
-+Optional properties:
-+- clock-frequency : input clock frequency to the core.
-+- baud-width: width, in bits, of the programmable divider used to scale
-+	the input clock to SCLK.
-+
-+The clock-frequency and baud-width properties are needed only if the divider
-+is programmable. They are not needed if the divider is fixed.
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index bb233a9..43d2a7c 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -231,6 +231,14 @@ config SPI_FSL_ESPI
- 	  From MPC8536, 85xx platform uses the controller, and all P10xx,
- 	  P20xx, P30xx,P40xx, P50xx uses this controller.
- 
-+config SPI_OC_TINY
-+	tristate "OpenCores tiny SPI"
-+	default n
-+	depends on GENERIC_GPIO
-+	select SPI_BITBANG
-+	help
-+	  This is the driver for OpenCores tiny SPI master controller.
-+
- config SPI_OMAP_UWIRE
- 	tristate "OMAP1 MicroWire"
- 	depends on ARCH_OMAP1
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 86d1b5f..c7e4c23 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_SPI_IMX)			+= spi_imx.o
- obj-$(CONFIG_SPI_LM70_LLP)		+= spi_lm70llp.o
- obj-$(CONFIG_SPI_PXA2XX)		+= pxa2xx_spi.o
- obj-$(CONFIG_SPI_PXA2XX_PCI)		+= pxa2xx_spi_pci.o
-+obj-$(CONFIG_SPI_OC_TINY)		+= spi_oc_tiny.o
- obj-$(CONFIG_SPI_OMAP_UWIRE)		+= omap_uwire.o
- obj-$(CONFIG_SPI_OMAP24XX)		+= omap2_mcspi.o
- obj-$(CONFIG_SPI_OMAP_100K)		+= omap_spi_100k.o
-diff --git a/drivers/spi/spi_oc_tiny.c b/drivers/spi/spi_oc_tiny.c
-new file mode 100644
-index 0000000..62a5267
---- /dev/null
-+++ b/drivers/spi/spi_oc_tiny.c
-@@ -0,0 +1,424 @@
-+/*
-+ * OpenCores tiny SPI master driver
-+ *
-+ * http://opencores.org/project,tiny_spi
-+ *
-+ * Copyright (C) 2011 Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-+ *
-+ * Based on spi_s3c24xx.c, which is:
-+ * Copyright (c) 2006 Ben Dooks
-+ * Copyright (c) 2006 Simtec Electronics
-+ *	Ben Dooks <ben-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/errno.h>
-+#include <linux/platform_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/spi/spi_bitbang.h>
-+#include <linux/spi/spi_oc_tiny.h>
-+#include <linux/io.h>
-+#include <linux/gpio.h>
-+#include <linux/of.h>
-+
-+#define DRV_NAME "spi_oc_tiny"
-+
-+#define TINY_SPI_RXDATA 0
-+#define TINY_SPI_TXDATA 4
-+#define TINY_SPI_STATUS 8
-+#define TINY_SPI_CONTROL 12
-+#define TINY_SPI_BAUD 16
-+
-+#define TINY_SPI_STATUS_TXE 0x1
-+#define TINY_SPI_STATUS_TXR 0x2
-+
-+struct tiny_spi {
-+	/* bitbang has to be first */
-+	struct spi_bitbang bitbang;
-+	struct completion done;
-+
-+	void __iomem *base;
-+	int irq;
-+	unsigned int freq;
-+	unsigned int baudwidth;
-+	unsigned int baud;
-+	unsigned int speed_hz;
-+	unsigned int mode;
-+	unsigned int len;
-+	unsigned int txc, rxc;
-+	const u8 *txp;
-+	u8 *rxp;
-+	unsigned int gpio_cs_count;
-+	int *gpio_cs;
-+};
-+
-+static inline struct tiny_spi *tiny_spi_to_hw(struct spi_device *sdev)
-+{
-+	return spi_master_get_devdata(sdev->master);
-+}
-+
-+static unsigned int tiny_spi_baud(struct spi_device *spi, unsigned int hz)
-+{
-+	struct tiny_spi *hw = tiny_spi_to_hw(spi);
-+
-+	return min(DIV_ROUND_UP(hw->freq, hz * 2), (1U << hw->baudwidth)) - 1;
-+}
-+
-+static void tiny_spi_chipselect(struct spi_device *spi, int is_active)
-+{
-+	struct tiny_spi *hw = tiny_spi_to_hw(spi);
-+
-+	if (hw->gpio_cs_count) {
-+		gpio_set_value(hw->gpio_cs[spi->chip_select],
-+			(spi->mode & SPI_CS_HIGH) ? is_active : !is_active);
-+	}
-+}
-+
-+static int tiny_spi_setup_transfer(struct spi_device *spi,
-+				   struct spi_transfer *t)
-+{
-+	struct tiny_spi *hw = tiny_spi_to_hw(spi);
-+	unsigned int baud = hw->baud;
-+
-+	if (t) {
-+		if (t->speed_hz && t->speed_hz != hw->speed_hz)
-+			baud = tiny_spi_baud(spi, t->speed_hz);
-+	}
-+	writel(baud, hw->base + TINY_SPI_BAUD);
-+	writel(hw->mode, hw->base + TINY_SPI_CONTROL);
-+	return 0;
-+}
-+
-+static int tiny_spi_setup(struct spi_device *spi)
-+{
-+	struct tiny_spi *hw = tiny_spi_to_hw(spi);
-+
-+	if (spi->max_speed_hz != hw->speed_hz) {
-+		hw->speed_hz = spi->max_speed_hz;
-+		hw->baud = tiny_spi_baud(spi, hw->speed_hz);
-+	}
-+	hw->mode = spi->mode & (SPI_CPOL | SPI_CPHA);
-+	return 0;
-+}
-+
-+static inline void tiny_spi_wait_txr(struct tiny_spi *hw)
-+{
-+	while (!(readb(hw->base + TINY_SPI_STATUS) &
-+		 TINY_SPI_STATUS_TXR))
-+		cpu_relax();
-+}
-+
-+static inline void tiny_spi_wait_txe(struct tiny_spi *hw)
-+{
-+	while (!(readb(hw->base + TINY_SPI_STATUS) &
-+		 TINY_SPI_STATUS_TXE))
-+		cpu_relax();
-+}
-+
-+static int tiny_spi_txrx_bufs(struct spi_device *spi, struct spi_transfer *t)
-+{
-+	struct tiny_spi *hw = tiny_spi_to_hw(spi);
-+	const u8 *txp = t->tx_buf;
-+	u8 *rxp = t->rx_buf;
-+	unsigned int i;
-+
-+	if (hw->irq >= 0) {
-+		/* use intrrupt driven data transfer */
-+		hw->len = t->len;
-+		hw->txp = t->tx_buf;
-+		hw->rxp = t->rx_buf;
-+		hw->txc = 0;
-+		hw->rxc = 0;
-+
-+		/* send the first byte */
-+		if (t->len > 1) {
-+			writeb(hw->txp ? *hw->txp++ : 0,
-+			       hw->base + TINY_SPI_TXDATA);
-+			hw->txc++;
-+			writeb(hw->txp ? *hw->txp++ : 0,
-+			       hw->base + TINY_SPI_TXDATA);
-+			hw->txc++;
-+			writeb(TINY_SPI_STATUS_TXR, hw->base + TINY_SPI_STATUS);
-+		} else {
-+			writeb(hw->txp ? *hw->txp++ : 0,
-+			       hw->base + TINY_SPI_TXDATA);
-+			hw->txc++;
-+			writeb(TINY_SPI_STATUS_TXE, hw->base + TINY_SPI_STATUS);
-+		}
-+
-+		wait_for_completion(&hw->done);
-+	} else if (txp && rxp) {
-+		/* we need to tighten the transfer loop */
-+		writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-+		if (t->len > 1) {
-+			writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-+			for (i = 2; i < t->len; i++) {
-+				u8 rx, tx = *txp++;
-+				tiny_spi_wait_txr(hw);
-+				rx = readb(hw->base + TINY_SPI_TXDATA);
-+				writeb(tx, hw->base + TINY_SPI_TXDATA);
-+				*rxp++ = rx;
-+			}
-+			tiny_spi_wait_txr(hw);
-+			*rxp++ = readb(hw->base + TINY_SPI_TXDATA);
-+		}
-+		tiny_spi_wait_txe(hw);
-+		*rxp++ = readb(hw->base + TINY_SPI_RXDATA);
-+	} else if (rxp) {
-+		writeb(0, hw->base + TINY_SPI_TXDATA);
-+		if (t->len > 1) {
-+			writeb(0,
-+			       hw->base + TINY_SPI_TXDATA);
-+			for (i = 2; i < t->len; i++) {
-+				u8 rx;
-+				tiny_spi_wait_txr(hw);
-+				rx = readb(hw->base + TINY_SPI_TXDATA);
-+				writeb(0, hw->base + TINY_SPI_TXDATA);
-+				*rxp++ = rx;
-+			}
-+			tiny_spi_wait_txr(hw);
-+			*rxp++ = readb(hw->base + TINY_SPI_TXDATA);
-+		}
-+		tiny_spi_wait_txe(hw);
-+		*rxp++ = readb(hw->base + TINY_SPI_RXDATA);
-+	} else if (txp) {
-+		writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-+		if (t->len > 1) {
-+			writeb(*txp++, hw->base + TINY_SPI_TXDATA);
-+			for (i = 2; i < t->len; i++) {
-+				u8 tx = *txp++;
-+				tiny_spi_wait_txr(hw);
-+				writeb(tx, hw->base + TINY_SPI_TXDATA);
-+			}
-+		}
-+		tiny_spi_wait_txe(hw);
-+	} else {
-+		writeb(0, hw->base + TINY_SPI_TXDATA);
-+		if (t->len > 1) {
-+			writeb(0, hw->base + TINY_SPI_TXDATA);
-+			for (i = 2; i < t->len; i++) {
-+				tiny_spi_wait_txr(hw);
-+				writeb(0, hw->base + TINY_SPI_TXDATA);
-+			}
-+		}
-+		tiny_spi_wait_txe(hw);
-+	}
-+	return t->len;
-+}
-+
-+static irqreturn_t tiny_spi_irq(int irq, void *dev)
-+{
-+	struct tiny_spi *hw = dev;
-+
-+	writeb(0, hw->base + TINY_SPI_STATUS);
-+	if (hw->rxc + 1 == hw->len) {
-+		if (hw->rxp)
-+			*hw->rxp++ = readb(hw->base + TINY_SPI_RXDATA);
-+		hw->rxc++;
-+		complete(&hw->done);
-+	} else {
-+		if (hw->rxp)
-+			*hw->rxp++ = readb(hw->base + TINY_SPI_TXDATA);
-+		hw->rxc++;
-+		if (hw->txc < hw->len) {
-+			writeb(hw->txp ? *hw->txp++ : 0,
-+			       hw->base + TINY_SPI_TXDATA);
-+			hw->txc++;
-+			writeb(TINY_SPI_STATUS_TXR,
-+			       hw->base + TINY_SPI_STATUS);
-+		} else {
-+			writeb(TINY_SPI_STATUS_TXE,
-+			       hw->base + TINY_SPI_STATUS);
-+		}
-+	}
-+	return IRQ_HANDLED;
-+}
-+
-+#ifdef CONFIG_OF
-+#include <linux/of_gpio.h>
-+
-+static int __devinit tiny_spi_of_probe(struct platform_device *pdev)
-+{
-+	struct tiny_spi *hw = platform_get_drvdata(pdev);
-+	struct device_node *np = pdev->dev.of_node;
-+	unsigned int i;
-+	const __be32 *val;
-+	int len;
-+
-+	if (!np)
-+		return 0;
-+	hw->gpio_cs_count = of_gpio_count(np);
-+	if (hw->gpio_cs_count) {
-+		hw->gpio_cs = devm_kzalloc(&pdev->dev,
-+				hw->gpio_cs_count * sizeof(unsigned int),
-+				GFP_KERNEL);
-+		if (!hw->gpio_cs)
-+			return -ENOMEM;
-+	}
-+	for (i = 0; i < hw->gpio_cs_count; i++) {
-+		hw->gpio_cs[i] = of_get_gpio_flags(np, i, NULL);
-+		if (hw->gpio_cs[i] < 0)
-+			return -ENODEV;
-+	}
-+	hw->bitbang.master->dev.of_node = pdev->dev.of_node;
-+	val = of_get_property(pdev->dev.of_node,
-+			      "clock-frequency", &len);
-+	if (val && len >= sizeof(__be32))
-+		hw->freq = be32_to_cpup(val);
-+	val = of_get_property(pdev->dev.of_node, "baud-width", &len);
-+	if (val && len >= sizeof(__be32))
-+		hw->baudwidth = be32_to_cpup(val);
-+	return 0;
-+}
-+#else /* !CONFIG_OF */
-+static int __devinit tiny_spi_of_probe(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_OF */
-+
-+static int __devinit tiny_spi_probe(struct platform_device *pdev)
-+{
-+	struct tiny_spi_platform_data *platp = pdev->dev.platform_data;
-+	struct tiny_spi *hw;
-+	struct spi_master *master;
-+	struct resource *res;
-+	unsigned int i;
-+	int err = -ENODEV;
-+
-+	master = spi_alloc_master(&pdev->dev, sizeof(struct tiny_spi));
-+	if (!master)
-+		return err;
-+
-+	/* setup the master state. */
-+	master->bus_num = pdev->id;
-+	master->num_chipselect = 255;
-+	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
-+	master->setup = tiny_spi_setup;
-+
-+	hw = spi_master_get_devdata(master);
-+	platform_set_drvdata(pdev, hw);
-+
-+	/* setup the state for the bitbang driver */
-+	hw->bitbang.master = spi_master_get(master);
-+	if (!hw->bitbang.master)
-+		return err;
-+	hw->bitbang.setup_transfer = tiny_spi_setup_transfer;
-+	hw->bitbang.chipselect = tiny_spi_chipselect;
-+	hw->bitbang.txrx_bufs = tiny_spi_txrx_bufs;
-+
-+	/* find and map our resources */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		goto exit_busy;
-+	if (!devm_request_mem_region(&pdev->dev, res->start, resource_size(res),
-+				     pdev->name))
-+		goto exit_busy;
-+	hw->base = devm_ioremap_nocache(&pdev->dev, res->start,
-+					resource_size(res));
-+	if (!hw->base)
-+		goto exit_busy;
-+	/* irq is optional */
-+	hw->irq = platform_get_irq(pdev, 0);
-+	if (hw->irq >= 0) {
-+		init_completion(&hw->done);
-+		err = devm_request_irq(&pdev->dev, hw->irq, tiny_spi_irq, 0,
-+				       pdev->name, hw);
-+		if (err)
-+			goto exit;
-+	}
-+	/* find platform data */
-+	if (platp) {
-+		hw->gpio_cs_count = platp->gpio_cs_count;
-+		hw->gpio_cs = platp->gpio_cs;
-+		if (platp->gpio_cs_count && !platp->gpio_cs)
-+			goto exit_busy;
-+		hw->freq = platp->freq;
-+		hw->baudwidth = platp->baudwidth;
-+	} else {
-+		err = tiny_spi_of_probe(pdev);
-+		if (err)
-+			goto exit;
-+	}
-+	for (i = 0; i < hw->gpio_cs_count; i++) {
-+		err = gpio_request(hw->gpio_cs[i], dev_name(&pdev->dev));
-+		if (err)
-+			goto exit_gpio;
-+		gpio_direction_output(hw->gpio_cs[i], 1);
-+	}
-+	if (hw->gpio_cs_count)
-+		hw->bitbang.master->num_chipselect = hw->gpio_cs_count;
-+	else
-+		hw->bitbang.master->num_chipselect = 1; /* no chipselect pin */
-+
-+	/* register our spi controller */
-+	err = spi_bitbang_start(&hw->bitbang);
-+	if (err)
-+		goto exit;
-+	dev_info(&pdev->dev, "base %p, irq %d\n", hw->base, hw->irq);
-+
-+	return 0;
-+
-+exit_gpio:
-+	while (i-- > 0)
-+		gpio_free(hw->gpio_cs[i]);
-+exit_busy:
-+	err = -EBUSY;
-+exit:
-+	platform_set_drvdata(pdev, NULL);
-+	spi_master_put(master);
-+	return err;
-+}
-+
-+static int __devexit tiny_spi_remove(struct platform_device *pdev)
-+{
-+	struct tiny_spi *hw = platform_get_drvdata(pdev);
-+	struct spi_master *master = hw->bitbang.master;
-+	unsigned int i;
-+
-+	spi_bitbang_stop(&hw->bitbang);
-+	for (i = 0; i < hw->gpio_cs_count; i++)
-+		gpio_free(hw->gpio_cs[i]);
-+	platform_set_drvdata(pdev, NULL);
-+	spi_master_put(master);
-+	return 0;
-+}
-+
-+static const struct of_device_id tiny_spi_match[] = {
-+	{ .compatible = "opencores,tiny-spi-rtlsvn2", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, tiny_spi_match);
-+
-+static struct platform_driver tiny_spi_driver = {
-+	.probe = tiny_spi_probe,
-+	.remove = __devexit_p(tiny_spi_remove),
-+	.driver = {
-+		.name = DRV_NAME,
-+		.owner = THIS_MODULE,
-+		.pm = NULL,
-+		.of_match_table = tiny_spi_match,
-+	},
-+};
-+
-+static int __init tiny_spi_init(void)
-+{
-+	return platform_driver_register(&tiny_spi_driver);
-+}
-+module_init(tiny_spi_init);
-+
-+static void __exit tiny_spi_exit(void)
-+{
-+	platform_driver_unregister(&tiny_spi_driver);
-+}
-+module_exit(tiny_spi_exit);
-+
-+MODULE_DESCRIPTION("OpenCores tiny SPI driver");
-+MODULE_AUTHOR("Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/include/linux/spi/spi_oc_tiny.h b/include/linux/spi/spi_oc_tiny.h
-new file mode 100644
-index 0000000..1ac529c
---- /dev/null
-+++ b/include/linux/spi/spi_oc_tiny.h
-@@ -0,0 +1,20 @@
-+#ifndef _LINUX_SPI_SPI_OC_TINY_H
-+#define _LINUX_SPI_SPI_OC_TINY_H
-+
-+/**
-+ * struct tiny_spi_platform_data - platform data of the OpenCores tiny SPI
-+ * @freq:	input clock freq to the core.
-+ * @baudwidth:	baud rate divider width of the core.
-+ * @gpio_cs_count:	number of gpio pins used for chipselect.
-+ * @gpio_cs:	array of gpio pins used for chipselect.
-+ *
-+ * freq and baudwidth are used only if the divider is programmable.
-+ */
-+struct tiny_spi_platform_data {
-+	unsigned int freq;
-+	unsigned int baudwidth;
-+	unsigned int gpio_cs_count;
-+	int *gpio_cs;
-+};
-+
-+#endif /* _LINUX_SPI_SPI_OC_TINY_H */
--- 
-1.7.3.5
+Please read through and reply with comments/corrections.  Feel free to
+add or remove tasks from the list I've given below.
+
+Thanks,
+g.
+
+
+1 - Latest news
+---------------
+- devicetree/arm on git://git.secretlab.ca/git/linux-2.6 has
+everything needed to turn on basic device tree support for any
+platform.
+- Similarly, u-boot just needs to have the CONFIG_OF_LIBFDT defined to
+turn on device tree support.
+- IRQ handling is still a problem and only one interrupt controller
+can be supported at the moment, but Lennert is working on a solution.
+- I've posted a patch that will allow dt and non-dt device
+registration to co-exist peacefully by snooping platform device
+registrations.  I could use some feedback and testing.
+- hopefully the basic dt support can be merged into Nicolas' tree this
+week if I get a cleaned up branch pushed out for him quickly.
+
+2 - Task status
+---------------
+Core infrastructure:
+[glikely] basic infrastructure to enable dt: DONE
+[r-herring] Allow dtb to be located anywhere in RAM: DONE
+[bones] Debug dtb corruption during init: INPROGRESS
+[glikely] OF clock bindings: INPROGRESS
+[glikely] Correctly handle dtb reserved memory sections: TODO
+[glikely] merge basic dt support into nico's tree: TODO
+[buytenh] virtual irq infrastructure: INPROGRESS
+Remove u-boot restriction of first 16k for dtb: TODO
+add processing of dtb reserved regions: TODO
+verify dt gpio infrastructure works: TODO
+[glikely] Remove early validation of machine type number: INPROGRESS
+
+imx51 tasks
+enable dtb support in u-boot: TODO
+enable basic kernel dtb support: TODO
+enable registration of devices form dt: TODO
+... add more details here, specific devices, etc...
+
+OMAP tasks
+[buytenh] enable dtb support in u-boot: DONE
+[buytenh] enable basic kernel dtb support on OMAP3: INPROGRESS
+enable basic kernel dtb support on OMAP4: TODO
+[buytenh] enable registration of devices form dt: TODO
+... add more details here, specific devices, etc...
+
+qemu support tasks:
+Cleanup and mainline arm dtb support patches: TODO
+configure qemu emulation from dtb (like microblaze): TODO
+... add more details here, specific devices, etc...
+
+Samsung S5PV310 tasks:
+[thomas-ab] enable dtb support in u-boot: DONE?
+[thomas-ab] enable basic kernel dtb support on S5PV310: DONE?
+[thomas-ab] make gpio driver dt-aware: TODO
+[thomas-ab] Register devices from dt: INPROGRESS
+... add more details here, specific devices, etc...
+
+Tegra tasks:
+[glikely] enable dtb support in u-boot: DONE
+[glikely] enable basic kernel dtb support on Harmony board: DONE
+[glikely] probe irq controllers from device tree: TODO
+[glikely] make gpio controller driver dt aware: TODO
+[glikely] register devices from dt: INPROGRESS
+... add more details here, specific devices, etc...
+
+Versatile tasks:
+enable dtb support in u-boot: TODO
+[jk-ozlabs] enable basic kernel dtb support on versatile: DONE
+[jk-ozlabs] probe clocks from dt: DONE
+[jk-ozlabs] register devices from dt: DONE
+decode irqs from dt: TODO
+
+Versatile express tasks:
+[lorenzo-pieralisi] enable dtb support in u-boot: DONE?
+[lorenzo-pieralisi] enable basic kernel dtb support on versatile express: DONE
+[lorenzo-pieralisi] probe clocks from dt: DONE?
+[lorenzo-pieralisi] probe irq controllers from device tree: TODO
+[lorenzo-pieralisi] register devices from dt: DONE?
+... add more details here, specific devices, etc...
+
+Xilinx arm tasks:
+[john linn] enable dtb support in u-boot: TODO?
+[john linn] enable basic kernel dtb support on xilinx arm devboard: DONE
+[john linn] probe irq controllers from device tree: TODO
+[john linn] register devices from dt: INPROGRESS?
+... add more details here, specific devices, etc...
+
+A15 tasks:
+nothing yet
+
+As far as I know, Rob's dtb anywhere patch is pending mainline, but
+I'll carry it in devicetree/arm until it is merged.  Same for the
+patch that eliminates early vetting of the machine type number.
+
+Active engineering list:
+Thomas Abraham [thomas-ab] Samsung
+Lennert Buytenhek [no launchpad id] core infrastructure and OMAP
+Andy Green [] OMAP
+Shawn Guo [] imx51
+Rob Herring [r-herring] clock bindings, boot code
+Jason Hui [] imx51
+Jeremy Kerr [jk-ozlabs] clock bindings, imx51, versatile
+John Linn [no launchpad id] Xilinx ARM dev board
+Grant Likely [glikely] core infrastructure, tegra, versatile
+Lorenzo Pieralisi [lorenzo-pieralisi] versatile express
