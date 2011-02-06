@@ -1,174 +1,68 @@
 From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/4] ARM: DT: Add SMDKV310 machine with device tree support.
-Date: Sun, 06 Feb 2011 18:47:27 +0530
-Message-ID: <1296998250-21856-2-git-send-email-thomas.abraham@linaro.org>
-References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>
+Subject: Re: Device Tree on ARM status report
+Date: Sun, 6 Feb 2011 19:06:24 +0530
+Message-ID: <AANLkTi=kXCyiBLz8hg92WTg2hz+xTu0P5p-F61xscY4p@mail.gmail.com>
+References: <AANLkTikLvO0Y44nCxEfCsNxU-Na+PzcLXZUjOsMUM1_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1296998250-21856-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <AANLkTikLvO0Y44nCxEfCsNxU-Na+PzcLXZUjOsMUM1_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new SMDKV310 machine that boots with a minimal
-device tree support. The bootargs and memory information is obtained
-from the device tree during boot.
+On 6 February 2011 10:12, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> Hi all,
+>
+> With several more engineers working on ARM device tree support, I'm
+> going to start collecting the status of all the work that is going on
+> (and I know about) and posting it in a regular status report,
+> hopefully weekly, for the next few months until the all of the major
+> features are implemented and working on several arm platforms. =A0I'll
+> try to use roughly the following format:
 
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/mach-s5pv310/Kconfig            |    7 ++
- arch/arm/mach-s5pv310/Makefile           |    1 +
- arch/arm/mach-s5pv310/mach-smdkv310-dt.c |  101 ++++++++++++++++++++++++++++++
- 3 files changed, 109 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/mach-s5pv310/mach-smdkv310-dt.c
+<snip>
 
-diff --git a/arch/arm/mach-s5pv310/Kconfig b/arch/arm/mach-s5pv310/Kconfig
-index 09c4c21..6c5f0bf 100644
---- a/arch/arm/mach-s5pv310/Kconfig
-+++ b/arch/arm/mach-s5pv310/Kconfig
-@@ -127,6 +127,13 @@ config MACH_SMDKV310
- 	help
- 	  Machine support for Samsung SMDKV310
- 
-+config MACH_SMDKV310_DT
-+	bool "SMDKV310 with device tree support"
-+	select CPU_S5PV310
-+	select USE_OF
-+	help
-+	  Machine support for Samsung SMDKV310 with device tree based initialization.
-+
- endmenu
- 
- comment "Configuration for HSMMC bus width"
-diff --git a/arch/arm/mach-s5pv310/Makefile b/arch/arm/mach-s5pv310/Makefile
-index 036fb38..59545aa 100644
---- a/arch/arm/mach-s5pv310/Makefile
-+++ b/arch/arm/mach-s5pv310/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_HOTPLUG_CPU)	+= hotplug.o
- 
- obj-$(CONFIG_MACH_SMDKC210)	+= mach-smdkc210.o
- obj-$(CONFIG_MACH_SMDKV310)	+= mach-smdkv310.o
-+obj-$(CONFIG_MACH_SMDKV310_DT)	+= mach-smdkv310-dt.o
- obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
- 
- # device support
-diff --git a/arch/arm/mach-s5pv310/mach-smdkv310-dt.c b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
-new file mode 100644
-index 0000000..367fdb1
---- /dev/null
-+++ b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
-@@ -0,0 +1,101 @@
-+/* linux/arch/arm/mach-s5pv310/mach-smdkv310.c
-+ *
-+ * Copyright (c) 2010 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+#include <linux/serial_core.h>
-+#include <linux/gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+
-+#include <asm/mach/arch.h>
-+#include <asm/mach-types.h>
-+
-+#include <plat/regs-serial.h>
-+#include <plat/s5pv310.h>
-+#include <plat/cpu.h>
-+#include <plat/devs.h>
-+
-+#include <mach/map.h>
-+
-+/* Following are default values for UCON, ULCON and UFCON UART registers */
-+#define SMDKV310_UCON_DEFAULT	(S3C2410_UCON_TXILEVEL |	\
-+				 S3C2410_UCON_RXILEVEL |	\
-+				 S3C2410_UCON_TXIRQMODE |	\
-+				 S3C2410_UCON_RXIRQMODE |	\
-+				 S3C2410_UCON_RXFIFO_TOI |	\
-+				 S3C2443_UCON_RXERR_IRQEN)
-+
-+#define SMDKV310_ULCON_DEFAULT	S3C2410_LCON_CS8
-+
-+#define SMDKV310_UFCON_DEFAULT	(S3C2410_UFCON_FIFOMODE |	\
-+				 S5PV210_UFCON_TXTRIG4 |	\
-+				 S5PV210_UFCON_RXTRIG4)
-+
-+static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
-+	[0] = {
-+		.hwport		= 0,
-+		.flags		= 0,
-+		.ucon		= SMDKV310_UCON_DEFAULT,
-+		.ulcon		= SMDKV310_ULCON_DEFAULT,
-+		.ufcon		= SMDKV310_UFCON_DEFAULT,
-+	},
-+	[1] = {
-+		.hwport		= 1,
-+		.flags		= 0,
-+		.ucon		= SMDKV310_UCON_DEFAULT,
-+		.ulcon		= SMDKV310_ULCON_DEFAULT,
-+		.ufcon		= SMDKV310_UFCON_DEFAULT,
-+	},
-+	[2] = {
-+		.hwport		= 2,
-+		.flags		= 0,
-+		.ucon		= SMDKV310_UCON_DEFAULT,
-+		.ulcon		= SMDKV310_ULCON_DEFAULT,
-+		.ufcon		= SMDKV310_UFCON_DEFAULT,
-+	},
-+	[3] = {
-+		.hwport		= 3,
-+		.flags		= 0,
-+		.ucon		= SMDKV310_UCON_DEFAULT,
-+		.ulcon		= SMDKV310_ULCON_DEFAULT,
-+		.ufcon		= SMDKV310_UFCON_DEFAULT,
-+	},
-+};
-+
-+static struct platform_device *smdkv310_devices[] __initdata = {
-+};
-+
-+static void __init smdkv310_map_io(void)
-+{
-+	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
-+	s3c24xx_init_clocks(24000000);
-+	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
-+}
-+
-+static void __init smdkv310_machine_init(void)
-+{
-+	platform_add_devices(smdkv310_devices, ARRAY_SIZE(smdkv310_devices));
-+}
-+
-+static char const *smdkv310_dt_compat[] = {
-+	"samsung,smdkv310",
-+	NULL
-+};
-+
-+DT_MACHINE_START(SMDKV310, "Samsung's SMDKV310 with flattened device tree")
-+	/* Maintainer: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
-+	/* Maintainer: Changhwan Youn <chaos.youn-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
-+	.boot_params	= S5P_PA_SDRAM + 0x100,
-+	.init_irq	= s5pv310_init_irq,
-+	.map_io		= smdkv310_map_io,
-+	.init_machine	= smdkv310_machine_init,
-+	.timer		= &s5pv310_timer,
-+	.dt_compat	= smdkv310_dt_compat,
-+MACHINE_END
--- 
-1.6.6.rc2
+> Samsung S5PV310 tasks:
+> [thomas-ab] enable dtb support in u-boot: DONE?
+
+The dtb support in u-boot has been enabled but that has been done in
+my copy of u-boot. The linaro u-boot does not include support for
+s5pv310 yet.
+
+> [thomas-ab] enable basic kernel dtb support on S5PV310: DONE?
+
+Done and tested.
+
+> [thomas-ab] make gpio driver dt-aware: TODO
+
+Will do this as next task.
+
+> [thomas-ab] Register devices from dt: INPROGRESS
+> ... add more details here, specific devices, etc...
+
+The watchdog timer driver was modified to be probed from device tree
+and it is working fine (will work for both dt and non-dt versions).
+Other work items that will be taken up next are
+
+- Retrieve the default UART register values from the device tree
+during UART initialization.
+- Add SDHCI_OF support for SDHCI s3c driver, required to support DT
+enabled sdhci driver for s5pv310
+- Initialize timer and GIC from dt.
+- Support dt for gpio, i2c, spi, uart, srom controller.
+
+Thanks,
+Thomas.
+
+<snip>
