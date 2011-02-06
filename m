@@ -1,7 +1,8 @@
 From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/4] watchdog: s3c2410: Add support for device tree based probe
-Date: Sun, 06 Feb 2011 18:47:30 +0530
-Message-ID: <1296998250-21856-5-git-send-email-thomas.abraham@linaro.org>
+Subject: [PATCH 3/4] ARM: DT: Add support for probing platform bus on SMDKV310
+	machine
+Date: Sun, 06 Feb 2011 18:47:29 +0530
+Message-ID: <1296998250-21856-4-git-send-email-thomas.abraham@linaro.org>
 References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,41 +22,33 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the of_match_table to enable s3c2410-wdt driver
-to be probed when watchdog device node is found in the device tree.
+This patch adds support for probing devices from device tree
+for Samsung's SMDKV310 machine.
 
 Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/watchdog/s3c2410_wdt.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+ arch/arm/mach-s5pv310/mach-smdkv310-dt.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-index ae53662..a9edd50 100644
---- a/drivers/watchdog/s3c2410_wdt.c
-+++ b/drivers/watchdog/s3c2410_wdt.c
-@@ -592,6 +592,13 @@ static int s3c2410wdt_resume(struct platform_device *dev)
- #define s3c2410wdt_resume  NULL
- #endif /* CONFIG_PM */
+diff --git a/arch/arm/mach-s5pv310/mach-smdkv310-dt.c b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
+index 367fdb1..f81d88a 100644
+--- a/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
++++ b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
+@@ -79,9 +79,15 @@ static void __init smdkv310_map_io(void)
+ 	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
+ }
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id s3c2410_wdt_match[] = {
-+	{ .compatible = "samsung,s3c2410-wdt" },
++static struct of_device_id smdkv310_dt_match_table[] __initdata = {
++	{ .compatible = "simple-bus", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
-+#endif
++
+ static void __init smdkv310_machine_init(void)
+ {
+ 	platform_add_devices(smdkv310_devices, ARRAY_SIZE(smdkv310_devices));
++	of_platform_bus_probe(NULL, smdkv310_dt_match_table, NULL);
+ }
  
- static struct platform_driver s3c2410wdt_driver = {
- 	.probe		= s3c2410wdt_probe,
-@@ -602,6 +609,9 @@ static struct platform_driver s3c2410wdt_driver = {
- 	.driver		= {
- 		.owner	= THIS_MODULE,
- 		.name	= "s3c2410-wdt",
-+#ifdef CONFIG_OF
-+		.of_match_table	= s3c2410_wdt_match,
-+#endif
- 	},
- };
- 
+ static char const *smdkv310_dt_compat[] = {
 -- 
 1.6.6.rc2
