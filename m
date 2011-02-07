@@ -1,43 +1,61 @@
-From: Shawn Guo <shawn.gsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Device Tree on ARM status report
-Date: Mon, 7 Feb 2011 19:49:07 +0800
-Message-ID: <AANLkTin2M2nT0XnzgeCD8Xn-m7cFLB2tMJmXbz5TzjU+@mail.gmail.com>
-References: <AANLkTikLvO0Y44nCxEfCsNxU-Na+PzcLXZUjOsMUM1_A@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: map ATAGs when not in first 1MB of RAM
+Date: Mon, 7 Feb 2011 08:23:03 -0800
+Message-ID: <20110207162302.GJ20795@atomide.com>
+References: <1296223246-2934-1-git-send-email-robherring2@gmail.com>
+	<20110128141031.GB12976@n2100.arm.linux.org.uk>
+	<4D42DC71.5080606@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <AANLkTikLvO0Y44nCxEfCsNxU-Na+PzcLXZUjOsMUM1_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <4D42DC71.5080606@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 6, 2011 at 12:42 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> Hi all,
->
-[...]
->
-> imx51 tasks
-> enable dtb support in u-boot: TODO
-> enable basic kernel dtb support: TODO
-> enable registration of devices form dt: TODO
-> ... add more details here, specific devices, etc...
->
-[...]
-> Shawn Guo [] imx51
+* Rob Herring <robherring2@gmail.com> [110128 07:10]:
+> Russell,
+> 
+> On 01/28/2011 08:10 AM, Russell King - ARM Linux wrote:
+> >On Fri, Jan 28, 2011 at 08:00:46AM -0600, Rob Herring wrote:
+> >>@@ -206,11 +206,17 @@ __create_page_tables:
+> >>  #endif
+> >>
+> >>  	/*
+> >>-	 * Then map first 1MB of ram in case it contains our boot params.
+> >>+	 * Then map boot params address in r2 or
+> >>+	 * the first 1MB of ram if boot params address is not specified.
+> >>  	 */
+> >>-	add	r0, r4, #PAGE_OFFSET>>  18
+> >>-	orr	r6, r7, r8
+> >>-	str	r6, [r0]
+> >>+	mov	r0, r2, lsr #20
+> >>+	movs	r0, r0, lsl #20
+> >>+	moveq	r0, r8
+> >>+	sub	r3, r0, r8
+> >>+	add	r3, r3, #PAGE_OFFSET
+> >>+	add	r3, r4, r3, lsr #18
+> >>+	orr	r6, r7, r0
+> >>+	str	r6, [r3]
+> >
+> >Wouldn't:
+> >	str	r6, [r4, r3, lsr #18]
+> >work here?
+> 
+> Not on Thumb2:
+> 
+> arch/arm/kernel/head.S:218: Error: Thumb supports only LSL in
+> shifted register indexing -- `str r6,[r4,r3,lsr#18]'
 
-I'm sorry that I'm a little behind primarily due to China Spring
-Festival Holiday and recent mxs works.  I will try to catch up ASAP.
-
--- 
-Regards,
-Shawn
+Acked-by: Tony Lindgren <tony@atomide.com>
