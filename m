@@ -1,103 +1,79 @@
-From: Meador Inge <meador_inge@mentor.com>
-Subject: Re: [PATCH v3 1/4] powerpc: Removing support for 'protected-sources'
-Date: Mon, 07 Feb 2011 12:02:49 -0600
-Message-ID: <4D5033C9.8030407@mentor.com>
-References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>	
-	<1296861941-3370-2-git-send-email-meador_inge@mentor.com>
-	<1297035336.14982.14.camel@pasglop>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: DT: Add a basic dts file for SMDKV310 machine
+Date: Mon, 07 Feb 2011 13:24:12 -0600
+Message-ID: <4D5046DC.8010503@gmail.com>
+References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>	<1296998250-21856-3-git-send-email-thomas.abraham@linaro.org>
+	<20110207000412.GA28953@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1297035336.14982.14.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Hollis Blanchard <hollis_blanchard@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <20110207000412.GA28953@yookeroo>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2011 05:35 PM, Benjamin Herrenschmidt wrote:
-> On Fri, 2011-02-04 at 17:25 -0600, Meador Inge wrote:
->> In a recent thread [1,2,3] concerning device trees for AMP systems, the
->> question of whether we really need 'protected-sources' arose.  The general
->> consensus was that a new boolean property 'pic-no-reset' (described in more
->> detail in a following patch) could be expanded to cover the use cases that
->> 'protected-sources' was covering.
+David, Thomas,
+
+On 02/06/2011 06:04 PM, David Gibson wrote:
+> On Sun, Feb 06, 2011 at 06:47:28PM +0530, Thomas Abraham wrote:
+>> This patch adds a basic dts file for Samsung's SMDKV310 machine.
 >>
->> One concern that was raised was for legacy systems which already use the
->> 'protected-sources' property [4].  For legacy use cases, 'protected-sources'
->> will be treated as an alias of 'pic-no-reset'.  The sources
->> encoded in the 'protected-sources' cells, however, will not be processed.  This
->> legacy check is added in a later patch in the series.
+>> Signed-off-by: Thomas Abraham<thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   arch/arm/mach-s5pv310/mach-smdkv310.dts |   38 +++++++++++++++++++++++++++++++
+>>   1 files changed, 38 insertions(+), 0 deletions(-)
+>>   create mode 100755 arch/arm/mach-s5pv310/mach-smdkv310.dts
+>>
+>> diff --git a/arch/arm/mach-s5pv310/mach-smdkv310.dts b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+>> new file mode 100755
+>> index 0000000..74d80bf
+>> --- /dev/null
+>> +++ b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+>> @@ -0,0 +1,38 @@
+>> +/dts-v1/;
+>> +
+>> +/ {
+>> +	model = "smdkv310";
+>> +	compatible = "samsung,smdkv310";
+>> +	#address-cells =<1>;
+>> +	#size-cells =<1>;
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg =<0x40000000 0x08000000>;
+>> +	};
 >
-> I'm a bit annoyed here. Why do we need to do that ? Those Cell machines
-> are going to be real bastards to find and test with, and I don't really
-> see the point...
+> Uh.. where are the cpus?
+>
 
-In my previous reply I said that "it is not so much as a need as it is a 
-potential simplification."  After further reflection, I don't think that 
-is completely true.  As we get into AMP systems with higher core counts, 
-then implementing this functionality using the existing 
-"protected-sources" implementation versus the new "pic-no-reset" work is 
-going to be harder to maintain.
+But for ARM, all the details of the cpu are probe-able. So what would we 
+gain by putting cpu info in the DTS?
 
-The reason being that *every* OS instance has to know about *every* 
-other OSes interrupt sources, which is a little gross.  You can see this 
-happening already in "arch/powerpc/boot/dts/p2020rdb_camp_core0.dts" and 
-"arch/powerpc/boot/dts/p2020rdb_camp_core1.dts":
+>> +	chosen {
+>> +		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
+>> +	};
+>> +
+>> +	soc {
+>> +		#address-cells =<1>;
+>> +		#size-cells =<1>;
+>> +		compatible = "simple-bus";
+>
+> It's generally a good idea to list the specific soc model before "simple-bus".
+>
+>> +		ranges =<0x00000000 0x00000000 0xFFFFFFFF>;
 
-	// p2020rdb_camp_core0.dts
-	mpic: pic@40000 {
-	...
-		// Sources used by the OS on core 1
-		protected-sources = <
-		42 76 77 78 79 /* serial1 , dma2 */
-		29 30 34 26 /* enet0, pci1 */
-		0xe0 0xe1 0xe2 0xe3 /* msi */
-		0xe4 0xe5 0xe6 0xe7
-		>;
-	};
+For no translation, you can do just:
 
-	// p2020rdb_camp_core1.dts
-	mpic: pic@40000 {
-	...
-		// Sources used by the OS on core 0
-		protected-sources = <
-		17 18 43 42 59 47 /*ecm, mem, i2c, serial0, spi,gpio */
-		16 20 21 22 23 28 	/* L2, dma1, USB */
-		03 35 36 40 31 32 33 	/* mdio, enet1, enet2 */
-		72 45 58 25 		/* sdhci, crypto , pci */
-		>;
-	};
+ranges;
 
-It is going to be a real pain to keep all of the lists up to date. 
-Especially considering we already have sufficient information in the 
-device tree to do this work.  I do understand the concern of 
-finding/testing the older systems.  However, is the testing of those 
-systems enough to keep out the proposed change and potentially lower 
-maintenance in the future?  Is the legacy system argument the only 
-reason to keep this change out or are there other technical deficiencies?
-
-Also, in the proposed MPIC modifications there is a check for protected 
-sources (it is treated as an alias for "pic-no-reset"; see PATCH 3 in 
-the set) that should provide functionality equivalent to what systems 
-using "protected-sources" already have.  That check only looks for the 
-presence of "protected-sources" and does not process the cells.  Another 
-option would be to leave in the protected sources implementation (but 
-undocumented in the binding) and have the full "pic-no-reset" behavior 
-there as well (and documented in the binding).
-
-If this has no chance of acceptance (?), then I will just re-submit the 
-binding and implementation with "protected-sources" and the limited form 
-of "pic-no-reset".
-
--- 
-Meador Inge     | meador_inge AT mentor.com
-Mentor Embedded | http://www.mentor.com/embedded-software
+Rob
