@@ -1,153 +1,60 @@
-From: Andres Salomon <dilinger@queued.net>
-Subject: [PATCH] of/pdt: don't bother parsing pkg2path results, return as-is
-Date: Fri, 18 Feb 2011 19:12:25 -0800
-Message-ID: <20110218191225.5e38b8bc@queued.net>
-References: <20110216222820.487AE9D401C@zog.reactivated.net>
-	<1297896277.3011.5.camel@macbook.infradead.org>
-	<AANLkTikAF2X1A5jfoNfCPRhZkZ7qPdZ57c8B5b9z4+qr@mail.gmail.com>
-	<20110218190659.7f955e4c@queued.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: DT: Add SMDKV310 machine with device tree
+	support.
+Date: Mon, 7 Feb 2011 16:15:55 +0100
+Message-ID: <201102071615.55652.arnd@arndb.de>
+References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>
+	<1296998250-21856-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20110218190659.7f955e4c@queued.net>
-Sender: sparclinux-owner@vger.kernel.org
-To: Andres Salomon <dilinger@queued.net>
-Cc: Daniel Drake <dsd@laptop.org>, David Woodhouse <dwmw2@infradead.org>, cbou@mail.ru, linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, dmitry.torokhov@gmail.com, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Mitch Bradley <wmb@laptop.org>, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <1296998250-21856-2-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Feb 2011 19:06:59 -0800
-Andres Salomon <dilinger@queued.net> wrote:
+On Sunday 06 February 2011, Thomas Abraham wrote:
 
-> On Fri, 18 Feb 2011 23:42:57 +0000
-> Daniel Drake <dsd@laptop.org> wrote:
->=20
-> > On 16 February 2011 22:44, David Woodhouse <dwmw2@infradead.org>
-> > wrote:
-> > > On Wed, 2011-02-16 at 22:28 +0000, Daniel Drake wrote:
-> > >>
-> > >> +static int __init add_common_platform_devices(void)
-> > >> +{
-> > >> + =C2=A0 =C2=A0 =C2=A0 struct platform_device *pdev;
-> > >> +
-> > >> + =C2=A0 =C2=A0 =C2=A0 pdev =3D platform_device_register_simple(=
-"olpc-battery",
-> > >> -1, NULL, 0);
-> > >> + =C2=A0 =C2=A0 =C2=A0 if (IS_ERR(pdev))
-> > >> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return PTR_ER=
-R(pdev);
-> > >> +
-> > >> + =C2=A0 =C2=A0 =C2=A0 return 0;
-> > >> +}
-> > >> +
-> > >
-> > > Still kind of sucks that you have to do this, and can't bind to
-> > > something in the device-tree.
-> >=20
-> > OK, feel free to put this patch on hold for now. I started looking
-> > at the device tree approach today. It looks doable but first we
-> > have to fix a DT bug/inconsistency that is preventing us from
-> > correctly binding to the tree's devices.
-> >=20
-> > Daniel
->=20
->=20
-> Mea culpa.  The patch below fixes a bug I introduced earlier.
-> Cc'ing the sparc folks, as this probably affects them
-> (although I would think that it fixes broken behavior for them..?)
->=20
->=20
->=20
+> diff --git a/arch/arm/mach-s5pv310/mach-smdkv310-dt.c b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
+> new file mode 100644
+> index 0000000..367fdb1
+> --- /dev/null
+> +++ b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
+> @@ -0,0 +1,101 @@
+> +/* linux/arch/arm/mach-s5pv310/mach-smdkv310.c
 
-And this is a followup to the prior patch; an optimization based
-upon what we're doing with pkg2path stuff.
+The file name in the comment doesn't match. I normally recommend not putting
+it in the comment at all so you don't need to change it when moving or
+copying the file.
 
-The sparc folks don't use pkg2path, so this shouldn't affect them at
-all.
+A comment along the lines of "s5pv310 platform with device tree enabled" is
+more helpful to the reader anyway.
 
-Cc'ing Mitch as well, in case there's some reason why I should be
-wary of doing this.  :)
+> +static void __init smdkv310_map_io(void)
+> +{
+> +	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
+> +	s3c24xx_init_clocks(24000000);
+> +	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
+> +}
 
+There is very little here that is really platform specific, right?
 
+Is this going to increase? If not, it might be good to read out the
+data (S5P_VA_CHIPID, 24000000, smdkv310_uartcfgs) from the device tree
+as well before passing them down. No need to do it right away, but it
+would be good to know the direction in which we're heading.
 
+Maybe add a comment like /* TODO: read these from the device tree */
+or similar.
 
-=46rom: Andres Salomon <dilinger@queued.net>
-
-The of_pdt_try_pkg2path() function currently allocates memory for
-and fetches the full path name from OFW (of the form '/foo/bar/baz@0').
-It then returns only the name ('baz@0)', and the caller re-constructs
-the full name (for dp->full_name) based upon dp->parent->full_name and
-what was returned by of_pdt_try_pkg2path().  Oh, and it allocates more
-memory for it.
-
-OLPC is the only architecture which fills in the pkg2path hook, so
-this shouldn't affect any other users (ie, sparc).  Since in practice
-(dp->parent->full_name + '/' + strrchr(pkg2path, '/')) and the result
-from pkg2path end up being exactly the same, just short circuit the res=
-t
-of the of_pdt_build_full_name logic and set dp->full_name to the result
-of pkg2path.  This means we don't have to parse it nor allocate more
-memory for it.
-
-This saves time, code, and memory.
-
-Signed-off-by: Andres Salomon <dilinger@queued.net>
----
- drivers/of/pdt.c |   17 +++++++----------
- 1 files changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index b39d584..605834b 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -134,7 +134,7 @@ static char * __init of_pdt_get_one_property(phandl=
-e node, const char *name)
-=20
- static char * __init of_pdt_try_pkg2path(phandle node)
- {
--	char *res, *buf =3D NULL;
-+	char *buf =3D NULL;
- 	int len;
-=20
- 	if (!of_pdt_prom_ops->pkg2path)
-@@ -147,13 +147,7 @@ static char * __init of_pdt_try_pkg2path(phandle n=
-ode)
- 		pr_err("%s: package-to-path failed\n", __func__);
- 		return NULL;
- 	}
--
--	res =3D strrchr(buf, '/');
--	if (!res) {
--		pr_err("%s: couldn't find / in %s\n", __func__, buf);
--		return NULL;
--	}
--	return res+1;
-+	return buf;
- }
-=20
- static struct device_node * __init of_pdt_create_node(phandle node,
-@@ -193,10 +187,13 @@ static char * __init of_pdt_build_full_name(struc=
-t device_node *dp,
- 	 * name property (ie, 'battery'), we want the name we see with
- 	 * package-to-path (ie, 'battery@0').
- 	 */
-+	n =3D of_pdt_try_pkg2path(node);
-+	if (n)
-+		return n;
-+
-+	/* Older methods for determining full name */
- 	name =3D of_pdt_node_name(dp);
- 	if (!name)
--		name =3D of_pdt_try_pkg2path(node);
--	if (!name)
- 		name =3D dp->name;
-=20
- 	plen =3D strlen(dp->parent->full_name);
---=20
-1.7.2.3
-
---
-To unsubscribe from this list: send the line "unsubscribe sparclinux" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
