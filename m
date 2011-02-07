@@ -1,15 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: DT: Add a basic dts file for SMDKV310 machine
-Date: Mon, 7 Feb 2011 11:04:12 +1100
-Message-ID: <20110207000412.GA28953@yookeroo>
-References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>
-	<1296998250-21856-3-git-send-email-thomas.abraham@linaro.org>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] powerpc: Removing support for 'protected-sources'
+Date: Sun, 06 Feb 2011 19:32:29 -0600
+Message-ID: <4D4F4BAD.4000909@mentor.com>
+References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>	
+	<1296861941-3370-2-git-send-email-meador_inge@mentor.com>
+	<1297035336.14982.14.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1296998250-21856-3-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1297035336.14982.14.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,71 +19,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 06, 2011 at 06:47:28PM +0530, Thomas Abraham wrote:
-> This patch adds a basic dts file for Samsung's SMDKV310 machine.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/mach-s5pv310/mach-smdkv310.dts |   38 +++++++++++++++++++++++++++++++
->  1 files changed, 38 insertions(+), 0 deletions(-)
->  create mode 100755 arch/arm/mach-s5pv310/mach-smdkv310.dts
-> 
-> diff --git a/arch/arm/mach-s5pv310/mach-smdkv310.dts b/arch/arm/mach-s5pv310/mach-smdkv310.dts
-> new file mode 100755
-> index 0000000..74d80bf
-> --- /dev/null
-> +++ b/arch/arm/mach-s5pv310/mach-smdkv310.dts
-> @@ -0,0 +1,38 @@
-> +/dts-v1/;
-> +
-> +/ {
-> +	model = "smdkv310";
-> +	compatible = "samsung,smdkv310";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x40000000 0x08000000>;
-> +	};
+On 02/06/2011 05:35 PM, Benjamin Herrenschmidt wrote:
+> On Fri, 2011-02-04 at 17:25 -0600, Meador Inge wrote:
+>> In a recent thread [1,2,3] concerning device trees for AMP systems, the
+>> question of whether we really need 'protected-sources' arose.  The general
+>> consensus was that a new boolean property 'pic-no-reset' (described in more
+>> detail in a following patch) could be expanded to cover the use cases that
+>> 'protected-sources' was covering.
+>>
+>> One concern that was raised was for legacy systems which already use the
+>> 'protected-sources' property [4].  For legacy use cases, 'protected-sources'
+>> will be treated as an alias of 'pic-no-reset'.  The sources
+>> encoded in the 'protected-sources' cells, however, will not be processed.  This
+>> legacy check is added in a later patch in the series.
+>
+> I'm a bit annoyed here. Why do we need to do that ? Those Cell machines
 
-Uh.. where are the cpus?
+Apologies, that certainly was not the intent.
 
-> +	chosen {
-> +		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
+> are going to be real bastards to find and test with, and I don't really
+> see the point...
 
-It's generally a good idea to list the specific soc model before "simple-bus".
+The idea came up when submitting a patch for documenting an Open PIC 
+binding.  The following two properties were documented in that binding: 
+(1) "protected-sources" and (2) "pic-no-reset".  "pic-no-reset" is a 
+newly proposed property with the intent of specifying from a device tree 
+that the PIC should not be reset.  The question of whether the one 
+property, "pic-no-reset", would suffice for both purposes came up.
 
-> +		ranges = <0x00000000 0x00000000 0xFFFFFFFF>;
-> +
-> +		GIC:gic@0x10500000 {
-> +			#interrupt-cells = <1>;
-> +			interrupt-controller;
-> +			reg = <0x10500000 0x1000>;
-> +			compatible = "arm,gic";
-> +		};
-> +
-> +		watchdog@0x10060000 {
-> +			reg = <0x10060000 0x400>;
-> +			interrupts = <552>;
-> +			interrupt-parent = <&GIC>;
-> +			compatible = "samsung,s3c2410-wdt";
-> +		};
-> +	};
-> +};
+It seems reasonable that "pic-no-reset" could satisfy the use case that 
+"protected-sources" is covering (since all of the sources that a 
+particular machine is actually using are already explicitly mentioned in 
+the device tree) and the use case of marking from a device tree that the 
+PIC should not be reset.  So it is not so much as a need as it is a 
+potential simplification.  It sounds like as a practical concern 
+(several systems using "protected-sources" are already in the wild and 
+testing considerations) that this may not be possible, which is fine.
+
+> The reason for not resetting the MPIC wasn't -only- about the protected
+> sources, but also because, from memory, some MPIC implementations had
+> issues when toggling the reset lines (pseries I think is one).
+>
+> That's actually why the MPIC_WANTS_RESET flag is working the other way
+> around, only platforms that actually want the reset set it.
+>
+> This is orthogonal to the need to touch or not touch the interrupt
+> sources as set by firmware. Yes, having protected sources probably
+> implies no-reset but the reverse isn't necessarily true.
+
+So barring the removal of protected sources, does the inclusion of the 
+"pic-no-reset" property seem reasonable?
+
+> Ben.
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
