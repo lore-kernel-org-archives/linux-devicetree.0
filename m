@@ -1,16 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: DT: Add SMDKV310 machine with device tree
-	support.
-Date: Sun, 6 Feb 2011 23:41:47 -0700
-Message-ID: <20110207064147.GB24685@angua.secretlab.ca>
+Subject: Re: [PATCH 2/4] ARM: DT: Add a basic dts file for SMDKV310 machine
+Date: Sun, 6 Feb 2011 23:54:11 -0700
+Message-ID: <20110207065411.GC24685@angua.secretlab.ca>
 References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>
-	<1296998250-21856-2-git-send-email-thomas.abraham@linaro.org>
+	<1296998250-21856-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1296998250-21856-2-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1296998250-21856-3-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -24,174 +23,106 @@ To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 06, 2011 at 06:47:27PM +0530, Thomas Abraham wrote:
-> This patch adds a new SMDKV310 machine that boots with a minimal
-> device tree support. The bootargs and memory information is obtained
-> from the device tree during boot.
+On Sun, Feb 06, 2011 at 06:47:28PM +0530, Thomas Abraham wrote:
+> This patch adds a basic dts file for Samsung's SMDKV310 machine.
 > 
 > Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/mach-s5pv310/Kconfig            |    7 ++
->  arch/arm/mach-s5pv310/Makefile           |    1 +
->  arch/arm/mach-s5pv310/mach-smdkv310-dt.c |  101 ++++++++++++++++++++++++++++++
->  3 files changed, 109 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/mach-s5pv310/mach-smdkv310-dt.c
+>  arch/arm/mach-s5pv310/mach-smdkv310.dts |   38 +++++++++++++++++++++++++++++++
+>  1 files changed, 38 insertions(+), 0 deletions(-)
+>  create mode 100755 arch/arm/mach-s5pv310/mach-smdkv310.dts
 > 
-> diff --git a/arch/arm/mach-s5pv310/Kconfig b/arch/arm/mach-s5pv310/Kconfig
-> index 09c4c21..6c5f0bf 100644
-> --- a/arch/arm/mach-s5pv310/Kconfig
-> +++ b/arch/arm/mach-s5pv310/Kconfig
-> @@ -127,6 +127,13 @@ config MACH_SMDKV310
->  	help
->  	  Machine support for Samsung SMDKV310
->  
-> +config MACH_SMDKV310_DT
-> +	bool "SMDKV310 with device tree support"
-
-SMDKV310 is the board designation, not the SoC, correct?  Considering
-that the point of this is to allow a single machine description to
-support many boards, you should consider naming this MACH_S5PV310_DT.
-Otherwise, you may as well just add a dt_compat table to the existing
-mach-smdkv310.c board support file.
-
-> +	select CPU_S5PV310
-> +	select USE_OF
-> +	help
-> +	  Machine support for Samsung SMDKV310 with device tree based initialization.
-> +
->  endmenu
->  
->  comment "Configuration for HSMMC bus width"
-> diff --git a/arch/arm/mach-s5pv310/Makefile b/arch/arm/mach-s5pv310/Makefile
-> index 036fb38..59545aa 100644
-> --- a/arch/arm/mach-s5pv310/Makefile
-> +++ b/arch/arm/mach-s5pv310/Makefile
-> @@ -24,6 +24,7 @@ obj-$(CONFIG_HOTPLUG_CPU)	+= hotplug.o
->  
->  obj-$(CONFIG_MACH_SMDKC210)	+= mach-smdkc210.o
->  obj-$(CONFIG_MACH_SMDKV310)	+= mach-smdkv310.o
-> +obj-$(CONFIG_MACH_SMDKV310_DT)	+= mach-smdkv310-dt.o
->  obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
->  
->  # device support
-> diff --git a/arch/arm/mach-s5pv310/mach-smdkv310-dt.c b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
-> new file mode 100644
-> index 0000000..367fdb1
+> diff --git a/arch/arm/mach-s5pv310/mach-smdkv310.dts b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+> new file mode 100755
+> index 0000000..74d80bf
 > --- /dev/null
-> +++ b/arch/arm/mach-s5pv310/mach-smdkv310-dt.c
-> @@ -0,0 +1,101 @@
-> +/* linux/arch/arm/mach-s5pv310/mach-smdkv310.c
-> + *
-> + * Copyright (c) 2010 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
+> +++ b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+> @@ -0,0 +1,38 @@
+> +/dts-v1/;
 > +
-> +#include <linux/serial_core.h>
-> +#include <linux/gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach-types.h>
-> +
-> +#include <plat/regs-serial.h>
-> +#include <plat/s5pv310.h>
-> +#include <plat/cpu.h>
-> +#include <plat/devs.h>
-> +
-> +#include <mach/map.h>
-> +
-> +/* Following are default values for UCON, ULCON and UFCON UART registers */
-> +#define SMDKV310_UCON_DEFAULT	(S3C2410_UCON_TXILEVEL |	\
-> +				 S3C2410_UCON_RXILEVEL |	\
-> +				 S3C2410_UCON_TXIRQMODE |	\
-> +				 S3C2410_UCON_RXIRQMODE |	\
-> +				 S3C2410_UCON_RXFIFO_TOI |	\
-> +				 S3C2443_UCON_RXERR_IRQEN)
-> +
-> +#define SMDKV310_ULCON_DEFAULT	S3C2410_LCON_CS8
-> +
-> +#define SMDKV310_UFCON_DEFAULT	(S3C2410_UFCON_FIFOMODE |	\
-> +				 S5PV210_UFCON_TXTRIG4 |	\
-> +				 S5PV210_UFCON_RXTRIG4)
-> +
-> +static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
-> +	[0] = {
-> +		.hwport		= 0,
-> +		.flags		= 0,
+> +/ {
+> +	model = "smdkv310";
+> +	compatible = "samsung,smdkv310";
 
-'0' initial values don't need to be specified.  .flags could be
-dropped from each of these entries.
+Should include the soc in this compatible list:
 
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ulcon		= SMDKV310_ULCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +	[1] = {
-> +		.hwport		= 1,
-> +		.flags		= 0,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ulcon		= SMDKV310_ULCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +	[2] = {
-> +		.hwport		= 2,
-> +		.flags		= 0,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ulcon		= SMDKV310_ULCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +	[3] = {
-> +		.hwport		= 3,
-> +		.flags		= 0,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ulcon		= SMDKV310_ULCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
+	compatible = "samsung,smdkv310", "samsung,s5pv310";
+
+Also, every 'compatible' value specified in this file should also have
+documentation in Documentation/devicetree/bindings.
+
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+
+It's usually a good idea to have a "interrupt-parent = <&GIC>;" here
+so that all child nodes inherit it as the default interrupt
+controller.
+
+Also, missing a 'cpus' node.
+
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x40000000 0x08000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
+
+initrd base address will get passed via the linux,initrd-start and
+linux,initrd-end properties which are automatically populated by
+u-boot.  Drop initrd from the boot args.
+
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+
+Should also specify the soc with something like:
+
+		compatible = "samsung,s5pv310-soc", "simple-bus";
+
+> +		ranges = <0x00000000 0x00000000 0xFFFFFFFF>;
+
+You can specify that the entire ranges is translated simply by
+specifying an empty ranges property like so:
+
+		ranges;
+
+> +
+> +		GIC:gic@0x10500000 {
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +			reg = <0x10500000 0x1000>;
+> +			compatible = "arm,gic";
+
+Be specific about the device on all the device nodes, followed by a
+list of the compatible devices.  Should be something like:
+
+	compatible = "samsung,s5pv310-soc", "arm,gic";
+
+> +		};
+> +
+> +		watchdog@0x10060000 {
+> +			reg = <0x10060000 0x400>;
+> +			interrupts = <552>;
+> +			interrupt-parent = <&GIC>;
+
+By putting the interrupt-parent property in the root node, this
+interrupt-parent property can be dropped.
+
+> +			compatible = "samsung,s3c2410-wdt";
+
+compatible needs to first specify the exact device
+(samsung,s5pv310-wdt?) followed by the compatible device.  I assume
+the wdt in the s5pv310 is compatible with the one in the s3c2410,
+correct?  Or am I missing something?
+
+> +		};
+> +	};
 > +};
-> +
-> +static struct platform_device *smdkv310_devices[] __initdata = {
-> +};
-
-Since this list is empty, it can be removed, and so can the call to
-platform_add_devices() below.
-
-> +
-> +static void __init smdkv310_map_io(void)
-> +{
-> +	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
-> +	s3c24xx_init_clocks(24000000);
-> +	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
-> +}
-> +
-> +static void __init smdkv310_machine_init(void)
-> +{
-> +	platform_add_devices(smdkv310_devices, ARRAY_SIZE(smdkv310_devices));
-> +}
-> +
-> +static char const *smdkv310_dt_compat[] = {
-> +	"samsung,smdkv310",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(SMDKV310, "Samsung's SMDKV310 with flattened device tree")
-> +	/* Maintainer: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
-> +	/* Maintainer: Changhwan Youn <chaos.youn-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
-> +	.boot_params	= S5P_PA_SDRAM + 0x100,
-
-.boot_params can be dropped.
-
-> +	.init_irq	= s5pv310_init_irq,
-> +	.map_io		= smdkv310_map_io,
-> +	.init_machine	= smdkv310_machine_init,
-> +	.timer		= &s5pv310_timer,
-> +	.dt_compat	= smdkv310_dt_compat,
-> +MACHINE_END
 > -- 
 > 1.6.6.rc2
 > 
