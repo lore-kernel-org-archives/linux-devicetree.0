@@ -1,78 +1,118 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Device Tree on ARM status report
-Date: Tue, 08 Feb 2011 11:51:35 +0000
-Message-ID: <1297165895.31587.62.camel@e102568-lin.cambridge.arm.com>
-References: <AANLkTikLvO0Y44nCxEfCsNxU-Na+PzcLXZUjOsMUM1_A@mail.gmail.com>
-	<20110207084613.GC2723@matterhorn.lan>
-	<AANLkTi=dK2qYTH7vThJb8-3wED5F_5Hcmr7nNidxs25c@mail.gmail.com>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: devicetree: Musings on reserved regions
+Date: Tue, 8 Feb 2011 23:24:52 +1100
+Message-ID: <20110208122452.GP30616@yookeroo>
+References: <AANLkTinjPk1rJp1pCvM3ZTsLnEym57qU6u72vL8JQ1V3@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <AANLkTi=dK2qYTH7vThJb8-3wED5F_5Hcmr7nNidxs25c-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AANLkTinjPk1rJp1pCvM3ZTsLnEym57qU6u72vL8JQ1V3-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org" <parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-02-07 at 14:28 -0700, Grant Likely wrote:
-> On Mon, Feb 7, 2011 at 1:46 AM, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On 11 Feb 05, Grant Likely wrote:
-> >> 2 - Task status
-> >> ---------------
-> >> Core infrastructure:
-> >> [glikely] basic infrastructure to enable dt: DONE
-> >> [r-herring] Allow dtb to be located anywhere in RAM: DONE
-> >> [bones] Debug dtb corruption during init: INPROGRESS
-> >> [glikely] OF clock bindings: INPROGRESS
-> >
-> > Does this include the common clock framework that Jeremy had been working on?
-> > I see no mention of that explicitly, hence the question.
-> 
-> No, since the common clk patches are taking some time to get right,
-> the device tree clock bindings have been decoupled from the common clk
-> patches so that dt support doesn't get held up.  When common clk gets
-> merged, the dt support will be modified to use it.
-> 
-
-Ok Grant, good to know. I did not have time to check how the bindings
-changed, but at least for vexpress I was registering and binding clocks
-from DT. Here is the vexpress list of tasks updated.
-
-Versatile express tasks:
-[lorenzo-pieralisi] enable dtb support in u-boot: DONE within Linaro ?
-[lorenzo-pieralisi] enable basic kernel dtb support on versatile
-express: DONE
-[lorenzo-pieralisi] probe clocks from dt: DONE
-[lorenzo-pieralisi] probe irq controllers from device tree: DONE (basic
-GIC init - interrupt routing is not there yet)
-[lorenzo-pieralisi] register devices from dt: 
-
-Currently all vexpress platform devices are registered from the DT code,
-but I have to rebase to see if things changed wrt test-devicetree 
-branch.
-
-They include:
-
-smsc911x (mdio inclusive but pending code to probe irq type)
-isp1760
-flash physmap
-amba-pl011
-amba-clcd-pl11x
-PMU
-mmc-pl18x
-
-The GIC and sp804 timers are also initialized from DT (they need not be
-platform devices though).
-
-Please let me know if you need further details.
-
-Lorenzo
+T24gTW9uLCBGZWIgMDcsIDIwMTEgYXQgMDE6NTk6NTNQTSAtMDcwMCwgR3JhbnQgTGlrZWx5IHdy
+b3RlOgo+IEFzIHBhcnQgb2YgdGhlIHByb2Nlc3Mgb2YgYnJpbmdpbmcgZHQgc3VwcG9ydCB1cCBv
+biBub24tcG93ZXJwYwo+IHBsYXRmb3JtcywgSSd2ZSBiZWVuIHRoaW5raW5nIGFib3V0IHRoZSB1
+c2FnZSBtb2RlIG9mIHRoZSByZXNlcnZlZAo+IHJlZ2lvbnMgc2VjdGlvbiBpbiB0aGUgZmxhdHRl
+bmVkIGRldmljZSB0cmVlIHN0cnVjdHVyZS4gIEZpcnN0LCBmb3IKPiByZWZlcmVuY2UsIGhlcmUg
+aXMgdGhlIGRlc2NyaXB0aW9uIG9mIHJlc2VydmVkIHJlZ2lvbnMgZnJvbSBlUEFQUgo+IDEuMDoK
+PiAKPiA+IDcuMyBNZW1vcnkgUmVzZXJ2YXRpb24gQmxvY2sKPiA+IDcuMy4xIFB1cnBvc2UKPiA+
+IFRoZSBtZW1vcnkgcmVzZXJ2YXRpb24gYmxvY2sgcHJvdmlkZXMgdGhlIGNsaWVudCBwcm9ncmFt
+IHdpdGgKPiA+IGEgbGlzdCBvZiBhcmVhcyBpbiBwaHlzaWNhbCBtZW1vcnkgd2hpY2ggYXJlIHJl
+c2VydmVkOyB0aGF0Cj4gPiBpcywgd2hpY2ggc2hhbGwgbm90IGJlIHVzZWQgZm9yIGdlbmVyYWwg
+bWVtb3J5IGFsbG9jYXRpb25zLiBJdAo+ID4gaXMgdXNlZCB0byBwcm90ZWN0IHZpdGFsIGRhdGEg
+c3RydWN0dXJlcyBmcm9tIGJlaW5nCj4gPiBvdmVyd3JpdHRlbiBieSB0aGUgY2xpZW50IHByb2dy
+YW0uIEZvciBleGFtcGxlLCBvbiBzb21lCj4gPiBzeXN0ZW1zIHdpdGggYW4gSU9NTVUsIHRoZSBU
+Q0UgKHRyYW5zbGF0aW9uIGNvbnRyb2wgZW50cnkpCj4gPiB0YWJsZXMgaW5pdGlhbGl6ZWQgYnkg
+YW4gZVBBUFIgYm9vdCBwcm9ncmFtIHdvdWxkIG5lZWQgdG8gYmUKPiA+IHByb3RlY3RlZCBpbiB0
+aGlzIG1hbm5lci4gTGlrZXdpc2UsIGFueSBib290IHByb2dyYW0gY29kZSBvcgo+ID4gZGF0YSB1
+c2VkIGR1cmluZyB0aGUgY2xpZW50IHByb2dyYW3igJlzIHJ1bnRpbWUgd291bGQgbmVlZCB0byBi
+ZQo+ID4gcmVzZXJ2ZWQgKGUuZy4sIFJUQVMgb24gT3BlbiBGaXJtd2FyZSBwbGF0Zm9ybXMpLiBU
+aGUgZVBBUFIKPiA+IGRvZXMgbm90IHJlcXVpcmUgdGhlIGJvb3QgcHJvZ3JhbSB0byBwcm92aWRl
+IGFueSBzdWNoIHJ1bnRpbWUKPiA+IGNvbXBvbmVudHMsIGJ1dCBpdCBkb2VzIG5vdCBwcm9oaWJp
+dCBpbXBsZW1lbnRhdGlvbnMgZnJvbQo+ID4gZG9pbmcgc28gYXMgYW4gZXh0ZW5zaW9uLgo+ID4K
+PiA+IE1vcmUgc3BlY2lmaWNhbGx5LCBhIGNsaWVudCBwcm9ncmFtIHNoYWxsIG5vdCBhY2Nlc3Mg
+bWVtb3J5IGluCj4gPiBhIHJlc2VydmVkIHJlZ2lvbiB1bmxlc3Mgb3RoZXIgaW5mb3JtYXRpb24g
+cHJvdmlkZWQgYnkgdGhlCj4gPiBib290IHByb2dyYW0gZXhwbGljaXRseSBpbmRpY2F0ZXMgdGhh
+dCBpdCBzaGFsbCBkbyBzby4gVGhlCj4gPiBjbGllbnQgcHJvZ3JhbSBtYXkgdGhlbiBhY2Nlc3Mg
+dGhlIGluZGljYXRlZCBzZWN0aW9uIG9mIHRoZQo+ID4gcmVzZXJ2ZWQgbWVtb3J5IGluIHRoZSBp
+bmRpY2F0ZWQgbWFubmVyLiBNZXRob2RzIGJ5IHdoaWNoIHRoZQo+ID4gYm9vdCBwcm9ncmFtIGNh
+biBpbmRpY2F0ZSB0byB0aGUgY2xpZW50IHByb2dyYW0gc3BlY2lmaWMgdXNlcwo+ID4gZm9yIHJl
+c2VydmVkIG1lbW9yeSBtYXkgYXBwZWFyIGluIHRoaXMgZG9jdW1lbnQsIGluIG9wdGlvbmFsCj4g
+PiBleHRlbnNpb25zIHRvIGl0LCBvciBpbiBwbGF0Zm9ybS1zcGVjaWZpYyBkb2N1bWVudGF0aW9u
+Lgo+ID4KPiA+IFRoZSByZXNlcnZlZCByZWdpb25zIHN1cHBsaWVkIGJ5IGEgYm9vdCBwcm9ncmFt
+IG1heSwgYnV0IGFyZQo+ID4gbm90IHJlcXVpcmVkIHRvLCBlbmNvbXBhc3MgdGhlIGRldmljZSB0
+cmVlIGJsb2IgaXRzZWxmLiBUaGUKPiA+IGNsaWVudCBwcm9ncmFtIHNoYWxsIGVuc3VyZSB0aGF0
+IGl0IGRvZXMgbm90IG92ZXJ3cml0ZSB0aGlzCj4gPiBkYXRhIHN0cnVjdHVyZSBiZWZvcmUgaXQg
+aXMgdXNlZCwgd2hldGhlciBvciBub3QgaXQgaXMgaW4gdGhlCj4gPiByZXNlcnZlZCBhcmVhcy4K
+PiAKPiBUaGUgcHJvYmxlbSB0aGF0IEknbSBoYXZpbmcsIGlzIHRoYXQgdGhlIGxpZmVjeWNsZSBm
+b3IgcmVzZXJ2ZWQKPiByZWdpb25zIGlzIG5vdCBkZWZpbmVkIGFuZCB0aGUgY2xpZW50IHByb2dy
+YW0gaGFzIG5vIG1lY2hhbmlzbSB0bwo+IGRldGVybWluZSB3aGF0IGVhY2ggcmVzZXJ2ZWQgcmVn
+aW9uIGlzIGludGVuZGVkIGZvci4gIFRoaXMgaXNzdWUgaGFzCj4gYmVlbiByYWlzZWQgYmVmb3Jl
+IGluIHRoZSBjb250ZXh0IG9mIGtleGVjIGZyb20gb25lIExpbnV4IGluc3RhbmNlIHRvCj4gYW5v
+dGhlclsxXS4gIFdoZW4gZ29pbmcgZnJvbSBvbmUga2VybmVsIHRvIHRoZSBuZXh0LCBrZXhlYyBu
+ZWVkcyB0bwo+IHBvcHVsYXRlIGEgdmFsaWQgc2V0IG9mIHJlc2VydmVkIHJlZ2lvbnMsIGJ1dCBp
+dCBpc24ndCBlYXN5IHRvIGZpZ3VyZQo+IG91dCB3aGF0IHRoZSBuZXcgc2V0IHNob3VsZCBiZSBi
+ZWNhdXNlIHRoZXJlIGlzbid0IGEgcmVsaWFibGUgd2F5IHRvCj4gZmlndXJlIG91dCB3aGljaCBy
+ZWdpb25zIGZyb20gdGhlIHByZXZpb3VzIGJvb3QgbmVlZCB0byBiZSBwcmVzZXJ2ZWQKPiAoaWUu
+IHJ1bnRpbWUgZmlybXdhcmUgb3IgZnJhbWVidWZmZXJzKSB2cyByZWdpb25zIHRoYXQgYXJlIG9i
+c29sZXRlCj4gKG9yaWdpbmFsIGluaXRyZCBhbmQgZHRiIHJlZ2lvbnMpLgoKSHJtLCBJIGFncmVl
+IHRoYXQgdGhlIGZhY3QgdGhhdCB0aGUgcmVzZXJ2ZWQgc2VjdGlvbnMgbWVhbmluZyBhbmQKbGlm
+ZXRpbWUgbWF5IG5vdCBiZSBrbm93biBpcyBhd2t3YXJkLCBidXQgSSdtIG5vdCB5ZXQgY29udmlu
+Y2VkIHRoYXQKd2UgbmVlZCBzb21ldGhpbmcgbGlrZSB0aGlzLgoKSGVyZSdzIGhvdyBJIGVudmlz
+YWdlZCB0aGlzIHdvcmtpbmcgdW5kZXIgdGhlIGN1cnJlbnQgc3BlYywgd2hpY2ggdGhlCnRleHQg
+aXMgbWVhbnQgdG8gY29udmV5IChidXQgbWF5YmUgbmVlZHMgd29yayk6CgpTbywgeW91IHN0YXJ0
+IHdpdGggdGhlIHJlc2VydmVkIHJlZ2lvbnMgZnJvbSB0aGUgc3BlY2lhbCBibG9jay4gIEl0Cndh
+bnRzIHRvIGJlIGhlcmUsIHJhdGhlciB0aGFuIGJ1aWx0IGludG8gdGhlIHRyZWUsIGJlY2F1c2Ug
+eW91IG5lZWQgdG8KcGFyc2UgdGhpcyBiZWZvcmUgZG9pbmcgKmFueSogbWVtb3J5IGFsbG9jYXRp
+b24sIGFuZCBkb2luZyB0cmVlCnBhcnNpbmcgYW5kIHRyYWNraW5nIHRoZSByZWdpb25zIHRoYXQg
+ZWFybHksIHdpdGhvdXQgbWVtb3J5IGFsbG9jYXRpb24KaXMgcGFpbmZ1bC4KCkFic2VudCBvdGhl
+ciBpbmZvcm1hdGlvbiwgdGhvc2UgcmVnaW9ucyBtdXN0IHJlbWFpbiB1bnRvdWNoZWQKKmZvcmV2
+ZXIqLiAgVGhlIGNsaWVudCBwcm9ncmFtIG11c3Qgbm90IHJlYWQgb3IgcmlnaHQgdGhlbSwgYW5k
+IGl0Cm11c3QgcGFzcyB0aG9zZSByZWdpb25zIG9udG8gc3Vic2VxdWVudCB0aGluZ3MgdG8gcnVu
+IC0gdGhhdCBjb3VsZCBiZQprZXhlYygpLCBvciB0aGUgcmVhbCBPUyBpZiB0aGlzIGNsaWVudCBp
+cyBhIHNlY29uZCBzdGFnZSBsb2FkZXIuCgpIb3dldmVyIG90aGVyIHBhcnRzIG9mIHRoZSBzcGVj
+IG1heSBkZXNyaWJlIHRoaW5ncyBnaXZpbmcgYSBzcGVjaWZpYwp1c2Ugb2YgcGFydCBvZiB0aGUg
+cmVzZXJ2ZWQgYXJlYSwgZm9yIGV4YW1wbGUsIHRoZSBpbml0cmQtc3RhcnQvZW5kCnByb3BlcnRp
+ZXMgYW5kIHRoZSBzcGluLXRhYmxlIGVudHJpZXMuCgpUaGUgYmluZGluZyB0aGF0IGRlc2NyaWJl
+cyBzb21lIHVzZSBvZiByZXNlcnZlZCBtZW1vcnkgbWF5IGFsc28gYm91bmQKdGhhdCByZXNlcnZh
+dGlvbidzIGxpZmV0aW1lLiAgU28sIG9uY2UgeW91J3ZlIHByb2Nlc3NlZCB0aGUgaW5pdHJkCnBy
+b3BlcnRpZXMsIHlvdSBtYXkgZXhjaXNlIHRoZSBpbml0cmQgYXJlYSBmcm9tIHRoZSByZXNlcnZl
+ZCBzZWN0aW9ucy4KVGhlcmUgaXMgbm8gZ3VhcmFudGVlIHRoZSBpbml0cmQgcmVzZXJ2YXRpb24g
+bWFwcyB0byBleGFjdGx5IG9uZSBlbnRyeQppbiB0aGUgcmVzZXJ2ZSBtYXAsIHNvIHllcywgdGhp
+cyBtYXkgbWVhbiBzb21lIGZhaXJseSBpbnZvbHZlZCBleHRlbnQKaW50ZXJzZWN0aW9uIHR5cGUg
+Y29kZSB0byBkby4KCkxpa2V3aXNlIHRoZSBzcGluLXRhYmxlIG1lYW5zIHRoYXQgb25jZSB5b3Ug
+aGF2ZSBicm91Z2h0IGEgc2Vjb25kYXJ5CmNwdSBvdXQgb2Ygc3BpbiB3aXRoIHRoYXQgbWV0aG9k
+LCB5b3UgbWF5IHJlY2xhaW0gdGhlIDE2ICg/KSBieXRlcyBvZgppdHMgc3BpbiB0YWJsZSBlbnRy
+eSAoYW5kIG5vIG1vcmUpLgoKTm93LCB0aGF0J3MgcHJldHR5IGFkLWhvYywgYnV0IHRoZSBwb2lu
+dCBpcyB0aGF0IHlvdSAqbXVzdCogdW5kZXJzdGFuZAp0aGUgdXNlIG9mIGEgc2VjdGlvbiBvZiBy
+ZXNlcnZlZCBtZW1vcnkgYmVmb3JlIGRlLXJlc2VydmluZyBpdCBhbnl3YXksCmFuZCB0aGVyZSBp
+cyBubyBndWFyYW50ZWUgdGhhdCBhIHJlc2VydmVkIGFyZWEgY2FuICpldmVyKiBiZSBmcmVlZC4K
+CkZ1cnRoZXJtb3JlLCBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCByZXF1aXJlIHRoZSBib290IHBy
+b2dyYW0gdG8gYmluZAplYWNoIHJlc2VydmUgZW50cnkgdG8gZXhhY3RseSBvbmUgcHVycG9zZS4g
+IEl0IHNlZW1zIHRvIGJlIGEgb2J2aW91cwpzY2hlbWUgZm9yIGEgYm9vdCBwcm9ncmFtIHdvdWxk
+IGJlIHRvIGxheSBvdXQgYWxsIHRoZSB0aGluZ3MgaXQgbmVlZHMKdG8gc2VxdWVudGlhbGx5IGlu
+IFJBTSwgYW5kIHB1dCBpbiBqdXN0IG9uZSByZXNlcnZlIGVudHJ5IGZvciB0aGUKd2hvbGUgYmxv
+Y2suICBGb3Igb25lIHRoaW5nLCB0aGF0IG1lYW5zIGl0IHdpbGwgbmV2ZXIgbmVlZCB0byByZXNp
+emUgLwptZW1tb3ZlKCkgdGhlIGR0IGJsb2IgZXZlbiBpZiB3aGF0IHRoaW5ncyBpdCBuZWVkcyB0
+byByZXNlcnZlIHZhcnkuCgpSZW1lbWJlciB0aGF0IGFsbCBlbHNlIGJlaW5nIGVxdWFsIGNsaWVu
+dCBwcm9ncmFtIGNvbXBsZXhpdHkgaXMKcHJlZmVyYWJsZSB0byBib290IHByb2dyYW0gY29tcGxl
+eGl0eS4KCi0tIApEYXZpZCBHaWJzb24JCQl8IEknbGwgaGF2ZSBteSBtdXNpYyBiYXJvcXVlLCBh
+bmQgbXkgY29kZQpkYXZpZCBBVCBnaWJzb24uZHJvcGJlYXIuaWQuYXUJfCBtaW5pbWFsaXN0LCB0
+aGFuayB5b3UuICBOT1QgX3RoZV8gX290aGVyXwoJCQkJfCBfd2F5XyBfYXJvdW5kXyEKaHR0cDov
+L3d3dy5vemxhYnMub3JnL35kZ2lic29uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJl
+ZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
+bmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
