@@ -1,159 +1,310 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Power.org:parch] devicetree: Musings on reserved regions
-Date: Mon, 7 Feb 2011 22:05:06 -0700
-Message-ID: <AANLkTikgBqJM=kWf+FK1nxmi+BSV-nEJo=ToL7gyinkN@mail.gmail.com>
-References: <AANLkTinjPk1rJp1pCvM3ZTsLnEym57qU6u72vL8JQ1V3@mail.gmail.com>
-	<1297114766.14982.76.camel@pasglop>
-	<AANLkTiniLf6f7FKMdZ1BWZ9jiA=KHEb0wsp84hCnm73Z@mail.gmail.com>
-	<DEB310FA-724C-4D8B-A8EC-E222A51CD5D4@pobox.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <DEB310FA-724C-4D8B-A8EC-E222A51CD5D4-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jimi Xenidis <jimix-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Cc: "parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org" <parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: [PATCH v3] gpio: add new Altera PIO driver
+Date: Tue,  8 Feb 2011 13:16:24 +0800
+Message-ID: <1297142184-20050-1-git-send-email-thomas@wytron.com.tw>
+References: <20110203165406.GA6180@angua.secretlab.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110203165406.GA6180@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Thomas Chou <thomas@wytron.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 7, 2011 at 3:00 PM, Jimi Xenidis <jimix-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org> wrote:
-> On Feb 7, 2011, at 3:45 PM, Grant Likely wrote:
->>
->> On Mon, Feb 7, 2011 at 2:39 PM, Benjamin Herrenschmidt
->> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->>>
->>>> In addition to the reserved regions block in the header, define a set
->>>> of properties in the memory node that specify the reserved regions
->>>> with the name reflecting the usage.
->>>> For example:
->>>>
->>>> =A0 =A0 =A0 memory@0 {
->>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 device_type =3D "memory";
->>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0 0x40000000>;
->>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reserved-ramdisk =3D <0xc00000 0x200000>; =
-/* 2MB ramdisk */
->>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reserved-dtb =3D <0xbf0000 0x1000>; /* dev=
-icetree */
->>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reserved-fb0 =3D 0x1000000 0x400000>; /* f=
-ramebuffer */
->>>> =A0 =A0 =A0 };
->>>>
->>>> Each reserved property would start with "reserved-" followed by a
->>>> name. =A0reserved-ramdisk and reserved-dtb would be reserved for ramdi=
-sk
->>>> and dtb images respectively. =A0Other names could also be defined; for
->>>> example, reserved-openfirmware.
->>>
->>> I very much dislike the list of properties with magic names. I'd rather
->>> have a pair of properties containing lists (reserved-names and
->>> reserved-ranges).
->>
->> Heh, I have very much the opposite opinion. =A0I'd rather have property
->> names that match the usage than have the names and values split into
->> two properties. =A0To me, keeping them together is more tasteful. =A0Que=
-ue
->> the debate... =A0:-)
->
-> ok.. here goes nothing...
-> When I see these "reservations", it makes me think that they should be no=
-des anyway. (off root?)
-> Once we have nodes for these interesting things, perhaps the next step is=
- to just have a "reserved" property for these nodes?
-> so:
-> =A0 =A0 =A0 =A0ramdisk@<addr> {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D < addr, size >;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0format =3D < "gzip", "cpio" >; =A0// optio=
-nal, order of wrapper?
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reserved;
-> =A0 =A0 =A0 =A0}
->
-> No, I'm not ready to propose the ramdisk node, but it is something to con=
-sider.
+This driver supports the Altera PIO core.
 
-Hmmm, of all the ideas, I think I like this one the best.  It is a
-little more verbose than I was thinking, but making each reserved
-region (or set of reserved regions) have separate node has some very
-real advantages.  For one, the address decoding *just works* with our
-existing helpers.  Also it means that device nodes can directly
-indicate the reserved regions associated with it by way of a phandle.
+Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
+---
+v2 change compatible vendor to uppercase, ALTR.
+   add dts binding doc.
+v3 remove subsys_initcall.
+   add to_altera_gpio() macro.
 
-Naming I think could simply be "reserved@<addr>" since the usage of
-each node can be indicated by phandles or driver-specific properties
-within the node, plus it kind of follows the lead of the 'generic
-names' recommended practise.  Something like 'format' I suppose could
-be specified, but I don't think it needs to be part of the reserved
-binding.  Should these nodes have a compatible property that describes
-it's usage?  ie; something like:
+ .../devicetree/bindings/gpio/altera_gpio.txt       |    7 +
+ drivers/gpio/Kconfig                               |    6 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/altera_gpio.c                         |  231 ++++++++++++++++++++
+ 4 files changed, 245 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/altera_gpio.txt
+ create mode 100644 drivers/gpio/altera_gpio.c
 
-for a data block: compatible =3D "reserved-data", "reserved-memory";
-	(like for an initrd or the dtb)
-for a framebuffer: compatible =3D "reserved-framebuffer", "reserved-memory":
-for shared memory: compatible =3D "reserved-shared", "reserved-memory";
-
-On Mon, Feb 7, 2011 at 3:50 PM, Dan Hettena <danh-5j0BnJlmnLM@public.gmane.org> wrote:
-> I've seen three types of reserved regions so far:
->
-> (1) Reserved regions that are permanently reserved. For example,
->    RAM used for configuration of a device not communicated in the
->    device tree. Nothing further needs to be said about this class.
-> (2) Reserved regions that are in use by something in the device tree
->    (for example, a spin table, or a frame buffer for a video device).
->    The client program can free these if it recognizes the node that
->    is using them and reprograms it (e.g., boot all processors, or
->    reprogram the video device).
-> (3) Reserved regions that contain data the client program might want to
->    use but are not actually being used by the hardware for anything.
->    For example, a RAM root file system.
->
-> I think this points strongly at having type 2 and type 3
-> reservations specified along with the nodes that make use of them,
-> so that the client program can free the memory as soon as it has
-> caused the reserved memory to no longer be in use for the purpose
-> for which it was reserved (provided that we make it clear that
-> reservations declared as such are not permitted to overlap).
-
-Yes.  I think phandles would do the trick nicely for this.  It would
-also be possible to allow an initrd-region =3D <&initrd_reserved>;
-property in the chosen node, but there probably isn't much benefit in
-doing so, and it would just create yet another new binding that client
-programs need to support in addition to the old binding.
-
->
-> Primarily because of type 1 reservations, I see no conflict between
-> the conventional reservations list and the idea of explicitly
-> identifying single-purpose reservations throughout the device tree
-> where they are used.
-
-IMO, type 1 reservations still need to be specified explicitly in the
-memory nodes (instead of, or in addition to, in the header).  It just
-makes life so much easier when all the data about the machine is fully
-specified in the device tree proper.  Otherwise extra hoops need to be
-jumped through to get at it.
-
-However, if nothing in the tree actually references a reserved
-region node, then the client must treat it as an 'anonymous' region
-and it does not have the option of ignoring or freeing it.
-
-> However, in the spirit of distributing memory nodes, I think I would
-> rather see the conventional reservations list moved to the
-> corresponding memory nodes (with an added rule that a reservation
-> may not cross a reg entry boundary, since that's just a big pain).
-> If we're going to work towards keeping crap out of the header, then
-> I don't see why the reservations block should be treated any
-> differently.
-
-I 100% agree.  The reserved regions nodes should be children of the
-associated memory node, and reservations should not cross boundaries.
-Collecting all the reservations in one place also give the client a
-fighting chance of locating them easily when it parses the memory
-node.
-
-g.
+diff --git a/Documentation/devicetree/bindings/gpio/altera_gpio.txt b/Documentation/devicetree/bindings/gpio/altera_gpio.txt
+new file mode 100644
+index 0000000..5ab751a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/altera_gpio.txt
+@@ -0,0 +1,7 @@
++Altera GPIO
++
++Required properties:
++- compatible : should be "ALTR,pio-1.0".
++Optional properties:
++- resetvalue : the reset value of the output port.
++- width : the width of the port in number of bits.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 664660e..40271f0 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -70,6 +70,12 @@ config GPIO_MAX730X
+ 
+ comment "Memory mapped GPIO expanders:"
+ 
++config GPIO_ALTERA
++	bool "Altera GPIO"
++	depends on OF
++	help
++	  Say yes here to support the Altera PIO device
++
+ config GPIO_BASIC_MMIO
+ 	tristate "Basic memory-mapped GPIO controllers support"
+ 	help
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 3351cf8..3b7b737 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
+ 
+ obj-$(CONFIG_GPIO_ADP5520)	+= adp5520-gpio.o
+ obj-$(CONFIG_GPIO_ADP5588)	+= adp5588-gpio.o
++obj-$(CONFIG_GPIO_ALTERA)	+= altera_gpio.o
+ obj-$(CONFIG_GPIO_BASIC_MMIO)	+= basic_mmio_gpio.o
+ obj-$(CONFIG_GPIO_LANGWELL)	+= langwell_gpio.o
+ obj-$(CONFIG_GPIO_MAX730X)	+= max730x.o
+diff --git a/drivers/gpio/altera_gpio.c b/drivers/gpio/altera_gpio.c
+new file mode 100644
+index 0000000..ab09f81
+--- /dev/null
++++ b/drivers/gpio/altera_gpio.c
+@@ -0,0 +1,231 @@
++/*
++ * Altera GPIO driver
++ *
++ * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
++ *
++ * Based on Xilinx gpio driver, which is
++ * Copyright 2008 Xilinx, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ */
++
++#include <linux/init.h>
++#include <linux/errno.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
++#include <linux/io.h>
++#include <linux/gpio.h>
++#include <linux/slab.h>
++
++#define DRV_NAME "altera_gpio"
++
++/* Register Offset Definitions */
++#define ALTERA_GPIO_DATA_OFFSET   0x0	/* Data register  */
++#define ALTERA_GPIO_DIR_OFFSET    0x4	/* I/O direction register  */
++
++struct altera_gpio_instance {
++	struct of_mm_gpio_chip mmchip;
++	u32 gpio_state;		/* GPIO state shadow register */
++	u32 gpio_dir;		/* GPIO direction shadow register */
++	spinlock_t gpio_lock;	/* Lock used for synchronization */
++};
++
++static inline struct altera_gpio_instance *to_altera_gpio(
++	struct of_mm_gpio_chip *mm_gc)
++{
++	return container_of(mm_gc, struct altera_gpio_instance, mmchip);
++}
++
++/*
++ * altera_gpio_get - Read the specified signal of the GPIO device.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ *
++ * This function reads the specified signal of the GPIO device. It returns 0 if
++ * the signal clear, 1 if signal is set or negative value on error.
++ */
++static int altera_gpio_get(struct gpio_chip *gc, unsigned int gpio)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++
++	return (readl(mm_gc->regs + ALTERA_GPIO_DATA_OFFSET) >> gpio) & 1;
++}
++
++/*
++ * altera_gpio_set - Write the specified signal of the GPIO device.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ * @val:    Value to be written to specified signal.
++ *
++ * This function writes the specified value in to the specified signal of the
++ * GPIO device.
++ */
++static void altera_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
++{
++	unsigned long flags;
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++
++	/* Write to shadow register and output */
++	if (val)
++		chip->gpio_state |= 1 << gpio;
++	else
++		chip->gpio_state &= ~(1 << gpio);
++	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++}
++
++/*
++ * altera_gpio_dir_in - Set the direction of the specified GPIO signal as input.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ *
++ * This function sets the direction of specified GPIO signal as input.
++ * It returns 0 if direction of GPIO signals is set as input otherwise it
++ * returns negative error value.
++ */
++static int altera_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
++{
++	unsigned long flags;
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++
++	/* Clear the GPIO bit in shadow register and set direction as input */
++	chip->gpio_dir &= ~(1 << gpio);
++	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
++
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++
++	return 0;
++}
++
++/*
++ * altera_gpio_dir_out - Set the direction of the specified GPIO as output.
++ * @gc:     Pointer to gpio_chip device structure.
++ * @gpio:   GPIO signal number.
++ * @val:    Value to be written to specified signal.
++ *
++ * This function sets the direction of specified GPIO signal as output. If all
++ * GPIO signals of GPIO chip is configured as input then it returns
++ * error otherwise it returns 0.
++ */
++static int altera_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
++{
++	unsigned long flags;
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++
++	/* Write state of GPIO signal */
++	if (val)
++		chip->gpio_state |= 1 << gpio;
++	else
++		chip->gpio_state &= ~(1 << gpio);
++	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++
++	/* Set the GPIO bit in shadow register and set direction as output */
++	chip->gpio_dir |= (1 << gpio);
++	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
++
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++
++	return 0;
++}
++
++/*
++ * altera_gpio_save_regs - Set initial values of GPIO pins
++ * @mm_gc: pointer to memory mapped GPIO chip structure
++ */
++static void altera_gpio_save_regs(struct of_mm_gpio_chip *mm_gc)
++{
++	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
++
++	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
++	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
++}
++
++/*
++ * altera_gpio_of_probe - Probe method for the GPIO device.
++ * @np: pointer to device tree node
++ *
++ * This function probes the GPIO device in the device tree. It initializes the
++ * driver data structure. It returns 0, if the driver is bound to the GPIO
++ * device, or a negative value if there is an error.
++ */
++static int __devinit altera_gpio_of_probe(struct device_node *np)
++{
++	struct altera_gpio_instance *chip;
++	int status = 0;
++	int len;
++	const __be32 *tree_info;
++
++	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	/* Update GPIO state shadow register with default value */
++	tree_info = of_get_property(np, "resetvalue", &len);
++	if (tree_info && len >= sizeof(__be32))
++		chip->gpio_state = be32_to_cpup(tree_info);
++
++	/* Update GPIO direction shadow register with default value */
++	chip->gpio_dir = 0; /* By default, all pins are inputs */
++
++	/* Check device node for device width */
++	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
++	tree_info = of_get_property(np, "width", &len);
++	if (tree_info && len >= sizeof(__be32))
++		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
++
++	spin_lock_init(&chip->gpio_lock);
++
++	chip->mmchip.gc.direction_input = altera_gpio_dir_in;
++	chip->mmchip.gc.direction_output = altera_gpio_dir_out;
++	chip->mmchip.gc.get = altera_gpio_get;
++	chip->mmchip.gc.set = altera_gpio_set;
++
++	chip->mmchip.save_regs = altera_gpio_save_regs;
++
++	/* Call the OF gpio helper to setup and register the GPIO device */
++	status = of_mm_gpiochip_add(np, &chip->mmchip);
++	if (status) {
++		kfree(chip);
++		pr_err("%s: error in probe function with status %d\n",
++		       np->full_name, status);
++		return status;
++	}
++	pr_info(DRV_NAME ": %s: registered\n", np->full_name);
++	return 0;
++}
++
++static struct of_device_id altera_gpio_of_match[] __devinitdata = {
++	{ .compatible = "ALTR,pio-1.0", },
++	{},
++};
++
++/* Make sure we get initialized before anyone else tries to use us */
++void __init altera_gpio_init(void)
++{
++	struct device_node *np;
++
++	for_each_matching_node(np, altera_gpio_of_match)
++		altera_gpio_of_probe(np);
++}
++
++MODULE_DESCRIPTION("Altera GPIO driver");
++MODULE_AUTHOR("Thomas Chou <thomas@wytron.com.tw>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:" DRV_NAME);
+-- 
+1.7.4
