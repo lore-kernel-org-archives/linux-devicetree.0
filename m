@@ -1,19 +1,16 @@
-From: Dan Hettena <danh-5j0BnJlmnLM@public.gmane.org>
-Subject: RE: [Power.org:parch] devicetree: Musings on reserved regions
-Date: Mon, 7 Feb 2011 14:50:52 -0800
-Message-ID: <2A9CCDDDAE41C446A006170FF0C786313CCE517331@express.ghs.com>
-References: <AANLkTinjPk1rJp1pCvM3ZTsLnEym57qU6u72vL8JQ1V3@mail.gmail.com>
-	<1297114766.14982.76.camel@pasglop>
-	<AANLkTiniLf6f7FKMdZ1BWZ9jiA=KHEb0wsp84hCnm73Z@mail.gmail.com>
-	<9F6FE96B71CF29479FF1CDC8046E15030C1955@039-SN1MPN1-002.039d.mgd.msft.net>
-	<AANLkTinO40aKu9VjFrB2GQmpqwGGk+vR=LjD5E49wyHf@mail.gmail.com>
-	<EA0D723E-90B1-4D35-8A3D-A5193E00F740@watson.ibm.com>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] powerpc: Removing support for 'protected-sources'
+Date: Mon, 07 Feb 2011 18:32:39 -0600
+Message-ID: <4D508F27.8060307@mentor.com>
+References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>	
+	<1296861941-3370-2-git-send-email-meador_inge@mentor.com>	
+	<1297035336.14982.14.camel@pasglop> <4D5033C9.8030407@mentor.com>
+	<1297115136.14982.82.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <EA0D723E-90B1-4D35-8A3D-A5193E00F740-aZOuKsOsJu3MbYB6QlFGEg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1297115136.14982.82.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,103 +20,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jimi Xenidis <jimix-aZOuKsOsJu3MbYB6QlFGEg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org" <parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, McClintock Matthew-B29882 <B29882-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I've seen three types of reserved regions so far:
+On 02/07/2011 03:45 PM, Benjamin Herrenschmidt wrote:
+>
+>> In my previous reply I said that "it is not so much as a need as it is a
+>> potential simplification."  After further reflection, I don't think that
+>> is completely true.  As we get into AMP systems with higher core counts,
+>> then implementing this functionality using the existing
+>> "protected-sources" implementation versus the new "pic-no-reset" work is
+>> going to be harder to maintain.
+>
+> I'm not arguing that your approach isn't more suitable for AMP systems,
+> I just want to leave the existing protected-sources mechanism alone. I'm
+> not opposing adding a new, better, mechanism for newer platforms.
 
-(1) Reserved regions that are permanently reserved. For example,
-    RAM used for configuration of a device not communicated in the
-    device tree. Nothing further needs to be said about this class.
-(2) Reserved regions that are in use by something in the device tree
-    (for example, a spin table, or a frame buffer for a video device).
-    The client program can free these if it recognizes the node that
-    is using them and reprograms it (e.g., boot all processors, or
-    reprogram the video device).
-(3) Reserved regions that contain data the client program might want to
-    use but are not actually being used by the hardware for anything.
-    For example, a RAM root file system.
+Is the mechanism mentioned earlier of having "protected-sources" as a 
+synonym for "pic-no-reset" not suitable?  Or would you like the current 
+protected sources implementation left completely intact?
 
-I think this points strongly at having type 2 and type 3 reservations specified along with the nodes that make use of them, so that the client program can free the memory as soon as it has caused the reserved memory to no longer be in use for the purpose for which it was reserved (provided that we make it clear that reservations declared as such are not permitted to overlap).
+> However, I'd name it differently. "pic-no-reset" doesn't carry enough
+> meaning in that case. What we want to point out here is that the PIC
+> has been pre-initialized.
+>
+> Another option, which may be cleaner, is to stick to "no-reset" (no need
+> for pic- prefix) and make it do just that (prevent the reset), and then
 
-Primarily because of type 1 reservations, I see no conflict between the conventional reservations list and the idea of explicitly identifying single-purpose reservations throughout the device tree where they are used.
+It originally was "no-reset", but that was considered too broad. [1] :)
 
-However, in the spirit of distributing memory nodes, I think I would rather see the conventional reservations list moved to the corresponding memory nodes (with an added rule that a reservation may not cross a reg entry boundary, since that's just a big pain). If we're going to work towards keeping crap out of the header, then I don't see why the reservations block should be treated any differently.
+> use a positive variant of "protected-sources", call it
+> "allowed-sources". Maybe even make it a series of ranges. Then have the
+> MPIC only access these.
 
-Dan
+That would work, but I still don't like having to mention this 
+information twice in the device tree.  All the sources encoded in the 
+various "interrupts" properties _are_ the allowed sources, right?
 
-> -----Original Message-----
-> From: parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org [mailto:parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org] On Behalf Of Jimi Xenidis
-> Sent: Monday, February 07, 2011 2:01 PM
-> To: Grant Likely
-> Cc: Yoder Stuart-B08248; Benjamin Herrenschmidt; parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org;
-> devicetree-discuss; David Gibson; McClintock Matthew-B29882; Wood Scott-
-> B07421
-> Subject: Re: [Power.org:parch] devicetree: Musings on reserved regions
-> 
-> On Feb 7, 2011, at 3:56 PM, Grant Likely wrote:
-> >
-> > On Mon, Feb 7, 2011 at 2:53 PM, Yoder Stuart-B08248
-> > <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of
-> Grant
-> >>> Likely
-> >>> Sent: Monday, February 07, 2011 3:45 PM
-> >>> To: Benjamin Herrenschmidt
-> >>> Cc: parch-QRwYI7m9GJLYtjvyW6yDsg@public.gmane.org; devicetree-discuss; David Gibson; Yoder Stuart-
-> B08248;
-> >>> McClintock Matthew-B29882; Wood Scott-B07421
-> >>> Subject: Re: [Power.org:parch] devicetree: Musings on reserved regions
-> >>>
-> >>> On Mon, Feb 7, 2011 at 2:39 PM, Benjamin Herrenschmidt
-> >>> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> >>>>
-> >>>>> In addition to the reserved regions block in the header, define a
-> set
-> >>>>> of properties in the memory node that specify the reserved regions
-> >>>>> with the name reflecting the usage.
-> >>>>> For example:
-> >>>>>
-> >>>>>       memory@0 {
-> >>>>>               device_type = "memory";
-> >>>>>               reg = <0 0x40000000>;
-> >>>>>               reserved-ramdisk = <0xc00000 0x200000>; /* 2MB ramdisk
-> >>>>> */
-> >>>>>               reserved-dtb = <0xbf0000 0x1000>; /* devicetree */
-> >>>>>               reserved-fb0 = 0x1000000 0x400000>; /* framebuffer */
-> >>>>>       };
-> >>>>>
-> >>>>> Each reserved property would start with "reserved-" followed by a
-> >>>>> name.  reserved-ramdisk and reserved-dtb would be reserved for
-> >>>>> ramdisk and dtb images respectively.  Other names could also be
-> >>>>> defined; for example, reserved-openfirmware.
-> >>>>
-> >>>> I very much dislike the list of properties with magic names. I'd
-> >>>> rather have a pair of properties containing lists (reserved-names and
-> >>>> reserved-ranges).
-> >>>
-> >>> Heh, I have very much the opposite opinion.  I'd rather have property
-> names
-> >>> that match the usage than have the names and values split into two
-> >>> properties.  To me, keeping them together is more tasteful.  Queue the
-> >>> debate...  :-)
-> >>
-> >> Could we not do both? Use an enum to identify the region type:
-> >>
-> >>    reserved = <0x1 0xc00000 0x200000>; /* 2MB ramdisk
-> >>    reserved = <0x2 0xbf0000 0x1000>; /* devicetree */
-> >>    reserved = <0x3 0x1000000 0x400000>; /* framebuffer */
-> >
-> > I really dislike enums for this sort of thing.  I'd rather have a
-> > string encoded somewhere, even if it is in a different property.
-> 
-> ack
-> -JX
-> 
-> >
-> > g.
-> 
+> I think this is more robust as it would also prevent "accidental" use of
+> the wrong sources (bad device-tree, drivers that let you muck around
+> with irq numbers, etc...).
+
+That would be nice.  All though, it may not be as helpful as it sounds. 
+  There is as much of a risk that someone will botch the 
+"allowed-sources" property as there is they will botch the "interrupts" 
+property.  We could perhaps still preform these checks without the extra 
+property: if a source is not mentioned in an interrupts property, then 
+it is not allowed.
+
+> Cheers,
+> Ben.
+>
+
+[1] http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/088244.html
+
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
