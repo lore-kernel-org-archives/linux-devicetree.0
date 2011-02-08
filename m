@@ -1,181 +1,130 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH v2] watchdog: Add driver for Altera Watchdog Timer
-Date: Tue, 8 Feb 2011 17:13:46 +0000
-Message-ID: <20110208171346.GD8679@pulham.picochip.com>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: Re: [Nios2-dev] [PATCH v2] watchdog: Add driver for Altera Watchdog
+	Timer
+Date: Tue, 08 Feb 2011 23:54:33 +0100
+Message-ID: <4D51C9A9.4060306@home.nl>
 References: <1294829027-15029-1-git-send-email-tklauser@distanz.ch>
- <1297171322-32401-1-git-send-email-tklauser@distanz.ch>
+	<1297171322-32401-1-git-send-email-tklauser@distanz.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1297171322-32401-1-git-send-email-tklauser@distanz.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tobias Klauser <tklauser@distanz.ch>
-Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1297171322-32401-1-git-send-email-tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Tobias,
 
-One very pedantic comment, otherwise looks great!
+One small remark below, looks ok otherwise.
+Thanks for the work you put into this!
 
-On Tue, Feb 08, 2011 at 02:22:02PM +0100, Tobias Klauser wrote:
-> This driver adds support for the Altera Timer in the Watchdog Timer
-> configuration. This component is usually found on SOPC (System on
-> Programmable Chip) for Altera FPGAs.
-> 
-> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
-
-Reviewed-by: Jamie Iles <jamie@jamieiles.com>.
-
-> ---
-> 
-> Thanks a lot to Jamie Iles for reviewing the first submitted version of this
-> driver.
-> 
-> changes for v2:
->  - Get driver properties from devicetree (and document them), thus the
->    driver depends on OF
->  - Do not select WATCHDOG_NOWAYOUT, but instead implement a software
->    timer resetting the watchdog timer when the device is not open
->  - Only support a single instance of the watchdog, so the private data
->    can be kept in static data
->  - Use devm_* functions in altera_wdt_probe to simplify cleanup and
->    error handling
->  - Remove empty altera_wdt_shutdown function
->  - Add MODULE_LICENSE (GPL)
-> 
->  .../devicetree/bindings/watchdog/altera_wdt.txt    |    7 +
->  drivers/watchdog/Kconfig                           |    8 +
->  drivers/watchdog/Makefile                          |    1 +
->  drivers/watchdog/altera_wdt.c                      |  310 ++++++++++++++++++++
->  4 files changed, 326 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/altera_wdt.txt
->  create mode 100644 drivers/watchdog/altera_wdt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/altera_wdt.txt b/Documentation/devicetree/bindings/watchdog/altera_wdt.txt
-> new file mode 100644
-> index 0000000..16ac949
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/altera_wdt.txt
-> @@ -0,0 +1,7 @@
-> +Altera Watchdog Timer
+On 2/8/11 2:22 PM, Tobias Klauser wrote:
+[...]
+> +static struct miscdevice altera_wdt_miscdev = {
+> +	.minor	= WATCHDOG_MINOR,
+> +	.name	= "watchdog",
+> +	.fops	=&altera_wdt_fops,
+> +};
 > +
-> +Required properties:
-> +- compatible : should be "ALTR,wdt-1.0"
-> +- clock-frequency : frequency of the clock input
-> +- timeout : load value of the timer (number of clock ticks until watchdog
-> +            resets)
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index bd6a33d..ebcafb0 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -69,6 +69,14 @@ config WM8350_WATCHDOG
->  	  Support for the watchdog in the WM8350 AudioPlus PMIC.  When
->  	  the watchdog triggers the system will be reset.
->  
-> +config ALTERA_WDT
-> +	tristate "Altera Watchdog Timer"
-> +	depends on OF
-> +	help
-> +	  Support for the Altera Timer in the Watchdog Timer configuration. This
-> +	  component is found on SOPC (System on Programmable Chip) for Altera
-> +	  FPGAs.
-> +
->  # ALPHA Architecture
->  
->  # ARM Architecture
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index fd9c8c0..48a2167 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -153,4 +153,5 @@ obj-$(CONFIG_WATCHDOG_CP1XXX)		+= cpwd.o
->  obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
->  obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
->  obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
-> +obj-$(CONFIG_ALTERA_WDT) += altera_wdt.o
->  obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
-> diff --git a/drivers/watchdog/altera_wdt.c b/drivers/watchdog/altera_wdt.c
-> new file mode 100644
-> index 0000000..dbced1e
-> --- /dev/null
-> +++ b/drivers/watchdog/altera_wdt.c
-> @@ -0,0 +1,310 @@
-> +/*
-> + * Driver for the Altera Watchdog Timer
-> + *
-> + * Copyright (C) 2011 Tobias Klauser <tklauser@distanz.ch>
-> + * Copyright (C) 2005 Walter Goossens
-> + *
-> + * Originally based on wdt.c which is
-> + *
-> + * Copyright (C) 1995-1997 Alan Cox <alan@lxorguk.ukuu.org.uk>
-> + *
-> + * Software timeout heartbeat code based on pika_wdt.c which is
-> + *
-> + * Copyright (c) 2008 PIKA Technologies
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/watchdog.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/fs.h>
-> +#include <linux/init.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/timer.h>
-> +#include <linux/io.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/of_platform.h>
-> +
-> +#define WATCHDOG_NAME	"altera_wdt"
-> +
-> +/* Register offsets */
-> +#define ALTERA_WDT_STATUS	0x00
-> +#define ALTERA_WDT_CONTROL	0x04
-> +#define ALTERA_WDT_PERIODL	0x08
-> +#define ALTERA_WDT_PERIODH	0x0C
-> +
-> +#define ALTERA_WDT_RUN_BIT	0x04
-> +
-> +/* User land timeout */
-> +#define WDT_HEARTBEAT 15
-> +static int heartbeat = WDT_HEARTBEAT;
-> +module_param(heartbeat, int, 0);
-> +MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. "
-> +	"(default = " __MODULE_STRING(WDT_HEARTBEAT) ")");
-> +
-> +static int nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, int, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
-> +	"(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static struct {
-> +	void __iomem *base;
-> +	unsigned long wdt_timeout;	/* timeout of the hardware timer */
-> +
-> +	unsigned long next_heartbeat;	/* the next_heartbeat for the timer */
-> +	unsigned long is_open;
-> +	char expect_close;
-> +	struct timer_list timer;	/* software timer that pings the watchdog */
-> +} altera_wdt_priv;
-> +
-> +/*
-> + * Start the watchdog. Once it has been started, it cannot be stopped anymore.
-> + */
-> +static int altera_wdt_setup(void)
+> +static int __devinit altera_wdt_probe(struct platform_device *pdev)
 > +{
-> +	u32 control = readl(altera_wdt_priv.base + ALTERA_WDT_CONTROL);
+> +	struct resource *res, *mem;
+> +	const u32 *freq_prop, *timeout_prop;
+Type should be const __be32 * here.
+> +	unsigned long timeout;
+> +	int ret;
 > +
-> +	writel(control | ALTERA_WDT_RUN_BIT, altera_wdt_priv.base + ALTERA_WDT_CONTROL);
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -ENOENT;
+> +
+> +	mem = devm_request_mem_region(&pdev->dev, res->start,
+> +				      resource_size(res), pdev->name);
+> +	if (!mem)
+> +		return -EBUSY;
+> +
+> +	altera_wdt_priv.base = devm_ioremap_nocache(&pdev->dev, mem->start,
+> +						    resource_size(mem));
+> +	if (!altera_wdt_priv.base)
+> +		return -ENOMEM;
+> +
+> +	freq_prop = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
+> +	if (!freq_prop)
+> +		return -ENODEV;
+> +
+> +	timeout_prop = of_get_property(pdev->dev.of_node, "timeout", NULL);
+> +	if (!timeout_prop)
+> +		return -ENODEV;
+> +
+> +	/* Add 1 as the timeout property actually holds the load value */
+> +	timeout = be32_to_cpup(timeout_prop) + 1;
+> +	/* Convert timeout to msecs */
+> +	timeout = timeout / (be32_to_cpup(freq_prop) / MSEC_PER_SEC);
+> +	/* Tickle the watchdog twice per timeout period */
+> +	altera_wdt_priv.wdt_timeout = msecs_to_jiffies(timeout / 2);
+> +
+> +	ret = misc_register(&altera_wdt_miscdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	altera_wdt_setup();
+> +	altera_wdt_priv.next_heartbeat = jiffies + heartbeat * HZ;
+> +	setup_timer(&altera_wdt_priv.timer, altera_wdt_ping, 0);
+> +	mod_timer(&altera_wdt_priv.timer, jiffies + altera_wdt_priv.wdt_timeout);
+> +
+> +	pr_info(WATCHDOG_NAME " enabled (heartbeat=%d sec, nowayout=%d)\n",
+> +		heartbeat, nowayout);
+> +
 > +	return 0;
 > +}
-
-Looks like this could be made static void.
-
-Jamie
+> +
+> +static int __devexit altera_wdt_remove(struct platform_device *pdev)
+> +{
+> +	misc_deregister(&altera_wdt_miscdev);
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id altera_wdt_match[] = {
+> +	{ .compatible = "ALTR,wdt-1.0", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, altera_wdt_match);
+> +
+> +static struct platform_driver altera_wdt_driver = {
+> +	.probe		= altera_wdt_probe,
+> +	.remove		= __devexit_p(altera_wdt_remove),
+> +	.driver		= {
+> +		.owner		= THIS_MODULE,
+> +		.name		= WATCHDOG_NAME,
+> +		.of_match_table	= altera_wdt_match,
+> +	},
+> +};
+> +
+> +static int __init altera_wdt_init(void)
+> +{
+> +	return platform_driver_register(&altera_wdt_driver);
+> +}
+> +
+> +static void __exit altera_wdt_exit(void)
+> +{
+> +	platform_driver_unregister(&altera_wdt_driver);
+> +}
+> +
+> +module_init(altera_wdt_init);
+> +module_exit(altera_wdt_exit);
+> +
+> +MODULE_AUTHOR("Walter Goossens, Tobias Klauser<tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("Driver for Altera Watchdog Timer");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
+> +MODULE_ALIAS("platform:" WATCHDOG_NAME);
