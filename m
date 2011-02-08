@@ -1,75 +1,181 @@
-From: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v3 1/4] powerpc: Removing support for 'protected-sources'
-Date: Tue, 8 Feb 2011 15:13:13 +0000
-Message-ID: <9F6FE96B71CF29479FF1CDC8046E15030C2233@039-SN1MPN1-002.039d.mgd.msft.net>
-References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>
-	<1296861941-3370-2-git-send-email-meador_inge@mentor.com>
-	<1297035336.14982.14.camel@pasglop>  <4D5033C9.8030407@mentor.com>
-	<1297115136.14982.82.camel@pasglop>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: Re: [PATCH v2] watchdog: Add driver for Altera Watchdog Timer
+Date: Tue, 8 Feb 2011 17:13:46 +0000
+Message-ID: <20110208171346.GD8679@pulham.picochip.com>
+References: <1294829027-15029-1-git-send-email-tklauser@distanz.ch>
+ <1297171322-32401-1-git-send-email-tklauser@distanz.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1297115136.14982.82.camel@pasglop>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1297171322-32401-1-git-send-email-tklauser@distanz.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tobias Klauser <tklauser@distanz.ch>
+Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw
 List-Id: devicetree@vger.kernel.org
 
+Hi Tobias,
 
+One very pedantic comment, otherwise looks great!
 
-> -----Original Message-----
-> From: devicetree-discuss-
-> bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org [mailto:devicetree-
-> discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
-> Benjamin Herrenschmidt
-> Sent: Monday, February 07, 2011 3:46 PM
-> To: Meador Inge
-> Cc: Hollis Blanchard; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linuxppc-
-> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [PATCH v3 1/4] powerpc: Removing support for 'protected-
-> sources'
+On Tue, Feb 08, 2011 at 02:22:02PM +0100, Tobias Klauser wrote:
+> This driver adds support for the Altera Timer in the Watchdog Timer
+> configuration. This component is usually found on SOPC (System on
+> Programmable Chip) for Altera FPGAs.
 > 
-> 
-> > In my previous reply I said that "it is not so much as a need as it is
-> > a potential simplification."  After further reflection, I don't think
-> > that is completely true.  As we get into AMP systems with higher core
-> > counts, then implementing this functionality using the existing
-> > "protected-sources" implementation versus the new "pic-no-reset" work
-> > is going to be harder to maintain.
-> 
-> I'm not arguing that your approach isn't more suitable for AMP systems, I
-> just want to leave the existing protected-sources mechanism alone. I'm not
-> opposing adding a new, better, mechanism for newer platforms.
-> 
-> However, I'd name it differently. "pic-no-reset" doesn't carry enough
-> meaning in that case. What we want to point out here is that the PIC has
-> been pre-initialized.
-> 
-> Another option, which may be cleaner, is to stick to "no-reset" (no need
-> for pic- prefix) and make it do just that (prevent the reset), and then use
-> a positive variant of "protected-sources", call it "allowed-sources". Maybe
-> even make it a series of ranges. Then have the MPIC only access these.
-> 
-> I think this is more robust as it would also prevent "accidental" use of
-> the wrong sources (bad device-tree, drivers that let you muck around with
-> irq numbers, etc...).
+> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
 
-What is the use case for "allowed-sources"?   For AMP the only device
-nodes in your device tree should be your AMP partition's devices,
-thus any interrupt specifiers in your dev tree are "allowed".
+Reviewed-by: Jamie Iles <jamie@jamieiles.com>.
 
-The MPIC is a shared device and thus the need for no-reset.
+> ---
+> 
+> Thanks a lot to Jamie Iles for reviewing the first submitted version of this
+> driver.
+> 
+> changes for v2:
+>  - Get driver properties from devicetree (and document them), thus the
+>    driver depends on OF
+>  - Do not select WATCHDOG_NOWAYOUT, but instead implement a software
+>    timer resetting the watchdog timer when the device is not open
+>  - Only support a single instance of the watchdog, so the private data
+>    can be kept in static data
+>  - Use devm_* functions in altera_wdt_probe to simplify cleanup and
+>    error handling
+>  - Remove empty altera_wdt_shutdown function
+>  - Add MODULE_LICENSE (GPL)
+> 
+>  .../devicetree/bindings/watchdog/altera_wdt.txt    |    7 +
+>  drivers/watchdog/Kconfig                           |    8 +
+>  drivers/watchdog/Makefile                          |    1 +
+>  drivers/watchdog/altera_wdt.c                      |  310 ++++++++++++++++++++
+>  4 files changed, 326 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/altera_wdt.txt
+>  create mode 100644 drivers/watchdog/altera_wdt.c
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/altera_wdt.txt b/Documentation/devicetree/bindings/watchdog/altera_wdt.txt
+> new file mode 100644
+> index 0000000..16ac949
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/altera_wdt.txt
+> @@ -0,0 +1,7 @@
+> +Altera Watchdog Timer
+> +
+> +Required properties:
+> +- compatible : should be "ALTR,wdt-1.0"
+> +- clock-frequency : frequency of the clock input
+> +- timeout : load value of the timer (number of clock ticks until watchdog
+> +            resets)
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index bd6a33d..ebcafb0 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -69,6 +69,14 @@ config WM8350_WATCHDOG
+>  	  Support for the watchdog in the WM8350 AudioPlus PMIC.  When
+>  	  the watchdog triggers the system will be reset.
+>  
+> +config ALTERA_WDT
+> +	tristate "Altera Watchdog Timer"
+> +	depends on OF
+> +	help
+> +	  Support for the Altera Timer in the Watchdog Timer configuration. This
+> +	  component is found on SOPC (System on Programmable Chip) for Altera
+> +	  FPGAs.
+> +
+>  # ALPHA Architecture
+>  
+>  # ARM Architecture
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index fd9c8c0..48a2167 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -153,4 +153,5 @@ obj-$(CONFIG_WATCHDOG_CP1XXX)		+= cpwd.o
+>  obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
+>  obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
+>  obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
+> +obj-$(CONFIG_ALTERA_WDT) += altera_wdt.o
+>  obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
+> diff --git a/drivers/watchdog/altera_wdt.c b/drivers/watchdog/altera_wdt.c
+> new file mode 100644
+> index 0000000..dbced1e
+> --- /dev/null
+> +++ b/drivers/watchdog/altera_wdt.c
+> @@ -0,0 +1,310 @@
+> +/*
+> + * Driver for the Altera Watchdog Timer
+> + *
+> + * Copyright (C) 2011 Tobias Klauser <tklauser@distanz.ch>
+> + * Copyright (C) 2005 Walter Goossens
+> + *
+> + * Originally based on wdt.c which is
+> + *
+> + * Copyright (C) 1995-1997 Alan Cox <alan@lxorguk.ukuu.org.uk>
+> + *
+> + * Software timeout heartbeat code based on pika_wdt.c which is
+> + *
+> + * Copyright (c) 2008 PIKA Technologies
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/watchdog.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/fs.h>
+> +#include <linux/init.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/timer.h>
+> +#include <linux/io.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define WATCHDOG_NAME	"altera_wdt"
+> +
+> +/* Register offsets */
+> +#define ALTERA_WDT_STATUS	0x00
+> +#define ALTERA_WDT_CONTROL	0x04
+> +#define ALTERA_WDT_PERIODL	0x08
+> +#define ALTERA_WDT_PERIODH	0x0C
+> +
+> +#define ALTERA_WDT_RUN_BIT	0x04
+> +
+> +/* User land timeout */
+> +#define WDT_HEARTBEAT 15
+> +static int heartbeat = WDT_HEARTBEAT;
+> +module_param(heartbeat, int, 0);
+> +MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. "
+> +	"(default = " __MODULE_STRING(WDT_HEARTBEAT) ")");
+> +
+> +static int nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, int, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+> +	"(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static struct {
+> +	void __iomem *base;
+> +	unsigned long wdt_timeout;	/* timeout of the hardware timer */
+> +
+> +	unsigned long next_heartbeat;	/* the next_heartbeat for the timer */
+> +	unsigned long is_open;
+> +	char expect_close;
+> +	struct timer_list timer;	/* software timer that pings the watchdog */
+> +} altera_wdt_priv;
+> +
+> +/*
+> + * Start the watchdog. Once it has been started, it cannot be stopped anymore.
+> + */
+> +static int altera_wdt_setup(void)
+> +{
+> +	u32 control = readl(altera_wdt_priv.base + ALTERA_WDT_CONTROL);
+> +
+> +	writel(control | ALTERA_WDT_RUN_BIT, altera_wdt_priv.base + ALTERA_WDT_CONTROL);
+> +	return 0;
+> +}
 
-So, all newer platforms should need is "no-reset".
+Looks like this could be made static void.
 
-Stuart
+Jamie
