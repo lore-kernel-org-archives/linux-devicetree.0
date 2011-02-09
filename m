@@ -1,11 +1,17 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: [PATCH] Print a device-tree message at KERN_WARNING level
-Date: Mon, 07 Feb 2011 14:26:57 +0100
-Message-ID: <1297085223.1741.24.camel@t41.thuisdomein>
+From: "Will Deacon" <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: RE: [RFC PATCH] ARM: pmu: add OF match support
+Date: Wed, 9 Feb 2011 18:53:04 -0000
+Message-ID: <46767.6810258583$1297697204@news.gmane.org>
+References: <1297223617-19173-1-git-send-email-robherring2@gmail.com>
+	<AANLkTi=7azYw8+sYrbDsLOfF1aZynBDo+ub37O9j+k49@mail.gmail.com>
+	<3399156206431206254@unknownmsgid>
+	<AANLkTin5aA0tq-PYBmRKh6tLv6bHRaK5ymjhsj9T4-Ah@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTin5aA0tq-PYBmRKh6tLv6bHRaK5ymjhsj9T4-Ah-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-gb
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,47 +21,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Kyle McMartin <kyle-pfcGkIkfWfAsA/PxXw9srA@public.gmane.org>
+To: 'Grant Likely' <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For some time now a laptop tracking Fedora's rawhide prints the message
-    /proc/device-tree: can't find root
+Grant,
 
-early in each boot. It turns out that in recent Fedora kernels
-CONFIG_PROC_DEVICETREE is set to Y by default. (Note that the config
-help for PROC_DEVICETREE tells to "say Y here" if "unsure".) Apparently
-this is a consequence of their wish to have one kernel for both OPLC x86
-and non-OLPC x86 hardware.
+> > Following on from Rob's update, it would be nice if you could specify that
+> > the PMU is a CPU PMU (as opposed to L2-cache, bus, gpu etc) in the string.
+> > That way adding different PMUs in the future seems more natural and it accounts
+> > for your concerns above. Is that ok, or does the compatible string have to
+> > match that used by the platform bus?
+> 
+> It does make sense to encode the specific implementation into the
+> compatible string.  A single device driver can bind against multiple
+> compatible strings.  ie. the match table could include {.compatible =
+> "arm,cortex-a9-pmu"},{.compatible = "arm,cortex-a9-l2cache-pmu"}...
 
-Since the majority of x86 hardware will be non-OLPC, KERN_WARNING seems
-to be more appropriate than KERN_ERR. (The main benefit of the
-KERN_WARNING level is that Fedora's plymouth bootsplash should now hide
-this message.)
+Ok - that's great! Specifying the CPU is probably a little verbose, but
+something like "arm,armv7pmu" would be really helpful when it comes to
+multiple devices.
 
-Signed-off-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
----
-Previously discussed in the thread starting here:
-http://lists.fedoraproject.org/pipermail/kernel/2011-February/003012.html
+> > As for versioning, the PMU detection is done dynamically at runtime,
+> > so knowing that we're poking a CPU is enough.
+> 
+> Fair enough.  It is still good practice in the compatible list to
+> encode the specific PMU implementation (maybe arm,cortex-a9-pmu?)
+> instead of trying to define a 'generic' or wildcard compatible value.
+> Newer implementations can always claim compatibility with an older
+> implementation so that the kernel doesn't have to be modified to find
+> the new devices.  "arm,pmu" is probably too generic.
 
-As stated in
-http://lists.fedoraproject.org/pipermail/kernel/2011-February/003011.html , I have no idea what this message means. I just prefer to not see it. This seems to be the easiest way to achieve that. But maybe there's an elegant way to drop this message all together on hardware for which it's apparently irrelevant.
+"arm,pmu" is definitely too generic. If it's good practice to specify
+as much as possible, then go for it - I just feel a little uneasy having
+to add lots of redundant kernel code but it sounds like you'll hopefully
+prove me wrong on that :)
 
- fs/proc/proc_devtree.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Cheers,
 
-diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-index d9396a4..71dd779 100644
---- a/fs/proc/proc_devtree.c
-+++ b/fs/proc/proc_devtree.c
-@@ -233,7 +233,7 @@ void __init proc_device_tree_init(void)
- 		return;
- 	root = of_find_node_by_path("/");
- 	if (root == NULL) {
--		printk(KERN_ERR "/proc/device-tree: can't find root\n");
-+		printk(KERN_WARNING "/proc/device-tree: can't find root\n");
- 		return;
- 	}
- 	proc_device_tree_add_node(root, proc_device_tree);
--- 
-1.7.4
+Will
