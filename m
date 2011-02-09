@@ -1,13 +1,11 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: Re: + gpio-add-new-altera-pio-driver-update.patch added to -mm tree
-Date: Wed, 09 Feb 2011 09:37:45 +0800
-Message-ID: <4D51EFE9.7070501@wytron.com.tw>
-References: <201102082049.p18KnLes024667@imap1.linux-foundation.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH] ARM: pmu: add OF match support
+Date: Tue,  8 Feb 2011 21:53:37 -0600
+Message-ID: <1297223617-19173-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201102082049.p18KnLes024667-AB4EexQrvXRQetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,200 +15,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, mm-commits-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew,
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-On 02/09/2011 04:49 AM, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org wrote:
-> The patch titled
->       gpio-add-new-altera-pio-driver-update
-> has been added to the -mm tree.  Its filename is
->       gpio-add-new-altera-pio-driver-update.patch
->
-> Before you just go and hit "reply", please:
->     a) Consider who else should be cc'ed
->     b) Prefer to cc a suitable mailing list as well
->     c) Ideally: find the original patch on the mailing list and do a
->        reply-to-all to that, adding suitable additional cc's
->
-> *** Remember to use Documentation/SubmitChecklist when testing your code ***
->
-> See http://userweb.kernel.org/~akpm/stuff/added-to-mm.txt to find
-> out what to do about this
->
-> The current -mm tree may be found at http://userweb.kernel.org/~akpm/mmotm/
->
-> ------------------------------------------------------
-> Subject: gpio-add-new-altera-pio-driver-update
-> From: Thomas Chou<thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
->
-> v3 remove subsys_initcall.
->     add to_altera_gpio() macro.
->
-> Signed-off-by: Thomas Chou<thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Andrew Morton<akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-> ---
+Add OF match table to enable OF style driver binding. The dts entry is like
+this:
 
-Please kindly merge it into Linus's tree.
+pmu {
+	compatible = "arm,pmu";
+	interrupts = <100 101>;
+};
 
-Best regards,
-Thomas
+The use of pdev->id as an index breaks with OF device binding. Change to use
+a counter instead. If more than 1 pmu device is ever really supported, a
+better solution to match users with particular pmu is probably needed.
 
->
->   Documentation/devicetree/bindings/gpio/altera_gpio.txt |    7 +
->   drivers/gpio/Makefile                                  |    2
->   drivers/gpio/altera_gpio.c                             |   40 ++++------
->   3 files changed, 27 insertions(+), 22 deletions(-)
->
-> diff -puN /dev/null Documentation/devicetree/bindings/gpio/altera_gpio.txt
-> --- /dev/null
-> +++ a/Documentation/devicetree/bindings/gpio/altera_gpio.txt
-> @@ -0,0 +1,7 @@
-> +Altera GPIO
-> +
-> +Required properties:
-> +- compatible : should be "ALTR,pio-1.0".
-> +Optional properties:
-> +- resetvalue : the reset value of the output port.
-> +- width : the width of the port in number of bits.
-> diff -puN drivers/gpio/Makefile~gpio-add-new-altera-pio-driver-update drivers/gpio/Makefile
-> --- a/drivers/gpio/Makefile~gpio-add-new-altera-pio-driver-update
-> +++ a/drivers/gpio/Makefile
-> @@ -8,9 +8,9 @@ ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
->
->   obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
->
-> -obj-$(CONFIG_GPIO_ALTERA)	+= altera_gpio.o
->   obj-$(CONFIG_GPIO_ADP5520)	+= adp5520-gpio.o
->   obj-$(CONFIG_GPIO_ADP5588)	+= adp5588-gpio.o
-> +obj-$(CONFIG_GPIO_ALTERA)	+= altera_gpio.o
->   obj-$(CONFIG_GPIO_BASIC_MMIO)	+= basic_mmio_gpio.o
->   obj-$(CONFIG_GPIO_LANGWELL)	+= langwell_gpio.o
->   obj-$(CONFIG_GPIO_MAX730X)	+= max730x.o
-> diff -puN drivers/gpio/altera_gpio.c~gpio-add-new-altera-pio-driver-update drivers/gpio/altera_gpio.c
-> --- a/drivers/gpio/altera_gpio.c~gpio-add-new-altera-pio-driver-update
-> +++ a/drivers/gpio/altera_gpio.c
-> @@ -37,6 +37,12 @@ struct altera_gpio_instance {
->   	spinlock_t gpio_lock;	/* Lock used for synchronization */
->   };
->
-> +static inline struct altera_gpio_instance *to_altera_gpio(
-> +	struct of_mm_gpio_chip *mm_gc)
-> +{
-> +	return container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +}
-> +
->   /*
->    * altera_gpio_get - Read the specified signal of the GPIO device.
->    * @gc:     Pointer to gpio_chip device structure.
-> @@ -65,8 +71,7 @@ static void altera_gpio_set(struct gpio_
->   {
->   	unsigned long flags;
->   	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> -	struct altera_gpio_instance *chip =
-> -	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
->
->   	spin_lock_irqsave(&chip->gpio_lock, flags);
->
-> @@ -93,8 +98,7 @@ static int altera_gpio_dir_in(struct gpi
->   {
->   	unsigned long flags;
->   	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> -	struct altera_gpio_instance *chip =
-> -	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
->
->   	spin_lock_irqsave(&chip->gpio_lock, flags);
->
-> @@ -121,8 +125,7 @@ static int altera_gpio_dir_out(struct gp
->   {
->   	unsigned long flags;
->   	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> -	struct altera_gpio_instance *chip =
-> -	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
->
->   	spin_lock_irqsave(&chip->gpio_lock, flags);
->
-> @@ -148,8 +151,7 @@ static int altera_gpio_dir_out(struct gp
->    */
->   static void altera_gpio_save_regs(struct of_mm_gpio_chip *mm_gc)
->   {
-> -	struct altera_gpio_instance *chip =
-> -	    container_of(mm_gc, struct altera_gpio_instance, mmchip);
-> +	struct altera_gpio_instance *chip = to_altera_gpio(mm_gc);
->
->   	writel(chip->gpio_state, mm_gc->regs + ALTERA_GPIO_DATA_OFFSET);
->   	writel(chip->gpio_dir, mm_gc->regs + ALTERA_GPIO_DIR_OFFSET);
-> @@ -167,15 +169,16 @@ static int __devinit altera_gpio_of_prob
->   {
->   	struct altera_gpio_instance *chip;
->   	int status = 0;
-> -	const u32 *tree_info;
-> +	int len;
-> +	const __be32 *tree_info;
->
->   	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
->   	if (!chip)
->   		return -ENOMEM;
->
->   	/* Update GPIO state shadow register with default value */
-> -	tree_info = of_get_property(np, "resetvalue", NULL);
-> -	if (tree_info)
-> +	tree_info = of_get_property(np, "resetvalue",&len);
-> +	if (tree_info&&  len>= sizeof(__be32))
->   		chip->gpio_state = be32_to_cpup(tree_info);
->
->   	/* Update GPIO direction shadow register with default value */
-> @@ -183,8 +186,8 @@ static int __devinit altera_gpio_of_prob
->
->   	/* Check device node for device width */
->   	chip->mmchip.gc.ngpio = 32; /* By default assume full GPIO controller */
-> -	tree_info = of_get_property(np, "width", NULL);
-> -	if (tree_info)
-> +	tree_info = of_get_property(np, "width",&len);
-> +	if (tree_info&&  len>= sizeof(__be32))
->   		chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
->
->   	spin_lock_init(&chip->gpio_lock);
-> @@ -209,24 +212,19 @@ static int __devinit altera_gpio_of_prob
->   }
->
->   static struct of_device_id altera_gpio_of_match[] __devinitdata = {
-> -	{ .compatible = "altr,pio-1.0", },
-> +	{ .compatible = "ALTR,pio-1.0", },
->   	{},
->   };
->
-> -static int __init altera_gpio_init(void)
-> +/* Make sure we get initialized before anyone else tries to use us */
-> +void __init altera_gpio_init(void)
->   {
->   	struct device_node *np;
->
->   	for_each_matching_node(np, altera_gpio_of_match)
->   		altera_gpio_of_probe(np);
-> -
-> -	return 0;
->   }
->
-> -/* Make sure we get initialized before anyone else tries to use us */
-> -subsys_initcall(altera_gpio_init);
-> -/* No exit call at the moment as we cannot unregister of GPIO chips */
-> -
->   MODULE_DESCRIPTION("Altera GPIO driver");
->   MODULE_AUTHOR("Thomas Chou<thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>");
->   MODULE_LICENSE("GPL");
-> _
->
-> Patches currently in -mm which might be from thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org are
->
-> linux-next.patch
-> gpio-add-new-altera-pio-driver.patch
-> gpio-add-new-altera-pio-driver-update.patch
->
->
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/kernel/pmu.c |   13 ++++++++++---
+ 1 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/kernel/pmu.c b/arch/arm/kernel/pmu.c
+index b8af96e..7084057 100644
+--- a/arch/arm/kernel/pmu.c
++++ b/arch/arm/kernel/pmu.c
+@@ -24,30 +24,37 @@
+ static volatile long pmu_lock;
+ 
+ static struct platform_device *pmu_devices[ARM_NUM_PMU_DEVICES];
++static int pmu_device_count;
+ 
+ static int __devinit pmu_device_probe(struct platform_device *pdev)
+ {
+ 
+-	if (pdev->id < 0 || pdev->id >= ARM_NUM_PMU_DEVICES) {
++	if (pmu_device_count >= ARM_NUM_PMU_DEVICES) {
+ 		pr_warning("received registration request for unknown "
+ 				"device %d\n", pdev->id);
+ 		return -EINVAL;
+ 	}
+ 
+-	if (pmu_devices[pdev->id])
++	if (pmu_devices[pmu_device_count])
+ 		pr_warning("registering new PMU device type %d overwrites "
+ 				"previous registration!\n", pdev->id);
+ 	else
+ 		pr_info("registered new PMU device of type %d\n",
+ 				pdev->id);
+ 
+-	pmu_devices[pdev->id] = pdev;
++	pmu_devices[pmu_device_count++] = pdev;
+ 	return 0;
+ }
+ 
++static struct of_device_id pmu_device_ids[] = {
++	{ .compatible = "arm,pmu" },
++	{},
++};
++
+ static struct platform_driver pmu_driver = {
+ 	.driver		= {
+ 		.name	= "arm-pmu",
++		.of_match_table = pmu_device_ids,
+ 	},
+ 	.probe		= pmu_device_probe,
+ };
+-- 
+1.7.1
