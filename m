@@ -1,51 +1,42 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: [PATCH] i2c-ocores: register devices on child nodes
-Date: Thu, 10 Feb 2011 10:51:54 +0800
-Message-ID: <1297306314-11483-1-git-send-email-thomas@wytron.com.tw>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH OF 07/14] of: move of_irq_map_pci() into generic code
+Date: Thu, 10 Feb 2011 14:57:21 +0100
+Message-ID: <4D53EEC1.5020101@monstr.eu>
+References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de> <1295843342-1122-8-git-send-email-bigeasy@linutronix.de>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1295843342-1122-8-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, x86@kernel.org, devicetree-discuss@lists.ozlabs.org, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch registers devices on the devicetree child nodes to the bus.
-Also removes one trailing whitespace.
+Sebastian Andrzej Siewior wrote:
+> From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+> 
+> There is a tiny difference between PPC32 and PPC64. Microblaze uses the
+> PPC32 variant.
+> 
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Signed-off-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
 
-Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
----
- drivers/i2c/busses/i2c-ocores.c |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+> ---
+>  arch/microblaze/include/asm/pci-bridge.h |   12 ++++
+>  arch/microblaze/include/asm/prom.h       |   15 -----
+>  arch/microblaze/kernel/prom_parse.c      |   77 ---------------------------
+>  arch/microblaze/pci/pci-common.c         |    1 +
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index ef3bcb1..c63838f 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -18,7 +18,7 @@
-  * - interrupts      : interrupt number
-  * - regstep         : size of device registers in bytes
-  * - clock-frequency : frequency of bus clock in Hz
-- * 
-+ *
-  * Example:
-  *
-  *  i2c0: ocores@a0000000 {
-@@ -55,6 +55,7 @@
- #include <linux/i2c-ocores.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/of_i2c.h>
- 
- struct ocores_i2c {
- 	void __iomem *base;
-@@ -347,6 +348,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 			i2c_new_device(&i2c->adap, pdata->devices + i);
- 	}
- 
-+	/* Now register all the child nodes */
-+	of_i2c_register_devices(&i2c->adap);
-+
- 	return 0;
- }
- 
+Please always CC me for Microblaze changes. I want to at least compile it.
+
+Thanks,
+Michal
+
 -- 
-1.7.4
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
