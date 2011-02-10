@@ -1,18 +1,13 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] ARM: pmu: add OF match support
-Date: Wed, 09 Feb 2011 17:00:48 -0600
-Message-ID: <4D531CA0.8050402@gmail.com>
-References: <1297223617-19173-1-git-send-email-robherring2@gmail.com>
-	<AANLkTi=7azYw8+sYrbDsLOfF1aZynBDo+ub37O9j+k49@mail.gmail.com>
-	<3399156206431206254@unknownmsgid>
-	<AANLkTin5aA0tq-PYBmRKh6tLv6bHRaK5ymjhsj9T4-Ah@mail.gmail.com>
-	<-4919269306841091192@unknownmsgid>
-	<AANLkTikrBx1Y7MFGCJe=Gx-9fUxhwuYq-BZ4stGBGav6@mail.gmail.com>
+From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Subject: [PATCH v4] i2c-gpio: add devicetree support
+Date: Thu, 10 Feb 2011 10:29:27 +0800
+Message-ID: <1297304967-3759-1-git-send-email-thomas@wytron.com.tw>
+References: <20110203180707.GE6180@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTikrBx1Y7MFGCJe=Gx-9fUxhwuYq-BZ4stGBGav6-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110203180707.GE6180-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,68 +17,261 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2011 01:03 PM, Grant Likely wrote:
-> On Wed, Feb 9, 2011 at 11:53 AM, Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>  wrote:
->> Grant,
->>
->>>> Following on from Rob's update, it would be nice if you could specify that
->>>> the PMU is a CPU PMU (as opposed to L2-cache, bus, gpu etc) in the string.
->>>> That way adding different PMUs in the future seems more natural and it accounts
->>>> for your concerns above. Is that ok, or does the compatible string have to
->>>> match that used by the platform bus?
->>>
->>> It does make sense to encode the specific implementation into the
->>> compatible string.  A single device driver can bind against multiple
->>> compatible strings.  ie. the match table could include {.compatible =
->>> "arm,cortex-a9-pmu"},{.compatible = "arm,cortex-a9-l2cache-pmu"}...
->>
->> Ok - that's great! Specifying the CPU is probably a little verbose, but
->> something like "arm,armv7pmu" would be really helpful when it comes to
->> multiple devices.
->>
->>>> As for versioning, the PMU detection is done dynamically at runtime,
->>>> so knowing that we're poking a CPU is enough.
->>>
->>> Fair enough.  It is still good practice in the compatible list to
->>> encode the specific PMU implementation (maybe arm,cortex-a9-pmu?)
->>> instead of trying to define a 'generic' or wildcard compatible value.
->>> Newer implementations can always claim compatibility with an older
->>> implementation so that the kernel doesn't have to be modified to find
->>> the new devices.  "arm,pmu" is probably too generic.
->>
->> "arm,pmu" is definitely too generic. If it's good practice to specify
->> as much as possible, then go for it - I just feel a little uneasy having
->> to add lots of redundant kernel code but it sounds like you'll hopefully
->> prove me wrong on that :)
->
-> Shouldn't be any redundant kernel code.  It's just a list of match
-> values, and the driver code already knows how to handle it.  The
-> advantage of being specific is that if the driver ever does need
-> information about the specific implementation (say, because the
-> hardware reported value is buggy), then the data is available.
+This patch adds devicetree support to i2c-gpio driver. The allocation
+of local data is integrated to a private structure, and use devm_*
+helper for easy cleanup.
 
-By that argument, we should use "<vendor>,cortex-a9-rXpX-pmu." As a 
-particular rev of the A9 PMU or vendor's SOC could be buggy. That would 
-quickly grow into a long list. Just with cpu models, we would have:
+It is base on an earlier patch for gc-linux from
+Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>.
 
-cortex-a9
-cortex-a8
-cortex-a15
-cortex-a5
-arm1136
-arm1176
-l210
-l220
-pl310
-various xscale flavors
-Qualcomm SMP
+Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Acked-by: Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+for v2.6.39
+v2 move of nodes probing to a hook, which will be optimized out
+     when devicetree is not used.
+   use linux/gpio.h.
+   move binding doc to i2c/i2c-gpio.txt.
+v3 use speed-hz instead of udelay in dts binding.
+   condition the devicetree probe.
+v4 simplify private allocation.
 
-Keep in mind that the whole point of this platform device is just to 
-specify the interrupt connection which is the only part that varies by 
-SOC (and is not probe-able).
+ Documentation/devicetree/bindings/i2c/i2c-gpio.txt |   40 +++++++
+ drivers/i2c/busses/i2c-gpio.c                      |  108 ++++++++++++++++----
+ 2 files changed, 128 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gpio.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+new file mode 100644
+index 0000000..38ef4f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+@@ -0,0 +1,40 @@
++GPIO-based I2C
++
++Required properties:
++- compatible : should be "i2c-gpio".
++- gpios : should specify GPIOs used for SDA and SCL lines, in that order.
++Optional properties:
++- sda-is-open-drain : present if SDA gpio is open-drain.
++- scl-is-open-drain : present if SCL gpio is open-drain.
++- scl-is-output-only : present if the output driver for SCL cannot be
++	turned off. this will prevent clock stretching from working.
++- speed-hz : SCL frequency.
++- timeout : clock stretching timeout in milliseconds.
++
++Example:
++
++gpio0: starlet-gpio@0d8000c0 {
++	compatible = "nintendo,starlet-gpio";
++	reg = <0d8000c0 4>;
++	gpio-controller;
++	#gpio-cells = <2>;
++};
++
++i2c-video {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "i2c-gpio";
++
++	gpios = <&gpio0 10 0	/* SDA line */
++		 &gpio0 11 0	/* SCL line */
++		>;
++	sda-is-open-drain;
++	scl-is-open-drain;
++	scl-is-output-only;
++	speed-hz = <250000>;
++
++	audio-video-encoder {
++		compatible = "nintendo,wii-ave-rvl";
++		reg = <70>;
++	};
++};
+diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+index d9aa9a6..3b2d694 100644
+--- a/drivers/i2c/busses/i2c-gpio.c
++++ b/drivers/i2c/busses/i2c-gpio.c
+@@ -14,8 +14,14 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
++#include <linux/gpio.h>
++#include <linux/of_i2c.h>
+ 
+-#include <asm/gpio.h>
++struct i2c_gpio_private_data {
++	struct i2c_adapter adap;
++	struct i2c_algo_bit_data bit_data;
++	struct i2c_gpio_platform_data pdata;
++};
+ 
+ /* Toggle SDA by changing the direction of the pin */
+ static void i2c_gpio_setsda_dir(void *data, int state)
+@@ -78,24 +84,80 @@ static int i2c_gpio_getscl(void *data)
+ 	return gpio_get_value(pdata->scl_pin);
+ }
+ 
++#ifdef CONFIG_OF
++#include <linux/of_gpio.h>
++
++/* Check if devicetree nodes exist and build platform data */
++static int i2c_gpio_of_probe(struct platform_device *pdev,
++			     struct i2c_gpio_platform_data *pdata)
++{
++	struct device_node *np = pdev->dev.of_node;
++	const __be32 *prop;
++	int sda_pin, scl_pin;
++	int len;
++
++	if (!np || of_gpio_count(np) < 2)
++		return -ENXIO;
++
++	sda_pin = of_get_gpio_flags(np, 0, NULL);
++	scl_pin = of_get_gpio_flags(np, 1, NULL);
++	if (sda_pin < 0 || scl_pin < 0) {
++		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
++		       np->full_name, sda_pin, scl_pin);
++		return -ENXIO;
++	}
++
++	pdata->sda_pin = sda_pin;
++	pdata->scl_pin = scl_pin;
++	prop = of_get_property(np, "sda-is-open-drain", NULL);
++	if (prop)
++		pdata->sda_is_open_drain = 1;
++	prop = of_get_property(np, "scl-is-open-drain", NULL);
++	if (prop)
++		pdata->scl_is_open_drain = 1;
++	prop = of_get_property(np, "scl-is-output-only", NULL);
++	if (prop)
++		pdata->scl_is_output_only = 1;
++	prop = of_get_property(np, "speed-hz", &len);
++	if (prop && len >= sizeof(__be32))
++		pdata->udelay = DIV_ROUND_UP(1000000, be32_to_cpup(prop) * 2);
++	prop = of_get_property(np, "timeout", &len);
++	if (prop && len >= sizeof(__be32))
++		pdata->timeout = msecs_to_jiffies(be32_to_cpup(prop));
++
++	return 0;
++}
++#else
++static int i2c_gpio_of_probe(struct platform_device *pdev,
++			     struct i2c_gpio_platform_data *pdata)
++{
++	return -ENXIO;
++}
++#endif
++
+ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+ {
++	struct i2c_gpio_private_data *priv;
+ 	struct i2c_gpio_platform_data *pdata;
+ 	struct i2c_algo_bit_data *bit_data;
+ 	struct i2c_adapter *adap;
+ 	int ret;
+ 
+-	pdata = pdev->dev.platform_data;
+-	if (!pdata)
+-		return -ENXIO;
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	adap = &priv->adap;
++	bit_data = &priv->bit_data;
++	pdata = &priv->pdata;
+ 
+-	ret = -ENOMEM;
+-	adap = kzalloc(sizeof(struct i2c_adapter), GFP_KERNEL);
+-	if (!adap)
+-		goto err_alloc_adap;
+-	bit_data = kzalloc(sizeof(struct i2c_algo_bit_data), GFP_KERNEL);
+-	if (!bit_data)
+-		goto err_alloc_bit_data;
++	if (pdev->dev.platform_data) {
++		*pdata = *(struct i2c_gpio_platform_data *)
++			pdev->dev.platform_data;
++	} else {
++		ret = i2c_gpio_of_probe(pdev, pdata);
++		if (ret)
++			return ret;
++	}
+ 
+ 	ret = gpio_request(pdata->sda_pin, "sda");
+ 	if (ret)
+@@ -143,6 +205,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+ 	adap->algo_data = bit_data;
+ 	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+ 	adap->dev.parent = &pdev->dev;
++	adap->dev.of_node = pdev->dev.of_node;
+ 
+ 	/*
+ 	 * If "dev->id" is negative we consider it as zero.
+@@ -154,13 +217,16 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_add_bus;
+ 
+-	platform_set_drvdata(pdev, adap);
++	platform_set_drvdata(pdev, priv);
+ 
+ 	dev_info(&pdev->dev, "using pins %u (SDA) and %u (SCL%s)\n",
+ 		 pdata->sda_pin, pdata->scl_pin,
+ 		 pdata->scl_is_output_only
+ 		 ? ", no clock stretching" : "");
+ 
++	/* Now register all the child nodes */
++	of_i2c_register_devices(adap);
++
+ 	return 0;
+ 
+ err_add_bus:
+@@ -168,34 +234,36 @@ err_add_bus:
+ err_request_scl:
+ 	gpio_free(pdata->sda_pin);
+ err_request_sda:
+-	kfree(bit_data);
+-err_alloc_bit_data:
+-	kfree(adap);
+-err_alloc_adap:
+ 	return ret;
+ }
+ 
+ static int __devexit i2c_gpio_remove(struct platform_device *pdev)
+ {
++	struct i2c_gpio_private_data *priv;
+ 	struct i2c_gpio_platform_data *pdata;
+ 	struct i2c_adapter *adap;
+ 
+-	adap = platform_get_drvdata(pdev);
+-	pdata = pdev->dev.platform_data;
++	priv = platform_get_drvdata(pdev);
++	adap = &priv->adap;
++	pdata = &priv->pdata;
+ 
+ 	i2c_del_adapter(adap);
+ 	gpio_free(pdata->scl_pin);
+ 	gpio_free(pdata->sda_pin);
+-	kfree(adap->algo_data);
+-	kfree(adap);
+ 
+ 	return 0;
+ }
+ 
++static const struct of_device_id i2c_gpio_match[] = {
++	{ .compatible = "i2c-gpio", },
++	{},
++};
++
+ static struct platform_driver i2c_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "i2c-gpio",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = i2c_gpio_match,
+ 	},
+ 	.probe		= i2c_gpio_probe,
+ 	.remove		= __devexit_p(i2c_gpio_remove),
+-- 
+1.7.4
