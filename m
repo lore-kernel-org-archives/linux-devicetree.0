@@ -1,69 +1,124 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Moving platform_data contents to device tree
-Date: Fri, 11 Feb 2011 09:01:14 -0700
-Message-ID: <AANLkTi=1UH-YBgS18pLbuGRGX02Xwxpek-wTGk5B3rGx@mail.gmail.com>
-References: <AANLkTikGa9dkM5DMJrM=RDs9twMY=uE21u5NmOv-=dPG@mail.gmail.com> <4D555983.7090102@gmail.com>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
+Date: Fri, 11 Feb 2011 11:35:41 -0600
+Message-ID: <4D55736D.2070606@mentor.com>
+References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>	<AANLkTinda9TX+Ng=kL-HHLOdqRnUZ6uitQKyZcRUHVco@mail.gmail.com>	<4D54986A.60907@mentor.com>	<AANLkTikPgqgnWDOz+H5OXK7Sc=J67xOF3NMNkfDErocu@mail.gmail.com>
+	<9F6FE96B71CF29479FF1CDC8046E15030C485D@039-SN1MPN1-002.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <4D555983.7090102@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E15030C485D-TcFNo7jSaXPiTqIcKZ1S2K4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 11, 2011 at 8:45 AM, Rob Herring <robherring2@gmail.com> wrote:
-> Thomas,
+On 02/11/2011 08:58 AM, Yoder Stuart-B08248 wrote:
 >
-> On 02/10/2011 09:29 PM, Thomas Abraham wrote:
->>
->> Hi,
->>
->> I am currently adding device tree support for Samsung's S5PV310
->> processor. I have a question about handling platform_data when adding
->> device tree support in drivers, specifically about the sdhci-s3c
->> driver.
->>
->> The platform data that is passed to the sdhci-s3c driver is defined in
->> file arch/arm/plat-samsung/plat/sdhci.h, struct s3c_sdhci_platdata. In
->> this structure, there are some function pointers that are passed to
->> the driver. These function pointers are setup by the platform code in
->> arch/arm/plat-samsung. But when platform devices are created from the
->> device tree, how would such function pointers be passed to the driver?
->>
->> Any suggestions on the approach to handle the platform_data
->> information when moving to device tree would be very helpful.
->>
-> As suggested by Grant, you can use bus notifiers. Here is an example:
 >
-> arch/powerpc/platforms/512x/pdm360ng.c
+>> -----Original Message-----
+>> From: Meador Inge [mailto:meadori-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>> Sent: Thursday, February 10, 2011 9:26 PM
+>> To: Benjamin Herrenschmidt
+>> Cc: Yoder Stuart-B08248; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linuxppc-
+>> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
+>>
+>> Apologies for the bad post.  Bad day for email ...  Please ignore the top
+>> reply in my previous reply.  The full reply is the below the quote.
+>>
+>> On Thu, Feb 10, 2011 at 8:01 PM, Meador Inge<meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>> wrote:
+>>>
+>>> On 02/10/2011 02:42 PM, Meador Inge wrote:
+>>>>
+>>>> ---------- Forwarded message ----------
+>>>> From: Meador Inge<meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>>>> Date: Fri, Feb 4, 2011 at 5:25 PM
+>>>> Subject: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
+>>>> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard<
+>>>> hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>>
+>>>> This patch set provides a binding for Open PIC and implements support
+>>>> for a new property, specified by that binding, called "pic-no-reset".
+>>>> With "pic-no-reset" in place the "protected-sources" property is no
+>>>> longer needed and its full implementation was removed.
+>>>> "protected-sources" is still checked for, however, for legacy
+>>>> purposes.
+>>>>
+>>>> For v3 of this patch the Open PIC binding was changed to be more
+>>>> consistent with existing bindings, several DTS files were cleaned up,
+>>>> "no-reset" was changed to "pic-no-reset", and a check to treat
+>>>> "protected-sources" as a synonym for "pic-no-reset" was added.
+>>>>
+>>
+>>  From the feedback I have received so far, the fundamental ideas in this
+>> patch set are sane.  However, the following issues still need agreement:
+>>
+>>      1. What should be the name of the no reset property?
+>>         "pic-no-reset" or "no-reset"?
+>>      2. Should we just keep the existing protected sources implementation
+>>         in place?
+>>
+>> For (1), I prefer "no-reset".
 >
-> Pure data (flags, quirks, chip select assignments, etc.) should ultimately
-> go into the device tree.
+> I also prefer plain "no-reset".  The property is on a pic node so
+> "pic" on the property seems redundant.
 >
-> For board specific functions, use the bus notifiers. For SoC functions, put
-> them in the driver and use the OF match table data pointer.
+>> For (2), I still think that we can make "no-
+>> reset" a synonym for "protected-sources" and that things will work out.
+>>
+>> Ben, you said that you would really like to leave the protected sources
+>> implementation alone.  Is the mechanism implemented in "PATCH
+>> v3 3/4" [1] of having "protected-sources" as a synonym for "pic-no-reset"
+>> not suitable?
+>
+> I thought what Ben was getting at was that there is existing
+> firmware that may provide a device tree with protected-sources,
+> and thus we should continue supporting it for backwards
+> compatibility.
 
-Yes, Rob is right.  However, things are simpler if the driver can be
-designed so that it *doesn't* need platform callbacks.  Sometimes it
-is unavoidable, but in a lot of cases platform callback turn into a
-way to let platform code twiddle or read GPIOs.  In those cases it
-would be better to turn those callbacks into real gpiolib drivers and
-design the driver to use the gpio api.
+Yup, Arnd pointed that out as well.  That is why in "PATCH v3 3/4" I 
+added a check for "protected-sources".  If it is found, then it is 
+treated exactly the same way as "no-reset", which should give equivalent 
+behavior.
 
-> See sdhci-of-core.c for an example.
+For example, say we have 100 sources and the sources [1, 50] are the 
+only ones actually mentioned in the device tree.  Also assume we set 
+"protected-sources = <51 52 53>".
 
-On a side note (and not related to sdhci-s3c); I'd like to be rid of
-both sdhci-of-core.c and sdhci-pltfm.c.  I'm all for providing common
-infrastructure, but I think those two files go about it in the wrong
-way.  Rather than having a single platform_device (well, 2 in this
-case, but of and non-of can be merged now) that matches against all
-'platform' sdhci controllers, each specific controller should have its
-own platform_driver structure.  The way it is done now creates too
-much indirection (IMHO) and it would be cleaner if the common code was
-available to the drivers a library function calls.
+Then, with the protected sources model sources [1, 50] and [54, 100] 
+would have there VECPRI/cpu binding initialization.  Where as in the 
+enhanced "no-reset" model, only sources [1, 50] would have the 
+initialization done.
 
-I've put splitting them up onto my todo list if somebody else doesn't
-beat me to it.
+So unless there is some problem with not initializing the remaining 
+sources, e.g. sources [51, 100] in the previous example, then the 
+expanded "no-reset" should offer equivalent behavior to "protected-sources".
 
-g.
+> So, I would say add "no-reset" as the preferred mechanism
+> going forward, but keep "protected-sources" for backwards
+> compatibility.
+>
+> Stuart
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
