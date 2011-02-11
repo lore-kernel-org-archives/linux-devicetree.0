@@ -1,17 +1,18 @@
-From: Scott Wood <scottwood@freescale.com>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
-Date: Fri, 11 Feb 2011 12:41:32 -0600
-Message-ID: <20110211124132.2ae965d7@udp111988uds>
+Date: Fri, 11 Feb 2011 11:59:41 -0700
+Message-ID: <AANLkTik8jp4fuNzoRHgkJ8fwXkPv9j6uK4uORswk+8Mo@mail.gmail.com>
 References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>
 	<AANLkTinda9TX+Ng=kL-HHLOdqRnUZ6uitQKyZcRUHVco@mail.gmail.com>
 	<4D54986A.60907@mentor.com>
 	<AANLkTikPgqgnWDOz+H5OXK7Sc=J67xOF3NMNkfDErocu@mail.gmail.com>
 	<9F6FE96B71CF29479FF1CDC8046E15030C485D@039-SN1MPN1-002.039d.mgd.msft.net>
+	<20110211124132.2ae965d7@udp111988uds>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E15030C485D@039-SN1MPN1-002.039d.mgd.msft.net>
+In-Reply-To: <20110211124132.2ae965d7@udp111988uds>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -21,31 +22,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Yoder Stuart-B08248 <B08248@freescale.com>
+To: Scott Wood <scottwood@freescale.com>
 Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Meador Inge <meadori@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAxMSBGZWIgMjAxMSAxNDo1ODoxMyArMDAwMApZb2RlciBTdHVhcnQtQjA4MjQ4IDxC
-MDgyNDhAZnJlZXNjYWxlLmNvbT4gd3JvdGU6Cgo+IAo+IAo+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0KPiA+IEZyb206IE1lYWRvciBJbmdlIFttYWlsdG86bWVhZG9yaUBnbWFpbC5jb21d
-Cj4gPiBTZW50OiBUaHVyc2RheSwgRmVicnVhcnkgMTAsIDIwMTEgOToyNiBQTQo+ID4gVG86IEJl
-bmphbWluIEhlcnJlbnNjaG1pZHQKPiA+IENjOiBZb2RlciBTdHVhcnQtQjA4MjQ4OyBkZXZpY2V0
-cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZzsgbGludXhwcGMtCj4gPiBkZXZAbGlzdHMub3ps
-YWJzLm9yZwo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwLzRdIHBvd2VycGM6IE9wZW4gUElD
-IGJpbmRpbmcgYW5kICJwaWMtbm8tcmVzZXQiCj4gPiAKPiA+IEZyb20gdGhlIGZlZWRiYWNrIEkg
-aGF2ZSByZWNlaXZlZCBzbyBmYXIsIHRoZSBmdW5kYW1lbnRhbCBpZGVhcyBpbiB0aGlzCj4gPiBw
-YXRjaCBzZXQgYXJlIHNhbmUuIMKgSG93ZXZlciwgdGhlIGZvbGxvd2luZyBpc3N1ZXMgc3RpbGwg
-bmVlZCBhZ3JlZW1lbnQ6Cj4gPiAKPiA+ICDCoCDCoDEuIFdoYXQgc2hvdWxkIGJlIHRoZSBuYW1l
-IG9mIHRoZSBubyByZXNldCBwcm9wZXJ0eT8KPiA+ICDCoCDCoCDCoCAicGljLW5vLXJlc2V0IiBv
-ciAibm8tcmVzZXQiPwo+ID4gIMKgIMKgMi4gU2hvdWxkIHdlIGp1c3Qga2VlcCB0aGUgZXhpc3Rp
-bmcgcHJvdGVjdGVkIHNvdXJjZXMgaW1wbGVtZW50YXRpb24KPiA+ICDCoCDCoCDCoCBpbiBwbGFj
-ZT8KPiA+IAo+ID4gRm9yICgxKSwgSSBwcmVmZXIgIm5vLXJlc2V0Ii4KPiAKPiBJIGFsc28gcHJl
-ZmVyIHBsYWluICJuby1yZXNldCIuICBUaGUgcHJvcGVydHkgaXMgb24gYSBwaWMgbm9kZSBzbwo+
-ICJwaWMiIG9uIHRoZSBwcm9wZXJ0eSBzZWVtcyByZWR1bmRhbnQuCgpJdCdzIG5vdCByZWR1bmRh
-bnQsIGl0J3MgbmFtZXNwYWNpbmcuICBCZWZvcmUgdGhlcmUgd2FzIGEgZ2VuZXJpYyAic3RhdHVz
-Igpwcm9wZXJ0eSwgc29tZW9uZSB3aG8gd2FudGVkIGEgZGV2aWNlLXNwZWNpZmljICJzdGF0dXMi
-IGNvdWxkIGhhdmUgbWFkZQp0aGUgc2FtZSBhcmd1bWVudC4gIFVzdWFsbHkgd2UgdXNlIGEgdmVu
-ZG9yIHByZWZpeCB0byBhdm9pZCB0aGF0IHByb2JsZW0sCmJ1dCB0aGF0IHdvbid0IHdvcmsgaGVy
-ZS4KCi1TY290dAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9y
-ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On Fri, Feb 11, 2011 at 11:41 AM, Scott Wood <scottwood@freescale.com> wrot=
+e:
+> On Fri, 11 Feb 2011 14:58:13 +0000
+> Yoder Stuart-B08248 <B08248@freescale.com> wrote:
+>
+>>
+>>
+>> > -----Original Message-----
+>> > From: Meador Inge [mailto:meadori@gmail.com]
+>> > Sent: Thursday, February 10, 2011 9:26 PM
+>> > To: Benjamin Herrenschmidt
+>> > Cc: Yoder Stuart-B08248; devicetree-discuss@lists.ozlabs.org; linuxppc-
+>> > dev@lists.ozlabs.org
+>> > Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-rese=
+t"
+>> >
+>> > From the feedback I have received so far, the fundamental ideas in this
+>> > patch set are sane. =A0However, the following issues still need agreem=
+ent:
+>> >
+>> > =A0=A0 =A01. What should be the name of the no reset property?
+>> > =A0=A0 =A0 =A0 "pic-no-reset" or "no-reset"?
+>> > =A0=A0 =A02. Should we just keep the existing protected sources implem=
+entation
+>> > =A0=A0 =A0 =A0 in place?
+>> >
+>> > For (1), I prefer "no-reset".
+>>
+>> I also prefer plain "no-reset". =A0The property is on a pic node so
+>> "pic" on the property seems redundant.
+>
+> It's not redundant, it's namespacing. =A0Before there was a generic "stat=
+us"
+> property, someone who wanted a device-specific "status" could have made
+> the same argument. =A0Usually we use a vendor prefix to avoid that proble=
+m,
+> but that won't work here.
+
+Yes, it is a namespace issue.  Please keep the 'pic-' or some other
+prefix to reduce the likelyhood of a global namespace clash.
+'no-reset' is vanilla enough that it is conceivable it could be
+defined as part of a common binding sometime in the future.
+
+g.
