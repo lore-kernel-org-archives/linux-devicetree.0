@@ -1,124 +1,51 @@
-From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+From: Scott Wood <scottwood@freescale.com>
 Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
-Date: Fri, 11 Feb 2011 11:35:41 -0600
-Message-ID: <4D55736D.2070606@mentor.com>
-References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>	<AANLkTinda9TX+Ng=kL-HHLOdqRnUZ6uitQKyZcRUHVco@mail.gmail.com>	<4D54986A.60907@mentor.com>	<AANLkTikPgqgnWDOz+H5OXK7Sc=J67xOF3NMNkfDErocu@mail.gmail.com>
+Date: Fri, 11 Feb 2011 12:41:32 -0600
+Message-ID: <20110211124132.2ae965d7@udp111988uds>
+References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>
+	<AANLkTinda9TX+Ng=kL-HHLOdqRnUZ6uitQKyZcRUHVco@mail.gmail.com>
+	<4D54986A.60907@mentor.com>
+	<AANLkTikPgqgnWDOz+H5OXK7Sc=J67xOF3NMNkfDErocu@mail.gmail.com>
 	<9F6FE96B71CF29479FF1CDC8046E15030C485D@039-SN1MPN1-002.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E15030C485D-TcFNo7jSaXPiTqIcKZ1S2K4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E15030C485D@039-SN1MPN1-002.039d.mgd.msft.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Yoder Stuart-B08248 <B08248@freescale.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Meador Inge <meadori@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2011 08:58 AM, Yoder Stuart-B08248 wrote:
->
->
->> -----Original Message-----
->> From: Meador Inge [mailto:meadori-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->> Sent: Thursday, February 10, 2011 9:26 PM
->> To: Benjamin Herrenschmidt
->> Cc: Yoder Stuart-B08248; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linuxppc-
->> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
->>
->> Apologies for the bad post.  Bad day for email ...  Please ignore the top
->> reply in my previous reply.  The full reply is the below the quote.
->>
->> On Thu, Feb 10, 2011 at 8:01 PM, Meador Inge<meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->> wrote:
->>>
->>> On 02/10/2011 02:42 PM, Meador Inge wrote:
->>>>
->>>> ---------- Forwarded message ----------
->>>> From: Meador Inge<meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->>>> Date: Fri, Feb 4, 2011 at 5:25 PM
->>>> Subject: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
->>>> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard<
->>>> hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->>>>
->>>>
->>>> This patch set provides a binding for Open PIC and implements support
->>>> for a new property, specified by that binding, called "pic-no-reset".
->>>> With "pic-no-reset" in place the "protected-sources" property is no
->>>> longer needed and its full implementation was removed.
->>>> "protected-sources" is still checked for, however, for legacy
->>>> purposes.
->>>>
->>>> For v3 of this patch the Open PIC binding was changed to be more
->>>> consistent with existing bindings, several DTS files were cleaned up,
->>>> "no-reset" was changed to "pic-no-reset", and a check to treat
->>>> "protected-sources" as a synonym for "pic-no-reset" was added.
->>>>
->>
->>  From the feedback I have received so far, the fundamental ideas in this
->> patch set are sane.  However, the following issues still need agreement:
->>
->>      1. What should be the name of the no reset property?
->>         "pic-no-reset" or "no-reset"?
->>      2. Should we just keep the existing protected sources implementation
->>         in place?
->>
->> For (1), I prefer "no-reset".
->
-> I also prefer plain "no-reset".  The property is on a pic node so
-> "pic" on the property seems redundant.
->
->> For (2), I still think that we can make "no-
->> reset" a synonym for "protected-sources" and that things will work out.
->>
->> Ben, you said that you would really like to leave the protected sources
->> implementation alone.  Is the mechanism implemented in "PATCH
->> v3 3/4" [1] of having "protected-sources" as a synonym for "pic-no-reset"
->> not suitable?
->
-> I thought what Ben was getting at was that there is existing
-> firmware that may provide a device tree with protected-sources,
-> and thus we should continue supporting it for backwards
-> compatibility.
-
-Yup, Arnd pointed that out as well.  That is why in "PATCH v3 3/4" I 
-added a check for "protected-sources".  If it is found, then it is 
-treated exactly the same way as "no-reset", which should give equivalent 
-behavior.
-
-For example, say we have 100 sources and the sources [1, 50] are the 
-only ones actually mentioned in the device tree.  Also assume we set 
-"protected-sources = <51 52 53>".
-
-Then, with the protected sources model sources [1, 50] and [54, 100] 
-would have there VECPRI/cpu binding initialization.  Where as in the 
-enhanced "no-reset" model, only sources [1, 50] would have the 
-initialization done.
-
-So unless there is some problem with not initializing the remaining 
-sources, e.g. sources [51, 100] in the previous example, then the 
-expanded "no-reset" should offer equivalent behavior to "protected-sources".
-
-> So, I would say add "no-reset" as the preferred mechanism
-> going forward, but keep "protected-sources" for backwards
-> compatibility.
->
-> Stuart
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
-
--- 
-Meador Inge     | meador_inge AT mentor.com
-Mentor Embedded | http://www.mentor.com/embedded-software
+T24gRnJpLCAxMSBGZWIgMjAxMSAxNDo1ODoxMyArMDAwMApZb2RlciBTdHVhcnQtQjA4MjQ4IDxC
+MDgyNDhAZnJlZXNjYWxlLmNvbT4gd3JvdGU6Cgo+IAo+IAo+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0KPiA+IEZyb206IE1lYWRvciBJbmdlIFttYWlsdG86bWVhZG9yaUBnbWFpbC5jb21d
+Cj4gPiBTZW50OiBUaHVyc2RheSwgRmVicnVhcnkgMTAsIDIwMTEgOToyNiBQTQo+ID4gVG86IEJl
+bmphbWluIEhlcnJlbnNjaG1pZHQKPiA+IENjOiBZb2RlciBTdHVhcnQtQjA4MjQ4OyBkZXZpY2V0
+cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZzsgbGludXhwcGMtCj4gPiBkZXZAbGlzdHMub3ps
+YWJzLm9yZwo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwLzRdIHBvd2VycGM6IE9wZW4gUElD
+IGJpbmRpbmcgYW5kICJwaWMtbm8tcmVzZXQiCj4gPiAKPiA+IEZyb20gdGhlIGZlZWRiYWNrIEkg
+aGF2ZSByZWNlaXZlZCBzbyBmYXIsIHRoZSBmdW5kYW1lbnRhbCBpZGVhcyBpbiB0aGlzCj4gPiBw
+YXRjaCBzZXQgYXJlIHNhbmUuIMKgSG93ZXZlciwgdGhlIGZvbGxvd2luZyBpc3N1ZXMgc3RpbGwg
+bmVlZCBhZ3JlZW1lbnQ6Cj4gPiAKPiA+ICDCoCDCoDEuIFdoYXQgc2hvdWxkIGJlIHRoZSBuYW1l
+IG9mIHRoZSBubyByZXNldCBwcm9wZXJ0eT8KPiA+ICDCoCDCoCDCoCAicGljLW5vLXJlc2V0IiBv
+ciAibm8tcmVzZXQiPwo+ID4gIMKgIMKgMi4gU2hvdWxkIHdlIGp1c3Qga2VlcCB0aGUgZXhpc3Rp
+bmcgcHJvdGVjdGVkIHNvdXJjZXMgaW1wbGVtZW50YXRpb24KPiA+ICDCoCDCoCDCoCBpbiBwbGFj
+ZT8KPiA+IAo+ID4gRm9yICgxKSwgSSBwcmVmZXIgIm5vLXJlc2V0Ii4KPiAKPiBJIGFsc28gcHJl
+ZmVyIHBsYWluICJuby1yZXNldCIuICBUaGUgcHJvcGVydHkgaXMgb24gYSBwaWMgbm9kZSBzbwo+
+ICJwaWMiIG9uIHRoZSBwcm9wZXJ0eSBzZWVtcyByZWR1bmRhbnQuCgpJdCdzIG5vdCByZWR1bmRh
+bnQsIGl0J3MgbmFtZXNwYWNpbmcuICBCZWZvcmUgdGhlcmUgd2FzIGEgZ2VuZXJpYyAic3RhdHVz
+Igpwcm9wZXJ0eSwgc29tZW9uZSB3aG8gd2FudGVkIGEgZGV2aWNlLXNwZWNpZmljICJzdGF0dXMi
+IGNvdWxkIGhhdmUgbWFkZQp0aGUgc2FtZSBhcmd1bWVudC4gIFVzdWFsbHkgd2UgdXNlIGEgdmVu
+ZG9yIHByZWZpeCB0byBhdm9pZCB0aGF0IHByb2JsZW0sCmJ1dCB0aGF0IHdvbid0IHdvcmsgaGVy
+ZS4KCi1TY290dAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9y
+ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
