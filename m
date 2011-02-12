@@ -1,72 +1,99 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-reset"
-Date: Fri, 11 Feb 2011 11:59:41 -0700
-Message-ID: <AANLkTik8jp4fuNzoRHgkJ8fwXkPv9j6uK4uORswk+8Mo@mail.gmail.com>
-References: <1296861941-3370-1-git-send-email-meador_inge@mentor.com>
-	<AANLkTinda9TX+Ng=kL-HHLOdqRnUZ6uitQKyZcRUHVco@mail.gmail.com>
-	<4D54986A.60907@mentor.com>
-	<AANLkTikPgqgnWDOz+H5OXK7Sc=J67xOF3NMNkfDErocu@mail.gmail.com>
-	<9F6FE96B71CF29479FF1CDC8046E15030C485D@039-SN1MPN1-002.039d.mgd.msft.net>
-	<20110211124132.2ae965d7@udp111988uds>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH v3 0/6] Basic ARM devicetree support
+Date: Sat, 12 Feb 2011 01:14:27 -0700
+Message-ID: <20110212080634.15682.21141.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20110211124132.2ae965d7@udp111988uds>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Meador Inge <meadori@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 11, 2011 at 11:41 AM, Scott Wood <scottwood@freescale.com> wrot=
-e:
-> On Fri, 11 Feb 2011 14:58:13 +0000
-> Yoder Stuart-B08248 <B08248@freescale.com> wrote:
->
->>
->>
->> > -----Original Message-----
->> > From: Meador Inge [mailto:meadori@gmail.com]
->> > Sent: Thursday, February 10, 2011 9:26 PM
->> > To: Benjamin Herrenschmidt
->> > Cc: Yoder Stuart-B08248; devicetree-discuss@lists.ozlabs.org; linuxppc-
->> > dev@lists.ozlabs.org
->> > Subject: Re: [PATCH v3 0/4] powerpc: Open PIC binding and "pic-no-rese=
-t"
->> >
->> > From the feedback I have received so far, the fundamental ideas in this
->> > patch set are sane. =A0However, the following issues still need agreem=
-ent:
->> >
->> > =A0=A0 =A01. What should be the name of the no reset property?
->> > =A0=A0 =A0 =A0 "pic-no-reset" or "no-reset"?
->> > =A0=A0 =A02. Should we just keep the existing protected sources implem=
-entation
->> > =A0=A0 =A0 =A0 in place?
->> >
->> > For (1), I prefer "no-reset".
->>
->> I also prefer plain "no-reset". =A0The property is on a pic node so
->> "pic" on the property seems redundant.
->
-> It's not redundant, it's namespacing. =A0Before there was a generic "stat=
-us"
-> property, someone who wanted a device-specific "status" could have made
-> the same argument. =A0Usually we use a vendor prefix to avoid that proble=
-m,
-> but that won't work here.
+Third posting.  v3 reverts the v2 changes to the handling of the dtb
+during early init.  The real problem turned out to be using the wrong
+function for allocating early memory.  Switching to alloc_bootmem()
+fixed the corruption issue.  Memory reservation was never the issue.
 
-Yes, it is a namespace issue.  Please keep the 'pic-' or some other
-prefix to reduce the likelyhood of a global namespace clash.
-'no-reset' is vanilla enough that it is conceivable it could be
-defined as part of a common binding sometime in the future.
+v3 also simplifies the handling of reserved memory sections and adds
+parsing of the dtb reserved map.
 
-g.
+I'm not asking for these patches to be merged into mainline yet, but
+I'm fairly confident that they should be pretty close to their final
+form.
+
+Not included in this series is Russell's patch to remove early vetting
+of the machine type number and Rob's patch to map the region if atags
+or the dtb are not within the first 1MB.  However, I am carrying those
+patches in my devicetree/arm and devicetree/test branches.
+
+Please test.
+
+...
+
+This patch series allows CONFIG_OF to be enabled on ARM and allows the
+kernel to accept a dtb pointer from boot firmware instead of atags.
+If a dtb is passed, then the kernel will use the root 'compatible'
+property to find a matching machine_desc, and it will use it to obtain
+the memory layout, initrd location and kernel parameters string.
+
+Only limited device tree support is enabled here.  It does not perform
+any kind of device registration from device tree data.  That support
+will be enabled in a later patch set.  Rather, this series is a stable
+base that other engineers can use to start working on device tree
+support for their platforms.
+
+Tested on Versatile (qemu) and nVidia Tegra Harmony.  Kernel compiles
+and boots with CONFIG_OF both on and off, both with and without passing
+a device tree blob.
+
+This series is reflected in the following branch (stable; will not be
+rebased):
+
+ git://git.secretlab.ca/git/linux-2.6 devicetree/arm
+
+The 'clean' patches (rebased) can be found here:
+
+ git://git.secretlab.ca/git/linux-2.6 devicetree/test
+
+---
+
+Grant Likely (5):
+      arm/dt: Make __vet_atags also accept a dtb image
+      arm/dt: consolidate atags setup into setup_machine_atags
+      arm/dt: probe for platforms via the device tree
+      arm/dt: Basic versatile devicetree support
+      arm/dt: Basic tegra devicetree support
+
+Jeremy Kerr (1):
+      arm/dt: Allow CONFIG_OF on ARM
+
+
+ arch/arm/Kconfig                       |    7 ++
+ arch/arm/include/asm/mach/arch.h       |    2 
+ arch/arm/include/asm/prom.h            |   37 +++++++++
+ arch/arm/include/asm/setup.h           |    3 +
+ arch/arm/kernel/Makefile               |    1 
+ arch/arm/kernel/devtree.c              |  136 ++++++++++++++++++++++++++++++++
+ arch/arm/kernel/head-common.S          |   24 ++++--
+ arch/arm/kernel/head.S                 |    8 +-
+ arch/arm/kernel/setup.c                |   78 ++++++++++--------
+ arch/arm/mach-tegra/board-harmony.c    |    6 +
+ arch/arm/mach-versatile/versatile_ab.c |    6 +
+ arch/arm/mach-versatile/versatile_pb.c |    6 +
+ arch/arm/mm/init.c                     |   11 +++
+ 13 files changed, 280 insertions(+), 45 deletions(-)
+ create mode 100644 arch/arm/include/asm/prom.h
+ create mode 100644 arch/arm/kernel/devtree.c
+
+-- 
+Signature
