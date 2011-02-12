@@ -1,8 +1,7 @@
 From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/7] serial: samsung: Get console register defaults from device
-	tree
-Date: Sat, 12 Feb 2011 18:17:03 +0530
-Message-ID: <1297514825-10345-6-git-send-email-thomas.abraham@linaro.org>
+Subject: [PATCH 2/7] ARM: s5pv310-dt: Add a basic dts file for SMDKV310 machine
+Date: Sat, 12 Feb 2011 18:17:00 +0530
+Message-ID: <1297514825-10345-3-git-send-email-thomas.abraham@linaro.org>
 References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,56 +21,98 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The uart ports are used as console and due to console_init, the uart ports
-are initialized prior to the uart driver's probe function is called.
-During this intialization stage, the driver obtains the default port
-register values from the platform data.
-
-This patch adds support for obtaining the default port register values
-from the device tree. The default values should be specified in the
-'chosen' node of the device tree.
+This patch adds a basic dts file for Samsung's SMDKV310 board which
+is based on the s5pv310 machine.
 
 Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/tty/serial/samsung.c |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
+ arch/arm/mach-s5pv310/mach-smdkv310.dts |   78 +++++++++++++++++++++++++++++++
+ 1 files changed, 78 insertions(+), 0 deletions(-)
+ create mode 100755 arch/arm/mach-s5pv310/mach-smdkv310.dts
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index 2335eda..66fece9 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -43,6 +43,7 @@
- #include <linux/delay.h>
- #include <linux/clk.h>
- #include <linux/cpufreq.h>
-+#include <linux/of.h>
- 
- #include <asm/irq.h>
- 
-@@ -1384,11 +1385,24 @@ static int s3c24xx_serial_init_ports(struct s3c24xx_uart_info **info)
- 	struct s3c24xx_uart_port *ptr = s3c24xx_serial_ports;
- 	struct platform_device **platdev_ptr;
- 	int i;
-+	unsigned int *condefs , len;
-+	struct s3c2410_uartcfg *cfg;
- 
- 	dbg("s3c24xx_serial_init_ports: initialising ports...\n");
- 
- 	platdev_ptr = s3c24xx_uart_devs;
-+	condefs = (u32 *)of_get_property(of_chosen, "console-defaults", &len);
-+	if (condefs && (len / sizeof(unsigned int)) == 3) {
-+		for (i = 0; i < CONFIG_SERIAL_SAMSUNG_UARTS; i++) {
-+			cfg = s3c24xx_dev_to_cfg(&(*platdev_ptr)->dev);
-+			cfg->ucon = be32_to_cpu(condefs[0]);
-+			cfg->ulcon = be32_to_cpu(condefs[1]);
-+			cfg->ufcon = be32_to_cpu(condefs[2]);
-+			platdev_ptr++;
-+		}
-+	}
- 
-+	platdev_ptr = s3c24xx_uart_devs;
- 	for (i = 0; i < CONFIG_SERIAL_SAMSUNG_UARTS; i++, ptr++, platdev_ptr++) {
- 		s3c24xx_serial_init_port(ptr, info[i], *platdev_ptr);
- 	}
+diff --git a/arch/arm/mach-s5pv310/mach-smdkv310.dts b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+new file mode 100755
+index 0000000..75aa76d
+--- /dev/null
++++ b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+@@ -0,0 +1,78 @@
++/dts-v1/;
++
++/ {
++	model = "smdkv310";
++	compatible = "samsung,s5pv310","samsung,smdkv310";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		cpu@0{
++			compatible = "arm,cortex-a9";
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a9";
++		};
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x40000000 0x08000000>;
++	};
++
++	chosen {
++		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
++		console-defaults = <0x3c5 0x3 0x111>;
++		xtal-frequency = <24000000>;
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-parent = <&GIC>;
++		compatible = "samsung,s5pv310-soc","simple-bus";
++		ranges;
++
++		GIC:gic@0x10500000 {
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			reg = <0x10500000 0x1000>;
++			compatible = "samsung,s5pv310-gic","arm,gic";
++		};
++
++		watchdog@0x10060000 {
++			reg = <0x10060000 0x400>;
++			interrupts = <552>;
++			compatible = "samsung,s5pv310-wdt","samsung,s3c2410-wdt";
++		};
++
++		serial@0x13800000 {
++			reg = <0x13800000 0x100>;
++			interrupts = <16 18 17>;
++			reg-defaults = <0x3c5 0x3 0x111>;
++			compatible = "samsung,s5pv310-uart","samsung,s3c2410-uart";
++		};
++
++		serial@0x13810000 {
++			reg = <0x13810000 0x100>;
++			interrupts = <20 22 21>;
++			reg-defaults = <0x3c5 0x3 0x111>;
++			compatible = "samsung,s5pv310-uart","samsung,s3c2410-uart";
++		};
++
++		serial@0x13820000 {
++			reg = <0x13820000 0x100>;
++			interrupts = <24 26 25>;
++			reg-defaults = <0x3c5 0x3 0x111>;
++			compatible = "samsung,s5pv310-uart","samsung,s3c2410-uart";
++		};
++
++		serial@0x13830000 {
++			reg = <0x13830000 0x100>;
++			interrupts = <28 30 29>;
++			reg-defaults = <0x3c5 0x3 0x111>;
++			compatible = "samsung,s5pv310-uart","samsung,s3c2410-uart";
++		};
++	};
++};
 -- 
 1.6.6.rc2
