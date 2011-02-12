@@ -1,62 +1,117 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 7/7] serial: samsung: Get default port register settings from
-	device tree
-Date: Sat, 12 Feb 2011 18:17:05 +0530
-Message-ID: <1297514825-10345-8-git-send-email-thomas.abraham@linaro.org>
-References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: Re: [PATCH v3] altera_ps2: Add devicetree support
+Date: Sat, 12 Feb 2011 21:23:41 +0800
+Message-ID: <4D5689DD.3050508@wytron.com.tw>
+References: <AANLkTikxSrwOfU=m_h+6G5hQMk6drOpqOPSfbBdzg53g@mail.gmail.com> <1296702304-30471-1-git-send-email-thomas@wytron.com.tw> <20110212092600.GE17755@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-reply-to: <1297514825-10345-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20110212092600.GE17755@angua.secretlab.ca>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Walter Goossens <waltergoossens@home.nl>
 List-Id: devicetree@vger.kernel.org
 
-The default uart port register settings are obtained from the platform data.
-In addition to that, this patch adds support for obtaining the default uart port
-register values from the uart node in device tree.
+On 02/12/2011 05:26 PM, Grant Likely wrote:
+> On Thu, Feb 03, 2011 at 11:05:04AM +0800, Thomas Chou wrote:
+>> Signed-off-by: Walter Goossens<waltergoossens@home.nl>
+>> Signed-off-by: Thomas Chou<thomas@wytron.com.tw>
+>> ---
+>> v2 use const and add compat version.
+>> v3 change compatible vendor to ALTR.
+>>     add dts binding doc.
+>>
+>>   .../devicetree/bindings/serio/altera_ps2.txt       |    4 ++++
+>>   drivers/input/serio/altera_ps2.c                   |   11 +++++++++--
+>>   2 files changed, 13 insertions(+), 2 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/serio/altera_ps2.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/serio/altera_ps2.txt b/Documentation/devicetree/bindings/serio/altera_ps2.txt
+>> new file mode 100644
+>> index 0000000..4d9eecc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serio/altera_ps2.txt
+>> @@ -0,0 +1,4 @@
+>> +Altera UP PS/2 controller
+>> +
+>> +Required properties:
+>> +- compatible : should be "ALTR,ps2-1.0".
+>> diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
+>> index 7998560..d94b4a3 100644
+>> --- a/drivers/input/serio/altera_ps2.c
+>> +++ b/drivers/input/serio/altera_ps2.c
+>> @@ -19,6 +19,7 @@
+>>   #include<linux/platform_device.h>
+>>   #include<linux/io.h>
+>>   #include<linux/slab.h>
+>> +#include<linux/of.h>
+>>
+>>   #define DRV_NAME "altera_ps2"
+>>
+>> @@ -173,6 +174,12 @@ static int __devexit altera_ps2_remove(struct platform_device *pdev)
+>>   	return 0;
+>>   }
+>>
+>> +static const struct of_device_id altera_ps2_match[] = {
+>> +	{ .compatible = "ALTR,ps2-1.0", },
+>> +	{},
+>> +}
+>> +MODULE_DEVICE_TABLE(of, altera_ps2_match);
+>> +
+>
+> Should be:
+>
+> #ifdef CONFIG_OF
+> static const struct of_device_id altera_ps2_match[] = {
+> 	{ .compatible = "ALTR,ps2-1.0", },
+> 	{},
+> }
+> MODULE_DEVICE_TABLE(of, altera_ps2_match);
+> #else /* CONFIG_OF */
+> #define altera_ps2_match NULL
+> #endif /* CONFIG_OF */
+>
+> Otherwise the driver will be advertising that it provides device tree
+> support when CONFIG_OF is disabled.
 
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/tty/serial/samsung.c |   13 +++++++++++++
- 1 files changed, 13 insertions(+), 0 deletions(-)
+Thanks. Will update all related drivers.
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index 66fece9..dda1d52 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1148,9 +1148,22 @@ int s3c24xx_serial_probe(struct platform_device *dev,
- {
- 	struct s3c24xx_uart_port *ourport;
- 	int ret;
-+	unsigned int len, *regdef;
-+	struct s3c2410_uartcfg *cfg;
- 
- 	dbg("s3c24xx_serial_probe(%p, %p) %d\n", dev, info, probe_index);
- 
-+	if (dev->dev.of_node) {
-+		regdef = (u32 *)of_get_property(dev->dev.of_node,
-+					"reg-defaults", &len);
-+		if (regdef && (len / sizeof(unsigned int)) == 3) {
-+			cfg = s3c24xx_dev_to_cfg(&dev->dev);
-+			cfg->ucon = be32_to_cpu(regdef[0]);
-+			cfg->ulcon = be32_to_cpu(regdef[1]);
-+			cfg->ufcon = be32_to_cpu(regdef[2]);
-+		}
-+	}
-+
- 	ourport = &s3c24xx_serial_ports[probe_index];
- 	probe_index++;
- 
--- 
-1.6.6.rc2
+- Thomas
+
+>
+> Otherwise, looks good to me.  Feel free to add my acked-by line.
+>
+> g.
+>
+>>   /*
+>>    * Our device driver structure
+>>    */
+>> @@ -182,6 +189,7 @@ static struct platform_driver altera_ps2_driver = {
+>>   	.driver	= {
+>>   		.name	= DRV_NAME,
+>>   		.owner	= THIS_MODULE,
+>> +		.of_match_table = altera_ps2_match,
+>>   	},
+>>   };
+>>
+>> @@ -189,13 +197,12 @@ static int __init altera_ps2_init(void)
+>>   {
+>>   	return platform_driver_register(&altera_ps2_driver);
+>>   }
+>> +module_init(altera_ps2_init);
+>>
+>>   static void __exit altera_ps2_exit(void)
+>>   {
+>>   	platform_driver_unregister(&altera_ps2_driver);
+>>   }
+>> -
+>> -module_init(altera_ps2_init);
+>>   module_exit(altera_ps2_exit);
+>>
+>>   MODULE_DESCRIPTION("Altera University Program PS2 controller driver");
+>> --
+>> 1.7.3.5
+>>
+>
+
