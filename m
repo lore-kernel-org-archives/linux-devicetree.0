@@ -1,16 +1,20 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: DT: Add a basic dts file for SMDKV310 machine
-Date: Sat, 12 Feb 2011 23:11:42 -0700
-Message-ID: <20110213061142.GC17375@angua.secretlab.ca>
-References: <1296998250-21856-1-git-send-email-thomas.abraham@linaro.org>
-	<1296998250-21856-3-git-send-email-thomas.abraham@linaro.org>
-	<20110207000412.GA28953@yookeroo> <4D5046DC.8010503@gmail.com>
+Subject: Re: [RFC PATCH] ARM: pmu: add OF match support
+Date: Sat, 12 Feb 2011 23:23:25 -0700
+Message-ID: <20110213062325.GE17375@angua.secretlab.ca>
+References: <1297223617-19173-1-git-send-email-robherring2@gmail.com>
+	<AANLkTi=7azYw8+sYrbDsLOfF1aZynBDo+ub37O9j+k49@mail.gmail.com>
+	<3399156206431206254@unknownmsgid>
+	<AANLkTin5aA0tq-PYBmRKh6tLv6bHRaK5ymjhsj9T4-Ah@mail.gmail.com>
+	<-4919269306841091192@unknownmsgid>
+	<AANLkTikrBx1Y7MFGCJe=Gx-9fUxhwuYq-BZ4stGBGav6@mail.gmail.com>
+	<4D531CA0.8050402@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D5046DC.8010503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4D531CA0.8050402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,51 +25,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 07, 2011 at 01:24:12PM -0600, Rob Herring wrote:
-> David, Thomas,
-> 
-> On 02/06/2011 06:04 PM, David Gibson wrote:
-> >On Sun, Feb 06, 2011 at 06:47:28PM +0530, Thomas Abraham wrote:
-> >>This patch adds a basic dts file for Samsung's SMDKV310 machine.
+On Wed, Feb 09, 2011 at 05:00:48PM -0600, Rob Herring wrote:
+> On 02/09/2011 01:03 PM, Grant Likely wrote:
+> >On Wed, Feb 9, 2011 at 11:53 AM, Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>  wrote:
+> >>Grant,
 > >>
-> >>Signed-off-by: Thomas Abraham<thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>---
-> >>  arch/arm/mach-s5pv310/mach-smdkv310.dts |   38 +++++++++++++++++++++++++++++++
-> >>  1 files changed, 38 insertions(+), 0 deletions(-)
-> >>  create mode 100755 arch/arm/mach-s5pv310/mach-smdkv310.dts
+> >>>>Following on from Rob's update, it would be nice if you could specify that
+> >>>>the PMU is a CPU PMU (as opposed to L2-cache, bus, gpu etc) in the string.
+> >>>>That way adding different PMUs in the future seems more natural and it accounts
+> >>>>for your concerns above. Is that ok, or does the compatible string have to
+> >>>>match that used by the platform bus?
+> >>>
+> >>>It does make sense to encode the specific implementation into the
+> >>>compatible string.  A single device driver can bind against multiple
+> >>>compatible strings.  ie. the match table could include {.compatible =
+> >>>"arm,cortex-a9-pmu"},{.compatible = "arm,cortex-a9-l2cache-pmu"}...
 > >>
-> >>diff --git a/arch/arm/mach-s5pv310/mach-smdkv310.dts b/arch/arm/mach-s5pv310/mach-smdkv310.dts
-> >>new file mode 100755
-> >>index 0000000..74d80bf
-> >>--- /dev/null
-> >>+++ b/arch/arm/mach-s5pv310/mach-smdkv310.dts
-> >>@@ -0,0 +1,38 @@
-> >>+/dts-v1/;
-> >>+
-> >>+/ {
-> >>+	model = "smdkv310";
-> >>+	compatible = "samsung,smdkv310";
-> >>+	#address-cells =<1>;
-> >>+	#size-cells =<1>;
-> >>+
-> >>+	memory {
-> >>+		device_type = "memory";
-> >>+		reg =<0x40000000 0x08000000>;
-> >>+	};
+> >>Ok - that's great! Specifying the CPU is probably a little verbose, but
+> >>something like "arm,armv7pmu" would be really helpful when it comes to
+> >>multiple devices.
+> >>
+> >>>>As for versioning, the PMU detection is done dynamically at runtime,
+> >>>>so knowing that we're poking a CPU is enough.
+> >>>
+> >>>Fair enough.  It is still good practice in the compatible list to
+> >>>encode the specific PMU implementation (maybe arm,cortex-a9-pmu?)
+> >>>instead of trying to define a 'generic' or wildcard compatible value.
+> >>>Newer implementations can always claim compatibility with an older
+> >>>implementation so that the kernel doesn't have to be modified to find
+> >>>the new devices.  "arm,pmu" is probably too generic.
+> >>
+> >>"arm,pmu" is definitely too generic. If it's good practice to specify
+> >>as much as possible, then go for it - I just feel a little uneasy having
+> >>to add lots of redundant kernel code but it sounds like you'll hopefully
+> >>prove me wrong on that :)
 > >
-> >Uh.. where are the cpus?
-> >
+> >Shouldn't be any redundant kernel code.  It's just a list of match
+> >values, and the driver code already knows how to handle it.  The
+> >advantage of being specific is that if the driver ever does need
+> >information about the specific implementation (say, because the
+> >hardware reported value is buggy), then the data is available.
 > 
-> But for ARM, all the details of the cpu are probe-able. So what
-> would we gain by putting cpu info in the DTS?
+> By that argument, we should use "<vendor>,cortex-a9-rXpX-pmu." As a
+> particular rev of the A9 PMU or vendor's SOC could be buggy. That
+> would quickly grow into a long list. Just with cpu models, we would
+> have:
+> 
+> cortex-a9
+> cortex-a8
+> cortex-a15
+> cortex-a5
+> arm1136
+> arm1176
+> l210
+> l220
+> pl310
+> various xscale flavors
+> Qualcomm SMP
 
-You can detect what cpus are present, but you cannot necessarily
-detect if all cpus are available (for instance in a multicore AMP
-system where some cores run a different operating environment.  It is
-also always good practice to have the structure of the device tree
-fully populated even if the OS doesn't currently use it because it
-provides points that (for instance) cpu affinity or non-probeable
-configuration can be hung off of.
+This is not even remotely an unreasonable list.  Also remember that
+newer revisions can (and should!) claim compatibility with an older
+version if it is indeed compatible.
+
+Typically what happens is one particular implementation ends up
+becoming the defacto standard implementation.  So instead of each
+implementation claiming compatibility with a loosely defined "arm,pmu"
+(a definition that can end up changing over time), each of the above
+implementation may end up claiming "arm,cortex-a8-pmu" compatibility.
+In essence the string "arm,cortex-a8-pmu" *becomes* the generic
+version without the ambiguity of what to do if/when arm invents an
+incompatible PMU.
+
+> Keep in mind that the whole point of this platform device is just to
+> specify the interrupt connection which is the only part that varies
+> by SOC (and is not probe-able).
+
+That's tangential to the argument.  There is very good reason to
+anchor compatible values to specific implementations.  Doing it this
+way costs nothing.  Not doing it causes ambiguity down the road that
+is hard to recover from.
+
+g.
