@@ -1,67 +1,46 @@
-From: Harry Wei <jiaweiwei.xiyou@gmail.com>
-Subject: Re: Fwd: [PATCH] of: Add missing of_address.h to xilinx ehci driver
-Date: Mon, 14 Feb 2011 23:56:27 +0800
-Message-ID: <20110214155625.GA1951@gmail.com>
-References: <1297680009-4054-1-git-send-email-monstr@monstr.eu>
- <AANLkTikwaUVs_a_eetGjCj=Tg9qSPKAgxKac11gHWqDe@mail.gmail.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: [PATCH] [TRIVIAL] Drop an uninteresting message to pr_debug level
+Date: Mon, 14 Feb 2011 22:34:22 +0100
+Message-ID: <1297719274.1793.8.camel@t41.thuisdomein>
+References: <1297085223.1741.24.camel@t41.thuisdomein>
+	<AANLkTi=n7ogDGzwemR4pP5Uhp-ZoDti+qZ4ubqvjuosK@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTikwaUVs_a_eetGjCj=Tg9qSPKAgxKac11gHWqDe@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, greg@kroah.com, john.williams@petalogix.com, monstr@monstr.eu, grant.likely@secretlab.ca
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTi=n7ogDGzwemR4pP5Uhp-ZoDti+qZ4ubqvjuosK-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kyle McMartin <kyle-pfcGkIkfWfAsA/PxXw9srA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 14, 2011 at 11:53:13PM +0800, harryxiyou wrote:
-> ---------- Forwarded message ----------
-> From: Michal Simek <monstr@monstr.eu>
-> Date: 2011/2/14
-> Subject: [PATCH] of: Add missing of_address.h to xilinx ehci driver
-> To: glikely@secretlab.ca
-> Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-> Michal Simek <monstr@monstr.eu>, John Williams <john.williams@petalogix.com>
-> 
-> 
-> Build log:
-> In file included from drivers/usb/host/ehci-hcd.c:1208:
-> drivers/usb/host/ehci-xilinx-of.c: In function 'ehci_hcd_xilinx_of_probe':
-> drivers/usb/host/ehci-xilinx-of.c:168: error: implicit declaration of
-> function 'of_address_to_resource'
-> 
-> Signed-off-by: John Williams <john.williams@petalogix.com>
-> Signed-off-by: Michal Simek <monstr@monstr.eu>
-Acked-by: Harry Wei <harryxiyou@gmail.com> 
-> ---
->  drivers/usb/host/ehci-xilinx-of.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-xilinx-of.c
-> b/drivers/usb/host/ehci-xilinx-of.c
-> index e8f4f36..a6f21b8 100644
-> --- a/drivers/usb/host/ehci-xilinx-of.c
-> +++ b/drivers/usb/host/ehci-xilinx-of.c
-> @@ -29,6 +29,7 @@
-> 
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> 
->  /**
->  * ehci_xilinx_of_setup - Initialize the device for ehci_reset()
-> --
-> 1.5.5.6
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
-> 
-> -- 
-> Best Regards.
-> Harry Wei.
-> Do what u like!
+Signed-off-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+---
+On Mon, 2011-02-14 at 08:27 -0700, Grant Likely wrote:
+> The message is unnecessary.  It can just be dropped altogether, or
+> changed to a pr_debug().
+
+Thanks. I picked the second option, as it is enough to address my
+concerns.
+
+diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
+index d9396a4..927cbd1 100644
+--- a/fs/proc/proc_devtree.c
++++ b/fs/proc/proc_devtree.c
+@@ -233,7 +233,7 @@ void __init proc_device_tree_init(void)
+ 		return;
+ 	root = of_find_node_by_path("/");
+ 	if (root == NULL) {
+-		printk(KERN_ERR "/proc/device-tree: can't find root\n");
++		pr_debug("/proc/device-tree: can't find root\n");
+ 		return;
+ 	}
+ 	proc_device_tree_add_node(root, proc_device_tree);
