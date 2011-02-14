@@ -1,14 +1,13 @@
-From: "Will Deacon" <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: RE: [RFC PATCH] ARM: pmu: add OF match support
-Date: Wed, 9 Feb 2011 09:51:27 -0000
-Message-ID: <41755.5343745791$1297697208@news.gmane.org>
-References: <1297223617-19173-1-git-send-email-robherring2@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] Print a device-tree message at KERN_WARNING level
+Date: Mon, 14 Feb 2011 08:27:34 -0700
+Message-ID: <AANLkTi=n7ogDGzwemR4pP5Uhp-ZoDti+qZ4ubqvjuosK@mail.gmail.com>
+References: <1297085223.1741.24.camel@t41.thuisdomein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1297223617-19173-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-gb
+In-Reply-To: <1297085223.1741.24.camel-3NV1x7ENidhrKue/0VVhAg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,32 +17,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: 'Rob Herring' <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Kyle McMartin <kyle-pfcGkIkfWfAsA/PxXw9srA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Feb 7, 2011 at 6:26 AM, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
+> For some time now a laptop tracking Fedora's rawhide prints the message
+> =A0 =A0/proc/device-tree: can't find root
+>
+> early in each boot. It turns out that in recent Fedora kernels
+> CONFIG_PROC_DEVICETREE is set to Y by default. (Note that the config
+> help for PROC_DEVICETREE tells to "say Y here" if "unsure".) Apparently
+> this is a consequence of their wish to have one kernel for both OPLC x86
+> and non-OLPC x86 hardware.
+>
+> Since the majority of x86 hardware will be non-OLPC, KERN_WARNING seems
+> to be more appropriate than KERN_ERR. (The main benefit of the
+> KERN_WARNING level is that Fedora's plymouth bootsplash should now hide
+> this message.)
+>
+> Signed-off-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+> ---
+> Previously discussed in the thread starting here:
+> http://lists.fedoraproject.org/pipermail/kernel/2011-February/003012.html
+>
+> As stated in
+> http://lists.fedoraproject.org/pipermail/kernel/2011-February/003011.html=
+ , I have no idea what this message means. I just prefer to not see it. Thi=
+s seems to be the easiest way to achieve that. But maybe there's an elegant=
+ way to drop this message all together on hardware for which it's apparentl=
+y irrelevant.
 
-> Add OF match table to enable OF style driver binding. The dts entry is like
-> this:
-> 
-> pmu {
-> 	compatible = "arm,pmu";
-> 	interrupts = <100 101>;
-> };
-> 
-> The use of pdev->id as an index breaks with OF device binding. Change to use
-> a counter instead. If more than 1 pmu device is ever really supported, a
-> better solution to match users with particular pmu is probably needed.
+The message is unnecessary.  It can just be dropped altogether, or
+changed to a pr_debug().
 
-We will want to support multiple PMU devices in the near future but
-this is currently blocked on userspace issues. One such device would
-be the event counters on the PL310, which could be used to complement
-the CPU PMU on the Cortex-A9.
+g.
 
-I don't like the idea of a counter as it forces platforms to register
-their devices in a specific order. Is it possible to separate different
-types of PMU in the device tree and then have pmu.c work out what to do
-with them?
+>
+> =A0fs/proc/proc_devtree.c | =A0 =A02 +-
+> =A01 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
+> index d9396a4..71dd779 100644
+> --- a/fs/proc/proc_devtree.c
+> +++ b/fs/proc/proc_devtree.c
+> @@ -233,7 +233,7 @@ void __init proc_device_tree_init(void)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return;
+> =A0 =A0 =A0 =A0root =3D of_find_node_by_path("/");
+> =A0 =A0 =A0 =A0if (root =3D=3D NULL) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_ERR "/proc/device-tree: can't f=
+ind root\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_WARNING "/proc/device-tree: can=
+'t find root\n");
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return;
+> =A0 =A0 =A0 =A0}
+> =A0 =A0 =A0 =A0proc_device_tree_add_node(root, proc_device_tree);
+> --
+> 1.7.4
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
 
-Will
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
