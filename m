@@ -1,50 +1,56 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v9] spi: New driver for Altera SPI
-Date: Tue, 15 Feb 2011 12:42:57 -0700
-Message-ID: <20110215194257.GB7649@angua.secretlab.ca>
-References: <1297142509-20158-1-git-send-email-thomas@wytron.com.tw>
- <1297649443-11491-1-git-send-email-thomas@wytron.com.tw>
- <4D58917E.9050408@bluewatersys.com>
- <4D5A2591.5090901@wytron.com.tw>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] [TRIVIAL] Drop an uninteresting message to pr_debug level
+Date: Tue, 15 Feb 2011 13:39:52 -0700
+Message-ID: <20110215203952.GA24022@angua.secretlab.ca>
+References: <1297085223.1741.24.camel@t41.thuisdomein>
+	<AANLkTi=n7ogDGzwemR4pP5Uhp-ZoDti+qZ4ubqvjuosK@mail.gmail.com>
+	<1297719274.1793.8.camel@t41.thuisdomein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D5A2591.5090901@wytron.com.tw>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Chou <thomas@wytron.com.tw>
-Cc: Ryan Mallon <ryan@bluewatersys.com>, David Brownell <dbrownell@users.sourceforge.net>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net
+In-Reply-To: <1297719274.1793.8.camel-3NV1x7ENidhrKue/0VVhAg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Kyle McMartin <kyle-pfcGkIkfWfAsA/PxXw9srA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 15, 2011 at 03:04:49PM +0800, Thomas Chou wrote:
-> Dear Ryan,
+On Mon, Feb 14, 2011 at 10:34:22PM +0100, Paul Bolle wrote:
+> Signed-off-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+> ---
+> On Mon, 2011-02-14 at 08:27 -0700, Grant Likely wrote:
+> > The message is unnecessary.  It can just be dropped altogether, or
+> > changed to a pr_debug().
 > 
-> On 02/14/2011 10:20 AM, Ryan Mallon wrote:
-> >On 02/14/2011 03:10 PM, Thomas Chou wrote:
-> >>This patch adds a new SPI driver to support the Altera SOPC Builder
-> >>SPI component. It uses the bitbanging library.
-> >>
-> >>Signed-off-by: Thomas Chou<thomas@wytron.com.tw>
-> >>---
-> >
-> >>+struct altera_spi {
-> >>+	/* bitbang has to be first */
-> >>+	struct spi_bitbang bitbang;
-> >
-> >Is this still true? I had a quick look and can't see anything which
-> >relies on spi_bitbang being the first entry. Things like this should be
-> >using container_of so that position in the struct is irrelevant.
-> >
-> >~Ryan
-> >
-> 
-> Yes, sadly true. This is due to the implementation of the bitbanging
-> library, spi_bitbang.c, which assumes the struct spi_bitbang is the
-> first of drvdata. Though it could be changed in the future (beyond
-> this little driver), every bitbanging library user has to follow
-> this for now.
+> Thanks. I picked the second option, as it is enough to address my
+> concerns.
 
-Should be easy to fix if it is indeed still true (I haven't dug deep
-enough to find the design error yet).  Anybody want to volunteer?
+Applied, thanks.
 
 g.
+
+> 
+> diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
+> index d9396a4..927cbd1 100644
+> --- a/fs/proc/proc_devtree.c
+> +++ b/fs/proc/proc_devtree.c
+> @@ -233,7 +233,7 @@ void __init proc_device_tree_init(void)
+>  		return;
+>  	root = of_find_node_by_path("/");
+>  	if (root == NULL) {
+> -		printk(KERN_ERR "/proc/device-tree: can't find root\n");
+> +		pr_debug("/proc/device-tree: can't find root\n");
+>  		return;
+>  	}
+>  	proc_device_tree_add_node(root, proc_device_tree);
+> 
+> 
