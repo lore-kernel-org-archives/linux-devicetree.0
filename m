@@ -1,92 +1,163 @@
-From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] of: Add missing of_address.h to xilinx ehci driver
-Date: Wed, 16 Feb 2011 06:58:26 +1000
-Message-ID: <AANLkTi=j4COunaLvadkD8Oh2qGaBCsNb8DvrKt_C4GHf@mail.gmail.com>
-References: <1297680009-4054-1-git-send-email-monstr@monstr.eu>
-	<20110215204011.GB24022@angua.secretlab.ca>
+From: Ryan Mallon <ryan@bluewatersys.com>
+Subject: Re: [PATCH v9] spi: New driver for Altera SPI
+Date: Wed, 16 Feb 2011 10:58:41 +1300
+Message-ID: <4D5AF711.3000508@bluewatersys.com>
+References: <1297142509-20158-1-git-send-email-thomas@wytron.com.tw> <1297649443-11491-1-git-send-email-thomas@wytron.com.tw> <4D58917E.9050408@bluewatersys.com> <4D5A2591.5090901@wytron.com.tw> <20110215194257.GB7649@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6163199633611596739=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110215204011.GB24022-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110215194257.GB7649@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Thomas Chou <thomas@wytron.com.tw>, David Brownell <dbrownell@users.sourceforge.net>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
---===============6163199633611596739==
-Content-Type: multipart/alternative; boundary=001485f44a30fa6b5d049c586c7b
-
---001485f44a30fa6b5d049c586c7b
-Content-Type: text/plain; charset=ISO-8859-1
-
-On Wed, Feb 16, 2011 at 6:40 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>wrote:
-
-> On Mon, Feb 14, 2011 at 11:40:09AM +0100, Michal Simek wrote:
-> > Build log:
-> > In file included from drivers/usb/host/ehci-hcd.c:1208:
-> > drivers/usb/host/ehci-xilinx-of.c: In function
-> 'ehci_hcd_xilinx_of_probe':
-> > drivers/usb/host/ehci-xilinx-of.c:168: error: implicit declaration of
-> function 'of_address_to_resource'
-> >
-> > Signed-off-by: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-> > Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+On 16/02/11 08:42, Grant Likely wrote:
+> On Tue, Feb 15, 2011 at 03:04:49PM +0800, Thomas Chou wrote:
+>> Dear Ryan,
+>>
+>> On 02/14/2011 10:20 AM, Ryan Mallon wrote:
+>>> On 02/14/2011 03:10 PM, Thomas Chou wrote:
+>>>> This patch adds a new SPI driver to support the Altera SOPC Builder
+>>>> SPI component. It uses the bitbanging library.
+>>>>
+>>>> Signed-off-by: Thomas Chou<thomas@wytron.com.tw>
+>>>> ---
+>>>> +struct altera_spi {
+>>>> +	/* bitbang has to be first */
+>>>> +	struct spi_bitbang bitbang;
+>>> Is this still true? I had a quick look and can't see anything which
+>>> relies on spi_bitbang being the first entry. Things like this should be
+>>> using container_of so that position in the struct is irrelevant.
+>>>
+>>> ~Ryan
+>>>
+>> Yes, sadly true. This is due to the implementation of the bitbanging
+>> library, spi_bitbang.c, which assumes the struct spi_bitbang is the
+>> first of drvdata. Though it could be changed in the future (beyond
+>> this little driver), every bitbanging library user has to follow
+>> this for now.
+> Should be easy to fix if it is indeed still true (I haven't dug deep
+> enough to find the design error yet).  Anybody want to volunteer?
 >
-> Applied, thanks.
+> g.
 >
+The problem is that spi_master_get_devdata is used to get both 
+struct spi_bitbang and the controller dependent structure, which means
+that struct spi_bitbang must be the first entry in the container
+structure.
 
-FYI I haven't tried building it, but I believe that ehci-ppc-of.c will need
-the same patch.
+The following incomplete, untested patch shows a possible way to fix
+this by introducing spi_alloc_master_bitbang. spi_master_get_devdata
+now returns a pointer to struct spi_bitbang only. Drivers which need
+an additional container struct should allocate it themselves and 
+pass the bitbang field to spi_alloc_master_bitbang. The driver 
+specific container can be fetched with:
 
-John
+static inline struct my_spi *to_my_spi(struct spi_master *master)
+{
+	struct spi_bitbang *bitbang = spi_master_get_devdata(master);
+	return container_of(bitbang, struct my_spi, bitbang);
+} 
 
---001485f44a30fa6b5d049c586c7b
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch only adds the alloc function and shows the necessary
+changes to the spi_gpio.c driver, which is actually pretty minimal.
+If there is any interest I can code up a proper patch.
 
-<br><br><div class=3D"gmail_quote">On Wed, Feb 16, 2011 at 6:40 AM, Grant L=
-ikely <span dir=3D"ltr">&lt;<a href=3D"mailto:grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org">gr=
-ant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail=
-_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:=
-1ex;">
-<div class=3D"im">On Mon, Feb 14, 2011 at 11:40:09AM +0100, Michal Simek wr=
-ote:<br>
-&gt; Build log:<br>
-&gt; In file included from drivers/usb/host/ehci-hcd.c:1208:<br>
-&gt; drivers/usb/host/ehci-xilinx-of.c: In function &#39;ehci_hcd_xilinx_of=
-_probe&#39;:<br>
-&gt; drivers/usb/host/ehci-xilinx-of.c:168: error: implicit declaration of =
-function &#39;of_address_to_resource&#39;<br>
-&gt;<br>
-&gt; Signed-off-by: John Williams &lt;<a href=3D"mailto:john.williams@petal=
-ogix.com">john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org</a>&gt;<br>
-&gt; Signed-off-by: Michal Simek &lt;<a href=3D"mailto:monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org">mo=
-nstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org</a>&gt;<br>
-<br>
-</div>Applied, thanks.<br></blockquote><div><br></div><div>FYI I haven&#39;=
-t tried building it, but I believe that ehci-ppc-of.c will need the same pa=
-tch.</div><div></div></div><br>
-<div>John</div><div><br></div>
+~Ryan
 
---001485f44a30fa6b5d049c586c7b--
-
---===============6163199633611596739==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6163199633611596739==--
+---
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 34bb17f..52ec691 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -27,6 +27,7 @@
+ #include <linux/slab.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
++#include <linux/spi/spi_bitbang.h>
+ #include <linux/of_spi.h>
+ #include <linux/pm_runtime.h>
+ 
+@@ -560,6 +561,24 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+ }
+ EXPORT_SYMBOL_GPL(spi_alloc_master);
+ 
++struct spi_master *spi_alloc_master_bitbang(struct device *dev,
++					    struct spi_bitbang *bitbang)
++{
++	struct spi_master *master;
++
++	master = kzalloc(sizeof(struct spi_master), GFP_KERNEL);
++	if (!master)
++		return NULL;
++
++	device_initialize(&master->dev);
++	master->dev.class = &spi_master_class;
++	master->dev.parent = get_device(dev);
++	spi_master_set_devdata(master, bitbang);
++
++	return master;
++}
++EXPORT_SYMBOL_GPL(spi_alloc_master_bitbang);
++
+ /**
+  * spi_register_master - register SPI master controller
+  * @master: initialized master, originally from spi_alloc_master()
+diff --git a/drivers/spi/spi_gpio.c b/drivers/spi/spi_gpio.c
+index 63e51b0..169dbf0 100644
+--- a/drivers/spi/spi_gpio.c
++++ b/drivers/spi/spi_gpio.c
+@@ -329,12 +329,17 @@ static int __init spi_gpio_probe(struct platform_device *pdev)
+ 	if (status < 0)
+ 		return status;
+ 
+-	master = spi_alloc_master(&pdev->dev, sizeof *spi_gpio);
+-	if (!master) {
++	spi_gpio = kzalloc(sizeof(struct spi_gpio), GFP_KERNEL);
++	if (!spi_gpio) {
+ 		status = -ENOMEM;
+ 		goto gpio_free;
+ 	}
+-	spi_gpio = spi_master_get_devdata(master);
++
++	master = spi_alloc_master_bitbang(&pdev->dev, &spi_gpio->bitbang);
++	if (!master) {
++		status = -ENOMEM;
++		goto spi_gpio_free;
++	}
+ 	platform_set_drvdata(pdev, spi_gpio);
+ 
+ 	spi_gpio->pdev = pdev;
+@@ -367,6 +372,8 @@ static int __init spi_gpio_probe(struct platform_device *pdev)
+ 	status = spi_bitbang_start(&spi_gpio->bitbang);
+ 	if (status < 0) {
+ 		spi_master_put(spi_gpio->bitbang.master);
++spi_gpio_free:
++		kfree(spi_gpio);
+ gpio_free:
+ 		if (SPI_MISO_GPIO != SPI_GPIO_NO_MISO)
+ 			gpio_free(SPI_MISO_GPIO);
+@@ -391,6 +398,7 @@ static int __exit spi_gpio_remove(struct platform_device *pdev)
+ 	/* stop() unregisters child devices too */
+ 	status = spi_bitbang_stop(&spi_gpio->bitbang);
+ 	spi_master_put(spi_gpio->bitbang.master);
++	kfree(spi_gpio);
+ 
+ 	platform_set_drvdata(pdev, NULL);
+ 
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index b4d7710..3f72a34 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -336,7 +336,8 @@ static inline void spi_master_put(struct spi_master *master)
+ /* the spi driver core manages memory for the spi_master classdev */
+ extern struct spi_master *
+ spi_alloc_master(struct device *host, unsigned size);
+-
++extern struct spi_master *
++spi_alloc_master_bitbang(struct device *host, struct spi_bitbang *bitbang);
+ extern int spi_register_master(struct spi_master *master);
+ extern void spi_unregister_master(struct spi_master *master);
+ 
