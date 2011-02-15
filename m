@@ -1,16 +1,14 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] [TRIVIAL] Drop an uninteresting message to pr_debug level
-Date: Tue, 15 Feb 2011 13:39:52 -0700
-Message-ID: <20110215203952.GA24022@angua.secretlab.ca>
-References: <1297085223.1741.24.camel@t41.thuisdomein>
-	<AANLkTi=n7ogDGzwemR4pP5Uhp-ZoDti+qZ4ubqvjuosK@mail.gmail.com>
-	<1297719274.1793.8.camel@t41.thuisdomein>
+Subject: Re: [PATCH] of: Add missing of_address.h to xilinx ehci driver
+Date: Tue, 15 Feb 2011 13:40:11 -0700
+Message-ID: <20110215204011.GB24022@angua.secretlab.ca>
+References: <1297680009-4054-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1297719274.1793.8.camel-3NV1x7ENidhrKue/0VVhAg@public.gmane.org>
+In-Reply-To: <1297680009-4054-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,37 +18,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: Kyle McMartin <kyle-pfcGkIkfWfAsA/PxXw9srA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 14, 2011 at 10:34:22PM +0100, Paul Bolle wrote:
-> Signed-off-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-> ---
-> On Mon, 2011-02-14 at 08:27 -0700, Grant Likely wrote:
-> > The message is unnecessary.  It can just be dropped altogether, or
-> > changed to a pr_debug().
+On Mon, Feb 14, 2011 at 11:40:09AM +0100, Michal Simek wrote:
+> Build log:
+> In file included from drivers/usb/host/ehci-hcd.c:1208:
+> drivers/usb/host/ehci-xilinx-of.c: In function 'ehci_hcd_xilinx_of_probe':
+> drivers/usb/host/ehci-xilinx-of.c:168: error: implicit declaration of function 'of_address_to_resource'
 > 
-> Thanks. I picked the second option, as it is enough to address my
-> concerns.
+> Signed-off-by: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 
 Applied, thanks.
 
 g.
 
+> ---
+>  drivers/usb/host/ehci-xilinx-of.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
-> diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-> index d9396a4..927cbd1 100644
-> --- a/fs/proc/proc_devtree.c
-> +++ b/fs/proc/proc_devtree.c
-> @@ -233,7 +233,7 @@ void __init proc_device_tree_init(void)
->  		return;
->  	root = of_find_node_by_path("/");
->  	if (root == NULL) {
-> -		printk(KERN_ERR "/proc/device-tree: can't find root\n");
-> +		pr_debug("/proc/device-tree: can't find root\n");
->  		return;
->  	}
->  	proc_device_tree_add_node(root, proc_device_tree);
-> 
+> diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+> index e8f4f36..a6f21b8 100644
+> --- a/drivers/usb/host/ehci-xilinx-of.c
+> +++ b/drivers/usb/host/ehci-xilinx-of.c
+> @@ -29,6 +29,7 @@
+>  
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+>  
+>  /**
+>   * ehci_xilinx_of_setup - Initialize the device for ehci_reset()
+> -- 
+> 1.5.5.6
 > 
