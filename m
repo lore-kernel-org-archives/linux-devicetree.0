@@ -1,71 +1,181 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: Re: [PATCH v5] i2c-gpio: add devicetree support
-Date: Wed, 16 Feb 2011 14:13:06 +0800
-Message-ID: <4D5B6AF2.8060104@wytron.com.tw>
-References: <1297304967-3759-1-git-send-email-thomas@wytron.com.tw>
-	<1297650610-12400-1-git-send-email-thomas@wytron.com.tw>
-	<20110216054956.GD11684@angua.secretlab.ca>
+From: Tobias Klauser <tklauser@distanz.ch>
+Subject: Re: [PATCH 3/4] tty: serial: altera_uart: Add devicetree support
+Date: Wed, 16 Feb 2011 08:43:21 +0100
+Message-ID: <20110216074321.GB4076@distanz.ch>
+References: <cover.1297245277.git.tklauser@distanz.ch> <c7a7085602687d2f1b6ac505c030f19bafda04e3.1297245277.git.tklauser@distanz.ch> <20110216043201.GA11684@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110216054956.GD11684-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110216043201.GA11684@angua.secretlab.ca>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On 2011-02-16 at 05:32:01 +0100, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Wed, Feb 09, 2011 at 10:58:13AM +0100, Tobias Klauser wrote:
+> > With the recent switch of the (currently still out-of-tree) Nios2 Linux
+> > port to devicetree we want to be able to retreive the resources and
+> > properties from dts.
+> > 
+> > The old method to retreive resources and properties from platform data
+> > is still supported.
+> > 
+> > Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> > ---
+> >  .../devicetree/bindings/serial/altera_uart.txt     |    7 +++
+> >  drivers/tty/serial/altera_uart.c                   |   47 ++++++++++++++++++--
+> >  2 files changed, 50 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/serial/altera_uart.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/altera_uart.txt b/Documentation/devicetree/bindings/serial/altera_uart.txt
+> > new file mode 100644
+> > index 0000000..2ab151c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/serial/altera_uart.txt
+> > @@ -0,0 +1,7 @@
+> > +Altera UART
+> > +
+> > +Required properties:
+> > +- compatible : should be "ALTR,uart-1.0"
+> > + 
+> > +Optional properties:
+> > +- clock-frequency : frequency of the clock input to the UART
+> > diff --git a/drivers/tty/serial/altera_uart.c b/drivers/tty/serial/altera_uart.c
+> > index 3a57352..5b46ca7 100644
+> > --- a/drivers/tty/serial/altera_uart.c
+> > +++ b/drivers/tty/serial/altera_uart.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/serial.h>
+> >  #include <linux/serial_core.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/of.h>
+> >  #include <linux/io.h>
+> >  #include <linux/altera_uart.h>
+> >  
+> > @@ -507,6 +508,34 @@ static struct uart_driver altera_uart_driver = {
+> >  	.cons		= ALTERA_UART_CONSOLE,
+> >  };
+> >  
+> > +#ifdef CONFIG_OF
+> > +static int altera_uart_get_uartclk(struct platform_device *pdev,
+> > +				   struct uart_port *port)
+> > +{
+> > +	const __be32 *clk = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
+> > +
+> > +	if (!clk)
+> > +		return -ENODEV;
+> > +
+> > +	port->uartclk = be32_to_cpup(clk);
+> > +
+> > +	return 0;
+> > +}
+> > +#else
+> > +static int altera_uart_get_uartclk(struct platform_device *pdev,
+> > +				   struct uart_port *port)
+> > +{
+> > +	struct altera_uart_platform_uart *platp = pdev->dev.platform_data;
+> > +
+> > +	if (!platp)
+> > +		return -ENODEV;
+> > +
+> > +	port->uartclk = platp->uartclk;
+> > +
+> > +	return 0;
+> > +}
+> > +#endif /* CONFIG_OF */
+> 
+> This either/or situation isn't really desirable.  The driver should be
+> written so that platform_data works regardless of whether or not
+> CONFIG_OF is set.  So, if the of_node pointer is set, use it to get
+> the configuration, but fall back to platform data if it is NULL.
 
-On 02/16/2011 01:49 PM, Grant Likely wrote:
-> On Mon, Feb 14, 2011 at 10:30:10AM +0800, Thomas Chou wrote:
->> From: Albert Herranz<albert_herranz-mRCrAkd8dF0@public.gmane.org>
->>
->> This patch adds devicetree support to i2c-gpio driver. The allocation
->> of local data is integrated to a private structure, and use devm_*
->> helper for easy cleanup.
->>
->> It is base on an earlier patch for gc-linux from
->> Albert Herranz<albert_herranz-mRCrAkd8dF0@public.gmane.org>.
->>
->> Signed-off-by: Thomas Chou<thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
->> CC: Albert Herranz<albert_herranz-mRCrAkd8dF0@public.gmane.org>
->> Acked-by: Haavard Skinnemoen<hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> One minor nitpick below, but I'd be fine with cleaning that up via a
-> followup patch.  This one looks correct to me.
->
-> Acked-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->
-> Ben, this one depends on a patch in my devicetree/next tree.  How do
-> you want to handle it?
->
-> g.
->
+Agreed, I'll fix this. Though that case will most probably never happen,
+we either use device tree data or platform data.
 
-Thanks a lot.
+> > +
+> >  static int __devinit altera_uart_probe(struct platform_device *pdev)
+> >  {
+> >  	struct altera_uart_platform_uart *platp = pdev->dev.platform_data;
+> > @@ -514,6 +543,7 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
+> >  	struct resource *res_mem;
+> >  	struct resource *res_irq;
+> >  	int i = pdev->id;
+> > +	int ret;
+> >  
+> >  	/* -1 emphasizes that the platform must have one port, no .N suffix */
+> >  	if (i == -1)
+> > @@ -538,6 +568,10 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
+> >  	else if (platp->irq)
+> >  		port->irq = platp->irq;
+> >  
+> > +	ret = altera_uart_get_uartclk(pdev, port);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> >  	port->membase = ioremap(port->mapbase, ALTERA_UART_SIZE);
+> >  	if (!port->membase)
+> >  		return -ENOMEM;
+> > @@ -550,7 +584,6 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
+> >  	port->line = i;
+> >  	port->type = PORT_ALTERA_UART;
+> >  	port->iotype = SERIAL_IO_MEM;
+> > -	port->uartclk = platp->uartclk;
+> >  	port->ops = &altera_uart_ops;
+> >  	port->flags = UPF_BOOT_AUTOCONF;
+> >  
+> > @@ -573,13 +606,19 @@ static int __devexit altera_uart_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > +static struct of_device_id altera_uart_match[] = {
+> > +	{ .compatible = "altr,uart-1.0", },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, altera_uart_match);
+> 
+> Need to protect the MODULE_DEVICE_TABLE with #ifdef/#endif.  You don't
+> want to advertise device tree support when CONFIG_OF isn't selected.
 
->> +#ifdef CONFIG_OF
->> +#include<linux/of_gpio.h>
->
-> Instead of putting the include here, please add #ifdef CONFIG_OF
-> protection around the contents of linux/of_gpio.h itself.  I fully
-> support that change so that includes can remain at the top where they
-> belong.
+Shall I put the #ifdef around the whole table and define it as NULL if
+CONFIG_OF is not defined - like this:
 
-Then, my earlier patch on Jan 31, might be another solution. This way 
-of_gpio.h can be included at the top, and those of_gpio users will be 
-optimized out when of or of_gpio is not configured.
+	#ifdef CONFIG_OF
+	static struct of_device_id altera_uart_match[] = {
+		{ .compatible = "altr,uart-1.0", },
+		{},
+	};
+	MODULE_DEVICE_TABLE(of, altera_uart_match);
+	#else
+	#define altera_uart_match NULL
+	#endif /* CONFIG_OF */
 
-[PATCH 2/3] of: of_gpiochip_add is needed only for gpiolib
+or will it be sufficient to just #ifdef the MODULE_DEVICE_TABLE:
 
-Cheers,
-Thomas
+	static struct of_device_id altera_uart_match[] = {
+		{ .compatible = "altr,uart-1.0", },
+		{},
+	};
+	#ifdef CONFIG_OF
+	MODULE_DEVICE_TABLE(of, altera_uart_match);
+	#endif
+
+> > +
+> >  static struct platform_driver altera_uart_platform_driver = {
+> >  	.probe	= altera_uart_probe,
+> >  	.remove	= __devexit_p(altera_uart_remove),
+> >  	.driver	= {
+> > -		.name	= DRV_NAME,
+> > -		.owner	= THIS_MODULE,
+> > -		.pm	= NULL,
+> > +		.name		= DRV_NAME,
+> > +		.owner		= THIS_MODULE,
+> > +		.of_match_table	= altera_uart_match,
+> >  	},
+> >  };
+> >  
+> > -- 
+> > 1.7.0.4
+> > 
+> 
