@@ -1,66 +1,104 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] i2c-ocores: register devices on child nodes
-Date: Tue, 15 Feb 2011 21:35:40 -0700
-Message-ID: <20110216043540.GB11684@angua.secretlab.ca>
-References: <1297306314-11483-1-git-send-email-thomas@wytron.com.tw>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4] altera_ps2: Add devicetree support
+Date: Tue, 15 Feb 2011 21:40:16 -0700
+Message-ID: <20110216044016.GC11684@angua.secretlab.ca>
+References: <20110212092600.GE17755@angua.secretlab.ca>
+ <1297649202-11200-1-git-send-email-thomas@wytron.com.tw>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1297306314-11483-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1297649202-11200-1-git-send-email-thomas@wytron.com.tw>
+Sender: linux-input-owner@vger.kernel.org
+To: Thomas Chou <thomas@wytron.com.tw>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Walter Goossens <waltergoossens@home.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 10, 2011 at 10:51:54AM +0800, Thomas Chou wrote:
-> This patch registers devices on the devicetree child nodes to the bus.
-> Also removes one trailing whitespace.
+On Mon, Feb 14, 2011 at 10:06:42AM +0800, Thomas Chou wrote:
+> From: Walter Goossens <waltergoossens@home.nl>
 > 
-> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+> Signed-off-by: Walter Goossens <waltergoossens@home.nl>
+> Signed-off-by: Thomas Chou <thomas@wytron.com.tw>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-Ben, do you want to pick this one up?  Or should I merge it via my
-devicetree branch?
-
+Merged, thanks,
 g.
 
 > ---
->  drivers/i2c/busses/i2c-ocores.c |    6 +++++-
->  1 files changed, 5 insertions(+), 1 deletions(-)
+> v2 use const and add compat version.
+> v3 change compatible vendor to ALTR.
+>     add dts binding doc.
+> v4 condition module device table export for of.
 > 
-> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> index ef3bcb1..c63838f 100644
-> --- a/drivers/i2c/busses/i2c-ocores.c
-> +++ b/drivers/i2c/busses/i2c-ocores.c
-> @@ -18,7 +18,7 @@
->   * - interrupts      : interrupt number
->   * - regstep         : size of device registers in bytes
->   * - clock-frequency : frequency of bus clock in Hz
-> - * 
-> + *
->   * Example:
->   *
->   *  i2c0: ocores@a0000000 {
-> @@ -55,6 +55,7 @@
->  #include <linux/i2c-ocores.h>
->  #include <linux/slab.h>
->  #include <linux/io.h>
-> +#include <linux/of_i2c.h>
->  
->  struct ocores_i2c {
->  	void __iomem *base;
-> @@ -347,6 +348,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->  			i2c_new_device(&i2c->adap, pdata->devices + i);
->  	}
->  
-> +	/* Now register all the child nodes */
-> +	of_i2c_register_devices(&i2c->adap);
+> Grant, please take it through your tree as Dmitry agreed.
+> 
+>  .../devicetree/bindings/serio/altera_ps2.txt       |    4 ++++
+>  drivers/input/serio/altera_ps2.c                   |   15 +++++++++++++--
+>  2 files changed, 17 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serio/altera_ps2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serio/altera_ps2.txt b/Documentation/devicetree/bindings/serio/altera_ps2.txt
+> new file mode 100644
+> index 0000000..4d9eecc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serio/altera_ps2.txt
+> @@ -0,0 +1,4 @@
+> +Altera UP PS/2 controller
 > +
+> +Required properties:
+> +- compatible : should be "ALTR,ps2-1.0".
+> diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
+> index 7998560..3fee88b 100644
+> --- a/drivers/input/serio/altera_ps2.c
+> +++ b/drivers/input/serio/altera_ps2.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>  
+>  #define DRV_NAME "altera_ps2"
+>  
+> @@ -173,6 +174,16 @@ static int __devexit altera_ps2_remove(struct platform_device *pdev)
 >  	return 0;
 >  }
 >  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id altera_ps2_match[] = {
+> +	{ .compatible = "ALTR,ps2-1.0", },
+> +	{},
+> +}
+> +MODULE_DEVICE_TABLE(of, altera_ps2_match);
+> +#else /* CONFIG_OF */
+> +#define altera_ps2_match NULL
+> +#endif /* CONFIG_OF */
+> +
+>  /*
+>   * Our device driver structure
+>   */
+> @@ -182,6 +193,7 @@ static struct platform_driver altera_ps2_driver = {
+>  	.driver	= {
+>  		.name	= DRV_NAME,
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = altera_ps2_match,
+>  	},
+>  };
+>  
+> @@ -189,13 +201,12 @@ static int __init altera_ps2_init(void)
+>  {
+>  	return platform_driver_register(&altera_ps2_driver);
+>  }
+> +module_init(altera_ps2_init);
+>  
+>  static void __exit altera_ps2_exit(void)
+>  {
+>  	platform_driver_unregister(&altera_ps2_driver);
+>  }
+> -
+> -module_init(altera_ps2_init);
+>  module_exit(altera_ps2_exit);
+>  
+>  MODULE_DESCRIPTION("Altera University Program PS2 controller driver");
 > -- 
 > 1.7.4
 > 
