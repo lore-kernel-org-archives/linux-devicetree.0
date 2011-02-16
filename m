@@ -1,645 +1,228 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH OF 07/14] of: move of_irq_map_pci() into generic code
-Date: Wed, 16 Feb 2011 14:53:47 -0700
-Message-ID: <AANLkTimE=mB_yWsOeD3zw+b4cHFx591h-605tK4yWAJr@mail.gmail.com>
-References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de> <1295843342-1122-8-git-send-email-bigeasy@linutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH TIP 08/14] x86/dtb: add support for PCI devices backed by
+	dtb nodes
+Date: Wed, 16 Feb 2011 14:59:15 -0700
+Message-ID: <AANLkTimWxmEcr=7AibGUht3bBi7ms2MRqj4Qj-jwEGBB@mail.gmail.com>
+References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
+	<1295843342-1122-9-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1295843342-1122-8-git-send-email-bigeasy@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Michal Simek <monstr@monstr.eu>, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1295843342-1122-9-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Sun, Jan 23, 2011 at 9:28 PM, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
-> From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+<bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+> x86_of_pci_init() does two things:
+> - it provides a generic irq enable and disable function. enable queries
+> =A0the device tree for the interrupt information, calls ->xlate on the
+> =A0irq host and updates the pci->irq information for the device.
 >
-> There is a tiny difference between PPC32 and PPC64. Microblaze uses t=
-he
-> PPC32 variant.
+> - it walks through PCI buss(es) in the device tree and adds its children
+> =A0(devices) nodes to appropriate pci_dev nodes in kernel. So the dtb
+> =A0node information is available at probe time of the PCI device.
 >
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Signed-off-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-
-I've got this one in my devicetree/next branch which is pulled into
-linux-next.  I've not received an ack from Ben yet.  Michal, is this
-okay by you?
-
-http://git.secretlab.ca/?p=3Dlinux-2.6.git;a=3Dcommit;h=3D04bea68b2f0ee=
-ebb089ecc67b618795925268b4a
-
-g.
-
+> Adding a PCI bus based on the information in the device tree is
+> currently not supported. Right now direct access via ioports is used.
+>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Tested-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 > ---
-> =A0arch/microblaze/include/asm/pci-bridge.h | =A0 12 ++++
-> =A0arch/microblaze/include/asm/prom.h =A0 =A0 =A0 | =A0 15 -----
-> =A0arch/microblaze/kernel/prom_parse.c =A0 =A0 =A0| =A0 77 ----------=
------------------
-> =A0arch/microblaze/pci/pci-common.c =A0 =A0 =A0 =A0 | =A0 =A01 +
-> =A0arch/powerpc/include/asm/pci-bridge.h =A0 =A0| =A0 10 ++++
-> =A0arch/powerpc/include/asm/prom.h =A0 =A0 =A0 =A0 =A0| =A0 15 -----
-> =A0arch/powerpc/kernel/pci-common.c =A0 =A0 =A0 =A0 | =A0 =A01 +
-> =A0arch/powerpc/kernel/prom_parse.c =A0 =A0 =A0 =A0 | =A0 84 --------=
-----------------------
-> =A0drivers/of/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
- =A06 ++
-> =A0drivers/of/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- =A01 +
-> =A0drivers/of/of_pci.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- 80 ++++++++++++++++++++++++++++
-> =A0include/linux/of_pci.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 2=
-0 +++++++
-> =A012 files changed, 131 insertions(+), 191 deletions(-)
-> =A0create mode 100644 drivers/of/of_pci.c
-> =A0create mode 100644 include/linux/of_pci.h
+> =A0arch/x86/include/asm/prom.h | =A0 17 +++++++++
+> =A0arch/x86/kernel/prom.c =A0 =A0 =A0| =A0 82 +++++++++++++++++++++++++++=
+++++++++++++++++
+> =A02 files changed, 99 insertions(+), 0 deletions(-)
 >
-> diff --git a/arch/microblaze/include/asm/pci-bridge.h b/arch/microbla=
-ze/include/asm/pci-bridge.h
-> index 0c68764..c2a40a4 100644
-> --- a/arch/microblaze/include/asm/pci-bridge.h
-> +++ b/arch/microblaze/include/asm/pci-bridge.h
-> @@ -104,11 +104,22 @@ struct pci_controller {
-> =A0 =A0 =A0 =A0int global_number; =A0 =A0 =A0/* PCI domain number */
-> =A0};
+> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+> index bd67ab2..3ed0bd6 100644
+> --- a/arch/x86/include/asm/prom.h
+> +++ b/arch/x86/include/asm/prom.h
+> @@ -16,6 +16,7 @@
+>
+> =A0#include <linux/of.h>
+> =A0#include <linux/types.h>
+> +#include <linux/pci.h>
+> =A0#include <asm/irq.h>
+> =A0#include <asm/atomic.h>
+> =A0#include <asm/setup.h>
+> @@ -28,8 +29,24 @@ extern void add_dtb(u64 data);
+> =A0void x86_dtb_find_config(void);
+> =A0void x86_dtb_get_config(unsigned int unused);
+> =A0void add_interrupt_host(struct irq_domain *ih);
+> +void __cpuinit x86_of_pci_init(void);
+> +
+> +static inline struct device_node *pci_device_to_OF_node(struct pci_dev *=
+pdev)
+> +{
+> + =A0 =A0 =A0 return pdev->dev.of_node;
+> +}
+> +
+> +static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
+> +{
+> + =A0 =A0 =A0 if (bus->self)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return pci_device_to_OF_node(bus->self);
+> + =A0 =A0 =A0 else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+> +}
+
+Nit: could simply be:
+
+static inline struct device_node *pci_device_to_OF_node(struct pci_dev *pde=
+v)
+{
+       return pdev ? pdev->dev.of_node : NULL;
+}
+
+static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
+{
+       return pci_device_to_OF_node(bus->self);
+}
+
+
+> +
+> =A0#else
+> =A0static inline void add_dtb(u64 data) { }
+> +static inline void x86_of_pci_init(void) { }
+> =A0#define x86_dtb_find_config x86_init_noop
+> =A0#define x86_dtb_get_config x86_init_uint_noop
+> =A0#define of_ioapic 0
+> diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
+> index 16c124e..8525ca0 100644
+> --- a/arch/x86/kernel/prom.c
+> +++ b/arch/x86/kernel/prom.c
+> @@ -9,10 +9,13 @@
+> =A0#include <linux/of_address.h>
+> =A0#include <linux/of_platform.h>
+> =A0#include <linux/slab.h>
+> +#include <linux/pci.h>
+> +#include <linux/of_pci.h>
+>
+> =A0#include <asm/hpet.h>
+> =A0#include <asm/irq_controller.h>
+> =A0#include <asm/io_apic.h>
+> +#include <asm/pci_x86.h>
+>
+> =A0__initdata u64 initial_dtb;
+> =A0char __initdata cmd_line[COMMAND_LINE_SIZE];
+> @@ -99,6 +102,85 @@ void __init add_dtb(u64 data)
+> =A0 =A0 =A0 =A0initial_dtb =3D data + offsetof(struct setup_data, data);
+> =A0}
 >
 > +#ifdef CONFIG_PCI
-> =A0static inline struct pci_controller *pci_bus_to_host(const struct =
-pci_bus *bus)
-> =A0{
-> =A0 =A0 =A0 =A0return bus->sysdata;
-> =A0}
->
-> +static inline struct device_node *pci_bus_to_OF_node(struct pci_bus =
-*bus)
+> +static int x86_of_pci_irq_enable(struct pci_dev *dev)
 > +{
-> + =A0 =A0 =A0 struct pci_controller *host;
-> +
-> + =A0 =A0 =A0 if (bus->self)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return pci_device_to_OF_node(bus->self)=
-;
-> + =A0 =A0 =A0 host =3D pci_bus_to_host(bus);
-> + =A0 =A0 =A0 return host ? host->dn : NULL;
-> +}
-> +
-> =A0static inline int isa_vaddr_is_ioport(void __iomem *address)
-> =A0{
-> =A0 =A0 =A0 =A0/* No specific ISA handling on ppc32 at this stage, it
-> @@ -116,6 +127,7 @@ static inline int isa_vaddr_is_ioport(void __iome=
-m *address)
-> =A0 =A0 =A0 =A0 */
-> =A0 =A0 =A0 =A0return 0;
-> =A0}
-> +#endif
->
-> =A0/* These are used for config access before all the PCI probing
-> =A0 =A0has been done. */
-> diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/inc=
-lude/asm/prom.h
-> index 2e72af0..d0890d3 100644
-> --- a/arch/microblaze/include/asm/prom.h
-> +++ b/arch/microblaze/include/asm/prom.h
-> @@ -64,21 +64,6 @@ extern void kdump_move_device_tree(void);
-> =A0/* CPU OF node matching */
-> =A0struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)=
-;
->
-> -/**
-> - * of_irq_map_pci - Resolve the interrupt for a PCI device
-> - * @pdev: =A0 =A0 =A0the device whose interrupt is to be resolved
-> - * @out_irq: =A0 structure of_irq filled by this function
-> - *
-> - * This function resolves the PCI interrupt for a given PCI device. =
-If a
-> - * device-node exists for a given pci_dev, it will use normal OF tre=
-e
-> - * walking. If not, it will implement standard swizzling and walk up=
- the
-> - * PCI tree until an device-node is found, at which point it will fi=
-nish
-> - * resolving using the OF tree walking.
-> - */
-> -struct pci_dev;
-> -struct of_irq;
-> -extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_i=
-rq);
-> -
-> =A0#endif /* __ASSEMBLY__ */
-> =A0#endif /* __KERNEL__ */
->
-> diff --git a/arch/microblaze/kernel/prom_parse.c b/arch/microblaze/ke=
-rnel/prom_parse.c
-> index 9ae24f4..47187cc 100644
-> --- a/arch/microblaze/kernel/prom_parse.c
-> +++ b/arch/microblaze/kernel/prom_parse.c
-> @@ -2,88 +2,11 @@
->
-> =A0#include <linux/kernel.h>
-> =A0#include <linux/string.h>
-> -#include <linux/pci_regs.h>
-> =A0#include <linux/module.h>
-> =A0#include <linux/ioport.h>
-> =A0#include <linux/etherdevice.h>
-> =A0#include <linux/of_address.h>
-> =A0#include <asm/prom.h>
-> -#include <asm/pci-bridge.h>
-> -
-> -#ifdef CONFIG_PCI
-> -int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
-> -{
-> - =A0 =A0 =A0 struct device_node *dn, *ppnode;
-> - =A0 =A0 =A0 struct pci_dev *ppdev;
-> - =A0 =A0 =A0 u32 lspec;
-> - =A0 =A0 =A0 u32 laddr[3];
-> - =A0 =A0 =A0 u8 pin;
-> - =A0 =A0 =A0 int rc;
-> -
-> - =A0 =A0 =A0 /* Check if we have a device node, if yes, fallback to =
-standard OF
-> - =A0 =A0 =A0 =A0* parsing
-> - =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 dn =3D pci_device_to_OF_node(pdev);
-> - =A0 =A0 =A0 if (dn)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return of_irq_map_one(dn, 0, out_irq);
-> -
-> - =A0 =A0 =A0 /* Ok, we don't, time to have fun. Let's start by build=
-ing up an
-> - =A0 =A0 =A0 =A0* interrupt spec. =A0we assume #interrupt-cells is 1=
-, which is standard
-> - =A0 =A0 =A0 =A0* for PCI. If you do different, then don't use that =
-routine.
-> - =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 rc =3D pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &p=
-in);
-> - =A0 =A0 =A0 if (rc !=3D 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return rc;
-> - =A0 =A0 =A0 /* No pin, exit */
-> - =A0 =A0 =A0 if (pin =3D=3D 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
-> -
-> - =A0 =A0 =A0 /* Now we walk up the PCI tree */
-> - =A0 =A0 =A0 lspec =3D pin;
-> - =A0 =A0 =A0 for (;;) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Get the pci_dev of our parent */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppdev =3D pdev->bus->self;
-> -
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Ouch, it's a host bridge... */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppdev =3D=3D NULL) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct pci_controller *=
-host;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 host =3D pci_bus_to_hos=
-t(pdev->bus);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D host ? host-=
->dn : NULL;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* No node for host bri=
-dge ? give up */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppnode =3D=3D NULL)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return =
--EINVAL;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We found a P2P bridg=
-e, check if it has a node */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D pci_device_t=
-o_OF_node(ppdev);
-> -
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Ok, we have found a parent with a de=
-vice-node, hand over to
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* the OF parsing code.
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* We build a unit address from the l=
-inux device to be used for
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* resolution. Note that we use the l=
-inux bus number which may
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* not match your firmware bus number=
-ing.
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* Fortunately, in most cases, interr=
-upt-map-mask doesn't
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* include the bus number as part of =
-the matching.
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* You should still be careful about =
-that though if you intend
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* to rely on this function (you ship=
- =A0a firmware that doesn't
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* create device nodes for all PCI de=
-vices).
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppnode)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> -
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We can only get here if we hit a P2P=
- bridge with no node,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* let's do standard swizzling and tr=
-y again
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 lspec =3D pci_swizzle_interrupt_pin(pde=
-v, lspec);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdev =3D ppdev;
-> - =A0 =A0 =A0 }
-> -
-> - =A0 =A0 =A0 laddr[0] =3D (pdev->bus->number << 16)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 | (pdev->devfn << 8);
-> - =A0 =A0 =A0 laddr[1] =A0=3D laddr[2] =3D 0;
-> - =A0 =A0 =A0 return of_irq_map_raw(ppnode, &lspec, 1, laddr, out_irq=
-);
-> -}
-> -EXPORT_SYMBOL_GPL(of_irq_map_pci);
-> -#endif /* CONFIG_PCI */
->
-> =A0void of_parse_dma_window(struct device_node *dn, const void *dma_w=
-indow_prop,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned long *busno, unsigned long *p=
-hys, unsigned long *size)
-> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/p=
-ci-common.c
-> index e363615..1e01a12 100644
-> --- a/arch/microblaze/pci/pci-common.c
-> +++ b/arch/microblaze/pci/pci-common.c
-> @@ -29,6 +29,7 @@
-> =A0#include <linux/slab.h>
-> =A0#include <linux/of.h>
-> =A0#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
->
-> =A0#include <asm/processor.h>
-> =A0#include <asm/io.h>
-> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/inc=
-lude/asm/pci-bridge.h
-> index 51e9e6f..edeb80f 100644
-> --- a/arch/powerpc/include/asm/pci-bridge.h
-> +++ b/arch/powerpc/include/asm/pci-bridge.h
-> @@ -171,6 +171,16 @@ static inline struct pci_controller *pci_bus_to_=
-host(const struct pci_bus *bus)
-> =A0 =A0 =A0 =A0return bus->sysdata;
-> =A0}
->
-> +static inline struct device_node *pci_bus_to_OF_node(struct pci_bus =
-*bus)
-> +{
-> + =A0 =A0 =A0 struct pci_controller *host;
-> +
-> + =A0 =A0 =A0 if (bus->self)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return pci_device_to_OF_node(bus->self)=
-;
-> + =A0 =A0 =A0 host =3D pci_bus_to_host(bus);
-> + =A0 =A0 =A0 return host ? host->dn : NULL;
-> +}
-> +
-> =A0static inline int isa_vaddr_is_ioport(void __iomem *address)
-> =A0{
-> =A0 =A0 =A0 =A0/* No specific ISA handling on ppc32 at this stage, it
-> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/a=
-sm/prom.h
-> index d727575..c189aa5 100644
-> --- a/arch/powerpc/include/asm/prom.h
-> +++ b/arch/powerpc/include/asm/prom.h
-> @@ -70,21 +70,6 @@ static inline int of_node_to_nid(struct device_nod=
-e *device) { return 0; }
-> =A0#endif
-> =A0#define of_node_to_nid of_node_to_nid
->
-> -/**
-> - * of_irq_map_pci - Resolve the interrupt for a PCI device
-> - * @pdev: =A0 =A0 =A0the device whose interrupt is to be resolved
-> - * @out_irq: =A0 structure of_irq filled by this function
-> - *
-> - * This function resolves the PCI interrupt for a given PCI device. =
-If a
-> - * device-node exists for a given pci_dev, it will use normal OF tre=
-e
-> - * walking. If not, it will implement standard swizzling and walk up=
- the
-> - * PCI tree until an device-node is found, at which point it will fi=
-nish
-> - * resolving using the OF tree walking.
-> - */
-> -struct pci_dev;
-> -struct of_irq;
-> -extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_i=
-rq);
-> -
-> =A0extern void of_instantiate_rtc(void);
->
-> =A0/* These includes are put at the bottom because they may contain t=
-hings
-> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/p=
-ci-common.c
-> index 10a44e6..eb341be 100644
-> --- a/arch/powerpc/kernel/pci-common.c
-> +++ b/arch/powerpc/kernel/pci-common.c
-> @@ -22,6 +22,7 @@
-> =A0#include <linux/init.h>
-> =A0#include <linux/bootmem.h>
-> =A0#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> =A0#include <linux/mm.h>
-> =A0#include <linux/list.h>
-> =A0#include <linux/syscalls.h>
-> diff --git a/arch/powerpc/kernel/prom_parse.c b/arch/powerpc/kernel/p=
-rom_parse.c
-> index c2b7a07..47187cc 100644
-> --- a/arch/powerpc/kernel/prom_parse.c
-> +++ b/arch/powerpc/kernel/prom_parse.c
-> @@ -2,95 +2,11 @@
->
-> =A0#include <linux/kernel.h>
-> =A0#include <linux/string.h>
-> -#include <linux/pci_regs.h>
-> =A0#include <linux/module.h>
-> =A0#include <linux/ioport.h>
-> =A0#include <linux/etherdevice.h>
-> =A0#include <linux/of_address.h>
-> =A0#include <asm/prom.h>
-> -#include <asm/pci-bridge.h>
-> -
-> -#ifdef CONFIG_PCI
-> -int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
-> -{
-> - =A0 =A0 =A0 struct device_node *dn, *ppnode;
-> - =A0 =A0 =A0 struct pci_dev *ppdev;
-> - =A0 =A0 =A0 u32 lspec;
-> - =A0 =A0 =A0 u32 laddr[3];
-> - =A0 =A0 =A0 u8 pin;
-> - =A0 =A0 =A0 int rc;
-> -
-> - =A0 =A0 =A0 /* Check if we have a device node, if yes, fallback to =
-standard OF
-> - =A0 =A0 =A0 =A0* parsing
-> - =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 dn =3D pci_device_to_OF_node(pdev);
-> - =A0 =A0 =A0 if (dn) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 rc =3D of_irq_map_one(dn, 0, out_irq);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!rc)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return rc;
-> - =A0 =A0 =A0 }
-> -
-> - =A0 =A0 =A0 /* Ok, we don't, time to have fun. Let's start by build=
-ing up an
-> - =A0 =A0 =A0 =A0* interrupt spec. =A0we assume #interrupt-cells is 1=
-, which is standard
-> - =A0 =A0 =A0 =A0* for PCI. If you do different, then don't use that =
-routine.
-> - =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 rc =3D pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &p=
-in);
-> - =A0 =A0 =A0 if (rc !=3D 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return rc;
-> - =A0 =A0 =A0 /* No pin, exit */
-> - =A0 =A0 =A0 if (pin =3D=3D 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
-> -
-> - =A0 =A0 =A0 /* Now we walk up the PCI tree */
-> - =A0 =A0 =A0 lspec =3D pin;
-> - =A0 =A0 =A0 for (;;) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Get the pci_dev of our parent */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppdev =3D pdev->bus->self;
-> -
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Ouch, it's a host bridge... */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppdev =3D=3D NULL) {
-> -#ifdef CONFIG_PPC64
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D pci_bus_to_O=
-=46_node(pdev->bus);
-> -#else
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct pci_controller *=
-host;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 host =3D pci_bus_to_hos=
-t(pdev->bus);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D host ? host-=
->dn : NULL;
-> -#endif
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* No node for host bri=
-dge ? give up */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppnode =3D=3D NULL)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return =
--EINVAL;
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We found a P2P bridg=
-e, check if it has a node */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D pci_device_t=
-o_OF_node(ppdev);
-> -
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Ok, we have found a parent with a de=
-vice-node, hand over to
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* the OF parsing code.
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* We build a unit address from the l=
-inux device to be used for
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* resolution. Note that we use the l=
-inux bus number which may
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* not match your firmware bus number=
-ing.
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* Fortunately, in most cases, interr=
-upt-map-mask doesn't include
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* the bus number as part of the matc=
-hing.
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* You should still be careful about =
-that though if you intend
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* to rely on this function (you ship=
- =A0a firmware that doesn't
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* create device nodes for all PCI de=
-vices).
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppnode)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> -
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We can only get here if we hit a P2P=
- bridge with no node,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* let's do standard swizzling and tr=
-y again
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 lspec =3D pci_swizzle_interrupt_pin(pde=
-v, lspec);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdev =3D ppdev;
-> - =A0 =A0 =A0 }
-> -
-> - =A0 =A0 =A0 laddr[0] =3D (pdev->bus->number << 16)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 | (pdev->devfn << 8);
-> - =A0 =A0 =A0 laddr[1] =A0=3D laddr[2] =3D 0;
-> - =A0 =A0 =A0 return of_irq_map_raw(ppnode, &lspec, 1, laddr, out_irq=
-);
-> -}
-> -EXPORT_SYMBOL_GPL(of_irq_map_pci);
-> -#endif /* CONFIG_PCI */
->
-> =A0void of_parse_dma_window(struct device_node *dn, const void *dma_w=
-indow_prop,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned long *busno, unsigned long *p=
-hys, unsigned long *size)
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 3c6e100..c71cff1 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -69,4 +69,10 @@ config OF_MDIO
-> =A0 =A0 =A0 =A0help
-> =A0 =A0 =A0 =A0 =A0OpenFirmware MDIO bus (Ethernet PHY) accessors
->
-> +config OF_PCI
-> + =A0 =A0 =A0 def_tristate PCI
-> + =A0 =A0 =A0 depends on PCI && !SPARC
-> + =A0 =A0 =A0 help
-> + =A0 =A0 =A0 =A0 OpenFirmware PCI bus accessors
-> +
-> =A0endmenu # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index 3ab21a0..f7861ed 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_I2C) =A0 =A0+=3D of_i2c.o
-> =A0obj-$(CONFIG_OF_NET) =A0 +=3D of_net.o
-> =A0obj-$(CONFIG_OF_SPI) =A0 +=3D of_spi.o
-> =A0obj-$(CONFIG_OF_MDIO) =A0+=3D of_mdio.o
-> +obj-$(CONFIG_OF_PCI) =A0 +=3D of_pci.o
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> new file mode 100644
-> index 0000000..dd862d2
-> --- /dev/null
-> +++ b/drivers/of/of_pci.c
-> @@ -0,0 +1,80 @@
-> +#include <linux/kernel.h>
-> +#include <linux/of_pci.h>
-> +#include <asm/prom.h>
-> +
-> +int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
-> +{
-> + =A0 =A0 =A0 struct device_node *dn, *ppnode;
-> + =A0 =A0 =A0 struct pci_dev *ppdev;
-> + =A0 =A0 =A0 u32 lspec;
-> + =A0 =A0 =A0 __be32 lspec_be;
-> + =A0 =A0 =A0 __be32 laddr[3];
+> + =A0 =A0 =A0 struct of_irq oirq;
+> + =A0 =A0 =A0 u32 virq;
+> + =A0 =A0 =A0 int ret;
 > + =A0 =A0 =A0 u8 pin;
-> + =A0 =A0 =A0 int rc;
 > +
-> + =A0 =A0 =A0 /* Check if we have a device node, if yes, fallback to =
-standard OF
-> + =A0 =A0 =A0 =A0* parsing
-> + =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 dn =3D pci_device_to_OF_node(pdev);
-> + =A0 =A0 =A0 if (dn) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 rc =3D of_irq_map_one(dn, 0, out_irq);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!rc)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return rc;
-> + =A0 =A0 =A0 }
+> + =A0 =A0 =A0 ret =3D pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+> + =A0 =A0 =A0 if (ret)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return ret;
+> + =A0 =A0 =A0 if (!pin)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
 > +
-> + =A0 =A0 =A0 /* Ok, we don't, time to have fun. Let's start by build=
-ing up an
-> + =A0 =A0 =A0 =A0* interrupt spec. =A0we assume #interrupt-cells is 1=
-, which is standard
-> + =A0 =A0 =A0 =A0* for PCI. If you do different, then don't use that =
-routine.
-> + =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 rc =3D pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &p=
-in);
-> + =A0 =A0 =A0 if (rc !=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return rc;
-> + =A0 =A0 =A0 /* No pin, exit */
-> + =A0 =A0 =A0 if (pin =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+> + =A0 =A0 =A0 ret =3D of_irq_map_pci(dev, &oirq);
+> + =A0 =A0 =A0 if (ret)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return ret;
 > +
-> + =A0 =A0 =A0 /* Now we walk up the PCI tree */
-> + =A0 =A0 =A0 lspec =3D pin;
-> + =A0 =A0 =A0 for (;;) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Get the pci_dev of our parent */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppdev =3D pdev->bus->self;
+> + =A0 =A0 =A0 virq =3D irq_create_of_mapping(oirq.controller, oirq.specif=
+ier,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 oirq.size);
+> + =A0 =A0 =A0 if (virq =3D=3D 0)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+> + =A0 =A0 =A0 dev->irq =3D virq;
+> + =A0 =A0 =A0 return 0;
+> +}
 > +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Ouch, it's a host bridge... */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppdev =3D=3D NULL) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D pci_bus_to_O=
-=46_node(pdev->bus);
+> +static void x86_of_pci_irq_disable(struct pci_dev *dev)
+> +{
+> +}
 > +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* No node for host bri=
-dge ? give up */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppnode =3D=3D NULL)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return =
--EINVAL;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We found a P2P bridg=
-e, check if it has a node */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ppnode =3D pci_device_t=
-o_OF_node(ppdev);
+> +void __cpuinit x86_of_pci_init(void)
+> +{
+> + =A0 =A0 =A0 struct device_node *np;
+> +
+> + =A0 =A0 =A0 pcibios_enable_irq =3D x86_of_pci_irq_enable;
+> + =A0 =A0 =A0 pcibios_disable_irq =3D x86_of_pci_irq_disable;
+> +
+> + =A0 =A0 =A0 for_each_node_by_type(np, "pci") {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const void *prop;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct pci_bus *bus;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 unsigned int bus_min;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node *child;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D of_get_property(np, "bus-range", N=
+ULL);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!prop)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus_min =3D be32_to_cpup(prop);
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus =3D pci_find_bus(0, bus_min);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!bus) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_ERR "Can't find=
+ a node for bus %s.\n",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 np->full_name);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
 > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
 > +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Ok, we have found a parent with a de=
-vice-node, hand over to
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* the OF parsing code.
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* We build a unit address from the l=
-inux device to be used for
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* resolution. Note that we use the l=
-inux bus number which may
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* not match your firmware bus number=
-ing.
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* Fortunately, in most cases, interr=
-upt-map-mask doesn't
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* include the bus number as part of =
-the matching.
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* You should still be careful about =
-that though if you intend
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* to rely on this function (you ship=
- =A0a firmware that doesn't
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* create device nodes for all PCI de=
-vices).
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ppnode)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (bus->self)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus->self->dev.of_node =3D =
+np;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus->dev.of_node =3D np;
 > +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* We can only get here if we hit a P2P=
- bridge with no node,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* let's do standard swizzling and tr=
-y again
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 lspec =3D pci_swizzle_interrupt_pin(pde=
-v, lspec);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdev =3D ppdev;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 for_each_child_of_node(np, child) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct pci_dev *dev;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 devfn;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D of_get_property(ch=
+ild, "reg", NULL);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!prop)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 devfn =3D (be32_to_cpup(pro=
+p) >> 8) & 0xff;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev =3D pci_get_slot(bus, d=
+evfn);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!dev)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev->dev.of_node =3D child;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pci_dev_put(dev);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
 > + =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 lspec_be =3D cpu_to_be32(lspec);
-> + =A0 =A0 =A0 laddr[0] =3D cpu_to_be32((pdev->bus->number << 16) | (p=
-dev->devfn << 8));
-> + =A0 =A0 =A0 laddr[1] =A0=3D laddr[2] =3D cpu_to_be32(0);
-> + =A0 =A0 =A0 return of_irq_map_raw(ppnode, &lspec_be, 1, laddr, out_=
-irq);
 > +}
-> +EXPORT_SYMBOL_GPL(of_irq_map_pci);
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> new file mode 100644
-> index 0000000..9b0ba67
-> --- /dev/null
-> +++ b/include/linux/of_pci.h
-> @@ -0,0 +1,20 @@
-> +#ifndef __OF_PCI_H
-> +#define __OF_PCI_H
-> +
-> +#include <linux/pci.h>
-> +
-> +/**
-> + * of_irq_map_pci - Resolve the interrupt for a PCI device
-> + * @pdev: =A0 =A0 =A0 the device whose interrupt is to be resolved
-> + * @out_irq: =A0 =A0structure of_irq filled by this function
-> + *
-> + * This function resolves the PCI interrupt for a given PCI device. =
-If a
-> + * device-node exists for a given pci_dev, it will use normal OF tre=
-e
-> + * walking. If not, it will implement standard swizzling and walk up=
- the
-> + * PCI tree until an device-node is found, at which point it will fi=
-nish
-> + * resolving using the OF tree walking.
-> + */
-> +struct pci_dev;
-> +struct of_irq;
-> +int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
 > +#endif
+> +
+> =A0static void __init dtb_setup_hpet(void)
+> =A0{
+> =A0 =A0 =A0 =A0struct device_node *dn;
 > --
 > 1.7.3.2
 >
 > _______________________________________________
 > devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 > https://lists.ozlabs.org/listinfo/devicetree-discuss
 >
 
 
 
---=20
+-- =
+
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
