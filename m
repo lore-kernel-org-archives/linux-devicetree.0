@@ -1,16 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: Add missing of_address.h to xilinx ehci driver
-Date: Tue, 15 Feb 2011 22:55:36 -0700
-Message-ID: <20110216055536.GB22236@angua.secretlab.ca>
-References: <1297680009-4054-1-git-send-email-monstr@monstr.eu>
-	<20110215204011.GB24022@angua.secretlab.ca>
-	<AANLkTi=j4COunaLvadkD8Oh2qGaBCsNb8DvrKt_C4GHf@mail.gmail.com>
+From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Subject: Re: [PATCH v5] i2c-gpio: add devicetree support
+Date: Wed, 16 Feb 2011 14:13:06 +0800
+Message-ID: <4D5B6AF2.8060104@wytron.com.tw>
+References: <1297304967-3759-1-git-send-email-thomas@wytron.com.tw>
+	<1297650610-12400-1-git-send-email-thomas@wytron.com.tw>
+	<20110216054956.GD11684@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTi=j4COunaLvadkD8Oh2qGaBCsNb8DvrKt_C4GHf-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110216054956.GD11684-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,30 +19,53 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 16, 2011 at 06:58:26AM +1000, John Williams wrote:
-> On Wed, Feb 16, 2011 at 6:40 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>wrote:
-> 
-> > On Mon, Feb 14, 2011 at 11:40:09AM +0100, Michal Simek wrote:
-> > > Build log:
-> > > In file included from drivers/usb/host/ehci-hcd.c:1208:
-> > > drivers/usb/host/ehci-xilinx-of.c: In function
-> > 'ehci_hcd_xilinx_of_probe':
-> > > drivers/usb/host/ehci-xilinx-of.c:168: error: implicit declaration of
-> > function 'of_address_to_resource'
-> > >
-> > > Signed-off-by: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-> > > Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-> >
-> > Applied, thanks.
-> >
-> 
-> FYI I haven't tried building it, but I believe that ehci-ppc-of.c will need
-> the same patch.
+Hi Grant,
 
-I'll wait for someone to post a patch.
+On 02/16/2011 01:49 PM, Grant Likely wrote:
+> On Mon, Feb 14, 2011 at 10:30:10AM +0800, Thomas Chou wrote:
+>> From: Albert Herranz<albert_herranz-mRCrAkd8dF0@public.gmane.org>
+>>
+>> This patch adds devicetree support to i2c-gpio driver. The allocation
+>> of local data is integrated to a private structure, and use devm_*
+>> helper for easy cleanup.
+>>
+>> It is base on an earlier patch for gc-linux from
+>> Albert Herranz<albert_herranz-mRCrAkd8dF0@public.gmane.org>.
+>>
+>> Signed-off-by: Thomas Chou<thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+>> CC: Albert Herranz<albert_herranz-mRCrAkd8dF0@public.gmane.org>
+>> Acked-by: Haavard Skinnemoen<hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> One minor nitpick below, but I'd be fine with cleaning that up via a
+> followup patch.  This one looks correct to me.
+>
+> Acked-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>
+> Ben, this one depends on a patch in my devicetree/next tree.  How do
+> you want to handle it?
+>
+> g.
+>
 
-g.
+Thanks a lot.
+
+>> +#ifdef CONFIG_OF
+>> +#include<linux/of_gpio.h>
+>
+> Instead of putting the include here, please add #ifdef CONFIG_OF
+> protection around the contents of linux/of_gpio.h itself.  I fully
+> support that change so that includes can remain at the top where they
+> belong.
+
+Then, my earlier patch on Jan 31, might be another solution. This way 
+of_gpio.h can be included at the top, and those of_gpio users will be 
+optimized out when of or of_gpio is not configured.
+
+[PATCH 2/3] of: of_gpiochip_add is needed only for gpiolib
+
+Cheers,
+Thomas
