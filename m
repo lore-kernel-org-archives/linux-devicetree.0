@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH OF 12/14] x86/rtc: don't register rtc if we the DT blob
-Date: Wed, 16 Feb 2011 15:08:05 -0700
-Message-ID: <20110216220805.GH22837@angua.secretlab.ca>
+Date: Wed, 16 Feb 2011 15:09:21 -0700
+Message-ID: <20110216220921.GI22837@angua.secretlab.ca>
 References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
 	<1295843342-1122-13-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
@@ -28,11 +28,6 @@ On Mon, Jan 24, 2011 at 09:59:00AM +0530, Sebastian Andrzej Siewior wrote:
 > 
 > Cc: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 > Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-I'm okay with this one being merged via the x86 tree.
-
 > ---
 >  arch/x86/kernel/rtc.c |    3 +++
 >  include/linux/of.h    |   12 ++++++++++++
@@ -56,42 +51,7 @@ I'm okay with this one being merged via the x86 tree.
 >  #endif
 > +	if (of_have_populated_dt())
 > +		return 0;
->  
->  	platform_device_register(&rtc_device);
->  	dev_info(&rtc_device.dev,
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index cad7cf0..016968d 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -70,6 +70,11 @@ extern struct device_node *allnodes;
->  extern struct device_node *of_chosen;
->  extern rwlock_t devtree_lock;
->  
-> +static inline int of_have_populated_dt(void)
-> +{
-> +	return allnodes != NULL;
-> +}
-> +
->  static inline bool of_node_is_root(const struct device_node *node)
->  {
->  	return node && (node->parent == NULL);
-> @@ -222,5 +227,12 @@ extern void of_attach_node(struct device_node *);
->  extern void of_detach_node(struct device_node *);
->  #endif
->  
-> +#else
-> +
-> +static inline int of_have_populated_dt(void)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif /* CONFIG_OF */
->  #endif /* _LINUX_OF_H */
-> -- 
-> 1.7.3.2
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+Hmmm, should this hunk be moved to the next patch to preserve bisectability?
+
+g.
