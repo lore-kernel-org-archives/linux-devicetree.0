@@ -1,16 +1,15 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH OF 07/14] of: move of_irq_map_pci() into generic code
-Date: Thu, 17 Feb 2011 08:49:34 +0100
-Message-ID: <4D5CD30E.30103@monstr.eu>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH TIP 02/14] x86: Add device tree support
+Date: Thu, 17 Feb 2011 12:03:34 +0100
+Message-ID: <4D5D0086.801@linutronix.de>
 References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
-	<1295843342-1122-8-git-send-email-bigeasy@linutronix.de>
-	<AANLkTimE=mB_yWsOeD3zw+b4cHFx591h-605tK4yWAJr@mail.gmail.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+	<1295843342-1122-3-git-send-email-bigeasy@linutronix.de>
+	<20110216212623.GA22837@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTimE=mB_yWsOeD3zw+b4cHFx591h-605tK4yWAJr-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110216212623.GA22837-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,531 +20,166 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Grant Likely wrote:
-> On Sun, Jan 23, 2011 at 9:28 PM, Sebastian Andrzej Siewior
-> <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
->> From: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
->>
->> There is a tiny difference between PPC32 and PPC64. Microblaze uses the
->> PPC32 variant.
->>
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->> Signed-off-by: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-> 
-> I've got this one in my devicetree/next branch which is pulled into
-> linux-next.  I've not received an ack from Ben yet.  Michal, is this
-> okay by you?
-
-yep. No problem. I don't have pci hw for testing but compilation is fine.
-
-If you like:
-Acked-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-
-Thanks,
-Michal
+> Hi Sebastian,
+Hi Grant,
 
 > 
-> http://git.secretlab.ca/?p=linux-2.6.git;a=commit;h=04bea68b2f0eeebb089ecc67b618795925268b4a
+> Relatively minor comments below.  You can go ahead and add the
+> following when you respin:
 > 
-> g.
-> 
->> ---
->>  arch/microblaze/include/asm/pci-bridge.h |   12 ++++
->>  arch/microblaze/include/asm/prom.h       |   15 -----
->>  arch/microblaze/kernel/prom_parse.c      |   77 ---------------------------
->>  arch/microblaze/pci/pci-common.c         |    1 +
->>  arch/powerpc/include/asm/pci-bridge.h    |   10 ++++
->>  arch/powerpc/include/asm/prom.h          |   15 -----
->>  arch/powerpc/kernel/pci-common.c         |    1 +
->>  arch/powerpc/kernel/prom_parse.c         |   84 ------------------------------
->>  drivers/of/Kconfig                       |    6 ++
->>  drivers/of/Makefile                      |    1 +
->>  drivers/of/of_pci.c                      |   80 ++++++++++++++++++++++++++++
->>  include/linux/of_pci.h                   |   20 +++++++
->>  12 files changed, 131 insertions(+), 191 deletions(-)
->>  create mode 100644 drivers/of/of_pci.c
->>  create mode 100644 include/linux/of_pci.h
->>
->> diff --git a/arch/microblaze/include/asm/pci-bridge.h b/arch/microblaze/include/asm/pci-bridge.h
->> index 0c68764..c2a40a4 100644
->> --- a/arch/microblaze/include/asm/pci-bridge.h
->> +++ b/arch/microblaze/include/asm/pci-bridge.h
->> @@ -104,11 +104,22 @@ struct pci_controller {
->>        int global_number;      /* PCI domain number */
->>  };
->>
->> +#ifdef CONFIG_PCI
->>  static inline struct pci_controller *pci_bus_to_host(const struct pci_bus *bus)
->>  {
->>        return bus->sysdata;
->>  }
->>
->> +static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
->> +{
->> +       struct pci_controller *host;
->> +
->> +       if (bus->self)
->> +               return pci_device_to_OF_node(bus->self);
->> +       host = pci_bus_to_host(bus);
->> +       return host ? host->dn : NULL;
->> +}
->> +
->>  static inline int isa_vaddr_is_ioport(void __iomem *address)
->>  {
->>        /* No specific ISA handling on ppc32 at this stage, it
->> @@ -116,6 +127,7 @@ static inline int isa_vaddr_is_ioport(void __iomem *address)
->>         */
->>        return 0;
->>  }
->> +#endif
->>
->>  /* These are used for config access before all the PCI probing
->>    has been done. */
->> diff --git a/arch/microblaze/include/asm/prom.h b/arch/microblaze/include/asm/prom.h
->> index 2e72af0..d0890d3 100644
->> --- a/arch/microblaze/include/asm/prom.h
->> +++ b/arch/microblaze/include/asm/prom.h
->> @@ -64,21 +64,6 @@ extern void kdump_move_device_tree(void);
->>  /* CPU OF node matching */
->>  struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
->>
->> -/**
->> - * of_irq_map_pci - Resolve the interrupt for a PCI device
->> - * @pdev:      the device whose interrupt is to be resolved
->> - * @out_irq:   structure of_irq filled by this function
->> - *
->> - * This function resolves the PCI interrupt for a given PCI device. If a
->> - * device-node exists for a given pci_dev, it will use normal OF tree
->> - * walking. If not, it will implement standard swizzling and walk up the
->> - * PCI tree until an device-node is found, at which point it will finish
->> - * resolving using the OF tree walking.
->> - */
->> -struct pci_dev;
->> -struct of_irq;
->> -extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
->> -
->>  #endif /* __ASSEMBLY__ */
->>  #endif /* __KERNEL__ */
->>
->> diff --git a/arch/microblaze/kernel/prom_parse.c b/arch/microblaze/kernel/prom_parse.c
->> index 9ae24f4..47187cc 100644
->> --- a/arch/microblaze/kernel/prom_parse.c
->> +++ b/arch/microblaze/kernel/prom_parse.c
->> @@ -2,88 +2,11 @@
->>
->>  #include <linux/kernel.h>
->>  #include <linux/string.h>
->> -#include <linux/pci_regs.h>
->>  #include <linux/module.h>
->>  #include <linux/ioport.h>
->>  #include <linux/etherdevice.h>
->>  #include <linux/of_address.h>
->>  #include <asm/prom.h>
->> -#include <asm/pci-bridge.h>
->> -
->> -#ifdef CONFIG_PCI
->> -int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
->> -{
->> -       struct device_node *dn, *ppnode;
->> -       struct pci_dev *ppdev;
->> -       u32 lspec;
->> -       u32 laddr[3];
->> -       u8 pin;
->> -       int rc;
->> -
->> -       /* Check if we have a device node, if yes, fallback to standard OF
->> -        * parsing
->> -        */
->> -       dn = pci_device_to_OF_node(pdev);
->> -       if (dn)
->> -               return of_irq_map_one(dn, 0, out_irq);
->> -
->> -       /* Ok, we don't, time to have fun. Let's start by building up an
->> -        * interrupt spec.  we assume #interrupt-cells is 1, which is standard
->> -        * for PCI. If you do different, then don't use that routine.
->> -        */
->> -       rc = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
->> -       if (rc != 0)
->> -               return rc;
->> -       /* No pin, exit */
->> -       if (pin == 0)
->> -               return -ENODEV;
->> -
->> -       /* Now we walk up the PCI tree */
->> -       lspec = pin;
->> -       for (;;) {
->> -               /* Get the pci_dev of our parent */
->> -               ppdev = pdev->bus->self;
->> -
->> -               /* Ouch, it's a host bridge... */
->> -               if (ppdev == NULL) {
->> -                       struct pci_controller *host;
->> -                       host = pci_bus_to_host(pdev->bus);
->> -                       ppnode = host ? host->dn : NULL;
->> -                       /* No node for host bridge ? give up */
->> -                       if (ppnode == NULL)
->> -                               return -EINVAL;
->> -               } else
->> -                       /* We found a P2P bridge, check if it has a node */
->> -                       ppnode = pci_device_to_OF_node(ppdev);
->> -
->> -               /* Ok, we have found a parent with a device-node, hand over to
->> -                * the OF parsing code.
->> -                * We build a unit address from the linux device to be used for
->> -                * resolution. Note that we use the linux bus number which may
->> -                * not match your firmware bus numbering.
->> -                * Fortunately, in most cases, interrupt-map-mask doesn't
->> -                * include the bus number as part of the matching.
->> -                * You should still be careful about that though if you intend
->> -                * to rely on this function (you ship  a firmware that doesn't
->> -                * create device nodes for all PCI devices).
->> -                */
->> -               if (ppnode)
->> -                       break;
->> -
->> -               /* We can only get here if we hit a P2P bridge with no node,
->> -                * let's do standard swizzling and try again
->> -                */
->> -               lspec = pci_swizzle_interrupt_pin(pdev, lspec);
->> -               pdev = ppdev;
->> -       }
->> -
->> -       laddr[0] = (pdev->bus->number << 16)
->> -               | (pdev->devfn << 8);
->> -       laddr[1]  = laddr[2] = 0;
->> -       return of_irq_map_raw(ppnode, &lspec, 1, laddr, out_irq);
->> -}
->> -EXPORT_SYMBOL_GPL(of_irq_map_pci);
->> -#endif /* CONFIG_PCI */
->>
->>  void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
->>                unsigned long *busno, unsigned long *phys, unsigned long *size)
->> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
->> index e363615..1e01a12 100644
->> --- a/arch/microblaze/pci/pci-common.c
->> +++ b/arch/microblaze/pci/pci-common.c
->> @@ -29,6 +29,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/of.h>
->>  #include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->>
->>  #include <asm/processor.h>
->>  #include <asm/io.h>
->> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
->> index 51e9e6f..edeb80f 100644
->> --- a/arch/powerpc/include/asm/pci-bridge.h
->> +++ b/arch/powerpc/include/asm/pci-bridge.h
->> @@ -171,6 +171,16 @@ static inline struct pci_controller *pci_bus_to_host(const struct pci_bus *bus)
->>        return bus->sysdata;
->>  }
->>
->> +static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
->> +{
->> +       struct pci_controller *host;
->> +
->> +       if (bus->self)
->> +               return pci_device_to_OF_node(bus->self);
->> +       host = pci_bus_to_host(bus);
->> +       return host ? host->dn : NULL;
->> +}
->> +
->>  static inline int isa_vaddr_is_ioport(void __iomem *address)
->>  {
->>        /* No specific ISA handling on ppc32 at this stage, it
->> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
->> index d727575..c189aa5 100644
->> --- a/arch/powerpc/include/asm/prom.h
->> +++ b/arch/powerpc/include/asm/prom.h
->> @@ -70,21 +70,6 @@ static inline int of_node_to_nid(struct device_node *device) { return 0; }
->>  #endif
->>  #define of_node_to_nid of_node_to_nid
->>
->> -/**
->> - * of_irq_map_pci - Resolve the interrupt for a PCI device
->> - * @pdev:      the device whose interrupt is to be resolved
->> - * @out_irq:   structure of_irq filled by this function
->> - *
->> - * This function resolves the PCI interrupt for a given PCI device. If a
->> - * device-node exists for a given pci_dev, it will use normal OF tree
->> - * walking. If not, it will implement standard swizzling and walk up the
->> - * PCI tree until an device-node is found, at which point it will finish
->> - * resolving using the OF tree walking.
->> - */
->> -struct pci_dev;
->> -struct of_irq;
->> -extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
->> -
->>  extern void of_instantiate_rtc(void);
->>
->>  /* These includes are put at the bottom because they may contain things
->> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
->> index 10a44e6..eb341be 100644
->> --- a/arch/powerpc/kernel/pci-common.c
->> +++ b/arch/powerpc/kernel/pci-common.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/init.h>
->>  #include <linux/bootmem.h>
->>  #include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->>  #include <linux/mm.h>
->>  #include <linux/list.h>
->>  #include <linux/syscalls.h>
->> diff --git a/arch/powerpc/kernel/prom_parse.c b/arch/powerpc/kernel/prom_parse.c
->> index c2b7a07..47187cc 100644
->> --- a/arch/powerpc/kernel/prom_parse.c
->> +++ b/arch/powerpc/kernel/prom_parse.c
->> @@ -2,95 +2,11 @@
->>
->>  #include <linux/kernel.h>
->>  #include <linux/string.h>
->> -#include <linux/pci_regs.h>
->>  #include <linux/module.h>
->>  #include <linux/ioport.h>
->>  #include <linux/etherdevice.h>
->>  #include <linux/of_address.h>
->>  #include <asm/prom.h>
->> -#include <asm/pci-bridge.h>
->> -
->> -#ifdef CONFIG_PCI
->> -int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
->> -{
->> -       struct device_node *dn, *ppnode;
->> -       struct pci_dev *ppdev;
->> -       u32 lspec;
->> -       u32 laddr[3];
->> -       u8 pin;
->> -       int rc;
->> -
->> -       /* Check if we have a device node, if yes, fallback to standard OF
->> -        * parsing
->> -        */
->> -       dn = pci_device_to_OF_node(pdev);
->> -       if (dn) {
->> -               rc = of_irq_map_one(dn, 0, out_irq);
->> -               if (!rc)
->> -                       return rc;
->> -       }
->> -
->> -       /* Ok, we don't, time to have fun. Let's start by building up an
->> -        * interrupt spec.  we assume #interrupt-cells is 1, which is standard
->> -        * for PCI. If you do different, then don't use that routine.
->> -        */
->> -       rc = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
->> -       if (rc != 0)
->> -               return rc;
->> -       /* No pin, exit */
->> -       if (pin == 0)
->> -               return -ENODEV;
->> -
->> -       /* Now we walk up the PCI tree */
->> -       lspec = pin;
->> -       for (;;) {
->> -               /* Get the pci_dev of our parent */
->> -               ppdev = pdev->bus->self;
->> -
->> -               /* Ouch, it's a host bridge... */
->> -               if (ppdev == NULL) {
->> -#ifdef CONFIG_PPC64
->> -                       ppnode = pci_bus_to_OF_node(pdev->bus);
->> -#else
->> -                       struct pci_controller *host;
->> -                       host = pci_bus_to_host(pdev->bus);
->> -                       ppnode = host ? host->dn : NULL;
->> -#endif
->> -                       /* No node for host bridge ? give up */
->> -                       if (ppnode == NULL)
->> -                               return -EINVAL;
->> -               } else
->> -                       /* We found a P2P bridge, check if it has a node */
->> -                       ppnode = pci_device_to_OF_node(ppdev);
->> -
->> -               /* Ok, we have found a parent with a device-node, hand over to
->> -                * the OF parsing code.
->> -                * We build a unit address from the linux device to be used for
->> -                * resolution. Note that we use the linux bus number which may
->> -                * not match your firmware bus numbering.
->> -                * Fortunately, in most cases, interrupt-map-mask doesn't include
->> -                * the bus number as part of the matching.
->> -                * You should still be careful about that though if you intend
->> -                * to rely on this function (you ship  a firmware that doesn't
->> -                * create device nodes for all PCI devices).
->> -                */
->> -               if (ppnode)
->> -                       break;
->> -
->> -               /* We can only get here if we hit a P2P bridge with no node,
->> -                * let's do standard swizzling and try again
->> -                */
->> -               lspec = pci_swizzle_interrupt_pin(pdev, lspec);
->> -               pdev = ppdev;
->> -       }
->> -
->> -       laddr[0] = (pdev->bus->number << 16)
->> -               | (pdev->devfn << 8);
->> -       laddr[1]  = laddr[2] = 0;
->> -       return of_irq_map_raw(ppnode, &lspec, 1, laddr, out_irq);
->> -}
->> -EXPORT_SYMBOL_GPL(of_irq_map_pci);
->> -#endif /* CONFIG_PCI */
->>
->>  void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
->>                unsigned long *busno, unsigned long *phys, unsigned long *size)
->> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
->> index 3c6e100..c71cff1 100644
->> --- a/drivers/of/Kconfig
->> +++ b/drivers/of/Kconfig
->> @@ -69,4 +69,10 @@ config OF_MDIO
->>        help
->>          OpenFirmware MDIO bus (Ethernet PHY) accessors
->>
->> +config OF_PCI
->> +       def_tristate PCI
->> +       depends on PCI && !SPARC
->> +       help
->> +         OpenFirmware PCI bus accessors
->> +
->>  endmenu # OF
->> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
->> index 3ab21a0..f7861ed 100644
->> --- a/drivers/of/Makefile
->> +++ b/drivers/of/Makefile
->> @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_I2C)    += of_i2c.o
->>  obj-$(CONFIG_OF_NET)   += of_net.o
->>  obj-$(CONFIG_OF_SPI)   += of_spi.o
->>  obj-$(CONFIG_OF_MDIO)  += of_mdio.o
->> +obj-$(CONFIG_OF_PCI)   += of_pci.o
->> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+Cool.
+
+>> diff --git a/Documentation/x86/boot_with_dtb.txt b/Documentation/x86/boot_with_dtb.txt
 >> new file mode 100644
->> index 0000000..dd862d2
+>> index 0000000..6a357aa
 >> --- /dev/null
->> +++ b/drivers/of/of_pci.c
->> @@ -0,0 +1,80 @@
->> +#include <linux/kernel.h>
->> +#include <linux/of_pci.h>
->> +#include <asm/prom.h>
+>> +++ b/Documentation/x86/boot_with_dtb.txt
+>> @@ -0,0 +1,26 @@
+>> +  Booting x86 with device tree
+>> +=================================
 >> +
->> +int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
->> +{
->> +       struct device_node *dn, *ppnode;
->> +       struct pci_dev *ppdev;
->> +       u32 lspec;
->> +       __be32 lspec_be;
->> +       __be32 laddr[3];
->> +       u8 pin;
->> +       int rc;
+>> +1. Introduction
+>> +~~~~~~~~~~~~~~~
+>> +This document contains device tree information which are specific to
+>> +the x86 platform. Generic informations as bindings can be found in
+>> +Documentation/powerpc/dts-bindings/
 >> +
->> +       /* Check if we have a device node, if yes, fallback to standard OF
->> +        * parsing
->> +        */
->> +       dn = pci_device_to_OF_node(pdev);
->> +       if (dn) {
->> +               rc = of_irq_map_one(dn, 0, out_irq);
->> +               if (!rc)
->> +                       return rc;
->> +       }
+>> +2. Passing the device tree
+>> +~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> +The pointer to the device tree block (dtb) is passed via setup_data
+>> +(see [0]) which requires at least boot protocol 2.09. The type filed is
+>> +defined as
 >> +
->> +       /* Ok, we don't, time to have fun. Let's start by building up an
->> +        * interrupt spec.  we assume #interrupt-cells is 1, which is standard
->> +        * for PCI. If you do different, then don't use that routine.
->> +        */
->> +       rc = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
->> +       if (rc != 0)
->> +               return rc;
->> +       /* No pin, exit */
->> +       if (pin == 0)
->> +               return -ENODEV;
+>> +#define SETUP_DTB                      2
 >> +
->> +       /* Now we walk up the PCI tree */
->> +       lspec = pin;
->> +       for (;;) {
->> +               /* Get the pci_dev of our parent */
->> +               ppdev = pdev->bus->self;
+>> +3. Purpose
+>> +~~~~~~~~~~~
+>> +The device tree is used as an extension to the "boot page". As such it does not
+>> +parse / consider data which are already covered by the boot page. This includes
+>> +memory size, command line arguments or initrd address.
+>> +It simply holds information which can not be retrieved otherwise like interrupt
+>> +routing or a list of devices behind an I2C bus.
 >> +
->> +               /* Ouch, it's a host bridge... */
->> +               if (ppdev == NULL) {
->> +                       ppnode = pci_bus_to_OF_node(pdev->bus);
->> +
->> +                       /* No node for host bridge ? give up */
->> +                       if (ppnode == NULL)
->> +                               return -EINVAL;
->> +               } else {
->> +                       /* We found a P2P bridge, check if it has a node */
->> +                       ppnode = pci_device_to_OF_node(ppdev);
->> +               }
->> +
->> +               /* Ok, we have found a parent with a device-node, hand over to
->> +                * the OF parsing code.
->> +                * We build a unit address from the linux device to be used for
->> +                * resolution. Note that we use the linux bus number which may
->> +                * not match your firmware bus numbering.
->> +                * Fortunately, in most cases, interrupt-map-mask doesn't
->> +                * include the bus number as part of the matching.
->> +                * You should still be careful about that though if you intend
->> +                * to rely on this function (you ship  a firmware that doesn't
->> +                * create device nodes for all PCI devices).
->> +                */
->> +               if (ppnode)
->> +                       break;
->> +
->> +               /* We can only get here if we hit a P2P bridge with no node,
->> +                * let's do standard swizzling and try again
->> +                */
->> +               lspec = pci_swizzle_interrupt_pin(pdev, lspec);
->> +               pdev = ppdev;
->> +       }
->> +
->> +       lspec_be = cpu_to_be32(lspec);
->> +       laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
->> +       laddr[1]  = laddr[2] = cpu_to_be32(0);
->> +       return of_irq_map_raw(ppnode, &lspec_be, 1, laddr, out_irq);
->> +}
->> +EXPORT_SYMBOL_GPL(of_irq_map_pci);
->> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
->> new file mode 100644
->> index 0000000..9b0ba67
->> --- /dev/null
->> +++ b/include/linux/of_pci.h
->> @@ -0,0 +1,20 @@
->> +#ifndef __OF_PCI_H
->> +#define __OF_PCI_H
->> +
->> +#include <linux/pci.h>
->> +
->> +/**
->> + * of_irq_map_pci - Resolve the interrupt for a PCI device
->> + * @pdev:       the device whose interrupt is to be resolved
->> + * @out_irq:    structure of_irq filled by this function
+>> +[0] Documentation/x86/boot.txt
+> 
+> Please also add a brief description to section I of
+> Documentation/devicetree/booting-without-of.txt
+
+I assumed this file is powerpc only. Since you added arm there I have no
+problem to move this content there.
+
+>> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+>> index b4ec95f..b227ba7 100644
+>> --- a/arch/x86/include/asm/prom.h
+>> +++ b/arch/x86/include/asm/prom.h
+>> @@ -1 +1,59 @@
+>> -/* dummy prom.h; here to make linux/of.h's #includes happy */
+>> +/*
+>> + * Definitions for Device tree / OpenFirmware handling on X86
 >> + *
->> + * This function resolves the PCI interrupt for a given PCI device. If a
->> + * device-node exists for a given pci_dev, it will use normal OF tree
->> + * walking. If not, it will implement standard swizzling and walk up the
->> + * PCI tree until an device-node is found, at which point it will finish
->> + * resolving using the OF tree walking.
+>> + * based on arch/powerpc/include/asm/prom.h which is
+>> + *         Copyright (C) 1996-2005 Paul Mackerras.
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * as published by the Free Software Foundation; either version
+>> + * 2 of the License, or (at your option) any later version.
 >> + */
->> +struct pci_dev;
->> +struct of_irq;
->> +int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
+>> +
+>> +#ifndef _ASM_X86_PROM_H
+>> +#define _ASM_X86_PROM_H
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +#include <linux/of.h>
+>> +#include <linux/types.h>
+>> +#include <asm/irq.h>
+>> +#include <asm/atomic.h>
+>> +#include <asm/setup.h>
+>> +
+>> +#ifdef CONFIG_OF
+>> +extern void add_dtb(u64 data);
+>> +#else
+>> +static inline void add_dtb(u64 data) { }
 >> +#endif
->> --
->> 1.7.3.2
->>
->> _______________________________________________
->> devicetree-discuss mailing list
->> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> https://lists.ozlabs.org/listinfo/devicetree-discuss
->>
+>> +
+>> +extern char cmd_line[COMMAND_LINE_SIZE];
+>> +/* This number is used when no interrupt has been assigned */
+>> +#define NO_IRQ		(0)
 > 
-> 
-> 
+> This line should no longer be necessary.  drivers/of/irq.c defines
+> NO_IRQ if it isn't already defined by the architecture.  I'm trying to
+> limit the exposure of NO_IRQ in dt code.
 
+okay, I will to remove that.
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+>> +#endif /* __ASSEMBLY__ */
+>> +
+>> +/*
+>> + * These includes are put at the bottom because they may contain things
+>> + * that are overridden by this file.  Ideally they shouldn't be included
+>> + * by this file, but there are a bunch of .c files that currently depend
+>> + * on it.  Eventually they will be cleaned up.
+>> + */
+>> +#include <linux/of_fdt.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/platform_device.h>
+> 
+> You should be able to remove these includes.  The problems described
+> in the header are mostly with device drivers and architecture code.
+> You shouldn't run into any of those issue, and if you do they should
+> be fixed at the source.
+okay.
+
+>> index c752e97..149c87f 100644
+>> --- a/arch/x86/kernel/irqinit.c
+>> +++ b/arch/x86/kernel/irqinit.c
+>> @@ -25,6 +25,7 @@
+>>  #include <asm/setup.h>
+>>  #include <asm/i8259.h>
+>>  #include <asm/traps.h>
+>> +#include <asm/prom.h>
+> 
+> I'm probably missing something.  I don't see any changes to irqinit.c
+> other than this.  What symbol definition has been moved to prom.h that
+> irqinit.c needs?
+
+This hunk was folded into the wrong patch. It should been folded into
+"x86/ioapic: Add OF bindings for IO-APIC".
+
+>>  /*
+>>   * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
+>> diff --git a/arch/x86/kernel/prom.c b/arch/x86/kernel/prom.c
+>> new file mode 100644
+>> index 0000000..4969ffa
+>> --- /dev/null
+>> +++ b/arch/x86/kernel/prom.c
+> 
+> You don't need to name this prom.c.  devicetree.c would make more sense.
+> prom is a legacy name from when only Open Firmware systems were using
+> the dt code.
+
+okay.
+
+>> @@ -0,0 +1,51 @@
+
+>> +
+>> +void __init add_dtb(u64 data)
+>> +{
+>> +	initial_boot_params = (struct boot_param_header *)
+>> +		phys_to_virt((u64) (u32) data +
+>> +				offsetof(struct setup_data, data));
+> 
+> (struct boot_param_header *) cast unnecessary since phys_to_virt
+> should return a void*.
+
+removed.
+
+>> +}
+
+Sebastian
