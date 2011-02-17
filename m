@@ -1,60 +1,181 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/7] Add Samsung's s5pv310 machine with device tree enabled
-Date: Wed, 16 Feb 2011 17:39:49 -0700
-Message-ID: <AANLkTi=JHEc1Kw7rhyE4OOADu5qtPwCtqL-=_FFRoeZL@mail.gmail.com>
-References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
+From: Thomas Chou <thomas@wytron.com.tw>
+Subject: Re: [Nios2-dev] [PATHV v2] tty: serial: altera_uart: Add devicetree
+  support
+Date: Thu, 17 Feb 2011 10:24:01 +0800
+Message-ID: <4D5C86C1.8070404@wytron.com.tw>
+References: <c7a7085602687d2f1b6ac505c030f19bafda04e3.1297245277.git.tklauser@distanz.ch> <1297872732-10207-1-git-send-email-tklauser@distanz.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1297514825-10345-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1297872732-10207-1-git-send-email-tklauser@distanz.ch>
+Sender: linux-serial-owner@vger.kernel.org
+To: nios2-dev@sopc.et.ntust.edu.tw
+Cc: Tobias Klauser <tklauser@distanz.ch>, Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 12, 2011 at 5:46 AM, Thomas Abraham
-<thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patchset adds Samsung's s5pv310 machine with device tree support. Th=
-is
-> is based on
+Hi Tobias,
+
+On 02/17/2011 12:12 AM, Tobias Klauser wrote:
+> With the recent switch of the (currently still out-of-tree) Nios2 Linux
+> port to devicetree we want to be able to retreive the resources and
+> properties from dts.
 >
-> git://git.secretlab.ca/git/linux-2.6 devicetree/test
+> The old method to retreive resources and properties from platform data
+> is still supported.
 >
-> A new machine s5pv310-dt is added along with a dts file for the smdkv310 =
-board.
-> Some of the features introduced in this patchset are
+> Cc: Grant Likely<grant.likely@secretlab.ca>
+> Signed-off-by: Tobias Klauser<tklauser@distanz.ch>
+> ---
+>   Thanks to Grant Likely for the review.
 >
-> 1. Tested on smdkv310 board and information such as bootargs, memory info=
-rmation
-> =A0 and console port register defaults are obtained from the device tree.
-> 2. Add basic device tree file for smdkv310 board.
-> 3. Device tree based probe enabled in watchdog timer driver (s3c2410-wdt).
-> 4. UART driver modified to obtain default console register values from
-> =A0 device tree.
+>   changes in v2:
+>   - fall back to uartclk from platform data if the device tree property
+>     is not available.
+>   - Only include MODULE_DEVICE_TABLE if CONFIG_OF is set so we don't
+>     advertise device tree support if CONFIG_OF isn't active.
+>   - change vendor prefix in match table to be uppercase for consistency
+>     with documentation
+>
+>   .../devicetree/bindings/serial/altera_uart.txt     |    7 +++
+>   drivers/tty/serial/altera_uart.c                   |   50 ++++++++++++++++++--
+>   2 files changed, 53 insertions(+), 4 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/serial/altera_uart.txt
+>
+> diff --git a/Documentation/devicetree/bindings/serial/altera_uart.txt b/Documentation/devicetree/bindings/serial/altera_uart.txt
+> new file mode 100644
+> index 0000000..71cae3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/altera_uart.txt
+> @@ -0,0 +1,7 @@
+> +Altera UART
+> +
+> +Required properties:
+> +- compatible : should be "ALTR,uart-1.0"
+> +
+> +Optional properties:
+> +- clock-frequency : frequency of the clock input to the UART
+> diff --git a/drivers/tty/serial/altera_uart.c b/drivers/tty/serial/altera_uart.c
+> index 5e80977..4f0898c 100644
+> --- a/drivers/tty/serial/altera_uart.c
+> +++ b/drivers/tty/serial/altera_uart.c
+> @@ -24,6 +24,7 @@
+>   #include<linux/serial.h>
+>   #include<linux/serial_core.h>
+>   #include<linux/platform_device.h>
+> +#include<linux/of.h>
+>   #include<linux/io.h>
+>   #include<linux/altera_uart.h>
+>
+> @@ -484,6 +485,29 @@ static struct uart_driver altera_uart_driver = {
+>   	.cons		= ALTERA_UART_CONSOLE,
+>   };
+>
+> +#ifdef CONFIG_OF
+> +static int altera_uart_get_of_uartclk(struct platform_device *pdev,
+> +				      struct uart_port *port)
+> +{
+> +	int len;
+> +	const __be32 *clk;
+> +
+> +	clk = of_get_property(pdev->dev.of_node, "clock-frequency",&len);
+> +	if (!clk || len<  sizeof(__be32))
+> +		return -ENODEV;
+> +
+> +	port->uartclk = be32_to_cpup(clk);
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int altera_uart_get_of_uartclk(struct platform_device *pdev,
+> +				      struct uart_port *port)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>   static int __devinit altera_uart_probe(struct platform_device *pdev)
+>   {
+>   	struct altera_uart_platform_uart *platp = pdev->dev.platform_data;
+> @@ -491,6 +515,7 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
+>   	struct resource *res_mem;
+>   	struct resource *res_irq;
+>   	int i = pdev->id;
+> +	int ret;
+>
+>   	/* -1 emphasizes that the platform must have one port, no .N suffix */
+>   	if (i == -1)
+> @@ -515,6 +540,14 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
+>   	else if (platp->irq)
+>   		port->irq = platp->irq;
+>
+> +	/* Try to get the uartclk from devicetree, fall back to platform data
+> +	 * otherwise */
 
-Thanks Thomas,
+Please follow multi-line comment style.
 
-I've picked up patches 1-3 into my devicetree/test branch.  They still
-require some work, but they are close enough that I'm happy to at
-least have them in my series.  You can either send me replacement
-patches as need be, or build on top of devicetree/test.
+/*
+  * xxxx
+  * xxxx
+  */
 
-The remainder I've commented on and I'll leave alone until I get the
-next version.
+> +	ret = altera_uart_get_of_uartclk(pdev, port);
+> +	if (ret&&  platp)
+> +		port->uartclk = platp->uartclk;
+> +	else if (ret)
+> +		return ret;
+> +
 
-g.
+Better reverse the priority, with platform data checked first.
+
+	if (platp)
+		port->uartclk = platp->uartclk;
+	else {
+		ret = altera_uart_get_of_uartclk(pdev, port);
+		if (ret)
+			return ret;
+	}
 
 
--- =
+>   	port->membase = ioremap(port->mapbase, ALTERA_UART_SIZE);
+>   	if (!port->membase)
+>   		return -ENOMEM;
+> @@ -527,7 +560,6 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
+>   	port->line = i;
+>   	port->type = PORT_ALTERA_UART;
+>   	port->iotype = SERIAL_IO_MEM;
+> -	port->uartclk = platp->uartclk;
+>   	port->ops =&altera_uart_ops;
+>   	port->flags = UPF_BOOT_AUTOCONF;
+>
+> @@ -550,13 +582,23 @@ static int __devexit altera_uart_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>
+> +#ifdef CONFIG_OF
+> +static struct of_device_id altera_uart_match[] = {
+> +	{ .compatible = "ALTR,uart-1.0", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, altera_uart_match);
+> +#else
+> +#define altera_uart_match NULL
+> +#endif /* CONFIG_OF */
+> +
+>   static struct platform_driver altera_uart_platform_driver = {
+>   	.probe	= altera_uart_probe,
+>   	.remove	= __devexit_p(altera_uart_remove),
+>   	.driver	= {
+> -		.name	= DRV_NAME,
+> -		.owner	= THIS_MODULE,
+> -		.pm	= NULL,
+> +		.name		= DRV_NAME,
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= altera_uart_match,
+>   	},
+>   };
+>
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Regards,
+Thomas
+
