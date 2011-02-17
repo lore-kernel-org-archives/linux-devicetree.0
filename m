@@ -1,72 +1,60 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/7] Add Samsung's s5pv310 machine with device tree enabled
-Date: Thu, 17 Feb 2011 19:41:17 +0530
-Message-ID: <AANLkTina6L1sZRTngUu-L4RMvC=p3GM0iq6PRq4VCAe+@mail.gmail.com>
-References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
-	<AANLkTi=JHEc1Kw7rhyE4OOADu5qtPwCtqL-=_FFRoeZL@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [sodaville] [PATCH OF 13/14] rtc/cmos: add OF bindings
+Date: Thu, 17 Feb 2011 09:46:30 -0700
+Message-ID: <AANLkTikqq9iKkZbg642PJq4hPJS493TrxY8Hx0e63rZv@mail.gmail.com>
+References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
+ <1295843342-1122-14-git-send-email-bigeasy@linutronix.de> <20110216221108.GJ22837@angua.secretlab.ca>
+ <20110217132612.GB13500@www.tglx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <AANLkTi=JHEc1Kw7rhyE4OOADu5qtPwCtqL-=_FFRoeZL-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110217132612.GB13500@www.tglx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org, sodaville@linutronix.de, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On 17 February 2011 06:09, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Sat, Feb 12, 2011 at 5:46 AM, Thomas Abraham
-> <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> This patchset adds Samsung's s5pv310 machine with device tree support. T=
-his
->> is based on
+On Thu, Feb 17, 2011 at 6:26 AM, Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+> * Grant Likely | 2011-02-16 15:11:08 [-0700]:
+>
+>>> diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Docu=
+mentation/powerpc/dts-bindings/rtc-cmos.txt
+>>> new file mode 100644
+>>> index 0000000..7382989
+>>> --- /dev/null
+>>> +++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
 >>
->> git://git.secretlab.ca/git/linux-2.6 devicetree/test
+>>Move to Documentation/devicetree/bindings/rtc/
+> moved.
+>
+>>> diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+>>> index c7ff8df..2709e00 100644
+>>> --- a/drivers/rtc/rtc-cmos.c
+>>> +++ b/drivers/rtc/rtc-cmos.c
+>>> @@ -1162,6 +1205,9 @@ static struct platform_driver cmos_platform_d=
+river =3D {
+>>> =A0#ifdef CONFIG_PM
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0.pm =A0 =A0 =A0 =A0 =A0 =A0 =3D &cmos_pm=
+_ops,
+>>> =A0#endif
+>>> +#if defined(CONFIG_OF)
+>>> + =A0 =A0 =A0 =A0 =A0 =A0.of_match_table =3D of_cmos_match,
+>>> +#endif
 >>
->> A new machine s5pv310-dt is added along with a dts file for the smdkv310=
- board.
->> Some of the features introduced in this patchset are
->>
->> 1. Tested on smdkv310 board and information such as bootargs, memory inf=
-ormation
->> =A0 and console port register defaults are obtained from the device tree.
->> 2. Add basic device tree file for smdkv310 board.
->> 3. Device tree based probe enabled in watchdog timer driver (s3c2410-wdt=
-).
->> 4. UART driver modified to obtain default console register values from
->> =A0 device tree.
+>>The #if defined(CONFIG_OF) is no longer necessary around
+>>.of_match_table, particularly if you have a #else above that #defines
+>>of_cmos_match to NULL.
 >
-> Thanks Thomas,
+> Kinda does not work. I get here:
+> |drivers/rtc/rtc-cmos.c:1209:3: error: unknown field =E2 =A0of_match_=
+table=E2 =A0 specified in initializer
 >
-> I've picked up patches 1-3 into my devicetree/test branch. =A0They still
-> require some work, but they are close enough that I'm happy to at
-> least have them in my series. =A0You can either send me replacement
-> patches as need be, or build on top of devicetree/test.
->
-> The remainder I've commented on and I'll leave alone until I get the
-> next version.
+> I rebased on top of -rc5. Is this something new you describing?
 
-Thanks for reviewing the patches. I will update the patchset and
-submit a newer one.
+Base your patch on top of my devicetree/next branch.  That's the
+branch that tglx will be applying them on top of them to get your
+changes to generic pci dt support code.
 
-Thanks,
-Thomas.
-
->
-> g.
->
->
-> --
-> Grant Likely, B.Sc., P.Eng.
-> Secret Lab Technologies Ltd.
->
+g.
