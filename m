@@ -1,55 +1,65 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [sodaville] [PATCH TIP 02/14] x86: Add device tree support
-Date: Thu, 17 Feb 2011 10:02:34 -0700
-Message-ID: <AANLkTinh85A_1rJ+JcLVR4fpN5A2iuWv4BfZ0h7FP6Yr@mail.gmail.com>
-References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
- <1295843342-1122-3-git-send-email-bigeasy@linutronix.de> <20110216213126.GC22837@angua.secretlab.ca>
- <20110217113102.GB11260@www.tglx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110217113102.GB11260@www.tglx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org
+From: Tobias Klauser <tklauser@distanz.ch>
+Subject: [PATCH 5/5] tty: serial: altera_jtaguart: Add device tree support
+Date: Thu, 17 Feb 2011 21:30:09 +0100
+Message-ID: <c28550ba11ed228f4137ced1ab34761c08ad38ad.1297974227.git.tklauser@distanz.ch>
+References: <cover.1297974227.git.tklauser@distanz.ch>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <cover.1297974227.git.tklauser@distanz.ch>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@suse.de>, Grant Likely <grant.likely@secretlab.ca>, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: nios2-dev@sopc.et.ntust.edu.tw
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 17, 2011 at 4:31 AM, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
-> * Grant Likely | 2011-02-16 14:31:26 [-0700]:
->
->>> +config X86_OF
->>> + =A0 =A0bool "Support for device tree"
->>> + =A0 =A0select OF
->>> + =A0 =A0select OF_EARLY_FLATTREE
->>> + =A0 =A0---help---
->>> + =A0 =A0 =A0Device tree support on X86.
->>> +
->>
->>On ARM and MIPS, this is called 'config USE_OF'. =A0It would be nice =
-to have
->>some commonality. =A0Maybe I should move the user-visible option to
->>drivers/of/Kconfig. =A0Or perhaps I should just make CONFIG_OF itself
->>user visible.
->>
->>thoughts?
->
-> We could make CONFIG_OF depend on CONFIG_HAVE_OF_SUPPORT and let OF
-> select OF_EARLY_FLATTREE if ARCH_WANT_EARLY_FLATTREE for instance. So
-> that part would work in a generic way.
->
-> For OF-only platforms you would have to go to drivers/of
-> before you can enable the specific SoC/board. So it could lead to
-> something like "first enable scsi disk before you can enable usb
-> storage".
+Advertise the possibility to use this driver with device tree if
+CONFIG_OF is set.
 
-That's definitely not desirable.  Currently ARM and MIPS boards that
-need it are force-selecting USE_OF which pretty much solves the
-problem.  The option is always user-
->
-> I like it :) For now I rename to USE_OF.
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+---
+ .../devicetree/bindings/altera_jtaguart.txt        |    4 ++++
+ drivers/tty/serial/altera_jtaguart.c               |   15 +++++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/altera_jtaguart.txt
 
-okay.
+diff --git a/Documentation/devicetree/bindings/altera_jtaguart.txt b/Documentation/devicetree/bindings/altera_jtaguart.txt
+new file mode 100644
+index 0000000..c152f65
+--- /dev/null
++++ b/Documentation/devicetree/bindings/altera_jtaguart.txt
+@@ -0,0 +1,4 @@
++Altera JTAG UART
++
++Required properties:
++- compatible : should be "ALTR,juart-1.0"
+diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
+index 8f014bb..d0f8779 100644
+--- a/drivers/tty/serial/altera_jtaguart.c
++++ b/drivers/tty/serial/altera_jtaguart.c
+@@ -466,12 +466,23 @@ static int __devexit altera_jtaguart_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id altera_jtaguart_match[] = {
++	{ .compatible = "ALTR,juart-1.0", },
++	{},
++}
++MODULE_DEVICE_TABLE(of, altera_jtaguart_match);
++#else
++#define altera_jtaguart_match NULL
++#endif /* CONFIG_OF */
++
+ static struct platform_driver altera_jtaguart_platform_driver = {
+ 	.probe	= altera_jtaguart_probe,
+ 	.remove	= __devexit_p(altera_jtaguart_remove),
+ 	.driver	= {
+-		.name	= DRV_NAME,
+-		.owner	= THIS_MODULE,
++		.name		= DRV_NAME,
++		.owner		= THIS_MODULE,
++		.of_match_table	= altera_jtaguart_match,
+ 	},
+ };
+ 
+-- 
+1.7.0.4
 
-g.
