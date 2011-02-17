@@ -1,16 +1,14 @@
 From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] serial: samsung: Get default port register settings
-	from device tree
-Date: Thu, 17 Feb 2011 19:39:52 +0530
-Message-ID: <AANLkTi=ixzGYAWsQ=iF3g9sAF1kUvF1D1Qd-ysinS+RV@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Add Samsung's s5pv310 machine with device tree enabled
+Date: Thu, 17 Feb 2011 19:41:17 +0530
+Message-ID: <AANLkTina6L1sZRTngUu-L4RMvC=p3GM0iq6PRq4VCAe+@mail.gmail.com>
 References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
-	<1297514825-10345-8-git-send-email-thomas.abraham@linaro.org>
-	<20110217002617.GD14124@angua.secretlab.ca>
+	<AANLkTi=JHEc1Kw7rhyE4OOADu5qtPwCtqL-=_FFRoeZL@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <20110217002617.GD14124-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <AANLkTi=JHEc1Kw7rhyE4OOADu5qtPwCtqL-=_FFRoeZL-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -26,65 +24,40 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Grant,
 
-On 17 February 2011 05:56, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Sat, Feb 12, 2011 at 06:17:05PM +0530, Thomas Abraham wrote:
->> The default uart port register settings are obtained from the platform d=
-ata.
->> In addition to that, this patch adds support for obtaining the default u=
-art port
->> register values from the uart node in device tree.
+On 17 February 2011 06:09, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Sat, Feb 12, 2011 at 5:46 AM, Thomas Abraham
+> <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> This patchset adds Samsung's s5pv310 machine with device tree support. T=
+his
+>> is based on
 >>
->> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> =A0drivers/tty/serial/samsung.c | =A0 13 +++++++++++++
->> =A01 files changed, 13 insertions(+), 0 deletions(-)
+>> git://git.secretlab.ca/git/linux-2.6 devicetree/test
 >>
->> diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
->> index 66fece9..dda1d52 100644
->> --- a/drivers/tty/serial/samsung.c
->> +++ b/drivers/tty/serial/samsung.c
->> @@ -1148,9 +1148,22 @@ int s3c24xx_serial_probe(struct platform_device *=
-dev,
->> =A0{
->> =A0 =A0 =A0 struct s3c24xx_uart_port *ourport;
->> =A0 =A0 =A0 int ret;
->> + =A0 =A0 unsigned int len, *regdef;
->> + =A0 =A0 struct s3c2410_uartcfg *cfg;
+>> A new machine s5pv310-dt is added along with a dts file for the smdkv310=
+ board.
+>> Some of the features introduced in this patchset are
 >>
->> =A0 =A0 =A0 dbg("s3c24xx_serial_probe(%p, %p) %d\n", dev, info, probe_in=
-dex);
->>
->> + =A0 =A0 if (dev->dev.of_node) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 regdef =3D (u32 *)of_get_property(dev->dev.of_=
-node,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 "reg-defaults", &len);
->> + =A0 =A0 =A0 =A0 =A0 =A0 if (regdef && (len / sizeof(unsigned int)) =3D=
-=3D 3) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg =3D s3c24xx_dev_to_cfg(&de=
-v->dev);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg->ucon =3D be32_to_cpu(regd=
-ef[0]);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg->ulcon =3D be32_to_cpu(reg=
-def[1]);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg->ufcon =3D be32_to_cpu(reg=
-def[2]);
->> + =A0 =A0 =A0 =A0 =A0 =A0 }
->> + =A0 =A0 }
->> +
+>> 1. Tested on smdkv310 board and information such as bootargs, memory inf=
+ormation
+>> =A0 and console port register defaults are obtained from the device tree.
+>> 2. Add basic device tree file for smdkv310 board.
+>> 3. Device tree based probe enabled in watchdog timer driver (s3c2410-wdt=
+).
+>> 4. UART driver modified to obtain default console register values from
+>> =A0 device tree.
 >
-> Same comment as before, per-uart configuration belongs in each ports
-> device tree node.
-
-The above configuration is obtained from the uart device tree node
-(dev->dev.of_node).
-
+> Thanks Thomas,
 >
-> Also, don't forget to add binding documentation do
-> Documentation/devicetree/bindings for the properties that you define
-> for the samsung uart.
+> I've picked up patches 1-3 into my devicetree/test branch. =A0They still
+> require some work, but they are close enough that I'm happy to at
+> least have them in my series. =A0You can either send me replacement
+> patches as need be, or build on top of devicetree/test.
+>
+> The remainder I've commented on and I'll leave alone until I get the
+> next version.
 
-Ok. The documentation will be added.
+Thanks for reviewing the patches. I will update the patchset and
+submit a newer one.
 
 Thanks,
 Thomas.
@@ -92,4 +65,8 @@ Thomas.
 >
 > g.
 >
+>
+> --
+> Grant Likely, B.Sc., P.Eng.
+> Secret Lab Technologies Ltd.
 >
