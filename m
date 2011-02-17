@@ -1,62 +1,133 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [sodaville] [PATCH OF 13/14] rtc/cmos: add OF bindings
-Date: Thu, 17 Feb 2011 14:26:12 +0100
-Message-ID: <20110217132612.GB13500@www.tglx.de>
-References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
-	<1295843342-1122-14-git-send-email-bigeasy@linutronix.de>
-	<20110216221108.GJ22837@angua.secretlab.ca>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/7] ARM: s5pv310-dt: Add a basic dts file for SMDKV310
+	machine
+Date: Thu, 17 Feb 2011 19:25:17 +0530
+Message-ID: <AANLkTim2N75+=OWOdNMYKh5pnHNEms28G75PDvgqDW6p@mail.gmail.com>
+References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
+	<1297514825-10345-3-git-send-email-thomas.abraham@linaro.org>
+	<20110217003434.GE14124@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-15"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110216221108.GJ22837-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <20110217003434.GE14124-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely | 2011-02-16 15:11:08 [-0700]:
+Hi Grant,
 
->> diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documenta=
-tion/powerpc/dts-bindings/rtc-cmos.txt
->> new file mode 100644
->> index 0000000..7382989
+On 17 February 2011 06:04, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Sat, Feb 12, 2011 at 06:17:00PM +0530, Thomas Abraham wrote:
+>> This patch adds a basic dts file for Samsung's SMDKV310 board which
+>> is based on the s5pv310 machine.
+>>
+>> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Structure looks good. =A0Some comments below, but it is getting close.
+>
+>> ---
+>> =A0arch/arm/mach-s5pv310/mach-smdkv310.dts | =A0 78 ++++++++++++++++++++=
++++++++++++
+>> =A01 files changed, 78 insertions(+), 0 deletions(-)
+>> =A0create mode 100755 arch/arm/mach-s5pv310/mach-smdkv310.dts
+>>
+>> diff --git a/arch/arm/mach-s5pv310/mach-smdkv310.dts b/arch/arm/mach-s5p=
+v310/mach-smdkv310.dts
+>> new file mode 100755
+>> index 0000000..75aa76d
 >> --- /dev/null
->> +++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
+>> +++ b/arch/arm/mach-s5pv310/mach-smdkv310.dts
+>> @@ -0,0 +1,78 @@
+>> +/dts-v1/;
+>> +
+>> +/ {
+>> + =A0 =A0 model =3D "smdkv310";
+
+<snip>
+
+>> +
+>> + =A0 =A0 chosen {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 bootargs =3D "root=3D/dev/ram0 rw ramdisk=3D81=
+92 initrd=3D0x41000000,8M console=3DttySAC1,115200 init=3D/linuxrc";
 >
->Move to Documentation/devicetree/bindings/rtc/
-moved.
+> initrd address should be passed via the linux,initrd-start and
+> linux,initrd-end properties. =A0U-Boot already knows how to do this so
+> it shouldn't be encoded in the kernel parameters list.
 
->> diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
->> index c7ff8df..2709e00 100644
->> --- a/drivers/rtc/rtc-cmos.c
->> +++ b/drivers/rtc/rtc-cmos.c
->> @@ -1162,6 +1205,9 @@ static struct platform_driver cmos_platform_driver=
- =3D {
->>  #ifdef CONFIG_PM
->>  		.pm		=3D &cmos_pm_ops,
->>  #endif
->> +#if defined(CONFIG_OF)
->> +		.of_match_table =3D of_cmos_match,
->> +#endif
+Ok. "linux,initrd-start" and "linux,initrd-end" properties will be
+added in chosen node and initrd parameters from bootargs removed as
+below.
+
+chosen {
+        bootargs =3D "root=3D/dev/ram0 console=3DttySAC1,115200 init=3D/lin=
+uxrc";
+        linux,initrd-start=3D<0x41000000>;
+        linux,initrd-end=3D<0x40800000>;
+    } ;
+
 >
->The #if defined(CONFIG_OF) is no longer necessary around
->.of_match_table, particularly if you have a #else above that #defines
->of_cmos_match to NULL.
+>> + =A0 =A0 =A0 =A0 =A0 =A0 console-defaults =3D <0x3c5 0x3 0x111>;
+>
+> Drop console-defaults. =A0The configuration should be encoded in the
+> uart's device tree node.
 
-Kinda does not work. I get here:
-|drivers/rtc/rtc-cmos.c:1209:3: error: unknown field =E2=80=98of_match_tabl=
-e=E2=80=99 specified in initializer
+The stage at which console_init is called, the code that initializes
+the uart module for console operation does not have access to the uart
+device tree node. Hence, the console-default register values are put
+into the chosen node which is easier to access. If this not the right
+approach, maybe the uart device tree node will have to be looked up by
+using "for_each_compatible_node" or similar. Would you suggest using
+for_each_compatible_node in this case.
 
-I rebased on top of -rc5. Is this something new you describing?
+>
+>> + =A0 =A0 =A0 =A0 =A0 =A0 xtal-frequency =3D <24000000>;
+>
+> It looks like this is misplaced. =A0If this is the primary frequency for
+> the system, then it should go either in the root node, =A0the soc node,
+> or the cpu nodes.
 
-Sebastian
+This is the frequency of the crystal clock from which all the SoC
+internal clocks are derived. The crystal clock frequency depends on
+the board. So it was put into the chosen node. Since this is board
+specific, this is added in the chosen node.
+
+>
+>> + =A0 =A0 };
+>> +
+
+<snip>
+
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 serial@0x13800000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x13800000 0x100>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <16 18 17>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg-defaults =3D <0x3c5 0x3 0x=
+111>;
+>
+> reg-defaults doesn't sound like a very good binding. =A0It's better when
+> the properties reflect what is trying to be configured instead of a
+> set of magic values. =A0(That said, sometimes magic values are
+> appropriate, but even then it needs to be well documented so that
+> mere-mortals have a fighting chance of understanding and manipulating it).
+>
+
+Ok. This will be changed to be more informative.
+
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,s5pv31=
+0-uart","samsung,s3c2410-uart";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
+
+<snip>
+
+Thanks,
+Thomas.
