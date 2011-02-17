@@ -1,170 +1,85 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH OF 13/14] rtc/cmos: add OF bindings
-Date: Wed, 16 Feb 2011 15:11:08 -0700
-Message-ID: <20110216221108.GJ22837@angua.secretlab.ca>
-References: <1295843342-1122-1-git-send-email-bigeasy@linutronix.de>
-	<1295843342-1122-14-git-send-email-bigeasy@linutronix.de>
+Subject: Re: [PATCH 4/7] watchdog: s3c2410: Add support for device tree
+	based probe
+Date: Wed, 16 Feb 2011 17:17:32 -0700
+Message-ID: <20110217001732.GA14124@angua.secretlab.ca>
+References: <1297514825-10345-1-git-send-email-thomas.abraham@linaro.org>
+	<1297514825-10345-5-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1295843342-1122-14-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+In-Reply-To: <1297514825-10345-5-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 24, 2011 at 09:59:01AM +0530, Sebastian Andrzej Siewior wrote:
-> This allows to load the OF driver based informations from the device
-> tree. Systems without BIOS may need to perform some initialization.
-> PowerPC creates a PNP device from the OF information and performs this
-> kind of initialization in their private PCI quirk. This looks more
-> generic.
+On Sat, Feb 12, 2011 at 06:17:02PM +0530, Thomas Abraham wrote:
+> This patch adds the of_match_table to enable s3c2410-wdt driver
+> to be probed when watchdog device node is found in the device tree.
 > 
-> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/powerpc/dts-bindings/rtc-cmos.txt |   28 ++++++++++++++
->  drivers/rtc/rtc-cmos.c                          |   46 +++++++++++++++++++++++
->  2 files changed, 74 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/powerpc/dts-bindings/rtc-cmos.txt
+>  drivers/watchdog/s3c2410_wdt.c |   10 ++++++++++
+>  1 files changed, 10 insertions(+), 0 deletions(-)
+
+Need to add documentation for compatible = "samsung,s3c2410-wdt" to
+Documentation/devicetree/bindings/wdt before this patch can be merged.
+
+A couple more comments below, but I'm okay with this one.  I'd go
+ahead and submit it to the linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list and cc:
+Wim.  It can be mainlined right away after fixing up the comments.
+I'll ack it when you repost and then work out with Wim if it should be
+merged through his tree or through mine.
+
 > 
-> diff --git a/Documentation/powerpc/dts-bindings/rtc-cmos.txt b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-> new file mode 100644
-> index 0000000..7382989
-> --- /dev/null
-> +++ b/Documentation/powerpc/dts-bindings/rtc-cmos.txt
-
-Move to Documentation/devicetree/bindings/rtc/
-
-> @@ -0,0 +1,28 @@
-> + Motorola mc146818 compatible RTC
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Required properties:
-> +  - compatible : "motorola,mc146818"
-> +  - reg : should contain registers location and length.
-> +
-> +Optional properties:
-> +  - interrupts : should contain interrupt.
-> +  - interrupt-parent : interrupt source phandle.
-> +  - ctrl-reg : Contains the initial value of the control register also
-> +    called "Register B".
-> +  - freq-reg : Contains the initial value of the frequency register also
-> +    called "Regsiter A".
-> +
-> +"Register A" and "B" are usually initialized by the firmware (BIOS for
-> +instance). If this is not done, it can be performed by the driver.
-> +
-> +ISA Example:
-> +
-> +	rtc@70 {
-> +	         compatible = "motorola,mc146818";
-> +	         interrupts = <8 3>;
-> +	         interrupt-parent = <&ioapic1>;
-> +	         ctrl-reg = <2>;
-> +	         freq-reg = <0x26>;
-> +	         reg = <1 0x70 2>;
-> +	 };
-> diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-> index c7ff8df..2709e00 100644
-> --- a/drivers/rtc/rtc-cmos.c
-> +++ b/drivers/rtc/rtc-cmos.c
-> @@ -37,6 +37,8 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/log2.h>
->  #include <linux/pm.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
->  
->  /* this is for "generic access to PC-style RTC" using CMOS_READ/CMOS_WRITE */
->  #include <asm-generic/rtc.h>
-> @@ -1123,6 +1125,46 @@ static struct pnp_driver cmos_pnp_driver = {
->  
->  #endif	/* CONFIG_PNP */
+> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
+> index ae53662..a9edd50 100644
+> --- a/drivers/watchdog/s3c2410_wdt.c
+> +++ b/drivers/watchdog/s3c2410_wdt.c
+> @@ -592,6 +592,13 @@ static int s3c2410wdt_resume(struct platform_device *dev)
+>  #define s3c2410wdt_resume  NULL
+>  #endif /* CONFIG_PM */
 >  
 > +#ifdef CONFIG_OF
-> +static const struct of_device_id of_cmos_match[] = {
-> +	{
-> +		.compatible = "motorola,mc146818",
-> +	},
-> +	{ },
+> +static const struct of_device_id s3c2410_wdt_match[] = {
+> +	{ .compatible = "samsung,s3c2410-wdt" },
+> +	{},
 > +};
-> +MODULE_DEVICE_TABLE(of, of_cmos_match);
-> +
-> +static __init void cmos_of_init(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct rtc_time time;
-> +	int ret;
-> +	const __be32 *val;
-> +
-> +	if (!node)
-> +		return;
-> +
-> +	val = of_get_property(node, "ctrl-reg", NULL);
-> +	if (val)
-> +		CMOS_WRITE(be32_to_cpup(val), RTC_CONTROL);
-> +
-> +	val = of_get_property(node, "freq-reg", NULL);
-> +	if (val)
-> +		CMOS_WRITE(be32_to_cpup(val), RTC_FREQ_SELECT);
-> +
-> +	get_rtc_time(&time);
-> +	ret = rtc_valid_tm(&time);
-> +	if (ret) {
-> +		struct rtc_time def_time = {
-> +			.tm_year = 1,
-> +			.tm_mday = 1,
-> +		};
-> +		set_rtc_time(&def_time);
-> +	}
-> +}
-> +#else
-> +static inline void cmos_of_init(struct platform_device *pdev) {}
-> +#endif
->  /*----------------------------------------------------------------*/
->  
->  /* Platform setup should have set up an RTC device, when PNP is
-> @@ -1131,6 +1173,7 @@ static struct pnp_driver cmos_pnp_driver = {
->  
->  static int __init cmos_platform_probe(struct platform_device *pdev)
->  {
-> +	cmos_of_init(pdev);
->  	cmos_wake_setup(&pdev->dev);
->  	return cmos_do_probe(&pdev->dev,
->  			platform_get_resource(pdev, IORESOURCE_IO, 0),
-> @@ -1162,6 +1205,9 @@ static struct platform_driver cmos_platform_driver = {
->  #ifdef CONFIG_PM
->  		.pm		= &cmos_pm_ops,
->  #endif
-> +#if defined(CONFIG_OF)
-> +		.of_match_table = of_cmos_match,
+> +MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
 > +#endif
 
-The #if defined(CONFIG_OF) is no longer necessary around
-.of_match_table, particularly if you have a #else above that #defines
-of_cmos_match to NULL.
+#else
+#define s3c2410_wdt_match NULL
+#endif
 
->  	}
+>  
+>  static struct platform_driver s3c2410wdt_driver = {
+>  	.probe		= s3c2410wdt_probe,
+> @@ -602,6 +609,9 @@ static struct platform_driver s3c2410wdt_driver = {
+>  	.driver		= {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "s3c2410-wdt",
+> +#ifdef CONFIG_OF
+> +		.of_match_table	= s3c2410_wdt_match,
+> +#endif
+
+The #ifdef can be dropped here now.  .of_match_table is no longer conditional.
+
+
+>  	},
 >  };
 >  
 > -- 
-> 1.7.3.2
+> 1.6.6.rc2
 > 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
