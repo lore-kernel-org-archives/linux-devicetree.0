@@ -1,163 +1,51 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: [PATCH 3/4 v3] tty: serial: altera_uart: Add devicetree support
-Date: Fri, 18 Feb 2011 11:35:32 +0100
-Message-ID: <1298025332-31846-1-git-send-email-tklauser@distanz.ch>
-References: <c7a7085602687d2f1b6ac505c030f19bafda04e3.1297245277.git.tklauser@distanz.ch>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <c7a7085602687d2f1b6ac505c030f19bafda04e3.1297245277.git.tklauser@distanz.ch>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org
-Cc: nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add MX51 basic DT support
+Date: Fri, 18 Feb 2011 09:12:52 -0600
+Message-ID: <4D5E8C74.4090004@gmail.com>
+References: <1298016730-22761-1-git-send-email-r64343@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <1298016730-22761-1-git-send-email-r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With the recent switch of the (currently still out-of-tree) Nios2 Linux
-port to devicetree we want to be able to retreive the resources and
-properties from dts.
+Jason,
 
-The old method to retreive resources and properties from platform data
-is still supported.
+On 02/18/2011 02:12 AM, Jason Liu wrote:
+> This patchset adds FSL mx51 device tree support. This
+> is based on
+>
+> git://git.secretlab.ca/git/linux-2.6 devicetree/test
+>
+> This patch has been tested on MX51 babbage board and can
+> boot up succesfully to linux console with DT enabled.
+>
+> Jason Liu (3):
+>    arm/dt: add basic mx51 device tree support
+>    arm/dt: add very basic dts file for babbage board
 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
----
+This is clearly based on the initial version I wrote. Can you give me 
+credit for it.
 
-Greg: This patch will have the same compile problem in your tree as the
-altera_jtaguart patch has. As this patch depends on the previous ones of
-this series it might be best to apply it once commit c9e358dfc
-"driver-core: remove conditionals around devicetree pointers" from
-Grant's tree is merged.
+>    serial/imx: parse from device tree support
 
-Thanks to Grant Likely and Thomas Chou for their comments.
+Jeremy Kerr wrote the initial version of this although it is quite 
+heavily changed.
 
-v3:
- - Change order for getting uartclk.
-v2:
- - fall back to uartclk from platform data if the device tree property
-   is not available.
- - Only include MODULE_DEVICE_TABLE if CONFIG_OF is set so we don't
-   advertise device tree support if CONFIG_OF isn't active.
- - change vendor prefix in match table to be uppercase for consistency
-   with documentation
+Original versions are here:
 
- .../devicetree/bindings/serial/altera_uart.txt     |    7 +++
- drivers/tty/serial/altera_uart.c                   |   51 ++++++++++++++++++--
- 2 files changed, 54 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/altera_uart.txt
+http://kernel.ubuntu.com/git?p=jk/dt/linux-2.6.git;a=shortlog;h=refs/heads/mx51
 
-diff --git a/Documentation/devicetree/bindings/serial/altera_uart.txt b/Documentation/devicetree/bindings/serial/altera_uart.txt
-new file mode 100644
-index 0000000..71cae3f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/altera_uart.txt
-@@ -0,0 +1,7 @@
-+Altera UART
-+
-+Required properties:
-+- compatible : should be "ALTR,uart-1.0"
-+
-+Optional properties:
-+- clock-frequency : frequency of the clock input to the UART
-diff --git a/drivers/tty/serial/altera_uart.c b/drivers/tty/serial/altera_uart.c
-index 5e80977..6a1ebd9 100644
---- a/drivers/tty/serial/altera_uart.c
-+++ b/drivers/tty/serial/altera_uart.c
-@@ -24,6 +24,7 @@
- #include <linux/serial.h>
- #include <linux/serial_core.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/io.h>
- #include <linux/altera_uart.h>
- 
-@@ -484,6 +485,29 @@ static struct uart_driver altera_uart_driver = {
- 	.cons		= ALTERA_UART_CONSOLE,
- };
- 
-+#ifdef CONFIG_OF
-+static int altera_uart_get_of_uartclk(struct platform_device *pdev,
-+				      struct uart_port *port)
-+{
-+	int len;
-+	const __be32 *clk;
-+
-+	clk = of_get_property(pdev->dev.of_node, "clock-frequency", &len);
-+	if (!clk || len < sizeof(__be32))
-+		return -ENODEV;
-+
-+	port->uartclk = be32_to_cpup(clk);
-+
-+	return 0;
-+}
-+#else
-+static int altera_uart_get_of_uartclk(struct platform_device *pdev,
-+				      struct uart_port *port)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_OF */
-+
- static int __devinit altera_uart_probe(struct platform_device *pdev)
- {
- 	struct altera_uart_platform_uart *platp = pdev->dev.platform_data;
-@@ -491,6 +515,7 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
- 	struct resource *res_mem;
- 	struct resource *res_irq;
- 	int i = pdev->id;
-+	int ret;
- 
- 	/* -1 emphasizes that the platform must have one port, no .N suffix */
- 	if (i == -1)
-@@ -515,6 +540,15 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
- 	else if (platp->irq)
- 		port->irq = platp->irq;
- 
-+	/* Check platform data first so we can override device node data */
-+	if (platp)
-+		port->uartclk = platp->uartclk;
-+	else {
-+		ret = altera_uart_get_of_uartclk(pdev, port);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	port->membase = ioremap(port->mapbase, ALTERA_UART_SIZE);
- 	if (!port->membase)
- 		return -ENOMEM;
-@@ -527,7 +561,6 @@ static int __devinit altera_uart_probe(struct platform_device *pdev)
- 	port->line = i;
- 	port->type = PORT_ALTERA_UART;
- 	port->iotype = SERIAL_IO_MEM;
--	port->uartclk = platp->uartclk;
- 	port->ops = &altera_uart_ops;
- 	port->flags = UPF_BOOT_AUTOCONF;
- 
-@@ -550,13 +583,23 @@ static int __devexit altera_uart_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id altera_uart_match[] = {
-+	{ .compatible = "ALTR,uart-1.0", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, altera_uart_match);
-+#else
-+#define altera_uart_match NULL
-+#endif /* CONFIG_OF */
-+
- static struct platform_driver altera_uart_platform_driver = {
- 	.probe	= altera_uart_probe,
- 	.remove	= __devexit_p(altera_uart_remove),
- 	.driver	= {
--		.name	= DRV_NAME,
--		.owner	= THIS_MODULE,
--		.pm	= NULL,
-+		.name		= DRV_NAME,
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= altera_uart_match,
- 	},
- };
- 
--- 
-1.7.0.4
-
+Rob
