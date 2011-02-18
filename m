@@ -1,42 +1,65 @@
-From: Thomas Chou <thomas@wytron.com.tw>
-Subject: Re: [Nios2-dev] [PATHV v2] tty: serial: altera_uart: Add  devicetree
- support
-Date: Fri, 18 Feb 2011 09:28:38 +0800
-Message-ID: <4D5DCB46.9090506@wytron.com.tw>
-References: <c7a7085602687d2f1b6ac505c030f19bafda04e3.1297245277.git.tklauser@distanz.ch> <1297872732-10207-1-git-send-email-tklauser@distanz.ch> <4D5C86C1.8070404@wytron.com.tw> <20110217074846.GG4076@distanz.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Tobias Klauser <tklauser@distanz.ch>
+Subject: [PATCH 5/5 v2] tty: serial: altera_jtaguart: Add device tree support
+Date: Fri, 18 Feb 2011 08:54:35 +0100
+Message-ID: <1298015675-18719-1-git-send-email-tklauser@distanz.ch>
+References: <c28550ba11ed228f4137ced1ab34761c08ad38ad.1297974227.git.tklauser@distanz.ch>
 Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20110217074846.GG4076@distanz.ch>
+In-Reply-To: <c28550ba11ed228f4137ced1ab34761c08ad38ad.1297974227.git.tklauser@distanz.ch>
 Sender: linux-serial-owner@vger.kernel.org
-To: Tobias Klauser <tklauser@distanz.ch>
-Cc: nios2-dev@sopc.et.ntust.edu.tw, Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@suse.de>, Grant Likely <grant.likely@secretlab.ca>, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: nios2-dev@sopc.et.ntust.edu.tw
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2011 03:48 PM, Tobias Klauser wrote:
->>> +	ret = altera_uart_get_of_uartclk(pdev, port);
->>> +	if (ret&&   platp)
->>> +		port->uartclk = platp->uartclk;
->>> +	else if (ret)
->>> +		return ret;
->>> +
->>
->> Better reverse the priority, with platform data checked first.
->>
->> 	if (platp)
->> 		port->uartclk = platp->uartclk;
->> 	else {
->> 		ret = altera_uart_get_of_uartclk(pdev, port);
->> 		if (ret)
->> 			return ret;
->> 	}
->
-> Do you have a specific reasoning for this? I thought it might make sense
-> to do it in the same order as with the resources above, but I have no
-> problem changing it to the way you suggest.
+Advertise the possibility to use this driver with device tree if
+CONFIG_OF is set.
 
-Not quite sure. But I see some drivers follow this order, and I just 
-followed, too.
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+---
+ .../devicetree/bindings/altera_jtaguart.txt        |    4 ++++
+ drivers/tty/serial/altera_jtaguart.c               |   15 +++++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/altera_jtaguart.txt
 
-- Thomas
+diff --git a/Documentation/devicetree/bindings/altera_jtaguart.txt b/Documentation/devicetree/bindings/altera_jtaguart.txt
+new file mode 100644
+index 0000000..c152f65
+--- /dev/null
++++ b/Documentation/devicetree/bindings/altera_jtaguart.txt
+@@ -0,0 +1,4 @@
++Altera JTAG UART
++
++Required properties:
++- compatible : should be "ALTR,juart-1.0"
+diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
+index 8f014bb..60e049b 100644
+--- a/drivers/tty/serial/altera_jtaguart.c
++++ b/drivers/tty/serial/altera_jtaguart.c
+@@ -466,12 +466,23 @@ static int __devexit altera_jtaguart_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id altera_jtaguart_match[] = {
++	{ .compatible = "ALTR,juart-1.0", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, altera_jtaguart_match);
++#else
++#define altera_jtaguart_match NULL
++#endif /* CONFIG_OF */
++
+ static struct platform_driver altera_jtaguart_platform_driver = {
+ 	.probe	= altera_jtaguart_probe,
+ 	.remove	= __devexit_p(altera_jtaguart_remove),
+ 	.driver	= {
+-		.name	= DRV_NAME,
+-		.owner	= THIS_MODULE,
++		.name		= DRV_NAME,
++		.owner		= THIS_MODULE,
++		.of_match_table	= altera_jtaguart_match,
+ 	},
+ };
+ 
+-- 
+1.7.0.4
+
