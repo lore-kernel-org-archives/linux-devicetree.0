@@ -1,71 +1,59 @@
-From: Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 0/3] Add MX51 basic DT support
-Date: Mon, 21 Feb 2011 02:10:37 +0000
-Message-ID: <2CF7613B9822A943BEF13EF7ACEC5BD114969F@039-SN1MPN1-003.039d.mgd.msft.net>
-References: <1298016730-22761-1-git-send-email-r64343@freescale.com>
-	<4D5E8C74.4090004@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] i2c-ocores: register devices on child nodes
+Date: Sun, 20 Feb 2011 20:40:49 -0700
+Message-ID: <AANLkTi=sQ2oS4qbfHtKG52KnDcpqkijQx_YXoAbctNzL@mail.gmail.com>
+References: <1297306314-11483-1-git-send-email-thomas@wytron.com.tw>
+	<20110216043540.GB11684@angua.secretlab.ca>
+	<20110220232808.GL15795@trinity.fluff.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <4D5E8C74.4090004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110220232808.GL15795-SMNkleLxa3Z6Wcw2j4pizdi2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Rob,
-
-Best Regards,
-Jason Liu
-
-
->-----Original Message-----
->From: Rob Herring [mailto:robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->Sent: Friday, February 18, 2011 11:13 PM
->To: Liu Hui-R64343; Jeremy Kerr
->Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org;
->patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
->Subject: Re: [PATCH 0/3] Add MX51 basic DT support
->
->Jason,
->
->On 02/18/2011 02:12 AM, Jason Liu wrote:
->> This patchset adds FSL mx51 device tree support. This is based on
+On Sun, Feb 20, 2011 at 4:28 PM, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org> wrote:
+> On Tue, Feb 15, 2011 at 09:35:40PM -0700, Grant Likely wrote:
+>> On Thu, Feb 10, 2011 at 10:51:54AM +0800, Thomas Chou wrote:
+>> > This patch registers devices on the devicetree child nodes to the bus.
+>> > Also removes one trailing whitespace.
+>> >
+>> > Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
 >>
->> git://git.secretlab.ca/git/linux-2.6 devicetree/test
+>> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 >>
->> This patch has been tested on MX51 babbage board and can boot up
->> succesfully to linux console with DT enabled.
->>
->> Jason Liu (3):
->>    arm/dt: add basic mx51 device tree support
->>    arm/dt: add very basic dts file for babbage board
+>> Ben, do you want to pick this one up? =A0Or should I merge it via my
+>> devicetree branch?
 >
->This is clearly based on the initial version I wrote. Can you give me credit for
->it.
+> If it applies to the mainline kernel, then I'll take it.
 
-OK, Sure,
->
->>    serial/imx: parse from device tree support
->
->Jeremy Kerr wrote the initial version of this although it is quite heavily
->changed.
+It should apply to mainline no problem.
 
-Yes,  Will add it to the commit log.
+g.
+
 >
->Original versions are here:
+> --
+> Ben Dooks, ben-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, http://www.fluff.org/ben/
 >
->http://kernel.ubuntu.com/git?p=jk/dt/linux-
->2.6.git;a=shortlog;h=refs/heads/mx51
+> Large Hadron Colada: A large Pina Colada that makes the universe disappea=
+r.
 >
->Rob
+>
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
