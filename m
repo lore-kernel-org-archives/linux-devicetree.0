@@ -1,80 +1,206 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 11/11] rtc/cmos: add OF bindings
-Date: Tue, 22 Feb 2011 13:50:48 -0700
-Message-ID: <AANLkTimYJh8wU8vhN+MGysyjAn2pCaqL-mGE1Vjr5TYB@mail.gmail.com>
-References: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de>
-	<1298405266-1624-12-git-send-email-bigeasy@linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1298405266-1624-12-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: [RFC PATCH 00/10] MIPS: Octeon: Use Device Tree.
+Date: Tue, 22 Feb 2011 12:57:44 -0800
+Message-ID: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
+Cc: David Daney <ddaney@caviumnetworks.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 22, 2011 at 1:07 PM, Sebastian Andrzej Siewior
-<bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
-> This allows to load the OF driver based informations from the device
-> tree. Systems without BIOS may need to perform some initialization.
-> PowerPC creates a PNP device from the OF information and performs this
-> kind of initialization in their private PCI quirk. This looks more
-> generic.
-> This patch also avoids registering the platform RTC driver on X86 if we
-> have a device tree blob. Without it we end up with of this devices. It
-> is in this hunk in order to remain bisectable.
->
-> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Background: The Octeon family of SOCs has a variety of on-chip
+controllers for Ethernet, MDIO, I2C, and several other I/O devices.
+These chips are used on boards with a great variety of different
+configurations.  To date, the configuration and bus topology
+information has been hard coded in the drivers and support code.
 
-Itty-bitty nit below, but otherwise:
+To facilitate supporting new chips and boards, we would like to make
+use use the Device Tree to encode the configuration information.
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+I would like to get some feedback on the current code I am working
+with.  The migration approach is as follows:
 
-[...]
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index d9dd664..8de7c29 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -70,6 +70,11 @@ extern struct device_node *allnodes;
-> =A0extern struct device_node *of_chosen;
-> =A0extern rwlock_t devtree_lock;
->
-> +static inline int of_have_populated_dt(void)
+o Several device tree templates are statically linked into the kernel
+  image.  Based on SOC type and board type one of these is selected in
+  early boot.  Legacy configuration probing code is used to prune and
+  patch the device tree template.
 
-Personally, I'd make this a 'bool' return value.
+o New SOCs and boards will directly use a device tree passed by the
+  bootloader (This patch set doesn't actually implement this, but it
+  is trivial to add).
 
-> +{
-> + =A0 =A0 =A0 return allnodes !=3D NULL;
-> +}
-> +
-> =A0static inline bool of_node_is_root(const struct device_node *node)
-> =A0{
-> =A0 =A0 =A0 =A0return node && (node->parent =3D=3D NULL);
-> @@ -222,5 +227,12 @@ extern void of_attach_node(struct device_node *);
-> =A0extern void of_detach_node(struct device_node *);
-> =A0#endif
->
-> +#else
-> +
-> +static inline int of_have_populated_dt(void)
-> +{
-> + =A0 =A0 =A0 return 0;
 
-and then 'return false'; here.
 
-But by *no means* should this patch be delayed by this comment.  :-)
+01/10 - Move configuration code to common place for use by Device Tree
+        pruning and patching code.
 
-g.
+02/10 - Add the statically linked Device Tree templates.
+
+03/10 - Remove unused arch/mips/prom.c code that conflicts with
+        following patches.
+
+04/10 - irq_create_of_mapping() function.
+
+05/10 - Rearrange legacy configuration code for following patch.
+
+06/10 - Fix up Device Tree template for current environment.
+
+07/10 - Convert I2C driver to use Device Tree.
+
+08/10 - Convert MDIO driver to use Device Tree.
+
+09/10 - Convert Ethernet mgmt driver to use Device Tree.
+
+10/10 - Convert Octeon Ethernet driver to use Device Tree.
+
+
+David Daney (10):
+  MIPS: Octeon: Move some Ethernet support files out of staging.
+  MIPS: Octeon: Add device tree source files.
+  MIPS: Prune some target specific code out of prom.c
+  MIPS: Octeon: Add a irq_create_of_mapping() implementation.
+  MIPS: Octeon: Rearrance CVMX files in preperation for device tree
+  MIPS: Octeon: Initialize and fixup device tree.
+  i2c: Convert i2c-octeon.c to use device tree.
+  netdev: mdio-octeon.c: Convert to use device tree.
+  netdev: octeon_mgmt: Convert to use device tree.
+  staging: octeon_ethernet: Convert to use device tree.
+
+ arch/mips/Kconfig                                  |    2 +
+ arch/mips/cavium-octeon/.gitignore                 |    2 +
+ arch/mips/cavium-octeon/Makefile                   |   13 +
+ arch/mips/cavium-octeon/executive/Makefile         |    5 +
+ .../mips/cavium-octeon/executive}/cvmx-cmd-queue.c |    8 +-
+ .../mips/cavium-octeon/executive}/cvmx-fpa.c       |    0
+ .../cavium-octeon/executive}/cvmx-helper-board.c   |   18 +-
+ .../cavium-octeon/executive}/cvmx-helper-fpa.c     |    0
+ .../cavium-octeon/executive}/cvmx-helper-loop.c    |    6 +-
+ .../cavium-octeon/executive}/cvmx-helper-npi.c     |    6 +-
+ .../cavium-octeon/executive}/cvmx-helper-rgmii.c   |   17 +-
+ .../cavium-octeon/executive}/cvmx-helper-sgmii.c   |   18 +-
+ .../cavium-octeon/executive}/cvmx-helper-spi.c     |   20 +-
+ .../cavium-octeon/executive}/cvmx-helper-util.c    |   16 +-
+ .../cavium-octeon/executive}/cvmx-helper-xaui.c    |   32 +-
+ .../mips/cavium-octeon/executive}/cvmx-helper.c    |  120 ++++--
+ .../executive}/cvmx-interrupt-decodes.c            |   10 +-
+ .../cavium-octeon/executive}/cvmx-interrupt-rsl.c  |    4 +-
+ .../mips/cavium-octeon/executive}/cvmx-pko.c       |    6 +-
+ .../mips/cavium-octeon/executive}/cvmx-spi.c       |   12 +-
+ arch/mips/cavium-octeon/octeon-irq.c               |   25 ++
+ arch/mips/cavium-octeon/octeon-platform.c          |  456 ++++++++++++--------
+ arch/mips/cavium-octeon/octeon_3xxx.dts            |  314 ++++++++++++++
+ arch/mips/cavium-octeon/octeon_68xx.dts            |   99 +++++
+ arch/mips/cavium-octeon/setup.c                    |   17 +
+ .../mips/include/asm}/octeon/cvmx-address.h        |    0
+ .../mips/include/asm}/octeon/cvmx-asxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-cmd-queue.h      |    0
+ .../mips/include/asm}/octeon/cvmx-config.h         |    0
+ .../mips/include/asm}/octeon/cvmx-dbg-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-fau.h            |    0
+ .../mips/include/asm}/octeon/cvmx-fpa-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-fpa.h            |    0
+ .../mips/include/asm}/octeon/cvmx-gmxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-helper-board.h   |    0
+ .../mips/include/asm}/octeon/cvmx-helper-fpa.h     |    0
+ .../mips/include/asm}/octeon/cvmx-helper-loop.h    |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-npi.h     |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-rgmii.h   |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-sgmii.h   |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-spi.h     |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-util.h    |    0
+ .../mips/include/asm}/octeon/cvmx-helper-xaui.h    |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper.h         |    1 +
+ .../mips/include/asm}/octeon/cvmx-ipd.h            |    0
+ .../mips/include/asm}/octeon/cvmx-mdio.h           |    0
+ .../mips/include/asm}/octeon/cvmx-pcsx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-pcsxx-defs.h     |    0
+ .../mips/include/asm}/octeon/cvmx-pip-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-pip.h            |    0
+ .../mips/include/asm}/octeon/cvmx-pko-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-pko.h            |    0
+ .../mips/include/asm}/octeon/cvmx-pow.h            |    0
+ .../mips/include/asm}/octeon/cvmx-scratch.h        |    0
+ .../mips/include/asm}/octeon/cvmx-spi.h            |    0
+ .../mips/include/asm}/octeon/cvmx-spxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-srxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-stxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-wqe.h            |    0
+ arch/mips/include/asm/octeon/octeon.h              |    5 -
+ arch/mips/kernel/prom.c                            |   49 ---
+ drivers/i2c/busses/i2c-octeon.c                    |   88 ++--
+ drivers/net/octeon/octeon_mgmt.c                   |  265 +++++++-----
+ drivers/net/phy/mdio-octeon.c                      |   73 ++--
+ drivers/staging/octeon/Makefile                    |    5 -
+ drivers/staging/octeon/cvmx-packet.h               |   65 ---
+ drivers/staging/octeon/cvmx-smix-defs.h            |  178 --------
+ drivers/staging/octeon/ethernet-defines.h          |    2 +-
+ drivers/staging/octeon/ethernet-mdio.c             |   31 +-
+ drivers/staging/octeon/ethernet-mem.c              |    2 +-
+ drivers/staging/octeon/ethernet-rgmii.c            |    4 +-
+ drivers/staging/octeon/ethernet-rx.c               |   14 +-
+ drivers/staging/octeon/ethernet-rx.h               |    2 +-
+ drivers/staging/octeon/ethernet-sgmii.c            |    4 +-
+ drivers/staging/octeon/ethernet-spi.c              |    6 +-
+ drivers/staging/octeon/ethernet-tx.c               |   12 +-
+ drivers/staging/octeon/ethernet-xaui.c             |    4 +-
+ drivers/staging/octeon/ethernet.c                  |  115 +++--
+ drivers/staging/octeon/octeon-ethernet.h           |    3 +
+ 79 files changed, 1308 insertions(+), 852 deletions(-)
+ create mode 100644 arch/mips/cavium-octeon/.gitignore
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-cmd-queue.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-fpa.c (100%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-board.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-fpa.c (100%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-loop.c (95%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-npi.c (96%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-rgmii.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-sgmii.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-spi.c (94%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-util.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-xaui.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper.c (93%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-interrupt-decodes.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-interrupt-rsl.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-pko.c (99%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-spi.c (99%)
+ create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
+ create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-address.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-asxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-cmd-queue.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-config.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-dbg-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fau.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fpa-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fpa.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-gmxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-board.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-fpa.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-loop.h (96%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-npi.h (96%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-rgmii.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-sgmii.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-spi.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-util.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-xaui.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper.h (99%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-ipd.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-mdio.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pcsx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pcsxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pip-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pip.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pko-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pko.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pow.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-scratch.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-spi.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-spxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-srxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-stxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-wqe.h (100%)
+ delete mode 100644 drivers/staging/octeon/cvmx-packet.h
+ delete mode 100644 drivers/staging/octeon/cvmx-smix-defs.h
+
+-- 
+1.7.2.3
