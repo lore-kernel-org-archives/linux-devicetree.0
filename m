@@ -1,206 +1,490 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: [RFC PATCH 00/10] MIPS: Octeon: Use Device Tree.
-Date: Tue, 22 Feb 2011 12:57:44 -0800
-Message-ID: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
-Cc: David Daney <ddaney@caviumnetworks.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [RFC PATCH 02/10] MIPS: Octeon: Add device tree source files.
+Date: Tue, 22 Feb 2011 12:57:46 -0800
+Message-ID: <1298408274-20856-3-git-send-email-ddaney@caviumnetworks.com>
+References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1298408274-20856-1-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Background: The Octeon family of SOCs has a variety of on-chip
-controllers for Ethernet, MDIO, I2C, and several other I/O devices.
-These chips are used on boards with a great variety of different
-configurations.  To date, the configuration and bus topology
-information has been hard coded in the drivers and support code.
-
-To facilitate supporting new chips and boards, we would like to make
-use use the Device Tree to encode the configuration information.
-
-I would like to get some feedback on the current code I am working
-with.  The migration approach is as follows:
-
-o Several device tree templates are statically linked into the kernel
-  image.  Based on SOC type and board type one of these is selected in
-  early boot.  Legacy configuration probing code is used to prune and
-  patch the device tree template.
-
-o New SOCs and boards will directly use a device tree passed by the
-  bootloader (This patch set doesn't actually implement this, but it
-  is trivial to add).
-
-
-
-01/10 - Move configuration code to common place for use by Device Tree
-        pruning and patching code.
-
-02/10 - Add the statically linked Device Tree templates.
-
-03/10 - Remove unused arch/mips/prom.c code that conflicts with
-        following patches.
-
-04/10 - irq_create_of_mapping() function.
-
-05/10 - Rearrange legacy configuration code for following patch.
-
-06/10 - Fix up Device Tree template for current environment.
-
-07/10 - Convert I2C driver to use Device Tree.
-
-08/10 - Convert MDIO driver to use Device Tree.
-
-09/10 - Convert Ethernet mgmt driver to use Device Tree.
-
-10/10 - Convert Octeon Ethernet driver to use Device Tree.
-
-
-David Daney (10):
-  MIPS: Octeon: Move some Ethernet support files out of staging.
-  MIPS: Octeon: Add device tree source files.
-  MIPS: Prune some target specific code out of prom.c
-  MIPS: Octeon: Add a irq_create_of_mapping() implementation.
-  MIPS: Octeon: Rearrance CVMX files in preperation for device tree
-  MIPS: Octeon: Initialize and fixup device tree.
-  i2c: Convert i2c-octeon.c to use device tree.
-  netdev: mdio-octeon.c: Convert to use device tree.
-  netdev: octeon_mgmt: Convert to use device tree.
-  staging: octeon_ethernet: Convert to use device tree.
-
- arch/mips/Kconfig                                  |    2 +
- arch/mips/cavium-octeon/.gitignore                 |    2 +
- arch/mips/cavium-octeon/Makefile                   |   13 +
- arch/mips/cavium-octeon/executive/Makefile         |    5 +
- .../mips/cavium-octeon/executive}/cvmx-cmd-queue.c |    8 +-
- .../mips/cavium-octeon/executive}/cvmx-fpa.c       |    0
- .../cavium-octeon/executive}/cvmx-helper-board.c   |   18 +-
- .../cavium-octeon/executive}/cvmx-helper-fpa.c     |    0
- .../cavium-octeon/executive}/cvmx-helper-loop.c    |    6 +-
- .../cavium-octeon/executive}/cvmx-helper-npi.c     |    6 +-
- .../cavium-octeon/executive}/cvmx-helper-rgmii.c   |   17 +-
- .../cavium-octeon/executive}/cvmx-helper-sgmii.c   |   18 +-
- .../cavium-octeon/executive}/cvmx-helper-spi.c     |   20 +-
- .../cavium-octeon/executive}/cvmx-helper-util.c    |   16 +-
- .../cavium-octeon/executive}/cvmx-helper-xaui.c    |   32 +-
- .../mips/cavium-octeon/executive}/cvmx-helper.c    |  120 ++++--
- .../executive}/cvmx-interrupt-decodes.c            |   10 +-
- .../cavium-octeon/executive}/cvmx-interrupt-rsl.c  |    4 +-
- .../mips/cavium-octeon/executive}/cvmx-pko.c       |    6 +-
- .../mips/cavium-octeon/executive}/cvmx-spi.c       |   12 +-
- arch/mips/cavium-octeon/octeon-irq.c               |   25 ++
- arch/mips/cavium-octeon/octeon-platform.c          |  456 ++++++++++++--------
- arch/mips/cavium-octeon/octeon_3xxx.dts            |  314 ++++++++++++++
- arch/mips/cavium-octeon/octeon_68xx.dts            |   99 +++++
- arch/mips/cavium-octeon/setup.c                    |   17 +
- .../mips/include/asm}/octeon/cvmx-address.h        |    0
- .../mips/include/asm}/octeon/cvmx-asxx-defs.h      |    0
- .../mips/include/asm}/octeon/cvmx-cmd-queue.h      |    0
- .../mips/include/asm}/octeon/cvmx-config.h         |    0
- .../mips/include/asm}/octeon/cvmx-dbg-defs.h       |    0
- .../mips/include/asm}/octeon/cvmx-fau.h            |    0
- .../mips/include/asm}/octeon/cvmx-fpa-defs.h       |    0
- .../mips/include/asm}/octeon/cvmx-fpa.h            |    0
- .../mips/include/asm}/octeon/cvmx-gmxx-defs.h      |    0
- .../mips/include/asm}/octeon/cvmx-helper-board.h   |    0
- .../mips/include/asm}/octeon/cvmx-helper-fpa.h     |    0
- .../mips/include/asm}/octeon/cvmx-helper-loop.h    |    1 +
- .../mips/include/asm}/octeon/cvmx-helper-npi.h     |    1 +
- .../mips/include/asm}/octeon/cvmx-helper-rgmii.h   |    1 +
- .../mips/include/asm}/octeon/cvmx-helper-sgmii.h   |    1 +
- .../mips/include/asm}/octeon/cvmx-helper-spi.h     |    1 +
- .../mips/include/asm}/octeon/cvmx-helper-util.h    |    0
- .../mips/include/asm}/octeon/cvmx-helper-xaui.h    |    1 +
- .../mips/include/asm}/octeon/cvmx-helper.h         |    1 +
- .../mips/include/asm}/octeon/cvmx-ipd.h            |    0
- .../mips/include/asm}/octeon/cvmx-mdio.h           |    0
- .../mips/include/asm}/octeon/cvmx-pcsx-defs.h      |    0
- .../mips/include/asm}/octeon/cvmx-pcsxx-defs.h     |    0
- .../mips/include/asm}/octeon/cvmx-pip-defs.h       |    0
- .../mips/include/asm}/octeon/cvmx-pip.h            |    0
- .../mips/include/asm}/octeon/cvmx-pko-defs.h       |    0
- .../mips/include/asm}/octeon/cvmx-pko.h            |    0
- .../mips/include/asm}/octeon/cvmx-pow.h            |    0
- .../mips/include/asm}/octeon/cvmx-scratch.h        |    0
- .../mips/include/asm}/octeon/cvmx-spi.h            |    0
- .../mips/include/asm}/octeon/cvmx-spxx-defs.h      |    0
- .../mips/include/asm}/octeon/cvmx-srxx-defs.h      |    0
- .../mips/include/asm}/octeon/cvmx-stxx-defs.h      |    0
- .../mips/include/asm}/octeon/cvmx-wqe.h            |    0
- arch/mips/include/asm/octeon/octeon.h              |    5 -
- arch/mips/kernel/prom.c                            |   49 ---
- drivers/i2c/busses/i2c-octeon.c                    |   88 ++--
- drivers/net/octeon/octeon_mgmt.c                   |  265 +++++++-----
- drivers/net/phy/mdio-octeon.c                      |   73 ++--
- drivers/staging/octeon/Makefile                    |    5 -
- drivers/staging/octeon/cvmx-packet.h               |   65 ---
- drivers/staging/octeon/cvmx-smix-defs.h            |  178 --------
- drivers/staging/octeon/ethernet-defines.h          |    2 +-
- drivers/staging/octeon/ethernet-mdio.c             |   31 +-
- drivers/staging/octeon/ethernet-mem.c              |    2 +-
- drivers/staging/octeon/ethernet-rgmii.c            |    4 +-
- drivers/staging/octeon/ethernet-rx.c               |   14 +-
- drivers/staging/octeon/ethernet-rx.h               |    2 +-
- drivers/staging/octeon/ethernet-sgmii.c            |    4 +-
- drivers/staging/octeon/ethernet-spi.c              |    6 +-
- drivers/staging/octeon/ethernet-tx.c               |   12 +-
- drivers/staging/octeon/ethernet-xaui.c             |    4 +-
- drivers/staging/octeon/ethernet.c                  |  115 +++--
- drivers/staging/octeon/octeon-ethernet.h           |    3 +
- 79 files changed, 1308 insertions(+), 852 deletions(-)
+Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+---
+ arch/mips/cavium-octeon/.gitignore      |    2 +
+ arch/mips/cavium-octeon/Makefile        |   13 ++
+ arch/mips/cavium-octeon/octeon_3xxx.dts |  314 +++++++++++++++++++++++++++++++
+ arch/mips/cavium-octeon/octeon_68xx.dts |   99 ++++++++++
+ 4 files changed, 428 insertions(+), 0 deletions(-)
  create mode 100644 arch/mips/cavium-octeon/.gitignore
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-cmd-queue.c (98%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-fpa.c (100%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-board.c (98%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-fpa.c (100%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-loop.c (95%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-npi.c (96%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-rgmii.c (97%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-sgmii.c (98%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-spi.c (94%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-util.c (97%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-xaui.c (97%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper.c (93%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-interrupt-decodes.c (98%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-interrupt-rsl.c (97%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-pko.c (99%)
- rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-spi.c (99%)
  create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
  create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-address.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-asxx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-cmd-queue.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-config.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-dbg-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fau.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fpa-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fpa.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-gmxx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-board.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-fpa.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-loop.h (96%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-npi.h (96%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-rgmii.h (98%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-sgmii.h (98%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-spi.h (98%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-util.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-xaui.h (98%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper.h (99%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-ipd.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-mdio.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pcsx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pcsxx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pip-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pip.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pko-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pko.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pow.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-scratch.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-spi.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-spxx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-srxx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-stxx-defs.h (100%)
- rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-wqe.h (100%)
- delete mode 100644 drivers/staging/octeon/cvmx-packet.h
- delete mode 100644 drivers/staging/octeon/cvmx-smix-defs.h
 
+diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
+new file mode 100644
+index 0000000..39c9686
+--- /dev/null
++++ b/arch/mips/cavium-octeon/.gitignore
+@@ -0,0 +1,2 @@
++*.dtb.S
++*.dtb
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index 19eb043..5e25dce 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -15,3 +15,16 @@ obj-y += octeon-memcpy.o
+ obj-y += executive/
+ 
+ obj-$(CONFIG_SMP)                     += smp.o
++
++DTS_FILES = octeon_3xxx.dts octeon_68xx.dts
++DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
++
++obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
++
++$(obj)/%.dtb: $(src)/%.dts
++	$(call cmd,dtc)
++
++# Let's keep the .dtb files around in case we want to look at them.
++.SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
++
++clean-files += $(DTB_FILES) $(patsubst %.dtb, %.dtb.S, $(DTB_FILES))
+diff --git a/arch/mips/cavium-octeon/octeon_3xxx.dts b/arch/mips/cavium-octeon/octeon_3xxx.dts
+new file mode 100644
+index 0000000..ad0feaa
+--- /dev/null
++++ b/arch/mips/cavium-octeon/octeon_3xxx.dts
+@@ -0,0 +1,314 @@
++/dts-v1/;
++/* OCTEON 3XXX, 5XXX, 63XX device tree skeleton. */
++/ {
++  model = "OCTEON";
++  compatible = "octeon,octeon";
++  #address-cells = <2>;
++  #size-cells = <2>;
++
++  soc@0 {
++    device_type = "soc";
++    compatible = "simple-bus";
++    #address-cells = <2>;
++    #size-cells = <2>;
++    ranges; /* Direct mapping */
++
++    ciu: ciu-3xxx@1070000000000 {
++      compatible = "octeon,ciu-3xxx";
++      interrupt-controller;
++      #address-cells = <0>;
++      #interrupt-cells = <2>;
++      reg = <0x10700 0x00000000 0x0 0x7000>;
++    };
++
++    /* SMI0 */
++    mdio0: mdio@1180000001800 {
++      compatible = "octeon,mdio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0x00001800 0x0 0x40>;
++      device_type = "mdio";
++
++      phy0: ethernet-phy@0 {
++	reg = <0>;
++      };
++
++      phy1: ethernet-phy@1 {
++	reg = <1>;
++      };
++
++      phy2: ethernet-phy@2 {
++	reg = <2>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++      phy3: ethernet-phy@3 {
++	reg = <3>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++      phy4: ethernet-phy@4 {
++	reg = <4>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++      phy5: ethernet-phy@5 {
++	reg = <5>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++
++      phy6: ethernet-phy@6 {
++	reg = <6>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++      phy7: ethernet-phy@7 {
++	reg = <7>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++      phy8: ethernet-phy@8 {
++	reg = <8>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++      phy9: ethernet-phy@9 {
++	reg = <9>;
++	marvell,reg-init = <3 0x10 0 0x5777>,
++			   <3 0x11 0 0x00aa>,
++                           <3 0x12 0 0x4105>,
++                           <3 0x13 0 0x0a60>;
++      };
++    };
++
++    /* SMI1 */
++    mdio1: mdio@1180000001900 {
++      compatible = "octeon,mdio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0x00001900 0x0 0x40>;
++      device_type = "mdio";
++    };
++
++    mgmt0: ethernet@1070000100000 {
++      compatible = "octeon,mgmt";
++      device_type = "network";
++      model = "mgmt";
++      reg = <0x10700 0x00100000 0x0 0x100>, /* MIX */
++            <0x11800 0xE0000000 0x0 0x300>, /* AGL */
++            <0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
++            <0x11800 0xE0002000 0x0 0x8>;   /* AGL_PRT_CTL */
++      unit-number = <0>;
++      interrupt-parent = <&ciu>;
++      interrupts = <0 62>, <1 46>;
++      local-mac-address = [ 00 00 00 00 00 00 ];
++      phy-handle = <&phy0>;
++    };
++
++    mgmt1: ethernet@1070000100800 {
++      compatible = "octeon,mgmt";
++      device_type = "network";
++      model = "mgmt";
++      reg = <0x10700 0x00100800 0x0 0x100>, /* MIX */
++            <0x11800 0xE0000800 0x0 0x300>, /* AGL */
++            <0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
++            <0x11800 0xE0002008 0x0 0x8>;   /* AGL_PRT_CTL */
++      unit-number = <1>;
++      interrupt-parent = <&ciu>;
++      interrupts = <1 18>, < 1 46>;
++      local-mac-address = [ 00 00 00 00 00 00 ];
++      phy-handle = <&phy1>;
++    };
++
++    pip: pip@11800a0000000 {
++      compatible = "octeon,pip";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0xa0000000 0x0 0x2000>;
++
++      interface@0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0>; /* interface */
++
++        ethernet@0 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x0>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy2>;
++        };
++        ethernet@1 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x1>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy3>;
++        };
++        ethernet@2 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x2>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy4>;
++        };
++        ethernet@3 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x3>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy5>;
++        };
++      };
++
++      interface@1 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <1>; /* interface */
++
++        ethernet@0 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x0>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy6>;
++        };
++        ethernet@1 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x1>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy7>;
++        };
++        ethernet@2 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x2>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy8>;
++        };
++        ethernet@3 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x3>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++          phy-handle = <&phy9>;
++        };
++      };
++
++      interface@2 { /* DPI interface. */
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <2>; /* interface */
++
++        ethernet@0 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x0>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++        ethernet@1 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x1>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++        ethernet@2 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x2>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++        ethernet@3 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x3>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++      };
++
++      interface@3 { /* Loop interface. */
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <3>; /* interface */
++
++        ethernet@0 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x0>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++        ethernet@1 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x1>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++        ethernet@2 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x2>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++        ethernet@3 {
++          device_type = "network";
++          model = "pip";
++          reg = <0x3>; /* Port */
++          local-mac-address = [ 00 00 00 00 00 00 ];
++        };
++      };
++    };
++
++    /* TWSI 0 */
++    i2c0: i2c@1180000001000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      compatible = "octeon,twsi";
++      reg = <0x11800 0x00001000 0x0 0x200>;
++      interrupt-parent = <&ciu>;
++      interrupts = <0 45>;
++      clock-rate = <100000>;
++
++      rtc@68 {
++        compatible = "dallas,ds1337";
++        reg = <0x68>;
++      };
++    };
++
++    /* TWSI 1 */
++    i2c1: i2c@1180000001200 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      compatible = "octeon,twsi";
++      reg = <0x11800 0x00001200 0x0 0x200>;
++      interrupt-parent = <&ciu>;
++      interrupts = <0 59>;
++      clock-rate = <100000>;
++    };
++  };
++
++  aliases {
++    ethernet-mgmt0 = &mgmt0;
++    ethernet-mgmt1 = &mgmt1;
++    pip = &pip;
++    mdio0 = &mdio0;
++    mdio1 = &mdio1;
++    i2c0 = &i2c0;
++    i2c1 = &i2c1;
++  };
++};
+diff --git a/arch/mips/cavium-octeon/octeon_68xx.dts b/arch/mips/cavium-octeon/octeon_68xx.dts
+new file mode 100644
+index 0000000..31dbd39
+--- /dev/null
++++ b/arch/mips/cavium-octeon/octeon_68xx.dts
+@@ -0,0 +1,99 @@
++/dts-v1/;
++/* OCTEON 68XX device tree skeleton. */
++/ {
++  model = "OCTEON";
++  compatible = "octeon,octeon";
++  #address-cells = <2>;
++  #size-cells = <2>;
++
++  soc@0 {
++    device_type = "soc";
++    compatible = "simple-bus";
++    #address-cells = <2>;
++    #size-cells = <2>;
++    ranges; /* Direct mapping */
++
++    ciu: ciu-68xx@1070100000000 {
++      compatible = "octeon,ciu-68xx";
++      interrupt-controller;
++      #address-cells = <0>;
++      #interrupt-cells = <2>;
++      reg = <0x10701 0x00000000 0x0 0x4000000>;
++    };
++
++    /* SMI0 */
++    mdio0: mdio@1180000003800 {
++      compatible = "octeon,mdio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0x00003800 0x0 0x40>;
++      device_type = "mdio";
++
++      phy0: ethernet-phy@0 {
++	reg = <0>;
++	device_type = "ethernet-phy";
++      };
++
++      phy1: ethernet-phy@1 {
++	reg = <1>;
++	device_type = "ethernet-phy";
++      };
++
++      phy3: ethernet-phy@3 {
++	reg = <3>;
++	device_type = "ethernet-phy";
++      };
++    };
++
++    /* SMI1 */
++    mdio1: mdio@1180000003880 {
++      compatible = "octeon,mdio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0x00003880 0x0 0x40>;
++      device_type = "mdio";
++    };
++
++    /* SMI2 */
++    mdio2: mdio@1180000003900 {
++      compatible = "octeon,mdio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0x00003900 0x0 0x40>;
++      device_type = "mdio";
++    };
++
++    /* SMI3 */
++    mdio3: mdio@1180000003980 {
++      compatible = "octeon,mdio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x11800 0x00003980 0x0 0x40>;
++      device_type = "mdio";
++    };
++
++    mgmt0: ethernet@1070000100000 {
++      compatible = "octeon,mgmt";
++      device_type = "network";
++      model = "mgmt";
++      /* Register banks: MIX AGL AGL_SHARED AGL_PRT_CTL*/
++      reg = <0x10700 0x00100000 0x0 0x100>, /* MIX */
++            <0x11800 0xE0000000 0x0 0x300>, /* AGL */
++            <0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
++            <0x11800 0xE0002000 0x0 0x8>;   /* AGL_PRT_CTL */
++      unit-number = <0>;
++      interrupt-parent = <&ciu>;
++      interrupts = <6 40>, <6 32>;
++      local-mac-address = [ 00 00 00 00 00 00 ];
++      phy-handle = <&phy0>;
++    };
++
++  };
++  aliases {
++    ethernet-mgmt0 = &mgmt0;
++    mdio0 = &mdio0;
++    mdio1 = &mdio1;
++    mdio2 = &mdio2;
++    mdio3 = &mdio3;
++  };
++};
 -- 
 1.7.2.3
