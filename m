@@ -1,298 +1,174 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 09/11] x86/ioapic: Add OF bindings for IO-APIC
-Date: Tue, 22 Feb 2011 14:14:08 -0700
-Message-ID: <AANLkTi=ft_zmt3vfifdTwWq+vOs2Z88ztHOyM43DCsj6@mail.gmail.com>
-References: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de> <1298405266-1624-10-git-send-email-bigeasy@linutronix.de>
+Subject: Re: Device tree on x86, part v4
+Date: Tue, 22 Feb 2011 14:16:31 -0700
+Message-ID: <AANLkTi=rvMEbu6ZqHMrin5wRcbO4024Ub93NmfKru+iQ@mail.gmail.com>
+References: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1298405266-1624-10-git-send-email-bigeasy@linutronix.de>
+In-Reply-To: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, Dirk Brandewie <dirk.brandewie@gmail.com>
+Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Feb 22, 2011 at 1:07 PM, Sebastian Andrzej Siewior
 <bigeasy@linutronix.de> wrote:
-> ioapic_xlate provides a translation from the information in device tr=
-ee
-> to ioapic related informations. This includes
-> - obtaining hw irq which is the vector number "=3D> pin number + gsi"
-> - obtaining type (level/edge/..)
-> - programming this information into ioapic
->
-> ioapic_add_ofnode adds an irq_domain based on informations from the d=
-evice
-> tree. This information (irq_domain) is required in order to map a dev=
-ice to
-> its proper interrupt controller.
->
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Dirk Brandewie <dirk.brandewie@gmail.com>
-> ---
-> =A0arch/x86/include/asm/io_apic.h | =A0 =A07 +++
-> =A0arch/x86/include/asm/prom.h =A0 =A0| =A0 =A02 +
-> =A0arch/x86/kernel/apic/io_apic.c | =A0 99 ++++++++++++++++++++++++++=
-++++++++++++++
-> =A0arch/x86/kernel/devicetree.c =A0 | =A0 13 +++++
-> =A0arch/x86/kernel/irqinit.c =A0 =A0 =A0| =A0 =A06 ++
-> =A05 files changed, 127 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/x86/include/asm/io_apic.h b/arch/x86/include/asm/io=
-_apic.h
-> index f327d38..fe88a73 100644
-> --- a/arch/x86/include/asm/io_apic.h
-> +++ b/arch/x86/include/asm/io_apic.h
-> @@ -177,6 +177,13 @@ struct mp_ioapic_gsi{
-> =A0 =A0 =A0 =A0u32 gsi_base;
-> =A0 =A0 =A0 =A0u32 gsi_end;
-> =A0};
-> +#ifdef CONFIG_OF
-> +struct mp_of_ioapic {
-> + =A0 =A0 =A0 struct device_node *node;
-> +};
-> +extern struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
-> +void __init ioapic_add_ofnode(struct device_node *np);
-> +#endif
-> =A0extern struct mp_ioapic_gsi =A0mp_gsi_routing[];
-> =A0extern u32 gsi_top;
-> =A0int mp_find_ioapic(u32 gsi);
-> diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.=
-h
-> index 3e441b3..98b9a73 100644
-> --- a/arch/x86/include/asm/prom.h
-> +++ b/arch/x86/include/asm/prom.h
-> @@ -26,6 +26,7 @@
-> =A0extern int of_ioapic;
-> =A0extern u64 initial_dtb;
-> =A0extern void add_dtb(u64 data);
-> +extern void x86_add_irq_domains(void);
-> =A0void x86_dtb_find_config(void);
-> =A0void x86_dtb_get_config(unsigned int unused);
-> =A0void add_interrupt_host(struct irq_domain *ih);
-> @@ -43,6 +44,7 @@ static inline struct device_node *pci_bus_to_OF_nod=
-e(struct pci_bus *bus)
->
-> =A0#else
-> =A0static inline void add_dtb(u64 data) { }
-> +static inline void x86_add_irq_domains(void) { }
-> =A0static inline void x86_of_pci_init(void) { }
-> =A0#define x86_dtb_find_config x86_init_noop
-> =A0#define x86_dtb_get_config x86_init_uint_noop
-> diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io=
-_apic.c
-> index ca9e2a3..c172452 100644
-> --- a/arch/x86/kernel/apic/io_apic.c
-> +++ b/arch/x86/kernel/apic/io_apic.c
-> @@ -43,6 +43,7 @@
-> =A0#include <linux/bootmem.h>
-> =A0#include <linux/dmar.h>
-> =A0#include <linux/hpet.h>
-> +#include <linux/of_address.h>
->
-> =A0#include <asm/idle.h>
-> =A0#include <asm/io.h>
-> @@ -60,6 +61,7 @@
-> =A0#include <asm/irq_remapping.h>
-> =A0#include <asm/hpet.h>
-> =A0#include <asm/hw_irq.h>
-> +#include <asm/irq_controller.h>
->
-> =A0#include <asm/apic.h>
->
-> @@ -88,6 +90,10 @@ int nr_ioapics;
-> =A0/* IO APIC gsi routing info */
-> =A0struct mp_ioapic_gsi =A0mp_gsi_routing[MAX_IO_APICS];
->
-> +#ifdef CONFIG_OF
-> +/* OF -> IO APIC lookup */
-> +struct mp_of_ioapic mp_of_ioapic[MAX_IO_APICS];
-> +#endif
-> =A0/* The one past the highest gsi number used */
-> =A0u32 gsi_top;
->
-> @@ -4083,6 +4089,99 @@ void __init mp_register_ioapic(int id, u32 add=
-ress, u32 gsi_base)
-> =A0 =A0 =A0 =A0nr_ioapics++;
-> =A0}
->
-> +#ifdef CONFIG_OF
-> +static int ioapic_xlate(struct irq_domain *id, const u32 *intspec, u=
-32 intsize,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 *out_hwirq, u32 *out_type)
-> +{
-> + =A0 =A0 =A0 u32 line;
-> + =A0 =A0 =A0 u32 idx;
-> + =A0 =A0 =A0 u32 type;
-> + =A0 =A0 =A0 u32 trigger;
-> + =A0 =A0 =A0 u32 polarity;
-> + =A0 =A0 =A0 struct irq_cfg *cfg;
-> + =A0 =A0 =A0 struct irq_desc *desc;
-> +
-> + =A0 =A0 =A0 if (intsize < 1)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
-> +
-> + =A0 =A0 =A0 line =3D *intspec;
-> + =A0 =A0 =A0 idx =3D (u32) id->priv;
-> + =A0 =A0 =A0 *out_hwirq =3D line + mp_gsi_routing[idx].gsi_base;
-> + =A0 =A0 =A0 if (intsize > 1) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 intspec++;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 type =3D *intspec;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 switch (type) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 0:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *out_type =3D IRQ_TYPE_=
-EDGE_RISING;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trigger =3D IOAPIC_EDGE=
-;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity =3D 1;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 1:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *out_type =3D IRQ_TYPE_=
-LEVEL_LOW;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trigger =3D IOAPIC_LEVE=
-L;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity =3D 0;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 2:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *out_type =3D IRQ_TYPE_=
-LEVEL_HIGH;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trigger =3D IOAPIC_LEVE=
-L;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity =3D 1;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 3:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *out_type =3D IRQ_TYPE_=
-EDGE_FALLING;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trigger =3D IOAPIC_EDGE=
-;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity =3D 0;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> This patchset introduces device tree support on x86. The device tree =
+is
+> passed by the bootloader via setup_data. It is used as an additional
+> source of information and does not replace the "traditional" x86 boot
+> page.
+> Right now we get the the following information from it:
+> - hpet location
+> - apic & ioapic location
+> - ioapic's interrupt routing
+> - legacy devices which are not initialized by bios
+> - devices which are behind a bus which does not support enumeration l=
+ike
+> =A0i2c
 
-This seems to beg for a lookup table.  :-)
+Looks good; ship it!
 
-But that can be changed later if you agree.
+g.
 
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 default:
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *out_type =3D IRQ_TYPE_=
-NONE;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trigger =3D IOAPIC_AUTO=
-;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity =3D 0;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> + =A0 =A0 =A0 } else {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 *out_type =3D IRQ_TYPE_NONE;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 trigger =3D IOAPIC_AUTO;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity =3D 0;
-> + =A0 =A0 =A0 }
-
-Actually, if the irq specifier is invalid (both for the default case,
-and the case where the size is too small), then this function should
-flat out refuse to xlate the irq and complain loudly.  Force users to
-provide good data.  Again, this can be fixed up with a followon patch.
-
-> + =A0 =A0 =A0 /* And now tell the IO APIC to make the line ready */
-> + =A0 =A0 =A0 desc =3D irq_to_desc_alloc_node(*out_hwirq, 0);
-> + =A0 =A0 =A0 cfg =3D irq_cfg(*out_hwirq);
-> + =A0 =A0 =A0 add_pin_to_irq_node(cfg, 0, idx, line);
-> + =A0 =A0 =A0 /* make it edge by default, settype will update it */
-> + =A0 =A0 =A0 setup_ioapic_irq(idx, line, *out_hwirq, cfg, trigger, p=
-olarity);
-> + =A0 =A0 =A0 return 0;
-> +}
-> +
-> +void __init ioapic_add_ofnode(struct device_node *np)
-> +{
-> + =A0 =A0 =A0 int i;
-> + =A0 =A0 =A0 int ret;
-> + =A0 =A0 =A0 struct resource r;
-> +
-> + =A0 =A0 =A0 ret =3D of_address_to_resource(np, 0, &r);
-> + =A0 =A0 =A0 if (ret) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_ERR "Failed to obtain addre=
-ss for %s\n",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 np->ful=
-l_name);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
-> + =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 for (i =3D 0; i < nr_ioapics; i++) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (r.start =3D=3D mp_ioapics[i].apicad=
-dr) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct irq_domain *id;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mp_of_ioapic[i].node =3D=
- np;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 id =3D kzalloc(sizeof(*=
-id), GFP_KERNEL);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 BUG_ON(!id);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 id->controller =3D np;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 id->xlate =3D ioapic_xl=
-ate;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 id->priv =3D (void *)i;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 add_interrupt_host(id);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
-> + =A0 =A0 =A0 }
-> + =A0 =A0 =A0 printk(KERN_ERR "IOxAPIC at %s is not registered.\n", n=
-p->full_name);
-> +}
-> +#endif
-> +
-> =A0/* Enable IOAPIC early just for system timer */
-> =A0void __init pre_init_apic_IRQ0(void)
-> =A0{
-> diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetre=
-e.c
-> index 179833f..62d0072 100644
-> --- a/arch/x86/kernel/devicetree.c
-> +++ b/arch/x86/kernel/devicetree.c
-> @@ -322,3 +322,16 @@ void __init x86_dtb_get_config(unsigned int unus=
-ed)
-> =A0 =A0 =A0 =A0dtb_setup_hpet();
-> =A0 =A0 =A0 =A0dtb_apic_setup();
-> =A0}
-> +
-> +void __init x86_add_irq_domains(void)
-> +{
-> + =A0 =A0 =A0 struct device_node *dp;
-> +
-> + =A0 =A0 =A0 if (!initial_boot_params)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
-> +
-> + =A0 =A0 =A0 for_each_node_with_property(dp, "interrupt-controller")=
- {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (of_device_is_compatible(dp, "intel,=
-ce4100-ioapic"))
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ioapic_add_ofnode(dp);
-> + =A0 =A0 =A0 }
-> +}
-> diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-> index 4cadf86..9f76f89 100644
-> --- a/arch/x86/kernel/irqinit.c
-> +++ b/arch/x86/kernel/irqinit.c
-> @@ -119,6 +119,12 @@ void __init init_IRQ(void)
-> =A0 =A0 =A0 =A0int i;
 >
-> =A0 =A0 =A0 =A0/*
-> + =A0 =A0 =A0 =A0* We probably need a better place for this, but it w=
-orks for
-> + =A0 =A0 =A0 =A0* now ...
-> + =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 x86_add_irq_domains();
-> +
-> + =A0 =A0 =A0 /*
-> =A0 =A0 =A0 =A0 * On cpu 0, Assign IRQ0_VECTOR..IRQ15_VECTOR's to IRQ=
- 0..15.
-> =A0 =A0 =A0 =A0 * If these IRQ's are handled by legacy interrupt-cont=
-rollers like PIC,
-> =A0 =A0 =A0 =A0 * then this configuration will likely be static after=
- the boot. If
-> --
-> 1.7.4
+> History:
+> - v1 initial post
+> - v2: Benh took my device tree apart so once this got fixed I refacto=
+r a
+> =A0 =A0 =A0lot of code. Here are the changes:
+> =A0 =A0 =A0- device tree is unflattenend before kmalloc() is working,
+> =A0 =A0 =A0 =A0alloc_bootmem() is used for that.
+> =A0 =A0 =A0- irq_host got renamed to irq_domain. This custom implemen=
+tation
+> =A0 =A0 =A0 =A0will leave once the powerpc implementation is in gener=
+ic shape
+> =A0 =A0 =A0- of_irq_map_pci() is moved from ppc & microblaze into dri=
+vers/of
+> =A0 =A0 =A0 =A0and used also by x86 instead of a tiny subset of it. B=
+ridges are
+> =A0 =A0 =A0 =A0not handled at all on x86 (I don't have any so for so =
+I worry
+> =A0 =A0 =A0 =A0later)
+> =A0 =A0 =A0- the device tree is relocated from its initial location. =
+That
+> =A0 =A0 =A0 =A0means that the boot loader does not need to know anyth=
+ing about
+> =A0 =A0 =A0 =A0kernel's memory layout.
+> - v3: - rebase on top of current tip. The OLPC merged some OF defines
+> =A0 =A0 =A0 =A0which are mostly nops so I replaced them with the code=
+ I have.
+> =A0 =A0 =A0 =A0irq_create_of_mapping() requires now an irq chip to wo=
+rk. Those
+> =A0 =A0 =A0 =A0things are moved into prom.c which is enabled by CONFI=
+G_X86_OF.
+> =A0 =A0 =A0 =A0This probably breaks OLPC but I don't know what they n=
+eed in the
+> =A0 =A0 =A0 =A0end.
+> =A0 =A0 =A0- Fixed up Grant's review comments. The most noticeable is=
+ the i2c
+> =A0 =A0 =A0 =A0controller node which has now three child nodes, repre=
+senting the
+> =A0 =A0 =A0 =A0three controllers indentified by the bar number. Each =
+pci bar
+> =A0 =A0 =A0 =A0matches via address translation the correct device tre=
+e node.
+> - v4: - rebased on top of tip's x86/platform branch.
+> =A0 =A0 =A0- added some documentation about the new compatible proper=
+ties.
+> =A0 =A0 =A0- merged the two rtc commits.
+> =A0 =A0 =A0- renamed prom.c to devicetree.c
+> =A0 =A0 =A0- renamed CONFIG_X86_OF to CONFIG_USE_OF
+> =A0 =A0 =A0- intel,ce4100-immr become intel,ce4100-cp
+> =A0 =A0 =A0- "standard" hardware like hpet has "ce4100" in its proper=
+ty. If
+> =A0 =A0 =A0 =A0further HW is compatible with it, can reuse the proper=
+ty string.
+> =A0 =A0 =A0- converted interrupt map to device nodes with an interrup=
+t property.
 >
+> The series is based on the tip tree and is also available at
+> =A0git://git.linutronix.de/users/bigeasy/soda.git ce_of_v4
+>
+> Sebastian Andrzej Siewior (11):
+> =A0 =A0 =A0x86/e820: remove conditional early mapping in parse_e820_e=
+xt
+> =A0 =A0 =A0x86: Add device tree support
+> =A0 =A0 =A0x86/dtb: Add a device tree for CE4100
+> =A0 =A0 =A0x86/dtb: add irq domain abstraction
+> =A0 =A0 =A0x86/dtb: add early parsing of IO APIC
+> =A0 =A0 =A0x86/dtb: add support hpet
+> =A0 =A0 =A0x86/dtb: add support for PCI devices backed by dtb nodes
+> =A0 =A0 =A0x86/dtb: Add generic bus probe
+> =A0 =A0 =A0x86/ioapic: Add OF bindings for IO-APIC
+> =A0 =A0 =A0x86/ce4100: use OF for ioapic
+> =A0 =A0 =A0rtc/cmos: add OF bindings
+>
+> .../devicetree/bindings/i2c/ce4100-i2c.txt =A0 =A0 =A0 =A0 | =A0 93 +=
+++++
+> Documentation/devicetree/bindings/rtc/rtc-cmos.txt | =A0 28 ++
+> Documentation/devicetree/bindings/x86/ce4100.txt =A0 | =A0 38 ++
+> .../devicetree/bindings/x86/interrupt.txt =A0 =A0 =A0 =A0 =A0| =A0 29=
+ ++
+> Documentation/devicetree/bindings/x86/timer.txt =A0 =A0| =A0 =A06 +
+> Documentation/devicetree/booting-without-of.txt =A0 =A0| =A0 20 +
+> arch/x86/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0 =A07 +
+> arch/x86/include/asm/bootparam.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+| =A0 =A01 +
+> arch/x86/include/asm/e820.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 =A02 +-
+> arch/x86/include/asm/io_apic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 =A07 +
+> arch/x86/include/asm/irq.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 =A03 -
+> arch/x86/include/asm/irq_controller.h =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ 12 +
+> arch/x86/include/asm/prom.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 72 ++++-
+> arch/x86/kernel/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 | =A0 =A01 +
+> arch/x86/kernel/apic/io_apic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 99 +++++
+> arch/x86/kernel/devicetree.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0337 +++++++++++++++
+> arch/x86/kernel/e820.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 | =A0 =A08 +-
+> arch/x86/kernel/irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0| =A0 =A09 -
+> arch/x86/kernel/irqinit.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0| =A0 =A09 +-
+> arch/x86/kernel/rtc.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0| =A0 =A03 +
+> arch/x86/kernel/setup.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0| =A0 22 +-
+> arch/x86/platform/ce4100/ce4100.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 24 +-
+> arch/x86/platform/ce4100/falconfalls.dts =A0 =A0 =A0 =A0 =A0 | =A0430=
+ ++++++++++++++++++++
+> drivers/of/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 | =A0 =A02 +-
+> drivers/of/of_pci.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0| =A0 =A01 +
+> drivers/rtc/rtc-cmos.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 | =A0 45 ++
+> include/linux/of.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 | =A0 12 +
+> 27 files changed, 1287 insertions(+), 33 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/i2c/ce4100-i2c.t=
+xt
+> create mode 100644 Documentation/devicetree/bindings/rtc/rtc-cmos.txt
+> create mode 100644 Documentation/devicetree/bindings/x86/ce4100.txt
+> create mode 100644 Documentation/devicetree/bindings/x86/interrupt.tx=
+t
+> create mode 100644 Documentation/devicetree/bindings/x86/timer.txt
+> create mode 100644 arch/x86/include/asm/irq_controller.h
+> create mode 100644 arch/x86/kernel/devicetree.c
+> create mode 100644 arch/x86/platform/ce4100/falconfalls.dts
+>
+> Sebastian
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-kerne=
 l" in
