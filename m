@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 04/11] x86/dtb: add irq domain abstraction
-Date: Tue, 22 Feb 2011 21:07:39 +0100
-Message-ID: <1298405266-1624-5-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 05/11] x86/dtb: add early parsing of IO APIC
+Date: Tue, 22 Feb 2011 21:07:40 +0100
+Message-ID: <1298405266-1624-6-git-send-email-bigeasy@linutronix.de>
 References: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,128 +21,202 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The here introduced irq_domain abstraction represents a generic irq
-controller. It is a subset of powerpc's irq_host which is going to be
-renamed to irq_domain and then become generic. This implementation will
-be removed once it is generic.
-
-The xlate callback is resposible to parse irq informations like irq type
-and number and returns the hardware irq number which is reported by the
-hardware as active.
+The apic & ioapic have to be added to system early because
+native_init_IRQ() requires it. In order to obtain the address of the
+ioapic the device tree has to be unflattened because
+of_address_to_resource() has to work.
+The device tree is relocated to ensure it is always covered by the
+kernel and the boot loader does not have to make assumptions about
+kernel's memory layout.
 
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Tested-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/x86/include/asm/irq_controller.h |   12 ++++++++
- arch/x86/include/asm/prom.h           |    2 +
- arch/x86/kernel/devicetree.c          |   47 ++++++++++++++++++++++++++++++++-
- 3 files changed, 60 insertions(+), 1 deletions(-)
- create mode 100644 arch/x86/include/asm/irq_controller.h
+ arch/x86/include/asm/prom.h  |    7 +++
+ arch/x86/kernel/devicetree.c |  111 +++++++++++++++++++++++++++++++++++++++++-
+ arch/x86/kernel/irqinit.c    |    3 +-
+ 3 files changed, 118 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include/asm/irq_controller.h
-new file mode 100644
-index 0000000..423bbbd
---- /dev/null
-+++ b/arch/x86/include/asm/irq_controller.h
-@@ -0,0 +1,12 @@
-+#ifndef __IRQ_CONTROLLER__
-+#define __IRQ_CONTROLLER__
-+
-+struct irq_domain {
-+	int (*xlate)(struct irq_domain *h, const u32 *intspec, u32 intsize,
-+			u32 *out_hwirq, u32 *out_type);
-+	void *priv;
-+	struct device_node *controller;
-+	struct list_head l;
-+};
-+
-+#endif
 diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-index 841697d..70467d1 100644
+index 70467d1..5aa2c32 100644
 --- a/arch/x86/include/asm/prom.h
 +++ b/arch/x86/include/asm/prom.h
-@@ -19,9 +19,11 @@
- #include <asm/irq.h>
- #include <asm/atomic.h>
- #include <asm/setup.h>
-+#include <asm/irq_controller.h>
+@@ -22,10 +22,17 @@
+ #include <asm/irq_controller.h>
  
  #ifdef CONFIG_OF
++extern int of_ioapic;
++extern u64 initial_dtb;
  extern void add_dtb(u64 data);
-+void add_interrupt_host(struct irq_domain *ih);
++void x86_dtb_find_config(void);
++void x86_dtb_get_config(unsigned int unused);
+ void add_interrupt_host(struct irq_domain *ih);
  #else
  static inline void add_dtb(u64 data) { }
++#define x86_dtb_find_config x86_init_noop
++#define x86_dtb_get_config x86_init_uint_noop
++#define of_ioapic 0
  #endif
+ 
+ extern char cmd_line[COMMAND_LINE_SIZE];
 diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index b86c65e..f2f159c 100644
+index f2f159c..72cc3e2 100644
 --- a/arch/x86/kernel/devicetree.c
 +++ b/arch/x86/kernel/devicetree.c
-@@ -3,19 +3,64 @@
-  */
- #include <linux/bootmem.h>
- #include <linux/io.h>
-+#include <linux/interrupt.h>
+@@ -7,15 +7,20 @@
  #include <linux/list.h>
  #include <linux/of.h>
  #include <linux/of_fdt.h>
++#include <linux/of_address.h>
  #include <linux/of_platform.h>
  #include <linux/slab.h>
  
-+#include <asm/irq_controller.h>
-+
+ #include <asm/irq_controller.h>
++#include <asm/apic.h>
+ 
++__initdata u64 initial_dtb;
  char __initdata cmd_line[COMMAND_LINE_SIZE];
-+static LIST_HEAD(irq_domains);
-+static DEFINE_RAW_SPINLOCK(big_irq_lock);
-+
-+void add_interrupt_host(struct irq_domain *ih)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&big_irq_lock, flags);
-+	list_add(&ih->l, &irq_domains);
-+	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
-+}
-+
-+static struct irq_domain *get_ih_from_node(struct device_node *controller)
-+{
-+	struct irq_domain *ih, *found = NULL;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&big_irq_lock, flags);
-+	list_for_each_entry(ih, &irq_domains, l) {
-+		if (ih->controller ==  controller) {
-+			found = ih;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
-+	return found;
-+}
+ static LIST_HEAD(irq_domains);
+ static DEFINE_RAW_SPINLOCK(big_irq_lock);
  
- unsigned int irq_create_of_mapping(struct device_node *controller,
- 		const u32 *intspec, unsigned int intsize)
++int __initdata of_ioapic;
++
+ void add_interrupt_host(struct irq_domain *ih)
  {
--	return intspec[0];
-+	struct irq_domain *ih;
-+	u32 virq;
-+	u32 type;
+ 	unsigned long flags;
+@@ -91,6 +96,108 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ 
+ void __init add_dtb(u64 data)
+ {
+-	initial_boot_params = phys_to_virt((u64) (u32) data +
+-				offsetof(struct setup_data, data));
++	initial_dtb = data + offsetof(struct setup_data, data);
++}
++
++static void __init dtb_lapic_setup(void)
++{
++#ifdef CONFIG_X86_LOCAL_APIC
++	if (apic_force_enable())
++		return;
++
++	smp_found_config = 1;
++	pic_mode = 1;
++	/* Required for ioapic registration */
++	set_fixmap_nocache(FIX_APIC_BASE, mp_lapic_addr);
++	if (boot_cpu_physical_apicid == -1U)
++		boot_cpu_physical_apicid = read_apic_id();
++
++	generic_processor_info(boot_cpu_physical_apicid,
++			GET_APIC_VERSION(apic_read(APIC_LVR)));
++#endif
++}
++
++#ifdef CONFIG_X86_IO_APIC
++static unsigned int ioapic_id;
++
++static void __init dtb_add_ioapic(struct device_node *dn)
++{
++	struct resource r;
 +	int ret;
- 
-+	ih = get_ih_from_node(controller);
-+	if (!ih)
-+		return 0;
-+	ret = ih->xlate(ih, intspec, intsize, &virq, &type);
-+	if (ret)
-+		return ret;
-+	if (type == IRQ_TYPE_NONE)
-+		return virq;
-+	/* set the mask if it is different from current */
-+	if (type == (irq_to_desc(virq)->status & IRQF_TRIGGER_MASK))
-+		set_irq_type(virq, type);
-+	return virq;
++
++	ret = of_address_to_resource(dn, 0, &r);
++	if (ret) {
++		printk(KERN_ERR "Can't obtain address from node %s.\n",
++				dn->full_name);
++		return;
++	}
++	mp_register_ioapic(++ioapic_id, r.start, gsi_top);
++}
++
++static void __init dtb_ioapic_setup(void)
++{
++	struct device_node *dn;
++
++	if (!smp_found_config)
++		return;
++
++	for_each_compatible_node(dn, NULL, "intel,ce4100-ioapic")
++		dtb_add_ioapic(dn);
++
++	if (nr_ioapics) {
++		of_ioapic = 1;
++		return;
++	}
++	printk(KERN_ERR "Error: No information about IO-APIC in OF.\n");
++	smp_found_config = 0;
++}
++#else
++static void __init dtb_ioapic_setup(void) {}
++#endif
++
++static void __init dtb_apic_setup(void)
++{
++	dtb_lapic_setup();
++	dtb_ioapic_setup();
++}
++
++void __init x86_dtb_find_config(void)
++{
++	if (initial_dtb)
++		smp_found_config = 1;
++	else
++		printk(KERN_ERR "Missing device tree!.\n");
++}
++
++void __init x86_dtb_get_config(unsigned int unused)
++{
++	u32 size;
++	u32 map_len;
++	void *new_dtb;
++
++	if (!initial_dtb)
++		return;
++
++	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
++			(u64)sizeof(struct boot_param_header));
++
++	initial_boot_params = early_memremap(initial_dtb, map_len);
++	size = be32_to_cpu(initial_boot_params->totalsize);
++	if (map_len < size) {
++		early_iounmap(initial_boot_params, map_len);
++		initial_boot_params = early_memremap(initial_dtb, size);
++		map_len = size;
++	}
++
++	new_dtb = alloc_bootmem(size);
++	memcpy(new_dtb, initial_boot_params, size);
++	early_iounmap(initial_boot_params, map_len);
++
++	initial_boot_params = new_dtb;
++
++	/* root level address cells */
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++
++	unflatten_device_tree();
++	dtb_apic_setup();
  }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+index c752e97..4cadf86 100644
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -25,6 +25,7 @@
+ #include <asm/setup.h>
+ #include <asm/i8259.h>
+ #include <asm/traps.h>
++#include <asm/prom.h>
  
+ /*
+  * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
+@@ -243,7 +244,7 @@ void __init native_init_IRQ(void)
+ 			set_intr_gate(i, interrupt[i-FIRST_EXTERNAL_VECTOR]);
+ 	}
+ 
+-	if (!acpi_ioapic)
++	if (!acpi_ioapic && !of_ioapic)
+ 		setup_irq(2, &irq2);
+ 
+ #ifdef CONFIG_X86_32
 -- 
 1.7.4
