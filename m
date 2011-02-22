@@ -1,13 +1,13 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 07/11] x86/dtb: add support for PCI devices backed by dtb nodes
-Date: Tue, 22 Feb 2011 14:08:07 -0700
-Message-ID: <AANLkTikwHjs2Egvq3kq6YZzkGeGWy7U8uiV+6kcjWDve@mail.gmail.com>
-References: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de> <1298405266-1624-8-git-send-email-bigeasy@linutronix.de>
+Subject: Re: [PATCH 04/11] x86/dtb: add irq domain abstraction
+Date: Tue, 22 Feb 2011 14:06:55 -0700
+Message-ID: <AANLkTimr7EnfC=qHkLJ30VniMU0X70dLGRP3-_Fo9qaX@mail.gmail.com>
+References: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de> <1298405266-1624-5-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1298405266-1624-8-git-send-email-bigeasy@linutronix.de>
+In-Reply-To: <1298405266-1624-5-git-send-email-bigeasy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: linux-kernel@vger.kernel.org, sodaville@linutronix.de, devicetree-discuss@lists.ozlabs.org, x86@kernel.org
@@ -15,226 +15,152 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, Feb 22, 2011 at 1:07 PM, Sebastian Andrzej Siewior
 <bigeasy@linutronix.de> wrote:
-> x86_of_pci_init() does two things:
-> - it provides a generic irq enable and disable function. enable queri=
-es
-> =A0the device tree for the interrupt information, calls ->xlate on th=
-e
-> =A0irq host and updates the pci->irq information for the device.
+> The here introduced irq_domain abstraction represents a generic irq
+> controller. It is a subset of powerpc's irq_host which is going to be
+> renamed to irq_domain and then become generic. This implementation wi=
+ll
+> be removed once it is generic.
 >
-> - it walks through PCI buss(es) in the device tree and adds its child=
-ren
-> =A0(devices) nodes to appropriate pci_dev nodes in kernel. So the dtb
-> =A0node information is available at probe time of the PCI device.
->
-> Adding a PCI bus based on the information in the device tree is
-> currently not supported. Right now direct access via ioports is used.
+> The xlate callback is resposible to parse irq informations like irq t=
+ype
+> and number and returns the hardware irq number which is reported by t=
+he
+> hardware as active.
 >
 > Cc: devicetree-discuss@lists.ozlabs.org
-> Tested-by: Dirk Brandewie <dirk.brandewie@gmail.com>
 > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Tested-by: Dirk Brandewie <dirk.brandewie@gmail.com>
 
 Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
 > ---
-> =A0arch/x86/include/asm/prom.h =A0| =A0 14 +++++++
-> =A0arch/x86/kernel/devicetree.c | =A0 83 ++++++++++++++++++++++++++++=
-++++++++++++++
-> =A0drivers/of/Kconfig =A0 =A0 =A0 =A0 =A0 | =A0 =A02 +-
-> =A0drivers/of/of_pci.c =A0 =A0 =A0 =A0 =A0| =A0 =A01 +
-> =A04 files changed, 99 insertions(+), 1 deletions(-)
+> =A0arch/x86/include/asm/irq_controller.h | =A0 12 ++++++++
+> =A0arch/x86/include/asm/prom.h =A0 =A0 =A0 =A0 =A0 | =A0 =A02 +
+> =A0arch/x86/kernel/devicetree.c =A0 =A0 =A0 =A0 =A0| =A0 47 +++++++++=
++++++++++++++++++++++++-
+> =A03 files changed, 60 insertions(+), 1 deletions(-)
+> =A0create mode 100644 arch/x86/include/asm/irq_controller.h
 >
+> diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include=
+/asm/irq_controller.h
+> new file mode 100644
+> index 0000000..423bbbd
+> --- /dev/null
+> +++ b/arch/x86/include/asm/irq_controller.h
+> @@ -0,0 +1,12 @@
+> +#ifndef __IRQ_CONTROLLER__
+> +#define __IRQ_CONTROLLER__
+> +
+> +struct irq_domain {
+> + =A0 =A0 =A0 int (*xlate)(struct irq_domain *h, const u32 *intspec, =
+u32 intsize,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 *out_hwirq, u32 *ou=
+t_type);
+> + =A0 =A0 =A0 void *priv;
+> + =A0 =A0 =A0 struct device_node *controller;
+> + =A0 =A0 =A0 struct list_head l;
+> +};
+> +
+> +#endif
 > diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.=
 h
-> index 5aa2c32..3e441b3 100644
+> index 841697d..70467d1 100644
 > --- a/arch/x86/include/asm/prom.h
 > +++ b/arch/x86/include/asm/prom.h
-> @@ -16,6 +16,7 @@
->
-> =A0#include <linux/of.h>
-> =A0#include <linux/types.h>
-> +#include <linux/pci.h>
+> @@ -19,9 +19,11 @@
 > =A0#include <asm/irq.h>
 > =A0#include <asm/atomic.h>
 > =A0#include <asm/setup.h>
-> @@ -28,8 +29,21 @@ extern void add_dtb(u64 data);
-> =A0void x86_dtb_find_config(void);
-> =A0void x86_dtb_get_config(unsigned int unused);
-> =A0void add_interrupt_host(struct irq_domain *ih);
-> +void __cpuinit x86_of_pci_init(void);
-> +
-> +static inline struct device_node *pci_device_to_OF_node(struct pci_d=
-ev *pdev)
-> +{
-> + =A0 =A0 =A0 return pdev ? pdev->dev.of_node : NULL;
-> +}
-> +
-> +static inline struct device_node *pci_bus_to_OF_node(struct pci_bus =
-*bus)
-> +{
-> + =A0 =A0 =A0 return pci_device_to_OF_node(bus->self);
-> +}
-> +
+> +#include <asm/irq_controller.h>
+>
+> =A0#ifdef CONFIG_OF
+> =A0extern void add_dtb(u64 data);
+> +void add_interrupt_host(struct irq_domain *ih);
 > =A0#else
 > =A0static inline void add_dtb(u64 data) { }
-> +static inline void x86_of_pci_init(void) { }
-> =A0#define x86_dtb_find_config x86_init_noop
-> =A0#define x86_dtb_get_config x86_init_uint_noop
-> =A0#define of_ioapic 0
+> =A0#endif
 > diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetre=
 e.c
-> index 8d7a2eb..b778ae5 100644
+> index b86c65e..f2f159c 100644
 > --- a/arch/x86/kernel/devicetree.c
 > +++ b/arch/x86/kernel/devicetree.c
-> @@ -9,11 +9,15 @@
+> @@ -3,19 +3,64 @@
+> =A0*/
+> =A0#include <linux/bootmem.h>
+> =A0#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> =A0#include <linux/list.h>
+> =A0#include <linux/of.h>
 > =A0#include <linux/of_fdt.h>
-> =A0#include <linux/of_address.h>
 > =A0#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
 > =A0#include <linux/slab.h>
-> +#include <linux/pci.h>
-> +#include <linux/of_pci.h>
 >
-> =A0#include <asm/hpet.h>
-> =A0#include <asm/irq_controller.h>
-> =A0#include <asm/apic.h>
-> +#include <asm/pci_x86.h>
->
-> =A0__initdata u64 initial_dtb;
+> +#include <asm/irq_controller.h>
+> +
 > =A0char __initdata cmd_line[COMMAND_LINE_SIZE];
-> @@ -100,6 +104,85 @@ void __init add_dtb(u64 data)
-> =A0 =A0 =A0 =A0initial_dtb =3D data + offsetof(struct setup_data, dat=
-a);
-> =A0}
->
-> +#ifdef CONFIG_PCI
-> +static int x86_of_pci_irq_enable(struct pci_dev *dev)
+> +static LIST_HEAD(irq_domains);
+> +static DEFINE_RAW_SPINLOCK(big_irq_lock);
+> +
+> +void add_interrupt_host(struct irq_domain *ih)
 > +{
-> + =A0 =A0 =A0 struct of_irq oirq;
-> + =A0 =A0 =A0 u32 virq;
-> + =A0 =A0 =A0 int ret;
-> + =A0 =A0 =A0 u8 pin;
+> + =A0 =A0 =A0 unsigned long flags;
 > +
-> + =A0 =A0 =A0 ret =3D pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &p=
-in);
-> + =A0 =A0 =A0 if (ret)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return ret;
-> + =A0 =A0 =A0 if (!pin)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> +
-> + =A0 =A0 =A0 ret =3D of_irq_map_pci(dev, &oirq);
-> + =A0 =A0 =A0 if (ret)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return ret;
-> +
-> + =A0 =A0 =A0 virq =3D irq_create_of_mapping(oirq.controller, oirq.sp=
-ecifier,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 oirq.size);
-> + =A0 =A0 =A0 if (virq =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
-> + =A0 =A0 =A0 dev->irq =3D virq;
-> + =A0 =A0 =A0 return 0;
+> + =A0 =A0 =A0 raw_spin_lock_irqsave(&big_irq_lock, flags);
+> + =A0 =A0 =A0 list_add(&ih->l, &irq_domains);
+> + =A0 =A0 =A0 raw_spin_unlock_irqrestore(&big_irq_lock, flags);
 > +}
 > +
-> +static void x86_of_pci_irq_disable(struct pci_dev *dev)
+> +static struct irq_domain *get_ih_from_node(struct device_node *contr=
+oller)
 > +{
-> +}
+> + =A0 =A0 =A0 struct irq_domain *ih, *found =3D NULL;
+> + =A0 =A0 =A0 unsigned long flags;
 > +
-> +void __cpuinit x86_of_pci_init(void)
-> +{
-> + =A0 =A0 =A0 struct device_node *np;
-> +
-> + =A0 =A0 =A0 pcibios_enable_irq =3D x86_of_pci_irq_enable;
-> + =A0 =A0 =A0 pcibios_disable_irq =3D x86_of_pci_irq_disable;
-> +
-> + =A0 =A0 =A0 for_each_node_by_type(np, "pci") {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const void *prop;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct pci_bus *bus;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 unsigned int bus_min;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct device_node *child;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D of_get_property(np, "bus-range=
-", NULL);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!prop)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus_min =3D be32_to_cpup(prop);
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus =3D pci_find_bus(0, bus_min);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!bus) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_ERR "Can't =
-find a node for bus %s.\n",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 np->full_name);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (bus->self)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus->self->dev.of_node =
-=3D np;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 else
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 bus->dev.of_node =3D np=
-;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 for_each_child_of_node(np, child) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct pci_dev *dev;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 devfn;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D of_get_propert=
-y(child, "reg", NULL);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!prop)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continu=
-e;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 devfn =3D (be32_to_cpup=
-(prop) >> 8) & 0xff;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev =3D pci_get_slot(bu=
-s, devfn);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!dev)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continu=
-e;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev->dev.of_node =3D ch=
-ild;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pci_dev_put(dev);
+> + =A0 =A0 =A0 raw_spin_lock_irqsave(&big_irq_lock, flags);
+> + =A0 =A0 =A0 list_for_each_entry(ih, &irq_domains, l) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ih->controller =3D=3D =A0controller=
+) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 found =3D ih;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
 > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
 > + =A0 =A0 =A0 }
+> + =A0 =A0 =A0 raw_spin_unlock_irqrestore(&big_irq_lock, flags);
+> + =A0 =A0 =A0 return found;
 > +}
-> +#endif
-> +
-> =A0static void __init dtb_setup_hpet(void)
+>
+> =A0unsigned int irq_create_of_mapping(struct device_node *controller,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0const u32 *intspec, unsigned int intsi=
+ze)
 > =A0{
-> =A0 =A0 =A0 =A0struct device_node *dn;
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index efabbf9..d06a637 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -71,7 +71,7 @@ config OF_MDIO
+> - =A0 =A0 =A0 return intspec[0];
+> + =A0 =A0 =A0 struct irq_domain *ih;
+> + =A0 =A0 =A0 u32 virq;
+> + =A0 =A0 =A0 u32 type;
+> + =A0 =A0 =A0 int ret;
 >
-> =A0config OF_PCI
-> =A0 =A0 =A0 =A0def_tristate PCI
-> - =A0 =A0 =A0 depends on PCI && (PPC || MICROBLAZE)
-> + =A0 =A0 =A0 depends on PCI && (PPC || MICROBLAZE || X86)
-> =A0 =A0 =A0 =A0help
-> =A0 =A0 =A0 =A0 =A0OpenFirmware PCI bus accessors
+> + =A0 =A0 =A0 ih =3D get_ih_from_node(controller);
+> + =A0 =A0 =A0 if (!ih)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+> + =A0 =A0 =A0 ret =3D ih->xlate(ih, intspec, intsize, &virq, &type);
+> + =A0 =A0 =A0 if (ret)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return ret;
+> + =A0 =A0 =A0 if (type =3D=3D IRQ_TYPE_NONE)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return virq;
+> + =A0 =A0 =A0 /* set the mask if it is different from current */
+> + =A0 =A0 =A0 if (type =3D=3D (irq_to_desc(virq)->status & IRQF_TRIGG=
+ER_MASK))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 set_irq_type(virq, type);
+> + =A0 =A0 =A0 return virq;
+> =A0}
+> =A0EXPORT_SYMBOL_GPL(irq_create_of_mapping);
 >
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 314535f..ac1ec54 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -1,5 +1,6 @@
-> =A0#include <linux/kernel.h>
-> =A0#include <linux/of_pci.h>
-> +#include <linux/of_irq.h>
-> =A0#include <asm/prom.h>
->
-> =A0/**
 > --
 > 1.7.4
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at =A0http://www.tux.org/lkml/
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 >
 
 
