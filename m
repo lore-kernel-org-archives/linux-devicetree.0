@@ -1,14 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] i2c: xiic: Add OF support for Xilinx i2c bus
-	interface
-Date: Tue, 22 Feb 2011 11:11:26 -0700
-Message-ID: <AANLkTi=NLhAiyznBbKjSf7tpeGrGi7NOK2cHUWhfNzG-@mail.gmail.com>
-References: <1298396971-611-1-git-send-email-monstr@monstr.eu>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Device tree on x86, part v4
+Date: Tue, 22 Feb 2011 21:07:35 +0100
+Message-ID: <1298405266-1624-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1298396971-611-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,153 +15,108 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sodaville-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[cc'ing Ben Dooks, embedded i2c maintainer]
+This patchset introduces device tree support on x86. The device tree is 
+passed by the bootloader via setup_data. It is used as an additional 
+source of information and does not replace the "traditional" x86 boot
+page.
+Right now we get the the following information from it:
+- hpet location
+- apic & ioapic location
+- ioapic's interrupt routing
+- legacy devices which are not initialized by bios
+- devices which are behind a bus which does not support enumeration like 
+  i2c
 
-On Tue, Feb 22, 2011 at 10:49 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> Add OF support to Xilinx i2c bus interface.
-> It is used on Microblaze systems.
->
-> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+History:
+- v1 initial post
+- v2: Benh took my device tree apart so once this got fixed I refactor a
+      lot of code. Here are the changes:
+      - device tree is unflattenend before kmalloc() is working,
+        alloc_bootmem() is used for that.
+      - irq_host got renamed to irq_domain. This custom implementation
+        will leave once the powerpc implementation is in generic shape
+      - of_irq_map_pci() is moved from ppc & microblaze into drivers/of
+	and used also by x86 instead of a tiny subset of it. Bridges are
+        not handled at all on x86 (I don't have any so for so I worry
+        later)
+      - the device tree is relocated from its initial location. That
+        means that the boot loader does not need to know anything about
+        kernel's memory layout.
+- v3: - rebase on top of current tip. The OLPC merged some OF defines
+        which are mostly nops so I replaced them with the code I have.
+        irq_create_of_mapping() requires now an irq chip to work. Those
+        things are moved into prom.c which is enabled by CONFIG_X86_OF.
+        This probably breaks OLPC but I don't know what they need in the
+	end.
+      - Fixed up Grant's review comments. The most noticeable is the i2c
+        controller node which has now three child nodes, representing the
+        three controllers indentified by the bar number. Each pci bar
+	matches via address translation the correct device tree node.
+- v4: - rebased on top of tip's x86/platform branch.
+      - added some documentation about the new compatible properties.
+      - merged the two rtc commits.
+      - renamed prom.c to devicetree.c
+      - renamed CONFIG_X86_OF to CONFIG_USE_OF
+      - intel,ce4100-immr become intel,ce4100-cp
+      - "standard" hardware like hpet has "ce4100" in its property. If
+        further HW is compatible with it, can reuse the property string.
+      - converted interrupt map to device nodes with an interrupt property.
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+The series is based on the tip tree and is also available at
+  git://git.linutronix.de/users/bigeasy/soda.git ce_of_v4
 
-Ben, since this one depends on a patch in my tree, do you want me to pick i=
-t up?
+Sebastian Andrzej Siewior (11):
+      x86/e820: remove conditional early mapping in parse_e820_ext
+      x86: Add device tree support
+      x86/dtb: Add a device tree for CE4100
+      x86/dtb: add irq domain abstraction
+      x86/dtb: add early parsing of IO APIC
+      x86/dtb: add support hpet
+      x86/dtb: add support for PCI devices backed by dtb nodes
+      x86/dtb: Add generic bus probe
+      x86/ioapic: Add OF bindings for IO-APIC
+      x86/ce4100: use OF for ioapic
+      rtc/cmos: add OF bindings
 
-g.
+.../devicetree/bindings/i2c/ce4100-i2c.txt         |   93 +++++
+Documentation/devicetree/bindings/rtc/rtc-cmos.txt |   28 ++
+Documentation/devicetree/bindings/x86/ce4100.txt   |   38 ++
+.../devicetree/bindings/x86/interrupt.txt          |   29 ++
+Documentation/devicetree/bindings/x86/timer.txt    |    6 +
+Documentation/devicetree/booting-without-of.txt    |   20 +
+arch/x86/Kconfig                                   |    7 +
+arch/x86/include/asm/bootparam.h                   |    1 +
+arch/x86/include/asm/e820.h                        |    2 +-
+arch/x86/include/asm/io_apic.h                     |    7 +
+arch/x86/include/asm/irq.h                         |    3 -
+arch/x86/include/asm/irq_controller.h              |   12 +
+arch/x86/include/asm/prom.h                        |   72 ++++-
+arch/x86/kernel/Makefile                           |    1 +
+arch/x86/kernel/apic/io_apic.c                     |   99 +++++
+arch/x86/kernel/devicetree.c                       |  337 +++++++++++++++
+arch/x86/kernel/e820.c                             |    8 +-
+arch/x86/kernel/irq.c                              |    9 -
+arch/x86/kernel/irqinit.c                          |    9 +-
+arch/x86/kernel/rtc.c                              |    3 +
+arch/x86/kernel/setup.c                            |   22 +-
+arch/x86/platform/ce4100/ce4100.c                  |   24 +-
+arch/x86/platform/ce4100/falconfalls.dts           |  430 ++++++++++++++++++++
+drivers/of/Kconfig                                 |    2 +-
+drivers/of/of_pci.c                                |    1 +
+drivers/rtc/rtc-cmos.c                             |   45 ++
+include/linux/of.h                                 |   12 +
+27 files changed, 1287 insertions(+), 33 deletions(-)
+create mode 100644 Documentation/devicetree/bindings/i2c/ce4100-i2c.txt
+create mode 100644 Documentation/devicetree/bindings/rtc/rtc-cmos.txt
+create mode 100644 Documentation/devicetree/bindings/x86/ce4100.txt
+create mode 100644 Documentation/devicetree/bindings/x86/interrupt.txt
+create mode 100644 Documentation/devicetree/bindings/x86/timer.txt
+create mode 100644 arch/x86/include/asm/irq_controller.h
+create mode 100644 arch/x86/kernel/devicetree.c
+create mode 100644 arch/x86/platform/ce4100/falconfalls.dts
 
-> ---
-> =A0drivers/i2c/busses/i2c-xiic.c | =A0 37 +++++++++++++++++++++++++++++--=
-------
-> =A01 files changed, 29 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
-> index a9c419e..0b7647b 100644
-> --- a/drivers/i2c/busses/i2c-xiic.c
-> +++ b/drivers/i2c/busses/i2c-xiic.c
-> @@ -41,6 +41,11 @@
-> =A0#include <linux/io.h>
-> =A0#include <linux/slab.h>
->
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_i2c.h>
-> +#include <linux/of_address.h>
-
-Nit: This should not be separate from the rest of the include block.
-The blank line between slab.h and of.h can be dropped.
-
-> +
-> =A0#define DRIVER_NAME "xiic-i2c"
->
-> =A0enum xilinx_i2c_state {
-> @@ -426,7 +431,7 @@ static void xiic_process(struct xiic_i2c *i2c)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0xiic_wakeup(i2c, STATE_ERR=
-OR);
->
-> =A0 =A0 =A0 =A0} else if (pend & (XIIC_INTR_TX_EMPTY_MASK | XIIC_INTR_TX_=
-HALF_MASK)) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Transmit register/FIFO is empty or =BD e=
-mpty */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Transmit register/FIFO is empty or 1/2 e=
-mpty */
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0clr =3D pend &
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(XIIC_INTR_TX_EMPTY_MASK |=
- XIIC_INTR_TX_HALF_MASK);
-> @@ -704,10 +709,6 @@ static int __devinit xiic_i2c_probe(struct platform_=
-device *pdev)
-> =A0 =A0 =A0 =A0if (irq < 0)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto resource_missing;
->
-> - =A0 =A0 =A0 pdata =3D (struct xiic_i2c_platform_data *) pdev->dev.platf=
-orm_data;
-> - =A0 =A0 =A0 if (!pdata)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
-> -
-> =A0 =A0 =A0 =A0i2c =3D kzalloc(sizeof(*i2c), GFP_KERNEL);
-> =A0 =A0 =A0 =A0if (!i2c)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ENOMEM;
-> @@ -730,6 +731,7 @@ static int __devinit xiic_i2c_probe(struct platform_d=
-evice *pdev)
-> =A0 =A0 =A0 =A0i2c->adap =3D xiic_adapter;
-> =A0 =A0 =A0 =A0i2c_set_adapdata(&i2c->adap, i2c);
-> =A0 =A0 =A0 =A0i2c->adap.dev.parent =3D &pdev->dev;
-> + =A0 =A0 =A0 i2c->adap.dev.of_node =3D of_node_get(pdev->dev.of_node);
->
-> =A0 =A0 =A0 =A0xiic_reinit(i2c);
->
-> @@ -748,9 +750,16 @@ static int __devinit xiic_i2c_probe(struct platform_=
-device *pdev)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto add_adapter_failed;
-> =A0 =A0 =A0 =A0}
->
-> - =A0 =A0 =A0 /* add in known devices to the bus */
-> - =A0 =A0 =A0 for (i =3D 0; i < pdata->num_devices; i++)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_new_device(&i2c->adap, pdata->devices +=
- i);
-> + =A0 =A0 =A0 dev_info(&pdev->dev, "mapped to 0x%08X, irq=3D%d\n",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 (unsigned int)i2c->base, irq);
-> +
-> + =A0 =A0 =A0 pdata =3D (struct xiic_i2c_platform_data *) pdev->dev.platf=
-orm_data;
-
-While you're touching this code anyway, the cast is unnecessary.
-
-> + =A0 =A0 =A0 if (pdata) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* add in known devices to the bus */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 for (i =3D 0; i < pdata->num_devices; i++)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_new_device(&i2c->adap, =
-pdata->devices + i);
-> + =A0 =A0 =A0 }
-> + =A0 =A0 =A0 of_i2c_register_devices(&i2c->adap);
->
-> =A0 =A0 =A0 =A0return 0;
->
-> @@ -799,12 +808,24 @@ static int __devexit xiic_i2c_remove(struct platfor=
-m_device* pdev)
-> =A0/* work with hotplug and coldplug */
-> =A0MODULE_ALIAS("platform:"DRIVER_NAME);
->
-> +#ifdef CONFIG_OF
-> +/* Match table for of_platform binding */
-> +static struct of_device_id __devinitdata xilinx_iic_of_match[] =3D {
-> + =A0 =A0 =A0 { .compatible =3D "xlnx,xps-iic-2.00.a", },
-> + =A0 =A0 =A0 {},
-> +};
-> +MODULE_DEVICE_TABLE(of, xilinx_iic_of_match);
-> +#else
-> +# define xilinx_iic_of_match NULL
-> +#endif
-> +
-> =A0static struct platform_driver xiic_i2c_driver =3D {
-> =A0 =A0 =A0 =A0.probe =A0 =3D xiic_i2c_probe,
-> =A0 =A0 =A0 =A0.remove =A0=3D __devexit_p(xiic_i2c_remove),
-> =A0 =A0 =A0 =A0.driver =A0=3D {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =3D THIS_MODULE,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =3D DRIVER_NAME,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D xilinx_iic_of_match,
-> =A0 =A0 =A0 =A0},
-> =A0};
->
-> --
-> 1.5.5.6
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at =A0http://www.tux.org/lkml/
->
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Sebastian
