@@ -1,122 +1,66 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 06/10] MIPS: Octeon: Initialize and fixup device
- tree.
-Date: Wed, 23 Feb 2011 11:51:34 -0700
-Message-ID: <20110223185134.GN14597@angua.secretlab.ca>
-References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
- <1298408274-20856-7-git-send-email-ddaney@caviumnetworks.com>
- <20110223174120.GG14597@angua.secretlab.ca>
- <4D6554A0.5010407@caviumnetworks.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm/dt: add very basic dts file for babbage board
+Date: Wed, 23 Feb 2011 11:59:57 -0700
+Message-ID: <20110223185957.GP14597@angua.secretlab.ca>
+References: <1298016730-22761-1-git-send-email-r64343@freescale.com>
+	<1298016730-22761-3-git-send-email-r64343@freescale.com>
+	<AANLkTikerADxGGRfnumWMN+s2r8gWOb1UAaS3tQ6DTe5@mail.gmail.com>
+	<AANLkTi=kxbzDCJqOnPNjCsNxMsLtcbbcGLfZbY05_Svh@mail.gmail.com>
+	<20110222141309.GH19871@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D6554A0.5010407@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20110222141309.GH19871-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 23, 2011 at 10:40:32AM -0800, David Daney wrote:
-> On 02/23/2011 09:41 AM, Grant Likely wrote:
-> >On Tue, Feb 22, 2011 at 12:57:50PM -0800, David Daney wrote:
-> >>Signed-off-by: David Daney<ddaney@caviumnetworks.com>
-> >>---
-> >>  arch/mips/Kconfig                         |    2 +
-> >>  arch/mips/cavium-octeon/octeon-platform.c |  280 +++++++++++++++++++++++++++++
-> >>  arch/mips/cavium-octeon/setup.c           |   17 ++
-> >>  3 files changed, 299 insertions(+), 0 deletions(-)
-> >
-> >I've got an odd feeling of foreboding about this patch.  It makes me
-> >nervous, but I can't articulate why yet.  Gut-wise I'd rather see the
-> >device tree pruned/fixed up before it gets unflattened,
-> 
-> I chose to work on the unflattened form because there were already
-> functions to do it.  I didn't see anything that would make
-> manipulating the flattened form easy.
-> 
-> I agree that working on the unflattened form would be best.  At a
-> minium the /proc/device-tree structure would better reflect reality.
-> 
-> What do you think about adding some helper functions to
-> drivers/of/fdt.c for the manipulation of the flattened form?
+On Tue, Feb 22, 2011 at 10:13:10PM +0800, Shawn Guo wrote:
+> Hi Grant,
+> =
 
-It would probably be easier/safer to link libfdt into the kernel
-proper.  It's already used in the powerpc bootwrapper, and there has
-been talk about replacing some of fdt.c with libfdt.  See
-scripts/dtc/libfdt
+> Thanks for the explanation in details.
+> =
 
-> 
-> >or for the
-> >kernel to have a separate .dtb linked in for each legacy platform.
-> 
-> I think there are too many variants to make this viable.
+> One more minor doubt below ...
+> =
 
-Out of curiosity, how many variants?
-
-btw, did you know about the dtc '/include/' functionality?  It is
-possible to set up .dts include files that represent a SoC and can be
-modified by the .dts files that include them.  See
-arch/powerpc/boot/dts/*5200*.dts
-
-> 
-> > I
-> >need to think about this some more....
-> >
-> >I've made some comments below anyway.
-> 
-> And I will respond.  Although if I end up modifying the flattened
-> form, it will all change.
-> 
-> >
+> On Mon, Feb 21, 2011 at 10:10:24AM -0700, Grant Likely wrote:
+> > On Mon, Feb 21, 2011 at 2:46 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 > [...]
-> >>+
-> >>+static int __init set_phy_addr_prop(struct device_node *n, int phy)
-> >>+{
-> >>+	u32 *vp;
-> >>+	struct property *old_p;
-> >>+	struct property *p = kzalloc(sizeof(struct device_node) + sizeof(u32), GFP_KERNEL);
-> >>+	if (!p)
-> >>+		return -ENOMEM;
-> >>+	/* The value will immediatly follow the node in memory. */
-> >>+	vp = (u32 *)(&p[1]);
-> >
-> >This is unsafe (I was on the losing end of an argument when I tried to
-> >do exactly the same thing).  If you want to allocate 2 things with one
-> >appended to the other, then you need to define a structure
-> >with the two element in it and allocate the size of that structure.
-> 
-> Weird.  alloc_netdev() does this, so it is not unheard of.
+> > >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> > >> + =A0 =A0 =A0 };
+> > >> +
+> > >> + =A0 =A0 =A0 clocks {
+> > >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
+> > >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
+> > >> +
+> > >
+> > > Can we use hex value here to keep the consistency throughout the file?
+> > =
 
-Not unheard of, but still bad practise.
+> > For #address-cells and #size-cells use decimal integers.
+> > =
 
-> >>+	old_p = of_find_property(n, "reg", NULL);
-> >>+	if (old_p)
-> >>+		prom_remove_property(n, old_p);
-> >>+	return prom_add_property(n, p);
-> >
-> >Would it not be more efficient to change the value in the existing reg
-> >property instead of doing this allocation song-and-dance?
-> >
-> 
-> I think I did it this way to try to get /proc/device-tree to reflect
-> the new value.
+> If I run 'dtc -I dts -O dts -o babbage-dtc.dts babbage.dts', I see
+> babbage-dtc.dts have these two decimal values written into the hex.
 
-Sounds like a bug in /proc/device-tree.  :-)  /proc/device-tree should
-be pointing directly at the device tree property itself.  I'd be
-surprised if modifying the data of 'reg' didn't show up there.
+Property values don't have any inherent type checking.  Once it is in
+internal form, dtc has no way of knowing the preferred representation
+and it just makes a guess.
 
-> >>+}
-> >>+arch_initcall(octeon_fix_device_tree);
-> >
-> >Calling this from an initcall really makes me nervous.  I'm worried
-> >about ordering issues.  Why can this code not be part of the prune
-> >routine above?
-> >
-> 
-> Again, done to try to make /proc/device-tree reflect reality.
-
-yeah, /proc/device-tree should not be driving design decisions.  Let's
-try to fix it instead.
+When it comes to maintaining .dts files; humans like looking at
+decimal numbers, so we use decimal for #address/#size-cells.
 
 g.
