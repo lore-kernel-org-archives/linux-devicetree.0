@@ -1,75 +1,90 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [RFC PATCH 06/10] MIPS: Octeon: Initialize and fixup device
- tree.
-Date: Wed, 23 Feb 2011 11:16:39 +1100
-Message-ID: <20110223001639.GB26300@yookeroo>
-References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
- <1298408274-20856-7-git-send-email-ddaney@caviumnetworks.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] i2c-ocores: register devices on child nodes
+Date: Tue, 22 Feb 2011 18:07:24 -0700
+Message-ID: <AANLkTikCHJoF-KHThge15fCQgsepjpUFdYtUzVpLk6fk@mail.gmail.com>
+References: <1297306314-11483-1-git-send-email-thomas@wytron.com.tw>
+ <20110223001252.GT15795@trinity.fluff.org> <4D645578.3020906@wytron.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1298408274-20856-7-git-send-email-ddaney@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=Big5
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4D645578.3020906-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Cc: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[snip]
-> +}
-> +
-> +static int __init set_mac_addr_prop(struct device_node *n, u64 mac)
-> +{
-> +	u8 *vp;
-> +	struct property *old_p;
-> +	struct property *p = kzalloc(sizeof(struct device_node) + 6, GFP_KERNEL);
-> +	if (!p)
-> +		return -ENOMEM;
-> +	/* The value will immediatly follow the node in memory. */
-> +	vp = (u8 *)(&p[1]);
-> +	p->name = "local-mac-address";
-> +	p->length = 6;
-> +	p->value = vp;
-> +
-> +	vp[0] = (mac >> 40) & 0xff;
-> +	vp[1] = (mac >> 32) & 0xff;
-> +	vp[2] = (mac >> 24) & 0xff;
-> +	vp[3] = (mac >> 16) & 0xff;
-> +	vp[4] = (mac >> 8) & 0xff;
-> +	vp[5] = mac & 0xff;
-> +
-> +	old_p = of_find_property(n, "local-mac-address", NULL);
-> +	if (old_p)
-> +		prom_remove_property(n, old_p);
-> +	return prom_add_property(n, p);
+On Tue, Feb 22, 2011 at 5:31 PM, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org> wrote:
+> On 02/23/2011 08:12 AM, Ben Dooks wrote:
+>>
+>> On Thu, Feb 10, 2011 at 10:51:54AM +0800, Thomas Chou wrote:
+>>>
+>>> This patch registers devices on the devicetree child nodes to the bus.
+>>> Also removes one trailing whitespace.
+>>
+>> Is this required as an urgent fix, or can it queue for next merge window?
+>
+> It is not urgent. An it is fine to queue it for next merge window.
 
-Hrm, since you entirely remove and replace the local-mac-address
-property here, I don't see much point to having the property with a
-bogus value in the .dts.
+Yes, queue for .39
 
-[snip]
-> +int __init octeon_prune_device_tree(void)
-> +{
-> +	int i, p, max_port;
-> +	const char *node_path;
-> +	char name_buffer[20];
-> +	struct device_node *aliases;
-> +	struct device_node *pip;
-> +	struct device_node *iface;
-> +	struct device_node *eth;
-> +	struct device_node *node;
-> +
-> +	aliases = of_find_node_by_path("/aliases");
-> +	if (!aliases) {
-> +		pr_err("Error: No /aliases node in device tree.");
-> +		return -EINVAL;
-> +	}
+g.
 
-Ok, I think the .dts could do with some more comments indicating that
-it will be subject to extensive pruning before use.
+>
+> - Thomas
+>
+>>
+>>> Signed-off-by: Thomas Chou<thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+>>> ---
+>>>  drivers/i2c/busses/i2c-ocores.c |    6 +++++-
+>>>  1 files changed, 5 insertions(+), 1 deletions(-)
+>>>
+>>> diff --git a/drivers/i2c/busses/i2c-ocores.c
+>>> b/drivers/i2c/busses/i2c-ocores.c
+>>> index ef3bcb1..c63838f 100644
+>>> --- a/drivers/i2c/busses/i2c-ocores.c
+>>> +++ b/drivers/i2c/busses/i2c-ocores.c
+>>> @@ -18,7 +18,7 @@
+>>>   * - interrupts      : interrupt number
+>>>   * - regstep         : size of device registers in bytes
+>>>   * - clock-frequency : frequency of bus clock in Hz
+>>> - *
+>>> + *
+>>>   * Example:
+>>>   *
+>>>   *  i2c0: ocores@a0000000 {
+>>> @@ -55,6 +55,7 @@
+>>>  #include<linux/i2c-ocores.h>
+>>>  #include<linux/slab.h>
+>>>  #include<linux/io.h>
+>>> +#include<linux/of_i2c.h>
+>>>
+>>>  struct ocores_i2c {
+>>>        void __iomem *base;
+>>> @@ -347,6 +348,9 @@ static int __devinit ocores_i2c_probe(struct
+>>> platform_device *pdev)
+>>>                        i2c_new_device(&i2c->adap, pdata->devices + i);
+>>>        }
+>>>
+>>> +       /* Now register all the child nodes */
+>>> +       of_i2c_register_devices(&i2c->adap);
+>>> +
+>>>        return 0;
+>>>  }
+>>>
+>>> --
+>>> 1.7.4
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>
+>
+
+
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
