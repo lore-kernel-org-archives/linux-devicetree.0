@@ -1,54 +1,69 @@
-From: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Make of_read_number() handle unaligned data
-Date: Tue, 22 Feb 2011 14:36:47 -0800
-Message-ID: <20110222223647.GA17406@dvomlehn-lnx2.corp.sa.net>
+From: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] i2c-ocores: register devices on child nodes
+Date: Wed, 23 Feb 2011 00:12:52 +0000
+Message-ID: <20110223001252.GT15795@trinity.fluff.org>
+References: <1297306314-11483-1-git-send-email-thomas@wytron.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1297306314-11483-1-git-send-email-thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Numeric values in properties can be unaligned, so introduce get_unaligned()
-in of_read_number() to make this work correctly on all processors.
+On Thu, Feb 10, 2011 at 10:51:54AM +0800, Thomas Chou wrote:
+> This patch registers devices on the devicetree child nodes to the bus.
+> Also removes one trailing whitespace.
 
-Signed-off-by: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
----
- include/linux/of.h |    8 ++++++--
- 1 files changed, 6 insertions(+), 2 deletions(-)
+Is this required as an urgent fix, or can it queue for next merge window?
+ 
+> Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+> ---
+>  drivers/i2c/busses/i2c-ocores.c |    6 +++++-
+>  1 files changed, 5 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+> index ef3bcb1..c63838f 100644
+> --- a/drivers/i2c/busses/i2c-ocores.c
+> +++ b/drivers/i2c/busses/i2c-ocores.c
+> @@ -18,7 +18,7 @@
+>   * - interrupts      : interrupt number
+>   * - regstep         : size of device registers in bytes
+>   * - clock-frequency : frequency of bus clock in Hz
+> - * 
+> + *
+>   * Example:
+>   *
+>   *  i2c0: ocores@a0000000 {
+> @@ -55,6 +55,7 @@
+>  #include <linux/i2c-ocores.h>
+>  #include <linux/slab.h>
+>  #include <linux/io.h>
+> +#include <linux/of_i2c.h>
+>  
+>  struct ocores_i2c {
+>  	void __iomem *base;
+> @@ -347,6 +348,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>  			i2c_new_device(&i2c->adap, pdata->devices + i);
+>  	}
+>  
+> +	/* Now register all the child nodes */
+> +	of_i2c_register_devices(&i2c->adap);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 1.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index cad7cf0..a0a6925 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -22,6 +22,7 @@
- #include <linux/spinlock.h>
- 
- #include <asm/byteorder.h>
-+#include <asm/unaligned.h>
- 
- #ifdef CONFIG_OF
- 
-@@ -110,8 +111,11 @@ extern void of_node_put(struct device_node *node);
- static inline u64 of_read_number(const __be32 *cell, int size)
- {
- 	u64 r = 0;
--	while (size--)
--		r = (r << 32) | be32_to_cpu(*(cell++));
-+	while (size--) {
-+		r = (r << 32) | be32_to_cpu(get_unaligned(cell));
-+		cell++;
-+	}
-+
- 	return r;
- }
+-- 
+Ben Dooks, ben-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, http://www.fluff.org/ben/
+
+Large Hadron Colada: A large Pina Colada that makes the universe disappear.
