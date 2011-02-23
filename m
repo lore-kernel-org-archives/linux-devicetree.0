@@ -1,70 +1,75 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: xiic: Use 32bit accesses only
-Date: Wed, 23 Feb 2011 18:49:58 +0100
-Message-ID: <201102231849.58544.arnd@arndb.de>
-References: <1298396971-611-1-git-send-email-monstr@monstr.eu> <201102230936.09921.arnd@arndb.de> <4D64D55B.50405@monstr.eu>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V11 2/4] ptp: Added a clock that uses the eTSEC found
+ on the MPC85xx.
+Date: Wed, 23 Feb 2011 10:54:59 -0700
+Message-ID: <20110223175459.GH14597@angua.secretlab.ca>
+References: <cover.1298447722.git.richard.cochran@omicron.at>
+ <be1f5e801e8cd0145dd23aadae7c2055bb3c1d47.1298447722.git.richard.cochran@omicron.at>
+ <20110223165058.GE14597@angua.secretlab.ca>
+ <20110223112612.30071995@schlenkerla>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4D64D55B.50405-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guan Xuetao <gxt-TG0Ac1+ktVePQbnJrJN+5g@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110223112612.30071995@schlenkerla>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 February 2011 10:37:31 Michal Simek wrote:
-> Arnd Bergmann wrote:
-> > On Wednesday 23 February 2011 09:08:47 Michal Simek wrote:
-> >> Grant Likely wrote:
-> >>> On Tue, Feb 22, 2011 at 10:49 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> >>>> i2c driver is used for LE/BE that's why is useful to use
-> >>>> 32bit accesses. Then it is not necessary to solve any
-> >>>> endian issues.
-> >>> Are you sure?  I would expect the BE version needs to use
-> >>> io{read,write}32be variants of the accessors.  What platforms have you
-> >>> tested on?
-> >> iowrite32 is the same with iowrite32be for Microblaze.
-> >> I have no problem to change it to iowrite32be if you like.
-> >>
-> >> I have tested it on microblaze big and little endian platforms.
+On Wed, Feb 23, 2011 at 11:26:12AM -0600, Scott Wood wrote:
+> On Wed, 23 Feb 2011 09:50:58 -0700
+> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> 
+> > On Wed, Feb 23, 2011 at 11:38:17AM +0100, Richard Cochran wrote:
+> > > +
+> > > +* Gianfar PTP clock nodes
+> > > +
+> > > +General Properties:
+> > > +
+> > > +  - compatible   Should be "fsl,etsec-ptp"
 > > 
-> > I think what Grant was saying is that iowrite32 being the same as
-> > iowrite32be is a bug, because iowrite32 is documented to be little-endian.
+> > Should specify an *exact* part; ie: "fsl,mpc8313-etsec-ptp" instead of
+> > trying to define a generic catchall.  The reason is that the same
+> > marketing name can end up getting applied to a wide range of parts.
+> > 
+> > Instead, choose one specific device to stand in as the 'common'
+> > implementation and get all parts with the same core to claim
+> > compatibility with it.  ie: a p2020 might have:
+> > 
+> > 	compatible = "fsl,mpc2020-etsec-ptp", "fsl,mpc8313-etsec-ptp";
 > 
-> Can you pointed me to that documentation?
-
-Documented was maybe a term that is bit too strong in this case ;-)
-
-Documentation/memory-barriers.txt documents that iowrite32 is the same
-as either writel or outl, depending on the source of the mapping.
-
-Both include/asm-generic/io.h and include/asm-generic/iomap.h define
-variants of iowrite32 and iowrite32be, but the definition in io.h is
-actually broken.
-
-> > This is probably fine as long as you don't have any PCI devices,
-> > but if you ever get PCI support, it won't work.
+> eTSEC is versioned, that's more reliable than the chip name since chips
+> have revisions (rev 2.1 of mpc8313 has eTSEC 1.6, not sure about previous
+> revs of mpc8313).  Logic blocks can be and have been uprevved between one
+> revision of a chip to the next.  I think "fsl,mpc8313rev2.1-etsec-ptp"
+> would be taking things a bit too far (and there could be board-level bugs
+> too...).
 > 
-> Microblaze have PCI support but I don't have the board for testing.
+> If you really need to know the exact SoC you're on, look in SVR (which
+> will provide revision info as well).  Isn't the device tree for things that
+> can't be probed?
 
-Ok, I see.
- 
-> > Also, it heavily confuses other developers such as Grant and me
-> > if one architecture defines things to mean something completely
-> > different from the other architectures.
+This is far more about the binding than it is about the chip revision.
+When documenting a binding it makes far more sense to anchor it to a
+specific implementation than to try and come up with a 'generic'
+catchall.  A new binding means new compatible value and dropping any
+claims of being compatible with the old.
+
+It is not about the logic block version, particularly when it is
+detectable by the driver as you say.
+
 > 
-> As I see will be good to review microblaze io.h and use generic one.
+> The eTSEC revision is probeable as well, but due the way PTP is described as
+> a separate node, the driver doesn't have straightforward access to those
+> registers.
 
-The generic io.h is lacking in a number of ways and should really
-be improved. Guan Xuetao also fell into the same trap with the
-unicore32 port.
+Ignorant question: Should the ptp be described as a separate node?
 
-The problem is that I copied asm/io.h from mn10300, which seemed
-generic enough, but it really doesn't work correctly with PCI.
-There is one patch for this that I did in the unicore32 tree,
-I should probably go through it and fix everything else that sticks
-out.
+> 
+> Insisting on an explicit chip also encourages people to claim compatibility
+> with that chip without ensuring that it really is fully compatible.
 
-	Arnd
+In practise, I've not seen this to be an issue.
+
+g.
