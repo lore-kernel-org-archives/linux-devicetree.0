@@ -1,58 +1,160 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V11 2/4] ptp: Added a clock that uses the eTSEC found on
- the MPC85xx.
-Date: Wed, 23 Feb 2011 11:26:12 -0600
-Message-ID: <20110223112612.30071995@schlenkerla>
-References: <cover.1298447722.git.richard.cochran@omicron.at>
-	<be1f5e801e8cd0145dd23aadae7c2055bb3c1d47.1298447722.git.richard.cochran@omicron.at>
-	<20110223165058.GE14597@angua.secretlab.ca>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [RFC PATCH 01/10] MIPS: Octeon: Move some Ethernet support files
+ out of staging.
+Date: Wed, 23 Feb 2011 09:36:13 -0800
+Message-ID: <4D65458D.5080908@caviumnetworks.com>
+References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com> <1298408274-20856-2-git-send-email-ddaney@caviumnetworks.com> <20110223144805.GC3143@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110223165058.GE14597-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110223144805.GC3143@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Feb 2011 09:50:58 -0700
-Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+On 02/23/2011 06:48 AM, Grant Likely wrote:
+> On Tue, Feb 22, 2011 at 12:57:45PM -0800, David Daney wrote:
+>> Signed-off-by: David Daney<ddaney@caviumnetworks.com>
+>
+> If this is an Ethernet driver, then it belongs in drivers/net and you
+> should cc both netdev and Dave Miller.
+>
 
-> On Wed, Feb 23, 2011 at 11:38:17AM +0100, Richard Cochran wrote:
-> > +
-> > +* Gianfar PTP clock nodes
-> > +
-> > +General Properties:
-> > +
-> > +  - compatible   Should be "fsl,etsec-ptp"
-> 
-> Should specify an *exact* part; ie: "fsl,mpc8313-etsec-ptp" instead of
-> trying to define a generic catchall.  The reason is that the same
-> marketing name can end up getting applied to a wide range of parts.
-> 
-> Instead, choose one specific device to stand in as the 'common'
-> implementation and get all parts with the same core to claim
-> compatibility with it.  ie: a p2020 might have:
-> 
-> 	compatible = "fsl,mpc2020-etsec-ptp", "fsl,mpc8313-etsec-ptp";
+Eventually the files need to go somewhere other than drivers/staging. 
+They are not all Ethernet related, so sorting out exactly where they all 
+go is not so simple.  This subject has been a thorn in my side for quite 
+some time.
 
-eTSEC is versioned, that's more reliable than the chip name since chips
-have revisions (rev 2.1 of mpc8313 has eTSEC 1.6, not sure about previous
-revs of mpc8313).  Logic blocks can be and have been uprevved between one
-revision of a chip to the next.  I think "fsl,mpc8313rev2.1-etsec-ptp"
-would be taking things a bit too far (and there could be board-level bugs
-too...).
+For the sake of getting the Device Tree patching code working and to 
+generate Device Tree related feedback, I moved them to be with their kin 
+in arch/mips/cavium-octeon/executive.
 
-If you really need to know the exact SoC you're on, look in SVR (which
-will provide revision info as well).  Isn't the device tree for things that
-can't be probed?
+In the context of this patch set, I consider this to be a somewhat minor 
+detail.
 
-The eTSEC revision is probeable as well, but due the way PTP is described as
-a separate node, the driver doesn't have straightforward access to those
-registers.
+David Daney
 
-Insisting on an explicit chip also encourages people to claim compatibility
-with that chip without ensuring that it really is fully compatible.
-
--Scott
+> g.
+>
+>> ---
+>>   arch/mips/cavium-octeon/executive/Makefile         |    5 +
+>>   .../mips/cavium-octeon/executive}/cvmx-cmd-queue.c |    8 +-
+>>   .../mips/cavium-octeon/executive}/cvmx-fpa.c       |    0
+>>   .../cavium-octeon/executive}/cvmx-helper-board.c   |   18 +--
+>>   .../cavium-octeon/executive}/cvmx-helper-fpa.c     |    0
+>>   .../cavium-octeon/executive}/cvmx-helper-loop.c    |    6 +-
+>>   .../cavium-octeon/executive}/cvmx-helper-npi.c     |    6 +-
+>>   .../cavium-octeon/executive}/cvmx-helper-rgmii.c   |   17 +-
+>>   .../cavium-octeon/executive}/cvmx-helper-sgmii.c   |   12 +-
+>>   .../cavium-octeon/executive}/cvmx-helper-spi.c     |   10 +-
+>>   .../cavium-octeon/executive}/cvmx-helper-util.c    |   16 +-
+>>   .../cavium-octeon/executive}/cvmx-helper-xaui.c    |   10 +-
+>>   .../mips/cavium-octeon/executive}/cvmx-helper.c    |   27 ++--
+>>   .../executive}/cvmx-interrupt-decodes.c            |   10 +-
+>>   .../cavium-octeon/executive}/cvmx-interrupt-rsl.c  |    4 +-
+>>   .../mips/cavium-octeon/executive}/cvmx-pko.c       |    6 +-
+>>   .../mips/cavium-octeon/executive}/cvmx-spi.c       |   12 +-
+>>   .../mips/include/asm}/octeon/cvmx-address.h        |    0
+>>   .../mips/include/asm}/octeon/cvmx-asxx-defs.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-cmd-queue.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-config.h         |    0
+>>   .../mips/include/asm}/octeon/cvmx-dbg-defs.h       |    0
+>>   .../mips/include/asm}/octeon/cvmx-fau.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-fpa-defs.h       |    0
+>>   .../mips/include/asm}/octeon/cvmx-fpa.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-gmxx-defs.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-board.h   |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-fpa.h     |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-loop.h    |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-npi.h     |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-rgmii.h   |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-sgmii.h   |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-spi.h     |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-util.h    |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper-xaui.h    |    0
+>>   .../mips/include/asm}/octeon/cvmx-helper.h         |    0
+>>   .../mips/include/asm}/octeon/cvmx-ipd.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-mdio.h           |    0
+>>   .../mips/include/asm}/octeon/cvmx-pcsx-defs.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-pcsxx-defs.h     |    0
+>>   .../mips/include/asm}/octeon/cvmx-pip-defs.h       |    0
+>>   .../mips/include/asm}/octeon/cvmx-pip.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-pko-defs.h       |    0
+>>   .../mips/include/asm}/octeon/cvmx-pko.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-pow.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-scratch.h        |    0
+>>   .../mips/include/asm}/octeon/cvmx-spi.h            |    0
+>>   .../mips/include/asm}/octeon/cvmx-spxx-defs.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-srxx-defs.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-stxx-defs.h      |    0
+>>   .../mips/include/asm}/octeon/cvmx-wqe.h            |    0
+>>   drivers/staging/octeon/Makefile                    |    5 -
+>>   drivers/staging/octeon/cvmx-packet.h               |   65 -------
+>>   drivers/staging/octeon/cvmx-smix-defs.h            |  178 --------------------
+>>   drivers/staging/octeon/ethernet-defines.h          |    2 +-
+>>   drivers/staging/octeon/ethernet-mdio.c             |    4 +-
+>>   drivers/staging/octeon/ethernet-mem.c              |    2 +-
+>>   drivers/staging/octeon/ethernet-rgmii.c            |    4 +-
+>>   drivers/staging/octeon/ethernet-rx.c               |   14 +-
+>>   drivers/staging/octeon/ethernet-rx.h               |    2 +-
+>>   drivers/staging/octeon/ethernet-sgmii.c            |    4 +-
+>>   drivers/staging/octeon/ethernet-spi.c              |    6 +-
+>>   drivers/staging/octeon/ethernet-tx.c               |   12 +-
+>>   drivers/staging/octeon/ethernet-xaui.c             |    4 +-
+>>   drivers/staging/octeon/ethernet.c                  |   14 +-
+>>   65 files changed, 116 insertions(+), 367 deletions(-)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-cmd-queue.c (98%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-fpa.c (100%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-board.c (98%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-fpa.c (100%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-loop.c (95%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-npi.c (96%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-rgmii.c (97%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-sgmii.c (98%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-spi.c (97%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-util.c (97%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper-xaui.c (98%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-helper.c (98%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-interrupt-decodes.c (98%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-interrupt-rsl.c (97%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-pko.c (99%)
+>>   rename {drivers/staging/octeon =>  arch/mips/cavium-octeon/executive}/cvmx-spi.c (99%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-address.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-asxx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-cmd-queue.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-config.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-dbg-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-fau.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-fpa-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-fpa.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-gmxx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-board.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-fpa.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-loop.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-npi.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-rgmii.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-sgmii.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-spi.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-util.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper-xaui.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-helper.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-ipd.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-mdio.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pcsx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pcsxx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pip-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pip.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pko-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pko.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-pow.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-scratch.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-spi.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-spxx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-srxx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-stxx-defs.h (100%)
+>>   rename {drivers/staging =>  arch/mips/include/asm}/octeon/cvmx-wqe.h (100%)
+>>   delete mode 100644 drivers/staging/octeon/cvmx-packet.h
+>>   delete mode 100644 drivers/staging/octeon/cvmx-smix-defs.h
+>>
