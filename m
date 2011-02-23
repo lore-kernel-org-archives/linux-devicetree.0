@@ -1,15 +1,17 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/pdt: allow DT device matching by fixing 'name'
-	brokenness (v2)
-Date: Wed, 23 Feb 2011 16:28:15 -0700
-Message-ID: <20110223232815.GC5404@angua.secretlab.ca>
-References: <20110223150357.5a40793d@queued.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH 02/10] MIPS: Octeon: Add device tree source files.
+Date: Thu, 24 Feb 2011 10:49:23 +1100
+Message-ID: <20110223234923.GA4932@yookeroo>
+References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
+	<1298408274-20856-3-git-send-email-ddaney@caviumnetworks.com>
+	<20110223000759.GA26300@yookeroo>
+	<4D655AB6.80400@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110223150357.5a40793d-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <4D655AB6.80400-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,142 +21,88 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 23, 2011 at 03:03:57PM -0800, Andres Salomon wrote:
+On Wed, Feb 23, 2011 at 11:06:30AM -0800, David Daney wrote:
+> On 02/22/2011 04:07 PM, David Gibson wrote:
+> >On Tue, Feb 22, 2011 at 12:57:46PM -0800, David Daney wrote:
+> >>Signed-off-by: David Daney<ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> >>---
+> >>  arch/mips/cavium-octeon/.gitignore      |    2 +
+> >>  arch/mips/cavium-octeon/Makefile        |   13 ++
+> >>  arch/mips/cavium-octeon/octeon_3xxx.dts |  314 +++++++++++++++++++++++++++++++
+> >>  arch/mips/cavium-octeon/octeon_68xx.dts |   99 ++++++++++
+> >>  4 files changed, 428 insertions(+), 0 deletions(-)
+> >>  create mode 100644 arch/mips/cavium-octeon/.gitignore
+> >>  create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
+> >>  create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
+> >>
+> >>diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
+> >>new file mode 100644
+> >>index 0000000..39c9686
+> >>--- /dev/null
+> >>+++ b/arch/mips/cavium-octeon/.gitignore
+> >>@@ -0,0 +1,2 @@
+> >>+*.dtb.S
+> >
+> >.dtb.S?
 > 
-> Commit e2f2a93b changed dp->name from using the 'name' property to
-> using package-to-path.  This fixed /proc/device-tree creation by
-> eliminating conflicts between names (the 'name' property provides
-> names like 'battery', whereas package-to-path provides names like
-> '/foo/bar/battery@0', which we stripped to 'battery@0').  However,
-> it also breaks of_device_id table matching.
+> I think I have the correct .gitignore syntax.
+
+What I meant was, where are you generating .dtb.S files that you need
+to ignore them?
+
+> >>+  compatible = "octeon,octeon";
+> >
+> >There's no model number at all for this board?
 > 
-> The fix that we _really_ wanted was to keep dp->name based upon
-> the name property ('battery'), but based dp->full_name upon
-> package-to-path ('battery@0').  This patch does just that.
 > 
-> This also changes OLPC behavior to use the full result from
-> package-to-path for full_name, rather than stripping the directory
-> out.  In practice, the strings end up being exactly the same; this
-> change saves time, code, and memory.
+> I think it should be:
 > 
-> Note that this affects sparc by reverting dp->name back to what
-> sparc was originally doing (looking at the name property).
+> 	compatible = "octeon,octeon-3860";
+
+That looks better.
+
+Also, the part before the comma is generally the vendor, so I would
+have expected cavium,XXX throughout rather than octeon,XXX.
+
+[snip]
+> >So, names or compatible values with "wildcards" like 3xxx should be
+> >avoided.  Instead, use the specific model number of this device, then
+> >future devices can claim compatibility with the earlier one.
+> >
+> >But, in addition the generic names convention means that the node name
+> >should be "interrupt-controller" rather than something model specific.
 > 
-> v2: combine two patches and revert of_pdt_node_name to original version.
+> Let's try:
 > 
-> Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> ciu: interrupt-controller@1070000000000 {
+>       compatible = "octeon,octeon-3860-ciu";
 
-Hi Andres, comments below.
+That looks better.
 
-g.
-
-> ---
->  drivers/of/pdt.c |   42 +++++++++++++++---------------------------
->  1 files changed, 15 insertions(+), 27 deletions(-)
+[snip]
+> >>+      device_type = "network";
+> >>+      model = "mgmt";
+> >>+      reg =<0x10700 0x00100000 0x0 0x100>, /* MIX */
+> >>+<0x11800 0xE0000000 0x0 0x300>, /* AGL */
+> >>+<0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
+> >>+<0x11800 0xE0002000 0x0 0x8>;   /* AGL_PRT_CTL */
+> >>+      unit-number =<0>;
+> >
+> >What is this 'unit-number' property for?
 > 
-> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-> index 28295d0..a7aa85e 100644
-> --- a/drivers/of/pdt.c
-> +++ b/drivers/of/pdt.c
-> @@ -134,7 +134,7 @@ static char * __init of_pdt_get_one_property(phandle node, const char *name)
->  
->  static char * __init of_pdt_try_pkg2path(phandle node)
->  {
-> -	char *res, *buf = NULL;
-> +	char *buf = NULL;
->  	int len;
->  
->  	if (!of_pdt_prom_ops->pkg2path)
-> @@ -147,29 +147,6 @@ static char * __init of_pdt_try_pkg2path(phandle node)
->  		pr_err("%s: package-to-path failed\n", __func__);
->  		return NULL;
->  	}
-> -
-> -	res = strrchr(buf, '/');
-> -	if (!res) {
-> -		pr_err("%s: couldn't find / in %s\n", __func__, buf);
-> -		return NULL;
-> -	}
-> -	return res+1;
-> -}
-> -
-> -/*
-> - * When fetching the node's name, first try using package-to-path; if
-> - * that fails (either because the arch hasn't supplied a PROM callback,
-> - * or some other random failure), fall back to just looking at the node's
-> - * 'name' property.
-> - */
-> -static char * __init of_pdt_build_name(phandle node)
-> -{
-> -	char *buf;
-> -
-> -	buf = of_pdt_try_pkg2path(node);
-> -	if (!buf)
-> -		buf = of_pdt_get_one_property(node, "name");
-> -
->  	return buf;
->  }
->  
+> The AGL_SHARED register bank is shared among all the octeon-5230-mii
+> devices.  the 'unit-number' indicates the bit-field index that this
+> device should use within those registers.
 
-It seems to me that of_pdt_build_full_name will still be missing the
-'@<addr>' component on non-sparc non-olpc builds because it uses the
-broken of_pdt_node_name().  That needs to be fixed too, even if there
-are no current users (or removed).
+Ok.  'cell-index' is the normal property name for this sort of
+purpose.
 
-> @@ -187,7 +164,7 @@ static struct device_node * __init of_pdt_create_node(phandle node,
->  
->  	kref_init(&dp->kref);
->  
-> -	dp->name = of_pdt_build_name(node);
-> +	dp->name = of_pdt_get_one_property(node, "name");
->  	dp->type = of_pdt_get_one_property(node, "device_type");
->  	dp->phandle = node;
->  
-> @@ -198,11 +175,22 @@ static struct device_node * __init of_pdt_create_node(phandle node,
->  	return dp;
->  }
->  
-> -static char * __init of_pdt_build_full_name(struct device_node *dp)
-> +static char * __init of_pdt_build_full_name(struct device_node *dp,
-> +		phandle node)
-
-Is dp->phandle not suitable here?
-
->  {
->  	int len, ourlen, plen;
->  	char *n;
->  
-> +	/*
-> +	 * When fetching the full name we want the name we see with
-> +	 * package-to-path (ie, '/foo/bar/battery@0') rather than what
-> +	 * we see with the name property (ie, 'battery').
-> +	 */
-> +	n = of_pdt_try_pkg2path(node);
-> +	if (n)
-> +		return n;
-> +
-> +	/* Older method for determining full name */
->  	plen = strlen(dp->parent->full_name);
->  	ourlen = strlen(of_pdt_node_name(dp));
->  	len = ourlen + plen + 2;
-> @@ -243,7 +231,7 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
->  #if defined(CONFIG_SPARC)
->  		dp->path_component_name = build_path_component(dp);
->  #endif
-
-I still think it would be useful to remove the #if
-defined(CONFIG_SPARC) from path_component_name, and it might be the
-best way to solve my comment about broken of_pdt_node_name above.
-
-> -		dp->full_name = of_pdt_build_full_name(dp);
-> +		dp->full_name = of_pdt_build_full_name(dp, node);
->  
->  		dp->child = of_pdt_build_tree(dp,
->  				of_pdt_prom_ops->getchild(node), nextp);
-> -- 
-> 1.7.2.3
-> 
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
