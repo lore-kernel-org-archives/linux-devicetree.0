@@ -1,85 +1,264 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH V11 2/4] ptp: Added a clock that uses the eTSEC found on
- the MPC85xx.
-Date: Thu, 24 Feb 2011 11:27:31 -0600
-Message-ID: <20110224112731.2d9bf080@schlenkerla>
-References: <cover.1298447722.git.richard.cochran@omicron.at>
-	<be1f5e801e8cd0145dd23aadae7c2055bb3c1d47.1298447722.git.richard.cochran@omicron.at>
-	<20110223165058.GE14597@angua.secretlab.ca>
-	<20110223112612.30071995@schlenkerla>
-	<20110223175459.GH14597@angua.secretlab.ca>
-	<20110223132444.65dfdda4@schlenkerla>
-	<20110224165004.GB15234@riccoc20.at.omicron.at>
+From: Andres Salomon <dilinger@queued.net>
+Subject: Re: [PATCH v5] of/promtree: allow DT device matching by fixing
+ 'name' brokenness
+Date: Thu, 24 Feb 2011 09:33:41 -0800
+Message-ID: <20110224093341.5a809a13@queued.net>
+References: <20110224165917.3760.24493.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110224165004.GB15234@riccoc20.at.omicron.at>
+In-Reply-To: <20110224165917.3760.24493.stgit@localhost6.localdomain6>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Thomas Gleixner <tglx@linutronix.de>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>, linux-api@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Paul Mackerras <paulus@samba.org>, John Stultz <john.stultz@linaro.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, netdev@vger.kernel.org, Mike Frysinger <vapier@gentoo.org>, Christoph Lameter <cl@linux.com>, linuxppc-dev@lists.ozlabs.org, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: dsd@laptop.org, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Feb 2011 17:50:04 +0100
-Richard Cochran <richardcochran@gmail.com> wrote:
+On Thu, 24 Feb 2011 10:04:41 -0700
+Grant Likely <grant.likely@secretlab.ca> wrote:
 
-> On Wed, Feb 23, 2011 at 01:24:44PM -0600, Scott Wood wrote:
-> > Whatever string is used should be written into a binding document.
-> > 
-> > fsl,etsec-v1.6-ptp seems like it would be just as good for that purpose.
-> > 
-> > Even just fsl,etsec-ptp will identify the binding, though it's lacking in
-> > identifying the hardware (in the absence of access to the eTSEC ID
-> > registers).
+> From: Andres Salomon <dilinger@queued.net>
 > 
-> I read the conversation, and I don't mind admitting that I do not
-> understand what you both are arguing/discussing about.
+> Commit e2f2a93b, "of/promtree: add package-to-path support to pdt"
+> changed dp->name from using the 'name' property to using
+> package-to-path.  This fixed /proc/device-tree creation by eliminating
+> conflicts between names (the 'name' property provides names like
+> 'battery', whereas package-to-path provides names like
+> '/foo/bar/battery@0', which we stripped to 'battery@0').  However, it
+> also breaks of_device_id table matching.
 > 
-> How should I set the strings?  Like this?
+> The fix that we _really_ wanted was to keep dp->name based upon
+> the name property ('battery'), but based dp->full_name upon
+> package-to-path ('battery@0').  This patch does just that.
 > 
-> arch/powerpc/boot/dts/mpc8313erdb.dts:
-> 	ptp_clock@24E00 {
-> 		compatible = "fsl,mpc8313-etsec-ptp";
-> 	}
-> arch/powerpc/boot/dts/mpc8572ds.dts:
-> 	ptp_clock@24E00 {
-> 		compatible = "fsl,mpc8572-etsec-ptp";
-> 	} 
-> arch/powerpc/boot/dts/p2020ds.dts:
-> 	ptp_clock@24E00 {
-> 		compatible = "fsl,p2020ds-etsec-ptp";
-> 	} 
-> arch/powerpc/boot/dts/p2020rdb.dts:
-> 	ptp_clock@24E00 {
-> 		compatible = "fsl,p2020rdb-etsec-ptp";
-> 	} 
+> This changes all users (except SPARC) of promtree to use the full
+> result from package-to-path for full_name, rather than stripping the
+> directory out.  In practice, the strings end up being exactly the
+> same; this change saves time, code, and memory.
 > 
-> drivers/net/gianfar_ptp.c:
+> SPARC continues to use the existing build_path_component() code.
 > 
-> static struct of_device_id match_table[] = {
-> 	{ .compatible = "fsl,mpc8313-etsec-ptp" },
-> 	{ .compatible = "fsl,mpc8572-etsec-ptp" },
-> 	{ .compatible = "fsl,p2020ds-etsec-ptp" },
-> 	{ .compatible = "fsl,p2020rdb-etsec-ptp" },
-> 	{},
-> };
+> v2: combine two patches and revert of_pdt_node_name to original
+> version v3: use dp->phandle instead of passing around node
+> v4: warn/bail out for non-sparc archs if pkg2path is not set
+> v5: split of_pdt_build_full_name into sparc & non-sparc versions
+>     BUG() when pkg2path doesn't work.
+> 
+> Signed-off-by: Andres Salomon <dilinger@queued.net>
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+> 
+> Hi Andres,
+> 
+> This is what I think the patch should really look like.  The
+> of_pdt_node_name() stuff really doesn't make sense to keep around
+> because what we *really* care about is the full name, not the path
+> component name.  Therefore I reorganized it so SPARC continues to use
+> it's build_path_component() to build up the full path; but everyone
+> else *must* provide a working mechanism to obtain the full path; be it
+> an actual call to OFW pkg2path, or something else.
+> 
+> Please take a look at let me know what you think.
+> 
+> g.
+> 
+>  drivers/of/pdt.c |  110
+> ++++++++++++++++++++---------------------------------- 1 files
+> changed, 40 insertions(+), 70 deletions(-)
+> 
+> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+> index 28295d0..ab54819 100644
+> --- a/drivers/of/pdt.c
+> +++ b/drivers/of/pdt.c
+> @@ -36,19 +36,53 @@ unsigned int of_pdt_unique_id __initdata;
+>  	(p)->unique_id = of_pdt_unique_id++; \
+>  } while (0)
+>  
+> -static inline const char *of_pdt_node_name(struct device_node *dp)
+> +static char * __init of_pdt_build_full_name(struct device_node *dp)
+>  {
+> -	return dp->path_component_name;
+> +	int len, ourlen, plen;
+> +	char *n;
+> +
+> +	dp->path_component_name = build_path_component(dp);
+> +
+> +	plen = strlen(dp->parent->full_name);
+> +	ourlen = strlen(dp->path_component_name);
+> +	len = ourlen + plen + 2;
+> +
+> +	n = prom_early_alloc(len);
+> +	strcpy(n, dp->parent->full_name);
+> +	if (!of_node_is_root(dp->parent)) {
+> +		strcpy(n + plen, "/");
+> +		plen++;
+> +	}
+> +	strcpy(n + plen, dp->path_component_name);
+> +
+> +	return n;
+>  }
 
-Those last two are boards, not chips.  I don't think even Grant is asking
-to take things that far.
+Sure, this part is fine.  The reason why this was originally in 2
+separate patches (and what I'd been attempting to do all along) was to
+keep the bugfix portion of it to a minimal size, and to have a separate
+generic cleanup patch that changed around more stuff.
 
-My vote, if it goes in a separate node at all, is "fsl,etsec-ptp", and let
-the driver use SVR.  Even encoding an etsec version in the compatible
-string would be difficult, unless fixed up by u-boot, as it appears to
-differ based on chip revision (and the chip manuals seem to often not match
-the hardware regarding the advertised eTSEC revision) and we don't normally
-have separate dts files for different revisions of the same chip.  Plus,
-our docs (at least the public ones) don't seem to be very helpful in
-determining what version of eTSEC implies what.
 
-If you want to use chip-based compatibles instead, then use the actual name
-of the chip.  You'll need to verify 100% compatibility if you want to claim
-compatibility with another chip; it's probably easier/safer to just list
-every single Freescale chip that has this type of PTP in a huge compatible
-table, like PCI drivers do.
+>  
+> -#else
+> +#else /* CONFIG_SPARC */
+>  
+>  static inline void of_pdt_incr_unique_id(void *p) { }
+>  static inline void irq_trans_init(struct device_node *dp) { }
+>  
+> -static inline const char *of_pdt_node_name(struct device_node *dp)
+> +static char * __init of_pdt_build_full_name(struct device_node *dp)
+>  {
+> -	return dp->name;
+> +	char *buf;
+> +	int len;
+> +
+> +	if (!of_pdt_prom_ops->pkg2path)
+> +		BUG();
 
--Scott
+I'd rather see WARN_ON() here.  Our options if any of
+this fail are to BUG (causing bootup to fail, most likely), WARN and
+return NULL (causing the DT creation to not happen, which may affect
+things differently depending upon what the DT is being used for), or
+WARN and return dp->name (which would cause the DT to be created,
+albeit not correctly.  The more I think about it, the more I like that
+last option.  If the DT is being used for booting, that option would
+provide the best attempt at actually booting up.
+
+
+
+> +
+> +	if (of_pdt_prom_ops->pkg2path(dp->phandle, buf, 0, &len))
+> +		BUG();
+
+Well, no, if pkg2path fails, we shouldn't really BUG().  There may be
+some reason why the call fails for only a particular node (for
+example, perhaps an invalid phandle gets passed, or there's a bug in
+the firmware for that particular node).  I'd rather disable the DT or
+just disable the node and have the machine at least bring up a
+framebuffer console with kernel logs showing some kind of warning/error
+message.
+
+
+
+> +
+> +	buf = prom_early_alloc(len + 1);
+> +	if (!buf)
+> +		BUG();
+
+Ditto.
+
+> +
+> +	if (of_pdt_prom_ops->pkg2path(dp->phandle, buf, len, &len)) {
+> +		pr_err("%s: package-to-path failed\n", __func__);
+> +		BUG();
+> +	}
+> +	return buf;
+>  }
+>  
+>  #endif /* !CONFIG_SPARC */
+> @@ -132,47 +166,6 @@ static char * __init
+> of_pdt_get_one_property(phandle node, const char *name) return buf;
+>  }
+>  
+> -static char * __init of_pdt_try_pkg2path(phandle node)
+> -{
+> -	char *res, *buf = NULL;
+> -	int len;
+> -
+> -	if (!of_pdt_prom_ops->pkg2path)
+> -		return NULL;
+> -
+> -	if (of_pdt_prom_ops->pkg2path(node, buf, 0, &len))
+> -		return NULL;
+> -	buf = prom_early_alloc(len + 1);
+> -	if (of_pdt_prom_ops->pkg2path(node, buf, len, &len)) {
+> -		pr_err("%s: package-to-path failed\n", __func__);
+> -		return NULL;
+> -	}
+> -
+> -	res = strrchr(buf, '/');
+> -	if (!res) {
+> -		pr_err("%s: couldn't find / in %s\n", __func__, buf);
+> -		return NULL;
+> -	}
+> -	return res+1;
+> -}
+> -
+> -/*
+> - * When fetching the node's name, first try using package-to-path; if
+> - * that fails (either because the arch hasn't supplied a PROM
+> callback,
+> - * or some other random failure), fall back to just looking at the
+> node's
+> - * 'name' property.
+> - */
+> -static char * __init of_pdt_build_name(phandle node)
+> -{
+> -	char *buf;
+> -
+> -	buf = of_pdt_try_pkg2path(node);
+> -	if (!buf)
+> -		buf = of_pdt_get_one_property(node, "name");
+> -
+> -	return buf;
+> -}
+> -
+>  static struct device_node * __init of_pdt_create_node(phandle node,
+>  						    struct
+> device_node *parent) {
+> @@ -187,7 +180,7 @@ static struct device_node * __init
+> of_pdt_create_node(phandle node, 
+>  	kref_init(&dp->kref);
+>  
+> -	dp->name = of_pdt_build_name(node);
+> +	dp->name = of_pdt_get_one_property(node, "name");
+>  	dp->type = of_pdt_get_one_property(node, "device_type");
+>  	dp->phandle = node;
+>  
+> @@ -198,26 +191,6 @@ static struct device_node * __init
+> of_pdt_create_node(phandle node, return dp;
+>  }
+>  
+> -static char * __init of_pdt_build_full_name(struct device_node *dp)
+> -{
+> -	int len, ourlen, plen;
+> -	char *n;
+> -
+> -	plen = strlen(dp->parent->full_name);
+> -	ourlen = strlen(of_pdt_node_name(dp));
+> -	len = ourlen + plen + 2;
+> -
+> -	n = prom_early_alloc(len);
+> -	strcpy(n, dp->parent->full_name);
+> -	if (!of_node_is_root(dp->parent)) {
+> -		strcpy(n + plen, "/");
+> -		plen++;
+> -	}
+> -	strcpy(n + plen, of_pdt_node_name(dp));
+> -
+> -	return n;
+> -}
+> -
+>  static struct device_node * __init of_pdt_build_tree(struct
+> device_node *parent, phandle node,
+>  						   struct
+> device_node ***nextp) @@ -240,9 +213,6 @@ static struct device_node *
+> __init of_pdt_build_tree(struct device_node *parent, *(*nextp) = dp;
+>  		*nextp = &dp->allnext;
+>  
+> -#if defined(CONFIG_SPARC)
+> -		dp->path_component_name = build_path_component(dp);
+> -#endif
+
+I do like moving this out of here.
+
+>  		dp->full_name = of_pdt_build_full_name(dp);
+>  
+>  		dp->child = of_pdt_build_tree(dp,
+> 
