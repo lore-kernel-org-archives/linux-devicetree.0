@@ -1,149 +1,88 @@
-From: Andres Salomon <dilinger@queued.net>
-Subject: [PATCH] of/pdt: allow DT device matching by fixing 'name'
- brokenness (v4)
-Date: Wed, 23 Feb 2011 22:38:22 -0800
-Message-ID: <20110223223822.48718b63@queued.net>
-References: <20110223150357.5a40793d@queued.net>
-	<20110223232815.GC5404@angua.secretlab.ca>
-	<20110223161630.3ae470bf@queued.net>
-	<20110224040638.GB22111@angua.secretlab.ca>
-	<20110223203649.4fcbe1db@queued.net>
-	<20110224053814.GA6046@angua.secretlab.ca>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Question regarding usage of pdev->id and platform_data
+Date: Thu, 24 Feb 2011 17:43:31 +0530
+Message-ID: <AANLkTikKLJn60_L2r-cyiFLtQVn=WCNBTzPg6vAVwZRV@mail.gmail.com>
+References: <AANLkTi=AoFEQ685Pup8i7EAs=hLHip0UnhMV+ZHxVAiD@mail.gmail.com>
+	<20110223180316.GI14597@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20110224053814.GA6046@angua.secretlab.ca>
-Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Daniel Drake <dsd@laptop.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110223180316.GI14597-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
-Commit e2f2a93b changed dp->name from using the 'name' property to
-using package-to-path.  This fixed /proc/device-tree creation by
-eliminating conflicts between names (the 'name' property provides
-names like 'battery', whereas package-to-path provides names like
-'/foo/bar/battery@0', which we stripped to 'battery@0').  However,
-it also breaks of_device_id table matching.
+On 23 February 2011 23:33, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> Hi Thomas,
+>
+> On Wed, Feb 23, 2011 at 10:48:37PM +0530, Thomas Abraham wrote:
+>> Hi,
+>>
+>> I am adding support for device tree based probe for the s5pv310 serial
+>> driver for a platform that has 4 instances of the uart port. I have
+>> few questions on this and appreciate any help for the following
+>> questions.
+>>
+>> 1. The driver is based on the usage of pdev->id in several parts of
+>> the driver. But the platform_device created using the
+>> of_platform_bus_probe function assigns -1 to pdev->id. Is the use of
+>> pdev->id not advisable or is it okay if the driver assigns a pdev->id
+>> value during the probe.
+>
+> No, the driver should *not* write a value to pdev->id at probe time.
+> Doing so breaks the device model. =A0Instead, any enumeration that the
+> driver cares about should be stored in the driver's private data
+> structure. =A0I would recommend modifying the driver to copy pdev->id
+> into its private structure. =A0If it is -1, then dynamically assign an
+> id.
+>
+>>
+>> 2. The driver uses pdev->dev.platform_data even after the probe is
+>> complete. I read in one of the posts from Grant Likely that drivers
+>> should not assign pdev->dev.platfrom_data.
+>
+> Correct.
+>
+>> Is it okay if the driver
+>> parse the platform data related information from the device node and
+>> assign it to pdev->dev.platform_data.
+>
+> No. =A0The driver *must not* modify or assign platform_data. =A0That
+> pointer provides information to the driver, but there are memory
+> allocation lifecycle issues if it tries to store something there.
+> (Okay, I it *can* be done if the driver very carefully cleaned up
+> after itself; but I strongly recommend against it; that isn't what
+> that pointer is for) =A0Modifying it also causes issues with drivers
+> that can accept either platform_data or device tree data.
+>
+> Instead, the driver should store all data it needs in its private data
+> structure. =A0That's exactly why drivers have private data structures.
+>
+> g.
+>
 
-The fix that we _really_ wanted was to keep dp->name based upon
-the name property ('battery'), but based dp->full_name upon
-package-to-path ('battery@0').  This patch does just that.
+Thanks for your explanation. It was very helpful. I am now modifying
+the uart driver to keep a copy of pdev->dev.platform_data and use it.
+Also, trying to eliminate all uses of pdev->id.
 
-This also changes OLPC behavior to use the full result from
-package-to-path for full_name, rather than stripping the directory
-out.  In practice, the strings end up being exactly the same; this
-change saves time, code, and memory.
+Could you help me with another question. The clk_get api for s5pv310
+uses the pdev->id to find the clock defined in platform code. Since
+the instance of 'struct platform_device' that the driver gets when
+probed using device tree will have pdev->id as -1, the clk_get fails.
+Is it okay to assign a instance value to pdev->id in the probe
+function.
 
-v2: combine two patches and revert of_pdt_node_name to original version
-v3: use dp->phandle instead of passing around node
-v4: warn/bail out for non-sparc archs if pkg2path is not set
-
-Signed-off-by: Andres Salomon <dilinger@queued.net>
----
- drivers/of/pdt.c |   50 ++++++++++++++++++++++----------------------------
- 1 files changed, 22 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index 28295d0..61f6308 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -48,7 +48,9 @@ static inline void irq_trans_init(struct device_node *dp) { }
- 
- static inline const char *of_pdt_node_name(struct device_node *dp)
- {
--	return dp->name;
-+	/* non-sparc archs should be setting a pkg2path hook */
-+	WARN_ON(1);
-+	return NULL;
- }
- 
- #endif /* !CONFIG_SPARC */
-@@ -134,7 +136,7 @@ static char * __init of_pdt_get_one_property(phandle node, const char *name)
- 
- static char * __init of_pdt_try_pkg2path(phandle node)
- {
--	char *res, *buf = NULL;
-+	char *buf = NULL;
- 	int len;
- 
- 	if (!of_pdt_prom_ops->pkg2path)
-@@ -147,29 +149,6 @@ static char * __init of_pdt_try_pkg2path(phandle node)
- 		pr_err("%s: package-to-path failed\n", __func__);
- 		return NULL;
- 	}
--
--	res = strrchr(buf, '/');
--	if (!res) {
--		pr_err("%s: couldn't find / in %s\n", __func__, buf);
--		return NULL;
--	}
--	return res+1;
--}
--
--/*
-- * When fetching the node's name, first try using package-to-path; if
-- * that fails (either because the arch hasn't supplied a PROM callback,
-- * or some other random failure), fall back to just looking at the node's
-- * 'name' property.
-- */
--static char * __init of_pdt_build_name(phandle node)
--{
--	char *buf;
--
--	buf = of_pdt_try_pkg2path(node);
--	if (!buf)
--		buf = of_pdt_get_one_property(node, "name");
--
- 	return buf;
- }
- 
-@@ -187,7 +166,7 @@ static struct device_node * __init of_pdt_create_node(phandle node,
- 
- 	kref_init(&dp->kref);
- 
--	dp->name = of_pdt_build_name(node);
-+	dp->name = of_pdt_get_one_property(node, "name");
- 	dp->type = of_pdt_get_one_property(node, "device_type");
- 	dp->phandle = node;
- 
-@@ -201,10 +180,25 @@ static struct device_node * __init of_pdt_create_node(phandle node,
- static char * __init of_pdt_build_full_name(struct device_node *dp)
- {
- 	int len, ourlen, plen;
-+	const char *name;
- 	char *n;
- 
-+	/*
-+	 * When fetching the full name we want the name we see with
-+	 * package-to-path (ie, '/foo/bar/battery@0') rather than what
-+	 * we see with the name property (ie, 'battery').
-+	 */
-+	n = of_pdt_try_pkg2path(dp->phandle);
-+	if (n)
-+		return n;
-+
-+	name = of_pdt_node_name(dp);
-+	if (!name)
-+		return NULL;
-+
-+	/* Older method for determining full name */
- 	plen = strlen(dp->parent->full_name);
--	ourlen = strlen(of_pdt_node_name(dp));
-+	ourlen = strlen(name);
- 	len = ourlen + plen + 2;
- 
- 	n = prom_early_alloc(len);
-@@ -213,7 +207,7 @@ static char * __init of_pdt_build_full_name(struct device_node *dp)
- 		strcpy(n + plen, "/");
- 		plen++;
- 	}
--	strcpy(n + plen, of_pdt_node_name(dp));
-+	strcpy(n + plen, name);
- 
- 	return n;
- }
--- 
-1.7.2.3
-
+Thanks,
+Thomas.
