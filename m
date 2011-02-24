@@ -1,114 +1,91 @@
-From: Andres Salomon <dilinger@queued.net>
-Subject: [PATCH] of/pdt: allow DT device matching by fixing 'name'
- brokenness (v3)
-Date: Wed, 23 Feb 2011 16:34:42 -0800
-Message-ID: <20110223163442.2974bd66@queued.net>
-References: <20110223150357.5a40793d@queued.net>
-	<20110223232815.GC5404@angua.secretlab.ca>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [RFC PATCH 02/10] MIPS: Octeon: Add device tree source files.
+Date: Wed, 23 Feb 2011 17:57:43 -0800
+Message-ID: <4D65BB17.4060703@caviumnetworks.com>
+References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com> <1298408274-20856-3-git-send-email-ddaney@caviumnetworks.com> <20110223000759.GA26300@yookeroo> <4D655AB6.80400@caviumnetworks.com> <20110223234923.GA4932@yookeroo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20110223232815.GC5404@angua.secretlab.ca>
-Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Daniel Drake <dsd@laptop.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110223234923.GA4932@yookeroo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/23/2011 03:49 PM, David Gibson wrote:
+> On Wed, Feb 23, 2011 at 11:06:30AM -0800, David Daney wrote:
+>> On 02/22/2011 04:07 PM, David Gibson wrote:
+>>> On Tue, Feb 22, 2011 at 12:57:46PM -0800, David Daney wrote:
+>>>> Signed-off-by: David Daney<ddaney@caviumnetworks.com>
+>>>> ---
+>>>>   arch/mips/cavium-octeon/.gitignore      |    2 +
+>>>>   arch/mips/cavium-octeon/Makefile        |   13 ++
+>>>>   arch/mips/cavium-octeon/octeon_3xxx.dts |  314 +++++++++++++++++++++++++++++++
+>>>>   arch/mips/cavium-octeon/octeon_68xx.dts |   99 ++++++++++
+>>>>   4 files changed, 428 insertions(+), 0 deletions(-)
+>>>>   create mode 100644 arch/mips/cavium-octeon/.gitignore
+>>>>   create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
+>>>>   create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
+>>>>
+>>>> diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
+>>>> new file mode 100644
+>>>> index 0000000..39c9686
+>>>> --- /dev/null
+>>>> +++ b/arch/mips/cavium-octeon/.gitignore
+>>>> @@ -0,0 +1,2 @@
+>>>> +*.dtb.S
+>>>
+>>> .dtb.S?
+>>
+>> I think I have the correct .gitignore syntax.
+>
+> What I meant was, where are you generating .dtb.S files that you need
+> to ignore them?
+>
 
-Commit e2f2a93b changed dp->name from using the 'name' property to
-using package-to-path.  This fixed /proc/device-tree creation by
-eliminating conflicts between names (the 'name' property provides
-names like 'battery', whereas package-to-path provides names like
-'/foo/bar/battery@0', which we stripped to 'battery@0').  However,
-it also breaks of_device_id table matching.
+They are a byproduct of $(call cmd,dtc).
 
-The fix that we _really_ wanted was to keep dp->name based upon
-the name property ('battery'), but based dp->full_name upon
-package-to-path ('battery@0').  This patch does just that.
+Normally make removes them automatically, but if you abort at just the 
+right time, they can be left around.
 
-This also changes OLPC behavior to use the full result from
-package-to-path for full_name, rather than stripping the directory
-out.  In practice, the strings end up being exactly the same; this
-change saves time, code, and memory.
+If it is objectionable, I can just remove that .gitignore bit.
 
-v2: combine two patches and revert of_pdt_node_name to original version
-v3: use dp->phandle instead of passing around node
 
-Signed-off-by: Andres Salomon <dilinger@queued.net>
----
- drivers/of/pdt.c |   37 ++++++++++++-------------------------
- 1 files changed, 12 insertions(+), 25 deletions(-)
+>>>> +  compatible = "octeon,octeon";
+>>>
+>>> There's no model number at all for this board?
+>>
+>>
+>> I think it should be:
+>>
+>> 	compatible = "octeon,octeon-3860";
+>
+> That looks better.
+>
+> Also, the part before the comma is generally the vendor, so I would
+> have expected cavium,XXX throughout rather than octeon,XXX.
 
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index 28295d0..c4cadeb 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -134,7 +134,7 @@ static char * __init of_pdt_get_one_property(phandle node, const char *name)
- 
- static char * __init of_pdt_try_pkg2path(phandle node)
- {
--	char *res, *buf = NULL;
-+	char *buf = NULL;
- 	int len;
- 
- 	if (!of_pdt_prom_ops->pkg2path)
-@@ -147,29 +147,6 @@ static char * __init of_pdt_try_pkg2path(phandle node)
- 		pr_err("%s: package-to-path failed\n", __func__);
- 		return NULL;
- 	}
--
--	res = strrchr(buf, '/');
--	if (!res) {
--		pr_err("%s: couldn't find / in %s\n", __func__, buf);
--		return NULL;
--	}
--	return res+1;
--}
--
--/*
-- * When fetching the node's name, first try using package-to-path; if
-- * that fails (either because the arch hasn't supplied a PROM callback,
-- * or some other random failure), fall back to just looking at the node's
-- * 'name' property.
-- */
--static char * __init of_pdt_build_name(phandle node)
--{
--	char *buf;
--
--	buf = of_pdt_try_pkg2path(node);
--	if (!buf)
--		buf = of_pdt_get_one_property(node, "name");
--
- 	return buf;
- }
- 
-@@ -187,7 +164,7 @@ static struct device_node * __init of_pdt_create_node(phandle node,
- 
- 	kref_init(&dp->kref);
- 
--	dp->name = of_pdt_build_name(node);
-+	dp->name = of_pdt_get_one_property(node, "name");
- 	dp->type = of_pdt_get_one_property(node, "device_type");
- 	dp->phandle = node;
- 
-@@ -203,6 +180,16 @@ static char * __init of_pdt_build_full_name(struct device_node *dp)
- 	int len, ourlen, plen;
- 	char *n;
- 
-+	/*
-+	 * When fetching the full name we want the name we see with
-+	 * package-to-path (ie, '/foo/bar/battery@0') rather than what
-+	 * we see with the name property (ie, 'battery').
-+	 */
-+	n = of_pdt_try_pkg2path(dp->phandle);
-+	if (n)
-+		return n;
-+
-+	/* Older method for determining full name */
- 	plen = strlen(dp->parent->full_name);
- 	ourlen = strlen(of_pdt_node_name(dp));
- 	len = ourlen + plen + 2;
--- 
-1.7.2.3
+OK, I will do that instead.
 
+
+[...]
+>>>> +      device_type = "network";
+>>>> +      model = "mgmt";
+>>>> +      reg =<0x10700 0x00100000 0x0 0x100>, /* MIX */
+>>>> +<0x11800 0xE0000000 0x0 0x300>, /* AGL */
+>>>> +<0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
+>>>> +<0x11800 0xE0002000 0x0 0x8>;   /* AGL_PRT_CTL */
+>>>> +      unit-number =<0>;
+>>>
+>>> What is this 'unit-number' property for?
+>>
+>> The AGL_SHARED register bank is shared among all the octeon-5230-mii
+>> devices.  the 'unit-number' indicates the bit-field index that this
+>> device should use within those registers.
+>
+> Ok.  'cell-index' is the normal property name for this sort of
+> purpose.
+
+Thanks, I will use 'cell-index'.
+
+David Daney
