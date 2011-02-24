@@ -1,281 +1,159 @@
-From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-Subject: [PATCH v6] i2c-gpio: add devicetree support
-Date: Thu, 24 Feb 2011 12:00:13 +0800
-Message-ID: <1298520013-3630-1-git-send-email-thomas@wytron.com.tw>
-References: <20110223011232.GC15795@trinity.fluff.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110223011232.GC15795-SMNkleLxa3Z6Wcw2j4pizdi2O/JbrIOy@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>, Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of/pdt: allow DT device matching by fixing 'name'
+ brokenness (v2)
+Date: Wed, 23 Feb 2011 21:06:38 -0700
+Message-ID: <20110224040638.GB22111@angua.secretlab.ca>
+References: <20110223150357.5a40793d@queued.net>
+ <20110223232815.GC5404@angua.secretlab.ca>
+ <20110223161630.3ae470bf@queued.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110223161630.3ae470bf@queued.net>
+Sender: sparclinux-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: Daniel Drake <dsd@laptop.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
+On Wed, Feb 23, 2011 at 04:16:30PM -0800, Andres Salomon wrote:
+> On Wed, 23 Feb 2011 16:28:15 -0700
+> Grant Likely <grant.likely@secretlab.ca> wrote:
+> 
+> > On Wed, Feb 23, 2011 at 03:03:57PM -0800, Andres Salomon wrote:
+> > > 
+> > > Commit e2f2a93b changed dp->name from using the 'name' property to
+> > > using package-to-path.  This fixed /proc/device-tree creation by
+> > > eliminating conflicts between names (the 'name' property provides
+> > > names like 'battery', whereas package-to-path provides names like
+> > > '/foo/bar/battery@0', which we stripped to 'battery@0').  However,
+> > > it also breaks of_device_id table matching.
+> > > 
+> > > The fix that we _really_ wanted was to keep dp->name based upon
+> > > the name property ('battery'), but based dp->full_name upon
+> > > package-to-path ('battery@0').  This patch does just that.
+> > > 
+> > > This also changes OLPC behavior to use the full result from
+> > > package-to-path for full_name, rather than stripping the directory
+> > > out.  In practice, the strings end up being exactly the same; this
+> > > change saves time, code, and memory.
+> > > 
+> > > Note that this affects sparc by reverting dp->name back to what
+> > > sparc was originally doing (looking at the name property).
+> > > 
+> > > v2: combine two patches and revert of_pdt_node_name to original
+> > > version.
+> > > 
+> > > Signed-off-by: Andres Salomon <dilinger@queued.net>
+> > 
+> > Hi Andres, comments below.
+> > 
+> > g.
+> > 
+> > > ---
+> > >  drivers/of/pdt.c |   42 +++++++++++++++---------------------------
+> > >  1 files changed, 15 insertions(+), 27 deletions(-)
+> > > 
+> > > diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+> > > index 28295d0..a7aa85e 100644
+> > > --- a/drivers/of/pdt.c
+> > > +++ b/drivers/of/pdt.c
+> > > @@ -134,7 +134,7 @@ static char * __init
+> > > of_pdt_get_one_property(phandle node, const char *name) 
+> > >  static char * __init of_pdt_try_pkg2path(phandle node)
+> > >  {
+> > > -	char *res, *buf = NULL;
+> > > +	char *buf = NULL;
+> > >  	int len;
+> > >  
+> > >  	if (!of_pdt_prom_ops->pkg2path)
+> > > @@ -147,29 +147,6 @@ static char * __init
+> > > of_pdt_try_pkg2path(phandle node) pr_err("%s: package-to-path
+> > > failed\n", __func__); return NULL;
+> > >  	}
+> > > -
+> > > -	res = strrchr(buf, '/');
+> > > -	if (!res) {
+> > > -		pr_err("%s: couldn't find / in %s\n", __func__,
+> > > buf);
+> > > -		return NULL;
+> > > -	}
+> > > -	return res+1;
+> > > -}
+> > > -
+> > > -/*
+> > > - * When fetching the node's name, first try using package-to-path;
+> > > if
+> > > - * that fails (either because the arch hasn't supplied a PROM
+> > > callback,
+> > > - * or some other random failure), fall back to just looking at the
+> > > node's
+> > > - * 'name' property.
+> > > - */
+> > > -static char * __init of_pdt_build_name(phandle node)
+> > > -{
+> > > -	char *buf;
+> > > -
+> > > -	buf = of_pdt_try_pkg2path(node);
+> > > -	if (!buf)
+> > > -		buf = of_pdt_get_one_property(node, "name");
+> > > -
+> > >  	return buf;
+> > >  }
+> > >  
+> > 
+> > It seems to me that of_pdt_build_full_name will still be missing the
+> > '@<addr>' component on non-sparc non-olpc builds because it uses the
+> > broken of_pdt_node_name().  That needs to be fixed too, even if there
+> > are no current users (or removed).
+> 
+> 
+> The intent if for them to use the pkg2path hook.  If
+> they can't use that, they'll need an architecture-specific way to
+> figure out the @<addr> component.  It may even be possible for sparc
+> to use package-to-path; but either way, if an architecture doesn't
+> have package-to-path (OLPC and powerpc have it; I don't know about
+> sparc), and can't fake it, it'll need to do something special.
+> 
+> If the pkg2path hook isn't set and we're not sparc, we fall back to
+> dp->name.  That sucks, but I don't know of a better way to do things.
 
-This patch adds devicetree support to i2c-gpio driver. The allocation
-of local data is integrated to a private structure, and use devm_*
-helper for easy cleanup.
+More that sucks, it is just plain *wrong*.  :-)
 
-It is base on an earlier patch for gc-linux from
-Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>.
+so, to sum up, of_pdt_build_tree goes through the following process:
 
-Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-CC: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
-Acked-by: Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
-for v2.6.39
-v2 move of nodes probing to a hook, which will be optimized out
-     when devicetree is not used.
-   use linux/gpio.h.
-   move binding doc to i2c/i2c-gpio.txt.
-v3 use speed-hz instead of udelay in dts binding.
-   condition the devicetree probe.
-v4 simplify private allocation.
-v5 condition module device table export for of.
-v6 change return code if probe fail.
+1) dp = of_pdt_create_node
+  - dp->name = of_pdt_get_one_property(node, "name"); /* name w/o addr */
 
-Hi Ben, this driver must get gpio pins from platform data or devicetree,
-  so it should fail if there is no platform data and devicetree is not
-  configured.
+2) (SPARC) dp->path_component_name = build_path_component(dp);
+  - format <node name>@<address>
+  - uses dp->name value
+  - not on OLPC
 
- Documentation/devicetree/bindings/i2c/i2c-gpio.txt |   40 +++++++
- drivers/i2c/busses/i2c-gpio.c                      |  113 ++++++++++++++++----
- 2 files changed, 133 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+3) dp->full_name = of_pdt_build_full_name(dp)
+  - (SPARC) use dp->path_component_name
+  - (OLPC) depend on value from of_pdt_try_pkg2path(node);
+  - (others) fake it with an incorrect value?
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-new file mode 100644
-index 0000000..38ef4f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-@@ -0,0 +1,40 @@
-+GPIO-based I2C
-+
-+Required properties:
-+- compatible : should be "i2c-gpio".
-+- gpios : should specify GPIOs used for SDA and SCL lines, in that order.
-+Optional properties:
-+- sda-is-open-drain : present if SDA gpio is open-drain.
-+- scl-is-open-drain : present if SCL gpio is open-drain.
-+- scl-is-output-only : present if the output driver for SCL cannot be
-+	turned off. this will prevent clock stretching from working.
-+- speed-hz : SCL frequency.
-+- timeout : clock stretching timeout in milliseconds.
-+
-+Example:
-+
-+gpio0: starlet-gpio@0d8000c0 {
-+	compatible = "nintendo,starlet-gpio";
-+	reg = <0d8000c0 4>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+};
-+
-+i2c-video {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "i2c-gpio";
-+
-+	gpios = <&gpio0 10 0	/* SDA line */
-+		 &gpio0 11 0	/* SCL line */
-+		>;
-+	sda-is-open-drain;
-+	scl-is-open-drain;
-+	scl-is-output-only;
-+	speed-hz = <250000>;
-+
-+	audio-video-encoder {
-+		compatible = "nintendo,wii-ave-rvl";
-+		reg = <70>;
-+	};
-+};
-diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-index d9aa9a6..feac3e5 100644
---- a/drivers/i2c/busses/i2c-gpio.c
-+++ b/drivers/i2c/busses/i2c-gpio.c
-@@ -14,8 +14,14 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-+#include <linux/gpio.h>
-+#include <linux/of_i2c.h>
- 
--#include <asm/gpio.h>
-+struct i2c_gpio_private_data {
-+	struct i2c_adapter adap;
-+	struct i2c_algo_bit_data bit_data;
-+	struct i2c_gpio_platform_data pdata;
-+};
- 
- /* Toggle SDA by changing the direction of the pin */
- static void i2c_gpio_setsda_dir(void *data, int state)
-@@ -78,24 +84,80 @@ static int i2c_gpio_getscl(void *data)
- 	return gpio_get_value(pdata->scl_pin);
- }
- 
-+#ifdef CONFIG_OF
-+#include <linux/of_gpio.h>
-+
-+/* Check if devicetree nodes exist and build platform data */
-+static int i2c_gpio_of_probe(struct platform_device *pdev,
-+			     struct i2c_gpio_platform_data *pdata)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	const __be32 *prop;
-+	int sda_pin, scl_pin;
-+	int len;
-+
-+	if (!np || of_gpio_count(np) < 2)
-+		return -ENODEV;
-+
-+	sda_pin = of_get_gpio_flags(np, 0, NULL);
-+	scl_pin = of_get_gpio_flags(np, 1, NULL);
-+	if (sda_pin < 0 || scl_pin < 0) {
-+		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
-+		       np->full_name, sda_pin, scl_pin);
-+		return -ENODEV;
-+	}
-+
-+	pdata->sda_pin = sda_pin;
-+	pdata->scl_pin = scl_pin;
-+	prop = of_get_property(np, "sda-is-open-drain", NULL);
-+	if (prop)
-+		pdata->sda_is_open_drain = 1;
-+	prop = of_get_property(np, "scl-is-open-drain", NULL);
-+	if (prop)
-+		pdata->scl_is_open_drain = 1;
-+	prop = of_get_property(np, "scl-is-output-only", NULL);
-+	if (prop)
-+		pdata->scl_is_output_only = 1;
-+	prop = of_get_property(np, "speed-hz", &len);
-+	if (prop && len >= sizeof(__be32))
-+		pdata->udelay = DIV_ROUND_UP(1000000, be32_to_cpup(prop) * 2);
-+	prop = of_get_property(np, "timeout", &len);
-+	if (prop && len >= sizeof(__be32))
-+		pdata->timeout = msecs_to_jiffies(be32_to_cpup(prop));
-+
-+	return 0;
-+}
-+#else
-+static int i2c_gpio_of_probe(struct platform_device *pdev,
-+			     struct i2c_gpio_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- {
-+	struct i2c_gpio_private_data *priv;
- 	struct i2c_gpio_platform_data *pdata;
- 	struct i2c_algo_bit_data *bit_data;
- 	struct i2c_adapter *adap;
- 	int ret;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata)
--		return -ENXIO;
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	adap = &priv->adap;
-+	bit_data = &priv->bit_data;
-+	pdata = &priv->pdata;
- 
--	ret = -ENOMEM;
--	adap = kzalloc(sizeof(struct i2c_adapter), GFP_KERNEL);
--	if (!adap)
--		goto err_alloc_adap;
--	bit_data = kzalloc(sizeof(struct i2c_algo_bit_data), GFP_KERNEL);
--	if (!bit_data)
--		goto err_alloc_bit_data;
-+	if (pdev->dev.platform_data) {
-+		*pdata = *(struct i2c_gpio_platform_data *)
-+			pdev->dev.platform_data;
-+	} else {
-+		ret = i2c_gpio_of_probe(pdev, pdata);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	ret = gpio_request(pdata->sda_pin, "sda");
- 	if (ret)
-@@ -143,6 +205,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- 	adap->algo_data = bit_data;
- 	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
- 	adap->dev.parent = &pdev->dev;
-+	adap->dev.of_node = pdev->dev.of_node;
- 
- 	/*
- 	 * If "dev->id" is negative we consider it as zero.
-@@ -154,13 +217,16 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_add_bus;
- 
--	platform_set_drvdata(pdev, adap);
-+	platform_set_drvdata(pdev, priv);
- 
- 	dev_info(&pdev->dev, "using pins %u (SDA) and %u (SCL%s)\n",
- 		 pdata->sda_pin, pdata->scl_pin,
- 		 pdata->scl_is_output_only
- 		 ? ", no clock stretching" : "");
- 
-+	/* Now register all the child nodes */
-+	of_i2c_register_devices(adap);
-+
- 	return 0;
- 
- err_add_bus:
-@@ -168,34 +234,41 @@ err_add_bus:
- err_request_scl:
- 	gpio_free(pdata->sda_pin);
- err_request_sda:
--	kfree(bit_data);
--err_alloc_bit_data:
--	kfree(adap);
--err_alloc_adap:
- 	return ret;
- }
- 
- static int __devexit i2c_gpio_remove(struct platform_device *pdev)
- {
-+	struct i2c_gpio_private_data *priv;
- 	struct i2c_gpio_platform_data *pdata;
- 	struct i2c_adapter *adap;
- 
--	adap = platform_get_drvdata(pdev);
--	pdata = pdev->dev.platform_data;
-+	priv = platform_get_drvdata(pdev);
-+	adap = &priv->adap;
-+	pdata = &priv->pdata;
- 
- 	i2c_del_adapter(adap);
- 	gpio_free(pdata->scl_pin);
- 	gpio_free(pdata->sda_pin);
--	kfree(adap->algo_data);
--	kfree(adap);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id i2c_gpio_match[] = {
-+	{ .compatible = "i2c-gpio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, i2c_gpio_match);
-+#else /* CONFIG_OF */
-+#define i2c_gpio_match NULL
-+#endif /* CONFIG_OF */
-+
- static struct platform_driver i2c_gpio_driver = {
- 	.driver		= {
- 		.name	= "i2c-gpio",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = i2c_gpio_match,
- 	},
- 	.probe		= i2c_gpio_probe,
- 	.remove		= __devexit_p(i2c_gpio_remove),
--- 
-1.7.4
+Am I correct?
+
+Faking it is clearly not acceptable.  The solution is to *force* all
+platforms to implement a method for obtaining the full path.  That
+means BUG() or WARN() if pkg2path is not populated, or if it returns
+NULL.  It also means no mucking about with of_pdt_try_pkg2path().
+Call ops->pkg2path directly and complain loudly when it does not work.
+
+I see two choices:
+1) implement ops->pkg2path for SPARC, but back it with
+   build_path_component() instead of a call to OF
+2) #ifdef of_pdt_build_full_name() to use the current behaviour for
+   SPARC, but call pkg2path for everyone else.
+
+Actually, I'd like to see build_path_component() refactored to return
+the full_name instead.  It is trivial to get the path component from
+the full name at any time, but it is not trivial to go the other
+direction.... but that is probably more surgery than should be done in
+this immediate bug-fix.  I'm assuming a fix is necessary before 2.6.38
+is finalized?
+
+g.
