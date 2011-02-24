@@ -1,220 +1,60 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v5] of/promtree: allow DT device matching by fixing 'name'
-	brokenness
-Date: Thu, 24 Feb 2011 10:04:41 -0700
-Message-ID: <20110224165917.3760.24493.stgit@localhost6.localdomain6>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH V11 2/4] ptp: Added a clock that uses the eTSEC found on
+ the MPC85xx.
+Date: Thu, 24 Feb 2011 11:08:04 -0600
+Message-ID: <20110224110804.74b546c0@schlenkerla>
+References: <cover.1298447722.git.richard.cochran@omicron.at>
+	<be1f5e801e8cd0145dd23aadae7c2055bb3c1d47.1298447722.git.richard.cochran@omicron.at>
+	<20110223165058.GE14597@angua.secretlab.ca>
+	<20110223112612.30071995@schlenkerla>
+	<20110223175459.GH14597@angua.secretlab.ca>
+	<20110224163944.GA15234@riccoc20.at.omicron.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: dsd@laptop.org, Andres Salomon <dilinger@queued.net>
-Cc: sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, davem@davemloft.net
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110224163944.GA15234@riccoc20.at.omicron.at>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Thomas Gleixner <tglx@linutronix.de>, Rodolfo Giometti <giometti@linux.it>, Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>, linux-api@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Paul Mackerras <paulus@samba.org>, John Stultz <john.stultz@linaro.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, netdev@vger.kernel.org, Mike Frysinger <vapier@gentoo.org>, Christoph Lameter <cl@linux.com>, linuxppc-dev@lists.ozlabs.org, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Krzysztof Halasa <khc@pm.waw.pl>
 List-Id: devicetree@vger.kernel.org
 
-From: Andres Salomon <dilinger@queued.net>
+On Thu, 24 Feb 2011 17:39:44 +0100
+Richard Cochran <richardcochran@gmail.com> wrote:
 
-Commit e2f2a93b, "of/promtree: add package-to-path support to pdt"
-changed dp->name from using the 'name' property to using
-package-to-path.  This fixed /proc/device-tree creation by eliminating
-conflicts between names (the 'name' property provides names like
-'battery', whereas package-to-path provides names like
-'/foo/bar/battery@0', which we stripped to 'battery@0').  However, it
-also breaks of_device_id table matching.
+> On Wed, Feb 23, 2011 at 10:54:59AM -0700, Grant Likely wrote:
+> > On Wed, Feb 23, 2011 at 11:26:12AM -0600, Scott Wood wrote:
+> 
+> > > The eTSEC revision is probeable as well, but due the way PTP is described as
+> > > a separate node, the driver doesn't have straightforward access to those
+> > > registers.
+> > 
+> > Ignorant question: Should the ptp be described as a separate node?
+> 
+> Well, the PTP Hardware Clock function is logically separate from the
+> MAC function.
 
-The fix that we _really_ wanted was to keep dp->name based upon
-the name property ('battery'), but based dp->full_name upon
-package-to-path ('battery@0').  This patch does just that.
+The eTSEC node doesn't describe the MAC function, it describes the whole
+device (or at least it should... we make an exception for MDIO, which
+should probably have been a subnode instead).
 
-This changes all users (except SPARC) of promtree to use the full
-result from package-to-path for full_name, rather than stripping the
-directory out.  In practice, the strings end up being exactly the
-same; this change saves time, code, and memory.
+> PHCs can be implemented in the MAC, in the PHY, or in
+> between in an FPGA on MII bus.
+> 
+> If the PHC is in the MAC, then it might be wise to implement one
+> driver that offers both the MAC and the PHC.
+> 
+> In the case of gianfar, it is not really necessary to combine the PHC
+> into the gianfar driver, since the registers are pretty well
+> separated.
 
-SPARC continues to use the existing build_path_component() code.
+How the drivers are structured in Linux is a separate concern from how the
+devices are described in the device tree.  The tree is supposed to be an
+OS-independent representation of hardware.
 
-v2: combine two patches and revert of_pdt_node_name to original version
-v3: use dp->phandle instead of passing around node
-v4: warn/bail out for non-sparc archs if pkg2path is not set
-v5: split of_pdt_build_full_name into sparc & non-sparc versions
-    BUG() when pkg2path doesn't work.
+If Linux has multiple drivers that correspond to portions of one node, a
+toplevel driver can register platform devices for the components, adding
+in any additional information like versioning that it gets from the
+toplevel registers.
 
-Signed-off-by: Andres Salomon <dilinger@queued.net>
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
----
-
-Hi Andres,
-
-This is what I think the patch should really look like.  The
-of_pdt_node_name() stuff really doesn't make sense to keep around
-because what we *really* care about is the full name, not the path
-component name.  Therefore I reorganized it so SPARC continues to use
-it's build_path_component() to build up the full path; but everyone
-else *must* provide a working mechanism to obtain the full path; be it
-an actual call to OFW pkg2path, or something else.
-
-Please take a look at let me know what you think.
-
-g.
-
- drivers/of/pdt.c |  110 ++++++++++++++++++++----------------------------------
- 1 files changed, 40 insertions(+), 70 deletions(-)
-
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index 28295d0..ab54819 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -36,19 +36,53 @@ unsigned int of_pdt_unique_id __initdata;
- 	(p)->unique_id = of_pdt_unique_id++; \
- } while (0)
- 
--static inline const char *of_pdt_node_name(struct device_node *dp)
-+static char * __init of_pdt_build_full_name(struct device_node *dp)
- {
--	return dp->path_component_name;
-+	int len, ourlen, plen;
-+	char *n;
-+
-+	dp->path_component_name = build_path_component(dp);
-+
-+	plen = strlen(dp->parent->full_name);
-+	ourlen = strlen(dp->path_component_name);
-+	len = ourlen + plen + 2;
-+
-+	n = prom_early_alloc(len);
-+	strcpy(n, dp->parent->full_name);
-+	if (!of_node_is_root(dp->parent)) {
-+		strcpy(n + plen, "/");
-+		plen++;
-+	}
-+	strcpy(n + plen, dp->path_component_name);
-+
-+	return n;
- }
- 
--#else
-+#else /* CONFIG_SPARC */
- 
- static inline void of_pdt_incr_unique_id(void *p) { }
- static inline void irq_trans_init(struct device_node *dp) { }
- 
--static inline const char *of_pdt_node_name(struct device_node *dp)
-+static char * __init of_pdt_build_full_name(struct device_node *dp)
- {
--	return dp->name;
-+	char *buf;
-+	int len;
-+
-+	if (!of_pdt_prom_ops->pkg2path)
-+		BUG();
-+
-+	if (of_pdt_prom_ops->pkg2path(dp->phandle, buf, 0, &len))
-+		BUG();
-+
-+	buf = prom_early_alloc(len + 1);
-+	if (!buf)
-+		BUG();
-+
-+	if (of_pdt_prom_ops->pkg2path(dp->phandle, buf, len, &len)) {
-+		pr_err("%s: package-to-path failed\n", __func__);
-+		BUG();
-+	}
-+	return buf;
- }
- 
- #endif /* !CONFIG_SPARC */
-@@ -132,47 +166,6 @@ static char * __init of_pdt_get_one_property(phandle node, const char *name)
- 	return buf;
- }
- 
--static char * __init of_pdt_try_pkg2path(phandle node)
--{
--	char *res, *buf = NULL;
--	int len;
--
--	if (!of_pdt_prom_ops->pkg2path)
--		return NULL;
--
--	if (of_pdt_prom_ops->pkg2path(node, buf, 0, &len))
--		return NULL;
--	buf = prom_early_alloc(len + 1);
--	if (of_pdt_prom_ops->pkg2path(node, buf, len, &len)) {
--		pr_err("%s: package-to-path failed\n", __func__);
--		return NULL;
--	}
--
--	res = strrchr(buf, '/');
--	if (!res) {
--		pr_err("%s: couldn't find / in %s\n", __func__, buf);
--		return NULL;
--	}
--	return res+1;
--}
--
--/*
-- * When fetching the node's name, first try using package-to-path; if
-- * that fails (either because the arch hasn't supplied a PROM callback,
-- * or some other random failure), fall back to just looking at the node's
-- * 'name' property.
-- */
--static char * __init of_pdt_build_name(phandle node)
--{
--	char *buf;
--
--	buf = of_pdt_try_pkg2path(node);
--	if (!buf)
--		buf = of_pdt_get_one_property(node, "name");
--
--	return buf;
--}
--
- static struct device_node * __init of_pdt_create_node(phandle node,
- 						    struct device_node *parent)
- {
-@@ -187,7 +180,7 @@ static struct device_node * __init of_pdt_create_node(phandle node,
- 
- 	kref_init(&dp->kref);
- 
--	dp->name = of_pdt_build_name(node);
-+	dp->name = of_pdt_get_one_property(node, "name");
- 	dp->type = of_pdt_get_one_property(node, "device_type");
- 	dp->phandle = node;
- 
-@@ -198,26 +191,6 @@ static struct device_node * __init of_pdt_create_node(phandle node,
- 	return dp;
- }
- 
--static char * __init of_pdt_build_full_name(struct device_node *dp)
--{
--	int len, ourlen, plen;
--	char *n;
--
--	plen = strlen(dp->parent->full_name);
--	ourlen = strlen(of_pdt_node_name(dp));
--	len = ourlen + plen + 2;
--
--	n = prom_early_alloc(len);
--	strcpy(n, dp->parent->full_name);
--	if (!of_node_is_root(dp->parent)) {
--		strcpy(n + plen, "/");
--		plen++;
--	}
--	strcpy(n + plen, of_pdt_node_name(dp));
--
--	return n;
--}
--
- static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
- 						   phandle node,
- 						   struct device_node ***nextp)
-@@ -240,9 +213,6 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
- 		*(*nextp) = dp;
- 		*nextp = &dp->allnext;
- 
--#if defined(CONFIG_SPARC)
--		dp->path_component_name = build_path_component(dp);
--#endif
- 		dp->full_name = of_pdt_build_full_name(dp);
- 
- 		dp->child = of_pdt_build_tree(dp,
-
+-Scott
