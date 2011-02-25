@@ -1,17 +1,11 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC PATCH 02/10] MIPS: Octeon: Add device tree source files.
-Date: Sat, 26 Feb 2011 08:46:22 +1100
-Message-ID: <1298670382.8833.693.camel@pasglop>
-References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
-	<1298408274-20856-3-git-send-email-ddaney@caviumnetworks.com>
-	<20110223000759.GA26300@yookeroo> <4D653CF1.30009@caviumnetworks.com>
-	<20110224231923.GB18233@yookeroo>
-	<AANLkTi=Oh0iu-d4n3rMLvXFH-DjS1mT3GgpoJyywjM=5@mail.gmail.com>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/2]  powerpc: Open PIC binding and "pic-no-reset"
+Date: Fri, 25 Feb 2011 15:59:35 -0600
+Message-ID: <1298671177-19572-1-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi=Oh0iu-d4n3rMLvXFH-DjS1mT3GgpoJyywjM=5@mail.gmail.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,69 +15,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dave Kleikamp <shaggy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2011-02-25 at 08:22 -0700, Grant Likely wrote:
-> 
-> Generally I've applied the argument that it's a good idea to populate
-> the /cpus node as an anchor for future things that might require it.
-> For example, a theoretical hypervisor which doesn't allow the guest
-> access to all the CPUs would use cpu nodes to tell the OS 'hands off'.
->  Or possibly more likely, and AMP scenario where Linux would certainly
-> detect all the CPUs, but is supposed to leave some of them alone.  It
-> would also be an anchor for anything NUMA-like which is also
-> theoretical, but may become more likely in some of the larger ARM
-> designs that I've been hearing about.
+This patch set provides a binding for Open PIC and implements support for
+a new property, specified by that binding, called "pic-no-reset".
 
-It also allows to bring other informations in there such as clock
-frequencies etc... In some kind, binding to a reset GPIO used to soft
-reset secondaries (ie on Macs we have something like that)...
+v4 - Per Ben's feedback the protected sources implementation was left
+     completely intact.  As such, the DTS cleanup and "protected-sources"
+     removal patches were dropped.
 
-> Given that we've been very explicit that the device tree is for
-> describing things that aren't probable, the argument that it is not
-> necessary to populate the cpus node probably holds some water.  If
-> there are no special considerations (ie. disabled CPUs or NUMA) and
-> nothing holds a phandle to a specific cpu node, then it is probably
-> okay to omit.  In that case the lack of /cpus node would mean simply,
-> "detect the cpus", and /cpus could be populated to override the
-> detected behaviour.
+v3 - the Open PIC binding was changed to be more consistent with existing
+     bindings, several DTS files were cleaned up, "no-reset" was changed to
+     "pic-no-reset", and a check to treat "protected-sources" as a synonym for
+     "pic-no-reset" was added.
 
-Well... I tend to recommend putting things that are soldered on the mobo
-in the device-tree, simply because that allows to pass all sort of
-additional informations that can be useful. For example, if you have a
-PCI2PCI bridge on the mobo, it allows you to provide proper slot names
-for the slots below it, or if devices have oddly routed interrupts (not
-the standard INTA...D with swizzling), which happens on embedded a lot,
-the device-tree can convey that more easily.
+Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Dave Kleikamp <shaggy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
-Other things like clock frequencies or in general clock relationships,
-or even location codes, MAC addresses, etc... 
+Meador Inge (2):
+  powerpc: document the Open PIC device tree binding
+  powerpc: make MPIC honor the "pic-no-reset" device tree property
 
-But you don't -have- to. It's just a recommendation.
-
-> Picking up on something David Daney said...
-> >> The number and type of CPUs can be (and is) probed.  There is an
-> >> existing mechanism for the bootloader to communicate which CPUs
-> >> should be used.
->
-> I do get a little nervous about this (the bootloader communication
-> bit).  For ARM, I had an argument with Nicolas Pitre about preserving
-> the existing ATAGs mechanism and adding DT on top vs. replacing ATAGs
-> entirely with DT.  I wanted to keep ATAGs, but Nicolas was concerned
-> about how to handle ambiguity about which data to use when the ATAGs
-> and DT disagree.  In hindsight Nicolas was 100% right and I'm glad he
-> pushed back.  The ARM DT support now detects if ATAGs or a .dtb were
-> passed at boot (one or the other), and it is *so* much cleaner.  All
-> configuration data lives in the same place and is manipulated in the
-> same way.  Plus it means that the dt usage model is the same for
-> multiple architectures, arm, powerpc and microblaze. 
-
-I think doing a "blend" of existing bootloader channels + device-tree is
-bad. The device-tree should convey all of the informations that were
-previously passed using a different mechanism, or hell will freeze over
-in the long run.
-
-Cheers,
-Ben.
+ Documentation/powerpc/dts-bindings/open-pic.txt |   98 +++++++++++++++++++++++
+ arch/powerpc/include/asm/mpic.h                 |    6 ++
+ arch/powerpc/sysdev/mpic.c                      |   67 ++++++++++++----
+ 3 files changed, 155 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/powerpc/dts-bindings/open-pic.txt
