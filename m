@@ -1,73 +1,55 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH 01/15] dt/powerpc: move of_bus_type infrastructure
- to ibmebus
-Date: Fri, 25 Feb 2011 19:53:39 +1100
-Message-ID: <1298624019.8833.607.camel@pasglop>
-References: <20110223043015.20795.37090.stgit@localhost6.localdomain6>
-	 <20110223043340.20795.84024.stgit@localhost6.localdomain6>
-	 <201102241546.48790.arnd@arndb.de>
+From: Daniel Drake <dsd@laptop.org>
+Subject: Re: [PATCH] olpc_battery: bind to device tree
+Date: Fri, 25 Feb 2011 14:19:33 +0000
+Message-ID: <AANLkTi=2a=9=k+ZG46yqKOaHd9tCkJVm4QRxGmgbRzsv@mail.gmail.com>
+References: <20110219150644.681D59D401D@zog.reactivated.net>
+	<AANLkTi=29myerzgH6WRCSOPKpaDnGgEtQacVHvxRoQT_@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <201102241546.48790.arnd@arndb.de>
-Sender: sparclinux-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, sfr@canb.auug.org.au, linux-kernel@vger.kernel.org, davem@davemloft.net, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AANLkTi=29myerzgH6WRCSOPKpaDnGgEtQacVHvxRoQT_@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-kernel@vger.kernel.org, dilinger@queued.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2011-02-24 at 15:46 +0100, Arnd Bergmann wrote:
-> On Wednesday 23 February 2011, Grant Likely wrote:
-> > arch/powerpc/kernel/ibmebus.c is the only remaining user of the
-> > of_bus_type support code for initializing the bus and registering
-> > drivers.  All others have either been switched to the vanilla platform
-> > bus or already have their own infrastructure.
-> > 
-> > This patch moves the functionality that ibmebus is using out of
-> > drivers/of/{platform,device}.c and into ibmebus.c where it is actually
-> > used.  Also renames the moved symbols from of_platform_* to
-> > ibmebus_bus_* to reflect the actual usage.
-> > 
-> > This patch is part of moving all of the of_platform_bus_type users
-> > over to the platform_bus_type.
-> > 
-> > Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> 
-> The ibmebus is essentially the platform bus of the IBM Power Systems (a.k.a.
-> pSeries a.k.a. System p), I think it would make a lot of sense to convert
-> the two drivers (ehca and ehea) on this bus into platform drivers as well.
-> 
-> The original reason for this bus was to provide a different IOMMU for them
-> than what is used on the PCI devices. This should now be possible in simpler
-> ways.
+On 23 February 2011 20:34, Grant Likely <grant.likely@secretlab.ca> wro=
+te:
+> As mentioned in the other thread, matching by name is strongly
+> discouraged. =A0It isn't very accurate and compatible is the preferre=
+d
+> method for binding devices. =A0'battery' in particular is highly
+> non-specific.
+>
+> I do understand that you don't have a compatible property in the
+> current firmware, and to a certain extent we have to live with what
+> we're given by the kernel. =A0However, I think it would be better in =
+the
+> OLPC case to find the battery node and add a compatible property
+> before registering a platform_device for it. =A0(or use a bus notifie=
+r
+> to tell you when it is registered, and add 'compatible' at that
+> point.) =A0That way we the uncertainty is taken care of in the board
+> support code without polluting the driver matching namespace.
 
-Well, it's really the IBM "GX" bus but yeah, it could be converted I
-suppose. The "special" iommu functions mostly derive from the fact that
-the two adapters we are interested in have their own translation
-mechanism built-in. The GX bus sits "above" the TCEs used as an iommu on
-these systems.
+Thanks for the review. This and the rest of your feedback makes sense.
 
-> > +static void ibmebus_bus_device_shutdown(struct device *dev)
-> > +{
-> > +	struct platform_device *of_dev = to_platform_device(dev);
-> > +	struct of_platform_driver *drv = to_of_platform_driver(dev->driver);
-> > +
-> > +	if (dev->driver && drv->shutdown)
-> > +		drv->shutdown(of_dev);
-> > +}
-> 
-> neither of the drivers provides a shutdown function.
+Would you mind commenting on exactly how this should look?
 
-Right but they might grow one ... and people will wonder why it doesn't
-work if you remove the above :-)
+Here are the changes i'm planning to make, both to the firmware and
+with kernel code as you suggest to fixup device trees for systems with
+old firmware:
 
- .../...
+/battery@0/compatible property added with value "olpc-battery" (XO-1 an=
+d XO-1.5)
+/pci/isa@f/rtc@i70/compatible property prepended with "olpc-xo1-rtc,"
+(XO-1 only)
+/pci/display@1,1/dcon device added, name=3Ddcon compatible=3Dolpc-dcon
+(XO-1 and XO-1.5)
 
-> These are also unused in the drivers.
+In addition to the battery patch you reviewed, we plan to make the
+olpc-rtc and DCON drivers bind to device tree nodes, which is the
+reason behind the other changes.
 
-Same reasoning, however it becomes moot if we convert them to platform.
-
-Cheers,
-Ben.
-
-
+Daniel
