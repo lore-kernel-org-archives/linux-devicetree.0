@@ -1,47 +1,43 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] dt: add a match table pointer to struct device
-Date: Fri, 25 Feb 2011 10:34:05 -0700
-Message-ID: <AANLkTik1fzJw11mKSVu4B2yrGZAju59uNmHjjGSgVcGY@mail.gmail.com>
-References: <20110223025233.25131.47193.stgit@localhost6.localdomain6>
- <AANLkTikauP8+PgFyicdSQzJ19ZvqpV=3ZnRTjSvY78qc@mail.gmail.com> <20110225163547.GC8523@suse.de>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH 3/4 v3] tty: serial: altera_uart: Add devicetree support
+Date: Fri, 25 Feb 2011 09:58:56 -0800
+Message-ID: <20110225175856.GA17072@kroah.com>
+References: <c7a7085602687d2f1b6ac505c030f19bafda04e3.1297245277.git.tklauser@distanz.ch>
+ <1298025332-31846-1-git-send-email-tklauser@distanz.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110225163547.GC8523@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@suse.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1298025332-31846-1-git-send-email-tklauser@distanz.ch>
+Sender: linux-serial-owner@vger.kernel.org
+To: Tobias Klauser <tklauser@distanz.ch>
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org, nios2-dev@sopc.et.ntust.edu.tw, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 25, 2011 at 9:35 AM, Greg KH <gregkh@suse.de> wrote:
-> On Fri, Feb 25, 2011 at 08:46:52AM -0700, Grant Likely wrote:
->> Greg, any thoughts on this change? =A0I'd like to take it via my tre=
-e so
->> I can finally dump the last vestiges of of_platform_bus_type.
->
-> Sorry, I didn't realize you just wanted my review, and not me to take=
- it
-> directly.
+On Fri, Feb 18, 2011 at 11:35:32AM +0100, Tobias Klauser wrote:
+> With the recent switch of the (currently still out-of-tree) Nios2 Linux
+> port to devicetree we want to be able to retreive the resources and
+> properties from dts.
+> 
+> The old method to retreive resources and properties from platform data
+> is still supported.
+> 
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> ---
+> 
+> Greg: This patch will have the same compile problem in your tree as the
+> altera_jtaguart patch has. As this patch depends on the previous ones of
+> this series it might be best to apply it once commit c9e358dfc
+> "driver-core: remove conditionals around devicetree pointers" from
+> Grant's tree is merged.
 
-Heh, I wasn't very clear about that.  Oops,
+Ok, I can't take this then, Grant, can you?
 
-> If you want to take it, that's great, no objection from me, feel free=
- to
-> add:
-> =A0 =A0 =A0 =A0Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-> to it.
+Please feel free to add:
+	Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
+to it.
 
-Thanks.  Yes I definitely want to take it because I've got a pile of
-patches that depend on it.
+thanks,
 
-> What about the other patch you sent me, do you want me to take that, =
-or
-> will you?
-
-Which one is that?  The relaxation of .name checking on of_serial?
-Yes, you can take that one, but hold off for the moment.  Looking at
-it now I realize that I forgot to cc some folks that should ack it, so
-I'm going to repost.
-
-g.
+greg k-h
