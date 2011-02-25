@@ -1,67 +1,51 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC PATCH 02/10] MIPS: Octeon: Add device tree source files.
-Date: Fri, 25 Feb 2011 10:19:23 +1100
-Message-ID: <20110224231923.GB18233@yookeroo>
-References: <1298408274-20856-1-git-send-email-ddaney@caviumnetworks.com>
-	<1298408274-20856-3-git-send-email-ddaney@caviumnetworks.com>
-	<20110223000759.GA26300@yookeroo>
-	<4D653CF1.30009@caviumnetworks.com>
+From: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+Subject: Re: [PATCH v6] i2c-gpio: add devicetree support
+Date: Fri, 25 Feb 2011 10:04:59 +0800
+Message-ID: <4D670E4B.6000407@wytron.com.tw>
+References: <20110223011232.GC15795@trinity.fluff.org> <1298520013-3630-1-git-send-email-thomas@wytron.com.tw> <20110224162210.GC17735@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4D653CF1.30009-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110224162210.GC17735-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 23, 2011 at 08:59:29AM -0800, David Daney wrote:
-> On 02/22/2011 04:07 PM, David Gibson wrote:
-> >On Tue, Feb 22, 2011 at 12:57:46PM -0800, David Daney wrote:
-> >>Signed-off-by: David Daney<ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> >>---
-> >>  arch/mips/cavium-octeon/.gitignore      |    2 +
-> >>  arch/mips/cavium-octeon/Makefile        |   13 ++
-> >>  arch/mips/cavium-octeon/octeon_3xxx.dts |  314 +++++++++++++++++++++++++++++++
-> >>  arch/mips/cavium-octeon/octeon_68xx.dts |   99 ++++++++++
-> >>  4 files changed, 428 insertions(+), 0 deletions(-)
-> >>  create mode 100644 arch/mips/cavium-octeon/.gitignore
-> >>  create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
-> >>  create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
-> >>
-> [...]
-> 
-> >>+    };
-> >>+  };
-> >
-> >Uh.. where are the CPUs?
-> >
-> 
-> The number and type of CPUs can be (and is) probed.  There is an
-> existing mechanism for the bootloader to communicate which CPUs
-> should be used.
+Hi Grant,
 
-Hrm, ok.
+On 02/25/2011 12:22 AM, Grant Likely wrote:
+>> +Required properties:
+>> +- compatible : should be "i2c-gpio".
+>> +- gpios : should specify GPIOs used for SDA and SCL lines, in that order.
+>> +Optional properties:
+>> +- sda-is-open-drain : present if SDA gpio is open-drain.
+>> +- scl-is-open-drain : present if SCL gpio is open-drain.
+>> +- scl-is-output-only : present if the output driver for SCL cannot be
+>> +	turned off. this will prevent clock stretching from working.
+>> +- speed-hz : SCL frequency.
+>
+> Hi Thomas,
+>
+> One nitpick; I just looked, and other i2c controllers are already
+> using 'clock-frequency' instead of 'speed-hz' for the speed of the
+> bus.  I'd like to see this patch use the same terminology.
 
-Grant,
+I studied 'clock-frequency' usage of existing i2c drivers before working 
+on this patch.
 
-We've seen this now on both MIPS and ARM - dts files with no cpus, on
-the grounds that those can be runtime probed.  I guess it makes sense,
-although a dts without cpus looks very, very odd to me.  What are your
-thoughts on this?
+i2c-ibm_iic.c, i2c-mpc.c, i2c-ocores.c : use as bus clock frequency 
+input to the core.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+i2c-cpm.c : use as i2c SCL output frequency.
+
+Most other non-i2c drivers use clock-frequency as bus clock frequency 
+input, too.
+
+I think the SCL freq usage in i2c-cpm.c is confusing. So I would suggest 
+we borrow 'speed-hz' from spi subsystem, which means the clock freq 
+output on the peripheral bus.
+
+Best regards,
+Thomas
