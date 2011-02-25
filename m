@@ -1,86 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v5] of/promtree: allow DT device matching by fixing 'name'
-	brokenness
-Date: Thu, 24 Feb 2011 23:06:06 -0700
-Message-ID: <AANLkTimc37=azh11sYYi6x7gTE=0ybud5tXgxa1TDUMT@mail.gmail.com>
-References: <20110224165917.3760.24493.stgit@localhost6.localdomain6>
-	<20110224093341.5a809a13@queued.net>
-	<20110224194234.GA8907@angua.secretlab.ca>
-	<20110224120109.0ed9f473@queued.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] x86: OLPC: have prom_early_alloc BUG rather than return NULL
+Date: Thu, 24 Feb 2011 23:20:10 -0700
+Message-ID: <AANLkTi=PpPKoHr1sOAwZZaFhVX9HOOqT7AYgY2QaX92O@mail.gmail.com>
+References: <20110224200631.0007833e@queued.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110224120109.0ed9f473-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110224200631.0007833e@queued.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 24, 2011 at 1:01 PM, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org> wrote:
-> On Thu, 24 Feb 2011 12:42:34 -0700
-> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> If firmware is buggy, then pkg2path must deal with it. =A0It is not okay
->> for it to return NULL. =A0(I know that pkg2path is an OFW command, but
->> in this context it really means the linux wrapper to pkg2path which
->> has the semantics, "give me the unique, full and accurate path for
->> this node"). =A0If OFW pkg2path doesn't work, then the platform code
->> must work around it. =A0I'm pushing back on this because I do not want
->> to see platform workarounds in the common code.
+On Thu, Feb 24, 2011 at 9:06 PM, Andres Salomon <dilinger@queued.net> w=
+rote:
 >
-> I'm fine with that, I just don't want to see BUG() happening that
-> early. =A0I think a workaround should be handled in common code. =A0I agr=
-ee
-> that heroic workarounds for firmware bugs should be handled in
-> arch-specific pkg2path hooks, but a simple workaround in common code
-> is better than just crashing early in boot (imo).
+> ..similar to what sparc's prom_early_alloc does.
+>
+> Signed-off-by: Andres Salomon <dilinger@queued.net>
 
-Alright, you've swayed me a bit.  I've made this change and pushed it
-out to devicetree/experimental.  I've also picked up your other patch.
- Let me know if it works for you.
-
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index 5ab3bd5..4d87b5d 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -65,17 +65,25 @@ static inline void irq_trans_init(struct device_node *d=
-p) {
-
- static char * __init of_pdt_build_full_name(struct device_node *dp)
- {
-+       static int failsafe_id =3D 0; /* for generating unique names on fai=
-lure */
-        char *buf;
-        int len;
-
-        if (of_pdt_prom_ops->pkg2path(dp->phandle, NULL, 0, &len))
--               BUG();
-+               goto failsafe;
-
-        buf =3D prom_early_alloc(len + 1);
--       if (!buf)
--               BUG();
-        if (of_pdt_prom_ops->pkg2path(dp->phandle, buf, len, &len))
--               BUG();
-+               goto failsafe;
-+       return buf;
-+
-+ failsafe:
-+       buf =3D prom_early_alloc(strlen(dp->parent->full_name) +
-+                              strlen(dp->name) + 16);
-+       sprintf(buf, "%s/%s@unknown%i",
-+               of_node_is_root(dp->parent) ? "" : dp->parent->full_name,
-+               dp->name, failsafe_id++);
-+       pr_err("%s: pkg2path failed; assigning %s\n", __func__, buf);
-        return buf;
- }
+What the hey, I've picked this up since it makes the other patch
+simpler.  I'll push the two patches to linux-next tomorrow and ask
+Linus to pull in a few days.
 
 g.
+
+> ---
+> =A0arch/x86/platform/olpc/olpc_dt.c | =A0 =A03 +--
+> =A01 files changed, 1 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olp=
+c/olpc_dt.c
+> index dab8746..044bda5 100644
+> --- a/arch/x86/platform/olpc/olpc_dt.c
+> +++ b/arch/x86/platform/olpc/olpc_dt.c
+> @@ -140,8 +140,7 @@ void * __init prom_early_alloc(unsigned long size=
+)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * wasted bootmem) and hand off chunks=
+ of it to callers.
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0res =3D alloc_bootmem(chunk_size);
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!res)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 BUG_ON(!res);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0prom_early_allocated +=3D chunk_size;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0memset(res, 0, chunk_size);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0free_mem =3D chunk_size;
+> --
+> 1.7.2.3
+>
+>
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
