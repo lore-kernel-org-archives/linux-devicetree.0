@@ -1,150 +1,55 @@
-From: Meador Inge <meador_inge@mentor.com>
-Subject: [PATCH v4 1/2] powerpc: document the Open PIC device tree binding
-Date: Fri, 25 Feb 2011 15:59:36 -0600
-Message-ID: <1298671177-19572-2-git-send-email-meador_inge@mentor.com>
-References: <1298671177-19572-1-git-send-email-meador_inge@mentor.com>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v5] of/promtree: allow DT device matching by fixing
+	'name' brokenness
+Date: Fri, 25 Feb 2011 22:41:32 -0800
+Message-ID: <20110225224132.0c15eb8a@queued.net>
+References: <20110224165917.3760.24493.stgit@localhost6.localdomain6>
+	<20110224093341.5a809a13@queued.net>
+	<20110224194234.GA8907@angua.secretlab.ca>
+	<20110224120109.0ed9f473@queued.net>
+	<AANLkTimc37=azh11sYYi6x7gTE=0ybud5tXgxa1TDUMT@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1298671177-19572-1-git-send-email-meador_inge@mentor.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org, Hollis Blanchard <hollis_blanchard@mentor.com>, Stuart Yoder <stuart.yoder@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <AANLkTimc37=azh11sYYi6x7gTE=0ybud5tXgxa1TDUMT-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This binding documents several properties that have been in use for quite
-some time, and adds one new property 'pic-no-reset', which controls the runtime
-initialization behavior of the PIC.  More specifically, the presence of
-'pic-no-reset' mandates that the PIC shall not be reset during runtime
-initialization and that any initialization related to interrupt sources
-shall be limited to sources explicitly referenced in the device tree.  This
-functionality is useful in AMP systems where multiple OSes are sharing the
-PIC and the reinitialization of the PIC can interfere with OSes that are
-already up and running.
-
-The interrupt specifier definition is based off of Stuart Yoder's FSL MPIC
-binding.
-
-Signed-off-by: Meador Inge <meador_inge@mentor.com>
-Cc: Hollis Blanchard <hollis_blanchard@mentor.com>
-Cc: Stuart Yoder <stuart.yoder@freescale.com>
----
- Documentation/powerpc/dts-bindings/open-pic.txt |   98 +++++++++++++++++++++++
- 1 files changed, 98 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/powerpc/dts-bindings/open-pic.txt
-
-diff --git a/Documentation/powerpc/dts-bindings/open-pic.txt b/Documentation/powerpc/dts-bindings/open-pic.txt
-new file mode 100644
-index 0000000..909a902
---- /dev/null
-+++ b/Documentation/powerpc/dts-bindings/open-pic.txt
-@@ -0,0 +1,98 @@
-+* Open PIC Binding
-+
-+This binding specifies what properties must be available in the device tree
-+representation of an Open PIC compliant interrupt controller.  This binding is
-+based on the binding defined for Open PIC in [1] and is a superset of that
-+binding.
-+
-+Required properties:
-+
-+  NOTE: Many of these descriptions were paraphrased here from [1] to aid
-+        readability.
-+
-+    - compatible: Specifies the compatibility list for the PIC.  The type
-+      shall be <string> and the value shall include "open-pic".
-+
-+    - reg: Specifies the base physical address(s) and size(s) of this
-+      PIC's addressable register space.  The type shall be <prop-encoded-array>.
-+
-+    - interrupt-controller: The presence of this property identifies the node
-+      as an Open PIC.  No property value shall be defined.
-+
-+    - #interrupt-cells: Specifies the number of cells needed to encode an
-+      interrupt source.  The type shall be a <u32> and the value shall be 2.
-+
-+    - #address-cells: Specifies the number of cells needed to encode an
-+      address.  The type shall be <u32> and the value shall be 0.  As such,
-+      'interrupt-map' nodes do not have to specify a parent unit address.
-+
-+Optional properties:
-+
-+    - pic-no-reset: The presence of this property indicates that the PIC
-+      shall not be reset during runtime initialization.  No property value shall
-+      be defined.  The presence of this property also mandates that any
-+      initialization related to interrupt sources shall be limited to sources
-+      explicitly referenced in the device tree.
-+
-+* Interrupt Specifier Definition
-+
-+  Interrupt specifiers consists of 2 cells encoded as
-+  follows:
-+
-+    - <1st-cell>: The interrupt-number that identifies the interrupt source.
-+
-+    - <2nd-cell>: The level-sense information, encoded as follows:
-+                    0 = low-to-high edge triggered
-+                    1 = active low level-sensitive
-+                    2 = active high level-sensitive
-+                    3 = high-to-low edge triggered
-+
-+* Examples
-+
-+Example 1:
-+
-+	/*
-+	 * An Open PIC interrupt controller
-+	 */
-+	mpic: pic@40000 {
-+		// This is an interrupt controller node.
-+		interrupt-controller;
-+
-+		// No address cells so that 'interrupt-map' nodes which reference
-+		// this Open PIC node do not need a parent address specifier.
-+		#address-cells = <0>;
-+
-+		// Two cells to encode interrupt sources.
-+		#interrupt-cells = <2>;
-+
-+		// Offset address of 0x40000 and size of 0x40000.
-+		reg = <0x40000 0x40000>;
-+
-+		// Compatible with Open PIC.
-+		compatible = "open-pic";
-+
-+		// The PIC shall not be reset.
-+		pic-no-reset;
-+	};
-+
-+Example 2:
-+
-+	/*
-+	 * An interrupt generating device that is wired to an Open PIC.
-+	 */
-+	serial0: serial@4500 {
-+		// Interrupt source '42' that is active high level-sensitive.
-+		// Note that there are only two cells as specified in the interrupt
-+		// parent's '#interrupt-cells' property.
-+		interrupts = <42 2>;
-+
-+		// The interrupt controller that this device is wired to.
-+		interrupt-parent = <&mpic>;
-+	};
-+
-+* References
-+
-+[1] Power.org (TM) Standard for Embedded Power Architecture (TM) Platform
-+    Requirements (ePAPR), Version 1.0, July 2008.
-+    (http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf)
-+
--- 
-1.6.3.3
+T24gVGh1LCAyNCBGZWIgMjAxMSAyMzowNjowNiAtMDcwMApHcmFudCBMaWtlbHkgPGdyYW50Lmxp
+a2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgoKPiBPbiBUaHUsIEZlYiAyNCwgMjAxMSBhdCAxOjAx
+IFBNLCBBbmRyZXMgU2Fsb21vbiA8ZGlsaW5nZXJAcXVldWVkLm5ldD4KPiB3cm90ZToKPiA+IE9u
+IFRodSwgMjQgRmViIDIwMTEgMTI6NDI6MzQgLTA3MDAKPiA+IEdyYW50IExpa2VseSA8Z3JhbnQu
+bGlrZWx5QHNlY3JldGxhYi5jYT4gd3JvdGU6Cj4gPj4gSWYgZmlybXdhcmUgaXMgYnVnZ3ksIHRo
+ZW4gcGtnMnBhdGggbXVzdCBkZWFsIHdpdGggaXQuIMKgSXQgaXMgbm90Cj4gPj4gb2theSBmb3Ig
+aXQgdG8gcmV0dXJuIE5VTEwuIMKgKEkga25vdyB0aGF0IHBrZzJwYXRoIGlzIGFuIE9GVwo+ID4+
+IGNvbW1hbmQsIGJ1dCBpbiB0aGlzIGNvbnRleHQgaXQgcmVhbGx5IG1lYW5zIHRoZSBsaW51eCB3
+cmFwcGVyIHRvCj4gPj4gcGtnMnBhdGggd2hpY2ggaGFzIHRoZSBzZW1hbnRpY3MsICJnaXZlIG1l
+IHRoZSB1bmlxdWUsIGZ1bGwgYW5kCj4gPj4gYWNjdXJhdGUgcGF0aCBmb3IgdGhpcyBub2RlIiku
+IMKgSWYgT0ZXIHBrZzJwYXRoIGRvZXNuJ3Qgd29yaywgdGhlbgo+ID4+IHRoZSBwbGF0Zm9ybSBj
+b2RlIG11c3Qgd29yayBhcm91bmQgaXQuIMKgSSdtIHB1c2hpbmcgYmFjayBvbiB0aGlzCj4gPj4g
+YmVjYXVzZSBJIGRvIG5vdCB3YW50IHRvIHNlZSBwbGF0Zm9ybSB3b3JrYXJvdW5kcyBpbiB0aGUg
+Y29tbW9uCj4gPj4gY29kZS4KPiA+Cj4gPiBJJ20gZmluZSB3aXRoIHRoYXQsIEkganVzdCBkb24n
+dCB3YW50IHRvIHNlZSBCVUcoKSBoYXBwZW5pbmcgdGhhdAo+ID4gZWFybHkuIMKgSSB0aGluayBh
+IHdvcmthcm91bmQgc2hvdWxkIGJlIGhhbmRsZWQgaW4gY29tbW9uIGNvZGUuIMKgSQo+ID4gYWdy
+ZWUgdGhhdCBoZXJvaWMgd29ya2Fyb3VuZHMgZm9yIGZpcm13YXJlIGJ1Z3Mgc2hvdWxkIGJlIGhh
+bmRsZWQgaW4KPiA+IGFyY2gtc3BlY2lmaWMgcGtnMnBhdGggaG9va3MsIGJ1dCBhIHNpbXBsZSB3
+b3JrYXJvdW5kIGluIGNvbW1vbiBjb2RlCj4gPiBpcyBiZXR0ZXIgdGhhbiBqdXN0IGNyYXNoaW5n
+IGVhcmx5IGluIGJvb3QgKGltbykuCj4gCj4gQWxyaWdodCwgeW91J3ZlIHN3YXllZCBtZSBhIGJp
+dC4gIEkndmUgbWFkZSB0aGlzIGNoYW5nZSBhbmQgcHVzaGVkIGl0Cj4gb3V0IHRvIGRldmljZXRy
+ZWUvZXhwZXJpbWVudGFsLiAgSSd2ZSBhbHNvIHBpY2tlZCB1cCB5b3VyIG90aGVyIHBhdGNoLgo+
+ICBMZXQgbWUga25vdyBpZiBpdCB3b3JrcyBmb3IgeW91LgoKClRoYW5rcywgdGhhdCBsb29rcyBn
+b29kLiAgRmVlbCBmcmVlIHRvIHB1c2ggaW50byBuZXh0LgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlz
+dApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
+cy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
