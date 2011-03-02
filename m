@@ -1,8 +1,8 @@
 From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 1/4] ARM:boot:device tree: Allow the device tree binary
 	to be appended to zImage
-Date: Tue, 01 Mar 2011 17:41:54 -0800
-Message-ID: <4D6DA062.8010904@secretlab.ca>
+Date: Tue, 01 Mar 2011 18:13:23 -0800
+Message-ID: <4D6DA7C3.4040609@secretlab.ca>
 References: <20110228233153.24836.24176.stgit@riker>
 	<20110228233327.24836.94530.stgit@riker>
 	<alpine.LFD.2.00.1103010019160.10356@xanadu.home>
@@ -24,10 +24,7 @@ To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I have looked through, and I'm reworking the patch set. I have just one
-comment below.
-
-- John
+Comment/question below.
 
 On 02/28/2011 10:39 PM, Nicolas Pitre wrote:
 > On Mon, 28 Feb 2011, John Bonesio wrote:
@@ -179,6 +176,18 @@ On 02/28/2011 10:39 PM, Nicolas Pitre wrote:
 > At this point you should only keep track of the .bss displacement in 
 > addition to the delta offset in r0.  And if both are equal to zero then 
 > skip over the fixup loop as before.
+
+Maybe I'm not understanding correctly. I think that if there is an
+appended dtb, then there are sections like the code and data that needs
+to be adjusted by the old r0 value, while the bss and the stack need to
+be adjusted by the old r0 + dtb size.
+
+If my understanding is right, then we can't just add the dtb size to r0
+and adjust everything.
+
+Am I missing something?
+
+
 > 
 >>  1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
 >>  		add	r1, r1, r0		@ table.  This fixes up the
@@ -209,11 +218,6 @@ On 02/28/2011 10:39 PM, Nicolas Pitre wrote:
 >> +		addcs	sp, sp, r5
 > 
 > This will always be true as this is within #ifndef CONFIG_ZBOOT_ROM.
-
-Right now sp will always be above r6. I thought it might be prudent to
-add the test in case the linker script changed and the stack was placed
-elsewhere. It might save someone a headache later.
-
 > 
 >>  #else
 >>  
