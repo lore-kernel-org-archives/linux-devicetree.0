@@ -1,15 +1,11 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] powerpc: make MPIC honor the "pic-no-reset"
-	device tree property
-Date: Wed, 02 Mar 2011 14:22:20 +1100
-Message-ID: <1299036140.8833.818.camel@pasglop>
-References: <1298671177-19572-1-git-send-email-meador_inge@mentor.com>
-	<1298671177-19572-3-git-send-email-meador_inge@mentor.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [git pull] device tree bug fixes
+Date: Wed, 2 Mar 2011 14:38:52 -0700
+Message-ID: <AANLkTimvaSwM0NmjWEC0S=uRCdc6MmSzB-3xqhTV7Y=y@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1298671177-19572-3-git-send-email-meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,155 +15,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
-> diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
-> index e000cce..7e1be12 100644
-> --- a/arch/powerpc/include/asm/mpic.h
-> +++ b/arch/powerpc/include/asm/mpic.h
-> @@ -325,6 +325,8 @@ struct mpic
->  #ifdef CONFIG_PM
->  	struct mpic_irq_save	*save_data;
->  #endif
-> +
-> +	int cpu;
->  };
+A few more patches for .28
 
-Why ? The MPIC isn't specifically associated with a CPU and whatever we
-pick as default during boot isn't relevant later on, so I don't see why
-we should have global permanent state here.
->  
-> +static inline void mpic_init_vector(struct mpic *mpic, int source)
-> +{
-> +	/* start with vector = source number, and masked */
-> +	u32 vecpri = MPIC_VECPRI_MASK | source | (8 << MPIC_VECPRI_PRIORITY_SHIFT);
-> +
-> +	/* init hw */
-> +	mpic_irq_write(source, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
-> +	mpic_irq_write(source, MPIC_INFO(IRQ_DESTINATION), 1 << mpic->cpu);
-> +}
+The following changes since commit dd9c1549edef02290edced639f67b54a25abbe0e:
 
-Just pass the CPU as an argument... but better... just don't do that,
-put the code back where it was and ... see below :-)
- 
->  /* Check if we have one of those nice broken MPICs with a flipped endian on
-> @@ -622,6 +631,14 @@ static unsigned int mpic_is_ipi(struct mpic *mpic, unsigned int irq)
->  	return (src >= mpic->ipi_vecs[0] && src <= mpic->ipi_vecs[3]);
->  }
->  
-> +/* Determine if the linux irq is a timer interrupt */
-> +static unsigned int mpic_is_timer_interrupt(struct mpic *mpic, unsigned int irq)
-> +{
-> +	unsigned int src = mpic_irq_to_hw(irq);
-> +
-> +	return (src >= mpic->timer_vecs[0] && src <= mpic->timer_vecs[3]);
-> +}
-> +
->  
->  /* Convert a cpu mask from logical to physical cpu numbers. */
->  static inline u32 mpic_physmask(u32 cpumask)
-> @@ -967,6 +984,15 @@ static int mpic_host_map(struct irq_host *h, unsigned int virq,
->  	if (hw >= mpic->irq_count)
->  		return -EINVAL;
->  
-> +	/* If the MPIC was reset, then all vectors have already been
-> +	 * initialized.  Otherwise, the appropriate vector needs to be
-> +	 * initialized here to ensure that only used sources are setup with
-> +	 * a vector.
-> +	 */
-> +	if (mpic->flags & MPIC_NO_RESET)
-> +		if (!(mpic_is_ipi(mpic, hw) || mpic_is_timer_interrupt(mpic, hw)))
-> +			mpic_init_vector(mpic, hw);
-> +
+  Linux 2.6.38-rc7 (2011-03-01 13:55:12 -0800)
 
-The above isn't useful. Of those two registers you want to initialize,
-afaik, one (the destination) will be initialized by the core calling
-into set_affinity when the interrupt is requested, and the other one is
-partially initialized in set_type, I'd say just modify set_type to
-initialize the source as well, and problem solved, no ? Or is there a
-chance that the interrupt was left unmasked ? I think it would be kosher
-to mask it in set_type unconditionally, I don't think it's ever supposed
-to be called for an enabled interrupt.
+are available in the git repository at:
+  git://git.secretlab.ca/git/linux-2.6 devicetree/merge
 
->  	mpic_msi_reserve_hwirq(mpic, hw);
->  
->  	/* Default chip */
-> @@ -1033,6 +1059,11 @@ static struct irq_host_ops mpic_host_ops = {
->  	.xlate = mpic_host_xlate,
->  };
->  
-> +static int mpic_reset_prohibited(struct device_node *node)
-> +{
-> +	return node && of_get_property(node, "pic-no-reset", NULL);
-> +}
-> +
->  /*
->   * Exported functions
->   */
-> @@ -1153,7 +1184,16 @@ struct mpic * __init mpic_alloc(struct device_node *node,
->  	mpic_map(mpic, node, paddr, &mpic->tmregs, MPIC_INFO(TIMER_BASE), 0x1000);
->  
->  	/* Reset */
-> -	if (flags & MPIC_WANTS_RESET) {
-> +
-> +	/* When using a device-node, reset requests are only honored if the MPIC
-> +	 * is allowed to reset.
-> +	 */
-> +	if (mpic_reset_prohibited(node)) {
-> +		mpic->flags |= MPIC_NO_RESET;
-> +	}
+Andres Salomon (2):
+      x86: OLPC: have prom_early_alloc BUG rather than return NULL
+      of/promtree: allow DT device matching by fixing 'name' brokenness (v5)
 
-No { } for single line nested statements
+Michal Simek (1):
+      of: Add missing of_address.h to xilinx ehci driver
 
-> +	if ((flags & MPIC_WANTS_RESET) && !(mpic->flags & MPIC_NO_RESET)) {
-> +		printk(KERN_DEBUG "mpic: Resetting\n");
->  		mpic_write(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0),
->  			   mpic_read(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0))
->  			   | MPIC_GREG_GCONF_RESET);
-> @@ -1270,7 +1310,6 @@ void __init mpic_set_default_senses(struct mpic *mpic, u8 *senses, int count)
->  void __init mpic_init(struct mpic *mpic)
->  {
->  	int i;
-> -	int cpu;
->  
->  	BUG_ON(mpic->num_sources == 0);
->  
-> @@ -1314,21 +1353,17 @@ void __init mpic_init(struct mpic *mpic)
->  	mpic_pasemi_msi_init(mpic);
->  
->  	if (mpic->flags & MPIC_PRIMARY)
-> -		cpu = hard_smp_processor_id();
-> +		mpic->cpu = hard_smp_processor_id();
->  	else
-> -		cpu = 0;
-> +		mpic->cpu = 0;
+Paul Bolle (1):
+      of/flattree: Drop an uninteresting message to pr_debug level
 
-Get rid of all that.
- 
-> -	for (i = 0; i < mpic->num_sources; i++) {
-> -		/* start with vector = source number, and masked */
-> -		u32 vecpri = MPIC_VECPRI_MASK | i |
-> -			(8 << MPIC_VECPRI_PRIORITY_SHIFT);
-> -		
-> -		/* check if protected */
-> -		if (mpic->protected && test_bit(i, mpic->protected))
-> -			continue;
-> -		/* init hw */
-> -		mpic_irq_write(i, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
-> -		mpic_irq_write(i, MPIC_INFO(IRQ_DESTINATION), 1 << cpu);
-> +	if (!(mpic->flags & MPIC_NO_RESET)) {
-> +		for (i = 0; i < mpic->num_sources; i++) {
-> +			/* check if protected */
-> +			if (mpic->protected && test_bit(i, mpic->protected))
-> +				continue;
-> +			mpic_init_vector(mpic, i);
-> +		}
->  	}
->  	
->  	/* Init spurious vector */
+ arch/x86/platform/olpc/olpc_dt.c  |    3 +-
+ drivers/of/pdt.c                  |  112 ++++++++++++++-----------------------
+ drivers/usb/host/ehci-xilinx-of.c |    1 +
+ fs/proc/proc_devtree.c            |    2 +-
+ 4 files changed, 45 insertions(+), 73 deletions(-)
 
-Cheers,
-Ben.
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
