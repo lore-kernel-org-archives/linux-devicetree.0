@@ -1,14 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: Make of_find_node_by_path() traverse /aliases for
-	relative paths.
-Date: Tue, 1 Mar 2011 17:56:22 -0700
-Message-ID: <AANLkTikUWwO_7-GFXJtvDmrib5LawVjgAqKmaGU=gJ75@mail.gmail.com>
-References: <1299021304-4703-1-git-send-email-ddaney@caviumnetworks.com>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM:boot:device tree: Allow the device tree binary
+	to be appended to zImage
+Date: Tue, 01 Mar 2011 17:41:54 -0800
+Message-ID: <4D6DA062.8010904@secretlab.ca>
+References: <20110228233153.24836.24176.stgit@riker>
+	<20110228233327.24836.94530.stgit@riker>
+	<alpine.LFD.2.00.1103010019160.10356@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1299021304-4703-1-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1103010019160.10356-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,92 +20,242 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 1, 2011 at 4:15 PM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wro=
-te:
-> Currently all paths passed to of_find_node_by_path() must begin with a
-> '/', indicating a full path to the desired node.
->
-> Augment the look-up code so that if a path does *not* begin with '/',
-> the path is used as the name of an /aliases property. =A0The value of
-> this alias is then used as the full node path to be found.
+I have looked through, and I'm reworking the patch set. I have just one
+comment below.
 
-Nice, thanks David!
+- John
 
-However, there is one more use case that this patch needs to handle.
-Right now it will support:
+On 02/28/2011 10:39 PM, Nicolas Pitre wrote:
+> On Mon, 28 Feb 2011, John Bonesio wrote:
+> 
+>> This patch provides the ability to boot using a device tree that is appended
+>> to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+>>
+>> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> Comments below.
+> 
+>> ---
+>>
+>>  arch/arm/Kconfig                |    7 +++
+>>  arch/arm/boot/compressed/head.S |   93 ++++++++++++++++++++++++++++++++++++---
+>>  2 files changed, 94 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index d8a330f..68fc640 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -1593,6 +1593,13 @@ config USE_OF
+>>  	help
+>>  	  Include support for flattened device tree machine descriptions.
+>>  
+>> +config ARM_APPENDED_DTB
+>> +       bool "Use appended device tree blob" if OF
+>> +       default n
+> 
+> The default is n by default, so you don't need to mention it.
+> 
+> Also this should depend on OF (CONFIG_OF).
+> 
+>> +       help
+>> +         With this option, the boot code will look for a dtb bianry
+> 
+> s/bianry/binary/
+> 
+> Since this is an help text for people who might not have a clue about 
+> "dtb", it would be better to spell it out.
+> 
+>> +         appended to zImage.
+>> +
+>>  # Compressed boot loader in ROM.  Yes, we really want to ask about
+>>  # TEXT and BSS so we preserve their values in the config files.
+>>  config ZBOOT_ROM_TEXT
+>> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+>> index 200625c..ae9f8c6 100644
+>> --- a/arch/arm/boot/compressed/head.S
+>> +++ b/arch/arm/boot/compressed/head.S
+>> @@ -210,6 +210,46 @@ restart:	adr	r0, LC0
+>>  		 */
+>>  		mov	r10, r6
+>>  #endif
+>> +#ifdef CONFIG_ARM_APPENDED_DTB
+>> +/*
+>> + *   r0  = delta
+>> + *   r2  = BSS start
+>> + *   r3  = BSS end
+>> + *   r4  = final kernel address
+>> + *   r5  = start of this image
+>> + *   r6  = _edata
+>> + *   r7  = architecture ID
+>> + *   r8  = atags/device tree pointer
+>> + *   r9  = size of decompressed image
+>> + *   r10 = end of this image, including  bss/stack/malloc space if non XIP
+>> + *   r11 = GOT start
+>> + *   r12 = GOT end
+>> + *
+>> + * if there are device trees (dtb) appended to zImage, advance r10 so that the
+>> + * dtb data will get relocated along with the kernel if necessary.
+>> + */
+>> +
+>> +		ldr	r12, [r6, #0]
+>> +		ldr	r1, =0xedfe0dd0		@ sig is 0xdoodfeed big endian
+>> +		cmp	r12, r1
+>> +		bne	dtb_check_done
+>> +
+>> +		/* Get the dtb's size */
+>> +		ldr	r12, [r6, #4]		@ device tree size
+>> +
+>> +		/* convert r12 (dtb size) to little endian */
+>> +		eor	r1, r12, r12, ror #16
+>> +		bic	r1, r1, #0x00ff0000
+>> +		mov	r12, r12, ror #8
+>> +		eor	r12, r12, r1, lsr #8
+>> +
+>> +		add	r10, r10, r12
+>> +		add	r6, r6, r12
+>> +
+>> +dtb_check_done:
+>> +		adr	r1, LC0
+>> +		ldr	r12, [r1, #28]		@ restore r12 (GOT end)
+>> +#endif
+> 
+> Instead of clobbering r12, you could use lr instead.
+> 
+> The byte swap on the size should be done only if __ARMEB__ is not 
+> defined i.e. #ifndef __ARMEB__ ...
+> 
+> Also the DT signature should be endian aware.
+> 
+>>  /*
+>>   * Check to see if we will overwrite ourselves.
+>> @@ -223,8 +263,8 @@ restart:	adr	r0, LC0
+>>   */
+>>  		cmp	r4, r10
+>>  		bhs	wont_overwrite
+>> -		add	r10, r4, r9
+>> -		cmp	r10, r5
+>> +		add	r1, r4, r9
+>> +		cmp	r1, r5
+>>  		bls	wont_overwrite
+>>  
+>>  /*
+>> @@ -272,8 +312,10 @@ wont_overwrite:
+>>   *   r12 = GOT end
+>>   *   sp  = stack pointer
+>>   */
+>> -		teq	r0, #0
+>> -		beq	not_relocated
+>> +		adr	r1, LC0
+>> +		ldr	r6, [r1, #16]		@ reload _edata value
+> 
+> Why?
+> 
+>> +
+>> +		add	r6, r6, r0
+>>  		add	r11, r11, r0
+>>  		add	r12, r12, r0
+>>  
+>> @@ -288,12 +330,34 @@ wont_overwrite:
+>>  
+>>  		/*
+>>  		 * Relocate all entries in the GOT table.
+>> +		 * Bump bss entries to past image end (r10)
+>>  		 */
+>> +		sub	r5, r10, r6		@ delta of image end and _edata
+>> +		add	r5, r5, #7		@ ... rounded up to a multiple
+>> +		bic	r5, r5, #7		@ ... of 8 bytes, so misaligned
+>> +		             	 		@ ... GOT entry doesn't
+>> +		             	 		@ ... overwrite end of image
+> 
+> This is wrong. You are going to displace the .bss pointers even if they 
+> don't need that in the case where no dtb was found.  And if a dtb was 
+> found the displacement is going to be the size of the dtb _plus_ the 
+> size of the .bss_stack instead of only the dtb size.
+> 
+> At this point you should only keep track of the .bss displacement in 
+> addition to the delta offset in r0.  And if both are equal to zero then 
+> skip over the fixup loop as before.
+> 
+>>  1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
+>>  		add	r1, r1, r0		@ table.  This fixes up the
+>> +		cmp	r1, r2
+>> +		movcc	r9, #0			@ r9 = entry < bss_start ? 0 :
+>> +		movcs	r9, #1			@      1;
+>> +		cmp	r1, r3
+>> +		movcs	r9, #0			@ r9 = entry >= end ? 0 : t1;
+>> +		cmp	r9, #0
+>> +		addne	r1, r5			@ entry += r9 ? bss delta : 0;
+> 
+> The above would be much more elegant if written like this:
+> 
+> 		cmp	r1, r2
+> 		cmphs	r3, r1
+> 		addhi	r1, r5
+> 
+>>  		str	r1, [r11], #4		@ C references.
+>>  		cmp	r11, r12
+>>  		blo	1b
+>> +
+>> +		/* bump our bss registers too */
+>> +		add	r2, r2, r5
+>> +		add	r3, r3, r5
+>> +
+>> +		/* bump the stack pinter, if at or above _edata */
+>> +		cmp	sp, r6
+>> +		addcs	sp, sp, r5
+> 
+> This will always be true as this is within #ifndef CONFIG_ZBOOT_ROM.
 
-"/full/path/to/node"
-and
-"alias"
+Right now sp will always be above r6. I thought it might be prudent to
+add the test in case the linker script changed and the stack was placed
+elsewhere. It might save someone a headache later.
 
-but in OF terms it is also valid to specify:
-
-"alias/relative/path/to/child"
-
-How I would handle this is to split on the first '/', use the front
-half to look up the path to the alias, and then concatenate the alias
-path with the child node relative path before doing the full lookup.
-Although that might not be the best way since it requires doing a copy
-to a temporary buffer.
-
-Alternately, it could be implemented with a multi test loop that does
-something like:
-
-for (; np; np =3D np->allnext) {
-        int len =3D strlen(alias_path);
-        if (np->full_name &&
-            (strncmp(np->full_name, alias_path, len) =3D=3D 0) &&
-            (np->full_name[len] =3D=3D '/') &&
-            (strncmp(&np->full_name[len+1], relative_path,
-strlen(relative_path)) =3D=3D 0)) {
-                of_node_get(np);
-                goto out;
-        }
-}
-
-
-[...]
-> +
-> + =A0 =A0 =A0 if (path[0] !=3D '/') {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 aliases =3D of_find_node_by_path("/aliases"=
-);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!aliases)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto out;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 path =3D of_get_property(aliases, path, NUL=
-L);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /*
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* The alias must begin with '/', otherwi=
-se we could
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* get stuck in an endless loop and blow =
-out the
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0* stack.
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*/
-
-I don't think this is true (the endless loop part).  I don't see how
-this would enter into a recursive set of calls other than the call
-of_find_node_by_path("/aliases") which is hard coded with a '/' in the
-first character.  The test for path[0] !=3D '/' looks unnecessary, or am
-I missing something?
-
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!path || path[0] !=3D '/')
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto out;
-> + =A0 =A0 =A0 }
-> +
-> =A0 =A0 =A0 =A0for (; np; np =3D np->allnext) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (np->full_name && (of_node_cmp(np->full=
-_name, path) =3D=3D 0)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&& of_node_get(np))
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
-> =A0 =A0 =A0 =A0}
-> +out:
-> + =A0 =A0 =A0 if (aliases)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_node_put(aliases);
-
-Since there is only one error path that needs to do this
-of_node_put(), I'd put it right into the error path and save one test.
-
-g.
+> 
+>>  #else
+>>  
+>>  		/*
+>> @@ -309,7 +373,7 @@ wont_overwrite:
+>>  		blo	1b
+>>  #endif
+>>  
+>> -not_relocated:	mov	r0, #0
+>> +		mov	r0, #0
+>>  1:		str	r0, [r2], #4		@ clear bss
+>>  		str	r0, [r2], #4
+>>  		str	r0, [r2], #4
+>> @@ -317,8 +381,25 @@ not_relocated:	mov	r0, #0
+>>  		cmp	r2, r3
+>>  		blo	1b
+>>  
+>> +#ifdef CONFIG_ARM_APPENDED_DTB
+>> +/*
+>> + * The C runtime environment should now be set up sufficiently.
+>> + *   r4  = kernel execution address
+>> + *   r6  = _edata
+>> + *   r7  = architecture ID
+>> + *   r8  = atags pointer
+>> + *
+>> + * if there is a device tree (dtb) appended to zImage, set up to use this dtb.
+>> + */
+>> +		ldr	r0, [r6, #0]
+>> +		ldr	r1, =0xedfe0dd0		@ sig is 0xdoodfeed big endian
+>> +		cmp	r0, r1
+>> +		bne	keep_atags
+>> +
+>> +		mov	r8, r6			@ use the appended device tree
+> 
+> You should have updated r8 the moment you knew you have a valid dtb 
+> earlier instead of duplicating this test here.
+> 
+>> +keep_atags:
+>> +#endif
+>>  /*
+>> - * The C runtime environment should now be setup sufficiently.
+>>   * Set up some pointers, and start decompressing.
+>>   *   r4  = kernel execution address
+>>   *   r7  = architecture ID
+>>
