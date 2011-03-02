@@ -1,17 +1,15 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM:boot:device tree: Allow the device tree binary
-	to be appended to zImage
-Date: Tue, 1 Mar 2011 21:57:18 -0500 (EST)
-Message-ID: <alpine.LFD.2.00.1103012139070.9350@xanadu.home>
-References: <20110228233153.24836.24176.stgit@riker>
-	<20110228233327.24836.94530.stgit@riker>
-	<alpine.LFD.2.00.1103010019160.10356@xanadu.home>
-	<4D6DA7C3.4040609@secretlab.ca>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] powerpc: make MPIC honor the "pic-no-reset"
+	device tree property
+Date: Wed, 02 Mar 2011 14:22:20 +1100
+Message-ID: <1299036140.8833.818.camel@pasglop>
+References: <1298671177-19572-1-git-send-email-meador_inge@mentor.com>
+	<1298671177-19572-3-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D6DA7C3.4040609-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <1298671177-19572-3-git-send-email-meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,61 +19,155 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 1 Mar 2011, John Bonesio wrote:
 
-> Comment/question below.
-> 
-> On 02/28/2011 10:39 PM, Nicolas Pitre wrote:
-> > On Mon, 28 Feb 2011, John Bonesio wrote:
-> > 
-> >> @@ -288,12 +330,34 @@ wont_overwrite:
-> >>  
-> >>  		/*
-> >>  		 * Relocate all entries in the GOT table.
-> >> +		 * Bump bss entries to past image end (r10)
-> >>  		 */
-> >> +		sub	r5, r10, r6		@ delta of image end and _edata
-> >> +		add	r5, r5, #7		@ ... rounded up to a multiple
-> >> +		bic	r5, r5, #7		@ ... of 8 bytes, so misaligned
-> >> +		             	 		@ ... GOT entry doesn't
-> >> +		             	 		@ ... overwrite end of image
-> > 
-> > This is wrong. You are going to displace the .bss pointers even if they 
-> > don't need that in the case where no dtb was found.  And if a dtb was 
-> > found the displacement is going to be the size of the dtb _plus_ the 
-> > size of the .bss_stack instead of only the dtb size.
-> > 
-> > At this point you should only keep track of the .bss displacement in 
-> > addition to the delta offset in r0.  And if both are equal to zero then 
-> > skip over the fixup loop as before.
-> 
-> Maybe I'm not understanding correctly. I think that if there is an
-> appended dtb, then there are sections like the code and data that needs
-> to be adjusted by the old r0 value, while the bss and the stack need to
-> be adjusted by the old r0 + dtb size.
+> diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
+> index e000cce..7e1be12 100644
+> --- a/arch/powerpc/include/asm/mpic.h
+> +++ b/arch/powerpc/include/asm/mpic.h
+> @@ -325,6 +325,8 @@ struct mpic
+>  #ifdef CONFIG_PM
+>  	struct mpic_irq_save	*save_data;
+>  #endif
+> +
+> +	int cpu;
+>  };
 
-Exact.
+Why ? The MPIC isn't specifically associated with a CPU and whatever we
+pick as default during boot isn't relevant later on, so I don't see why
+we should have global permanent state here.
+>  
+> +static inline void mpic_init_vector(struct mpic *mpic, int source)
+> +{
+> +	/* start with vector = source number, and masked */
+> +	u32 vecpri = MPIC_VECPRI_MASK | source | (8 << MPIC_VECPRI_PRIORITY_SHIFT);
+> +
+> +	/* init hw */
+> +	mpic_irq_write(source, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
+> +	mpic_irq_write(source, MPIC_INFO(IRQ_DESTINATION), 1 << mpic->cpu);
+> +}
 
-> If my understanding is right, then we can't just add the dtb size to r0
-> and adjust everything.
+Just pass the CPU as an argument... but better... just don't do that,
+put the code back where it was and ... see below :-)
+ 
+>  /* Check if we have one of those nice broken MPICs with a flipped endian on
+> @@ -622,6 +631,14 @@ static unsigned int mpic_is_ipi(struct mpic *mpic, unsigned int irq)
+>  	return (src >= mpic->ipi_vecs[0] && src <= mpic->ipi_vecs[3]);
+>  }
+>  
+> +/* Determine if the linux irq is a timer interrupt */
+> +static unsigned int mpic_is_timer_interrupt(struct mpic *mpic, unsigned int irq)
+> +{
+> +	unsigned int src = mpic_irq_to_hw(irq);
+> +
+> +	return (src >= mpic->timer_vecs[0] && src <= mpic->timer_vecs[3]);
+> +}
+> +
+>  
+>  /* Convert a cpu mask from logical to physical cpu numbers. */
+>  static inline u32 mpic_physmask(u32 cpumask)
+> @@ -967,6 +984,15 @@ static int mpic_host_map(struct irq_host *h, unsigned int virq,
+>  	if (hw >= mpic->irq_count)
+>  		return -EINVAL;
+>  
+> +	/* If the MPIC was reset, then all vectors have already been
+> +	 * initialized.  Otherwise, the appropriate vector needs to be
+> +	 * initialized here to ensure that only used sources are setup with
+> +	 * a vector.
+> +	 */
+> +	if (mpic->flags & MPIC_NO_RESET)
+> +		if (!(mpic_is_ipi(mpic, hw) || mpic_is_timer_interrupt(mpic, hw)))
+> +			mpic_init_vector(mpic, hw);
+> +
 
-indeed.
+The above isn't useful. Of those two registers you want to initialize,
+afaik, one (the destination) will be initialized by the core calling
+into set_affinity when the interrupt is requested, and the other one is
+partially initialized in set_type, I'd say just modify set_type to
+initialize the source as well, and problem solved, no ? Or is there a
+chance that the interrupt was left unmasked ? I think it would be kosher
+to mask it in set_type unconditionally, I don't think it's ever supposed
+to be called for an enabled interrupt.
 
-> Am I missing something?
+>  	mpic_msi_reserve_hwirq(mpic, hw);
+>  
+>  	/* Default chip */
+> @@ -1033,6 +1059,11 @@ static struct irq_host_ops mpic_host_ops = {
+>  	.xlate = mpic_host_xlate,
+>  };
+>  
+> +static int mpic_reset_prohibited(struct device_node *node)
+> +{
+> +	return node && of_get_property(node, "pic-no-reset", NULL);
+> +}
+> +
+>  /*
+>   * Exported functions
+>   */
+> @@ -1153,7 +1184,16 @@ struct mpic * __init mpic_alloc(struct device_node *node,
+>  	mpic_map(mpic, node, paddr, &mpic->tmregs, MPIC_INFO(TIMER_BASE), 0x1000);
+>  
+>  	/* Reset */
+> -	if (flags & MPIC_WANTS_RESET) {
+> +
+> +	/* When using a device-node, reset requests are only honored if the MPIC
+> +	 * is allowed to reset.
+> +	 */
+> +	if (mpic_reset_prohibited(node)) {
+> +		mpic->flags |= MPIC_NO_RESET;
+> +	}
 
-Suppose that no dtb was found.  In that case, r10 is still pointing to 
-the top of the stack.  So r5 will contain the size of .bss and the 
-stack.  Then you bump .bss pointers in the GOT by that size.  If a dtb 
-was found then r5 ends up with the size of the dtb plus .bss plus stack.
+No { } for single line nested statements
 
-What I'm suggesting is that the size of the dtb be kept in a register of 
-its own up to this point.  That size can be 0 if none was found.  If
-r0 == 0 and dtb_size == 0 then the whole GOT fixup can be skipped as it 
-is done at the moment by branching to not_relocated.
+> +	if ((flags & MPIC_WANTS_RESET) && !(mpic->flags & MPIC_NO_RESET)) {
+> +		printk(KERN_DEBUG "mpic: Resetting\n");
+>  		mpic_write(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0),
+>  			   mpic_read(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0))
+>  			   | MPIC_GREG_GCONF_RESET);
+> @@ -1270,7 +1310,6 @@ void __init mpic_set_default_senses(struct mpic *mpic, u8 *senses, int count)
+>  void __init mpic_init(struct mpic *mpic)
+>  {
+>  	int i;
+> -	int cpu;
+>  
+>  	BUG_ON(mpic->num_sources == 0);
+>  
+> @@ -1314,21 +1353,17 @@ void __init mpic_init(struct mpic *mpic)
+>  	mpic_pasemi_msi_init(mpic);
+>  
+>  	if (mpic->flags & MPIC_PRIMARY)
+> -		cpu = hard_smp_processor_id();
+> +		mpic->cpu = hard_smp_processor_id();
+>  	else
+> -		cpu = 0;
+> +		mpic->cpu = 0;
 
+Get rid of all that.
+ 
+> -	for (i = 0; i < mpic->num_sources; i++) {
+> -		/* start with vector = source number, and masked */
+> -		u32 vecpri = MPIC_VECPRI_MASK | i |
+> -			(8 << MPIC_VECPRI_PRIORITY_SHIFT);
+> -		
+> -		/* check if protected */
+> -		if (mpic->protected && test_bit(i, mpic->protected))
+> -			continue;
+> -		/* init hw */
+> -		mpic_irq_write(i, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
+> -		mpic_irq_write(i, MPIC_INFO(IRQ_DESTINATION), 1 << cpu);
+> +	if (!(mpic->flags & MPIC_NO_RESET)) {
+> +		for (i = 0; i < mpic->num_sources; i++) {
+> +			/* check if protected */
+> +			if (mpic->protected && test_bit(i, mpic->protected))
+> +				continue;
+> +			mpic_init_vector(mpic, i);
+> +		}
+>  	}
+>  	
+>  	/* Init spurious vector */
 
-Nicolas
+Cheers,
+Ben.
