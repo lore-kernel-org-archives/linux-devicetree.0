@@ -1,64 +1,62 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCH] hwmon: (ads1015) Add devicetree documentation
-Date: Thu, 3 Mar 2011 13:20:25 +0100
-Message-ID: <20110303132025.51e0d92e@endymion.delvare>
-References: <1299143805-13133-1-git-send-email-eibach@gdsys.de>
-	<20110303115151.GF3649@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
+From: Dirk Eibach <eibach@gdsys.de>
+Subject: [PATCH v3] hwmon: (ads1015) Add devicetree documentation
+Date: Thu,  3 Mar 2011 13:32:37 +0100
+Message-ID: <1299155557-13715-1-git-send-email-eibach@gdsys.de>
+References: <20110303115151.GF3649@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20110303115151.GF3649@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: Dirk Eibach <eibach@gdsys.de>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, rdunlap@xenotime.net, devicetree-discuss@lists.ozlabs.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, rdunlap@xenotime.net, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de, khali@linux-fr.org, Dirk Eibach <eibach@gdsys.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Signed-off-by: Dirk Eibach <eibach@gdsys.de>
+---
+Changes since v1:
+- removed sysfs from description
+- explain channels 
 
-On Thu, 3 Mar 2011 12:51:51 +0100, Wolfram Sang wrote:
-> On Thu, Mar 03, 2011 at 10:16:45AM +0100, Dirk Eibach wrote:
-> > Signed-off-by: Dirk Eibach <eibach@gdsys.de>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/ads1015.txt |   15 +++++++++++++++
-> >  1 files changed, 15 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
-> > new file mode 100644
-> > index 0000000..3a7d67a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i2c/ads1015.txt
-> > @@ -0,0 +1,15 @@
-> > +ADS1015 (I2C)
-> > +
-> > +Optional properties:
-> > +
-> > + - exported-channels : exported_channels is a bitmask that specifies which
-> > +		       inputs should be exported to sysfs.
-> 
-> Hmm, device tree bindings should be OS-neutral, sysfs is not.
+Changes since v2:
+- Replaced 'accessable' by 'accessible'.
 
-Why do we document this in the Linux kernel tree then?
+ Documentation/devicetree/bindings/i2c/ads1015.txt |   29 +++++++++++++++++++++
+ 1 files changed, 29 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
 
-> Maybe
-> "active-channels" would be better; then the OS could decide what to do
-> with the active channels. Then again, what is the drawback of exporting
-> all channels?
-
-Performance and user-friendliness. libsensors-based applications will
-read all available attributes by default, and each reading takes time.
-Letting the platform declare how the inputs are used allows for a sane
-output for "sensors" and other similar tools out of the box, without
-the user having to tinker with ignore statements in configuration files
-to discard the nonsensical values.
-
-> Is there another hwmon-driver doing so (couldn't find one)?
-
-If "doing so" means "letting the user define how the ADC inputs are
-used", then yes, the pcf8591 driver does something similar, except that
-it uses a module parameter for the setting, for historical reasons.
-Platform-provided, per-device data is better in my opinion.
-
+diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
+new file mode 100644
+index 0000000..985e24d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/ads1015.txt
+@@ -0,0 +1,29 @@
++ADS1015 (I2C)
++
++This device is a 12-bit A-D converter with 4 inputs.
++
++The inputs can be used single ended or in certain differential combinations.
++
++For configuration all possible combinations are mapped to 8 channels:
++0: Voltage over AIN0 and AIN1.
++1: Voltage over AIN0 and AIN3.
++2: Voltage over AIN1 and AIN3.
++3: Voltage over AIN2 and AIN3.
++4: Voltage over AIN0 and GND.
++5: Voltage over AIN1 and GND.
++6: Voltage over AIN2 and GND.
++7: Voltage over AIN3 and GND.
++
++Optional properties:
++
++ - exported-channels : exported_channels is a bitmask that specifies which
++		       channels should be accessible by the user.
++
++Example:
++ads1015@49 {
++	compatible = "ti,ads1015";
++	reg = <0x49>;
++	exported-channels = <0x14>;
++};
++
++In this example only channel 2 and 4 would be accessible by the user.
 -- 
-Jean Delvare
+1.5.6.5
