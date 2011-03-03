@@ -1,15 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2] hwmon: (ads1015) Add devicetree documentation
-Date: Thu, 3 Mar 2011 10:53:28 -0700
-Message-ID: <20110303175328.GE22940@angua.secretlab.ca>
-References: <20110303102157.GC3649@pengutronix.de>
-	<1299154757-13682-1-git-send-email-eibach@gdsys.de>
+From: Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v4] hwmon: Add support for Texas Instruments ADS1015
+Date: Thu, 3 Mar 2011 11:47:47 -0800
+Message-ID: <20110303194747.GB31661@suse.de>
+References: <1299138343-12773-1-git-send-email-eibach@gdsys.de>
+	<20110303175050.GC22940@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1299154757-13682-1-git-send-email-eibach-dJ+jgKLZIg4@public.gmane.org>
+In-Reply-To: <20110303175050.GC22940-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,70 +19,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dirk Eibach <eibach-dJ+jgKLZIg4@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Dirk Eibach <eibach-dJ+jgKLZIg4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kay Sievers <kay.sievers-tD+1rO4QERM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 03, 2011 at 01:19:17PM +0100, Dirk Eibach wrote:
-> Signed-off-by: Dirk Eibach <eibach-dJ+jgKLZIg4@public.gmane.org>
-> ---
-> Changes since v1:
-> - removed sysfs from description
-> - explain channels 
+On Thu, Mar 03, 2011 at 10:50:50AM -0700, Grant Likely wrote:
+> > +	i2c_set_clientdata(client, data);
+> > +	mutex_init(&data->update_lock);
+> > +
+> > +	/* build sysfs attribute group */
+> > +	data->attr_group.attrs = data->attr_table;
+> > +	exported_channels = ads1015_get_exported_channels(client);
+> > +	for (k = 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
+> > +		if (!(exported_channels & (1<<k)))
+> > +			continue;
+> > +		data->attr_table[n++] =
+> > +			all_attributes[k];
+> > +	}
+> > +	err = sysfs_create_group(&client->dev.kobj, &data->attr_group);
+> > +	if (err)
+> > +		goto exit_free;
 > 
->  Documentation/devicetree/bindings/i2c/ads1015.txt |   29 +++++++++++++++++++++
->  1 files changed, 29 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
+> I suspect there are lifecycle issues here.  Attributes should not be
+> added to a device after the device is registered.  If adding
+> attributes, then a new struct device should be allocated, added to the
+> attribute group, and then registered as a child of the i2c_device.
+> Otherwise the attributes are not available at uevent time, which means
+> userspace (udev) may not be able to do the right things with the
+> device when the device appears.
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
-> new file mode 100644
-> index 0000000..0f30616
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/ads1015.txt
+> Kay/GregKH, do I have this right?
 
-While this device is on an i2c bus, it is a hwmon device.  Similar to
-hwmon drivers, the documentation makes more sense in
-Documentation/devicetree/bindings/hwmon/ti-ads1015.txt
+You have it right that the attributes need to be added earlier, yes.
+But I don't recommend using a whole new struct device for this, each
+subsystem should have a way to add groups of attributes for their
+devices to properly show up before the uevent happens.
 
-> @@ -0,0 +1,29 @@
-> +ADS1015 (I2C)
-> +
-> +This device is a 12-bit A-D converter with 4 inputs.
-> +
-> +The inputs can be used single ended or in certain differential combinations.
-> +
-> +For configuration all possible combinations are mapped to 8 channels:
-> +0: Voltage over AIN0 and AIN1.
-> +1: Voltage over AIN0 and AIN3.
-> +2: Voltage over AIN1 and AIN3.
-> +3: Voltage over AIN2 and AIN3.
-> +4: Voltage over AIN0 and GND.
-> +5: Voltage over AIN1 and GND.
-> +6: Voltage over AIN2 and GND.
-> +7: Voltage over AIN3 and GND.
-> +
+I don't recall what the hwmon subsystem does for this, I'm sure it is
+somewhere in there...
 
-Required properties:
- - compatible : must be "ti,ads1015"
+thanks,
 
-> +Optional properties:
-> +
-> + - exported-channels : exported_channels is a bitmask that specifies which
-> +		       channels should be accessable by the user.
-> +
-> +Example:
-> +ads1015@49 {
-> +	compatible = "ti,ads1015";
-> +	reg = <0x49>;
-> +	exported-channels = <0x14>;
-> +};
-> +
-> +In this example only channel 2 and 4 would be accessable by the user.
-> -- 
-> 1.5.6.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+greg k-h
