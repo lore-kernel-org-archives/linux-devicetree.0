@@ -1,52 +1,40 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [git pull] device tree bug fixes
-Date: Wed, 2 Mar 2011 14:38:52 -0700
-Message-ID: <AANLkTimvaSwM0NmjWEC0S=uRCdc6MmSzB-3xqhTV7Y=y@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+From: Dirk Eibach <eibach@gdsys.de>
+Subject: [PATCH] hwmon: (ads1015) Add devicetree documentation
+Date: Thu,  3 Mar 2011 10:16:45 +0100
+Message-ID: <1299143805-13133-1-git-send-email-eibach@gdsys.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, rdunlap@xenotime.net, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de, khali@linux-fr.org, Dirk Eibach <eibach@gdsys.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Signed-off-by: Dirk Eibach <eibach@gdsys.de>
+---
+ Documentation/devicetree/bindings/i2c/ads1015.txt |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
 
-A few more patches for .28
-
-The following changes since commit dd9c1549edef02290edced639f67b54a25abbe0e:
-
-  Linux 2.6.38-rc7 (2011-03-01 13:55:12 -0800)
-
-are available in the git repository at:
-  git://git.secretlab.ca/git/linux-2.6 devicetree/merge
-
-Andres Salomon (2):
-      x86: OLPC: have prom_early_alloc BUG rather than return NULL
-      of/promtree: allow DT device matching by fixing 'name' brokenness (v5)
-
-Michal Simek (1):
-      of: Add missing of_address.h to xilinx ehci driver
-
-Paul Bolle (1):
-      of/flattree: Drop an uninteresting message to pr_debug level
-
- arch/x86/platform/olpc/olpc_dt.c  |    3 +-
- drivers/of/pdt.c                  |  112 ++++++++++++++-----------------------
- drivers/usb/host/ehci-xilinx-of.c |    1 +
- fs/proc/proc_devtree.c            |    2 +-
- 4 files changed, 45 insertions(+), 73 deletions(-)
-
-
+diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
+new file mode 100644
+index 0000000..3a7d67a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/ads1015.txt
+@@ -0,0 +1,15 @@
++ADS1015 (I2C)
++
++Optional properties:
++
++ - exported-channels : exported_channels is a bitmask that specifies which
++		       inputs should be exported to sysfs.
++
++Example:
++ads1015@49 {
++	compatible = "ti,ads1015";
++	reg = <0x49>;
++	exported-channels = <0x14>;
++};
++
++In this example only in2_input and in4_input would be created.
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+1.5.6.5
+
