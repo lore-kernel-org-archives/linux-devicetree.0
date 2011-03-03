@@ -1,51 +1,120 @@
 From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH] hwmon: (ads1015) Add devicetree documentation
-Date: Thu, 3 Mar 2011 10:01:57 -0700
-Message-ID: <20110303170157.GA22940@angua.secretlab.ca>
+Date: Thu, 3 Mar 2011 10:26:53 -0700
+Message-ID: <20110303172653.GB22940@angua.secretlab.ca>
 References: <1299143805-13133-1-git-send-email-eibach@gdsys.de>
  <20110303115151.GF3649@pengutronix.de>
  <20110303132025.51e0d92e@endymion.delvare>
+ <20110303132549.GG3649@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110303132025.51e0d92e@endymion.delvare>
+In-Reply-To: <20110303132549.GG3649@pengutronix.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: Jean Delvare <khali@linux-fr.org>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Dirk Eibach <eibach@gdsys.de>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, rdunlap@xenotime.net, devicetree-discuss@lists.ozlabs.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: Jean Delvare <khali@linux-fr.org>, Dirk Eibach <eibach@gdsys.de>, devicetree-discuss@lists.ozlabs.org, rdunlap@xenotime.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 03, 2011 at 01:20:25PM +0100, Jean Delvare wrote:
-> Hi Wolfram,
-> 
-> On Thu, 3 Mar 2011 12:51:51 +0100, Wolfram Sang wrote:
-> > On Thu, Mar 03, 2011 at 10:16:45AM +0100, Dirk Eibach wrote:
-> > > Signed-off-by: Dirk Eibach <eibach@gdsys.de>
-> > > ---
-> > >  Documentation/devicetree/bindings/i2c/ads1015.txt |   15 +++++++++++++++
-> > >  1 files changed, 15 insertions(+), 0 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
-> > > new file mode 100644
-> > > index 0000000..3a7d67a
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/i2c/ads1015.txt
-> > > @@ -0,0 +1,15 @@
-> > > +ADS1015 (I2C)
-> > > +
-> > > +Optional properties:
-> > > +
-> > > + - exported-channels : exported_channels is a bitmask that specifies which
-> > > +		       inputs should be exported to sysfs.
+On Thu, Mar 03, 2011 at 02:25:49PM +0100, Wolfram Sang wrote:
+> > > Hmm, device tree bindings should be OS-neutral, sysfs is not.
 > > 
-> > Hmm, device tree bindings should be OS-neutral, sysfs is not.
+> > Why do we document this in the Linux kernel tree then?
 > 
-> Why do we document this in the Linux kernel tree then?
+> To describe which bindings Linux supports.
+> 
+> > > with the active channels. Then again, what is the drawback of exporting
+> > > all channels?
+> > 
+> > Performance and user-friendliness. libsensors-based applications will
+> > read all available attributes by default, and each reading takes time.
+> > Letting the platform declare how the inputs are used allows for a sane
+> > output for "sensors" and other similar tools out of the box, without
+> > the user having to tinker with ignore statements in configuration files
+> > to discard the nonsensical values.
+> 
+> OK, that's fine I'd say.
+> 
+> > > Is there another hwmon-driver doing so (couldn't find one)?
+> > 
+> > If "doing so" means "letting the user define how the ADC inputs are
+> > used", then yes, the pcf8591 driver does something similar, except that
+> > it uses a module parameter for the setting, for historical reasons.
+> > Platform-provided, per-device data is better in my opinion.
+> 
+> OK. The thing is you can't map platform_data 1:1 to bindings, because
+> most are very specific to the Linux-driver. Do you think something like
+> "active-channels" would be sufficent for those other hwmon devices, too?
+> (I still do not like "exported-channels", because there is no need to
+> export the channels for the OS. The devicetree is primarily a hardware
+> description language) Or maybe we go specific and say "ads1015,channel1
+> = 1"? Maybe somebody knows of a similar chips as a reference?
 
-Lack of a better place and process for documenting and reviewing
-bindings.  I've been toying with moving device tree bindings out to
-devicetree.org, but I don't have a good review model for that.  I
-might end up splitting it out into a separate git repository.
+Yes, Wolfram's correct.  The focus should be on what the connections
+actually are instead of what the OS should attempt to do with them.
+ie. give the active channels actual names for what they do, or use a
+phandle to reference them from another node.  The driver can then make
+a decision based on whether or not a channel has a configuration
+provided.
+
+>From the little information I have, I'd recommend something like:
+
+sensor@49 {
+	compatible = "ti,ads1015"
+	reg = <0x49>;
+
+	// Each child node (one node per channel) has an address with
+	// no range
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	adc@2 {
+		ti,measurement = "cpu voltage";
+		reg = <2>;
+	};
+
+	adc@4 {
+		ti,measurement = "base voltage";
+		reg = <4>;
+	};
+};
+
+However, after taking a little look at the data sheet, this binding
+might end up being a little naive for what the part can do.  It might
+make more sense to do something like:
+
+sensor@49 {
+	compatible = "ti,ads1015"
+	reg = <0x49>;
+
+	// Each child node (one node per channel) has an address with
+	// no range
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	measurement@0 {
+		reg = <0>;	// This reg value no longer reflects
+				// the chip, it's just a handle for
+				// logical measurement channels
+		ti,measurement = "cpu voltage";
+		ti,multiplexer = <2>; // AIN0 vs. AIN3
+		ti,gain = <5>; // +/-0.256V
+		ti,inverse-polarity;
+	};
+
+	measurement@1 {
+		reg = <1>;
+		ti,measurement = "base voltage";
+		ti,multiplexer = <4>; // AIN0 vs. GND
+		ti,gain = <2>; // +/-2.048V
+	};
+};
+
+...which splits it up by logical measurement configurations instead of
+only the multiplexer setting.
+
+It's more verbose than a single exported-channels property, but it is
+flexible enough that it can be easily extended with extra
+configuration data per channel.
 
 g.
