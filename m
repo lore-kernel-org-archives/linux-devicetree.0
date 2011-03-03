@@ -1,30 +1,104 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH V12 0/4] ptp: IEEE 1588 hardware clock support
-Date: Thu, 03 Mar 2011 12:13:43 -0800 (PST)
-Message-ID: <20110303.121343.28802720.davem@davemloft.net>
-References: <cover.1298878618.git.richard.cochran@omicron.at>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4] hwmon: Add support for Texas Instruments ADS1015
+Date: Thu, 3 Mar 2011 21:02:36 +0100
+Message-ID: <20110303200236.GA17132@pengutronix.de>
+References: <1299138343-12773-1-git-send-email-eibach@gdsys.de>
+	<20110303175050.GC22940@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1298878618.git.richard.cochran-3mrvs1K0uXizZXS1Dc/lvw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, giometti-k2GhghHVRtY@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6111917929097123674=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110303175050.GC22940-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Dirk Eibach <eibach-dJ+jgKLZIg4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Kay Sievers <kay.sievers-tD+1rO4QERM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Mon, 28 Feb 2011 08:57:03 +0100
 
-> This really might be the last review of the PTP hardware clock patch
-> series. These patches apply on top of the timers/core branch in the
-> tip tree.
+--===============6111917929097123674==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+Content-Disposition: inline
 
-I'm find with the networking portions so:
 
-Acked-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am assuming these will be pushed through the timers/core branch
-since there are dependencies.
+> > ---
+> > Changes since v1:
+> > - fixed/extended Documentation
+> > - removed unused register definitions
+> > - hardcoded PGA fullscale table size
+> > - made sure patch applies against v2.6.38-rc4
+> > - reordered functions to avoid forward declaration
+> > - results from i2c_smbus_read_word_data() are handled correctly
+> > - moved locking into ads1015_read_value()
+> > - removed unnecessray clearing of bit
+> > - proper error handling in ads1015_read_value()
+> > - use DIV_ROUND_CLOSEST for scaling result
+> > - removed detect()
+> >=20
+> > Changes since v2:
+> > - removed *all* leftovers from detect()
+> > - fixed return with mutex held
+> > - made sysfs representation configurable
+> >   (hope this will be the reference implementation for generations to co=
+me ;)
+> >=20
+> > Changes since v3:
+> > - included linux/of.h
+> > - remove linux/types.h from header file
+> > - sysfs is now configured with a bitmask
+> > - assume big-endian of-properties
+>=20
+> I recommend putting the revision history *above* the '---' trim line.
+> It turns out to be useful to have the revision history in the commit
+> text that actually gets merged into mainline.
 
-Thanks.
+Is this common sense meanwhile? (That is quite many additional lines per
+commit)
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAk1v89wACgkQD27XaX1/VRs6WgCgsawA+9QpY35Pmp4nZybtNZY+
+o+sAoMSxahwlRnOckFa1VbJrqfOHsy+s
+=f3UC
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
+
+--===============6111917929097123674==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6111917929097123674==--
