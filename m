@@ -1,71 +1,112 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4] hwmon: Add support for Texas Instruments ADS1015
-Date: Thu, 03 Mar 2011 14:15:55 -0700
-Message-ID: <d24a5758-e7e8-4d21-b0d8-3b0dee1fddcd@email.android.com>
-References: <1299138343-12773-1-git-send-email-eibach@gdsys.de>
-	<20110303175050.GC22940@angua.secretlab.ca>
-	<20110303200236.GA17132@pengutronix.de>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH] hwmon: (ads1015) Add devicetree documentation
+Date: Thu, 3 Mar 2011 23:02:53 +0100
+Message-ID: <20110303230253.0e8455c2@endymion.delvare>
+References: <1299143805-13133-1-git-send-email-eibach@gdsys.de>
+	<20110303115151.GF3649@pengutronix.de>
+	<20110303132025.51e0d92e@endymion.delvare>
+	<20110303132549.GG3649@pengutronix.de>
+	<20110303172653.GB22940@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110303200236.GA17132-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Dirk Eibach <eibach-dJ+jgKLZIg4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Kay Sievers <kay.sievers-tD+1rO4QERM@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20110303172653.GB22940@angua.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Dirk Eibach <eibach@gdsys.de>, devicetree-discuss@lists.ozlabs.org, rdunlap@xenotime.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 3 Mar 2011 10:26:53 -0700, Grant Likely wrote:
+> On Thu, Mar 03, 2011 at 02:25:49PM +0100, Wolfram Sang wrote:
+> > OK. The thing is you can't map platform_data 1:1 to bindings, because
+> > most are very specific to the Linux-driver. Do you think something like
+> > "active-channels" would be sufficent for those other hwmon devices, too?
+> > (I still do not like "exported-channels", because there is no need to
+> > export the channels for the OS. The devicetree is primarily a hardware
+> > description language) Or maybe we go specific and say "ads1015,channel1
+> > = 1"? Maybe somebody knows of a similar chips as a reference?
+> 
+> Yes, Wolfram's correct.  The focus should be on what the connections
+> actually are instead of what the OS should attempt to do with them.
+> ie. give the active channels actual names for what they do, or use a
+> phandle to reference them from another node.  The driver can then make
+> a decision based on whether or not a channel has a configuration
+> provided.
+> 
+> From the little information I have, I'd recommend something like:
+> 
+> sensor@49 {
+> 	compatible = "ti,ads1015"
+> 	reg = <0x49>;
+> 
+> 	// Each child node (one node per channel) has an address with
+> 	// no range
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+> 
+> 	adc@2 {
+> 		ti,measurement = "cpu voltage";
+> 		reg = <2>;
+> 	};
+> 
+> 	adc@4 {
+> 		ti,measurement = "base voltage";
+> 		reg = <4>;
+> 	};
+> };
+> 
+> However, after taking a little look at the data sheet, this binding
+> might end up being a little naive for what the part can do.  It might
+> make more sense to do something like:
+> 
+> sensor@49 {
+> 	compatible = "ti,ads1015"
+> 	reg = <0x49>;
+> 
+> 	// Each child node (one node per channel) has an address with
+> 	// no range
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+> 
+> 	measurement@0 {
+> 		reg = <0>;	// This reg value no longer reflects
+> 				// the chip, it's just a handle for
+> 				// logical measurement channels
 
+If there any hard requirement for this? From the driver's perspective,
+the multiplexer setting can be used as the channel ID, and it's easier
+this way than using arbitrary identifiers.
 
-Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> 		ti,measurement = "cpu voltage";
+> 		ti,multiplexer = <2>; // AIN0 vs. AIN3
+> 		ti,gain = <5>; // +/-0.256V
+> 		ti,inverse-polarity;
+> 	};
+> 
+> 	measurement@1 {
+> 		reg = <1>;
+> 		ti,measurement = "base voltage";
+> 		ti,multiplexer = <4>; // AIN0 vs. GND
+> 		ti,gain = <2>; // +/-2.048V
+> 	};
+> };
+> 
+> ...which splits it up by logical measurement configurations instead of
+> only the multiplexer setting.
 
->> > ---
->> > Changes since v1:
->> > - fixed/extended Documentation
->> > - removed unused register definitions
->> > - hardcoded PGA fullscale table size
->> > - made sure patch applies against v2.6.38-rc4
->> > - reordered functions to avoid forward declaration
->> > - results from i2c_smbus_read_word_data() are handled correctly
->> > - moved locking into ads1015_read_value()
->> > - removed unnecessray clearing of bit
->> > - proper error handling in ads1015_read_value()
->> > - use DIV_ROUND_CLOSEST for scaling result
->> > - removed detect()
->> > 
->> > Changes since v2:
->> > - removed *all* leftovers from detect()
->> > - fixed return with mutex held
->> > - made sysfs representation configurable
->> >   (hope this will be the reference implementation for generations
->to come ;)
->> > 
->> > Changes since v3:
->> > - included linux/of.h
->> > - remove linux/types.h from header file
->> > - sysfs is now configured with a bitmask
->> > - assume big-endian of-properties
->> 
->> I recommend putting the revision history *above* the '---' trim line.
->> It turns out to be useful to have the revision history in the commit
->> text that actually gets merged into mainline.
->
->Is this common sense meanwhile? (That is quite many additional lines
->per
->commit)
+I wouldn't disagree, as I did suggest making the gain a per-channel
+setting while reviewing Dirk's driver. I had not thought of labelling,
+but the hwmon sysfs API supports this too, so it would fit nicely
+(although it can also be handled in user-space if needed.)
 
-Absolutely.  Commit text is cheap and useful.  I say the more detail the better.
+> It's more verbose than a single exported-channels property, but it is
+> flexible enough that it can be easily extended with extra
+> configuration data per channel.
 
-g.
-
+I will leave it up to Dirk to decide how much time he wants to spend on
+this. He has already been very patient with the driver review process
+and I do not want to abuse his patience.
 
 -- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+Jean Delvare
