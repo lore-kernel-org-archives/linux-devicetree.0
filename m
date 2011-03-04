@@ -1,115 +1,148 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] hwmon: (ads1015) Add devicetree documentation
-Date: Thu, 3 Mar 2011 15:09:28 -0700
-Message-ID: <AANLkTikXzJEAYg7+5ekMzTj_V-Hs63Psgru4Vc_QGhRy@mail.gmail.com>
-References: <1299143805-13133-1-git-send-email-eibach@gdsys.de>
- <20110303115151.GF3649@pengutronix.de> <20110303132025.51e0d92e@endymion.delvare>
- <20110303132549.GG3649@pengutronix.de> <20110303172653.GB22940@angua.secretlab.ca>
- <20110303230253.0e8455c2@endymion.delvare>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: [RFC 2/3] OLPC: add missing elements to device tree
+Date: Fri,  4 Mar 2011 17:12:34 +0000 (GMT)
+Message-ID: <20110304171235.10C1F9D401D@zog.reactivated.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20110303230253.0e8455c2@endymion.delvare>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jean Delvare <khali@linux-fr.org>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Dirk Eibach <eibach@gdsys.de>, devicetree-discuss@lists.ozlabs.org, rdunlap@xenotime.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 3, 2011 at 3:02 PM, Jean Delvare <khali@linux-fr.org> wrote=
-:
-> On Thu, 3 Mar 2011 10:26:53 -0700, Grant Likely wrote:
->> On Thu, Mar 03, 2011 at 02:25:49PM +0100, Wolfram Sang wrote:
->> > OK. The thing is you can't map platform_data 1:1 to bindings, beca=
-use
->> > most are very specific to the Linux-driver. Do you think something=
- like
->> > "active-channels" would be sufficent for those other hwmon devices=
-, too?
->> > (I still do not like "exported-channels", because there is no need=
- to
->> > export the channels for the OS. The devicetree is primarily a hard=
-ware
->> > description language) Or maybe we go specific and say "ads1015,cha=
-nnel1
->> > =3D 1"? Maybe somebody knows of a similar chips as a reference?
->>
->> Yes, Wolfram's correct. =A0The focus should be on what the connectio=
-ns
->> actually are instead of what the OS should attempt to do with them.
->> ie. give the active channels actual names for what they do, or use a
->> phandle to reference them from another node. =A0The driver can then =
-make
->> a decision based on whether or not a channel has a configuration
->> provided.
->>
->> From the little information I have, I'd recommend something like:
->>
->> sensor@49 {
->> =A0 =A0 =A0 compatible =3D "ti,ads1015"
->> =A0 =A0 =A0 reg =3D <0x49>;
->>
->> =A0 =A0 =A0 // Each child node (one node per channel) has an address=
- with
->> =A0 =A0 =A0 // no range
->> =A0 =A0 =A0 #address-cells =3D <1>;
->> =A0 =A0 =A0 #size-cells =3D <0>;
->>
->> =A0 =A0 =A0 adc@2 {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,measurement =3D "cpu voltage";
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <2>;
->> =A0 =A0 =A0 };
->>
->> =A0 =A0 =A0 adc@4 {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,measurement =3D "base voltage";
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <4>;
->> =A0 =A0 =A0 };
->> };
->>
->> However, after taking a little look at the data sheet, this binding
->> might end up being a little naive for what the part can do. =A0It mi=
-ght
->> make more sense to do something like:
->>
->> sensor@49 {
->> =A0 =A0 =A0 compatible =3D "ti,ads1015"
->> =A0 =A0 =A0 reg =3D <0x49>;
->>
->> =A0 =A0 =A0 // Each child node (one node per channel) has an address=
- with
->> =A0 =A0 =A0 // no range
->> =A0 =A0 =A0 #address-cells =3D <1>;
->> =A0 =A0 =A0 #size-cells =3D <0>;
->>
->> =A0 =A0 =A0 measurement@0 {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0>; =A0 =A0 =A0// This reg valu=
-e no longer reflects
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 // the c=
-hip, it's just a handle for
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 // logic=
-al measurement channels
->
-> If there any hard requirement for this? From the driver's perspective=
-,
-> the multiplexer setting can be used as the channel ID, and it's easie=
-r
-> this way than using arbitrary identifiers.
+In response to new device tree code in the kernel, OLPC will start
+using it for probing of certain devices. However, some firmware fixes
+are needed to put the devicetree into a usable state.
 
-Nope, not a hard requirement.  Just a suggestion.  It would be
-valuable if (and only if) there was ever reason to have more than one
-configuration for a particular multiplexer setting.
+Retain compatibility with old firmware by fixing up the device tree
+at boot-time if it does not contain the new nodes/properties that
+we need for probing.
 
->> It's more verbose than a single exported-channels property, but it i=
-s
->> flexible enough that it can be easily extended with extra
->> configuration data per channel.
->
-> I will leave it up to Dirk to decide how much time he wants to spend =
-on
-> this. He has already been very patient with the driver review process
-> and I do not want to abuse his patience.
+Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+---
+ arch/x86/platform/olpc/olpc_dt.c |   87 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 87 insertions(+), 0 deletions(-)
 
-BTW Dirk, I'm happy to help show how to write the parser code for the
-sub-node approach if you need it.
-
-g.
+diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
+index 09cbede..58bba78 100644
+--- a/arch/x86/platform/olpc/olpc_dt.c
++++ b/arch/x86/platform/olpc/olpc_dt.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_pdt.h>
+ #include <asm/olpc_ofw.h>
++#include <asm/olpc.h>
+ 
+ static phandle __init olpc_dt_getsibling(phandle node)
+ {
+@@ -164,6 +165,91 @@ static struct of_pdt_ops prom_olpc_ops __initdata = {
+ 	.pkg2path = olpc_dt_pkg2path,
+ };
+ 
++static char __init *prom_alloc_string(const char *str, int *len)
++{
++	int _len = strlen(str);
++	char *output = prom_early_alloc(_len + 1);
++
++	strcpy(output, str);
++	if (len)
++		*len = _len;
++	return output;
++}
++
++static void __init prom_alloc_property(struct device_node *node,
++	const char *name, const char *value)
++{
++	struct property *p = prom_early_alloc(sizeof(struct property));
++
++	p->name = prom_alloc_string(name, NULL);
++	p->value = prom_alloc_string(value, &p->length);
++	prom_add_property(node, p);
++}
++
++/* Add dcon device as child of display */
++static void __init add_dcon_node(struct device_node *display)
++{
++	struct device_node *node = prom_early_alloc(sizeof(struct device_node));
++	unsigned long flags;
++
++	kref_init(&node->kref);
++	node->name = prom_alloc_string("dcon", NULL);
++	node->full_name = (char *) node->name;
++	node->parent = display;
++
++	write_lock_irqsave(&devtree_lock, flags);
++	node->sibling = node->parent->child;
++	node->allnext = allnodes;
++	node->parent->child = node;
++	allnodes = node;
++	write_unlock_irqrestore(&devtree_lock, flags);
++
++	prom_alloc_property(node, "compatible", "olpc,xo1-dcon");
++}
++
++static void __init olpc_dt_fixup(void)
++{
++	struct device_node *node;
++
++	/*
++	 * Use battery's compatible property to determine if we're running a
++	 * new-enough firmware. If we have this property, no fixups are needed.
++	 */
++	node = of_find_node_by_name(NULL, "battery");
++	if (node && of_get_property(node, "compatible", NULL)) {
++		of_node_put(node);
++		return;
++	}
++
++	/*
++	 * Add "compatible" property to battery, it was missing from earlier
++	 * firmware releases.
++	 */
++	prom_alloc_property(node, "compatible", "olpc,xo1-battery");
++	of_node_put(node);
++
++	/*
++	 * Mark XO-1 RTC as compatible with olpc,xo1-rtc - this was not done in
++	 * earlier firmware releases.
++	 */
++	node = of_find_node_by_name(NULL, "rtc");
++	if (olpc_platform_info.boardrev < olpc_board_pre(0xd0) && node) {
++		struct property *p = of_get_property(node, "compatible", NULL);
++		prom_remove_property(node, p);
++		prom_alloc_property(node, "compatible", "olpc,xo1-rtc");
++	}
++	of_node_put(node);
++
++	/*
++	 * Add "dcon" device node, it was missing from earlier firmware
++	 * releases.
++	 */
++	node = of_find_node_by_name(NULL, "display");
++	if (node)
++		add_dcon_node(node);
++	of_node_put(node);
++}
++
+ void __init olpc_dt_build_devicetree(void)
+ {
+ 	phandle root;
+@@ -177,6 +263,7 @@ void __init olpc_dt_build_devicetree(void)
+ 		return;
+ 	}
+ 	of_pdt_build_devicetree(root, &prom_olpc_ops);
++	olpc_dt_fixup();
+ 
+ 	pr_info("PROM DT: Built device tree with %u bytes of memory.\n",
+ 			prom_early_allocated);
+-- 
+1.7.4
