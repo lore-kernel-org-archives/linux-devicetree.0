@@ -1,361 +1,523 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: [RFC PATCH v2 07/12] MIPS: Octeon: Rearrance CVMX files in preperation for device tree
-Date: Fri,  4 Mar 2011 11:42:19 -0800
-Message-ID: <1299267744-17278-8-git-send-email-ddaney@caviumnetworks.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [RFC PATCH v2 04/12] MIPS: Octeon: Add device tree source files.
+Date: Fri,  4 Mar 2011 11:42:16 -0800
+Message-ID: <1299267744-17278-5-git-send-email-ddaney@caviumnetworks.com>
 References: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
-Cc: David Daney <ddaney@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1299267744-17278-1-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Daney <ddaney@caviumnetworks.com>
+Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 ---
- .../cavium-octeon/executive/cvmx-helper-sgmii.c    |    6 +-
- .../mips/cavium-octeon/executive/cvmx-helper-spi.c |   10 ++
- .../cavium-octeon/executive/cvmx-helper-xaui.c     |   22 +++--
- arch/mips/cavium-octeon/executive/cvmx-helper.c    |   93 ++++++++++++++++---
- arch/mips/include/asm/octeon/cvmx-helper-loop.h    |    1 +
- arch/mips/include/asm/octeon/cvmx-helper-npi.h     |    1 +
- arch/mips/include/asm/octeon/cvmx-helper-rgmii.h   |    1 +
- arch/mips/include/asm/octeon/cvmx-helper-sgmii.h   |    1 +
- arch/mips/include/asm/octeon/cvmx-helper-spi.h     |    1 +
- arch/mips/include/asm/octeon/cvmx-helper-xaui.h    |    1 +
- arch/mips/include/asm/octeon/cvmx-helper.h         |    1 +
- 11 files changed, 114 insertions(+), 24 deletions(-)
+ arch/mips/cavium-octeon/.gitignore      |    2 +
+ arch/mips/cavium-octeon/Makefile        |   13 ++
+ arch/mips/cavium-octeon/octeon_3xxx.dts |  330 +++++++++++++++++++++++++++++++
+ arch/mips/cavium-octeon/octeon_68xx.dts |  116 +++++++++++
+ 4 files changed, 461 insertions(+), 0 deletions(-)
+ create mode 100644 arch/mips/cavium-octeon/.gitignore
+ create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
+ create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
 
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-helper-sgmii.c b/arch/mips/cavium-octeon/executive/cvmx-helper-sgmii.c
-index 464347f..0c0bf5d 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-helper-sgmii.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-helper-sgmii.c
-@@ -326,6 +326,10 @@ static int __cvmx_helper_sgmii_hardware_init(int interface, int num_ports)
- 	return 0;
- }
+diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
+new file mode 100644
+index 0000000..39c9686
+--- /dev/null
++++ b/arch/mips/cavium-octeon/.gitignore
+@@ -0,0 +1,2 @@
++*.dtb.S
++*.dtb
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index 19eb043..5e25dce 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -15,3 +15,16 @@ obj-y += octeon-memcpy.o
+ obj-y += executive/
  
-+int __cvmx_helper_sgmii_enumerate(int interface)
-+{
-+	return 4;
-+}
- /**
-  * Probe a SGMII interface and determine the number of ports
-  * connected to it. The SGMII interface should still be down after
-@@ -347,7 +351,7 @@ int __cvmx_helper_sgmii_probe(int interface)
- 	mode.u64 = cvmx_read_csr(CVMX_GMXX_INF_MODE(interface));
- 	mode.s.en = 1;
- 	cvmx_write_csr(CVMX_GMXX_INF_MODE(interface), mode.u64);
--	return 4;
-+	return __cvmx_helper_sgmii_enumerate(interface);
- }
- 
- /**
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-helper-spi.c b/arch/mips/cavium-octeon/executive/cvmx-helper-spi.c
-index 02a4442..2830e4b 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-helper-spi.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-helper-spi.c
-@@ -51,6 +51,16 @@ void __cvmx_interrupt_stxx_int_msk_enable(int index);
- #define CVMX_HELPER_SPI_TIMEOUT 10
- #endif
- 
-+int __cvmx_helper_spi_enumerate(int interface)
-+{
-+	if ((cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_SIM) &&
-+	    cvmx_spi4000_is_present(interface)) {
-+		return 10;
-+	} else {
-+		return 16;
-+	}
-+}
+ obj-$(CONFIG_SMP)                     += smp.o
 +
- /**
-  * Probe a SPI interface and determine the number of ports
-  * connected to it. The SPI interface should still be down after
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-helper-xaui.c b/arch/mips/cavium-octeon/executive/cvmx-helper-xaui.c
-index 667a8e3..1723248e 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-helper-xaui.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-helper-xaui.c
-@@ -44,6 +44,19 @@
- void __cvmx_interrupt_gmxx_enable(int interface);
- void __cvmx_interrupt_pcsx_intx_en_reg_enable(int index, int block);
- void __cvmx_interrupt_pcsxx_int_en_reg_enable(int index);
++DTS_FILES = octeon_3xxx.dts octeon_68xx.dts
++DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
 +
-+int __cvmx_helper_xaui_enumerate(int interface)
-+{
-+	union cvmx_gmxx_hg2_control gmx_hg2_control;
++obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
 +
-+	/* If HiGig2 is enabled return 16 ports, otherwise return 1 port */
-+	gmx_hg2_control.u64 = cvmx_read_csr(CVMX_GMXX_HG2_CONTROL(interface));
-+	if (gmx_hg2_control.s.hg2tx_en)
-+		return 16;
-+	else
-+		return 1;
-+}
++$(obj)/%.dtb: $(src)/%.dts
++	$(call cmd,dtc)
 +
- /**
-  * Probe a XAUI interface and determine the number of ports
-  * connected to it. The XAUI interface should still be down
-@@ -56,7 +69,6 @@ void __cvmx_interrupt_pcsxx_int_en_reg_enable(int index);
- int __cvmx_helper_xaui_probe(int interface)
- {
- 	int i;
--	union cvmx_gmxx_hg2_control gmx_hg2_control;
- 	union cvmx_gmxx_inf_mode mode;
- 
- 	/*
-@@ -90,13 +102,7 @@ int __cvmx_helper_xaui_probe(int interface)
- 		pko_mem_port_ptrs.s.pid = interface * 16 + i;
- 		cvmx_write_csr(CVMX_PKO_MEM_PORT_PTRS, pko_mem_port_ptrs.u64);
- 	}
--
--	/* If HiGig2 is enabled return 16 ports, otherwise return 1 port */
--	gmx_hg2_control.u64 = cvmx_read_csr(CVMX_GMXX_HG2_CONTROL(interface));
--	if (gmx_hg2_control.s.hg2tx_en)
--		return 16;
--	else
--		return 1;
-+	return __cvmx_helper_xaui_enumerate(interface);
- }
- 
- /**
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-helper.c b/arch/mips/cavium-octeon/executive/cvmx-helper.c
-index 6238a22..bea6ab6 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-helper.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-helper.c
-@@ -234,21 +234,16 @@ static int __cvmx_helper_port_setup_ipd(int ipd_port)
- }
- 
- /**
-- * This function probes an interface to determine the actual
-- * number of hardware ports connected to it. It doesn't setup the
-- * ports or enable them. The main goal here is to set the global
-- * interface_port_count[interface] correctly. Hardware setup of the
-- * ports will be performed later.
-+ * This function sets the interface_port_count[interface] correctly,
-+ * without modifying any hardware configuration.  Hardware setup of
-+ * the ports will be performed later.
-  *
-  * @interface: Interface to probe
-  *
-  * Returns Zero on success, negative on failure
-  */
--int cvmx_helper_interface_probe(int interface)
-+int cvmx_helper_interface_enumerate(int interface)
- {
--	/* At this stage in the game we don't want packets to be moving yet.
--	   The following probe calls should perform hardware setup
--	   needed to determine port counts. Receive must still be disabled */
- 	switch (cvmx_helper_interface_get_mode(interface)) {
- 		/* These types don't support ports to IPD/PKO */
- 	case CVMX_HELPER_INTERFACE_MODE_DISABLED:
-@@ -258,7 +253,7 @@ int cvmx_helper_interface_probe(int interface)
- 		/* XAUI is a single high speed port */
- 	case CVMX_HELPER_INTERFACE_MODE_XAUI:
- 		interface_port_count[interface] =
--		    __cvmx_helper_xaui_probe(interface);
-+		    __cvmx_helper_xaui_enumerate(interface);
- 		break;
- 		/*
- 		 * RGMII/GMII/MII are all treated about the same. Most
-@@ -267,7 +262,7 @@ int cvmx_helper_interface_probe(int interface)
- 	case CVMX_HELPER_INTERFACE_MODE_RGMII:
- 	case CVMX_HELPER_INTERFACE_MODE_GMII:
- 		interface_port_count[interface] =
--		    __cvmx_helper_rgmii_probe(interface);
-+		    __cvmx_helper_rgmii_enumerate(interface);
- 		break;
- 		/*
- 		 * SPI4 can have 1-16 ports depending on the device at
-@@ -275,7 +270,7 @@ int cvmx_helper_interface_probe(int interface)
- 		 */
- 	case CVMX_HELPER_INTERFACE_MODE_SPI:
- 		interface_port_count[interface] =
--		    __cvmx_helper_spi_probe(interface);
-+		    __cvmx_helper_spi_enumerate(interface);
- 		break;
- 		/*
- 		 * SGMII can have 1-4 ports depending on how many are
-@@ -284,12 +279,12 @@ int cvmx_helper_interface_probe(int interface)
- 	case CVMX_HELPER_INTERFACE_MODE_SGMII:
- 	case CVMX_HELPER_INTERFACE_MODE_PICMG:
- 		interface_port_count[interface] =
--		    __cvmx_helper_sgmii_probe(interface);
-+		    __cvmx_helper_sgmii_enumerate(interface);
- 		break;
- 		/* PCI target Network Packet Interface */
- 	case CVMX_HELPER_INTERFACE_MODE_NPI:
- 		interface_port_count[interface] =
--		    __cvmx_helper_npi_probe(interface);
-+		    __cvmx_helper_npi_enumerate(interface);
- 		break;
- 		/*
- 		 * Special loopback only ports. These are not the same
-@@ -297,7 +292,7 @@ int cvmx_helper_interface_probe(int interface)
- 		 */
- 	case CVMX_HELPER_INTERFACE_MODE_LOOP:
- 		interface_port_count[interface] =
--		    __cvmx_helper_loop_probe(interface);
-+		    __cvmx_helper_loop_enumerate(interface);
- 		break;
- 	}
- 
-@@ -313,6 +308,74 @@ int cvmx_helper_interface_probe(int interface)
- }
- 
- /**
-+ * This function probes an interface to determine the actual
-+ * number of hardware ports connected to it. It doesn't setup the
-+ * ports or enable them. The main goal here is to set the global
-+ * interface_port_count[interface] correctly. Hardware setup of the
-+ * ports will be performed later.
++# Let's keep the .dtb files around in case we want to look at them.
++.SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
++
++clean-files += $(DTB_FILES) $(patsubst %.dtb, %.dtb.S, $(DTB_FILES))
+diff --git a/arch/mips/cavium-octeon/octeon_3xxx.dts b/arch/mips/cavium-octeon/octeon_3xxx.dts
+new file mode 100644
+index 0000000..6910d9d
+--- /dev/null
++++ b/arch/mips/cavium-octeon/octeon_3xxx.dts
+@@ -0,0 +1,330 @@
++/dts-v1/;
++/*
++ * OCTEON 3XXX, 5XXX, 63XX device tree skeleton.
 + *
-+ * @interface: Interface to probe
-+ *
-+ * Returns Zero on success, negative on failure
++ * This device tree is pruned and patched by early boot code before
++ * use.  Because of this, it contains a super-set of the available
++ * devices and properties.
 + */
-+int cvmx_helper_interface_probe(int interface)
-+{
-+	cvmx_helper_interface_enumerate(interface);
-+	/* At this stage in the game we don't want packets to be moving yet.
-+	   The following probe calls should perform hardware setup
-+	   needed to determine port counts. Receive must still be disabled */
-+	switch (cvmx_helper_interface_get_mode(interface)) {
-+		/* These types don't support ports to IPD/PKO */
-+	case CVMX_HELPER_INTERFACE_MODE_DISABLED:
-+	case CVMX_HELPER_INTERFACE_MODE_PCIE:
-+		break;
-+		/* XAUI is a single high speed port */
-+	case CVMX_HELPER_INTERFACE_MODE_XAUI:
-+		__cvmx_helper_xaui_probe(interface);
-+		break;
-+		/*
-+		 * RGMII/GMII/MII are all treated about the same. Most
-+		 * functions refer to these ports as RGMII.
-+		 */
-+	case CVMX_HELPER_INTERFACE_MODE_RGMII:
-+	case CVMX_HELPER_INTERFACE_MODE_GMII:
-+		__cvmx_helper_rgmii_probe(interface);
-+		break;
-+		/*
-+		 * SPI4 can have 1-16 ports depending on the device at
-+		 * the other end.
-+		 */
-+	case CVMX_HELPER_INTERFACE_MODE_SPI:
-+		__cvmx_helper_spi_probe(interface);
-+		break;
-+		/*
-+		 * SGMII can have 1-4 ports depending on how many are
-+		 * hooked up.
-+		 */
-+	case CVMX_HELPER_INTERFACE_MODE_SGMII:
-+	case CVMX_HELPER_INTERFACE_MODE_PICMG:
-+		__cvmx_helper_sgmii_probe(interface);
-+		break;
-+		/* PCI target Network Packet Interface */
-+	case CVMX_HELPER_INTERFACE_MODE_NPI:
-+		__cvmx_helper_npi_probe(interface);
-+		break;
-+		/*
-+		 * Special loopback only ports. These are not the same
-+		 * as other ports in loopback mode.
-+		 */
-+	case CVMX_HELPER_INTERFACE_MODE_LOOP:
-+		__cvmx_helper_loop_probe(interface);
-+		break;
-+	}
++/ {
++	model = "OCTEON";
++	compatible = "cavium,octeon-3860";
++	#address-cells = <2>;
++	#size-cells = <2>;
 +
-+	/* Make sure all global variables propagate to other cores */
-+	CVMX_SYNCWS;
++	soc@0 {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges; /* Direct mapping */
 +
-+	return 0;
-+}
++		ciu: interrupt-controller@1070000000000 {
++			compatible = "cavium,octeon-3860-ciu";
++			interrupt-controller;
++			#address-cells = <0>;
++			/* Interrupts are specified by three parts:
++			 * 1) Controller register (0 or 1)
++			 * 2) Bit within the register (0..63)
++			 * 3) Triggering (0 - level active high
++			 *		  1 - level active low
++			 *		  2 - edge rising
++			 *		  3 - edge falling
++			 *
++			 * For non-GPIO sources, the triggering cannot be
++			 * changed and is ignored.
++			 */
++			#interrupt-cells = <3>;
++			reg = <0x10700 0x00000000 0x0 0x7000>;
++		};
 +
-+/**
-  * Setup the IPD/PIP for the ports on an interface. Packet
-  * classification and tagging are set for every port on the
-  * interface. The number of ports on the interface must already
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-loop.h b/arch/mips/include/asm/octeon/cvmx-helper-loop.h
-index e646a6c..0a2488e 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-loop.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-loop.h
-@@ -44,6 +44,7 @@
-  * Returns Number of ports on the interface. Zero to disable.
-  */
- extern int __cvmx_helper_loop_probe(int interface);
-+static inline int __cvmx_helper_loop_enumerate(int interface) {return 4;}
- 
- /**
-  * Bringup and enable a LOOP interface. After this call packet
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-npi.h b/arch/mips/include/asm/octeon/cvmx-helper-npi.h
-index 908e7b0..8df4c7f 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-npi.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-npi.h
-@@ -45,6 +45,7 @@
-  * Returns Number of ports on the interface. Zero to disable.
-  */
- extern int __cvmx_helper_npi_probe(int interface);
-+#define __cvmx_helper_npi_enumerate __cvmx_helper_npi_probe
- 
- /**
-  * Bringup and enable a NPI interface. After this call packet
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-rgmii.h b/arch/mips/include/asm/octeon/cvmx-helper-rgmii.h
-index ea26526..78295ba 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-rgmii.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-rgmii.h
-@@ -43,6 +43,7 @@
-  * Returns Number of RGMII/GMII/MII ports (0-4).
-  */
- extern int __cvmx_helper_rgmii_probe(int interface);
-+#define __cvmx_helper_rgmii_enumerate __cvmx_helper_rgmii_probe
- 
- /**
-  * Put an RGMII interface in loopback mode. Internal packets sent
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-sgmii.h b/arch/mips/include/asm/octeon/cvmx-helper-sgmii.h
-index 19b48d6..9a9b6c1 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-sgmii.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-sgmii.h
-@@ -45,6 +45,7 @@
-  * Returns Number of ports on the interface. Zero to disable.
-  */
- extern int __cvmx_helper_sgmii_probe(int interface);
-+extern int __cvmx_helper_sgmii_enumerate(int interface);
- 
- /**
-  * Bringup and enable a SGMII interface. After this call packet
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-spi.h b/arch/mips/include/asm/octeon/cvmx-helper-spi.h
-index 69bac03..9f1c6b9 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-spi.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-spi.h
-@@ -42,6 +42,7 @@
-  * Returns Number of ports on the interface. Zero to disable.
-  */
- extern int __cvmx_helper_spi_probe(int interface);
-+extern int __cvmx_helper_spi_enumerate(int interface);
- 
- /**
-  * Bringup and enable a SPI interface. After this call packet I/O
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-xaui.h b/arch/mips/include/asm/octeon/cvmx-helper-xaui.h
-index 4b4db2f..f6fbc4f 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-xaui.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-xaui.h
-@@ -45,6 +45,7 @@
-  * Returns Number of ports on the interface. Zero to disable.
-  */
- extern int __cvmx_helper_xaui_probe(int interface);
-+extern int __cvmx_helper_xaui_enumerate(int interface);
- 
- /**
-  * Bringup and enable a XAUI interface. After this call packet
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper.h b/arch/mips/include/asm/octeon/cvmx-helper.h
-index 51916f3..3169cd7 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper.h
-@@ -207,6 +207,7 @@ extern int cvmx_helper_link_set(int ipd_port,
-  * Returns Zero on success, negative on failure
-  */
- extern int cvmx_helper_interface_probe(int interface);
-+extern int cvmx_helper_interface_enumerate(int interface);
- 
- /**
-  * Configure a port for internal and/or external loopback. Internal loopback
++		smi0: mdio@1180000001800 {
++			compatible = "cavium,octeon-3860-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0x00001800 0x0 0x40>;
++
++			phy0: ethernet-phy@0 {
++				reg = <0>;
++			};
++
++			phy1: ethernet-phy@1 {
++				reg = <1>;
++			};
++
++			phy2: ethernet-phy@2 {
++				reg = <2>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++			phy3: ethernet-phy@3 {
++				reg = <3>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++			phy4: ethernet-phy@4 {
++				reg = <4>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++			phy5: ethernet-phy@5 {
++				reg = <5>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++
++			phy6: ethernet-phy@6 {
++				reg = <6>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++			phy7: ethernet-phy@7 {
++				reg = <7>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++			phy8: ethernet-phy@8 {
++				reg = <8>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++			phy9: ethernet-phy@9 {
++				reg = <9>;
++				marvell,reg-init = <3 0x10 0 0x5777>,
++					<3 0x11 0 0x00aa>,
++					<3 0x12 0 0x4105>,
++					<3 0x13 0 0x0a60>;
++			};
++		};
++
++		smi1: mdio@1180000001900 {
++			compatible = "cavium,octeon-3860-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0x00001900 0x0 0x40>;
++		};
++
++		mix0: ethernet@1070000100000 {
++			compatible = "cavium,octeon-5750-mix";
++			device_type = "network";
++			reg = <0x10700 0x00100000 0x0 0x100>, /* MIX */
++			      <0x11800 0xE0000000 0x0 0x300>, /* AGL */
++			      <0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
++			      <0x11800 0xE0002000 0x0 0x8>;   /* AGL_PRT_CTL */
++			cell-index = <0>;
++			interrupt-parent = <&ciu>;
++			interrupts = <0 62 0>, <1 46 0>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			phy-handle = <&phy0>;
++		};
++
++		mix1: ethernet@1070000100800 {
++			compatible = "cavium,octeon-5750-mix";
++			device_type = "network";
++			reg = <0x10700 0x00100800 0x0 0x100>, /* MIX */
++			      <0x11800 0xE0000800 0x0 0x300>, /* AGL */
++			      <0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
++			      <0x11800 0xE0002008 0x0 0x8>;   /* AGL_PRT_CTL */
++			cell-index = <1>;
++			interrupt-parent = <&ciu>;
++			interrupts = <1 18 0>, < 1 46 0>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			phy-handle = <&phy1>;
++		};
++
++		pip: pip@11800a0000000 {
++			compatible = "cavium,octeon-3860-pip";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0xa0000000 0x0 0x2000>;
++
++			interface@0 {
++				compatible = "cavium,octeon-3860-pip-interface";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>; /* interface */
++
++				ethernet@0 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x0>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy2>;
++				};
++				ethernet@1 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x1>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy3>;
++				};
++				ethernet@2 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x2>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy4>;
++				};
++				ethernet@3 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x3>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy5>;
++				};
++			};
++
++			interface@1 {
++				compatible = "cavium,octeon-3860-pip-interface";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <1>; /* interface */
++
++				ethernet@0 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x0>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy6>;
++				};
++				ethernet@1 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x1>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy7>;
++				};
++				ethernet@2 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x2>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy8>;
++				};
++				ethernet@3 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x3>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++					phy-handle = <&phy9>;
++				};
++			};
++
++			interface@2 { /* DPI interface. */
++				compatible = "cavium,octeon-3860-pip-interface";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <2>; /* interface */
++
++				ethernet@0 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x0>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++				ethernet@1 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x1>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++				ethernet@2 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x2>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++				ethernet@3 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x3>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++			};
++
++			interface@3 { /* Loop interface. */
++				compatible = "cavium,octeon-3860-pip-interface";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <3>; /* interface */
++
++				ethernet@0 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x0>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++				ethernet@1 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x1>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++				ethernet@2 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x2>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++				ethernet@3 {
++					compatible = "cavium,octeon-3860-pip-port";
++					device_type = "network";
++					reg = <0x3>; /* Port */
++					local-mac-address = [ 00 00 00 00 00 00 ];
++				};
++			};
++		};
++
++		twsi0: i2c@1180000001000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "cavium,octeon-3860-twsi";
++			reg = <0x11800 0x00001000 0x0 0x200>;
++			interrupt-parent = <&ciu>;
++			interrupts = <0 45 0>;
++			clock-rate = <100000>;
++
++			rtc@68 {
++				compatible = "dallas,ds1337";
++				reg = <0x68>;
++			};
++			tmp@4c {
++				compatible = "ti,tmp421";
++				reg = <0x4c>;
++			};
++		};
++
++		twsi1: i2c@1180000001200 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "cavium,octeon-3860-twsi";
++			reg = <0x11800 0x00001200 0x0 0x200>;
++			interrupt-parent = <&ciu>;
++			interrupts = <0 59 0>;
++			clock-rate = <100000>;
++		};
++	};
++
++	aliases {
++		mix0 = &mix0;
++		mix1 = &mix1;
++		pip = &pip;
++		smi0 = &smi0;
++		smi1 = &smi1;
++		twsi0 = &twsi0;
++		twsi1 = &twsi1;
++	};
++ };
+diff --git a/arch/mips/cavium-octeon/octeon_68xx.dts b/arch/mips/cavium-octeon/octeon_68xx.dts
+new file mode 100644
+index 0000000..f2a8eab
+--- /dev/null
++++ b/arch/mips/cavium-octeon/octeon_68xx.dts
+@@ -0,0 +1,116 @@
++/dts-v1/;
++/*
++ * OCTEON 68XX device tree skeleton.
++ */
++/ {
++	model = "OCTEON";
++	compatible = "cavium,octeon-6880";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	soc@0 {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges; /* Direct mapping */
++
++		ciu2: interrupt-controller@1070100000000 {
++			compatible = "cavium,octeon-6880-ciu2";
++			interrupt-controller;
++			#address-cells = <0>;
++			#interrupt-cells = <2>;
++			reg = <0x10701 0x00000000 0x0 0x4000000>;
++		};
++
++		smi0: mdio@1180000003800 {
++			compatible = "cavium,octeon-3860-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0x00003800 0x0 0x40>;
++
++		phy0: ethernet-phy@0 {
++				reg = <0>;
++				device_type = "ethernet-phy";
++			};
++
++		phy1: ethernet-phy@1 {
++				reg = <1>;
++				device_type = "ethernet-phy";
++			};
++
++		phy3: ethernet-phy@3 {
++				reg = <3>;
++				device_type = "ethernet-phy";
++			};
++		};
++
++		smi1: mdio@1180000003880 {
++			compatible = "cavium,octeon-3860-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0x00003880 0x0 0x40>;
++		};
++
++		smi2: mdio@1180000003900 {
++			compatible = "cavium,octeon-3860-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0x00003900 0x0 0x40>;
++		};
++
++		smi3: mdio@1180000003980 {
++			compatible = "cavium,octeon-3860-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x11800 0x00003980 0x0 0x40>;
++		};
++
++		mix0: ethernet@1070000100000 {
++			compatible = "cavium,octeon-5750-mix";
++			device_type = "network";
++			reg = <0x10700 0x00100000 0x0 0x100>, /* MIX */
++			      <0x11800 0xE0000000 0x0 0x300>, /* AGL */
++			      <0x11800 0xE0000400 0x0 0x400>, /* AGL_SHARED  */
++			      <0x11800 0xE0002000 0x0 0x8>;   /* AGL_PRT_CTL */
++			cell-index = <0>;
++			interrupt-parent = <&ciu2>;
++			interrupts = <0 62>, <1 46>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			phy-handle = <&phy0>;
++		};
++
++		twsi0: i2c@1180000001000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "cavium,octeon-3860-twsi";
++			reg = <0x11800 0x00001000 0x0 0x200>;
++			interrupt-parent = <&ciu2>;
++			interrupts = <0 45>;
++			clock-rate = <100000>;
++
++			rtc@68 {
++				compatible = "dallas,ds1337";
++				reg = <0x68>;
++			};
++		};
++
++		twsi1: i2c@1180000001200 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "cavium,octeon-3860-twsi";
++			reg = <0x11800 0x00001200 0x0 0x200>;
++			interrupt-parent = <&ciu2>;
++			interrupts = <0 59>;
++			clock-rate = <100000>;
++		};
++	};
++	aliases {
++		mix0 = &mix0;
++		smi0 = &smi0;
++		smi1 = &smi1;
++		smi2 = &smi2;
++		smi3 = &smi3;
++		twsi0 = &twsi0;
++		twsi1 = &twsi1;
++	};
++ };
 -- 
 1.7.2.3
