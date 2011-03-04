@@ -1,13 +1,11 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [RFC 3/3] olpc-battery: bind to device tree
-Date: Fri, 4 Mar 2011 10:23:24 -0800
-Message-ID: <20110304102324.0a5f308a@debxo>
-References: <20110304171241.0DCF89D401E@zog.reactivated.net>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [RFC PATCH v2 00/12] MIPS: Octeon: Use Device Tree.
+Date: Fri,  4 Mar 2011 11:42:12 -0800
+Message-ID: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110304171241.0DCF89D401E-k/4jFdqg8LLlyo9zxV8I99HuzzzSOjJt@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,139 +15,234 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+New in v2:
 
-On Fri,  4 Mar 2011
-17:12:40 +0000 (GMT) Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> wrote:
+Changed many device tree bindings.  They should be closer to the
+standard naming scheme now.
 
-> This is cleaner, and allows suspend/resume (wakeup) handlers to be
-> added in an upcoming patch.
-> 
-> Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/power/olpc_battery.c |   55
-> ++++++++++++++++++++++++++---------------- 1 files changed, 34
-> insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/power/olpc_battery.c
-> b/drivers/power/olpc_battery.c index 0b0ff3a..dc1526e 100644
-> --- a/drivers/power/olpc_battery.c
-> +++ b/drivers/power/olpc_battery.c
-> @@ -519,9 +519,8 @@ static struct device_attribute olpc_bat_error = {
->   *		Initialisation
->   *********************************************************************/
->  
-> -static struct platform_device *bat_pdev;
-> -
->  static struct power_supply olpc_bat = {
-> +	.name = "olpc-battery",
->  	.get_property = olpc_bat_get_property,
->  	.use_for_apm = 1,
->  };
-> @@ -534,14 +533,11 @@ void olpc_battery_trigger_uevent(unsigned long
-> cause) kobject_uevent(&olpc_bat.dev->kobj, KOBJ_CHANGE);
->  }
->  
-> -static int __init olpc_bat_init(void)
-> +static int __devinit olpc_battery_probe(struct platform_device *pdev)
->  {
-> -	int ret = 0;
-> +	int ret;
->  	uint8_t status;
->  
-> -	if (!olpc_platform_info.ecver)
-> -		return -ENXIO;
-> -
->  	/*
->  	 * We've seen a number of EC protocol changes; this driver
-> requires
->  	 * the latest EC protocol, supported by 0x44 and above.
-> @@ -558,15 +554,10 @@ static int __init olpc_bat_init(void)
->  
->  	/* Ignore the status. It doesn't actually matter */
->  
-> -	bat_pdev = platform_device_register_simple("olpc-battery",
-> 0, NULL, 0);
-> -	if (IS_ERR(bat_pdev))
-> -		return PTR_ERR(bat_pdev);
-> -
-> -	ret = power_supply_register(&bat_pdev->dev, &olpc_ac);
-> +	ret = power_supply_register(&pdev->dev, &olpc_ac);
->  	if (ret)
-> -		goto ac_failed;
-> +		return ret;
->  
-> -	olpc_bat.name = bat_pdev->name;
->  	if (olpc_board_at_least(olpc_board_pre(0xd0))) { /* XO-1.5 */
->  		olpc_bat.properties = olpc_xo15_bat_props;
->  		olpc_bat.num_properties =
-> ARRAY_SIZE(olpc_xo15_bat_props); @@ -575,7 +566,7 @@ static int
-> __init olpc_bat_init(void) olpc_bat.num_properties =
-> ARRAY_SIZE(olpc_xo1_bat_props); }
->  
-> -	ret = power_supply_register(&bat_pdev->dev, &olpc_bat);
-> +	ret = power_supply_register(&pdev->dev, &olpc_bat);
->  	if (ret)
->  		goto battery_failed;
->  
-> @@ -587,7 +578,7 @@ static int __init olpc_bat_init(void)
->  	if (ret)
->  		goto error_failed;
->  
-> -	goto success;
-> +	return 0;
->  
->  error_failed:
->  	device_remove_bin_file(olpc_bat.dev, &olpc_bat_eeprom);
-> @@ -595,19 +586,41 @@ eeprom_failed:
->  	power_supply_unregister(&olpc_bat);
->  battery_failed:
->  	power_supply_unregister(&olpc_ac);
-> -ac_failed:
-> -	platform_device_unregister(bat_pdev);
-> -success:
->  	return ret;
->  }
->  
-> -static void __exit olpc_bat_exit(void)
-> +static int __devexit olpc_battery_remove(struct platform_device
-> *pdev) {
->  	device_remove_file(olpc_bat.dev, &olpc_bat_error);
->  	device_remove_bin_file(olpc_bat.dev, &olpc_bat_eeprom);
->  	power_supply_unregister(&olpc_bat);
->  	power_supply_unregister(&olpc_ac);
-> -	platform_device_unregister(bat_pdev);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id olpc_battery_ids[] __devinitconst =
-> {
-> +	{ .compatible = "olpc,xo1-battery" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, olpc_battery_ids);
-> +
-> +static struct platform_driver olpc_battery_drv = {
-> +	.driver = {
-> +		.name = "olpc-battery",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = olpc_battery_ids,
-> +	},
-> +	.probe = olpc_battery_probe,
-> +	.remove = __devexit_p(olpc_battery_remove),
-> +};
-> +
-> +static int __init olpc_bat_init(void)
-> +{
-> +	return platform_driver_register(&olpc_battery_drv);
-> +}
-> +static void __exit olpc_bat_exit(void)
-> +{
-> +	platform_driver_unregister(&olpc_battery_drv);
->  }
->  
->  module_init(olpc_bat_init);
+Editing of the template device tree is done in the flattened form
+using libfdt.
+
+Standard platform driver functions used in preference to the
+of_platform variety.
+
+v1:
+
+Background: The Octeon family of SOCs has a variety of on-chip
+controllers for Ethernet, MDIO, I2C, and several other I/O devices.
+These chips are used on boards with a great variety of different
+configurations.  To date, the configuration and bus topology
+information has been hard coded in the drivers and support code.
+
+To facilitate supporting new chips and boards, we would like to make
+use use the Device Tree to encode the configuration information.
+
+I would like to get some feedback on the current code I am working
+with.  The migration approach is as follows:
+
+o Several device tree templates are statically linked into the kernel
+  image.  Based on SOC type and board type one of these is selected in
+  early boot.  Legacy configuration probing code is used to prune and
+  patch the device tree template.
+
+o New SOCs and boards will directly use a device tree passed by the
+  bootloader (This patch set doesn't actually implement this, but it
+  is trivial to add).
+
+
+
+01/12 - Move configuration code to common place for use by Device Tree
+        pruning and patching code.
+
+02/12 - Infrastructure to allow scripts/dtc/libfdt to be used in the
+        kernel.
+
+03/12 - OF patch to simplify of_find_node_by_path().  This one I
+        previously sent seperatly and receive as of yet unacted upon
+        feedback.
+
+04/12 - Add the statically linked Device Tree templates.
+
+05/10 - Remove unused arch/mips/prom.c code that conflicts with
+        following patches.
+
+06/10 - irq_create_of_mapping() function.
+
+07/10 - Rearrange legacy configuration code for following patch.
+
+08/10 - Fix up Device Tree template for current environment.
+
+09/10 - Convert I2C driver to use Device Tree.
+
+10/10 - Convert MDIO driver to use Device Tree.
+
+11/10 - Convert Ethernet mgmt driver to use Device Tree.
+
+12/10 - Convert Octeon Ethernet driver to use Device Tree.
+
+David Daney (12):
+  MIPS: Octeon: Move some Ethernet support files out of staging.
+  of: Allow scripts/dtc/libfdt to be used from kernel code
+  of: Make of_find_node_by_path() traverse /aliases for relative paths.
+  MIPS: Octeon: Add device tree source files.
+  MIPS: Prune some target specific code out of prom.c
+  MIPS: Octeon: Add a irq_create_of_mapping() implementation.
+  MIPS: Octeon: Rearrance CVMX files in preperation for device tree
+  MIPS: Octeon: Initialize and fixup device tree.
+  i2c: Convert i2c-octeon.c to use device tree.
+  netdev: mdio-octeon.c: Convert to use device tree.
+  netdev: octeon_mgmt: Convert to use device tree.
+  staging: octeon_ethernet: Convert to use device tree.
+
+ arch/mips/Kconfig                                  |    1 +
+ arch/mips/cavium-octeon/.gitignore                 |    2 +
+ arch/mips/cavium-octeon/Makefile                   |   13 +
+ arch/mips/cavium-octeon/executive/Makefile         |    5 +
+ .../mips/cavium-octeon/executive}/cvmx-cmd-queue.c |    8 +-
+ .../mips/cavium-octeon/executive}/cvmx-fpa.c       |    0
+ .../cavium-octeon/executive}/cvmx-helper-board.c   |   18 +-
+ .../cavium-octeon/executive}/cvmx-helper-fpa.c     |    0
+ .../cavium-octeon/executive}/cvmx-helper-loop.c    |    6 +-
+ .../cavium-octeon/executive}/cvmx-helper-npi.c     |    6 +-
+ .../cavium-octeon/executive}/cvmx-helper-rgmii.c   |   17 +-
+ .../cavium-octeon/executive}/cvmx-helper-sgmii.c   |   18 +-
+ .../cavium-octeon/executive}/cvmx-helper-spi.c     |   20 +-
+ .../cavium-octeon/executive}/cvmx-helper-util.c    |   16 +-
+ .../cavium-octeon/executive}/cvmx-helper-xaui.c    |   32 +-
+ .../mips/cavium-octeon/executive}/cvmx-helper.c    |  120 +++++--
+ .../executive}/cvmx-interrupt-decodes.c            |   10 +-
+ .../cavium-octeon/executive}/cvmx-interrupt-rsl.c  |    4 +-
+ .../mips/cavium-octeon/executive}/cvmx-pko.c       |    6 +-
+ .../mips/cavium-octeon/executive}/cvmx-spi.c       |   12 +-
+ arch/mips/cavium-octeon/octeon-irq.c               |   25 ++
+ arch/mips/cavium-octeon/octeon-platform.c          |  410 +++++++++++---------
+ arch/mips/cavium-octeon/octeon_3xxx.dts            |  330 ++++++++++++++++
+ arch/mips/cavium-octeon/octeon_68xx.dts            |  116 ++++++
+ arch/mips/cavium-octeon/setup.c                    |   17 +
+ .../mips/include/asm}/octeon/cvmx-address.h        |    0
+ .../mips/include/asm}/octeon/cvmx-asxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-cmd-queue.h      |    0
+ .../mips/include/asm}/octeon/cvmx-config.h         |    0
+ .../mips/include/asm}/octeon/cvmx-dbg-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-fau.h            |    0
+ .../mips/include/asm}/octeon/cvmx-fpa-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-fpa.h            |    0
+ .../mips/include/asm}/octeon/cvmx-gmxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-helper-board.h   |    0
+ .../mips/include/asm}/octeon/cvmx-helper-fpa.h     |    0
+ .../mips/include/asm}/octeon/cvmx-helper-loop.h    |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-npi.h     |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-rgmii.h   |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-sgmii.h   |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-spi.h     |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper-util.h    |    0
+ .../mips/include/asm}/octeon/cvmx-helper-xaui.h    |    1 +
+ .../mips/include/asm}/octeon/cvmx-helper.h         |    1 +
+ .../mips/include/asm}/octeon/cvmx-ipd.h            |    0
+ .../mips/include/asm}/octeon/cvmx-mdio.h           |    0
+ .../mips/include/asm}/octeon/cvmx-pcsx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-pcsxx-defs.h     |    0
+ .../mips/include/asm}/octeon/cvmx-pip-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-pip.h            |    0
+ .../mips/include/asm}/octeon/cvmx-pko-defs.h       |    0
+ .../mips/include/asm}/octeon/cvmx-pko.h            |    0
+ .../mips/include/asm}/octeon/cvmx-pow.h            |    0
+ .../mips/include/asm}/octeon/cvmx-scratch.h        |    0
+ .../mips/include/asm}/octeon/cvmx-spi.h            |    0
+ .../mips/include/asm}/octeon/cvmx-spxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-srxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-stxx-defs.h      |    0
+ .../mips/include/asm}/octeon/cvmx-wqe.h            |    0
+ arch/mips/include/asm/octeon/octeon.h              |    5 -
+ arch/mips/kernel/prom.c                            |   49 ---
+ drivers/i2c/busses/i2c-octeon.c                    |   69 ++--
+ drivers/net/octeon/octeon_mgmt.c                   |  321 +++++++++++-----
+ drivers/net/phy/mdio-octeon.c                      |   92 +++--
+ drivers/of/base.c                                  |   24 ++-
+ drivers/staging/octeon/Makefile                    |    5 -
+ drivers/staging/octeon/cvmx-packet.h               |   65 ---
+ drivers/staging/octeon/cvmx-smix-defs.h            |  178 ---------
+ drivers/staging/octeon/ethernet-defines.h          |    2 +-
+ drivers/staging/octeon/ethernet-mdio.c             |   31 +-
+ drivers/staging/octeon/ethernet-mem.c              |    2 +-
+ drivers/staging/octeon/ethernet-rgmii.c            |    4 +-
+ drivers/staging/octeon/ethernet-rx.c               |   14 +-
+ drivers/staging/octeon/ethernet-rx.h               |    2 +-
+ drivers/staging/octeon/ethernet-sgmii.c            |    4 +-
+ drivers/staging/octeon/ethernet-spi.c              |    6 +-
+ drivers/staging/octeon/ethernet-tx.c               |   12 +-
+ drivers/staging/octeon/ethernet-xaui.c             |    4 +-
+ drivers/staging/octeon/ethernet.c                  |  102 +++--
+ drivers/staging/octeon/octeon-ethernet.h           |    3 +
+ include/linux/libfdt.h                             |    3 +
+ lib/Kconfig                                        |    6 +
+ lib/Makefile                                       |    2 +
+ lib/libfdt/Makefile                                |    7 +
+ lib/libfdt/libfdt_env.h                            |   21 +
+ scripts/dtc/libfdt/libfdt.h                        |    4 +-
+ 86 files changed, 1421 insertions(+), 835 deletions(-)
+ create mode 100644 arch/mips/cavium-octeon/.gitignore
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-cmd-queue.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-fpa.c (100%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-board.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-fpa.c (100%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-loop.c (95%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-npi.c (96%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-rgmii.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-sgmii.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-spi.c (94%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-util.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper-xaui.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-helper.c (93%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-interrupt-decodes.c (98%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-interrupt-rsl.c (97%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-pko.c (99%)
+ rename {drivers/staging/octeon => arch/mips/cavium-octeon/executive}/cvmx-spi.c (99%)
+ create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
+ create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-address.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-asxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-cmd-queue.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-config.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-dbg-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fau.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fpa-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-fpa.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-gmxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-board.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-fpa.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-loop.h (96%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-npi.h (96%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-rgmii.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-sgmii.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-spi.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-util.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper-xaui.h (98%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-helper.h (99%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-ipd.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-mdio.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pcsx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pcsxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pip-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pip.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pko-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pko.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-pow.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-scratch.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-spi.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-spxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-srxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-stxx-defs.h (100%)
+ rename {drivers/staging => arch/mips/include/asm}/octeon/cvmx-wqe.h (100%)
+ delete mode 100644 drivers/staging/octeon/cvmx-packet.h
+ delete mode 100644 drivers/staging/octeon/cvmx-smix-defs.h
+ create mode 100644 include/linux/libfdt.h
+ create mode 100644 lib/libfdt/Makefile
+ create mode 100644 lib/libfdt/libfdt_env.h
+
+-- 
+1.7.2.3
