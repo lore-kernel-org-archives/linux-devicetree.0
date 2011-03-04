@@ -1,119 +1,92 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: [RFC PATCH v2 02/12] of: Allow scripts/dtc/libfdt to be used from kernel code
-Date: Fri,  4 Mar 2011 11:42:14 -0800
-Message-ID: <1299267744-17278-3-git-send-email-ddaney@caviumnetworks.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [RFC PATCH v2 03/12] of: Make of_find_node_by_path() traverse
+	/aliases for relative paths.
+Date: Fri,  4 Mar 2011 11:42:15 -0800
+Message-ID: <1299267744-17278-4-git-send-email-ddaney@caviumnetworks.com>
 References: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
-Cc: David Daney <ddaney@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1299267744-17278-1-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Daney <ddaney@caviumnetworks.com>
----
- include/linux/libfdt.h      |    3 +++
- lib/Kconfig                 |    6 ++++++
- lib/Makefile                |    2 ++
- lib/libfdt/Makefile         |    7 +++++++
- lib/libfdt/libfdt_env.h     |   21 +++++++++++++++++++++
- scripts/dtc/libfdt/libfdt.h |    4 ++--
- 6 files changed, 41 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/libfdt.h
- create mode 100644 lib/libfdt/Makefile
- create mode 100644 lib/libfdt/libfdt_env.h
+Currently all paths passed to of_find_node_by_path() must begin with a
+'/', indicating a full path to the desired node.
 
-diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
-new file mode 100644
-index 0000000..10bce91
---- /dev/null
-+++ b/include/linux/libfdt.h
-@@ -0,0 +1,3 @@
-+#include "../../lib/libfdt/libfdt_env.h"
-+#include "../../scripts/dtc/libfdt/fdt.h"
-+#include "../../scripts/dtc/libfdt/libfdt.h"
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 0ee67e0..e8a2638 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -219,4 +219,10 @@ config LRU_CACHE
- config AVERAGE
- 	bool
+Augment the look-up code so that if a path does *not* begin with '/',
+the path is used as the name of an /aliases property.  The value of
+this alias is then used as the full node path to be found.
+
+Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+---
+
+This patch is unchanged from the previous version I send separately.  I
+have not forgotten about Grant's feedback, just deferred it to the
+next version.
+
+ drivers/of/base.c |   24 +++++++++++++++++++++++-
+ 1 files changed, 23 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 710b53b..e63da9c 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -340,7 +340,10 @@ EXPORT_SYMBOL(of_get_next_child);
  
-+#
-+# The Flattened Device Tree manipulation library
-+#
-+config LIBFDT
-+	bool
-+
- endmenu
-diff --git a/lib/Makefile b/lib/Makefile
-index cbb774f..5840115 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -110,6 +110,8 @@ obj-$(CONFIG_ATOMIC64_SELFTEST) += atomic64_test.o
+ /**
+  *	of_find_node_by_path - Find a node matching a full OF path
+- *	@path:	The full path to match
++ *	@path: Either the full path to match, or if the path does not
++ *	       start with '/', the name of a property of the /aliases
++ *	       node (an alias).  In the case of an alias, the node
++ *	       matching the alias' value will be returned.
+  *
+  *	Returns a node pointer with refcount incremented, use
+  *	of_node_put() on it when done.
+@@ -348,13 +351,32 @@ EXPORT_SYMBOL(of_get_next_child);
+ struct device_node *of_find_node_by_path(const char *path)
+ {
+ 	struct device_node *np = allnodes;
++	struct device_node *aliases = NULL;
  
- obj-$(CONFIG_AVERAGE) += average.o
- 
-+obj-$(CONFIG_LIBFDT) += libfdt/
+ 	read_lock(&devtree_lock);
 +
- hostprogs-y	:= gen_crc32table
- clean-files	:= crc32table.h
- 
-diff --git a/lib/libfdt/Makefile b/lib/libfdt/Makefile
-new file mode 100644
-index 0000000..6c1a496
---- /dev/null
-+++ b/lib/libfdt/Makefile
-@@ -0,0 +1,7 @@
-+obj-y = fdt.o fdt_wip.o fdt_ro.o
++	if (path[0] != '/') {
++		aliases = of_find_node_by_path("/aliases");
++		if (!aliases)
++			goto out;
++		path = of_get_property(aliases, path, NULL);
++		/*
++		 * The alias must begin with '/', otherwise we could
++		 * get stuck in an endless loop and blow out the
++		 * stack.
++		 */
++		if (!path || path[0] != '/')
++			goto out;
++	}
 +
-+EXTRA_CFLAGS += -include $(src)/libfdt_env.h -I$(src)/../../scripts/dtc/libfdt
-+
-+$(obj)/%.o: $(src)/../../scripts/dtc/libfdt/%.c FORCE
-+	$(call cmd,force_checksrc)
-+	$(call if_changed_rule,cc_o_c)
-diff --git a/lib/libfdt/libfdt_env.h b/lib/libfdt/libfdt_env.h
-new file mode 100644
-index 0000000..d977b8b
---- /dev/null
-+++ b/lib/libfdt/libfdt_env.h
-@@ -0,0 +1,21 @@
-+#ifndef _LIBFDT_ENV_H
-+#define _LIBFDT_ENV_H
-+
-+#include <linux/string.h>
-+
-+#define _B(n)	((unsigned long long)((uint8_t *)&x)[n])
-+static inline uint32_t fdt32_to_cpu(uint32_t x)
-+{
-+	return (_B(0) << 24) | (_B(1) << 16) | (_B(2) << 8) | _B(3);
-+}
-+#define cpu_to_fdt32(x) fdt32_to_cpu(x)
-+
-+static inline uint64_t fdt64_to_cpu(uint64_t x)
-+{
-+	return (_B(0) << 56) | (_B(1) << 48) | (_B(2) << 40) | (_B(3) << 32)
-+		| (_B(4) << 24) | (_B(5) << 16) | (_B(6) << 8) | _B(7);
-+}
-+#define cpu_to_fdt64(x) fdt64_to_cpu(x)
-+#undef _B
-+
-+#endif /* _LIBFDT_ENV_H */
-diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
-index ce80e4f..33a0c4d 100644
---- a/scripts/dtc/libfdt/libfdt.h
-+++ b/scripts/dtc/libfdt/libfdt.h
-@@ -51,8 +51,8 @@
-  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
--#include <libfdt_env.h>
--#include <fdt.h>
-+#include "libfdt_env.h"
-+#include "fdt.h"
- 
- #define FDT_FIRST_SUPPORTED_VERSION	0x10
- #define FDT_LAST_SUPPORTED_VERSION	0x11
+ 	for (; np; np = np->allnext) {
+ 		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+ 		    && of_node_get(np))
+ 			break;
+ 	}
++out:
++	if (aliases)
++		of_node_put(aliases);
+ 	read_unlock(&devtree_lock);
+ 	return np;
+ }
 -- 
 1.7.2.3
