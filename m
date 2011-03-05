@@ -1,14 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] Make of_read_number() handle unaligned data
-Date: Fri, 4 Mar 2011 22:20:45 -0700
-Message-ID: <20110305052045.GK7579@angua.secretlab.ca>
-References: <20110222223647.GA17406@dvomlehn-lnx2.corp.sa.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH v2 02/12] of: Allow scripts/dtc/libfdt to be used
+	from kernel code
+Date: Sat, 5 Mar 2011 19:24:09 +1100
+Message-ID: <20110305082409.GB3312@yookeroo>
+References: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com>
+	<1299267744-17278-3-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110222223647.GA17406-ZEW99E7oL/EiWxQNNj96ibh/4TqKg8J2XqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1299267744-17278-3-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,56 +20,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 22, 2011 at 02:36:47PM -0800, David VomLehn wrote:
-> Numeric values in properties can be unaligned, so introduce get_unaligned()
-> in of_read_number() to make this work correctly on all processors.
-> 
-> Signed-off-by: David VomLehn <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Hi David,
-
-I've thought a lot about this change, (which is a big part of why it
-has taken me so long to reply) and while the change itself doesn't
-look problematic, I'm really bothered by the implications.  I really
-don't like the binding that makes this change necessary.  Mixing cell
-and string values is already troublesome.  Placing the cell after the
-string so that alignment is wonky is doubly so.  (however, I am
-working from memory here about the binding that requires this change.
-Can you send it to me again, and I'll have a fresh look).
-
-g.
-
-> ---
->  include/linux/of.h |    8 ++++++--
->  1 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index cad7cf0..a0a6925 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -22,6 +22,7 @@
->  #include <linux/spinlock.h>
->  
->  #include <asm/byteorder.h>
-> +#include <asm/unaligned.h>
->  
->  #ifdef CONFIG_OF
->  
-> @@ -110,8 +111,11 @@ extern void of_node_put(struct device_node *node);
->  static inline u64 of_read_number(const __be32 *cell, int size)
->  {
->  	u64 r = 0;
-> -	while (size--)
-> -		r = (r << 32) | be32_to_cpu(*(cell++));
-> +	while (size--) {
-> +		r = (r << 32) | be32_to_cpu(get_unaligned(cell));
-> +		cell++;
-> +	}
+On Fri, Mar 04, 2011 at 11:42:14AM -0800, David Daney wrote:
+> Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+[snip]
+> --- /dev/null
+> +++ b/lib/libfdt/libfdt_env.h
+> @@ -0,0 +1,21 @@
+> +#ifndef _LIBFDT_ENV_H
+> +#define _LIBFDT_ENV_H
 > +
->  	return r;
->  }
->  
+> +#include <linux/string.h>
+> +
+> +#define _B(n)	((unsigned long long)((uint8_t *)&x)[n])
+> +static inline uint32_t fdt32_to_cpu(uint32_t x)
+> +{
+> +	return (_B(0) << 24) | (_B(1) << 16) | (_B(2) << 8) | _B(3);
+> +}
+> +#define cpu_to_fdt32(x) fdt32_to_cpu(x)
+> +
+> +static inline uint64_t fdt64_to_cpu(uint64_t x)
+> +{
+> +	return (_B(0) << 56) | (_B(1) << 48) | (_B(2) << 40) | (_B(3) << 32)
+> +		| (_B(4) << 24) | (_B(5) << 16) | (_B(6) << 8) | _B(7);
+> +}
+> +#define cpu_to_fdt64(x) fdt64_to_cpu(x)
+> +#undef _B
+
+Ah, yuck.  I only used those nasty macros in the userspace version of
+libfdt_env.h because bytesex.h is such a portability nightmare.  The
+kernel already has cpu_to_be{32,64}(), and the fdt byteswapping
+functions should just be aliased to them.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
