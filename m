@@ -1,41 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] arm/dt: add basic mx51 device tree support
-Date: Mon, 7 Mar 2011 15:52:26 +0100
-Message-ID: <201103071552.26766.arnd@arndb.de>
-References: <1299503160-9910-1-git-send-email-jason.hui@linaro.org>
-	<201103071537.49026.arnd@arndb.de>
-	<20110307144621.GB9978@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RFC 0/5] Dynamically add clk to clkdev per dt clock nodes
+Date: Tue,  8 Mar 2011 00:22:07 +0800
+Message-ID: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110307144621.GB9978-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 March 2011, Shawn Guo wrote:
-> > Alternatively, it could be done the other way round: rename the identifiers
-> > in the file from mx51_ to mx5_, and make sure that they don't contain
-> > any mx51 specific settings but always refer to properties in the 
-> > device tree for the differences.
-> > 
-> So our ultimate goal is to have only one board-dt.c in one mach-xxx?
+Before translating all mx5 clocks from static adding way to dynamic
+way, I would send this out for review and comment, so that I can turn
+around in case that I'm on a wrong direction.
 
-I wouldn't make that a strict rule, but I'd say that one goal should be
-to have as few board-dt files as possible without adding complexity.
+It's based on Jason's mx51-basic-dt-support patch set, and only adds
+gpt and uart related clocks, but it's enough to get the system at
+where Jason's patch can get.
 
-As a start, we can say we want one file for per set of machines that
-can run a common binary kernel, but there may be good reasons for
-deviating from that rule on both sides.
+ [PATCH 1/5] arm/dts: babbage: add gpt and uart related clock nodes
+ [PATCH 2/5] arm/mxc: add clk members to ease dt clock support
+ [PATCH 3/5] arm/dt: mx51: dynamically add gpt and uart related clocks per dt nodes
+ [PATCH 4/5] arm/dt: mx5: change timer init function to dt clock way
+ [PATCH 5/5] of/clock: eliminate function __of_clk_get_from_provider
 
-	Arnd
+ arch/arm/boot/dts/babbage.dts          |  162 ++++++++++++-
+ arch/arm/mach-mx5/board-dt.c           |    9 +-
+ arch/arm/mach-mx5/clock-mx51-mx53.c    |  436 +++++++++++++++++++++++++++++++-
+ arch/arm/plat-mxc/include/mach/clock.h |    4 +
+ drivers/of/clock.c                     |   23 +--
+ drivers/tty/serial/imx.c               |   79 +++++-
+ 6 files changed, 661 insertions(+), 52 deletions(-)
+
+Regards,
+Shawn
