@@ -1,108 +1,46 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH V2 1/3] arm/dt: add basic mx51 device tree support
-Date: Mon, 7 Mar 2011 22:23:55 +0800
-Message-ID: <20110307142354.GA9978@S2101-09.ap.freescale.net>
+Date: Mon, 7 Mar 2011 15:37:48 +0100
+Message-ID: <201103071537.49026.arnd@arndb.de>
 References: <1299503160-9910-1-git-send-email-jason.hui@linaro.org>
 	<1299503160-9910-2-git-send-email-jason.hui@linaro.org>
+	<20110307141656.GC7189@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1299503160-9910-2-git-send-email-jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110307141656.GC7189-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 07, 2011 at 09:05:58PM +0800, Jason Liu wrote:
-> Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-[...]
-> diff --git a/arch/arm/mach-mx5/board-dt.c b/arch/arm/mach-mx5/board-dt.c
-> new file mode 100644
-> index 0000000..90593f5
-> --- /dev/null
-> +++ b/arch/arm/mach-mx5/board-dt.c
-> @@ -0,0 +1,64 @@
-> +/*
-> + * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_fdt.h>
-> +
-> +#include <mach/common.h>
-> +#include <mach/hardware.h>
-> +#include <mach/imx-uart.h>
-> +#include <mach/iomux-mx51.h>
-> +
-> +#include <asm/irq.h>
-> +#include <asm/setup.h>
-> +#include <asm/mach-types.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/time.h>
-> +
-> +#include "devices.h"
-> +
-> +static struct of_device_id mx51_dt_match_table[] __initdata = {
-> +	{ .compatible = "simple-bus", },
-> +	{}
-> +};
-> +
-> +static void __init mx51_dt_board_init(void)
-> +{
-> +	of_platform_bus_probe(NULL, mx51_dt_match_table, NULL);
-> +}
-> +
-> +static void __init mx51_dt_timer_init(void)
-> +{
-> +	mx51_clocks_init(32768, 24000000, 22579200, 0);
-> +	mx5_clk_dt_init();
-> +}
-> +
-> +static struct sys_timer mxc_timer = {
-> +	.init = mx51_dt_timer_init,
-> +};
-> +
-> +static const char * const mx51_dt_board_compat[] = {
+On Monday 07 March 2011, Shawn Guo wrote:
+> > diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
+> > index 0d43be9..540697e 100644
+> > --- a/arch/arm/mach-mx5/Makefile
+> > +++ b/arch/arm/mach-mx5/Makefile
+> > @@ -18,3 +18,4 @@ obj-$(CONFIG_MACH_EUKREA_CPUIMX51SD) += board-cpuimx51sd.o
+> >  obj-$(CONFIG_MACH_EUKREA_MBIMXSD51_BASEBOARD) += eukrea_mbimxsd-baseboard.o
+> >  obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
+> >  obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
+> > +obj-$(CONFIG_MACH_MX51_DT) += board-dt.o
+> 
+> If board-dt.c is mx51 specific, would it be sane to name it something
+> like board-mx51-dt.c?  We have mx53 stuff in this folder as well.
+> 
 
-The extra 'const' is introducing the warning below.
+Alternatively, it could be done the other way round: rename the identifiers
+in the file from mx51_ to mx5_, and make sure that they don't contain
+any mx51 specific settings but always refer to properties in the 
+device tree for the differences.
 
-arch/arm/mach-mx5/board-dt.c:69: warning: initialization discards qualifiers from pointer target type
-
-> +	"fsl,mx51-babbage",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(MX51_DT, "Freescale MX51 (Flattened Device Tree)")
-> +	.boot_params  = PHYS_OFFSET + 0x100,
-> +	.map_io       = mx51_map_io,
-> +	.init_irq     = mx51_init_irq,
-> +	.init_machine = mx51_dt_board_init,
-> +	.dt_compat    = mx51_dt_board_compat,
-> +	.timer        = &mxc_timer,
-> +MACHINE_END
-
--- 
-Regards,
-Shawn
+	Arnd
