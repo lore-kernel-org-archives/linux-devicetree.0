@@ -1,7 +1,7 @@
 From: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2 1/3] arm/dt: add basic mx51 device tree support
-Date: Mon,  7 Mar 2011 21:05:58 +0800
-Message-ID: <1299503160-9910-2-git-send-email-jason.hui@linaro.org>
+Subject: [PATCH V2 2/3] arm/dt: add very basic dts file for babbage board
+Date: Mon,  7 Mar 2011 21:05:59 +0800
+Message-ID: <1299503160-9910-3-git-send-email-jason.hui@linaro.org>
 References: <1299503160-9910-1-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,185 +22,126 @@ Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Singed-off-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/mach-mx5/Kconfig               |    8 ++++
- arch/arm/mach-mx5/Makefile              |    1 +
- arch/arm/mach-mx5/board-dt.c            |   64 +++++++++++++++++++++++++++++++
- arch/arm/mach-mx5/clock-mx51-mx53.c     |   43 ++++++++++++++++++++-
- arch/arm/plat-mxc/include/mach/common.h |    1 +
- 5 files changed, 116 insertions(+), 1 deletions(-)
+ arch/arm/boot/dts/babbage.dts |  110 +++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 110 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-index de4fa99..6438f87 100644
---- a/arch/arm/mach-mx5/Kconfig
-+++ b/arch/arm/mach-mx5/Kconfig
-@@ -47,6 +47,14 @@ config MACH_MX51_BABBAGE
- 	  u-boot. This includes specific configurations for the board and its
- 	  peripherals.
- 
-+config MACH_MX51_DT
-+	bool "Generic MX51 board (FDT support)"
-+	select USE_OF
-+	select SOC_IMX51
-+	help
-+	 Support for generic Freescale i.MX51 boards using Flattened Device
-+	 Tree.
-+
- config MACH_MX51_3DS
- 	bool "Support MX51PDK (3DS)"
- 	select SOC_IMX51
-diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-index 0d43be9..540697e 100644
---- a/arch/arm/mach-mx5/Makefile
-+++ b/arch/arm/mach-mx5/Makefile
-@@ -18,3 +18,4 @@ obj-$(CONFIG_MACH_EUKREA_CPUIMX51SD) += board-cpuimx51sd.o
- obj-$(CONFIG_MACH_EUKREA_MBIMXSD51_BASEBOARD) += eukrea_mbimxsd-baseboard.o
- obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
- obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
-+obj-$(CONFIG_MACH_MX51_DT) += board-dt.o
-diff --git a/arch/arm/mach-mx5/board-dt.c b/arch/arm/mach-mx5/board-dt.c
+diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
 new file mode 100644
-index 0000000..90593f5
+index 0000000..46a3071
 --- /dev/null
-+++ b/arch/arm/mach-mx5/board-dt.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++++ b/arch/arm/boot/dts/babbage.dts
+@@ -0,0 +1,110 @@
++/dts-v1/;
 +
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_fdt.h>
++/ {
++	model = "Freescale i.MX51 Babbage";
++	compatible = "fsl,mx51-babbage";
++	#address-cells = <0x1>;
++	#size-cells = <0x1>;
++	#interrupt-cells = <0x1>;
++	interrupt-parent = <&tzic>;
 +
-+#include <mach/common.h>
-+#include <mach/hardware.h>
-+#include <mach/imx-uart.h>
-+#include <mach/iomux-mx51.h>
++	memory {
++		reg = <0x90000000 0x20000000>;
++	};
 +
-+#include <asm/irq.h>
-+#include <asm/setup.h>
-+#include <asm/mach-types.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach/time.h>
++	chosen {
++		bootargs = "console=ttymxc1,115200n8 debug earlyprintk";
++	};
 +
-+#include "devices.h"
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
 +
-+static struct of_device_id mx51_dt_match_table[] __initdata = {
-+	{ .compatible = "simple-bus", },
-+	{}
++		tzic: tzic@0 {
++			#address-cells = <0>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			reg = <0xe0000000 0x1000>;
++			compatible = "fsl,imx51-tzic";
++		};
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		uart0_clk: uart@0 {
++			compatible = "clock";
++			clock-outputs = "imx-uart.0";
++		};
++
++		uart1_clk: uart@1 {
++			compatible = "clock";
++			clock-outputs = "imx-uart.1";
++		};
++
++		uart2_clk: uart@2 {
++			compatible = "clock";
++			clock-outputs = "imx-uart.2";
++		};
++
++		fec_clk: fec@0 {
++			compatible = "clock";
++			clock-outputs = "fec.0";
++		};
++	};
++
++	spba@70000000 {
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		compatible = "simple-bus";
++		ranges = <0x0 0x70000000 0x100000>;
++
++		imx-uart@c000 {
++			compatible = "imx-uart";
++			reg = <0xc000 0x1000>;
++			interrupts = <0x21>;
++			rts-cts;
++			uart-clock = <&uart2_clk>, "uart";
++		};
++	};
++
++	aips@73f00000 {
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		compatible = "simple-bus";
++		ranges = <0x0 0x73f00000 0x100000>;
++
++		imx-uart@bc000 {
++			compatible = "imx-uart";
++			reg = <0xbc000 0x1000>;
++			interrupts = <0x1f>;
++			rts-cts;
++			uart-clock = <&uart0_clk>, "uart";
++		};
++
++		imx-uart@c0000 {
++			compatible = "imx-uart";
++			reg = <0xc0000 0x1000>;
++			interrupts = <0x20>;
++			rts-cts;
++			uart-clock = <&uart1_clk>, "uart";
++		};
++	};
++
++	aips@83f00000 {
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		compatible = "simple-bus";
++		ranges = <0x0 0x83f00000 0x100000>;
++
++		fec@ec000 {
++			compatible = "fec";
++			reg = <0xec000 0x1000>;
++			interrupts = <0x57>;
++			fec_clk-clock = <&fec_clk>, "fec";
++		};
++	};
 +};
-+
-+static void __init mx51_dt_board_init(void)
-+{
-+	of_platform_bus_probe(NULL, mx51_dt_match_table, NULL);
-+}
-+
-+static void __init mx51_dt_timer_init(void)
-+{
-+	mx51_clocks_init(32768, 24000000, 22579200, 0);
-+	mx5_clk_dt_init();
-+}
-+
-+static struct sys_timer mxc_timer = {
-+	.init = mx51_dt_timer_init,
-+};
-+
-+static const char * const mx51_dt_board_compat[] = {
-+	"fsl,mx51-babbage",
-+	NULL
-+};
-+
-+DT_MACHINE_START(MX51_DT, "Freescale MX51 (Flattened Device Tree)")
-+	.boot_params  = PHYS_OFFSET + 0x100,
-+	.map_io       = mx51_map_io,
-+	.init_irq     = mx51_init_irq,
-+	.init_machine = mx51_dt_board_init,
-+	.dt_compat    = mx51_dt_board_compat,
-+	.timer        = &mxc_timer,
-+MACHINE_END
-diff --git a/arch/arm/mach-mx5/clock-mx51-mx53.c b/arch/arm/mach-mx5/clock-mx51-mx53.c
-index 0a19e75..dedb7f9 100644
---- a/arch/arm/mach-mx5/clock-mx51-mx53.c
-+++ b/arch/arm/mach-mx5/clock-mx51-mx53.c
-@@ -15,13 +15,19 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/clkdev.h>
--
-+#include <linux/err.h>
- #include <asm/div64.h>
- 
- #include <mach/hardware.h>
- #include <mach/common.h>
- #include <mach/clock.h>
- 
-+#ifdef CONFIG_OF
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_clk.h>
-+#endif /* CONFIG_OF */
-+
- #include "crm_regs.h"
- 
- /* External clock values passed-in by the board code */
-@@ -1432,3 +1438,38 @@ int __init mx53_clocks_init(unsigned long ckil, unsigned long osc,
- 		MX53_INT_GPT);
- 	return 0;
- }
-+
-+#ifdef CONFIG_OF
-+static struct clk *mx5_dt_clk_get(struct device_node *np,
-+					const char *output_id, void *data)
-+{
-+	return data;
-+}
-+
-+static __init void mx5_dt_scan_clks(void)
-+{
-+	struct device_node *node;
-+	struct clk *clk;
-+	const char *id;
-+	int rc;
-+
-+	for_each_compatible_node(node, NULL, "clock") {
-+		id = of_get_property(node, "clock-outputs", NULL);
-+		if (!id)
-+			continue;
-+
-+		clk = clk_get_sys(id, NULL);
-+		if (IS_ERR(clk))
-+			continue;
-+
-+		rc = of_clk_add_provider(node, mx5_dt_clk_get, clk);
-+		if (rc)
-+			pr_err("error adding fixed clk %s\n", node->name);
-+	}
-+}
-+
-+void __init mx5_clk_dt_init(void)
-+{
-+	mx5_dt_scan_clks();
-+}
-+#endif
-diff --git a/arch/arm/plat-mxc/include/mach/common.h b/arch/arm/plat-mxc/include/mach/common.h
-index aea2cd3..a28e84a 100644
---- a/arch/arm/plat-mxc/include/mach/common.h
-+++ b/arch/arm/plat-mxc/include/mach/common.h
-@@ -58,4 +58,5 @@ extern void mxc91231_arch_reset(int, const char *);
- extern void mxc91231_prepare_idle(void);
- extern void mx51_efikamx_reset(void);
- extern int mx53_revision(void);
-+extern void mx5_clk_dt_init(void);
- #endif
 -- 
 1.7.0.4
