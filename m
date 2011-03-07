@@ -1,7 +1,7 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: [PATCH V2 1/3] arm/dt: add basic mx51 device tree support
-Date: Mon, 7 Mar 2011 22:17:54 +0800
-Message-ID: <20110307141656.GC7189@S2101-09.ap.freescale.net>
+Date: Mon, 7 Mar 2011 22:23:55 +0800
+Message-ID: <20110307142354.GA9978@S2101-09.ap.freescale.net>
 References: <1299503160-9910-1-git-send-email-jason.hui@linaro.org>
 	<1299503160-9910-2-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
@@ -26,44 +26,82 @@ List-Id: devicetree@vger.kernel.org
 On Mon, Mar 07, 2011 at 09:05:58PM +0800, Jason Liu wrote:
 > Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
->  arch/arm/mach-mx5/Kconfig               |    8 ++++
->  arch/arm/mach-mx5/Makefile              |    1 +
->  arch/arm/mach-mx5/board-dt.c            |   64 +++++++++++++++++++++++++++++++
->  arch/arm/mach-mx5/clock-mx51-mx53.c     |   43 ++++++++++++++++++++-
->  arch/arm/plat-mxc/include/mach/common.h |    1 +
->  5 files changed, 116 insertions(+), 1 deletions(-)
-> 
-> diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-> index de4fa99..6438f87 100644
-> --- a/arch/arm/mach-mx5/Kconfig
-> +++ b/arch/arm/mach-mx5/Kconfig
-> @@ -47,6 +47,14 @@ config MACH_MX51_BABBAGE
->  	  u-boot. This includes specific configurations for the board and its
->  	  peripherals.
->  
-> +config MACH_MX51_DT
-> +	bool "Generic MX51 board (FDT support)"
-> +	select USE_OF
-> +	select SOC_IMX51
-> +	help
-> +	 Support for generic Freescale i.MX51 boards using Flattened Device
-> +	 Tree.
+[...]
+> diff --git a/arch/arm/mach-mx5/board-dt.c b/arch/arm/mach-mx5/board-dt.c
+> new file mode 100644
+> index 0000000..90593f5
+> --- /dev/null
+> +++ b/arch/arm/mach-mx5/board-dt.c
+> @@ -0,0 +1,64 @@
+> +/*
+> + * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
 > +
->  config MACH_MX51_3DS
->  	bool "Support MX51PDK (3DS)"
->  	select SOC_IMX51
-> diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-> index 0d43be9..540697e 100644
-> --- a/arch/arm/mach-mx5/Makefile
-> +++ b/arch/arm/mach-mx5/Makefile
-> @@ -18,3 +18,4 @@ obj-$(CONFIG_MACH_EUKREA_CPUIMX51SD) += board-cpuimx51sd.o
->  obj-$(CONFIG_MACH_EUKREA_MBIMXSD51_BASEBOARD) += eukrea_mbimxsd-baseboard.o
->  obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
->  obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
-> +obj-$(CONFIG_MACH_MX51_DT) += board-dt.o
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_fdt.h>
+> +
+> +#include <mach/common.h>
+> +#include <mach/hardware.h>
+> +#include <mach/imx-uart.h>
+> +#include <mach/iomux-mx51.h>
+> +
+> +#include <asm/irq.h>
+> +#include <asm/setup.h>
+> +#include <asm/mach-types.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/time.h>
+> +
+> +#include "devices.h"
+> +
+> +static struct of_device_id mx51_dt_match_table[] __initdata = {
+> +	{ .compatible = "simple-bus", },
+> +	{}
+> +};
+> +
+> +static void __init mx51_dt_board_init(void)
+> +{
+> +	of_platform_bus_probe(NULL, mx51_dt_match_table, NULL);
+> +}
+> +
+> +static void __init mx51_dt_timer_init(void)
+> +{
+> +	mx51_clocks_init(32768, 24000000, 22579200, 0);
+> +	mx5_clk_dt_init();
+> +}
+> +
+> +static struct sys_timer mxc_timer = {
+> +	.init = mx51_dt_timer_init,
+> +};
+> +
+> +static const char * const mx51_dt_board_compat[] = {
 
-If board-dt.c is mx51 specific, would it be sane to name it something
-like board-mx51-dt.c?  We have mx53 stuff in this folder as well.
+The extra 'const' is introducing the warning below.
+
+arch/arm/mach-mx5/board-dt.c:69: warning: initialization discards qualifiers from pointer target type
+
+> +	"fsl,mx51-babbage",
+> +	NULL
+> +};
+> +
+> +DT_MACHINE_START(MX51_DT, "Freescale MX51 (Flattened Device Tree)")
+> +	.boot_params  = PHYS_OFFSET + 0x100,
+> +	.map_io       = mx51_map_io,
+> +	.init_irq     = mx51_init_irq,
+> +	.init_machine = mx51_dt_board_init,
+> +	.dt_compat    = mx51_dt_board_compat,
+> +	.timer        = &mxc_timer,
+> +MACHINE_END
 
 -- 
 Regards,
