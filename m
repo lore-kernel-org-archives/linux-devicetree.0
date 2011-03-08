@@ -1,16 +1,14 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm/mxc: add clk members to ease dt clock support
-Date: Tue, 8 Mar 2011 11:56:34 +0800
-Message-ID: <20110308035633.GD14370@S2101-09.ap.freescale.net>
+From: Jason Hui <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] arm/dts: babbage: add gpt and uart related clock nodes
+Date: Tue, 8 Mar 2011 14:56:52 +0800
+Message-ID: <AANLkTima=zGr96dZUaYvCN6oE=KCY=ySOgOLweEJYk97@mail.gmail.com>
 References: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
-	<1299514932-13558-3-git-send-email-shawn.guo@linaro.org>
-	<AANLkTikZsMxs1dXgBxVEar+MLF0j4ROZO+uTmo+OSF4s@mail.gmail.com>
+	<1299514932-13558-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTikZsMxs1dXgBxVEar+MLF0j4ROZO+uTmo+OSF4s-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1299514932-13558-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,83 +18,109 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 07, 2011 at 10:53:37AM -0700, Grant Likely wrote:
-> On Mon, Mar 7, 2011 at 9:22 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > The 'rate' is added for fixed-clock support, while 'pll_base' is for
-> > pll clock. =A0These two particular type of clocks are supposed to be
-> > gracefully supported by the common clk api when it gets ready.
-> =
+Hi, Shawn,
 
-> How does the current imx clock code handle fixed and pll clocks?
+On Tue, Mar 8, 2011 at 12:22 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The patch is to add all gpt, uart related dt clock nodes for babbage.
+> It sticks to the clock name used in clock-mx51-mx53.c, so that
+> everything gets consistent to Reference Manual. =A0For example, the
+> numbering in clock name usually starts from 1, while 'reg' property
+> numbering starts from 0 to easy clock binding.
+>
+> Besides the generally used clock bindings, the following properties
+> are proposed in this patch.
+>
+> * clock-alias
+> Like clock-outputs to reflect cl->dev_id, property clock-alias is
+> defined to reflect cl->con_id.
+>
+> * clock-depend
+> The mxc 'struct clk' has the member 'secondary' to refer to the clock
+> that the 'clk' has dependency on. =A0This 'secondary' clock needs to be
+> on whenever the 'clk' is set to on. =A0This clock-depend property is
+> defined to reflect this 'secondary' clock.
+>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> =A0arch/arm/boot/dts/babbage.dts | =A0162 +++++++++++++++++++++++++++++++=
+++++++++--
+> =A01 files changed, 156 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
+> index 46a3071..1774cec 100644
+> --- a/arch/arm/boot/dts/babbage.dts
+> +++ b/arch/arm/boot/dts/babbage.dts
+> @@ -35,19 +35,169 @@
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#address-cells =3D <1>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#size-cells =3D <0>;
+>
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 uart0_clk: uart@0 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 ckil_clk: clkil {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fixed-clock=
+";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #frequency-cells =3D <1>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "clil";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <32768>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 ckih_clk: ckih {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fixed-clock=
+";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #frequency-cells =3D <1>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "ckih";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <225792=
+00>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 osc_clk: soc {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fixed-clock=
+";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #frequency-cells =3D <1>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "osc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <240000=
+00>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pll1_main_clk: pll1_main {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "clock";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "pll1_mai=
+n";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-source =3D <&osc_clk>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pll1_sw_clk: pll_switch@0 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "clock";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "pll1_sw";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-source =3D <&pll1_mai=
+n_clk>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pll2_sw_clk: pll_switch@1 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "clock";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <1>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "pll2_sw";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-source =3D <&osc_clk>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>
 
-For fixed-clock, the current code gets several variables holding the
-rate and then return the rate from several get_rate functions.
+It seems that you mis-used the reg property, it need fixed globally.
 
-static unsigned long external_high_reference, external_low_reference;
-static unsigned long oscillator_reference, ckih2_reference;
+BR,
+Jason
 
-static unsigned long get_high_reference_clock_rate(struct clk *clk)
-{
-        return external_high_reference;
-}
-
-static unsigned long get_low_reference_clock_rate(struct clk *clk)
-{
-        return external_low_reference;
-}
-
-static unsigned long get_oscillator_reference_clock_rate(struct clk *clk)
-{
-        return oscillator_reference;
-}
-
-static unsigned long get_ckih2_reference_clock_rate(struct clk *clk)
-{
-        return ckih2_reference;
-}
-
-With this new rate member added, all these can be consolidated into one.
-
-For base address of pll, the current code uses the reference to clocks
-statically defined to know which pll is the one.
-
-static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
-{
-#ifdef CONFIG_OF
-        return pll->pll_base;
-#else
-        if (pll =3D=3D &pll1_main_clk)
-                return MX51_DPLL1_BASE;
-        else if (pll =3D=3D &pll2_sw_clk)
-                return MX51_DPLL2_BASE;
-        else if (pll =3D=3D &pll3_sw_clk)
-                return MX51_DPLL3_BASE;
-        else
-                BUG();
-
-        return NULL;
-#endif
-}
-
-static inline void __iomem *_get_pll_base(struct clk *pll)
-{
-        if (cpu_is_mx51())
-                return _mx51_get_pll_base(pll);
-        else
-                return _mx53_get_pll_base(pll);
-}
-
-> Using the dt shouldn't require any special treatment in this regard.
-> =
-
-I would say these two members were added to make dt clock code simple
-and good.
-
--- =
-
-Regards,
-Shawn
+>
+> --
+> 1.7.1
+>
+>
+> _______________________________________________
+> linaro-dev mailing list
+> linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+> http://lists.linaro.org/mailman/listinfo/linaro-dev
+>
