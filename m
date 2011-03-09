@@ -1,15 +1,11 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [RFC 1/3] OLPC: Use device tree for platform identification
-Date: Tue, 8 Mar 2011 19:35:46 -0800
-Message-ID: <20110308193546.151521a9@queued.net>
-References: <20110304171214.2B5C69D401D@zog.reactivated.net>
-	<20110304100137.473b8d04@debxo>
-	<AANLkTi=Jcq5SDbWgN+1TQNeP3CvJVRY7CO3c__DDEPz3@mail.gmail.com>
+From: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V3 0/5] Add MX51 basic DT support
+Date: Wed,  9 Mar 2011 13:19:28 +0800
+Message-ID: <1299647973-21845-1-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi=Jcq5SDbWgN+1TQNeP3CvJVRY7CO3c__DDEPz3-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,24 +15,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCA4IE1hciAyMDExIDIxOjEzOjAwICswMDAwCkRhbmllbCBEcmFrZSA8ZHNkQGxhcHRv
-cC5vcmc+IHdyb3RlOgoKPiBPbiA0IE1hcmNoIDIwMTEgMTg6MDEsIEFuZHJlcyBTYWxvbW9uIDxk
-aWxpbmdlckBxdWV1ZWQubmV0PiB3cm90ZToKPiA+PiArc3RhdGljIGludCBfX2luaXQgZGVjbGFy
-ZV9vZl9wbGF0Zm9ybV9kZXZpY2VzKHZvaWQpCj4gPj4gK3sKPiA+PiArIMKgIMKgIHJldHVybiBv
-Zl9wbGF0Zm9ybV9idXNfcHJvYmUoTlVMTCwgb2ZfaWRzLCBOVUxMKTsKPiA+PiArfQo+ID4+ICtk
-ZXZpY2VfaW5pdGNhbGwoZGVjbGFyZV9vZl9wbGF0Zm9ybV9kZXZpY2VzKTsKPiA+Cj4gPiBIb3cg
-YWJvdXQgJ29scGNfY3JlYXRlX3BsYXRmb3JtX2RldmljZXMnIG9yIHNvbWUgc3VjaCBuYW1lPyDC
-oFRoYXQncwo+ID4gd2hhdCdzIHJlYWxseSBoYXBwZW5pbmcgaGVyZSwgcmlnaHQ/Cj4gCj4gVGhl
-IHJlYXNvbiBJIGNhbGxlZCBpdCBkZWNsYXJlX29mX3BsYXRmb3JtX2RldmljZXMgaXMgYmVjYXVz
-ZSB0aGF0cwo+IHdoYXQgYWxsIHRoZSBvdGhlciBwbGF0Zm9ybXMgZG8gKGRvIGEgZ2l0IGdyZXAp
-LiBkbyB5b3Ugc3RpbGwgdGhpbmsgaXQKPiBzaG91bGQgYmUgcmVuYW1lZD8KPiAKClllcywgdW5s
-ZXNzIHRoZXJlJ3Mgc29tZSByZWFzb24gd2h5IGl0IHNob3VsZCBiZSBuYW1lZCAiZGVjbGFyZSIu
-ICBJJ20KYXNzdW1pbmcgdGhlIG5hbWVzIHVzZWQgaW4gcHBjIHBsYXRmb3JtIGRldmljZSBjb2Rl
-IGFyZSBsaWtlIHRoYXQgZm9yCmhpc3RvcmljYWwgcmVhc29ucz8KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5n
-IGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
-emxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+From: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+This patchset adds Freescale i.mx51 device tree support.
+This is based on
+
+git://git.secretlab.ca/git/linux-2.6 devicetree/test
+
+This patch has been tested on MX51 babbage board and can
+boot up succesfully to linux console with DT enabled.
+
+Grant, I think it's almost ready for you to merge it.
+
+V3:
+- prefix the property name with the vendor name as like:
+   "fsl,has-rts-cts" and "fsl,irda-mode"
+- use the ttymxc0 as the console
+- add FEC support, nfs can be used now
+
+Jason Liu (5):
+  arm/dt: add basic mx51 device tree support
+  arm/dt: add very basic dts file for babbage board
+  serial/imx: parse from device tree support
+  net/fec: check id_entry pointer before using it
+  net/fec: add device tree matching support
+
+ arch/arm/boot/dts/babbage.dts           |  110 +++++++++++++++++++++++++++++++
+ arch/arm/mach-mx5/Kconfig               |    8 ++
+ arch/arm/mach-mx5/Makefile              |    1 +
+ arch/arm/mach-mx5/board-dt.c            |   64 ++++++++++++++++++
+ arch/arm/mach-mx5/clock-mx51-mx53.c     |   43 ++++++++++++-
+ arch/arm/plat-mxc/include/mach/common.h |    1 +
+ drivers/net/fec.c                       |   25 +++++--
+ drivers/tty/serial/imx.c                |   79 +++++++++++++++++++---
+ 8 files changed, 314 insertions(+), 17 deletions(-)
+ create mode 100644 arch/arm/boot/dts/babbage.dts
+ create mode 100644 arch/arm/mach-mx5/board-dt.c
