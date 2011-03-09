@@ -1,147 +1,165 @@
 From: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V3 2/5] arm/dt: add very basic dts file for babbage board
-Date: Wed,  9 Mar 2011 13:19:30 +0800
-Message-ID: <1299647973-21845-3-git-send-email-jason.hui@linaro.org>
+Subject: [PATCH V3 3/5] serial/imx: parse from device tree support
+Date: Wed,  9 Mar 2011 13:19:31 +0800
+Message-ID: <1299647973-21845-4-git-send-email-jason.hui@linaro.org>
 References: <1299647973-21845-1-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1299647973-21845-1-git-send-email-jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Singed-off-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 ---
- arch/arm/boot/dts/babbage.dts |  110 +++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 110 insertions(+), 0 deletions(-)
+ drivers/tty/serial/imx.c |   79 ++++++++++++++++++++++++++++++++++++++++------
+ 1 files changed, 69 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
-new file mode 100644
-index 0000000..303dcd5
---- /dev/null
-+++ b/arch/arm/boot/dts/babbage.dts
-@@ -0,0 +1,110 @@
-+/dts-v1/;
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index dfcf4b1..c9483d1 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -53,6 +53,9 @@
+ #include <mach/hardware.h>
+ #include <mach/imx-uart.h>
+ 
++#include <linux/of.h>
++#include <linux/of_address.h>
 +
-+/ {
-+	model = "Freescale i.MX51 Babbage";
-+	compatible = "fsl,mx51-babbage";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	#interrupt-cells = <1>;
-+	interrupt-parent = <&tzic>;
+ /* Register definitions */
+ #define URXD0 0x0  /* Receiver Register */
+ #define URTX0 0x40 /* Transmitter Register */
+@@ -1224,6 +1227,53 @@ static int serial_imx_resume(struct platform_device *dev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static int serial_imx_probe_dt(struct imx_port *sport,
++		struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	static int line;
 +
-+	memory {
-+		reg = <0x90000000 0x20000000>;
-+	};
++	if (!node)
++		return -ENODEV;
 +
-+	chosen {
-+		bootargs = "console=ttymxc0,115200n8 debug earlyprintk ip=dhcp";
-+	};
++	if (of_get_property(node, "fsl,has-rts-cts", NULL))
++		sport->have_rtscts = 1;
 +
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
++	if (of_get_property(node, "fsl,irda-mode", NULL))
++		sport->use_irda = 1;
 +
-+		tzic: tz-interrupt-controller {
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+			interrupt-controller;
-+			reg = <0xe0000000 0x1000>;
-+			compatible = "fsl,imx51-tzic";
-+		};
-+	};
++	sport->port.line = line++;
 +
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	return 0;
++}
++#else
++static int serial_imx_probe_dt(struct imx_port *sport,
++		struct platform_device *pdev)
++{
++	return -ENODEV;
++}
++#endif
 +
-+		uart0_clk: uart0 {
-+			compatible = "clock";
-+			clock-outputs = "imx-uart.0";
-+		};
++static int serial_imx_probe_pdata(struct imx_port *sport,
++		struct platform_device *pdev)
++{
++	struct imxuart_platform_data *pdata = pdev->dev.platform_data;
 +
-+		uart1_clk: uart1 {
-+			compatible = "clock";
-+			clock-outputs = "imx-uart.1";
-+		};
++	if (!pdata)
++		return 0;
 +
-+		uart2_clk: uart2 {
-+			compatible = "clock";
-+			clock-outputs = "imx-uart.2";
-+		};
++	if (pdata->flags & IMXUART_HAVE_RTSCTS)
++		sport->have_rtscts = 1;
 +
-+		fec_clk: fec {
-+			compatible = "clock";
-+			clock-outputs = "fec.0";
-+		};
-+	};
++#ifdef CONFIG_IRDA
++	if (pdata->flags & IMXUART_IRDA)
++		sport->use_irda = 1;
++#endif
++	sport->port.line = pdev->id;
 +
-+	aips@73f00000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0x0 0x73f00000 0x100000>;
++	return 0;
++}
+ static int serial_imx_probe(struct platform_device *pdev)
+ {
+ 	struct imx_port *sport;
+@@ -1236,6 +1286,12 @@ static int serial_imx_probe(struct platform_device *pdev)
+ 	if (!sport)
+ 		return -ENOMEM;
+ 
++	ret = serial_imx_probe_dt(sport, pdev);
++	if (ret == -ENODEV)
++		ret = serial_imx_probe_pdata(sport, pdev);
++	if (ret)
++		goto free;
 +
-+		imx-uart@bc000 {
-+			compatible = "fsl,imx51-uart";
-+			reg = <0xbc000 0x1000>;
-+			interrupts = <0x1f>;
-+			fsl,has-rts-cts;
-+			uart-clock = <&uart0_clk>, "uart";
-+		};
-+
-+		imx-uart@c0000 {
-+			compatible = "fsl,imx51-uart";
-+			reg = <0xc0000 0x1000>;
-+			interrupts = <0x20>;
-+			fsl,has-rts-cts;
-+			uart-clock = <&uart1_clk>, "uart";
-+		};
-+	};
-+
-+	spba@70000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0x0 0x70000000 0x100000>;
-+
-+		imx-uart@c000 {
-+			compatible = "fsl,imx51-uart";
-+			reg = <0xc000 0x1000>;
-+			interrupts = <0x21>;
-+			fsl,has-rts-cts;
-+			uart-clock = <&uart2_clk>, "uart";
-+		};
-+	};
-+
-+	aips@83f00000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0x0 0x83f00000 0x100000>;
-+
-+		fec@ec000 {
-+			compatible = "fsl,imx-fec";
-+			reg = <0xec000 0x1000>;
-+			interrupts = <0x57>;
-+			fec_clk-clock = <&fec_clk>, "fec";
-+		};
-+	};
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+ 		ret = -ENODEV;
+@@ -1260,7 +1316,6 @@ static int serial_imx_probe(struct platform_device *pdev)
+ 	sport->port.fifosize = 32;
+ 	sport->port.ops = &imx_pops;
+ 	sport->port.flags = UPF_BOOT_AUTOCONF;
+-	sport->port.line = pdev->id;
+ 	init_timer(&sport->timer);
+ 	sport->timer.function = imx_timeout;
+ 	sport->timer.data     = (unsigned long)sport;
+@@ -1274,17 +1329,13 @@ static int serial_imx_probe(struct platform_device *pdev)
+ 
+ 	sport->port.uartclk = clk_get_rate(sport->clk);
+ 
+-	imx_ports[pdev->id] = sport;
++	if (imx_ports[sport->port.line]) {
++		ret = -EBUSY;
++		goto clkput;
++	}
++	imx_ports[sport->port.line] = sport;
+ 
+ 	pdata = pdev->dev.platform_data;
+-	if (pdata && (pdata->flags & IMXUART_HAVE_RTSCTS))
+-		sport->have_rtscts = 1;
+-
+-#ifdef CONFIG_IRDA
+-	if (pdata && (pdata->flags & IMXUART_IRDA))
+-		sport->use_irda = 1;
+-#endif
+-
+ 	if (pdata && pdata->init) {
+ 		ret = pdata->init(pdev);
+ 		if (ret)
+@@ -1336,6 +1387,11 @@ static int serial_imx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct of_device_id imx_uart_matches[] = {
++	{ .compatible = "fsl,imx51-uart" },
++	{},
 +};
++
+ static struct platform_driver serial_imx_driver = {
+ 	.probe		= serial_imx_probe,
+ 	.remove		= serial_imx_remove,
+@@ -1345,6 +1401,9 @@ static struct platform_driver serial_imx_driver = {
+ 	.driver		= {
+ 		.name	= "imx-uart",
+ 		.owner	= THIS_MODULE,
++#if defined(CONFIG_OF)
++		.of_match_table = imx_uart_matches,
++#endif
+ 	},
+ };
+ 
 -- 
 1.7.1
