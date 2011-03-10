@@ -1,51 +1,140 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] arm/dt: add basic mx51 device tree support
-Date: Thu, 10 Mar 2011 13:38:44 +0100
-Message-ID: <201103101338.45187.arnd@arndb.de>
-References: <1299503160-9910-1-git-send-email-jason.hui@linaro.org>
-	<20110307141656.GC7189@S2101-09.ap.freescale.net>
-	<201103071537.49026.arnd@arndb.de>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] powerpc: make MPIC honor the "pic-no-reset" device
+	tree property
+Date: Thu, 10 Mar 2011 11:23:13 -0600
+Message-ID: <4D790901.9000701@mentor.com>
+References: <1298671177-19572-1-git-send-email-meador_inge@mentor.com>	
+	<1298671177-19572-3-git-send-email-meador_inge@mentor.com>
+	<1299036140.8833.818.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <201103071537.49026.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1299036140.8833.818.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 March 2011, Arnd Bergmann wrote:
-> On Monday 07 March 2011, Shawn Guo wrote:
-> > > diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-> > > index 0d43be9..540697e 100644
-> > > --- a/arch/arm/mach-mx5/Makefile
-> > > +++ b/arch/arm/mach-mx5/Makefile
-> > > @@ -18,3 +18,4 @@ obj-$(CONFIG_MACH_EUKREA_CPUIMX51SD) += board-cpuimx51sd.o
-> > >  obj-$(CONFIG_MACH_EUKREA_MBIMXSD51_BASEBOARD) += eukrea_mbimxsd-baseboard.o
-> > >  obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
-> > >  obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
-> > > +obj-$(CONFIG_MACH_MX51_DT) += board-dt.o
-> > 
-> > If board-dt.c is mx51 specific, would it be sane to name it something
-> > like board-mx51-dt.c?  We have mx53 stuff in this folder as well.
-> > 
-> 
-> Alternatively, it could be done the other way round: rename the identifiers
-> in the file from mx51_ to mx5_, and make sure that they don't contain
-> any mx51 specific settings but always refer to properties in the 
-> device tree for the differences.
+On 03/01/2011 09:22 PM, Benjamin Herrenschmidt wrote:
+>
+>> diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
+>> index e000cce..7e1be12 100644
+>> --- a/arch/powerpc/include/asm/mpic.h
+>> +++ b/arch/powerpc/include/asm/mpic.h
+>> @@ -325,6 +325,8 @@ struct mpic
+>>   #ifdef CONFIG_PM
+>>   	struct mpic_irq_save	*save_data;
+>>   #endif
+>> +
+>> +	int cpu;
+>>   };
+>
+> Why ? The MPIC isn't specifically associated with a CPU and whatever we
+> pick as default during boot isn't relevant later on, so I don't see why
+> we should have global permanent state here.
 
-Hi Jason,
+I agree.  I shouldn't have cached that.  We should probably introduce a 
+helper function to get the cpuid, though.  The:
 
-I saw that your V4 still implements neither Shawn's suggestion nor mine.
+	unsigned int cpu = 0;
 
-	Arnd
+	if (mpic->flags & MPIC_PRIMARY)
+		cpu = hard_smp_processor_id();
+
+code is scattered in three places: '_mpic_cpu_write', '_mpic_cpu_read', 
+and 'mpic_init'.
+
+>>   /* Check if we have one of those nice broken MPICs with a flipped endian on
+>> @@ -622,6 +631,14 @@ static unsigned int mpic_is_ipi(struct mpic *mpic, unsigned int irq)
+>>   	return (src>= mpic->ipi_vecs[0]&&  src<= mpic->ipi_vecs[3]);
+>>   }
+>>
+>> +/* Determine if the linux irq is a timer interrupt */
+>> +static unsigned int mpic_is_timer_interrupt(struct mpic *mpic, unsigned int irq)
+>> +{
+>> +	unsigned int src = mpic_irq_to_hw(irq);
+>> +
+>> +	return (src>= mpic->timer_vecs[0]&&  src<= mpic->timer_vecs[3]);
+>> +}
+>> +
+>>
+>>   /* Convert a cpu mask from logical to physical cpu numbers. */
+>>   static inline u32 mpic_physmask(u32 cpumask)
+>> @@ -967,6 +984,15 @@ static int mpic_host_map(struct irq_host *h, unsigned int virq,
+>>   	if (hw>= mpic->irq_count)
+>>   		return -EINVAL;
+>>
+>> +	/* If the MPIC was reset, then all vectors have already been
+>> +	 * initialized.  Otherwise, the appropriate vector needs to be
+>> +	 * initialized here to ensure that only used sources are setup with
+>> +	 * a vector.
+>> +	 */
+>> +	if (mpic->flags&  MPIC_NO_RESET)
+>> +		if (!(mpic_is_ipi(mpic, hw) || mpic_is_timer_interrupt(mpic, hw)))
+>> +			mpic_init_vector(mpic, hw);
+>> +
+>
+> The above isn't useful. Of those two registers you want to initialize,
+> afaik, one (the destination) will be initialized by the core calling
+> into set_affinity when the interrupt is requested, and the other one is
+
+AFAIK, we can't rely on 'set_affinity' always being called.  I don't 
+think it is called at all when !defined(CONFIG_SMP) and if it was, then 
+that would be an error:
+
+	/* include/linux/irq.h */
+
+	#else /* CONFIG_SMP */
+
+	static inline int irq_set_affinity(unsigned int irq,
+		const struct cpumask *m)
+	{
+		return -EINVAL;
+	}
+
+> partially initialized in set_type, I'd say just modify set_type to
+> initialize the source as well, and problem solved, no ?
+
+The priority has to be initialized as well.  They could both be done in 
+'mpic_set_irq_type', but that seems like a weird place since it has 
+nothing to do with actually setting the type.
+
+Since we already have 'mpic_irq_set_priority' and 'mpic_set_vector', 
+perhaps a better option is to add 'mpic_set_destination' and put the 
+following in 'mpic_host_map' (using the cpuid helper function suggested 
+above):
+
+	/* Lazy source init when MPIC_NO_RESET */
+	if (!mpic_is_ipi(mpic, hw) && (mpic->flags & MPIC_NO_RESET)) {
+		mpic_set_vector(virq, hw);
+		mpic_set_destination(virq, mpic_cpuid(mpic));
+		mpic_irq_set_priority(virq, 8);
+	}
+
+It is more overhead, but it reads well.  Thoughts?
+
+> Or is there a chance that the interrupt was left unmasked ?
+
+There shouldn't be.  The original idea was that either the boot program 
+would leave it masked or one of the AMP OSes would boot without 
+'pic-no-reset', which would mask everything.  Most likely the boot program.
+
+> I think it would be kosher to mask it in set_type unconditionally, I don't think it's ever supposed
+> to be called for an enabled interrupt.
+
+I will look into that.
+
+Thanks,
+
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
