@@ -1,49 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] arm/dt: add basic mx51 device tree support
-Date: Fri, 11 Mar 2011 13:10:43 +0100
-Message-ID: <201103111310.43339.arnd@arndb.de>
-References: <1299503160-9910-1-git-send-email-jason.hui@linaro.org>
-	<201103101338.45187.arnd@arndb.de>
-	<AANLkTi=3cXtnZA+8JW5+-OjjpJBC4SL26NoAMpnrgWmy@mail.gmail.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [RFC PATCH v2 06/12] MIPS: Octeon: Add a irq_create_of_mapping()
+ implementation.
+Date: Fri, 11 Mar 2011 10:27:53 -0800
+Message-ID: <4D7A69A9.40206@caviumnetworks.com>
+References: <1299267744-17278-1-git-send-email-ddaney@caviumnetworks.com> <1299267744-17278-7-git-send-email-ddaney@caviumnetworks.com> <20110305010746.GD7579@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTi=3cXtnZA+8JW5+-OjjpJBC4SL26NoAMpnrgWmy-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason Hui <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110305010746.GD7579@angua.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 11 March 2011, Jason Hui wrote:
-> >> Alternatively, it could be done the other way round: rename the identifiers
-> >> in the file from mx51_ to mx5_, and make sure that they don't contain
-> >> any mx51 specific settings but always refer to properties in the
-> >> device tree for the differences.
-> >
-> > I saw that your V4 still implements neither Shawn's suggestion nor mine.
-> 
-> As you said, I don't want to make thing complex too. I don't want to
-> have mx51_dt or
-> mx53_dt as Shawn Suggests and I still don't want to make it change to
-> mx5 now as you suggest
-> Since this patch only support mx51 currently. I think it's easy to
-> make change later once mx53 in-deed
-> added in DT support, what do you think?
+On 03/04/2011 05:07 PM, Grant Likely wrote:
+> On Fri, Mar 04, 2011 at 11:42:18AM -0800, David Daney wrote:
+[...]
+>> +/*
+>> + * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux irq#
+>> + *
+>> + * Octeon irq maps are a pair of indexes.  The first selects either
+>> + * ciu0 or ciu1, the second is the bit within the ciu register.
+>> + */
+>
+> Is each 'ciu' an interrupt controller, or a 'bank' within the
+> controller?
 
-It would also be easy to rename the file from mx51_dt to board_dt
-when it becomes more generic. I don't consider it a show-stopper
-though and am comfortable with leaving it to your own judgement.
+The ciu0 and ciu1 are 'banks' within a single interrupt controller. 
+Each of these 'banks' has 64 bits, each bit corresponds to the finest 
+grained source that can be routed via the interrupt infrastructure. 
+Each interrupt source can therefore be completely specified by its bank 
+and bit numbers.
 
-Generally speaking, you don't have to do everything that reviewers
-suggest, but please reply to explain your reasons if you disagree.
+> Also, it is typical to have another cell for specifying
+> flags if there is any kind of configuration for each irq line, like
+> edge vs. level and active high or active low.  (the counter example is
+> PCI which doesn't use a flags cell because all PCI irqs are level
+> active.
+>
 
-	Arnd
+If you look in patch 04/12, you will see that I have added such a flag 
+cell to the device tree.  In the next revision of this patch, I will be 
+adding the logic to actually configure the polarity and triggering based 
+on the flag cell.
+
+There are only 16 sources (GPIO pins that can actually be configured. 
+The remaining sources will ignore the triggering flags as they are hard 
+wired.
+
+
+> You'll need to supply documentation for the ciu binding to
+> Documentation/devicetree/bindings before this patch gets merged.
+
+OK, I will work on that too.
+
+Thanks,
+David Daney
