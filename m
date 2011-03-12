@@ -1,62 +1,141 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM:boot:device tree: Allow the device tree binary to
-	be appended to zImage
-Date: Sat, 12 Mar 2011 01:44:53 -0700
-Message-ID: <20110312084453.GD9347@angua.secretlab.ca>
-References: <20110309215800.26377.43925.stgit@riker>
-	<20110309230542.GC9995@trinity.fluff.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/3] of/promtree: switch to building the DT using
+ of_attach_node
+Date: Sat, 12 Mar 2011 02:00:09 -0700
+Message-ID: <20110312090009.GE9347@angua.secretlab.ca>
+References: <1299716167-9656-1-git-send-email-dilinger@queued.net>
+ <1299716167-9656-3-git-send-email-dilinger@queued.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <sparclinux-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110309230542.GC9995-SMNkleLxa3Z6Wcw2j4pizdi2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1299716167-9656-3-git-send-email-dilinger@queued.net>
+Sender: sparclinux-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: devicetree-discuss@lists.ozlabs.org, Daniel Drake <dsd@laptop.org>, linux-kernel@vger.kernel.org, davem@davemloft.net, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2011 at 11:05:42PM +0000, Ben Dooks wrote:
-> On Wed, Mar 09, 2011 at 01:58:00PM -0800, John Bonesio wrote:
-> > This patch provides the ability to boot using a device tree that is appended
-> > to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+On Wed, Mar 09, 2011 at 04:16:06PM -0800, Andres Salomon wrote:
+> Use common functions (of_attach_node) to build the device tree.  This
+> allows us to drop a bit of code, and provides a more understandable
+> tree building.  It does change the order of the allnodes/allnext list;
+> the old tree looked something like this:
 > 
-> I'd much rather see something that wrappers the kernel and passes the
-> DT through an ATAG. So possibly a pre-amble as well?
+> allnodes --> root (/)
+>              allnext ------> np1 (/pci)
+>                              allnext --> np2 (/pci/foo)
+>                                          allnext=NULL
+> 
+> Pretend that was a tree.  The new tree looks something like this:
+> 
+> allnodes     root (/)
+>       |      allnext=NULL    np1 (/pci)
+>       |        ^------------ allnext     np2 (/pci/foo)
+>       |                        ^-------- allnext
+>       |_____________________________________^
+> 
+> That shouldn't actually matter for anything, but it's worth noting in case
+> anyone notices odd behavior changes.  Plus, it's a good excuse to make
+> beautiful art.
 
-When DT support was initially implemented for ARM, it did exactly
-that.  It passed the dt via an ATAG.  However, that leaves a number of
-questions about which data is authoritative, ATAG or DT data.  Nicolas
-argued rightly and successfully that if DT was going to be used, then
-we should go at it whole hog and make passing a dtb the full boot
-interface.
+Hmmm, I hadn't thought of that detail.  This will very likely cause
+breakage in subtle ways.  Though we *shouldn't* depend on the order of
+the device nodes in the tree, I know for certain that there are some
+platform which will end up renumbering devices if the order is in
+reverse (uarts in particular) in a way that breaks booting.  Ugh.
 
-I disagreed strongly at first, but I'm glad to say he convinced me.
-In the end the implementation of passing dt directly turned out to be
-far more simple and elegant than the hybrid approach was.  In the
-current code, a single kernel image can accept either a .dtb or an
-ATAGs list (so no backwards compatibility issues) and it detects which
-data structure to parse early in setup_arch().
-
-As for this patch, this functionality was implemented for a client and
-it is being posted for wider review in case anyone else finds it
-useful.  I wasn't originally planning to push for mainline merging of
-it, but after positive feedback on the first posting I though it was
-probably worth the effort to refine it more and get it into acceptable
-shape for mainline.
-
-Regarding using a wrapper; that was the approach I initially wanted to
-pursue, but modifying the zImage wrapper was much simpler to implement
-because the wrapper has knowledge about how much RAM the kernel needs
-at boot and can therefore make a good decision about where to locate
-the .dtb before jumping into the kernel.
+Now, this might not be a problem at all for SPARC, and this patch only
+affects OLPC and SPARC at the moment.  If David ack's it, then I'll
+pick it up.  However, it will require some more thought before
+unflatten_device_tree() can be converted to use it.
 
 g.
+
+> 
+> Also note that this changes what gets passed to the of_pdt_build_more()
+> hook.  The only user of this hook is sparc's leon_kernel.c, which ends
+> up using it to call prom_amba_init.  However, prom_amba_init isn't
+> actually set in the kernel, so I can't tell whether this actually breaks
+> behavior or not.
+> 
+> Signed-off-by: Andres Salomon <dilinger@queued.net>
+> ---
+>  drivers/of/pdt.c |   39 ++++++++++++---------------------------
+>  1 files changed, 12 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+> index 4d87b5d..5933127 100644
+> --- a/drivers/of/pdt.c
+> +++ b/drivers/of/pdt.c
+> @@ -193,56 +193,41 @@ static struct device_node * __init of_pdt_create_node(phandle node,
+>  	return dp;
+>  }
+>  
+> -static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
+> -						   phandle node,
+> -						   struct device_node ***nextp)
+> +static void __init of_pdt_build_tree(struct device_node *parent, phandle node)
+>  {
+> -	struct device_node *ret = NULL, *prev_sibling = NULL;
+>  	struct device_node *dp;
+>  
+> -	while (1) {
+> +	while (node) {
+>  		dp = of_pdt_create_node(node, parent);
+>  		if (!dp)
+>  			break;
+>  
+> -		if (prev_sibling)
+> -			prev_sibling->sibling = dp;
+> -
+> -		if (!ret)
+> -			ret = dp;
+> -		prev_sibling = dp;
+> -
+> -		*(*nextp) = dp;
+> -		*nextp = &dp->allnext;
+> -
+>  		dp->full_name = of_pdt_build_full_name(dp);
+> +		of_attach_node(dp);
+>  
+> -		dp->child = of_pdt_build_tree(dp,
+> -				of_pdt_prom_ops->getchild(node), nextp);
+> +		/* process child nodes prior to siblings */
+> +		of_pdt_build_tree(dp, of_pdt_prom_ops->getchild(node));
+>  
+>  		if (of_pdt_build_more)
+> -			of_pdt_build_more(dp, nextp);
+> +			of_pdt_build_more(dp, NULL);
+>  
+>  		node = of_pdt_prom_ops->getsibling(node);
+>  	}
+> -
+> -	return ret;
+>  }
+>  
+>  void __init of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops)
+>  {
+> -	struct device_node **nextp;
+> +	struct device_node *dp;
+>  
+>  	BUG_ON(!ops);
+>  	of_pdt_prom_ops = ops;
+>  
+> -	allnodes = of_pdt_create_node(root_node, NULL);
+> +	dp = of_pdt_create_node(root_node, NULL);
+>  #if defined(CONFIG_SPARC)
+> -	allnodes->path_component_name = "";
+> +	dp->path_component_name = "";
+>  #endif
+> -	allnodes->full_name = "/";
+> +	dp->full_name = "/";
+>  
+> -	nextp = &allnodes->allnext;
+> -	allnodes->child = of_pdt_build_tree(allnodes,
+> -			of_pdt_prom_ops->getchild(allnodes->phandle), &nextp);
+> +	of_attach_node(dp);
+> +	of_pdt_build_tree(dp, of_pdt_prom_ops->getchild(dp->phandle));
+>  }
+> -- 
+> 1.7.2.3
+> 
