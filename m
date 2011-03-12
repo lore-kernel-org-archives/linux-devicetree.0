@@ -1,11 +1,16 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [RFC v2] OLPC: add missing elements to device tree
-Date: Sat, 12 Mar 2011 18:04:48 +0000 (GMT)
-Message-ID: <20110312180448.572A49D401E@zog.reactivated.net>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 3/3] of/flattree: use of_attach_node to build tree, and
+	associated cleanups
+Date: Sat, 12 Mar 2011 11:37:26 -0800
+Message-ID: <20110312113726.0bf060da@queued.net>
+References: <1299716167-9656-1-git-send-email-dilinger@queued.net>
+	<1299716167-9656-4-git-send-email-dilinger@queued.net>
+	<20110312091056.GG9347@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110312091056.GG9347-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,154 +20,249 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In response to new device tree code in the kernel, OLPC will start
-using it for probing of certain devices. However, some firmware fixes
-are needed to put the devicetree into a usable state.
+On Sat, 12 Mar 2011 02:10:56 -0700
+Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 
-Retain compatibility with old firmware by fixing up the device tree
-at boot-time if it does not contain the new nodes/properties that
-we need for probing.
+> On Wed, Mar 09, 2011 at 04:16:07PM -0800, Andres Salomon wrote:
+> > Use a common function (of_attach_node) to build the device tree.
+> > This simplifies the flat device tree creation a bit, and as an
+> > added bonus allows us to drop a (now unused) field from the
+> > device_node struct.
+> > 
+> > There are a few minor cleanups snuck in here as well (comment
+> > additions, etc).
+> > 
+> > Signed-off-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+> 
+> In addition to my comment about changing the tree order on the last
+> patch, unfortunately this patch will also break the newly added
+> of_fdt_unflatten_tree().  of_fdt_unflatten_tree() allows a driver to
+> unflatten a private dtb for its own use without it being attached to
+> the global tree or the global list of all nodes.  I had also forgotten
+> about this.  Shoot.
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
----
- arch/x86/platform/olpc/olpc_dt.c |  104 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 104 insertions(+), 0 deletions(-)
+Ah, I was wondering what that was all about.  So we'd probably end up
+with something like:
 
-v2: ask OpenFirmware to adjust the tree instead of manipulating the tree
-on the linux level.
+void of_attach_node(struct device_node *dp)
+{
+	unsigned long flags;
 
-diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
-index 24f2598..d6ee929 100644
---- a/arch/x86/platform/olpc/olpc_dt.c
-+++ b/arch/x86/platform/olpc/olpc_dt.c
-@@ -21,6 +21,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/of_pdt.h>
-+#include <asm/olpc.h>
- #include <asm/olpc_ofw.h>
- 
- static phandle __init olpc_dt_getsibling(phandle node)
-@@ -164,6 +165,107 @@ static struct of_pdt_ops prom_olpc_ops __initdata = {
- 	.pkg2path = olpc_dt_pkg2path,
- };
- 
-+static phandle __init olpc_dt_finddevice(const char *path)
-+{
-+	phandle node;
-+	const void *args[] = { path };
-+	void *res[] = { &node };
-+
-+	if (olpc_ofw("finddevice", args, res)) {
-+		pr_err("olpc_dt: finddevice failed!\n");
-+		return 0;
-+	}
-+
-+	if ((s32) node == -1)
-+		return 0;
-+
-+	return node;
-+}
-+
-+static int __init olpc_dt_interpret(const char *words)
-+{
-+	int result;
-+	const void *args[] = { words };
-+	void *res[] = { &result };
-+
-+	if (olpc_ofw("interpret", args, res)) {
-+		pr_err("olpc_dt: interpret failed!\n");
-+		return -1;
-+	}
-+
-+	return result;
-+}
-+
-+/*
-+ * Extract board revision directly from OFW device tree.
-+ * We can't use olpc_platform_info because that hasn't been set up yet.
-+ */
-+static u32 __init olpc_dt_get_board_revision(void)
-+{
-+	phandle node;
-+	__be32 rev;
-+	int r;
-+
-+	node = olpc_dt_finddevice("/");
-+	if (!node)
-+		return 0;
-+
-+	r = olpc_dt_getproperty(node, "board-revision-int",
-+				(char *) &rev, sizeof(rev));
-+	if (r < 0)
-+		return 0;
-+
-+	return be32_to_cpu(rev);
-+}
-+
-+void __init olpc_dt_fixup(void)
-+{
-+	int r;
-+	char buf[64];
-+	phandle node;
-+	u32 board_rev;
-+
-+	node = olpc_dt_finddevice("/battery@0");
-+	if (!node)
-+		return;
-+
-+	/*
-+	 * If the battery node has a compatible property, we are running a new
-+	 * enough firmware and don't have fixups to make.
-+	 */
-+	r = olpc_dt_getproperty(node, "compatible", buf, sizeof(buf));
-+	if (r > 0)
-+		return;
-+
-+	pr_info("PROM DT: Old firmware detected, applying fixes\n");
-+
-+	/* Add olpc,xo1-battery compatible marker to battery node */
-+	olpc_dt_interpret("\" /battery@0\" find-device"
-+		" \" olpc,xo1-battery\" +compatible"
-+		" device-end");
-+
-+	board_rev = olpc_dt_get_board_revision();
-+	if (!board_rev)
-+		return;
-+
-+	if (board_rev >= olpc_board_pre(0xd0)) {
-+		/* XO-1.5: add dcon device */
-+		olpc_dt_interpret("\" /pci/display@1\" find-device"
-+			" new-device"
-+			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
-+			" finish-device device-end");
-+	} else {
-+		/* XO-1: add dcon device, mark RTC as olpc,xo1-rtc */
-+		olpc_dt_interpret("\" /pci/display@1,1\" find-device"
-+			" new-device"
-+			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
-+			" finish-device device-end"
-+			" \" /rtc\" find-device"
-+			" \" olpc,xo1-rtc\" +compatible"
-+			" device-end");
-+	}
-+}
-+
- void __init olpc_dt_build_devicetree(void)
- {
- 	phandle root;
-@@ -171,6 +273,8 @@ void __init olpc_dt_build_devicetree(void)
- 	if (!olpc_ofw_is_installed())
- 		return;
- 
-+	olpc_dt_fixup();
-+
- 	root = olpc_dt_getsibling(0);
- 	if (!root) {
- 		pr_err("PROM: unable to get root node from OFW!\n");
--- 
-1.7.4
+	write_lock_irqsave(devtree_lock, &flags);
+	__of_attach_node(allnodes, dp);
+	write_unlock_irqrestore(devtree_lock, &flags);
+}
+
+Most stuff could get away with just calling of_attach_node, with the
+unflatten_dt_node calling __of_attach_node (and either not caring
+about devtree_lock, as is currently the case, or grabbing it from
+unflatten_device_tree).
+
+
+> 
+> The solution would be a variant of of_attach_node which accepts a
+> private allnodes pointer.  That would also help with the ordering
+> issues because the order of the list could be explicitly reversed
+> before assigning the value to the real allnodes pointer.  Another
+> possible option would be an optional 'tail' pointer argument to
+> of_attach_node() which if present it would use as the insertion point
+> for adding the node, which would preserve the current sort order.
+
+I was leaning towards a tail pointer, but I need to take a closer look
+at the two options.
+
+
+
+> 
+> g.
+> 
+> > ---
+> >  drivers/of/fdt.c   |   42
+> > ++++++++++++++++-------------------------- include/linux/of.h |
+> > 1 - 2 files changed, 16 insertions(+), 27 deletions(-)
+> > 
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index af824e7..e70cee8 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -139,16 +139,17 @@ static void *unflatten_dt_alloc(unsigned long
+> > *mem, unsigned long size, /**
+> >   * unflatten_dt_node - Alloc and populate a device_node from the
+> > flat tree
+> >   * @blob: The parent device tree blob
+> > + * @mem: memory chunk to use for allocating device nodes and
+> > properties
+> >   * @p: pointer to node in flat tree
+> >   * @dad: Parent struct device_node
+> > - * @allnextpp: pointer to ->allnext from last allocated device_node
+> > + * @size_scan: are we figuring out amount of memory to allocate?
+> >   * @fpsize: Size of the node path up at the current depth.
+> >   */
+> >  unsigned long unflatten_dt_node(struct boot_param_header *blob,
+> >  				unsigned long mem,
+> >  				unsigned long *p,
+> >  				struct device_node *dad,
+> > -				struct device_node ***allnextpp,
+> > +				bool size_scan,
+> >  				unsigned long fpsize)
+> >  {
+> >  	struct device_node *np;
+> > @@ -195,7 +196,7 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob, 
+> >  	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) +
+> > allocl, __alignof__(struct device_node));
+> > -	if (allnextpp) {
+> > +	if (!size_scan) {
+> >  		memset(np, 0, sizeof(*np));
+> >  		np->full_name = ((char *)np) + sizeof(struct
+> > device_node); if (new_format) {
+> > @@ -217,19 +218,10 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob, } else
+> >  			memcpy(np->full_name, pathp, l);
+> >  		prev_pp = &np->properties;
+> > -		**allnextpp = np;
+> > -		*allnextpp = &np->allnext;
+> > -		if (dad != NULL) {
+> > -			np->parent = dad;
+> > -			/* we temporarily use the next field as
+> > `last_child'*/
+> > -			if (dad->next == NULL)
+> > -				dad->child = np;
+> > -			else
+> > -				dad->next->sibling = np;
+> > -			dad->next = np;
+> > -		}
+> > +		np->parent = dad;
+> >  		kref_init(&np->kref);
+> >  	}
+> > +	/* process properties */
+> >  	while (1) {
+> >  		u32 sz, noff;
+> >  		char *pname;
+> > @@ -258,7 +250,7 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob, l = strlen(pname) + 1;
+> >  		pp = unflatten_dt_alloc(&mem, sizeof(struct
+> > property), __alignof__(struct property));
+> > -		if (allnextpp) {
+> > +		if (!size_scan) {
+> >  			/* We accept flattened tree phandles
+> > either in
+> >  			 * ePAPR-style "phandle" properties, or the
+> >  			 * legacy "linux,phandle" properties.  If
+> > both @@ -301,7 +293,7 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob, sz = (pa - ps) + 1;
+> >  		pp = unflatten_dt_alloc(&mem, sizeof(struct
+> > property) + sz, __alignof__(struct property));
+> > -		if (allnextpp) {
+> > +		if (!size_scan) {
+> >  			pp->name = "name";
+> >  			pp->length = sz;
+> >  			pp->value = pp + 1;
+> > @@ -313,7 +305,7 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob, (char *)pp->value);
+> >  		}
+> >  	}
+> > -	if (allnextpp) {
+> > +	if (!size_scan) {
+> >  		*prev_pp = NULL;
+> >  		np->name = of_get_property(np, "name", NULL);
+> >  		np->type = of_get_property(np, "device_type",
+> > NULL); @@ -322,12 +314,14 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob, np->name = "<NULL>";
+> >  		if (!np->type)
+> >  			np->type = "<NULL>";
+> > +
+> > +		of_attach_node(np);
+> >  	}
+> >  	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
+> >  		if (tag == OF_DT_NOP)
+> >  			*p += 4;
+> >  		else
+> > -			mem = unflatten_dt_node(blob, mem, p, np,
+> > allnextpp,
+> > +			mem = unflatten_dt_node(blob, mem, p, np,
+> > size_scan, fpsize);
+> >  		tag = be32_to_cpup((__be32 *)(*p));
+> >  	}
+> > @@ -347,16 +341,13 @@ unsigned long unflatten_dt_node(struct
+> > boot_param_header *blob,
+> >   * pointers of the nodes so the normal device-tree walking
+> > functions
+> >   * can be used.
+> >   * @blob: The blob to expand
+> > - * @mynodes: The device_node tree created by the call
+> >   * @dt_alloc: An allocator that provides a virtual address to
+> > memory
+> >   * for the resulting tree
+> >   */
+> >  void __unflatten_device_tree(struct boot_param_header *blob,
+> > -			     struct device_node **mynodes,
+> >  			     void * (*dt_alloc)(u64 size, u64
+> > align)) {
+> >  	unsigned long start, mem, size;
+> > -	struct device_node **allnextp = mynodes;
+> >  
+> >  	pr_debug(" -> unflatten_device_tree()\n");
+> >  
+> > @@ -378,7 +369,7 @@ void __unflatten_device_tree(struct
+> > boot_param_header *blob, /* First pass, scan for size */
+> >  	start = ((unsigned long)blob) +
+> >  		be32_to_cpu(blob->off_dt_struct);
+> > -	size = unflatten_dt_node(blob, 0, &start, NULL, NULL, 0);
+> > +	size = unflatten_dt_node(blob, 0, &start, NULL, true, 0);
+> >  	size = (size | 3) + 1;
+> >  
+> >  	pr_debug("  size is %lx, allocating...\n", size);
+> > @@ -394,13 +385,12 @@ void __unflatten_device_tree(struct
+> > boot_param_header *blob, /* Second pass, do actual unflattening */
+> >  	start = ((unsigned long)blob) +
+> >  		be32_to_cpu(blob->off_dt_struct);
+> > -	unflatten_dt_node(blob, mem, &start, NULL, &allnextp, 0);
+> > +	unflatten_dt_node(blob, mem, &start, NULL, false, 0);
+> >  	if (be32_to_cpup((__be32 *)start) != OF_DT_END)
+> >  		pr_warning("Weird tag at end of tree: %08x\n",
+> > *((u32 *)start)); if (be32_to_cpu(((__be32 *)mem)[size / 4]) !=
+> > 0xdeadbeef) pr_warning("End of tree marker overwritten: %08x\n",
+> >  			   be32_to_cpu(((__be32 *)mem)[size / 4]));
+> > -	*allnextp = NULL;
+> >  
+> >  	pr_debug(" <- unflatten_device_tree()\n");
+> >  }
+> > @@ -423,7 +413,7 @@ void of_fdt_unflatten_tree(unsigned long *blob,
+> >  {
+> >  	struct boot_param_header *device_tree =
+> >  		(struct boot_param_header *)blob;
+> > -	__unflatten_device_tree(device_tree, mynodes,
+> > &kernel_tree_alloc);
+> > +	__unflatten_device_tree(device_tree, &kernel_tree_alloc);
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+> >  
+> > @@ -702,7 +692,7 @@ int __init early_init_dt_scan_chosen(unsigned
+> > long node, const char *uname, */
+> >  void __init unflatten_device_tree(void)
+> >  {
+> > -	__unflatten_device_tree(initial_boot_params, &allnodes,
+> > +	__unflatten_device_tree(initial_boot_params,
+> >  				early_init_dt_alloc_memory_arch);
+> >  
+> >  	/* Get pointer to OF "/chosen" node for use everywhere */
+> > diff --git a/include/linux/of.h b/include/linux/of.h
+> > index bb36473..95754ca 100644
+> > --- a/include/linux/of.h
+> > +++ b/include/linux/of.h
+> > @@ -50,7 +50,6 @@ struct device_node {
+> >  	struct	device_node *parent;
+> >  	struct	device_node *child;
+> >  	struct	device_node *sibling;
+> > -	struct	device_node *next;	/* next device of
+> > same type */ struct	device_node *allnext;	/* next in
+> > list of all nodes */ struct	proc_dir_entry *pde;	/*
+> > this node's proc directory */ struct	kref kref;
+> > -- 
+> > 1.7.2.3
+> > 
