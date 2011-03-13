@@ -1,121 +1,36 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm/mxc: add clk members to ease dt clock support
-Date: Sun, 13 Mar 2011 23:19:03 +0800
-Message-ID: <20110313151902.GA10572@S2100-06.ap.freescale.net>
-References: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
-	<1299514932-13558-3-git-send-email-shawn.guo@linaro.org>
-	<AANLkTikZsMxs1dXgBxVEar+MLF0j4ROZO+uTmo+OSF4s@mail.gmail.com>
-	<20110308035633.GD14370@S2101-09.ap.freescale.net>
+From: Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH V12 3/4] ptp: Added a clock driver for the IXP46x.
+Date: Mon, 14 Mar 2011 00:40:48 +0100
+Message-ID: <m3ei6azj0f.fsf@intrepid.localdomain>
+References: <cover.1298878618.git.richard.cochran@omicron.at>
+	<cd6ddff0dcca60ac88b35660505d7bf54ad32405.1298878618.git.richard.cochran@omicron.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110308035633.GD14370-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cd6ddff0dcca60ac88b35660505d7bf54ad32405.1298878618.git.richard.cochran-3mrvs1K0uXizZXS1Dc/lvw@public.gmane.org>
+	(Richard Cochran's message of "Mon, 28 Feb 2011 08:58:27 +0100")
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 08, 2011 at 11:56:34AM +0800, Shawn Guo wrote:
-> On Mon, Mar 07, 2011 at 10:53:37AM -0700, Grant Likely wrote:
-> > On Mon, Mar 7, 2011 at 9:22 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > > The 'rate' is added for fixed-clock support, while 'pll_base' is for
-> > > pll clock. =A0These two particular type of clocks are supposed to be
-> > > gracefully supported by the common clk api when it gets ready.
-> > =
+Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-> > How does the current imx clock code handle fixed and pll clocks?
-> =
+> This patch adds a driver for the hardware time stamping unit found on the
+> IXP465. The basic clock operations and an external trigger are implemented.
+>
+> Signed-off-by: Richard Cochran <richard.cochran-3mrvs1K0uXizZXS1Dc/lvw@public.gmane.org>
+> Acked-by: John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/mach-ixp4xx/include/mach/ixp46x_ts.h |   78 ++++++
+>  drivers/net/arm/ixp4xx_eth.c                  |  192 ++++++++++++++-
+>  drivers/ptp/Kconfig                           |   13 +
+>  drivers/ptp/Makefile                          |    1 +
+>  drivers/ptp/ptp_ixp46x.c                      |  332 +++++++++++++++++++++++++
 
-> For fixed-clock, the current code gets several variables holding the
-> rate and then return the rate from several get_rate functions.
-> =
+I can't see any obvious problem in this code, though I don't have IXP46x
+hardware.
 
-> static unsigned long external_high_reference, external_low_reference;
-> static unsigned long oscillator_reference, ckih2_reference;
-> =
-
-> static unsigned long get_high_reference_clock_rate(struct clk *clk)
-> {
->         return external_high_reference;
-> }
-> =
-
-> static unsigned long get_low_reference_clock_rate(struct clk *clk)
-> {
->         return external_low_reference;
-> }
-> =
-
-> static unsigned long get_oscillator_reference_clock_rate(struct clk *clk)
-> {
->         return oscillator_reference;
-> }
-> =
-
-> static unsigned long get_ckih2_reference_clock_rate(struct clk *clk)
-> {
->         return ckih2_reference;
-> }
-> =
-
-> With this new rate member added, all these can be consolidated into one.
-> =
-
-> For base address of pll, the current code uses the reference to clocks
-> statically defined to know which pll is the one.
-> =
-
-I just noticed that the references to clocks statically created are =
-
-being used in the current clock code widely, and I need to work around
-it 'globally' anyway, so I will not add the new member 'pll_base'.
-
-> static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
-> {
-> #ifdef CONFIG_OF
->         return pll->pll_base;
-> #else
->         if (pll =3D=3D &pll1_main_clk)
->                 return MX51_DPLL1_BASE;
->         else if (pll =3D=3D &pll2_sw_clk)
->                 return MX51_DPLL2_BASE;
->         else if (pll =3D=3D &pll3_sw_clk)
->                 return MX51_DPLL3_BASE;
->         else
->                 BUG();
-> =
-
->         return NULL;
-> #endif
-> }
-> =
-
-> static inline void __iomem *_get_pll_base(struct clk *pll)
-> {
->         if (cpu_is_mx51())
->                 return _mx51_get_pll_base(pll);
->         else
->                 return _mx53_get_pll_base(pll);
-> }
-> =
-
-> > Using the dt shouldn't require any special treatment in this regard.
-> > =
-
-> I would say these two members were added to make dt clock code simple
-> and good.
-
--- =
-
-Regards,
-Shawn
+Acked-by: Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+-- 
+Krzysztof Halasa
