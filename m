@@ -1,13 +1,11 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/5] of/clock: eliminate function __of_clk_get_from_provider
-Date: Mon, 14 Mar 2011 21:18:42 +0800
-Message-ID: <1300108722-3254-6-git-send-email-shawn.guo@linaro.org>
-References: <1300108722-3254-1-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 0/7] support sdhci-esdhc-imx as an OF device
+Date: Mon, 14 Mar 2011 22:25:52 +0800
+Message-ID: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1300108722-3254-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -18,58 +16,58 @@ List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
 Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With the platform clock support, the 'struct clk' should have been
-associated with device_node->data.  So the use of function
-__of_clk_get_from_provider can be eliminated.
+This patch set is to support sdhci-esdhc-imx as an OF device.  As
+there is already powerpc based esdhc OF support, it chose to add OF
+support for imx esdhc driver in a different way from what sdhci-tegra
+did.  
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/of/clock.c |   23 ++---------------------
- 1 files changed, 2 insertions(+), 21 deletions(-)
+It consolidates sdhci_pltfm_data sdhci_of_data into sdhci_data and get
+sdhci-esdhc-imx work with both platform bus and OF.
 
-diff --git a/drivers/of/clock.c b/drivers/of/clock.c
-index 7b5ea67..f124d0a 100644
---- a/drivers/of/clock.c
-+++ b/drivers/of/clock.c
-@@ -71,24 +71,6 @@ void of_clk_del_provider(struct device_node *np,
- 	mutex_unlock(&of_clk_lock);
- }
- 
--static struct clk *__of_clk_get_from_provider(struct device_node *np, const char *clk_output)
--{
--	struct of_clk_provider *provider;
--	struct clk *clk = NULL;
--
--	/* Check if we have such a provider in our array */
--	mutex_lock(&of_clk_lock);
--	list_for_each_entry(provider, &of_clk_providers, link) {
--		if (provider->node == np)
--			clk = provider->get(np, clk_output, provider->data);
--		if (clk)
--			break;
--	}
--	mutex_unlock(&of_clk_lock);
--
--	return clk;
--}
--
- struct clk *of_clk_get(struct device *dev, const char *id)
- {
- 	struct device_node *provnode;
-@@ -123,9 +105,8 @@ struct clk *of_clk_get(struct device *dev, const char *id)
- 			__func__, prop_name, dev->of_node->full_name);
- 		return NULL;
- 	}
--	clk = __of_clk_get_from_provider(provnode, prop);
--	if (clk)
--		dev_dbg(dev, "Using clock from %s\n", provnode->full_name);
-+
-+	clk = provnode->data;
- 
- 	of_node_put(provnode);
- 
--- 
-1.7.1
+The first patch is not related to imx esdhc OF support, but we need it
+to fix the following show-stopper issue.
+
+    https://bugs.launchpad.net/bugs/723159
+
+Hi Nicolas,
+
+The fix has already been merged by Sascha, so you may want to apply it
+on Linaro tree to get rid of the problem. 
+
+Regards,
+Shawn
+
+
+Richard Zhu (1):
+      mx51 enchance the sd/mmc HW timing compatibility on mx51 boards.
+
+Shawn Guo (6):
+      arm/dt: add pad configurations for mx51 babbage
+      mmc: make the reference to sdhci_tegra_dt_pdata conditional
+      mmc: consolidate sdhci_pltfm_data and sdhci_of_data into one
+      mmc: support sdhci-esdhc-imx as an OF device
+      arm/dts: babbage: add device nodes for esdhc
+      dt: update fsl-esdhc bindings for imx esdhc OF support
+
+ .../devicetree/bindings/mmc/fsl-esdhc.txt          |    5 +-
+ arch/arm/boot/dts/babbage.dts                      |   14 +++
+ arch/arm/mach-mx5/board-dt.c                       |   94 ++++++++++++++++++++
+ arch/arm/plat-mxc/include/mach/iomux-mx51.h        |   40 ++++----
+ drivers/mmc/host/Kconfig                           |    7 +-
+ drivers/mmc/host/Makefile                          |    3 +-
+ drivers/mmc/host/sdhci-cns3xxx.c                   |    3 +-
+ drivers/mmc/host/sdhci-dove.c                      |    2 +-
+ drivers/mmc/host/sdhci-esdhc-imx.c                 |   19 ++--
+ drivers/mmc/host/sdhci-of-core.c                   |   53 +++++++----
+ drivers/mmc/host/sdhci-of-esdhc.c                  |   28 +++---
+ drivers/mmc/host/sdhci-of-hlwd.c                   |   20 +++--
+ drivers/mmc/host/sdhci-of.h                        |   10 +--
+ drivers/mmc/host/sdhci-pltfm.c                     |   49 +++++-----
+ drivers/mmc/host/sdhci-pltfm.h                     |   18 ++--
+ drivers/mmc/host/sdhci-tegra.c                     |   10 +-
+ drivers/mmc/host/sdhci.h                           |   15 +++
+ include/linux/mmc/sdhci-pltfm.h                    |   35 -------
+ 18 files changed, 267 insertions(+), 158 deletions(-)
