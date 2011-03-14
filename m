@@ -1,11 +1,14 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/7] support sdhci-esdhc-imx as an OF device
-Date: Mon, 14 Mar 2011 22:25:52 +0800
-Message-ID: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 1/7] mx51 enchance the sd/mmc HW timing compatibility on mx51
+	boards.
+Date: Mon, 14 Mar 2011 22:25:53 +0800
+Message-ID: <1300112759-3495-2-git-send-email-shawn.guo@linaro.org>
+References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <1300112759-3495-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -16,58 +19,161 @@ List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
 Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is to support sdhci-esdhc-imx as an OF device.  As
-there is already powerpc based esdhc OF support, it chose to add OF
-support for imx esdhc driver in a different way from what sdhci-tegra
-did.  
+From: Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-It consolidates sdhci_pltfm_data sdhci_of_data into sdhci_data and get
-sdhci-esdhc-imx work with both platform bus and OF.
+Some cards have the CRC errors in read on mx51 BBG board.
+Configure the eSDHC pad configurations to level up the
+compatibility to fix this issue.
 
-The first patch is not related to imx esdhc OF support, but we need it
-to fix the following show-stopper issue.
+Signed-off-by: Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Tested-by: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/plat-mxc/include/mach/iomux-mx51.h |   40 +++++++++++++-------------
+ 1 files changed, 20 insertions(+), 20 deletions(-)
 
-    https://bugs.launchpad.net/bugs/723159
-
-Hi Nicolas,
-
-The fix has already been merged by Sascha, so you may want to apply it
-on Linaro tree to get rid of the problem. 
-
-Regards,
-Shawn
-
-
-Richard Zhu (1):
-      mx51 enchance the sd/mmc HW timing compatibility on mx51 boards.
-
-Shawn Guo (6):
-      arm/dt: add pad configurations for mx51 babbage
-      mmc: make the reference to sdhci_tegra_dt_pdata conditional
-      mmc: consolidate sdhci_pltfm_data and sdhci_of_data into one
-      mmc: support sdhci-esdhc-imx as an OF device
-      arm/dts: babbage: add device nodes for esdhc
-      dt: update fsl-esdhc bindings for imx esdhc OF support
-
- .../devicetree/bindings/mmc/fsl-esdhc.txt          |    5 +-
- arch/arm/boot/dts/babbage.dts                      |   14 +++
- arch/arm/mach-mx5/board-dt.c                       |   94 ++++++++++++++++++++
- arch/arm/plat-mxc/include/mach/iomux-mx51.h        |   40 ++++----
- drivers/mmc/host/Kconfig                           |    7 +-
- drivers/mmc/host/Makefile                          |    3 +-
- drivers/mmc/host/sdhci-cns3xxx.c                   |    3 +-
- drivers/mmc/host/sdhci-dove.c                      |    2 +-
- drivers/mmc/host/sdhci-esdhc-imx.c                 |   19 ++--
- drivers/mmc/host/sdhci-of-core.c                   |   53 +++++++----
- drivers/mmc/host/sdhci-of-esdhc.c                  |   28 +++---
- drivers/mmc/host/sdhci-of-hlwd.c                   |   20 +++--
- drivers/mmc/host/sdhci-of.h                        |   10 +--
- drivers/mmc/host/sdhci-pltfm.c                     |   49 +++++-----
- drivers/mmc/host/sdhci-pltfm.h                     |   18 ++--
- drivers/mmc/host/sdhci-tegra.c                     |   10 +-
- drivers/mmc/host/sdhci.h                           |   15 +++
- include/linux/mmc/sdhci-pltfm.h                    |   35 -------
- 18 files changed, 267 insertions(+), 158 deletions(-)
+diff --git a/arch/arm/plat-mxc/include/mach/iomux-mx51.h b/arch/arm/plat-mxc/include/mach/iomux-mx51.h
+index b6767f9..3e41348 100644
+--- a/arch/arm/plat-mxc/include/mach/iomux-mx51.h
++++ b/arch/arm/plat-mxc/include/mach/iomux-mx51.h
+@@ -985,11 +985,11 @@
+ #define MX51_PAD_NANDF_WE_B__GPIO3_3		(_MX51_PAD_NANDF_WE_B__GPIO3_3 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_WE_B__NANDF_WE_B		(_MX51_PAD_NANDF_WE_B__NANDF_WE_B | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_WE_B__PATA_DIOW		(_MX51_PAD_NANDF_WE_B__PATA_DIOW | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_WE_B__SD3_DATA0		(_MX51_PAD_NANDF_WE_B__SD3_DATA0 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_WE_B__SD3_DATA0		(_MX51_PAD_NANDF_WE_B__SD3_DATA0 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RE_B__GPIO3_4		(_MX51_PAD_NANDF_RE_B__GPIO3_4 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RE_B__NANDF_RE_B		(_MX51_PAD_NANDF_RE_B__NANDF_RE_B | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RE_B__PATA_DIOR		(_MX51_PAD_NANDF_RE_B__PATA_DIOR | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_RE_B__SD3_DATA1		(_MX51_PAD_NANDF_RE_B__SD3_DATA1 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_RE_B__SD3_DATA1		(_MX51_PAD_NANDF_RE_B__SD3_DATA1 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_ALE__GPIO3_5		(_MX51_PAD_NANDF_ALE__GPIO3_5 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_ALE__NANDF_ALE		(_MX51_PAD_NANDF_ALE__NANDF_ALE | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_ALE__PATA_BUFFER_EN	(_MX51_PAD_NANDF_ALE__PATA_BUFFER_EN | MUX_PAD_CTRL(NO_PAD_CTRL))
+@@ -999,18 +999,18 @@
+ #define MX51_PAD_NANDF_WP_B__GPIO3_7		(_MX51_PAD_NANDF_WP_B__GPIO3_7 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_WP_B__NANDF_WP_B		(_MX51_PAD_NANDF_WP_B__NANDF_WP_B | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_WP_B__PATA_DMACK		(_MX51_PAD_NANDF_WP_B__PATA_DMACK | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_WP_B__SD3_DATA2		(_MX51_PAD_NANDF_WP_B__SD3_DATA2 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_WP_B__SD3_DATA2		(_MX51_PAD_NANDF_WP_B__SD3_DATA2 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB0__ECSPI2_SS1		(_MX51_PAD_NANDF_RB0__ECSPI2_SS1 | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB0__GPIO3_8		(_MX51_PAD_NANDF_RB0__GPIO3_8 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB0__NANDF_RB0		(_MX51_PAD_NANDF_RB0__NANDF_RB0 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB0__PATA_DMARQ		(_MX51_PAD_NANDF_RB0__PATA_DMARQ | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_RB0__SD3_DATA3		(_MX51_PAD_NANDF_RB0__SD3_DATA3 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_RB0__SD3_DATA3		(_MX51_PAD_NANDF_RB0__SD3_DATA3 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB1__CSPI_MOSI		(_MX51_PAD_NANDF_RB1__CSPI_MOSI | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB1__ECSPI2_RDY		(_MX51_PAD_NANDF_RB1__ECSPI2_RDY | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB1__GPIO3_9		(_MX51_PAD_NANDF_RB1__GPIO3_9 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB1__NANDF_RB1		(_MX51_PAD_NANDF_RB1__NANDF_RB1 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB1__PATA_IORDY		(_MX51_PAD_NANDF_RB1__PATA_IORDY | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_RB1__SD4_CMD		(_MX51_PAD_NANDF_RB1__SD4_CMD | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_RB1__SD4_CMD		(_MX51_PAD_NANDF_RB1__SD4_CMD | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB2__DISP2_WAIT		(_MX51_PAD_NANDF_RB2__DISP2_WAIT | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB2__ECSPI2_SCLK		(_MX51_PAD_NANDF_RB2__ECSPI2_SCLK | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RB2__FEC_COL		(_MX51_PAD_NANDF_RB2__FEC_COL | MUX_PAD_CTRL(MX51_PAD_CTRL_2))
+@@ -1036,41 +1036,41 @@
+ #define MX51_PAD_NANDF_CS2__GPIO3_18		(_MX51_PAD_NANDF_CS2__GPIO3_18 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS2__NANDF_CS2		(_MX51_PAD_NANDF_CS2__NANDF_CS2 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS2__PATA_CS_0		(_MX51_PAD_NANDF_CS2__PATA_CS_0 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_CS2__SD4_CLK		(_MX51_PAD_NANDF_CS2__SD4_CLK | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_CS2__SD4_CLK		(_MX51_PAD_NANDF_CS2__SD4_CLK | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL | PAD_CTL_HYS))
+ #define MX51_PAD_NANDF_CS2__USBH3_H1_DP		(_MX51_PAD_NANDF_CS2__USBH3_H1_DP | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS3__FEC_MDC		(_MX51_PAD_NANDF_CS3__FEC_MDC | MUX_PAD_CTRL(MX51_PAD_CTRL_5))
+ #define MX51_PAD_NANDF_CS3__GPIO3_19		(_MX51_PAD_NANDF_CS3__GPIO3_19 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS3__NANDF_CS3		(_MX51_PAD_NANDF_CS3__NANDF_CS3 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS3__PATA_CS_1		(_MX51_PAD_NANDF_CS3__PATA_CS_1 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_CS3__SD4_DAT0		(_MX51_PAD_NANDF_CS3__SD4_DAT0 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_CS3__SD4_DAT0		(_MX51_PAD_NANDF_CS3__SD4_DAT0 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS3__USBH3_H1_DM		(_MX51_PAD_NANDF_CS3__USBH3_H1_DM | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS4__FEC_TDATA1		(_MX51_PAD_NANDF_CS4__FEC_TDATA1 | MUX_PAD_CTRL(MX51_PAD_CTRL_5))
+ #define MX51_PAD_NANDF_CS4__GPIO3_20		(_MX51_PAD_NANDF_CS4__GPIO3_20 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS4__NANDF_CS4		(_MX51_PAD_NANDF_CS4__NANDF_CS4 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS4__PATA_DA_0		(_MX51_PAD_NANDF_CS4__PATA_DA_0 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_CS4__SD4_DAT1		(_MX51_PAD_NANDF_CS4__SD4_DAT1 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_CS4__SD4_DAT1		(_MX51_PAD_NANDF_CS4__SD4_DAT1 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS4__USBH3_STP		(_MX51_PAD_NANDF_CS4__USBH3_STP | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS5__FEC_TDATA2		(_MX51_PAD_NANDF_CS5__FEC_TDATA2 | MUX_PAD_CTRL(MX51_PAD_CTRL_5))
+ #define MX51_PAD_NANDF_CS5__GPIO3_21		(_MX51_PAD_NANDF_CS5__GPIO3_21 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS5__NANDF_CS5		(_MX51_PAD_NANDF_CS5__NANDF_CS5 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS5__PATA_DA_1		(_MX51_PAD_NANDF_CS5__PATA_DA_1 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_CS5__SD4_DAT2		(_MX51_PAD_NANDF_CS5__SD4_DAT2 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_CS5__SD4_DAT2		(_MX51_PAD_NANDF_CS5__SD4_DAT2 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS5__USBH3_DIR		(_MX51_PAD_NANDF_CS5__USBH3_DIR | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS6__CSPI_SS3		(_MX51_PAD_NANDF_CS6__CSPI_SS3 | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS6__FEC_TDATA3		(_MX51_PAD_NANDF_CS6__FEC_TDATA3 | MUX_PAD_CTRL(MX51_PAD_CTRL_5))
+ #define MX51_PAD_NANDF_CS6__GPIO3_22		(_MX51_PAD_NANDF_CS6__GPIO3_22 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS6__NANDF_CS6		(_MX51_PAD_NANDF_CS6__NANDF_CS6 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS6__PATA_DA_2		(_MX51_PAD_NANDF_CS6__PATA_DA_2 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_CS6__SD4_DAT3		(_MX51_PAD_NANDF_CS6__SD4_DAT3 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_CS6__SD4_DAT3		(_MX51_PAD_NANDF_CS6__SD4_DAT3 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS7__FEC_TX_EN		(_MX51_PAD_NANDF_CS7__FEC_TX_EN | MUX_PAD_CTRL(MX51_PAD_CTRL_5))
+ #define MX51_PAD_NANDF_CS7__GPIO3_23		(_MX51_PAD_NANDF_CS7__GPIO3_23 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_CS7__NANDF_CS7		(_MX51_PAD_NANDF_CS7__NANDF_CS7 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_CS7__SD3_CLK		(_MX51_PAD_NANDF_CS7__SD3_CLK | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_CS7__SD3_CLK		(_MX51_PAD_NANDF_CS7__SD3_CLK | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL | PAD_CTL_HYS))
+ #define MX51_PAD_NANDF_RDY_INT__ECSPI2_SS0	(_MX51_PAD_NANDF_RDY_INT__ECSPI2_SS0 | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_RDY_INT__FEC_TX_CLK	(_MX51_PAD_NANDF_RDY_INT__FEC_TX_CLK | MUX_PAD_CTRL(MX51_PAD_CTRL_4))
+ #define MX51_PAD_NANDF_RDY_INT__GPIO3_24	(_MX51_PAD_NANDF_RDY_INT__GPIO3_24 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_RDY_INT__NANDF_RDY_INT	(_MX51_PAD_NANDF_RDY_INT__NANDF_RDY_INT | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_NANDF_RDY_INT__SD3_CMD		(_MX51_PAD_NANDF_RDY_INT__SD3_CMD | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_NANDF_RDY_INT__SD3_CMD		(_MX51_PAD_NANDF_RDY_INT__SD3_CMD | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_NANDF_D15__ECSPI2_MOSI		(_MX51_PAD_NANDF_D15__ECSPI2_MOSI | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_NANDF_D15__GPIO3_25		(_MX51_PAD_NANDF_D15__GPIO3_25 | MUX_PAD_CTRL(MX51_GPIO_PAD_CTRL))
+ #define MX51_PAD_NANDF_D15__NANDF_D15		(_MX51_PAD_NANDF_D15__NANDF_D15 | MUX_PAD_CTRL(NO_PAD_CTRL))
+@@ -1479,26 +1479,26 @@
+ #define MX51_PAD_SD1_CLK__SD1_CLK		(_MX51_PAD_SD1_CLK__SD1_CLK | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL | PAD_CTL_HYS))
+ #define MX51_PAD_SD1_DATA0__AUD5_TXD		(_MX51_PAD_SD1_DATA0__AUD5_TXD | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD1_DATA0__CSPI_MISO		(_MX51_PAD_SD1_DATA0__CSPI_MISO | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+-#define MX51_PAD_SD1_DATA0__SD1_DATA0		(_MX51_PAD_SD1_DATA0__SD1_DATA0 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD1_DATA0__SD1_DATA0		(_MX51_PAD_SD1_DATA0__SD1_DATA0 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_EIM_DA0__EIM_DA0		(_MX51_PAD_EIM_DA0__EIM_DA0 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA1__EIM_DA1		(_MX51_PAD_EIM_DA1__EIM_DA1 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA2__EIM_DA2		(_MX51_PAD_EIM_DA2__EIM_DA2 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA3__EIM_DA3		(_MX51_PAD_EIM_DA3__EIM_DA3 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD1_DATA1__AUD5_RXD		(_MX51_PAD_SD1_DATA1__AUD5_RXD | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_SD1_DATA1__SD1_DATA1		(_MX51_PAD_SD1_DATA1__SD1_DATA1 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD1_DATA1__SD1_DATA1		(_MX51_PAD_SD1_DATA1__SD1_DATA1 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_EIM_DA4__EIM_DA4		(_MX51_PAD_EIM_DA4__EIM_DA4 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA5__EIM_DA5		(_MX51_PAD_EIM_DA5__EIM_DA5 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA6__EIM_DA6		(_MX51_PAD_EIM_DA6__EIM_DA6 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA7__EIM_DA7		(_MX51_PAD_EIM_DA7__EIM_DA7 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD1_DATA2__AUD5_TXC		(_MX51_PAD_SD1_DATA2__AUD5_TXC | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_SD1_DATA2__SD1_DATA2		(_MX51_PAD_SD1_DATA2__SD1_DATA2 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD1_DATA2__SD1_DATA2		(_MX51_PAD_SD1_DATA2__SD1_DATA2 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_EIM_DA10__EIM_DA10		(_MX51_PAD_EIM_DA10__EIM_DA10 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA11__EIM_DA11		(_MX51_PAD_EIM_DA11__EIM_DA11 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA8__EIM_DA8		(_MX51_PAD_EIM_DA8__EIM_DA8 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_EIM_DA9__EIM_DA9		(_MX51_PAD_EIM_DA9__EIM_DA9 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD1_DATA3__AUD5_TXFS		(_MX51_PAD_SD1_DATA3__AUD5_TXFS | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD1_DATA3__CSPI_SS1		(_MX51_PAD_SD1_DATA3__CSPI_SS1 | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+-#define MX51_PAD_SD1_DATA3__SD1_DATA3		(_MX51_PAD_SD1_DATA3__SD1_DATA3 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD1_DATA3__SD1_DATA3		(_MX51_PAD_SD1_DATA3__SD1_DATA3 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_GPIO1_0__CSPI_SS2		(_MX51_PAD_GPIO1_0__CSPI_SS2 | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_GPIO1_0__GPIO1_0		(_MX51_PAD_GPIO1_0__GPIO1_0 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_GPIO1_0__SD1_CD		(_MX51_PAD_GPIO1_0__SD1_CD | MUX_PAD_CTRL(MX51_ESDHC_PAD_CTRL))
+@@ -1517,16 +1517,16 @@
+ #define MX51_PAD_SD2_CLK__SD2_CLK		(_MX51_PAD_SD2_CLK__SD2_CLK | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL | PAD_CTL_HYS))
+ #define MX51_PAD_SD2_DATA0__CSPI_MISO		(_MX51_PAD_SD2_DATA0__CSPI_MISO | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA0__SD1_DAT4		(_MX51_PAD_SD2_DATA0__SD1_DAT4 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_SD2_DATA0__SD2_DATA0		(_MX51_PAD_SD2_DATA0__SD2_DATA0 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD2_DATA0__SD2_DATA0		(_MX51_PAD_SD2_DATA0__SD2_DATA0 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA1__SD1_DAT5		(_MX51_PAD_SD2_DATA1__SD1_DAT5 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_SD2_DATA1__SD2_DATA1		(_MX51_PAD_SD2_DATA1__SD2_DATA1 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD2_DATA1__SD2_DATA1		(_MX51_PAD_SD2_DATA1__SD2_DATA1 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA1__USBH3_H2_DP		(_MX51_PAD_SD2_DATA1__USBH3_H2_DP | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA2__SD1_DAT6		(_MX51_PAD_SD2_DATA2__SD1_DAT6 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_SD2_DATA2__SD2_DATA2		(_MX51_PAD_SD2_DATA2__SD2_DATA2 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD2_DATA2__SD2_DATA2		(_MX51_PAD_SD2_DATA2__SD2_DATA2 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA2__USBH3_H2_DM		(_MX51_PAD_SD2_DATA2__USBH3_H2_DM | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA3__CSPI_SS2		(_MX51_PAD_SD2_DATA3__CSPI_SS2 | MUX_PAD_CTRL(MX51_ECSPI_PAD_CTRL))
+ #define MX51_PAD_SD2_DATA3__SD1_DAT7		(_MX51_PAD_SD2_DATA3__SD1_DAT7 | MUX_PAD_CTRL(NO_PAD_CTRL))
+-#define MX51_PAD_SD2_DATA3__SD2_DATA3		(_MX51_PAD_SD2_DATA3__SD2_DATA3 | MUX_PAD_CTRL(NO_PAD_CTRL))
++#define MX51_PAD_SD2_DATA3__SD2_DATA3		(_MX51_PAD_SD2_DATA3__SD2_DATA3 | MUX_PAD_CTRL(MX51_SDHCI_PAD_CTRL))
+ #define MX51_PAD_GPIO1_2__CCM_OUT_2		(_MX51_PAD_GPIO1_2__CCM_OUT_2 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_GPIO1_2__GPIO1_2		(_MX51_PAD_GPIO1_2__GPIO1_2 | MUX_PAD_CTRL(NO_PAD_CTRL))
+ #define MX51_PAD_GPIO1_2__I2C2_SCL		(_MX51_PAD_GPIO1_2__I2C2_SCL | MUX_PAD_CTRL(MX51_I2C_PAD_CTRL))
+-- 
+1.7.1
