@@ -1,72 +1,53 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/7] arm/dt: add pad configurations for mx51 babbage
-Date: Mon, 14 Mar 2011 23:53:14 +0800
-Message-ID: <20110314155313.GC3674@S2101-09.ap.freescale.net>
-References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
-	<1300112759-3495-3-git-send-email-shawn.guo@linaro.org>
-	<4D7E3230.6040505@gmail.com>
+From: Meador Inge <meador_inge@mentor.com>
+Subject: [PATCH v5 0/3] powerpc: Open PIC binding and "pic-no-reset"
+Date: Mon, 14 Mar 2011 15:01:04 -0500
+Message-ID: <1300132867-4840-1-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4D7E3230.6040505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org, Hollis Blanchard <hollis_blanchard@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 14, 2011 at 10:20:16AM -0500, Rob Herring wrote:
-> Shawn,
-> 
-Hi Rob,
+This patch set provides a binding for Open PIC and implements support for
+a new property, specified by that binding, called "pic-no-reset".
 
-> On 03/14/2011 09:25 AM, Shawn Guo wrote:
-> >The pad configuration is something common between dt and non-dt
-> >kernel, so it can be copied from non-dt code directly.
-> >
-> >Signed-off-by: Shawn Guo<shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >---
-> >  arch/arm/mach-mx5/board-dt.c |   94 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 files changed, 94 insertions(+), 0 deletions(-)
-> >
-> >diff --git a/arch/arm/mach-mx5/board-dt.c b/arch/arm/mach-mx5/board-dt.c
-> >index 45d1e37..4850251 100644
-> >--- a/arch/arm/mach-mx5/board-dt.c
-> >+++ b/arch/arm/mach-mx5/board-dt.c
-> >@@ -31,6 +31,97 @@
-> >
-> >  #include "devices.h"
-> >
-> >+static iomux_v3_cfg_t mx51babbage_pads[] = {
-> >+	/* UART1 */
-> >+	MX51_PAD_UART1_RXD__UART1_RXD,
-> >+	MX51_PAD_UART1_TXD__UART1_TXD,
-> >+	MX51_PAD_UART1_RTS__UART1_RTS,
-> >+	MX51_PAD_UART1_CTS__UART1_CTS,
-[...]
-> >+};
-> 
-> This data already exists, so you should not duplicate it here.
-> 
-So you are suggesting remove the 'static' where is first defined, and
-refer to it here directly?  Correct me if I misunderstood you comment.
+v5 - Moved the Open PIC binding to its rightful home of
+     ".../Documentation/devicetree/bindings/".  Also, fixed up
+     the lazy reset code to take better advantage of existing
+     functions.  Finally, did some minor refactoring to put
+     cpu id fetching in its own helper function.
 
-> Iomux setup is a good candidate for a DT binding as it is just data,
-> but I never came up with a good solution that was not bloated with a
-> 32-bit value for every setting of each pin.
-> 
-Honestly, this is something new for me, and I never thought about it,
-but will, if later we all think this is something we should do.
+v4 - Per Ben's feedback the protected sources implementation was left
+     completely intact.  As such, the DTS cleanup and "protected-sources"
+     removal patches were dropped.
 
--- 
-Regards,
-Shawn
+v3 - the Open PIC binding was changed to be more consistent with existing
+     bindings, several DTS files were cleaned up, "no-reset" was changed to
+     "pic-no-reset", and a check to treat "protected-sources" as a synonym for
+     "pic-no-reset" was added.
+
+Signed-off-by: Meador Inge <meador_inge@mentor.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Hollis Blanchard <hollis_blanchard@mentor.com>
+
+Meador Inge (3):
+  powerpc: document the Open PIC device tree binding
+  powerpc: make MPIC honor the "pic-no-reset" device tree property
+  powerpc: factoring mpic cpu id fetching into a function
+
+ Documentation/devicetree/bindings/open-pic.txt |   98 ++++++++++++++++++++++++
+ arch/powerpc/include/asm/mpic.h                |    4 +
+ arch/powerpc/sysdev/mpic.c                     |   85 +++++++++++++++-----
+ 3 files changed, 165 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/open-pic.txt
