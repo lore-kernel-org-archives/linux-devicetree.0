@@ -1,101 +1,55 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/7] mmc: support sdhci-esdhc-imx as an OF device
-Date: Mon, 14 Mar 2011 22:25:57 +0800
-Message-ID: <1300112759-3495-6-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 6/7] arm/dts: babbage: add device nodes for esdhc
+Date: Mon, 14 Mar 2011 22:25:58 +0800
+Message-ID: <1300112759-3495-7-git-send-email-shawn.guo@linaro.org>
 References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1300112759-3495-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mmc/host/Kconfig         |    7 ++++---
- drivers/mmc/host/Makefile        |    3 ++-
- drivers/mmc/host/sdhci-of-core.c |    3 +++
- drivers/mmc/host/sdhci-of.h      |    1 +
- 4 files changed, 10 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/babbage.dts |   14 ++++++++++++++
+ 1 files changed, 14 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index afe8c6f..9746ec1 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -133,12 +133,13 @@ config MMC_SDHCI_CNS3XXX
- 	  If unsure, say N.
+diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
+index 378cd7d..d1824ab 100644
+--- a/arch/arm/boot/dts/babbage.dts
++++ b/arch/arm/boot/dts/babbage.dts
+@@ -572,6 +572,20 @@
+ 		compatible = "simple-bus";
+ 		ranges = <0x0 0x70000000 0x100000>;
  
- config MMC_SDHCI_ESDHC_IMX
--	bool "SDHCI platform support for the Freescale eSDHC i.MX controller"
--	depends on MMC_SDHCI_PLTFM && (ARCH_MX25 || ARCH_MX35 || ARCH_MX5)
-+	bool "SDHCI support for the Freescale eSDHC i.MX controller"
-+	depends on ARCH_MX25 || ARCH_MX35 || ARCH_MX5
-+	depends on MMC_SDHCI_PLTFM || MMC_SDHCI_OF
- 	select MMC_SDHCI_IO_ACCESSORS
- 	help
- 	  This selects the Freescale eSDHC controller support on the platform
--	  bus, found on platforms like mx35/51.
-+	  or OF bus, found on platforms like mx35/51.
- 
- 	  If unsure, say N.
- 
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index e834fb2..cca8dfd 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -39,7 +39,6 @@ obj-$(CONFIG_MMC_USHC)		+= ushc.o
- obj-$(CONFIG_MMC_SDHCI_PLTFM)			+= sdhci-platform.o
- sdhci-platform-y				:= sdhci-pltfm.o
- sdhci-platform-$(CONFIG_MMC_SDHCI_CNS3XXX)	+= sdhci-cns3xxx.o
--sdhci-platform-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
- sdhci-platform-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
- sdhci-platform-$(CONFIG_MMC_SDHCI_TEGRA)	+= sdhci-tegra.o
- 
-@@ -48,6 +47,8 @@ sdhci-of-y				:= sdhci-of-core.o
- sdhci-of-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
- sdhci-of-$(CONFIG_MMC_SDHCI_OF_HLWD)	+= sdhci-of-hlwd.o
- 
-+obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
++		sdhci@4000 {
++			compatible = "fsl,imx-esdhc", "fsl,esdhc";
++			reg = <0x4000 0x4000>;
++			interrupts = <1>;
++			bus-clock = <&esdhc1_clk>, "esdhc";
++		};
 +
- ifeq ($(CONFIG_CB710_DEBUG),y)
- 	CFLAGS-cb710-mmc	+= -DDEBUG
- endif
-diff --git a/drivers/mmc/host/sdhci-of-core.c b/drivers/mmc/host/sdhci-of-core.c
-index 0b32ad7..d803fa5 100644
---- a/drivers/mmc/host/sdhci-of-core.c
-+++ b/drivers/mmc/host/sdhci-of-core.c
-@@ -32,6 +32,9 @@
- #include "sdhci.h"
- 
- static const struct of_device_id sdhci_of_match[] = {
-+#ifdef CONFIG_MMC_SDHCI_ESDHC_IMX
-+	{ .compatible = "fsl,imx-esdhc", .data = &sdhci_esdhc_imx_data, },
-+#endif
- #ifdef CONFIG_MMC_SDHCI_OF_ESDHC
- 	{ .compatible = "fsl,mpc8379-esdhc", .data = &sdhci_esdhc_data, },
- 	{ .compatible = "fsl,mpc8536-esdhc", .data = &sdhci_esdhc_data, },
-diff --git a/drivers/mmc/host/sdhci-of.h b/drivers/mmc/host/sdhci-of.h
-index e88fe2e..90fb2eb 100644
---- a/drivers/mmc/host/sdhci-of.h
-+++ b/drivers/mmc/host/sdhci-of.h
-@@ -31,6 +31,7 @@ extern void sdhci_be32bs_writel(struct sdhci_host *host, u32 val, int reg);
- extern void sdhci_be32bs_writew(struct sdhci_host *host, u16 val, int reg);
- extern void sdhci_be32bs_writeb(struct sdhci_host *host, u8 val, int reg);
- 
-+extern struct sdhci_data sdhci_esdhc_imx_data;
- extern struct sdhci_data sdhci_esdhc_data;
- extern struct sdhci_data sdhci_hlwd_data;
- 
++		sdhci@8000 {
++			compatible = "fsl,imx-esdhc", "fsl,esdhc";
++			reg = <0x8000 0x4000>;
++			interrupts = <2>;
++			bus-clock = <&esdhc2_clk>, "esdhc";
++		};
++
+ 		imx-uart@c000 {
+ 			compatible = "fsl,imx51-uart";
+ 			reg = <0xc000 0x1000>;
 -- 
 1.7.1
