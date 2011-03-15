@@ -1,13 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: [PATCH] arm/dt: Add dtb make rule
-Date: Mon, 14 Mar 2011 18:34:53 -0500
-Message-ID: <4D7EA61D.4030403@gmail.com>
+Date: Tue, 15 Mar 2011 08:53:03 +0800
+Message-ID: <20110315005302.GA11098@S2100-06.ap.freescale.net>
 References: <1299786381-8925-1-git-send-email-robherring2@gmail.com>
+	<4D7EA61D.4030403@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1299786381-8925-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4D7EA61D.4030403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -17,19 +19,26 @@ List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
 Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Mon, Mar 14, 2011 at 06:34:53PM -0500, Rob Herring wrote:
+> Grant,
+> 
+> On 03/10/2011 01:46 PM, Rob Herring wrote:
+> >From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >
+> >Add a make rule to compile dt blobs for ARM.
+> >
+> >Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Can you pick this one up in your ARM tree.
+> 
++1
 
-On 03/10/2011 01:46 PM, Rob Herring wrote:
-> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
-> Add a make rule to compile dt blobs for ARM.
->
-> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+It's handy.
 
-Can you pick this one up in your ARM tree.
-
-Rob
+-- 
+Regards,
+Shawn
