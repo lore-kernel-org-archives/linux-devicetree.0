@@ -1,370 +1,198 @@
-From: Kim Phillips <kim.phillips@freescale.com>
-Subject: [PATCH] crypto: caam - de-CHIP-ify device tree compatibles
-Date: Tue, 15 Mar 2011 16:52:20 -0500
-Message-ID: <20110315165220.d4fb60bc.kim.phillips@freescale.com>
+From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [RFC v2] OLPC: add missing elements to device tree
+Date: Tue, 15 Mar 2011 15:27:26 -0700
+Message-ID: <20110315152726.4a116a4d@queued.net>
+References: <20110312180448.572A49D401E@zog.reactivated.net>
+	<20110315033335.GC5600@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Steve Cornelius <sec@pobox.com>, Kumar Gala <kumar.gala@freescale.com>, Scott Wood <scottwood@freescale.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110315033335.GC5600-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-- all the integration parameters have been captured by the binding.
-- the block name really uniquely identifies this hardware.
+Looks good to me as well.
 
-Some advocate putting SoC names everywhere in case software needs
-to work around some chip-specific bug, but more precise SoC
-information already exists in SVR, and board information already
-exists in the top-level device tree node.
+Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 
-Note that sometimes the SoC name is a worse identifier than the
-block version, as the block version can change between revisions
-of the same SoC.
+This should probably be forwarded to the x86 folks.
 
-As a matter of historical reference, neither SEC versions 2.x
-nor 3.x (driven by talitos) ever needed CHIP references.
+On Mon, 14 Mar 2011
+21:33:35 -0600 Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 
-Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
-Cc: Kumar Gala <kumar.gala@freescale.com>
-Cc: Scott Wood <scottwood@freescale.com>
----
- .../devicetree/bindings/crypto/fsl-sec4.txt        |   64 ++++++++------------
- arch/powerpc/boot/dts/p4080ds.dts                  |   32 ++++-------
- 2 files changed, 37 insertions(+), 59 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index 568aa3c..bf57ecd 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -38,7 +38,7 @@ in the memory partition devoted to a particular core.  The P4080 has 4 JRs, so
- up to 4 JRs can be configured; and all 4 JRs process requests in parallel.
- 
- =====================================================================
--P4080 SEC 4 Node
-+SEC 4 Node
- 
- Description
- 
-@@ -53,7 +53,7 @@ PROPERTIES
-    - compatible
-       Usage: required
-       Value type: <string>
--      Definition: Must include "fsl,p4080-sec-v4.0","fsl,sec-v4.0"
-+      Definition: Must include "fsl,sec-v4.0"
- 
-    - #address-cells
-        Usage: required
-@@ -105,7 +105,7 @@ PROPERTIES
- 
- EXAMPLE
- 	crypto@300000 {
--		compatible = "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
-+		compatible = "fsl,sec-v4.0";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0x300000 0x10000>;
-@@ -115,7 +115,7 @@ EXAMPLE
- 	};
- 
- =====================================================================
--P4080 Job Ring (JR) Node
-+Job Ring (JR) Node
- 
-     Child of the crypto node defines data processing interface to SEC 4
-     across the peripheral bus for purposes of processing
-@@ -127,7 +127,7 @@ P4080 Job Ring (JR) Node
-   - compatible
-       Usage: required
-       Value type: <string>
--      Definition: Must include "fsl,p4080-sec-v4.0-job-ring","fsl,sec-v4.0-job-ring"
-+      Definition: Must include "fsl,sec-v4.0-job-ring"
- 
-   - reg
-       Usage: required
-@@ -163,8 +163,7 @@ P4080 Job Ring (JR) Node
- 
- EXAMPLE
- 	jr@1000 {
--		compatible = "fsl,p4080-sec-v4.0-job-ring",
--			     "fsl,sec-v4.0-job-ring";
-+		compatible = "fsl,sec-v4.0-job-ring";
- 		reg = <0x1000 0x1000>;
- 		fsl,liodn = <0x081>;
- 		interrupt-parent = <&mpic>;
-@@ -173,7 +172,7 @@ EXAMPLE
- 
- 
- =====================================================================
--P4080 Run Time Integrity Check (RTIC) Node
-+Run Time Integrity Check (RTIC) Node
- 
-   Child node of the crypto node.  Defines a register space that
-   contains up to 5 sets of addresses and their lengths (sizes) that
-@@ -186,7 +185,7 @@ P4080 Run Time Integrity Check (RTIC) Node
-   - compatible
-       Usage: required
-       Value type: <string>
--      Definition: Must include "fsl,p4080-sec-v4.0-rtic","fsl,sec-v4.0-rtic".
-+      Definition: Must include "fsl,sec-v4.0-rtic".
- 
-    - #address-cells
-        Usage: required
-@@ -219,8 +218,7 @@ P4080 Run Time Integrity Check (RTIC) Node
- 
- EXAMPLE
- 	rtic@6000 {
--		compatible = "fsl,p4080-sec-v4.0-rtic",
--			     "fsl,sec-v4.0-rtic";
-+		compatible = "fsl,sec-v4.0-rtic";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0x6000 0x100>;
-@@ -228,7 +226,7 @@ EXAMPLE
- 	};
- 
- =====================================================================
--P4080 Run Time Integrity Check (RTIC) Memory Node
-+Run Time Integrity Check (RTIC) Memory Node
-   A child node that defines individual RTIC memory regions that are used to
-   perform run-time integrity check of memory areas that should not modified.
-   The node defines a register that contains the memory address &
-@@ -238,7 +236,7 @@ P4080 Run Time Integrity Check (RTIC) Memory Node
-   - compatible
-       Usage: required
-       Value type: <string>
--      Definition: Must include "fsl,p4080-sec-v4.0-rtic-memory","fsl,sec-v4.0-rtic-memory".
-+      Definition: Must include "fsl,sec-v4.0-rtic-memory".
- 
-   - reg
-       Usage: required
-@@ -270,15 +268,14 @@ P4080 Run Time Integrity Check (RTIC) Memory Node
- 
- EXAMPLE
- 	rtic-a@0 {
--		compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--			     "fsl,sec-v4.0-rtic-memory";
-+		compatible = "fsl,sec-v4.0-rtic-memory";
- 		reg = <0x00 0x20 0x100 0x80>;
- 		fsl,liodn   = <0x03c>;
- 		fsl,rtic-region  = <0x12345678 0x12345678 0x12345678>;
- 	};
- 
- =====================================================================
--P4080 Secure Non-Volatile Storage (SNVS) Node
-+Secure Non-Volatile Storage (SNVS) Node
- 
-     Node defines address range and the associated
-     interrupt for the SNVS function.  This function
-@@ -288,7 +285,7 @@ P4080 Secure Non-Volatile Storage (SNVS) Node
-   - compatible
-       Usage: required
-       Value type: <string>
--      Definition: Must include "fsl,p4080-sec-v4.0-mon", "fsl,sec-v4.0-mon".
-+      Definition: Must include "fsl,sec-v4.0-mon".
- 
-   - reg
-       Usage: required
-@@ -315,7 +312,7 @@ P4080 Secure Non-Volatile Storage (SNVS) Node
- 
- EXAMPLE
- 	sec_mon@314000 {
--		compatible = "fsl,p4080-sec-v4.0-mon", "fsl,sec-v4.0-mon";
-+		compatible = "fsl,sec-v4.0-mon";
- 		reg = <0x314000 0x1000>;
- 		interrupt-parent = <&mpic>;
- 		interrupts = <93 2>;
-@@ -325,7 +322,7 @@ EXAMPLE
- FULL EXAMPLE
- 
- 	crypto: crypto@300000 {
--		compatible = "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
-+		compatible = "fsl,sec-v4.0";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0x300000 0x10000>;
-@@ -334,73 +331,64 @@ FULL EXAMPLE
- 		interrupts = <92 2>;
- 
- 		sec_jr0: jr@1000 {
--			compatible = "fsl,p4080-sec-v4.0-job-ring",
--				     "fsl,sec-v4.0-job-ring";
-+			compatible = "fsl,sec-v4.0-job-ring";
- 			reg = <0x1000 0x1000>;
- 			interrupt-parent = <&mpic>;
- 			interrupts = <88 2>;
- 		};
- 
- 		sec_jr1: jr@2000 {
--			compatible = "fsl,p4080-sec-v4.0-job-ring",
--				     "fsl,sec-v4.0-job-ring";
-+			compatible = "fsl,sec-v4.0-job-ring";
- 			reg = <0x2000 0x1000>;
- 			interrupt-parent = <&mpic>;
- 			interrupts = <89 2>;
- 		};
- 
- 		sec_jr2: jr@3000 {
--			compatible = "fsl,p4080-sec-v4.0-job-ring",
--				     "fsl,sec-v4.0-job-ring";
-+			compatible = "fsl,sec-v4.0-job-ring";
- 			reg = <0x3000 0x1000>;
- 			interrupt-parent = <&mpic>;
- 			interrupts = <90 2>;
- 		};
- 
- 		sec_jr3: jr@4000 {
--			compatible = "fsl,p4080-sec-v4.0-job-ring",
--				     "fsl,sec-v4.0-job-ring";
-+			compatible = "fsl,sec-v4.0-job-ring";
- 			reg = <0x4000 0x1000>;
- 			interrupt-parent = <&mpic>;
- 			interrupts = <91 2>;
- 		};
- 
- 		rtic@6000 {
--			compatible = "fsl,p4080-sec-v4.0-rtic",
--				     "fsl,sec-v4.0-rtic";
-+			compatible = "fsl,sec-v4.0-rtic";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x6000 0x100>;
- 			ranges = <0x0 0x6100 0xe00>;
- 
- 			rtic_a: rtic-a@0 {
--				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--					     "fsl,sec-v4.0-rtic-memory";
-+				compatible = "fsl,sec-v4.0-rtic-memory";
- 				reg = <0x00 0x20 0x100 0x80>;
- 			};
- 
- 			rtic_b: rtic-b@20 {
--				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--					     "fsl,sec-v4.0-rtic-memory";
-+				compatible = "fsl,sec-v4.0-rtic-memory";
- 				reg = <0x20 0x20 0x200 0x80>;
- 			};
- 
- 			rtic_c: rtic-c@40 {
--				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--					     "fsl,sec-v4.0-rtic-memory";
-+				compatible = "fsl,sec-v4.0-rtic-memory";
- 				reg = <0x40 0x20 0x300 0x80>;
- 			};
- 
- 			rtic_d: rtic-d@60 {
--				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--					     "fsl,sec-v4.0-rtic-memory";
-+				compatible = "fsl,sec-v4.0-rtic-memory";
- 				reg = <0x60 0x20 0x500 0x80>;
- 			};
- 		};
- 	};
- 
- 	sec_mon: sec_mon@314000 {
--		compatible = "fsl,p4080-sec-v4.0-mon", "fsl,sec-v4.0-mon";
-+		compatible = "fsl,sec-v4.0-mon";
- 		reg = <0x314000 0x1000>;
- 		interrupt-parent = <&mpic>;
- 		interrupts = <93 2>;
-diff --git a/arch/powerpc/boot/dts/p4080ds.dts b/arch/powerpc/boot/dts/p4080ds.dts
-index 0430d24..927f94d 100644
---- a/arch/powerpc/boot/dts/p4080ds.dts
-+++ b/arch/powerpc/boot/dts/p4080ds.dts
-@@ -423,7 +423,7 @@
- 		};
- 
- 		crypto: crypto@300000 {
--			compatible = "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
-+			compatible = "fsl,sec-v4.0";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x300000 0x10000>;
-@@ -432,74 +432,64 @@
- 			interrupts = <92 2>;
- 
- 			sec_jr0: jr@1000 {
--				compatible = "fsl,p4080-sec-v4.0-job-ring",
--					     "fsl,sec-v4.0-job-ring";
-+				compatible = "fsl,sec-v4.0-job-ring";
- 				reg = <0x1000 0x1000>;
- 				interrupt-parent = <&mpic>;
- 				interrupts = <88 2>;
- 			};
- 
- 			sec_jr1: jr@2000 {
--				compatible = "fsl,p4080-sec-v4.0-job-ring",
--					     "fsl,sec-v4.0-job-ring";
-+				compatible = "fsl,sec-v4.0-job-ring";
- 				reg = <0x2000 0x1000>;
- 				interrupt-parent = <&mpic>;
- 				interrupts = <89 2>;
- 			};
- 
- 			sec_jr2: jr@3000 {
--				compatible = "fsl,p4080-sec-v4.0-job-ring",
--					     "fsl,sec-v4.0-job-ring";
-+				compatible = "fsl,sec-v4.0-job-ring";
- 				reg = <0x3000 0x1000>;
- 				interrupt-parent = <&mpic>;
- 				interrupts = <90 2>;
- 			};
- 
- 			sec_jr3: jr@4000 {
--				compatible = "fsl,p4080-sec-v4.0-job-ring",
--					     "fsl,sec-v4.0-job-ring";
-+				compatible = "fsl,sec-v4.0-job-ring";
- 				reg = <0x4000 0x1000>;
- 				interrupt-parent = <&mpic>;
- 				interrupts = <91 2>;
- 			};
- 
- 			rtic@6000 {
--				compatible = "fsl,p4080-sec-v4.0-rtic",
--					     "fsl,sec-v4.0-rtic";
-+				compatible = "fsl,sec-v4.0-rtic";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				reg = <0x6000 0x100>;
- 				ranges = <0x0 0x6100 0xe00>;
- 
- 				rtic_a: rtic-a@0 {
--					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--						     "fsl,sec-v4.0-rtic-memory";
-+					compatible = "fsl,sec-v4.0-rtic-memory";
- 					reg = <0x00 0x20 0x100 0x80>;
- 				};
- 
- 				rtic_b: rtic-b@20 {
--					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--						     "fsl,sec-v4.0-rtic-memory";
-+					compatible = "fsl,sec-v4.0-rtic-memory";
- 					reg = <0x20 0x20 0x200 0x80>;
- 				};
- 
- 				rtic_c: rtic-c@40 {
--					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--						     "fsl,sec-v4.0-rtic-memory";
-+					compatible = "fsl,sec-v4.0-rtic-memory";
- 					reg = <0x40 0x20 0x300 0x80>;
- 				};
- 
- 				rtic_d: rtic-d@60 {
--					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
--						     "fsl,sec-v4.0-rtic-memory";
-+					compatible = "fsl,sec-v4.0-rtic-memory";
- 					reg = <0x60 0x20 0x500 0x80>;
- 				};
- 			};
- 		};
- 
- 		sec_mon: sec_mon@314000 {
--			compatible = "fsl,p4080-sec-v4.0-mon",
--				     "fsl,sec-v4.0-mon";
-+			compatible = "fsl,sec-v4.0-mon";
- 			reg = <0x314000 0x1000>;
- 			interrupt-parent = <&mpic>;
- 			interrupts = <93 2>;
--- 
-1.7.4.1
+> On Sat, Mar 12, 2011 at 06:04:48PM +0000, Daniel Drake wrote:
+> > In response to new device tree code in the kernel, OLPC will start
+> > using it for probing of certain devices. However, some firmware
+> > fixes are needed to put the devicetree into a usable state.
+> > 
+> > Retain compatibility with old firmware by fixing up the device tree
+> > at boot-time if it does not contain the new nodes/properties that
+> > we need for probing.
+> > 
+> > Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+> 
+> Looks okay to me.
+> 
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> g.
+> 
+> > ---
+> >  arch/x86/platform/olpc/olpc_dt.c |  104
+> > ++++++++++++++++++++++++++++++++++++++ 1 files changed, 104
+> > insertions(+), 0 deletions(-)
+> > 
+> > v2: ask OpenFirmware to adjust the tree instead of manipulating the
+> > tree on the linux level.
+> > 
+> > diff --git a/arch/x86/platform/olpc/olpc_dt.c
+> > b/arch/x86/platform/olpc/olpc_dt.c index 24f2598..d6ee929 100644
+> > --- a/arch/x86/platform/olpc/olpc_dt.c
+> > +++ b/arch/x86/platform/olpc/olpc_dt.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/of_platform.h>
+> >  #include <linux/of_pdt.h>
+> > +#include <asm/olpc.h>
+> >  #include <asm/olpc_ofw.h>
+> >  
+> >  static phandle __init olpc_dt_getsibling(phandle node)
+> > @@ -164,6 +165,107 @@ static struct of_pdt_ops prom_olpc_ops
+> > __initdata = { .pkg2path = olpc_dt_pkg2path,
+> >  };
+> >  
+> > +static phandle __init olpc_dt_finddevice(const char *path)
+> > +{
+> > +	phandle node;
+> > +	const void *args[] = { path };
+> > +	void *res[] = { &node };
+> > +
+> > +	if (olpc_ofw("finddevice", args, res)) {
+> > +		pr_err("olpc_dt: finddevice failed!\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	if ((s32) node == -1)
+> > +		return 0;
+> > +
+> > +	return node;
+> > +}
+> > +
+> > +static int __init olpc_dt_interpret(const char *words)
+> > +{
+> > +	int result;
+> > +	const void *args[] = { words };
+> > +	void *res[] = { &result };
+> > +
+> > +	if (olpc_ofw("interpret", args, res)) {
+> > +		pr_err("olpc_dt: interpret failed!\n");
+> > +		return -1;
+> > +	}
+> > +
+> > +	return result;
+> > +}
+> > +
+> > +/*
+> > + * Extract board revision directly from OFW device tree.
+> > + * We can't use olpc_platform_info because that hasn't been set up
+> > yet.
+> > + */
+> > +static u32 __init olpc_dt_get_board_revision(void)
+> > +{
+> > +	phandle node;
+> > +	__be32 rev;
+> > +	int r;
+> > +
+> > +	node = olpc_dt_finddevice("/");
+> > +	if (!node)
+> > +		return 0;
+> > +
+> > +	r = olpc_dt_getproperty(node, "board-revision-int",
+> > +				(char *) &rev, sizeof(rev));
+> > +	if (r < 0)
+> > +		return 0;
+> > +
+> > +	return be32_to_cpu(rev);
+> > +}
+> > +
+> > +void __init olpc_dt_fixup(void)
+> > +{
+> > +	int r;
+> > +	char buf[64];
+> > +	phandle node;
+> > +	u32 board_rev;
+> > +
+> > +	node = olpc_dt_finddevice("/battery@0");
+> > +	if (!node)
+> > +		return;
+> > +
+> > +	/*
+> > +	 * If the battery node has a compatible property, we are
+> > running a new
+> > +	 * enough firmware and don't have fixups to make.
+> > +	 */
+> > +	r = olpc_dt_getproperty(node, "compatible", buf,
+> > sizeof(buf));
+> > +	if (r > 0)
+> > +		return;
+> > +
+> > +	pr_info("PROM DT: Old firmware detected, applying
+> > fixes\n"); +
+> > +	/* Add olpc,xo1-battery compatible marker to battery node
+> > */
+> > +	olpc_dt_interpret("\" /battery@0\" find-device"
+> > +		" \" olpc,xo1-battery\" +compatible"
+> > +		" device-end");
+> > +
+> > +	board_rev = olpc_dt_get_board_revision();
+> > +	if (!board_rev)
+> > +		return;
+> > +
+> > +	if (board_rev >= olpc_board_pre(0xd0)) {
+> > +		/* XO-1.5: add dcon device */
+> > +		olpc_dt_interpret("\" /pci/display@1\" find-device"
+> > +			" new-device"
+> > +			" \" dcon\" device-name \" olpc,xo1-dcon\"
+> > +compatible"
+> > +			" finish-device device-end");
+> > +	} else {
+> > +		/* XO-1: add dcon device, mark RTC as olpc,xo1-rtc
+> > */
+> > +		olpc_dt_interpret("\" /pci/display@1,1\"
+> > find-device"
+> > +			" new-device"
+> > +			" \" dcon\" device-name \" olpc,xo1-dcon\"
+> > +compatible"
+> > +			" finish-device device-end"
+> > +			" \" /rtc\" find-device"
+> > +			" \" olpc,xo1-rtc\" +compatible"
+> > +			" device-end");
+> > +	}
+> > +}
+> > +
+> >  void __init olpc_dt_build_devicetree(void)
+> >  {
+> >  	phandle root;
+> > @@ -171,6 +273,8 @@ void __init olpc_dt_build_devicetree(void)
+> >  	if (!olpc_ofw_is_installed())
+> >  		return;
+> >  
+> > +	olpc_dt_fixup();
+> > +
+> >  	root = olpc_dt_getsibling(0);
+> >  	if (!root) {
+> >  		pr_err("PROM: unable to get root node from
+> > OFW!\n"); -- 
+> > 1.7.4
+> > 
