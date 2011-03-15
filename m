@@ -1,16 +1,16 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM:boot:device tree: Allow the device tree binary to
-	be appended to zImage
-Date: Tue, 15 Mar 2011 15:52:32 +0800
-Message-ID: <20110315075231.GH11098@S2100-06.ap.freescale.net>
-References: <20110309215800.26377.43925.stgit@riker>
-	<20110315034421.GE11098@S2100-06.ap.freescale.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] of/clock: eliminate function
+	__of_clk_get_from_provider
+Date: Tue, 15 Mar 2011 01:54:05 -0600
+Message-ID: <20110315075405.GJ23050@angua.secretlab.ca>
+References: <1300108722-3254-1-git-send-email-shawn.guo@linaro.org>
+	<1300108722-3254-6-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110315034421.GE11098-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1300108722-3254-6-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,46 +20,69 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2011 at 11:44:22AM +0800, Shawn Guo wrote:
-> On Wed, Mar 09, 2011 at 01:58:00PM -0800, John Bonesio wrote:
-> > This patch provides the ability to boot using a device tree that is appended
-> > to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-> > 
-> > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > ---
-> > 
-> >  arch/arm/Kconfig                |    7 ++++
-> >  arch/arm/boot/compressed/head.S |   75 +++++++++++++++++++++++++++++++++++++--
-> >  2 files changed, 79 insertions(+), 3 deletions(-)
-> > 
-> I played this patch on mx51 babbage a little bit, and noticed that it
-> introduces one difference on both non-dt and dt kernel booting.  The
-
-To be clear, the difference is being seen when I do not even enable
-CONFIG_ARM_APPENDED_DTB.
-
--- 
-Regards,
-Shawn
-
-> serial terminal stalls for a few seconds after printing
-> 'Uncompressing Linux...', and then continue to work with all message
-> output.  That's something like:
+On Mon, Mar 14, 2011 at 09:18:42PM +0800, Shawn Guo wrote:
+> With the platform clock support, the 'struct clk' should have been
+> associated with device_node->data.  So the use of function
+> __of_clk_get_from_provider can be eliminated.
 > 
-> Uncompressing Linux... (stall for seconds) done, booting the kernel.
-> Linux version 2.6.38-rc6+ (r65073@S2101-09) (gcc version 4.4.5 (Ubuntu/Linaro 4.
-> 4.4-14ubuntu4) ) #91 Tue Mar 15 11:29:03 CST 2011
-> CPU: ARMv7 Processor [412fc085] revision 5 (ARMv7), cr=10c53c7f
-> CPU: VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> Machine: Freescale MX51 Babbage Board
-> Machine: Freescale MX51 Babbage Board
-> Memory policy: ECC disabled, Data cache writeback
-> Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 130048
-> ......
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/of/clock.c |   23 ++---------------------
+>  1 files changed, 2 insertions(+), 21 deletions(-)
 > 
-> I'm unsure if this is expected ...
-> 
+> diff --git a/drivers/of/clock.c b/drivers/of/clock.c
+> index 7b5ea67..f124d0a 100644
+> --- a/drivers/of/clock.c
+> +++ b/drivers/of/clock.c
+> @@ -71,24 +71,6 @@ void of_clk_del_provider(struct device_node *np,
+>  	mutex_unlock(&of_clk_lock);
+>  }
+>  
+> -static struct clk *__of_clk_get_from_provider(struct device_node *np, const char *clk_output)
+> -{
+> -	struct of_clk_provider *provider;
+> -	struct clk *clk = NULL;
+> -
+> -	/* Check if we have such a provider in our array */
+> -	mutex_lock(&of_clk_lock);
+> -	list_for_each_entry(provider, &of_clk_providers, link) {
+> -		if (provider->node == np)
+> -			clk = provider->get(np, clk_output, provider->data);
+> -		if (clk)
+> -			break;
+> -	}
+> -	mutex_unlock(&of_clk_lock);
+> -
+> -	return clk;
+> -}
+> -
+>  struct clk *of_clk_get(struct device *dev, const char *id)
+>  {
+>  	struct device_node *provnode;
+> @@ -123,9 +105,8 @@ struct clk *of_clk_get(struct device *dev, const char *id)
+>  			__func__, prop_name, dev->of_node->full_name);
+>  		return NULL;
+>  	}
+> -	clk = __of_clk_get_from_provider(provnode, prop);
+> -	if (clk)
+> -		dev_dbg(dev, "Using clock from %s\n", provnode->full_name);
+> +
+> +	clk = provnode->data;
+
+Where is the device_node->data pointer getting set?
+
+In general the ->data pointer of struct device_node should be avoided.
+There are no strong rules about its usage which means there is a very
+real risk that another driver or subsystem will try to use it for a
+different purpose.  
+
+Iterating over the whole device tree is safer, and it really isn't
+very expensive.  If you really want to store the struct_clk pointer in
+the device node, then it would be better to add a struct clk * field
+to struct device_node.
+
+g.
