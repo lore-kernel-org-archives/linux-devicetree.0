@@ -1,95 +1,84 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V4 5/5] net/fec: add device tree matching support
-Date: Tue, 15 Mar 2011 01:14:04 -0600
-Message-ID: <20110315071404.GE23050@angua.secretlab.ca>
-References: <1299733185-2172-1-git-send-email-jason.hui@linaro.org>
-	<1299733185-2172-6-git-send-email-jason.hui@linaro.org>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [PATCH 3/4 v5] video, sm501: add OF binding to support SM501
+Date: Tue, 15 Mar 2011 08:26:40 +0100
+Message-ID: <4D7F14B0.1030008@denx.de>
+References: <1291451028-22532-1-git-send-email-hs@denx.de>
+ <1296026490-14665-1-git-send-email-hs@denx.de>
+Reply-To: hs@denx.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1299733185-2172-6-git-send-email-jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1296026490-14665-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Paul Mundt <lethal@linux-sh.org>, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 10, 2011 at 12:59:45PM +0800, Jason Liu wrote:
-> Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hello
+
+Heiko Schocher wrote:
+> - add binding to OF, compatible name "smi,sm501"
+> 
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> cc: linux-fbdev@vger.kernel.org
+> cc: devicetree-discuss@ozlabs.org
+> cc: Ben Dooks <ben@simtec.co.uk>
+> cc: Vincent Sanders <vince@simtec.co.uk>
+> cc: Samuel Ortiz <sameo@linux.intel.com>
+> cc: linux-kernel@vger.kernel.org
+> cc: Randy Dunlap <rdunlap@xenotime.net>
+> cc: Paul Mundt <lethal@linux-sh.org>
+> 
 > ---
->  drivers/net/fec.c |   13 +++++++++++++
->  1 files changed, 13 insertions(+), 0 deletions(-)
+> - changes since v1:
+>   add Ben Dooks, Vincent Sanders and Samuel Ortiz to cc, as suggested from
+>   Paul Mundt.
+> - changes since v2:
+>   add comments from Randy Dunlap:
+>   - move parameter documentation to Documentation/fb/sm501.txt
+> - changes since v3:
+>   - rebased against v2.6.38-rc2
+>   - split in 3 patches
+>     - of support patch
+>       - get rid of "#if defined(CONFIG_PPC_MPC52xx)" usage
+>         hide this in DTS, as Paul suggested.
+>     - i/o routine patch
+>     - edid support patch
+> - changes since v4
+>   replace remaining CONFIG_PPC_MPC52xx with CONFIG_OF, as
+>   it is no longer MPC52xx only.
+> - changes since v5
+>   free edid_data after its usage, as it is no longer needed,
+>   suggested from Paul Mundt. Also fall back to default if
+>   kmemdup(edid_data) fails.
 > 
-> diff --git a/drivers/net/fec.c b/drivers/net/fec.c
-> index 02cdd71..fcb9768 100644
-> --- a/drivers/net/fec.c
-> +++ b/drivers/net/fec.c
-> @@ -45,6 +45,9 @@
->  #include <linux/phy.h>
->  #include <linux/fec.h>
->  
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +
-
-Should be mixed in with the rest of the linux/*.h includes (don't put
-a blank line between them.
-
->  #include <asm/cacheflush.h>
->  
->  #ifndef CONFIG_ARM
-> @@ -1523,6 +1526,13 @@ static const struct dev_pm_ops fec_pm_ops = {
->  };
->  #endif
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id fec_matches[] = {
-> +	{ .compatible = "fsl,imx-fec" },
-
-Must have documentation for this binding in
-Documentation/devicetree/bindings before I can pick this up.  Same
-goes for the uart driver patch.
-
-Also, I recommend being more specific on the compatible property.
-fsl,imx51-fec would be better.  Newer parts can claim compatibility
-with this one if you're concerned about supporting multiple parts.
-
-ie. for imx 53, this would be appropriate:
-
-	compatible = "fsl,imx53-fec", "fsl,imx51-fec";
-
-> +	{},
-> +};
-> +#endif
-> +
->  static struct platform_driver fec_driver = {
->  	.driver	= {
->  		.name	= DRIVER_NAME,
-> @@ -1530,6 +1540,9 @@ static struct platform_driver fec_driver = {
->  #ifdef CONFIG_PM
->  		.pm	= &fec_pm_ops,
->  #endif
-> +#ifdef CONFIG_OF
-> +		.of_match_table = fec_matches,
-> +#endif
->  	},
->  	.id_table = fec_devtype,
->  	.probe	= fec_probe,
-> -- 
-> 1.7.1
+> ./scripts/checkpatch.pl 0003-video-sm501-add-OF-binding-to-support-SM501.patch
+> total: 0 errors, 0 warnings, 132 lines checked
 > 
+> 0003-video-sm501-add-OF-binding-to-support-SM501.patch has no obvious style problems and is ready for submission.
 > 
-> _______________________________________________
-> linaro-dev mailing list
-> linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-> http://lists.linaro.org/mailman/listinfo/linaro-dev
+>  Documentation/powerpc/dts-bindings/sm501.txt |   34 +++++++++++++++++++++
+>  drivers/mfd/sm501.c                          |    9 +++++-
+>  drivers/video/sm501fb.c                      |   42 ++++++++++++++++++++++++--
+>  3 files changed, 81 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
+
+This patchset is pending know for a while. I got Acked by from
+
+Samuel Ortiz for the mfd part, see here:
+
+http://www.spinics.net/lists/linux-fbdev/msg02550.html
+http://linux.derkeiler.com/Mailing-Lists/Kernel/2011-01/msg11798.html
+
+and for the DTS part from Benjamin Herrenschmidt:
+
+http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/088279.html
+
+Are there some more issues?
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
