@@ -1,15 +1,18 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] arm/dt: mx51: dynamically add clocks per dt nodes
-Date: Tue, 15 Mar 2011 01:48:08 -0600
-Message-ID: <20110315074808.GI23050@angua.secretlab.ca>
-References: <1300108722-3254-1-git-send-email-shawn.guo@linaro.org>
-	<1300108722-3254-4-git-send-email-shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm/mxc: add clk members to ease dt clock support
+Date: Tue, 15 Mar 2011 15:50:29 +0800
+Message-ID: <20110315075028.GG11098@S2100-06.ap.freescale.net>
+References: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
+	<1299514932-13558-3-git-send-email-shawn.guo@linaro.org>
+	<AANLkTikZsMxs1dXgBxVEar+MLF0j4ROZO+uTmo+OSF4s@mail.gmail.com>
+	<20110308035633.GD14370@S2101-09.ap.freescale.net>
+	<20110315074101.GH23050@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1300108722-3254-4-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20110315074101.GH23050-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,83 +22,106 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 14, 2011 at 09:18:40PM +0800, Shawn Guo wrote:
-> This patch is to change the static clock creating and registering to
-> the dynamic way, which scans dt clock nodes, associate clk with
-> device_node, and then add them to clkdev accordingly.
-> 
-> It's a pretty straight translation from non-dt clock code to dt one,
-> and it does not really change any actual clock code.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/mach-mx5/clock-mx51-mx53.c | 1401 ++++++++++++++++++++++++++++++++++-
->  1 files changed, 1387 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm/mach-mx5/clock-mx51-mx53.c b/arch/arm/mach-mx5/clock-mx51-mx53.c
-> index dedb7f9..c3ec7f6 100644
-> --- a/arch/arm/mach-mx5/clock-mx51-mx53.c
-> +++ b/arch/arm/mach-mx5/clock-mx51-mx53.c
-> @@ -49,6 +49,30 @@ static struct clk emi_fast_clk;
->  static struct clk ipu_clk;
->  static struct clk mipi_hsc1_clk;
->  
-> +#ifdef CONFIG_OF
-> +/*
-> + * The pointers are defined to save the references to the clocks
-> + * dynamically created, and then could be used to replace those
-> + * static references in non-dt clock code.
-> + */
-> +static struct clk *osc_clk_dt;
-> +static struct clk *pll1_main_clk_dt;
-> +static struct clk *pll1_sw_clk_dt;
-> +static struct clk *pll2_sw_clk_dt;
-> +static struct clk *pll3_sw_clk_dt;
-> +static struct clk *lp_apm_clk_dt;
-> +static struct clk *periph_apm_clk_dt;
-> +static struct clk *main_bus_clk_dt;
-> +static struct clk *ipg_clk_dt;
-> +static struct clk *ipg_per_clk_dt;
-> +static struct clk *cpu_clk_dt;
-> +static struct clk *iim_clk_dt;
-> +static struct clk *usboh3_clk_dt;
-> +static struct clk *usb_phy1_clk_dt;
-> +static struct clk *esdhc1_clk_dt;
-> +static struct clk *esdhc2_clk_dt;
-> +#endif
+On Tue, Mar 15, 2011 at 01:41:01AM -0600, Grant Likely wrote:
+> On Tue, Mar 08, 2011 at 11:56:34AM +0800, Shawn Guo wrote:
+> > On Mon, Mar 07, 2011 at 10:53:37AM -0700, Grant Likely wrote:
+> > > On Mon, Mar 7, 2011 at 9:22 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
+e:
+> > > > The 'rate' is added for fixed-clock support, while 'pll_base' is for
+> > > > pll clock. =A0These two particular type of clocks are supposed to be
+> > > > gracefully supported by the common clk api when it gets ready.
+> > > =
 
-Heh, yeah this seems sub-optimal.  It would be better to share common
-clock initialization between dt and non-dt boards, even if it means
-that a lot of the clocks are node described in the device tree (at
-least for the on-chip SoC clocks; board-accessible clocks still need
-to appear in the device tree though.
+> > > How does the current imx clock code handle fixed and pll clocks?
+> > =
 
-> +
->  #define MAX_DPLL_WAIT_TRIES	1000 /* 1000 * udelay(1) = 1ms */
->  
->  /* calculate best pre and post dividers to get the required divider */
-> @@ -163,10 +187,18 @@ static inline void __iomem *_mx53_get_pll_base(struct clk *pll)
->  	return NULL;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static void __iomem *dt_mx51_get_pll_base(struct clk *pll);
-> +#endif
-> +
->  static inline void __iomem *_get_pll_base(struct clk *pll)
->  {
->  	if (cpu_is_mx51())
-> +#ifdef CONFIG_OF
-> +		return dt_mx51_get_pll_base(pll);
-> +#else
->  		return _mx51_get_pll_base(pll);
-> +#endif
+> > For fixed-clock, the current code gets several variables holding the
+> > rate and then return the rate from several get_rate functions.
+> > =
 
-If you do it this way, you need to make sure dt_mx51_get_pll_base()
-falls back to _mx51_get_pll_base() when a dt is not provided.
+> > static unsigned long external_high_reference, external_low_reference;
+> > static unsigned long oscillator_reference, ckih2_reference;
+> > =
 
-g.
+> > static unsigned long get_high_reference_clock_rate(struct clk *clk)
+> > {
+> >         return external_high_reference;
+> > }
+> > =
+
+> > static unsigned long get_low_reference_clock_rate(struct clk *clk)
+> > {
+> >         return external_low_reference;
+> > }
+> > =
+
+> > static unsigned long get_oscillator_reference_clock_rate(struct clk *cl=
+k)
+> > {
+> >         return oscillator_reference;
+> > }
+> > =
+
+> > static unsigned long get_ckih2_reference_clock_rate(struct clk *clk)
+> > {
+> >         return ckih2_reference;
+> > }
+> > =
+
+> > With this new rate member added, all these can be consolidated into one.
+> > =
+
+> > For base address of pll, the current code uses the reference to clocks
+> > statically defined to know which pll is the one.
+> > =
+
+> > static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
+> > {
+> > #ifdef CONFIG_OF
+> >         return pll->pll_base;
+> > #else
+> >         if (pll =3D=3D &pll1_main_clk)
+> >                 return MX51_DPLL1_BASE;
+> >         else if (pll =3D=3D &pll2_sw_clk)
+> >                 return MX51_DPLL2_BASE;
+> >         else if (pll =3D=3D &pll3_sw_clk)
+> >                 return MX51_DPLL3_BASE;
+> >         else
+> >                 BUG();
+> > =
+
+> >         return NULL;
+> > #endif
+> =
+
+> Be careful about stuff like this.  Remember that enabling CONFIG_OF
+> must *not break* board support that does not use the device tree.  The
+> above #ifdef block will break existing users.
+> =
+
+Though the code has been killed in the latest version I just sent
+yesterday I sent last night, I do not understand how it will break
+the existing users.  The existing code is:
+
+static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
+{
+        if (pll =3D=3D &pll1_main_clk)
+                return MX51_DPLL1_BASE;
+        else if (pll =3D=3D &pll2_sw_clk)
+                return MX51_DPLL2_BASE;
+        else if (pll =3D=3D &pll3_sw_clk)
+                return MX51_DPLL3_BASE;
+        else
+                BUG();
+
+        return NULL;
+}
+
+-- =
+
+Regards,
+Shawn
