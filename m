@@ -1,74 +1,156 @@
-From: "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V4 1/5] arm/dt: add basic mx51 device tree support
-Date: Wed, 16 Mar 2011 01:45:12 -0700
-Message-ID: <20110316084512.GI2273@linux.vnet.ibm.com>
-References: <1299733185-2172-1-git-send-email-jason.hui@linaro.org>
-	<1299733185-2172-2-git-send-email-jason.hui@linaro.org>
-	<20110315070342.GB23050@angua.secretlab.ca>
-	<AANLkTimJUcsAc6Y2nf7fMWu=H1JW9ybrWZMtP3swWsu=@mail.gmail.com>
-	<AANLkTimE7iWuCf8BMVMjNYxxosnrzSbRg7P1mULAe=5W@mail.gmail.com>
-Reply-To: paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH v2 4/5] dt: add of_platform_populate() for creating device
+ from the device tree
+Date: Wed, 16 Mar 2011 02:33:49 -0600
+Message-ID: <20110316083348.1154.4764.stgit@localhost6.localdomain6>
+References: <20110316083046.1154.89723.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTimE7iWuCf8BMVMjNYxxosnrzSbRg7P1mULAe=5W-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110316083046.1154.89723.stgit@localhost6.localdomain6>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2011 aFt 11:03:55PM -0600, Grant Likely wrote:
-> On Tue, Mar 15, 2011 at 9:34 PM, Jason Hui <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > Hi, Grant,
-> >
-> > On Tue, Mar 15, 2011 at 3:03 PM, Grant Likely <grant.likely@secretlab.c=
-a> wrote:
-> >> Hi Jason,
-> >>
-> >> Minor comments below.
-> >>
-> >> On Thu, Mar 10, 2011 at 12:59:41PM +0800, Jason Liu wrote:
-> >>> Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >>
-> >> This looks wrong. =A0You should only have one s-o-b line. =A0Use one e=
-mail
-> >> addr or the other. =A0Not both.
-> >
-> > I just take the same approach as this link: https://lkml.org/lkml/2010/=
-12/17/363
-> > If you think it's not applicable, I can change it.
-> =
+of_platform_populate() is similar to of_platform_bus_probe() except
+that it strictly enforces that all device nodes must have a compatible
+property, and it can be used to register devices (not buses) which are
+children of the root node.
 
-> Yeah, I don't think that's right.  A s-o-b is a personal assertion
-> that the patch is to the best of your knowledge that you have the
-> right to submit it for inclusion in the kernel (see section 12 of
-> Documentation/SubmittingPatches).  It doesn't make any statements
-> about who owns the copyright on the patch or other issues of corporate
-> ownership.  Companies may have policies about which email address
-> employees use when signing off, but that isn't what the s-o-b protocol
-> is for.
-> =
+This patch also modifies MPC5200 support to use the new function.
 
-> Since there isn't more than one of you, you should only have one s-o-b
-> line.  :-)
-> =
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
+ arch/powerpc/platforms/52xx/mpc52xx_common.c |   10 ++---
+ drivers/of/platform.c                        |   54 ++++++++++++++++++++++++--
+ include/linux/of_platform.h                  |    3 +
+ 3 files changed, 57 insertions(+), 10 deletions(-)
 
-> Paul, since your email was presented as evidence, would you care to
-> offer a counter-argument?  :-)
-
-How about https://lkml.org/lkml/2011/2/22/668?  ;-)
-
-There is only one of me, but I am acting in two roles.
-
-							Thanx, Paul
+diff --git a/arch/powerpc/platforms/52xx/mpc52xx_common.c b/arch/powerpc/platforms/52xx/mpc52xx_common.c
+index 41f3a7e..5767a8a 100644
+--- a/arch/powerpc/platforms/52xx/mpc52xx_common.c
++++ b/arch/powerpc/platforms/52xx/mpc52xx_common.c
+@@ -97,13 +97,11 @@ struct mpc52xx_gpio_wkup __iomem *wkup_gpio;
+  *					of the localplus bus to the of_platform
+  *					bus.
+  */
+-void __init
+-mpc52xx_declare_of_platform_devices(void)
++void __init mpc52xx_declare_of_platform_devices(void)
+ {
+-	/* Find every child of the SOC node and add it to of_platform */
+-	if (of_platform_bus_probe(NULL, mpc52xx_bus_ids, NULL))
+-		printk(KERN_ERR __FILE__ ": "
+-			"Error while probing of_platform bus\n");
++	/* Find all the 'platform' devices and register them. */
++	if (of_platform_populate(NULL, mpc52xx_bus_ids, NULL))
++		pr_err(__FILE__ ": Error while populating devices from DT\n");
+ }
+ 
+ /*
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 63d3cb7..9b785be 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -221,19 +221,26 @@ EXPORT_SYMBOL(of_platform_device_create);
+  */
+ static int of_platform_bus_create(struct device_node *bus,
+ 				  const struct of_device_id *matches,
+-				  struct device *parent)
++				  struct device *parent, bool strict)
+ {
+ 	struct device_node *child;
+ 	struct platform_device *dev;
+ 	int rc = 0;
+ 
++	/* Make sure it has a compatible property */
++	if (strict && (!of_get_property(bus, "compatible", NULL))) {
++		pr_debug("%s() - skipping %s, no compatible prop\n",
++			 __func__, bus->full_name);
++		return 0;
++	}
++
+ 	dev = of_platform_device_create(bus, NULL, parent);
+ 	if (!dev || !of_match_node(matches, bus))
+ 		return 0;
+ 
+ 	for_each_child_of_node(bus, child) {
+ 		pr_debug("   create child: %s\n", child->full_name);
+-		rc = of_platform_bus_create(child, matches, &dev->dev);
++		rc = of_platform_bus_create(child, matches, &dev->dev, strict);
+ 		if (rc) {
+ 			of_node_put(child);
+ 			break;
+@@ -267,11 +274,11 @@ int of_platform_bus_probe(struct device_node *root,
+ 
+ 	/* Do a self check of bus type, if there's a match, create children */
+ 	if (of_match_node(matches, root)) {
+-		rc = of_platform_bus_create(root, matches, parent);
++		rc = of_platform_bus_create(root, matches, parent, false);
+ 	} else for_each_child_of_node(root, child) {
+ 		if (!of_match_node(matches, child))
+ 			continue;
+-		rc = of_platform_bus_create(child, matches, parent);
++		rc = of_platform_bus_create(child, matches, parent, false);
+ 		if (rc)
+ 			break;
+ 	}
+@@ -280,4 +287,43 @@ int of_platform_bus_probe(struct device_node *root,
+ 	return rc;
+ }
+ EXPORT_SYMBOL(of_platform_bus_probe);
++
++/**
++ * of_platform_populate() - Populate platform_devices from device tree data
++ * @root: parent of the first level to probe or NULL for the root of the tree
++ * @matches: match table, NULL to use the default
++ * @parent: parent to hook devices from, NULL for toplevel
++ *
++ * Similar to of_platform_bus_probe(), this function walks the device tree
++ * and creates devices from nodes.  It differs in that it follows the modern
++ * convention of requiring all device nodes to have a 'compatible' property,
++ * and it is suitable for creating devices which are children of the root
++ * node (of_platform_bus_probe will only create children of the root which
++ * are selected by the @matches argument).
++ *
++ * New board support should be using this function instead of
++ * of_platform_bus_probe().
++ *
++ * Returns 0 on success, < 0 on failure.
++ */
++int of_platform_populate(struct device_node *root,
++			const struct of_device_id *matches,
++			struct device *parent)
++{
++	struct device_node *child;
++	int rc = 0;
++
++	root = root ? of_node_get(root) : of_find_node_by_path("/");
++	if (!root)
++		return -EINVAL;
++
++	for_each_child_of_node(root, child) {
++		rc = of_platform_bus_create(child, matches, parent, true);
++		if (rc)
++			break;
++	}
++
++	of_node_put(root);
++	return rc;
++}
+ #endif /* !CONFIG_SPARC */
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index fb51ae3..43c723d 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -55,6 +55,9 @@ extern struct platform_device *of_platform_device_create(struct device_node *np,
+ extern int of_platform_bus_probe(struct device_node *root,
+ 				 const struct of_device_id *matches,
+ 				 struct device *parent);
++extern int of_platform_populate(struct device_node *root,
++				const struct of_device_id *matches,
++				struct device *parent);
+ #endif /* !CONFIG_SPARC */
+ 
+ #endif /* CONFIG_OF_DEVICE */
