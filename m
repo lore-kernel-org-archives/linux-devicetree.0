@@ -1,34 +1,52 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V12 0/4] ptp: IEEE 1588 hardware clock support
-Date: Wed, 16 Mar 2011 15:26:03 +0100
-Message-ID: <20110316142603.GC12435@riccoc20.at.omicron.at>
-References: <cover.1298878618.git.richard.cochran@omicron.at>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 5/7] mmc: support sdhci-esdhc-imx as an OF device
+Date: Wed, 16 Mar 2011 22:39:16 +0800
+Message-ID: <20110316143915.GE11658@S2100-06.ap.freescale.net>
+References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
+	<1300112759-3495-6-git-send-email-shawn.guo@linaro.org>
+	<20110315195926.GB20845@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1298878618.git.richard.cochran-3mrvs1K0uXizZXS1Dc/lvw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+In-Reply-To: <20110315195926.GB20845-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 28, 2011 at 08:57:03AM +0100, Richard Cochran wrote:
-> * PHC Patch ChangeLog
-> ** v12
-> *** gianfar_ptp
->    - fixed up device tree
->    - inlined the header file
->    - use platform_ calls instead of deprecated of_ calls
->    - removed static global single instance
->    - removed John Stultz's ack from this patch
+On Tue, Mar 15, 2011 at 01:59:26PM -0600, Grant Likely wrote:
+> On Mon, Mar 14, 2011 at 10:25:57PM +0800, Shawn Guo wrote:
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> dt support can be added directly to sdchi-pltfm.c drivers now.  There
+> is no longer any need to use sdhci-of-core.c any more.  For an
+> example, see the patch titled "of/tegra: add sdhci device tree
+> handling" in my devicetree/test branch.
+> 
+I mentioned this a little bit in the cover letter of the patch set
+as below.
 
-@Thomas and John:
+"This patch set is to support sdhci-esdhc-imx as an OF device.  As
+there is already powerpc based esdhc OF support, it chose to add OF
+support for imx esdhc driver in a different way from what sdhci-tegra
+did."
 
-Can I get your acks on the remaining patches?
+The tegra approach you made was one of the two options I had, and I
+happened to love the another more, as it consolidates the eSDHC OF
+driver for Freescale MPCxxx and i.MX family.
 
-Can this be merged for 2.6.39?
+I can turn it around to your approach if you can convince me :)
 
-Thanks,
-
-Richard
+-- 
+Regards,
+Shawn
