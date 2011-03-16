@@ -1,385 +1,200 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] crypto: caam - de-CHIP-ify device tree compatibles
-Date: Tue, 15 Mar 2011 18:59:51 -0600
-Message-ID: <20110316005951.GA18791@angua.secretlab.ca>
-References: <20110315165220.d4fb60bc.kim.phillips@freescale.com>
+From: Jason Hui <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 3/5] serial/imx: parse from device tree support
+Date: Wed, 16 Mar 2011 11:35:25 +0800
+Message-ID: <AANLkTine9PS7=0kXrkR5=MGg0DhUO2K+_nYDAbJNEqmE@mail.gmail.com>
+References: <1299733185-2172-1-git-send-email-jason.hui@linaro.org>
+	<1299733185-2172-4-git-send-email-jason.hui@linaro.org>
+	<20110315070709.GC23050@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110315165220.d4fb60bc.kim.phillips@freescale.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@freescale.com>
-Cc: linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Steve Cornelius <sec@pobox.com>, Kumar Gala <kumar.gala@freescale.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110315070709.GC23050-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2011 at 04:52:20PM -0500, Kim Phillips wrote:
-> - all the integration parameters have been captured by the binding.
-> - the block name really uniquely identifies this hardware.
-> 
-> Some advocate putting SoC names everywhere in case software needs
-> to work around some chip-specific bug, but more precise SoC
-> information already exists in SVR, and board information already
-> exists in the top-level device tree node.
-> 
-> Note that sometimes the SoC name is a worse identifier than the
-> block version, as the block version can change between revisions
-> of the same SoC.
-> 
-> As a matter of historical reference, neither SEC versions 2.x
-> nor 3.x (driven by talitos) ever needed CHIP references.
-> 
-> Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
+Hi, Grant,
 
-<sigh>  Very well.  As long as some level of versioning is used on the
-compatible values, I guess I can live with it.
+On Tue, Mar 15, 2011 at 3:07 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+> Minor comments, but otherwise goes first.
+>
+> On Thu, Mar 10, 2011 at 12:59:43PM +0800, Jason Liu wrote:
+>> Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Jason Liu <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+>
+> Jeremy's s-o-b should go at the top of the list. =A0He started it, and
+> then you took over. =A0s-o-b lines is the chain of people who have
+> handled a patch, and so it should reflect the order that they handled
+> it.
 
-Acked-off-by: Grant Likely <grant.likely@secretlab.ca>
+OK, get it.
 
-> Cc: Kumar Gala <kumar.gala@freescale.com>
-> Cc: Scott Wood <scottwood@freescale.com>
-> ---
->  .../devicetree/bindings/crypto/fsl-sec4.txt        |   64 ++++++++------------
->  arch/powerpc/boot/dts/p4080ds.dts                  |   32 ++++-------
->  2 files changed, 37 insertions(+), 59 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> index 568aa3c..bf57ecd 100644
-> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> @@ -38,7 +38,7 @@ in the memory partition devoted to a particular core.  The P4080 has 4 JRs, so
->  up to 4 JRs can be configured; and all 4 JRs process requests in parallel.
->  
->  =====================================================================
-> -P4080 SEC 4 Node
-> +SEC 4 Node
->  
->  Description
->  
-> @@ -53,7 +53,7 @@ PROPERTIES
->     - compatible
->        Usage: required
->        Value type: <string>
-> -      Definition: Must include "fsl,p4080-sec-v4.0","fsl,sec-v4.0"
-> +      Definition: Must include "fsl,sec-v4.0"
->  
->     - #address-cells
->         Usage: required
-> @@ -105,7 +105,7 @@ PROPERTIES
->  
->  EXAMPLE
->  	crypto@300000 {
-> -		compatible = "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
-> +		compatible = "fsl,sec-v4.0";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		reg = <0x300000 0x10000>;
-> @@ -115,7 +115,7 @@ EXAMPLE
->  	};
->  
->  =====================================================================
-> -P4080 Job Ring (JR) Node
-> +Job Ring (JR) Node
->  
->      Child of the crypto node defines data processing interface to SEC 4
->      across the peripheral bus for purposes of processing
-> @@ -127,7 +127,7 @@ P4080 Job Ring (JR) Node
->    - compatible
->        Usage: required
->        Value type: <string>
-> -      Definition: Must include "fsl,p4080-sec-v4.0-job-ring","fsl,sec-v4.0-job-ring"
-> +      Definition: Must include "fsl,sec-v4.0-job-ring"
->  
->    - reg
->        Usage: required
-> @@ -163,8 +163,7 @@ P4080 Job Ring (JR) Node
->  
->  EXAMPLE
->  	jr@1000 {
-> -		compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -			     "fsl,sec-v4.0-job-ring";
-> +		compatible = "fsl,sec-v4.0-job-ring";
->  		reg = <0x1000 0x1000>;
->  		fsl,liodn = <0x081>;
->  		interrupt-parent = <&mpic>;
-> @@ -173,7 +172,7 @@ EXAMPLE
->  
->  
->  =====================================================================
-> -P4080 Run Time Integrity Check (RTIC) Node
-> +Run Time Integrity Check (RTIC) Node
->  
->    Child node of the crypto node.  Defines a register space that
->    contains up to 5 sets of addresses and their lengths (sizes) that
-> @@ -186,7 +185,7 @@ P4080 Run Time Integrity Check (RTIC) Node
->    - compatible
->        Usage: required
->        Value type: <string>
-> -      Definition: Must include "fsl,p4080-sec-v4.0-rtic","fsl,sec-v4.0-rtic".
-> +      Definition: Must include "fsl,sec-v4.0-rtic".
->  
->     - #address-cells
->         Usage: required
-> @@ -219,8 +218,7 @@ P4080 Run Time Integrity Check (RTIC) Node
->  
->  EXAMPLE
->  	rtic@6000 {
-> -		compatible = "fsl,p4080-sec-v4.0-rtic",
-> -			     "fsl,sec-v4.0-rtic";
-> +		compatible = "fsl,sec-v4.0-rtic";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		reg = <0x6000 0x100>;
-> @@ -228,7 +226,7 @@ EXAMPLE
->  	};
->  
->  =====================================================================
-> -P4080 Run Time Integrity Check (RTIC) Memory Node
-> +Run Time Integrity Check (RTIC) Memory Node
->    A child node that defines individual RTIC memory regions that are used to
->    perform run-time integrity check of memory areas that should not modified.
->    The node defines a register that contains the memory address &
-> @@ -238,7 +236,7 @@ P4080 Run Time Integrity Check (RTIC) Memory Node
->    - compatible
->        Usage: required
->        Value type: <string>
-> -      Definition: Must include "fsl,p4080-sec-v4.0-rtic-memory","fsl,sec-v4.0-rtic-memory".
-> +      Definition: Must include "fsl,sec-v4.0-rtic-memory".
->  
->    - reg
->        Usage: required
-> @@ -270,15 +268,14 @@ P4080 Run Time Integrity Check (RTIC) Memory Node
->  
->  EXAMPLE
->  	rtic-a@0 {
-> -		compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -			     "fsl,sec-v4.0-rtic-memory";
-> +		compatible = "fsl,sec-v4.0-rtic-memory";
->  		reg = <0x00 0x20 0x100 0x80>;
->  		fsl,liodn   = <0x03c>;
->  		fsl,rtic-region  = <0x12345678 0x12345678 0x12345678>;
->  	};
->  
->  =====================================================================
-> -P4080 Secure Non-Volatile Storage (SNVS) Node
-> +Secure Non-Volatile Storage (SNVS) Node
->  
->      Node defines address range and the associated
->      interrupt for the SNVS function.  This function
-> @@ -288,7 +285,7 @@ P4080 Secure Non-Volatile Storage (SNVS) Node
->    - compatible
->        Usage: required
->        Value type: <string>
-> -      Definition: Must include "fsl,p4080-sec-v4.0-mon", "fsl,sec-v4.0-mon".
-> +      Definition: Must include "fsl,sec-v4.0-mon".
->  
->    - reg
->        Usage: required
-> @@ -315,7 +312,7 @@ P4080 Secure Non-Volatile Storage (SNVS) Node
->  
->  EXAMPLE
->  	sec_mon@314000 {
-> -		compatible = "fsl,p4080-sec-v4.0-mon", "fsl,sec-v4.0-mon";
-> +		compatible = "fsl,sec-v4.0-mon";
->  		reg = <0x314000 0x1000>;
->  		interrupt-parent = <&mpic>;
->  		interrupts = <93 2>;
-> @@ -325,7 +322,7 @@ EXAMPLE
->  FULL EXAMPLE
->  
->  	crypto: crypto@300000 {
-> -		compatible = "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
-> +		compatible = "fsl,sec-v4.0";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		reg = <0x300000 0x10000>;
-> @@ -334,73 +331,64 @@ FULL EXAMPLE
->  		interrupts = <92 2>;
->  
->  		sec_jr0: jr@1000 {
-> -			compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -				     "fsl,sec-v4.0-job-ring";
-> +			compatible = "fsl,sec-v4.0-job-ring";
->  			reg = <0x1000 0x1000>;
->  			interrupt-parent = <&mpic>;
->  			interrupts = <88 2>;
->  		};
->  
->  		sec_jr1: jr@2000 {
-> -			compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -				     "fsl,sec-v4.0-job-ring";
-> +			compatible = "fsl,sec-v4.0-job-ring";
->  			reg = <0x2000 0x1000>;
->  			interrupt-parent = <&mpic>;
->  			interrupts = <89 2>;
->  		};
->  
->  		sec_jr2: jr@3000 {
-> -			compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -				     "fsl,sec-v4.0-job-ring";
-> +			compatible = "fsl,sec-v4.0-job-ring";
->  			reg = <0x3000 0x1000>;
->  			interrupt-parent = <&mpic>;
->  			interrupts = <90 2>;
->  		};
->  
->  		sec_jr3: jr@4000 {
-> -			compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -				     "fsl,sec-v4.0-job-ring";
-> +			compatible = "fsl,sec-v4.0-job-ring";
->  			reg = <0x4000 0x1000>;
->  			interrupt-parent = <&mpic>;
->  			interrupts = <91 2>;
->  		};
->  
->  		rtic@6000 {
-> -			compatible = "fsl,p4080-sec-v4.0-rtic",
-> -				     "fsl,sec-v4.0-rtic";
-> +			compatible = "fsl,sec-v4.0-rtic";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			reg = <0x6000 0x100>;
->  			ranges = <0x0 0x6100 0xe00>;
->  
->  			rtic_a: rtic-a@0 {
-> -				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -					     "fsl,sec-v4.0-rtic-memory";
-> +				compatible = "fsl,sec-v4.0-rtic-memory";
->  				reg = <0x00 0x20 0x100 0x80>;
->  			};
->  
->  			rtic_b: rtic-b@20 {
-> -				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -					     "fsl,sec-v4.0-rtic-memory";
-> +				compatible = "fsl,sec-v4.0-rtic-memory";
->  				reg = <0x20 0x20 0x200 0x80>;
->  			};
->  
->  			rtic_c: rtic-c@40 {
-> -				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -					     "fsl,sec-v4.0-rtic-memory";
-> +				compatible = "fsl,sec-v4.0-rtic-memory";
->  				reg = <0x40 0x20 0x300 0x80>;
->  			};
->  
->  			rtic_d: rtic-d@60 {
-> -				compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -					     "fsl,sec-v4.0-rtic-memory";
-> +				compatible = "fsl,sec-v4.0-rtic-memory";
->  				reg = <0x60 0x20 0x500 0x80>;
->  			};
->  		};
->  	};
->  
->  	sec_mon: sec_mon@314000 {
-> -		compatible = "fsl,p4080-sec-v4.0-mon", "fsl,sec-v4.0-mon";
-> +		compatible = "fsl,sec-v4.0-mon";
->  		reg = <0x314000 0x1000>;
->  		interrupt-parent = <&mpic>;
->  		interrupts = <93 2>;
-> diff --git a/arch/powerpc/boot/dts/p4080ds.dts b/arch/powerpc/boot/dts/p4080ds.dts
-> index 0430d24..927f94d 100644
-> --- a/arch/powerpc/boot/dts/p4080ds.dts
-> +++ b/arch/powerpc/boot/dts/p4080ds.dts
-> @@ -423,7 +423,7 @@
->  		};
->  
->  		crypto: crypto@300000 {
-> -			compatible = "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
-> +			compatible = "fsl,sec-v4.0";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			reg = <0x300000 0x10000>;
-> @@ -432,74 +432,64 @@
->  			interrupts = <92 2>;
->  
->  			sec_jr0: jr@1000 {
-> -				compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -					     "fsl,sec-v4.0-job-ring";
-> +				compatible = "fsl,sec-v4.0-job-ring";
->  				reg = <0x1000 0x1000>;
->  				interrupt-parent = <&mpic>;
->  				interrupts = <88 2>;
->  			};
->  
->  			sec_jr1: jr@2000 {
-> -				compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -					     "fsl,sec-v4.0-job-ring";
-> +				compatible = "fsl,sec-v4.0-job-ring";
->  				reg = <0x2000 0x1000>;
->  				interrupt-parent = <&mpic>;
->  				interrupts = <89 2>;
->  			};
->  
->  			sec_jr2: jr@3000 {
-> -				compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -					     "fsl,sec-v4.0-job-ring";
-> +				compatible = "fsl,sec-v4.0-job-ring";
->  				reg = <0x3000 0x1000>;
->  				interrupt-parent = <&mpic>;
->  				interrupts = <90 2>;
->  			};
->  
->  			sec_jr3: jr@4000 {
-> -				compatible = "fsl,p4080-sec-v4.0-job-ring",
-> -					     "fsl,sec-v4.0-job-ring";
-> +				compatible = "fsl,sec-v4.0-job-ring";
->  				reg = <0x4000 0x1000>;
->  				interrupt-parent = <&mpic>;
->  				interrupts = <91 2>;
->  			};
->  
->  			rtic@6000 {
-> -				compatible = "fsl,p4080-sec-v4.0-rtic",
-> -					     "fsl,sec-v4.0-rtic";
-> +				compatible = "fsl,sec-v4.0-rtic";
->  				#address-cells = <1>;
->  				#size-cells = <1>;
->  				reg = <0x6000 0x100>;
->  				ranges = <0x0 0x6100 0xe00>;
->  
->  				rtic_a: rtic-a@0 {
-> -					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -						     "fsl,sec-v4.0-rtic-memory";
-> +					compatible = "fsl,sec-v4.0-rtic-memory";
->  					reg = <0x00 0x20 0x100 0x80>;
->  				};
->  
->  				rtic_b: rtic-b@20 {
-> -					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -						     "fsl,sec-v4.0-rtic-memory";
-> +					compatible = "fsl,sec-v4.0-rtic-memory";
->  					reg = <0x20 0x20 0x200 0x80>;
->  				};
->  
->  				rtic_c: rtic-c@40 {
-> -					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -						     "fsl,sec-v4.0-rtic-memory";
-> +					compatible = "fsl,sec-v4.0-rtic-memory";
->  					reg = <0x40 0x20 0x300 0x80>;
->  				};
->  
->  				rtic_d: rtic-d@60 {
-> -					compatible = "fsl,p4080-sec-v4.0-rtic-memory",
-> -						     "fsl,sec-v4.0-rtic-memory";
-> +					compatible = "fsl,sec-v4.0-rtic-memory";
->  					reg = <0x60 0x20 0x500 0x80>;
->  				};
->  			};
->  		};
->  
->  		sec_mon: sec_mon@314000 {
-> -			compatible = "fsl,p4080-sec-v4.0-mon",
-> -				     "fsl,sec-v4.0-mon";
-> +			compatible = "fsl,sec-v4.0-mon";
->  			reg = <0x314000 0x1000>;
->  			interrupt-parent = <&mpic>;
->  			interrupts = <93 2>;
-> -- 
-> 1.7.4.1
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+>> ---
+>> =A0drivers/tty/serial/imx.c | =A0 79 +++++++++++++++++++++++++++++++++++=
++++++------
+>> =A01 files changed, 69 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+>> index dfcf4b1..c9483d1 100644
+>> --- a/drivers/tty/serial/imx.c
+>> +++ b/drivers/tty/serial/imx.c
+>> @@ -53,6 +53,9 @@
+>> =A0#include <mach/hardware.h>
+>> =A0#include <mach/imx-uart.h>
+>>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +
+>
+> These should be mixed in with the rest of the <linux/*.h> includes.
+
+OK,
+
+>
+>> =A0/* Register definitions */
+>> =A0#define URXD0 0x0 =A0/* Receiver Register */
+>> =A0#define URTX0 0x40 /* Transmitter Register */
+>> @@ -1224,6 +1227,53 @@ static int serial_imx_resume(struct platform_devi=
+ce *dev)
+>> =A0 =A0 =A0 return 0;
+>> =A0}
+>>
+>> +#ifdef CONFIG_OF
+>> +static int serial_imx_probe_dt(struct imx_port *sport,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 struct platform_device *pdev)
+>> +{
+>> + =A0 =A0 struct device_node *node =3D pdev->dev.of_node;
+>> + =A0 =A0 static int line;
+>> +
+>> + =A0 =A0 if (!node)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+>> +
+>> + =A0 =A0 if (of_get_property(node, "fsl,has-rts-cts", NULL))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 sport->have_rtscts =3D 1;
+>> +
+>> + =A0 =A0 if (of_get_property(node, "fsl,irda-mode", NULL))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 sport->use_irda =3D 1;
+>> +
+>> + =A0 =A0 sport->port.line =3D line++;
+>> +
+>> + =A0 =A0 return 0;
+>> +}
+>> +#else
+>> +static int serial_imx_probe_dt(struct imx_port *sport,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 struct platform_device *pdev)
+>> +{
+>> + =A0 =A0 return -ENODEV;
+>> +}
+>> +#endif
+>> +
+>> +static int serial_imx_probe_pdata(struct imx_port *sport,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 struct platform_device *pdev)
+>> +{
+>> + =A0 =A0 struct imxuart_platform_data *pdata =3D pdev->dev.platform_dat=
+a;
+>> +
+>> + =A0 =A0 if (!pdata)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>> +
+>> + =A0 =A0 if (pdata->flags & IMXUART_HAVE_RTSCTS)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 sport->have_rtscts =3D 1;
+>> +
+>> +#ifdef CONFIG_IRDA
+>> + =A0 =A0 if (pdata->flags & IMXUART_IRDA)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 sport->use_irda =3D 1;
+>> +#endif
+>> + =A0 =A0 sport->port.line =3D pdev->id;
+>> +
+>> + =A0 =A0 return 0;
+>> +}
+>> =A0static int serial_imx_probe(struct platform_device *pdev)
+>> =A0{
+>> =A0 =A0 =A0 struct imx_port *sport;
+>> @@ -1236,6 +1286,12 @@ static int serial_imx_probe(struct platform_devic=
+e *pdev)
+>> =A0 =A0 =A0 if (!sport)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+>>
+>> + =A0 =A0 ret =3D serial_imx_probe_dt(sport, pdev);
+>> + =A0 =A0 if (ret =3D=3D -ENODEV)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ret =3D serial_imx_probe_pdata(sport, pdev);
+>> + =A0 =A0 if (ret)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 goto free;
+>> +
+>> =A0 =A0 =A0 res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> =A0 =A0 =A0 if (!res) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENODEV;
+>> @@ -1260,7 +1316,6 @@ static int serial_imx_probe(struct platform_device=
+ *pdev)
+>> =A0 =A0 =A0 sport->port.fifosize =3D 32;
+>> =A0 =A0 =A0 sport->port.ops =3D &imx_pops;
+>> =A0 =A0 =A0 sport->port.flags =3D UPF_BOOT_AUTOCONF;
+>> - =A0 =A0 sport->port.line =3D pdev->id;
+>> =A0 =A0 =A0 init_timer(&sport->timer);
+>> =A0 =A0 =A0 sport->timer.function =3D imx_timeout;
+>> =A0 =A0 =A0 sport->timer.data =A0 =A0 =3D (unsigned long)sport;
+>> @@ -1274,17 +1329,13 @@ static int serial_imx_probe(struct platform_devi=
+ce *pdev)
+>>
+>> =A0 =A0 =A0 sport->port.uartclk =3D clk_get_rate(sport->clk);
+>>
+>> - =A0 =A0 imx_ports[pdev->id] =3D sport;
+>> + =A0 =A0 if (imx_ports[sport->port.line]) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -EBUSY;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 goto clkput;
+>> + =A0 =A0 }
+>> + =A0 =A0 imx_ports[sport->port.line] =3D sport;
+>>
+>> =A0 =A0 =A0 pdata =3D pdev->dev.platform_data;
+>> - =A0 =A0 if (pdata && (pdata->flags & IMXUART_HAVE_RTSCTS))
+>> - =A0 =A0 =A0 =A0 =A0 =A0 sport->have_rtscts =3D 1;
+>> -
+>> -#ifdef CONFIG_IRDA
+>> - =A0 =A0 if (pdata && (pdata->flags & IMXUART_IRDA))
+>> - =A0 =A0 =A0 =A0 =A0 =A0 sport->use_irda =3D 1;
+>> -#endif
+>> -
+>> =A0 =A0 =A0 if (pdata && pdata->init) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D pdata->init(pdev);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ret)
+>> @@ -1336,6 +1387,11 @@ static int serial_imx_remove(struct platform_devi=
+ce *pdev)
+>> =A0 =A0 =A0 return 0;
+>> =A0}
+>>
+>> +static struct of_device_id imx_uart_matches[] =3D {
+>> + =A0 =A0 { .compatible =3D "fsl,imx51-uart" },
+>> + =A0 =A0 {},
+>> +};
+>> +
+>> =A0static struct platform_driver serial_imx_driver =3D {
+>> =A0 =A0 =A0 .probe =A0 =A0 =A0 =A0 =A0=3D serial_imx_probe,
+>> =A0 =A0 =A0 .remove =A0 =A0 =A0 =A0 =3D serial_imx_remove,
+>> @@ -1345,6 +1401,9 @@ static struct platform_driver serial_imx_driver =
+=3D {
+>> =A0 =A0 =A0 .driver =A0 =A0 =A0 =A0 =3D {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =3D "imx-uart",
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .owner =A0=3D THIS_MODULE,
+>> +#if defined(CONFIG_OF)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D imx_uart_matches,
+>> +#endif
+>> =A0 =A0 =A0 },
+>> =A0};
+>>
+>> --
+>> 1.7.1
+>>
+>
