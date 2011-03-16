@@ -1,279 +1,446 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [git pull] device tree for 2.6.39
-Date: Wed, 16 Mar 2011 10:36:24 -0600
-Message-ID: <AANLkTi=nCSyqh3z5DrfnOYmDKH+GseFpn8hz5tG1EN7P@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2] hwmon: (ads1015) Make gain and datarate configurable
+Date: Wed, 16 Mar 2011 14:46:44 -0600
+Message-ID: <20110316204644.GA15557@angua.secretlab.ca>
+References: <20110312081809.GB9347@angua.secretlab.ca>
+ <1300269715-15819-1-git-send-email-eibach@gdsys.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1300269715-15819-1-git-send-email-eibach@gdsys.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dirk Eibach <eibach@gdsys.de>
+Cc: lm-sensors@lm-sensors.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rdunlap@xenotime.net, khali@linux-fr.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wed, Mar 16, 2011 at 11:01:55AM +0100, Dirk Eibach wrote:
+> Configuration for ads1015 gain and datarate is possible via
+> devicetree or platform data.
+> 
+> This is a followup patch to previous ads1015 patches on Jean Delvares
+> tree.
+> 
+> Changes since v1:
+> - replaced exported_channels bitmask with an enable entry per channel
+> - improved platform data example in Documentation
+> - improved patch description
+> 
+> Signed-off-by: Dirk Eibach <eibach@gdsys.de>
 
-Big clean up here removing the last vestiges of of_platform_bus_type.
-along with other minor fixes and cleanups.  Also generalizes some of
-the powerpc dt code to be usable by other platforms.
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-g.
-
-The following changes since commit 521cb40b0c44418a4fd36dc633f575813d59a43d:
-
-  Linux 2.6.38 (2011-03-14 18:20:32 -0700)
-
-are available in the git repository at:
-  git://git.secretlab.ca/git/linux-2.6 devicetree/next
-
-Grant Likely (19):
-      driver-core: remove conditionals around devicetree pointers
-      Merge commit 'v2.6.38-rc3' into devicetree/next
-      powerpc/pci: Make both ppc32 and ppc64 use sysdata for pci_controller
-      Merge commit 'v2.6.38-rc6' into devicetree/next
-      drivercore/dt: add a match table pointer to struct device
-      dt/powerpc: move of_bus_type infrastructure to ibmebus
-      dt/powerpc: Eliminate users of of_platform_{,un}register_driver
-      dt/sparc: Eliminate users of of_platform_{,un}register_driver
-      leds/leds-gpio: merge platform_driver with of_platform_driver
-      dt: xilinx_hwicap: merge platform and of_platform driver bindings
-      dt: uartlite: merge platform and of_platform driver bindings
-      dt/spi: Eliminate users of of_platform_{,un}register_driver
-      dt/sound: Eliminate users of of_platform_{,un}register_driver
-      dt/net: Eliminate users of of_platform_{,un}register_driver
-      dt/video: Eliminate users of of_platform_{,un}register_driver
-      dt/usb: Eliminate users of of_platform_{,un}register_driver
-      dt/serial: Eliminate users of of_platform_{,un}register_driver
-      dt: Eliminate of_platform_{,un}register_driver
-      dt: eliminate of_platform_driver shim code
-
-Lennert Buytenhek (1):
-      dt: Typo fix.
-
-Rob Herring (1):
-      ipmi: convert OF driver to platform driver
-
-Sebastian Andrzej Siewior (1):
-      of/pci: move of_irq_map_pci() into generic code
-
-Tobias Klauser (2):
-      tty: serial: altera_uart: Add devicetree support
-      tty: serial: altera_jtaguart: Add device tree support
-
-Walter Goossens (1):
-      altera_ps2: Add devicetree support
-
- .../devicetree/bindings/serial/altera_jtaguart.txt |    4 +
- .../devicetree/bindings/serial/altera_uart.txt     |    7 +
- .../devicetree/bindings/serio/altera_ps2.txt       |    4 +
- arch/microblaze/include/asm/pci-bridge.h           |   12 +
- arch/microblaze/include/asm/prom.h                 |   15 -
- arch/microblaze/kernel/prom_parse.c                |   77 ----
- arch/microblaze/pci/pci-common.c                   |    1 +
- arch/microblaze/pci/pci_32.c                       |    1 +
- arch/powerpc/include/asm/pci-bridge.h              |   37 +-
- arch/powerpc/include/asm/pci.h                     |    2 +-
- arch/powerpc/include/asm/prom.h                    |   15 -
- arch/powerpc/kernel/ibmebus.c                      |  404 +++++++++++++++++-
- arch/powerpc/kernel/of_platform.c                  |    9 +-
- arch/powerpc/kernel/pci-common.c                   |   12 +-
- arch/powerpc/kernel/pci_32.c                       |    2 +-
- arch/powerpc/kernel/pci_64.c                       |    6 +-
- arch/powerpc/kernel/pci_dn.c                       |    9 +-
- arch/powerpc/kernel/pci_of_scan.c                  |    4 +-
- arch/powerpc/kernel/prom_parse.c                   |   84 ----
- arch/powerpc/platforms/52xx/mpc52xx_gpio.c         |   14 +-
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c          |   10 +-
- arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c      |   11 +-
- arch/powerpc/platforms/82xx/ep8248e.c              |    7 +-
- arch/powerpc/platforms/83xx/suspend.c              |   14 +-
- arch/powerpc/platforms/cell/axon_msi.c             |   11 +-
- arch/powerpc/platforms/pasemi/gpio_mdio.c          |    9 +-
- arch/powerpc/platforms/pseries/pci_dlpar.c         |    2 +-
- arch/powerpc/sysdev/axonram.c                      |   11 +-
- arch/powerpc/sysdev/bestcomm/bestcomm.c            |    9 +-
- arch/powerpc/sysdev/fsl_85xx_l2ctlr.c              |    9 +-
- arch/powerpc/sysdev/fsl_msi.c                      |   13 +-
- arch/powerpc/sysdev/fsl_pmc.c                      |    7 +-
- arch/powerpc/sysdev/fsl_rio.c                      |    7 +-
- arch/powerpc/sysdev/pmi.c                          |    9 +-
- arch/powerpc/sysdev/qe_lib/qe.c                    |    7 +-
- arch/sparc/include/asm/parport.h                   |    6 +-
- arch/sparc/kernel/apc.c                            |    7 +-
- arch/sparc/kernel/auxio_64.c                       |    7 +-
- arch/sparc/kernel/central.c                        |   14 +-
- arch/sparc/kernel/chmc.c                           |   19 +-
- arch/sparc/kernel/pci_fire.c                       |    7 +-
- arch/sparc/kernel/pci_psycho.c                     |    7 +-
- arch/sparc/kernel/pci_sabre.c                      |    9 +-
- arch/sparc/kernel/pci_schizo.c                     |   11 +-
- arch/sparc/kernel/pci_sun4v.c                      |    7 +-
- arch/sparc/kernel/pmc.c                            |    7 +-
- arch/sparc/kernel/power.c                          |    6 +-
- arch/sparc/kernel/time_32.c                        |    6 +-
- arch/sparc/kernel/time_64.c                        |   18 +-
- drivers/ata/pata_mpc52xx.c                         |    8 +-
- drivers/ata/pata_of_platform.c                     |    9 +-
- drivers/ata/sata_dwc_460ex.c                       |    9 +-
- drivers/ata/sata_fsl.c                             |    9 +-
- drivers/atm/fore200e.c                             |   17 +-
- drivers/block/xsysace.c                            |   11 +-
- drivers/char/hw_random/n2-drv.c                    |   16 +-
- drivers/char/hw_random/pasemi-rng.c                |    9 +-
- drivers/char/ipmi/ipmi_si_intf.c                   |   70 +--
- drivers/char/xilinx_hwicap/xilinx_hwicap.c         |  129 ++----
- drivers/crypto/amcc/crypto4xx_core.c               |    9 +-
- drivers/crypto/n2_core.c                           |   20 +-
- drivers/crypto/talitos.c                           |    9 +-
- drivers/dma/fsldma.c                               |   14 +-
- drivers/dma/mpc512x_dma.c                          |    9 +-
- drivers/dma/ppc4xx/adma.c                          |   11 +-
- drivers/edac/mpc85xx_edac.c                        |   27 +-
- drivers/edac/ppc4xx_edac.c                         |   23 +-
- drivers/hwmon/ultra45_env.c                        |    9 +-
- drivers/i2c/busses/i2c-cpm.c                       |    9 +-
- drivers/i2c/busses/i2c-ibm_iic.c                   |    9 +-
- drivers/i2c/busses/i2c-mpc.c                       |   22 +-
- drivers/i2c/busses/i2c-ocores.c                    |   14 +-
- drivers/i2c/i2c-core.c                             |    2 -
- drivers/input/misc/sparcspkr.c                     |   22 +-
- drivers/input/serio/altera_ps2.c                   |   15 +-
- drivers/input/serio/i8042-sparcio.h                |    8 +-
- drivers/input/serio/xilinx_ps2.c                   |    9 +-
- drivers/leds/leds-gpio.c                           |  214 ++++------
- drivers/macintosh/smu.c                            |    7 +-
- drivers/macintosh/therm_pm72.c                     |    8 +-
- drivers/macintosh/therm_windtunnel.c               |    9 +-
- drivers/media/video/fsl-viu.c                      |    9 +-
- drivers/mmc/host/mmc_spi.c                         |    4 -
- drivers/mmc/host/sdhci-of-core.c                   |   15 +-
- drivers/mtd/maps/physmap_of.c                      |   15 +-
- drivers/mtd/maps/sun_uflash.c                      |    8 +-
- drivers/mtd/nand/fsl_upm.c                         |    9 +-
- drivers/mtd/nand/mpc5121_nfc.c                     |    9 +-
- drivers/mtd/nand/ndfc.c                            |    9 +-
- drivers/mtd/nand/pasemi_nand.c                     |    9 +-
- drivers/mtd/nand/socrates_nand.c                   |    9 +-
- drivers/net/can/mscan/mpc5xxx_can.c                |   15 +-
- drivers/net/can/sja1000/sja1000_of_platform.c      |    9 +-
- drivers/net/ethoc.c                                |    8 +-
- drivers/net/fec_mpc52xx.c                          |   13 +-
- drivers/net/fec_mpc52xx.h                          |    2 +-
- drivers/net/fec_mpc52xx_phy.c                      |    5 +-
- drivers/net/fs_enet/fs_enet-main.c                 |   16 +-
- drivers/net/fs_enet/mii-bitbang.c                  |    9 +-
- drivers/net/fs_enet/mii-fec.c                      |   15 +-
- drivers/net/fsl_pq_mdio.c                          |    9 +-
- drivers/net/gianfar.c                              |   12 +-
- drivers/net/greth.c                                |    8 +-
- drivers/net/ibm_newemac/core.c                     |    9 +-
- drivers/net/ibm_newemac/mal.c                      |    9 +-
- drivers/net/ibm_newemac/rgmii.c                    |    9 +-
- drivers/net/ibm_newemac/tah.c                      |    9 +-
- drivers/net/ibm_newemac/zmii.c                     |    9 +-
- drivers/net/ll_temac_main.c                        |    9 +-
- drivers/net/myri_sbus.c                            |    8 +-
- drivers/net/niu.c                                  |   11 +-
- drivers/net/phy/mdio-gpio.c                        |    9 +-
- drivers/net/sunbmac.c                              |    9 +-
- drivers/net/sunhme.c                               |   14 +-
- drivers/net/sunlance.c                             |    8 +-
- drivers/net/sunqe.c                                |    8 +-
- drivers/net/ucc_geth.c                             |    8 +-
- drivers/net/xilinx_emaclite.c                      |    9 +-
- drivers/of/Kconfig                                 |    6 +
- drivers/of/Makefile                                |    1 +
- drivers/of/device.c                                |   34 --
- drivers/of/of_pci.c                                |   91 ++++
- drivers/of/platform.c                              |  461 --------------------
- drivers/parport/parport_sunbpp.c                   |    8 +-
- drivers/pcmcia/electra_cf.c                        |    9 +-
- drivers/pcmcia/m8xx_pcmcia.c                       |    9 +-
- drivers/rtc/rtc-mpc5121.c                          |    9 +-
- drivers/sbus/char/bbc_i2c.c                        |    9 +-
- drivers/sbus/char/display7seg.c                    |    9 +-
- drivers/sbus/char/envctrl.c                        |    9 +-
- drivers/sbus/char/flash.c                          |    9 +-
- drivers/sbus/char/uctrl.c                          |    9 +-
- drivers/scsi/qlogicpti.c                           |   14 +-
- drivers/scsi/sun_esp.c                             |    8 +-
- drivers/spi/mpc512x_psc_spi.c                      |    9 +-
- drivers/spi/mpc52xx_psc_spi.c                      |    9 +-
- drivers/spi/mpc52xx_spi.c                          |    9 +-
- drivers/spi/pxa2xx_spi.c                           |    2 -
- drivers/spi/pxa2xx_spi_pci.c                       |    2 -
- drivers/spi/spi_fsl_espi.c                         |   11 +-
- drivers/spi/spi_fsl_lib.c                          |    3 +-
- drivers/spi/spi_fsl_lib.h                          |    3 +-
- drivers/spi/spi_fsl_spi.c                          |   11 +-
- drivers/spi/spi_ppc4xx.c                           |    9 +-
- drivers/spi/xilinx_spi.c                           |    6 -
- drivers/tty/serial/altera_jtaguart.c               |   15 +-
- drivers/tty/serial/altera_uart.c                   |   51 ++-
- drivers/tty/serial/apbuart.c                       |   11 +-
- drivers/tty/serial/cpm_uart/cpm_uart_core.c        |    9 +-
- drivers/tty/serial/mpc52xx_uart.c                  |   13 +-
- drivers/tty/serial/of_serial.c                     |   14 +-
- drivers/tty/serial/sunhv.c                         |    8 +-
- drivers/tty/serial/sunsab.c                        |    8 +-
- drivers/tty/serial/sunsu.c                         |    6 +-
- drivers/tty/serial/sunzilog.c                      |   10 +-
- drivers/tty/serial/uartlite.c                      |  103 +----
- drivers/tty/serial/ucc_uart.c                      |    9 +-
- drivers/usb/gadget/fsl_qe_udc.c                    |   14 +-
- drivers/usb/host/ehci-hcd.c                        |   12 +-
- drivers/usb/host/ehci-ppc-of.c                     |    9 +-
- drivers/usb/host/ehci-xilinx-of.c                  |    6 +-
- drivers/usb/host/fhci-hcd.c                        |    9 +-
- drivers/usb/host/isp1760-if.c                      |    9 +-
- drivers/usb/host/ohci-hcd.c                        |    6 +-
- drivers/usb/host/ohci-ppc-of.c                     |    9 +-
- drivers/video/bw2.c                                |    8 +-
- drivers/video/cg14.c                               |    8 +-
- drivers/video/cg3.c                                |    9 +-
- drivers/video/cg6.c                                |    9 +-
- drivers/video/ffb.c                                |    9 +-
- drivers/video/fsl-diu-fb.c                         |    9 +-
- drivers/video/leo.c                                |    9 +-
- drivers/video/mb862xx/mb862xxfb.c                  |    9 +-
- drivers/video/p9100.c                              |    8 +-
- drivers/video/platinumfb.c                         |    9 +-
- drivers/video/sunxvr1000.c                         |    9 +-
- drivers/video/tcx.c                                |    9 +-
- drivers/video/xilinxfb.c                           |   11 +-
- drivers/watchdog/cpwd.c                            |    9 +-
- drivers/watchdog/gef_wdt.c                         |    9 +-
- drivers/watchdog/mpc8xxx_wdt.c                     |   15 +-
- drivers/watchdog/riowd.c                           |    9 +-
- include/linux/device.h                             |    8 +-
- include/linux/i2c.h                                |    2 -
- include/linux/of.h                                 |    6 +-
- include/linux/of_device.h                          |    5 +-
- include/linux/of_pci.h                             |    9 +
- include/linux/of_platform.h                        |   18 +-
- sound/soc/fsl/fsl_dma.c                            |    9 +-
- sound/soc/fsl/fsl_ssi.c                            |    9 +-
- sound/soc/fsl/mpc5200_dma.c                        |   24 +-
- sound/soc/fsl/mpc5200_psc_ac97.c                   |    9 +-
- sound/soc/fsl/mpc5200_psc_i2s.c                    |    9 +-
- sound/sparc/amd7930.c                              |    8 +-
- sound/sparc/cs4231.c                               |   16 +-
- sound/sparc/dbri.c                                 |    8 +-
- 196 files changed, 1546 insertions(+), 1959 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/altera_jtaguart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/altera_uart.txt
- create mode 100644 Documentation/devicetree/bindings/serio/altera_ps2.txt
- create mode 100644 drivers/of/of_pci.c
- create mode 100644 include/linux/of_pci.h
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> ---
+>  .../devicetree/bindings/hwmon/ads1015.txt          |   73 +++++++++++++
+>  Documentation/devicetree/bindings/i2c/ads1015.txt  |   29 -----
+>  Documentation/hwmon/ads1015                        |   44 ++++++---
+>  drivers/hwmon/ads1015.c                            |  113 +++++++++++++++----
+>  include/linux/i2c/ads1015.h                        |   10 ++-
+>  5 files changed, 202 insertions(+), 67 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ads1015.txt
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ads1015.txt b/Documentation/devicetree/bindings/hwmon/ads1015.txt
+> new file mode 100644
+> index 0000000..fb6e139
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ads1015.txt
+> @@ -0,0 +1,73 @@
+> +ADS1015 (I2C)
+> +
+> +This device is a 12-bit A-D converter with 4 inputs.
+> +
+> +The inputs can be used single ended or in certain differential combinations.
+> +
+> +For configuration all possible combinations are mapped to 8 channels:
+> +  0: Voltage over AIN0 and AIN1.
+> +  1: Voltage over AIN0 and AIN3.
+> +  2: Voltage over AIN1 and AIN3.
+> +  3: Voltage over AIN2 and AIN3.
+> +  4: Voltage over AIN0 and GND.
+> +  5: Voltage over AIN1 and GND.
+> +  6: Voltage over AIN2 and GND.
+> +  7: Voltage over AIN3 and GND.
+> +
+> +Each channel can be configured indvidually:
+> + - pga ist the programmable gain amplifier
+> +    0: FS = +/- 6.144 V
+> +    1: FS = +/- 4.096 V
+> +    2: FS = +/- 2.048 V (default)
+> +    3: FS = +/- 1.024 V
+> +    4: FS = +/- 0.512 V
+> +    5: FS = +/- 0.256 V
+> + - data_rate in samples per second
+> +    0: 128
+> +    1: 250
+> +    2: 490
+> +    3: 920
+> +    4: 1600
+> +    5: 2400
+> +    6: 3300
+> +
+> +1) The /ads1015 node
+> +
+> +  Required properties:
+> +
+> +   - compatible : must be "ti,ads1015"
+> +   - reg : I2C busaddress of the device
+> +   - #address-cells : must be <1>
+> +   - #size-cells : must be <0>
+> +
+> +  The node contains child nodes for each channel that the platform uses.
+> +
+> +  Example ADS1015 node:
+> +
+> +    ads1015@49 {
+> +	    compatible = "ti,ads1015";
+> +	    reg = <0x49>;
+> +	    #address-cells = <1>;
+> +	    #size-cells = <0>;
+> +
+> +	    [ child node definitions... ]
+> +    }
+> +
+> +2) channel nodes
+> +
+> +  Required properties:
+> +
+> +   - reg : the channel number
+> +
+> +  Optional properties:
+> +
+> +   - ti,gain : the programmable gain amplifier setting
+> +   - ti,datarate : the converter datarate
+> +
+> +  Example ADS1015 node:
+> +
+> +    channel@4 {
+> +	    reg = <4>;
+> +	    ti,gain = <3>;
+> +	    ti,datarate = <5>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
+> deleted file mode 100644
+> index 985e24d..0000000
+> --- a/Documentation/devicetree/bindings/i2c/ads1015.txt
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -ADS1015 (I2C)
+> -
+> -This device is a 12-bit A-D converter with 4 inputs.
+> -
+> -The inputs can be used single ended or in certain differential combinations.
+> -
+> -For configuration all possible combinations are mapped to 8 channels:
+> -0: Voltage over AIN0 and AIN1.
+> -1: Voltage over AIN0 and AIN3.
+> -2: Voltage over AIN1 and AIN3.
+> -3: Voltage over AIN2 and AIN3.
+> -4: Voltage over AIN0 and GND.
+> -5: Voltage over AIN1 and GND.
+> -6: Voltage over AIN2 and GND.
+> -7: Voltage over AIN3 and GND.
+> -
+> -Optional properties:
+> -
+> - - exported-channels : exported_channels is a bitmask that specifies which
+> -		       channels should be accessible by the user.
+> -
+> -Example:
+> -ads1015@49 {
+> -	compatible = "ti,ads1015";
+> -	reg = <0x49>;
+> -	exported-channels = <0x14>;
+> -};
+> -
+> -In this example only channel 2 and 4 would be accessible by the user.
+> diff --git a/Documentation/hwmon/ads1015 b/Documentation/hwmon/ads1015
+> index 56ee797..18a8e00 100644
+> --- a/Documentation/hwmon/ads1015
+> +++ b/Documentation/hwmon/ads1015
+> @@ -38,30 +38,48 @@ Platform Data
+>  
+>  In linux/i2c/ads1015.h platform data is defined as:
+>  
+> +struct ads1015_channel_data {
+> +	unsigned int pga;
+> +	unsigned int data_rate;
+> +};
+> +
+>  struct ads1015_platform_data {
+>  	unsigned int exported_channels;
+> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
+>  };
+>  
+>  exported_channels is a bitmask that specifies which inputs should be exported.
+>  
+> +channel_data contains configuration data for the exported inputs:
+> +- pga ist the programmable gain amplifier
+> +  0: FS = +/- 6.144 V
+> +  1: FS = +/- 4.096 V
+> +  2: FS = +/- 2.048 V (default)
+> +  3: FS = +/- 1.024 V
+> +  4: FS = +/- 0.512 V
+> +  5: FS = +/- 0.256 V
+> +- data_rate in samples per second
+> +  0: 128
+> +  1: 250
+> +  2: 490
+> +  3: 920
+> +  4: 1600
+> +  5: 2400
+> +  6: 3300
+> +
+>  Example:
+>  struct ads1015_platform_data data = {
+> -	.exported_channels = (1 << 2) | (1 << 4)
+> +	.channel_data = {
+> +		[2] = { .enabled = true, .pga = 1, .data_rate = 0 },
+> +		[4] = { .enabled = true, .pga = 4, .data_rate = 5 },
+> +	}
+>  };
+>  
+> -In this case only in2_input and in4_input would be created.
+> +In this case only in2_input(FS +/- 4.096 V, 128 SPS) and in4_input
+> +(FS +/- 0.512 V, 2400 SPS) would be created.
+>  
+>  Devicetree
+>  ----------
+>  
+> -The ads1015 node may have an "exported-channels" property.
+> -exported_channels is a bitmask that specifies which inputs should be exported.
+> -
+> -Example:
+> -ads1015@49 {
+> -	compatible = "ti,ads1015";
+> -	reg = <0x49>;
+> -	exported-channels = < 0x14 >;
+> -};
+> -
+> -In this case only in2_input and in4_input would be created.
+> +Configuration is also possible via devicetree:
+> +Documentation/devicetree/bindings/hwmon/ads1015.txt
+> diff --git a/drivers/hwmon/ads1015.c b/drivers/hwmon/ads1015.c
+> index 8ef2b60..a7c524d 100644
+> --- a/drivers/hwmon/ads1015.c
+> +++ b/drivers/hwmon/ads1015.c
+> @@ -25,7 +25,7 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/slab.h>
+> -#include <linux/jiffies.h>
+> +#include <linux/delay.h>
+>  #include <linux/i2c.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/hwmon-sysfs.h>
+> @@ -45,12 +45,18 @@ enum {
+>  static const unsigned int fullscale_table[8] = {
+>  	6144, 4096, 2048, 1024, 512, 256, 256, 256 };
+>  
+> -#define ADS1015_CONFIG_CHANNELS 8
+> +/* Data rates in samples per second */
+> +static const unsigned int data_rate_table[8] = {
+> +	128, 250, 490, 920, 1600, 2400, 3300, 3300 };
+> +
+>  #define ADS1015_DEFAULT_CHANNELS 0xff
+> +#define ADS1015_DEFAULT_PGA 2
+> +#define ADS1015_DEFAULT_DATA_RATE 4
+>  
+>  struct ads1015_data {
+>  	struct device *hwmon_dev;
+>  	struct mutex update_lock; /* mutex protect updates */
+> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
+>  };
+>  
+>  static s32 ads1015_read_reg(struct i2c_client *client, unsigned int reg)
+> @@ -71,32 +77,38 @@ static int ads1015_read_value(struct i2c_client *client, unsigned int channel,
+>  {
+>  	u16 config;
+>  	s16 conversion;
+> -	unsigned int pga;
+> +	struct ads1015_data *data = i2c_get_clientdata(client);
+> +	unsigned int pga = data->channel_data[channel].pga;
+>  	int fullscale;
+> +	unsigned int data_rate = data->channel_data[channel].data_rate;
+> +	unsigned int conversion_time_ms;
+>  	unsigned int k;
+> -	struct ads1015_data *data = i2c_get_clientdata(client);
+>  	int res;
+>  
+>  	mutex_lock(&data->update_lock);
+>  
+> -	/* get fullscale voltage */
+> +	/* get channel parameters */
+>  	res = ads1015_read_reg(client, ADS1015_CONFIG);
+>  	if (res < 0)
+>  		goto err_unlock;
+>  	config = res;
+> -	pga = (config >> 9) & 0x0007;
+>  	fullscale = fullscale_table[pga];
+> +	conversion_time_ms = 1 + 1000 / data_rate_table[data_rate];
+>  
+>  	/* set channel and start single conversion */
+> -	config &= ~(0x0007 << 12);
+> -	config |= (1 << 15) | (1 << 8) | (channel & 0x0007) << 12;
+> +	config &= 0x001f;
+> +	config |= (1 << 15) | (1 << 8);
+> +	config |= (channel & 0x0007) << 12;
+> +	config |= (pga & 0x0007) << 9;
+> +	config |= (data_rate & 0x0007) << 5;
+>  
+> -	/* wait until conversion finished */
+>  	res = ads1015_write_reg(client, ADS1015_CONFIG, config);
+>  	if (res < 0)
+>  		goto err_unlock;
+> +
+> +	/* wait until conversion finished */
+>  	for (k = 0; k < 5; ++k) {
+> -		schedule_timeout(msecs_to_jiffies(1));
+> +		msleep(k ? 1 : conversion_time_ms);
+>  		res = ads1015_read_reg(client, ADS1015_CONFIG);
+>  		if (res < 0)
+>  			goto err_unlock;
+> @@ -166,29 +178,83 @@ static int ads1015_remove(struct i2c_client *client)
+>  	return 0;
+>  }
+>  
+> -static unsigned int ads1015_get_exported_channels(struct i2c_client *client)
+> +static void ads1015_get_exported_channels(struct i2c_client *client)
+>  {
+> +	unsigned int k;
+> +	struct ads1015_data *data = i2c_get_clientdata(client);
+>  	struct ads1015_platform_data *pdata = dev_get_platdata(&client->dev);
+>  #ifdef CONFIG_OF
+> -	struct device_node *np = client->dev.of_node;
+> -	const __be32 *of_channels;
+> -	int of_channels_size;
+> +	struct device_node *node;
+>  #endif
+>  
+>  	/* prefer platform data */
+> -	if (pdata)
+> -		return pdata->exported_channels;
+> +	if (pdata) {
+> +		memcpy(data->channel_data, pdata->channel_data,
+> +		       sizeof(data->channel_data));
+> +		return;
+> +	}
+>  
+>  #ifdef CONFIG_OF
+>  	/* fallback on OF */
+> -	of_channels = of_get_property(np, "exported-channels",
+> -				      &of_channels_size);
+> -	if (of_channels && (of_channels_size == sizeof(*of_channels)))
+> -		return be32_to_cpup(of_channels);
+> +	if (!client->dev.of_node
+> +	    || !of_get_next_child(client->dev.of_node, NULL))
+> +		goto fallback_default;
+> +
+> +	for_each_child_of_node(client->dev.of_node, node) {
+> +		const __be32 *property;
+> +		int len;
+> +		unsigned int channel;
+> +		unsigned int pga = ADS1015_DEFAULT_PGA;
+> +		unsigned int data_rate = ADS1015_DEFAULT_DATA_RATE;
+> +
+> +		property = of_get_property(node, "reg", &len);
+> +		if (!property || (len < sizeof(int))) {
+> +			dev_err(&client->dev, "ads1015: invalid reg on %s\n",
+> +				node->full_name);
+> +			continue;
+> +		}
+> +
+> +		channel = be32_to_cpup(property);
+> +		if (channel > ADS1015_CONFIG_CHANNELS) {
+> +			dev_err(&client->dev, "ads1015: invalid addr=%x on %s\n",
+> +				channel, node->full_name);
+> +			continue;
+> +		}
+> +
+> +		property = of_get_property(node, "ti,gain", &len);
+> +		if (property && (len == sizeof(int))) {
+> +			pga = be32_to_cpup(property);
+> +			if (pga > 7) {
+> +				dev_err(&client->dev,
+> +					"ads1015: invalid gain on %s\n",
+> +					node->full_name);
+> +			}
+> +		}
+> +
+> +		property = of_get_property(node, "ti,datarate", &len);
+> +		if (property && (len == sizeof(int))) {
+> +			data_rate = be32_to_cpup(property);
+> +			if (data_rate > 7)
+> +				dev_err(&client->dev,
+> +					"ads1015: invalid data_rate on %s\n",
+> +					node->full_name);
+> +		}
+> +
+> +		data->channel_data[channel].enabled = true;
+> +		data->channel_data[channel].pga = pga;
+> +		data->channel_data[channel].data_rate = data_rate;
+> +	}
+> +
+> +	return;
+>  #endif
+>  
+>  	/* fallback on default configuration */
+> -	return ADS1015_DEFAULT_CHANNELS;
+> +fallback_default:
+> +	for (k = 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
+> +		data->channel_data[k].enabled = true;
+> +		data->channel_data[k].pga = ADS1015_DEFAULT_PGA;
+> +		data->channel_data[k].data_rate = ADS1015_DEFAULT_DATA_RATE;
+> +	}
+>  }
+>  
+>  static int ads1015_probe(struct i2c_client *client,
+> @@ -196,7 +262,6 @@ static int ads1015_probe(struct i2c_client *client,
+>  {
+>  	struct ads1015_data *data;
+>  	int err;
+> -	unsigned int exported_channels;
+>  	unsigned int k;
+>  
+>  	data = kzalloc(sizeof(struct ads1015_data), GFP_KERNEL);
+> @@ -209,9 +274,9 @@ static int ads1015_probe(struct i2c_client *client,
+>  	mutex_init(&data->update_lock);
+>  
+>  	/* build sysfs attribute group */
+> -	exported_channels = ads1015_get_exported_channels(client);
+> +	ads1015_get_exported_channels(client);
+>  	for (k = 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
+> -		if (!(exported_channels & (1<<k)))
+> +		if (!data->channel_data[k].enabled)
+>  			continue;
+>  		err = device_create_file(&client->dev, &ads1015_in[k].dev_attr);
+>  		if (err)
+> diff --git a/include/linux/i2c/ads1015.h b/include/linux/i2c/ads1015.h
+> index 8541c6a..0d9e746 100644
+> --- a/include/linux/i2c/ads1015.h
+> +++ b/include/linux/i2c/ads1015.h
+> @@ -21,8 +21,16 @@
+>  #ifndef LINUX_ADS1015_H
+>  #define LINUX_ADS1015_H
+>  
+> +#define ADS1015_CONFIG_CHANNELS 8
+> +
+> +struct ads1015_channel_data {
+> +	bool enabled;
+> +	unsigned int pga;
+> +	unsigned int data_rate;
+> +};
+> +
+>  struct ads1015_platform_data {
+> -	unsigned int exported_channels;
+> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
+>  };
+>  
+>  #endif /* LINUX_ADS1015_H */
+> -- 
+> 1.5.6.5
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
