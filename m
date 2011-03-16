@@ -1,159 +1,40 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] OLPC: add missing elements to device tree
-Date: Wed, 16 Mar 2011 15:17:01 +0000 (GMT)
-Message-ID: <20110316151701.F279E9D401E__919.397411826317$1300288950$gmane$org@zog.reactivated.net>
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [PATCH 3/4 v5] video, sm501: add OF binding to support SM501
+Date: Thu, 17 Mar 2011 00:36:02 +0900
+Message-ID: <20110316153601.GA13315@linux-sh.org>
+References: <1291451028-22532-1-git-send-email-hs@denx.de> <1296026490-14665-1-git-send-email-hs@denx.de> <4D7F14B0.1030008@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4D7F14B0.1030008@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-In response to new device tree code in the kernel, OLPC will start
-using it for probing of certain devices. However, some firmware fixes
-are needed to put the devicetree into a usable state.
-
-Retain compatibility with old firmware by fixing up the device tree
-at boot-time if it does not contain the new nodes/properties that
-we need for probing. This is the same approach taken on PPC platforms.
-
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
----
- arch/x86/platform/olpc/olpc_dt.c |  103 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 103 insertions(+), 0 deletions(-)
-
-diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
-index d39f63d..d6ee929 100644
---- a/arch/x86/platform/olpc/olpc_dt.c
-+++ b/arch/x86/platform/olpc/olpc_dt.c
-@@ -165,6 +165,107 @@ static struct of_pdt_ops prom_olpc_ops __initdata = {
- 	.pkg2path = olpc_dt_pkg2path,
- };
- 
-+static phandle __init olpc_dt_finddevice(const char *path)
-+{
-+	phandle node;
-+	const void *args[] = { path };
-+	void *res[] = { &node };
-+
-+	if (olpc_ofw("finddevice", args, res)) {
-+		pr_err("olpc_dt: finddevice failed!\n");
-+		return 0;
-+	}
-+
-+	if ((s32) node == -1)
-+		return 0;
-+
-+	return node;
-+}
-+
-+static int __init olpc_dt_interpret(const char *words)
-+{
-+	int result;
-+	const void *args[] = { words };
-+	void *res[] = { &result };
-+
-+	if (olpc_ofw("interpret", args, res)) {
-+		pr_err("olpc_dt: interpret failed!\n");
-+		return -1;
-+	}
-+
-+	return result;
-+}
-+
-+/*
-+ * Extract board revision directly from OFW device tree.
-+ * We can't use olpc_platform_info because that hasn't been set up yet.
-+ */
-+static u32 __init olpc_dt_get_board_revision(void)
-+{
-+	phandle node;
-+	__be32 rev;
-+	int r;
-+
-+	node = olpc_dt_finddevice("/");
-+	if (!node)
-+		return 0;
-+
-+	r = olpc_dt_getproperty(node, "board-revision-int",
-+				(char *) &rev, sizeof(rev));
-+	if (r < 0)
-+		return 0;
-+
-+	return be32_to_cpu(rev);
-+}
-+
-+void __init olpc_dt_fixup(void)
-+{
-+	int r;
-+	char buf[64];
-+	phandle node;
-+	u32 board_rev;
-+
-+	node = olpc_dt_finddevice("/battery@0");
-+	if (!node)
-+		return;
-+
-+	/*
-+	 * If the battery node has a compatible property, we are running a new
-+	 * enough firmware and don't have fixups to make.
-+	 */
-+	r = olpc_dt_getproperty(node, "compatible", buf, sizeof(buf));
-+	if (r > 0)
-+		return;
-+
-+	pr_info("PROM DT: Old firmware detected, applying fixes\n");
-+
-+	/* Add olpc,xo1-battery compatible marker to battery node */
-+	olpc_dt_interpret("\" /battery@0\" find-device"
-+		" \" olpc,xo1-battery\" +compatible"
-+		" device-end");
-+
-+	board_rev = olpc_dt_get_board_revision();
-+	if (!board_rev)
-+		return;
-+
-+	if (board_rev >= olpc_board_pre(0xd0)) {
-+		/* XO-1.5: add dcon device */
-+		olpc_dt_interpret("\" /pci/display@1\" find-device"
-+			" new-device"
-+			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
-+			" finish-device device-end");
-+	} else {
-+		/* XO-1: add dcon device, mark RTC as olpc,xo1-rtc */
-+		olpc_dt_interpret("\" /pci/display@1,1\" find-device"
-+			" new-device"
-+			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
-+			" finish-device device-end"
-+			" \" /rtc\" find-device"
-+			" \" olpc,xo1-rtc\" +compatible"
-+			" device-end");
-+	}
-+}
-+
- void __init olpc_dt_build_devicetree(void)
- {
- 	phandle root;
-@@ -172,6 +273,8 @@ void __init olpc_dt_build_devicetree(void)
- 	if (!olpc_ofw_is_installed())
- 		return;
- 
-+	olpc_dt_fixup();
-+
- 	root = olpc_dt_getsibling(0);
- 	if (!root) {
- 		pr_err("PROM: unable to get root node from OFW!\n");
--- 
-1.7.4
+On Tue, Mar 15, 2011 at 08:26:40AM +0100, Heiko Schocher wrote:
+> > 0003-video-sm501-add-OF-binding-to-support-SM501.patch has no obvious style problems and is ready for submission.
+> > 
+> >  Documentation/powerpc/dts-bindings/sm501.txt |   34 +++++++++++++++++++++
+> >  drivers/mfd/sm501.c                          |    9 +++++-
+> >  drivers/video/sm501fb.c                      |   42 ++++++++++++++++++++++++--
+> >  3 files changed, 81 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
+> 
+> This patchset is pending know for a while. I got Acked by from
+> 
+> Samuel Ortiz for the mfd part, see here:
+> 
+> http://www.spinics.net/lists/linux-fbdev/msg02550.html
+> http://linux.derkeiler.com/Mailing-Lists/Kernel/2011-01/msg11798.html
+> 
+> and for the DTS part from Benjamin Herrenschmidt:
+> 
+> http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/088279.html
+> 
+> Are there some more issues?
+> 
+Not that I remember off the top of my head, but I think they've been lost
+in my backlog. Could you re-send the current series with the appropriate
+acked-bys? If there's nothing else obvious outstanding I'll roll them in.
