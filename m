@@ -1,446 +1,117 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2] hwmon: (ads1015) Make gain and datarate configurable
-Date: Wed, 16 Mar 2011 14:46:44 -0600
-Message-ID: <20110316204644.GA15557@angua.secretlab.ca>
-References: <20110312081809.GB9347@angua.secretlab.ca>
- <1300269715-15819-1-git-send-email-eibach@gdsys.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: No support of platform device instance id?
+Date: Wed, 16 Mar 2011 17:05:00 -0600
+Message-ID: <20110316230500.GB15557@angua.secretlab.ca>
+References: <20110312070057.GB9650@S2100-06.ap.freescale.net>
+	<20110312094620.GM9347@angua.secretlab.ca>
+	<20110312145532.GA10194@S2100-06.ap.freescale.net>
+	<20110314211019.GH16096@angua.secretlab.ca>
+	<20110316135800.GB11658@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1300269715-15819-1-git-send-email-eibach@gdsys.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dirk Eibach <eibach@gdsys.de>
-Cc: lm-sensors@lm-sensors.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rdunlap@xenotime.net, khali@linux-fr.org
+In-Reply-To: <20110316135800.GB11658-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Hui <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2011 at 11:01:55AM +0100, Dirk Eibach wrote:
-> Configuration for ads1015 gain and datarate is possible via
-> devicetree or platform data.
-> 
-> This is a followup patch to previous ads1015 patches on Jean Delvares
-> tree.
-> 
-> Changes since v1:
-> - replaced exported_channels bitmask with an enable entry per channel
-> - improved platform data example in Documentation
-> - improved patch description
-> 
-> Signed-off-by: Dirk Eibach <eibach@gdsys.de>
+[widening cc: list to solicit feedback on the new model]
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+On Wed, Mar 16, 2011 at 09:58:01PM +0800, Shawn Guo wrote:
+> On Mon, Mar 14, 2011 at 03:10:19PM -0600, Grant Likely wrote:
+> > 
+> [...]
+> > Several weeks back I posted a patch for of_platform_bus_snoop() which
+> > matches platform_device registrations to nodes in the device tree
+> > instead of allocating and registering a new device.  I've spent some
+> > more time on that patch in the last couple of weeks to the point that
+> > I'm happy with the model and I'm almost ready to push it out to my
+> > devicetree/test branch.  John Bonesio is currently refactoring and
+> 
+> I have seen it on devicetree/test branch.
 
-> ---
->  .../devicetree/bindings/hwmon/ads1015.txt          |   73 +++++++++++++
->  Documentation/devicetree/bindings/i2c/ads1015.txt  |   29 -----
->  Documentation/hwmon/ads1015                        |   44 ++++++---
->  drivers/hwmon/ads1015.c                            |  113 +++++++++++++++----
->  include/linux/i2c/ads1015.h                        |   10 ++-
->  5 files changed, 202 insertions(+), 67 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ads1015.txt
->  delete mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ads1015.txt b/Documentation/devicetree/bindings/hwmon/ads1015.txt
-> new file mode 100644
-> index 0000000..fb6e139
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ads1015.txt
-> @@ -0,0 +1,73 @@
-> +ADS1015 (I2C)
-> +
-> +This device is a 12-bit A-D converter with 4 inputs.
-> +
-> +The inputs can be used single ended or in certain differential combinations.
-> +
-> +For configuration all possible combinations are mapped to 8 channels:
-> +  0: Voltage over AIN0 and AIN1.
-> +  1: Voltage over AIN0 and AIN3.
-> +  2: Voltage over AIN1 and AIN3.
-> +  3: Voltage over AIN2 and AIN3.
-> +  4: Voltage over AIN0 and GND.
-> +  5: Voltage over AIN1 and GND.
-> +  6: Voltage over AIN2 and GND.
-> +  7: Voltage over AIN3 and GND.
-> +
-> +Each channel can be configured indvidually:
-> + - pga ist the programmable gain amplifier
-> +    0: FS = +/- 6.144 V
-> +    1: FS = +/- 4.096 V
-> +    2: FS = +/- 2.048 V (default)
-> +    3: FS = +/- 1.024 V
-> +    4: FS = +/- 0.512 V
-> +    5: FS = +/- 0.256 V
-> + - data_rate in samples per second
-> +    0: 128
-> +    1: 250
-> +    2: 490
-> +    3: 920
-> +    4: 1600
-> +    5: 2400
-> +    6: 3300
-> +
-> +1) The /ads1015 node
-> +
-> +  Required properties:
-> +
-> +   - compatible : must be "ti,ads1015"
-> +   - reg : I2C busaddress of the device
-> +   - #address-cells : must be <1>
-> +   - #size-cells : must be <0>
-> +
-> +  The node contains child nodes for each channel that the platform uses.
-> +
-> +  Example ADS1015 node:
-> +
-> +    ads1015@49 {
-> +	    compatible = "ti,ads1015";
-> +	    reg = <0x49>;
-> +	    #address-cells = <1>;
-> +	    #size-cells = <0>;
-> +
-> +	    [ child node definitions... ]
-> +    }
-> +
-> +2) channel nodes
-> +
-> +  Required properties:
-> +
-> +   - reg : the channel number
-> +
-> +  Optional properties:
-> +
-> +   - ti,gain : the programmable gain amplifier setting
-> +   - ti,datarate : the converter datarate
-> +
-> +  Example ADS1015 node:
-> +
-> +    channel@4 {
-> +	    reg = <4>;
-> +	    ti,gain = <3>;
-> +	    ti,datarate = <5>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Documentation/devicetree/bindings/i2c/ads1015.txt
-> deleted file mode 100644
-> index 985e24d..0000000
-> --- a/Documentation/devicetree/bindings/i2c/ads1015.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -ADS1015 (I2C)
-> -
-> -This device is a 12-bit A-D converter with 4 inputs.
-> -
-> -The inputs can be used single ended or in certain differential combinations.
-> -
-> -For configuration all possible combinations are mapped to 8 channels:
-> -0: Voltage over AIN0 and AIN1.
-> -1: Voltage over AIN0 and AIN3.
-> -2: Voltage over AIN1 and AIN3.
-> -3: Voltage over AIN2 and AIN3.
-> -4: Voltage over AIN0 and GND.
-> -5: Voltage over AIN1 and GND.
-> -6: Voltage over AIN2 and GND.
-> -7: Voltage over AIN3 and GND.
-> -
-> -Optional properties:
-> -
-> - - exported-channels : exported_channels is a bitmask that specifies which
-> -		       channels should be accessible by the user.
-> -
-> -Example:
-> -ads1015@49 {
-> -	compatible = "ti,ads1015";
-> -	reg = <0x49>;
-> -	exported-channels = <0x14>;
-> -};
-> -
-> -In this example only channel 2 and 4 would be accessible by the user.
-> diff --git a/Documentation/hwmon/ads1015 b/Documentation/hwmon/ads1015
-> index 56ee797..18a8e00 100644
-> --- a/Documentation/hwmon/ads1015
-> +++ b/Documentation/hwmon/ads1015
-> @@ -38,30 +38,48 @@ Platform Data
->  
->  In linux/i2c/ads1015.h platform data is defined as:
->  
-> +struct ads1015_channel_data {
-> +	unsigned int pga;
-> +	unsigned int data_rate;
-> +};
-> +
->  struct ads1015_platform_data {
->  	unsigned int exported_channels;
-> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
->  };
->  
->  exported_channels is a bitmask that specifies which inputs should be exported.
->  
-> +channel_data contains configuration data for the exported inputs:
-> +- pga ist the programmable gain amplifier
-> +  0: FS = +/- 6.144 V
-> +  1: FS = +/- 4.096 V
-> +  2: FS = +/- 2.048 V (default)
-> +  3: FS = +/- 1.024 V
-> +  4: FS = +/- 0.512 V
-> +  5: FS = +/- 0.256 V
-> +- data_rate in samples per second
-> +  0: 128
-> +  1: 250
-> +  2: 490
-> +  3: 920
-> +  4: 1600
-> +  5: 2400
-> +  6: 3300
-> +
->  Example:
->  struct ads1015_platform_data data = {
-> -	.exported_channels = (1 << 2) | (1 << 4)
-> +	.channel_data = {
-> +		[2] = { .enabled = true, .pga = 1, .data_rate = 0 },
-> +		[4] = { .enabled = true, .pga = 4, .data_rate = 5 },
-> +	}
->  };
->  
-> -In this case only in2_input and in4_input would be created.
-> +In this case only in2_input(FS +/- 4.096 V, 128 SPS) and in4_input
-> +(FS +/- 0.512 V, 2400 SPS) would be created.
->  
->  Devicetree
->  ----------
->  
-> -The ads1015 node may have an "exported-channels" property.
-> -exported_channels is a bitmask that specifies which inputs should be exported.
-> -
-> -Example:
-> -ads1015@49 {
-> -	compatible = "ti,ads1015";
-> -	reg = <0x49>;
-> -	exported-channels = < 0x14 >;
-> -};
-> -
-> -In this case only in2_input and in4_input would be created.
-> +Configuration is also possible via devicetree:
-> +Documentation/devicetree/bindings/hwmon/ads1015.txt
-> diff --git a/drivers/hwmon/ads1015.c b/drivers/hwmon/ads1015.c
-> index 8ef2b60..a7c524d 100644
-> --- a/drivers/hwmon/ads1015.c
-> +++ b/drivers/hwmon/ads1015.c
-> @@ -25,7 +25,7 @@
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/slab.h>
-> -#include <linux/jiffies.h>
-> +#include <linux/delay.h>
->  #include <linux/i2c.h>
->  #include <linux/hwmon.h>
->  #include <linux/hwmon-sysfs.h>
-> @@ -45,12 +45,18 @@ enum {
->  static const unsigned int fullscale_table[8] = {
->  	6144, 4096, 2048, 1024, 512, 256, 256, 256 };
->  
-> -#define ADS1015_CONFIG_CHANNELS 8
-> +/* Data rates in samples per second */
-> +static const unsigned int data_rate_table[8] = {
-> +	128, 250, 490, 920, 1600, 2400, 3300, 3300 };
-> +
->  #define ADS1015_DEFAULT_CHANNELS 0xff
-> +#define ADS1015_DEFAULT_PGA 2
-> +#define ADS1015_DEFAULT_DATA_RATE 4
->  
->  struct ads1015_data {
->  	struct device *hwmon_dev;
->  	struct mutex update_lock; /* mutex protect updates */
-> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
->  };
->  
->  static s32 ads1015_read_reg(struct i2c_client *client, unsigned int reg)
-> @@ -71,32 +77,38 @@ static int ads1015_read_value(struct i2c_client *client, unsigned int channel,
->  {
->  	u16 config;
->  	s16 conversion;
-> -	unsigned int pga;
-> +	struct ads1015_data *data = i2c_get_clientdata(client);
-> +	unsigned int pga = data->channel_data[channel].pga;
->  	int fullscale;
-> +	unsigned int data_rate = data->channel_data[channel].data_rate;
-> +	unsigned int conversion_time_ms;
->  	unsigned int k;
-> -	struct ads1015_data *data = i2c_get_clientdata(client);
->  	int res;
->  
->  	mutex_lock(&data->update_lock);
->  
-> -	/* get fullscale voltage */
-> +	/* get channel parameters */
->  	res = ads1015_read_reg(client, ADS1015_CONFIG);
->  	if (res < 0)
->  		goto err_unlock;
->  	config = res;
-> -	pga = (config >> 9) & 0x0007;
->  	fullscale = fullscale_table[pga];
-> +	conversion_time_ms = 1 + 1000 / data_rate_table[data_rate];
->  
->  	/* set channel and start single conversion */
-> -	config &= ~(0x0007 << 12);
-> -	config |= (1 << 15) | (1 << 8) | (channel & 0x0007) << 12;
-> +	config &= 0x001f;
-> +	config |= (1 << 15) | (1 << 8);
-> +	config |= (channel & 0x0007) << 12;
-> +	config |= (pga & 0x0007) << 9;
-> +	config |= (data_rate & 0x0007) << 5;
->  
-> -	/* wait until conversion finished */
->  	res = ads1015_write_reg(client, ADS1015_CONFIG, config);
->  	if (res < 0)
->  		goto err_unlock;
-> +
-> +	/* wait until conversion finished */
->  	for (k = 0; k < 5; ++k) {
-> -		schedule_timeout(msecs_to_jiffies(1));
-> +		msleep(k ? 1 : conversion_time_ms);
->  		res = ads1015_read_reg(client, ADS1015_CONFIG);
->  		if (res < 0)
->  			goto err_unlock;
-> @@ -166,29 +178,83 @@ static int ads1015_remove(struct i2c_client *client)
->  	return 0;
->  }
->  
-> -static unsigned int ads1015_get_exported_channels(struct i2c_client *client)
-> +static void ads1015_get_exported_channels(struct i2c_client *client)
->  {
-> +	unsigned int k;
-> +	struct ads1015_data *data = i2c_get_clientdata(client);
->  	struct ads1015_platform_data *pdata = dev_get_platdata(&client->dev);
->  #ifdef CONFIG_OF
-> -	struct device_node *np = client->dev.of_node;
-> -	const __be32 *of_channels;
-> -	int of_channels_size;
-> +	struct device_node *node;
->  #endif
->  
->  	/* prefer platform data */
-> -	if (pdata)
-> -		return pdata->exported_channels;
-> +	if (pdata) {
-> +		memcpy(data->channel_data, pdata->channel_data,
-> +		       sizeof(data->channel_data));
-> +		return;
-> +	}
->  
->  #ifdef CONFIG_OF
->  	/* fallback on OF */
-> -	of_channels = of_get_property(np, "exported-channels",
-> -				      &of_channels_size);
-> -	if (of_channels && (of_channels_size == sizeof(*of_channels)))
-> -		return be32_to_cpup(of_channels);
-> +	if (!client->dev.of_node
-> +	    || !of_get_next_child(client->dev.of_node, NULL))
-> +		goto fallback_default;
-> +
-> +	for_each_child_of_node(client->dev.of_node, node) {
-> +		const __be32 *property;
-> +		int len;
-> +		unsigned int channel;
-> +		unsigned int pga = ADS1015_DEFAULT_PGA;
-> +		unsigned int data_rate = ADS1015_DEFAULT_DATA_RATE;
-> +
-> +		property = of_get_property(node, "reg", &len);
-> +		if (!property || (len < sizeof(int))) {
-> +			dev_err(&client->dev, "ads1015: invalid reg on %s\n",
-> +				node->full_name);
-> +			continue;
-> +		}
-> +
-> +		channel = be32_to_cpup(property);
-> +		if (channel > ADS1015_CONFIG_CHANNELS) {
-> +			dev_err(&client->dev, "ads1015: invalid addr=%x on %s\n",
-> +				channel, node->full_name);
-> +			continue;
-> +		}
-> +
-> +		property = of_get_property(node, "ti,gain", &len);
-> +		if (property && (len == sizeof(int))) {
-> +			pga = be32_to_cpup(property);
-> +			if (pga > 7) {
-> +				dev_err(&client->dev,
-> +					"ads1015: invalid gain on %s\n",
-> +					node->full_name);
-> +			}
-> +		}
-> +
-> +		property = of_get_property(node, "ti,datarate", &len);
-> +		if (property && (len == sizeof(int))) {
-> +			data_rate = be32_to_cpup(property);
-> +			if (data_rate > 7)
-> +				dev_err(&client->dev,
-> +					"ads1015: invalid data_rate on %s\n",
-> +					node->full_name);
-> +		}
-> +
-> +		data->channel_data[channel].enabled = true;
-> +		data->channel_data[channel].pga = pga;
-> +		data->channel_data[channel].data_rate = data_rate;
-> +	}
-> +
-> +	return;
->  #endif
->  
->  	/* fallback on default configuration */
-> -	return ADS1015_DEFAULT_CHANNELS;
-> +fallback_default:
-> +	for (k = 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
-> +		data->channel_data[k].enabled = true;
-> +		data->channel_data[k].pga = ADS1015_DEFAULT_PGA;
-> +		data->channel_data[k].data_rate = ADS1015_DEFAULT_DATA_RATE;
-> +	}
->  }
->  
->  static int ads1015_probe(struct i2c_client *client,
-> @@ -196,7 +262,6 @@ static int ads1015_probe(struct i2c_client *client,
->  {
->  	struct ads1015_data *data;
->  	int err;
-> -	unsigned int exported_channels;
->  	unsigned int k;
->  
->  	data = kzalloc(sizeof(struct ads1015_data), GFP_KERNEL);
-> @@ -209,9 +274,9 @@ static int ads1015_probe(struct i2c_client *client,
->  	mutex_init(&data->update_lock);
->  
->  	/* build sysfs attribute group */
-> -	exported_channels = ads1015_get_exported_channels(client);
-> +	ads1015_get_exported_channels(client);
->  	for (k = 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
-> -		if (!(exported_channels & (1<<k)))
-> +		if (!data->channel_data[k].enabled)
->  			continue;
->  		err = device_create_file(&client->dev, &ads1015_in[k].dev_attr);
->  		if (err)
-> diff --git a/include/linux/i2c/ads1015.h b/include/linux/i2c/ads1015.h
-> index 8541c6a..0d9e746 100644
-> --- a/include/linux/i2c/ads1015.h
-> +++ b/include/linux/i2c/ads1015.h
-> @@ -21,8 +21,16 @@
->  #ifndef LINUX_ADS1015_H
->  #define LINUX_ADS1015_H
->  
-> +#define ADS1015_CONFIG_CHANNELS 8
-> +
-> +struct ads1015_channel_data {
-> +	bool enabled;
-> +	unsigned int pga;
-> +	unsigned int data_rate;
-> +};
-> +
->  struct ads1015_platform_data {
-> -	unsigned int exported_channels;
-> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
->  };
->  
->  #endif /* LINUX_ADS1015_H */
-> -- 
-> 1.5.6.5
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Good.  I don't know if you've seen it yet, but I also posted and
+pushed out an updated version last night that cleans up the usage
+model quite a bit.  New code uses of_platform_prepare() for flagging
+nodes that will be registered later, and both of_platform_bus_probe()
+and of_platform_populate() will respect the discoveries made by
+of_platform_prepare().
+
+> > cleaning it up for me so that it can get posted.  You can see the
+> > current state in my devicetree/preregister branch, with tegra modified
+> > to use it.
+> > 
+> > The model is:
+> > 
+> > 1) Platform code calls of_platform_device_preregister() to tell the DT
+> >    code about the nodes it /intends/ to register as devices.
+> > 2) Platform code can register as many or as few platform_devices as it
+> >    likes.  If any of these devices match one of the nodes passed by
+> >    of_platform_device_preregister(), then the DT code will set the
+> >    of_node pointer before it gets bound to a device.
+> > 3) Platform code calls of_platform_device_probe() which will
+> >    register platform_devices for any nodes which *did not* get
+> >    assigned to a device in step 2.
+> > 
+> > I implemented this as a way to allow dt and non-dt use-cases to share
+> > the same SoC setup code so that anything on-chip would get registered
+> > in the same way, but would also get the benefit of being linked to its
+> > device tree node.  For example, to obtain the list of i2c devices or
+> > gpio connections from the tree.  It also helps solve the problem of
+> > matching nodes to clks which are currently matched by name.  I think
+> > it would also solve your use case, at least in the short term.
+> > 
+> I'm seeing this approach benefits the smooth moving of dt on ARM, but
+> will this be the ultimate shape of dt support on ARM?
+
+I've been spending a *lot* of time thinking about this (which is part
+of the reason why it's taken so long to get full dt support for ARM
+hammered out; decisions made now will be with us for a long time to
+come).  On powerpc the design was easy because all of the BSPs were
+converted to require a device tree.  Therefore it made complete sense
+to obtain all device information from the tree.
+
+On ARM however, SoC support code must handle both DT and non-DT use
+cases, which means that the internal SoC device layout is going to be
+encoded in the kernel regardless of whether or not it is available in
+the device tree.  If we follow the lead of PowerPC here and obtain all
+device information from the DT, then it means DT and non-DT
+initialization uses entirely different code paths for the same SoC.
+Sure, the DT init code will a lot simpler that its non-DT counterpart,
+but is that really an advantage when the non-DT init code needs to be
+written regardless?  Perhaps not.
+
+To answer your question, "will this be the ultimate shape of dt
+support on ARM?"  I think that ultimately that decision needs to be
+made by each sub-arch maintainer.  For existing SoCs, yes I think that
+this new model will be the right thing to do, with SoC internals
+registered statically, and board-level devices and clocks probed
+entirely from the device tree.
+
+I also expect that some maintainers will decide to go 100% device tree
+for their SoC.  The Xilinx ARM FPGA is a likely candidate here.  In
+that scenario, this new model wouldn't make much sense, and it would
+be better to follow the powerpc lead by registering everything
+directly from the DT.
+
+Either choice is valid.  It is a tradeoff between sharing
+initialization code and the simplicity of full DT device
+registration.
+
+I'd like to have feedback on the new code to make sure that the model
+is sane.  There are some fiddly code it there which is used to match
+platform_device registrations to nodes in the device tree.  I *think*
+it makes sense, but I'd like to hear other opinions.
+
+g.
