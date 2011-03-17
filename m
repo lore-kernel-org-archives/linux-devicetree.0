@@ -1,20 +1,17 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: No support of platform device instance id?
-Date: Thu, 17 Mar 2011 11:08:19 -0600
-Message-ID: <20110317170819.GF9597@angua.secretlab.ca>
-References: <20110312070057.GB9650@S2100-06.ap.freescale.net>
-	<20110312094620.GM9347@angua.secretlab.ca>
-	<20110312145532.GA10194@S2100-06.ap.freescale.net>
-	<20110314211019.GH16096@angua.secretlab.ca>
-	<20110316135800.GB11658@S2100-06.ap.freescale.net>
-	<20110316230500.GB15557@angua.secretlab.ca>
-	<20110317043114.GG11658@S2100-06.ap.freescale.net>
+Subject: Re: [PATCH V4 1/5] arm/dt: add basic mx51 device tree support
+Date: Thu, 17 Mar 2011 11:17:13 -0600
+Message-ID: <20110317171713.GI9597@angua.secretlab.ca>
+References: <1299733185-2172-1-git-send-email-jason.hui@linaro.org>
+	<1299733185-2172-2-git-send-email-jason.hui@linaro.org>
+	<20110315070342.GB23050@angua.secretlab.ca>
+	<20110317015435.GF11658@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110317043114.GG11658-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20110317015435.GF11658-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -25,52 +22,53 @@ List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
 Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 12:31:15PM +0800, Shawn Guo wrote:
-> On Wed, Mar 16, 2011 at 05:05:00PM -0600, Grant Likely wrote:
+On Thu, Mar 17, 2011 at 09:54:35AM +0800, Shawn Guo wrote:
+> On Tue, Mar 15, 2011 at 01:03:42AM -0600, Grant Likely wrote:
+> > > +#ifdef CONFIG_OF
+> > > +static struct clk *mx5_dt_clk_get(struct device_node *np,
+> > > +					const char *output_id, void *data)
+> > > +{
+> > > +	return data;
+> > > +}
+> > > +
+> > > +static __init void mx5_dt_scan_clks(void)
+> > > +{
+> > > +	struct device_node *node;
+> > > +	struct clk *clk;
+> > > +	const char *id;
+> > > +	int rc;
+> > > +
+> > > +	for_each_compatible_node(node, NULL, "clock") {
+> > > +		id = of_get_property(node, "clock-outputs", NULL);
+> > > +		if (!id)
+> > > +			continue;
+> > > +
+> > > +		clk = clk_get_sys(id, NULL);
+> > > +		if (IS_ERR(clk))
+> > > +			continue;
+> > > +
+> > > +		rc = of_clk_add_provider(node, mx5_dt_clk_get, clk);
+> > > +		if (rc)
+> > > +			pr_err("error adding fixed clk %s\n", node->name);
+> > > +	}
+> > > +}
+> > > +
+> > > +void __init mx5_clk_dt_init(void)
+> > > +{
+> > > +	mx5_dt_scan_clks();
+> > > +}
+> > > +#endif
 > > 
-> [...]
-> > I'd like to have feedback on the new code to make sure that the model
-> > is sane.  There are some fiddly code it there which is used to match
-> > platform_device registrations to nodes in the device tree.  I *think*
-> > it makes sense, but I'd like to hear other opinions.
+> > Nitpick: Would it make sense for these 3 functions to be in a separate .c file?
 > > 
-> Binding platform_device with of_node via resources matching seems a
-> little fiddly, but your implementation looks solid to me.  I made a
-> quick scan on all the platform_device registration under
-> arch/arm/plat-mxc/devices, nothing would be broken, only except
-> platform-gpio_keys which is not an on-chip device.
+> Sorry for that I'm late on this.  It will not make much sense to do
+> so if considering that dynamic dt clock codes have to be put in
+> clock-mx51-mx53.c anyway, since they are referring to existing
+> enable/disable/get_rate/set_rate/... functions.
 
-Right; and doing it this way doesn't make sense for anything that is
-board/system specific because if the board is using the DT, then it is
-simpler and more reliable to avoid the matching heuristic entirely.
-
-> Looking at the code, I'm wondering how the binding of resource type
-> IORESOURCE_DMA looks like.  I'm seeing some platform_device is using
-> this flag to tell dma channel fixed for the device.  I'm not sure if
-> it can be fit in property 'dma-ranges'.  And I only see IORESOURCE_MEM
-> and IORESOURCE_IRQ being used in the matching model.
-
-The matching is simply a heuristic that makes a best guess about how
-how device nodes line up with platform_device registrations.  Right
-now the heuristic is to look at the register ranges and irqs described
-in the node and make sure that each of them are listed in the
-platform_device.  If the platform_device has additional resources,
-then it simply ignores them.  That seems to be sufficient for accurate
-matching, but I won't know for sure until people start using it.
-
-If there are situations where the heuristic does not work, then I'd
-like to know what they are so that the algorithm can be fixed, or in
-the absolute worst case implement workaround logic.
-
-One option I'm considering which would improve the accuracy of the
-heuristic is to add a 'char *of_compatible' field to struct
-platform_device.  Then platform_devices could optionally be tagged
-with the compatible value that must be present in order to be matched
-with a node.
-
-I definitely want feedback on the matching heuristic!
+Okay.
 
 g.
