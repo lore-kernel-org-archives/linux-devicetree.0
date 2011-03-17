@@ -1,39 +1,45 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V11 2/4] ptp: Added a clock that uses the eTSEC found on
- the MPC85xx.
-Date: Thu, 17 Mar 2011 13:21:16 -0600
-Message-ID: <20110317192116.GC12824@angua.secretlab.ca>
-References: <cover.1298447722.git.richard.cochran@omicron.at>
- <be1f5e801e8cd0145dd23aadae7c2055bb3c1d47.1298447722.git.richard.cochran@omicron.at>
- <20110223165058.GE14597@angua.secretlab.ca>
- <20110223112612.30071995@schlenkerla>
- <20110223175459.GH14597@angua.secretlab.ca>
- <20110223132444.65dfdda4@schlenkerla>
- <20110224165004.GB15234@riccoc20.at.omicron.at>
- <20110224112731.2d9bf080@schlenkerla>
- <20110225075320.GA4032@riccoc20.at.omicron.at>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
+	registration.
+Date: Thu, 17 Mar 2011 19:24:41 +0000
+Message-ID: <20110317192441.69c699b1@lxorguk.ukuu.org.uk>
+References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
+	<1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
+	<20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+	<20110317182510.GN9597@angua.secretlab.ca>
+	<4D82560B.4090800@caviumnetworks.com>
+	<20110317184723.GQ9597@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110225075320.GA4032-7KxsofuKt4IfAd9E5cN8NEzG7cXyKsk/@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110317184723.GQ9597-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 25, 2011 at 08:53:20AM +0100, Richard Cochran wrote:
-> On Thu, Feb 24, 2011 at 11:27:31AM -0600, Scott Wood wrote:
+> > If we did that, serial8250_probe() would automatically do the right thing.
 > 
-> > My vote, if it goes in a separate node at all, is "fsl,etsec-ptp",
-> 
-> So, that is what the patch does.
-> 
-> > and let the driver use SVR.
-> 
-> What is SVR?
+> Take a look at the way arch/powerpc/platforms/512x/pdm360ng.c uses a
+> notifier for amending a platform_device with additional data..
 
-An on chip register that provides the exact version of the SoC.  (As
-opposed to PVR which is the version of the cpu core).
+I tend to view arch specific embedded code as rather like very dubious
+parties. What goes on in other peoples' house out of sight is none of my
+business.
 
-g.
+The 8250 however is core code so it should keep its clothers on and behave
+in a manner befitting its status.
+
+What part of the problem can't be solved by doing it properly using the
+device registration interfaces we have today ?
+
+Alan
