@@ -1,15 +1,17 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Subject: Re: RFC: Platform data for onboard USB assets
-Date: Thu, 17 Mar 2011 23:33:01 +0100
-Message-ID: <201103172333.01474.arnd@arndb.de>
+Date: Thu, 17 Mar 2011 15:53:28 -0700
+Message-ID: <20110317225328.GB31581@kroah.com>
 References: <20110311165642.GA9996@kroah.com>
 	<20110317214042.GQ31411@opensource.wolfsonmicro.com>
 	<20110317214736.GA29014@kroah.com>
+	<201103172333.01474.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110317214736.GA29014-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201103172333.01474.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,114 +21,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 March 2011 22:47:36 Greg KH wrote:
-> > > Patches to fix this, for this specific PandaBoard controller are gladly
-> > > accepted.  What's odd is this is explicitly a Linux development board,
-> > > so you would think that this could have been caught, and fixed, in the
-> > > hardware a long time ago, right?
+On Thu, Mar 17, 2011 at 11:33:01PM +0100, Arnd Bergmann wrote:
+> On Thursday 17 March 2011 22:47:36 Greg KH wrote:
+> > > > Patches to fix this, for this specific PandaBoard controller are gladly
+> > > > accepted.  What's odd is this is explicitly a Linux development board,
+> > > > so you would think that this could have been caught, and fixed, in the
+> > > > hardware a long time ago, right?
+> > > 
+> > > The way everyone resolves this stuff is by patching their kernel
+> > > locally.
 > > 
-> > The way everyone resolves this stuff is by patching their kernel
-> > locally.
+> > Well, that means that the device tree work is going to be useful here,
+> > right?  :)
 > 
-> Well, that means that the device tree work is going to be useful here,
-> right?  :)
+> I like the idea. Let's make this the first use case where a lot of
+> people will want to have the device tree on ARM. The patch to the
+> driver to check for a mac-address property is trivial, and we
+> can probably come up with a decent way of parsing the device
+> tree for USB devices, after all there is an existing spec for
+> it (http://playground.sun.com/1275/bindings/usb/usb-1_0.ps).
+> 
+> 	Arnd
+> 
+> 8<------
+> [PATCH] net/smscx5xx: demonstrate use of device tree for mac address
+> 
+> This takes the MAC address for smsc75xx/smsc95xx USB network devices
+> from a the device tree. This is required to get a usable persistent
+> address on the popular beagleboard, whose hardware designers
+> accidentally forgot that an ethernet device really requires an a
+> MAC address to be functional.
+> 
+> The smsc75xx and smsc95xx drivers are just two copies of the
+> same code, so better fix both.
+> 
+> Not tested!
+> 
+> Signed-off-by: Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I like the idea. Let's make this the first use case where a lot of
-people will want to have the device tree on ARM. The patch to the
-driver to check for a mac-address property is trivial, and we
-can probably come up with a decent way of parsing the device
-tree for USB devices, after all there is an existing spec for
-it (http://playground.sun.com/1275/bindings/usb/usb-1_0.ps).
+<snip>
 
-	Arnd
+Very nice.
 
-8<------
-[PATCH] net/smscx5xx: demonstrate use of device tree for mac address
+Andy and Mark, would this patch work for you?
 
-This takes the MAC address for smsc75xx/smsc95xx USB network devices
-from a the device tree. This is required to get a usable persistent
-address on the popular beagleboard, whose hardware designers
-accidentally forgot that an ethernet device really requires an a
-MAC address to be functional.
+thanks,
 
-The smsc75xx and smsc95xx drivers are just two copies of the
-same code, so better fix both.
-
-Not tested!
-
-Signed-off-by: Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
-index 753ee6e..0420209 100644
---- a/drivers/net/usb/smsc75xx.c
-+++ b/drivers/net/usb/smsc75xx.c
-@@ -29,6 +29,7 @@
- #include <linux/crc32.h>
- #include <linux/usb/usbnet.h>
- #include <linux/slab.h>
-+#include <linux/of_device.h>
- #include "smsc75xx.h"
- 
- #define SMSC_CHIPNAME			"smsc75xx"
-@@ -658,6 +659,8 @@ static int smsc75xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
- 
- static void smsc75xx_init_mac_address(struct usbnet *dev)
- {
-+	void *address;
-+
- 	/* try reading mac address from EEPROM */
- 	if (smsc75xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
- 			dev->net->dev_addr) == 0) {
-@@ -669,6 +672,13 @@ static void smsc75xx_init_mac_address(struct usbnet *dev)
- 		}
- 	}
- 
-+	address = of_get_property(dev->udev->dev.of_node,
-+				  "local-mac-address", NULL);
-+	if (address) {
-+		memcpy(dev->net->dev_addr, address, ETH_ALEN);
-+		return;
-+	}
-+
- 	/* no eeprom, or eeprom values are invalid. generate random MAC */
- 	random_ether_addr(dev->net->dev_addr);
- 	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr");
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index bc86f4b..74585fb 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -29,6 +29,7 @@
- #include <linux/crc32.h>
- #include <linux/usb/usbnet.h>
- #include <linux/slab.h>
-+#include <linux/of_device.h>
- #include "smsc95xx.h"
- 
- #define SMSC_CHIPNAME			"smsc95xx"
-@@ -639,6 +640,8 @@ static int smsc95xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
- 
- static void smsc95xx_init_mac_address(struct usbnet *dev)
- {
-+	void *address;
-+
- 	/* try reading mac address from EEPROM */
- 	if (smsc95xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
- 			dev->net->dev_addr) == 0) {
-@@ -649,6 +652,13 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
- 		}
- 	}
- 
-+	address = of_get_property(dev->udev->dev.of_node,
-+				  "local-mac-address", NULL);
-+	if (address) {
-+		memcpy(dev->net->dev_addr, address, ETH_ALEN);
-+		return;
-+	}
-+
- 	/* no eeprom, or eeprom values are invalid. generate random MAC */
- 	random_ether_addr(dev->net->dev_addr);
- 	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr\n");
+greg k-h
