@@ -1,63 +1,159 @@
-From: Andy Green <andy@warmcat.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: RFC: Platform data for onboard USB assets
-Date: Thu, 17 Mar 2011 23:22:03 +0000
-Message-ID: <4D82979B.2050003@linaro.org>
-References: <20110311165642.GA9996@kroah.com> <20110317214042.GQ31411@opensource.wolfsonmicro.com> <20110317214736.GA29014@kroah.com> <201103172333.01474.arnd@arndb.de>
-Reply-To: andy.green@linaro.org
+Date: Thu, 17 Mar 2011 17:27:56 -0600
+Message-ID: <20110317232756.GA3148@angua.secretlab.ca>
+References: <20110311165642.GA9996@kroah.com>
+ <20110317214042.GQ31411@opensource.wolfsonmicro.com>
+ <20110317214736.GA29014@kroah.com>
+ <201103172333.01474.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201103172333.01474.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg KH <greg@kroah.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Linux USB list <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201103172333.01474.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2011 10:33 PM, Somebody in the thread at some point said:
+On Thu, Mar 17, 2011 at 11:33:01PM +0100, Arnd Bergmann wrote:
 > On Thursday 17 March 2011 22:47:36 Greg KH wrote:
->>>> Patches to fix this, for this specific PandaBoard controller are gladly
->>>> accepted.  What's odd is this is explicitly a Linux development board,
->>>> so you would think that this could have been caught, and fixed, in the
->>>> hardware a long time ago, right?
->>>
->>> The way everyone resolves this stuff is by patching their kernel
->>> locally.
->>
->> Well, that means that the device tree work is going to be useful here,
->> right?  :)
->
+> > > > Patches to fix this, for this specific PandaBoard controller are gladly
+> > > > accepted.  What's odd is this is explicitly a Linux development board,
+> > > > so you would think that this could have been caught, and fixed, in the
+> > > > hardware a long time ago, right?
+> > > 
+> > > The way everyone resolves this stuff is by patching their kernel
+> > > locally.
+> > 
+> > Well, that means that the device tree work is going to be useful here,
+> > right?  :)
+> 
 > I like the idea. Let's make this the first use case where a lot of
-
-You changed your first opinion about tagging "dynamically probed 
-devices" with what is effectively platform_data, cool.
-
 > people will want to have the device tree on ARM. The patch to the
 > driver to check for a mac-address property is trivial, and we
 > can probably come up with a decent way of parsing the device
 > tree for USB devices, after all there is an existing spec for
 > it (http://playground.sun.com/1275/bindings/usb/usb-1_0.ps).
+> 
 
-It doesn't do it already then.
+It would be fairly easy to handle.  In the model we've been using for
+the flattened tree so far, nodes for detectable are optional and
+almost always been omitted (as opposed to OpenFirmware which always
+populates the devices, whether they are detectable or not).
 
-That spec you pointed to from 1998 is obviously going to be a whole 
-subproject doing the binding, it seems to fingerprint devices by VID/PID 
-if I understood it.
+However, it's always been an option to populate nodes for devices that
+can also be detected if additional data needs to be supplied to make
+it work.  For example, providing IRQ swizzle data for PCI host
+controllers.
 
-What's the plan for leveraging that level of generality on "dynamically 
-probed devices"?  I mean I know what I want to use this for and the 
-platform_data scheme covers all the soldered-on-the-board cases fine.
+In this case, there needs to be a generic mechanism for attaching
+device node pointers to USB devices when the device is attached or
+removed from the bus from the perspective of Linux.
 
-Is there actually a need for sort of not platform_data but universal 
-vid_pid_specific_usb_device_option_data coming from the board definition 
-file or bootloader for *pluggable* usb devices?  udev seems to be well 
-established doing that already in a generic, not-platform-specific way 
-that can go in all distros and so on nicely.  Maybe this is just my 
-impoverished imagination and people do want, say, some kinds of USB mice 
-to operate at higher DPI or whatever when plugged in a specific board 
-because it is that board.
+The USB binding that you linked uses a single cell containing the hub
+or host contoller port to address a usb device.  As long as the device
+tree topology mirrors the topology of the USB tree, and providing that
+an of_node is associated with the USB host controller device in Linux,
+then the USB core code should have sufficient knowledge to set and
+clear each USB device's .of_node pointer as devices are attached and
+removed.
 
-BTW the whole RFC patchset I sent was tested on real Panda, including 
-the platform end which actually exists.
+The patch below also looks right to me.  I believe it also has the
+advantage of u-boot already knowing how to update the
+local-mac-address property at boot time.
 
--Andy
+g.
+
+> 	Arnd
+> 
+> 8<------
+> [PATCH] net/smscx5xx: demonstrate use of device tree for mac address
+> 
+> This takes the MAC address for smsc75xx/smsc95xx USB network devices
+> from a the device tree. This is required to get a usable persistent
+> address on the popular beagleboard, whose hardware designers
+> accidentally forgot that an ethernet device really requires an a
+> MAC address to be functional.
+> 
+> The smsc75xx and smsc95xx drivers are just two copies of the
+> same code, so better fix both.
+> 
+> Not tested!
+> 
+> Signed-off-by: Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
+> index 753ee6e..0420209 100644
+> --- a/drivers/net/usb/smsc75xx.c
+> +++ b/drivers/net/usb/smsc75xx.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/crc32.h>
+>  #include <linux/usb/usbnet.h>
+>  #include <linux/slab.h>
+> +#include <linux/of_device.h>
+>  #include "smsc75xx.h"
+>  
+>  #define SMSC_CHIPNAME			"smsc75xx"
+> @@ -658,6 +659,8 @@ static int smsc75xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
+>  
+>  static void smsc75xx_init_mac_address(struct usbnet *dev)
+>  {
+> +	void *address;
+> +
+>  	/* try reading mac address from EEPROM */
+>  	if (smsc75xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+>  			dev->net->dev_addr) == 0) {
+> @@ -669,6 +672,13 @@ static void smsc75xx_init_mac_address(struct usbnet *dev)
+>  		}
+>  	}
+>  
+> +	address = of_get_property(dev->udev->dev.of_node,
+> +				  "local-mac-address", NULL);
+> +	if (address) {
+> +		memcpy(dev->net->dev_addr, address, ETH_ALEN);
+> +		return;
+> +	}
+> +
+>  	/* no eeprom, or eeprom values are invalid. generate random MAC */
+>  	random_ether_addr(dev->net->dev_addr);
+>  	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr");
+> diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+> index bc86f4b..74585fb 100644
+> --- a/drivers/net/usb/smsc95xx.c
+> +++ b/drivers/net/usb/smsc95xx.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/crc32.h>
+>  #include <linux/usb/usbnet.h>
+>  #include <linux/slab.h>
+> +#include <linux/of_device.h>
+>  #include "smsc95xx.h"
+>  
+>  #define SMSC_CHIPNAME			"smsc95xx"
+> @@ -639,6 +640,8 @@ static int smsc95xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
+>  
+>  static void smsc95xx_init_mac_address(struct usbnet *dev)
+>  {
+> +	void *address;
+> +
+>  	/* try reading mac address from EEPROM */
+>  	if (smsc95xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+>  			dev->net->dev_addr) == 0) {
+> @@ -649,6 +652,13 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
+>  		}
+>  	}
+>  
+> +	address = of_get_property(dev->udev->dev.of_node,
+> +				  "local-mac-address", NULL);
+> +	if (address) {
+> +		memcpy(dev->net->dev_addr, address, ETH_ALEN);
+> +		return;
+> +	}
+> +
+>  	/* no eeprom, or eeprom values are invalid. generate random MAC */
+>  	random_ether_addr(dev->net->dev_addr);
+>  	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr\n");
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
