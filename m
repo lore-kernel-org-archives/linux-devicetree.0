@@ -1,159 +1,57 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: RFC: Platform data for onboard USB assets
-Date: Thu, 17 Mar 2011 17:27:56 -0600
-Message-ID: <20110317232756.GA3148@angua.secretlab.ca>
-References: <20110311165642.GA9996@kroah.com>
- <20110317214042.GQ31411@opensource.wolfsonmicro.com>
- <20110317214736.GA29014@kroah.com>
- <201103172333.01474.arnd@arndb.de>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
+	registration.
+Date: Thu, 17 Mar 2011 23:48:14 +0000
+Message-ID: <20110317234814.421f1aa4@lxorguk.ukuu.org.uk>
+References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
+	<1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
+	<20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+	<20110317182510.GN9597@angua.secretlab.ca>
+	<4D82560B.4090800@caviumnetworks.com>
+	<20110317184723.GQ9597@angua.secretlab.ca>
+	<20110317192441.69c699b1@lxorguk.ukuu.org.uk>
+	<20110317193149.GD12824@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201103172333.01474.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110317193149.GD12824-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 11:33:01PM +0100, Arnd Bergmann wrote:
-> On Thursday 17 March 2011 22:47:36 Greg KH wrote:
-> > > > Patches to fix this, for this specific PandaBoard controller are gladly
-> > > > accepted.  What's odd is this is explicitly a Linux development board,
-> > > > so you would think that this could have been caught, and fixed, in the
-> > > > hardware a long time ago, right?
-> > > 
-> > > The way everyone resolves this stuff is by patching their kernel
-> > > locally.
-> > 
-> > Well, that means that the device tree work is going to be useful here,
-> > right?  :)
-> 
-> I like the idea. Let's make this the first use case where a lot of
-> people will want to have the device tree on ARM. The patch to the
-> driver to check for a mac-address property is trivial, and we
-> can probably come up with a decent way of parsing the device
-> tree for USB devices, after all there is an existing spec for
-> it (http://playground.sun.com/1275/bindings/usb/usb-1_0.ps).
-> 
+> Device registration isn't the problem.  The problem is supplying
+> machine-specific callbacks from the board support code to the
+> drivers.  When devices are sourced from a device tree, it is easy to
+> get data about the device out of the tree, but it is really hard to
+> get callback pointers.  To make it all work without this fiddling
+> about, the octeon serial_{in,out} implementation would need to be
+> rolled into of_serial.c (which FWIW, I have absolutely no problem
+> with).
 
-It would be fairly easy to handle.  In the model we've been using for
-the flattened tree so far, nodes for detectable are optional and
-almost always been omitted (as opposed to OpenFirmware which always
-populates the devices, whether they are detectable or not).
+Disagree - the arch code needs to register I/O method descriptions with
+the of_serial code they don't neccessarily need to be in it.
 
-However, it's always been an option to populate nodes for devices that
-can also be detected if additional data needs to be supplied to make
-it work.  For example, providing IRQ swizzle data for PCI host
-controllers.
+Ie you'd have something like
 
-In this case, there needs to be a generic mechanism for attaching
-device node pointers to USB devices when the device is attached or
-removed from the bus from the perspective of Linux.
+	of_serial8250_register_ops("dt-op-type-name-blah", &ops);
 
-The USB binding that you linked uses a single cell containing the hub
-or host contoller port to address a usb device.  As long as the device
-tree topology mirrors the topology of the USB tree, and providing that
-an of_node is associated with the USB host controller device in Linux,
-then the USB core code should have sufficient knowledge to set and
-clear each USB device's .of_node pointer as devices are attached and
-removed.
+in the early boot code, and the ops can be in the arch, providing the ops
+has a module owner field the rest can even work modular. Sure the stuff
+should be able to describe standard forms directly without extra methods
+being registered but for the special stuff I think that is the right
+approach
 
-The patch below also looks right to me.  I believe it also has the
-advantage of u-boot already knowing how to update the
-local-mac-address property at boot time.
-
-g.
-
-> 	Arnd
-> 
-> 8<------
-> [PATCH] net/smscx5xx: demonstrate use of device tree for mac address
-> 
-> This takes the MAC address for smsc75xx/smsc95xx USB network devices
-> from a the device tree. This is required to get a usable persistent
-> address on the popular beagleboard, whose hardware designers
-> accidentally forgot that an ethernet device really requires an a
-> MAC address to be functional.
-> 
-> The smsc75xx and smsc95xx drivers are just two copies of the
-> same code, so better fix both.
-> 
-> Not tested!
-> 
-> Signed-off-by: Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
-> index 753ee6e..0420209 100644
-> --- a/drivers/net/usb/smsc75xx.c
-> +++ b/drivers/net/usb/smsc75xx.c
-> @@ -29,6 +29,7 @@
->  #include <linux/crc32.h>
->  #include <linux/usb/usbnet.h>
->  #include <linux/slab.h>
-> +#include <linux/of_device.h>
->  #include "smsc75xx.h"
->  
->  #define SMSC_CHIPNAME			"smsc75xx"
-> @@ -658,6 +659,8 @@ static int smsc75xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
->  
->  static void smsc75xx_init_mac_address(struct usbnet *dev)
->  {
-> +	void *address;
-> +
->  	/* try reading mac address from EEPROM */
->  	if (smsc75xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
->  			dev->net->dev_addr) == 0) {
-> @@ -669,6 +672,13 @@ static void smsc75xx_init_mac_address(struct usbnet *dev)
->  		}
->  	}
->  
-> +	address = of_get_property(dev->udev->dev.of_node,
-> +				  "local-mac-address", NULL);
-> +	if (address) {
-> +		memcpy(dev->net->dev_addr, address, ETH_ALEN);
-> +		return;
-> +	}
-> +
->  	/* no eeprom, or eeprom values are invalid. generate random MAC */
->  	random_ether_addr(dev->net->dev_addr);
->  	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr");
-> diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-> index bc86f4b..74585fb 100644
-> --- a/drivers/net/usb/smsc95xx.c
-> +++ b/drivers/net/usb/smsc95xx.c
-> @@ -29,6 +29,7 @@
->  #include <linux/crc32.h>
->  #include <linux/usb/usbnet.h>
->  #include <linux/slab.h>
-> +#include <linux/of_device.h>
->  #include "smsc95xx.h"
->  
->  #define SMSC_CHIPNAME			"smsc95xx"
-> @@ -639,6 +640,8 @@ static int smsc95xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
->  
->  static void smsc95xx_init_mac_address(struct usbnet *dev)
->  {
-> +	void *address;
-> +
->  	/* try reading mac address from EEPROM */
->  	if (smsc95xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
->  			dev->net->dev_addr) == 0) {
-> @@ -649,6 +652,13 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
->  		}
->  	}
->  
-> +	address = of_get_property(dev->udev->dev.of_node,
-> +				  "local-mac-address", NULL);
-> +	if (address) {
-> +		memcpy(dev->net->dev_addr, address, ETH_ALEN);
-> +		return;
-> +	}
-> +
->  	/* no eeprom, or eeprom values are invalid. generate random MAC */
->  	random_ether_addr(dev->net->dev_addr);
->  	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr\n");
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Funnily enough I'm in the middle of trying to rip the rm9k, au and other
+crap out of 8250.c by doing this for the UPIO_xxx ids and once you have
+an ops struct you can also then go and boot out the resource claim crap
+and package it all nicely.
