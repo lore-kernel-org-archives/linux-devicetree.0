@@ -1,61 +1,174 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
- registration.
-Date: Thu, 17 Mar 2011 09:42:34 -0700
-Message-ID: <4D8239FA.50208@caviumnetworks.com>
-References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>	<1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com> <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V5 2/4] arm/dt: add very basic dts file for babbage board
+Date: Thu, 17 Mar 2011 10:42:38 -0600
+Message-ID: <20110317164238.GC9597@angua.secretlab.ca>
+References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
+	<1300290701-9433-3-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1300290701-9433-3-git-send-email-jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2011 05:18 AM, Alan Cox wrote:
-> On Wed, 16 Mar 2011 18:26:06 -0700
-> David Daney<ddaney@caviumnetworks.com>  wrote:
->
->> The 8250 driver is a bit weird in that in addition to supporting
->> platform devices, extra devices can be added by calling
->> serial8250_register_port().
->>
->> The problem is that if we call serial8250_register_port() before the
->> driver is initialized Bad Things happen (we dereference NULL
->> pointers).
->>
->> There doesn't seem to be a general way to know if a driver has been
->> initialized
->
-> I've had a bigger dig into this. I think the correct answer is probably
-> "always go via platform devices or similar". That *is* the notifier in
-> the kernel of today. serial8250_register_port ultimately should I think
-> ultimatly become an internal helper.
->
+On Wed, Mar 16, 2011 at 11:51:39PM +0800, Jason Liu wrote:
+> Singed-off-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/babbage.dts |  122 +++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 122 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
+> new file mode 100644
+> index 0000000..8f9b47c
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/babbage.dts
+> @@ -0,0 +1,122 @@
+> +/*
+> + * Copyright 2011 Linaro Ltd.
+> + * Copyright 2011 Freescale Semiconductor, Inc.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/ {
+> +	model = "Freescale i.MX51 Babbage";
+> +	compatible = "fsl,mx51-babbage";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	#interrupt-cells = <1>;
+> +	interrupt-parent = <&tzic>;
+> +
+> +	memory {
+> +		reg = <0x90000000 0x20000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttymxc0,115200n8 debug earlyprintk ip=dhcp";
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		tzic: tz-interrupt-controller {
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +			reg = <0xe0000000 0x1000>;
+> +			compatible = "fsl,imx51-tzic";
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		uart0_clk: uart0 {
+> +			compatible = "clock";
+> +			clock-outputs = "imx-uart.0";
+> +		};
+> +
+> +		uart1_clk: uart1 {
+> +			compatible = "clock";
+> +			clock-outputs = "imx-uart.1";
+> +		};
+> +
+> +		uart2_clk: uart2 {
+> +			compatible = "clock";
+> +			clock-outputs = "imx-uart.2";
+> +		};
+> +
+> +		fec_clk: fec {
+> +			compatible = "clock";
+> +			clock-outputs = "fec.0";
+> +		};
 
-That was kind of my thought too.  However we have all sorts of things 
-calling serial8250_register_port(). Things like:
+As previously discussed, 'compatible = "clock";' isn't a very good
+binding; but I won't say any more on this here since Shawn reworks
+this code in his series.
 
-8250_pci.c
-of_serial.c
-8250_acorn.c
-8250_gsc.c
-.
-.
-.
+> +	};
+> +
+> +	aips@73f00000 {
 
-The resulting view of the drivers in sysfs is that the little stub code 
-that calls serial8250_register_port() is shown as the driver rather than 
-serial8250.  But I suppose that is a matter of aesthetics more than 
-function.
+Since aips isn't addressable, and there is no 'reg' property in this
+node, the name can simply be 'aips' or 'aips1' (or whatever name is
+used in the imx reference manual).  Same goes for the spba node below.
 
-All those 'stub drivers' are relying on the ordering of module_init 
-calls caused indirectly by the Makefile layout.  The path of least 
-resistance is your suggestion that I use late_initcall() in my driver 
-stub.  I actually tried that before hacking up this patch, but didn't 
-like the idea of relying on *_initcall() ordering being necessary for 
-correct initialization.
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0x0 0x73f00000 0x100000>;
+> +
+> +		imx-uart@bc000 {
+> +			compatible = "fsl,imx51-uart";
+> +			reg = <0xbc000 0x1000>;
+> +			interrupts = <0x1f>;
+> +			fsl,has-rts-cts;
+> +			uart-clock = <&uart0_clk>, "uart";
+> +		};
+> +
+> +		imx-uart@c0000 {
+> +			compatible = "fsl,imx51-uart";
+> +			reg = <0xc0000 0x1000>;
+> +			interrupts = <0x20>;
+> +			fsl,has-rts-cts;
+> +			uart-clock = <&uart1_clk>, "uart";
+> +		};
+> +	};
+> +
+> +	spba@70000000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0x0 0x70000000 0x100000>;
+> +
+> +		imx-uart@c000 {
+> +			compatible = "fsl,imx51-uart";
+> +			reg = <0xc000 0x1000>;
+> +			interrupts = <0x21>;
+> +			fsl,has-rts-cts;
+> +			uart-clock = <&uart2_clk>, "uart";
+> +		};
+> +	};
+> +
+> +	aips@83f00000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0x0 0x83f00000 0x100000>;
+> +
+> +		fec@ec000 {
+> +			compatible = "fsl,imx51-fec";
+> +			reg = <0xec000 0x1000>;
+> +			interrupts = <0x57>;
+> +			fec_clk-clock = <&fec_clk>, "fec";
 
-David Daney
+Unfortunately we're leaking Linux implementation details here by
+needing to use the name "fec_clk".  This will require some more
+thought on the best way to handle (but I'm not asking you to change
+anything yet).
+
+g.
