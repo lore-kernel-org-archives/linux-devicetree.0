@@ -1,66 +1,109 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
- registration.
-Date: Thu, 17 Mar 2011 12:47:23 -0600
-Message-ID: <20110317184723.GQ9597@angua.secretlab.ca>
-References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
- <1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
- <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
- <20110317182510.GN9597@angua.secretlab.ca>
- <4D82560B.4090800@caviumnetworks.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Question regarding usage of pdev->id and platform_data
+Date: Thu, 17 Mar 2011 13:19:38 -0600
+Message-ID: <20110317191938.GB12824@angua.secretlab.ca>
+References: <AANLkTi=AoFEQ685Pup8i7EAs=hLHip0UnhMV+ZHxVAiD@mail.gmail.com>
+	<20110223180316.GI14597@angua.secretlab.ca>
+	<AANLkTikKLJn60_L2r-cyiFLtQVn=WCNBTzPg6vAVwZRV@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D82560B.4090800@caviumnetworks.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <AANLkTikKLJn60_L2r-cyiFLtQVn=WCNBTzPg6vAVwZRV-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 11:42:19AM -0700, David Daney wrote:
-> On 03/17/2011 11:25 AM, Grant Likely wrote:
-> >On Thu, Mar 17, 2011 at 12:18:49PM +0000, Alan Cox wrote:
-> >>On Wed, 16 Mar 2011 18:26:06 -0700
-> >>David Daney<ddaney@caviumnetworks.com>  wrote:
-> >>
-> >>>The 8250 driver is a bit weird in that in addition to supporting
-> >>>platform devices, extra devices can be added by calling
-> >>>serial8250_register_port().
-> >>>
-> >>>The problem is that if we call serial8250_register_port() before the
-> >>>driver is initialized Bad Things happen (we dereference NULL
-> >>>pointers).
-> >>>
-> >>>There doesn't seem to be a general way to know if a driver has been
-> >>>initialized
-> >>
-> >>I've had a bigger dig into this. I think the correct answer is probably
-> >>"always go via platform devices or similar". That *is* the notifier in
-> >>the kernel of today. serial8250_register_port ultimately should I think
-> >>ultimatly become an internal helper.
-> >
-> >+1
-> >
-> >Depending on serial8250_register_port() definitely the wrong thing to
-> >do for platform support code.  It would be better to figure out how to
-> >get the dt bits you need into 8250.c or of_serial.c.
-> >
-> 
-> IMHO, of_serial.c is no better than my board/chip specific code that
-> calls serial8250_register_port().
-> 
-> Really what would be ideal would be a hook to add a
-> dev.platform_data pointer to the appropriate struct
-> plat_serial8250_port when the platform device is created.  It is
-> possible that the platform bus notifiers could be used for this.  We
-> would also want to have a way to add an of_device_id to those
-> recognized by 8250.c
-> 
-> If we did that, serial8250_probe() would automatically do the right thing.
+On Thu, Feb 24, 2011 at 05:43:31PM +0530, Thomas Abraham wrote:
+> Hi Grant,
+> =
 
-Take a look at the way arch/powerpc/platforms/512x/pdm360ng.c uses a
-notifier for amending a platform_device with additional data..
+> On 23 February 2011 23:33, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > Hi Thomas,
+> >
+> > On Wed, Feb 23, 2011 at 10:48:37PM +0530, Thomas Abraham wrote:
+> >> Hi,
+> >>
+> >> I am adding support for device tree based probe for the s5pv310 serial
+> >> driver for a platform that has 4 instances of the uart port. I have
+> >> few questions on this and appreciate any help for the following
+> >> questions.
+> >>
+> >> 1. The driver is based on the usage of pdev->id in several parts of
+> >> the driver. But the platform_device created using the
+> >> of_platform_bus_probe function assigns -1 to pdev->id. Is the use of
+> >> pdev->id not advisable or is it okay if the driver assigns a pdev->id
+> >> value during the probe.
+> >
+> > No, the driver should *not* write a value to pdev->id at probe time.
+> > Doing so breaks the device model. =A0Instead, any enumeration that the
+> > driver cares about should be stored in the driver's private data
+> > structure. =A0I would recommend modifying the driver to copy pdev->id
+> > into its private structure. =A0If it is -1, then dynamically assign an
+> > id.
+> >
+> >>
+> >> 2. The driver uses pdev->dev.platform_data even after the probe is
+> >> complete. I read in one of the posts from Grant Likely that drivers
+> >> should not assign pdev->dev.platfrom_data.
+> >
+> > Correct.
+> >
+> >> Is it okay if the driver
+> >> parse the platform data related information from the device node and
+> >> assign it to pdev->dev.platform_data.
+> >
+> > No. =A0The driver *must not* modify or assign platform_data. =A0That
+> > pointer provides information to the driver, but there are memory
+> > allocation lifecycle issues if it tries to store something there.
+> > (Okay, I it *can* be done if the driver very carefully cleaned up
+> > after itself; but I strongly recommend against it; that isn't what
+> > that pointer is for) =A0Modifying it also causes issues with drivers
+> > that can accept either platform_data or device tree data.
+> >
+> > Instead, the driver should store all data it needs in its private data
+> > structure. =A0That's exactly why drivers have private data structures.
+> >
+> > g.
+> >
+> =
+
+> Thanks for your explanation. It was very helpful. I am now modifying
+> the uart driver to keep a copy of pdev->dev.platform_data and use it.
+> Also, trying to eliminate all uses of pdev->id.
+> =
+
+> Could you help me with another question. The clk_get api for s5pv310
+> uses the pdev->id to find the clock defined in platform code. Since
+> the instance of 'struct platform_device' that the driver gets when
+> probed using device tree will have pdev->id as -1, the clk_get fails.
+> Is it okay to assign a instance value to pdev->id in the probe
+> function.
+
+When clock connections are described in the device tree, it is
+intended (hoped?) that code in drivers/of/clock.c will take care of
+any decoding device tree references to struct clks.  Unfortunately,
+the design of the clk api is such that it really is non-trivial and I
+don't have an easy answer for you about how to reconcile the different
+way that DT and non-DT platforms want to get their clock information.
+
+However, I do have a workaround.  Take a look at the
+of_platform_prepare() patch that I sent around a couple of days ago.
+That patch will allow DT platforms to continue using the static
+platform_device registrations used by non-DT platforms with the same
+SoC, while still getting links to the device tree nodes.  It may not
+be the long term solution, but I'm comfortable merging code that uses
+it because it sidesteps a lot of these issues (the static
+registrations can keep using the current .id and clk_get() code).
 
 g.
-
