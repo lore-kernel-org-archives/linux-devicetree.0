@@ -1,109 +1,39 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Question regarding usage of pdev->id and platform_data
-Date: Thu, 17 Mar 2011 13:19:38 -0600
-Message-ID: <20110317191938.GB12824@angua.secretlab.ca>
-References: <AANLkTi=AoFEQ685Pup8i7EAs=hLHip0UnhMV+ZHxVAiD@mail.gmail.com>
-	<20110223180316.GI14597@angua.secretlab.ca>
-	<AANLkTikKLJn60_L2r-cyiFLtQVn=WCNBTzPg6vAVwZRV@mail.gmail.com>
+Subject: Re: [PATCH V11 2/4] ptp: Added a clock that uses the eTSEC found on
+ the MPC85xx.
+Date: Thu, 17 Mar 2011 13:21:16 -0600
+Message-ID: <20110317192116.GC12824@angua.secretlab.ca>
+References: <cover.1298447722.git.richard.cochran@omicron.at>
+ <be1f5e801e8cd0145dd23aadae7c2055bb3c1d47.1298447722.git.richard.cochran@omicron.at>
+ <20110223165058.GE14597@angua.secretlab.ca>
+ <20110223112612.30071995@schlenkerla>
+ <20110223175459.GH14597@angua.secretlab.ca>
+ <20110223132444.65dfdda4@schlenkerla>
+ <20110224165004.GB15234@riccoc20.at.omicron.at>
+ <20110224112731.2d9bf080@schlenkerla>
+ <20110225075320.GA4032@riccoc20.at.omicron.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AANLkTikKLJn60_L2r-cyiFLtQVn=WCNBTzPg6vAVwZRV-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110225075320.GA4032-7KxsofuKt4IfAd9E5cN8NEzG7cXyKsk/@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 24, 2011 at 05:43:31PM +0530, Thomas Abraham wrote:
-> Hi Grant,
-> =
+On Fri, Feb 25, 2011 at 08:53:20AM +0100, Richard Cochran wrote:
+> On Thu, Feb 24, 2011 at 11:27:31AM -0600, Scott Wood wrote:
+> 
+> > My vote, if it goes in a separate node at all, is "fsl,etsec-ptp",
+> 
+> So, that is what the patch does.
+> 
+> > and let the driver use SVR.
+> 
+> What is SVR?
 
-> On 23 February 2011 23:33, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > Hi Thomas,
-> >
-> > On Wed, Feb 23, 2011 at 10:48:37PM +0530, Thomas Abraham wrote:
-> >> Hi,
-> >>
-> >> I am adding support for device tree based probe for the s5pv310 serial
-> >> driver for a platform that has 4 instances of the uart port. I have
-> >> few questions on this and appreciate any help for the following
-> >> questions.
-> >>
-> >> 1. The driver is based on the usage of pdev->id in several parts of
-> >> the driver. But the platform_device created using the
-> >> of_platform_bus_probe function assigns -1 to pdev->id. Is the use of
-> >> pdev->id not advisable or is it okay if the driver assigns a pdev->id
-> >> value during the probe.
-> >
-> > No, the driver should *not* write a value to pdev->id at probe time.
-> > Doing so breaks the device model. =A0Instead, any enumeration that the
-> > driver cares about should be stored in the driver's private data
-> > structure. =A0I would recommend modifying the driver to copy pdev->id
-> > into its private structure. =A0If it is -1, then dynamically assign an
-> > id.
-> >
-> >>
-> >> 2. The driver uses pdev->dev.platform_data even after the probe is
-> >> complete. I read in one of the posts from Grant Likely that drivers
-> >> should not assign pdev->dev.platfrom_data.
-> >
-> > Correct.
-> >
-> >> Is it okay if the driver
-> >> parse the platform data related information from the device node and
-> >> assign it to pdev->dev.platform_data.
-> >
-> > No. =A0The driver *must not* modify or assign platform_data. =A0That
-> > pointer provides information to the driver, but there are memory
-> > allocation lifecycle issues if it tries to store something there.
-> > (Okay, I it *can* be done if the driver very carefully cleaned up
-> > after itself; but I strongly recommend against it; that isn't what
-> > that pointer is for) =A0Modifying it also causes issues with drivers
-> > that can accept either platform_data or device tree data.
-> >
-> > Instead, the driver should store all data it needs in its private data
-> > structure. =A0That's exactly why drivers have private data structures.
-> >
-> > g.
-> >
-> =
-
-> Thanks for your explanation. It was very helpful. I am now modifying
-> the uart driver to keep a copy of pdev->dev.platform_data and use it.
-> Also, trying to eliminate all uses of pdev->id.
-> =
-
-> Could you help me with another question. The clk_get api for s5pv310
-> uses the pdev->id to find the clock defined in platform code. Since
-> the instance of 'struct platform_device' that the driver gets when
-> probed using device tree will have pdev->id as -1, the clk_get fails.
-> Is it okay to assign a instance value to pdev->id in the probe
-> function.
-
-When clock connections are described in the device tree, it is
-intended (hoped?) that code in drivers/of/clock.c will take care of
-any decoding device tree references to struct clks.  Unfortunately,
-the design of the clk api is such that it really is non-trivial and I
-don't have an easy answer for you about how to reconcile the different
-way that DT and non-DT platforms want to get their clock information.
-
-However, I do have a workaround.  Take a look at the
-of_platform_prepare() patch that I sent around a couple of days ago.
-That patch will allow DT platforms to continue using the static
-platform_device registrations used by non-DT platforms with the same
-SoC, while still getting links to the device tree nodes.  It may not
-be the long term solution, but I'm comfortable merging code that uses
-it because it sidesteps a lot of these issues (the static
-registrations can keep using the current .id and clk_get() code).
+An on chip register that provides the exact version of the SoC.  (As
+opposed to PVR which is the version of the cpu core).
 
 g.
