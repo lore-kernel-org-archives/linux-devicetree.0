@@ -1,112 +1,63 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 4/7] mmc: consolidate sdhci_pltfm_data and sdhci_of_data
- into one
-Date: Thu, 17 Mar 2011 14:29:30 -0600
-Message-ID: <20110317202930.GG12824@angua.secretlab.ca>
-References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
- <1300112759-3495-5-git-send-email-shawn.guo@linaro.org>
- <20110315195513.GA20845@angua.secretlab.ca>
- <20110317063319.GH11658@S2100-06.ap.freescale.net>
+Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
+ registration.
+Date: Thu, 17 Mar 2011 14:31:54 -0600
+Message-ID: <20110317203154.GH12824@angua.secretlab.ca>
+References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
+ <1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
+ <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+ <20110317182510.GN9597@angua.secretlab.ca>
+ <4D82560B.4090800@caviumnetworks.com>
+ <20110317184723.GQ9597@angua.secretlab.ca>
+ <20110317192441.69c699b1@lxorguk.ukuu.org.uk>
+ <20110317193149.GD12824@angua.secretlab.ca>
+ <4D826B52.3060304@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110317063319.GH11658@S2100-06.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, nicolas.pitre@linaro.org, devicetree-discuss@lists.ozlabs.org, linaro-dev@lists.linaro.org, linux-mmc@vger.kernel.org
+In-Reply-To: <4D826B52.3060304@caviumnetworks.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-[cc'ing linux-mmc@vger.kernel.org]
-
-On Thu, Mar 17, 2011 at 02:33:20PM +0800, Shawn Guo wrote:
-> On Tue, Mar 15, 2011 at 01:55:13PM -0600, Grant Likely wrote:
-> > On Mon, Mar 14, 2011 at 10:25:56PM +0800, Shawn Guo wrote:
-> > > This patch is motivated by the work of supporting sdhci-esdhc-imx as
-> > > an OF device.  The sdhci-esdhc-imx driver was well designed to be
-> > > able to work with either platform or OF bus, with a little effort to
-> > > decouple the driver from sdhci_pltfm_data.
-> > > 
-> > > Like sdhci_ops works for both platform and OF sdhci driver, the patch
-> > > demonstrates that sdhci_pltfm_data and sdhci_of_data can be
-> > > consolidated into sdhci_data, which should work for both.  As one of
-> > > the results, header linux/mmc/sdhci-pltfm.h can be deleted.
-> > > 
-> > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > 
-> > I like the push to unify DT and non-DT usage with the SDHCI drivers,
-> > but I'm not convinced on the approach.  Actually, that's more a
-> > comment on the existing code than it is on the this patch.
-> > 
-> Yes, this patch is not supposed to mean that much.  It only intends
-> to unify one data structure so that sdhci-esdhc-imx.c can work for
-> both cases.
+On Thu, Mar 17, 2011 at 01:13:06PM -0700, David Daney wrote:
+> On 03/17/2011 12:31 PM, Grant Likely wrote:
+> >On Thu, Mar 17, 2011 at 07:24:41PM +0000, Alan Cox wrote:
+> >>>>If we did that, serial8250_probe() would automatically do the right thing.
+> >>>
+> >>>Take a look at the way arch/powerpc/platforms/512x/pdm360ng.c uses a
+> >>>notifier for amending a platform_device with additional data..
+> >>
+> >>I tend to view arch specific embedded code as rather like very dubious
+> >>parties. What goes on in other peoples' house out of sight is none of my
+> >>business.
+> >>
+> >>The 8250 however is core code so it should keep its clothers on and behave
+> >>in a manner befitting its status.
+> >>
+> >>What part of the problem can't be solved by doing it properly using the
+> >>device registration interfaces we have today ?
+> >
+> >Device registration isn't the problem.  The problem is supplying
+> >machine-specific callbacks from the board support code to the
+> >drivers.  When devices are sourced from a device tree, it is easy to
+> >get data about the device out of the tree, but it is really hard to
+> >get callback pointers.  To make it all work without this fiddling
+> >about, the octeon serial_{in,out} implementation would need to be
+> >rolled into of_serial.c (which FWIW, I have absolutely no problem
+> >with).
+> >
 > 
-> The topic you raised here is a bigger one which may involve debate
-> with authors of both sdhci-pltfm.c and sdhci-of-core.c.  We can take
-> it as the final goal, and this patch could be a first step to that
-> goal.
+> The only problem I have with that is that it ends up moving chip
+> specific erratum workarounds into drivers/tty/serial instead of
+> arch/mips/cavium-octeon.
+> 
+> I will think about this more.
 
-I doubt very much that the sdhci-of-core.c users/developers will have
-a problem with this.  There is a strong trend toward unifying DT and
-non-DT code, and Linux has a strong pattern of each driver handling
-its own registration.
-
-I actually don't have an objection to this patch specifically, but
-rather I want to see the overall direction be to eliminate
-sdhci-of-core.c and sdhci-pltfm.c entirely instead of using it more..
-
-On another note, this patch changes a number of names, both of 
-structures and variables.  Specifically:
-
-{sdhci_pltfm_data,sdhci_of_data} ==> sdhci_data and
-pdata ==> data
-
-However, it would be easier to review if the pdata==>data change was
-dropped (the name of the local variable doesn't matter that much), and
-if sdhci_of_data was renamed to sdhci_pltfm_data.  Doing so would make
-the diff much smaller without changing the sanity of the resulting
-code.
+arch/mips/cavium-octeon/serial.c appears to be void of any
+chip-specific errata at the moment.  :-)
 
 g.
 
-> 
-> -- 
-> Regards,
-> Shawn
-> 
-> > I don't like the way that sdhci-pltfm.c and sdhci-of-core.c each take
-> > responsibility for the .probe hook on each of the implementations.
-> > Doing it that way means that each implementation needs to add a set of
-> > hooks into those core files protected by #ifdefs based on whether or
-> > not the driver is enabled.  It also means that loading one driver
-> > means that all the configured sdhci drivers get loaded into the
-> > kernel.  This seems backwards.
-> > 
-> > From what I can see, sdhci-pltfm.c and sdhci-of-core.c both provide
-> > useful common functions that would be used by all sdhci host drivers.
-> > The interface would be a lot cleaner if those routines were exported
-> > for use by other modules, and each driver registered its own probe
-> > hook.  It would keep all the driver specific stuff out of
-> > sdhci_pltfm_ids and I think it would result in a cleaner interface
-> > overall.
-> > 
-> > Here is how I would do it:
-> > 
-> > 1) break the bulk of the sdhci_pltfm.c and sdhci_of_core.c .probe and
-> > .remove hooks out into separate functions; callable by other modules
-> > 2) for each driver, add its own probe and remove hooks which calls
-> > into the new functions created in step 1.  This would eliminate the
-> > need for the ->exit and ->init callbacks since they would get rolled
-> > into the new .probe and .remove callbacks
-> > 3) finally, when all drivers are removed; eliminate the driver
-> > registration from sdhci_pltfm.c and sdhci_of_core.c because there
-> > wouldn't be any users left.
-> > 
-> > drivers/mmc/host/sdhci-pxa.c appears to be a good example of how I
-> > think sdhci platform_drivers should be structured.
-> > 
-> > At the same time, the functionality from sdhci_of_core.c could easily
-> > be migrated into sdhci_pltfm.c.
-> > 
-> 
