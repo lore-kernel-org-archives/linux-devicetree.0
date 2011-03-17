@@ -1,74 +1,46 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V4 1/5] arm/dt: add basic mx51 device tree support
-Date: Thu, 17 Mar 2011 11:17:13 -0600
-Message-ID: <20110317171713.GI9597@angua.secretlab.ca>
-References: <1299733185-2172-1-git-send-email-jason.hui@linaro.org>
-	<1299733185-2172-2-git-send-email-jason.hui@linaro.org>
-	<20110315070342.GB23050@angua.secretlab.ca>
-	<20110317015435.GF11658@S2100-06.ap.freescale.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
+ registration.
+Date: Thu, 17 Mar 2011 12:25:10 -0600
+Message-ID: <20110317182510.GN9597@angua.secretlab.ca>
+References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
+ <1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
+ <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110317015435.GF11658-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: David Daney <ddaney@caviumnetworks.com>, linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 09:54:35AM +0800, Shawn Guo wrote:
-> On Tue, Mar 15, 2011 at 01:03:42AM -0600, Grant Likely wrote:
-> > > +#ifdef CONFIG_OF
-> > > +static struct clk *mx5_dt_clk_get(struct device_node *np,
-> > > +					const char *output_id, void *data)
-> > > +{
-> > > +	return data;
-> > > +}
-> > > +
-> > > +static __init void mx5_dt_scan_clks(void)
-> > > +{
-> > > +	struct device_node *node;
-> > > +	struct clk *clk;
-> > > +	const char *id;
-> > > +	int rc;
-> > > +
-> > > +	for_each_compatible_node(node, NULL, "clock") {
-> > > +		id = of_get_property(node, "clock-outputs", NULL);
-> > > +		if (!id)
-> > > +			continue;
-> > > +
-> > > +		clk = clk_get_sys(id, NULL);
-> > > +		if (IS_ERR(clk))
-> > > +			continue;
-> > > +
-> > > +		rc = of_clk_add_provider(node, mx5_dt_clk_get, clk);
-> > > +		if (rc)
-> > > +			pr_err("error adding fixed clk %s\n", node->name);
-> > > +	}
-> > > +}
-> > > +
-> > > +void __init mx5_clk_dt_init(void)
-> > > +{
-> > > +	mx5_dt_scan_clks();
-> > > +}
-> > > +#endif
+On Thu, Mar 17, 2011 at 12:18:49PM +0000, Alan Cox wrote:
+> On Wed, 16 Mar 2011 18:26:06 -0700
+> David Daney <ddaney@caviumnetworks.com> wrote:
+> 
+> > The 8250 driver is a bit weird in that in addition to supporting
+> > platform devices, extra devices can be added by calling
+> > serial8250_register_port().
 > > 
-> > Nitpick: Would it make sense for these 3 functions to be in a separate .c file?
+> > The problem is that if we call serial8250_register_port() before the
+> > driver is initialized Bad Things happen (we dereference NULL
+> > pointers).
 > > 
-> Sorry for that I'm late on this.  It will not make much sense to do
-> so if considering that dynamic dt clock codes have to be put in
-> clock-mx51-mx53.c anyway, since they are referring to existing
-> enable/disable/get_rate/set_rate/... functions.
+> > There doesn't seem to be a general way to know if a driver has been
+> > initialized
+> 
+> I've had a bigger dig into this. I think the correct answer is probably
+> "always go via platform devices or similar". That *is* the notifier in
+> the kernel of today. serial8250_register_port ultimately should I think
+> ultimatly become an internal helper.
 
-Okay.
++1
+
+Depending on serial8250_register_port() definitely the wrong thing to
+do for platform support code.  It would be better to figure out how to
+get the dt bits you need into 8250.c or of_serial.c.
 
 g.
+
