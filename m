@@ -1,249 +1,132 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] arm/dt: mx51: dynamically add gpt and uart related
-	clocks per dt nodes
-Date: Thu, 17 Mar 2011 14:47:49 -0600
-Message-ID: <20110317204748.GJ12824@angua.secretlab.ca>
-References: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
-	<1299514932-13558-4-git-send-email-shawn.guo@linaro.org>
-	<20110315073731.GG23050@angua.secretlab.ca>
-	<20110316120455.GA11658@S2100-06.ap.freescale.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: RFC: Platform data for onboard USB assets
+Date: Thu, 17 Mar 2011 23:33:01 +0100
+Message-ID: <201103172333.01474.arnd@arndb.de>
+References: <20110311165642.GA9996@kroah.com>
+	<20110317214042.GQ31411@opensource.wolfsonmicro.com>
+	<20110317214736.GA29014@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110316120455.GA11658-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110317214736.GA29014-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2011 at 08:04:56PM +0800, Shawn Guo wrote:
-> On Tue, Mar 15, 2011 at 01:37:31AM -0600, Grant Likely wrote:
-> > On Tue, Mar 08, 2011 at 12:22:10AM +0800, Shawn Guo wrote:
-> > > This patch is to change the static clock creating and registering to
-> > > the dynamic way, which scans dt clock nodes, associate clk with
-> > > device_node, and then add them to clkdev accordingly.
-> > > 
-> > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  arch/arm/mach-mx5/clock-mx51-mx53.c |  436 +++++++++++++++++++++++++++++++++--
-> > >  1 files changed, 422 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/mach-mx5/clock-mx51-mx53.c b/arch/arm/mach-mx5/clock-mx51-mx53.c
-> > > index dedb7f9..1940171 100644
-> > > --- a/arch/arm/mach-mx5/clock-mx51-mx53.c
-> > > +++ b/arch/arm/mach-mx5/clock-mx51-mx53.c
-> > > @@ -135,6 +135,9 @@ static inline u32 _get_mux(struct clk *parent, struct clk *m0,
-> > >  
-> > >  static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
-> > >  {
-> > > +#ifdef CONFIG_OF
-> > > +	return pll->pll_base;
-> > > +#else
-> > >  	if (pll == &pll1_main_clk)
-> > >  		return MX51_DPLL1_BASE;
-> > >  	else if (pll == &pll2_sw_clk)
-> > > @@ -145,6 +148,7 @@ static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
-> > >  		BUG();
-> > >  
-> > >  	return NULL;
-> > > +#endif
-> > >  }
-> > >  
-> > >  static inline void __iomem *_mx53_get_pll_base(struct clk *pll)
-> > > @@ -1439,33 +1443,437 @@ int __init mx53_clocks_init(unsigned long ckil, unsigned long osc,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +/*
-> > > + * Dynamically create and register clks per dt nodes
-> > > + */
-> > >  #ifdef CONFIG_OF
-> > > -static struct clk *mx5_dt_clk_get(struct device_node *np,
-> > > -					const char *output_id, void *data)
-> > > +
-> > > +#define ALLOC_CLK_LOOKUP()						\
-> > > +	struct clk_lookup *cl;						\
-> > > +	struct clk *clk;						\
-> > > +	int ret;							\
-> > > +									\
-> > > +	do {								\
-> > > +		cl = kzalloc(sizeof(*cl) + sizeof(*clk), GFP_KERNEL);	\
-> > > +		if (!cl)						\
-> > > +			return -ENOMEM;					\
-> > > +		clk = (struct clk *) (cl + 1);				\
-> > > +									\
-> > > +		clk->parent = mx5_get_source_clk(node);			\
-> > > +		clk->secondary = mx5_get_source_clk(node);		\
-> > > +	} while (0)
-> > > +
-> > > +#define ADD_CLK_LOOKUP()						\
-> > > +	do {								\
-> > > +		node->data = clk;					\
-> > > +		cl->dev_id = of_get_property(node,			\
-> > > +				"clock-outputs", NULL);			\
-> > > +		cl->con_id = of_get_property(node,			\
-> > > +				"clock-alias", NULL);			\
-> > > +		if (!cl->dev_id && !cl->con_id) {			\
-> > > +			ret = -EINVAL;					\
-> > > +			goto out_kfree;					\
-> > > +		}							\
-> > > +		cl->clk = clk;						\
-> > > +		clkdev_add(cl);						\
-> > > +									\
-> > > +		return 0;						\
-> > > +									\
-> > > +	out_kfree:							\
-> > > +		kfree(cl);						\
-> > > +		return ret;						\
-> > > +	} while (0)
+On Thursday 17 March 2011 22:47:36 Greg KH wrote:
+> > > Patches to fix this, for this specific PandaBoard controller are gladly
+> > > accepted.  What's odd is this is explicitly a Linux development board,
+> > > so you would think that this could have been caught, and fixed, in the
+> > > hardware a long time ago, right?
 > > 
-> > Yikes!  Doing this as a macro will be a nightmare for debugging.
-> > This needs refactoring into functions.
-> > 
-> > > +
-> > > +static unsigned long get_fixed_clk_rate(struct clk *clk)
-> > >  {
-> > > -	return data;
-> > > +	return clk->rate;
-> > >  }
-> > >  
-> > > -static __init void mx5_dt_scan_clks(void)
-> > > +static __init int mx5_scan_fixed_clks(void)
-> > >  {
-> > >  	struct device_node *node;
-> > > +	struct clk_lookup *cl;
-> > >  	struct clk *clk;
-> > > -	const char *id;
-> > > -	int rc;
-> > > +	const __be32 *rate;
-> > > +	int ret = 0;
-> > >  
-> > > -	for_each_compatible_node(node, NULL, "clock") {
-> > > -		id = of_get_property(node, "clock-outputs", NULL);
-> > > -		if (!id)
-> > > +	for_each_compatible_node(node, NULL, "fixed-clock") {
-> > > +		cl = kzalloc(sizeof(*cl) + sizeof(*clk), GFP_KERNEL);
-> > > +		if (!cl) {
-> > > +			ret = -ENOMEM;
-> > > +			break;
-> > > +		}
-> > > +		clk = (struct clk *) (cl + 1);
-> > > +
-> > > +		rate = of_get_property(node, "clock-frequency", NULL);
-> > > +		if (!rate) {
-> > > +			kfree(cl);
-> > >  			continue;
-> > > +		}
-> > > +		clk->rate = be32_to_cpu(*rate);
-> > > +		clk->get_rate = get_fixed_clk_rate;
-> > > +
-> > > +		node->data = clk;
-> > >  
-> > > -		clk = clk_get_sys(id, NULL);
-> > > -		if (IS_ERR(clk))
-> > > +		cl->dev_id = of_get_property(node, "clock-outputs", NULL);
-> > > +		cl->con_id = of_get_property(node, "clock-alias", NULL);
-> > 
-> > As discussed briefly earlier, clock-alias looks like it is encoding
-> > Linux-specific implementation details into the device tree, and it
-> > shouldn't be necessary when explicit links to clock providers are
-> > supplied in the device tree.
-> > 
-> > > +		if (!cl->dev_id && !cl->con_id) {
-> > > +			kfree(cl);
-> > >  			continue;
-> > > +		}
-> > > +		cl->clk = clk;
-> > > +		clkdev_add(cl);
-> > > +	}
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static struct clk *mx5_prop_name_to_clk(struct device_node *node,
-> > > +		const char *prop_name)
-> > > +{
-> > > +	struct device_node *provnode;
-> > > +	struct clk *clk;
-> > > +	const void *prop;
-> > > +	u32 provhandle;
-> > > +
-> > > +	prop = of_get_property(node, prop_name, NULL);
-> > > +	if (!prop)
-> > > +		return NULL;
-> > > +	provhandle = be32_to_cpup(prop);
-> > > +
-> > > +	provnode = of_find_node_by_phandle(provhandle);
-> > > +	if (!provnode)
-> > > +		return NULL;
-> > > +
-> > > +	clk = provnode->data;
-> > > +
-> > > +	of_node_put(provnode);
-> > > +
-> > > +	return clk;
-> > > +}
-> > > +
-> > > +static inline struct clk *mx5_get_source_clk(struct device_node *node)
-> > > +{
-> > > +	return mx5_prop_name_to_clk(node, "clock-source");
-> > > +}
-> > > +
-> > > +static inline struct clk *mx5_get_depend_clk(struct device_node *node)
-> > > +{
-> > > +	return mx5_prop_name_to_clk(node, "clock-depend");
-> > > +}
-> > 
-> > Ditto here.  'clock-depend' seems to be Linux specifc.  I need to look
-> > at the usage model for these properties.
-> > 
-> This is not Linux but hardware specific.  Let's look at the eSDHC1
-> example below.
+> > The way everyone resolves this stuff is by patching their kernel
+> > locally.
 > 
->                 esdhc1_clk: esdhc@0 {
->                         compatible = "fsl,mxc-clock";
->                         reg = <0>;
->                         clock-outputs = "sdhci-esdhc-imx.0";
->                         clock-source = <&pll2_sw_clk>;
->                         clock-depend = <&esdhc1_ipg_clk>;
->                 };
-> 
-> 
-> We have esdhc1_clk added to clkdev standing for the clock for hardware
-> block eSDHC1.  This clock is actually the serial clock of eSDHC1,
-> while eSDHC1 internal working clock esdhc1_ipg_clk has also to be on
-> to get the block functional.
+> Well, that means that the device tree work is going to be useful here,
+> right?  :)
 
-Actually, part of what I think is throwing me off here is that this
-node is only using half the clock binding.  A single node can be both
-a clock provider and a clock consumer, which will often be the case
-for clock controllers like this.  So in this case, it is using the
-correct "clock-outputs" property to declare the clocks that it
-provides, but it isn't using the *-clock binding to reference the
-clocks that it needs.  This really should be something like:
+I like the idea. Let's make this the first use case where a lot of
+people will want to have the device tree on ARM. The patch to the
+driver to check for a mac-address property is trivial, and we
+can probably come up with a decent way of parsing the device
+tree for USB devices, after all there is an existing spec for
+it (http://playground.sun.com/1275/bindings/usb/usb-1_0.ps).
 
-        esdhc1_clk: esdhc@0 {
-                compatible = "fsl,mxc-clock";
-                reg = <0>;
-                clock-outputs = "sdhci-esdhc-imx.0";
-                src-clock = <&pll2_sw_clk>, "sw-clk";
-                ipg-clock = <&esdhc1_ipg_clk>, "ipg-clk";
-        };
+	Arnd
 
-Also remember that a single clock node can provide multiple clock
-outputs.  I don't know if this is a factor for imx51, but if it is
-then you should layout the clock nodes to replicate the actual clock
-hardware topology in the hardware (as opposed to the software layout
-that Linux is currently using).
+8<------
+[PATCH] net/smscx5xx: demonstrate use of device tree for mac address
 
-g.
+This takes the MAC address for smsc75xx/smsc95xx USB network devices
+from a the device tree. This is required to get a usable persistent
+address on the popular beagleboard, whose hardware designers
+accidentally forgot that an ethernet device really requires an a
+MAC address to be functional.
+
+The smsc75xx and smsc95xx drivers are just two copies of the
+same code, so better fix both.
+
+Not tested!
+
+Signed-off-by: Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
+index 753ee6e..0420209 100644
+--- a/drivers/net/usb/smsc75xx.c
++++ b/drivers/net/usb/smsc75xx.c
+@@ -29,6 +29,7 @@
+ #include <linux/crc32.h>
+ #include <linux/usb/usbnet.h>
+ #include <linux/slab.h>
++#include <linux/of_device.h>
+ #include "smsc75xx.h"
+ 
+ #define SMSC_CHIPNAME			"smsc75xx"
+@@ -658,6 +659,8 @@ static int smsc75xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
+ 
+ static void smsc75xx_init_mac_address(struct usbnet *dev)
+ {
++	void *address;
++
+ 	/* try reading mac address from EEPROM */
+ 	if (smsc75xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+ 			dev->net->dev_addr) == 0) {
+@@ -669,6 +672,13 @@ static void smsc75xx_init_mac_address(struct usbnet *dev)
+ 		}
+ 	}
+ 
++	address = of_get_property(dev->udev->dev.of_node,
++				  "local-mac-address", NULL);
++	if (address) {
++		memcpy(dev->net->dev_addr, address, ETH_ALEN);
++		return;
++	}
++
+ 	/* no eeprom, or eeprom values are invalid. generate random MAC */
+ 	random_ether_addr(dev->net->dev_addr);
+ 	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr");
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index bc86f4b..74585fb 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -29,6 +29,7 @@
+ #include <linux/crc32.h>
+ #include <linux/usb/usbnet.h>
+ #include <linux/slab.h>
++#include <linux/of_device.h>
+ #include "smsc95xx.h"
+ 
+ #define SMSC_CHIPNAME			"smsc95xx"
+@@ -639,6 +640,8 @@ static int smsc95xx_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
+ 
+ static void smsc95xx_init_mac_address(struct usbnet *dev)
+ {
++	void *address;
++
+ 	/* try reading mac address from EEPROM */
+ 	if (smsc95xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+ 			dev->net->dev_addr) == 0) {
+@@ -649,6 +652,13 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
+ 		}
+ 	}
+ 
++	address = of_get_property(dev->udev->dev.of_node,
++				  "local-mac-address", NULL);
++	if (address) {
++		memcpy(dev->net->dev_addr, address, ETH_ALEN);
++		return;
++	}
++
+ 	/* no eeprom, or eeprom values are invalid. generate random MAC */
+ 	random_ether_addr(dev->net->dev_addr);
+ 	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr\n");
