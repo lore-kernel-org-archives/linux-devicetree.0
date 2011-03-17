@@ -1,17 +1,14 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
-	registration.
-Date: Thu, 17 Mar 2011 11:42:19 -0700
-Message-ID: <4D82560B.4090800@caviumnetworks.com>
-References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
-	<1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
-	<20110317121849.49d7c425@lxorguk.ukuu.org.uk>
-	<20110317182510.GN9597@angua.secretlab.ca>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH] ARM:boot:device tree: Allow the device tree binary to be
+	appended to zImage
+Date: Thu, 17 Mar 2011 14:42:39 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1103171422500.26889@xanadu.home>
+References: <20110309215800.26377.43925.stgit@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110317182510.GN9597-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-reply-to: <20110309215800.26377.43925.stgit@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,47 +18,163 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2011 11:25 AM, Grant Likely wrote:
-> On Thu, Mar 17, 2011 at 12:18:49PM +0000, Alan Cox wrote:
->> On Wed, 16 Mar 2011 18:26:06 -0700
->> David Daney<ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>  wrote:
->>
->>> The 8250 driver is a bit weird in that in addition to supporting
->>> platform devices, extra devices can be added by calling
->>> serial8250_register_port().
->>>
->>> The problem is that if we call serial8250_register_port() before the
->>> driver is initialized Bad Things happen (we dereference NULL
->>> pointers).
->>>
->>> There doesn't seem to be a general way to know if a driver has been
->>> initialized
->>
->> I've had a bigger dig into this. I think the correct answer is probably
->> "always go via platform devices or similar". That *is* the notifier in
->> the kernel of today. serial8250_register_port ultimately should I think
->> ultimatly become an internal helper.
->
-> +1
->
-> Depending on serial8250_register_port() definitely the wrong thing to
-> do for platform support code.  It would be better to figure out how to
-> get the dt bits you need into 8250.c or of_serial.c.
->
+On Wed, 9 Mar 2011, John Bonesio wrote:
 
-IMHO, of_serial.c is no better than my board/chip specific code that 
-calls serial8250_register_port().
+> This patch provides the ability to boot using a device tree that is appended
+> to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+> 
+> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Really what would be ideal would be a hook to add a dev.platform_data 
-pointer to the appropriate struct plat_serial8250_port when the platform 
-device is created.  It is possible that the platform bus notifiers could 
-be used for this.  We would also want to have a way to add an 
-of_device_id to those recognized by 8250.c
+You're almost there, but there are still remaining issues with this 
+patch.
 
-If we did that, serial8250_probe() would automatically do the right thing.
+> ---
+> 
+>  arch/arm/Kconfig                |    7 ++++
+>  arch/arm/boot/compressed/head.S |   75 +++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 79 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index d8a330f..1a55e3e 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1593,6 +1593,13 @@ config USE_OF
+>  	help
+>  	  Include support for flattened device tree machine descriptions.
+>  
+> +config ARM_APPENDED_DTB
+> +	bool "Use appended device tree blob"
+> +	depends on OF
+> +	help
+> +	  With this option, the boot code will look for a device tree binary
+> +	  (dtb) appended to zImage.
+> +
 
-David Daney
+I'd put this option below the ZBOOT_ROM option, and make it dependent on 
+!ZBOOT_ROM, e.g.:
+
+	depends on OF && !ZBOOT_ROM
+
+> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+> index 200625c..611719e 100644
+> --- a/arch/arm/boot/compressed/head.S
+> +++ b/arch/arm/boot/compressed/head.S
+> @@ -210,6 +210,58 @@ restart:	adr	r0, LC0
+>  		 */
+>  		mov	r10, r6
+>  #endif
+> +#ifdef CONFIG_ARM_APPENDED_DTB
+> +/*
+> + *   r0  = delta
+> + *   r2  = BSS start
+> + *   r3  = BSS end
+> + *   r4  = final kernel address
+> + *   r5  = start of this image
+> + *   r6  = _edata
+> + *   r7  = architecture ID
+> + *   r8  = atags/device tree pointer
+> + *   r9  = size of decompressed image
+> + *   r10 = end of this image, including  bss/stack/malloc space if non XIP
+> + *   r11 = GOT start
+> + *   r12 = GOT end
+> + *
+> + * if there are device trees (dtb) appended to zImage, advance r10 so that the
+> + * dtb data will get relocated along with the kernel if necessary.
+> + */
+> +
+> +		ldr	lr, [r6, #0]
+> +#ifndef __ARMEB__
+> +		ldr	r1, =0xedfe0dd0		@ sig is 0xd00dfeed big endian
+> +#else
+> +		ldr	r1, =0xd00dfeed
+> +#endif
+> +		cmp	lr, r1
+> +		bne	dtb_check_done
+> +
+> +		mov	r8, r6			@ use the appended device tree
+> +
+> +		/* Get the dtb's size */
+> +		ldr	lr, [r6, #4]
+> +
+> +#ifndef __ARMEB__
+> +		/* convert lr (dtb size) to little endian */
+> +		eor	r1, lr, lr, ror #16
+> +		bic	r1, r1, #0x00ff0000
+> +		mov	lr, lr, ror #8
+> +		eor	lr, lr, r1, lsr #8
+> +#endif
+> +		/*
+> +		 * dtb size rounded up to a multiple of 8 bytes so a
+> +		 * misaligned GOT entry doesn't cause the end of the
+> +		 * dtb binary to be overwritten.
+> +		 */
+> +		add	lr, lr, #7
+> +		bic	lr, lr, #7
+> +
+> +		add	r10, r10, lr
+> +		add	r6, r6, lr
+> +dtb_check_done:
+> +#endif
+
+Now if no dtb was found, or if that code is not configured, then lr 
+contains garbage and that may have random consequences with the code 
+that follows, which would explain the reported bad behaviors with this 
+patch applied even if not configured in the kernel.
+
+
+>  /*
+>   * Check to see if we will overwrite ourselves.
+> @@ -272,7 +324,8 @@ wont_overwrite:
+>   *   r12 = GOT end
+>   *   sp  = stack pointer
+>   */
+> -		teq	r0, #0
+> +		add	r1, r0, lr
+> +		teq	r1, #0
+>  		beq	not_relocated
+
+A better way to write the above is simply:
+
+		orrs	r1, r0, lr
+  		beq	not_relocated
+
+>  		add	r11, r11, r0
+>  		add	r12, r12, r0
+> @@ -288,12 +341,28 @@ wont_overwrite:
+>  
+>  		/*
+>  		 * Relocate all entries in the GOT table.
+> +		 * Bump bss entries to _edata + dtb size
+>  		 */
+>  1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
+> -		add	r1, r1, r0		@ table.  This fixes up the
+> -		str	r1, [r11], #4		@ C references.
+> +		add	r1, r1, r0		@ This fixes up C references
+> +		cmp	r1, r2			@ if entry >= bss_start &&
+> +		cmphs	r3, r1			@       bss_end > entry
+> +		addhi	r1, lr			@    entry += dtb size
+> +		str	r1, [r11], #4		@ next entry
+>  		cmp	r11, r12
+>  		blo	1b
+> +
+> +		/* bump our bss registers too */
+> +		add	r2, r2, lr
+> +		add	r3, r3, lr
+> +
+> +		/*
+> +		 * bump the stack pinter
+> +		 *
+> + 		 * If the linker script changes so the stack is not after
+> +		 * the bss section, this code will be wrong.
+> +		 */
+> +		add	sp, sp, lr
+>  #else
+>  
+>  		/*
+> 
+
+Nicolas
