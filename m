@@ -1,67 +1,65 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] mmc: make the reference to sdhci_tegra_dt_pdata
-	conditional
-Date: Thu, 17 Mar 2011 13:59:00 -0600
-Message-ID: <AANLkTi=umf9nDpExLEBgJEMgUP-CJUUEbAQrQfdBw7Fd@mail.gmail.com>
-References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
-	<1300112759-3495-4-git-send-email-shawn.guo@linaro.org>
-	<20110315075859.GL23050@angua.secretlab.ca>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
+	registration.
+Date: Thu, 17 Mar 2011 13:13:06 -0700
+Message-ID: <4D826B52.3060304@caviumnetworks.com>
+References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
+	<1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
+	<20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+	<20110317182510.GN9597@angua.secretlab.ca>
+	<4D82560B.4090800@caviumnetworks.com>
+	<20110317184723.GQ9597@angua.secretlab.ca>
+	<20110317192441.69c699b1@lxorguk.ukuu.org.uk>
+	<20110317193149.GD12824@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <20110315075859.GL23050-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110317193149.GD12824-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2011 at 1:58 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
-> On Mon, Mar 14, 2011 at 10:25:55PM +0800, Shawn Guo wrote:
->> Wrap tegra dt_id with CONFIG_MMC_SDHCI_TEGRA to make the reference to
->> sdhci_tegra_dt_pdata conditional, otherwise it will stop build for
->> other mmc driver when OF is enabled.
+On 03/17/2011 12:31 PM, Grant Likely wrote:
+> On Thu, Mar 17, 2011 at 07:24:41PM +0000, Alan Cox wrote:
+>>>> If we did that, serial8250_probe() would automatically do the right thing.
+>>>
+>>> Take a look at the way arch/powerpc/platforms/512x/pdm360ng.c uses a
+>>> notifier for amending a platform_device with additional data..
 >>
->> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Looks right to me.
-
-Actually...
-
->
-> g.
->
->> ---
->> =A0drivers/mmc/host/sdhci-pltfm.c | =A0 =A02 ++
->> =A01 files changed, 2 insertions(+), 0 deletions(-)
+>> I tend to view arch specific embedded code as rather like very dubious
+>> parties. What goes on in other peoples' house out of sight is none of my
+>> business.
 >>
->> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-plt=
-fm.c
->> index ccc04ac..4125fbf 100644
->> --- a/drivers/mmc/host/sdhci-pltfm.c
->> +++ b/drivers/mmc/host/sdhci-pltfm.c
->> @@ -52,7 +52,9 @@ static struct sdhci_ops sdhci_pltfm_ops =3D {
->> =A0#if defined(CONFIG_OF)
->> =A0#include <linux/of_device.h>
->> =A0static const struct of_device_id sdhci_dt_ids[] =3D {
->> +#ifdef CONFIG_MMC_SDHCI_TEGRA
->> =A0 =A0 =A0 { .compatible =3D "nvidia,tegra250-sdhci", .data =3D &sdhci_=
-tegra_dt_pdata },
->> +#endif
->> =A0 =A0 =A0 { }
->> =A0};
->> =A0MODULE_DEVICE_TABLE(platform, sdhci_dt_ids);
+>> The 8250 however is core code so it should keep its clothers on and behave
+>> in a manner befitting its status.
+>>
+>> What part of the problem can't be solved by doing it properly using the
+>> device registration interfaces we have today ?
+>
+> Device registration isn't the problem.  The problem is supplying
+> machine-specific callbacks from the board support code to the
+> drivers.  When devices are sourced from a device tree, it is easy to
+> get data about the device out of the tree, but it is really hard to
+> get callback pointers.  To make it all work without this fiddling
+> about, the octeon serial_{in,out} implementation would need to be
+> rolled into of_serial.c (which FWIW, I have absolutely no problem
+> with).
+>
 
-It would be better if the #ifdef went around the entire sdhci_dt_ids
-table including the MODULE_DEVICE_TABLE registration.
+The only problem I have with that is that it ends up moving chip 
+specific erratum workarounds into drivers/tty/serial instead of 
+arch/mips/cavium-octeon.
 
-g.
+I will think about this more.
+
+David Daney
