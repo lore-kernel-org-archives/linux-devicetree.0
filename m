@@ -1,63 +1,60 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
- registration.
-Date: Thu, 17 Mar 2011 14:31:54 -0600
-Message-ID: <20110317203154.GH12824@angua.secretlab.ca>
-References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
- <1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
- <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
- <20110317182510.GN9597@angua.secretlab.ca>
- <4D82560B.4090800@caviumnetworks.com>
- <20110317184723.GQ9597@angua.secretlab.ca>
- <20110317192441.69c699b1@lxorguk.ukuu.org.uk>
- <20110317193149.GD12824@angua.secretlab.ca>
- <4D826B52.3060304@caviumnetworks.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 5/7] mmc: support sdhci-esdhc-imx as an OF device
+Date: Thu, 17 Mar 2011 15:42:07 -0500
+Message-ID: <4D82721F.5060907@gmail.com>
+References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>	<1300112759-3495-6-git-send-email-shawn.guo@linaro.org>	<20110315195926.GB20845@angua.secretlab.ca>	<20110316143915.GE11658@S2100-06.ap.freescale.net> <20110317202238.GF12824@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4D826B52.3060304@caviumnetworks.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20110317202238.GF12824@angua.secretlab.ca>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Shawn Guo <shawn.guo@freescale.com>, nicolas.pitre@linaro.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 01:13:06PM -0700, David Daney wrote:
-> On 03/17/2011 12:31 PM, Grant Likely wrote:
-> >On Thu, Mar 17, 2011 at 07:24:41PM +0000, Alan Cox wrote:
-> >>>>If we did that, serial8250_probe() would automatically do the right thing.
-> >>>
-> >>>Take a look at the way arch/powerpc/platforms/512x/pdm360ng.c uses a
-> >>>notifier for amending a platform_device with additional data..
-> >>
-> >>I tend to view arch specific embedded code as rather like very dubious
-> >>parties. What goes on in other peoples' house out of sight is none of my
-> >>business.
-> >>
-> >>The 8250 however is core code so it should keep its clothers on and behave
-> >>in a manner befitting its status.
-> >>
-> >>What part of the problem can't be solved by doing it properly using the
-> >>device registration interfaces we have today ?
-> >
-> >Device registration isn't the problem.  The problem is supplying
-> >machine-specific callbacks from the board support code to the
-> >drivers.  When devices are sourced from a device tree, it is easy to
-> >get data about the device out of the tree, but it is really hard to
-> >get callback pointers.  To make it all work without this fiddling
-> >about, the octeon serial_{in,out} implementation would need to be
-> >rolled into of_serial.c (which FWIW, I have absolutely no problem
-> >with).
-> >
-> 
-> The only problem I have with that is that it ends up moving chip
-> specific erratum workarounds into drivers/tty/serial instead of
-> arch/mips/cavium-octeon.
-> 
-> I will think about this more.
+On 03/17/2011 03:22 PM, Grant Likely wrote:
+> [cc'ing linux-mmc to continue this discussion]
+>
+> On Wed, Mar 16, 2011 at 10:39:16PM +0800, Shawn Guo wrote:
+>> On Tue, Mar 15, 2011 at 01:59:26PM -0600, Grant Likely wrote:
+>>> On Mon, Mar 14, 2011 at 10:25:57PM +0800, Shawn Guo wrote:
+>>>> Signed-off-by: Shawn Guo<shawn.guo@linaro.org>
+>>>
+>>> dt support can be added directly to sdchi-pltfm.c drivers now.  There
+>>> is no longer any need to use sdhci-of-core.c any more.  For an
+>>> example, see the patch titled "of/tegra: add sdhci device tree
+>>> handling" in my devicetree/test branch.
+>>>
+>> I mentioned this a little bit in the cover letter of the patch set
+>> as below.
+>>
+>> "This patch set is to support sdhci-esdhc-imx as an OF device.  As
+>> there is already powerpc based esdhc OF support, it chose to add OF
+>> support for imx esdhc driver in a different way from what sdhci-tegra
+>> did."
+>
+> I should read your descriptions more carefully.  :-)
+>
+>> The tegra approach you made was one of the two options I had, and I
+>> happened to love the another more, as it consolidates the eSDHC OF
+>> driver for Freescale MPCxxx and i.MX family.
+>
+> Heh, I don't dispute the value of merging code.  However, with this
+> approach it means that DT and non-DT imx platforms will be using
+> different drivers for the same device.  Given the choices, I'd
+> rather see the imx driver used in both DT and non-DT situations
+> instead of sharing code with the powerpc version.  I've learnt the
+> hard way that it is just too painful having two drivers for the same
+> hardware; particularly when the only difference is the method used to
+> probe them.
+>
+> Actually, what I'd *really* rather see is the powerpc code migrated
+> over to sdhci_pltfm.c, and then have the imx compatible value added to
+> it.  I'll make sure to get some help from the Freescale powerpc folks
+> to test any patch you produce to that end.
 
-arch/mips/cavium-octeon/serial.c appears to be void of any
-chip-specific errata at the moment.  :-)
+Based on past experience, there will be differences between imx and ppc 
+h/w even though it is the "same" block.
 
-g.
-
+Rob
