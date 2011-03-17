@@ -1,57 +1,43 @@
-From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
-	registration.
-Date: Thu, 17 Mar 2011 23:48:14 +0000
-Message-ID: <20110317234814.421f1aa4@lxorguk.ukuu.org.uk>
-References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
-	<1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
-	<20110317121849.49d7c425@lxorguk.ukuu.org.uk>
-	<20110317182510.GN9597@angua.secretlab.ca>
-	<4D82560B.4090800@caviumnetworks.com>
-	<20110317184723.GQ9597@angua.secretlab.ca>
-	<20110317192441.69c699b1@lxorguk.ukuu.org.uk>
-	<20110317193149.GD12824@angua.secretlab.ca>
+From: Greg KH <greg@kroah.com>
+Subject: Re: RFC: Platform data for onboard USB assets
+Date: Thu, 17 Mar 2011 16:25:03 -0700
+Message-ID: <20110317232503.GA14561@kroah.com>
+References: <20110311165642.GA9996@kroah.com>
+ <20110317214042.GQ31411@opensource.wolfsonmicro.com>
+ <20110317214736.GA29014@kroah.com>
+ <201103172333.01474.arnd@arndb.de>
+ <20110317225328.GB31581@kroah.com>
+ <4D8296D1.9060106@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110317193149.GD12824-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4D8296D1.9060106@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.green@linaro.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Linux USB list <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> Device registration isn't the problem.  The problem is supplying
-> machine-specific callbacks from the board support code to the
-> drivers.  When devices are sourced from a device tree, it is easy to
-> get data about the device out of the tree, but it is really hard to
-> get callback pointers.  To make it all work without this fiddling
-> about, the octeon serial_{in,out} implementation would need to be
-> rolled into of_serial.c (which FWIW, I have absolutely no problem
-> with).
+On Thu, Mar 17, 2011 at 11:18:41PM +0000, Andy Green wrote:
+> On 03/17/2011 10:53 PM, Somebody in the thread at some point said:
+> 
+> >>Not tested!
+> >>
+> >>Signed-off-by: Arnd Bergmann<arnd.bergmann@linaro.org>
+> >
+> ><snip>
+> >
+> >Very nice.
+> >
+> >Andy and Mark, would this patch work for you?
+> 
+> You do realize this untested patch depends on 13 year old vapour
+> definition of general usb device tagging in Device Tree that does
+> not exist yet?
 
-Disagree - the arch code needs to register I/O method descriptions with
-the of_serial code they don't neccessarily need to be in it.
+As you get to create your own device tree for your board, it will then
+exist, right?
 
-Ie you'd have something like
+thanks,
 
-	of_serial8250_register_ops("dt-op-type-name-blah", &ops);
-
-in the early boot code, and the ops can be in the arch, providing the ops
-has a module owner field the rest can even work modular. Sure the stuff
-should be able to describe standard forms directly without extra methods
-being registered but for the special stuff I think that is the right
-approach
-
-Funnily enough I'm in the middle of trying to rip the rm9k, au and other
-crap out of 8250.c by doing this for the UPIO_xxx ids and once you have
-an ops struct you can also then go and boot out the resource claim crap
-and package it all nicely.
+greg k-h
