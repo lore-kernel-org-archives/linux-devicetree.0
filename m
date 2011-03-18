@@ -1,89 +1,264 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V5 2/4] arm/dt: add very basic dts file for babbage board
-Date: Fri, 18 Mar 2011 10:02:24 -0600
-Message-ID: <20110318160224.GC22790@angua.secretlab.ca>
-References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
-	<1300290701-9433-3-git-send-email-jason.hui@linaro.org>
-	<20110317164238.GC9597@angua.secretlab.ca>
-	<20110318014917.GB26951@S2100-06.ap.freescale.net>
-	<20110318054333.GH18545@angua.secretlab.ca>
-	<20110318075431.GD26951@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 3/5] arm/dt: mx51: dynamically add gpt and uart related
+	clocks per dt nodes
+Date: Sat, 19 Mar 2011 00:35:39 +0800
+Message-ID: <20110318163538.GE26951@S2100-06.ap.freescale.net>
+References: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
+	<1299514932-13558-4-git-send-email-shawn.guo@linaro.org>
+	<20110315073731.GG23050@angua.secretlab.ca>
+	<20110316120455.GA11658@S2100-06.ap.freescale.net>
+	<20110317204748.GJ12824@angua.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110318075431.GD26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20110317204748.GJ12824-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2011 at 03:54:32PM +0800, Shawn Guo wrote:
-> On Thu, Mar 17, 2011 at 11:43:34PM -0600, Grant Likely wrote:
-> > On Fri, Mar 18, 2011 at 09:49:17AM +0800, Shawn Guo wrote:
-> > > On Thu, Mar 17, 2011 at 10:42:38AM -0600, Grant Likely wrote:
-> > > > On Wed, Mar 16, 2011 at 11:51:39PM +0800, Jason Liu wrote:
-> > > [...]
-> > > > > +	aips@83f00000 {
-> > > > > +		#address-cells = <1>;
-> > > > > +		#size-cells = <1>;
-> > > > > +		compatible = "simple-bus";
-> > > > > +		ranges = <0x0 0x83f00000 0x100000>;
-> > > > > +
-> > > > > +		fec@ec000 {
-> > > > > +			compatible = "fsl,imx51-fec";
-> > > > > +			reg = <0xec000 0x1000>;
-> > > > > +			interrupts = <0x57>;
-> > > > > +			fec_clk-clock = <&fec_clk>, "fec";
+On Thu, Mar 17, 2011 at 02:47:49PM -0600, Grant Likely wrote:
+> On Wed, Mar 16, 2011 at 08:04:56PM +0800, Shawn Guo wrote:
+> > On Tue, Mar 15, 2011 at 01:37:31AM -0600, Grant Likely wrote:
+> > > On Tue, Mar 08, 2011 at 12:22:10AM +0800, Shawn Guo wrote:
+> > > > This patch is to change the static clock creating and registering to
+> > > > the dynamic way, which scans dt clock nodes, associate clk with
+> > > > device_node, and then add them to clkdev accordingly.
 > > > > 
-> > > > Unfortunately we're leaking Linux implementation details here by
-> > > > needing to use the name "fec_clk".  This will require some more
-> > > > thought on the best way to handle (but I'm not asking you to change
-> > > > anything yet).
+> > > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > ---
+> > > >  arch/arm/mach-mx5/clock-mx51-mx53.c |  436 +++++++++++++++++++++++++++++++++--
+> > > >  1 files changed, 422 insertions(+), 14 deletions(-)
 > > > > 
-> > > This constraint comes from function of_clk_get in drivers/of/clock.c:
+> > > > diff --git a/arch/arm/mach-mx5/clock-mx51-mx53.c b/arch/arm/mach-mx5/clock-mx51-mx53.c
+> > > > index dedb7f9..1940171 100644
+> > > > --- a/arch/arm/mach-mx5/clock-mx51-mx53.c
+> > > > +++ b/arch/arm/mach-mx5/clock-mx51-mx53.c
+> > > > @@ -135,6 +135,9 @@ static inline u32 _get_mux(struct clk *parent, struct clk *m0,
+> > > >  
+> > > >  static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
+> > > >  {
+> > > > +#ifdef CONFIG_OF
+> > > > +	return pll->pll_base;
+> > > > +#else
+> > > >  	if (pll == &pll1_main_clk)
+> > > >  		return MX51_DPLL1_BASE;
+> > > >  	else if (pll == &pll2_sw_clk)
+> > > > @@ -145,6 +148,7 @@ static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
+> > > >  		BUG();
+> > > >  
+> > > >  	return NULL;
+> > > > +#endif
+> > > >  }
+> > > >  
+> > > >  static inline void __iomem *_mx53_get_pll_base(struct clk *pll)
+> > > > @@ -1439,33 +1443,437 @@ int __init mx53_clocks_init(unsigned long ckil, unsigned long osc,
+> > > >  	return 0;
+> > > >  }
+> > > >  
+> > > > +/*
+> > > > + * Dynamically create and register clks per dt nodes
+> > > > + */
+> > > >  #ifdef CONFIG_OF
+> > > > -static struct clk *mx5_dt_clk_get(struct device_node *np,
+> > > > -					const char *output_id, void *data)
+> > > > +
+> > > > +#define ALLOC_CLK_LOOKUP()						\
+> > > > +	struct clk_lookup *cl;						\
+> > > > +	struct clk *clk;						\
+> > > > +	int ret;							\
+> > > > +									\
+> > > > +	do {								\
+> > > > +		cl = kzalloc(sizeof(*cl) + sizeof(*clk), GFP_KERNEL);	\
+> > > > +		if (!cl)						\
+> > > > +			return -ENOMEM;					\
+> > > > +		clk = (struct clk *) (cl + 1);				\
+> > > > +									\
+> > > > +		clk->parent = mx5_get_source_clk(node);			\
+> > > > +		clk->secondary = mx5_get_source_clk(node);		\
+> > > > +	} while (0)
+> > > > +
+> > > > +#define ADD_CLK_LOOKUP()						\
+> > > > +	do {								\
+> > > > +		node->data = clk;					\
+> > > > +		cl->dev_id = of_get_property(node,			\
+> > > > +				"clock-outputs", NULL);			\
+> > > > +		cl->con_id = of_get_property(node,			\
+> > > > +				"clock-alias", NULL);			\
+> > > > +		if (!cl->dev_id && !cl->con_id) {			\
+> > > > +			ret = -EINVAL;					\
+> > > > +			goto out_kfree;					\
+> > > > +		}							\
+> > > > +		cl->clk = clk;						\
+> > > > +		clkdev_add(cl);						\
+> > > > +									\
+> > > > +		return 0;						\
+> > > > +									\
+> > > > +	out_kfree:							\
+> > > > +		kfree(cl);						\
+> > > > +		return ret;						\
+> > > > +	} while (0)
 > > > 
-> > > struct clk *of_clk_get(struct device *dev, const char *id)
-> > > {
-> > > 	[...]
-> > >         dev_dbg(dev, "Looking up %s-clock from device tree\n", id);
+> > > Yikes!  Doing this as a macro will be a nightmare for debugging.
+> > > This needs refactoring into functions.
 > > > 
-> > >         snprintf(prop_name, 32, "%s-clock", id ? id : "bus");
-> > >         prop = of_get_property(dev->of_node, prop_name, &sz);
-> > > 	[...]
-> > > }
+> > > > +
+> > > > +static unsigned long get_fixed_clk_rate(struct clk *clk)
+> > > >  {
+> > > > -	return data;
+> > > > +	return clk->rate;
+> > > >  }
+> > > >  
+> > > > -static __init void mx5_dt_scan_clks(void)
+> > > > +static __init int mx5_scan_fixed_clks(void)
+> > > >  {
+> > > >  	struct device_node *node;
+> > > > +	struct clk_lookup *cl;
+> > > >  	struct clk *clk;
+> > > > -	const char *id;
+> > > > -	int rc;
+> > > > +	const __be32 *rate;
+> > > > +	int ret = 0;
+> > > >  
+> > > > -	for_each_compatible_node(node, NULL, "clock") {
+> > > > -		id = of_get_property(node, "clock-outputs", NULL);
+> > > > -		if (!id)
+> > > > +	for_each_compatible_node(node, NULL, "fixed-clock") {
+> > > > +		cl = kzalloc(sizeof(*cl) + sizeof(*clk), GFP_KERNEL);
+> > > > +		if (!cl) {
+> > > > +			ret = -ENOMEM;
+> > > > +			break;
+> > > > +		}
+> > > > +		clk = (struct clk *) (cl + 1);
+> > > > +
+> > > > +		rate = of_get_property(node, "clock-frequency", NULL);
+> > > > +		if (!rate) {
+> > > > +			kfree(cl);
+> > > >  			continue;
+> > > > +		}
+> > > > +		clk->rate = be32_to_cpu(*rate);
+> > > > +		clk->get_rate = get_fixed_clk_rate;
+> > > > +
+> > > > +		node->data = clk;
+> > > >  
+> > > > -		clk = clk_get_sys(id, NULL);
+> > > > -		if (IS_ERR(clk))
+> > > > +		cl->dev_id = of_get_property(node, "clock-outputs", NULL);
+> > > > +		cl->con_id = of_get_property(node, "clock-alias", NULL);
 > > > 
-> > > The 'id' here is clk_lookup->con_id.  If we choose to use some fixed
-> > > prop name here, the name leaking Linux implementation like 'fec_clk'
-> > > will not need to be there.
+> > > As discussed briefly earlier, clock-alias looks like it is encoding
+> > > Linux-specific implementation details into the device tree, and it
+> > > shouldn't be necessary when explicit links to clock providers are
+> > > supplied in the device tree.
 > > > 
-> > > What about fixing the name as 'bus-clock' used by the current
-> > > implementation, or 'module-clock', or anything you can think of
-> > > better?
+> > > > +		if (!cl->dev_id && !cl->con_id) {
+> > > > +			kfree(cl);
+> > > >  			continue;
+> > > > +		}
+> > > > +		cl->clk = clk;
+> > > > +		clkdev_add(cl);
+> > > > +	}
+> > > > +
+> > > > +	return ret;
+> > > > +}
+> > > > +
+> > > > +static struct clk *mx5_prop_name_to_clk(struct device_node *node,
+> > > > +		const char *prop_name)
+> > > > +{
+> > > > +	struct device_node *provnode;
+> > > > +	struct clk *clk;
+> > > > +	const void *prop;
+> > > > +	u32 provhandle;
+> > > > +
+> > > > +	prop = of_get_property(node, prop_name, NULL);
+> > > > +	if (!prop)
+> > > > +		return NULL;
+> > > > +	provhandle = be32_to_cpup(prop);
+> > > > +
+> > > > +	provnode = of_find_node_by_phandle(provhandle);
+> > > > +	if (!provnode)
+> > > > +		return NULL;
+> > > > +
+> > > > +	clk = provnode->data;
+> > > > +
+> > > > +	of_node_put(provnode);
+> > > > +
+> > > > +	return clk;
+> > > > +}
+> > > > +
+> > > > +static inline struct clk *mx5_get_source_clk(struct device_node *node)
+> > > > +{
+> > > > +	return mx5_prop_name_to_clk(node, "clock-source");
+> > > > +}
+> > > > +
+> > > > +static inline struct clk *mx5_get_depend_clk(struct device_node *node)
+> > > > +{
+> > > > +	return mx5_prop_name_to_clk(node, "clock-depend");
+> > > > +}
+> > > 
+> > > Ditto here.  'clock-depend' seems to be Linux specifc.  I need to look
+> > > at the usage model for these properties.
+> > > 
+> > This is not Linux but hardware specific.  Let's look at the eSDHC1
+> > example below.
 > > 
-> > Yeah, I though about that, but I'm being very careful about hard
-> > coding anything in the core DT code because every platform seems to
-> > want something different here, or want a different set of clocks.  I
-> > don't have a good solution for this yet.
+> >                 esdhc1_clk: esdhc@0 {
+> >                         compatible = "fsl,mxc-clock";
+> >                         reg = <0>;
+> >                         clock-outputs = "sdhci-esdhc-imx.0";
+> >                         clock-source = <&pll2_sw_clk>;
+> >                         clock-depend = <&esdhc1_ipg_clk>;
+> >                 };
 > > 
-> We are not hard coding anything but a property name here.  We are hard
-> coding property name everywhere in dt code, aren't we?
+> > 
+> > We have esdhc1_clk added to clkdev standing for the clock for hardware
+> > block eSDHC1.  This clock is actually the serial clock of eSDHC1,
+> > while eSDHC1 internal working clock esdhc1_ipg_clk has also to be on
+> > to get the block functional.
+> 
+> Actually, part of what I think is throwing me off here is that this
+> node is only using half the clock binding.  A single node can be both
+> a clock provider and a clock consumer, which will often be the case
+> for clock controllers like this.  So in this case, it is using the
+> correct "clock-outputs" property to declare the clocks that it
+> provides, but it isn't using the *-clock binding to reference the
+> clocks that it needs.  This really should be something like:
+> 
+>         esdhc1_clk: esdhc@0 {
+>                 compatible = "fsl,mxc-clock";
+>                 reg = <0>;
+>                 clock-outputs = "sdhci-esdhc-imx.0";
+>                 src-clock = <&pll2_sw_clk>, "sw-clk";
+>                 ipg-clock = <&esdhc1_ipg_clk>, "ipg-clk";
 
-In this case, each platform seems to have a different naming
-conventions for the set of clocks, and a different number of clocks.
-I'm not willing to hard code the translations until I've got a better
-understanding of the different needs between platforms.
+The name 'ipg-clock' is too specific to be a property naming which
+should be generic.  So I would have something like:
 
-What I might do is allow platform code to supply the core code with a
-clock name translation table which might solve the problem nicely.
+                  src-clock = <&pll2_sw_clk>, "sw-clk";
+                  dep-clock = <&esdhc1_ipg_clk>, "ipg-clk";
 
-g.
+>         };
+> 
+> Also remember that a single clock node can provide multiple clock
+> outputs.  I don't know if this is a factor for imx51, but if it is
+
+I do not see this is a factor for imx51 so far.
+
+-- 
+Regards,
+Shawn
+
+> then you should layout the clock nodes to replicate the actual clock
+> hardware topology in the hardware (as opposed to the software layout
+> that Linux is currently using).
+> 
