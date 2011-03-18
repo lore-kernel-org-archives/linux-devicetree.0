@@ -1,18 +1,16 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 3/7] mmc: make the reference to sdhci_tegra_dt_pdata
-	conditional
-Date: Fri, 18 Mar 2011 09:22:03 +0800
-Message-ID: <20110318012202.GA26951@S2100-06.ap.freescale.net>
-References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
-	<1300112759-3495-4-git-send-email-shawn.guo@linaro.org>
-	<20110315075859.GL23050@angua.secretlab.ca>
-	<AANLkTi=umf9nDpExLEBgJEMgUP-CJUUEbAQrQfdBw7Fd@mail.gmail.com>
+Subject: Re: [PATCH V5 2/4] arm/dt: add very basic dts file for babbage board
+Date: Fri, 18 Mar 2011 09:49:17 +0800
+Message-ID: <20110318014917.GB26951@S2100-06.ap.freescale.net>
+References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
+	<1300290701-9433-3-git-send-email-jason.hui@linaro.org>
+	<20110317164238.GC9597@angua.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AANLkTi=umf9nDpExLEBgJEMgUP-CJUUEbAQrQfdBw7Fd-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110317164238.GC9597-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -23,58 +21,49 @@ List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
 Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 01:59:00PM -0600, Grant Likely wrote:
-> On Tue, Mar 15, 2011 at 1:58 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
- wrote:
-> > On Mon, Mar 14, 2011 at 10:25:55PM +0800, Shawn Guo wrote:
-> >> Wrap tegra dt_id with CONFIG_MMC_SDHCI_TEGRA to make the reference to
-> >> sdhci_tegra_dt_pdata conditional, otherwise it will stop build for
-> >> other mmc driver when OF is enabled.
-> >>
-> >> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > Looks right to me.
-> =
+On Thu, Mar 17, 2011 at 10:42:38AM -0600, Grant Likely wrote:
+> On Wed, Mar 16, 2011 at 11:51:39PM +0800, Jason Liu wrote:
+[...]
+> > +	aips@83f00000 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "simple-bus";
+> > +		ranges = <0x0 0x83f00000 0x100000>;
+> > +
+> > +		fec@ec000 {
+> > +			compatible = "fsl,imx51-fec";
+> > +			reg = <0xec000 0x1000>;
+> > +			interrupts = <0x57>;
+> > +			fec_clk-clock = <&fec_clk>, "fec";
+> 
+> Unfortunately we're leaking Linux implementation details here by
+> needing to use the name "fec_clk".  This will require some more
+> thought on the best way to handle (but I'm not asking you to change
+> anything yet).
+> 
+This constraint comes from function of_clk_get in drivers/of/clock.c:
 
-> Actually...
-> =
+struct clk *of_clk_get(struct device *dev, const char *id)
+{
+	[...]
+        dev_dbg(dev, "Looking up %s-clock from device tree\n", id);
 
-> >
-> > g.
-> >
-> >> ---
-> >> =A0drivers/mmc/host/sdhci-pltfm.c | =A0 =A02 ++
-> >> =A01 files changed, 2 insertions(+), 0 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-p=
-ltfm.c
-> >> index ccc04ac..4125fbf 100644
-> >> --- a/drivers/mmc/host/sdhci-pltfm.c
-> >> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> >> @@ -52,7 +52,9 @@ static struct sdhci_ops sdhci_pltfm_ops =3D {
-> >> =A0#if defined(CONFIG_OF)
-> >> =A0#include <linux/of_device.h>
-> >> =A0static const struct of_device_id sdhci_dt_ids[] =3D {
-> >> +#ifdef CONFIG_MMC_SDHCI_TEGRA
-> >> =A0 =A0 =A0 { .compatible =3D "nvidia,tegra250-sdhci", .data =3D &sdhc=
-i_tegra_dt_pdata },
-> >> +#endif
-> >> =A0 =A0 =A0 { }
-> >> =A0};
-> >> =A0MODULE_DEVICE_TABLE(platform, sdhci_dt_ids);
-> =
+        snprintf(prop_name, 32, "%s-clock", id ? id : "bus");
+        prop = of_get_property(dev->of_node, prop_name, &sz);
+	[...]
+}
 
-> It would be better if the #ifdef went around the entire sdhci_dt_ids
-> table including the MODULE_DEVICE_TABLE registration.
-> =
+The 'id' here is clk_lookup->con_id.  If we choose to use some fixed
+prop name here, the name leaking Linux implementation like 'fec_clk'
+will not need to be there.
 
-You really want to go this?  In that case, all the references to
-sdhci_dt_ids will have to get around by the #ifdef.
+What about fixing the name as 'bus-clock' used by the current
+implementation, or 'module-clock', or anything you can think of
+better?
 
--- =
-
+-- 
 Regards,
 Shawn
