@@ -1,264 +1,90 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 3/5] arm/dt: mx51: dynamically add gpt and uart related
-	clocks per dt nodes
-Date: Sat, 19 Mar 2011 00:35:39 +0800
-Message-ID: <20110318163538.GE26951@S2100-06.ap.freescale.net>
-References: <1299514932-13558-1-git-send-email-shawn.guo@linaro.org>
-	<1299514932-13558-4-git-send-email-shawn.guo@linaro.org>
-	<20110315073731.GG23050@angua.secretlab.ca>
-	<20110316120455.GA11658@S2100-06.ap.freescale.net>
-	<20110317204748.GJ12824@angua.secretlab.ca>
+From: Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: RFC: Platform data for onboard USB assets
+Date: Fri, 18 Mar 2011 17:52:13 +0000
+Message-ID: <4D839BCD.6030202@linaro.org>
+References: <20110311165642.GA9996@kroah.com> <201103172333.01474.arnd@arndb.de> <4D82979B.2050003@linaro.org> <201103181600.09877.arnd@arndb.de>
+Reply-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110317204748.GJ12824-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201103181600.09877.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 02:47:49PM -0600, Grant Likely wrote:
-> On Wed, Mar 16, 2011 at 08:04:56PM +0800, Shawn Guo wrote:
-> > On Tue, Mar 15, 2011 at 01:37:31AM -0600, Grant Likely wrote:
-> > > On Tue, Mar 08, 2011 at 12:22:10AM +0800, Shawn Guo wrote:
-> > > > This patch is to change the static clock creating and registering to
-> > > > the dynamic way, which scans dt clock nodes, associate clk with
-> > > > device_node, and then add them to clkdev accordingly.
-> > > > 
-> > > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > ---
-> > > >  arch/arm/mach-mx5/clock-mx51-mx53.c |  436 +++++++++++++++++++++++++++++++++--
-> > > >  1 files changed, 422 insertions(+), 14 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/mach-mx5/clock-mx51-mx53.c b/arch/arm/mach-mx5/clock-mx51-mx53.c
-> > > > index dedb7f9..1940171 100644
-> > > > --- a/arch/arm/mach-mx5/clock-mx51-mx53.c
-> > > > +++ b/arch/arm/mach-mx5/clock-mx51-mx53.c
-> > > > @@ -135,6 +135,9 @@ static inline u32 _get_mux(struct clk *parent, struct clk *m0,
-> > > >  
-> > > >  static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
-> > > >  {
-> > > > +#ifdef CONFIG_OF
-> > > > +	return pll->pll_base;
-> > > > +#else
-> > > >  	if (pll == &pll1_main_clk)
-> > > >  		return MX51_DPLL1_BASE;
-> > > >  	else if (pll == &pll2_sw_clk)
-> > > > @@ -145,6 +148,7 @@ static inline void __iomem *_mx51_get_pll_base(struct clk *pll)
-> > > >  		BUG();
-> > > >  
-> > > >  	return NULL;
-> > > > +#endif
-> > > >  }
-> > > >  
-> > > >  static inline void __iomem *_mx53_get_pll_base(struct clk *pll)
-> > > > @@ -1439,33 +1443,437 @@ int __init mx53_clocks_init(unsigned long ckil, unsigned long osc,
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +/*
-> > > > + * Dynamically create and register clks per dt nodes
-> > > > + */
-> > > >  #ifdef CONFIG_OF
-> > > > -static struct clk *mx5_dt_clk_get(struct device_node *np,
-> > > > -					const char *output_id, void *data)
-> > > > +
-> > > > +#define ALLOC_CLK_LOOKUP()						\
-> > > > +	struct clk_lookup *cl;						\
-> > > > +	struct clk *clk;						\
-> > > > +	int ret;							\
-> > > > +									\
-> > > > +	do {								\
-> > > > +		cl = kzalloc(sizeof(*cl) + sizeof(*clk), GFP_KERNEL);	\
-> > > > +		if (!cl)						\
-> > > > +			return -ENOMEM;					\
-> > > > +		clk = (struct clk *) (cl + 1);				\
-> > > > +									\
-> > > > +		clk->parent = mx5_get_source_clk(node);			\
-> > > > +		clk->secondary = mx5_get_source_clk(node);		\
-> > > > +	} while (0)
-> > > > +
-> > > > +#define ADD_CLK_LOOKUP()						\
-> > > > +	do {								\
-> > > > +		node->data = clk;					\
-> > > > +		cl->dev_id = of_get_property(node,			\
-> > > > +				"clock-outputs", NULL);			\
-> > > > +		cl->con_id = of_get_property(node,			\
-> > > > +				"clock-alias", NULL);			\
-> > > > +		if (!cl->dev_id && !cl->con_id) {			\
-> > > > +			ret = -EINVAL;					\
-> > > > +			goto out_kfree;					\
-> > > > +		}							\
-> > > > +		cl->clk = clk;						\
-> > > > +		clkdev_add(cl);						\
-> > > > +									\
-> > > > +		return 0;						\
-> > > > +									\
-> > > > +	out_kfree:							\
-> > > > +		kfree(cl);						\
-> > > > +		return ret;						\
-> > > > +	} while (0)
-> > > 
-> > > Yikes!  Doing this as a macro will be a nightmare for debugging.
-> > > This needs refactoring into functions.
-> > > 
-> > > > +
-> > > > +static unsigned long get_fixed_clk_rate(struct clk *clk)
-> > > >  {
-> > > > -	return data;
-> > > > +	return clk->rate;
-> > > >  }
-> > > >  
-> > > > -static __init void mx5_dt_scan_clks(void)
-> > > > +static __init int mx5_scan_fixed_clks(void)
-> > > >  {
-> > > >  	struct device_node *node;
-> > > > +	struct clk_lookup *cl;
-> > > >  	struct clk *clk;
-> > > > -	const char *id;
-> > > > -	int rc;
-> > > > +	const __be32 *rate;
-> > > > +	int ret = 0;
-> > > >  
-> > > > -	for_each_compatible_node(node, NULL, "clock") {
-> > > > -		id = of_get_property(node, "clock-outputs", NULL);
-> > > > -		if (!id)
-> > > > +	for_each_compatible_node(node, NULL, "fixed-clock") {
-> > > > +		cl = kzalloc(sizeof(*cl) + sizeof(*clk), GFP_KERNEL);
-> > > > +		if (!cl) {
-> > > > +			ret = -ENOMEM;
-> > > > +			break;
-> > > > +		}
-> > > > +		clk = (struct clk *) (cl + 1);
-> > > > +
-> > > > +		rate = of_get_property(node, "clock-frequency", NULL);
-> > > > +		if (!rate) {
-> > > > +			kfree(cl);
-> > > >  			continue;
-> > > > +		}
-> > > > +		clk->rate = be32_to_cpu(*rate);
-> > > > +		clk->get_rate = get_fixed_clk_rate;
-> > > > +
-> > > > +		node->data = clk;
-> > > >  
-> > > > -		clk = clk_get_sys(id, NULL);
-> > > > -		if (IS_ERR(clk))
-> > > > +		cl->dev_id = of_get_property(node, "clock-outputs", NULL);
-> > > > +		cl->con_id = of_get_property(node, "clock-alias", NULL);
-> > > 
-> > > As discussed briefly earlier, clock-alias looks like it is encoding
-> > > Linux-specific implementation details into the device tree, and it
-> > > shouldn't be necessary when explicit links to clock providers are
-> > > supplied in the device tree.
-> > > 
-> > > > +		if (!cl->dev_id && !cl->con_id) {
-> > > > +			kfree(cl);
-> > > >  			continue;
-> > > > +		}
-> > > > +		cl->clk = clk;
-> > > > +		clkdev_add(cl);
-> > > > +	}
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static struct clk *mx5_prop_name_to_clk(struct device_node *node,
-> > > > +		const char *prop_name)
-> > > > +{
-> > > > +	struct device_node *provnode;
-> > > > +	struct clk *clk;
-> > > > +	const void *prop;
-> > > > +	u32 provhandle;
-> > > > +
-> > > > +	prop = of_get_property(node, prop_name, NULL);
-> > > > +	if (!prop)
-> > > > +		return NULL;
-> > > > +	provhandle = be32_to_cpup(prop);
-> > > > +
-> > > > +	provnode = of_find_node_by_phandle(provhandle);
-> > > > +	if (!provnode)
-> > > > +		return NULL;
-> > > > +
-> > > > +	clk = provnode->data;
-> > > > +
-> > > > +	of_node_put(provnode);
-> > > > +
-> > > > +	return clk;
-> > > > +}
-> > > > +
-> > > > +static inline struct clk *mx5_get_source_clk(struct device_node *node)
-> > > > +{
-> > > > +	return mx5_prop_name_to_clk(node, "clock-source");
-> > > > +}
-> > > > +
-> > > > +static inline struct clk *mx5_get_depend_clk(struct device_node *node)
-> > > > +{
-> > > > +	return mx5_prop_name_to_clk(node, "clock-depend");
-> > > > +}
-> > > 
-> > > Ditto here.  'clock-depend' seems to be Linux specifc.  I need to look
-> > > at the usage model for these properties.
-> > > 
-> > This is not Linux but hardware specific.  Let's look at the eSDHC1
-> > example below.
-> > 
-> >                 esdhc1_clk: esdhc@0 {
-> >                         compatible = "fsl,mxc-clock";
-> >                         reg = <0>;
-> >                         clock-outputs = "sdhci-esdhc-imx.0";
-> >                         clock-source = <&pll2_sw_clk>;
-> >                         clock-depend = <&esdhc1_ipg_clk>;
-> >                 };
-> > 
-> > 
-> > We have esdhc1_clk added to clkdev standing for the clock for hardware
-> > block eSDHC1.  This clock is actually the serial clock of eSDHC1,
-> > while eSDHC1 internal working clock esdhc1_ipg_clk has also to be on
-> > to get the block functional.
-> 
-> Actually, part of what I think is throwing me off here is that this
-> node is only using half the clock binding.  A single node can be both
-> a clock provider and a clock consumer, which will often be the case
-> for clock controllers like this.  So in this case, it is using the
-> correct "clock-outputs" property to declare the clocks that it
-> provides, but it isn't using the *-clock binding to reference the
-> clocks that it needs.  This really should be something like:
-> 
->         esdhc1_clk: esdhc@0 {
->                 compatible = "fsl,mxc-clock";
->                 reg = <0>;
->                 clock-outputs = "sdhci-esdhc-imx.0";
->                 src-clock = <&pll2_sw_clk>, "sw-clk";
->                 ipg-clock = <&esdhc1_ipg_clk>, "ipg-clk";
+On 03/18/2011 03:00 PM, Somebody in the thread at some point said:
 
-The name 'ipg-clock' is too specific to be a property naming which
-should be generic.  So I would have something like:
+Hi -
 
-                  src-clock = <&pll2_sw_clk>, "sw-clk";
-                  dep-clock = <&esdhc1_ipg_clk>, "ipg-clk";
+>> You changed your first opinion about tagging "dynamically probed
+>> devices" with what is effectively platform_data, cool.
+>
+> I still don't like the idea of attaching platform_data to more
+> devices, when we try to move people away from that in other
+> parts of the kernel, because of the known deficiencies.
 
->         };
-> 
-> Also remember that a single clock node can provide multiple clock
-> outputs.  I don't know if this is a factor for imx51, but if it is
+Whatever way you look at it, data delivered into the driver by Device 
+Tree is fundamentally the same action as delivering data into the driver 
+by platform_data.  Yes, you query by named element with device context, 
+but you end up with the same answer as if you dereference a 
+platform_data member.  There are no "known deficiencies" to 
+platform_data for this action either, at least, not known to me, I don't 
+think lack of typechecking on the pointer itself is an issue given the 
+accuracy it can be targeted to a soldered-on-the-board device.
 
-I do not see this is a factor for imx51 so far.
+> Passing a MAC address in a device tree property is a
+> well-established method that is used on many drivers, and
+> is portable across operating systems and architectures.
 
--- 
-Regards,
-Shawn
+If you're talking about Device Tree, that itself is not at all "well 
+established" let alone servicing drivers from it.  Like I say I don't 
+want to seem like I am down on it, but it is very new indeed let's face 
+it and few drivers are using it for functional configuration information 
+compared to vast numbers using platform_data.
 
-> then you should layout the clock nodes to replicate the actual clock
-> hardware topology in the hardware (as opposed to the software layout
-> that Linux is currently using).
-> 
+=====> If Device Tree APIs is mandated to implement functionality fixes 
+to drivers and platform_data is blocked for this, then we end up with 
+different, rotting functionality for platform_data basis and drivers 
+that remain broken on the many, many, platforms that don't have and will 
+never have Device Tree.  That does NOT sound like the right approach.
+
+I guess the grand plan is to eliminate platform_data by overwhelming it 
+with Device Tree refactoring.  But each driver has to be tested and each 
+board definition file changed... that is a huge, huge undertaking that 
+will not happen in any kind of medium and perhaps not long term either.
+
+So they will have to coexist for a very long while.  A policy of denying 
+fixes to platform_data users by enforcing introduction of Device Tree 
+APIs and making platform_data users out as troglodytes does not sound 
+workable.
+
+> We don't need to implement the entire binding. My point was that
+> if we implement a way to attach a device_node to a usb_device, we
+> should do it in a way that is compatible with that binding, rather
+> than coming up with a new way.
+
+That document is of no interest outside open firmware / Device Tree 
+implementation since it is specific to it, and there is no value to 
+reference it for a platform_data based solution.
+
+> My impression so far is that attaching a struct device_node to
+> static USB devices can be useful in general, but I wouldn't
+> go so far to suggest using this for dynamically probed devices.
+
+At least we agree there's no point to target pluggable devices with 
+either solution, in which case platform_data and Device Tree provide the 
+same end result, plus or minus extra query API.
+
+By the way I intend shortly to extend my patchset to cover Panda WLAN 
+case via probed MMC / SDIO device in the same way as USB.  So there will 
+then be a second use case for my async platform_data patchset via a 
+different subsystem.  Of course, maybe it just doubles the number of 
+beatings ^^
+
+-Andy
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
