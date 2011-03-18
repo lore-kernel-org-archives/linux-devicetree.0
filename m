@@ -1,47 +1,57 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V5 1/4] arm/dt: add basic mx51 device tree support
-Date: Thu, 17 Mar 2011 23:05:04 -0600
-Message-ID: <20110318050504.GC18545@angua.secretlab.ca>
-References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
-	<1300290701-9433-2-git-send-email-jason.hui@linaro.org>
-	<20110317163732.GB9597@angua.secretlab.ca>
-	<20110318021918.GC26951@S2100-06.ap.freescale.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
+ registration.
+Date: Thu, 17 Mar 2011 23:18:44 -0600
+Message-ID: <20110318051844.GF18545@angua.secretlab.ca>
+References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
+ <1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
+ <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
+ <20110317182510.GN9597@angua.secretlab.ca>
+ <4D82560B.4090800@caviumnetworks.com>
+ <20110317184723.GQ9597@angua.secretlab.ca>
+ <20110317192441.69c699b1@lxorguk.ukuu.org.uk>
+ <20110317193149.GD12824@angua.secretlab.ca>
+ <20110317234814.421f1aa4@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110318021918.GC26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20110317234814.421f1aa4@lxorguk.ukuu.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: David Daney <ddaney@caviumnetworks.com>, linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2011 at 10:19:19AM +0800, Shawn Guo wrote:
-> On Thu, Mar 17, 2011 at 10:37:32AM -0600, Grant Likely wrote:
-> > On Wed, Mar 16, 2011 at 11:51:38PM +0800, Jason Liu wrote:
-> > > Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  arch/arm/mach-mx5/Kconfig               |    8 ++++
-> > >  arch/arm/mach-mx5/Makefile              |    1 +
-> > >  arch/arm/mach-mx5/board-dt.c            |   64 +++++++++++++++++++++++++++++++
-> > >  arch/arm/mach-mx5/clock-dt.c            |   52 +++++++++++++++++++++++++
-> > >  arch/arm/plat-mxc/include/mach/common.h |    1 +
-> > >  5 files changed, 126 insertions(+), 0 deletions(-)
-> > 
-> > I've picked up this series into my devicetree/test branch.  I still
+On Thu, Mar 17, 2011 at 11:48:14PM +0000, Alan Cox wrote:
+> > Device registration isn't the problem.  The problem is supplying
+> > machine-specific callbacks from the board support code to the
+> > drivers.  When devices are sourced from a device tree, it is easy to
+> > get data about the device out of the tree, but it is really hard to
+> > get callback pointers.  To make it all work without this fiddling
+> > about, the octeon serial_{in,out} implementation would need to be
+> > rolled into of_serial.c (which FWIW, I have absolutely no problem
+> > with).
 > 
-> Have you done that yet?  I just checked and did not see it.  I'm
-> waiting for it to start the next spin of my patch sets.
+> Disagree - the arch code needs to register I/O method descriptions with
+> the of_serial code they don't neccessarily need to be in it.
+> 
+> Ie you'd have something like
+> 
+> 	of_serial8250_register_ops("dt-op-type-name-blah", &ops);
+> 
+> in the early boot code, and the ops can be in the arch, providing the ops
+> has a module owner field the rest can even work modular. Sure the stuff
+> should be able to describe standard forms directly without extra methods
+> being registered but for the special stuff I think that is the right
+> approach
 
-I just hadn't pushed it out.  I've done so now.  Sorry for the delay.
+Yeah, okay.  That's nice and clean.  I like it.
+
+> Funnily enough I'm in the middle of trying to rip the rm9k, au and other
+> crap out of 8250.c by doing this for the UPIO_xxx ids and once you have
+> an ops struct you can also then go and boot out the resource claim crap
+> and package it all nicely.
+
+:-)
 
 g.
