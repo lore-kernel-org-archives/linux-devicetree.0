@@ -1,82 +1,47 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] mmc: make the reference to sdhci_tegra_dt_pdata
-	conditional
-Date: Thu, 17 Mar 2011 22:58:59 -0600
-Message-ID: <20110318045859.GB18545@angua.secretlab.ca>
-References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
-	<1300112759-3495-4-git-send-email-shawn.guo@linaro.org>
-	<20110315075859.GL23050@angua.secretlab.ca>
-	<AANLkTi=umf9nDpExLEBgJEMgUP-CJUUEbAQrQfdBw7Fd@mail.gmail.com>
-	<20110318012202.GA26951@S2100-06.ap.freescale.net>
+Subject: Re: [PATCH V5 1/4] arm/dt: add basic mx51 device tree support
+Date: Thu, 17 Mar 2011 23:05:04 -0600
+Message-ID: <20110318050504.GC18545@angua.secretlab.ca>
+References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
+	<1300290701-9433-2-git-send-email-jason.hui@linaro.org>
+	<20110317163732.GB9597@angua.secretlab.ca>
+	<20110318021918.GC26951@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110318012202.GA26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+In-Reply-To: <20110318021918.GC26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2011 at 09:22:03AM +0800, Shawn Guo wrote:
-> On Thu, Mar 17, 2011 at 01:59:00PM -0600, Grant Likely wrote:
-> > On Tue, Mar 15, 2011 at 1:58 AM, Grant Likely <grant.likely@secretlab.c=
-a> wrote:
-> > > On Mon, Mar 14, 2011 at 10:25:55PM +0800, Shawn Guo wrote:
-> > >> Wrap tegra dt_id with CONFIG_MMC_SDHCI_TEGRA to make the reference to
-> > >> sdhci_tegra_dt_pdata conditional, otherwise it will stop build for
-> > >> other mmc driver when OF is enabled.
-> > >>
-> > >> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >
-> > > Looks right to me.
-> > =
+On Fri, Mar 18, 2011 at 10:19:19AM +0800, Shawn Guo wrote:
+> On Thu, Mar 17, 2011 at 10:37:32AM -0600, Grant Likely wrote:
+> > On Wed, Mar 16, 2011 at 11:51:38PM +0800, Jason Liu wrote:
+> > > Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  arch/arm/mach-mx5/Kconfig               |    8 ++++
+> > >  arch/arm/mach-mx5/Makefile              |    1 +
+> > >  arch/arm/mach-mx5/board-dt.c            |   64 +++++++++++++++++++++++++++++++
+> > >  arch/arm/mach-mx5/clock-dt.c            |   52 +++++++++++++++++++++++++
+> > >  arch/arm/plat-mxc/include/mach/common.h |    1 +
+> > >  5 files changed, 126 insertions(+), 0 deletions(-)
+> > 
+> > I've picked up this series into my devicetree/test branch.  I still
+> 
+> Have you done that yet?  I just checked and did not see it.  I'm
+> waiting for it to start the next spin of my patch sets.
 
-> > Actually...
-> > =
-
-> > >
-> > > g.
-> > >
-> > >> ---
-> > >> =A0drivers/mmc/host/sdhci-pltfm.c | =A0 =A02 ++
-> > >> =A01 files changed, 2 insertions(+), 0 deletions(-)
-> > >>
-> > >> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci=
--pltfm.c
-> > >> index ccc04ac..4125fbf 100644
-> > >> --- a/drivers/mmc/host/sdhci-pltfm.c
-> > >> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> > >> @@ -52,7 +52,9 @@ static struct sdhci_ops sdhci_pltfm_ops =3D {
-> > >> =A0#if defined(CONFIG_OF)
-> > >> =A0#include <linux/of_device.h>
-> > >> =A0static const struct of_device_id sdhci_dt_ids[] =3D {
-> > >> +#ifdef CONFIG_MMC_SDHCI_TEGRA
-> > >> =A0 =A0 =A0 { .compatible =3D "nvidia,tegra250-sdhci", .data =3D &sd=
-hci_tegra_dt_pdata },
-> > >> +#endif
-> > >> =A0 =A0 =A0 { }
-> > >> =A0};
-> > >> =A0MODULE_DEVICE_TABLE(platform, sdhci_dt_ids);
-> > =
-
-> > It would be better if the #ifdef went around the entire sdhci_dt_ids
-> > table including the MODULE_DEVICE_TABLE registration.
-> > =
-
-> You really want to go this?  In that case, all the references to
-> sdhci_dt_ids will have to get around by the #ifdef.
-
-Sorry, my mistake.  I wasn't reading the patch correctly when I looked
-at it again.  Your change is indeed correct.
+I just hadn't pushed it out.  I've done so now.  Sorry for the delay.
 
 g.
