@@ -1,57 +1,74 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 1/2] serial: 8250: Add a notifier chain for driver
- registration.
-Date: Thu, 17 Mar 2011 23:18:44 -0600
-Message-ID: <20110318051844.GF18545@angua.secretlab.ca>
-References: <1300325167-26433-1-git-send-email-ddaney@caviumnetworks.com>
- <1300325167-26433-2-git-send-email-ddaney@caviumnetworks.com>
- <20110317121849.49d7c425@lxorguk.ukuu.org.uk>
- <20110317182510.GN9597@angua.secretlab.ca>
- <4D82560B.4090800@caviumnetworks.com>
- <20110317184723.GQ9597@angua.secretlab.ca>
- <20110317192441.69c699b1@lxorguk.ukuu.org.uk>
- <20110317193149.GD12824@angua.secretlab.ca>
- <20110317234814.421f1aa4@lxorguk.ukuu.org.uk>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V5 2/4] arm/dt: add very basic dts file for babbage board
+Date: Thu, 17 Mar 2011 23:43:34 -0600
+Message-ID: <20110318054333.GH18545@angua.secretlab.ca>
+References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
+	<1300290701-9433-3-git-send-email-jason.hui@linaro.org>
+	<20110317164238.GC9597@angua.secretlab.ca>
+	<20110318014917.GB26951@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110317234814.421f1aa4@lxorguk.ukuu.org.uk>
-Sender: linux-serial-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: David Daney <ddaney@caviumnetworks.com>, linux-serial@vger.kernel.org, gregkh@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <20110318014917.GB26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 11:48:14PM +0000, Alan Cox wrote:
-> > Device registration isn't the problem.  The problem is supplying
-> > machine-specific callbacks from the board support code to the
-> > drivers.  When devices are sourced from a device tree, it is easy to
-> > get data about the device out of the tree, but it is really hard to
-> > get callback pointers.  To make it all work without this fiddling
-> > about, the octeon serial_{in,out} implementation would need to be
-> > rolled into of_serial.c (which FWIW, I have absolutely no problem
-> > with).
+On Fri, Mar 18, 2011 at 09:49:17AM +0800, Shawn Guo wrote:
+> On Thu, Mar 17, 2011 at 10:42:38AM -0600, Grant Likely wrote:
+> > On Wed, Mar 16, 2011 at 11:51:39PM +0800, Jason Liu wrote:
+> [...]
+> > > +	aips@83f00000 {
+> > > +		#address-cells = <1>;
+> > > +		#size-cells = <1>;
+> > > +		compatible = "simple-bus";
+> > > +		ranges = <0x0 0x83f00000 0x100000>;
+> > > +
+> > > +		fec@ec000 {
+> > > +			compatible = "fsl,imx51-fec";
+> > > +			reg = <0xec000 0x1000>;
+> > > +			interrupts = <0x57>;
+> > > +			fec_clk-clock = <&fec_clk>, "fec";
+> > 
+> > Unfortunately we're leaking Linux implementation details here by
+> > needing to use the name "fec_clk".  This will require some more
+> > thought on the best way to handle (but I'm not asking you to change
+> > anything yet).
+> > 
+> This constraint comes from function of_clk_get in drivers/of/clock.c:
 > 
-> Disagree - the arch code needs to register I/O method descriptions with
-> the of_serial code they don't neccessarily need to be in it.
+> struct clk *of_clk_get(struct device *dev, const char *id)
+> {
+> 	[...]
+>         dev_dbg(dev, "Looking up %s-clock from device tree\n", id);
 > 
-> Ie you'd have something like
+>         snprintf(prop_name, 32, "%s-clock", id ? id : "bus");
+>         prop = of_get_property(dev->of_node, prop_name, &sz);
+> 	[...]
+> }
 > 
-> 	of_serial8250_register_ops("dt-op-type-name-blah", &ops);
+> The 'id' here is clk_lookup->con_id.  If we choose to use some fixed
+> prop name here, the name leaking Linux implementation like 'fec_clk'
+> will not need to be there.
 > 
-> in the early boot code, and the ops can be in the arch, providing the ops
-> has a module owner field the rest can even work modular. Sure the stuff
-> should be able to describe standard forms directly without extra methods
-> being registered but for the special stuff I think that is the right
-> approach
+> What about fixing the name as 'bus-clock' used by the current
+> implementation, or 'module-clock', or anything you can think of
+> better?
 
-Yeah, okay.  That's nice and clean.  I like it.
-
-> Funnily enough I'm in the middle of trying to rip the rm9k, au and other
-> crap out of 8250.c by doing this for the UPIO_xxx ids and once you have
-> an ops struct you can also then go and boot out the resource claim crap
-> and package it all nicely.
-
-:-)
+Yeah, I though about that, but I'm being very careful about hard
+coding anything in the core DT code because every platform seems to
+want something different here, or want a different set of clocks.  I
+don't have a good solution for this yet.
 
 g.
