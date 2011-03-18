@@ -1,74 +1,39 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V5 2/4] arm/dt: add very basic dts file for babbage board
-Date: Thu, 17 Mar 2011 23:43:34 -0600
-Message-ID: <20110318054333.GH18545@angua.secretlab.ca>
-References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
-	<1300290701-9433-3-git-send-email-jason.hui@linaro.org>
-	<20110317164238.GC9597@angua.secretlab.ca>
-	<20110318014917.GB26951@S2100-06.ap.freescale.net>
+Subject: Re: [PATCH 0/4] switch DT creation to using of_attach_node (v2)
+Date: Thu, 17 Mar 2011 23:45:17 -0600
+Message-ID: <20110318054517.GI18545@angua.secretlab.ca>
+References: <1300408356-15253-1-git-send-email-dilinger@queued.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110318014917.GB26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <1300408356-15253-1-git-send-email-dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2011 at 09:49:17AM +0800, Shawn Guo wrote:
-> On Thu, Mar 17, 2011 at 10:42:38AM -0600, Grant Likely wrote:
-> > On Wed, Mar 16, 2011 at 11:51:39PM +0800, Jason Liu wrote:
-> [...]
-> > > +	aips@83f00000 {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +		compatible = "simple-bus";
-> > > +		ranges = <0x0 0x83f00000 0x100000>;
-> > > +
-> > > +		fec@ec000 {
-> > > +			compatible = "fsl,imx51-fec";
-> > > +			reg = <0xec000 0x1000>;
-> > > +			interrupts = <0x57>;
-> > > +			fec_clk-clock = <&fec_clk>, "fec";
-> > 
-> > Unfortunately we're leaking Linux implementation details here by
-> > needing to use the name "fec_clk".  This will require some more
-> > thought on the best way to handle (but I'm not asking you to change
-> > anything yet).
-> > 
-> This constraint comes from function of_clk_get in drivers/of/clock.c:
+On Thu, Mar 17, 2011 at 05:32:32PM -0700, Andres Salomon wrote:
+> This is attempt #2 to make OF core use of_attach_node for both promtree
+> and flattree building.  This reworks of_attach_node quite a bit to conform
+> with our expectations of how the DT should look in memory.
 > 
-> struct clk *of_clk_get(struct device *dev, const char *id)
-> {
-> 	[...]
->         dev_dbg(dev, "Looking up %s-clock from device tree\n", id);
-> 
->         snprintf(prop_name, 32, "%s-clock", id ? id : "bus");
->         prop = of_get_property(dev->of_node, prop_name, &sz);
-> 	[...]
-> }
-> 
-> The 'id' here is clk_lookup->con_id.  If we choose to use some fixed
-> prop name here, the name leaking Linux implementation like 'fec_clk'
-> will not need to be there.
-> 
-> What about fixing the name as 'bus-clock' used by the current
-> implementation, or 'module-clock', or anything you can think of
-> better?
+> It's different in many ways from the original patches, so it's worth
+> reviewing each in their entirety.
 
-Yeah, I though about that, but I'm being very careful about hard
-coding anything in the core DT code because every platform seems to
-want something different here, or want a different set of clocks.  I
-don't have a good solution for this yet.
+Thanks Andres,
+
+Ping me on this stuff after the merge window.  I don't have time to
+look at it now, but I'll do so right all the stuff for .39 is taken
+care of.
 
 g.
