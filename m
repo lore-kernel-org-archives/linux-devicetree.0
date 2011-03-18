@@ -1,57 +1,49 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/6] add full platform dt clock support for mx51 babbage
-Date: Sat, 19 Mar 2011 02:24:26 +0800
-Message-ID: <1300472672-13392-1-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH v2 2/6] arm/mxc: add clk member 'rate' to ease dt fixed-clock
+	support
+Date: Sat, 19 Mar 2011 02:24:28 +0800
+Message-ID: <1300472672-13392-3-git-send-email-shawn.guo@linaro.org>
+References: <1300472672-13392-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1300472672-13392-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set is to add full platform dt clock support for mx51
-babbage, based on Grant's devicetree/test tree.  All mx51 non-dt
-clocks in clock-mx51-mx53.c are translated to dt ones.
+This new member is not necessary to support dt clock, but it can
+simplified the code a lot in terms of those fixed rate clocks.
 
-Regards,
-Shawn
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/plat-mxc/include/mach/clock.h |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-Changes since v1:
- * unify the references to clocks that could be created statically
-   and dynamically, so that we do not have to duplicate functions
- * use for_each_matching_node suggested by Grant to match clock
-   creating functions
- * reserve 'data' of device_node structure and use new one 'clk'
- * change macro ALLOC_CLK_LOOKUP and ADD_CLK_LOOKUP to functions
- * fix codes that will break existing board support
- * use clock provider 'src-clock' and 'dep-clock'
- * fix up aips and spba node name to remove address info (suggestion
-   given by Grant on Jason's patch)
-
-Shawn Guo (6):
-      arm/dts: babbage: add all available clock nodes
-      arm/mxc: add clk member 'rate' to ease dt fixed-clock support
-      dt: add new member 'clk' into device_node
-      arm/dt: mx51: dynamically add clocks per dt nodes
-      arm/dt: mx5: change timer init function to dt clock way
-      of/clock: eliminate function __of_clk_get_from_provider
-
- arch/arm/boot/dts/babbage.dts          |  501 +++++++++++-
- arch/arm/mach-mx5/Makefile             |    2 +-
- arch/arm/mach-mx5/board-dt.c           |    9 +-
- arch/arm/mach-mx5/clock-dt.c           |   52 --
- arch/arm/mach-mx5/clock-mx51-mx53.c    | 1433 +++++++++++++++++++++++++++++++-
- arch/arm/plat-mxc/include/mach/clock.h |    4 +
- drivers/of/clock.c                     |   23 +-
- include/linux/of.h                     |    1 +
- 8 files changed, 1913 insertions(+), 112 deletions(-)
+diff --git a/arch/arm/plat-mxc/include/mach/clock.h b/arch/arm/plat-mxc/include/mach/clock.h
+index 753a598..e688b49 100644
+--- a/arch/arm/plat-mxc/include/mach/clock.h
++++ b/arch/arm/plat-mxc/include/mach/clock.h
+@@ -38,6 +38,10 @@ struct clk {
+ 	/* Register address for clock's enable/disable control. */
+ 	void __iomem *enable_reg;
+ 	u32 flags;
++#ifdef CONFIG_OF
++	/* clock rate used by fixed-clock */
++	unsigned long rate;
++#endif
+ 	/* get the current clock rate (always a fresh value) */
+ 	unsigned long (*get_rate) (struct clk *);
+ 	/* Function ptr to set the clock to a new rate. The rate must match a
+-- 
+1.7.1
