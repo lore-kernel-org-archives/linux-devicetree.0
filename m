@@ -1,50 +1,52 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V5 1/4] arm/dt: add basic mx51 device tree support
-Date: Fri, 18 Mar 2011 10:19:19 +0800
-Message-ID: <20110318021918.GC26951@S2100-06.ap.freescale.net>
-References: <1300290701-9433-1-git-send-email-jason.hui@linaro.org>
-	<1300290701-9433-2-git-send-email-jason.hui@linaro.org>
-	<20110317163732.GB9597@angua.secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: RFC: Platform data for onboard USB assets
+Date: Thu, 17 Mar 2011 22:54:01 -0600
+Message-ID: <20110318045401.GA18545@angua.secretlab.ca>
+References: <20110311165642.GA9996@kroah.com>
+	<20110317214042.GQ31411@opensource.wolfsonmicro.com>
+	<20110317214736.GA29014@kroah.com>
+	<201103172333.01474.arnd@arndb.de>
+	<20110317225328.GB31581@kroah.com> <4D8296D1.9060106@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110317163732.GB9597-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <4D8296D1.9060106-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 10:37:32AM -0600, Grant Likely wrote:
-> On Wed, Mar 16, 2011 at 11:51:38PM +0800, Jason Liu wrote:
-> > Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/mach-mx5/Kconfig               |    8 ++++
-> >  arch/arm/mach-mx5/Makefile              |    1 +
-> >  arch/arm/mach-mx5/board-dt.c            |   64 +++++++++++++++++++++++++++++++
-> >  arch/arm/mach-mx5/clock-dt.c            |   52 +++++++++++++++++++++++++
-> >  arch/arm/plat-mxc/include/mach/common.h |    1 +
-> >  5 files changed, 126 insertions(+), 0 deletions(-)
+On Thu, Mar 17, 2011 at 11:18:41PM +0000, Andy Green wrote:
+> On 03/17/2011 10:53 PM, Somebody in the thread at some point said:
 > 
-> I've picked up this series into my devicetree/test branch.  I still
-
-Have you done that yet?  I just checked and did not see it.  I'm
-waiting for it to start the next spin of my patch sets.
-
-> have comments, but it has come a long way and I'm happy enough with it
-> to start carrying it.  Future patches can either build on top of this
-> series, or completely replace it (your choice).
+> >>Not tested!
+> >>
+> >>Signed-off-by: Arnd Bergmann<arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> ><snip>
+> >
+> >Very nice.
+> >
+> >Andy and Mark, would this patch work for you?
 > 
+> You do realize this untested patch depends on 13 year old vapour
+> definition of general usb device tagging in Device Tree that does
+> not exist yet?
 
--- 
-Regards,
-Shawn
+IIRC, not vapour.  I believe this binding is currently used by Open
+Firmware on existing PowerPC, SPARC and x86 machines.  Linux doesn't
+use the binding because up to this point Linux hasn't cared about how
+firmware initialized the usb bus.  It just reinitializes everything
+anyway.
+
+g.
