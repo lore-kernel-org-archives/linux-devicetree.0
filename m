@@ -1,52 +1,82 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: RFC: Platform data for onboard USB assets
-Date: Thu, 17 Mar 2011 22:54:01 -0600
-Message-ID: <20110318045401.GA18545@angua.secretlab.ca>
-References: <20110311165642.GA9996@kroah.com>
-	<20110317214042.GQ31411@opensource.wolfsonmicro.com>
-	<20110317214736.GA29014@kroah.com>
-	<201103172333.01474.arnd@arndb.de>
-	<20110317225328.GB31581@kroah.com> <4D8296D1.9060106@linaro.org>
+Subject: Re: [PATCH 3/7] mmc: make the reference to sdhci_tegra_dt_pdata
+	conditional
+Date: Thu, 17 Mar 2011 22:58:59 -0600
+Message-ID: <20110318045859.GB18545@angua.secretlab.ca>
+References: <1300112759-3495-1-git-send-email-shawn.guo@linaro.org>
+	<1300112759-3495-4-git-send-email-shawn.guo@linaro.org>
+	<20110315075859.GL23050@angua.secretlab.ca>
+	<AANLkTi=umf9nDpExLEBgJEMgUP-CJUUEbAQrQfdBw7Fd@mail.gmail.com>
+	<20110318012202.GA26951@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4D8296D1.9060106-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110318012202.GA26951-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 11:18:41PM +0000, Andy Green wrote:
-> On 03/17/2011 10:53 PM, Somebody in the thread at some point said:
-> 
-> >>Not tested!
-> >>
-> >>Signed-off-by: Arnd Bergmann<arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> ><snip>
-> >
-> >Very nice.
-> >
-> >Andy and Mark, would this patch work for you?
-> 
-> You do realize this untested patch depends on 13 year old vapour
-> definition of general usb device tagging in Device Tree that does
-> not exist yet?
+On Fri, Mar 18, 2011 at 09:22:03AM +0800, Shawn Guo wrote:
+> On Thu, Mar 17, 2011 at 01:59:00PM -0600, Grant Likely wrote:
+> > On Tue, Mar 15, 2011 at 1:58 AM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+> > > On Mon, Mar 14, 2011 at 10:25:55PM +0800, Shawn Guo wrote:
+> > >> Wrap tegra dt_id with CONFIG_MMC_SDHCI_TEGRA to make the reference to
+> > >> sdhci_tegra_dt_pdata conditional, otherwise it will stop build for
+> > >> other mmc driver when OF is enabled.
+> > >>
+> > >> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >
+> > > Looks right to me.
+> > =
 
-IIRC, not vapour.  I believe this binding is currently used by Open
-Firmware on existing PowerPC, SPARC and x86 machines.  Linux doesn't
-use the binding because up to this point Linux hasn't cared about how
-firmware initialized the usb bus.  It just reinitializes everything
-anyway.
+> > Actually...
+> > =
+
+> > >
+> > > g.
+> > >
+> > >> ---
+> > >> =A0drivers/mmc/host/sdhci-pltfm.c | =A0 =A02 ++
+> > >> =A01 files changed, 2 insertions(+), 0 deletions(-)
+> > >>
+> > >> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci=
+-pltfm.c
+> > >> index ccc04ac..4125fbf 100644
+> > >> --- a/drivers/mmc/host/sdhci-pltfm.c
+> > >> +++ b/drivers/mmc/host/sdhci-pltfm.c
+> > >> @@ -52,7 +52,9 @@ static struct sdhci_ops sdhci_pltfm_ops =3D {
+> > >> =A0#if defined(CONFIG_OF)
+> > >> =A0#include <linux/of_device.h>
+> > >> =A0static const struct of_device_id sdhci_dt_ids[] =3D {
+> > >> +#ifdef CONFIG_MMC_SDHCI_TEGRA
+> > >> =A0 =A0 =A0 { .compatible =3D "nvidia,tegra250-sdhci", .data =3D &sd=
+hci_tegra_dt_pdata },
+> > >> +#endif
+> > >> =A0 =A0 =A0 { }
+> > >> =A0};
+> > >> =A0MODULE_DEVICE_TABLE(platform, sdhci_dt_ids);
+> > =
+
+> > It would be better if the #ifdef went around the entire sdhci_dt_ids
+> > table including the MODULE_DEVICE_TABLE registration.
+> > =
+
+> You really want to go this?  In that case, all the references to
+> sdhci_dt_ids will have to get around by the #ifdef.
+
+Sorry, my mistake.  I wasn't reading the patch correctly when I looked
+at it again.  Your change is indeed correct.
 
 g.
