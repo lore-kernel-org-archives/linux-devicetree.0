@@ -1,75 +1,41 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 6/6] of/clock: eliminate function __of_clk_get_from_provider
-Date: Sat, 19 Mar 2011 02:24:32 +0800
-Message-ID: <1300472672-13392-7-git-send-email-shawn.guo@linaro.org>
-References: <1300472672-13392-1-git-send-email-shawn.guo@linaro.org>
+From: Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: RFC: Platform data for onboard USB assets
+Date: Fri, 18 Mar 2011 20:02:23 +0000
+Message-ID: <4D83BA4F.8050301@linaro.org>
+References: <4D83A25C.804@ti.com> <20110318182518.GA2271@opensource.wolfsonmicro.com>
+Reply-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1300472672-13392-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110318182518.GA2271-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: David Anders <x0132446-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the platform clock support, the 'struct clk' should have been
-associated with device_node->data.  So the use of function
-__of_clk_get_from_provider can be eliminated.
+On 03/18/2011 06:25 PM, Somebody in the thread at some point said:
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/of/clock.c |   23 ++---------------------
- 1 files changed, 2 insertions(+), 21 deletions(-)
+Hi -
 
-diff --git a/drivers/of/clock.c b/drivers/of/clock.c
-index 7b5ea67..1b34937 100644
---- a/drivers/of/clock.c
-+++ b/drivers/of/clock.c
-@@ -71,24 +71,6 @@ void of_clk_del_provider(struct device_node *np,
- 	mutex_unlock(&of_clk_lock);
- }
- 
--static struct clk *__of_clk_get_from_provider(struct device_node *np, const char *clk_output)
--{
--	struct of_clk_provider *provider;
--	struct clk *clk = NULL;
--
--	/* Check if we have such a provider in our array */
--	mutex_lock(&of_clk_lock);
--	list_for_each_entry(provider, &of_clk_providers, link) {
--		if (provider->node == np)
--			clk = provider->get(np, clk_output, provider->data);
--		if (clk)
--			break;
--	}
--	mutex_unlock(&of_clk_lock);
--
--	return clk;
--}
--
- struct clk *of_clk_get(struct device *dev, const char *id)
- {
- 	struct device_node *provnode;
-@@ -123,9 +105,8 @@ struct clk *of_clk_get(struct device *dev, const char *id)
- 			__func__, prop_name, dev->of_node->full_name);
- 		return NULL;
- 	}
--	clk = __of_clk_get_from_provider(provnode, prop);
--	if (clk)
--		dev_dbg(dev, "Using clock from %s\n", provnode->full_name);
-+
-+	clk = provnode->clk;
- 
- 	of_node_put(provnode);
- 
--- 
-1.7.1
+>> if you grep in drivers/net you will find a wide range of network
+>> devices that use the random_ether_addr() function:
+>
+> This is a slightly different case to the one where device tree is most
+> useful which is the case where there is a MAC assigned to the system but
+> it's been stored in an alternative location and needs to be programmed
+> into the NIC by software.
+
+ From an earlier discussion in IRC, I know David's point is the presence 
+of so many calls to random_ether_addr() suggests the "crap, there is no 
+EEPROM" state can be reached by all those drivers.
+
+In which case, they are all potential consumers of a MAC "stored in an 
+alternative location and needs to be programmed into the NIC by 
+software" solution, which he also thinks is needed.
+
+-Andy
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
