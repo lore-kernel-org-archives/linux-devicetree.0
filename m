@@ -1,39 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] switch DT creation to using of_attach_node (v2)
-Date: Thu, 17 Mar 2011 23:45:17 -0600
-Message-ID: <20110318054517.GI18545@angua.secretlab.ca>
-References: <1300408356-15253-1-git-send-email-dilinger@queued.net>
+From: Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: RFC: Platform data for onboard USB assets
+Date: Fri, 18 Mar 2011 07:42:36 +0000
+Message-ID: <4D830CEC.4040608@linaro.org>
+References: <20110311165642.GA9996@kroah.com> <20110317214042.GQ31411@opensource.wolfsonmicro.com> <20110317214736.GA29014@kroah.com> <201103172333.01474.arnd@arndb.de> <20110317225328.GB31581@kroah.com> <4D8296D1.9060106@linaro.org> <20110317232503.GA14561@kroah.com>
+Reply-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1300408356-15253-1-git-send-email-dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110317232503.GA14561-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2011 at 05:32:32PM -0700, Andres Salomon wrote:
-> This is attempt #2 to make OF core use of_attach_node for both promtree
-> and flattree building.  This reworks of_attach_node quite a bit to conform
-> with our expectations of how the DT should look in memory.
-> 
-> It's different in many ways from the original patches, so it's worth
-> reviewing each in their entirety.
+On 03/17/2011 11:25 PM, Somebody in the thread at some point said:
+> On Thu, Mar 17, 2011 at 11:18:41PM +0000, Andy Green wrote:
+>> On 03/17/2011 10:53 PM, Somebody in the thread at some point said:
+>>
+>>>> Not tested!
+>>>>
+>>>> Signed-off-by: Arnd Bergmann<arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>
+>>> <snip>
+>>>
+>>> Very nice.
+>>>
+>>> Andy and Mark, would this patch work for you?
+>>
+>> You do realize this untested patch depends on 13 year old vapour
+>> definition of general usb device tagging in Device Tree that does
+>> not exist yet?
+>
+> As you get to create your own device tree for your board, it will then
+> exist, right?
 
-Thanks Andres,
+No, if you read Arnd's post you will find Device Tree does not support 
+targeting USB devices yet, and if you further read the 1998 document he 
+points to as the basis of actually implementing it, it seems to me at 
+least it'll be a little project yet to do that on Linux side.
 
-Ping me on this stuff after the merge window.  I don't have time to
-look at it now, but I'll do so right all the stuff for .39 is taken
-care of.
+That is why his "very nice" patch is untested, it literally doesn't work 
+as things stand so he is unable to test it.  Yes, you will also need a 
+device tree for your board.  When you ask if it "works for me", the 
+answer is it doesn't work for me, the author nor anybody else.
 
-g.
+The Device Tree guys at first trashing and then co-opting this RFC has 
+the tendency to make me sound like a Device Tree basher.  Actually I 
+don't think it's evil so long as it reflects the reality and necessity 
+that it is completely optional, there is an elephant in the room about 
+that and how it competes with platform_data.  At the moment Device Tree 
+is "all things to all men", and few things stay like that for long.
+
+-Andy
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
