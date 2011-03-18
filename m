@@ -1,120 +1,604 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: RFC: Platform data for onboard USB assets
-Date: Fri, 18 Mar 2011 21:06:13 +0100
-Message-ID: <201103182106.13888.arnd@arndb.de>
-References: <20110311165642.GA9996@kroah.com> <201103181600.09877.arnd@arndb.de> <4D839BCD.6030202@linaro.org>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH v2] hwmon: (ads1015) Make gain and datarate configurable
+Date: Fri, 18 Mar 2011 22:02:40 +0100
+Message-ID: <20110318220240.399ade64@endymion.delvare>
+References: <20110312081809.GB9347@angua.secretlab.ca>
+ <1300269715-15819-1-git-send-email-eibach@gdsys.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4D839BCD.6030202-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1300269715-15819-1-git-send-email-eibach@gdsys.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dirk Eibach <eibach@gdsys.de>
+Cc: lm-sensors@lm-sensors.org, linux-doc@vger.kernel.org, rdunlap@xenotime.net, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 March 2011 18:52:13 Andy Green wrote:
-> On 03/18/2011 03:00 PM, Somebody in the thread at some point said:
-> 
-> >> You changed your first opinion about tagging "dynamically probed
-> >> devices" with what is effectively platform_data, cool.
-> >
-> > I still don't like the idea of attaching platform_data to more
-> > devices, when we try to move people away from that in other
-> > parts of the kernel, because of the known deficiencies.
-> 
-> Whatever way you look at it, data delivered into the driver by Device 
-> Tree is fundamentally the same action as delivering data into the driver 
-> by platform_data.  Yes, you query by named element with device context, 
-> but you end up with the same answer as if you dereference a 
-> platform_data member.
+Hi Dirk,
 
-Yes. Both approaches are essentially hacks to deal with the
-deficiencies of hardware probing in existing systems.
+On Wed, 16 Mar 2011 11:01:55 +0100, Dirk Eibach wrote:
+> Configuration for ads1015 gain and datarate is possible via
+> devicetree or platform data.
+>=20
+> This is a followup patch to previous ads1015 patches on Jean Delvares
+> tree.
+>=20
+> Changes since v1:
+> - replaced exported_channels bitmask with an enable entry per channel
+> - improved platform data example in Documentation
+> - improved patch description
+>=20
+> Signed-off-by: Dirk Eibach <eibach@gdsys.de>
+> ---
+>  .../devicetree/bindings/hwmon/ads1015.txt          |   73 ++++++++++=
++++
+>  Documentation/devicetree/bindings/i2c/ads1015.txt  |   29 -----
+>  Documentation/hwmon/ads1015                        |   44 ++++++---
+>  drivers/hwmon/ads1015.c                            |  113 ++++++++++=
++++++----
+>  include/linux/i2c/ads1015.h                        |   10 ++-
+>  5 files changed, 202 insertions(+), 67 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ads1015.t=
+xt
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/ads1015.txt
 
-In a perfect world, we would need neither the device tree nor
-any platform data at all, because we'd be able to ask the hardware
-or the fictionary correct firmware about what the properties
-of the hardware are. This works to a surprisingly large extent
-on server hardware, but much less so on typical embedded systems.
+Took me a little longer than I expected to review this, but here we go
+finally:
 
-> There are no "known deficiencies" to 
-> platform_data for this action either, at least, not known to me, I don't 
-> think lack of typechecking on the pointer itself is an issue given the 
-> accuracy it can be targeted to a soldered-on-the-board device.
+>=20
+> diff --git a/Documentation/devicetree/bindings/hwmon/ads1015.txt b/Do=
+cumentation/devicetree/bindings/hwmon/ads1015.txt
+> new file mode 100644
+> index 0000000..fb6e139
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ads1015.txt
+> @@ -0,0 +1,73 @@
+> +ADS1015 (I2C)
+> +
+> +This device is a 12-bit A-D converter with 4 inputs.
+> +
+> +The inputs can be used single ended or in certain differential combi=
+nations.
+> +
+> +For configuration all possible combinations are mapped to 8 channels=
+:
+> +  0: Voltage over AIN0 and AIN1.
+> +  1: Voltage over AIN0 and AIN3.
+> +  2: Voltage over AIN1 and AIN3.
+> +  3: Voltage over AIN2 and AIN3.
+> +  4: Voltage over AIN0 and GND.
+> +  5: Voltage over AIN1 and GND.
+> +  6: Voltage over AIN2 and GND.
+> +  7: Voltage over AIN3 and GND.
+> +
+> +Each channel can be configured indvidually:
 
-The main deficiency of platform_data is that it's very inflexible,
-you have to write code for each new board you want to support,
-something that we've generally moved away from in Linux a decade
-ago.
+Spelling: individually.
 
-Another problem is that you need to hardcode data structures,
-which is arguably less flexible than key/value pairs.
+> + - pga ist the programmable gain amplifier
 
-> > Passing a MAC address in a device tree property is a
-> > well-established method that is used on many drivers, and
-> > is portable across operating systems and architectures.
-> 
-> If you're talking about Device Tree, that itself is not at all "well 
-> established" let alone servicing drivers from it.  Like I say I don't 
-> want to seem like I am down on it, but it is very new indeed let's face 
-> it and few drivers are using it for functional configuration information 
-> compared to vast numbers using platform_data.
+"is", not "ist" ;)
 
-I mean specifically passing MAC addresses using the device tree.
+> +    0: FS =3D +/- 6.144 V
 
-$ git grep -l "local-mac-address" | wc -l
-142
+Please include the term "full scale" in the description, otherwise it's
+not clear what "FS" means.
 
-That is 142 unique files in the kernel referencing this (mostly
-powerpc, but also some others), both device drivers and dts files,
-plus a handful of drivers that use the nonstandard "mac-address"
-property instead of "local-mac-address".
+> +    1: FS =3D +/- 4.096 V
+> +    2: FS =3D +/- 2.048 V (default)
+> +    3: FS =3D +/- 1.024 V
+> +    4: FS =3D +/- 0.512 V
+> +    5: FS =3D +/- 0.256 V
+> + - data_rate in samples per second
+> +    0: 128
+> +    1: 250
+> +    2: 490
+> +    3: 920
+> +    4: 1600
+> +    5: 2400
+> +    6: 3300
 
-> =====> If Device Tree APIs is mandated to implement functionality fixes 
-> to drivers and platform_data is blocked for this, then we end up with 
-> different, rotting functionality for platform_data basis and drivers 
-> that remain broken on the many, many, platforms that don't have and will 
-> never have Device Tree.  That does NOT sound like the right approach.
+These sample rates make me wonder if hwmon is really the right
+subsystem for this device. hwmon is more like 2 samples per second.
 
-See the device tree fragment patches that Grant just posted.
-It should become really easy to combine both methods, or to
-gradually migrate without breaking anything.
+As you documented the default value for pga, you should do the same for
+data_rate.
 
-> I guess the grand plan is to eliminate platform_data by overwhelming it 
-> with Device Tree refactoring.  But each driver has to be tested and each 
-> board definition file changed... that is a huge, huge undertaking that 
-> will not happen in any kind of medium and perhaps not long term either.
-> 
-> So they will have to coexist for a very long while.  A policy of denying 
-> fixes to platform_data users by enforcing introduction of Device Tree 
-> APIs and making platform_data users out as troglodytes does not sound 
-> workable.
+> +
+> +1) The /ads1015 node
+> +
+> +  Required properties:
+> +
+> +   - compatible : must be "ti,ads1015"
+> +   - reg : I2C busaddress of the device
 
-No, that is not the plan. The platform data is well-established
-for deeply embedded systems (blackfin, arm-nommu, mips32, ...) where you
-never want to build a kernel for multiple boards anyway. We also
-have ways to generate platform_data from the device tree properties
-to allow the same driver to be used by systems with or without
-full device trees, and we have the fragments I mentioned that work
-in the opposite way.
+Missing space between "bus" and "address".
 
-No need to be so negative here, there is no fundamental problem.
+> +   - #address-cells : must be <1>
+> +   - #size-cells : must be <0>
+> +
+> +  The node contains child nodes for each channel that the platform u=
+ses.
+> +
+> +  Example ADS1015 node:
+> +
+> +    ads1015@49 {
+> +	    compatible =3D "ti,ads1015";
+> +	    reg =3D <0x49>;
+> +	    #address-cells =3D <1>;
+> +	    #size-cells =3D <0>;
+> +
+> +	    [ child node definitions... ]
+> +    }
+> +
+> +2) channel nodes
+> +
+> +  Required properties:
+> +
+> +   - reg : the channel number
+> +
+> +  Optional properties:
+> +
+> +   - ti,gain : the programmable gain amplifier setting
+> +   - ti,datarate : the converter datarate
 
-The only point I'm trying to get across is that the general move
-is away from hardcoding settings in device drivers and per-board
-platform_data towards probing stuff properly where possible, and
-using device_node properties is the preferred method for new
-code where that is not possible.
+Missing space between "data" and "rate" (the second time, of course.)
+It's also confusing to have "datarate" for the property, but
+"data_rate" as the struct member.
 
-The USB layer is not architecture specific, so when we add hacks
-to it for dealing with nondiscoverable hardware properties, we
-should use methods that are accepted everywhere, which platform
-data is not.
+> +
+> +  Example ADS1015 node:
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is an example channel node, not ADS1015 node.
+
+> +
+> +    channel@4 {
+> +	    reg =3D <4>;
+> +	    ti,gain =3D <3>;
+> +	    ti,datarate =3D <5>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/i2c/ads1015.txt b/Docu=
+mentation/devicetree/bindings/i2c/ads1015.txt
+> deleted file mode 100644
+> index 985e24d..0000000
+> --- a/Documentation/devicetree/bindings/i2c/ads1015.txt
+> +++ /dev/null
+
+=46or the next iteration, please consider that the file was originally
+located in Documentation/devicetree/bindings/hwmon. This is where I put
+it upon recommendation by Grant Likely. So this new patch should modify
+the document in-place, rather than create a new one and delete the old
+one.
+
+> @@ -1,29 +0,0 @@
+> -ADS1015 (I2C)
+> -
+> -This device is a 12-bit A-D converter with 4 inputs.
+> -
+> -The inputs can be used single ended or in certain differential combi=
+nations.
+> -
+> -For configuration all possible combinations are mapped to 8 channels=
+:
+> -0: Voltage over AIN0 and AIN1.
+> -1: Voltage over AIN0 and AIN3.
+> -2: Voltage over AIN1 and AIN3.
+> -3: Voltage over AIN2 and AIN3.
+> -4: Voltage over AIN0 and GND.
+> -5: Voltage over AIN1 and GND.
+> -6: Voltage over AIN2 and GND.
+> -7: Voltage over AIN3 and GND.
+> -
+> -Optional properties:
+> -
+> - - exported-channels : exported_channels is a bitmask that specifies=
+ which
+> -		       channels should be accessible by the user.
+> -
+> -Example:
+> -ads1015@49 {
+> -	compatible =3D "ti,ads1015";
+> -	reg =3D <0x49>;
+> -	exported-channels =3D <0x14>;
+> -};
+> -
+> -In this example only channel 2 and 4 would be accessible by the user=
+=2E
+> diff --git a/Documentation/hwmon/ads1015 b/Documentation/hwmon/ads101=
+5
+> index 56ee797..18a8e00 100644
+> --- a/Documentation/hwmon/ads1015
+> +++ b/Documentation/hwmon/ads1015
+> @@ -38,30 +38,48 @@ Platform Data
+> =20
+>  In linux/i2c/ads1015.h platform data is defined as:
+> =20
+> +struct ads1015_channel_data {
+> +	unsigned int pga;
+> +	unsigned int data_rate;
+> +};
+> +
+>  struct ads1015_platform_data {
+>  	unsigned int exported_channels;
+> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
+>  };
+
+These structure definitions do not match the actual ones in
+<linux/i2c/ads1015.h>. This is a common problem when you duplicate
+code... It doesn't stay magically in sync.
+
+> =20
+>  exported_channels is a bitmask that specifies which inputs should be=
+ exported.
+
+exported_channels no longer exists.
+
+> =20
+> +channel_data contains configuration data for the exported inputs:
+
+It was underlined before that the term "exported" should be avoided
+here. "for the used input combinations" would sound better.
+
+> +- pga ist the programmable gain amplifier
+
+"is"
+
+> +  0: FS =3D +/- 6.144 V
+> +  1: FS =3D +/- 4.096 V
+> +  2: FS =3D +/- 2.048 V (default)
+
+I fail to see how this default is relevant when using platform data. If
+the value isn't specified as part of the channel data, it'll be read as
+0 by the driver, not 2.
+
+> +  3: FS =3D +/- 1.024 V
+> +  4: FS =3D +/- 0.512 V
+> +  5: FS =3D +/- 0.256 V
+> +- data_rate in samples per second
+> +  0: 128
+> +  1: 250
+> +  2: 490
+> +  3: 920
+> +  4: 1600
+> +  5: 2400
+> +  6: 3300
+> +
+
+The duplicate documentation between Documentation/hwmon/ads1015 and
+Documentation/devicetree/bindings/hwmon/ads1015.txt is somewhat
+unpleasant. It will be difficult to keep things in sync over time. I
+wonder if this could be avoided.
+
+>  Example:
+>  struct ads1015_platform_data data =3D {
+> -	.exported_channels =3D (1 << 2) | (1 << 4)
+> +	.channel_data =3D {
+> +		[2] =3D { .enabled =3D true, .pga =3D 1, .data_rate =3D 0 },
+> +		[4] =3D { .enabled =3D true, .pga =3D 4, .data_rate =3D 5 },
+> +	}
+>  };
+
+This looks pretty good, I have to admit :)
+
+> =20
+> -In this case only in2_input and in4_input would be created.
+> +In this case only in2_input(FS +/- 4.096 V, 128 SPS) and in4_input
+
+Space missing before opening parenthesis.
+
+> +(FS +/- 0.512 V, 2400 SPS) would be created.
+> =20
+>  Devicetree
+>  ----------
+> =20
+> -The ads1015 node may have an "exported-channels" property.
+> -exported_channels is a bitmask that specifies which inputs should be=
+ exported.
+> -
+> -Example:
+> -ads1015@49 {
+> -	compatible =3D "ti,ads1015";
+> -	reg =3D <0x49>;
+> -	exported-channels =3D < 0x14 >;
+> -};
+> -
+> -In this case only in2_input and in4_input would be created.
+> +Configuration is also possible via devicetree:
+> +Documentation/devicetree/bindings/hwmon/ads1015.txt
+> diff --git a/drivers/hwmon/ads1015.c b/drivers/hwmon/ads1015.c
+> index 8ef2b60..a7c524d 100644
+> --- a/drivers/hwmon/ads1015.c
+> +++ b/drivers/hwmon/ads1015.c
+> @@ -25,7 +25,7 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/slab.h>
+> -#include <linux/jiffies.h>
+> +#include <linux/delay.h>
+>  #include <linux/i2c.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/hwmon-sysfs.h>
+> @@ -45,12 +45,18 @@ enum {
+>  static const unsigned int fullscale_table[8] =3D {
+>  	6144, 4096, 2048, 1024, 512, 256, 256, 256 };
+> =20
+> -#define ADS1015_CONFIG_CHANNELS 8
+> +/* Data rates in samples per second */
+> +static const unsigned int data_rate_table[8] =3D {
+> +	128, 250, 490, 920, 1600, 2400, 3300, 3300 };
+> +
+>  #define ADS1015_DEFAULT_CHANNELS 0xff
+> +#define ADS1015_DEFAULT_PGA 2
+> +#define ADS1015_DEFAULT_DATA_RATE 4
+
+Does it really make sense to have a default configuration? The chip
+needs proper configuration to be usable at all, I would think it makes
+sense to make the platform or devicetree data mandatory. I am
+particularly worried about the case where the PGA is set improperly: th=
+e
+input voltage could be over what the chip supports?
+
+Or asking the other way around: do you see any problem with making the
+platform data or devicetree data mandatory?
+
+> =20
+>  struct ads1015_data {
+>  	struct device *hwmon_dev;
+>  	struct mutex update_lock; /* mutex protect updates */
+> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
+>  };
+> =20
+>  static s32 ads1015_read_reg(struct i2c_client *client, unsigned int =
+reg)
+> @@ -71,32 +77,38 @@ static int ads1015_read_value(struct i2c_client *=
+client, unsigned int channel,
+>  {
+>  	u16 config;
+>  	s16 conversion;
+> -	unsigned int pga;
+> +	struct ads1015_data *data =3D i2c_get_clientdata(client);
+> +	unsigned int pga =3D data->channel_data[channel].pga;
+>  	int fullscale;
+> +	unsigned int data_rate =3D data->channel_data[channel].data_rate;
+> +	unsigned int conversion_time_ms;
+>  	unsigned int k;
+> -	struct ads1015_data *data =3D i2c_get_clientdata(client);
+>  	int res;
+> =20
+>  	mutex_lock(&data->update_lock);
+> =20
+> -	/* get fullscale voltage */
+> +	/* get channel parameters */
+>  	res =3D ads1015_read_reg(client, ADS1015_CONFIG);
+>  	if (res < 0)
+>  		goto err_unlock;
+>  	config =3D res;
+> -	pga =3D (config >> 9) & 0x0007;
+>  	fullscale =3D fullscale_table[pga];
+> +	conversion_time_ms =3D 1 + 1000 / data_rate_table[data_rate];
+
+Maybe a suitable use case for DIV_ROUND_UP()?
+
+> =20
+>  	/* set channel and start single conversion */
+
+You don't only set the channel and start the conversion. You also set
+the PGA and data rate.
+
+> -	config &=3D ~(0x0007 << 12);
+> -	config |=3D (1 << 15) | (1 << 8) | (channel & 0x0007) << 12;
+> +	config &=3D 0x001f;
+> +	config |=3D (1 << 15) | (1 << 8);
+> +	config |=3D (channel & 0x0007) << 12;
+> +	config |=3D (pga & 0x0007) << 9;
+> +	config |=3D (data_rate & 0x0007) << 5;
+> =20
+> -	/* wait until conversion finished */
+>  	res =3D ads1015_write_reg(client, ADS1015_CONFIG, config);
+>  	if (res < 0)
+>  		goto err_unlock;
+> +
+> +	/* wait until conversion finished */
+>  	for (k =3D 0; k < 5; ++k) {
+> -		schedule_timeout(msecs_to_jiffies(1));
+> +		msleep(k ? 1 : conversion_time_ms);
+>  		res =3D ads1015_read_reg(client, ADS1015_CONFIG);
+>  		if (res < 0)
+>  			goto err_unlock;
+
+This could be done more efficiently: msleep(conversion_time_ms) before
+the loop, and msleep(1) inside the loop (after reading the register.)
+
+That being said... As the conversion rate is known in advance, the
+retry loop should never be needed, should it? Did you ever see it
+trigger?
+
+> @@ -166,29 +178,83 @@ static int ads1015_remove(struct i2c_client *cl=
+ient)
+>  	return 0;
+>  }
+> =20
+> -static unsigned int ads1015_get_exported_channels(struct i2c_client =
+*client)
+> +static void ads1015_get_exported_channels(struct i2c_client *client)
+>  {
+> +	unsigned int k;
+> +	struct ads1015_data *data =3D i2c_get_clientdata(client);
+>  	struct ads1015_platform_data *pdata =3D dev_get_platdata(&client->d=
+ev);
+>  #ifdef CONFIG_OF
+> -	struct device_node *np =3D client->dev.of_node;
+> -	const __be32 *of_channels;
+> -	int of_channels_size;
+> +	struct device_node *node;
+>  #endif
+> =20
+>  	/* prefer platform data */
+> -	if (pdata)
+> -		return pdata->exported_channels;
+> +	if (pdata) {
+> +		memcpy(data->channel_data, pdata->channel_data,
+> +		       sizeof(data->channel_data));
+> +		return;
+> +	}
+> =20
+>  #ifdef CONFIG_OF
+>  	/* fallback on OF */
+> -	of_channels =3D of_get_property(np, "exported-channels",
+> -				      &of_channels_size);
+> -	if (of_channels && (of_channels_size =3D=3D sizeof(*of_channels)))
+> -		return be32_to_cpup(of_channels);
+> +	if (!client->dev.of_node
+> +	    || !of_get_next_child(client->dev.of_node, NULL))
+> +		goto fallback_default;
+> +
+> +	for_each_child_of_node(client->dev.of_node, node) {
+> +		const __be32 *property;
+> +		int len;
+> +		unsigned int channel;
+> +		unsigned int pga =3D ADS1015_DEFAULT_PGA;
+> +		unsigned int data_rate =3D ADS1015_DEFAULT_DATA_RATE;
+> +
+> +		property =3D of_get_property(node, "reg", &len);
+> +		if (!property || (len < sizeof(int))) {
+
+=46or consistency with the following tests, you should test for len !=3D
+sizeof(int). Note that you can omit the parentheses around this test,
+BTW, and same below.
+
+> +			dev_err(&client->dev, "ads1015: invalid reg on %s\n",
+
+The leading "ads1015:" in all error messages is redundant, as dev_err()
+will include the client name already.
+
+> +				node->full_name);
+> +			continue;
+> +		}
+> +
+> +		channel =3D be32_to_cpup(property);
+> +		if (channel > ADS1015_CONFIG_CHANNELS) {
+> +			dev_err(&client->dev, "ads1015: invalid addr=3D%x on %s\n",
+> +				channel, node->full_name);
+
+"addr" is misleading, it is a channel number (sort of, at least), not
+an address. I'm sure you can come up with a more useful error message.
+
+> +			continue;
+> +		}
+> +
+> +		property =3D of_get_property(node, "ti,gain", &len);
+> +		if (property && (len =3D=3D sizeof(int))) {
+> +			pga =3D be32_to_cpup(property);
+> +			if (pga > 7) {
+> +				dev_err(&client->dev,
+> +					"ads1015: invalid gain on %s\n",
+> +					node->full_name);
+> +			}
+> +		}
+> +
+> +		property =3D of_get_property(node, "ti,datarate", &len);
+> +		if (property && (len =3D=3D sizeof(int))) {
+> +			data_rate =3D be32_to_cpup(property);
+> +			if (data_rate > 7)
+
+I count only 6 possible data rates.
+
+> +				dev_err(&client->dev,
+> +					"ads1015: invalid data_rate on %s\n",
+> +					node->full_name);
+
+Curly braces would be appreciated, for readability and consistency.
+
+> +		}
+> +
+> +		data->channel_data[channel].enabled =3D true;
+> +		data->channel_data[channel].pga =3D pga;
+> +		data->channel_data[channel].data_rate =3D data_rate;
+> +	}
+> +
+> +	return;
+>  #endif
+> =20
+>  	/* fallback on default configuration */
+> -	return ADS1015_DEFAULT_CHANNELS;
+> +fallback_default:
+
+Use of goto and label is discouraged, except for error paths. If you
+feel the need for it, it suggests that the devicetree parsing code
+should be moved to a separate function. Maybe this would let you merge
+the two #ifdef CONFIG_OF blocks, which would be nice, and also get rid
+of the following warning I'm seeing:
+
+drivers/hwmon/ads1015.c: In function =E2=80=98ads1015_get_exported_chan=
+nels=E2=80=99:
+drivers/hwmon/ads1015.c:252:1: warning: label =E2=80=98fallback_default=
+=E2=80=99 defined but not used
+
+
+
+> +	for (k =3D 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
+> +		data->channel_data[k].enabled =3D true;
+> +		data->channel_data[k].pga =3D ADS1015_DEFAULT_PGA;
+> +		data->channel_data[k].data_rate =3D ADS1015_DEFAULT_DATA_RATE;
+> +	}
+
+As said earlier, I'm really not sure that this default makes any sense.
+
+>  } =20
+>  static int ads1015_probe(struct i2c_client *client,
+> @@ -196,7 +262,6 @@ static int ads1015_probe(struct i2c_client *clien=
+t,
+>  {
+>  	struct ads1015_data *data;
+>  	int err;
+> -	unsigned int exported_channels;
+>  	unsigned int k;
+> =20
+>  	data =3D kzalloc(sizeof(struct ads1015_data), GFP_KERNEL);
+> @@ -209,9 +274,9 @@ static int ads1015_probe(struct i2c_client *clien=
+t,
+>  	mutex_init(&data->update_lock);
+> =20
+>  	/* build sysfs attribute group */
+> -	exported_channels =3D ads1015_get_exported_channels(client);
+> +	ads1015_get_exported_channels(client);
+
+This function would rather be named ads1015_get_channels_config or
+similar.
+
+>  	for (k =3D 0; k < ADS1015_CONFIG_CHANNELS; ++k) {
+> -		if (!(exported_channels & (1<<k)))
+> +		if (!data->channel_data[k].enabled)
+>  			continue;
+>  		err =3D device_create_file(&client->dev, &ads1015_in[k].dev_attr);
+>  		if (err)
+> diff --git a/include/linux/i2c/ads1015.h b/include/linux/i2c/ads1015.=
+h
+> index 8541c6a..0d9e746 100644
+> --- a/include/linux/i2c/ads1015.h
+> +++ b/include/linux/i2c/ads1015.h
+> @@ -21,8 +21,16 @@
+>  #ifndef LINUX_ADS1015_H
+>  #define LINUX_ADS1015_H
+> =20
+> +#define ADS1015_CONFIG_CHANNELS 8
+
+I can't make sense of the "CONFIG" part in the name.
+
+> +
+> +struct ads1015_channel_data {
+> +	bool enabled;
+> +	unsigned int pga;
+> +	unsigned int data_rate;
+> +};
+> +
+>  struct ads1015_platform_data {
+> -	unsigned int exported_channels;
+> +	struct ads1015_channel_data channel_data[ADS1015_CONFIG_CHANNELS];
+>  };
+> =20
+>  #endif /* LINUX_ADS1015_H */
+
+
+--=20
+Jean Delvare
