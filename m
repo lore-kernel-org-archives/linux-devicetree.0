@@ -1,89 +1,141 @@
-From: Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>
+From: David Anders <x0132446-l0cyMroinI0@public.gmane.org>
 Subject: Re: RFC: Platform data for onboard USB assets
-Date: Fri, 18 Mar 2011 17:52:13 +0000
-Message-ID: <4D839BCD.6030202@linaro.org>
-References: <20110311165642.GA9996@kroah.com> <201103172333.01474.arnd@arndb.de> <4D82979B.2050003@linaro.org> <201103181600.09877.arnd@arndb.de>
-Reply-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Date: Fri, 18 Mar 2011 13:20:12 -0500
+Message-ID: <4D83A25C.804@ti.com>
+References: <20110311165642.GA9996@kroah.com> <201103172333.01474.arnd@arndb.de> <4D82979B.2050003@linaro.org> <201103181600.09877.arnd@arndb.de> <4D839BCD.6030202@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201103181600.09877.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <4D839BCD.6030202-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/2011 03:00 PM, Somebody in the thread at some point said:
-
-Hi -
-
->> You changed your first opinion about tagging "dynamically probed
->> devices" with what is effectively platform_data, cool.
+On 03/18/2011 12:52 PM, Andy Green wrote:
+> On 03/18/2011 03:00 PM, Somebody in the thread at some point said:
 >
-> I still don't like the idea of attaching platform_data to more
-> devices, when we try to move people away from that in other
-> parts of the kernel, because of the known deficiencies.
+> Hi -
+>
+>    
+>>> You changed your first opinion about tagging "dynamically probed
+>>> devices" with what is effectively platform_data, cool.
+>>>        
+>> I still don't like the idea of attaching platform_data to more
+>> devices, when we try to move people away from that in other
+>> parts of the kernel, because of the known deficiencies.
+>>      
+> Whatever way you look at it, data delivered into the driver by Device
+> Tree is fundamentally the same action as delivering data into the driver
+> by platform_data.  Yes, you query by named element with device context,
+> but you end up with the same answer as if you dereference a
+> platform_data member.  There are no "known deficiencies" to
+> platform_data for this action either, at least, not known to me, I don't
+> think lack of typechecking on the pointer itself is an issue given the
+> accuracy it can be targeted to a soldered-on-the-board device.
+>
+>    
+>> Passing a MAC address in a device tree property is a
+>> well-established method that is used on many drivers, and
+>> is portable across operating systems and architectures.
+>>      
+> If you're talking about Device Tree, that itself is not at all "well
+> established" let alone servicing drivers from it.  Like I say I don't
+> want to seem like I am down on it, but it is very new indeed let's face
+> it and few drivers are using it for functional configuration information
+> compared to vast numbers using platform_data.
+>
+> =====>  If Device Tree APIs is mandated to implement functionality fixes
+> to drivers and platform_data is blocked for this, then we end up with
+> different, rotting functionality for platform_data basis and drivers
+> that remain broken on the many, many, platforms that don't have and will
+> never have Device Tree.  That does NOT sound like the right approach.
+>
+> I guess the grand plan is to eliminate platform_data by overwhelming it
+> with Device Tree refactoring.  But each driver has to be tested and each
+> board definition file changed... that is a huge, huge undertaking that
+> will not happen in any kind of medium and perhaps not long term either.
+>
+> So they will have to coexist for a very long while.  A policy of denying
+> fixes to platform_data users by enforcing introduction of Device Tree
+> APIs and making platform_data users out as troglodytes does not sound
+> workable.
+>
+>    
+>> We don't need to implement the entire binding. My point was that
+>> if we implement a way to attach a device_node to a usb_device, we
+>> should do it in a way that is compatible with that binding, rather
+>> than coming up with a new way.
+>>      
+> That document is of no interest outside open firmware / Device Tree
+> implementation since it is specific to it, and there is no value to
+> reference it for a platform_data based solution.
+>
+>    
+>> My impression so far is that attaching a struct device_node to
+>> static USB devices can be useful in general, but I wouldn't
+>> go so far to suggest using this for dynamically probed devices.
+>>      
+> At least we agree there's no point to target pluggable devices with
+> either solution, in which case platform_data and Device Tree provide the
+> same end result, plus or minus extra query API.
+>
+> By the way I intend shortly to extend my patchset to cover Panda WLAN
+> case via probed MMC / SDIO device in the same way as USB.  So there will
+> then be a second use case for my async platform_data patchset via a
+> different subsystem.  Of course, maybe it just doubles the number of
+> beatings ^^
+>
+> -Andy
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>    
 
-Whatever way you look at it, data delivered into the driver by Device 
-Tree is fundamentally the same action as delivering data into the driver 
-by platform_data.  Yes, you query by named element with device context, 
-but you end up with the same answer as if you dereference a 
-platform_data member.  There are no "known deficiencies" to 
-platform_data for this action either, at least, not known to me, I don't 
-think lack of typechecking on the pointer itself is an issue given the 
-accuracy it can be targeted to a soldered-on-the-board device.
 
-> Passing a MAC address in a device tree property is a
-> well-established method that is used on many drivers, and
-> is portable across operating systems and architectures.
+just a note on some of things discussed. the mac address issue applies 
+to many development boards including the BeagleBoard XM which uses the 
+same SMSC LAN9514 with no eeprom.
 
-If you're talking about Device Tree, that itself is not at all "well 
-established" let alone servicing drivers from it.  Like I say I don't 
-want to seem like I am down on it, but it is very new indeed let's face 
-it and few drivers are using it for functional configuration information 
-compared to vast numbers using platform_data.
+if you look at the drivers/net/usb/smsc95xx.c you'll find:
 
-=====> If Device Tree APIs is mandated to implement functionality fixes 
-to drivers and platform_data is blocked for this, then we end up with 
-different, rotting functionality for platform_data basis and drivers 
-that remain broken on the many, many, platforms that don't have and will 
-never have Device Tree.  That does NOT sound like the right approach.
+static void smsc95xx_init_mac_address(struct usbnet *dev)
+{
+     /* try reading mac address from EEPROM */
+     if (smsc95xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+             dev->net->dev_addr) == 0) {
+         if (is_valid_ether_addr(dev->net->dev_addr)) {
+             /* eeprom values are valid so use them */
+             netif_dbg(dev, ifup, dev->net, "MAC address read from 
+EEPROM\n");
+             return;
+         }
+     }
 
-I guess the grand plan is to eliminate platform_data by overwhelming it 
-with Device Tree refactoring.  But each driver has to be tested and each 
-board definition file changed... that is a huge, huge undertaking that 
-will not happen in any kind of medium and perhaps not long term either.
+     /* no eeprom, or eeprom values are invalid. generate random MAC */
+     random_ether_addr(dev->net->dev_addr);
+     netif_dbg(dev, ifup, dev->net, "MAC address set to 
+random_ether_addr\n");
+}
 
-So they will have to coexist for a very long while.  A policy of denying 
-fixes to platform_data users by enforcing introduction of Device Tree 
-APIs and making platform_data users out as troglodytes does not sound 
-workable.
 
-> We don't need to implement the entire binding. My point was that
-> if we implement a way to attach a device_node to a usb_device, we
-> should do it in a way that is compatible with that binding, rather
-> than coming up with a new way.
+this is how the mac address is assigned when no eeprom is present.
 
-That document is of no interest outside open firmware / Device Tree 
-implementation since it is specific to it, and there is no value to 
-reference it for a platform_data based solution.
 
-> My impression so far is that attaching a struct device_node to
-> static USB devices can be useful in general, but I wouldn't
-> go so far to suggest using this for dynamically probed devices.
+if you grep in drivers/net you will find a wide range of network devices 
+that use the random_ether_addr() function:
 
-At least we agree there's no point to target pluggable devices with 
-either solution, in which case platform_data and Device Tree provide the 
-same end result, plus or minus extra query API.
 
-By the way I intend shortly to extend my patchset to cover Panda WLAN 
-case via probed MMC / SDIO device in the same way as USB.  So there will 
-then be a second use case for my async platform_data patchset via a 
-different subsystem.  Of course, maybe it just doubles the number of 
-beatings ^^
+grep -r -e "random_ether_addr" * | wc -l
+61
 
--Andy
+Dave Anders
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
