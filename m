@@ -1,94 +1,58 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: No support of platform device instance id?
-Date: Sat, 19 Mar 2011 20:45:47 -0600
-Message-ID: <AANLkTim4xoztp7DdS3P2Be2tEHwspiFUKMux4KDf3i1J@mail.gmail.com>
-References: <20110312070057.GB9650@S2100-06.ap.freescale.net>
-	<20110312094620.GM9347@angua.secretlab.ca>
-	<20110312145532.GA10194@S2100-06.ap.freescale.net>
-	<20110314211019.GH16096@angua.secretlab.ca>
-	<20110316135800.GB11658@S2100-06.ap.freescale.net>
-	<20110316230500.GB15557@angua.secretlab.ca>
-	<20110317043114.GG11658@S2100-06.ap.freescale.net>
-	<20110317170819.GF9597@angua.secretlab.ca>
-	<20110320023905.GA27709@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] make sdhci device drivers self registered
+Date: Mon, 21 Mar 2011 11:42:13 +0800
+Message-ID: <1300678938-8046-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <20110320023905.GA27709-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 19, 2011 at 8:39 PM, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Thu, Mar 17, 2011 at 11:08:19AM -0600, Grant Likely wrote:
->> On Thu, Mar 17, 2011 at 12:31:15PM +0800, Shawn Guo wrote:
->> > On Wed, Mar 16, 2011 at 05:05:00PM -0600, Grant Likely wrote:
->> > >
->> > [...]
->> > > I'd like to have feedback on the new code to make sure that the model
->> > > is sane. =A0There are some fiddly code it there which is used to mat=
-ch
->> > > platform_device registrations to nodes in the device tree. =A0I *thi=
-nk*
->> > > it makes sense, but I'd like to hear other opinions.
->> > >
->> > Binding platform_device with of_node via resources matching seems a
->> > little fiddly, but your implementation looks solid to me. =A0I made a
->> > quick scan on all the platform_device registration under
->> > arch/arm/plat-mxc/devices, nothing would be broken, only except
->> > platform-gpio_keys which is not an on-chip device.
->>
->> Right; and doing it this way doesn't make sense for anything that is
->> board/system specific because if the board is using the DT, then it is
->> simpler and more reliable to avoid the matching heuristic entirely.
->>
->> > Looking at the code, I'm wondering how the binding of resource type
->> > IORESOURCE_DMA looks like. =A0I'm seeing some platform_device is using
->> > this flag to tell dma channel fixed for the device. =A0I'm not sure if
->> > it can be fit in property 'dma-ranges'. =A0And I only see IORESOURCE_M=
-EM
->> > and IORESOURCE_IRQ being used in the matching model.
->>
->> The matching is simply a heuristic that makes a best guess about how
->> how device nodes line up with platform_device registrations. =A0Right
->> now the heuristic is to look at the register ranges and irqs described
->> in the node and make sure that each of them are listed in the
->> platform_device. =A0If the platform_device has additional resources,
->> then it simply ignores them. =A0That seems to be sufficient for accurate
->> matching, but I won't know for sure until people start using it.
->>
->> If there are situations where the heuristic does not work, then I'd
->> like to know what they are so that the algorithm can be fixed, or in
->> the absolute worst case implement workaround logic.
->>
->> One option I'm considering which would improve the accuracy of the
->> heuristic is to add a 'char *of_compatible' field to struct
->> platform_device. =A0Then platform_devices could optionally be tagged
->> with the compatible value that must be present in order to be matched
->> with a node.
->>
->> I definitely want feedback on the matching heuristic!
->>
-> Tested on babbage with serial, fec and esdhc drivers, and I did see
-> it solves problems of clkdev dev_id matching and pdev->id use. =A0And
-> it even helped to discover one problem with .end definition of fec
-> resource IORESOURCE_MEM. =A0I will send mainline a patch for that soon.
+This patch set is to take sdhci device driver specific things out
+from sdhci-pltfm.c and make them self registered. Here are the
+difference it makes.
 
-Awesome, thanks!
+ * Get the sdhci device driver follow the Linux trend that driver
+   take the registration by its own
+ * sdhci-pltfm.c becomes significantly simpler and only has common
+   support functions there
+ * All sdhci device specific stuff are going back its own driver
+ * The dt and non-dt support share the same pair of .probe and
+   .remove hooks.
 
-g.
+The first one patch adds common support function into sdhci-pltfm.c
+when changing sdhci-esdhc-imx driver, while the last one clean up
+sdhci-pltfm.c when changing sdhci-tegra driver.
 
--- =
+Only the patch of sdhci-esdhc-imx are tested on hardware, and others
+are just build tested.
 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Regards,
+Shawn
+
+Shawn Guo (5):
+      mmc: sdhci: make sdhci-esdhc-imx driver self registered
+      mmc: sdhci: make sdhci-cns3xxx driver self registered
+      mmc: sdhci: make sdhci-dove driver self registered
+      mmc: sdhci: make sdhci-tegra driver self registered
+      mmc: sdhci: update Makefile/Kconfig for sdhci_pltfm change
+
+ drivers/mmc/host/Kconfig           |   24 +++--
+ drivers/mmc/host/Makefile          |   11 +-
+ drivers/mmc/host/sdhci-cns3xxx.c   |   68 +++++++++++++-
+ drivers/mmc/host/sdhci-dove.c      |   70 +++++++++++++-
+ drivers/mmc/host/sdhci-esdhc-imx.c |   98 +++++++++++++++----
+ drivers/mmc/host/sdhci-pltfm.c     |  165 ++-----------------------------
+ drivers/mmc/host/sdhci-pltfm.h     |   14 ++-
+ drivers/mmc/host/sdhci-tegra.c     |  189 +++++++++++++++++++++---------------
