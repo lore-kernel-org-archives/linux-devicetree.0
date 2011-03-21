@@ -1,45 +1,55 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH 0/5] make sdhci device drivers self registered
-Date: Mon, 21 Mar 2011 13:54:40 +0100
-Message-ID: <20110321125440.GE9686@pengutronix.de>
-References: <1300694823-8300-1-git-send-email-shawn.guo@linaro.org>
- <201103211339.45305.arnd@arndb.de>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH] hwmon: (ads1015) Make gain and datarate configurable
+Date: Mon, 21 Mar 2011 14:05:33 +0100
+Message-ID: <20110321140533.1e5faa76@endymion.delvare>
+References: <20110318220240.399ade64@endymion.delvare>
+	<1300703865-23939-1-git-send-email-eibach@gdsys.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201103211339.45305.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Shawn Guo <shawn.guo@linaro.org>, linaro-dev@lists.linaro.org, sameo@linux.intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1300703865-23939-1-git-send-email-eibach@gdsys.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dirk Eibach <eibach@gdsys.de>
+Cc: lm-sensors@lm-sensors.org, linux-doc@vger.kernel.org, rdunlap@xenotime.net, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 21 Mar 2011 11:37:45 +0100, Dirk Eibach wrote:
+> Configuration for ads1015 gain and datarate is possible via
+> devicetree or platform data.
+> 
+> This is a followup patch to previous ads1015 patches on Jean Delvares
+> tree.
+> 
+> Changes since v1:
+> - replaced exported_channels bitmask with an enable entry per channel
+> - improved platform data example in Documentation
+> - improved patch description
+> 
+> Changes since v2:
+> - fixed spelling and whitespace in Documentation
+> - marked default data_rate
+> - replaced FS by full scale
+> - removed structure definition from Documentation
+> - used DIV_ROUND_UP()
+> - improved comments
+> - improved waiting for conversion
+> - moved devicetree stuff to ads1015_get_channels_config_of()
+> - renamed ads1015_get_exported_channels() to ads1015_get_channels_config()
+> - renamed ADS1015_CONFIG_CHANNELS to ADS1015_CHANNELS
+> - fixed some style inconsistencies
+> 
+> Signed-off-by: Dirk Eibach <eibach@gdsys.de>
+> ---
+>  .../devicetree/bindings/hwmon/ads1015.txt          |   88 +++++++++---
+>  Documentation/hwmon/ads1015                        |   49 ++++---
+>  drivers/hwmon/ads1015.c                            |  151 ++++++++++++++------
+>  include/linux/i2c/ads1015.h                        |   10 ++-
+>  4 files changed, 212 insertions(+), 86 deletions(-)
 
---//IivP0gvsAy3Can
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks.
 
-> If you don't get any other feedback and Chris is happy with the
+I'll send all my hwmon patches to Linus later today.
 
-I would like to have a look at it, please give me a few days.
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---//IivP0gvsAy3Can
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk2HSpAACgkQD27XaX1/VRu2XACgpoIYAxXl7PBMt1ImAi1v//Ri
-DbsAoIKyxG8Tr4N5OIFQVDyca2g6Ic65
-=Uzdh
------END PGP SIGNATURE-----
-
---//IivP0gvsAy3Can--
+-- 
+Jean Delvare
