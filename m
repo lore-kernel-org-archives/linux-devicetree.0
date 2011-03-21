@@ -1,63 +1,79 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 0/5] make sdhci device drivers self registered
-Date: Mon, 21 Mar 2011 20:52:34 +0800
-Message-ID: <20110321125233.GA28098@S2100-06.ap.freescale.net>
-References: <1300694823-8300-1-git-send-email-shawn.guo@linaro.org>
-	<201103211339.45305.arnd@arndb.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] hwmon: (ads1015) Make gain and datarate configurable
+Date: Mon, 21 Mar 2011 13:53:25 +0100
+Message-ID: <20110321125325.GD9686@pengutronix.de>
+References: <20110312081809.GB9347@angua.secretlab.ca>
+	<1300269715-15819-1-git-send-email-eibach@gdsys.de>
+	<20110318220240.399ade64@endymion.delvare>
+	<48D3D52125C49B43AE880038E2E5314BB5BE82@SRV101.gdsys.de>
+	<20110321130347.44f5d16d@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201103211339.45305.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============9195189809176388024=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110321130347.44f5d16d-R0o5gVi9kd7kN2dkZ6Wm7A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Cc: "Eibach, Dirk" <Eibach-dJ+jgKLZIg4@public.gmane.org>, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 21, 2011 at 01:39:45PM +0100, Arnd Bergmann wrote:
-[...]
-> 
-> Hi Shawn,
-> 
-Hi Arnd,
 
-> The changes you make look very nice, great work there!
-> 
-> I think the split of the series into five patches is not ideal
-> because you have more interdependencies than necessary, and it's
-> not clear that the series can be safely bisected, especially
-> with the way you do all the Kconfig/Makefile updates at the
-> end.
-> 
-> A nicer way to partition the series would be
-> 
-> 1.   Add sdhci_pltfm_init helper
-> 2-5. Convert each of the users, including the respective
->      Kconfig/Makefile changes
-> 6.   remove obsolete code from sdhci-pltfm.c
-> 
-> As I said, that's just a detail and the end result is the same.
-> If you don't get any other feedback and Chris is happy with the
-> changes, I wouldn't expect you to reshuffle all the patches just
-> for this.
-> 
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-Actually, I knew there should be better partition of the patch set,
-and it just did not come into my mind :)  You suggestion does look
-better.  I would take it in the next spin.
+--===============9195189809176388024==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q0rSlbzrZN6k9QnT"
+Content-Disposition: inline
 
-Thanks for the suggestion.
 
--- 
-Regards,
-Shawn
+--Q0rSlbzrZN6k9QnT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> > I am not proud of this, but I learned BASIC on a Commodore 116 ;)
+>=20
+> Oh dear, you must be even older than me then :p Locomotive BASIC on an
+> Amstrad CPC464 for me.
+
+Both were released in 1984. (And the BASIC V3.5 of the 116 was quite
+better than V2.0 of the Commodore 64 (released in 1982). Still BASIC,
+though :)) SCNR, I love the 8-bit era...
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--Q0rSlbzrZN6k9QnT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk2HSkUACgkQD27XaX1/VRsZlACfbfl68zMB4sizAeMWYnDYoO9j
+l9wAoMAnYO3GRPGaK/zNxuAHz/AxgH4W
+=XEWP
+-----END PGP SIGNATURE-----
+
+--Q0rSlbzrZN6k9QnT--
+
+--===============9195189809176388024==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============9195189809176388024==--
