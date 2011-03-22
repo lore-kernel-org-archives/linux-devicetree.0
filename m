@@ -1,96 +1,73 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v6 0/6] powerpc, 52xx: add charon board support
-Date: Tue, 22 Mar 2011 09:27:26 +0100
-Message-ID: <1300782452-528-1-git-send-email-hs@denx.de>
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH v6 5/6] powerpc, video: add SM501 support for charon board.
+Date: Tue, 22 Mar 2011 09:27:31 +0100
+Message-ID: <1300782452-528-6-git-send-email-hs@denx.de>
 References: <1291451028-22532-1-git-send-email-hs@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1291451028-22532-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Ben Dooks <ben-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vincent Sanders <vince-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+ <1300782452-528-1-git-send-email-hs@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1300782452-528-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Heiko Schocher <hs@denx.de>, Wolfram Sang <w.sang@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
 List-Id: devicetree@vger.kernel.org
 
-cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-cc: Ben Dooks <ben-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
-cc: Vincent Sanders <vince-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>
-cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-cc: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
-cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-cc: Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Heiko Schocher <hs@denx.de>
+cc: Wolfram Sang <w.sang@pengutronix.de>
+cc: Grant Likely <grant.likely@secretlab.ca>
+cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+cc: linux-fbdev@vger.kernel.org
+cc: devicetree-discuss@ozlabs.org
+cc: Ben Dooks <ben@simtec.co.uk>
+cc: Vincent Sanders <vince@simtec.co.uk>
+cc: Samuel Ortiz <sameo@linux.intel.com>
+cc: linux-kernel@vger.kernel.org
+cc: Randy Dunlap <rdunlap@xenotime.net>
+cc: Wolfgang Denk <wd@denx.de>
+cc: Paul Mundt <lethal@linux-sh.org>
+---
+- changes since v1:
+  - no board specific defconfig file for mpc52xx based boards as suggested
+    from Wolfram Sang
 
-changes since v5:
-- repost complete patchseries, as Paul Mundt suggested
-- rebased against current head
-- add Acked-by from Samuel Ortiz (MFD parts)
-  http://www.spinics.net/lists/linux-fbdev/msg02550.html
-  http://linux.derkeiler.com/Mailing-Lists/Kernel/2011-01/msg11798.html
+- changes since v2:
+  add Ben Dooks, Vincent Sanders and Samuel Ortiz and lkml to cc, as
+  suggested from Paul Mundt.
 
-  and Benjamin Herrenschmidt (DTS parts)
-  http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/088279.html
-- removed patch 
-  "powerpc, mpc5200: update mpc5200_defconfig to fit for charon board."
-  therefore added
-  "powerpc, tqm5200: update tqm5200_defconfig to fit for charon board."
+- changes since v3:
+  - rebased against v2.6.38-rc2
+- changes since v4:
+  - added Paul Mundt to cc (Sorry forgot this in series v4)
 
-  Paul: before adding this patchseries, this patch should get
-        an Acked-by from a powerpc maintainer. 
+ arch/powerpc/boot/dts/charon.dts |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-checkpatch says:
-total: 0 errors, 0 warnings, 233 lines checked
-
-20110322/0001-powerpc-5200-add-support-for-charon-board.patch has no obvious style problems and is ready for submission.
-total: 0 errors, 0 warnings, 841 lines checked
-
-20110322/0002-video-sm501-add-I-O-functions-for-use-on-powerpc.patch has no obvious style problems and is ready for submission.
-total: 0 errors, 0 warnings, 109 lines checked
-
-20110322/0003-video-sm501-add-edid-and-commandline-support.patch has no obvious style problems and is ready for submission.
-total: 0 errors, 0 warnings, 106 lines checked
-
-20110322/0004-video-sm501-add-OF-binding-to-support-SM501.patch has no obvious style problems and is ready for submission.
-total: 0 errors, 0 warnings, 22 lines checked
-
-20110322/0005-powerpc-video-add-SM501-support-for-charon-board.patch has no obvious style problems and is ready for submission.
-total: 0 errors, 0 warnings, 82 lines checked
-
-20110322/0006-powerpc-tqm5200-update-tqm5200_defconfig-to-fit-for-.patch has no obvious style problems and is ready for submission.
-
-Heiko Schocher (6):
-  powerpc, 5200: add support for charon board
-  video, sm501: add I/O functions for use on powerpc
-  video, sm501: add edid and commandline support
-  video, sm501: add OF binding to support SM501
-  powerpc, video: add SM501 support for charon board.
-  powerpc, tqm5200: update tqm5200_defconfig to fit for charon board.
-
- Documentation/fb/sm501.txt                   |   10 +
- Documentation/powerpc/dts-bindings/sm501.txt |   34 ++++
- arch/powerpc/boot/dts/charon.dts             |  236 ++++++++++++++++++++++
- arch/powerpc/configs/52xx/tqm5200_defconfig  |   20 ++-
- arch/powerpc/platforms/52xx/mpc5200_simple.c |    1 +
- drivers/mfd/sm501.c                          |  133 +++++++------
- drivers/video/sm501fb.c                      |  272 +++++++++++++++++---------
- include/linux/sm501.h                        |    8 +
- 8 files changed, 555 insertions(+), 159 deletions(-)
- create mode 100644 Documentation/fb/sm501.txt
- create mode 100644 Documentation/powerpc/dts-bindings/sm501.txt
- create mode 100644 arch/powerpc/boot/dts/charon.dts
-
+diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
+index 9776889..0e00e50 100644
+--- a/arch/powerpc/boot/dts/charon.dts
++++ b/arch/powerpc/boot/dts/charon.dts
+@@ -186,6 +186,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+ 		ranges = <	0 0 0xfc000000 0x02000000
++				1 0 0xe0000000 0x04000000 // CS1 range, SM501
+ 				3 0 0xe8000000 0x00080000>;
+ 
+ 		flash@0,0 {
+@@ -197,6 +198,15 @@
+ 			#address-cells = <1>;
+ 		};
+ 
++		display@1,0 {
++			compatible = "smi,sm501";
++			reg = <1 0x00000000 0x00800000
++			       1 0x03e00000 0x00200000>;
++			mode = "640x480-32@60";
++			interrupts = <1 1 3>;
++			little-endian;
++		};
++
+ 		mram0@3,0 {
+ 			compatible = "mtd-ram";
+ 			reg = <3 0x00000 0x80000>;
 -- 
 1.7.4
