@@ -1,54 +1,37 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH v6 6/6] powerpc, tqm5200: update tqm5200_defconfig to
- fit for charon board.
-Date: Tue, 22 Mar 2011 10:10:27 +0100
-Message-ID: <20110322091027.GC2134@pengutronix.de>
-References: <1291451028-22532-1-git-send-email-hs@denx.de>
- <1300782452-528-1-git-send-email-hs@denx.de>
- <1300782452-528-7-git-send-email-hs@denx.de>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM:boot:device tree: Allow the device tree binary to
+	be appended to zImage
+Date: Tue, 22 Mar 2011 12:47:56 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1103221242340.11889@xanadu.home>
+References: <20110321221930.19756.36549.stgit@riker>
+	<alpine.LFD.2.00.1103211844500.11889@xanadu.home>
+	<4D87E260.6050902@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1300782452-528-7-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <4D87E260.6050902-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 21 Mar 2011, John Bonesio wrote:
 
---RIYY1s2vRbPFwWeW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Nicolas,
+> 
+> Is this addhi instruction the only one, or do I need to go through and
+> find other instructions to update as well?
 
->     As this board is tqm5200 based, added necessary changes
->     to the tqm5200_defconfig. In previous patchserie I added
->     the changes to mpc5200_defconfig, as Wolfram Sang mentioned,
->     but as tqm5200_defconfig is in mainline, and the board is
->     tqm5200 based, I think, thats the appropriate place, as
+That was the only one I noticed.
 
-I'd think the perfect solution would have been to merge the
-tqm-defconfig into the mpc5200-defconfig entirely and get rid of it.
-That being said, I don't think this issue is big enough to block this
-series, so fine enough with me.
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---RIYY1s2vRbPFwWeW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk2IZ4MACgkQD27XaX1/VRu7cQCfWpwfinmAeGn8hGBfiiU0IqlG
-MkoAoLaw5f0WowSPgUmyBzmU9YvG4B6b
-=7p51
------END PGP SIGNATURE-----
-
---RIYY1s2vRbPFwWeW--
+Nicolas
