@@ -1,44 +1,69 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] crypto: caam - de-CHIP-ify device tree compatibles
-Date: Wed, 23 Mar 2011 21:24:09 +0800
-Message-ID: <20110323132409.GD4374@gondor.apana.org.au>
-References: <20110315165220.d4fb60bc.kim.phillips@freescale.com> <20110316005951.GA18791@angua.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/4] of/flattree: minor cleanups
+Date: Wed, 23 Mar 2011 14:35:55 -0600
+Message-ID: <20110323203555.GA14277@ponder.secretlab.ca>
+References: <1300408356-15253-1-git-send-email-dilinger@queued.net>
+ <1300408356-15253-4-git-send-email-dilinger@queued.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110316005951.GA18791@angua.secretlab.ca>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Kim Phillips <kim.phillips@freescale.com>, linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Steve Cornelius <sec@pobox.com>, Kumar Gala <kumar.gala@freescale.com>
+In-Reply-To: <1300408356-15253-4-git-send-email-dilinger@queued.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andres Salomon <dilinger@queued.net>
+Cc: devicetree-discuss@lists.ozlabs.org, Daniel Drake <dsd@laptop.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2011 at 06:59:51PM -0600, Grant Likely wrote:
-> On Tue, Mar 15, 2011 at 04:52:20PM -0500, Kim Phillips wrote:
-> > - all the integration parameters have been captured by the binding.
-> > - the block name really uniquely identifies this hardware.
-> > 
-> > Some advocate putting SoC names everywhere in case software needs
-> > to work around some chip-specific bug, but more precise SoC
-> > information already exists in SVR, and board information already
-> > exists in the top-level device tree node.
-> > 
-> > Note that sometimes the SoC name is a worse identifier than the
-> > block version, as the block version can change between revisions
-> > of the same SoC.
-> > 
-> > As a matter of historical reference, neither SEC versions 2.x
-> > nor 3.x (driven by talitos) ever needed CHIP references.
-> > 
-> > Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
+On Thu, Mar 17, 2011 at 05:32:35PM -0700, Andres Salomon wrote:
+>  - static-ize some functions
+>  - add some additional comments
 > 
-> <sigh>  Very well.  As long as some level of versioning is used on the
-> compatible values, I guess I can live with it.
-> 
-> Acked-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Andres Salomon <dilinger@queued.net>
 
-Patch applied.  Thanks!
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Merged, thanks.  I'll look at the rest after the merge window.
+
+g.
+
+> ---
+>  drivers/of/fdt.c |    6 ++++--
+>  1 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index af824e7..c9db49c 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -139,12 +139,13 @@ static void *unflatten_dt_alloc(unsigned long *mem, unsigned long size,
+>  /**
+>   * unflatten_dt_node - Alloc and populate a device_node from the flat tree
+>   * @blob: The parent device tree blob
+> + * @mem: Memory chunk to use for allocating device nodes and properties
+>   * @p: pointer to node in flat tree
+>   * @dad: Parent struct device_node
+>   * @allnextpp: pointer to ->allnext from last allocated device_node
+>   * @fpsize: Size of the node path up at the current depth.
+>   */
+> -unsigned long unflatten_dt_node(struct boot_param_header *blob,
+> +static unsigned long unflatten_dt_node(struct boot_param_header *blob,
+>  				unsigned long mem,
+>  				unsigned long *p,
+>  				struct device_node *dad,
+> @@ -230,6 +231,7 @@ unsigned long unflatten_dt_node(struct boot_param_header *blob,
+>  		}
+>  		kref_init(&np->kref);
+>  	}
+> +	/* process properties */
+>  	while (1) {
+>  		u32 sz, noff;
+>  		char *pname;
+> @@ -351,7 +353,7 @@ unsigned long unflatten_dt_node(struct boot_param_header *blob,
+>   * @dt_alloc: An allocator that provides a virtual address to memory
+>   * for the resulting tree
+>   */
+> -void __unflatten_device_tree(struct boot_param_header *blob,
+> +static void __unflatten_device_tree(struct boot_param_header *blob,
+>  			     struct device_node **mynodes,
+>  			     void * (*dt_alloc)(u64 size, u64 align))
+>  {
+> -- 
+> 1.7.2.3
+> 
