@@ -1,53 +1,35 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 0/6] powerpc, 52xx: add charon board support
-Date: Tue, 22 Mar 2011 14:58:09 -0600
-Message-ID: <AANLkTi=Da06s2WeA0+9fshBV2ME-ADHPBWxZ5iL6rM_T@mail.gmail.com>
-References: <1291451028-22532-1-git-send-email-hs@denx.de> <1300782452-528-1-git-send-email-hs@denx.de>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] crypto: caam - standardize device tree naming
+	convention to utilize '-vX.Y'
+Date: Wed, 23 Mar 2011 21:18:42 +0800
+Message-ID: <20110323131842.GA4374@gondor.apana.org.au>
+References: <20110314174247.e5515448.kim.phillips@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1300782452-528-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linuxppc-dev@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110314174247.e5515448.kim.phillips@freescale.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Kim Phillips <kim.phillips@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Kumar Gala <kumar.gala@freescale.com>, Steve Cornelius <sec@pobox.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 22, 2011 at 2:27 AM, Heiko Schocher <hs@denx.de> wrote:
-> cc: Wolfram Sang <w.sang@pengutronix.de>
-> cc: Grant Likely <grant.likely@secretlab.ca>
-> cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> cc: linux-fbdev@vger.kernel.org
-> cc: devicetree-discuss@ozlabs.org
-> cc: Ben Dooks <ben@simtec.co.uk>
-> cc: Vincent Sanders <vince@simtec.co.uk>
-> cc: Samuel Ortiz <sameo@linux.intel.com>
-> cc: linux-kernel@vger.kernel.org
-> cc: Randy Dunlap <rdunlap@xenotime.net>
-> cc: Wolfgang Denk <wd@denx.de>
-> cc: Paul Mundt <lethal@linux-sh.org>
->
-> changes since v5:
-> - repost complete patchseries, as Paul Mundt suggested
-> - rebased against current head
-> - add Acked-by from Samuel Ortiz (MFD parts)
-> =A0http://www.spinics.net/lists/linux-fbdev/msg02550.html
-> =A0http://linux.derkeiler.com/Mailing-Lists/Kernel/2011-01/msg11798.h=
-tml
->
-> =A0and Benjamin Herrenschmidt (DTS parts)
-> =A0http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/08827=
-9.html
-> - removed patch
-> =A0"powerpc, mpc5200: update mpc5200_defconfig to fit for charon boar=
-d."
-> =A0therefore added
-> =A0"powerpc, tqm5200: update tqm5200_defconfig to fit for charon boar=
-d."
+On Mon, Mar 14, 2011 at 05:42:47PM -0500, Kim Phillips wrote:
+> Help clarify that the number trailing in compatible nomenclature
+> is the version number of the device, i.e., change:
+> 
+> "fsl,p4080-sec4.0", "fsl,sec4.0";
+> 
+> to:
+> 
+> "fsl,p4080-sec-v4.0", "fsl,sec-v4.0";
+> 
+> Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
+> Cc: Kumar Gala <kumar.gala@freescale.com>
+> Cc: Steve Cornelius <sec@pobox.com>
 
-Why?  As Wolfram mentioned, I'd rather see mpc5200 defconfig used.
-Eventually I'd like to remove tqm5200_defconfig
-
-I'll look through the rest of the patches soon.
-
-g.
+Applied.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
