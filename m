@@ -1,56 +1,114 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [git pull] last device tree and spi changes for 2.6.39 merge window
-Date: Wed, 23 Mar 2011 23:54:36 -0600
-Message-ID: <AANLkTi=_o_WPfvH7jh9zr87+JXT4wRsVEzUzMvrgOrgf@mail.gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: [PATCH 3/4] powerpc/mpic: parse 4-cell intspec types other than zero
+Date: Thu, 24 Mar 2011 16:43:54 -0500
+Message-ID: <20110324214354.GB9524@schlenkerla.am.freescale.net>
+References: <20110324214315.GA9502@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Andres Salomon <dilinger@queued.net>, spi-devel-general@lists.sourceforge.net, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <20110324214315.GA9502@schlenkerla.am.freescale.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: galak@kernel.crashing.org
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Signed-off-by: Scott Wood <scottwood@freescale.com>
+---
+ arch/powerpc/include/asm/mpic.h |    2 ++
+ arch/powerpc/sysdev/mpic.c      |   37 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 38 insertions(+), 1 deletions(-)
 
-A few last patches for .39.  It's such a small set that I put them all
-into one branch.  Please pull!
-
-Thanks,
-g.
-
-The following changes since commit 4bbba111d94781d34081c37856bbc5eb33f6c72a:
-
-  Merge branch 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound-2.6
-(2011-03-23 07:58:09 -0700)
-
-are available in the git repository at:
-
-  git://git.secretlab.ca/git/linux-2.6 devicetree/merge
-
-Andres Salomon (1):
-      of/flattree: minor cleanups
-
-Grant Likely (3):
-      dt: Refactor of_platform_bus_probe()
-      dt: protect against NULL matches passed to of_match_node()
-      dt: eliminate OF_NO_DEEP_PROBE and test for NULL match table
-
-Jarkko Nikula (1):
-      spi/omap_mcspi: Fix broken last word xfer
-
-Philippe Langlais (1):
-      spi/pl022: Add loopback support for the SPI on 5500
-
- drivers/of/base.c           |    3 ++
- drivers/of/fdt.c            |    6 ++-
- drivers/of/platform.c       |   72 ++++++++++++++-----------------------------
- drivers/spi/amba-pl022.c    |   20 +++++++++++-
- drivers/spi/omap2_mcspi.c   |    6 ++--
- include/linux/of_platform.h |    3 --
- 6 files changed, 52 insertions(+), 58 deletions(-)
-
-
+diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
+index 7005ee0..25a0cb3 100644
+--- a/arch/powerpc/include/asm/mpic.h
++++ b/arch/powerpc/include/asm/mpic.h
+@@ -371,6 +371,8 @@ struct mpic
+  * NOTE: This flag trumps MPIC_WANTS_RESET.
+  */
+ #define MPIC_NO_RESET			0x00004000
++/* Freescale MPIC (compatible includes "fsl,mpic") */
++#define MPIC_FSL			0x00008000
+ 
+ /* MPIC HW modification ID */
+ #define MPIC_REGSET_MASK		0xf0000000
+diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+index 0f7c671..69f96ec 100644
+--- a/arch/powerpc/sysdev/mpic.c
++++ b/arch/powerpc/sysdev/mpic.c
+@@ -6,6 +6,7 @@
+  *  with various broken implementations of this HW.
+  *
+  *  Copyright (C) 2004 Benjamin Herrenschmidt, IBM Corp.
++ *  Copyright 2010-2011 Freescale Semiconductor, Inc.
+  *
+  *  This file is subject to the terms and conditions of the GNU General Public
+  *  License.  See the file COPYING in the main directory of this archive
+@@ -1030,6 +1031,7 @@ static int mpic_host_xlate(struct irq_host *h, struct device_node *ct,
+ 			   irq_hw_number_t *out_hwirq, unsigned int *out_flags)
+ 
+ {
++	struct mpic *mpic = h->host_data;
+ 	static unsigned char map_mpic_senses[4] = {
+ 		IRQ_TYPE_EDGE_RISING,
+ 		IRQ_TYPE_LEVEL_LOW,
+@@ -1038,7 +1040,38 @@ static int mpic_host_xlate(struct irq_host *h, struct device_node *ct,
+ 	};
+ 
+ 	*out_hwirq = intspec[0];
+-	if (intsize > 1) {
++	if (intsize >= 4 && (mpic->flags & MPIC_FSL)) {
++		/*
++		 * Freescale MPIC with extended intspec:
++		 * First two cells are as usual.  Third specifies
++		 * an "interrupt type".  Fourth is type-specific data.
++		 *
++		 * See Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
++		 */
++		switch (intspec[2]) {
++		case 0:
++		case 1: /* no EISR/EIMR support for now, treat as shared IRQ */
++			break;
++		case 2:
++			if (intspec[0] >= ARRAY_SIZE(mpic->ipi_vecs))
++				return -EINVAL;
++
++			*out_hwirq = mpic->ipi_vecs[intspec[0]];
++			break;
++		case 3:
++			if (intspec[0] >= ARRAY_SIZE(mpic->timer_vecs))
++				return -EINVAL;
++
++			*out_hwirq = mpic->timer_vecs[intspec[0]];
++			break;
++		default:
++			pr_debug("%s: unknown irq type %u\n",
++				 __func__, intspec[2]);
++			return -EINVAL;
++		}
++
++		*out_flags = map_mpic_senses[intspec[1] & 3];
++	} else if (intsize > 1) {
+ 		u32 mask = 0x3;
+ 
+ 		/* Apple invented a new race of encoding on machines with
+@@ -1137,6 +1170,8 @@ struct mpic * __init mpic_alloc(struct device_node *node,
+ 	/* Check for "big-endian" in device-tree */
+ 	if (node && of_get_property(node, "big-endian", NULL) != NULL)
+ 		mpic->flags |= MPIC_BIG_ENDIAN;
++	if (node && of_device_is_compatible(node, "fsl,mpic"))
++		mpic->flags |= MPIC_FSL;
+ 
+ 	/* Look for protected sources */
+ 	if (node) {
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+1.7.1
