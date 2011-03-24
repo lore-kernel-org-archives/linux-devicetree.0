@@ -1,12 +1,12 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/4] powerpc: Add fsl mpic timer binding
-Date: Thu, 24 Mar 2011 16:43:15 -0500
-Message-ID: <20110324214315.GA9502@schlenkerla.am.freescale.net>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCHv3] ARM:boot:device tree: Allow the device tree binary to be
+	appended to zImage
+Date: Thu, 24 Mar 2011 16:18:41 -0700
+Message-ID: <20110324231830.2586.7150.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,86 +16,143 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org
+Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the existing example in the general mpic binding to have a
-separate TCRx region.  Currently the example doesn't describe TCRx at
-all.  The one upstream device tree with an mpic timer node (p1022ds)
-uses one large reg region to describe both, even though there are other
-unrelated registers in between.  That device tree also contains a bogus
-interrupt specifier, and there's no upstream software that uses this yet,
-so changing this shouldn't be a problem.
+This patch provides the ability to boot using a device tree that is appended
+to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
 
-Add a full binding for the MPIC timer node, not just an example of
-4-cell interrupts in the MPIC binding.
-
-Add fsl,available-ranges, similar to msi-available-ranges.
-
-Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- .../devicetree/bindings/powerpc/fsl/mpic-timer.txt |   38 ++++++++++++++++++++
- .../devicetree/bindings/powerpc/fsl/mpic.txt       |    2 +-
- 2 files changed, 39 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-new file mode 100644
-index 0000000..df41958
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-@@ -0,0 +1,38 @@
-+* Freescale MPIC timers
+ arch/arm/Kconfig                |    7 ++++
+ arch/arm/boot/compressed/head.S |   78 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 82 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 92bae09..3556aea 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1651,6 +1651,13 @@ config ZBOOT_ROM
+ 	  Say Y here if you intend to execute your compressed kernel image
+ 	  (zImage) directly from ROM or flash.  If unsure, say N.
+ 
++config ARM_APPENDED_DTB
++	bool "Use appended device tree blob"
++	depends on OF && !ZBOOT_ROM
++	help
++	  With this option, the boot code will look for a device tree binary
++	  (dtb) appended to zImage.
 +
-+Required properties:
-+- compatible: "fsl,mpic-global-timer"
+ config CMDLINE
+ 	string "Default kernel command string"
+ 	default ""
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index 200625c..034a654 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -211,6 +211,61 @@ restart:	adr	r0, LC0
+ 		mov	r10, r6
+ #endif
+ 
++		mov	lr, #0			@ init lr (dtb size) to 0
++#ifdef CONFIG_ARM_APPENDED_DTB
++/*
++ *   r0  = delta
++ *   r2  = BSS start
++ *   r3  = BSS end
++ *   r4  = final kernel address
++ *   r5  = start of this image
++ *   r6  = _edata
++ *   r7  = architecture ID
++ *   r8  = atags/device tree pointer
++ *   r9  = size of decompressed image
++ *   r10 = end of this image, including  bss/stack/malloc space if non XIP
++ *   r11 = GOT start
++ *   r12 = GOT end
++ *
++ * if there are device trees (dtb) appended to zImage, advance r10 so that the
++ * dtb data will get relocated along with the kernel if necessary.
++ */
 +
-+- reg : Contains two regions.  The first is the main timer register bank
-+  (GTCCRxx, GTBCRxx, GTVPRxx, GTDRxx).  The second is the timer control
-+  register (TCRx) for the group.
++		ldr	lr, [r6, #0]
++#ifndef __ARMEB__
++		ldr	r1, =0xedfe0dd0		@ sig is 0xd00dfeed big endian
++#else
++		ldr	r1, =0xd00dfeed
++#endif
++		cmp	lr, r1
++		mov	lr, #0			@ dtb not found, it's size is 0
++		bne	dtb_check_done
 +
-+- fsl,available-ranges: use <start count> style section to define which
-+  timer interrupts can be used.  This property is optional; without this,
-+  all timers within the group can be used.
++		mov	r8, r6			@ use the appended device tree
 +
-+- interrupts: one interrupt per timer in the group, in order, starting
-+  with timer zero.  If timer-available-ranges is present, only the
-+  interrupts that correspond to available timers shall be present.
++		/* Get the dtb's size */
++		ldr	lr, [r6, #4]
 +
-+Example:
-+	/* Note that this requires #interrupt-cells to be 4 */
-+	timer0: timer@41100 {
-+		compatible = "fsl,mpic-global-timer";
-+		reg = <0x41100 0x100 0x41300 4>;
++#ifndef __ARMEB__
++		/* convert lr (dtb size) to little endian */
++		eor	r1, lr, lr, ror #16
++		bic	r1, r1, #0x00ff0000
++		mov	lr, lr, ror #8
++		eor	lr, lr, r1, lsr #8
++#endif
++		/*
++		 * dtb size rounded up to a multiple of 8 bytes so a
++		 * misaligned GOT entry doesn't cause the end of the
++		 * dtb binary to be overwritten.
++		 */
++		add	lr, lr, #7
++		bic	lr, lr, #7
 +
-+		/* Another AMP partition is using timers 0 and 1 */
-+		fsl,available-ranges = <2 2>;
++		add	r10, r10, lr
++		add	r6, r6, lr
++dtb_check_done:
++#endif
 +
-+		interrupts = <2 0 3 0
-+		              3 0 3 0>;
-+	};
+ /*
+  * Check to see if we will overwrite ourselves.
+  *   r4  = final kernel address
+@@ -271,8 +326,9 @@ wont_overwrite:
+  *   r11 = GOT start
+  *   r12 = GOT end
+  *   sp  = stack pointer
++ *   lr  = appended dtb size (0 if not present)
+  */
+-		teq	r0, #0
++		orrs	r1, r0, lr
+ 		beq	not_relocated
+ 		add	r11, r11, r0
+ 		add	r12, r12, r0
+@@ -288,12 +344,28 @@ wont_overwrite:
+ 
+ 		/*
+ 		 * Relocate all entries in the GOT table.
++		 * Bump bss entries to _edata + dtb size
+ 		 */
+ 1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
+-		add	r1, r1, r0		@ table.  This fixes up the
+-		str	r1, [r11], #4		@ C references.
++		add	r1, r1, r0		@ This fixes up C references
++		cmp	r1, r2			@ if entry >= bss_start &&
++		cmphs	r3, r1			@       bss_end > entry
++		addhi	r1, r1, lr		@    entry += dtb size
++		str	r1, [r11], #4		@ next entry
+ 		cmp	r11, r12
+ 		blo	1b
 +
-+	timer1: timer@42100 {
-+		compatible = "fsl,mpic-global-timer";
-+		reg = <0x42100 0x100 0x42300 4>;
-+		interrupts = <4 0 3 0
-+		              5 0 3 0
-+		              6 0 3 0
-+		              7 0 3 0>;
-+	};
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-index 8aa10f4..6af4b64 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-@@ -190,7 +190,7 @@ EXAMPLE 4
- 	 */
- 	timer0: timer@41100 {
- 		compatible = "fsl,mpic-global-timer";
--		reg = <0x41100 0x100>;
-+		reg = <0x41100 0x100 0x41300 4>;
- 		interrupts = <0 0 3 0
- 		              1 0 3 0
- 		              2 0 3 0
--- 
-1.7.1
++		/* bump our bss registers too */
++		add	r2, r2, lr
++		add	r3, r3, lr
++
++		/*
++		 * bump the stack pinter
++		 *
++ 		 * If the linker script changes so the stack is not after
++		 * the bss section, this code will be wrong.
++		 */
++		add	sp, sp, lr
+ #else
+ 
+ 		/*
