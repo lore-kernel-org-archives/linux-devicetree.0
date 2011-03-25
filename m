@@ -1,14 +1,11 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary to be
-	appended to zImage
-Date: Thu, 24 Mar 2011 19:37:29 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1103241936550.11889@xanadu.home>
-References: <20110324231830.2586.7150.stgit@riker>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] net/fec: fix compile error introduced by dt support
+Date: Fri, 25 Mar 2011 15:13:58 +0800
+Message-ID: <1301037238-4031-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20110324231830.2586.7150.stgit@riker>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,149 +15,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Mar 2011, John Bonesio wrote:
-
-> This patch provides the ability to boot using a device tree that is appended
-> to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-> 
-> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-Reviewed-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
-> 
->  arch/arm/Kconfig                |    7 ++++
->  arch/arm/boot/compressed/head.S |   78 ++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 82 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 92bae09..3556aea 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1651,6 +1651,13 @@ config ZBOOT_ROM
->  	  Say Y here if you intend to execute your compressed kernel image
->  	  (zImage) directly from ROM or flash.  If unsure, say N.
->  
-> +config ARM_APPENDED_DTB
-> +	bool "Use appended device tree blob"
-> +	depends on OF && !ZBOOT_ROM
-> +	help
-> +	  With this option, the boot code will look for a device tree binary
-> +	  (dtb) appended to zImage.
-> +
->  config CMDLINE
->  	string "Default kernel command string"
->  	default ""
-> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> index 200625c..034a654 100644
-> --- a/arch/arm/boot/compressed/head.S
-> +++ b/arch/arm/boot/compressed/head.S
-> @@ -211,6 +211,61 @@ restart:	adr	r0, LC0
->  		mov	r10, r6
->  #endif
->  
-> +		mov	lr, #0			@ init lr (dtb size) to 0
-> +#ifdef CONFIG_ARM_APPENDED_DTB
-> +/*
-> + *   r0  = delta
-> + *   r2  = BSS start
-> + *   r3  = BSS end
-> + *   r4  = final kernel address
-> + *   r5  = start of this image
-> + *   r6  = _edata
-> + *   r7  = architecture ID
-> + *   r8  = atags/device tree pointer
-> + *   r9  = size of decompressed image
-> + *   r10 = end of this image, including  bss/stack/malloc space if non XIP
-> + *   r11 = GOT start
-> + *   r12 = GOT end
-> + *
-> + * if there are device trees (dtb) appended to zImage, advance r10 so that the
-> + * dtb data will get relocated along with the kernel if necessary.
-> + */
-> +
-> +		ldr	lr, [r6, #0]
-> +#ifndef __ARMEB__
-> +		ldr	r1, =0xedfe0dd0		@ sig is 0xd00dfeed big endian
-> +#else
-> +		ldr	r1, =0xd00dfeed
-> +#endif
-> +		cmp	lr, r1
-> +		mov	lr, #0			@ dtb not found, it's size is 0
-> +		bne	dtb_check_done
-> +
-> +		mov	r8, r6			@ use the appended device tree
-> +
-> +		/* Get the dtb's size */
-> +		ldr	lr, [r6, #4]
-> +
-> +#ifndef __ARMEB__
-> +		/* convert lr (dtb size) to little endian */
-> +		eor	r1, lr, lr, ror #16
-> +		bic	r1, r1, #0x00ff0000
-> +		mov	lr, lr, ror #8
-> +		eor	lr, lr, r1, lsr #8
-> +#endif
-> +		/*
-> +		 * dtb size rounded up to a multiple of 8 bytes so a
-> +		 * misaligned GOT entry doesn't cause the end of the
-> +		 * dtb binary to be overwritten.
-> +		 */
-> +		add	lr, lr, #7
-> +		bic	lr, lr, #7
-> +
-> +		add	r10, r10, lr
-> +		add	r6, r6, lr
-> +dtb_check_done:
-> +#endif
-> +
->  /*
->   * Check to see if we will overwrite ourselves.
->   *   r4  = final kernel address
-> @@ -271,8 +326,9 @@ wont_overwrite:
->   *   r11 = GOT start
->   *   r12 = GOT end
->   *   sp  = stack pointer
-> + *   lr  = appended dtb size (0 if not present)
->   */
-> -		teq	r0, #0
-> +		orrs	r1, r0, lr
->  		beq	not_relocated
->  		add	r11, r11, r0
->  		add	r12, r12, r0
-> @@ -288,12 +344,28 @@ wont_overwrite:
->  
->  		/*
->  		 * Relocate all entries in the GOT table.
-> +		 * Bump bss entries to _edata + dtb size
->  		 */
->  1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
-> -		add	r1, r1, r0		@ table.  This fixes up the
-> -		str	r1, [r11], #4		@ C references.
-> +		add	r1, r1, r0		@ This fixes up C references
-> +		cmp	r1, r2			@ if entry >= bss_start &&
-> +		cmphs	r3, r1			@       bss_end > entry
-> +		addhi	r1, r1, lr		@    entry += dtb size
-> +		str	r1, [r11], #4		@ next entry
->  		cmp	r11, r12
->  		blo	1b
-> +
-> +		/* bump our bss registers too */
-> +		add	r2, r2, lr
-> +		add	r3, r3, lr
-> +
-> +		/*
-> +		 * bump the stack pinter
-> +		 *
-> + 		 * If the linker script changes so the stack is not after
-> +		 * the bss section, this code will be wrong.
-> +		 */
-> +		add	sp, sp, lr
->  #else
->  
->  		/*
-> 
+QWZ0ZXIgZmVjIGR0IHN1cHBvcnQgaXMgYWRkZWQsIHRoZSBmb2xsb3dpbmcgY29tcGlsZSBlcnJv
+ciB3aWxsIGJlCnNlZW4gd2hlbiBidWlsZGluZyBhIHB1cmUgbm9uLWR0IGtlcm5lbC4KCmRyaXZl
+cnMvbmV0L2ZlYy5jOiBJbiBmdW5jdGlvbiDigJhmZWNfcHJvYmXigJk6CmRyaXZlcnMvbmV0L2Zl
+Yy5jOjEzODM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhvZl9t
+YXRjaF9kZXZpY2XigJkKZHJpdmVycy9uZXQvZmVjLmM6MTM4Mzogd2FybmluZzogYXNzaWdubWVu
+dCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2FzdAoKVGhpcyBwYXRjaCBp
+cyB0byBmaXggdGhlIGVycm9yLgoKU2lnbmVkLW9mZi1ieTogU2hhd24gR3VvIDxzaGF3bi5ndW9A
+bGluYXJvLm9yZz4KLS0tCiBkcml2ZXJzL25ldC9mZWMuYyB8ICAgMTMgKysrKysrKysrKysrLQog
+MSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9ucygtKQoKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvbmV0L2ZlYy5jIGIvZHJpdmVycy9uZXQvZmVjLmMKaW5kZXggYjU3Zjg3
+OS4uZmZiMWU3NSAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvZmVjLmMKKysrIGIvZHJpdmVycy9u
+ZXQvZmVjLmMKQEAgLTg1LDggKzg1LDE5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkIGZlY19kdF9pZHNbXSA9IHsKIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg1MS1mZWMiLCAu
+ZGF0YSA9ICZmZWNfZGV2dHlwZVswXSwgfSwKIAl7fSwKIH07CisKK3N0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkICoKK2ZlY19nZXRfb2ZfZGV2aWNlX2lkKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYpCit7CisJcmV0dXJuIG9mX21hdGNoX2RldmljZShmZWNfZHRfaWRzLCAmcGRl
+di0+ZGV2KTsKK30KICNlbHNlCiAjZGVmaW5lIGZlY19kdF9pZHMgTlVMTAorc3RhdGljIGlubGlu
+ZSBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICoKK2ZlY19nZXRfb2ZfZGV2aWNlX2lkKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UgKnBkZXYpCit7CisJcmV0dXJuIE5VTEw7Cit9CiAjZW5kaWYKIAogc3RhdGlj
+IHVuc2lnbmVkIGNoYXIgbWFjYWRkcltFVEhfQUxFTl07CkBAIC0xMzgwLDcgKzEzOTEsNyBAQCBm
+ZWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAlzdHJ1Y3QgcmVzb3VyY2Ug
+KnI7CiAJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2ZfaWQ7CiAKLQlvZl9pZCA9IG9mX21h
+dGNoX2RldmljZShmZWNfZHRfaWRzLCAmcGRldi0+ZGV2KTsKKwlvZl9pZCA9IGZlY19nZXRfb2Zf
+ZGV2aWNlX2lkKHBkZXYpOwogCWlmIChvZl9pZCkKIAkJcGRldi0+aWRfZW50cnkgPSAoc3RydWN0
+IHBsYXRmb3JtX2RldmljZV9pZCAqKW9mX2lkLT5kYXRhOwogCi0tIAoxLjcuMQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNz
+IG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczov
+L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
