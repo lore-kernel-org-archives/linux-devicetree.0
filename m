@@ -1,116 +1,173 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/5] mmc: sdhci: merge two sdhci-pltfm.h into one
-Date: Fri, 25 Mar 2011 16:48:51 +0800
-Message-ID: <1301042931-4869-6-git-send-email-shawn.guo@linaro.org>
-References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 1/5] mmc: sdhci: make sdhci-esdhc-imx driver self
+ registered
+Date: Fri, 25 Mar 2011 17:36:50 +0800
+Message-ID: <20110325093649.GA17228@S2100-06.ap.freescale.net>
+References: <1300694823-8300-1-git-send-email-shawn.guo@linaro.org>
+ <1300694823-8300-2-git-send-email-shawn.guo@linaro.org>
+ <20110324042858.GD27881@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1301042931-4869-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110324042858.GD27881@ponder.secretlab.ca>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linaro-dev@lists.linaro.org, sameo@linux.intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The structure sdhci_pltfm_data is not necessarily to be in a public
-header like include/linux/mmc/sdhci-pltfm.h, so the patch moves it
-into drivers/mmc/host/sdhci-pltfm.h and eliminates the former one.
+On Wed, Mar 23, 2011 at 10:28:58PM -0600, Grant Likely wrote:
+> On Mon, Mar 21, 2011 at 04:06:59PM +0800, Shawn Guo wrote:
+> > The patch turns the common stuff to in sdhci-pltfm.c into functions,
+> > and add sdhci-esdhc-imx its own .probe and .remove which in turn call
+> > into the common functions, so that sdhci-esdhc-imx driver registers
+> > itself and keep all sdhci-esdhc-imx specific things like
+> > sdhci_esdhc_imx_pdata away from sdhci-pltfm.c which is common.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> 
+> Hi Shawn,
+> 
+Hi Grant,
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mmc/host/sdhci-cns3xxx.c |    1 -
- drivers/mmc/host/sdhci-esdhc.c   |    1 -
- drivers/mmc/host/sdhci-pltfm.h   |    6 +++++-
- include/linux/mmc/sdhci-pltfm.h  |   29 -----------------------------
- 4 files changed, 5 insertions(+), 32 deletions(-)
- delete mode 100644 include/linux/mmc/sdhci-pltfm.h
+> Thanks for all this work, I think it is the right thing to do.  A few
+> relatively minor comments below, but otherwise I like it.
+> 
+> g.
+> 
+> > ---
+> >  drivers/mmc/host/sdhci-esdhc-imx.c |   98 +++++++++++++++++++++++++++++-------
+> >  drivers/mmc/host/sdhci-pltfm.c     |   84 +++++++++++++++++++++++++++++--
+> >  drivers/mmc/host/sdhci-pltfm.h     |   11 ++++-
+> 
+> I think this patch should be split in 2.  One patch to refactor
+> edhci-pltfm* to create the common utility functions, and one patch to
+> convert the imx driver.
+> 
+I squashed this whole series into one patch in a relevant patch set
+I just posted out minutes ago, primarily to reduce the patch quantity
+and ease the bisect, since it's logically integral.
 
-diff --git a/drivers/mmc/host/sdhci-cns3xxx.c b/drivers/mmc/host/sdhci-cns3xxx.c
-index 95b9080..2238d34 100644
---- a/drivers/mmc/host/sdhci-cns3xxx.c
-+++ b/drivers/mmc/host/sdhci-cns3xxx.c
-@@ -15,7 +15,6 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/mmc/host.h>
--#include <linux/mmc/sdhci-pltfm.h>
- #include <mach/cns3xxx.h>
- #include "sdhci.h"
- #include "sdhci-pltfm.h"
-diff --git a/drivers/mmc/host/sdhci-esdhc.c b/drivers/mmc/host/sdhci-esdhc.c
-index b3d1bc1..fd041d9 100644
---- a/drivers/mmc/host/sdhci-esdhc.c
-+++ b/drivers/mmc/host/sdhci-esdhc.c
-@@ -20,7 +20,6 @@
- #include <linux/err.h>
- #include <linux/clk.h>
- #include <linux/mmc/host.h>
--#include <linux/mmc/sdhci-pltfm.h>
- #ifdef CONFIG_MMC_SDHCI_ESDHC_IMX
- #include <mach/hardware.h>
- #endif
-diff --git a/drivers/mmc/host/sdhci-pltfm.h b/drivers/mmc/host/sdhci-pltfm.h
-index 05fe25d..e2d143c 100644
---- a/drivers/mmc/host/sdhci-pltfm.h
-+++ b/drivers/mmc/host/sdhci-pltfm.h
-@@ -14,9 +14,13 @@
- #include <linux/clk.h>
- #include <linux/types.h>
- #include <linux/platform_device.h>
--#include <linux/mmc/sdhci-pltfm.h>
- #include <linux/mmc/sdhci.h>
- 
-+struct sdhci_pltfm_data {
-+	struct sdhci_ops *ops;
-+	unsigned int quirks;
-+};
-+
- struct sdhci_pltfm_host {
- 	struct clk *clk;
- 	u32 scratchpad; /* to handle quirks across io-accessor calls */
-diff --git a/include/linux/mmc/sdhci-pltfm.h b/include/linux/mmc/sdhci-pltfm.h
-deleted file mode 100644
-index f1c2ac3..0000000
---- a/include/linux/mmc/sdhci-pltfm.h
-+++ /dev/null
-@@ -1,29 +0,0 @@
--/*
-- * Platform data declarations for the sdhci-pltfm driver.
-- *
-- * Copyright (c) 2010 MontaVista Software, LLC.
-- *
-- * Author: Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or (at
-- * your option) any later version.
-- */
--
--#ifndef _SDHCI_PLTFM_H
--#define _SDHCI_PLTFM_H
--
--struct sdhci_ops;
--
--/**
-- * struct sdhci_pltfm_data - SDHCI platform-specific information & hooks
-- * @ops: optional pointer to the platform-provided SDHCI ops
-- * @quirks: optional SDHCI quirks
-- */
--struct sdhci_pltfm_data {
--	struct sdhci_ops *ops;
--	unsigned int quirks;
--};
--
--#endif /* _SDHCI_PLTFM_H */
+[...]
+> > +static int __init sdhci_esdhc_imx_init(void)
+> > +{
+> > +	return platform_driver_register(&sdhci_esdhc_imx_driver);
+> > +}
+> > +
+> > +static void __exit sdhci_esdhc_imx_exit(void)
+> > +{
+> > +	platform_driver_unregister(&sdhci_esdhc_imx_driver);
+> > +}
+> > +
+> > +module_init(sdhci_esdhc_imx_init);
+> > +module_exit(sdhci_esdhc_imx_exit);
+> 
+> Typically, I like to see module_init() and module_exit() immediately
+> adjacent to the functions they register.
+> 
+Incorporated in the new patch set just posted ...
+
+> > +
+> > +MODULE_DESCRIPTION("SDHCI driver for i.MX eSDHC");
+> > +MODULE_AUTHOR("Wolfram Sang <w.sang@pengutronix.de>");
+> > +MODULE_LICENSE("GPL v2");
+> > diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+> > index ccc04ac..38b8cb4 100644
+> > --- a/drivers/mmc/host/sdhci-pltfm.c
+> > +++ b/drivers/mmc/host/sdhci-pltfm.c
+> > @@ -44,6 +44,83 @@
+> >  static struct sdhci_ops sdhci_pltfm_ops = {
+> >  };
+> >  
+> > +struct sdhci_host *sdhci_pltfm_init(struct platform_device *pdev,
+> > +				    struct sdhci_pltfm_data *pdata)
+> 
+> Since there is no chance of *pdata being passed via the
+> pdev->dev.platform_data pointer (there aren't any users in mainline of
+> that feature) then I would take the opportunity to rename this
+> parameter and structure to eliminate any confusion.  'struct
+> sdhci_pltfm' would be sufficient I think.
+> 
+The chance comes along with the new patch set (function
+sdhci_esdhc_probe in sdhci-esdhc.c).  And I would not rename 'struct
+sdhci_pltfmi_data' to 'struct sdhci_pltfm' in terms of that we have
+another name of 'struct sdhci_pltfm_host'.  But yes, pdata does
+confuse.  Any suggestion?  I can fix all of them with a follow-up
+patch against the new series.
+
+> > +{
+> > +	struct sdhci_host *host;
+> > +	struct sdhci_pltfm_host *pltfm_host;
+> > +	struct resource *iomem;
+> > +	int ret;
+> > +
+> > +	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	if (!iomem) {
+> > +		ret = -ENOMEM;
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (resource_size(iomem) < 0x100)
+> > +		dev_err(&pdev->dev, "Invalid iomem size!\n");
+> > +
+> > +	/* Some PCI-based MFD need the parent here */
+> > +	if (pdev->dev.parent != &platform_bus)
+> > +		host = sdhci_alloc_host(pdev->dev.parent, sizeof(*pltfm_host));
+> > +	else
+> > +		host = sdhci_alloc_host(&pdev->dev, sizeof(*pltfm_host));
+> > +
+> > +	if (IS_ERR(host)) {
+> > +		ret = PTR_ERR(host);
+> > +		goto err;
+> > +	}
+> > +
+> > +	pltfm_host = sdhci_priv(host);
+> > +
+> > +	host->hw_name = "SDHCI";
+> > +	if (pdata && pdata->ops)
+> > +		host->ops = pdata->ops;
+> > +	else
+> > +		host->ops = &sdhci_pltfm_ops;
+> > +	if (pdata)
+> > +		host->quirks = pdata->quirks;
+> > +	host->irq = platform_get_irq(pdev, 0);
+> > +
+> > +	if (!request_mem_region(iomem->start, resource_size(iomem),
+> > +		mmc_hostname(host->mmc))) {
+> > +		dev_err(&pdev->dev, "cannot request region\n");
+> > +		ret = -EBUSY;
+> > +		goto err_request;
+> > +	}
+> > +
+> > +	host->ioaddr = ioremap(iomem->start, resource_size(iomem));
+> > +	if (!host->ioaddr) {
+> > +		dev_err(&pdev->dev, "failed to remap registers\n");
+> > +		ret = -ENOMEM;
+> > +		goto err_remap;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, host);
+> > +
+> > +	return host;
+> > +
+> > +err_remap:
+> > +	release_mem_region(iomem->start, resource_size(iomem));
+> > +err_request:
+> > +	sdhci_free_host(host);
+> > +err:
+> > +	pr_err("%s failed %d\n", __func__, ret);
+> > +	return NULL;
+> > +}
+> 
+> Since the bulk of this function is a direct clone of the
+> body of sdhci_pltfm_probe(), this patch should also modify
+> sdhci_pltfm_probe() to use the new utility function.  That will also
+> make it clearer to readers that this new block is simply a refactor of
+> the old.
+> 
+Good suggestion.  Will take it next time where applies ...
+
 -- 
-1.7.1
+Regards,
+Shawn
+
