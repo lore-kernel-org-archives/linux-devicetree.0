@@ -1,49 +1,88 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] net/fec: fix compile error introduced by dt support
-Date: Fri, 25 Mar 2011 15:13:58 +0800
-Message-ID: <1301037238-4031-1-git-send-email-shawn.guo@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH 0/5] consolidate sdhci pltfm & OF drivers and get them self registered
+Date: Fri, 25 Mar 2011 16:48:46 +0800
+Message-ID: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, sameo@linux.intel.com, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-QWZ0ZXIgZmVjIGR0IHN1cHBvcnQgaXMgYWRkZWQsIHRoZSBmb2xsb3dpbmcgY29tcGlsZSBlcnJv
-ciB3aWxsIGJlCnNlZW4gd2hlbiBidWlsZGluZyBhIHB1cmUgbm9uLWR0IGtlcm5lbC4KCmRyaXZl
-cnMvbmV0L2ZlYy5jOiBJbiBmdW5jdGlvbiDigJhmZWNfcHJvYmXigJk6CmRyaXZlcnMvbmV0L2Zl
-Yy5jOjEzODM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhvZl9t
-YXRjaF9kZXZpY2XigJkKZHJpdmVycy9uZXQvZmVjLmM6MTM4Mzogd2FybmluZzogYXNzaWdubWVu
-dCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2FzdAoKVGhpcyBwYXRjaCBp
-cyB0byBmaXggdGhlIGVycm9yLgoKU2lnbmVkLW9mZi1ieTogU2hhd24gR3VvIDxzaGF3bi5ndW9A
-bGluYXJvLm9yZz4KLS0tCiBkcml2ZXJzL25ldC9mZWMuYyB8ICAgMTMgKysrKysrKysrKysrLQog
-MSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9ucygtKQoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbmV0L2ZlYy5jIGIvZHJpdmVycy9uZXQvZmVjLmMKaW5kZXggYjU3Zjg3
-OS4uZmZiMWU3NSAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvZmVjLmMKKysrIGIvZHJpdmVycy9u
-ZXQvZmVjLmMKQEAgLTg1LDggKzg1LDE5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
-X2lkIGZlY19kdF9pZHNbXSA9IHsKIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg1MS1mZWMiLCAu
-ZGF0YSA9ICZmZWNfZGV2dHlwZVswXSwgfSwKIAl7fSwKIH07CisKK3N0YXRpYyBjb25zdCBzdHJ1
-Y3Qgb2ZfZGV2aWNlX2lkICoKK2ZlY19nZXRfb2ZfZGV2aWNlX2lkKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpCit7CisJcmV0dXJuIG9mX21hdGNoX2RldmljZShmZWNfZHRfaWRzLCAmcGRl
-di0+ZGV2KTsKK30KICNlbHNlCiAjZGVmaW5lIGZlY19kdF9pZHMgTlVMTAorc3RhdGljIGlubGlu
-ZSBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICoKK2ZlY19nZXRfb2ZfZGV2aWNlX2lkKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYpCit7CisJcmV0dXJuIE5VTEw7Cit9CiAjZW5kaWYKIAogc3RhdGlj
-IHVuc2lnbmVkIGNoYXIgbWFjYWRkcltFVEhfQUxFTl07CkBAIC0xMzgwLDcgKzEzOTEsNyBAQCBm
-ZWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAlzdHJ1Y3QgcmVzb3VyY2Ug
-KnI7CiAJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2ZfaWQ7CiAKLQlvZl9pZCA9IG9mX21h
-dGNoX2RldmljZShmZWNfZHRfaWRzLCAmcGRldi0+ZGV2KTsKKwlvZl9pZCA9IGZlY19nZXRfb2Zf
-ZGV2aWNlX2lkKHBkZXYpOwogCWlmIChvZl9pZCkKIAkJcGRldi0+aWRfZW50cnkgPSAoc3RydWN0
-IHBsYXRmb3JtX2RldmljZV9pZCAqKW9mX2lkLT5kYXRhOwogCi0tIAoxLjcuMQoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNz
-IG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczov
-L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+Here are what the patch set does.
+
+* Remove .probe and .remove hooks from sdhci-pltfm.c and make it be
+  a pure common helper function providers.
+* Add .probe and .remove hooks for sdhci pltfm drivers sdhci-cns3xxx,
+  sdhci-dove, sdhci-tegra, and sdhci-esdhc-imx to make them self
+  registered with calling helper functions created above.
+* Migrate the use of sdhci_of_host and sdhci_of_data to
+  sdhci_pltfm_host and sdhci_pltfm_data, so that OF version host and
+  data structure works can be saved, and pltfm version works for both
+  cases.
+* Add OF common helper stuff into sdhci-pltfm.c, and make OF version
+  sdhci drivers sdhci-of-esdhc and sdhci-of-hlwd become self
+  registered as well, so that sdhci-of-core.c and sdhci-of.h can be
+  removed.
+* Consolidate the OF and pltfm esdhc drivers into one with sharing
+  the same pair of .probe and .remove hooks.  As a result,
+  sdhci-esdhc-imx.c and sdhci-of-esdhc.c go away, while
+  sdhci-esdhc.c comes in and works for both MPCxxx and i.MX.
+* Eliminate include/linux/mmc/sdhci-pltfm.h with moving stuff into
+  drivers/mmc/host/sdhci-pltfm.h.
+
+And the benefits we gain from the changes are:
+
+* Get the sdhci device driver follow the Linux trend that driver
+  makes the registration by its own.
+* sdhci-pltfm.c becomes simple and clean as it only has common helper
+  stuff there now.
+* All sdhci device specific things are going back its own driver.
+* The dt and non-dt drivers are consolidated to use the same pair of
+  .probe and .remove hooks.
+* SDHCI driver for Freescale eSDHC controller found on both MPCxxx
+  and i.MX platforms is consolidated to use the same one .probe
+  function.
+
+The patch set works against the tree below, and was only tested on
+i.mx51 babbage board, all other targets were build tested.
+
+  git://git.secretlab.ca/git/linux-2.6.git devicetree/test
+
+Comments are welcomed and appreciated.
+
+Regards,
+Shawn
+
+PS: The first patch is a squashing of the patch set below, which was
+posted for review a few days back.
+
+  [PATCH 0/5] make sdhci device drivers self registered
+
+Some patches in this series are relatively large, involving more
+changes than expected, I chose to not split considering they are
+logically integral, and doing so can reduce the patch quantity much,
+and make bisect much easier.  But sorry for that it makes reviewers'
+life harder.
+
+Shawn Guo (5):
+      mmc: sdhci: make sdhci-pltfm device drivers self registered
+      mmc: sdhci: eliminate sdhci_of_host and sdhci_of_data
+      mmc: sdhci: make sdhci-of device drivers self registered
+      mmc: sdhci: consolidate sdhci-of-esdhc and sdhci-esdhc-imx
+      mmc: sdhci: merge two sdhci-pltfm.h into one
+
+ drivers/mmc/host/Kconfig           |   71 ++++---
+ drivers/mmc/host/Makefile          |   17 +-
+ drivers/mmc/host/sdhci-cns3xxx.c   |   68 ++++++-
+ drivers/mmc/host/sdhci-dove.c      |   69 ++++++-
+ drivers/mmc/host/sdhci-esdhc-imx.c |  149 -------------
+ drivers/mmc/host/sdhci-esdhc.c     |  412 ++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci-of-core.c   |  247 ---------------------
+ drivers/mmc/host/sdhci-of-esdhc.c  |   89 --------
+ drivers/mmc/host/sdhci-of-hlwd.c   |   89 +++++++-
+ drivers/mmc/host/sdhci-of.h        |   42 ----
+ drivers/mmc/host/sdhci-pltfm.c     |  251 +++++++++-------------
+ drivers/mmc/host/sdhci-pltfm.h     |   36 +++-
+ drivers/mmc/host/sdhci-tegra.c     |  187 ++++++++++-------
+ include/linux/mmc/sdhci-pltfm.h    |   35 ---
+ 14 files changed, 912 insertions(+), 850 deletions(-)
