@@ -1,8 +1,8 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH 2/6] Default to bootm_size() when CONFIG_SYS_BOOTMAPSZ is not
-	defined
-Date: Mon, 28 Mar 2011 13:58:43 -0600
-Message-ID: <20110328195839.10235.92568.stgit@ponder>
+Subject: [PATCH 3/6] Remove device tree booting dependency on
+	CONFIG_SYS_BOOTMAPSZ
+Date: Mon, 28 Mar 2011 13:58:49 -0600
+Message-ID: <20110328195848.10235.55053.stgit@ponder>
 References: <20110328195231.10235.36716.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,132 +24,91 @@ List-Id: devicetree@vger.kernel.org
 
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This patch adds a function getenv_bootm_mapsize() for obtaining the
-size of the early mapped region accessible by the kernel during early
-boot.  It defaults to CONFIG_SYS_BOOTMAPSZ, or if not defined,
-defaults to getenv_bootm_size(), which in turn defaults to the size of
-RAM.
-
-getenv_bootm_mapsize() can also be overridden with a "bootm_mapsize"
-environmental variable.
+The previous patch makes u-boot use the full accessible size of ram as
+the default boot mapped size if CONFIG_SYS_BOOTMAPSZ is not defined,
+which means boot_relocate_fdt() can be changed to depend solely on
+CONFIG_OF_LIBFDT.
 
 Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- README                   |   16 ++++++++++++++--
- arch/powerpc/lib/bootm.c |    2 +-
- common/image.c           |   22 +++++++++++++++++++---
- include/image.h          |    1 +
- 4 files changed, 35 insertions(+), 6 deletions(-)
+ arch/powerpc/lib/bootm.c       |    4 ++--
+ common/cmd_bootm.c             |    2 +-
+ common/image.c                 |    4 ++--
+ include/configs/omap3_beagle.h |    7 -------
+ 4 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/README b/README
-index 21cd71b..b8c1833 100644
---- a/README
-+++ b/README
-@@ -2311,7 +2311,10 @@ Configuration Settings:
- 		used) must be put below this limit, unless "bootm_low"
- 		enviroment variable is defined and non-zero. In such case
- 		all data for the Linux kernel must be between "bootm_low"
--		and "bootm_low" + CONFIG_SYS_BOOTMAPSZ.
-+		and "bootm_low" + CONFIG_SYS_BOOTMAPSZ.  The environment
-+		variable "bootm_mapsize" will override the value of
-+		CONFIG_SYS_BOOTMAPSZ.  If CONFIG_SYS_BOOTMAPSZ is undefined,
-+		then the value in "bootm_size" will be used instead.
- 
- - CONFIG_SYS_BOOT_RAMDISK_HIGH:
- 		Enable initrd_high functionality.  If defined then the
-@@ -3147,7 +3150,16 @@ List of environment variables (most likely not complete):
- 		  for use by the bootm command. See also "bootm_size"
- 		  environment variable. Address defined by "bootm_low" is
- 		  also the base of the initial memory mapping for the Linux
--		  kernel -- see the description of CONFIG_SYS_BOOTMAPSZ.
-+		  kernel -- see the description of CONFIG_SYS_BOOTMAPSZ and
-+		  bootm_mapsize.
-+
-+  bootm_mapsize	- Size of the initial memory mapping for the Linux kernel.
-+		  This variable is given as a hexadecimal number and it
-+		  defines the size of the memory region starting at base
-+		  address bootm_low that is accessible by the Linux kernel
-+		  during early boot.  If unset, CONFIG_SYS_BOOTMAPSZ is used
-+		  as the default value if it is defined, and bootm_size is
-+		  used otherwise.
- 
-   bootm_size	- Memory range available for image processing in the bootm
- 		  command can be restricted. This variable is given as
 diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c
-index 11a574a..1ee4f79 100644
+index 1ee4f79..180ee30 100644
 --- a/arch/powerpc/lib/bootm.c
 +++ b/arch/powerpc/lib/bootm.c
-@@ -95,7 +95,7 @@ static void boot_jump_linux(bootm_headers_t *images)
- 		debug ("   Booting using OF flat tree...\n");
- 		WATCHDOG_RESET ();
- 		(*kernel) ((bd_t *)of_flat_tree, 0, 0, EPAPR_MAGIC,
--			   CONFIG_SYS_BOOTMAPSZ, 0, 0);
-+			   getenv_bootm_mapsize(), 0, 0);
- 		/* does not return */
- 	} else
- #endif
-diff --git a/common/image.c b/common/image.c
-index c86b86f..a6247d8 100644
---- a/common/image.c
-+++ b/common/image.c
-@@ -454,6 +454,22 @@ phys_size_t getenv_bootm_size(void)
- #endif
+@@ -249,7 +249,7 @@ static int boot_body_linux(bootm_headers_t *images)
+ 	if (ret)
+ 		return ret;
+ 
+-#if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_SYS_BOOTMAPSZ)
++#if defined(CONFIG_OF_LIBFDT)
+ 	ret = boot_relocate_fdt(lmb, of_flat_tree, &of_size);
+ 	if (ret)
+ 		return ret;
+@@ -288,7 +288,7 @@ static int boot_body_linux(bootm_headers_t *images)
+ 		if (*initrd_start && *initrd_end)
+ 			fdt_initrd(*of_flat_tree, *initrd_start, *initrd_end, 1);
+ 	}
+-#endif	/* CONFIG_OF_LIBFDT && CONFIG_SYS_BOOTMAPSZ */
++#endif	/* CONFIG_OF_LIBFDT */
+ 	return 0;
  }
  
-+phys_size_t getenv_bootm_mapsize(void)
-+{
-+	phys_size_t tmp;
-+	char *s = getenv ("bootm_mapsize");
-+	if (s) {
-+		tmp = (phys_size_t)simple_strtoull (s, NULL, 16);
-+		return tmp;
-+	}
-+
-+#if defined(CONFIG_SYS_BOOTMAPSZ)
-+	return CONFIG_SYS_BOOTMAPSZ;
-+#else
-+	return getenv_bootm_size();
-+#endif
-+}
-+
- void memmove_wd (void *to, void *from, size_t len, ulong chunksz)
- {
- 	if (to == from)
-@@ -1207,7 +1223,7 @@ int boot_relocate_fdt (struct lmb *lmb, char **of_flat_tree, ulong *of_size)
- 	/* Pad the FDT by a specified amount */
- 	of_len = *of_size + CONFIG_SYS_FDT_PAD;
- 	of_start = (void *)(unsigned long)lmb_alloc_base(lmb, of_len, 0x1000,
--			CONFIG_SYS_BOOTMAPSZ + getenv_bootm_low());
-+			getenv_bootm_mapsize() + getenv_bootm_low());
- 
- 	if (of_start == 0) {
- 		puts("device tree - allocation error\n");
-@@ -1581,7 +1597,7 @@ int boot_get_cmdline (struct lmb *lmb, ulong *cmd_start, ulong *cmd_end)
- 	char *s;
- 
- 	cmdline = (char *)(ulong)lmb_alloc_base(lmb, CONFIG_SYS_BARGSIZE, 0xf,
--				     CONFIG_SYS_BOOTMAPSZ + getenv_bootm_low());
-+				getenv_bootm_mapsize() + getenv_bootm_base());
- 
- 	if (cmdline == NULL)
- 		return -1;
-@@ -1617,7 +1633,7 @@ int boot_get_cmdline (struct lmb *lmb, ulong *cmd_start, ulong *cmd_end)
- int boot_get_kbd (struct lmb *lmb, bd_t **kbd)
- {
- 	*kbd = (bd_t *)(ulong)lmb_alloc_base(lmb, sizeof(bd_t), 0xf,
--				     CONFIG_SYS_BOOTMAPSZ + getenv_bootm_low());
-+				getenv_bootm_mapsize() + getenv_bootm_low());
- 	if (*kbd == NULL)
- 		return -1;
- 
-diff --git a/include/image.h b/include/image.h
-index aa1d7df..b77cb79 100644
---- a/include/image.h
-+++ b/include/image.h
-@@ -451,6 +451,7 @@ int image_check_dcrc (const image_header_t *hdr);
- int getenv_yesno (char *var);
- ulong getenv_bootm_low(void);
- phys_size_t getenv_bootm_size(void);
-+phys_size_t getenv_bootm_mapsize(void);
- void memmove_wd (void *to, void *from, size_t len, ulong chunksz);
+diff --git a/common/cmd_bootm.c b/common/cmd_bootm.c
+index a5c275f..8a0a99e 100644
+--- a/common/cmd_bootm.c
++++ b/common/cmd_bootm.c
+@@ -544,7 +544,7 @@ int do_bootm_subcommand (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv
+ 		}
+ 			break;
  #endif
+-#if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_SYS_BOOTMAPSZ)
++#if defined(CONFIG_OF_LIBFDT)
+ 		case BOOTM_STATE_FDT:
+ 		{
+ 			ret = boot_relocate_fdt(&images.lmb,
+diff --git a/common/image.c b/common/image.c
+index a6247d8..127eda2 100644
+--- a/common/image.c
++++ b/common/image.c
+@@ -1202,7 +1202,7 @@ static int fit_check_fdt (const void *fit, int fdt_noffset, int verify)
+  *      0 - success
+  *      1 - failure
+  */
+-#if defined(CONFIG_SYS_BOOTMAPSZ)
++#if defined(CONFIG_OF_LIBFDT)
+ int boot_relocate_fdt (struct lmb *lmb, char **of_flat_tree, ulong *of_size)
+ {
+ 	void	*fdt_blob = *of_flat_tree;
+@@ -1252,7 +1252,7 @@ int boot_relocate_fdt (struct lmb *lmb, char **of_flat_tree, ulong *of_size)
+ error:
+ 	return 1;
+ }
+-#endif /* CONFIG_SYS_BOOTMAPSZ */
++#endif /* CONFIG_OF_LIBFDT */
+ 
+ /**
+  * boot_get_fdt - main fdt handling routine
+diff --git a/include/configs/omap3_beagle.h b/include/configs/omap3_beagle.h
+index 5cfa4cb..a0f6829 100644
+--- a/include/configs/omap3_beagle.h
++++ b/include/configs/omap3_beagle.h
+@@ -56,13 +56,6 @@
+ #define CONFIG_MISC_INIT_R
+ 
+ #define CONFIG_OF_LIBFDT		1
+-/*
+- * The early kernel mapping on ARM currently only maps from the base of DRAM
+- * to the end of the kernel image.  The kernel is loaded at DRAM base + 0x8000.
+- * The early kernel pagetable uses DRAM base + 0x4000 to DRAM base + 0x8000,
+- * so that leaves DRAM base to DRAM base + 0x4000 available.
+- */
+-#define CONFIG_SYS_BOOTMAPSZ	        0x4000
+ 
+ #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
+ #define CONFIG_SETUP_MEMORY_TAGS	1
