@@ -1,102 +1,42 @@
-From: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm/dt: Add basic device tree support for mx53 loco board
-Date: Tue, 29 Mar 2011 16:37:00 +0800
-Message-ID: <1301387820-18299-1-git-send-email-jason.hui@linaro.org>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: Device Tree on ARM status report - Mar 20
+Date: Tue, 29 Mar 2011 17:08:50 +0800
+Message-ID: <20110329090849.GE18775@S2100-06.ap.freescale.net>
+References: <AANLkTikZkfhA2Wu7_P_z5UX0Z5QeHa-W8TNksR1n4GV2@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AANLkTikZkfhA2Wu7_P_z5UX0Z5QeHa-W8TNksR1n4GV2-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, =?iso-8859-1?Q?Lo=EFc?= Minier <loic.minier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jason Hui <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
----
-grant, uboot patches has been send to u-boot maillist
-Test OK on mx53 loco board
+On Mon, Mar 21, 2011 at 03:25:16AM -0600, Grant Likely wrote:
+> 
+[...]
+> - Add packaging of .dtb files into linux-image-linaro-* packages.
+> Loic and I discussed putting them under /lib/dtb/`uname -r`/, but
+> thinking about it more, it might make more sense to share the modules
+> directory and use /lib/modules/`uname -r`/dtbs.  The dtc tool needed
+> to build the .dtbs is included with the kernel tree.
+> - Add relevant dtb files to boot partition in linaro-image tools
+> - Add boot script which passes dtb as 3rd argument to 'bootm'
+> 
+I just had a talk with Loic.  Considering the experience of playing
+l-m-c and the kind help that people jcrigby, slangasek, lool will give
+me, I would like to give a shot on this tasks.
 
-Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/mx53-loco.dts     |   30 ++++++++++++++++++++++++++++++
- arch/arm/mach-mx5/Kconfig           |    1 +
- arch/arm/mach-mx5/board-mx53_loco.c |    5 +++++
- 3 files changed, 36 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/mx53-loco.dts b/arch/arm/boot/dts/mx53-loco.dts
-new file mode 100644
-index 0000000..7347456
---- /dev/null
-+++ b/arch/arm/boot/dts/mx53-loco.dts
-@@ -0,0 +1,30 @@
-+/*
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+
-+/ {
-+	model = "Freescale i.MX53 LOCO";
-+	compatible = "fsl,mx53-loco";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	aliases {
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x70000000 0x40000000>;
-+	};
-+
-+	chosen {
-+	};
-+};
-diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-index aae51ee..a61e01e 100644
---- a/arch/arm/mach-mx5/Kconfig
-+++ b/arch/arm/mach-mx5/Kconfig
-@@ -167,6 +167,7 @@ config MACH_MX53_SMD
- config MACH_MX53_LOCO
- 	bool "Support MX53 LOCO platforms"
- 	select SOC_IMX53
-+	select MX5_DT_COMMON
- 	select IMX_HAVE_PLATFORM_IMX2_WDT
- 	select IMX_HAVE_PLATFORM_IMX_I2C
- 	select IMX_HAVE_PLATFORM_IMX_UART
-diff --git a/arch/arm/mach-mx5/board-mx53_loco.c b/arch/arm/mach-mx5/board-mx53_loco.c
-index 0a18f8d..6ffc591 100644
---- a/arch/arm/mach-mx5/board-mx53_loco.c
-+++ b/arch/arm/mach-mx5/board-mx53_loco.c
-@@ -226,10 +226,15 @@ static struct sys_timer mx53_loco_timer = {
- 	.init	= mx53_loco_timer_init,
- };
- 
-+static const char *mx53_loco_dt_match[] __initdata = {
-+	"fsl,mx53-loco",
-+	NULL
-+};
- MACHINE_START(MX53_LOCO, "Freescale MX53 LOCO Board")
- 	.map_io = mx53_map_io,
- 	.init_early = imx53_init_early,
- 	.init_irq = mx53_init_irq,
- 	.timer = &mx53_loco_timer,
- 	.init_machine = mx53_loco_board_init,
-+	.dt_compat = mx53_loco_dt_match,
- MACHINE_END
 -- 
-1.7.1
+Regards,
+Shawn
