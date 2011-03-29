@@ -1,16 +1,14 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] fdt_ro: Fix fdt_get_property_namelen() length bug
-Date: Tue, 29 Mar 2011 15:04:25 +1100
-Message-ID: <20110329040425.GP8428@yookeroo>
-References: <1301350775-27040-1-git-send-email-ptyser@xes-inc.com>
-	<20110329013446.GM8428@yookeroo>
-	<1301366877.11221.53.camel@ptyser-laptop>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM device tree support improvements
+Date: Tue, 29 Mar 2011 14:46:32 +0800
+Message-ID: <20110329064631.GA18775@S2100-06.ap.freescale.net>
+References: <20110328195231.10235.36716.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1301366877.11221.53.camel@ptyser-laptop>
+In-Reply-To: <20110328195231.10235.36716.stgit@ponder>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,86 +18,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Peter Tyser <ptyser-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, wd-ynQEQJNshbs@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 28, 2011 at 09:47:57PM -0500, Peter Tyser wrote:
-> On Tue, 2011-03-29 at 12:34 +1100, David Gibson wrote:
-> > On Mon, Mar 28, 2011 at 05:19:35PM -0500, Peter Tyser wrote:
-> > > fdt_get_property_namelen() should only compare 'namelen' characters when
-> > > matching a property name.  The previous code compared 'namelen'
-> > > characters correctly, but also required the property name length to
-> > > exactly match 'namelen'.
-> > > 
-> > > This length matching requirement would result in bugs such as
-> > > "ethernet0" not being found when using fdt_get_property_namelen() to
-> > > find properties starting with "ethernet".
-> > 
-> > Nack.  The current behaviour of the *_namelen() functions is the
-> > intended one.  Their purpose is not for doing partial matches, but
-> > instead for doing exact matches, but using a non-null-terminated
-> > string as the argument.
+On Mon, Mar 28, 2011 at 01:58:25PM -0600, Grant Likely wrote:
+> Hi Jerry & Wolfgang,
 > 
-> OK, your explanation of their intended use makes sense.  The comments
-> describing the _namelen() functions seem a bit misleading though, eg:
-> /**
->  * fdt_get_property_namelen - find a property based on substring
->  * @fdt: pointer to the device tree blob
->  * @nodeoffset: offset of the node whose property to find
->  * @name: name of the property to find
->  * @namelen: number of characters of name to consider
->  * @lenp: pointer to an integer variable (will be overwritten) or NULL
->  *
->  * Identical to fdt_get_property_namelen(), but only examine the first
->  * namelen characters of name for matching the property name.
->  */
+> The following series fixes a bug in the device tree code and
+> eliminates the CONFIG_OF_LIBFDT dependency on CONFIG_SYS_BOOTMAPSZ.
+> It also adds parsing of the reserved mem regions so that U-Boot
+> doesn't decide to use a regions set aside for another purpose.
 > 
-> That make it sound like its specifically for partial matching of
-> substrings in general.
-
-Ah, true.  It's not technically wrong, since it is only checking
-namelen characters from the 'name' property - but against the full
-length of the name in the tree.  But it is misleading.
-
-Erm, suggested new wording?
-
-> > For example get_subnode_offset_namelen() is
-> > used internally for comparing names against path components without
-> > having to copy and null terminate the pieces of the path first.
+> Finally, the last patch adds CONFIG_OF_LIBFDT to a bunch of boards.
+> I'm not expecting the last patch to be picked up in mainline (yet),
+> but it will be picked up into the Linaro tree for the 11.05 release.
 > 
-> fdt_subnode_offset_namelen() shouldn't be affected by this patch as it
-> does its length checking in _fdt_nodename_eq() instead of
-> _fdt_string_eq().  I assume your argument still applies to paths that do
-> use _fdt_string_eq() though.
+> John, this same series applies cleanly on the linaro-stable u-boot
+> tree.  Can you pick them up please?  Or would you prefer me to send
+> you a pull request?
+> 
+> g.
+> 
+> ---
+> 
+> Grant Likely (6):
+>       Stop passing around bootmem_base value.
+>       Default to bootm_size() when CONFIG_SYS_BOOTMAPSZ is not defined
+>       Remove device tree booting dependency on CONFIG_SYS_BOOTMAPSZ
+>       Fix off-by-one error in passing initrd end address via device tree
+>       Respect memreserve regions specified in the device tree
+>       Add CONFIG_OF_LIBFDT to more boards.
+> 
+On mx51evk (babbage) board:
 
-That's right.
-
-> Is there a downside to allowing partial matching?  I'm not too familiar
-> with libfdt, but it seems like it would make it more flexible to allow
-> arbitrary namelen matching.  The places I see that do use _namelen()
-> functions to do non-null string matching seem like they'd still work
-> fine with this change applied, eg in fdt_path_offset().
-
-Actually, it *would* break fdt_path_offset() - specifically if you had
-a tree where one node's name is a prefix of another node's name, but
-the longer name appeared first in the blob, then it would not be
-possible to locate the shorter named node by path or name, because the
-partial match would grab the longer name first.  Partial matching for
-property names would break in the analgous case - a node with one
-property whose name is a prefix of another property.
-
-Neither is a common case, but it's possible.
-
-In any case wanting a partial match on node or property name is a
-rarely desired function.  The case of the aliases node is the only
-place I can think you might want it.
-
-So, if you want this function I would instead suggest a variant on
-get_alias() which does this for this specific case.
+Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Regards,
+Shawn
