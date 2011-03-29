@@ -1,39 +1,40 @@
 From: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm/dt: Add basic device tree support for mx51 babbage board
-Date: Tue, 29 Mar 2011 15:17:36 +0800
-Message-ID: <1301383056-17962-1-git-send-email-jason.hui@linaro.org>
+Subject: [PATCH] arm/dt: Add basic device tree support for mx53 loco board
+Date: Tue, 29 Mar 2011 16:37:00 +0800
+Message-ID: <1301387820-18299-1-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 ---
-No uboot patch since uboot patch already in linaro uboot git
+grant, uboot patches has been send to u-boot maillist
+Test OK on mx53 loco board
 
 Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/mx51-babbage.dts     |   30 ++++++++++++++++++++++++++++++
- arch/arm/mach-mx5/Kconfig              |    6 ++++++
- arch/arm/mach-mx5/board-mx51_babbage.c |    6 ++++++
- 3 files changed, 42 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/mx53-loco.dts     |   30 ++++++++++++++++++++++++++++++
+ arch/arm/mach-mx5/Kconfig           |    1 +
+ arch/arm/mach-mx5/board-mx53_loco.c |    5 +++++
+ 3 files changed, 36 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mx51-babbage.dts b/arch/arm/boot/dts/mx51-babbage.dts
+diff --git a/arch/arm/boot/dts/mx53-loco.dts b/arch/arm/boot/dts/mx53-loco.dts
 new file mode 100644
-index 0000000..179f745
+index 0000000..7347456
 --- /dev/null
-+++ b/arch/arm/boot/dts/mx51-babbage.dts
++++ b/arch/arm/boot/dts/mx53-loco.dts
 @@ -0,0 +1,30 @@
 +/*
 + * Copyright 2011 Linaro Ltd.
@@ -49,8 +50,8 @@ index 0000000..179f745
 +/dts-v1/;
 +
 +/ {
-+	model = "Freescale i.MX51 Babbage";
-+	compatible = "fsl,mx51-babbage";
++	model = "Freescale i.MX53 LOCO";
++	compatible = "fsl,mx53-loco";
 +	#address-cells = <1>;
 +	#size-cells = <1>;
 +
@@ -59,57 +60,43 @@ index 0000000..179f745
 +
 +	memory {
 +		device_type = "memory";
-+		reg = <0x90000000 0x20000000>;
++		reg = <0x70000000 0x40000000>;
 +	};
 +
 +	chosen {
 +	};
 +};
 diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-index 83ee088..aae51ee 100644
+index aae51ee..a61e01e 100644
 --- a/arch/arm/mach-mx5/Kconfig
 +++ b/arch/arm/mach-mx5/Kconfig
-@@ -38,6 +38,7 @@ comment "MX5 platforms:"
- config MACH_MX51_BABBAGE
- 	bool "Support MX51 BABBAGE platforms"
- 	select SOC_IMX51
+@@ -167,6 +167,7 @@ config MACH_MX53_SMD
+ config MACH_MX53_LOCO
+ 	bool "Support MX53 LOCO platforms"
+ 	select SOC_IMX53
 +	select MX5_DT_COMMON
  	select IMX_HAVE_PLATFORM_IMX2_WDT
  	select IMX_HAVE_PLATFORM_IMX_I2C
  	select IMX_HAVE_PLATFORM_IMX_UART
-@@ -114,6 +115,11 @@ config MACH_EUKREA_MBIMXSD51_BASEBOARD
- 
- endchoice
- 
-+config MX5_DT_COMMON
-+	bool
-+	select USE_OF
-+	select PROC_DEVICETREE
-+
- config MX51_EFIKA_COMMON
- 	bool
- 	select SOC_IMX51
-diff --git a/arch/arm/mach-mx5/board-mx51_babbage.c b/arch/arm/mach-mx5/board-mx51_babbage.c
-index b2ecd19..30b92ca 100644
---- a/arch/arm/mach-mx5/board-mx51_babbage.c
-+++ b/arch/arm/mach-mx5/board-mx51_babbage.c
-@@ -399,6 +399,11 @@ static struct sys_timer mx51_babbage_timer = {
- 	.init = mx51_babbage_timer_init,
+diff --git a/arch/arm/mach-mx5/board-mx53_loco.c b/arch/arm/mach-mx5/board-mx53_loco.c
+index 0a18f8d..6ffc591 100644
+--- a/arch/arm/mach-mx5/board-mx53_loco.c
++++ b/arch/arm/mach-mx5/board-mx53_loco.c
+@@ -226,10 +226,15 @@ static struct sys_timer mx53_loco_timer = {
+ 	.init	= mx53_loco_timer_init,
  };
  
-+static const char *mx51_babbage_dt_match[] __initdata = {
-+	"fsl,mx51-babbage",
++static const char *mx53_loco_dt_match[] __initdata = {
++	"fsl,mx53-loco",
 +	NULL
 +};
-+
- MACHINE_START(MX51_BABBAGE, "Freescale MX51 Babbage Board")
- 	/* Maintainer: Amit Kucheria <amit.kucheria-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> */
- 	.boot_params = MX51_PHYS_OFFSET + 0x100,
-@@ -407,4 +412,5 @@ MACHINE_START(MX51_BABBAGE, "Freescale MX51 Babbage Board")
- 	.init_irq = mx51_init_irq,
- 	.timer = &mx51_babbage_timer,
- 	.init_machine = mx51_babbage_init,
-+	.dt_compat = mx51_babbage_dt_match,
+ MACHINE_START(MX53_LOCO, "Freescale MX53 LOCO Board")
+ 	.map_io = mx53_map_io,
+ 	.init_early = imx53_init_early,
+ 	.init_irq = mx53_init_irq,
+ 	.timer = &mx53_loco_timer,
+ 	.init_machine = mx53_loco_board_init,
++	.dt_compat = mx53_loco_dt_match,
  MACHINE_END
 -- 
 1.7.1
