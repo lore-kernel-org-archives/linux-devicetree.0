@@ -1,13 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Playing with device trees under qemu?
-Date: Tue, 29 Mar 2011 23:18:15 -0600
-Message-ID: <AANLkTinp4u+23boN1ZCJ0P9EKCuVUA-Tq9yAWkJmP-dV@mail.gmail.com>
-References: <4D91B92B.6050009@parallels.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: checking status semantics with compatible functions
+Date: Wed, 30 Mar 2011 03:07:57 -0500
+Message-ID: <9BC4C90E-090F-4961-A242-10D769C08738@kernel.crashing.org>
+Mime-Version: 1.0 (Apple Message framework v1084)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D91B92B.6050009-bzQdu9zFT3WakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,36 +15,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Landley <rlandley-bzQdu9zFT3WakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linuxppc-dev-50dRxjG7WBCY5r8RbUyfqNHuzzzSOjJt@public.gmane.org, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2011 at 4:49 AM, Rob Landley <rlandley-bzQdu9zFT3WakBO8gow8eQ@public.gmane.org> wrote:
-> Google is being unhelpful here. =A0If I want to:
->
-> A) play around with the recent device tree support patches for the kernel
->
-> B) boot them under QEMU
->
-> Where do I go? =A0The closest thing to a device trees website google
-> finds is http://elinux.org/Device_Trees which doesn't mention qemu at
-> all. =A0There was a CELF proposal last year to add device tree support to
-> qemu, which is inexplicably attributed to me:
->
-> http://elinux.org/CELF_Project_Proposal/Add_Device_Tree_emulation_support=
-_to_QEMU
->
-> And google also found http://www.linux-kvm.org/wiki/images/f/fe/2010-foru=
-m-armbru-qdev.pdf
-> and a kvm (not qemu) status page http://www.linux-kvm.org/page/Qdev_status
-> but none of them are the "go here, download this, do that" variety...
->
-> Any suggestions, or is it not ripe enough to play with yet?
+Grant,
 
-This is a good starting point, if a bit old.  Things have moved on a
-bit since then and I should really write up the QEMU configuration
-that I'm currently using.
+We have a few helper functions like:
 
-http://people.canonical.com/~jk/dt-workshop/
+drivers/of/base.c:EXPORT_SYMBOL(of_device_is_compatible);
+drivers/of/base.c:EXPORT_SYMBOL(of_find_compatible_node);
 
-g.
+That we use in places like arch/powerpc/platform/85xx/mpc85xx_ds.c:
+
+        for_each_node_by_type(np, "pci") {
+                if (of_device_is_compatible(np, "fsl,mpc8540-pci") ||
+                    of_device_is_compatible(np, "fsl,mpc8548-pcie") ||
+                    of_device_is_compatible(np, "fsl,p2020-pcie")) {
+
+It seems like we should check 'status' in these cases with 'of_device_is_available'.  I'm thinking that we should have versions of the helpers that also do the 'of_device_is_available' checking.  Or should we just change the helpers to call of_device_is_available?
+
+- k
