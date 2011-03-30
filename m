@@ -1,59 +1,65 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: checking status semantics with compatible functions
-Date: Wed, 30 Mar 2011 08:31:13 -0600
-Message-ID: <20110330143113.GA13685@ponder.secretlab.ca>
-References: <9BC4C90E-090F-4961-A242-10D769C08738@kernel.crashing.org>
-	<C1B3133E-0EEE-49E9-9E3A-35026CFA78E9@kernel.crashing.org>
+From: Steev Klimaszewski <steev-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH] arm/dt: Add basic device tree support for genesi mx board
+Date: Wed, 30 Mar 2011 10:58:19 -0500
+Message-ID: <AANLkTikZyhk1MHnTMd6KwGCLu7MTOpq3iR+ajDDAJDPs@mail.gmail.com>
+References: <1301490914-2279-1-git-send-email-jason.hui@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <C1B3133E-0EEE-49E9-9E3A-35026CFA78E9@kernel.crashing.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Kumar Gala <galak@kernel.crashing.org>
-Cc: Linuxppc-dev list <linuxppc-dev@ozlabs.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Prabhakar Kushwaha <prabhakar@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <1301490914-2279-1-git-send-email-jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2011 at 03:26:29AM -0500, Kumar Gala wrote:
-> [Adding proper lists on CC]
-> 
-> - k
-> 
-> On Mar 30, 2011, at 3:07 AM, Kumar Gala wrote:
-> 
-> > Grant,
-> > 
-> > We have a few helper functions like:
-> > 
-> > drivers/of/base.c:EXPORT_SYMBOL(of_device_is_compatible);
-> > drivers/of/base.c:EXPORT_SYMBOL(of_find_compatible_node);
-> > 
-> > That we use in places like arch/powerpc/platform/85xx/mpc85xx_ds.c:
-> > 
-> >        for_each_node_by_type(np, "pci") {
-> >                if (of_device_is_compatible(np, "fsl,mpc8540-pci") ||
-> >                    of_device_is_compatible(np, "fsl,mpc8548-pcie") ||
-> >                    of_device_is_compatible(np, "fsl,p2020-pcie")) {
-> > 
-> > It seems like we should check 'status' in these cases with
-> > 'of_device_is_available'.  I'm thinking that we should have
-> > versions of the helpers that also do the 'of_device_is_available'
-> > checking.  Or should we just change the helpers to call
-> > of_device_is_available?
-
-Yes, of_device_is_available() should be checked, but it should not be
-added directly to of_device_is_compatible().  I'm okay with adding
-a helper variant that does the of_device_is_compatible() check.
-
-In that particular case, I'd also suggest using for_each_matching_node().
-
-g.
+T24gV2VkLCBNYXIgMzAsIDIwMTEgYXQgODoxNSBBTSwgSmFzb24gTGl1IDxqYXNvbi5odWlAbGlu
+YXJvLm9yZz4gd3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgR2VuZXNpIEVmaWth
+IE1YIFNtYXJ0dG9wIGFuZCBTbWFydGJvb2sKPgo+IFNpZ25lZC1vZmYtYnk6IEphc29uIExpdSA8
+amFzb24uaHVpQGxpbmFyby5vcmc+Cj4KPiAtLS0KPiBHcmFudCwgdWJvb3QgcGF0Y2ggaGFzIGJl
+ZW4gaW5jbHVkZWQgaW4geW91ciB1Ym9vdCBwYXRjaHNldC4KPiBBbmQgbXg1MV9lZmlrYSBidWls
+ZCBicmVhaywgbmVlZCBwdWxsIGluIHRoZSBwYXRjaCB0byBmaXggaXQKPiBodHRwOi8vZ2l0LnBl
+bmd1dHJvbml4LmRlLz9wPWlteC9saW51eC0yLjYuZ2l0O2E9Y29tbWl0ZGlmZjsKPiBoPTI1MTI5
+MGE2MDc4Y2I4ODM4MjM0NGIzZWU1MzVhZThjNjI1NGMxYjUKPiAtLS0KPiDCoGFyY2gvYXJtL2Jv
+b3QvZHRzL2dlbmVzaS1lZmlrYW14LmR0cyDCoCB8IMKgIDMwICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKwo+IMKgYXJjaC9hcm0vYm9vdC9kdHMvZ2VuZXNpLWVmaWthc2IuZHRzIMKgIHwg
+wqAgMzAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gwqBhcmNoL2FybS9tYWNoLW14
+NS9LY29uZmlnIMKgIMKgIMKgIMKgIMKgIMKgIMKgfCDCoCDCoDEgKwo+IMKgYXJjaC9hcm0vbWFj
+aC1teDUvYm9hcmQtbXg1MV9lZmlrYW14LmMgfCDCoCDCoDYgKysrKysrCj4gwqBhcmNoL2FybS9t
+YWNoLW14NS9ib2FyZC1teDUxX2VmaWthc2IuYyB8IMKgIMKgNiArKysrKysKPiDCoDUgZmlsZXMg
+Y2hhbmdlZCwgNzMgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9nZW5lc2ktZWZpa2FteC5kdHMgYi9hcmNoL2FybS9ib290L2R0
+cy9nZW5lc2ktZWZpa2FteC5kdHMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAw
+MDAuLmVjYTk2MTYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZ2Vu
+ZXNpLWVmaWthbXguZHRzCj4gQEAgLTAsMCArMSwzMCBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQg
+MjAxMSBMaW5hcm8gTHRkLgo+ICsgKgo+ICsgKiBUaGUgY29kZSBjb250YWluZWQgaGVyZWluIGlz
+IGxpY2Vuc2VkIHVuZGVyIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMKPiArICogTGljZW5zZS4gWW91
+IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZQo+ICsg
+KiBWZXJzaW9uIDIgb3IgbGF0ZXIgYXQgdGhlIGZvbGxvd2luZyBsb2NhdGlvbnM6Cj4gKyAqCj4g
+KyAqIGh0dHA6Ly93d3cub3BlbnNvdXJjZS5vcmcvbGljZW5zZXMvZ3BsLWxpY2Vuc2UuaHRtbAo+
+ICsgKiBodHRwOi8vd3d3LmdudS5vcmcvY29weWxlZnQvZ3BsLmh0bWwKPiArICovCj4gKwo+ICsv
+ZHRzLXYxLzsKPiArCj4gKy8gewo+ICsgwqAgwqAgwqAgbW9kZWwgPSAiR2VuZXNpIEVmaWthTVgg
+bmV0dG9wIjsKPiArIMKgIMKgIMKgIGNvbXBhdGlibGUgPSAiZ2VuZXNpLGVmaWthbXgiOwo+ICsg
+wqAgwqAgwqAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyDCoCDCoCDCoCAjc2l6ZS1jZWxscyA9
+IDwxPjsKPHNuaXA+Cj4gwqBNQUNISU5FX1NUQVJUKE1YNTFfRUZJS0FNWCwgIkdlbmVzaSBFZmlr
+YU1YIG5ldHRvcCIpCj4gwqAgwqAgwqAgwqAvKiBNYWludGFpbmVyOiBBbWl0IEt1Y2hlcmlhIDxh
+bWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+ICovCj4gwqAgwqAgwqAgwqAuYm9vdF9wYXJhbXMgPSBN
+WDUxX1BIWVNfT0ZGU0VUICsgMHgxMDAsCj4gQEAgLTI5NCw0ICsyOTksNSBAQCBNQUNISU5FX1NU
+QVJUKE1YNTFfRUZJS0FNWCwgIkdlbmVzaSBFZmlrYU1YIG5ldHRvcCIpCj4gwqAgwqAgwqAgwqAu
+aW5pdF9pcnEgPSBteDUxX2luaXRfaXJxLAo+IMKgIMKgIMKgIMKgLnRpbWVyID0gJm14NTFfZWZp
+a2FteF90aW1lciwKPiDCoCDCoCDCoCDCoC5pbml0X21hY2hpbmUgPSBteDUxX2VmaWthbXhfaW5p
+dCwKPiArIMKgIMKgIMKgIC5kdF9jb21wYXQgPSBteDUxX2VmaWthbXhfZHRfbWF0Y2gsCj4gwqBN
+QUNISU5FX0VORAoKV2UgYWN0dWFsbHkgY2FsbCB0aGUgc21hbGwgZGVza3RvcCBhIFNtYXJ0dG9w
+IG5vdCBuZXR0b3AgOikKCi0tIApTdGVldiBLbGltYXN6ZXdza2kgPHN0ZWV2QGdlbmVzaS11c2Eu
+Y29tPgpTZW5pb3IgU29mdHdhcmUgRW5naW5lZXIsIEdlbmVzaSBVU0EsIEluYy4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbmFyby1kZXYgbWFpbGlu
+ZyBsaXN0CmxpbmFyby1kZXZAbGlzdHMubGluYXJvLm9yZwpodHRwOi8vbGlzdHMubGluYXJvLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbmFyby1kZXYK
