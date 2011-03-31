@@ -1,67 +1,62 @@
-From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+From: Michal Simek <monstr@monstr.eu>
 Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 23:47:04 +1000
-Message-ID: <AANLkTikCEYK5K3sQ1rgVK6qMvizQYUn=xsiSPedNRn9A@mail.gmail.com>
-References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
-	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
-	<20110331124925.GA2202@pengutronix.de>
-	<AANLkTi=sG6oVNifwLLi8jjKQXjR6kXZx43NxtFfoPumy@mail.gmail.com>
-	<20110331132328.GB2202@pengutronix.de>
+Date: Thu, 31 Mar 2011 15:51:32 +0200
+Message-ID: <4D9486E4.9030006@monstr.eu>
+References: <1301574600-4861-1-git-send-email-monstr@monstr.eu> <20110331124925.GA2202@pengutronix.de> <AANLkTinJrG=s3Xuvf_=bNtYF-z8u+YXvd217UKKz24ik@mail.gmail.com> <201103311525.52396.arnd@arndb.de>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110331132328.GB2202-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201103311525.52396.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: John Williams <john.williams@petalogix.com>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, hjk@linutronix.de, gregkh@suse.de
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMzEsIDIwMTEgYXQgMTE6MjMgUE0sIFdvbGZyYW0gU2FuZyA8dy5zYW5nQHBl
-bmd1dHJvbml4LmRlPiB3cm90ZToKPgo+PiDCoCDCoE1heWJlIEkgbWlzdW5kZXJzdGFuZCB5b3Us
-IGluIG15IHZpZXcgaXQgaXMgdGhlIHJlc3BvbnNpYmlsaXR5IG9mIDx2ZW5kb3I+Cj4+IMKgIMKg
-dG8gY3JlYXRlIHRoZWlyIERUUyBmaWxlcyB0byBpbmRpY2F0ZSB0aGV5IHdhbnQgPHNwZWNpYWwt
-Y2FyZDE+IHRvIGJpbmQgdG8KPj4gwqAgwqBnZW5lcmljLXVpby4KPgo+IERldmljZSB0cmVlIGlz
-IGEgT1MtbmV1dHJhbCBoYXJkd2FyZSBkZXNjcmlwdGlvbiBsYW5ndWFnZS4gImdlbmVyaWMtdWlv
-Igo+IGlzIG5laXRoZXIgT1MtbmV1dHJhbCBub3IgYSBoYXJkd2FyZSBkZXNjcmlwdGlvbi4gZGV2
-aWNldHJlZS5vcmcgaGFzCj4gbW9yZSBpbmZvcm1hdGlvbiBhYm91dCB0aGlzLgoKSWYgd2UgYXJl
-IHRyeWluZyB0byBiZSBwdXJlLCBJIG1pZ2h0IGFyZ3VlIHdlIGFyZSBub3QgY2hhbmdpbmcgdGhl
-IERUUwpsYW5ndWFnZSwgYnV0IHJhdGhlciBqdXN0IGFkZCBzdXBwb3J0IGluIExpbnV4IGZvciBh
-IHBhcnRpY3VsYXIKdXNlLWNhc2UuICBUaGVyZSBpcyBubyB2aW9sYXRpb24gb2YgRFRTIHN5bnRh
-eC4KCkl0IG1pZ2h0IGJlICpyZWNvbW1lbmRlZCogdGhhdCBkZXZpY2UgdHJlZXMgZGVzY3JpYmUg
-b25seSBoYXJkd2FyZSwKYWx0aG91Z2ggYXMgTWljaGFsIHBvaW50cyBvdXQgdGhlcmUgaXMgYWxy
-ZWFkeSBwcmVjZWRlbnQgaW4gdGhlCidjaG9zZW4nIG5vZGUgd2hlcmUgdGhpcyBpcyBjbGVhcmx5
-IHZpb2xhdGVkLCBidXQgaW4gYSB3YXkgdGhhdCBpcwpjb21wYXRpYmxlIHdpdGggRFRTIHN5bnRh
-eC4KCklzIGl0IGZvcmJpZGRlbiB0byBoYXZlIERUUyBkZXNjcmlwdGlvbnMgb2YgcHVyZWx5IHZp
-cnR1YWwgZGV2aWNlcywgYXMKd291bGQgYmUgcHJlc2VudCBpZiB5b3UgYm9vdCBhIERUUy1kcml2
-ZW4ga2VybmVsIGluc2lkZSBhIFZNCmVudmlyb25tZW50LCB3aGljaCBwcm92aWRlcyBvbmx5IHZp
-cnR1YWwgaW1wbGVtZW50YXRpb25zIG9mIHZhcmlvdXMKZGV2aWNlcyAoZXRoZXJuZXQgZXRjKT8K
-Cid2bXdhcmUsdmlydC1lbmV0JyBvciB3aGF0ZXZlcj8KCj4+IMKgIMKgT3VyIHVzZS1jYXNlIGlz
-IHByZXR0eSBjbGVhciwgaW4gRlBHQS1iYXNlZCBzeXN0ZW1zIGl0IGlzIGNvbW1vbiB0byBjcmVh
-dGUKPj4gwqAgwqBhcmJpdHJhcnkgZGV2aWNlcyB0aGF0IGRldmVsb3BlcnMganVzdCB3YW50IHRv
-IGNvbnRyb2wgZnJvbSB1c2Vyc3BhY2UsCj4+IMKgIMKgd2l0aCBzaW1wbGUgSVJRIGFuZCBJTyBj
-YXBhYmlsaXRpZXMgKERNQSBjYW4gY29tZSBsYXRlciA6KS4g77+9VGhleSBkb24ndAo+PiDCoCDC
-oG5lZWQgdG8gYmluZCB0byBvdGhlciBrZXJuZWwgQVBJcyBvciBzdWJzeXN0ZW1zLCBhbmQgZG9u
-J3Qgd2FudCB0byBpbnZlc3QKPj4gwqAgwqBpbiBvbmUtb2ZmIGtlcm5lbCBkcml2ZXJzIHRoYXQg
-c2ltcGx5IHdpbGwgbmV2ZXIgZ28gdXBzdHJlYW0uCj4KPiBGb3IgdGhhdCwgdGhlIG5ld19jb21w
-YXRpYmxlLWZpbGUgd291bGQgYmUgc3VpdGFibGUsIEkgdGhpbmsuCgojIGVjaG8gImdlbmVyaWMt
-dWlvIiA+IC9zeXMvY2xhc3MvdWlvLzxzb21ldGhpbmc+Cgo/Cgo+PiDCoCDCoFVJTyBpcyBwZXJm
-ZWN0LCBhbmQgc2ltcGx5IHRhZ2dpbmcgdGhlIGRldmljZSBhcyBnZW5lcmljLXVpbyBpbiB0aGUg
-RFRTIGlzCj4+IMKgIMKgc28gc2ltcGxlLCBjbGVhbiwgYW5kIGVsZWdhbnQuCj4KPiBTaW1wbGUs
-IHllcyAoSSBkbyB1bmRlcnN0YW5kIEkgd3JvdGUgdGhlIGZpcnN0IGFwcHJvYWNoIDspKSAuIEVs
-ZWdhbnQsCj4gbm90IHJlYWxseSwgYmVjYXVzZSBpdCBicmVha3MgY29yZSBjb252ZW50aW9ucyBv
-ZiB0aGUgZGV2aWNlIHRyZWUuIEZvcgo+IHlvdXIgY2FzZSBpdCBpcyBhIHZlcnkgY29udmVuaWFu
-dCBoYWNrLCBidXQgaXQgaXMgc3RpbGwgYSBoYWNrLgoKQmVpbmcgdXNlZnVsIHNlZW1zIGxpa2Ug
-YSBoaWdoIHByaW9yaXR5IGluIHRoZSBrZXJuZWwsIEknbSBub3QgYXNoYW1lZCBvZiBpdCEgOikK
-ClJlZ2FyZHMsCgpKb2huCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
-QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
-ZXRyZWUtZGlzY3Vzcwo=
+Arnd Bergmann wrote:
+> On Thursday 31 March 2011, John Williams wrote:
+>> On Thu, Mar 31, 2011 at 10:49 PM, Wolfram Sang <w.sang@pengutronix.de> wrote:
+>>> On Thu, Mar 31, 2011 at 02:30:00PM +0200, Michal Simek wrote:
+>>>> Support OF support. "generic-uio" compatible property is used.
+>>> And exactly this was the issue last time (when I tried). This is a
+>>> generic property, which is linux-specific and not describing HW. The
+>>> agreement back then was to we probably need to add compatible-entries at
+>>> runtime (something like new_id for USB). So the uio-of-driver could be
+>>> matched against any device. Otherwise, we would collect a lot of
+>>> potential entries like "vendor,special-card1". Although I wonder
+>>> meanwhile if it is really going to be that bad; we don't have so much
+>>> UIO-driver in tree as well. Maybe worth a try?
+>>
+>> Maybe I misunderstand you, in my view it is the responsibility of
+>> <vendor> to create their DTS files to indicate they want
+>> <special-card1> to bind to generic-uio.
+>>
+>> So, no great list of compat strings should grow in the driver, but
+>> rather the user of the driver must make it happen.
+>>
+>> Am I missing something?
+> 
+> We try to make the device tree on describe the present hardware,
+> but not relate to how it is used.
+> 
+> There are certainly cases where a specific piece of hardware can
+> be used either by a kernel-only driver or the UIO driver with a
+> user backend. I would argue that you should be able to use an
+> identical device tree for both cases, because the hardware is
+> the same. Chosing which driver to use can be either in the realm
+> of the kernel, or even user policy.
+
+ok. What about to keep of_device_id empty?  Then there is compatible property 
+string and everybody can choose what wants.
+OF is just a different driver initialization method but it is in the same 
+category which is supported right now which is initialization through 
+platform_device structure.
+
+Michal
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
