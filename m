@@ -1,11 +1,13 @@
 From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: UIO OF support
-Date: Thu, 31 Mar 2011 14:29:59 +0200
-Message-ID: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
+Subject: [PATCH] uio/pdrv_genirq: Add OF support
+Date: Thu, 31 Mar 2011 14:30:00 +0200
+Message-ID: <1301574600-4861-2-git-send-email-monstr@monstr.eu>
+References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1301574600-4861-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,19 +18,120 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org
+Cc: gregkh-l3A5Bk7waGM@public.gmane.org, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Support OF support. "generic-uio" compatible property is used.
 
-here is OF support for UIO. I tried to do minimal changes.
-John Williams has warned me that there was any previous attempt to add this OF support 
-to UIO.
+Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+---
+ drivers/uio/uio_pdrv_genirq.c |   60 ++++++++++++++++++++++++++++++++++++++--
+ 1 files changed, 57 insertions(+), 3 deletions(-)
 
-Grant: Can you please review it? I wasn't sure about one part. I think you will see it 
-and will comment it if there is something stupid.
-
-I look forward for your comments and discuss about it.
-
-Thanks,
-Michal
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+index 7174d51..9e89806 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -23,6 +23,10 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+ 
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++
+ #define DRIVER_NAME "uio_pdrv_genirq"
+ 
+ struct uio_pdrv_genirq_platdata {
+@@ -92,11 +96,44 @@ static int uio_pdrv_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ {
+ 	struct uio_info *uioinfo = pdev->dev.platform_data;
+-	struct uio_pdrv_genirq_platdata *priv;
++	struct uio_pdrv_genirq_platdata *priv = NULL;
+ 	struct uio_mem *uiomem;
+ 	int ret = -EINVAL;
+ 	int i;
+ 
++	if (!uioinfo) {
++		struct resource r_irq; /* Interrupt resources */
++		int rc = 0;
++
++		rc = of_address_to_resource(pdev->dev.of_node, 0,
++							&pdev->resource[0]);
++		if (rc) {
++			dev_err(&pdev->dev, "invalid address\n");
++			goto bad2;
++		}
++		pdev->num_resources = 1;
++
++		/* alloc uioinfo for one device */
++		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
++		if (!uioinfo) {
++			ret = -ENOMEM;
++			dev_err(&pdev->dev, "unable to kmalloc\n");
++			goto bad2;
++		}
++		uioinfo->name = pdev->dev.of_node->name;
++		/* Use version for storing full IP name for identification */
++		uioinfo->version = pdev->dev.of_node->full_name;
++
++		/* Get IRQ for the device */
++		rc = of_irq_to_resource(pdev->dev.of_node, 0, &r_irq);
++		if (rc == NO_IRQ)
++			dev_err(&pdev->dev, "no IRQ found\n");
++		else {
++			uioinfo->irq = r_irq.start;
++			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
++		}
++	}
++
+ 	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+ 		dev_err(&pdev->dev, "missing platform_data\n");
+ 		goto bad0;
+@@ -176,10 +213,15 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 	return 0;
+- bad1:
++
++bad1:
+ 	kfree(priv);
+ 	pm_runtime_disable(&pdev->dev);
+- bad0:
++bad0:
++	/* kfree uioinfo for CONFIG_OF */
++	if (!pdev->dev.platform_data)
++		kfree(uioinfo);
++bad2:
+ 	return ret;
+ }
+ 
+@@ -215,6 +257,17 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+ 	.runtime_resume = uio_pdrv_genirq_runtime_nop,
+ };
+ 
++#ifdef CONFIG_OF
++/* Match table for of_platform binding */
++static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
++	{ .compatible = "generic-uio", },
++	{ /* end of list */ },
++};
++MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
++#else
++# define uio_of_genirq_match NULL
++#endif
++
+ static struct platform_driver uio_pdrv_genirq = {
+ 	.probe = uio_pdrv_genirq_probe,
+ 	.remove = uio_pdrv_genirq_remove,
+@@ -222,6 +275,7 @@ static struct platform_driver uio_pdrv_genirq = {
+ 		.name = DRIVER_NAME,
+ 		.owner = THIS_MODULE,
+ 		.pm = &uio_pdrv_genirq_dev_pm_ops,
++		.of_match_table = uio_of_genirq_match,
+ 	},
+ };
+ 
+-- 
+1.5.5.6
