@@ -1,16 +1,14 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] of/clock: eliminate function
-	__of_clk_get_from_provider
-Date: Thu, 31 Mar 2011 14:41:35 -0600
-Message-ID: <20110331204135.GC31846@ponder.secretlab.ca>
-References: <1300472672-13392-1-git-send-email-shawn.guo@linaro.org>
-	<1300472672-13392-7-git-send-email-shawn.guo@linaro.org>
+Subject: Re: clock bindings
+Date: Thu, 31 Mar 2011 16:45:47 -0600
+Message-ID: <20110331224547.GH437@ponder.secretlab.ca>
+References: <4D498AAC.3090009@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1300472672-13392-7-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <4D498AAC.3090009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,67 +18,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 19, 2011 at 02:24:32AM +0800, Shawn Guo wrote:
-> With the platform clock support, the 'struct clk' should have been
-> associated with device_node->data.  So the use of function
-> __of_clk_get_from_provider can be eliminated.
+On Wed, Feb 02, 2011 at 10:47:40AM -0600, Rob Herring wrote:
+> I've started looking at the DT clock bindings in more depth. To what
+> level should the clock tree be defined in the DT? Should it be a
+> one-to-one correlation of current struct clk nodes to node in DT
+> where each node is a single input and output? Or only define a
+> single (or few) node with the inputs (oscillators) and many outputs
+> for SOC's clock controller (i.e. MX51 CCM).
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> If the DT itself does not have a hierarchical construction of nodes
+> that matches the clock tree hierarchy, then creating the hierarchy
+> at run-time will be a challenge and not be very efficient. It would
+> require 1 pass for each clock node type to create all the nodes, and
+> then another pass to setup the hierarchy.
 
-Not really true since a device node describes a clock provider which
-may be able to provide more than one clock output.
+Wow, it takes me a long time to reply sometimes.
+
+I'm not sure at the moment.  A month ago I would have said
+"everything", but I've thought about it a lot more and I think it is
+more important that dt and non-dt users share the same code base for
+setting up internal-to-the-soc clocks.  Anything available externally
+will need a node describing it in the dt, which means the support code
+shifts from registering all the clocks to matching up dt nodes to
+existing clocks where possible.
+
+For the time being, I've pushed back on registering all devices from
+the device tree for the same reason which has given some breathing
+room on the topic.  It will be a topic for discussion at UDS.
 
 g.
-
-> ---
->  drivers/of/clock.c |   23 ++---------------------
->  1 files changed, 2 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/of/clock.c b/drivers/of/clock.c
-> index 7b5ea67..1b34937 100644
-> --- a/drivers/of/clock.c
-> +++ b/drivers/of/clock.c
-> @@ -71,24 +71,6 @@ void of_clk_del_provider(struct device_node *np,
->  	mutex_unlock(&of_clk_lock);
->  }
->  
-> -static struct clk *__of_clk_get_from_provider(struct device_node *np, const char *clk_output)
-> -{
-> -	struct of_clk_provider *provider;
-> -	struct clk *clk = NULL;
-> -
-> -	/* Check if we have such a provider in our array */
-> -	mutex_lock(&of_clk_lock);
-> -	list_for_each_entry(provider, &of_clk_providers, link) {
-> -		if (provider->node == np)
-> -			clk = provider->get(np, clk_output, provider->data);
-> -		if (clk)
-> -			break;
-> -	}
-> -	mutex_unlock(&of_clk_lock);
-> -
-> -	return clk;
-> -}
-> -
->  struct clk *of_clk_get(struct device *dev, const char *id)
->  {
->  	struct device_node *provnode;
-> @@ -123,9 +105,8 @@ struct clk *of_clk_get(struct device *dev, const char *id)
->  			__func__, prop_name, dev->of_node->full_name);
->  		return NULL;
->  	}
-> -	clk = __of_clk_get_from_provider(provnode, prop);
-> -	if (clk)
-> -		dev_dbg(dev, "Using clock from %s\n", provnode->full_name);
-> +
-> +	clk = provnode->clk;
->  
->  	of_node_put(provnode);
->  
-> -- 
-> 1.7.1
-> 
