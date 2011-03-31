@@ -1,55 +1,126 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] dt: add new member 'clk' into device_node
-Date: Thu, 31 Mar 2011 13:59:51 -0600
-Message-ID: <20110331195951.GA31846@ponder.secretlab.ca>
-References: <1300472672-13392-1-git-send-email-shawn.guo@linaro.org>
-	<1300472672-13392-4-git-send-email-shawn.guo@linaro.org>
+From: "Hans J. Koch" <hjk@hansjkoch.de>
+Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
+Date: Thu, 31 Mar 2011 22:30:24 +0200
+Message-ID: <20110331203024.GE2734@local>
+References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
+ <1301574600-4861-2-git-send-email-monstr@monstr.eu>
+ <20110331124925.GA2202@pengutronix.de>
+ <4D948189.9070606@monstr.eu>
+ <20110331170321.GA2734@local>
+ <4D94C09B.4070506@monstr.eu>
+ <20110331192302.GD2734@local>
+ <AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1300472672-13392-4-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Michal Simek <monstr@monstr.eu>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@linutronix.de, gregkh@suse.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 19, 2011 at 02:24:29AM +0800, Shawn Guo wrote:
-> This pointer to 'struct clk' is added to save the reference to 'clk'
-> which is dynamically created per dt clock node, so that clkdev API
-> like clk_get can work with dt based device driver.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  include/linux/of.h |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index d9dd664..e621295 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -54,6 +54,7 @@ struct device_node {
->  	struct	device_node *allnext;	/* next in list of all nodes */
->  	struct	proc_dir_entry *pde;	/* this node's proc directory */
->  	struct	kref kref;
-> +	struct	clk *clk;
+On Thu, Mar 31, 2011 at 01:48:32PM -0600, Grant Likely wrote:
+> On Thu, Mar 31, 2011 at 1:23 PM, Hans J. Koch <hjk@hansjkoch.de> wrot=
+e:
+> > On Thu, Mar 31, 2011 at 07:57:47PM +0200, Michal Simek wrote:
+> >> Hans J. Koch wrote:
+> >> >On Thu, Mar 31, 2011 at 03:28:41PM +0200, Michal Simek wrote:
+> >> >>>>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 uioinfo->name =3D pdev->dev.of_n=
+ode->name;
+> >> >>>>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Use version for storing full =
+IP name for identification */
+> >> >>>>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 uioinfo->version =3D pdev->dev.o=
+f_node->full_name;
+> >> >>>I don't think this is apropriate, but will leave that to Hans.
+> >> >>I was thinking what to add and I choose full_name because I can =
+read
+> >> >>this value and identify which UIO is this device.
+> >> >>I know that there should be version but there is no version stri=
+ng in DTS.
+> >> >
+> >> >The purpose of uio_info->version is to give the userspace part of=
+ the driver
+> >> >additional information. Kernel part and userspace part might be d=
+eveloped
+> >> >independently, and there should be a chance for the userspace par=
+t to find
+> >> >out if a certain feature is already supported by the kernel part =
+without
+> >> >having to do dirty kernel version checks.
+> >> >
+> >> >So, uio_info->version is an information about the driver, not the=
+ hardware.
+> >> >
+> >> >Example: You write a UIO driver for a chip you use in a project. =
+You don't
+> >> >need all the functionality of that chip. One year later you need =
+additional
+> >> >chip functionality, and it turns out that you have to do certain
+> >> >initializations in the kernel part. Your new userspace will need =
+the new
+> >> >kernel driver, but there are lots of older kernels around in your=
+ customers
+> >> >devices. In that case, your userspace part can simply check the v=
+ersion
+> >> >string in sysfs and require at least your new version.
+> >>
+> >> I understand reasons but this information is not in device tree an=
+d
+> >> it must be setup.
+> >> Grant suggested compatible string but it is not the best option to=
+o.
+> >
+> > In uio_pdrv_genirq, uio_info->version is hardcoded in platform data=
+=2E Hardware
+> > initialization can also take place in the same platform specific fi=
+le, which
+> > is common practice on archs like ARM. Therefore, a driver specific =
+versioning
+> > can make sense for UIO, even if the driver code itself doesn't chan=
+ge.
+> >
+> > If you have no equivalent for that in device tree, you should creat=
+e a new
+> > generic driver (uio_of_genirq?) that simply doesn't support this ki=
+nd of
+> > versioning.
+>=20
+> I'd avoid that.  Current trend is to move away from separate
+> of-specific data because the driver is essentially identical other
+> than the data source being different (platform_data vs. a device node
+> pointer).
 
-The dt clock support code can already translate from dt node to a
-clock provider, and each clock provider should provide a .get() hook
-to return the correct struct clk.  of_clk_add_provider() inserts a
-mapping into the of_clk_providers() list, and clk_get() calls
-of_clk_get() which will process a devicenode->clk provider mapping.
+The point here his that UIO drivers are _not_ like normal drivers, beca=
+use
+they're split into a kernel and a userspace part. If there are changes =
+in the
+hardware initialization the kernel performs, and the userspace part of =
+the
+driver needs to know about it, we use the "version" attribute in sysfs =
+to
+communicate that.
 
-Adding a struct clk pointer to the device node isn't sufficient since
-a single clock provider node can provide multiple clock outputs.
+OK, userspace could check the kernel version. But UIO drivers are mostl=
+y used
+in environments where custom non-mainline kernels reporting arbitrary v=
+ersion
+numbers are running (less than 1% of the UIO drivers in use are ever po=
+sted
+on LKML, I guess). That makes it at least difficult for these people to=
+ write
+a clean UIO driver that can deal with different kernels.
 
-g.
+Killing the "version" attribute means breaking some out-of-tree UIO dri=
+vers.
+Personally, I'm fine with that. But completely throwing away the possib=
+ility
+of that kind of versioning is one step too far IMHO.
+
+=46or UIO, it is not enough to just know "we have this chip using that =
+driver",
+at least not for a generic driver like the one proposed in this patch.
+
+Thanks,
+Hans
