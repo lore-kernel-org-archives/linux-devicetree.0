@@ -1,16 +1,15 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 15:37:49 +0200
-Message-ID: <4D9483AD.2060604@monstr.eu>
+Date: Thu, 31 Mar 2011 23:47:04 +1000
+Message-ID: <AANLkTikCEYK5K3sQ1rgVK6qMvizQYUn=xsiSPedNRn9A@mail.gmail.com>
 References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
 	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
 	<20110331124925.GA2202@pengutronix.de>
 	<AANLkTi=sG6oVNifwLLi8jjKQXjR6kXZx43NxtFfoPumy@mail.gmail.com>
 	<20110331132328.GB2202@pengutronix.de>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <20110331132328.GB2202-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
@@ -23,28 +22,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: gregkh-l3A5Bk7waGM@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Cc: hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang wrote:
->>    Maybe I misunderstand you, in my view it is the responsibility of <vendor>
->>    to create their DTS files to indicate they want <special-card1> to bind to
->>    generic-uio.
-> 
-> Device tree is a OS-neutral hardware description language. "generic-uio"
-> is neither OS-neutral nor a hardware description. devicetree.org has
-> more information about this.
-
-If you look at dts for ppc you should be able to find out linux,stdout-path in 
-chosen node. The same is for bootargs which are linux specific option.
-If chosem node can be used for OS specific description then this could be a way.
-
-M
-
-
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+T24gVGh1LCBNYXIgMzEsIDIwMTEgYXQgMTE6MjMgUE0sIFdvbGZyYW0gU2FuZyA8dy5zYW5nQHBl
+bmd1dHJvbml4LmRlPiB3cm90ZToKPgo+PiDCoCDCoE1heWJlIEkgbWlzdW5kZXJzdGFuZCB5b3Us
+IGluIG15IHZpZXcgaXQgaXMgdGhlIHJlc3BvbnNpYmlsaXR5IG9mIDx2ZW5kb3I+Cj4+IMKgIMKg
+dG8gY3JlYXRlIHRoZWlyIERUUyBmaWxlcyB0byBpbmRpY2F0ZSB0aGV5IHdhbnQgPHNwZWNpYWwt
+Y2FyZDE+IHRvIGJpbmQgdG8KPj4gwqAgwqBnZW5lcmljLXVpby4KPgo+IERldmljZSB0cmVlIGlz
+IGEgT1MtbmV1dHJhbCBoYXJkd2FyZSBkZXNjcmlwdGlvbiBsYW5ndWFnZS4gImdlbmVyaWMtdWlv
+Igo+IGlzIG5laXRoZXIgT1MtbmV1dHJhbCBub3IgYSBoYXJkd2FyZSBkZXNjcmlwdGlvbi4gZGV2
+aWNldHJlZS5vcmcgaGFzCj4gbW9yZSBpbmZvcm1hdGlvbiBhYm91dCB0aGlzLgoKSWYgd2UgYXJl
+IHRyeWluZyB0byBiZSBwdXJlLCBJIG1pZ2h0IGFyZ3VlIHdlIGFyZSBub3QgY2hhbmdpbmcgdGhl
+IERUUwpsYW5ndWFnZSwgYnV0IHJhdGhlciBqdXN0IGFkZCBzdXBwb3J0IGluIExpbnV4IGZvciBh
+IHBhcnRpY3VsYXIKdXNlLWNhc2UuICBUaGVyZSBpcyBubyB2aW9sYXRpb24gb2YgRFRTIHN5bnRh
+eC4KCkl0IG1pZ2h0IGJlICpyZWNvbW1lbmRlZCogdGhhdCBkZXZpY2UgdHJlZXMgZGVzY3JpYmUg
+b25seSBoYXJkd2FyZSwKYWx0aG91Z2ggYXMgTWljaGFsIHBvaW50cyBvdXQgdGhlcmUgaXMgYWxy
+ZWFkeSBwcmVjZWRlbnQgaW4gdGhlCidjaG9zZW4nIG5vZGUgd2hlcmUgdGhpcyBpcyBjbGVhcmx5
+IHZpb2xhdGVkLCBidXQgaW4gYSB3YXkgdGhhdCBpcwpjb21wYXRpYmxlIHdpdGggRFRTIHN5bnRh
+eC4KCklzIGl0IGZvcmJpZGRlbiB0byBoYXZlIERUUyBkZXNjcmlwdGlvbnMgb2YgcHVyZWx5IHZp
+cnR1YWwgZGV2aWNlcywgYXMKd291bGQgYmUgcHJlc2VudCBpZiB5b3UgYm9vdCBhIERUUy1kcml2
+ZW4ga2VybmVsIGluc2lkZSBhIFZNCmVudmlyb25tZW50LCB3aGljaCBwcm92aWRlcyBvbmx5IHZp
+cnR1YWwgaW1wbGVtZW50YXRpb25zIG9mIHZhcmlvdXMKZGV2aWNlcyAoZXRoZXJuZXQgZXRjKT8K
+Cid2bXdhcmUsdmlydC1lbmV0JyBvciB3aGF0ZXZlcj8KCj4+IMKgIMKgT3VyIHVzZS1jYXNlIGlz
+IHByZXR0eSBjbGVhciwgaW4gRlBHQS1iYXNlZCBzeXN0ZW1zIGl0IGlzIGNvbW1vbiB0byBjcmVh
+dGUKPj4gwqAgwqBhcmJpdHJhcnkgZGV2aWNlcyB0aGF0IGRldmVsb3BlcnMganVzdCB3YW50IHRv
+IGNvbnRyb2wgZnJvbSB1c2Vyc3BhY2UsCj4+IMKgIMKgd2l0aCBzaW1wbGUgSVJRIGFuZCBJTyBj
+YXBhYmlsaXRpZXMgKERNQSBjYW4gY29tZSBsYXRlciA6KS4g77+9VGhleSBkb24ndAo+PiDCoCDC
+oG5lZWQgdG8gYmluZCB0byBvdGhlciBrZXJuZWwgQVBJcyBvciBzdWJzeXN0ZW1zLCBhbmQgZG9u
+J3Qgd2FudCB0byBpbnZlc3QKPj4gwqAgwqBpbiBvbmUtb2ZmIGtlcm5lbCBkcml2ZXJzIHRoYXQg
+c2ltcGx5IHdpbGwgbmV2ZXIgZ28gdXBzdHJlYW0uCj4KPiBGb3IgdGhhdCwgdGhlIG5ld19jb21w
+YXRpYmxlLWZpbGUgd291bGQgYmUgc3VpdGFibGUsIEkgdGhpbmsuCgojIGVjaG8gImdlbmVyaWMt
+dWlvIiA+IC9zeXMvY2xhc3MvdWlvLzxzb21ldGhpbmc+Cgo/Cgo+PiDCoCDCoFVJTyBpcyBwZXJm
+ZWN0LCBhbmQgc2ltcGx5IHRhZ2dpbmcgdGhlIGRldmljZSBhcyBnZW5lcmljLXVpbyBpbiB0aGUg
+RFRTIGlzCj4+IMKgIMKgc28gc2ltcGxlLCBjbGVhbiwgYW5kIGVsZWdhbnQuCj4KPiBTaW1wbGUs
+IHllcyAoSSBkbyB1bmRlcnN0YW5kIEkgd3JvdGUgdGhlIGZpcnN0IGFwcHJvYWNoIDspKSAuIEVs
+ZWdhbnQsCj4gbm90IHJlYWxseSwgYmVjYXVzZSBpdCBicmVha3MgY29yZSBjb252ZW50aW9ucyBv
+ZiB0aGUgZGV2aWNlIHRyZWUuIEZvcgo+IHlvdXIgY2FzZSBpdCBpcyBhIHZlcnkgY29udmVuaWFu
+dCBoYWNrLCBidXQgaXQgaXMgc3RpbGwgYSBoYWNrLgoKQmVpbmcgdXNlZnVsIHNlZW1zIGxpa2Ug
+YSBoaWdoIHByaW9yaXR5IGluIHRoZSBrZXJuZWwsIEknbSBub3QgYXNoYW1lZCBvZiBpdCEgOikK
+ClJlZ2FyZHMsCgpKb2huCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
+QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
+ZXRyZWUtZGlzY3Vzcwo=
