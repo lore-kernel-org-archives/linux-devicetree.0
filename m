@@ -1,13 +1,14 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 14:49:26 +0200
-Message-ID: <20110331124925.GA2202@pengutronix.de>
+Date: Thu, 31 Mar 2011 23:10:21 +1000
+Message-ID: <AANLkTi=sG6oVNifwLLi8jjKQXjR6kXZx43NxtFfoPumy@mail.gmail.com>
 References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
 	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
+	<20110331124925.GA2202@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1620792774322761134=="
+Content-Type: multipart/mixed; boundary="===============0182303076030815113=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1301574600-4861-2-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20110331124925.GA2202-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,189 +18,119 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: gregkh-l3A5Bk7waGM@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--===============0182303076030815113==
+Content-Type: multipart/alternative; boundary=000e0cd174ee2e59d0049fc7056a
 
---===============1620792774322761134==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
+--000e0cd174ee2e59d0049fc7056a
+Content-Type: text/plain; charset=ISO-8859-1
 
+Hi Wolfram,
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+We discuss this again :)
+
+On Thu, Mar 31, 2011 at 10:49 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>wrote:
+
+> On Thu, Mar 31, 2011 at 02:30:00PM +0200, Michal Simek wrote:
+> > Support OF support. "generic-uio" compatible property is used.
+>
+> And exactly this was the issue last time (when I tried). This is a
+> generic property, which is linux-specific and not describing HW. The
+> agreement back then was to we probably need to add compatible-entries at
+> runtime (something like new_id for USB). So the uio-of-driver could be
+> matched against any device. Otherwise, we would collect a lot of
+> potential entries like "vendor,special-card1". Although I wonder
+> meanwhile if it is really going to be that bad; we don't have so much
+> UIO-driver in tree as well. Maybe worth a try?
+>
+
+Maybe I misunderstand you, in my view it is the responsibility of <vendor>
+to create their DTS files to indicate they want <special-card1> to bind to
+generic-uio.
+
+So, no great list of compat strings should grow in the driver, but rather
+the user of the driver must make it happen.
+
+Am I missing something?
+
+Our use-case is pretty clear, in FPGA-based systems it is common to create
+arbitrary devices that developers just want to control from userspace, with
+simple IRQ and IO capabilities (DMA can come later :).  They don't need to
+bind to other kernel APIs or subsystems, and don't want to invest in one-off
+kernel drivers that simply will never go upstream.
+
+UIO is perfect, and simply tagging the device as generic-uio in the DTS is
+so simple, clean, and elegant.  Traditional embedded developers really light
+up when you tell them you can write simple IRQ handlers in Linux userspace.
+ They love it even more if they don't have to write a line of kernel code,
+which generic-uio enables.
+
+John
+-- 
+John Williams, PhD, B. Eng, B. IT
+PetaLogix - Linux Solutions for a Reconfigurable World
+w: www.petalogix.com  p: +61-7-30090663  f: +61-7-30090663
+
+--000e0cd174ee2e59d0049fc7056a
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 31, 2011 at 02:30:00PM +0200, Michal Simek wrote:
-> Support OF support. "generic-uio" compatible property is used.
+Hi Wolfram,<br><br><div>We discuss this again :)</div><div><br><div class=
+=3D"gmail_quote">On Thu, Mar 31, 2011 at 10:49 PM, Wolfram Sang <span dir=
+=3D"ltr">&lt;<a href=3D"mailto:w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org">w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org=
+</a>&gt;</span> wrote:<br>
 
-And exactly this was the issue last time (when I tried). This is a
-generic property, which is linux-specific and not describing HW. The
-agreement back then was to we probably need to add compatible-entries at
-runtime (something like new_id for USB). So the uio-of-driver could be
-matched against any device. Otherwise, we would collect a lot of
-potential entries like "vendor,special-card1". Although I wonder
-meanwhile if it is really going to be that bad; we don't have so much
-UIO-driver in tree as well. Maybe worth a try?
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex;"><div class=3D"im">On Thu, Mar 31, 2011 at 0=
+2:30:00PM +0200, Michal Simek wrote:<br>
+&gt; Support OF support. &quot;generic-uio&quot; compatible property is use=
+d.<br>
+<br>
+</div>And exactly this was the issue last time (when I tried). This is a<br=
+>
+generic property, which is linux-specific and not describing HW. The<br>
+agreement back then was to we probably need to add compatible-entries at<br=
+>
+runtime (something like new_id for USB). So the uio-of-driver could be<br>
+matched against any device. Otherwise, we would collect a lot of<br>
+potential entries like &quot;vendor,special-card1&quot;. Although I wonder<=
+br>
+meanwhile if it is really going to be that bad; we don&#39;t have so much<b=
+r>
+UIO-driver in tree as well. Maybe worth a try?<br></blockquote><div><br></d=
+iv><div>Maybe I misunderstand you, in my view it is the responsibility of &=
+lt;vendor&gt; to create their DTS files to indicate they want &lt;special-c=
+ard1&gt; to bind to generic-uio.</div>
 
-> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-> ---
->  drivers/uio/uio_pdrv_genirq.c |   60 +++++++++++++++++++++++++++++++++++=
-+++--
->  1 files changed, 57 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-> index 7174d51..9e89806 100644
-> --- a/drivers/uio/uio_pdrv_genirq.c
-> +++ b/drivers/uio/uio_pdrv_genirq.c
-> @@ -23,6 +23,10 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> =20
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +
->  #define DRIVER_NAME "uio_pdrv_genirq"
-> =20
->  struct uio_pdrv_genirq_platdata {
-> @@ -92,11 +96,44 @@ static int uio_pdrv_genirq_irqcontrol(struct uio_info=
- *dev_info, s32 irq_on)
->  static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  {
->  	struct uio_info *uioinfo =3D pdev->dev.platform_data;
-> -	struct uio_pdrv_genirq_platdata *priv;
-> +	struct uio_pdrv_genirq_platdata *priv =3D NULL;
+<div><br></div><div>So, no great list of compat strings should grow in the =
+driver, but rather the user of the driver must make it happen.</div><div><b=
+r></div><div>Am I missing something?</div><div><br></div><div>Our use-case =
+is pretty clear, in FPGA-based systems it is common to create arbitrary dev=
+ices that developers just want to control from userspace, with simple IRQ a=
+nd IO capabilities (DMA can come later :). =A0They don&#39;t need to bind t=
+o other kernel APIs or subsystems, and don&#39;t want to invest in one-off =
+kernel drivers that simply will never go upstream.</div>
 
-unrelated?
+<div><br></div><div>UIO is perfect, and simply tagging the device as generi=
+c-uio in the DTS is so simple, clean, and elegant. =A0Traditional embedded =
+developers really light up when you tell them you can write simple IRQ hand=
+lers in Linux userspace. =A0They love it even more if they don&#39;t have t=
+o write a line of kernel code, which generic-uio enables.</div>
 
->  	struct uio_mem *uiomem;
->  	int ret =3D -EINVAL;
->  	int i;
-> =20
-> +	if (!uioinfo) {
-> +		struct resource r_irq; /* Interrupt resources */
-> +		int rc =3D 0;
-> +
-> +		rc =3D of_address_to_resource(pdev->dev.of_node, 0,
-> +							&pdev->resource[0]);
-> +		if (rc) {
-> +			dev_err(&pdev->dev, "invalid address\n");
-> +			goto bad2;
-> +		}
-> +		pdev->num_resources =3D 1;
-> +
-> +		/* alloc uioinfo for one device */
-> +		uioinfo =3D kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-> +		if (!uioinfo) {
-> +			ret =3D -ENOMEM;
-> +			dev_err(&pdev->dev, "unable to kmalloc\n");
-> +			goto bad2;
-> +		}
-> +		uioinfo->name =3D pdev->dev.of_node->name;
-> +		/* Use version for storing full IP name for identification */
-> +		uioinfo->version =3D pdev->dev.of_node->full_name;
+<div><br></div><div>John</div><div>--=A0</div></div>John Williams, PhD, B. =
+Eng, B. IT<br>PetaLogix - Linux Solutions for a Reconfigurable World<br>w: =
+<a href=3D"http://www.petalogix.com" target=3D"_blank">www.petalogix.com</a=
+>=A0=A0p: +61-7-30090663=A0 f: +61-7-30090663<br>
 
-I don't think this is apropriate, but will leave that to Hans.
 
-> +		/* Get IRQ for the device */
-> +		rc =3D of_irq_to_resource(pdev->dev.of_node, 0, &r_irq);
-> +		if (rc =3D=3D NO_IRQ)
-> +			dev_err(&pdev->dev, "no IRQ found\n");
+</div>
 
-No error, I think. Sometimes just mmaping the registers is enough.
+--000e0cd174ee2e59d0049fc7056a--
 
-> +		else {
-> +			uioinfo->irq =3D r_irq.start;
-> +			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
-> +		}
-> +	}
-> +
->  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
->  		dev_err(&pdev->dev, "missing platform_data\n");
->  		goto bad0;
-> @@ -176,10 +213,15 @@ static int uio_pdrv_genirq_probe(struct platform_de=
-vice *pdev)
-> =20
->  	platform_set_drvdata(pdev, priv);
->  	return 0;
-> - bad1:
-> +
-> +bad1:
-
-The spaces before labels are intentional, better keep them.
-
->  	kfree(priv);
->  	pm_runtime_disable(&pdev->dev);
-> - bad0:
-> +bad0:
-> +	/* kfree uioinfo for CONFIG_OF */
-> +	if (!pdev->dev.platform_data)
-> +		kfree(uioinfo);
-> +bad2:
->  	return ret;
->  }
-> =20
-> @@ -215,6 +257,17 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_p=
-m_ops =3D {
->  	.runtime_resume =3D uio_pdrv_genirq_runtime_nop,
->  };
-> =20
-> +#ifdef CONFIG_OF
-> +/* Match table for of_platform binding */
-> +static const struct of_device_id __devinitconst uio_of_genirq_match[] =
-=3D {
-> +	{ .compatible =3D "generic-uio", },
-> +	{ /* end of list */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-> +#else
-> +# define uio_of_genirq_match NULL
-> +#endif
-> +
->  static struct platform_driver uio_pdrv_genirq =3D {
->  	.probe =3D uio_pdrv_genirq_probe,
->  	.remove =3D uio_pdrv_genirq_remove,
-> @@ -222,6 +275,7 @@ static struct platform_driver uio_pdrv_genirq =3D {
->  		.name =3D DRIVER_NAME,
->  		.owner =3D THIS_MODULE,
->  		.pm =3D &uio_pdrv_genirq_dev_pm_ops,
-> +		.of_match_table =3D uio_of_genirq_match,
->  	},
->  };
-> =20
-> --=20
-> 1.5.5.6
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk2UeFUACgkQD27XaX1/VRtdXgCffr1l6ifExt9UH4ROFvyBb9wq
-npYAniyu1ReSjswVUCEP5MxUcuT6I8C3
-=uAwA
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
-
---===============1620792774322761134==
+--===============0182303076030815113==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -210,4 +141,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============1620792774322761134==--
+--===============0182303076030815113==--
