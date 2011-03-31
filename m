@@ -1,61 +1,140 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Michal Simek <monstr@monstr.eu>
 Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 15:25:52 +0200
-Message-ID: <201103311525.52396.arnd@arndb.de>
-References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
-	<20110331124925.GA2202@pengutronix.de>
-	<AANLkTinJrG=s3Xuvf_=bNtYF-z8u+YXvd217UKKz24ik@mail.gmail.com>
+Date: Thu, 31 Mar 2011 15:28:41 +0200
+Message-ID: <4D948189.9070606@monstr.eu>
+References: <1301574600-4861-1-git-send-email-monstr@monstr.eu> <1301574600-4861-2-git-send-email-monstr@monstr.eu> <20110331124925.GA2202@pengutronix.de>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <AANLkTinJrG=s3Xuvf_=bNtYF-z8u+YXvd217UKKz24ik-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Cc: gregkh-l3A5Bk7waGM@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110331124925.GA2202@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@linutronix.de, gregkh@suse.de
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 31 March 2011, John Williams wrote:
-> On Thu, Mar 31, 2011 at 10:49 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >
-> > On Thu, Mar 31, 2011 at 02:30:00PM +0200, Michal Simek wrote:
-> > > Support OF support. "generic-uio" compatible property is used.
-> >
-> > And exactly this was the issue last time (when I tried). This is a
-> > generic property, which is linux-specific and not describing HW. The
-> > agreement back then was to we probably need to add compatible-entries at
-> > runtime (something like new_id for USB). So the uio-of-driver could be
-> > matched against any device. Otherwise, we would collect a lot of
-> > potential entries like "vendor,special-card1". Although I wonder
-> > meanwhile if it is really going to be that bad; we don't have so much
-> > UIO-driver in tree as well. Maybe worth a try?
+Wolfram Sang wrote:
+> On Thu, Mar 31, 2011 at 02:30:00PM +0200, Michal Simek wrote:
+>> Support OF support. "generic-uio" compatible property is used.
 > 
-> 
-> Maybe I misunderstand you, in my view it is the responsibility of
-> <vendor> to create their DTS files to indicate they want
-> <special-card1> to bind to generic-uio.
-> 
-> So, no great list of compat strings should grow in the driver, but
-> rather the user of the driver must make it happen.
-> 
-> Am I missing something?
+> And exactly this was the issue last time (when I tried). This is a
+> generic property, which is linux-specific and not describing HW. The
+> agreement back then was to we probably need to add compatible-entries at
+> runtime (something like new_id for USB). So the uio-of-driver could be
+> matched against any device. Otherwise, we would collect a lot of
+> potential entries like "vendor,special-card1". Although I wonder
+> meanwhile if it is really going to be that bad; we don't have so much
+> UIO-driver in tree as well. Maybe worth a try?
 
-We try to make the device tree on describe the present hardware,
-but not relate to how it is used.
+I will read reactions to get better picture to be able to argue. :-)
 
-There are certainly cases where a specific piece of hardware can
-be used either by a kernel-only driver or the UIO driver with a
-user backend. I would argue that you should be able to use an
-identical device tree for both cases, because the hardware is
-the same. Chosing which driver to use can be either in the realm
-of the kernel, or even user policy.
+> 
+>> Signed-off-by: Michal Simek <monstr@monstr.eu>
+>> ---
+>>  drivers/uio/uio_pdrv_genirq.c |   60 ++++++++++++++++++++++++++++++++++++++--
+>>  1 files changed, 57 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+>> index 7174d51..9e89806 100644
+>> --- a/drivers/uio/uio_pdrv_genirq.c
+>> +++ b/drivers/uio/uio_pdrv_genirq.c
+>> @@ -23,6 +23,10 @@
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/slab.h>
+>>  
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/of_address.h>
+>> +
+>>  #define DRIVER_NAME "uio_pdrv_genirq"
+>>  
+>>  struct uio_pdrv_genirq_platdata {
+>> @@ -92,11 +96,44 @@ static int uio_pdrv_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+>>  static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>>  {
+>>  	struct uio_info *uioinfo = pdev->dev.platform_data;
+>> -	struct uio_pdrv_genirq_platdata *priv;
+>> +	struct uio_pdrv_genirq_platdata *priv = NULL;
+> 
+> unrelated?
 
-	Arnd
+you are right here. I changed order and this is not necessary.
+
+
+> 
+>>  	struct uio_mem *uiomem;
+>>  	int ret = -EINVAL;
+>>  	int i;
+>>  
+>> +	if (!uioinfo) {
+>> +		struct resource r_irq; /* Interrupt resources */
+>> +		int rc = 0;
+>> +
+>> +		rc = of_address_to_resource(pdev->dev.of_node, 0,
+>> +							&pdev->resource[0]);
+>> +		if (rc) {
+>> +			dev_err(&pdev->dev, "invalid address\n");
+>> +			goto bad2;
+>> +		}
+>> +		pdev->num_resources = 1;
+>> +
+>> +		/* alloc uioinfo for one device */
+>> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+>> +		if (!uioinfo) {
+>> +			ret = -ENOMEM;
+>> +			dev_err(&pdev->dev, "unable to kmalloc\n");
+>> +			goto bad2;
+>> +		}
+>> +		uioinfo->name = pdev->dev.of_node->name;
+>> +		/* Use version for storing full IP name for identification */
+>> +		uioinfo->version = pdev->dev.of_node->full_name;
+> 
+> I don't think this is apropriate, but will leave that to Hans.
+
+I was thinking what to add and I choose full_name because I can read this value 
+and identify which UIO is this device.
+I know that there should be version but there is no version string in DTS.
+
+> 
+>> +		/* Get IRQ for the device */
+>> +		rc = of_irq_to_resource(pdev->dev.of_node, 0, &r_irq);
+>> +		if (rc == NO_IRQ)
+>> +			dev_err(&pdev->dev, "no IRQ found\n");
+> 
+> No error, I think. Sometimes just mmaping the registers is enough.
+
+OK. Let's changed it to dev_info if you like.
+
+
+> 
+>> +		else {
+>> +			uioinfo->irq = r_irq.start;
+>> +			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
+>> +		}
+>> +	}
+>> +
+>>  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+>>  		dev_err(&pdev->dev, "missing platform_data\n");
+>>  		goto bad0;
+>> @@ -176,10 +213,15 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>>  
+>>  	platform_set_drvdata(pdev, priv);
+>>  	return 0;
+>> - bad1:
+>> +
+>> +bad1:
+> 
+> The spaces before labels are intentional, better keep them.
+
+I found both cases. checkpatch doesn't show any problem for both cases that's 
+why if you like space before label, I am fine with this.
+
+Michal
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
