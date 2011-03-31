@@ -1,93 +1,47 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 10:25:57 -0600
-Message-ID: <20110331162557.GG26709@ponder.secretlab.ca>
-References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
-	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
-	<20110331124925.GA2202@pengutronix.de>
-	<AANLkTi=sG6oVNifwLLi8jjKQXjR6kXZx43NxtFfoPumy@mail.gmail.com>
-	<20110331132328.GB2202@pengutronix.de>
-	<AANLkTikCEYK5K3sQ1rgVK6qMvizQYUn=xsiSPedNRn9A@mail.gmail.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH 0/5] consolidate sdhci pltfm & OF drivers and get them self registered
+Date: Thu, 31 Mar 2011 12:36:53 -0400
+Message-ID: <m38vvvz1p6.fsf@pullcord.laptop.org>
+References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTikCEYK5K3sQ1rgVK6qMvizQYUn=xsiSPedNRn9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Cc: hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org> (Shawn
+	Guo's message of "Fri, 25 Mar 2011 16:48:46 +0800")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, sameo@linux.intel.com, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMzEsIDIwMTEgYXQgMTE6NDc6MDRQTSArMTAwMCwgSm9obiBXaWxsaWFtcyB3
-cm90ZToKPiBPbiBUaHUsIE1hciAzMSwgMjAxMSBhdCAxMToyMyBQTSwgV29sZnJhbSBTYW5nIDx3
-LnNhbmdAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+ID4KPiA+PiDCoCDCoE1heWJlIEkgbWlzdW5k
-ZXJzdGFuZCB5b3UsIGluIG15IHZpZXcgaXQgaXMgdGhlIHJlc3BvbnNpYmlsaXR5IG9mIDx2ZW5k
-b3I+Cj4gPj4gwqAgwqB0byBjcmVhdGUgdGhlaXIgRFRTIGZpbGVzIHRvIGluZGljYXRlIHRoZXkg
-d2FudCA8c3BlY2lhbC1jYXJkMT4gdG8gYmluZCB0bwo+ID4+IMKgIMKgZ2VuZXJpYy11aW8uCj4g
-Pgo+ID4gRGV2aWNlIHRyZWUgaXMgYSBPUy1uZXV0cmFsIGhhcmR3YXJlIGRlc2NyaXB0aW9uIGxh
-bmd1YWdlLiAiZ2VuZXJpYy11aW8iCj4gPiBpcyBuZWl0aGVyIE9TLW5ldXRyYWwgbm9yIGEgaGFy
-ZHdhcmUgZGVzY3JpcHRpb24uIGRldmljZXRyZWUub3JnIGhhcwo+ID4gbW9yZSBpbmZvcm1hdGlv
-biBhYm91dCB0aGlzLgo+IAo+IElmIHdlIGFyZSB0cnlpbmcgdG8gYmUgcHVyZSwgSSBtaWdodCBh
-cmd1ZSB3ZSBhcmUgbm90IGNoYW5naW5nIHRoZSBEVFMKPiBsYW5ndWFnZSwgYnV0IHJhdGhlciBq
-dXN0IGFkZCBzdXBwb3J0IGluIExpbnV4IGZvciBhIHBhcnRpY3VsYXIKPiB1c2UtY2FzZS4gIFRo
-ZXJlIGlzIG5vIHZpb2xhdGlvbiBvZiBEVFMgc3ludGF4Lgo+IAo+IEl0IG1pZ2h0IGJlICpyZWNv
-bW1lbmRlZCogdGhhdCBkZXZpY2UgdHJlZXMgZGVzY3JpYmUgb25seSBoYXJkd2FyZSwKPiBhbHRo
-b3VnaCBhcyBNaWNoYWwgcG9pbnRzIG91dCB0aGVyZSBpcyBhbHJlYWR5IHByZWNlZGVudCBpbiB0
-aGUKPiAnY2hvc2VuJyBub2RlIHdoZXJlIHRoaXMgaXMgY2xlYXJseSB2aW9sYXRlZCwgYnV0IGlu
-IGEgd2F5IHRoYXQgaXMKPiBjb21wYXRpYmxlIHdpdGggRFRTIHN5bnRheC4KClRoZXJlIGFyZSBv
-ZiBjb3Vyc2UgZXhjZXB0aW9ucywgcGFydGljdWxhcmx5IGZvciBwYXNzaW5nIGJvb3QKaW5mb3Jt
-YXRpb24gdGhhdCBpcyBPUyBzcGVjaWZpYy4gIFRoZXJlIGlzIHN0cm9uZyBwcmVzc3VyZSB0byBh
-dm9pZCBpdApob3dldmVyLgoKPiAKPiBJcyBpdCBmb3JiaWRkZW4gdG8gaGF2ZSBEVFMgZGVzY3Jp
-cHRpb25zIG9mIHB1cmVseSB2aXJ0dWFsIGRldmljZXMsIGFzCj4gd291bGQgYmUgcHJlc2VudCBp
-ZiB5b3UgYm9vdCBhIERUUy1kcml2ZW4ga2VybmVsIGluc2lkZSBhIFZNCj4gZW52aXJvbm1lbnQs
-IHdoaWNoIHByb3ZpZGVzIG9ubHkgdmlydHVhbCBpbXBsZW1lbnRhdGlvbnMgb2YgdmFyaW91cwo+
-IGRldmljZXMgKGV0aGVybmV0IGV0Yyk/Cj4gCj4gJ3Ztd2FyZSx2aXJ0LWVuZXQnIG9yIHdoYXRl
-dmVyPwoKTm8sIGl0IGlzIG5vdCBhdCBhbGwgZm9yYmlkZGVuLiAgSG93ZXZlciBpdCBuZWVkcyB0
-byBiZSBhbmNob3JlZCBvbiBhCnJlYWwgaW1wbGVtZW50YXRpb24gb2YgdGhlIHZpcnR1YWwgZGV2
-aWNlLiAgVGhlIGRpZmZlcmVuY2Ugd2l0aCB1aW8gaXMKdGhhdCAndWlvJyBpcyBhIHZlcnkgc3Bl
-Y2lmaWMgZGVzY3JpcHRpb24gb2YgL2hvdy8gbGludXggaW50ZXJhY3RzCndpdGggdGhlIGRldmlj
-ZS4gIEl0IGRvZXNuJ3QgZGVzY3JpYmUgL3doYXQvIHRoZSBpbnRlcmZhY2UgaXMuCgpUaGUgdmly
-dGlvIHN0dWZmIGlzIGEgZ29vZCBleGFtcGxlIGJlY2F1c2UgdGhlIGludGVyZmFjZSBpcyBkZWZp
-bmVkCmluZGVwZW5lbnRseSBvZiBob3cgTGludXggYWN0dWFsbHkgZHJpdmVzIGl0LgoKU28geW91
-IGNvdWxkIG1vZGlmeSB0aGUgZWFybGllciBzdGF0ZW1lbnQgdG8gc2F5IHRoYXQgZGV2aWNlIHRy
-ZWVzCmRlc2NyaWJlIG9ubHkgaW50ZXJmYWNlczsgbm90IGludGVybmFsIE9TIGltcGxlbWVudGF0
-aW9uIGRldGFpbHMuCgpBIHJlYWxseSBiaWcgcHJvYmxlbSB3aXRoICdnZW5lcmljLXVpbycgaXMg
-dGhhdCBpdCBjYXN0cyBhIHZlcnkgbGFyZ2UKbmV0LiAgSWYgeW91IGFkZCAnZ2VuZXJpYy11aW8n
-IHRvIGEgbm9kZXMgY29tcGF0aWJsZSBsaXN0LCB0aGVuIGl0CmltbWVkaWF0ZWx5IHByZWNsdWRl
-cyBhbnkgcG9zc2liaWxpdHkgb2YgaXQgYmVpbmcgZHJpdmVuIGJ5IGFuCmluLWtlcm5lbCBkcml2
-ZXIuCgpIb3dldmVyLCBhcyBhbHJlYWR5IHJhaXNlZCB0aGVyZSBpcyBhbm90aGVyIHdheSB0byBz
-a2luIHRoaXMgY2F0Li4uLgoKPiAKPiA+PiDCoCDCoE91ciB1c2UtY2FzZSBpcyBwcmV0dHkgY2xl
-YXIsIGluIEZQR0EtYmFzZWQgc3lzdGVtcyBpdCBpcyBjb21tb24gdG8gY3JlYXRlCj4gPj4gwqAg
-wqBhcmJpdHJhcnkgZGV2aWNlcyB0aGF0IGRldmVsb3BlcnMganVzdCB3YW50IHRvIGNvbnRyb2wg
-ZnJvbSB1c2Vyc3BhY2UsCj4gPj4gwqAgwqB3aXRoIHNpbXBsZSBJUlEgYW5kIElPIGNhcGFiaWxp
-dGllcyAoRE1BIGNhbiBjb21lIGxhdGVyIDopLiDvv71UaGV5IGRvbid0Cj4gPj4gwqAgwqBuZWVk
-IHRvIGJpbmQgdG8gb3RoZXIga2VybmVsIEFQSXMgb3Igc3Vic3lzdGVtcywgYW5kIGRvbid0IHdh
-bnQgdG8gaW52ZXN0Cj4gPj4gwqAgwqBpbiBvbmUtb2ZmIGtlcm5lbCBkcml2ZXJzIHRoYXQgc2lt
-cGx5IHdpbGwgbmV2ZXIgZ28gdXBzdHJlYW0uCj4gPgo+ID4gRm9yIHRoYXQsIHRoZSBuZXdfY29t
-cGF0aWJsZS1maWxlIHdvdWxkIGJlIHN1aXRhYmxlLCBJIHRoaW5rLgo+IAo+ICMgZWNobyAiZ2Vu
-ZXJpYy11aW8iID4gL3N5cy9jbGFzcy91aW8vPHNvbWV0aGluZz4KPiAKPiA/CgpZZWFoLCBzb21l
-dGhpbmcgbGlrZSB0aGF0LiAgSSdkIHByZWZlciBzb21ldGhpbmcgbGlrZToKIjx2ZW5kb3I+LDxo
-YXJkd2FyZS1uYW1lPiIgPiAvc3lzL2J1cy9wbGF0Zm9ybS9kcml2ZXJzL2dlbmVyaWMtdWlvL2Nv
-bXBhdGlibGUtaGFyZHdhcmUKClRoYXQgbWFrZXMgaXQgdGhlIG1vZGVsIHRvIHN1cHBsZW1lbnQg
-dGhlIGRyaXZlciB3aXRoIGFkZGl0aW9uYWwKaW5mb3JtYXRpb24gYWJvdXQgd2hhdCBkZXZpY2Vz
-IGl0IGJpbmRzIGFnYWluc3QuCgo+IAo+ID4+IMKgIMKgVUlPIGlzIHBlcmZlY3QsIGFuZCBzaW1w
-bHkgdGFnZ2luZyB0aGUgZGV2aWNlIGFzIGdlbmVyaWMtdWlvIGluIHRoZSBEVFMgaXMKPiA+PiDC
-oCDCoHNvIHNpbXBsZSwgY2xlYW4sIGFuZCBlbGVnYW50Lgo+ID4KPiA+IFNpbXBsZSwgeWVzIChJ
-IGRvIHVuZGVyc3RhbmQgSSB3cm90ZSB0aGUgZmlyc3QgYXBwcm9hY2ggOykpIC4gRWxlZ2FudCwK
-PiA+IG5vdCByZWFsbHksIGJlY2F1c2UgaXQgYnJlYWtzIGNvcmUgY29udmVudGlvbnMgb2YgdGhl
-IGRldmljZSB0cmVlLiBGb3IKPiA+IHlvdXIgY2FzZSBpdCBpcyBhIHZlcnkgY29udmVuaWFudCBo
-YWNrLCBidXQgaXQgaXMgc3RpbGwgYSBoYWNrLgo+IAo+IEJlaW5nIHVzZWZ1bCBzZWVtcyBsaWtl
-IGEgaGlnaCBwcmlvcml0eSBpbiB0aGUga2VybmVsLCBJJ20gbm90IGFzaGFtZWQgb2YgaXQhIDop
-Cgo6LSkKCj4gCj4gUmVnYXJkcywKPiAKPiBKb2huCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2
-aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
-L2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+Hi Wolfram,
+
+On Fri, Mar 25 2011, Shawn Guo wrote:
+> Here are what the patch set does.
+>
+> * Remove .probe and .remove hooks from sdhci-pltfm.c and make it be
+>   a pure common helper function providers.
+> * Add .probe and .remove hooks for sdhci pltfm drivers sdhci-cns3xxx,
+>   sdhci-dove, sdhci-tegra, and sdhci-esdhc-imx to make them self
+>   registered with calling helper functions created above.
+> * Migrate the use of sdhci_of_host and sdhci_of_data to
+>   sdhci_pltfm_host and sdhci_pltfm_data, so that OF version host and
+>   data structure works can be saved, and pltfm version works for both
+>   cases.
+> * Add OF common helper stuff into sdhci-pltfm.c, and make OF version
+>   sdhci drivers sdhci-of-esdhc and sdhci-of-hlwd become self
+>   registered as well, so that sdhci-of-core.c and sdhci-of.h can be
+>   removed.
+> * Consolidate the OF and pltfm esdhc drivers into one with sharing
+>   the same pair of .probe and .remove hooks.  As a result,
+>   sdhci-esdhc-imx.c and sdhci-of-esdhc.c go away, while
+>   sdhci-esdhc.c comes in and works for both MPCxxx and i.MX.
+> * Eliminate include/linux/mmc/sdhci-pltfm.h with moving stuff into
+>   drivers/mmc/host/sdhci-pltfm.h.
+
+If you get time, would appreciate getting an ACK from you on the patch
+changes (including Grant's review).  Thanks very much!
+
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
