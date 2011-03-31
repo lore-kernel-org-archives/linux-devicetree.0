@@ -1,35 +1,34 @@
-From: =?iso-8859-1?Q?Lo=EFc?= Minier <loic.minier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm/dt: Add basic device tree support for genesi mx board
-Date: Thu, 31 Mar 2011 02:30:03 +0200
-Message-ID: <20110331003003.GG23560@bee.dooz.org>
-References: <1301490914-2279-1-git-send-email-jason.hui@linaro.org>
-	<AANLkTikZyhk1MHnTMd6KwGCLu7MTOpq3iR+ajDDAJDPs@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] arm/dt: Add basic device tree support for mx53 loco board
+Date: Wed, 30 Mar 2011 21:52:15 -0600
+Message-ID: <20110331035215.GC21226@ponder.secretlab.ca>
+References: <1301387820-18299-1-git-send-email-jason.hui@linaro.org>
+	<2CF7613B9822A943BEF13EF7ACEC5BD1173561@039-SN1MPN1-001.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AANLkTikZyhk1MHnTMd6KwGCLu7MTOpq3iR+ajDDAJDPs-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Steev Klimaszewski <steev-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <2CF7613B9822A943BEF13EF7ACEC5BD1173561-TcFNo7jSaXN2rPA8UBad2K4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2011, Steev Klimaszewski wrote:
-> We actually call the small desktop a Smarttop not nettop :)
+On Tue, Mar 29, 2011 at 10:34:12AM +0000, Liu Hui-R64343 wrote:
+> Hi, Grant,
+> The two patches for mx51/mx53 DT support have the same issue, which 
+> is the S-O-B will be missed when you git am. Let me know if you want me
+> re-send the two patches or you would take care when you am it? Thanks,
 
- I thought the same, but this name is already used in mainline
- linux/arch/arm/mach-mx5/board-mx51_efikamx.c:
- MACHINE_START(MX51_EFIKAMX, "Genesi EfikaMX nettop"
+I fixed it up.  Don't worry about it.
 
--- =
-
-Lo=EFc Minier
+g.
