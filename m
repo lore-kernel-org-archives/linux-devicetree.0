@@ -1,85 +1,55 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 13:48:32 -0600
-Message-ID: <AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
-References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
- <1301574600-4861-2-git-send-email-monstr@monstr.eu> <20110331124925.GA2202@pengutronix.de>
- <4D948189.9070606@monstr.eu> <20110331170321.GA2734@local>
- <4D94C09B.4070506@monstr.eu> <20110331192302.GD2734@local>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] dt: add new member 'clk' into device_node
+Date: Thu, 31 Mar 2011 13:59:51 -0600
+Message-ID: <20110331195951.GA31846@ponder.secretlab.ca>
+References: <1300472672-13392-1-git-send-email-shawn.guo@linaro.org>
+	<1300472672-13392-4-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110331192302.GD2734@local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Hans J. Koch" <hjk@hansjkoch.de>
-Cc: Michal Simek <monstr@monstr.eu>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@linutronix.de, gregkh@suse.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1300472672-13392-4-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2011 at 1:23 PM, Hans J. Koch <hjk@hansjkoch.de> wrote:
-> On Thu, Mar 31, 2011 at 07:57:47PM +0200, Michal Simek wrote:
->> Hans J. Koch wrote:
->> >On Thu, Mar 31, 2011 at 03:28:41PM +0200, Michal Simek wrote:
->> >>>>+ =A0 =A0 =A0 =A0 uioinfo->name =3D pdev->dev.of_node->name;
->> >>>>+ =A0 =A0 =A0 =A0 /* Use version for storing full IP name for id=
-entification */
->> >>>>+ =A0 =A0 =A0 =A0 uioinfo->version =3D pdev->dev.of_node->full_n=
-ame;
->> >>>I don't think this is apropriate, but will leave that to Hans.
->> >>I was thinking what to add and I choose full_name because I can re=
-ad
->> >>this value and identify which UIO is this device.
->> >>I know that there should be version but there is no version string=
- in DTS.
->> >
->> >The purpose of uio_info->version is to give the userspace part of t=
-he driver
->> >additional information. Kernel part and userspace part might be dev=
-eloped
->> >independently, and there should be a chance for the userspace part =
-to find
->> >out if a certain feature is already supported by the kernel part wi=
-thout
->> >having to do dirty kernel version checks.
->> >
->> >So, uio_info->version is an information about the driver, not the h=
-ardware.
->> >
->> >Example: You write a UIO driver for a chip you use in a project. Yo=
-u don't
->> >need all the functionality of that chip. One year later you need ad=
-ditional
->> >chip functionality, and it turns out that you have to do certain
->> >initializations in the kernel part. Your new userspace will need th=
-e new
->> >kernel driver, but there are lots of older kernels around in your c=
-ustomers
->> >devices. In that case, your userspace part can simply check the ver=
-sion
->> >string in sysfs and require at least your new version.
->>
->> I understand reasons but this information is not in device tree and
->> it must be setup.
->> Grant suggested compatible string but it is not the best option too.
->
-> In uio_pdrv_genirq, uio_info->version is hardcoded in platform data. =
-Hardware
-> initialization can also take place in the same platform specific file=
-, which
-> is common practice on archs like ARM. Therefore, a driver specific ve=
-rsioning
-> can make sense for UIO, even if the driver code itself doesn't change=
-=2E
->
-> If you have no equivalent for that in device tree, you should create =
-a new
-> generic driver (uio_of_genirq?) that simply doesn't support this kind=
- of
-> versioning.
+On Sat, Mar 19, 2011 at 02:24:29AM +0800, Shawn Guo wrote:
+> This pointer to 'struct clk' is added to save the reference to 'clk'
+> which is dynamically created per dt clock node, so that clkdev API
+> like clk_get can work with dt based device driver.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  include/linux/of.h |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index d9dd664..e621295 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -54,6 +54,7 @@ struct device_node {
+>  	struct	device_node *allnext;	/* next in list of all nodes */
+>  	struct	proc_dir_entry *pde;	/* this node's proc directory */
+>  	struct	kref kref;
+> +	struct	clk *clk;
 
-I'd avoid that.  Current trend is to move away from separate
-of-specific data because the driver is essentially identical other
-than the data source being different (platform_data vs. a device node
-pointer).
+The dt clock support code can already translate from dt node to a
+clock provider, and each clock provider should provide a .get() hook
+to return the correct struct clk.  of_clk_add_provider() inserts a
+mapping into the of_clk_providers() list, and clk_get() calls
+of_clk_get() which will process a devicenode->clk provider mapping.
+
+Adding a struct clk pointer to the device node isn't sufficient since
+a single clock provider node can provide multiple clock outputs.
 
 g.
