@@ -1,121 +1,64 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 5/5] mmc: sdhci: merge two sdhci-pltfm.h into one
-Date: Thu, 31 Mar 2011 09:54:08 -0600
-Message-ID: <20110331155408.GD26709@ponder.secretlab.ca>
-References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
- <1301042931-4869-6-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] net/fec: fix compile error introduced by dt support
+Date: Thu, 31 Mar 2011 10:09:40 -0600
+Message-ID: <20110331160940.GF26709@ponder.secretlab.ca>
+References: <1301037238-4031-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1301042931-4869-6-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org, linux-kernel@vger.kernel.org, sameo@linux.intel.com
+In-Reply-To: <1301037238-4031-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 25, 2011 at 04:48:51PM +0800, Shawn Guo wrote:
-> The structure sdhci_pltfm_data is not necessarily to be in a public
-> header like include/linux/mmc/sdhci-pltfm.h, so the patch moves it
-> into drivers/mmc/host/sdhci-pltfm.h and eliminates the former one.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-
-Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-
-Looks good to me.
-
-> ---
->  drivers/mmc/host/sdhci-cns3xxx.c |    1 -
->  drivers/mmc/host/sdhci-esdhc.c   |    1 -
->  drivers/mmc/host/sdhci-pltfm.h   |    6 +++++-
->  include/linux/mmc/sdhci-pltfm.h  |   29 -----------------------------
->  4 files changed, 5 insertions(+), 32 deletions(-)
->  delete mode 100644 include/linux/mmc/sdhci-pltfm.h
-> 
-> diff --git a/drivers/mmc/host/sdhci-cns3xxx.c b/drivers/mmc/host/sdhci-cns3xxx.c
-> index 95b9080..2238d34 100644
-> --- a/drivers/mmc/host/sdhci-cns3xxx.c
-> +++ b/drivers/mmc/host/sdhci-cns3xxx.c
-> @@ -15,7 +15,6 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/mmc/host.h>
-> -#include <linux/mmc/sdhci-pltfm.h>
->  #include <mach/cns3xxx.h>
->  #include "sdhci.h"
->  #include "sdhci-pltfm.h"
-> diff --git a/drivers/mmc/host/sdhci-esdhc.c b/drivers/mmc/host/sdhci-esdhc.c
-> index b3d1bc1..fd041d9 100644
-> --- a/drivers/mmc/host/sdhci-esdhc.c
-> +++ b/drivers/mmc/host/sdhci-esdhc.c
-> @@ -20,7 +20,6 @@
->  #include <linux/err.h>
->  #include <linux/clk.h>
->  #include <linux/mmc/host.h>
-> -#include <linux/mmc/sdhci-pltfm.h>
->  #ifdef CONFIG_MMC_SDHCI_ESDHC_IMX
->  #include <mach/hardware.h>
->  #endif
-> diff --git a/drivers/mmc/host/sdhci-pltfm.h b/drivers/mmc/host/sdhci-pltfm.h
-> index 05fe25d..e2d143c 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.h
-> +++ b/drivers/mmc/host/sdhci-pltfm.h
-> @@ -14,9 +14,13 @@
->  #include <linux/clk.h>
->  #include <linux/types.h>
->  #include <linux/platform_device.h>
-> -#include <linux/mmc/sdhci-pltfm.h>
->  #include <linux/mmc/sdhci.h>
->  
-> +struct sdhci_pltfm_data {
-> +	struct sdhci_ops *ops;
-> +	unsigned int quirks;
-> +};
-> +
->  struct sdhci_pltfm_host {
->  	struct clk *clk;
->  	u32 scratchpad; /* to handle quirks across io-accessor calls */
-> diff --git a/include/linux/mmc/sdhci-pltfm.h b/include/linux/mmc/sdhci-pltfm.h
-> deleted file mode 100644
-> index f1c2ac3..0000000
-> --- a/include/linux/mmc/sdhci-pltfm.h
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -/*
-> - * Platform data declarations for the sdhci-pltfm driver.
-> - *
-> - * Copyright (c) 2010 MontaVista Software, LLC.
-> - *
-> - * Author: Anton Vorontsov <avorontsov@ru.mvista.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or (at
-> - * your option) any later version.
-> - */
-> -
-> -#ifndef _SDHCI_PLTFM_H
-> -#define _SDHCI_PLTFM_H
-> -
-> -struct sdhci_ops;
-> -
-> -/**
-> - * struct sdhci_pltfm_data - SDHCI platform-specific information & hooks
-> - * @ops: optional pointer to the platform-provided SDHCI ops
-> - * @quirks: optional SDHCI quirks
-> - */
-> -struct sdhci_pltfm_data {
-> -	struct sdhci_ops *ops;
-> -	unsigned int quirks;
-> -};
-> -
-> -#endif /* _SDHCI_PLTFM_H */
-> -- 
-> 1.7.1
-> 
-> 
-> _______________________________________________
-> linaro-dev mailing list
-> linaro-dev@lists.linaro.org
-> http://lists.linaro.org/mailman/listinfo/linaro-dev
+T24gRnJpLCBNYXIgMjUsIDIwMTEgYXQgMDM6MTM6NThQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+IEFmdGVyIGZlYyBkdCBzdXBwb3J0IGlzIGFkZGVkLCB0aGUgZm9sbG93aW5nIGNvbXBpbGUg
+ZXJyb3Igd2lsbCBiZQo+IHNlZW4gd2hlbiBidWlsZGluZyBhIHB1cmUgbm9uLWR0IGtlcm5lbC4K
+PiAKPiBkcml2ZXJzL25ldC9mZWMuYzogSW4gZnVuY3Rpb24g4oCYZmVjX3Byb2Jl4oCZOgo+IGRy
+aXZlcnMvbmV0L2ZlYy5jOjEzODM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5j
+dGlvbiDigJhvZl9tYXRjaF9kZXZpY2XigJkKPiBkcml2ZXJzL25ldC9mZWMuYzoxMzgzOiB3YXJu
+aW5nOiBhc3NpZ25tZW50IG1ha2VzIHBvaW50ZXIgZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBjYXN0
+CgpFYXJsaWVyIHRvZGF5IEkgc3VnZ2VzdGVkIGZpeGluZyB0aGlzIGJ5IGFkZGluZyBhbiBlbXB0
+eQppbXBsZW1lbnRhdGlvbiBvZiBvZl9tYXRjaF9kZXZpY2UsIGJ1dCBJIGZvcmdvdCB0aGF0IGFu
+IC5vZl9tYXRjaApwb2ludGVyIGhhcyBiZWVuIGFkZGVkIHRvIHN0cnVjdCBkZXZpY2UgZm9yIGV4
+YWN0bHkgdGhpcyBwdXJwb3NlLiAgWW91CmNhbiB1c2UgdGhhdCBpbnN0ZWFkLgoKVGhhdCBjaGFu
+Z2UgaXMgY3VycmVudGx5IGluIG1haW5saW5lLCBidXQgaXQgaGFzIG5vdCBiZWVuIGJhY2twb3J0
+ZWQKdG8gdGhlIExpbmFybyAyLjYuMzggdHJlZSAoeWV0KS4KCmcuCgo+IAo+IFRoaXMgcGF0Y2gg
+aXMgdG8gZml4IHRoZSBlcnJvci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTaGF3biBHdW8gPHNoYXdu
+Lmd1b0BsaW5hcm8ub3JnPgo+IC0tLQo+ICBkcml2ZXJzL25ldC9mZWMuYyB8ICAgMTMgKysrKysr
+KysrKysrLQo+ICAxIGZpbGVzIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2ZlYy5jIGIvZHJpdmVycy9uZXQvZmVj
+LmMKPiBpbmRleCBiNTdmODc5Li5mZmIxZTc1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbmV0L2Zl
+Yy5jCj4gKysrIGIvZHJpdmVycy9uZXQvZmVjLmMKPiBAQCAtODUsOCArODUsMTkgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZmVjX2R0X2lkc1tdID0gewo+ICAJeyAuY29tcGF0
+aWJsZSA9ICJmc2wsaW14NTEtZmVjIiwgLmRhdGEgPSAmZmVjX2RldnR5cGVbMF0sIH0sCj4gIAl7
+fSwKPiAgfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICoKPiArZmVj
+X2dldF9vZl9kZXZpY2VfaWQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJ
+cmV0dXJuIG9mX21hdGNoX2RldmljZShmZWNfZHRfaWRzLCAmcGRldi0+ZGV2KTsKPiArfQo+ICAj
+ZWxzZQo+ICAjZGVmaW5lIGZlY19kdF9pZHMgTlVMTAo+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBv
+Zl9kZXZpY2VfaWQgKgo+ICtmZWNfZ2V0X29mX2RldmljZV9pZChzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQo+ICt7Cj4gKwlyZXR1cm4gTlVMTDsKPiArfQo+ICAjZW5kaWYKPiAgCj4gIHN0
+YXRpYyB1bnNpZ25lZCBjaGFyIG1hY2FkZHJbRVRIX0FMRU5dOwo+IEBAIC0xMzgwLDcgKzEzOTEs
+NyBAQCBmZWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCXN0cnVjdCBy
+ZXNvdXJjZSAqcjsKPiAgCWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm9mX2lkOwo+ICAKPiAt
+CW9mX2lkID0gb2ZfbWF0Y2hfZGV2aWNlKGZlY19kdF9pZHMsICZwZGV2LT5kZXYpOwo+ICsJb2Zf
+aWQgPSBmZWNfZ2V0X29mX2RldmljZV9pZChwZGV2KTsKPiAgCWlmIChvZl9pZCkKPiAgCQlwZGV2
+LT5pZF9lbnRyeSA9IChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlX2lkICopb2ZfaWQtPmRhdGE7Cj4g
+IAo+IC0tIAo+IDEuNy4xCj4gCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KPiBsaW5hcm8tZGV2IG1haWxpbmcgbGlzdAo+IGxpbmFyby1kZXZAbGlz
+dHMubGluYXJvLm9yZwo+IGh0dHA6Ly9saXN0cy5saW5hcm8ub3JnL21haWxtYW4vbGlzdGluZm8v
+bGluYXJvLWRldgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0
+cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVl
+LWRpc2N1c3MK
