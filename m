@@ -1,15 +1,17 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Thu, 31 Mar 2011 10:43:48 -0600
-Message-ID: <20110331164348.GI26709@ponder.secretlab.ca>
-References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
-	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
+Subject: Re: [PATCH] arm/dt: Add basic device tree support for mx53 loco board
+Date: Thu, 31 Mar 2011 10:50:48 -0600
+Message-ID: <20110331165048.GJ26709@ponder.secretlab.ca>
+References: <1301387820-18299-1-git-send-email-jason.hui@linaro.org>
+	<2CF7613B9822A943BEF13EF7ACEC5BD1173561@039-SN1MPN1-001.039d.mgd.msft.net>
+	<20110331035215.GC21226@ponder.secretlab.ca>
+	<20110331163615.GA25866@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1301574600-4861-2-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20110331163615.GA25866-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,142 +21,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2011 at 02:30:00PM +0200, Michal Simek wrote:
-> Support OF support. "generic-uio" compatible property is used.
+On Fri, Apr 01, 2011 at 12:36:16AM +0800, Shawn Guo wrote:
+> Hi Grant,
 > 
-> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-> ---
->  drivers/uio/uio_pdrv_genirq.c |   60 ++++++++++++++++++++++++++++++++++++++--
->  1 files changed, 57 insertions(+), 3 deletions(-)
+> On Wed, Mar 30, 2011 at 09:52:15PM -0600, Grant Likely wrote:
+> > On Tue, Mar 29, 2011 at 10:34:12AM +0000, Liu Hui-R64343 wrote:
+> > > Hi, Grant,
+> > > The two patches for mx51/mx53 DT support have the same issue, which 
+> > > is the S-O-B will be missed when you git am. Let me know if you want me
+> > > re-send the two patches or you would take care when you am it? Thanks,
+> > 
+> > I fixed it up.  Don't worry about it.
+> > 
+> I'm little confused by the Kconfig changes in this patch.  I saw your
+> comments on SMDKV310 patch as below.  But this patch was accepted with
+> MX5_DT_COMMON selected, which in turn selects USE_OF and
+> PROC_DEVICETREE.
+
+I picked up a bunch of these patches even though there were little
+things that should probably be fixed up.  I'll get it all resolved
+before I ask Nicolas to pull.
+
 > 
-> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-> index 7174d51..9e89806 100644
-> --- a/drivers/uio/uio_pdrv_genirq.c
-> +++ b/drivers/uio/uio_pdrv_genirq.c
-> @@ -23,6 +23,10 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
->  
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +
->  #define DRIVER_NAME "uio_pdrv_genirq"
->  
->  struct uio_pdrv_genirq_platdata {
-> @@ -92,11 +96,44 @@ static int uio_pdrv_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
->  static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  {
->  	struct uio_info *uioinfo = pdev->dev.platform_data;
-> -	struct uio_pdrv_genirq_platdata *priv;
-> +	struct uio_pdrv_genirq_platdata *priv = NULL;
->  	struct uio_mem *uiomem;
->  	int ret = -EINVAL;
->  	int i;
->  
-> +	if (!uioinfo) {
-> +		struct resource r_irq; /* Interrupt resources */
-> +		int rc = 0;
-> +
-> +		rc = of_address_to_resource(pdev->dev.of_node, 0,
-> +							&pdev->resource[0]);
-> +		if (rc) {
-> +			dev_err(&pdev->dev, "invalid address\n");
-> +			goto bad2;
-> +		}
-> +		pdev->num_resources = 1;
-
-You shouldn't need this anymore.  Device tree sourced platform_devices
-get their resource table populated automatically.  Also, drivers
-should /never/ modify the resource values set in the device because it
-messes up driver rebinding.
-
-> +
-> +		/* alloc uioinfo for one device */
-> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-> +		if (!uioinfo) {
-> +			ret = -ENOMEM;
-> +			dev_err(&pdev->dev, "unable to kmalloc\n");
-> +			goto bad2;
-> +		}
-> +		uioinfo->name = pdev->dev.of_node->name;
-> +		/* Use version for storing full IP name for identification */
-> +		uioinfo->version = pdev->dev.of_node->full_name;
-
-Comment on the binding: You should probably use the first entry in the
-compatible list for the name of the device.  Node names should be
-generic and usually they will say what a device does, but not what a
-device actually /is/ (this is the Generic Names recommended practice).
-
-Modern convention is to rely on the first compatible entry for
-describing what ip block it is.
-
-
-> +
-> +		/* Get IRQ for the device */
-> +		rc = of_irq_to_resource(pdev->dev.of_node, 0, &r_irq);
-
-Ditto here, the pdev should already have the irq resource populated.
-
-> +		if (rc == NO_IRQ)
-> +			dev_err(&pdev->dev, "no IRQ found\n");
-> +		else {
-> +			uioinfo->irq = r_irq.start;
-> +			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
-> +		}
-> +	}
-> +
->  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
->  		dev_err(&pdev->dev, "missing platform_data\n");
->  		goto bad0;
-> @@ -176,10 +213,15 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, priv);
->  	return 0;
-> - bad1:
-> +
-> +bad1:
->  	kfree(priv);
->  	pm_runtime_disable(&pdev->dev);
-> - bad0:
-> +bad0:
-> +	/* kfree uioinfo for CONFIG_OF */
-> +	if (!pdev->dev.platform_data)
-> +		kfree(uioinfo);
-> +bad2:
->  	return ret;
->  }
->  
-> @@ -215,6 +257,17 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
->  	.runtime_resume = uio_pdrv_genirq_runtime_nop,
->  };
->  
-> +#ifdef CONFIG_OF
-> +/* Match table for of_platform binding */
-> +static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-> +	{ .compatible = "generic-uio", },
-> +	{ /* end of list */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-> +#else
-> +# define uio_of_genirq_match NULL
-> +#endif
-> +
->  static struct platform_driver uio_pdrv_genirq = {
->  	.probe = uio_pdrv_genirq_probe,
->  	.remove = uio_pdrv_genirq_remove,
-> @@ -222,6 +275,7 @@ static struct platform_driver uio_pdrv_genirq = {
->  		.name = DRIVER_NAME,
->  		.owner = THIS_MODULE,
->  		.pm = &uio_pdrv_genirq_dev_pm_ops,
-> +		.of_match_table = uio_of_genirq_match,
->  	},
->  };
->  
-> -- 
-> 1.5.5.6
+> --- quota begins ---
+> > diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
+> > index a021b52..78f5924 100644
+> > --- a/arch/arm/mach-exynos4/Kconfig
+> > +++ b/arch/arm/mach-exynos4/Kconfig
+> > @@ -123,6 +123,7 @@ config MACH_SMDKV310
+> >  	select EXYNOS4_SETUP_I2C1
+> >  	select EXYNOS4_SETUP_KEYPAD
+> >  	select EXYNOS4_SETUP_SDHCI
+> > +	select USE_OF
 > 
+> I would drop this bit (I dropped it from my branch when I applied the
+> patch).  Device tree support remains an optional feature.  Instead it
+> can be enabled by default in the defconfig (or however the config is
+> managed for the kernel package)
+> --- quota ends ---
+> 
+> BTW, are you silently renaming the original devicetree/test branch
+> to devicetree/test-2.6.38 and using new devicetree/test for Nicolas
+> to pull Linaro bits?  If that is the case, what branch
+> devicetree/arm-linaro-2.6.38-rebuilt will be for?
+
+devicetree/test is /always/ an unstable branch that I try to keep as
+close to Linus' tree as possible.  I usually rebase for every -rc
+release.  devicetree/arm is based on devicetree/test, but it is
+published in a way that means it can always be merged.
+
+Also, which devicetree/test is pretty much "anything goes", I'm a lot
+more careful about which patches I actually publish to devicetree/arm.
+
+devicetree/arm-linaro-2.6.38 is the tree that I used previously for
+asking Nicolas to pull.  I created
+devicetree/arm-linaro-2.6.38-rebuilt solely for the purpose of
+Nicolas' new rebuilt branch, but now I hear that he isn't going to use
+that tree, so I'll push the latest changes into the
+devicetree/arm-linaro-2.6.38 branch too.
+
+You should be using devicetree/arm for anything targeted at upstream,
+and devicetree/arm-linaro-2.6.38 for anything targeted at the 11.05
+release.
+
+g.
