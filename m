@@ -1,13 +1,15 @@
-From: Steev Klimaszewski <steev-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+From: =?iso-8859-1?Q?Lo=EFc?= Minier <loic.minier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] arm/dt: Add basic device tree support for genesi mx board
-Date: Wed, 30 Mar 2011 10:58:19 -0500
-Message-ID: <AANLkTikZyhk1MHnTMd6KwGCLu7MTOpq3iR+ajDDAJDPs@mail.gmail.com>
+Date: Thu, 31 Mar 2011 02:30:03 +0200
+Message-ID: <20110331003003.GG23560@bee.dooz.org>
 References: <1301490914-2279-1-git-send-email-jason.hui@linaro.org>
+	<AANLkTikZyhk1MHnTMd6KwGCLu7MTOpq3iR+ajDDAJDPs@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1301490914-2279-1-git-send-email-jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AANLkTikZyhk1MHnTMd6KwGCLu7MTOpq3iR+ajDDAJDPs-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
@@ -17,49 +19,17 @@ List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
 	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
 Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Steev Klimaszewski <steev-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMzAsIDIwMTEgYXQgODoxNSBBTSwgSmFzb24gTGl1IDxqYXNvbi5odWlAbGlu
-YXJvLm9yZz4gd3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgR2VuZXNpIEVmaWth
-IE1YIFNtYXJ0dG9wIGFuZCBTbWFydGJvb2sKPgo+IFNpZ25lZC1vZmYtYnk6IEphc29uIExpdSA8
-amFzb24uaHVpQGxpbmFyby5vcmc+Cj4KPiAtLS0KPiBHcmFudCwgdWJvb3QgcGF0Y2ggaGFzIGJl
-ZW4gaW5jbHVkZWQgaW4geW91ciB1Ym9vdCBwYXRjaHNldC4KPiBBbmQgbXg1MV9lZmlrYSBidWls
-ZCBicmVhaywgbmVlZCBwdWxsIGluIHRoZSBwYXRjaCB0byBmaXggaXQKPiBodHRwOi8vZ2l0LnBl
-bmd1dHJvbml4LmRlLz9wPWlteC9saW51eC0yLjYuZ2l0O2E9Y29tbWl0ZGlmZjsKPiBoPTI1MTI5
-MGE2MDc4Y2I4ODM4MjM0NGIzZWU1MzVhZThjNjI1NGMxYjUKPiAtLS0KPiDCoGFyY2gvYXJtL2Jv
-b3QvZHRzL2dlbmVzaS1lZmlrYW14LmR0cyDCoCB8IMKgIDMwICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKwo+IMKgYXJjaC9hcm0vYm9vdC9kdHMvZ2VuZXNpLWVmaWthc2IuZHRzIMKgIHwg
-wqAgMzAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gwqBhcmNoL2FybS9tYWNoLW14
-NS9LY29uZmlnIMKgIMKgIMKgIMKgIMKgIMKgIMKgfCDCoCDCoDEgKwo+IMKgYXJjaC9hcm0vbWFj
-aC1teDUvYm9hcmQtbXg1MV9lZmlrYW14LmMgfCDCoCDCoDYgKysrKysrCj4gwqBhcmNoL2FybS9t
-YWNoLW14NS9ib2FyZC1teDUxX2VmaWthc2IuYyB8IMKgIMKgNiArKysrKysKPiDCoDUgZmlsZXMg
-Y2hhbmdlZCwgNzMgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9nZW5lc2ktZWZpa2FteC5kdHMgYi9hcmNoL2FybS9ib290L2R0
-cy9nZW5lc2ktZWZpa2FteC5kdHMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAw
-MDAuLmVjYTk2MTYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZ2Vu
-ZXNpLWVmaWthbXguZHRzCj4gQEAgLTAsMCArMSwzMCBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQg
-MjAxMSBMaW5hcm8gTHRkLgo+ICsgKgo+ICsgKiBUaGUgY29kZSBjb250YWluZWQgaGVyZWluIGlz
-IGxpY2Vuc2VkIHVuZGVyIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMKPiArICogTGljZW5zZS4gWW91
-IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZQo+ICsg
-KiBWZXJzaW9uIDIgb3IgbGF0ZXIgYXQgdGhlIGZvbGxvd2luZyBsb2NhdGlvbnM6Cj4gKyAqCj4g
-KyAqIGh0dHA6Ly93d3cub3BlbnNvdXJjZS5vcmcvbGljZW5zZXMvZ3BsLWxpY2Vuc2UuaHRtbAo+
-ICsgKiBodHRwOi8vd3d3LmdudS5vcmcvY29weWxlZnQvZ3BsLmh0bWwKPiArICovCj4gKwo+ICsv
-ZHRzLXYxLzsKPiArCj4gKy8gewo+ICsgwqAgwqAgwqAgbW9kZWwgPSAiR2VuZXNpIEVmaWthTVgg
-bmV0dG9wIjsKPiArIMKgIMKgIMKgIGNvbXBhdGlibGUgPSAiZ2VuZXNpLGVmaWthbXgiOwo+ICsg
-wqAgwqAgwqAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyDCoCDCoCDCoCAjc2l6ZS1jZWxscyA9
-IDwxPjsKPHNuaXA+Cj4gwqBNQUNISU5FX1NUQVJUKE1YNTFfRUZJS0FNWCwgIkdlbmVzaSBFZmlr
-YU1YIG5ldHRvcCIpCj4gwqAgwqAgwqAgwqAvKiBNYWludGFpbmVyOiBBbWl0IEt1Y2hlcmlhIDxh
-bWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+ICovCj4gwqAgwqAgwqAgwqAuYm9vdF9wYXJhbXMgPSBN
-WDUxX1BIWVNfT0ZGU0VUICsgMHgxMDAsCj4gQEAgLTI5NCw0ICsyOTksNSBAQCBNQUNISU5FX1NU
-QVJUKE1YNTFfRUZJS0FNWCwgIkdlbmVzaSBFZmlrYU1YIG5ldHRvcCIpCj4gwqAgwqAgwqAgwqAu
-aW5pdF9pcnEgPSBteDUxX2luaXRfaXJxLAo+IMKgIMKgIMKgIMKgLnRpbWVyID0gJm14NTFfZWZp
-a2FteF90aW1lciwKPiDCoCDCoCDCoCDCoC5pbml0X21hY2hpbmUgPSBteDUxX2VmaWthbXhfaW5p
-dCwKPiArIMKgIMKgIMKgIC5kdF9jb21wYXQgPSBteDUxX2VmaWthbXhfZHRfbWF0Y2gsCj4gwqBN
-QUNISU5FX0VORAoKV2UgYWN0dWFsbHkgY2FsbCB0aGUgc21hbGwgZGVza3RvcCBhIFNtYXJ0dG9w
-IG5vdCBuZXR0b3AgOikKCi0tIApTdGVldiBLbGltYXN6ZXdza2kgPHN0ZWV2QGdlbmVzaS11c2Eu
-Y29tPgpTZW5pb3IgU29mdHdhcmUgRW5naW5lZXIsIEdlbmVzaSBVU0EsIEluYy4KCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbmFyby1kZXYgbWFpbGlu
-ZyBsaXN0CmxpbmFyby1kZXZAbGlzdHMubGluYXJvLm9yZwpodHRwOi8vbGlzdHMubGluYXJvLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbmFyby1kZXYK
+On Wed, Mar 30, 2011, Steev Klimaszewski wrote:
+> We actually call the small desktop a Smarttop not nettop :)
+
+ I thought the same, but this name is already used in mainline
+ linux/arch/arm/mach-mx5/board-mx51_efikamx.c:
+ MACHINE_START(MX51_EFIKAMX, "Genesi EfikaMX nettop"
+
+-- =
+
+Lo=EFc Minier
