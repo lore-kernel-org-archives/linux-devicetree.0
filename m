@@ -1,70 +1,62 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 4/5] mmc: sdhci: consolidate sdhci-of-esdhc and
- sdhci-esdhc-imx
-Date: Fri, 1 Apr 2011 14:18:36 +0800
-Message-ID: <20110401061835.GG25866@S2100-06.ap.freescale.net>
-References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
- <1301042931-4869-5-git-send-email-shawn.guo@linaro.org>
- <20110331155312.GC26709@ponder.secretlab.ca>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: clock bindings
+Date: Fri, 1 Apr 2011 14:43:04 +0800
+Message-ID: <20110401064303.GH25866@S2100-06.ap.freescale.net>
+References: <4D498AAC.3090009@gmail.com>
+	<20110331224547.GH437@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110331155312.GC26709@ponder.secretlab.ca>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Shawn Guo <shawn.guo@linaro.org>, linaro-dev@lists.linaro.org, sameo@linux.intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20110331224547.GH437-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2011 at 09:53:12AM -0600, Grant Likely wrote:
-> On Fri, Mar 25, 2011 at 04:48:50PM +0800, Shawn Guo wrote:
-> > This patch is to consolidate SDHCI driver for Freescale eSDHC
-> > controller found on both MPCxxx and i.MX platforms.  It turns
-> > sdhci-of-esdhc.c and sdhci-esdhc-imx.c into one sdhci-esdhc.c,
-> > which gets the same pair of .probe and .remove serving two cases.
+On Thu, Mar 31, 2011 at 04:45:47PM -0600, Grant Likely wrote:
+> On Wed, Feb 02, 2011 at 10:47:40AM -0600, Rob Herring wrote:
+> > I've started looking at the DT clock bindings in more depth. To what
+> > level should the clock tree be defined in the DT? Should it be a
+> > one-to-one correlation of current struct clk nodes to node in DT
+> > where each node is a single input and output? Or only define a
+> > single (or few) node with the inputs (oscillators) and many outputs
+> > for SOC's clock controller (i.e. MX51 CCM).
 > > 
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > ---
-> >  drivers/mmc/host/Kconfig           |   38 ++--
-> >  drivers/mmc/host/Makefile          |    3 +-
-> >  drivers/mmc/host/sdhci-esdhc-imx.c |  210 ------------------
-> >  drivers/mmc/host/sdhci-esdhc.c     |  413 ++++++++++++++++++++++++++++++++++++
-> >  drivers/mmc/host/sdhci-of-esdhc.c  |  162 --------------
+> > If the DT itself does not have a hierarchical construction of nodes
+> > that matches the clock tree hierarchy, then creating the hierarchy
+> > at run-time will be a challenge and not be very efficient. It would
+> > require 1 pass for each clock node type to create all the nodes, and
+> > then another pass to setup the hierarchy.
 > 
-> This patch would be easier to review if it was split into two patches;
-> first rename sdhci-esdhc-imx.c to sdhci-esdhc.c without any changes to
-> the .c code, and then a second patch to merge the ppc bits into the
-> imx version.
+> Wow, it takes me a long time to reply sometimes.
 > 
-OK.
-
-> > +#if defined(CONFIG_OF)
-> > +#include <linux/of_device.h>
-> > +static const struct of_device_id sdhci_esdhc_dt_ids[] = {
-> > +#ifdef CONFIG_MMC_SDHCI_ESDHC_IMX
-> > +	{ .compatible = "fsl,imx-esdhc", .data = &sdhci_esdhc_imx_pdata },
-> > +#endif
-> > +#ifdef CONFIG_MMC_SDHCI_ESDHC_MPC
-> > +	{ .compatible = "fsl,mpc8379-esdhc", .data = &sdhci_esdhc_mpc_pdata },
-> > +	{ .compatible = "fsl,mpc8536-esdhc", .data = &sdhci_esdhc_mpc_pdata },
-> > +	{ .compatible = "fsl,esdhc", .data = &sdhci_esdhc_mpc_pdata },
-> > +#endif
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(platform, sdhci_esdhc_dt_ids);
-> > +
-> > +static const struct of_device_id *
-> > +sdhci_esdhc_get_of_device_id(struct platform_device *pdev)
-> > +{
-> > +	return of_match_device(sdhci_esdhc_dt_ids, &pdev->dev);
+> I'm not sure at the moment.  A month ago I would have said
+> "everything", but I've thought about it a lot more and I think it is
+> more important that dt and non-dt users share the same code base for
+> setting up internal-to-the-soc clocks.  Anything available externally
+> will need a node describing it in the dt, which means the support code
+> shifts from registering all the clocks to matching up dt nodes to
+> existing clocks where possible.
 > 
-> You can add an empty implementation of of_match_device() to
-> linux/of_device.h.  That would eliminate the need for this function.
+> For the time being, I've pushed back on registering all devices from
+> the device tree for the same reason which has given some breathing
+> room on the topic.  It will be a topic for discussion at UDS.
 > 
-Will follow what you suggested later to use .of_match pointer newly
-added into struct device.
+You must have seen the hot discussion on arch/arm platform device
+mess.  People have so much expectation from device tree to partly
+clean them up.  You are going on a way which may let those people
+down, at lease for quite some time :) 
 
 -- 
 Regards,
 Shawn
-
