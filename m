@@ -1,18 +1,11 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Sat, 2 Apr 2011 12:35:50 +0200
-Message-ID: <20110402103550.GA21760@pengutronix.de>
-References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
-	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
-	<20110331124925.GA2202@pengutronix.de> <4D948189.9070606@monstr.eu>
-	<20110331170321.GA2734@local> <4D94C09B.4070506@monstr.eu>
-	<20110331192302.GD2734@local>
-	<AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
-	<20110331203024.GE2734@local>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm/dt: Add a make rule to build dtb for enabled platform
+Date: Sat,  2 Apr 2011 18:39:43 +0800
+Message-ID: <1301740783-23147-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2320816601950994652=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110331203024.GE2734@local>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,69 +15,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
-Cc: gregkh-l3A5Bk7waGM@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, hjk-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+It's based on commit fe8e6d0b0e601ca0a63fe768d4b812d5a45a9da7
+"arm/dt: Add dtb make rule" from Rob Herring.
 
---===============2320816601950994652==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
+With 'make ARCH=arm dtb', it builds Device Tree Blobs for those
+platforms enabled by CONFIG.
 
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+This patch works against Linaro kernel tree.  But it needs to go
+through mainline review before it gets applied.
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ arch/arm/Makefile      |    3 +++
+ arch/arm/boot/Makefile |   14 ++++++++++++++
+ 2 files changed, 17 insertions(+), 0 deletions(-)
 
-
-> For UIO, it is not enough to just know "we have this chip using that driv=
-er",
-> at least not for a generic driver like the one proposed in this patch.
-
-So, what about setting this string to a default (e.g. '0' or 'generic' or
-whatever). Then, userspace knows this is the unmodified upstream version of=
- the
-generic driver. If the generic driver is not sufficent for a user and he
-patches it, he can simply patch the version string, too?
-
-Or can we use the notifiers to set up an individual version? That could als=
-o be
-the place to do special board-setup connected to the selected version.
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAk2W/AYACgkQD27XaX1/VRuDygCgpTl0PepbmFDomLwo6mHFrVeJ
-tbsAoLvL5Q4tc3hduZa4d7KkVrlUkxgt
-=gUVi
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
-
---===============2320816601950994652==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2320816601950994652==--
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index d51ab6c..7fd2af9 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -292,6 +292,9 @@ zinstall uinstall install: vmlinux
+ %.dtb:
+ 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
+ 
++dtb:
++	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
++
+ # We use MRPROPER_FILES and CLEAN_FILES now
+ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+index 08fc37f..dcea984 100644
+--- a/arch/arm/boot/Makefile
++++ b/arch/arm/boot/Makefile
+@@ -63,6 +63,20 @@ endif
+ $(obj)/%.dtb: $(src)/dts/%.dts
+ 	$(call cmd,dtc)
+ 
++dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
++dtb-$(CONFIG_MACH_MX51_BABBAGE) += mx51-babbage.dtb
++dtb-$(CONFIG_MACH_MX51_EFIKAMX) += genesi-efikamx.dtb
++dtb-$(CONFIG_MACH_MX51_EFIKASB) += genesi-efikasb.dtb
++dtb-$(CONFIG_MACH_MX53_LOCO) += mx53-loco.dtb
++dtb-$(CONFIG_MACH_OMAP3_BEAGLE) += omap3-beagle.dtb
++dtb-$(CONFIG_MACH_OMAP4_PANDA) += omap4-panda.dtb
++dtb-$(CONFIG_MACH_OVERO) += omap3-overo.dtb
++dtb-$(CONFIG_MACH_SMDKV310) += exynos4-smdkv310.dtb
++dtb-$(CONFIG_ARCH_VERSATILE_PB) += versatile-pb.dtb
++dtb-$(CONFIG_MACH_VERSATILE_AB) += versatile-ab.dtb
++
++$(obj)/dtb: $(addprefix $(obj)/, $(dtb-y))
++
+ quiet_cmd_uimage = UIMAGE  $@
+       cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
+ 		   -C none -a $(LOADADDR) -e $(STARTADDR) \
+-- 
+1.7.1
