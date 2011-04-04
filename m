@@ -1,23 +1,11 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Linus being annoyed by the ARM kernel code
-Date: Mon, 4 Apr 2011 07:29:53 -0400
-Message-ID: <BANLkTiku0xqBrpPdHe6hn4B94aRPq6-a5A@mail.gmail.com>
-References: <AANLkTike+x521179=qQjkt15hs4gH2L2vX1XSFhjM7OW@mail.gmail.com>
-	<-7349239223538377619@unknownmsgid>
-	<AANLkTimAsNaYZ-fk3d51iwzDwde=kcGGok+R6jK75wRx@mail.gmail.com>
-	<alpine.LFD.2.00.1104011756380.28032@xanadu.home>
-	<BANLkTimNQD2sWp+vegDKCqP7Y9GCBgkPew@mail.gmail.com>
-	<alpine.LFD.2.00.1104021320460.28032@xanadu.home>
-	<4D98320C.1090505@linaro.org>
-	<BANLkTimu6E44TnSO5S2sJXhDE-B3v8Yz=w@mail.gmail.com>
-	<4D989BCE.7020607@linaro.org>
-	<alpine.LFD.2.00.1104032134240.28032@xanadu.home>
-	<4D99875C.8060004@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] arm/dt: Add a make rule to build dtb for enabled boards
+Date: Mon,  4 Apr 2011 23:01:47 +0800
+Message-ID: <1301929307-1838-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4D99875C.8060004-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,39 +15,114 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Eric Miao <eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 4, 2011 at 4:54 AM, Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org> wrote:
-> Another way to solve it, would be to encode the set of device trees
-> supported in a way that removes redundancy. =A0Then the additional data n=
-eeded
-> to resolve a generic OMAP3 device table into overo or beagle or any simil=
-ar
-> board would be a small increment. =A0The encoded table can be initdata and
-> gotten rid of after being rendered into the DT required.
+With 'make ARCH=arm dtb', it builds Device Tree Blobs for those boards
+enabled by build CONFIG.
 
-Grant, this is an interesting idea...
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+It's based on commit fe8e6d0b0e601ca0a63fe768d4b812d5a45a9da7
+"arm/dt: Add dtb make rule" from Rob Herring.  And it works against
+Linaro kernel tree.  But it needs to go through mainline review
+before it gets applied.
 
-Suppose Linux develops a standardized DT format for describing things
-like clock and power domains. This domain data is then acted on by
-generic code in the kernel.  The domain data is CPU specific, not
-board specific.
+Changes since v1:
+* Take suggestion from Rob Herring to move .dts dection into machine
+  sepcific Makefile.boot, so that arch/arm/boot/Makefile can be as
+  clean as it is.
 
-It would make sense to me to not put this data into the board specific
-device trees. Board specific device trees include the CPU identifier.
-During the Linux boot process we could look at the CPU identifier and
-then expand the in-memory DT with CPU specific info like the clock and
-power domains.
+ arch/arm/Makefile                     |    3 +++
+ arch/arm/boot/Makefile                |    2 ++
+ arch/arm/mach-exynos4/Makefile.boot   |    2 ++
+ arch/arm/mach-mx5/Makefile.boot       |    5 +++++
+ arch/arm/mach-omap2/Makefile.boot     |    4 ++++
+ arch/arm/mach-tegra/Makefile.boot     |    2 ++
+ arch/arm/mach-versatile/Makefile.boot |    2 ++
+ 7 files changed, 20 insertions(+), 0 deletions(-)
 
-Since each CPU variant would expand into the corresponding nodes we
-can now write generic code that acts on this data in a manner that is
-not bound to the specific CPU. Keeping data like this out of the board
-specific DT makes them easier to write. There's nothing to be gained
-by adding dozens of CPU specific nodes to a board level device tree.
-
--- =
-
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index d51ab6c..7fd2af9 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -292,6 +292,9 @@ zinstall uinstall install: vmlinux
+ %.dtb:
+ 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
+ 
++dtb:
++	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
++
+ # We use MRPROPER_FILES and CLEAN_FILES now
+ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+index 08fc37f..ce39850 100644
+--- a/arch/arm/boot/Makefile
++++ b/arch/arm/boot/Makefile
+@@ -63,6 +63,8 @@ endif
+ $(obj)/%.dtb: $(src)/dts/%.dts
+ 	$(call cmd,dtc)
+ 
++$(obj)/dtb: $(addprefix $(obj)/, $(dtb-y))
++
+ quiet_cmd_uimage = UIMAGE  $@
+       cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
+ 		   -C none -a $(LOADADDR) -e $(STARTADDR) \
+diff --git a/arch/arm/mach-exynos4/Makefile.boot b/arch/arm/mach-exynos4/Makefile.boot
+index d65956f..fcee6b5 100644
+--- a/arch/arm/mach-exynos4/Makefile.boot
++++ b/arch/arm/mach-exynos4/Makefile.boot
+@@ -1,2 +1,4 @@
+    zreladdr-y	:= 0x40008000
+ params_phys-y	:= 0x40000100
++
++dtb-$(CONFIG_MACH_SMDKV310) += exynos4-smdkv310.dtb
+diff --git a/arch/arm/mach-mx5/Makefile.boot b/arch/arm/mach-mx5/Makefile.boot
+index e928be1..4111462 100644
+--- a/arch/arm/mach-mx5/Makefile.boot
++++ b/arch/arm/mach-mx5/Makefile.boot
+@@ -7,3 +7,8 @@ initrd_phys-$(CONFIG_ARCH_MX51)	:= 0x90800000
+    zreladdr-$(CONFIG_ARCH_MX53)	:= 0x70008000
+ params_phys-$(CONFIG_ARCH_MX53)	:= 0x70000100
+ initrd_phys-$(CONFIG_ARCH_MX53)	:= 0x70800000
++
++dtb-$(CONFIG_MACH_MX51_BABBAGE) += mx51-babbage.dtb
++dtb-$(CONFIG_MACH_MX51_EFIKAMX) += genesi-efikamx.dtb
++dtb-$(CONFIG_MACH_MX51_EFIKASB) += genesi-efikasb.dtb
++dtb-$(CONFIG_MACH_MX53_LOCO) += mx53-loco.dtb
+diff --git a/arch/arm/mach-omap2/Makefile.boot b/arch/arm/mach-omap2/Makefile.boot
+index 565aff7..0f54901 100644
+--- a/arch/arm/mach-omap2/Makefile.boot
++++ b/arch/arm/mach-omap2/Makefile.boot
+@@ -1,3 +1,7 @@
+   zreladdr-y		:= 0x80008000
+ params_phys-y		:= 0x80000100
+ initrd_phys-y		:= 0x80800000
++
++dtb-$(CONFIG_MACH_OMAP3_BEAGLE) += omap3-beagle.dtb
++dtb-$(CONFIG_MACH_OMAP4_PANDA) += omap4-panda.dtb
++dtb-$(CONFIG_MACH_OVERO) += omap3-overo.dtb
+diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
+index db52d61..c98addf 100644
+--- a/arch/arm/mach-tegra/Makefile.boot
++++ b/arch/arm/mach-tegra/Makefile.boot
+@@ -1,3 +1,5 @@
+ zreladdr-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00008000
+ params_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00000100
+ initrd_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00800000
++
++dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
+diff --git a/arch/arm/mach-versatile/Makefile.boot b/arch/arm/mach-versatile/Makefile.boot
+index c7e75ac..e2227d3 100644
+--- a/arch/arm/mach-versatile/Makefile.boot
++++ b/arch/arm/mach-versatile/Makefile.boot
+@@ -2,3 +2,5 @@
+ params_phys-y	:= 0x00000100
+ initrd_phys-y	:= 0x00800000
+ 
++dtb-$(CONFIG_ARCH_VERSATILE_PB) += versatile-pb.dtb
++dtb-$(CONFIG_MACH_VERSATILE_AB) += versatile-ab.dtb
+-- 
+1.7.1
