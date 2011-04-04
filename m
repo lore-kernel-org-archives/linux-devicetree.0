@@ -1,11 +1,21 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm/dt: Add a make rule to build dtb for enabled boards
-Date: Mon,  4 Apr 2011 23:01:47 +0800
-Message-ID: <1301929307-1838-1-git-send-email-shawn.guo@linaro.org>
+From: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
+Date: Mon, 4 Apr 2011 19:04:38 +0200
+Message-ID: <20110404170437.GA4830@local>
+References: <1301574600-4861-1-git-send-email-monstr@monstr.eu>
+	<1301574600-4861-2-git-send-email-monstr@monstr.eu>
+	<20110331124925.GA2202@pengutronix.de> <4D948189.9070606@monstr.eu>
+	<20110331170321.GA2734@local> <4D94C09B.4070506@monstr.eu>
+	<20110331192302.GD2734@local>
+	<AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
+	<20110331203024.GE2734@local>
+	<20110402103550.GA21760@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110402103550.GA21760-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,114 +25,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With 'make ARCH=arm dtb', it builds Device Tree Blobs for those boards
-enabled by build CONFIG.
+On Sat, Apr 02, 2011 at 12:35:50PM +0200, Wolfram Sang wrote:
+> 
+> > For UIO, it is not enough to just know "we have this chip using that driver",
+> > at least not for a generic driver like the one proposed in this patch.
+> 
+> So, what about setting this string to a default (e.g. '0' or 'generic' or
+> whatever). Then, userspace knows this is the unmodified upstream version of the
+> generic driver.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-It's based on commit fe8e6d0b0e601ca0a63fe768d4b812d5a45a9da7
-"arm/dt: Add dtb make rule" from Rob Herring.  And it works against
-Linaro kernel tree.  But it needs to go through mainline review
-before it gets applied.
+A "generic driver" should always be unmodified since you don't know who else
+might be using it. With uio_pdrv_genirq it is different when used with
+platform devices (which is its original purpose), since in the same file where
+you setup your struct uio_info you can also have code to initialize the device.
 
-Changes since v1:
-* Take suggestion from Rob Herring to move .dts dection into machine
-  sepcific Makefile.boot, so that arch/arm/boot/Makefile can be as
-  clean as it is.
+Therefore, platform devices need the ability to adjust the version attribute.
+Device tree code should probably don't touch it and leave it at a default value
+as you suggested.
 
- arch/arm/Makefile                     |    3 +++
- arch/arm/boot/Makefile                |    2 ++
- arch/arm/mach-exynos4/Makefile.boot   |    2 ++
- arch/arm/mach-mx5/Makefile.boot       |    5 +++++
- arch/arm/mach-omap2/Makefile.boot     |    4 ++++
- arch/arm/mach-tegra/Makefile.boot     |    2 ++
- arch/arm/mach-versatile/Makefile.boot |    2 ++
- 7 files changed, 20 insertions(+), 0 deletions(-)
+> If the generic driver is not sufficent for a user and he
+> patches it, he can simply patch the version string, too?
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index d51ab6c..7fd2af9 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -292,6 +292,9 @@ zinstall uinstall install: vmlinux
- %.dtb:
- 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
- 
-+dtb:
-+	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-+
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
-diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-index 08fc37f..ce39850 100644
---- a/arch/arm/boot/Makefile
-+++ b/arch/arm/boot/Makefile
-@@ -63,6 +63,8 @@ endif
- $(obj)/%.dtb: $(src)/dts/%.dts
- 	$(call cmd,dtc)
- 
-+$(obj)/dtb: $(addprefix $(obj)/, $(dtb-y))
-+
- quiet_cmd_uimage = UIMAGE  $@
-       cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
- 		   -C none -a $(LOADADDR) -e $(STARTADDR) \
-diff --git a/arch/arm/mach-exynos4/Makefile.boot b/arch/arm/mach-exynos4/Makefile.boot
-index d65956f..fcee6b5 100644
---- a/arch/arm/mach-exynos4/Makefile.boot
-+++ b/arch/arm/mach-exynos4/Makefile.boot
-@@ -1,2 +1,4 @@
-    zreladdr-y	:= 0x40008000
- params_phys-y	:= 0x40000100
-+
-+dtb-$(CONFIG_MACH_SMDKV310) += exynos4-smdkv310.dtb
-diff --git a/arch/arm/mach-mx5/Makefile.boot b/arch/arm/mach-mx5/Makefile.boot
-index e928be1..4111462 100644
---- a/arch/arm/mach-mx5/Makefile.boot
-+++ b/arch/arm/mach-mx5/Makefile.boot
-@@ -7,3 +7,8 @@ initrd_phys-$(CONFIG_ARCH_MX51)	:= 0x90800000
-    zreladdr-$(CONFIG_ARCH_MX53)	:= 0x70008000
- params_phys-$(CONFIG_ARCH_MX53)	:= 0x70000100
- initrd_phys-$(CONFIG_ARCH_MX53)	:= 0x70800000
-+
-+dtb-$(CONFIG_MACH_MX51_BABBAGE) += mx51-babbage.dtb
-+dtb-$(CONFIG_MACH_MX51_EFIKAMX) += genesi-efikamx.dtb
-+dtb-$(CONFIG_MACH_MX51_EFIKASB) += genesi-efikasb.dtb
-+dtb-$(CONFIG_MACH_MX53_LOCO) += mx53-loco.dtb
-diff --git a/arch/arm/mach-omap2/Makefile.boot b/arch/arm/mach-omap2/Makefile.boot
-index 565aff7..0f54901 100644
---- a/arch/arm/mach-omap2/Makefile.boot
-+++ b/arch/arm/mach-omap2/Makefile.boot
-@@ -1,3 +1,7 @@
-   zreladdr-y		:= 0x80008000
- params_phys-y		:= 0x80000100
- initrd_phys-y		:= 0x80800000
-+
-+dtb-$(CONFIG_MACH_OMAP3_BEAGLE) += omap3-beagle.dtb
-+dtb-$(CONFIG_MACH_OMAP4_PANDA) += omap4-panda.dtb
-+dtb-$(CONFIG_MACH_OVERO) += omap3-overo.dtb
-diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
-index db52d61..c98addf 100644
---- a/arch/arm/mach-tegra/Makefile.boot
-+++ b/arch/arm/mach-tegra/Makefile.boot
-@@ -1,3 +1,5 @@
- zreladdr-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00008000
- params_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00000100
- initrd_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00800000
-+
-+dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
-diff --git a/arch/arm/mach-versatile/Makefile.boot b/arch/arm/mach-versatile/Makefile.boot
-index c7e75ac..e2227d3 100644
---- a/arch/arm/mach-versatile/Makefile.boot
-+++ b/arch/arm/mach-versatile/Makefile.boot
-@@ -2,3 +2,5 @@
- params_phys-y	:= 0x00000100
- initrd_phys-y	:= 0x00800000
- 
-+dtb-$(CONFIG_ARCH_VERSATILE_PB) += versatile-pb.dtb
-+dtb-$(CONFIG_MACH_VERSATILE_AB) += versatile-ab.dtb
--- 
-1.7.1
+Or better write a dedicated driver. Patching a generic thing like uio_pdrv_genirq
+can only be done in specialized drivers in a project. That's hackery that won't
+make it into mainline anyway.
+
+> 
+> Or can we use the notifiers to set up an individual version? That could also be
+> the place to do special board-setup connected to the selected version.
+
+How could that look like? If you have an idea for a generic solution, you're
+welcome.
+
+Thanks,
+Hans
