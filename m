@@ -1,15 +1,21 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] arm/dt: Add a make rule to build dtb for enabled boards
-Date: Tue, 5 Apr 2011 15:09:05 +0800
-Message-ID: <20110405070904.GB28171@S2100-06.ap.freescale.net>
-References: <1301929307-1838-1-git-send-email-shawn.guo@linaro.org>
-	<20110405044827.GA28817@ponder.secretlab.ca>
+From: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
+Date: Tue, 5 Apr 2011 13:50:13 +0200
+Message-ID: <20110405115013.GA7028@local>
+References: <20110331170321.GA2734@local> <4D94C09B.4070506@monstr.eu>
+	<20110331192302.GD2734@local>
+	<AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
+	<20110331203024.GE2734@local>
+	<20110402103550.GA21760@pengutronix.de>
+	<20110404170437.GA4830@local>
+	<20110404173149.GB12200@pengutronix.de>
+	<20110404182423.GC4830@local> <4D9AB5E8.3080401@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110405044827.GA28817-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <4D9AB5E8.3080401-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,64 +25,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2011 at 10:48:27PM -0600, Grant Likely wrote:
-> On Mon, Apr 04, 2011 at 11:01:47PM +0800, Shawn Guo wrote:
-> > With 'make ARCH=arm dtb', it builds Device Tree Blobs for those boards
-> > enabled by build CONFIG.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > It's based on commit fe8e6d0b0e601ca0a63fe768d4b812d5a45a9da7
-> > "arm/dt: Add dtb make rule" from Rob Herring.  And it works against
-> > Linaro kernel tree.  But it needs to go through mainline review
-> > before it gets applied.
-> > 
-> > Changes since v1:
-> > * Take suggestion from Rob Herring to move .dts dection into machine
-> >   sepcific Makefile.boot, so that arch/arm/boot/Makefile can be as
-> >   clean as it is.
+On Tue, Apr 05, 2011 at 08:25:44AM +0200, Michal Simek wrote:
+> Hans J. Koch wrote:
+> >On Mon, Apr 04, 2011 at 07:31:49PM +0200, Wolfram Sang wrote:
+> >>So, the solution for now is to simply add a default value and we can check
+> >>later if it can be modified at runtime?
+> >
+> >Yes.
 > 
-> Looks good, some minor comments below, but I've picked it up and asked
-> Nicolas to merge it.
-> 
-> Cheers,
-> g.
-> 
-> > 
-> >  arch/arm/Makefile                     |    3 +++
-> >  arch/arm/boot/Makefile                |    2 ++
-> >  arch/arm/mach-exynos4/Makefile.boot   |    2 ++
-> >  arch/arm/mach-mx5/Makefile.boot       |    5 +++++
-> >  arch/arm/mach-omap2/Makefile.boot     |    4 ++++
-> >  arch/arm/mach-tegra/Makefile.boot     |    2 ++
-> >  arch/arm/mach-versatile/Makefile.boot |    2 ++
-> >  7 files changed, 20 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> > index d51ab6c..7fd2af9 100644
-> > --- a/arch/arm/Makefile
-> > +++ b/arch/arm/Makefile
-> > @@ -292,6 +292,9 @@ zinstall uinstall install: vmlinux
-> >  %.dtb:
-> >  	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-> >  
-> > +dtb:
-> > +	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-> > +
-> 
-> Since the target is the same, I've merged this rule with the %.dtb
-> rule.  I also renamed the target 'dtbs' because it will build more
-> than one .dtb file.
-> 
-I started with 'dtbs' as target name, and later changed it to 'dtb'
-to align with $(dtb-y).  And 'dtbs' looks truly fine for me, but you
-may want to change commit message accordingly, as there is
-'make ARCH=arm dtb' in it.
+> ok. Nice. What default value would you like to see as the version string?
+> '0', 'generic', 'generic-uio', 'dt'
 
--- 
-Regards,
-Shawn
+Actually, I don't care too much. '0' or 'generic' would be OK. I don't
+like 'generic-uio' because it only applies to one driver, not UIO as
+a whole.
+
+> 
+> Ok the last thing is how to handle compatible property.
+
+if 'dt' means 'device tree' then I'd actually like that one since this
+default is only used in the device tree case. Obviously you must not
+change the version attributes set by platform devices.
+
+Thanks,
+Hans
