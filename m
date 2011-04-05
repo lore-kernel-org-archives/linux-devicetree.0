@@ -1,21 +1,15 @@
-From: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
-Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
-Date: Tue, 5 Apr 2011 13:50:13 +0200
-Message-ID: <20110405115013.GA7028@local>
-References: <20110331170321.GA2734@local> <4D94C09B.4070506@monstr.eu>
-	<20110331192302.GD2734@local>
-	<AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
-	<20110331203024.GE2734@local>
-	<20110402103550.GA21760@pengutronix.de>
-	<20110404170437.GA4830@local>
-	<20110404173149.GB12200@pengutronix.de>
-	<20110404182423.GC4830@local> <4D9AB5E8.3080401@monstr.eu>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: checking status semantics with compatible functions
+Date: Tue, 05 Apr 2011 21:59:36 +1000
+Message-ID: <1302004776.2549.153.camel@pasglop>
+References: <9BC4C90E-090F-4961-A242-10D769C08738@kernel.crashing.org>
+	<C1B3133E-0EEE-49E9-9E3A-35026CFA78E9@kernel.crashing.org>
+	<20110330143113.GA13685@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4D9AB5E8.3080401-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20110330143113.GA13685-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,31 +19,21 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Linuxppc-dev list <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 05, 2011 at 08:25:44AM +0200, Michal Simek wrote:
-> Hans J. Koch wrote:
-> >On Mon, Apr 04, 2011 at 07:31:49PM +0200, Wolfram Sang wrote:
-> >>So, the solution for now is to simply add a default value and we can check
-> >>later if it can be modified at runtime?
-> >
-> >Yes.
+On Wed, 2011-03-30 at 08:31 -0600, Grant Likely wrote:
+> Yes, of_device_is_available() should be checked, but it should not be
+> added directly to of_device_is_compatible().  I'm okay with adding
+> a helper variant that does the of_device_is_compatible() check.
 > 
-> ok. Nice. What default value would you like to see as the version string?
-> '0', 'generic', 'generic-uio', 'dt'
+> In that particular case, I'd also suggest using
+> for_each_matching_node().
 
-Actually, I don't care too much. '0' or 'generic' would be OK. I don't
-like 'generic-uio' because it only applies to one driver, not UIO as
-a whole.
+Agreed. A device might be unavailable due to how FW configured the
+machine, but made later on available by the kernel, that shouldn't
+impact the interface compatibility test.
 
-> 
-> Ok the last thing is how to handle compatible property.
-
-if 'dt' means 'device tree' then I'd actually like that one since this
-default is only used in the device tree case. Obviously you must not
-change the version attributes set by platform devices.
-
-Thanks,
-Hans
+Cheers,
+Ben.
