@@ -1,16 +1,22 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] net/fec: fix compile error introduced by dt support
-Date: Mon, 4 Apr 2011 22:54:00 -0600
-Message-ID: <20110405045400.GA28956@ponder.secretlab.ca>
-References: <1301037238-4031-1-git-send-email-shawn.guo@linaro.org>
-	<20110331160940.GF26709@ponder.secretlab.ca>
-	<20110401074916.GI25866@S2100-06.ap.freescale.net>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] uio/pdrv_genirq: Add OF support
+Date: Tue, 05 Apr 2011 08:25:44 +0200
+Message-ID: <4D9AB5E8.3080401@monstr.eu>
+References: <20110331124925.GA2202@pengutronix.de>
+	<4D948189.9070606@monstr.eu> <20110331170321.GA2734@local>
+	<4D94C09B.4070506@monstr.eu> <20110331192302.GD2734@local>
+	<AANLkTin6iSVQtKo602hceod+4=cVUMG=GR7cCZvHg4nO@mail.gmail.com>
+	<20110331203024.GE2734@local>
+	<20110402103550.GA21760@pengutronix.de>
+	<20110404170437.GA4830@local>
+	<20110404173149.GB12200@pengutronix.de>
+	<20110404182423.GC4830@local>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110401074916.GI25866-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20110404182423.GC4830@local>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,38 +26,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMDEsIDIwMTEgYXQgMDM6NDk6MTZQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
-Ogo+IE9uIFRodSwgTWFyIDMxLCAyMDExIGF0IDEwOjA5OjQwQU0gLTA2MDAsIEdyYW50IExpa2Vs
-eSB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDI1LCAyMDExIGF0IDAzOjEzOjU4UE0gKzA4MDAsIFNo
-YXduIEd1byB3cm90ZToKPiA+ID4gQWZ0ZXIgZmVjIGR0IHN1cHBvcnQgaXMgYWRkZWQsIHRoZSBm
-b2xsb3dpbmcgY29tcGlsZSBlcnJvciB3aWxsIGJlCj4gPiA+IHNlZW4gd2hlbiBidWlsZGluZyBh
-IHB1cmUgbm9uLWR0IGtlcm5lbC4KPiA+ID4gCj4gPiA+IGRyaXZlcnMvbmV0L2ZlYy5jOiBJbiBm
-dW5jdGlvbiDigJhmZWNfcHJvYmXigJk6Cj4gPiA+IGRyaXZlcnMvbmV0L2ZlYy5jOjEzODM6IGVy
-cm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhvZl9tYXRjaF9kZXZpY2Xi
-gJkKPiA+ID4gZHJpdmVycy9uZXQvZmVjLmM6MTM4Mzogd2FybmluZzogYXNzaWdubWVudCBtYWtl
-cyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2FzdAo+ID4gCj4gPiBFYXJsaWVyIHRv
-ZGF5IEkgc3VnZ2VzdGVkIGZpeGluZyB0aGlzIGJ5IGFkZGluZyBhbiBlbXB0eQo+ID4gaW1wbGVt
-ZW50YXRpb24gb2Ygb2ZfbWF0Y2hfZGV2aWNlLCBidXQgSSBmb3Jnb3QgdGhhdCBhbiAub2ZfbWF0
-Y2gKPiA+IHBvaW50ZXIgaGFzIGJlZW4gYWRkZWQgdG8gc3RydWN0IGRldmljZSBmb3IgZXhhY3Rs
-eSB0aGlzIHB1cnBvc2UuICBZb3UKPiA+IGNhbiB1c2UgdGhhdCBpbnN0ZWFkLgo+ID4gCj4gPiBU
-aGF0IGNoYW5nZSBpcyBjdXJyZW50bHkgaW4gbWFpbmxpbmUsIGJ1dCBpdCBoYXMgbm90IGJlZW4g
-YmFja3BvcnRlZAo+ID4gdG8gdGhlIExpbmFybyAyLjYuMzggdHJlZSAoeWV0KS4KPiA+IAo+IFRo
-aXMgc2ltcGx5IGlzIGEgZml4IHRvIGNvbW1pdCA1NDg5OGI4NmZhOTgxMzMxM2IzZWI5ODFjNDQ2
-MTBmZjQ4M2IwMDY3Cj4gIm5ldC9mZWM6IGFkZCBkZXZpY2UgdHJlZSBtYXRjaGluZyBzdXBwb3J0
-Iiwgd2hpY2ggb25seSBzaXRzIG9uIGJyYW5jaAo+IGRldmljZXRyZWUvdGVzdC0yLjYuMzggcmln
-aHQgbm93LiAgSG93ZXZlciwgLm9mX21hdGNoIGlzIG5vdCBhdmFpbGFibGUKPiBvbiB0aGF0IHRy
-ZWUgeWV0LiAgU28gSSBjYW4gbm90IGRvIGFueXRoaW5nIHVudGlsIGV0aGVyIHRoaXMgcGF0Y2gK
-PiBzaG93cyBvbiBkZXZpY2V0cmVlL3Rlc3Qgb3IgLm9mX21hdGNoIGlzIGJhY2sgcG9ydGVkIG9u
-Cj4gZGV2aWNldHJlZS90ZXN0LTIuNi4zOC4gIE9yIHlvdSBjYW4gc2ltcGx5IGlnbm9yZSB0aGlz
-IHBhdGNoIHNpbmNlIEkKPiBqdXN0IHdhbnQgbGV0IHlvdSBrbm93IHN1Y2ggYSBjb21waWxlIGVy
-cm9yLgoKT2theSwgb2ZfbWF0Y2ggaXMgaW4gbXkgZGV2aWNldHJlZS90ZXN0IGJyYW5jaCBub3cg
-c2luY2UgSSd2ZSByZWJhc2VkCnRvIDIuNi4zOC1yYzEuICBJJ2xsIGhhcHBpbHkgdGFrZSBhIGZp
-eHVwIHBhdGNoIGZyb20geW91IG5vdy4gIDotKQoKZy4KCj4gCj4gLS0gCj4gUmVnYXJkcywKPiBT
-aGF3bgo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-ZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5v
-emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRp
-c2N1c3MK
+Hans J. Koch wrote:
+> On Mon, Apr 04, 2011 at 07:31:49PM +0200, Wolfram Sang wrote:
+>> So, the solution for now is to simply add a default value and we can check
+>> later if it can be modified at runtime?
+> 
+> Yes.
+
+ok. Nice. What default value would you like to see as the version string?
+'0', 'generic', 'generic-uio', 'dt'
+
+Ok the last thing is how to handle compatible property.
+
+Thanks,
+Michal
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
