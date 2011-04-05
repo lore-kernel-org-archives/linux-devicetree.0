@@ -1,14 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm/dt: Add a make rule to build dtb for enabled boards
-Date: Mon, 4 Apr 2011 22:48:27 -0600
-Message-ID: <20110405044827.GA28817@ponder.secretlab.ca>
-References: <1301929307-1838-1-git-send-email-shawn.guo@linaro.org>
+Subject: Re: clock bindings
+Date: Mon, 4 Apr 2011 22:50:53 -0600
+Message-ID: <20110405045053.GB28817@ponder.secretlab.ca>
+References: <4D498AAC.3090009@gmail.com>
+	<20110331224547.GH437@ponder.secretlab.ca>
+	<20110401064303.GH25866@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1301929307-1838-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20110401064303.GH25866-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,132 +20,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2011 at 11:01:47PM +0800, Shawn Guo wrote:
-> With 'make ARCH=arm dtb', it builds Device Tree Blobs for those boards
-> enabled by build CONFIG.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> It's based on commit fe8e6d0b0e601ca0a63fe768d4b812d5a45a9da7
-> "arm/dt: Add dtb make rule" from Rob Herring.  And it works against
-> Linaro kernel tree.  But it needs to go through mainline review
-> before it gets applied.
-> 
-> Changes since v1:
-> * Take suggestion from Rob Herring to move .dts dection into machine
->   sepcific Makefile.boot, so that arch/arm/boot/Makefile can be as
->   clean as it is.
+On Fri, Apr 01, 2011 at 02:43:04PM +0800, Shawn Guo wrote:
+> On Thu, Mar 31, 2011 at 04:45:47PM -0600, Grant Likely wrote:
+> > On Wed, Feb 02, 2011 at 10:47:40AM -0600, Rob Herring wrote:
+> > > I've started looking at the DT clock bindings in more depth. To what
+> > > level should the clock tree be defined in the DT? Should it be a
+> > > one-to-one correlation of current struct clk nodes to node in DT
+> > > where each node is a single input and output? Or only define a
+> > > single (or few) node with the inputs (oscillators) and many outputs
+> > > for SOC's clock controller (i.e. MX51 CCM).
+> > > 
+> > > If the DT itself does not have a hierarchical construction of nodes
+> > > that matches the clock tree hierarchy, then creating the hierarchy
+> > > at run-time will be a challenge and not be very efficient. It would
+> > > require 1 pass for each clock node type to create all the nodes, and
+> > > then another pass to setup the hierarchy.
+> > 
+> > Wow, it takes me a long time to reply sometimes.
+> > 
+> > I'm not sure at the moment.  A month ago I would have said
+> > "everything", but I've thought about it a lot more and I think it is
+> > more important that dt and non-dt users share the same code base for
+> > setting up internal-to-the-soc clocks.  Anything available externally
+> > will need a node describing it in the dt, which means the support code
+> > shifts from registering all the clocks to matching up dt nodes to
+> > existing clocks where possible.
+> > 
+> > For the time being, I've pushed back on registering all devices from
+> > the device tree for the same reason which has given some breathing
+> > room on the topic.  It will be a topic for discussion at UDS.
+> > 
+> You must have seen the hot discussion on arch/arm platform device
+> mess.  People have so much expectation from device tree to partly
+> clean them up.  You are going on a way which may let those people
+> down, at lease for quite some time :) 
 
-Looks good, some minor comments below, but I've picked it up and asked
-Nicolas to merge it.
+Actually, I'm not too worried about this.  The real problem is the
+board files, not the SoC support code, so even with changing focus a
+bit it will still have a huge impact on how the board files look.
 
-Cheers,
 g.
-
-> 
->  arch/arm/Makefile                     |    3 +++
->  arch/arm/boot/Makefile                |    2 ++
->  arch/arm/mach-exynos4/Makefile.boot   |    2 ++
->  arch/arm/mach-mx5/Makefile.boot       |    5 +++++
->  arch/arm/mach-omap2/Makefile.boot     |    4 ++++
->  arch/arm/mach-tegra/Makefile.boot     |    2 ++
->  arch/arm/mach-versatile/Makefile.boot |    2 ++
->  7 files changed, 20 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index d51ab6c..7fd2af9 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -292,6 +292,9 @@ zinstall uinstall install: vmlinux
->  %.dtb:
->  	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
->  
-> +dtb:
-> +	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-> +
-
-Since the target is the same, I've merged this rule with the %.dtb
-rule.  I also renamed the target 'dtbs' because it will build more
-than one .dtb file.
-
->  # We use MRPROPER_FILES and CLEAN_FILES now
->  archclean:
->  	$(Q)$(MAKE) $(clean)=$(boot)
-> diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-> index 08fc37f..ce39850 100644
-> --- a/arch/arm/boot/Makefile
-> +++ b/arch/arm/boot/Makefile
-> @@ -63,6 +63,8 @@ endif
->  $(obj)/%.dtb: $(src)/dts/%.dts
->  	$(call cmd,dtc)
->  
-> +$(obj)/dtb: $(addprefix $(obj)/, $(dtb-y))
-> +
->  quiet_cmd_uimage = UIMAGE  $@
->        cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
->  		   -C none -a $(LOADADDR) -e $(STARTADDR) \
-> diff --git a/arch/arm/mach-exynos4/Makefile.boot b/arch/arm/mach-exynos4/Makefile.boot
-> index d65956f..fcee6b5 100644
-> --- a/arch/arm/mach-exynos4/Makefile.boot
-> +++ b/arch/arm/mach-exynos4/Makefile.boot
-> @@ -1,2 +1,4 @@
->     zreladdr-y	:= 0x40008000
->  params_phys-y	:= 0x40000100
-> +
-> +dtb-$(CONFIG_MACH_SMDKV310) += exynos4-smdkv310.dtb
-> diff --git a/arch/arm/mach-mx5/Makefile.boot b/arch/arm/mach-mx5/Makefile.boot
-> index e928be1..4111462 100644
-> --- a/arch/arm/mach-mx5/Makefile.boot
-> +++ b/arch/arm/mach-mx5/Makefile.boot
-> @@ -7,3 +7,8 @@ initrd_phys-$(CONFIG_ARCH_MX51)	:= 0x90800000
->     zreladdr-$(CONFIG_ARCH_MX53)	:= 0x70008000
->  params_phys-$(CONFIG_ARCH_MX53)	:= 0x70000100
->  initrd_phys-$(CONFIG_ARCH_MX53)	:= 0x70800000
-> +
-> +dtb-$(CONFIG_MACH_MX51_BABBAGE) += mx51-babbage.dtb
-> +dtb-$(CONFIG_MACH_MX51_EFIKAMX) += genesi-efikamx.dtb
-> +dtb-$(CONFIG_MACH_MX51_EFIKASB) += genesi-efikasb.dtb
-> +dtb-$(CONFIG_MACH_MX53_LOCO) += mx53-loco.dtb
-> diff --git a/arch/arm/mach-omap2/Makefile.boot b/arch/arm/mach-omap2/Makefile.boot
-> index 565aff7..0f54901 100644
-> --- a/arch/arm/mach-omap2/Makefile.boot
-> +++ b/arch/arm/mach-omap2/Makefile.boot
-> @@ -1,3 +1,7 @@
->    zreladdr-y		:= 0x80008000
->  params_phys-y		:= 0x80000100
->  initrd_phys-y		:= 0x80800000
-> +
-> +dtb-$(CONFIG_MACH_OMAP3_BEAGLE) += omap3-beagle.dtb
-> +dtb-$(CONFIG_MACH_OMAP4_PANDA) += omap4-panda.dtb
-> +dtb-$(CONFIG_MACH_OVERO) += omap3-overo.dtb
-> diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
-> index db52d61..c98addf 100644
-> --- a/arch/arm/mach-tegra/Makefile.boot
-> +++ b/arch/arm/mach-tegra/Makefile.boot
-> @@ -1,3 +1,5 @@
->  zreladdr-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00008000
->  params_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00000100
->  initrd_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00800000
-> +
-> +dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
-> diff --git a/arch/arm/mach-versatile/Makefile.boot b/arch/arm/mach-versatile/Makefile.boot
-> index c7e75ac..e2227d3 100644
-> --- a/arch/arm/mach-versatile/Makefile.boot
-> +++ b/arch/arm/mach-versatile/Makefile.boot
-> @@ -2,3 +2,5 @@
->  params_phys-y	:= 0x00000100
->  initrd_phys-y	:= 0x00800000
->  
-> +dtb-$(CONFIG_ARCH_VERSATILE_PB) += versatile-pb.dtb
-> +dtb-$(CONFIG_MACH_VERSATILE_AB) += versatile-ab.dtb
-> -- 
-> 1.7.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
