@@ -1,16 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: clock bindings
-Date: Mon, 4 Apr 2011 22:50:53 -0600
-Message-ID: <20110405045053.GB28817@ponder.secretlab.ca>
-References: <4D498AAC.3090009@gmail.com>
-	<20110331224547.GH437@ponder.secretlab.ca>
-	<20110401064303.GH25866@S2100-06.ap.freescale.net>
+Subject: Re: [PATCH] net/fec: fix compile error introduced by dt support
+Date: Mon, 4 Apr 2011 22:54:00 -0600
+Message-ID: <20110405045400.GA28956@ponder.secretlab.ca>
+References: <1301037238-4031-1-git-send-email-shawn.guo@linaro.org>
+	<20110331160940.GF26709@ponder.secretlab.ca>
+	<20110401074916.GI25866@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110401064303.GH25866-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20110401074916.GI25866-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,46 +21,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 01, 2011 at 02:43:04PM +0800, Shawn Guo wrote:
-> On Thu, Mar 31, 2011 at 04:45:47PM -0600, Grant Likely wrote:
-> > On Wed, Feb 02, 2011 at 10:47:40AM -0600, Rob Herring wrote:
-> > > I've started looking at the DT clock bindings in more depth. To what
-> > > level should the clock tree be defined in the DT? Should it be a
-> > > one-to-one correlation of current struct clk nodes to node in DT
-> > > where each node is a single input and output? Or only define a
-> > > single (or few) node with the inputs (oscillators) and many outputs
-> > > for SOC's clock controller (i.e. MX51 CCM).
-> > > 
-> > > If the DT itself does not have a hierarchical construction of nodes
-> > > that matches the clock tree hierarchy, then creating the hierarchy
-> > > at run-time will be a challenge and not be very efficient. It would
-> > > require 1 pass for each clock node type to create all the nodes, and
-> > > then another pass to setup the hierarchy.
-> > 
-> > Wow, it takes me a long time to reply sometimes.
-> > 
-> > I'm not sure at the moment.  A month ago I would have said
-> > "everything", but I've thought about it a lot more and I think it is
-> > more important that dt and non-dt users share the same code base for
-> > setting up internal-to-the-soc clocks.  Anything available externally
-> > will need a node describing it in the dt, which means the support code
-> > shifts from registering all the clocks to matching up dt nodes to
-> > existing clocks where possible.
-> > 
-> > For the time being, I've pushed back on registering all devices from
-> > the device tree for the same reason which has given some breathing
-> > room on the topic.  It will be a topic for discussion at UDS.
-> > 
-> You must have seen the hot discussion on arch/arm platform device
-> mess.  People have so much expectation from device tree to partly
-> clean them up.  You are going on a way which may let those people
-> down, at lease for quite some time :) 
-
-Actually, I'm not too worried about this.  The real problem is the
-board files, not the SoC support code, so even with changing focus a
-bit it will still have a huge impact on how the board files look.
-
-g.
+T24gRnJpLCBBcHIgMDEsIDIwMTEgYXQgMDM6NDk6MTZQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+IE9uIFRodSwgTWFyIDMxLCAyMDExIGF0IDEwOjA5OjQwQU0gLTA2MDAsIEdyYW50IExpa2Vs
+eSB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDI1LCAyMDExIGF0IDAzOjEzOjU4UE0gKzA4MDAsIFNo
+YXduIEd1byB3cm90ZToKPiA+ID4gQWZ0ZXIgZmVjIGR0IHN1cHBvcnQgaXMgYWRkZWQsIHRoZSBm
+b2xsb3dpbmcgY29tcGlsZSBlcnJvciB3aWxsIGJlCj4gPiA+IHNlZW4gd2hlbiBidWlsZGluZyBh
+IHB1cmUgbm9uLWR0IGtlcm5lbC4KPiA+ID4gCj4gPiA+IGRyaXZlcnMvbmV0L2ZlYy5jOiBJbiBm
+dW5jdGlvbiDigJhmZWNfcHJvYmXigJk6Cj4gPiA+IGRyaXZlcnMvbmV0L2ZlYy5jOjEzODM6IGVy
+cm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhvZl9tYXRjaF9kZXZpY2Xi
+gJkKPiA+ID4gZHJpdmVycy9uZXQvZmVjLmM6MTM4Mzogd2FybmluZzogYXNzaWdubWVudCBtYWtl
+cyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2FzdAo+ID4gCj4gPiBFYXJsaWVyIHRv
+ZGF5IEkgc3VnZ2VzdGVkIGZpeGluZyB0aGlzIGJ5IGFkZGluZyBhbiBlbXB0eQo+ID4gaW1wbGVt
+ZW50YXRpb24gb2Ygb2ZfbWF0Y2hfZGV2aWNlLCBidXQgSSBmb3Jnb3QgdGhhdCBhbiAub2ZfbWF0
+Y2gKPiA+IHBvaW50ZXIgaGFzIGJlZW4gYWRkZWQgdG8gc3RydWN0IGRldmljZSBmb3IgZXhhY3Rs
+eSB0aGlzIHB1cnBvc2UuICBZb3UKPiA+IGNhbiB1c2UgdGhhdCBpbnN0ZWFkLgo+ID4gCj4gPiBU
+aGF0IGNoYW5nZSBpcyBjdXJyZW50bHkgaW4gbWFpbmxpbmUsIGJ1dCBpdCBoYXMgbm90IGJlZW4g
+YmFja3BvcnRlZAo+ID4gdG8gdGhlIExpbmFybyAyLjYuMzggdHJlZSAoeWV0KS4KPiA+IAo+IFRo
+aXMgc2ltcGx5IGlzIGEgZml4IHRvIGNvbW1pdCA1NDg5OGI4NmZhOTgxMzMxM2IzZWI5ODFjNDQ2
+MTBmZjQ4M2IwMDY3Cj4gIm5ldC9mZWM6IGFkZCBkZXZpY2UgdHJlZSBtYXRjaGluZyBzdXBwb3J0
+Iiwgd2hpY2ggb25seSBzaXRzIG9uIGJyYW5jaAo+IGRldmljZXRyZWUvdGVzdC0yLjYuMzggcmln
+aHQgbm93LiAgSG93ZXZlciwgLm9mX21hdGNoIGlzIG5vdCBhdmFpbGFibGUKPiBvbiB0aGF0IHRy
+ZWUgeWV0LiAgU28gSSBjYW4gbm90IGRvIGFueXRoaW5nIHVudGlsIGV0aGVyIHRoaXMgcGF0Y2gK
+PiBzaG93cyBvbiBkZXZpY2V0cmVlL3Rlc3Qgb3IgLm9mX21hdGNoIGlzIGJhY2sgcG9ydGVkIG9u
+Cj4gZGV2aWNldHJlZS90ZXN0LTIuNi4zOC4gIE9yIHlvdSBjYW4gc2ltcGx5IGlnbm9yZSB0aGlz
+IHBhdGNoIHNpbmNlIEkKPiBqdXN0IHdhbnQgbGV0IHlvdSBrbm93IHN1Y2ggYSBjb21waWxlIGVy
+cm9yLgoKT2theSwgb2ZfbWF0Y2ggaXMgaW4gbXkgZGV2aWNldHJlZS90ZXN0IGJyYW5jaCBub3cg
+c2luY2UgSSd2ZSByZWJhc2VkCnRvIDIuNi4zOC1yYzEuICBJJ2xsIGhhcHBpbHkgdGFrZSBhIGZp
+eHVwIHBhdGNoIGZyb20geW91IG5vdy4gIDotKQoKZy4KCj4gCj4gLS0gCj4gUmVnYXJkcywKPiBT
+aGF3bgo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+ZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRp
+c2N1c3MK
