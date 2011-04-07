@@ -1,12 +1,11 @@
-From: Domenico Andreoli <cavok-iIV0ii4H0r6tG0bUXCXiUA@public.gmane.org>
-Subject: initial approach to DT + gpio-leds problems on s3c2440
-Date: Wed, 6 Apr 2011 19:32:55 +0200
-Message-ID: <20110406173255.GA17523@dandreoli.com>
+From: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/85xx: P1020 DTS : re-organize dts files
+Date: Thu, 7 Apr 2011 11:55:34 +0530
+Message-ID: <1302157534-16746-1-git-send-email-prabhakar@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,259 +15,831 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: meet2prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, B11780-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Creates P1020si.dtsi, containing information for the P1020 SoC. Modifies dts
+files for P1020 based systems to use dtsi file.
 
-  I'm playing with my ARM board to add some DT support to S3C2440.
-dtb file is merged within the kernel image (thanks to a patch of Jeremy
-Kerr) and the board _does_ correctly boot using the basic info provided
-by it (i.e. kernel command line).
-
-Willing to play further, I succesfully added DT support to the GPIO
-controller (please check the patch just to be sure I'm right) but there
-is no way to bind GPIO leds (please check also the dts).
-
-I see the usage of of_find_compatible_node() to bind DT nodes to
-the GPIO controller but I don't understand _where_ the gpio-leds DT
-nodes are bound to anything. I only see the leds-gpio platform driver
-registration walking the device list to find an OF match but of course
-there is not any device bound to the led nodes.
-
-Please help me understand what I'm missing. Thank you.
-
-regards,
-Domenico
-
+Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-by: Kumar Gala <kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
+ Based upon git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git(branch master)
 
-Index: arm-2.6.git/arch/arm/plat-samsung/include/plat/gpio-core.h
-===================================================================
---- arm-2.6.git.orig/arch/arm/plat-samsung/include/plat/gpio-core.h	2011-04-06 17:35:26.000000000 +0200
-+++ arm-2.6.git/arch/arm/plat-samsung/include/plat/gpio-core.h	2011-04-06 17:42:23.000000000 +0200
-@@ -71,6 +71,7 @@
- #ifdef CONFIG_PM
- 	u32			pm_save[4];
- #endif
-+	const char		*of_compatible;
- };
+ Please see mpc5200b.dtsi for reference.
  
- static inline struct s3c_gpio_chip *to_s3c_gpio(struct gpio_chip *gpc)
+ Tested on P1020RDB
 
-Index: arm-2.6.git/arch/arm/plat-s3c24xx/gpiolib.c
-===================================================================
---- arm-2.6.git.orig/arch/arm/plat-s3c24xx/gpiolib.c	2011-04-06 16:38:33.000000000 +0200
-+++ arm-2.6.git/arch/arm/plat-s3c24xx/gpiolib.c	2011-04-06 17:41:37.000000000 +0200
-@@ -97,6 +97,7 @@
- 			.direction_input	= s3c24xx_gpiolib_banka_input,
- 			.direction_output	= s3c24xx_gpiolib_banka_output,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-a",
- 	},
- 	[1] = {
- 		.base	= S3C2410_GPBCON,
-@@ -107,6 +108,7 @@
- 			.label			= "GPIOB",
- 			.ngpio			= 16,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-b",
- 	},
- 	[2] = {
- 		.base	= S3C2410_GPCCON,
-@@ -117,6 +119,7 @@
- 			.label			= "GPIOC",
- 			.ngpio			= 16,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-c",
- 	},
- 	[3] = {
- 		.base	= S3C2410_GPDCON,
-@@ -127,6 +130,7 @@
- 			.label			= "GPIOD",
- 			.ngpio			= 16,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-d",
- 	},
- 	[4] = {
- 		.base	= S3C2410_GPECON,
-@@ -137,6 +141,7 @@
- 			.owner			= THIS_MODULE,
- 			.ngpio			= 16,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-e",
- 	},
- 	[5] = {
- 		.base	= S3C2410_GPFCON,
-@@ -148,6 +153,7 @@
- 			.ngpio			= 8,
- 			.to_irq			= s3c24xx_gpiolib_bankf_toirq,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-f",
- 	},
- 	[6] = {
- 		.base	= S3C2410_GPGCON,
-@@ -160,6 +166,7 @@
- 			.ngpio			= 16,
- 			.to_irq			= samsung_gpiolib_to_irq,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-g",
- 	}, {
- 		.base	= S3C2410_GPHCON,
- 		.pm	= __gpio_pm(&s3c_gpio_pm_2bit),
-@@ -169,6 +176,7 @@
- 			.label			= "GPIOH",
- 			.ngpio			= 11,
- 		},
-+		.of_compatible = "samsung,s3c2410-gpio-h",
- 	},
- 		/* GPIOS for the S3C2443 and later devices. */
- 	{
-@@ -180,6 +188,7 @@
- 			.label			= "GPIOJ",
- 			.ngpio			= 16,
- 		},
-+		.of_compatible = "samsung,s3c2440-gpio-j",
- 	}, {
- 		.base	= S3C2443_GPKCON,
- 		.pm	= __gpio_pm(&s3c_gpio_pm_2bit),
-@@ -189,6 +198,7 @@
- 			.label			= "GPIOK",
- 			.ngpio			= 16,
- 		},
-+		.of_compatible = "samsung,s3c2443-gpio-k",
- 	}, {
- 		.base	= S3C2443_GPLCON,
- 		.pm	= __gpio_pm(&s3c_gpio_pm_2bit),
-@@ -198,6 +208,7 @@
- 			.label			= "GPIOL",
- 			.ngpio			= 15,
- 		},
-+		.of_compatible = "samsung,s3c2443-gpio-l",
- 	}, {
- 		.base	= S3C2443_GPMCON,
- 		.pm	= __gpio_pm(&s3c_gpio_pm_2bit),
-@@ -207,6 +218,7 @@
- 			.label			= "GPIOM",
- 			.ngpio			= 2,
- 		},
-+		.of_compatible = "samsung,s3c2443-gpio-m",
- 	},
- };
+ arch/powerpc/boot/dts/p1020rdb.dts |  315 +-----------------------------
+ arch/powerpc/boot/dts/p1020si.dtsi |  378 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 380 insertions(+), 313 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/p1020si.dtsi
+
+diff --git a/arch/powerpc/boot/dts/p1020rdb.dts b/arch/powerpc/boot/dts/p1020rdb.dts
+index e0668f8..8ae5ddf 100644
+--- a/arch/powerpc/boot/dts/p1020rdb.dts
++++ b/arch/powerpc/boot/dts/p1020rdb.dts
+@@ -9,12 +9,10 @@
+  * option) any later version.
+  */
  
-Index: arm-2.6.git/arch/arm/plat-samsung/gpio.c
-===================================================================
---- arm-2.6.git.orig/arch/arm/plat-samsung/gpio.c	2011-04-06 17:13:46.000000000 +0200
-+++ arm-2.6.git/arch/arm/plat-samsung/gpio.c	2011-04-06 17:50:46.000000000 +0200
-@@ -15,6 +15,7 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/gpio.h>
-+#include <linux/of.h>
- #include <linux/spinlock.h>
- 
- #include <plat/gpio-core.h>
-@@ -152,6 +153,13 @@
- 		printk(KERN_ERR "gpio: %s has no PM function\n", gc->label);
- #endif
- 
-+#ifdef CONFIG_OF_GPIO
-+	if (chip->of_compatible)
-+		gc->of_node = of_find_compatible_node(NULL, NULL, chip->of_compatible);
-+#endif /* CONFIG_OF_GPIO */
+-/dts-v1/;
++/include/ "p1020si.dtsi"
 +
- 	/* gpiochip_add() prints own failure message on error. */
- 	ret = gpiochip_add(gc);
- 	if (ret >= 0)
-Index: arm-2.6.git/arch/arm/boot/dts/friendlyarm-qq2440.dts
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ arm-2.6.git/arch/arm/boot/dts/friendlyarm-qq2440.dts	2011-04-06 18:42:20.000000000 +0200
-@@ -0,0 +1,42 @@
+ / {
+-	model = "fsl,P1020";
+ 	compatible = "fsl,P1020RDB";
+-	#address-cells = <2>;
+-	#size-cells = <2>;
+ 
+ 	aliases {
+ 		serial0 = &serial0;
+@@ -26,34 +24,11 @@
+ 		pci1 = &pci1;
+ 	};
+ 
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		PowerPC,P1020@0 {
+-			device_type = "cpu";
+-			reg = <0x0>;
+-			next-level-cache = <&L2>;
+-		};
+-
+-		PowerPC,P1020@1 {
+-			device_type = "cpu";
+-			reg = <0x1>;
+-			next-level-cache = <&L2>;
+-		};
+-	};
+-
+ 	memory {
+ 		device_type = "memory";
+ 	};
+ 
+ 	localbus@ffe05000 {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		compatible = "fsl,p1020-elbc", "fsl,elbc", "simple-bus";
+-		reg = <0 0xffe05000 0 0x1000>;
+-		interrupts = <19 2>;
+-		interrupt-parent = <&mpic>;
+ 
+ 		/* NOR, NAND Flashes and Vitesse 5 port L2 switch */
+ 		ranges = <0x0 0x0 0x0 0xef000000 0x01000000
+@@ -165,88 +140,14 @@
+ 	};
+ 
+ 	soc@ffe00000 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		device_type = "soc";
+-		compatible = "fsl,p1020-immr", "simple-bus";
+-		ranges = <0x0  0x0 0xffe00000 0x100000>;
+-		bus-frequency = <0>;		// Filled out by uboot.
+-
+-		ecm-law@0 {
+-			compatible = "fsl,ecm-law";
+-			reg = <0x0 0x1000>;
+-			fsl,num-laws = <12>;
+-		};
+-
+-		ecm@1000 {
+-			compatible = "fsl,p1020-ecm", "fsl,ecm";
+-			reg = <0x1000 0x1000>;
+-			interrupts = <16 2>;
+-			interrupt-parent = <&mpic>;
+-		};
+-
+-		memory-controller@2000 {
+-			compatible = "fsl,p1020-memory-controller";
+-			reg = <0x2000 0x1000>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <16 2>;
+-		};
+-
+ 		i2c@3000 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			cell-index = <0>;
+-			compatible = "fsl-i2c";
+-			reg = <0x3000 0x100>;
+-			interrupts = <43 2>;
+-			interrupt-parent = <&mpic>;
+-			dfsrr;
+ 			rtc@68 {
+ 				compatible = "dallas,ds1339";
+ 				reg = <0x68>;
+ 			};
+ 		};
+ 
+-		i2c@3100 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			cell-index = <1>;
+-			compatible = "fsl-i2c";
+-			reg = <0x3100 0x100>;
+-			interrupts = <43 2>;
+-			interrupt-parent = <&mpic>;
+-			dfsrr;
+-		};
+-
+-		serial0: serial@4500 {
+-			cell-index = <0>;
+-			device_type = "serial";
+-			compatible = "ns16550";
+-			reg = <0x4500 0x100>;
+-			clock-frequency = <0>;
+-			interrupts = <42 2>;
+-			interrupt-parent = <&mpic>;
+-		};
+-
+-		serial1: serial@4600 {
+-			cell-index = <1>;
+-			device_type = "serial";
+-			compatible = "ns16550";
+-			reg = <0x4600 0x100>;
+-			clock-frequency = <0>;
+-			interrupts = <42 2>;
+-			interrupt-parent = <&mpic>;
+-		};
+-
+ 		spi@7000 {
+-			cell-index = <0>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			compatible = "fsl,espi";
+-			reg = <0x7000 0x1000>;
+-			interrupts = <59 0x2>;
+-			interrupt-parent = <&mpic>;
+-			mode = "cpu";
+ 
+ 			fsl_m25p80@0 {
+ 				#address-cells = <1>;
+@@ -294,66 +195,7 @@
+ 			};
+ 		};
+ 
+-		gpio: gpio-controller@f000 {
+-			#gpio-cells = <2>;
+-			compatible = "fsl,mpc8572-gpio";
+-			reg = <0xf000 0x100>;
+-			interrupts = <47 0x2>;
+-			interrupt-parent = <&mpic>;
+-			gpio-controller;
+-		};
+-
+-		L2: l2-cache-controller@20000 {
+-			compatible = "fsl,p1020-l2-cache-controller";
+-			reg = <0x20000 0x1000>;
+-			cache-line-size = <32>;	// 32 bytes
+-			cache-size = <0x40000>; // L2,256K
+-			interrupt-parent = <&mpic>;
+-			interrupts = <16 2>;
+-		};
+-
+-		dma@21300 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			compatible = "fsl,eloplus-dma";
+-			reg = <0x21300 0x4>;
+-			ranges = <0x0 0x21100 0x200>;
+-			cell-index = <0>;
+-			dma-channel@0 {
+-				compatible = "fsl,eloplus-dma-channel";
+-				reg = <0x0 0x80>;
+-				cell-index = <0>;
+-				interrupt-parent = <&mpic>;
+-				interrupts = <20 2>;
+-			};
+-			dma-channel@80 {
+-				compatible = "fsl,eloplus-dma-channel";
+-				reg = <0x80 0x80>;
+-				cell-index = <1>;
+-				interrupt-parent = <&mpic>;
+-				interrupts = <21 2>;
+-			};
+-			dma-channel@100 {
+-				compatible = "fsl,eloplus-dma-channel";
+-				reg = <0x100 0x80>;
+-				cell-index = <2>;
+-				interrupt-parent = <&mpic>;
+-				interrupts = <22 2>;
+-			};
+-			dma-channel@180 {
+-				compatible = "fsl,eloplus-dma-channel";
+-				reg = <0x180 0x80>;
+-				cell-index = <3>;
+-				interrupt-parent = <&mpic>;
+-				interrupts = <23 2>;
+-			};
+-		};
+-
+ 		mdio@24000 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			compatible = "fsl,etsec2-mdio";
+-			reg = <0x24000 0x1000 0xb0030 0x4>;
+ 
+ 			phy0: ethernet-phy@0 {
+ 				interrupt-parent = <&mpic>;
+@@ -369,10 +211,6 @@
+ 		};
+ 
+ 		mdio@25000 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			compatible = "fsl,etsec2-tbi";
+-			reg = <0x25000 0x1000 0xb1030 0x4>;
+ 
+ 			tbi0: tbi-phy@11 {
+ 				reg = <0x11>;
+@@ -381,97 +219,25 @@
+ 		};
+ 
+ 		enet0: ethernet@b0000 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			device_type = "network";
+-			model = "eTSEC";
+-			compatible = "fsl,etsec2";
+-			fsl,num_rx_queues = <0x8>;
+-			fsl,num_tx_queues = <0x8>;
+-			local-mac-address = [ 00 00 00 00 00 00 ];
+-			interrupt-parent = <&mpic>;
+ 			fixed-link = <1 1 1000 0 0>;
+ 			phy-connection-type = "rgmii-id";
+ 
+-			queue-group@0 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				reg = <0xb0000 0x1000>;
+-				interrupts = <29 2 30 2 34 2>;
+-			};
+-
+-			queue-group@1 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				reg = <0xb4000 0x1000>;
+-				interrupts = <17 2 18 2 24 2>;
+-			};
+ 		};
+ 
+ 		enet1: ethernet@b1000 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			device_type = "network";
+-			model = "eTSEC";
+-			compatible = "fsl,etsec2";
+-			fsl,num_rx_queues = <0x8>;
+-			fsl,num_tx_queues = <0x8>;
+-			local-mac-address = [ 00 00 00 00 00 00 ];
+-			interrupt-parent = <&mpic>;
+ 			phy-handle = <&phy0>;
+ 			tbi-handle = <&tbi0>;
+ 			phy-connection-type = "sgmii";
+ 
+-			queue-group@0 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				reg = <0xb1000 0x1000>;
+-				interrupts = <35 2 36 2 40 2>;
+-			};
+-
+-			queue-group@1 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				reg = <0xb5000 0x1000>;
+-				interrupts = <51 2 52 2 67 2>;
+-			};
+ 		};
+ 
+ 		enet2: ethernet@b2000 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			device_type = "network";
+-			model = "eTSEC";
+-			compatible = "fsl,etsec2";
+-			fsl,num_rx_queues = <0x8>;
+-			fsl,num_tx_queues = <0x8>;
+-			local-mac-address = [ 00 00 00 00 00 00 ];
+-			interrupt-parent = <&mpic>;
+ 			phy-handle = <&phy1>;
+ 			phy-connection-type = "rgmii-id";
+ 
+-			queue-group@0 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				reg = <0xb2000 0x1000>;
+-				interrupts = <31 2 32 2 33 2>;
+-			};
+-
+-			queue-group@1 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				reg = <0xb6000 0x1000>;
+-				interrupts = <25 2 26 2 27 2>;
+-			};
+ 		};
+ 
+ 		usb@22000 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			compatible = "fsl-usb2-dr";
+-			reg = <0x22000 0x1000>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <28 0x2>;
+ 			phy_type = "ulpi";
+ 		};
+ 
+@@ -481,82 +247,15 @@
+ 		   it enables USB2. OTOH, U-Boot does create a new node
+ 		   when there isn't any. So, just comment it out.
+ 		usb@23000 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			compatible = "fsl-usb2-dr";
+-			reg = <0x23000 0x1000>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <46 0x2>;
+ 			phy_type = "ulpi";
+ 		};
+ 		*/
+ 
+-		sdhci@2e000 {
+-			compatible = "fsl,p1020-esdhc", "fsl,esdhc";
+-			reg = <0x2e000 0x1000>;
+-			interrupts = <72 0x2>;
+-			interrupt-parent = <&mpic>;
+-			/* Filled in by U-Boot */
+-			clock-frequency = <0>;
+-		};
+-
+-		crypto@30000 {
+-			compatible = "fsl,sec3.1", "fsl,sec3.0", "fsl,sec2.4",
+-				     "fsl,sec2.2", "fsl,sec2.1", "fsl,sec2.0";
+-			reg = <0x30000 0x10000>;
+-			interrupts = <45 2 58 2>;
+-			interrupt-parent = <&mpic>;
+-			fsl,num-channels = <4>;
+-			fsl,channel-fifo-len = <24>;
+-			fsl,exec-units-mask = <0xbfe>;
+-			fsl,descriptor-types-mask = <0x3ab0ebf>;
+-		};
+-
+-		mpic: pic@40000 {
+-			interrupt-controller;
+-			#address-cells = <0>;
+-			#interrupt-cells = <2>;
+-			reg = <0x40000 0x40000>;
+-			compatible = "chrp,open-pic";
+-			device_type = "open-pic";
+-		};
+-
+-		msi@41600 {
+-			compatible = "fsl,p1020-msi", "fsl,mpic-msi";
+-			reg = <0x41600 0x80>;
+-			msi-available-ranges = <0 0x100>;
+-			interrupts = <
+-				0xe0 0
+-				0xe1 0
+-				0xe2 0
+-				0xe3 0
+-				0xe4 0
+-				0xe5 0
+-				0xe6 0
+-				0xe7 0>;
+-			interrupt-parent = <&mpic>;
+-		};
+-
+-		global-utilities@e0000 {	//global utilities block
+-			compatible = "fsl,p1020-guts";
+-			reg = <0xe0000 0x1000>;
+-			fsl,has-rstcr;
+-		};
+ 	};
+ 
+ 	pci0: pcie@ffe09000 {
+-		compatible = "fsl,mpc8548-pcie";
+-		device_type = "pci";
+-		#interrupt-cells = <1>;
+-		#size-cells = <2>;
+-		#address-cells = <3>;
+-		reg = <0 0xffe09000 0 0x1000>;
+-		bus-range = <0 255>;
+ 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
+-		clock-frequency = <33333333>;
+-		interrupt-parent = <&mpic>;
+-		interrupts = <16 2>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+@@ -573,18 +272,8 @@
+ 	};
+ 
+ 	pci1: pcie@ffe0a000 {
+-		compatible = "fsl,mpc8548-pcie";
+-		device_type = "pci";
+-		#interrupt-cells = <1>;
+-		#size-cells = <2>;
+-		#address-cells = <3>;
+-		reg = <0 0xffe0a000 0 0x1000>;
+-		bus-range = <0 255>;
+ 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
+-		clock-frequency = <33333333>;
+-		interrupt-parent = <&mpic>;
+-		interrupts = <16 2>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+diff --git a/arch/powerpc/boot/dts/p1020si.dtsi b/arch/powerpc/boot/dts/p1020si.dtsi
+new file mode 100644
+index 0000000..7b87d00
+--- /dev/null
++++ b/arch/powerpc/boot/dts/p1020si.dtsi
+@@ -0,0 +1,378 @@
++/*
++ * P1020si Device Tree Source
++ *
++ * Copyright 2011 Freescale Semiconductor Inc.
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
 +/dts-v1/;
-+/include/ "skeleton.dtsi"
-+
 +/ {
-+	model = "FriendlyARM QQ2440 Development Board";
-+	compatible = "friendlyarm,qq2440";
++	model = "fsl,P1020";
++	compatible = "fsl,P1020";
++	#address-cells = <2>;
++	#size-cells = <2>;
 +
-+	chosen {
-+		bootargs = "noinitrd root=/dev/mtdblock4 init=/linuxrc console=ttySAC0";
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		PowerPC,P1020@0 {
++			device_type = "cpu";
++			reg = <0x0>;
++			next-level-cache = <&L2>;
++		};
++
++		PowerPC,P1020@1 {
++			device_type = "cpu";
++			reg = <0x1>;
++			next-level-cache = <&L2>;
++		};
 +	};
 +
-+	memory {
-+		reg = <0x30000000 0x04000000>;
++	localbus@ffe05000 {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		compatible = "fsl,p1020-elbc", "fsl,elbc", "simple-bus";
++		reg = <0 0xffe05000 0 0x1000>;
++		interrupts = <19 2>;
++		interrupt-parent = <&mpic>;
 +	};
 +
-+	gpb: gpio-controller@1 {
-+		#gpio-cells = <2>;
-+		compatible = "samsung,s3c2440-gpio-b", "samsung,s3c2410-gpio-b";
-+		gpio-controller;
++	soc@ffe00000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		device_type = "soc";
++		compatible = "fsl,p1020-immr", "simple-bus";
++		ranges = <0x0  0x0 0xffe00000 0x100000>;
++		bus-frequency = <0>;		// Filled out by uboot.
++
++		ecm-law@0 {
++			compatible = "fsl,ecm-law";
++			reg = <0x0 0x1000>;
++			fsl,num-laws = <12>;
++		};
++
++		ecm@1000 {
++			compatible = "fsl,p1020-ecm", "fsl,ecm";
++			reg = <0x1000 0x1000>;
++			interrupts = <16 2>;
++			interrupt-parent = <&mpic>;
++		};
++
++		memory-controller@2000 {
++			compatible = "fsl,p1020-memory-controller";
++			reg = <0x2000 0x1000>;
++			interrupt-parent = <&mpic>;
++			interrupts = <16 2>;
++		};
++
++		i2c@3000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			cell-index = <0>;
++			compatible = "fsl-i2c";
++			reg = <0x3000 0x100>;
++			interrupts = <43 2>;
++			interrupt-parent = <&mpic>;
++			dfsrr;
++		};
++
++		i2c@3100 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			cell-index = <1>;
++			compatible = "fsl-i2c";
++			reg = <0x3100 0x100>;
++			interrupts = <43 2>;
++			interrupt-parent = <&mpic>;
++			dfsrr;
++		};
++
++		serial0: serial@4500 {
++			cell-index = <0>;
++			device_type = "serial";
++			compatible = "ns16550";
++			reg = <0x4500 0x100>;
++			clock-frequency = <0>;
++			interrupts = <42 2>;
++			interrupt-parent = <&mpic>;
++		};
++
++		serial1: serial@4600 {
++			cell-index = <1>;
++			device_type = "serial";
++			compatible = "ns16550";
++			reg = <0x4600 0x100>;
++			clock-frequency = <0>;
++			interrupts = <42 2>;
++			interrupt-parent = <&mpic>;
++		};
++
++		spi@7000 {
++			cell-index = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl,espi";
++			reg = <0x7000 0x1000>;
++			interrupts = <59 0x2>;
++			interrupt-parent = <&mpic>;
++			mode = "cpu";
++		};
++
++		gpio: gpio-controller@f000 {
++			#gpio-cells = <2>;
++			compatible = "fsl,mpc8572-gpio";
++			reg = <0xf000 0x100>;
++			interrupts = <47 0x2>;
++			interrupt-parent = <&mpic>;
++			gpio-controller;
++		};
++
++		L2: l2-cache-controller@20000 {
++			compatible = "fsl,p1020-l2-cache-controller";
++			reg = <0x20000 0x1000>;
++			cache-line-size = <32>;	// 32 bytes
++			cache-size = <0x40000>; // L2,256K
++			interrupt-parent = <&mpic>;
++			interrupts = <16 2>;
++		};
++
++		dma@21300 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "fsl,eloplus-dma";
++			reg = <0x21300 0x4>;
++			ranges = <0x0 0x21100 0x200>;
++			cell-index = <0>;
++			dma-channel@0 {
++				compatible = "fsl,eloplus-dma-channel";
++				reg = <0x0 0x80>;
++				cell-index = <0>;
++				interrupt-parent = <&mpic>;
++				interrupts = <20 2>;
++			};
++			dma-channel@80 {
++				compatible = "fsl,eloplus-dma-channel";
++				reg = <0x80 0x80>;
++				cell-index = <1>;
++				interrupt-parent = <&mpic>;
++				interrupts = <21 2>;
++			};
++			dma-channel@100 {
++				compatible = "fsl,eloplus-dma-channel";
++				reg = <0x100 0x80>;
++				cell-index = <2>;
++				interrupt-parent = <&mpic>;
++				interrupts = <22 2>;
++			};
++			dma-channel@180 {
++				compatible = "fsl,eloplus-dma-channel";
++				reg = <0x180 0x80>;
++				cell-index = <3>;
++				interrupt-parent = <&mpic>;
++				interrupts = <23 2>;
++			};
++		};
++
++		mdio@24000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl,etsec2-mdio";
++			reg = <0x24000 0x1000 0xb0030 0x4>;
++
++		};
++
++		mdio@25000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl,etsec2-tbi";
++			reg = <0x25000 0x1000 0xb1030 0x4>;
++
++		};
++
++		enet0: ethernet@b0000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			device_type = "network";
++			model = "eTSEC";
++			compatible = "fsl,etsec2";
++			fsl,num_rx_queues = <0x8>;
++			fsl,num_tx_queues = <0x8>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			interrupt-parent = <&mpic>;
++
++			queue-group@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0xb0000 0x1000>;
++				interrupts = <29 2 30 2 34 2>;
++			};
++
++			queue-group@1 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0xb4000 0x1000>;
++				interrupts = <17 2 18 2 24 2>;
++			};
++		};
++
++		enet1: ethernet@b1000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			device_type = "network";
++			model = "eTSEC";
++			compatible = "fsl,etsec2";
++			fsl,num_rx_queues = <0x8>;
++			fsl,num_tx_queues = <0x8>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			interrupt-parent = <&mpic>;
++
++			queue-group@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0xb1000 0x1000>;
++				interrupts = <35 2 36 2 40 2>;
++			};
++
++			queue-group@1 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0xb5000 0x1000>;
++				interrupts = <51 2 52 2 67 2>;
++			};
++		};
++
++		enet2: ethernet@b2000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			device_type = "network";
++			model = "eTSEC";
++			compatible = "fsl,etsec2";
++			fsl,num_rx_queues = <0x8>;
++			fsl,num_tx_queues = <0x8>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			interrupt-parent = <&mpic>;
++
++			queue-group@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0xb2000 0x1000>;
++				interrupts = <31 2 32 2 33 2>;
++			};
++
++			queue-group@1 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0xb6000 0x1000>;
++				interrupts = <25 2 26 2 27 2>;
++			};
++		};
++
++		usb@22000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl-usb2-dr";
++			reg = <0x22000 0x1000>;
++			interrupt-parent = <&mpic>;
++			interrupts = <28 0x2>;
++		};
++
++		/* USB2 is shared with localbus, so it must be disabled
++		   by default. We can't put 'status = "disabled";' here
++		   since U-Boot doesn't clear the status property when
++		   it enables USB2. OTOH, U-Boot does create a new node
++		   when there isn't any. So, just comment it out.
++		usb@23000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl-usb2-dr";
++			reg = <0x23000 0x1000>;
++			interrupt-parent = <&mpic>;
++			interrupts = <46 0x2>;
++			phy_type = "ulpi";
++		};
++		*/
++
++		sdhci@2e000 {
++			compatible = "fsl,p1020-esdhc", "fsl,esdhc";
++			reg = <0x2e000 0x1000>;
++			interrupts = <72 0x2>;
++			interrupt-parent = <&mpic>;
++			/* Filled in by U-Boot */
++			clock-frequency = <0>;
++		};
++
++		crypto@30000 {
++			compatible = "fsl,sec3.1", "fsl,sec3.0", "fsl,sec2.4",
++				     "fsl,sec2.2", "fsl,sec2.1", "fsl,sec2.0";
++			reg = <0x30000 0x10000>;
++			interrupts = <45 2 58 2>;
++			interrupt-parent = <&mpic>;
++			fsl,num-channels = <4>;
++			fsl,channel-fifo-len = <24>;
++			fsl,exec-units-mask = <0xbfe>;
++			fsl,descriptor-types-mask = <0x3ab0ebf>;
++		};
++
++		mpic: pic@40000 {
++			interrupt-controller;
++			#address-cells = <0>;
++			#interrupt-cells = <2>;
++			reg = <0x40000 0x40000>;
++			compatible = "chrp,open-pic";
++			device_type = "open-pic";
++		};
++
++		msi@41600 {
++			compatible = "fsl,p1020-msi", "fsl,mpic-msi";
++			reg = <0x41600 0x80>;
++			msi-available-ranges = <0 0x100>;
++			interrupts = <
++				0xe0 0
++				0xe1 0
++				0xe2 0
++				0xe3 0
++				0xe4 0
++				0xe5 0
++				0xe6 0
++				0xe7 0>;
++			interrupt-parent = <&mpic>;
++		};
++
++		global-utilities@e0000 {	//global utilities block
++			compatible = "fsl,p1020-guts";
++			reg = <0xe0000 0x1000>;
++			fsl,has-rstcr;
++		};
 +	};
 +
-+	leds {
-+		compatible = "gpio-leds";
++	pci0: pcie@ffe09000 {
++		compatible = "fsl,mpc8548-pcie";
++		device_type = "pci";
++		#interrupt-cells = <1>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0 0xffe09000 0 0x1000>;
++		bus-range = <0 255>;
++		clock-frequency = <33333333>;
++		interrupt-parent = <&mpic>;
++		interrupts = <16 2>;
++	};
 +
-+		led1 {
-+			gpios = <&gpb 5 1>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+		led2 {
-+			gpios = <&gpb 6 1>;
-+			linux,default-trigger = "nand-disk";
-+		};
-+		led3 {
-+			gpios = <&gpb 7 1>;
-+			linux,default-trigger = "mmc0";
-+		};
-+		led4 {
-+			gpios = <&gpb 8 1>;
-+			linux,default-trigger = "none";
-+		};
++	pci1: pcie@ffe0a000 {
++		compatible = "fsl,mpc8548-pcie";
++		device_type = "pci";
++		#interrupt-cells = <1>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0 0xffe0a000 0 0x1000>;
++		bus-range = <0 255>;
++		clock-frequency = <33333333>;
++		interrupt-parent = <&mpic>;
++		interrupts = <16 2>;
 +	};
 +};
-Index: arm-2.6.git/arch/arm/mach-s3c2440/mach-qq2440.c
-===================================================================
---- arm-2.6.git.orig/arch/arm/mach-s3c2440/mach-qq2440.c	2011-04-06 10:39:33.000000000 +0200
-+++ arm-2.6.git/arch/arm/mach-s3c2440/mach-qq2440.c	2011-04-06 16:26:10.000000000 +0200
-@@ -273,7 +273,7 @@
- 	&s3c_device_i2c0,
- 	&s3c_device_rtc,
- 	&s3c_device_usbgadget,
--	&qq2440_leds,
-+//	&qq2440_leds,
- 	&qq2440_button_device,
- 	&s3c_device_nand,
- 	&s3c_device_sdi,
-@@ -316,10 +316,16 @@
- 	platform_add_devices(qq2440_devices, ARRAY_SIZE(qq2440_devices));
- }
- 
-+static const char *qq2440_dt_match[] __initdata = {
-+	"friendlyarm,qq2440",
-+	NULL
-+};
-+
- MACHINE_START(QQ2440, "QQ2440")
- 	.boot_params   = S3C2410_SDRAM_PA + 0x100,
- 	.map_io        = qq2440_map_io,
- 	.init_machine  = qq2440_init,
- 	.init_irq      = s3c24xx_init_irq,
- 	.timer         = &s3c24xx_timer,
-+	.dt_compat     = qq2440_dt_match,
- MACHINE_END
-Index: arm-2.6.git/arch/arm/mach-s3c2410/Makefile.boot
-===================================================================
---- arm-2.6.git.orig/arch/arm/mach-s3c2410/Makefile.boot	2011-04-06 10:20:38.000000000 +0200
-+++ arm-2.6.git/arch/arm/mach-s3c2410/Makefile.boot	2011-04-06 10:39:39.000000000 +0200
-@@ -5,3 +5,5 @@
- 	zreladdr-y		:= 0x30008000
- 	params_phys-y	:= 0x30000100
- endif
-+
-+dtb-$(CONFIG_MACH_QQ2440) += friendlyarm-qq2440.dtb
-
-
------[ Domenico Andreoli, aka cavok
- --[ http://www.dandreoli.com/gpgkey.asc
-   ---[ 3A0F 2F80 F79C 678A 8936  4FEE 0677 9033 A20E BC50
+-- 
+1.7.3
