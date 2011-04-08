@@ -1,16 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [patch 1/2] Add dt_compat field to struct gpio_chip
-Date: Thu, 7 Apr 2011 17:17:17 -0700
-Message-ID: <BANLkTi=r2MESkm-JXwa59pYGDxMDWQF0XQ@mail.gmail.com>
-References: <20110407163322.465935232@gmail.com>
-	<20110407163930.GB17498@dandreoli.com>
-	<20110407171704.GC2455@angua.secretlab.ca>
-	<BANLkTi=WE_vOUAi8T60ESAH2kua4uB-_HA@mail.gmail.com>
+From: Dipen Dudhat <Dipen.Dudhat-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc: Document the Integrated Flash Controller device tree
+	binding
+Date: Fri, 8 Apr 2011 14:32:08 +0530
+Message-ID: <1302253328-16419-1-git-send-email-Dipen.Dudhat@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTi=WE_vOUAi8T60ESAH2kua4uB-_HA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,111 +16,97 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 7, 2011 at 1:41 PM, Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Apr 7, 2011 at 7:17 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> =
-wrote:
->>
->> On Thu, Apr 07, 2011 at 06:39:30PM +0200, Domenico Andreoli wrote:
->> > From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> > This new field allows easy creation of GPIO chips in base of struct ar=
-rays.
->> >
->> > Signed-off-by: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> > ---
->> > =A0drivers/of/gpio.c =A0 =A0 =A0 =A0 =A0| =A0 =A03 +++
->> > =A0include/asm-generic/gpio.h | =A0 =A01 +
->> > =A02 files changed, 4 insertions(+)
->> >
->> > Index: b/drivers/of/gpio.c
->> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > --- a/drivers/of/gpio.c =A0 =A0 =A0 2011-04-07 18:19:20.000000000 +0200
->> > +++ b/drivers/of/gpio.c =A0 =A0 =A0 2011-04-07 18:20:31.000000000 +0200
->> > @@ -212,6 +212,9 @@
->> >
->> > =A0void of_gpiochip_add(struct gpio_chip *chip)
->> > =A0{
->> > + =A0 =A0 if ((!chip->of_node) && (chip->dt_compat))
->> > + =A0 =A0 =A0 =A0 =A0 =A0 chip->of_node =3D of_find_compatible_node(NU=
-LL, NULL, chip->dt_compat);
->> > +
->>
->> Hi Domenico,
->
-> Hi Grant,
->
->> From what I can tell, this patch attempts to adapt to the way that
->> arch/arm/plat-samsung/gpio.c registers gpios with the kernel. =A0Each
->> platform seems to have its own static table of gpio banks which are
->> registered without any regard to the Linux device model. =A0It works,
->> but it isn't really the way things should be done.
->
-> About the independent models of the ARM platforms, I can't say
-> anything. I only wanted to explore the DT concepts and import them on
-> the s3c24xx. While this could look only as the latest individual
-> attempt, the DT interface is not and cannot be of any harm if ARM
-> deploys it a little more.
->
->> The design of gpiolib right now is such that the of_node pointer
->> should be known *before* of_gpiochip_add() gets called. =A0This is very
->> important because the code that registers the gpio is the only place
->> that can truly know which node is actually associated with the gpio.
->
-> This explains why a so simple patch has never been proposed before.
->
->> To solve your problem, the best solution would be to rework
->> arch/arm/plat-samsung-gpio.c to properly use the driver model and
->> register platform_devices which can be attached to dt nodes. =A0This
->> change should probably be done anyway, even ignoring the dt needs, but
->> I'm not going to force you to make this change to get dt support added
->> for samsung gpios.
->
-> Indeed my plan is to not rework it, not in the next future, not before
-> I switched all its users to DT ;)
->
-> I'd like to follow the path towards a pure dts platform definition so
-> the next step would be to DT-fy something like the s3c
-> sdi/sdhci/whatever, which already uses some GPIO. Then something else
-> like audio or network and so on. I would be very glad to arrive sooner
-> or later to a s3c24xx FDT.
->
->> Alternately, what you should do is make sure that the chip->of_node
->> pointer is correctly populated before calling gpiochip_add(), possibly
->> in s3c_gpiolib_add().
->
-> I already restored it to the previous state, with .dt_compat in struct
-> s3c_gpio_chip and the the call of of_find_compatible_node() in
-> s3c_gpiolib_add(), this way it stays out of gpiolib.
->
->> Also, be careful about the way that 'compatible' is being used.
->> Remember that compatible describes the /interface/ to a device, but
->> not the /instance/. =A0Many systems have multiple instances of the same
->> device, and compatible doesn't provide any help for differentiating
->> between them.
->
-> I needed some clarification here, I already suspected that my way to
-> encode banks in the compatible property was somehow fishy. And I
-> needed a working patch to get some attention before digging further..
-> ;)
->
->> Typically, when trying to find a specific instance of a
->> device, it should be resolved with a property in the /aliases node, or
->> it should be matched up against the resolved base address of the
->> device.
->
-> This is what I'll try next. This alone seems to imply the rework you
-> said above, let's see.
+Signed-off-by: Dipen Dudhat <Dipen.Dudhat-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-By: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/powerpc/fsl/ifc.txt        |   76 ++++++++++++++++++++
+ 1 files changed, 76 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/ifc.txt
 
-It doesn't actually depend on the rework.  You already have the
-register information in s3c gpio.  You could use the same compatible
-value for all, and then add another comparison against the base
-address to figure out exactly which one is the correct one.
-
-g.
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/ifc.txt b/Documentation/devicetree/bindings/powerpc/fsl/ifc.txt
+new file mode 100644
+index 0000000..939a26d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/powerpc/fsl/ifc.txt
+@@ -0,0 +1,76 @@
++Integrated Flash Controller
++
++Properties:
++- name : Should be ifc
++- compatible : should contain "fsl,ifc". The version of the integrated
++               flash controller can be found in the IFC_REV register at
++               offset zero.
++
++- #address-cells : Should be either two or three.  The first cell is the
++                   chipselect number, and the remaining cells are the
++                   offset into the chipselect.
++- #size-cells : Either one or two, depending on how large each chipselect
++                can be.
++- reg : Offset and length of the register set for the device
++- interrupts : IFC has two interrupts. The first one is the "common"
++               interrupt(CM_EVTER_STAT), and second is the NAND interrupt
++               (NAND_EVTER_STAT).
++
++- ranges : Each range corresponds to a single chipselect, and covers
++           the entire access window as configured.
++
++Child device nodes describe the devices connected to IFC such as NOR (e.g.
++cfi-flash) and NAND (fsl,ifc-nand). There might be board specific devices
++like FPGAs, CPLDs, etc.
++
++Example:
++
++	ifc@ffe1e000 {
++		compatible = "fsl,ifc", "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
++		reg = <0x0 0xffe1e000 0 0x2000>;
++		interrupts = <16 2 19 2>;
++
++		/* NOR, NAND Flashes and CPLD on board */
++		ranges = <0x0 0x0 0x0 0xee000000 0x02000000
++			  0x1 0x0 0x0 0xffa00000 0x00010000
++			  0x3 0x0 0x0 0xffb00000 0x00020000>;
++
++		flash@0,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "cfi-flash";
++			reg = <0x0 0x0 0x2000000>;
++			bank-width = <2>;
++			device-width = <1>;
++
++			partition@0 {
++				/* 32MB for user data */
++				reg = <0x0 0x02000000>;
++				label = "NOR Data";
++			};
++		};
++
++		flash@1,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "fsl,ifc-nand";
++			reg = <0x1 0x0 0x10000>;
++
++			partition@0 {
++				/* This location must not be altered  */
++				/* 1MB for u-boot Bootloader Image */
++				reg = <0x0 0x00100000>;
++				label = "NAND U-Boot Image";
++				read-only;
++			};
++		};
++
++		cpld@3,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "fsl,p1010rdb-cpld";
++			reg = <0x3 0x0 0x000001f>;
++		};
++	};
+-- 
+1.5.6.5
