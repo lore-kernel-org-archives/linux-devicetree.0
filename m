@@ -1,71 +1,32 @@
-From: Vasiliy Kulikov <segoon@openwall.com>
-Subject: [PATCH] char: briq_panel: fix TOCTOU bug
-Date: Sat,  9 Apr 2011 16:41:26 +0400
-Message-ID: <1302352886-20847-1-git-send-email-segoon@openwall.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@suse.de>, devicetree-discuss@lists.ozlabs.org
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [patch 0/2] s3c: DeviceTree bits for s3c24xx GPIO
+Date: Sun, 10 Apr 2011 17:33:03 +0200
+Message-ID: <20110410153303.GA27088@dandreoli.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is a TOCTOU bug in briq_panel_write() code:
+Hi,
 
-    if (vfd_cursor > 39)   <<<
-	    scroll_vfd();
-    vfd[vfd_cursor++] = c; <<<
+  here are the first bits to add DT to the GPIO controller of s3c24xx.
 
-It's possible to write to arbitrary memory location in case of more than
-one process tries to call write() simultaneously.
+cheers,
+Domenico
 
-Signed-off-by: Vasiliy Kulikov <segoon@openwall.com>
----
- drivers/char/briq_panel.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/char/briq_panel.c b/drivers/char/briq_panel.c
-index 095ab90..afad0a4 100644
---- a/drivers/char/briq_panel.c
-+++ b/drivers/char/briq_panel.c
-@@ -9,6 +9,7 @@
- #include <linux/types.h>
- #include <linux/errno.h>
- #include <linux/tty.h>
-+#include <linux/mutex.h>
- #include <linux/timer.h>
- #include <linux/kernel.h>
- #include <linux/wait.h>
-@@ -34,6 +35,7 @@ static int		vfd_is_open;
- static unsigned char	vfd[40];
- static int		vfd_cursor;
- static unsigned char	ledpb, led;
-+static DEFINE_MUTEX(vfd_mutex);
- 
- static void update_vfd(void)
- {
-@@ -140,12 +142,15 @@ static ssize_t briq_panel_write(struct file *file, const char __user *buf, size_
- 	if (!vfd_is_open)
- 		return -EBUSY;
- 
-+	mutex_lock(&vfd_mutex);
- 	for (;;) {
- 		char c;
- 		if (!indx)
- 			break;
--		if (get_user(c, buf))
-+		if (get_user(c, buf)) {
-+			mutex_unlock(&vfd_mutex);
- 			return -EFAULT;
-+		}
- 		if (esc) {
- 			set_led(c);
- 			esc = 0;
-@@ -175,6 +180,7 @@ static ssize_t briq_panel_write(struct file *file, const char __user *buf, size_
- 		buf++;
- 	}
- 	update_vfd();
-+	mutex_unlock(&vfd_mutex);
- 
- 	return len;
- }
--- 
-1.7.0.4
+-----[ Domenico Andreoli, aka cavok
+ --[ http://www.dandreoli.com/gpgkey.asc
+   ---[ 3A0F 2F80 F79C 678A 8936  4FEE 0677 9033 A20E BC50
