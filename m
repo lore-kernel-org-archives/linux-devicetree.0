@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 1/2] ARM: vexpress: add basic DT platform matching support
-Date: Wed, 13 Apr 2011 19:02:20 +0100
-Message-ID: <1302717741-18753-2-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [PATCH 2/2] ARM: vexpress: add basic dts DT source
+Date: Wed, 13 Apr 2011 19:02:21 +0100
+Message-ID: <1302717741-18753-3-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1302717741-18753-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,38 +20,43 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a DT match table to the Versatile Express machine
-description in order to enable basic device tree support.
+This patch provides a simple device tree source for the Versatile
+Express board. It just defines memory layout and assigns a compatible string
+to the board.
 
-Tested on a Versatile Express board where the device tree blob is
-passed to the kernel by u-boot.
+Compiled blob tested on Versatile Express, passed to the kernel
+through u-boot. 'chosen' node defined within u-boot to avoid cluttering
+the default dts configuration.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/mach-vexpress/v2m.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/vexpress.dts |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/vexpress.dts
 
-diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
-index ba46e8e..e318df3 100644
---- a/arch/arm/mach-vexpress/v2m.c
-+++ b/arch/arm/mach-vexpress/v2m.c
-@@ -437,6 +437,11 @@ static void __init v2m_init(void)
- 	ct_desc->init_tile();
- }
- 
-+static const char *vexpress_dt_match[] __initdata = {
-+	"arm,vexpress",
-+	NULL,
-+};
+diff --git a/arch/arm/boot/dts/vexpress.dts b/arch/arm/boot/dts/vexpress.dts
+new file mode 100644
+index 0000000..bea2a18
+--- /dev/null
++++ b/arch/arm/boot/dts/vexpress.dts
+@@ -0,0 +1,18 @@
++/dts-v1/;
 +
- MACHINE_START(VEXPRESS, "ARM-Versatile Express")
- 	.boot_params	= PLAT_PHYS_OFFSET + 0x00000100,
- 	.map_io		= v2m_map_io,
-@@ -444,4 +449,5 @@ MACHINE_START(VEXPRESS, "ARM-Versatile Express")
- 	.init_irq	= v2m_init_irq,
- 	.timer		= &v2m_timer,
- 	.init_machine	= v2m_init,
-+	.dt_compat	= vexpress_dt_match,
- MACHINE_END
++/ {
++	model = "ARM Versatile Express";
++	compatible = "arm,vexpress";
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	aliases { };
++
++	chosen { };
++
++	memory {
++		device_type = "memory";
++		reg = <0x60000000 0x40000000>;
++	};
++};
 -- 
 1.7.4.4
