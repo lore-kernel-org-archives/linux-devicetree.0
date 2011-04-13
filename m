@@ -1,14 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: add DT support to the S3C SDI driver
-Date: Wed, 13 Apr 2011 11:35:58 -0600
-Message-ID: <20110413173558.GF2254@ponder.secretlab.ca>
-References: <20110413172547.GA27819@dandreoli.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 0/2] ARM: vexpress: DT enablement
+Date: Wed, 13 Apr 2011 19:02:19 +0100
+Message-ID: <1302717741-18753-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110413172547.GA27819-iIV0ii4H0r6tG0bUXCXiUA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,32 +15,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2011 at 07:25:47PM +0200, Domenico Andreoli wrote:
-> From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This patch adds DeviceTree support to the S3C SDI driver.
-> 
-> It implements all the configurations of the platform driver except the
-> set_power() callback and the ocr_avail mask.
-> 
-> Signed-off-by: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> ---
-> 
-> ocr_avail is a bit mask that could be easily ported to DT. If there
-> is not any better (or readable) way to render it in DT, I will
-> straightforwardly implement it.
-> 
-> set_power() instead deserves some more considerations. Current
-> implementations boil down to gpio on/off settings, its DT implementation
-> is again straightforward. Problem would arise if any board requires
-> some naive implementation, would it require a different of_device_id
-> with proper .data set?
+This patchset enables basic Versatile Express DT support in the Linaro kernel.
 
-It would be better to think out the binding a bit more, but I'd need
-to know more details about what is possible.
+It applies to:
 
-g.
+git://git.linaro.org/kernel/linux-linaro-2.6.38.git master
+
+	commit 7c4bc9c2662c6d9840afed0e29eb01314af9bb78
+
+It defines the required match table and adds a simple dts file where the memory 
+node by default declares the full 1GB memory space.
+
+Tested on a Versatile Express board with u-boot compiled with DT support.
+
+Lorenzo Pieralisi (2):
+  ARM: vexpress: add basic DT platform matching support
+  ARM: vexpress: add basic dts DT source
+
+ arch/arm/boot/dts/vexpress.dts |   18 ++++++++++++++++++
+ arch/arm/mach-vexpress/v2m.c   |    6 ++++++
+ 2 files changed, 24 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/vexpress.dts
+
+-- 
+1.7.4.4
