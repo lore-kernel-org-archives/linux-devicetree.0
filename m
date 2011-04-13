@@ -1,50 +1,186 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary
-	to be appended to zImage
-Date: Wed, 13 Apr 2011 17:00:30 +0300
-Message-ID: <20110413140030.GE12665@atomide.com>
-References: <20110324231830.2586.7150.stgit@riker>
-	<20110328091259.GA18721@S2100-06.ap.freescale.net>
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: add DT support to the S3C SDI driver
+Date: Wed, 13 Apr 2011 19:25:47 +0200
+Message-ID: <20110413172547.GA27819@dandreoli.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110328091259.GA18721@S2100-06.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, glikely@secretlab.ca, linux-arm-kernel@lists.infradead.org, nico@fluxnic.net
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Shawn Guo <shawn.guo@freescale.com> [110328 12:10]:
-> On Thu, Mar 24, 2011 at 04:18:41PM -0700, John Bonesio wrote:
-> > This patch provides the ability to boot using a device tree that is appended
-> > to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-> > 
-> > Signed-off-by: John Bonesio <bones@secretlab.ca>
-> > ---
-> > 
-> Tested on mx51 babbage.  The non-dt kernel works fine, but dt kernel
-> does not.
-> 
-> I tracked it down a little bit and found, before calling kernel from
-> arch/arm/boot/compressed/head.S, the dtb magic number (at address
-> pointed by r8) was interpolated to 0x73fbc000 which happens to be the
-> value of 'uart_base' assigned in plat-mxc/include/mach/uncompress.h.
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Gave this a try on an omap3 based board, looks like decompress_kernel
-will trash the first 16 bytes of the device tree data somehow.
+This patch adds DeviceTree support to the S3C SDI driver.
 
-John, can you please check if your current patch works properly?
+It implements all the configurations of the platform driver except the
+set_power() callback and the ocr_avail mask.
 
-Regards,
+Signed-off-by: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Tony
+---
+
+ocr_avail is a bit mask that could be easily ported to DT. If there
+is not any better (or readable) way to render it in DT, I will
+straightforwardly implement it.
+
+set_power() instead deserves some more considerations. Current
+implementations boil down to gpio on/off settings, its DT implementation
+is again straightforward. Problem would arise if any board requires
+some naive implementation, would it require a different of_device_id
+with proper .data set?
+
+cheers,
+Domenico
+
+---
+ drivers/mmc/host/s3cmci.c |   83 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 78 insertions(+), 5 deletions(-)
+
+Index: b/drivers/mmc/host/s3cmci.c
+===================================================================
+--- a/drivers/mmc/host/s3cmci.c
++++ b/drivers/mmc/host/s3cmci.c
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/clk.h>
++#include <linux/slab.h>
+ #include <linux/mmc/host.h>
+ #include <linux/platform_device.h>
+ #include <linux/cpufreq.h>
+@@ -22,6 +23,8 @@
+ #include <linux/gpio.h>
+ #include <linux/irq.h>
+ #include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ 
+ #include <mach/dma.h>
+ 
+@@ -1544,6 +1547,58 @@
+ 
+ #endif /* CONFIG_DEBUG_FS */
+ 
++#ifdef CONFIG_OF
++
++enum of_s3cmci_flags {
++	OF_S3CMCI_USE_DMA = 1,
++};
++
++static struct s3c24xx_mci_pdata *s3cmci_of_init(struct device *dev)
++{
++	struct s3c24xx_mci_pdata *pdata;
++	const __be32 *spec;
++	enum of_gpio_flags gpio_flags;
++	int gpio;
++	u32 flags;
++
++	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
++	if(!pdata) {
++		dev_err(dev, "%s: failed to allocate pdata\n", dev->of_node->full_name);
++		return NULL;
++	}
++
++	gpio = of_get_gpio_flags(dev->of_node, 0, &gpio_flags);
++	if (gpio < 0) {
++		pdata->no_detect = 1;
++	} else {
++		pdata->gpio_detect = gpio;
++		pdata->detect_invert = (gpio_flags & OF_GPIO_ACTIVE_LOW) == OF_GPIO_ACTIVE_LOW;
++	}
++
++	gpio = of_get_gpio_flags(dev->of_node, 1, &gpio_flags);
++	if (gpio < 0) {
++		pdata->no_wprotect = 1;
++	} else {
++		pdata->gpio_wprotect = gpio;
++		pdata->wprotect_invert = (gpio_flags & OF_GPIO_ACTIVE_LOW) == OF_GPIO_ACTIVE_LOW;
++	}
++
++	spec = of_get_property(dev->of_node, "flags", 0);
++	flags = spec ? be32_to_cpup(spec) : 0;
++	pdata->use_dma = flags | OF_S3CMCI_USE_DMA;
++
++	return pdata;
++}
++
++#else
++
++static struct s3c24xx_mci_pdata *s3cmci_of_init(struct device *dev)
++{
++	return NULL;
++}
++
++#endif /* CONFIG_OF */
++
+ static int __devinit s3cmci_probe(struct platform_device *pdev)
+ {
+ 	struct s3cmci_host *host;
+@@ -1552,7 +1607,12 @@
+ 	int is2440;
+ 	int i;
+ 
+-	is2440 = platform_get_device_id(pdev)->driver_data;
++	if (platform_get_device_id(pdev))
++		is2440 = platform_get_device_id(pdev)->driver_data;
++	else if (pdev->dev.of_match)
++		is2440 = (int) pdev->dev.of_match->data;
++	else
++		BUG();
+ 
+ 	mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
+ 	if (!mmc) {
+@@ -1577,11 +1637,11 @@
+ 	host->pdev	= pdev;
+ 	host->is2440	= is2440;
+ 
+-	host->pdata = pdev->dev.platform_data;
+-	if (!host->pdata) {
++	if (!pdev->dev.platform_data && pdev->dev.of_node)
++		pdev->dev.platform_data = s3cmci_of_init(&pdev->dev);
++	if (!pdev->dev.platform_data)
+ 		pdev->dev.platform_data = &s3cmci_def_pdata;
+-		host->pdata = &s3cmci_def_pdata;
+-	}
++	host->pdata = pdev->dev.platform_data;
+ 
+ 	spin_lock_init(&host->complete_lock);
+ 	tasklet_init(&host->pio_tasklet, pio_tasklet, (unsigned long) host);
+@@ -1901,12 +1961,25 @@
+ #define s3cmci_pm_ops NULL
+ #endif /* CONFIG_PM */
+ 
++#ifdef CONFIG_OF
++
++static const struct of_device_id s3cmci_of_match[] = {
++	{ .compatible = "samsung,s3c2410-sdi", .data = (void *) 0, },
++	{ .compatible = "samsung,s3c2412-sdi", .data = (void *) 1, },
++	{ .compatible = "samsung,s3c2440-sdi", .data = (void *) 1, },
++	{},
++};
++
++#else /* CONFIG_OF */
++#define s3cmci_of_match  NULL
++#endif /* CONFIG_OF */
+ 
+ static struct platform_driver s3cmci_driver = {
+ 	.driver	= {
+ 		.name	= "s3c-sdi",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= s3cmci_pm_ops,
++		.of_match_table = s3cmci_of_match,
+ 	},
+ 	.id_table	= s3cmci_driver_ids,
+ 	.probe		= s3cmci_probe,
