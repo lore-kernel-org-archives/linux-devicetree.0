@@ -1,108 +1,75 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: [PATCH v2] uio/pdrv_genirq: Add OF support
-Date: Thu, 14 Apr 2011 11:41:46 +0200
-Message-ID: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH v2] uio/pdrv_genirq: Add OF support
+Date: Thu, 14 Apr 2011 18:59:31 +0200
+Message-ID: <20110414165931.GA19228@pengutronix.de>
+References: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de, Michal Simek <monstr@monstr.eu>
+To: Michal Simek <monstr@monstr.eu>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Support OF support. "generic-uio" compatible property is used.
 
-Signed-off-by: Michal Simek <monstr@monstr.eu>
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-v2: Remove additional resource binding
-    Setup correct version string
-    Clear compatible string
----
- drivers/uio/uio_pdrv_genirq.c |   45 +++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 45 insertions(+), 0 deletions(-)
+Hi Michal,
 
-diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-index 7174d51..fd84a93 100644
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -23,6 +23,10 @@
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
- 
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+
- #define DRIVER_NAME "uio_pdrv_genirq"
- 
- struct uio_pdrv_genirq_platdata {
-@@ -97,6 +101,28 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- 	int ret = -EINVAL;
- 	int i;
- 
-+	if (!uioinfo) {
-+		/* alloc uioinfo for one device */
-+		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-+		if (!uioinfo) {
-+			ret = -ENOMEM;
-+			dev_err(&pdev->dev, "unable to kmalloc\n");
-+			goto bad2;
-+		}
-+		uioinfo->name = pdev->dev.of_node->name;
-+		uioinfo->version = "dt";
-+
-+		/* Multiple IRQs are not supported */
-+		if (pdev->num_resources > 1) {
-+			struct resource *r = &pdev->resource[1];
-+			uioinfo->irq = r->start;
-+			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
-+		} else {
-+			uioinfo->irq = UIO_IRQ_NONE;
-+			dev_info(&pdev->dev, "no IRQ found\n");
-+		}
-+	}
-+
- 	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
- 		dev_err(&pdev->dev, "missing platform_data\n");
- 		goto bad0;
-@@ -180,6 +206,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- 	kfree(priv);
- 	pm_runtime_disable(&pdev->dev);
-  bad0:
-+	/* kfree uioinfo for CONFIG_OF */
-+	if (!pdev->dev.platform_data)
-+		kfree(uioinfo);
-+ bad2:
- 	return ret;
- }
- 
-@@ -215,6 +245,20 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
- 	.runtime_resume = uio_pdrv_genirq_runtime_nop,
- };
- 
-+#ifdef CONFIG_OF
-+/*
-+ * Empty match table for of_platform binding
-+ * Select your custom compatible string in format
-+ * { .compatible = "<compatible string>", },
-+ */
-+static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-+	{ /* end of list */ },
-+};
-+MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-+#else
-+# define uio_of_genirq_match NULL
-+#endif
-+
- static struct platform_driver uio_pdrv_genirq = {
- 	.probe = uio_pdrv_genirq_probe,
- 	.remove = uio_pdrv_genirq_remove,
-@@ -222,6 +266,7 @@ static struct platform_driver uio_pdrv_genirq = {
- 		.name = DRIVER_NAME,
- 		.owner = THIS_MODULE,
- 		.pm = &uio_pdrv_genirq_dev_pm_ops,
-+		.of_match_table = uio_of_genirq_match,
- 	},
- };
- 
--- 
-1.5.5.6
+On Thu, Apr 14, 2011 at 11:41:46AM +0200, Michal Simek wrote:
+> Support OF support. "generic-uio" compatible property is used.
+
+This description is not true anymore. Please also add a short paragrpah how=
+ it
+is intended to be used now.
+
+> Signed-off-by: Michal Simek <monstr@monstr.eu>
+
+> +		uioinfo->version =3D "dt";
+
+Minor nit: "devicetree" is probably more descriptive.
+
+> +
+> +		/* Multiple IRQs are not supported */
+> +		if (pdev->num_resources > 1) {
+> +			struct resource *r =3D &pdev->resource[1];
+
+Are you sure the irq-ressource is always [1]? (Similar question for the
+if()-block above). Try platform_get_irq().
+
+> +#ifdef CONFIG_OF
+> +/*
+> + * Empty match table for of_platform binding
+
+While it probably doesn't make change to put every supported device in
+upstream, it still deosn't technically have to be empty. So, mabye drop this
+comment and add something like "/* empty for now */" to the table?
+
+Thanks,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAk2nJ/MACgkQD27XaX1/VRsuNgCfdS6fQTSKO9qBpXWJbYmCa7fA
+wxEAoLsL3ta1bfx6AjjcOvBsUkOWJkLu
+=0VEc
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
