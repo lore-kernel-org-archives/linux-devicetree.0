@@ -1,72 +1,128 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: vexpress: add basic DT platform matching support
-Date: Thu, 14 Apr 2011 14:54:48 -0600
-Message-ID: <20110414205448.GB5255@ponder.secretlab.ca>
-References: <1302717741-18753-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1302717741-18753-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: "Hans J. Koch" <hjk@hansjkoch.de>
+Subject: Re: [PATCH v2] uio/pdrv_genirq: Add OF support
+Date: Fri, 15 Apr 2011 01:06:02 +0200
+Message-ID: <20110414230602.GC2780@local>
+References: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1302717741-18753-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2011 at 07:02:20PM +0100, Lorenzo Pieralisi wrote:
-> This patch adds a DT match table to the Versatile Express machine
-> description in order to enable basic device tree support.
+On Thu, Apr 14, 2011 at 11:41:46AM +0200, Michal Simek wrote:
+> Support OF support. "generic-uio" compatible property is used.
 > 
-> Tested on a Versatile Express board where the device tree blob is
-> passed to the kernel by u-boot.
+> Signed-off-by: Michal Simek <monstr@monstr.eu>
 > 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-
-Merged into devicetree/test & devicetree/arm.  I squashed this with
-the second patch while I was at it.  I see that Nicolas has already
-picked it up into the Linaro tree, so I don't need to worry about
-pushing it to him.  :-)
-
-g.
-
-
 > ---
->  arch/arm/mach-vexpress/v2m.c |    6 ++++++
->  1 files changed, 6 insertions(+), 0 deletions(-)
+> v2: Remove additional resource binding
+>     Setup correct version string
+>     Clear compatible string
+> ---
+>  drivers/uio/uio_pdrv_genirq.c |   45 +++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 45 insertions(+), 0 deletions(-)
 > 
-> diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
-> index ba46e8e..e318df3 100644
-> --- a/arch/arm/mach-vexpress/v2m.c
-> +++ b/arch/arm/mach-vexpress/v2m.c
-> @@ -437,6 +437,11 @@ static void __init v2m_init(void)
->  	ct_desc->init_tile();
+> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+> index 7174d51..fd84a93 100644
+> --- a/drivers/uio/uio_pdrv_genirq.c
+> +++ b/drivers/uio/uio_pdrv_genirq.c
+> @@ -23,6 +23,10 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slab.h>
+>  
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +
+>  #define DRIVER_NAME "uio_pdrv_genirq"
+>  
+>  struct uio_pdrv_genirq_platdata {
+> @@ -97,6 +101,28 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>  	int ret = -EINVAL;
+>  	int i;
+>  
+> +	if (!uioinfo) {
+> +		/* alloc uioinfo for one device */
+> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+> +		if (!uioinfo) {
+> +			ret = -ENOMEM;
+> +			dev_err(&pdev->dev, "unable to kmalloc\n");
+> +			goto bad2;
+> +		}
+> +		uioinfo->name = pdev->dev.of_node->name;
+> +		uioinfo->version = "dt";
+
+Can that be something more descriptive?
+
+> +
+> +		/* Multiple IRQs are not supported */
+
+But multiple mappings are, and also no mappings.
+
+> +		if (pdev->num_resources > 1) {
+> +			struct resource *r = &pdev->resource[1];
+> +			uioinfo->irq = r->start;
+
+Why has the irq be resource[1] ?
+
+> +			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
+> +		} else {
+> +			uioinfo->irq = UIO_IRQ_NONE;
+> +			dev_info(&pdev->dev, "no IRQ found\n");
+> +		}
+> +	}
+> +
+>  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+>  		dev_err(&pdev->dev, "missing platform_data\n");
+>  		goto bad0;
+> @@ -180,6 +206,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>  	kfree(priv);
+>  	pm_runtime_disable(&pdev->dev);
+>   bad0:
+> +	/* kfree uioinfo for CONFIG_OF */
+> +	if (!pdev->dev.platform_data)
+> +		kfree(uioinfo);
+> + bad2:
+>  	return ret;
 >  }
 >  
-> +static const char *vexpress_dt_match[] __initdata = {
-> +	"arm,vexpress",
-> +	NULL,
+> @@ -215,6 +245,20 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+>  	.runtime_resume = uio_pdrv_genirq_runtime_nop,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +/*
+> + * Empty match table for of_platform binding
+> + * Select your custom compatible string in format
+> + * { .compatible = "<compatible string>", },
+> + */
+> +static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> +	{ /* end of list */ },
+
+doesn't that want a NULL termination?
+
 > +};
+> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
+> +#else
+> +# define uio_of_genirq_match NULL
+> +#endif
 > +
->  MACHINE_START(VEXPRESS, "ARM-Versatile Express")
->  	.boot_params	= PLAT_PHYS_OFFSET + 0x00000100,
->  	.map_io		= v2m_map_io,
-> @@ -444,4 +449,5 @@ MACHINE_START(VEXPRESS, "ARM-Versatile Express")
->  	.init_irq	= v2m_init_irq,
->  	.timer		= &v2m_timer,
->  	.init_machine	= v2m_init,
-> +	.dt_compat	= vexpress_dt_match,
->  MACHINE_END
+>  static struct platform_driver uio_pdrv_genirq = {
+>  	.probe = uio_pdrv_genirq_probe,
+>  	.remove = uio_pdrv_genirq_remove,
+> @@ -222,6 +266,7 @@ static struct platform_driver uio_pdrv_genirq = {
+>  		.name = DRIVER_NAME,
+>  		.owner = THIS_MODULE,
+>  		.pm = &uio_pdrv_genirq_dev_pm_ops,
+> +		.of_match_table = uio_of_genirq_match,
+>  	},
+>  };
+>  
 > -- 
-> 1.7.4.4
+> 1.5.5.6
 > 
 > 
