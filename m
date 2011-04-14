@@ -1,218 +1,108 @@
-From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: add DT support to the S3C SDI driver
-Date: Thu, 14 Apr 2011 11:37:51 +0200
-Message-ID: <20110414093751.GA6955@dandreoli.com>
-References: <20110413172547.GA27819@dandreoli.com>
-	<201104141151.50497.anarsoul@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201104141151.50497.anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: [PATCH v2] uio/pdrv_genirq: Add OF support
+Date: Thu, 14 Apr 2011 11:41:46 +0200
+Message-ID: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2011 at 11:51:50AM +0300, Vasily Khoruzhick wrote:
-> On Wednesday 13 April 2011 20:25:47 Domenico Andreoli wrote:
-> > From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > This patch adds DeviceTree support to the S3C SDI driver.
-> > 
-> > It implements all the configurations of the platform driver except the
-> > set_power() callback and the ocr_avail mask.
-> > 
-> > Signed-off-by: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Hm, but is there any bootloader with dt support for s3c24xx?
+Support OF support. "generic-uio" compatible property is used.
 
-I don't know, probably no - I don't care. IMHO main gain doesn't come
-from the bootloader.
+Signed-off-by: Michal Simek <monstr@monstr.eu>
 
-I use this patch by Jeremy Kerr to bundle dtb with the kernel. Another
-solution has been proposed [0] but has some issue. More will come,
-maybe allowing the bundle of multiple dtbs.
+---
+v2: Remove additional resource binding
+    Setup correct version string
+    Clear compatible string
+---
+ drivers/uio/uio_pdrv_genirq.c |   45 +++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 45 insertions(+), 0 deletions(-)
 
-cheers,
-Domenico
-
-[0] http://article.gmane.org/gmane.linux.drivers.devicetree/5068
-
-
-Index: arm-2.6.git/arch/arm/Kconfig
-===================================================================
---- arm-2.6.git.orig/arch/arm/Kconfig	2011-04-05 16:06:26.000000000 +0200
-+++ arm-2.6.git/arch/arm/Kconfig	2011-04-05 16:06:54.000000000 +0200
-@@ -1694,6 +1694,10 @@
- 	help
- 	  Include support for flattened device tree machine descriptions.
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+index 7174d51..fd84a93 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -23,6 +23,10 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
  
-+config ARM_EMBEDDED_DTB
-+	string "Embedded device tree blob" if OF
-+	default ""
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
 +
- # Compressed boot loader in ROM.  Yes, we really want to ask about
- # TEXT and BSS so we preserve their values in the config files.
- config ZBOOT_ROM_TEXT
-Index: arm-2.6.git/arch/arm/Makefile
-===================================================================
---- arm-2.6.git.orig/arch/arm/Makefile	2011-04-05 16:06:26.000000000 +0200
-+++ arm-2.6.git/arch/arm/Makefile	2011-04-05 16:06:54.000000000 +0200
-@@ -281,7 +281,7 @@
- # Convert bzImage to zImage
- bzImage: zImage
+ #define DRIVER_NAME "uio_pdrv_genirq"
  
--zImage Image xipImage bootpImage uImage: vmlinux
-+zImage Image xipImage bootpImage uImage dtbImage: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
+ struct uio_pdrv_genirq_platdata {
+@@ -97,6 +101,28 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ 	int ret = -EINVAL;
+ 	int i;
  
- zinstall uinstall install: vmlinux
-Index: arm-2.6.git/arch/arm/boot/Makefile
-===================================================================
---- arm-2.6.git.orig/arch/arm/boot/Makefile	2011-04-05 16:06:26.000000000 +0200
-+++ arm-2.6.git/arch/arm/boot/Makefile	2011-04-05 16:06:54.000000000 +0200
-@@ -27,7 +27,7 @@
- 
- export ZRELADDR INITRD_PHYS PARAMS_PHYS
- 
--targets := Image zImage xipImage bootpImage uImage
-+targets := Image zImage xipImage bootpImage uImage dtbImage
- 
- ifeq ($(CONFIG_XIP_KERNEL),y)
- 
-@@ -90,6 +90,14 @@
- 	$(call if_changed,objcopy)
- 	@echo '  Kernel: $@ is ready'
- 
-+$(obj)/dt/dtb: $(obj)/zImage FORCE
-+	$(Q)$(MAKE) $(build)=$(obj)/dt $@
-+	@:
++	if (!uioinfo) {
++		/* alloc uioinfo for one device */
++		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
++		if (!uioinfo) {
++			ret = -ENOMEM;
++			dev_err(&pdev->dev, "unable to kmalloc\n");
++			goto bad2;
++		}
++		uioinfo->name = pdev->dev.of_node->name;
++		uioinfo->version = "dt";
 +
-+$(obj)/dtbImage: $(obj)/dt/dtb FORCE
-+	$(call if_changed,objcopy)
-+	@echo '  Kernel: $@ is ready'
++		/* Multiple IRQs are not supported */
++		if (pdev->num_resources > 1) {
++			struct resource *r = &pdev->resource[1];
++			uioinfo->irq = r->start;
++			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
++		} else {
++			uioinfo->irq = UIO_IRQ_NONE;
++			dev_info(&pdev->dev, "no IRQ found\n");
++		}
++	}
 +
- PHONY += initrd FORCE
- initrd:
- 	@test "$(INITRD_PHYS)" != "" || \
-Index: arm-2.6.git/arch/arm/boot/dt/Makefile
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ arm-2.6.git/arch/arm/boot/dt/Makefile	2011-04-05 16:06:54.000000000 +0200
-@@ -0,0 +1,15 @@
-+#
-+# linux/arch/arm/dt/Makefile
-+#
-+# This file is included by the global makefile so that you can add your own
-+# architecture-specific flags and dependencies.
-+#
-+
-+LDFLAGS_dtb	:=-p --no-undefined -X -T
-+
-+targets	:= dtb dtb.o
-+
-+$(obj)/dtb:	$(src)/dtb.lds $(src)/dtb.o FORCE
-+	$(call if_changed,ld)
-+
-+$(obj)/dtb.o: arch/arm/boot/zImage FORCE
-Index: arm-2.6.git/arch/arm/boot/dt/dtb.S
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ arm-2.6.git/arch/arm/boot/dt/dtb.S	2011-04-05 16:06:54.000000000 +0200
-@@ -0,0 +1,52 @@
+ 	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+ 		dev_err(&pdev->dev, "missing platform_data\n");
+ 		goto bad0;
+@@ -180,6 +206,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ 	kfree(priv);
+ 	pm_runtime_disable(&pdev->dev);
+  bad0:
++	/* kfree uioinfo for CONFIG_OF */
++	if (!pdev->dev.platform_data)
++		kfree(uioinfo);
++ bad2:
+ 	return ret;
+ }
+ 
+@@ -215,6 +245,20 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+ 	.runtime_resume = uio_pdrv_genirq_runtime_nop,
+ };
+ 
++#ifdef CONFIG_OF
 +/*
-+ * If we have an embedded dtb (_dtb_start < _dtb_end), then add a pointer
-+ * to it in r2, as per the DT-on-ARM boot interface.
-+ *
-+ * r2-r14 overwritten
++ * Empty match table for of_platform binding
++ * Select your custom compatible string in format
++ * { .compatible = "<compatible string>", },
 + */
++static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
++	{ /* end of list */ },
++};
++MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
++#else
++# define uio_of_genirq_match NULL
++#endif
 +
-+#define DTB_ADDR		0x00001000
-+
-+	.globl start
-+start:
-+setup_dtb:
-+	ldr	r4, =dtb_start
-+	ldr	r5, =dtb_end
-+
-+	cmp	r4, r5		/* skip the init if there's no DTB */
-+	beq	zimage_start
-+
-+	/* Find our offset from the link address, and update dtb start
-+	 * and end pointers. */
-+	bl	1f
-+1:	sub	r6, lr, #(1b)
-+	add	r4, r4, r6
-+	add	r5, r5, r6
-+
-+	/* calculate final DTB address into r2 */
-+	ldr	r7, =0xfff00000
-+	and	r2, r6, r7
-+	add	r2, r2, #DTB_ADDR
-+
-+	/* copy dtb to final address */
-+	mov	r3, r2
-+2:	ldmia	r4!, {r7-r14}
-+	stmia	r3!, {r7-r14}
-+	cmp	r4, r5
-+	blo	2b
-+
-+	b	zimage_start
-+
-+	.ltorg
-+
-+	.align 4
-+	.section .dtb,"a"
-+dtb_start:
-+	.incbin CONFIG_ARM_EMBEDDED_DTB
-+dtb_end:
-+	.align 4
-+
-+	.section .zimage,"ax"
-+zimage_start:
-+	.incbin "arch/arm/boot/zImage"
-+
-Index: arm-2.6.git/arch/arm/boot/dt/dtb.lds
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ arm-2.6.git/arch/arm/boot/dt/dtb.lds	2011-04-05 16:06:54.000000000 +0200
-@@ -0,0 +1,25 @@
-+/*
-+ *  linux/arch/arm/boot/dt/dtb.lds
-+ *
-+ *  Copyright (C) 2009-2010 Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+OUTPUT_ARCH(arm)
-+ENTRY(start)
-+SECTIONS
-+{
-+	.text : {
-+		*(.text)
-+	}
-+
-+	.dtb : {
-+		*(.dtb)
-+	}
-+
-+	.zimage : {
-+		*(.zimage)
-+	}
-+}
-
------[ Domenico Andreoli, aka cavok
- --[ http://www.dandreoli.com/gpgkey.asc
-   ---[ 3A0F 2F80 F79C 678A 8936  4FEE 0677 9033 A20E BC50
+ static struct platform_driver uio_pdrv_genirq = {
+ 	.probe = uio_pdrv_genirq_probe,
+ 	.remove = uio_pdrv_genirq_remove,
+@@ -222,6 +266,7 @@ static struct platform_driver uio_pdrv_genirq = {
+ 		.name = DRIVER_NAME,
+ 		.owner = THIS_MODULE,
+ 		.pm = &uio_pdrv_genirq_dev_pm_ops,
++		.of_match_table = uio_of_genirq_match,
+ 	},
+ };
+ 
+-- 
+1.5.5.6
