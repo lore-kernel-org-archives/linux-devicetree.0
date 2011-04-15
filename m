@@ -1,128 +1,117 @@
-From: "Hans J. Koch" <hjk@hansjkoch.de>
-Subject: Re: [PATCH v2] uio/pdrv_genirq: Add OF support
-Date: Fri, 15 Apr 2011 01:06:02 +0200
-Message-ID: <20110414230602.GC2780@local>
-References: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v3] Add GPIO DT support to s3c24xx
+Date: Fri, 15 Apr 2011 02:08:08 +0200
+Message-ID: <201104150208.08420.marek.vasut@gmail.com>
+References: <20110410152735.338798127@gmail.com>
+	<20110411064719.GD4439@angua.secretlab.ca>
+	<20110411093304.GA21589@dandreoli.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110411093304.GA21589@dandreoli.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Domenico Andreoli <cavokz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2011 at 11:41:46AM +0200, Michal Simek wrote:
-> Support OF support. "generic-uio" compatible property is used.
+On Monday, April 11, 2011 11:33:04 AM Domenico Andreoli wrote:
+> From: Domenico Andreoli <cavokz@gmail.com>
 > 
-> Signed-off-by: Michal Simek <monstr@monstr.eu>
+> Assign proper OF node (= with matching physical base address) to each
+> s3c24xx GPIO chip.
+> 
+> Signed-off-by: Domenico Andreoli <cavokz@gmail.com>
 > 
 > ---
-> v2: Remove additional resource binding
->     Setup correct version string
->     Clear compatible string
-> ---
->  drivers/uio/uio_pdrv_genirq.c |   45 +++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 45 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-> index 7174d51..fd84a93 100644
-> --- a/drivers/uio/uio_pdrv_genirq.c
-> +++ b/drivers/uio/uio_pdrv_genirq.c
-> @@ -23,6 +23,10 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
->  
+> With this new patch there is no need to add the dt_compat field to
+> s3c_gpio_chip, such string is now chosen in base of the s3c gpio chip
+> base address.
+> 
+> Respect to v2, s3c24xx_attach_of_node() now uses of_address_to_resource()
+> instead of of_get_address()+of_translate_address(). I don't see where
+> is the gain.
+> 
+> ---
+>  arch/arm/plat-s3c24xx/gpiolib.c |   36
+> ++++++++++++++++++++++++++++++++++++ 1 file changed, 36 insertions(+)
+> 
+> Index: b/arch/arm/plat-s3c24xx/gpiolib.c
+> ===================================================================
+> --- a/arch/arm/plat-s3c24xx/gpiolib.c	2011-04-10 23:28:31.000000000 +0200
+> +++ b/arch/arm/plat-s3c24xx/gpiolib.c	2011-04-11 11:23:36.000000000 +0200
+> @@ -19,6 +19,8 @@
+>  #include <linux/ioport.h>
+>  #include <linux/io.h>
+>  #include <linux/gpio.h>
 > +#include <linux/of.h>
-> +#include <linux/of_platform.h>
 > +#include <linux/of_address.h>
-> +
->  #define DRIVER_NAME "uio_pdrv_genirq"
->  
->  struct uio_pdrv_genirq_platdata {
-> @@ -97,6 +101,28 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  	int ret = -EINVAL;
->  	int i;
->  
-> +	if (!uioinfo) {
-> +		/* alloc uioinfo for one device */
-> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-> +		if (!uioinfo) {
-> +			ret = -ENOMEM;
-> +			dev_err(&pdev->dev, "unable to kmalloc\n");
-> +			goto bad2;
-> +		}
-> +		uioinfo->name = pdev->dev.of_node->name;
-> +		uioinfo->version = "dt";
-
-Can that be something more descriptive?
-
-> +
-> +		/* Multiple IRQs are not supported */
-
-But multiple mappings are, and also no mappings.
-
-> +		if (pdev->num_resources > 1) {
-> +			struct resource *r = &pdev->resource[1];
-> +			uioinfo->irq = r->start;
-
-Why has the irq be resource[1] ?
-
-> +			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
-> +		} else {
-> +			uioinfo->irq = UIO_IRQ_NONE;
-> +			dev_info(&pdev->dev, "no IRQ found\n");
-> +		}
-> +	}
-> +
->  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
->  		dev_err(&pdev->dev, "missing platform_data\n");
->  		goto bad0;
-> @@ -180,6 +206,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  	kfree(priv);
->  	pm_runtime_disable(&pdev->dev);
->   bad0:
-> +	/* kfree uioinfo for CONFIG_OF */
-> +	if (!pdev->dev.platform_data)
-> +		kfree(uioinfo);
-> + bad2:
->  	return ret;
->  }
->  
-> @@ -215,6 +245,20 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
->  	.runtime_resume = uio_pdrv_genirq_runtime_nop,
->  };
->  
-> +#ifdef CONFIG_OF
-> +/*
-> + * Empty match table for of_platform binding
-> + * Select your custom compatible string in format
-> + * { .compatible = "<compatible string>", },
-> + */
-> +static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-> +	{ /* end of list */ },
-
-doesn't that want a NULL termination?
-
-> +};
-> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-> +#else
-> +# define uio_of_genirq_match NULL
-> +#endif
-> +
->  static struct platform_driver uio_pdrv_genirq = {
->  	.probe = uio_pdrv_genirq_probe,
->  	.remove = uio_pdrv_genirq_remove,
-> @@ -222,6 +266,7 @@ static struct platform_driver uio_pdrv_genirq = {
->  		.name = DRIVER_NAME,
->  		.owner = THIS_MODULE,
->  		.pm = &uio_pdrv_genirq_dev_pm_ops,
-> +		.of_match_table = uio_of_genirq_match,
+> 
+>  #include <plat/gpio-core.h>
+>  #include <plat/gpio-cfg.h>
+> @@ -210,6 +212,39 @@
 >  	},
 >  };
->  
-> -- 
-> 1.5.5.6
+> 
+> +#ifdef CONFIG_OF_GPIO
+> +
+> +static void s3c24xx_attach_of_node(struct s3c_gpio_chip *chip)
+> +{
+> +	struct device_node *dn;
+> +	struct resource res;
+> +	const char *dt_compat;
+> +
+> +	if (chip->base == S3C2410_GPACON)
+> +		dt_compat = "samsung,s3c2410-gpio-a";
+> +	else
+> +		dt_compat = "samsung,s3c2410-gpio";
+> +
+> +	for_each_compatible_node(dn, NULL, dt_compat) {
+> +		if (of_address_to_resource(dn, 0, &res) < 0) {
+> +			printk(KERN_ERR "%s: unable to translate DT address\n", dn-
+>full_name);
+> +			continue;
+> +		}
+> +
+> +		if (chip->base == (res.start - S3C24XX_PA_GPIO + S3C24XX_VA_GPIO)) {
+> +			chip->chip.of_node = dn;
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +#else
+> +
+> +static void s3c24xx_attach_of_node(struct s3c_gpio_chip *chip)
+
+static inline void maybe ;)
+
+> +{
+> +}
+> +
+> +#endif
+> 
+>  static __init int s3c24xx_gpiolib_init(void)
+>  {
+> @@ -220,6 +255,7 @@
+>  		if (!chip->config)
+>  			chip->config = &s3c24xx_gpiocfg_default;
+> 
+> +		s3c24xx_attach_of_node(chip);
+>  		s3c_gpiolib_add(chip);
+>  	}
 > 
 > 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
