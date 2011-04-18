@@ -1,15 +1,15 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V14 3/4] ptp: Added a clock driver for the IXP46x.
-Date: Mon, 18 Apr 2011 10:26:38 +0200
-Message-ID: <201104181026.39107.arnd@arndb.de>
-References: <cover.1303107532.git.richard.cochran@omicron.at>
-	<20110418080606.GA3809@riccoc20.at.omicron.at>
-	<201104181021.01279.arnd@arndb.de>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2] uio/pdrv_genirq: Add OF support
+Date: Mon, 18 Apr 2011 10:33:08 +0200
+Message-ID: <4DABF744.4010209@monstr.eu>
+References: <1302774106-32764-1-git-send-email-monstr@monstr.eu>
+	<20110414165931.GA19228@pengutronix.de>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201104181021.01279.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20110414165931.GA19228-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,36 +19,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Christoph Lameter <cl-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 April 2011, Arnd Bergmann wrote:
-> On Monday 18 April 2011, Richard Cochran wrote:
-> > On Mon, Apr 18, 2011 at 08:56:03AM +0200, Arnd Bergmann wrote:
-> > > On Monday 18 April 2011, Richard Cochran wrote:
-> > > > +
-> > > > +       lo = __raw_readl(&regs->channel[ch].src_uuid_lo);
-> > > > +       hi = __raw_readl(&regs->channel[ch].src_uuid_hi);
-> > > > +
-> > > 
-> > > I guess you should use readl(), not __raw_readl() here. The __raw_* functions
-> > > are not meant for device drivers.
-> > 
-> > Krzysztof had a different opinion about this.
-> > 
-> >     https://lkml.org/lkml/2011/1/8/67
-> > 
-> > Anyway, it is his driver, and I just followed what he does elsewhere
-> > in the driver. It make sense to me to keep the driver consistent.
-> > Maybe we should make the change throughout?
+Hi Wolfram,
+
+Wolfram Sang wrote:
+> Hi Michal,
 > 
-> It would certainly be useful to fix it up. I now realized that this driver
-> supports both big-endian and little-endian configurations, so just using
-> readl() is certainly broken.
-> There should probably be an ixp specific version of the safe I/O accessors
-> to deal with it on all on-chip peripherals in a safe way.
+> On Thu, Apr 14, 2011 at 11:41:46AM +0200, Michal Simek wrote:
+>> Support OF support. "generic-uio" compatible property is used.
+> 
+> This description is not true anymore. Please also add a short paragrpah how it
+> is intended to be used now.
 
-Anyway, not your problem then, just leave it like it is.
+ok.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
+>> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+> 
+>> +		uioinfo->version = "dt";
+> 
+> Minor nit: "devicetree" is probably more descriptive.
+
+no problem to change it
+
+> 
+>> +
+>> +		/* Multiple IRQs are not supported */
+>> +		if (pdev->num_resources > 1) {
+>> +			struct resource *r = &pdev->resource[1];
+> 
+> Are you sure the irq-ressource is always [1]?  (Similar question for the
+> if()-block above). Try platform_get_irq().
+
+I wasn't aware about platform_get_irq. You are right.
+
+What "if()-block above" are you talking about?
+Above is kzalloc uioinfo allocation.
+I am going to send v3 that's why please comment this there.
+
+> 
+>> +#ifdef CONFIG_OF
+>> +/*
+>> + * Empty match table for of_platform binding
+> 
+> While it probably doesn't make change to put every supported device in
+> upstream, it still deosn't technically have to be empty. So, mabye drop this
+> comment and add something like "/* empty for now */" to the table?
+
+ok, done.
+
+Thanks,
+Michal
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
