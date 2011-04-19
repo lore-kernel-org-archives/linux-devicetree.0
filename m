@@ -1,112 +1,119 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
-Date: Tue, 19 Apr 2011 10:42:04 +0200
-Message-ID: <4DAD4ADC.9020201@monstr.eu>
-References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
-	<BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
-	<20110419061121.GB5252@ponder.secretlab.ca>
-	<201104190932.31777.arnd@arndb.de>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 0/5] consolidate sdhci pltfm & OF drivers and get them
+ self registered
+Date: Tue, 19 Apr 2011 12:20:31 +0200
+Message-ID: <20110419102031.GA4164@pengutronix.de>
+References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201104190932.31777.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org, linux-kernel@vger.kernel.org, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> On Tuesday 19 April 2011, Grant Likely wrote:
->> On Tue, Apr 19, 2011 at 11:58:25AM +1000, John Williams wrote:
->>> I know the arguments against the 'generic-uio' tag, but come on, let's
->>> look at the lesser of two evils here!  I call BS on this DTS purity.
-> 
-> Both a specific device ID and something like "generic-uio" are
-> equally broken:
-> 
-> If you have generic-uio, it is impossible to write an in-kernel driver
-> for the same hardware without changing the device tree, meaning that
-> it is impossible to correctly describe the hardware in the device tree.
-> 
-> If you put a meaningful identifier into the match table, it is also
-> impossible to have an in-kernel driver for the hardware, because now
-> you have no way to choose whether to handle the device with UIO
-> or an in-kernel driver.
-> 
-> There may be cases where you have two instances of the same device
-> in a machine and  want one of them to be driven by UIO and the other
-> by another driver. A common example of this would be a virtual machine
-> where one device is passed through to the guest and the other is
-> used by the host. I've done this for USB input devices and PCI network
-> interfaces.
 
-This discuss is only about example in the commit message that's why I think that 
-we can add what maintainers like. If Hans or Greg want to add exact vendor and 
-device, I will add it and we can move on. We can also add just "vendor,device".
-Hans and Greg: What do you prefer?
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Keeping empty match table in the patch creates space for everybody to choose 
-custom preferred compatible string.
+Hi Shawn,
 
-The last thing which we need to decide is what Paul mentioned about adding new 
-file to doc in Documentation/devicetree/bindings/uio/
-I think uio_pdrv_genirq.txt file name should be the best choice.
+On Fri, Mar 25, 2011 at 04:48:46PM +0800, Shawn Guo wrote:
+> Here are what the patch set does.
+>=20
+> * Remove .probe and .remove hooks from sdhci-pltfm.c and make it be
+>   a pure common helper function providers.
+> * Add .probe and .remove hooks for sdhci pltfm drivers sdhci-cns3xxx,
+>   sdhci-dove, sdhci-tegra, and sdhci-esdhc-imx to make them self
+>   registered with calling helper functions created above.
+> * Migrate the use of sdhci_of_host and sdhci_of_data to
+>   sdhci_pltfm_host and sdhci_pltfm_data, so that OF version host and
+>   data structure works can be saved, and pltfm version works for both
+>   cases.
+> * Add OF common helper stuff into sdhci-pltfm.c, and make OF version
+>   sdhci drivers sdhci-of-esdhc and sdhci-of-hlwd become self
+>   registered as well, so that sdhci-of-core.c and sdhci-of.h can be
+>   removed.
+> * Consolidate the OF and pltfm esdhc drivers into one with sharing
+>   the same pair of .probe and .remove hooks.  As a result,
+>   sdhci-esdhc-imx.c and sdhci-of-esdhc.c go away, while
+>   sdhci-esdhc.c comes in and works for both MPCxxx and i.MX.
+> * Eliminate include/linux/mmc/sdhci-pltfm.h with moving stuff into
+>   drivers/mmc/host/sdhci-pltfm.h.
+>=20
+> And the benefits we gain from the changes are:
+>=20
+> * Get the sdhci device driver follow the Linux trend that driver
+>   makes the registration by its own.
+> * sdhci-pltfm.c becomes simple and clean as it only has common helper
+>   stuff there now.
+> * All sdhci device specific things are going back its own driver.
+> * The dt and non-dt drivers are consolidated to use the same pair of
+>   .probe and .remove hooks.
+> * SDHCI driver for Freescale eSDHC controller found on both MPCxxx
+>   and i.MX platforms is consolidated to use the same one .probe
+>   function.
+>=20
+> The patch set works against the tree below, and was only tested on
+> i.mx51 babbage board, all other targets were build tested.
+>=20
+>   git://git.secretlab.ca/git/linux-2.6.git devicetree/test
+>=20
+> Comments are welcomed and appreciated.
 
-What about this description? (Please check my english).
-"
-UIO genirq
+First of all, thanks _a lot_ for doing this! Many people have promised
+to do such an approach, but you finally made it!
 
-Compatible property wasn't advisedly setup because UIO can be used for various 
-devices. Please choose your preferred compatible string and add it to matching 
-table in the driver.
+Sorry for the long delay in reviewing it, I didn't want to rush a review
+so I needed some time for it which I didn't have much in the last weeks.
+Let's hope my battery will have enough power on my flight back to
+Germany ;) So, this is for now a purely "visual" review. I hope I can
+check V2 on real hardware then.
 
-Required properties:
-   - compatible : "vendor,device"
+The approach seems sensible, so have a look at my (mostly minor)
+comments inside the patches. However, there is one bigger piece missing.
+You converted all the drivers which had a seperate source-file and
+hooked into sdhci-pltfm.c. However, those are only those users which
+need additional code to work around the quirks. There are also users
+which can take the plain pltfm-driver with a properly set
+platform_data (check the thread "[PATCH] mmc: add SDHCI driver for STM
+platforms (V2)" for an example). Those have to be converted, too.
+Now the discussion could be if every of those users gets its own
+pltfm-<something>.c or if we create something similat to
+sdhci-pltfm-generic, which can also be setup with platform_data like the
+old driver (/me likes the latter a bit more. If we don't change the name
+of the driver (not talking about the sourcefile) and keep it
+"sdhci-pltfm", then you wouldn't need to change all those users if you
+ensured it behaves the same.
 
-Optional properties:
-   - reg : should contain registers location and length.
-   - interrupts : should contain interrupt.
-   - interrupt-parent : interrupt source phandle.
+Also, I think the next version of this series should have all makers of
+a sdhci-pltfm user CCed so we give them a chance to report breakage. Or
+donate acks or tested-by.
 
-At least one of reg or interrupt property should be used.
+Regards,
 
-TODO: Add userspace hook to tell the kernel compatible string at runtime.
-"
+   Wolfram
 
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
->  
->> Call it what you like, but the reasons are well founded.  The alternative
->> that has been proposed which I am in agreement with is to investigate
->> giving userspace the hook to tell the kernel at runtime which devices
->> should be picked up by the uio driver.
-> 
-> Yes, I believe this is the best option.
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-I agree that this will be nice follow up patch to support this.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-> 
->> In the mean time, explicitly modifying the match table is an okay
->> compromise.
-> 
-> Agreed.
+iEYEARECAAYFAk2tYe8ACgkQD27XaX1/VRsCRgCgkp+BmJJsLsKllKL0OI/BnO9F
+PRkAn1BpnXBv1exnkJFlqFAPe5O2Yt8w
+=GSqA
+-----END PGP SIGNATURE-----
 
-ok. great.
-
-Michal
-
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+--BXVAT5kNtrzKuDFl--
