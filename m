@@ -1,129 +1,62 @@
 From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
-Date: Tue, 19 Apr 2011 00:08:16 -0600
-Message-ID: <20110419060816.GA5252@ponder.secretlab.ca>
+Date: Tue, 19 Apr 2011 00:11:21 -0600
+Message-ID: <20110419061121.GB5252@ponder.secretlab.ca>
 References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
+ <20110418160658.GD23814@pengutronix.de>
+ <BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
+In-Reply-To: <BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: devicetree-discuss@lists.ozlabs.org, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de
+To: John Williams <john.williams@petalogix.com>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2011 at 10:50:54AM +0200, Michal Simek wrote:
-> Adding OF binding to genirq.
-> Version string is setup to the "devicetree".
-> 
-> Compatible string is not setup for now but you can add your
-> custom compatible string to uio_of_genirq_match structure.
-> 
-> For example with "uio" compatible string:
-> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-> 	{ .compatible = "uio", },
-> 	{ /* empty for now */ },
-> };
-> 
-> Signed-off-by: Michal Simek <monstr@monstr.eu>
-> 
-> ---
-> 
-> v3: Fix irq binding
->     Use "devicetree" as version string
-> 
-> v2: Remove additional resource binding
->     Setup correct version string
->     Clear compatible string
-> ---
->  drivers/uio/uio_pdrv_genirq.c |   42 +++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 42 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-> index 7174d51..c8d565a 100644
-> --- a/drivers/uio/uio_pdrv_genirq.c
-> +++ b/drivers/uio/uio_pdrv_genirq.c
-> @@ -23,6 +23,10 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
->  
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +
->  #define DRIVER_NAME "uio_pdrv_genirq"
->  
->  struct uio_pdrv_genirq_platdata {
-> @@ -97,6 +101,30 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  	int ret = -EINVAL;
->  	int i;
->  
-> +	if (!uioinfo) {
-> +		int irq;
-> +
-> +		/* alloc uioinfo for one device */
-> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-> +		if (!uioinfo) {
-> +			ret = -ENOMEM;
-> +			dev_err(&pdev->dev, "unable to kmalloc\n");
-> +			goto bad2;
-> +		}
-> +		uioinfo->name = pdev->dev.of_node->name;
-> +		uioinfo->version = "devicetree";
-> +
-> +		/* Multiple IRQs are not supported */
-> +		irq = platform_get_irq(pdev, 0);
-> +		if (irq < 0) {
+On Tue, Apr 19, 2011 at 11:58:25AM +1000, John Williams wrote:
+> On Tue, Apr 19, 2011 at 2:06 AM, Wolfram Sang <w.sang@pengutronix.de>=
+ wrote:
+> > Hi,
+> >
+> >> For example with "uio" compatible string:
+> >> static const struct of_device_id __devinitconst uio_of_genirq_matc=
+h[] =3D {
+> >> =A0 =A0 =A0 { .compatible =3D "uio", },
+> >> =A0 =A0 =A0 { /* empty for now */ },
+> >> };
+> >
+> > Please use a proper example with "vendor,device".
+> > (And after that it won't be empty anymore)
+>=20
+> My vote is, and always has been 'generic-uio' :)
+>=20
+> Putting some random vendor/device string in there is just nuts. Do yo=
+u
+> really want a kernel patch every time some one binds their device to
+> it?
+>=20
+> Or, is there no expectation that anybody would attempt to merge such =
+a
+> pointless patch to begin with?
+>=20
+> As we discussed at ELC, putting a real vendor/device in there is also
+> broken because all instances in the system wil bind to the generic
+> uio, which is not necessarily what is desired.
+>=20
+> I know the arguments against the 'generic-uio' tag, but come on, let'=
+s
+> look at the lesser of two evils here!  I call BS on this DTS purity.
 
-PowerPC and x86 will return 0 for an unassigned IRQ, as will most platforms.
+Call it what you like, but the reasons are well founded.  The alternati=
+ve
+that has been proposed which I am in agreement with is to investigate
+giving userspace the hook to tell the kernel at runtime which devices
+should be picked up by the uio driver.
 
-> +			uioinfo->irq = UIO_IRQ_NONE;
-> +			dev_info(&pdev->dev, "no IRQ found\n");
-> +		} else {
-> +			uioinfo->irq = irq;
-> +			dev_info(&pdev->dev, "irq %d\n", (u32)uioinfo->irq);
-> +		}
-> +	}
-> +
->  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
->  		dev_err(&pdev->dev, "missing platform_data\n");
->  		goto bad0;
-> @@ -180,6 +208,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->  	kfree(priv);
->  	pm_runtime_disable(&pdev->dev);
->   bad0:
-> +	/* kfree uioinfo for CONFIG_OF */
-> +	if (!pdev->dev.platform_data)
-> +		kfree(uioinfo);
-> + bad2:
->  	return ret;
->  }
->  
-> @@ -215,6 +247,15 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
->  	.runtime_resume = uio_pdrv_genirq_runtime_nop,
->  };
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-> +	{ /* empty for now */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-> +#else
-> +# define uio_of_genirq_match NULL
-> +#endif
-> +
->  static struct platform_driver uio_pdrv_genirq = {
->  	.probe = uio_pdrv_genirq_probe,
->  	.remove = uio_pdrv_genirq_remove,
-> @@ -222,6 +263,7 @@ static struct platform_driver uio_pdrv_genirq = {
->  		.name = DRIVER_NAME,
->  		.owner = THIS_MODULE,
->  		.pm = &uio_pdrv_genirq_dev_pm_ops,
-> +		.of_match_table = uio_of_genirq_match,
->  	},
->  };
->  
-> -- 
-> 1.5.5.6
-> 
+In the mean time, explicitly modifying the match table is an okay
+compromise.
+
+g.
