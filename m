@@ -1,44 +1,32 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] dt/flattree: Fix return value of early_init_dt_scan_memory
-Date: Tue, 19 Apr 2011 23:01:09 +0800
-Message-ID: <1303225269-10092-1-git-send-email-shawn.guo@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
+Date: Tue, 19 Apr 2011 17:07:40 +0200
+Message-ID: <201104191707.40456.arnd@arndb.de>
+References: <1303116654-5042-1-git-send-email-monstr@monstr.eu> <BANLkTin0krYi+MqngSQ5n-752vDa_a8ZtA@mail.gmail.com> <BANLkTin-qL3ppG1jRjBu3S16SWcNjD=3kA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BANLkTin-qL3ppG1jRjBu3S16SWcNjD=3kA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: John Williams <john.williams@petalogix.com>, Wolfram Sang <w.sang@pengutronix.de>, Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, hjk@hansjkoch.de
 List-Id: devicetree@vger.kernel.org
 
-It fixes the return value of funciont early_init_dt_scan_memory on
-the success return path.
+On Tuesday 19 April 2011, Grant Likely wrote:
+> > or whatever, as this would bind all instances matching vendor,device.
+> >
+> > So, the question I have is, how to handle bind per-instance?
+> 
+> By manipulating a property on the device instance of course!  :-)
+> 
+> Something like:  echo "generic-uio" >>
+> /sys/devices/path/to/device/a-property-that-changes-the-driver-it-will-bind-to.
+> 
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/of/fdt.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+But what code would create that in sysfs, and based on what properties
+of the device? Should we do that for every platform device, or perhaps
+for every one that has any resources?
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c9db49c..387336d 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -659,7 +659,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 		early_init_dt_add_memory_arch(base, size);
- 	}
- 
--	return 0;
-+	return 1;
- }
- 
- int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
--- 
-1.7.4.1
+	Arnd
