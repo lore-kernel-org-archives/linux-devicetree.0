@@ -1,101 +1,100 @@
-From: Bhaskar Upadhaya <Bhaskar.Upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH][upstream] powerpc: Adding bindings for flexcan controller
-Date: Tue, 19 Apr 2011 19:28:31 +0530
-Message-ID: <1303221511-12903-1-git-send-email-Bhaskar.Upadhaya@freescale.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
+Date: Tue, 19 Apr 2011 08:49:31 -0600
+Message-ID: <BANLkTin-qL3ppG1jRjBu3S16SWcNjD=3kA@mail.gmail.com>
+References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
+ <20110418160658.GD23814@pengutronix.de> <BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
+ <20110419061121.GB5252@ponder.secretlab.ca> <BANLkTin0krYi+MqngSQ5n-752vDa_a8ZtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: inuxppc-dev-50dRxjG7WBCY5r8RbUyfqNHuzzzSOjJt@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BANLkTin0krYi+MqngSQ5n-752vDa_a8ZtA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Williams <john.williams@petalogix.com>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-From: Bhaskar Upadhaya <bhaskar.upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Apr 19, 2011 at 6:37 AM, John Williams
+<john.williams@petalogix.com> wrote:
+> On Tue, Apr 19, 2011 at 4:11 PM, Grant Likely <grant.likely@secretlab=
+=2Eca> wrote:
+>> On Tue, Apr 19, 2011 at 11:58:25AM +1000, John Williams wrote:
+>>> On Tue, Apr 19, 2011 at 2:06 AM, Wolfram Sang <w.sang@pengutronix.d=
+e> wrote:
+>>> > Hi,
+>>> >
+>>> >> For example with "uio" compatible string:
+>>> >> static const struct of_device_id __devinitconst uio_of_genirq_ma=
+tch[] =3D {
+>>> >> =A0 =A0 =A0 { .compatible =3D "uio", },
+>>> >> =A0 =A0 =A0 { /* empty for now */ },
+>>> >> };
+>>> >
+>>> > Please use a proper example with "vendor,device".
+>>> > (And after that it won't be empty anymore)
+>>>
+>>> My vote is, and always has been 'generic-uio' :)
+>>>
+>>> Putting some random vendor/device string in there is just nuts. Do =
+you
+>>> really want a kernel patch every time some one binds their device t=
+o
+>>> it?
+>>>
+>>> Or, is there no expectation that anybody would attempt to merge suc=
+h a
+>>> pointless patch to begin with?
+>>>
+>>> As we discussed at ELC, putting a real vendor/device in there is al=
+so
+>>> broken because all instances in the system wil bind to the generic
+>>> uio, which is not necessarily what is desired.
+>>>
+>>> I know the arguments against the 'generic-uio' tag, but come on, le=
+t's
+>>> look at the lesser of two evils here! =A0I call BS on this DTS puri=
+ty.
+>>
+>> Call it what you like, but the reasons are well founded. =A0The alte=
+rnative
+>> that has been proposed which I am in agreement with is to investigat=
+e
+>> giving userspace the hook to tell the kernel at runtime which device=
+s
+>> should be picked up by the uio driver.
+>
+> OK, so let's talk about this interface. =A0As I see it, it must be ab=
+le
+> to handle bind per-instance, not per compatibility.
+>
+> For example, we make systems with multiple, identical timers. =A0One
+> will be used as the system timer, the others need to be (optionally)
+> bound to generic UIO.
+>
+> Therefore, it's not OK to just do
+>
+> echo "vendor,device" >> /sys/class/something/generic-uio/compatlist
+>
+> or whatever, as this would bind all instances matching vendor,device.
+>
+> So, the question I have is, how to handle bind per-instance?
 
-Signed-off-by: Bhaskar Upadhaya <bhaskar.upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Acked-By: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-Based upon git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git (branch -> master)
+By manipulating a property on the device instance of course!  :-)
 
- .../devicetree/bindings/net/can/fsl-flexcan.txt    |   61 ++++++++++++++++++++
- 1 files changed, 61 insertions(+), 0 deletions(-)
- create mode 100755 Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+Something like:  echo "generic-uio" >>
+/sys/devices/path/to/device/a-property-that-changes-the-driver-it-will-=
+bind-to.
 
-diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-new file mode 100755
-index 0000000..1a729f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-@@ -0,0 +1,61 @@
-+CAN Device Tree Bindings
-+------------------------
-+2011 Freescale Semiconductor, Inc.
-+
-+fsl,flexcan-v1.0 nodes
-+-----------------------
-+In addition to the required compatible-, reg- and interrupt-properties, you can
-+also specify which clock source shall be used for the controller.
-+
-+CPI Clock- Can Protocol Interface Clock
-+	This CLK_SRC bit of CTRL(control register) selects the clock source to
-+	the CAN Protocol Interface(CPI) to be either the peripheral clock
-+	(driven by the PLL) or the crystal oscillator clock. The selected clock
-+	is the one fed to the prescaler to generate the Serial Clock (Sclock).
-+	The PRESDIV field of CTRL(control register) controls a prescaler that
-+	generates the Serial Clock (Sclock), whose period defines the
-+	time quantum used to compose the CAN waveform.
-+
-+Can Engine Clock Source
-+	There are two sources for CAN clock
-+	- Platform Clock  It represents the bus clock
-+	- Oscillator Clock
-+
-+	Peripheral Clock (PLL)
-+	--------------
-+		     |
-+		    ---------		      -------------
-+		    |       |CPI Clock	      | Prescaler |       Sclock
-+		    |       |---------------->| (1.. 256) |------------>
-+		    ---------		      -------------
-+                     |  |
-+	--------------  ---------------------CLK_SRC
-+	Oscillator Clock
-+
-+- fsl,flexcan-clock-source : CAN Engine Clock Source.This property selects
-+			     the peripheral clock. PLL clock is fed to the
-+			     prescaler to generate the Serial Clock (Sclock).
-+			     Valid values are "oscillator" and "platform"
-+			     "oscillator": CAN engine clock source is oscillator clock.
-+			     "platform" The CAN engine clock source is the bus clock
-+		             (platform clock).
-+
-+- fsl,flexcan-clock-divider : for the reference and system clock, an additional
-+			      clock divider can be specified.
-+- clock-frequency: frequency required to calculate the bitrate for FlexCAN.
-+
-+Note:
-+	- v1.0 of flexcan-v1.0 represent the IP block version for P1010 SOC.
-+	- P1010 does not have oscillator as the Clock Source.So the default
-+	  Clock Source is platform clock.
-+Examples:
-+
-+	can0@1c000 {
-+		compatible = "fsl,flexcan-v1.0";
-+		reg = <0x1c000 0x1000>;
-+		interrupts = <48 0x2>;
-+		interrupt-parent = <&mpic>;
-+		fsl,flexcan-clock-source = "platform";
-+		fsl,flexcan-clock-divider = <2>;
-+		clock-frequency = <fixed by u-boot>;
-+	};
--- 
-1.5.6.5
+>> In the mean time, explicitly modifying the match table is an okay
+>> compromise.
+>
+> My mind is still boggling that in this day and age it could possibly
+> be preferred to modify code, instead of a data structure. =A0However,
+> clearly this is a lost cause!
+
+I don't think anybody wants this as a long term solution.  It is
+merely a stop-gap so that development is not stalled while working out
+a real interface.
+
+g.
