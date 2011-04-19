@@ -1,74 +1,54 @@
-From: Ben Hutchings <bhutchings@solarflare.com>
-Subject: Re: [PATCH V14 4/4] ptp: Added a clock driver for the National
- Semiconductor PHYTER.
-Date: Mon, 18 Apr 2011 21:57:25 +0100
-Message-ID: <1303160245.2857.60.camel@bwh-desktop>
-References: <cover.1303107532.git.richard.cochran@omicron.at>
-	 <1728ffb5735c2a04876a69ad55427c4e7b5a1bd7.1303107532.git.richard.cochran@omicron.at>
+From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
+Date: Tue, 19 Apr 2011 11:58:25 +1000
+Message-ID: <BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
+References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
+	<20110418160658.GD23814@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1728ffb5735c2a04876a69ad55427c4e7b5a1bd7.1303107532.git.richard.cochran@omicron.at>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Alan Cox <alan@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Christoph Lameter <cl@linux.com>, David Miller <davem@davemloft.net>, John Stultz <john.stultz@linaro.org>, Krzysztof Halasa <khc@pm.waw.pl>, Peter Zijlstra <peterz@infradead.org>, Rodolfo Giometti <giometti@linux.it>, Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mike Frysinger <vapier@gentoo.org>, Paul Mackerras <paulus@samba.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110418160658.GD23814-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-04-18 at 08:30 +0200, Richard Cochran wrote:
-> This patch adds support for the PTP clock found on the DP83640.
-> The basic clock operations and one external time stamp have
-> been implemented.
-[...]
-> --- /dev/null
-> +++ b/drivers/net/phy/dp83640.c
-[...]
-> +static int match(struct sk_buff *skb, unsigned int type, struct rxts *rxts)
-> +{
-> +	u16 *seqid;
+On Tue, Apr 19, 2011 at 2:06 AM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi,
+>
+>> For example with "uio" compatible string:
+>> static const struct of_device_id __devinitconst uio_of_genirq_match[] =
+=3D {
+>> =A0 =A0 =A0 { .compatible =3D "uio", },
+>> =A0 =A0 =A0 { /* empty for now */ },
+>> };
+>
+> Please use a proper example with "vendor,device".
+> (And after that it won't be empty anymore)
 
-Should be __be16 *, and similarly for the casts.
+My vote is, and always has been 'generic-uio' :)
 
-> +	u8 *msgtype, *data = skb_mac_header(skb);
-> +
-> +	/* check sequenceID, messageType, 12 bit hash of offset 20-29 */
-> +	/* We assume that the IPv4 header has no options. */
+Putting some random vendor/device string in there is just nuts. Do you
+really want a kernel patch every time some one binds their device to
+it?
 
-Does the hardware definitely not timestamp received packets with IP
-options?
+Or, is there no expectation that anybody would attempt to merge such a
+pointless patch to begin with?
 
-> +	switch (type) {
-> +	case PTP_CLASS_V1_IPV4:
-> +		msgtype = data + 42 + 32;
-> +		seqid = (u16 *)(data + 42 + 30);
-> +		break;
-> +	case PTP_CLASS_V1_IPV6:
-> +		msgtype = data + 62 + 32;
-> +		seqid = (u16 *)(data + 62 + 30);
-> +		break;
-> +	case PTP_CLASS_V2_IPV4:
-> +		msgtype = data + 42 + 0;
-> +		seqid = (u16 *)(data + 42 + 30);
-> +		break;
-> +	case PTP_CLASS_V2_IPV6:
-> +		msgtype = data + 62 + 0;
-> +		seqid = (u16 *)(data + 62 + 30);
-> +		break;
-> +	case PTP_CLASS_V2_L2:
-> +		msgtype = data + 14 + 0;
-> +		seqid = (u16 *)(data + 14 + 30);
-> +		break;
-> +	case PTP_CLASS_V2_VLAN:
-> +		msgtype = data + 18 + 0;
-> +		seqid = (u16 *)(data + 18 + 30);
-> +		break;
-[...]
+As we discussed at ELC, putting a real vendor/device in there is also
+broken because all instances in the system wil bind to the generic
+uio, which is not necessarily what is desired.
 
-Would be better without the magic numbers.
+I know the arguments against the 'generic-uio' tag, but come on, let's
+look at the lesser of two evils here!  I call BS on this DTS purity.
 
-Ben.
-
--- 
-Ben Hutchings, Senior Software Engineer, Solarflare
-Not speaking for my employer; that's the marketing department's job.
-They asked us to note that Solarflare product names are trademarked.
+John
