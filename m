@@ -1,16 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
-Date: Tue, 19 Apr 2011 09:45:10 -0600
-Message-ID: <BANLkTim9_n85ahW781fGjf_iofhBjnD36w@mail.gmail.com>
-References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
-	<BANLkTin0krYi+MqngSQ5n-752vDa_a8ZtA@mail.gmail.com>
-	<BANLkTin-qL3ppG1jRjBu3S16SWcNjD=3kA@mail.gmail.com>
-	<201104191707.40456.arnd@arndb.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: Mistake in p2020rdb.dts?
+Date: Tue, 19 Apr 2011 11:04:22 -0500
+Message-ID: <20110419110422.0c41e637@schlenkerla.am.freescale.net>
+References: <D1C1C6B1-BA4D-401E-BC13-2681A024825A@aol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201104191707.40456.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <D1C1C6B1-BA4D-401E-BC13-2681A024825A-YDxpq3io04c@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,29 +17,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+To: jobhunts02-YDxpq3io04c@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2011 at 9:07 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 19 April 2011, Grant Likely wrote:
->> > or whatever, as this would bind all instances matching vendor,device.
->> >
->> > So, the question I have is, how to handle bind per-instance?
->>
->> By manipulating a property on the device instance of course! =A0:-)
->>
->> Something like: =A0echo "generic-uio" >>
->> /sys/devices/path/to/device/a-property-that-changes-the-driver-it-will-b=
-ind-to.
->>
->
-> But what code would create that in sysfs, and based on what properties
-> of the device? Should we do that for every platform device, or perhaps
-> for every one that has any resources?
-
-Yes, I think it can be a generic facility for all platform_devices.
-We already have some code to support user-space manipulated driver
-binding/unbinding.  This is very much in the same vein.
-
-g.
+T24gVHVlLCAxOSBBcHIgMjAxMSAwMDoxMjo1OSAtMDcwMAo8am9iaHVudHMwMkBhb2wuY29tPiB3
+cm90ZToKCj4gSSBhbSBydW5uaW5nIExpbnV4IDIuNi4zMiBvbiBhIFAyMDIwIGFuZCBhbSB0cnlp
+bmcgdG8gdXNlIHRoZSBrZXJuZWzigJlzIERNQSBjb2RlLiBTbyBmYXIsIEkgaGF2ZSBoYWQgbm8g
+c3VjY2Vzcy4gIElzIHRoZXJlIGEgbWlzdGFrZSBpbiBsaW51eC9hcmNoL3Bvd2VyYy9ib290L2R0
+cy9wMjAyMHJkYi5kdHM/Cj4gIAo+IEFjY29yZGluZyB0byBsaW51eC9Eb2N1bWVudGF0aW9uL3Bv
+d2VycGMvZHRzLWJpbmRpbmdzL2ZzbC9kbWEudHh0LCB0aGUgY29tcGF0aWJsZSBsaXN0cyBmb3Ig
+RE1BIGNvbnRyb2xsZXJzIGFuZCB0aGUgRE1BIGNoYW5uZWwgbm9kZXMgc2hvdWxkIGhhdmUg4oCc
+MiBlbnRyaWVzLCBmaXJzdCBpcyDigJhmc2wsQ0hJUC1kbWHigJksIHdoZXJlIENISVAgaXMgdGhl
+IHByb2Nlc3NvciAobXBjODM0OSwgbXBjODM2MCwgZXRjLikgYW5kIHRoZSBzZWNvbmQgaXMg4oCY
+ZnNsLGVsby1kbWEu4oCZ4oCdICBJbiBwMjAyMHJkYi5kdHMsIHRoZSBjb21wYXRpYmxlIGxpc3Rz
+IGZvciB0aGUgRE1BIGNvbnRyb2xsZXIgYW5kIHRoZSBETUEgY2hhbm5lbCBub2RlcyBhcmUgImZz
+bCxlbG9wbHVzLWRtYSIgYW5kICJmc2wsZWxvcGx1cy1kbWEtY2hhbm5lbCwiIHJlc3BlY3RpdmVs
+eS4gIE5vdGUgdGhhdCBlYWNoIGhhcyBvbmx5IG9uZSBlbnRyeS4KPiAgCj4gU2hvdWxkIGNvbXBh
+dGlibGUgPSDigJxmc2wsUDIwMjBSREItZG1h4oCdLCAiZnNsLGVsb3BsdXMtZG1hIiAgZm9yIHRo
+ZSBETUEgY29udHJvbGxlcnM/LCBhbmQKPiBTaG91bGQgY29tcGF0aWJsZSA9IOKAnGZzbCxQMjAy
+MFJEQi1kbWHigJ0sICIgZnNsLGVsb3BsdXMtZG1hLWNoYW5uZWwiICBmb3IgdGhlIERNQSBjaGFu
+bmVsIG5vZGVzPwoKUDIwMjBSREIgaXMgbm90IGEgY2hpcCwgaXQncyBhIGJvYXJkLiAgUGx1cywg
+d2UgdXN1YWxseSB1c2UgbG93ZXJjYXNlIGZvcgp0aGlzLgoKY29tcGF0aWJsZSBzaG91bGQgYmUg
+ImZzbCxwMjAyMC1kbWEiLCAiZnNsLGVsb3BsdXMtZG1hIiwgYW5kIGxpa2V3aXNlIGZvcgp0aGUg
+Y2hhbm5lbHMuCgotU2NvdHQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNj
+dXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rl
+dmljZXRyZWUtZGlzY3Vzcwo=
