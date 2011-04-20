@@ -1,36 +1,41 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
-Date: Tue, 19 Apr 2011 18:09:19 -0500
-Message-ID: <20110419180919.17971598@schlenkerla.am.freescale.net>
-References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
-	<20110419060816.GA5252@ponder.secretlab.ca>
-	<20110419220018.GB2772@local>
+From: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH] dt/flattree: Fix return value of early_init_dt_scan_memory
+Date: Wed, 20 Apr 2011 08:47:26 +0800
+Message-ID: <1303260446.28913.4.camel@pororo>
+References: <1303225269-10092-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110419220018.GB2772@local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Hans J. Koch" <hjk@hansjkoch.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, john.williams@petalogix.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1303225269-10092-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Apr 2011 00:00:18 +0200
-"Hans J. Koch" <hjk@hansjkoch.de> wrote:
+Hi Shawn,
 
-> On Tue, Apr 19, 2011 at 12:08:16AM -0600, Grant Likely wrote:
-> > PowerPC and x86 will return 0 for an unassigned IRQ, as will most platforms.
-> 
-> That might be right for these architectures. On ARM SoCs, IRQ0 is often a
-> normal irq like any other (e.g. "Audio DMA Controller 1" on Telechips TCC8000).
+> It fixes the return value of funciont early_init_dt_scan_memory on
+> the success return path.
 
-It's true on at least some powerpc and x86 interrupt controllers as well.
-ARM isn't special. :-)
+[In general, the changelog should explain why you're making this change,
+not just re-iterate what the patch does. Does this fix a problem you
+were seeing?]
 
-I'm not sure what goes on on x86, as I see a real " 0:" in
-/proc/interrupts.  But on powerpc, Linux's IRQ numberspace is decoupled
-from that of any IRQ controller.  This is mainly to accommodate multiple
-IRQ controllers with their own numberspaces in the same system; being able
-to avoid irq 0 is just a bonus.
+With regards to this specific patch - I don't think this is correct; if
+we return 1 here, we'll abort the of_scan_flat_dt loop after
+successfully parsing one memory node, whereas machines may have multiple
+nodes. This change will break booting on those machines.
 
--Scott
+Cheers,
+
+
+Jeremy
