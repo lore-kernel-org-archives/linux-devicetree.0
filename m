@@ -1,17 +1,11 @@
-From: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] consolidate sdhci pltfm & OF drivers and get them
-	self registered
-Date: Wed, 20 Apr 2011 13:23:04 +0900
-Message-ID: <BANLkTinv84Ci1BUAGAXSDc-VYWGs8fC4fA@mail.gmail.com>
-References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
-	<20110419102031.GA4164@pengutronix.de>
-	<BANLkTinfhb3vejJSM4y-C=3vk5RE76gPjQ@mail.gmail.com>
-	<20110419174712.GA29314@pengutronix.de>
+From: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/85xx:DTS: Fix PCIe IDSEL for Px020RDB
+Date: Wed, 20 Apr 2011 09:42:44 +0530
+Message-ID: <1303272764-15333-1-git-send-email-prabhakar@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110419174712.GA29314-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,30 +15,137 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?7KCV7J6s7ZuI?= <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: meet2prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2011 at 2:47 AM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->
->> BTW, Are there reason to omit the sdhci-s3c.c? Maybe Mr. Jung will handl=
-e it.
->
-> The difference is that sdhci-s3c.c was more like a fork of sdhci-pltfm wh=
-ile
-> the others were users of it. With the new interface, s3c can be converted=
- using
-> pltfm more easily. If somebody is willing to do that, this is very much
-> welcome. I'd suggest waiting for Shawn's interface to stabilize, though.
-Okay Thanks, we will prepare it.
->
-> Regards,
->
-> =A0 Wolfram
->
-> --
-> Pengutronix e.K. =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | Wo=
-lfram Sang =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0|
-> Industrial Linux Solutions =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | http://www.p=
-engutronix.de/ =A0|
->
+PCIe device in legacy mode can trigger interrupts using the wires #INTA, #INTB
+,#INTC and #INTD. PCI devices are obligated to use #INTx for interrupts under
+legacy mode.  Each PCI slot or device is typically wired to different inputs on
+the interrupt controller. 
+
+So, Define interrupt-map and interrupt-map-mask properties for device tree to
+of map each PCI interrupt signal to the inputs of the interrupt controller.
+
+Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Based upon git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git(branch master)
+
+ This patch has depedency on following 2 patches
+ 	-- powerpc/85xx: P2020 DTS: re-organize dts files
+	-- powerpc/85xx: P1020 DTS : re-organize dts files
+
+ arch/powerpc/boot/dts/p1020rdb.dts            |   16 ++++++++++++++++
+ arch/powerpc/boot/dts/p2020rdb.dts            |   16 ++++++++++++++++
+ arch/powerpc/boot/dts/p2020rdb_camp_core0.dts |    8 ++++++++
+ arch/powerpc/boot/dts/p2020rdb_camp_core1.dts |    8 ++++++++
+ 4 files changed, 48 insertions(+), 0 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/p1020rdb.dts b/arch/powerpc/boot/dts/p1020rdb.dts
+index 7ed4793..d6a8ae4 100644
+--- a/arch/powerpc/boot/dts/p1020rdb.dts
++++ b/arch/powerpc/boot/dts/p1020rdb.dts
+@@ -257,6 +257,14 @@
+ 	pci0: pcie@ffe09000 {
+ 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
++		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x4 0x1
++			0000 0x0 0x0 0x2 &mpic 0x5 0x1
++			0000 0x0 0x0 0x3 &mpic 0x6 0x1
++			0000 0x0 0x0 0x4 &mpic 0x7 0x1
++			>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+@@ -275,6 +283,14 @@
+ 	pci1: pcie@ffe0a000 {
+ 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
++		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x0 0x1
++			0000 0x0 0x0 0x2 &mpic 0x1 0x1
++			0000 0x0 0x0 0x3 &mpic 0x2 0x1
++			0000 0x0 0x0 0x4 &mpic 0x3 0x1
++			>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+diff --git a/arch/powerpc/boot/dts/p2020rdb.dts b/arch/powerpc/boot/dts/p2020rdb.dts
+index 60a0a8c..3782a58 100644
+--- a/arch/powerpc/boot/dts/p2020rdb.dts
++++ b/arch/powerpc/boot/dts/p2020rdb.dts
+@@ -249,6 +249,14 @@
+ 	pci1: pcie@ffe09000 {
+ 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
++		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x4 0x1
++			0000 0x0 0x0 0x2 &mpic 0x5 0x1
++			0000 0x0 0x0 0x3 &mpic 0x6 0x1
++			0000 0x0 0x0 0x4 &mpic 0x7 0x1
++			>;
+ 			pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+@@ -267,6 +275,14 @@
+ 	pci2: pcie@ffe0a000 {
+ 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
++		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x0 0x1
++			0000 0x0 0x0 0x2 &mpic 0x1 0x1
++			0000 0x0 0x0 0x3 &mpic 0x2 0x1
++			0000 0x0 0x0 0x4 &mpic 0x3 0x1
++			>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
+index 72c912f..fc8dddd 100644
+--- a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
++++ b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
+@@ -175,6 +175,14 @@
+ 	pci1: pcie@ffe09000 {
+ 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
++		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x4 0x1
++			0000 0x0 0x0 0x2 &mpic 0x5 0x1
++			0000 0x0 0x0 0x3 &mpic 0x6 0x1
++			0000 0x0 0x0 0x4 &mpic 0x7 0x1
++			>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
+index eb572cc..261c34b 100644
+--- a/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
++++ b/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
+@@ -203,6 +203,14 @@
+ 	pci2: pcie@ffe0a000 {
+ 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
+ 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
++		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x0 0x1
++			0000 0x0 0x0 0x2 &mpic 0x1 0x1
++			0000 0x0 0x0 0x3 &mpic 0x2 0x1
++			0000 0x0 0x0 0x4 &mpic 0x3 0x1
++			>;
+ 		pcie@0 {
+ 			reg = <0x0 0x0 0x0 0x0 0x0>;
+ 			#size-cells = <2>;
+-- 
+1.7.3
