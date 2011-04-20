@@ -1,11 +1,17 @@
-From: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc/85xx:DTS: Fix PCIe IDSEL for Px020RDB
-Date: Wed, 20 Apr 2011 09:42:44 +0530
-Message-ID: <1303272764-15333-1-git-send-email-prabhakar@freescale.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary to
+	be appended to zImage
+Date: Wed, 20 Apr 2011 13:47:47 +0800
+Message-ID: <20110420054746.GA31127@S2100-06.ap.freescale.net>
+References: <20110324231830.2586.7150.stgit@riker>
+	<20110328091259.GA18721@S2100-06.ap.freescale.net>
+	<20110413140030.GE12665@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110413140030.GE12665-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,137 +21,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: meet2prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PCIe device in legacy mode can trigger interrupts using the wires #INTA, #INTB
-,#INTC and #INTD. PCI devices are obligated to use #INTx for interrupts under
-legacy mode.  Each PCI slot or device is typically wired to different inputs on
-the interrupt controller. 
+Hi Tony,
 
-So, Define interrupt-map and interrupt-map-mask properties for device tree to
-of map each PCI interrupt signal to the inputs of the interrupt controller.
+On Wed, Apr 13, 2011 at 05:00:30PM +0300, Tony Lindgren wrote:
+> * Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> [110328 12:10]:
+> > On Thu, Mar 24, 2011 at 04:18:41PM -0700, John Bonesio wrote:
+> > > This patch provides the ability to boot using a device tree that is appended
+> > > to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+> > > 
+> > > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > > ---
+> > > 
+> > Tested on mx51 babbage.  The non-dt kernel works fine, but dt kernel
+> > does not.
+> > 
+> > I tracked it down a little bit and found, before calling kernel from
+> > arch/arm/boot/compressed/head.S, the dtb magic number (at address
+> > pointed by r8) was interpolated to 0x73fbc000 which happens to be the
+> > value of 'uart_base' assigned in plat-mxc/include/mach/uncompress.h.
+> 
+I got it working by remove the 'static' from uart_base definition.
 
-Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Gave this a try on an omap3 based board, looks like decompress_kernel
+> will trash the first 16 bytes of the device tree data somehow.
+> 
+16 bytes corruption is a little beyond my guess.  I expect only 8
+bytes corruption on omap3.  Can you please remove the 'static' in
+uncompress.h to see if it helps?
+
+--- a/arch/arm/plat-omap/include/plat/uncompress.h
++++ b/arch/arm/plat-omap/include/plat/uncompress.h
+@@ -27,8 +27,8 @@
+
+ #define MDR1_MODE_MASK                 0x07
+
+-static volatile u8 *uart_base;
+-static int uart_shift;
++volatile u8 *uart_base;
++int uart_shift;
 ---
- Based upon git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git(branch master)
 
- This patch has depedency on following 2 patches
- 	-- powerpc/85xx: P2020 DTS: re-organize dts files
-	-- powerpc/85xx: P1020 DTS : re-organize dts files
+Here is how I tracked it down with help from Dave Martin and Nicolas
+Pitre.
 
- arch/powerpc/boot/dts/p1020rdb.dts            |   16 ++++++++++++++++
- arch/powerpc/boot/dts/p2020rdb.dts            |   16 ++++++++++++++++
- arch/powerpc/boot/dts/p2020rdb_camp_core0.dts |    8 ++++++++
- arch/powerpc/boot/dts/p2020rdb_camp_core1.dts |    8 ++++++++
- 4 files changed, 48 insertions(+), 0 deletions(-)
+http://lists.linaro.org/pipermail/linaro-kernel/2011-April/000259.html
 
-diff --git a/arch/powerpc/boot/dts/p1020rdb.dts b/arch/powerpc/boot/dts/p1020rdb.dts
-index 7ed4793..d6a8ae4 100644
---- a/arch/powerpc/boot/dts/p1020rdb.dts
-+++ b/arch/powerpc/boot/dts/p1020rdb.dts
-@@ -257,6 +257,14 @@
- 	pci0: pcie@ffe09000 {
- 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
- 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x4 0x1
-+			0000 0x0 0x0 0x2 &mpic 0x5 0x1
-+			0000 0x0 0x0 0x3 &mpic 0x6 0x1
-+			0000 0x0 0x0 0x4 &mpic 0x7 0x1
-+			>;
- 		pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
- 			#size-cells = <2>;
-@@ -275,6 +283,14 @@
- 	pci1: pcie@ffe0a000 {
- 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
- 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x0 0x1
-+			0000 0x0 0x0 0x2 &mpic 0x1 0x1
-+			0000 0x0 0x0 0x3 &mpic 0x2 0x1
-+			0000 0x0 0x0 0x4 &mpic 0x3 0x1
-+			>;
- 		pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
- 			#size-cells = <2>;
-diff --git a/arch/powerpc/boot/dts/p2020rdb.dts b/arch/powerpc/boot/dts/p2020rdb.dts
-index 60a0a8c..3782a58 100644
---- a/arch/powerpc/boot/dts/p2020rdb.dts
-+++ b/arch/powerpc/boot/dts/p2020rdb.dts
-@@ -249,6 +249,14 @@
- 	pci1: pcie@ffe09000 {
- 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
- 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x4 0x1
-+			0000 0x0 0x0 0x2 &mpic 0x5 0x1
-+			0000 0x0 0x0 0x3 &mpic 0x6 0x1
-+			0000 0x0 0x0 0x4 &mpic 0x7 0x1
-+			>;
- 			pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
- 			#size-cells = <2>;
-@@ -267,6 +275,14 @@
- 	pci2: pcie@ffe0a000 {
- 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
- 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x0 0x1
-+			0000 0x0 0x0 0x2 &mpic 0x1 0x1
-+			0000 0x0 0x0 0x3 &mpic 0x2 0x1
-+			0000 0x0 0x0 0x4 &mpic 0x3 0x1
-+			>;
- 		pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
- 			#size-cells = <2>;
-diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
-index 72c912f..fc8dddd 100644
---- a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
-+++ b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
-@@ -175,6 +175,14 @@
- 	pci1: pcie@ffe09000 {
- 		ranges = <0x2000000 0x0 0xa0000000 0 0xa0000000 0x0 0x20000000
- 			  0x1000000 0x0 0x00000000 0 0xffc10000 0x0 0x10000>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x4 0x1
-+			0000 0x0 0x0 0x2 &mpic 0x5 0x1
-+			0000 0x0 0x0 0x3 &mpic 0x6 0x1
-+			0000 0x0 0x0 0x4 &mpic 0x7 0x1
-+			>;
- 		pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
- 			#size-cells = <2>;
-diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
-index eb572cc..261c34b 100644
---- a/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
-+++ b/arch/powerpc/boot/dts/p2020rdb_camp_core1.dts
-@@ -203,6 +203,14 @@
- 	pci2: pcie@ffe0a000 {
- 		ranges = <0x2000000 0x0 0x80000000 0 0x80000000 0x0 0x20000000
- 			  0x1000000 0x0 0x00000000 0 0xffc00000 0x0 0x10000>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x0 0x1
-+			0000 0x0 0x0 0x2 &mpic 0x1 0x1
-+			0000 0x0 0x0 0x3 &mpic 0x2 0x1
-+			0000 0x0 0x0 0x4 &mpic 0x3 0x1
-+			>;
- 		pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
- 			#size-cells = <2>;
+With the comments given by Nicolas below, this seems a global issue in
+platform uncompress.h.
+
+--- quote begins ---
+You must not use static variable in the decompressor.  For one thing, 
+that breaks the ability to XIP the decompressor code and move writable 
+data elsewhere.
+
+So the fix is indeed to _not_ declare any global variable as static in 
+this case.
+--- quote ends ---
+
+I would like to confirm it fixes your setup before I send fixing
+patch to remove 'static' from global variables in all platform
+uncompress.h.
+
 -- 
-1.7.3
+Regards,
+Shawn
