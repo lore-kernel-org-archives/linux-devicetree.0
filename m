@@ -1,54 +1,27 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary
-	to be appended to zImage
-Date: Thu, 21 Apr 2011 15:46:19 +0300
-Message-ID: <20110421124618.GA15060@atomide.com>
-References: <20110324231830.2586.7150.stgit@riker>
-	<20110328091259.GA18721@S2100-06.ap.freescale.net>
-	<20110413140030.GE12665@atomide.com>
-	<20110420054746.GA31127@S2100-06.ap.freescale.net>
-	<20110420073445.GB31127@S2100-06.ap.freescale.net>
-	<20110421080238.GE13688@atomide.com>
+From: Domenico Andreoli <dr.domenico.andreoli@gmail.com>
+Subject: [PATCH 0/2] OF: add MMC binding helpers
+Date: Thu, 21 Apr 2011 15:16:52 +0200
+Message-ID: <20110421131652.GA15155@dandreoli.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110421080238.GE13688-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-mmc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110421 11:00]:
-> * Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> [110420 00:27]:
-> > On Wed, Apr 20, 2011 at 01:47:47PM +0800, Shawn Guo wrote:
-> > > I would like to confirm it fixes your setup before I send fixing
-> > > patch to remove 'static' from global variables in all platform
-> > > uncompress.h.
-> > > 
-> > Just saw Nico's patch, so ignore above lines ...
-> 
-> Thanks looks like removing static only changes things so now
-> "Warning: Neither atags nor dtb found" error message printed out.
+Hi all,
 
-But also Nico's patch fixes the corruption of the DT data during
-uncompress, so I'm getting much further now.
+  in working to add OF support to S3C MMC I discovered that some good
+code has been already written for the MMC-over-SPI driver. This is
+the first attempt to use it to build a common set of OF bindings for
+MMC drivers.
 
-Now the problem is that the DT data is zeroed out by the time code
-gets to setup_machine_fdt. I wonder if I'm missing some patch?
+Please tell me whether I'm on a good way or not.
 
-I'm using grant's devicetree/arm branch + DT append patch + Nico's
-static fix + my relocate fix.
+cheers,
+Domenico
 
-Oh well have to look at it again next week..
-
-Tony
+-----[ Domenico Andreoli, aka cavok
+ --[ http://cavokz.wordpress.com/gpgkey/
+   ---[ 3A0F 2F80 F79C 678A 8936  4FEE 0677 9033 A20E BC50
