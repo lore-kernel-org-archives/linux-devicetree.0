@@ -1,43 +1,58 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary
-	to be appended to zImage
-Date: Thu, 21 Apr 2011 01:02:39 -0700
-Message-ID: <20110421080238.GE13688@atomide.com>
-References: <20110324231830.2586.7150.stgit@riker>
-	<20110328091259.GA18721@S2100-06.ap.freescale.net>
-	<20110413140030.GE12665@atomide.com>
-	<20110420054746.GA31127@S2100-06.ap.freescale.net>
-	<20110420073445.GB31127@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/5] mmc: sdhci: eliminate sdhci_of_host and sdhci_of_data
+Date: Thu, 21 Apr 2011 16:10:39 +0800
+Message-ID: <20110421081038.GE4024@S2100-06.ap.freescale.net>
+References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
+	<1301042931-4869-3-git-send-email-shawn.guo@linaro.org>
+	<20110419102053.GC4164@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110420073445.GB31127-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20110419102053.GC4164-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> [110420 00:27]:
-> On Wed, Apr 20, 2011 at 01:47:47PM +0800, Shawn Guo wrote:
-> > I would like to confirm it fixes your setup before I send fixing
-> > patch to remove 'static' from global variables in all platform
-> > uncompress.h.
+On Tue, Apr 19, 2011 at 12:20:53PM +0200, Wolfram Sang wrote:
+> On Fri, Mar 25, 2011 at 04:48:48PM +0800, Shawn Guo wrote:
+> > The patch is to migrate the use of sdhci_of_host and sdhci_of_data
+> > to sdhci_pltfm_host and sdhci_pltfm_data, so that the former pair can
+> > be eliminated.
 > > 
-> Just saw Nico's patch, so ignore above lines ...
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> 
+> [...]
+> 
+> > diff --git a/drivers/mmc/host/sdhci-pltfm.h b/drivers/mmc/host/sdhci-pltfm.h
+> > index a3e4be0..12afe86 100644
+> > --- a/drivers/mmc/host/sdhci-pltfm.h
+> > +++ b/drivers/mmc/host/sdhci-pltfm.h
+> > @@ -19,6 +19,10 @@
+> >  struct sdhci_pltfm_host {
+> >  	struct clk *clk;
+> >  	u32 scratchpad; /* to handle quirks across io-accessor calls */
+> > +
+> > +	/* migrate from sdhci_of_host */
+> > +	unsigned int clock;
+> > +	u16 xfer_mode_shadow;
+> 
+> xfer_mode_shadow can be merged into scratchpad. They both fix the same
+> issue.
+> 
+Yeah.
 
-Thanks looks like removing static only changes things so now
-"Warning: Neither atags nor dtb found" error message printed out.
-
+-- 
 Regards,
-
-Tony
+Shawn
