@@ -1,19 +1,16 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc: document the FSL MPIC message register
-	binding
-Date: Thu, 21 Apr 2011 14:35:42 -0500
-Message-ID: <20110421143542.68971b33@schlenkerla.am.freescale.net>
-References: <1303232375-25014-1-git-send-email-meador_inge@mentor.com>
-	<1303232375-25014-2-git-send-email-meador_inge@mentor.com>
-	<20110419125214.560f4b99@schlenkerla.am.freescale.net>
-	<4DADD3D2.6070805@mentor.com>
-	<20110419133336.46d8566f@schlenkerla.am.freescale.net>
-	<4DB084F6.4060103@mentor.com>
+From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
+Date: Fri, 22 Apr 2011 09:46:53 +1000
+Message-ID: <BANLkTinBZxBcc3fRo_jc4=VuY3D2pbaAzg@mail.gmail.com>
+References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
+	<20110418160658.GD23814@pengutronix.de>
+	<BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
+	<20110421120855.GC2135@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DB084F6.4060103-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20110421120855.GC2135-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,22 +20,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Apr 2011 14:26:46 -0500
-Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+Hi Wolfram,
 
-> Hmmm ...  In the MPC8572E and P1022DS manuals I don't see the terminology
-> group used for message registers.
+On Thu, Apr 21, 2011 at 10:08 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Tue, Apr 19, 2011 at 11:58:25AM +1000, John Williams wrote:
+>
+>> As we discussed at ELC, putting a real vendor/device in there is also
+>> broken because all instances in the system wil bind to the generic
+>> uio, which is not necessarily what is desired.
+>
+> IIRC I pointed you to mpc5200b-psc devices which also have multiple functions
+> and have seperate bindings for these functions. It fits the "hardware
+> description" character of a dt, because it says this PSC is a UART or an
+> SPI or whatever.
 
-I was looking at the P4080 manual, which does use it.  It looks like some
-other chip manuals just use MSGR0-MSGR7.
+Right, and my interpretation of that was basically - modify the device
+tree as required to make the correct driver bind to the device.
 
-> If you feel like group is a more idiomatic term, I can change it.
+Is that correct?
 
-Since the docs aren't consistent, I don't really have a strong opinion
-here.  Just make clear in the binding what you're referring to.
+It's the same underlying piece of silicon, you are just using the
+device tree to tell Linux how it should behave at runtime, and which
+driver to bind.
 
--Scott
+If so, it seems to be exactly what Arnd and Grant don't want - having
+the device tree describe Linux behaviour.
+
+In the hardware, it's a multifunction device, so surely a clean DTS
+would just have 'mpc5200b', but no attempt to describe how Linux
+should bind to it and configure it.  Instead this should be done at
+runtime, using some yet-to-be-determined mechanism.
+
+The difference between what you are doing for these multifunction
+devices, versus the generic-uio approach, is surely only a matter of
+degree rather than fundamentals?
+
+Regards,
+
+John
