@@ -1,66 +1,120 @@
 From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 3/5] mmc: sdhci: make sdhci-of device drivers self
- registered
-Date: Thu, 21 Apr 2011 16:17:49 +0800
-Message-ID: <20110421081749.GF4024@S2100-06.ap.freescale.net>
+Subject: Re: [PATCH 4/5] mmc: sdhci: consolidate sdhci-of-esdhc and
+ sdhci-esdhc-imx
+Date: Thu, 21 Apr 2011 16:53:17 +0800
+Message-ID: <20110421085316.GG4024@S2100-06.ap.freescale.net>
 References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
- <1301042931-4869-4-git-send-email-shawn.guo@linaro.org>
- <20110419102101.GD4164@pengutronix.de>
+ <1301042931-4869-5-git-send-email-shawn.guo@linaro.org>
+ <20110419102110.GE4164@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110419102101.GD4164@pengutronix.de>
+In-Reply-To: <20110419102110.GE4164@pengutronix.de>
 Sender: linux-mmc-owner@vger.kernel.org
 To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org, linux-kernel@vger.kernel.org, sameo@linux.intel.com
+Cc: Shawn Guo <shawn.guo@linaro.org>, linaro-dev@lists.linaro.org, sameo@linux.intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2011 at 12:21:01PM +0200, Wolfram Sang wrote:
+On Tue, Apr 19, 2011 at 12:21:10PM +0200, Wolfram Sang wrote:
+> >  config MMC_SDHCI_ESDHC_IMX
+> > -	bool "SDHCI platform support for the Freescale eSDHC i.MX controller"
+> > +	bool "SDHCI support for the Freescale eSDHC i.MX controller"
+> >  	depends on ARCH_MX25 || ARCH_MX35 || ARCH_MX5
+> >  	depends on MMC_SDHCI
+> > -	select MMC_SDHCI_PLTFM
+> > +	select MMC_SDHCI_ESDHC
+> >  	select MMC_SDHCI_IO_ACCESSORS
+> >  	help
+> > -	  This selects the Freescale eSDHC controller support on the platform
+> > -	  bus, found on platforms like mx35/51.
+> > +	  This selects the Freescale eSDHC controller support on platforms
+> > +	  like mx35/51.
 > 
-> > +static int __devinit sdhci_esdhc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct sdhci_host *host;
-> > +	int ret;
+> While we are at it, mx25 could be added and mx53 (and you know better
+> what else will be coming ;))
+> 
+It's a direct copy.  Will update it properly.
+
+> > diff --git a/drivers/mmc/host/sdhci-esdhc.c b/drivers/mmc/host/sdhci-esdhc.c
+> > new file mode 100644
+> > index 0000000..b3d1bc1
+> > --- /dev/null
+> > +++ b/drivers/mmc/host/sdhci-esdhc.c
+> > @@ -0,0 +1,413 @@
+> > +/*
+> > + * Freescale eSDHC controller driver for MPCxxx and i.MX.
+> > + *
+> > + * Copyright (c) 2007 Freescale Semiconductor, Inc.
+> > + *   Author: Xiaobo Xie <X.Xie@freescale.com>
+> > + *
+> > + * Copyright (c) 2009 MontaVista Software, Inc.
+> > + *   Author: Anton Vorontsov <avorontsov@ru.mvista.com>
+> > + *
+> > + * Copyright (c) 2010 Pengutronix e.K.
+> > + *   Author: Wolfram Sang <w.sang@pengutronix.de>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License.
+> > + */
 > > +
-> > +	host = sdhci_pltfm_init(pdev, &sdhci_esdhc_pdata);
-> > +	if (!host)
-> > +		return -ENOMEM;
+> > +#include <linux/io.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/err.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/mmc/host.h>
+> > +#include <linux/mmc/sdhci-pltfm.h>
+> > +#ifdef CONFIG_MMC_SDHCI_ESDHC_IMX
+> > +#include <mach/hardware.h>
+> > +#endif
+> > +#include "sdhci.h"
+> > +#include "sdhci-pltfm.h"
+> > +
+> > +/*
+> > + * Ops and quirks for the Freescale eSDHC controller.
+> > + */
+> > +
+> > +#define ESDHC_DEFAULT_QUIRKS	(SDHCI_QUIRK_FORCE_BLK_SZ_2048 | \
+> > +				SDHCI_QUIRK_BROKEN_CARD_DETECTION | \
+> > +				SDHCI_QUIRK_NO_BUSY_IRQ | \
+> > +				SDHCI_QUIRK_NONSTANDARD_CLOCK | \
+> > +				SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK | \
+> > +				SDHCI_QUIRK_PIO_NEEDS_DELAY | \
+> > +				SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET | \
+> > +				SDHCI_QUIRK_NO_CARD_NO_RESET)
 > 
-> Just noticed: Since pltfm_init may fail due to various reasons, maybe
-> ERRPTR might be a good idea?
+> These are not the current quirks. Meanwhile BROKEN_CARD_DETECTION is
+> gone as well as NO_CARD_NO_RESET (at least for imx). My additions to use
+> GPIOs for card detect and write protect are also not in this version.
 > 
-Ok.
+Next version will be based on mmc-next.
 
 > [...]
 > 
-> > +static int __init sdhci_hlwd_init(void)
-> > +{
-> > +	return platform_driver_register(&sdhci_hlwd_driver);
-> > +}
-> > +module_init(sdhci_hlwd_init);
-> > +
-> > +static void __exit sdhci_hlwd_exit(void)
-> > +{
-> > +	platform_driver_unregister(&sdhci_hlwd_driver);
-> > +}
-> > +module_exit(sdhci_hlwd_exit);
-> > +
-> > +MODULE_DESCRIPTION("Secure Digital Host Controller Interface OF driver");
-> > +MODULE_AUTHOR("Xiaobo Xie <X.Xie@freescale.com>, "
-> > +	      "Anton Vorontsov <avorontsov@ru.mvista.com>");
-> > +MODULE_LICENSE("GPL v2");
+> > +static struct sdhci_pltfm_data sdhci_esdhc_mpc_pdata = {
+> > +	.quirks = ESDHC_DEFAULT_QUIRKS,
+> > +	.ops = &sdhci_esdhc_mpc_ops,
+> > +};
+> > +#endif
 > 
-> Please double check the authors. It is based on the fsl driver, but the
-> copyright should go to
+> Please mark the #endif with comments of the expression they are
+> depending on, e.g.
 > 
->  * Copyright (C) 2009 The GameCube Linux Team
->  * Copyright (C) 2009 Albert Herranz
+> #endif /* CONFIG_MMC_SDHCI_ESDHC_MPC */
 > 
-> I think.
+> if it is not immediately visible. That helps readability.
 > 
-Sorry, I misread the current copyright in sdhci-of-hlwd.c.  You are
-right.
+Ok, since you like it :)
+
+> [...]
+> 
+> Phew, due to all these hardware bugs, the driver will get messy, even if
+> we try hard. Any chances that future revisions of the core will be
+> updated? :)
+> 
+I doubt all these quirks are design bugs but some designs not fully
+compliant to SDHC specification, which you still can say bugs :)
 
 -- 
 Regards,
