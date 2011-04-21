@@ -1,122 +1,57 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 4/5] mmc: sdhci: consolidate sdhci-of-esdhc and
- sdhci-esdhc-imx
-Date: Thu, 21 Apr 2011 16:53:17 +0800
-Message-ID: <20110421085316.GG4024@S2100-06.ap.freescale.net>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 1/5] mmc: sdhci: make sdhci-pltfm device drivers self
+ registered
+Date: Thu, 21 Apr 2011 11:57:01 +0200
+Message-ID: <20110421095701.GA2135@pengutronix.de>
 References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
- <1301042931-4869-5-git-send-email-shawn.guo@linaro.org>
- <20110419102110.GE4164@pengutronix.de>
+ <1301042931-4869-2-git-send-email-shawn.guo@linaro.org>
+ <20110419102042.GB4164@pengutronix.de>
+ <20110421080322.GD4024@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
 Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110419102110.GE4164@pengutronix.de>
+In-Reply-To: <20110421080322.GD4024@S2100-06.ap.freescale.net>
 Sender: linux-mmc-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
+To: Shawn Guo <shawn.guo@freescale.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>, linaro-dev@lists.linaro.org, sameo@linux.intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2011 at 12:21:10PM +0200, Wolfram Sang wrote:
-> >  config MMC_SDHCI_ESDHC_IMX
-> > -	bool "SDHCI platform support for the Freescale eSDHC i.MX controller"
-> > +	bool "SDHCI support for the Freescale eSDHC i.MX controller"
-> >  	depends on ARCH_MX25 || ARCH_MX35 || ARCH_MX5
-> >  	depends on MMC_SDHCI
-> > -	select MMC_SDHCI_PLTFM
-> > +	select MMC_SDHCI_ESDHC
-> >  	select MMC_SDHCI_IO_ACCESSORS
-> >  	help
-> > -	  This selects the Freescale eSDHC controller support on the platform
-> > -	  bus, found on platforms like mx35/51.
-> > +	  This selects the Freescale eSDHC controller support on platforms
-> > +	  like mx35/51.
-> 
-> While we are at it, mx25 could be added and mx53 (and you know better
-> what else will be coming ;))
-> 
-It's a direct copy.  Will update it properly.
 
-> > diff --git a/drivers/mmc/host/sdhci-esdhc.c b/drivers/mmc/host/sdhci-esdhc.c
-> > new file mode 100644
-> > index 0000000..b3d1bc1
-> > --- /dev/null
-> > +++ b/drivers/mmc/host/sdhci-esdhc.c
-> > @@ -0,0 +1,413 @@
-> > +/*
-> > + * Freescale eSDHC controller driver for MPCxxx and i.MX.
-> > + *
-> > + * Copyright (c) 2007 Freescale Semiconductor, Inc.
-> > + *   Author: Xiaobo Xie <X.Xie@freescale.com>
-> > + *
-> > + * Copyright (c) 2009 MontaVista Software, Inc.
-> > + *   Author: Anton Vorontsov <avorontsov@ru.mvista.com>
-> > + *
-> > + * Copyright (c) 2010 Pengutronix e.K.
-> > + *   Author: Wolfram Sang <w.sang@pengutronix.de>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License.
-> > + */
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/err.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/mmc/host.h>
-> > +#include <linux/mmc/sdhci-pltfm.h>
-> > +#ifdef CONFIG_MMC_SDHCI_ESDHC_IMX
-> > +#include <mach/hardware.h>
-> > +#endif
-> > +#include "sdhci.h"
-> > +#include "sdhci-pltfm.h"
-> > +
-> > +/*
-> > + * Ops and quirks for the Freescale eSDHC controller.
-> > + */
-> > +
-> > +#define ESDHC_DEFAULT_QUIRKS	(SDHCI_QUIRK_FORCE_BLK_SZ_2048 | \
-> > +				SDHCI_QUIRK_BROKEN_CARD_DETECTION | \
-> > +				SDHCI_QUIRK_NO_BUSY_IRQ | \
-> > +				SDHCI_QUIRK_NONSTANDARD_CLOCK | \
-> > +				SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK | \
-> > +				SDHCI_QUIRK_PIO_NEEDS_DELAY | \
-> > +				SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET | \
-> > +				SDHCI_QUIRK_NO_CARD_NO_RESET)
-> 
-> These are not the current quirks. Meanwhile BROKEN_CARD_DETECTION is
-> gone as well as NO_CARD_NO_RESET (at least for imx). My additions to use
-> GPIOs for card detect and write protect are also not in this version.
-> 
-Next version will be based on mmc-next.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> [...]
-> 
-> > +static struct sdhci_pltfm_data sdhci_esdhc_mpc_pdata = {
-> > +	.quirks = ESDHC_DEFAULT_QUIRKS,
-> > +	.ops = &sdhci_esdhc_mpc_ops,
-> > +};
-> > +#endif
-> 
-> Please mark the #endif with comments of the expression they are
-> depending on, e.g.
-> 
-> #endif /* CONFIG_MMC_SDHCI_ESDHC_MPC */
-> 
-> if it is not immediately visible. That helps readability.
-> 
-Ok, since you like it :)
+> > > +MODULE_LICENSE("GPL v2");
+> >=20
+> > Just to be sure: Did you double-check if the original licenses were v2
+> > or v2+?
+> >=20
+> It seems to me that sdhci-cns3xxx.c, sdhci-dove.c, sdhci-esdhc-imx.c
+> and sdhci-tegra.c all use v2.
+>=20
+> Actually I do not even know how v2+ is stated.  Do you have an example
+> for me to refer?
 
-> [...]
-> 
-> Phew, due to all these hardware bugs, the driver will get messy, even if
-> we try hard. Any chances that future revisions of the core will be
-> updated? :)
-> 
-I doubt all these quirks are design bugs but some designs not fully
-compliant to SDHC specification, which you still can say bugs :)
+Check davinci_mmc.c (or grep for 'any later version').
 
--- 
-Regards,
-Shawn
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk2v/20ACgkQD27XaX1/VRvl8QCeNcN5AQaQfG6cbrzexrnIylTt
+alMAoKQZvE4si/UuLC7eVC+Cc1y89ZPI
+=0mbV
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
