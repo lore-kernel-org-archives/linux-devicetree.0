@@ -1,51 +1,88 @@
-From: "Steven A. Falco" <sfalco-7/gz0mrWfc7QT0dZR+AlfA@public.gmane.org>
-Subject: [Question] PCIe bridge representation
-Date: Fri, 22 Apr 2011 12:57:31 -0400
-Message-ID: <4DB1B37B.90806@harris.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 2/3] drivers/video/sm501fb.c: Convert release_resource to release_mem_region
+Date: Fri, 22 Apr 2011 22:11:22 +0200
+Message-ID: <1303503083-26170-2-git-send-email-julia@diku.dk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Mundt <lethal@linux-sh.org>
+Cc: kernel-janitors@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-I have a custom embedded board using the PPC405EX.  On one of the PCIe
-controllers, there is a PLX PCIe switch (PEX8613).  Downstream from that
-are two ASICs.
+Request_mem_region should be used with release_mem_region, not
+release_resource.
 
-When I attempt to load the driver for the ASICs, I get an error:
+The semantic match that finds this problem is as follows:
+(http://coccinelle.lip6.fr/)
 
-0001:43:00.0: device not available because of BAR 0 [0xa1000000-0xa1ffffff] collisions
+// <smpl>
+@s exists@
+expression e1,e2,e3,e4,e;
+@@
 
-My device tree is basically copied from the Kilauea evaluation board.
-The ranges property for the host bridge is:
+*e4 = request_mem_region(e1,e2,e3)
+... when != e4 = e
+*release_resource(e4);
+// </smpl>
 
-ranges = <0x02000000 0x00000000 0x80000000 0x90000000 0x00000000 0x10000000
-          0x01000000 0x00000000 0x00000000 0xe8010000 0x00000000 0x00010000>;
+Signed-off-by: Julia Lawall <julia@diku.dk>
 
-The strange thing is, the ASICs should be assigned addresses in the
-0x90000000 space, not 0xa1000000.
+---
+ drivers/video/sm501fb.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-So I'm wondering if I need something explicit in the device tree to
-describe the PCIe switch, and possibly the ASICs as well.
-
-I'll note in passing that a previous custom board we built used a PCI bridge
-chip instead of the PCIe switch.  On that board, nothing special was needed.
-The addresses were allocated in 0x90000000 as expected.
-
-	Steve
-
--- 
-A: Because it makes the logic of the discussion difficult to follow.
-Q: Why shouldn't I top post?
-A: No.
-Q: Should I top post?
+diff --git a/drivers/video/sm501fb.c b/drivers/video/sm501fb.c
+index 56ef6b3..87f0be1 100644
+--- a/drivers/video/sm501fb.c
++++ b/drivers/video/sm501fb.c
+@@ -1625,22 +1625,22 @@ static int sm501fb_start(struct sm501fb_info *info,
+ 	return 0; /* everything is setup */
+ 
+  err_mem_res:
+-	release_resource(info->fbmem_res);
+-	kfree(info->fbmem_res);
++	release_mem_region(info->fbmem_res->start,
++			   resource_size(info->fbmem_res));
+ 
+  err_regs2d_map:
+ 	iounmap(info->regs2d);
+ 
+  err_regs2d_res:
+-	release_resource(info->regs2d_res);
+-	kfree(info->regs2d_res);
++	release_mem_region(info->regs2d_res->start,
++			   resource_size(info->regs2d_res));
+ 
+  err_regs_map:
+ 	iounmap(info->regs);
+ 
+  err_regs_res:
+-	release_resource(info->regs_res);
+-	kfree(info->regs_res);
++	release_mem_region(info->regs_res->start,
++			   resource_size(info->regs_res));
+ 
+  err_release:
+ 	return ret;
+@@ -1652,16 +1652,16 @@ static void sm501fb_stop(struct sm501fb_info *info)
+ 	sm501_unit_power(info->dev->parent, SM501_GATE_DISPLAY, 0);
+ 
+ 	iounmap(info->fbmem);
+-	release_resource(info->fbmem_res);
+-	kfree(info->fbmem_res);
++	release_mem_region(info->fbmem_res->start,
++			   resource_size(info->fbmem_res));
+ 
+ 	iounmap(info->regs2d);
+-	release_resource(info->regs2d_res);
+-	kfree(info->regs2d_res);
++	release_mem_region(info->regs2d_res->start,
++			   resource_size(info->regs2d_res));
+ 
+ 	iounmap(info->regs);
+-	release_resource(info->regs_res);
+-	kfree(info->regs_res);
++	release_mem_region(info->regs_res->start,
++			   resource_size(info->regs_res));
+ }
+ 
+ static int sm501fb_init_fb(struct fb_info *fb,
