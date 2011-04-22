@@ -1,70 +1,51 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
-Date: Fri, 22 Apr 2011 08:07:28 +0200
-Message-ID: <20110422060728.GC24653@pengutronix.de>
-References: <1303116654-5042-1-git-send-email-monstr@monstr.eu>
- <20110418160658.GD23814@pengutronix.de>
- <BANLkTimFnfgiQ5aMq_KwqHP8p92pjOJJwg@mail.gmail.com>
- <20110421120855.GC2135@pengutronix.de>
- <BANLkTinBZxBcc3fRo_jc4=VuY3D2pbaAzg@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm/dt: Fix babbage.dts memory node
+Date: Fri, 22 Apr 2011 14:25:26 +0800
+Message-ID: <1303453526-27523-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTinBZxBcc3fRo_jc4=VuY3D2pbaAzg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Williams <john.williams@petalogix.com>
-Cc: Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, arnd@arndb.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Without device_type property set as memory for the node, the generated
+dtb can still work when it gets passed to kernel by u-boot, since
+u-boot will fix it up.  But kernel will not boot due to that it fails
+to parse the memory node, when the dtb is appended to kernel image as
+it is.
 
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch adds a property device_type="memory" for memory node to fix
+the problem.
 
-> The difference between what you are doing for these multifunction
-> devices, versus the generic-uio approach, is surely only a matter of
-> degree rather than fundamentals?
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+It applies on branch devicetree/test.
 
-I don't think so.
+ arch/arm/boot/dts/babbage.dts |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-If you write "uio-generic", then you explicitly specify uio which is linux
-specific and not hardware related. There is no uio-hardware :)
-
-If you write "fsl,mpc5200b-psc-uart" then you describe that in your hardware
-the psc is used as an UART (and not SPI) and every OS can make its assumpti=
-on
-about it.
-
-So, you could have "company, super-fpga64-uart" which would bind to the
-corresponding UART driver. And "company, super-fpga64-encryptor" would be
-handled in Linux by the uio-driver if you setup this way, for example. If y=
-ou
-later have a seperate driver for it, then it will match against this
-compatible-entry instead of uio. No change of the devicetree, the hardware =
-did
-not change.
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk2xGyAACgkQD27XaX1/VRsuKwCaA4fXlV4YyAvZoeN8BIXEd3Ig
-WuMAoMUiW72a5vfVvaq5LSfKI8abs8Vv
-=+a14
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
+index 8f9b47c..4805168 100644
+--- a/arch/arm/boot/dts/babbage.dts
++++ b/arch/arm/boot/dts/babbage.dts
+@@ -21,6 +21,7 @@
+ 	interrupt-parent = <&tzic>;
+ 
+ 	memory {
++		device_type = "memory";
+ 		reg = <0x90000000 0x20000000>;
+ 	};
+ 
+-- 
+1.7.4.1
