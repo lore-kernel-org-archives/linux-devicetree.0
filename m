@@ -1,74 +1,65 @@
-From: Albert ARIBAUD <albert.u.boot@aribaud.net>
-Subject: Re: [PATCH 6/6] Add CONFIG_OF_LIBFDT to more boards.
-Date: Thu, 28 Apr 2011 11:22:35 +0200
-Message-ID: <4DB931DB.9080704@aribaud.net>
-References: <20110328195231.10235.36716.stgit@ponder>	<20110328195906.10235.68517.stgit@ponder>
-	<20110427224417.88363D52707@gemini.denx.de>
+From: Zach Pfeffer <zach.pfeffer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm/dt: Fix babbage.dts memory node
+Date: Sat, 23 Apr 2011 16:39:15 -0500
+Message-ID: <BANLkTikNodocgONEpqASBy1iAZzu50w3vQ@mail.gmail.com>
+References: <1303453526-27523-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <20110427224417.88363D52707@gemini.denx.de>
-List-Unsubscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Wolfgang Denk <wd@denx.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linaro-kernel@lists.linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Albert Aribaud <albert.aribaud@free.fr>, u-boot@lists.denx.de, vanbaren@cideas.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1303453526-27523-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfgang,
+On 22 April 2011 01:25, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Without device_type property set as memory for the node, the generated
+> dtb can still work when it gets passed to kernel by u-boot, since
+> u-boot will fix it up. =A0But kernel will not boot due to that it fails
+> to parse the memory node, when the dtb is appended to kernel image as
+> it is.
 
-Le 28/04/2011 00:44, Wolfgang Denk a =E9crit :
-> Dear Albert,
+I'm a little confused. The first part of the statement implies that
+the kernel will boot without the device_type property, but the second
+part of the statement says that the kernel won't boot.
+
+> The patch adds a property device_type=3D"memory" for memory node to fix
+> the problem.
 >
-> In message<20110328195906.10235.68517.stgit@ponder>  Grant Likely wrote:
->> From: Grant Likely<grant.likely@linaro.org>
->>
->> The following boards gain device tree support with this patch:
->>
->> ca9x4_ct_vxp - Versatile Express
->>
->> i.mx5 boards:
->> efikamx
->> mx51evk
->> mx53evk
->>
->> OMAP boards:
->> devkit8000
->> igep0020
->> igep0030
->> omap3_overo
->> omap3_pandora
->> omap4_sdp3430
->> omap3_zoom1
->> omap3_zoom2
->> omap4_panda
->> omap4_sdp4430
->>
->> Tegra boards:
->> Harmony
->>
->> Signed-off-by: Grant Likely<grant.likely@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> It applies on branch devicetree/test.
 >
-> Could you please pull this through your tree (or ACK that I do this) ?
-
-I'll pull this and send a new pull request with it and Po-Yu Chuang's =
-
-fixes today.
-
-> Thanks.
+> =A0arch/arm/boot/dts/babbage.dts | =A0 =A01 +
+> =A01 files changed, 1 insertions(+), 0 deletions(-)
 >
-> Best regards,
+> diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
+> index 8f9b47c..4805168 100644
+> --- a/arch/arm/boot/dts/babbage.dts
+> +++ b/arch/arm/boot/dts/babbage.dts
+> @@ -21,6 +21,7 @@
+> =A0 =A0 =A0 =A0interrupt-parent =3D <&tzic>;
 >
-> Wolfgang Denk
-
-Amicalement,
--- =
-
-Albert.
+> =A0 =A0 =A0 =A0memory {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 device_type =3D "memory";
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x90000000 0x20000000>;
+> =A0 =A0 =A0 =A0};
+>
+> --
+> 1.7.4.1
+>
+>
+> _______________________________________________
+> linaro-kernel mailing list
+> linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+> http://lists.linaro.org/mailman/listinfo/linaro-kernel
+>
