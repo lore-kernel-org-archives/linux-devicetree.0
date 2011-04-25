@@ -1,14 +1,14 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] arm/dt: Fix babbage.dts memory node
-Date: Sun, 24 Apr 2011 20:48:02 +0800
-Message-ID: <20110424124801.GC5161@S2100-06.ap.freescale.net>
-References: <1303453526-27523-1-git-send-email-shawn.guo@linaro.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] libfdt: include version number in soname
+Date: Mon, 25 Apr 2011 13:07:33 +1000
+Message-ID: <20110425030733.GA6263@yookeroo>
+References: <1303380829-16965-1-git-send-email-pbonzini@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1303453526-27523-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1303380829-16965-1-git-send-email-pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,48 +18,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Thu, Apr 21, 2011 at 12:13:49PM +0200, Paolo Bonzini wrote:
+> The libfdt shared library is only installed by its unversioned name.
+> Including it properly in a distribution requires installation of both
+> the versioned name (used in the binary-only package) and the unversioned
+> name (used in the development package).  The latter is just a symbolic
+> link, so you need to change the soname in turn to include the version.
+> 
+> While at it, use Makefile variables to shorten some lines and avoid
+> cut-and-paste typos; and clean up remnants of when shared libraries were
+> not supported on Darwin.
 
-Let me know if you prefer to get babbage.dts deprecated by merging it
-into mx51-babbage.dts.
+So, as it happens, I was attempting to package libfdt just a few days
+ago and also hit problems because the shared library was not properly
+versioned.  That was more due to the lack of SONAME entry in the ELF
+itself, rather than the missing installed filename.
+
+However this patch isn't quite right - it sets the SONAME containing
+the whole of the dtc version, which means even minor version updates
+will cause a change of soname and will therefore be seen as
+incompatible changes.
+
+I'll revise and send out a version with both sign-offs in a moment.
+Jon, it would be really good to squeeze this one into the mooted
+upcoming official release - it would then be a good base for the
+distros to build proper libfdt packages from.
 
 -- 
-Regards,
-Shawn
-
-On Fri, Apr 22, 2011 at 02:25:26PM +0800, Shawn Guo wrote:
-> Without device_type property set as memory for the node, the generated
-> dtb can still work when it gets passed to kernel by u-boot, since
-> u-boot will fix it up.  But kernel will not boot due to that it fails
-> to parse the memory node, when the dtb is appended to kernel image as
-> it is.
-> 
-> The patch adds a property device_type="memory" for memory node to fix
-> the problem.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> It applies on branch devicetree/test.
-> 
->  arch/arm/boot/dts/babbage.dts |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
-> index 8f9b47c..4805168 100644
-> --- a/arch/arm/boot/dts/babbage.dts
-> +++ b/arch/arm/boot/dts/babbage.dts
-> @@ -21,6 +21,7 @@
->  	interrupt-parent = <&tzic>;
->  
->  	memory {
-> +		device_type = "memory";
->  		reg = <0x90000000 0x20000000>;
->  	};
->  
-> -- 
-> 1.7.4.1
-> 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
