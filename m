@@ -1,60 +1,84 @@
-From: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] libfdt: include version number in soname
-Date: Tue, 26 Apr 2011 13:16:27 +0200
-Message-ID: <4DB6A98B.6020107@redhat.com>
-References: <1303380829-16965-1-git-send-email-pbonzini@redhat.com>
-	<20110425030733.GA6263@yookeroo> <4DB5B8D0.90802@redhat.com>
-	<20110426104527.GC6263@yookeroo>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 0/5] consolidate sdhci pltfm & OF drivers and get them
+ self registered
+Date: Tue, 26 Apr 2011 15:20:34 +0200
+Message-ID: <20110426132034.GB2446@pengutronix.de>
+References: <1301042931-4869-1-git-send-email-shawn.guo@linaro.org>
+ <20110419102031.GA4164@pengutronix.de>
+ <20110421074818.GC4024@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110426104527.GC6263@yookeroo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110421074818.GC4024@S2100-06.ap.freescale.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linaro-dev@lists.linaro.org, sameo@linux.intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2011 12:45 PM, David Gibson wrote:
-> Minimally, yes.  But I think we can do a bit better.  In particular
-> I'd prefer not to tie the soname directly to the dtc version at all.
-> Updates to dtc are only vaguely in sync with libfdt updates, and since
-> we are symbol versioning in libfdt, even pretty significant changes in
-> libfdt won't break backwards compatibility if we do things right.
-> 
-> So here's my patch version instead.  Jon, please apply.
-> 
-> libfdt: include version number in soname
-> 
-> From: Paolo Bonzini<pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> 
-> The libfdt shared library is only installed by its unversioned name.
-> Including it properly in a distribution requires installation of both
-> the versioned name (used in the binary-only package) and the unversioned
-> name (used in the development package).  The latter is just a symbolic
-> link, so you need to change the soname in turn to include the version.
-> 
-> While at it, use Makefile variables to shorten some lines and avoid
-> cut-and-paste typos; and clean up remnants of when shared libraries were
-> not supported on Darwin.
-> 
-> Signed-off-by: Paolo Bonzini<pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: David Gibson<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-This:
+--RASg3xLB4tUQ4RcS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+	$(CC) $(LDFLAGS) -fPIC $(SHAREDLIB_LINK_OPTIONS)$(LIBFDT_SONAME) -o $(LIBFDT_lib) $^
+Hi Shawn,
 
-should be $(LIBFDT_soname).
+> > The approach seems sensible, so have a look at my (mostly minor)
+> > comments inside the patches. However, there is one bigger piece missing.
+> > You converted all the drivers which had a seperate source-file and
+> > hooked into sdhci-pltfm.c. However, those are only those users which
+> > need additional code to work around the quirks. There are also users
+> > which can take the plain pltfm-driver with a properly set
+> > platform_data (check the thread "[PATCH] mmc: add SDHCI driver for STM
+> > platforms (V2)" for an example). Those have to be converted, too.
+>=20
+> Even those drivers need pltfm-<something>.c to accommodate the
+> platform_data, right?  I think sdhci-dove.c (sitting on mainline) is
+> also such an example.  So if I'm not mistaken, I did take care of the
+> drivers which can take the current plain pltfm-sdhci driver.
 
-ACK with that change.
+I stand corrected. I assumed the STM platforms did hit mainline
+meanwhile, but they did not. There really doesn't seem to be one user of
+sdhci-pltfm without using workarounds. (will make sdhc v3 make it better
+or worse? I get fears...) So, everything OK with your series.
 
-Paolo
+> > Now the discussion could be if every of those users gets its own
+> > pltfm-<something>.c or if we create something similat to
+> > sdhci-pltfm-generic, which can also be setup with platform_data like the
+> > old driver (/me likes the latter a bit more. If we don't change the name
+> > of the driver (not talking about the sourcefile) and keep it
+> > "sdhci-pltfm", then you wouldn't need to change all those users if you
+> > ensured it behaves the same.
+> >=20
+> Since there are already pltfm-<something>.c to hold platform_data for
+> those users anyway, it's not an argument here.
+
+sdhci-dove needs to overload readw/readl. If there is a user not
+needings such, i.e. only plain quirks (or even nothing, what a dream!),
+then a generic driver might be worthwhile. Can wait until we see such a
+user, though.
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--RASg3xLB4tUQ4RcS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk22xqIACgkQD27XaX1/VRsR0gCfRgIYjL9bbkjWlK1gBIcyWmc8
+M/8AnRsKHefIc4HUrjsQMyA/Pw2g4z/2
+=ww1+
+-----END PGP SIGNATURE-----
+
+--RASg3xLB4tUQ4RcS--
