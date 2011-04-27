@@ -1,68 +1,118 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] libfdt: include version number in soname
-Date: Wed, 27 Apr 2011 01:19:12 +1000
-Message-ID: <20110426151912.GE6263@yookeroo>
-References: <1303380829-16965-1-git-send-email-pbonzini@redhat.com>
-	<20110425030733.GA6263@yookeroo> <4DB5B8D0.90802@redhat.com>
-	<20110426104527.GC6263@yookeroo> <4DB6A98B.6020107@redhat.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
+Date: Wed, 27 Apr 2011 13:05:41 +0200
+Message-ID: <4DB7F885.4040402@monstr.eu>
+References: <1303116654-5042-1-git-send-email-monstr@monstr.eu> <20110419060816.GA5252@ponder.secretlab.ca>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4DB6A98B.6020107-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110419060816.GA5252@ponder.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2011 at 01:16:27PM +0200, Paolo Bonzini wrote:
-> On 04/26/2011 12:45 PM, David Gibson wrote:
-> > Minimally, yes.  But I think we can do a bit better.  In particular
-> > I'd prefer not to tie the soname directly to the dtc version at all.
-> > Updates to dtc are only vaguely in sync with libfdt updates, and since
-> > we are symbol versioning in libfdt, even pretty significant changes in
-> > libfdt won't break backwards compatibility if we do things right.
-> > 
-> > So here's my patch version instead.  Jon, please apply.
-> > 
-> > libfdt: include version number in soname
-> > 
-> > From: Paolo Bonzini<pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > 
-> > The libfdt shared library is only installed by its unversioned name.
-> > Including it properly in a distribution requires installation of both
-> > the versioned name (used in the binary-only package) and the unversioned
-> > name (used in the development package).  The latter is just a symbolic
-> > link, so you need to change the soname in turn to include the version.
-> > 
-> > While at it, use Makefile variables to shorten some lines and avoid
-> > cut-and-paste typos; and clean up remnants of when shared libraries were
-> > not supported on Darwin.
-> > 
-> > Signed-off-by: Paolo Bonzini<pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: David Gibson<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Grant Likely wrote:
+> On Mon, Apr 18, 2011 at 10:50:54AM +0200, Michal Simek wrote:
+>> Adding OF binding to genirq.
+>> Version string is setup to the "devicetree".
+>>
+>> Compatible string is not setup for now but you can add your
+>> custom compatible string to uio_of_genirq_match structure.
+>>
+>> For example with "uio" compatible string:
+>> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+>> 	{ .compatible = "uio", },
+>> 	{ /* empty for now */ },
+>> };
+>>
+>> Signed-off-by: Michal Simek <monstr@monstr.eu>
+>>
+>> ---
+>>
+>> v3: Fix irq binding
+>>     Use "devicetree" as version string
+>>
+>> v2: Remove additional resource binding
+>>     Setup correct version string
+>>     Clear compatible string
+>> ---
+>>  drivers/uio/uio_pdrv_genirq.c |   42 +++++++++++++++++++++++++++++++++++++++++
+>>  1 files changed, 42 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+>> index 7174d51..c8d565a 100644
+>> --- a/drivers/uio/uio_pdrv_genirq.c
+>> +++ b/drivers/uio/uio_pdrv_genirq.c
+>> @@ -23,6 +23,10 @@
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/slab.h>
+>>  
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/of_address.h>
+>> +
+>>  #define DRIVER_NAME "uio_pdrv_genirq"
+>>  
+>>  struct uio_pdrv_genirq_platdata {
+>> @@ -97,6 +101,30 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>>  	int ret = -EINVAL;
+>>  	int i;
+>>  
+>> +	if (!uioinfo) {
+>> +		int irq;
+>> +
+>> +		/* alloc uioinfo for one device */
+>> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+>> +		if (!uioinfo) {
+>> +			ret = -ENOMEM;
+>> +			dev_err(&pdev->dev, "unable to kmalloc\n");
+>> +			goto bad2;
+>> +		}
+>> +		uioinfo->name = pdev->dev.of_node->name;
+>> +		uioinfo->version = "devicetree";
+>> +
+>> +		/* Multiple IRQs are not supported */
+>> +		irq = platform_get_irq(pdev, 0);
+>> +		if (irq < 0) {
 > 
-> This:
-> 
-> +	$(CC) $(LDFLAGS) -fPIC $(SHAREDLIB_LINK_OPTIONS)$(LIBFDT_SONAME) -o $(LIBFDT_lib) $^
-> 
-> should be $(LIBFDT_soname).
+> PowerPC and x86 will return 0 for an unassigned IRQ, as will most platforms.
 
-Ugh, yes, instead of $(LIBFDT_SONAME) to be clear.  I did check the
-soname on my build, I must have made an accidental press of M-u after
-I did so, sorry.
+I have looked at it and platform_get_irq for unassigned IRQ returns -ENXIO.
+
+It is there from 2006 (drivers/base/platform.c)
+"[PATCH] driver core: platform_get_irq*(): return -ENXIO on error"
+(sha1 305b3228f9ff4d59f49e6d34a7034d44ee8ce2f0)
+
+Maybe you have this patch in your queue but it is not in the mainline 2.6.39-rc5.
+
+Maybe should return NO_IRQ instead.
+But anyway for current code I would prefer to use this condition to cover all 
+architectures NO_IRQ definition.
+
+irq = platform_get_irq(pdev, 0);
+if (irq == -ENXIO || irq == NO_IRQ)
+	uioinfo->irq = UIO_IRQ_NONE;
+else
+	uioinfo->irq = irq;
+
+or of course to only NO_IRQ if we do s/-ENXIO/NO_IRQ in platform_get_irq.
+
+if (irq == NO_IRQ)
+	uioinfo->irq = UIO_IRQ_NONE;
+else
+	uioinfo->irq = irq;
+
+What do you think?
+
+Thanks,
+Michal
+
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
