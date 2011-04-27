@@ -1,118 +1,61 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v3] uio/pdrv_genirq: Add OF support
-Date: Wed, 27 Apr 2011 13:05:41 +0200
-Message-ID: <4DB7F885.4040402@monstr.eu>
-References: <1303116654-5042-1-git-send-email-monstr@monstr.eu> <20110419060816.GA5252@ponder.secretlab.ca>
-Reply-To: monstr@monstr.eu
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary
+	to be appended to zImage
+Date: Wed, 27 Apr 2011 07:23:06 -0700
+Message-ID: <20110427142306.GI3755@atomide.com>
+References: <20110324231830.2586.7150.stgit@riker>
+	<20110328091259.GA18721@S2100-06.ap.freescale.net>
+	<20110413140030.GE12665@atomide.com>
+	<20110420054746.GA31127@S2100-06.ap.freescale.net>
+	<20110420073445.GB31127@S2100-06.ap.freescale.net>
+	<20110421080238.GE13688@atomide.com>
+	<20110421124618.GA15060@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110419060816.GA5252@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, john.williams@petalogix.com, linux-kernel@vger.kernel.org, hjk@hansjkoch.de, w.sang@pengutronix.de, arnd@arndb.de
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20110421124618.GA15060@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, glikely@secretlab.ca, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nico@fluxnic.net>
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> On Mon, Apr 18, 2011 at 10:50:54AM +0200, Michal Simek wrote:
->> Adding OF binding to genirq.
->> Version string is setup to the "devicetree".
->>
->> Compatible string is not setup for now but you can add your
->> custom compatible string to uio_of_genirq_match structure.
->>
->> For example with "uio" compatible string:
->> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
->> 	{ .compatible = "uio", },
->> 	{ /* empty for now */ },
->> };
->>
->> Signed-off-by: Michal Simek <monstr@monstr.eu>
->>
->> ---
->>
->> v3: Fix irq binding
->>     Use "devicetree" as version string
->>
->> v2: Remove additional resource binding
->>     Setup correct version string
->>     Clear compatible string
->> ---
->>  drivers/uio/uio_pdrv_genirq.c |   42 +++++++++++++++++++++++++++++++++++++++++
->>  1 files changed, 42 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
->> index 7174d51..c8d565a 100644
->> --- a/drivers/uio/uio_pdrv_genirq.c
->> +++ b/drivers/uio/uio_pdrv_genirq.c
->> @@ -23,6 +23,10 @@
->>  #include <linux/pm_runtime.h>
->>  #include <linux/slab.h>
->>  
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_address.h>
->> +
->>  #define DRIVER_NAME "uio_pdrv_genirq"
->>  
->>  struct uio_pdrv_genirq_platdata {
->> @@ -97,6 +101,30 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
->>  	int ret = -EINVAL;
->>  	int i;
->>  
->> +	if (!uioinfo) {
->> +		int irq;
->> +
->> +		/* alloc uioinfo for one device */
->> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
->> +		if (!uioinfo) {
->> +			ret = -ENOMEM;
->> +			dev_err(&pdev->dev, "unable to kmalloc\n");
->> +			goto bad2;
->> +		}
->> +		uioinfo->name = pdev->dev.of_node->name;
->> +		uioinfo->version = "devicetree";
->> +
->> +		/* Multiple IRQs are not supported */
->> +		irq = platform_get_irq(pdev, 0);
->> +		if (irq < 0) {
+* Tony Lindgren <tony@atomide.com> [110421 05:44]:
+> * Tony Lindgren <tony@atomide.com> [110421 11:00]:
+> > * Shawn Guo <shawn.guo@freescale.com> [110420 00:27]:
+> > > On Wed, Apr 20, 2011 at 01:47:47PM +0800, Shawn Guo wrote:
+> > > > I would like to confirm it fixes your setup before I send fixing
+> > > > patch to remove 'static' from global variables in all platform
+> > > > uncompress.h.
+> > > > 
+> > > Just saw Nico's patch, so ignore above lines ...
+> > 
+> > Thanks looks like removing static only changes things so now
+> > "Warning: Neither atags nor dtb found" error message printed out.
 > 
-> PowerPC and x86 will return 0 for an unassigned IRQ, as will most platforms.
+> But also Nico's patch fixes the corruption of the DT data during
+> uncompress, so I'm getting much further now.
+> 
+> Now the problem is that the DT data is zeroed out by the time code
+> gets to setup_machine_fdt. I wonder if I'm missing some patch?
+> 
+> I'm using grant's devicetree/arm branch + DT append patch + Nico's
+> static fix + my relocate fix.
+> 
+> Oh well have to look at it again next week..
 
-I have looked at it and platform_get_irq for unassigned IRQ returns -ENXIO.
+I guess the issue is that when setup_machine_fdt gets called we only
+have minimal MMU mapping done.
 
-It is there from 2006 (drivers/base/platform.c)
-"[PATCH] driver core: platform_get_irq*(): return -ENXIO on error"
-(sha1 305b3228f9ff4d59f49e6d34a7034d44ee8ce2f0)
+So I guess there's some other patch related to it?
 
-Maybe you have this patch in your queue but it is not in the mainline 2.6.39-rc5.
-
-Maybe should return NO_IRQ instead.
-But anyway for current code I would prefer to use this condition to cover all 
-architectures NO_IRQ definition.
-
-irq = platform_get_irq(pdev, 0);
-if (irq == -ENXIO || irq == NO_IRQ)
-	uioinfo->irq = UIO_IRQ_NONE;
-else
-	uioinfo->irq = irq;
-
-or of course to only NO_IRQ if we do s/-ENXIO/NO_IRQ in platform_get_irq.
-
-if (irq == NO_IRQ)
-	uioinfo->irq = UIO_IRQ_NONE;
-else
-	uioinfo->irq = irq;
-
-What do you think?
-
-Thanks,
-Michal
-
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Tony
