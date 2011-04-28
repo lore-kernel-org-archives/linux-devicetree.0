@@ -1,82 +1,106 @@
-From: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] Add CONFIG_OF_LIBFDT to more boards.
-Date: Thu, 28 Apr 2011 14:51:44 +0200
-Message-ID: <4DB962E0.3000209__15691.0237427384$1304001743$gmane$org@aribaud.net>
-References: <20110328195231.10235.36716.stgit@ponder>
-	<20110328195906.10235.68517.stgit@ponder>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH 0/6] General device tree irq domain infrastructure
+Date: Thu, 28 Apr 2011 14:01:43 -0600
+Message-ID: <20110428192227.8979.49181.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110328195906.10235.68517.stgit@ponder>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <public-grant.likely-s3s/WqlpOiPyB63q8FvJNQ-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>
-Cc: public-vanbaren-He//nVnquyzQT0dZR+AlfA-wOFGN7rlS/M9smdsby/KFg@public.gmane.org, public-wd-ynQEQJNshbs-wOFGN7rlS/M9smdsby/KFg@public.gmane.org, public-linaro-kernel-cunTk1MwBs8s++Sfvej+rw-wOFGN7rlS/M9smdsby/KFg@public.gmane.org, public-u-boot-0aAXYlwwYIKGBzrmiIFOJg-wOFGN7rlS/M9smdsby/KFg@public.gmane.org, John Rigby <public-john.rigby-QSEj5FYQhm4dnm+yROfE0A-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, public-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ-wOFGN7rlS/M9smdsby/KFg@public.gmane.org, public-patches-QSEj5FYQhm4dnm+yROfE0A-wOFGN7rlS/M9smdsby/KFg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf>
+Cc: devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+A lot of this series ends up being fixups to powerpc code; but the 4th
+patch is of importance to every architecture using CONFIG_OF (except
+SPARC, which has its own solution).
+
+This series (finally!) factors out device tree irq domain decoding
+from arch/powerpc and makes it generic for all architectures.  The
+infrastructure is quite simple.  Any interrupt controller can embed
+the of_irq_domain structure and register it with the core code.  After
+that, device nodes referencing interrupts on that device tree node
+will trigger a call to the domain's map function.
+
+PowerPC and x86 have been converted to use of_irq_domain.  MIPS and
+Microblaze have it enabled, but nothing actually registers domains
+yet, so a workaround is in place to preserve the current behaviour
+until it is fixed.
+
+I'd really like to get patches 1-4 merged into 2.6.40.  Please test.
+I'm also running through build testing here, and when it's complete
+I'll push it out to a 'devicetree/irq-domain' branch on
+git://git.secretlab.ca/git/linux-2.6
+
+It needs testing.  I've booted it on a powerpc board here without any
+apparent regressions, but that isn't a very big sample.  I've also
+build tested on everything I think is affected.
+
+I'd also like to get it into linux-next.  Ben, if things checkout okay
+over the next few days, would you be okay with me adding it to
+linux-next, say around Wednesday next week?  As for merging, I think
+this should probably go via your powerpc tree since the that's where
+the bulk of the changes are, but I'm open to other suggestions).
+
+Patches 5 & 6 are follow-on cleanup work to powerpc, but patch 6 is
+RFC only since there is a locking problem that I haven't fixed yet.
+
+Cheers,
+g.
+
+---
+
+Grant Likely (6):
+      powerpc: stop exporting irq_map
+      powerpc: make irq_{alloc,free}_virt private and remove count argument
+      powerpc: Make struct irq_host semi-private by moving into irqhost.h
+      dt: generalize of_irq_parse_and_map()
+      powerpc: move irq_alloc_descs_at() call into irq_alloc_virt()
+      powerpc: use irq_alloc_desc() to manage irq allocations
 
 
-
-Hi Grant,
-
-Le 28/03/2011 21:59, Grant Likely a =E9crit :
-> From: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
->
-> The following boards gain device tree support with this patch:
->
-> ca9x4_ct_vxp - Versatile Express
->
-> i.mx5 boards:
-> efikamx
-> mx51evk
-> mx53evk
->
-> OMAP boards:
-> devkit8000
-> igep0020
-> igep0030
-> omap3_overo
-> omap3_pandora
-> omap4_sdp3430
-> omap3_zoom1
-> omap3_zoom2
-> omap4_panda
-> omap4_sdp4430
->
-> Tegra boards:
-> Harmony
->
-> Signed-off-by: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A-XMD5yJDbdMQAvxtiuMwx3w@public.gmane.org=
-ane.org>
-> ---
->   include/configs/ca9x4_ct_vxp.h  |    2 ++
->   include/configs/devkit8000.h    |    2 ++
->   include/configs/efikamx.h       |    2 ++
->   include/configs/igep0020.h      |    2 ++
->   include/configs/igep0030.h      |    2 ++
->   include/configs/mx51evk.h       |    2 ++
->   include/configs/mx53evk.h       |    2 ++
->   include/configs/omap3_overo.h   |    2 ++
->   include/configs/omap3_pandora.h |    2 ++
->   include/configs/omap3_sdp3430.h |    2 ++
->   include/configs/omap3_zoom1.h   |    2 ++
->   include/configs/omap3_zoom2.h   |    2 ++
->   include/configs/omap4_panda.h   |    2 ++
->   include/configs/omap4_sdp4430.h |    2 ++
->   include/configs/tegra2-common.h |    1 +
->   15 files changed, 29 insertions(+), 0 deletions(-)
-
-Applied to u-boot-arm/master, thanks.
-
-Amicalement,
--- =
-
-Albert.
+ arch/microblaze/kernel/irq.c                     |    7 -
+ arch/microblaze/kernel/setup.c                   |    2 
+ arch/mips/kernel/prom.c                          |   14 -
+ arch/powerpc/include/asm/irq.h                   |   88 +------
+ arch/powerpc/include/asm/irqhost.h               |   27 ++
+ arch/powerpc/kernel/irq.c                        |  260 ++++++++++++----------
+ arch/powerpc/platforms/512x/mpc5121_ads_cpld.c   |    5 
+ arch/powerpc/platforms/52xx/media5200.c          |    5 
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |    1 
+ arch/powerpc/platforms/52xx/mpc52xx_pic.c        |   80 +------
+ arch/powerpc/platforms/82xx/pq2ads-pci-pic.c     |    5 
+ arch/powerpc/platforms/85xx/socrates_fpga_pic.c  |   26 +-
+ arch/powerpc/platforms/86xx/gef_pic.c            |   10 -
+ arch/powerpc/platforms/8xx/m8xx_setup.c          |    2 
+ arch/powerpc/platforms/cell/axon_msi.c           |   15 +
+ arch/powerpc/platforms/cell/spider-pic.c         |   19 +-
+ arch/powerpc/platforms/embedded6xx/flipper-pic.c |    9 -
+ arch/powerpc/platforms/embedded6xx/hlwd-pic.c    |    9 -
+ arch/powerpc/platforms/embedded6xx/wii.c         |    6 -
+ arch/powerpc/platforms/iseries/irq.c             |   10 -
+ arch/powerpc/platforms/powermac/pic.c            |   12 +
+ arch/powerpc/platforms/pseries/ras.c             |    4 
+ arch/powerpc/platforms/pseries/xics.c            |   14 +
+ arch/powerpc/sysdev/cpm1.c                       |    8 -
+ arch/powerpc/sysdev/cpm2_pic.c                   |   10 -
+ arch/powerpc/sysdev/fsl_msi.c                    |    3 
+ arch/powerpc/sysdev/i8259.c                      |    3 
+ arch/powerpc/sysdev/ipic.c                       |   19 +-
+ arch/powerpc/sysdev/mpc8xx_pic.c                 |   10 -
+ arch/powerpc/sysdev/mpc8xxx_gpio.c               |   13 +
+ arch/powerpc/sysdev/mpic.c                       |   33 +--
+ arch/powerpc/sysdev/mpic_msi.c                   |    3 
+ arch/powerpc/sysdev/mpic_pasemi_msi.c            |    5 
+ arch/powerpc/sysdev/mv64x60_pic.c                |   14 +
+ arch/powerpc/sysdev/qe_lib/qe_ic.c               |    9 -
+ arch/powerpc/sysdev/uic.c                        |   13 +
+ arch/powerpc/sysdev/xilinx_intc.c                |    9 -
+ arch/x86/include/asm/irq_controller.h            |   12 -
+ arch/x86/include/asm/prom.h                      |    1 
+ arch/x86/kernel/devicetree.c                     |   77 +------
+ drivers/of/irq.c                                 |  118 ++++++++++
+ include/linux/of_irq.h                           |   31 +++
+ 42 files changed, 504 insertions(+), 517 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/irqhost.h
+ delete mode 100644 arch/x86/include/asm/irq_controller.h
