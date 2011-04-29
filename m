@@ -1,70 +1,113 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v5 7/8] arm/dt: Basic tegra devicetree support
-Date: Fri, 29 Apr 2011 01:16:03 -0600
-Message-ID: <20110429071603.12522.58598.stgit@ponder>
-References: <20110429070135.12522.35745.stgit@ponder>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] dt/irq: add of_irq_domain_add_simple() helper
+Date: Fri, 29 Apr 2011 01:35:09 -0600
+Message-ID: <20110429073324.17840.37136.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110429070135.12522.35745.stgit@ponder>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds adds very basic support for booting tegra with a
-device tree.  It simply allows the existing machine_descs to match
-against the tegra compatible values so that the kernel can boot.
-Kernel parameters and the initrd pointer is read out of the tree
-instead of atags.
+of_irq_domain_add_simple() is an easy way to generate an irq translation
+domain for simple irq controllers.  It assumes a flat 1:1 mapping from
+hardware irq number to an offset of the first linux irq number assigned
+to the controller
 
-This is not complete device tree support.  This change will be
-reverted when a new machine_desc is added that can populate the
-device registrations directly from data in the tree instead of using
-hard coded data.  That change will be made in a future patch.
-
-v2: Fixed cut-and-paste error in commit text
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- arch/arm/boot/dts/tegra-harmony.dts |    7 +++++++
- arch/arm/mach-tegra/board-harmony.c |    6 ++++++
- 2 files changed, 13 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/tegra-harmony.dts
 
-diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
-new file mode 100644
-index 0000000..81032e7
---- /dev/null
-+++ b/arch/arm/boot/dts/tegra-harmony.dts
-@@ -0,0 +1,7 @@
-+/dts-v1/;
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "NVIDIA Tegra2 Harmony evaluation board";
-+	compatible = "nvidia,harmony", "nvidia,tegra250";
-+};
-diff --git a/arch/arm/mach-tegra/board-harmony.c b/arch/arm/mach-tegra/board-harmony.c
-index 75c918a..adbdb87 100644
---- a/arch/arm/mach-tegra/board-harmony.c
-+++ b/arch/arm/mach-tegra/board-harmony.c
-@@ -199,6 +199,11 @@ static void __init tegra_harmony_init(void)
- 	harmony_regulator_init();
- }
+Following on from the irq_domain patch series I posted earlier, here is a simple
+method for registering a 1:1 translation.
+
+g.
+
+ drivers/of/irq.c       |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_irq.h |    2 ++
+ 2 files changed, 46 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6da0964..641590c 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -24,6 +24,7 @@
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/string.h>
++#include <linux/slab.h>
  
-+static const char * tegra_harmony_board_compat[] = {
-+	"nvidia,harmony",
-+	NULL
+ /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+ #ifndef NO_IRQ
+@@ -147,6 +148,49 @@ unsigned int irq_create_of_mapping(struct device_node *controller,
+ }
+ EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+ 
++/*
++ * A simple irq domain implementation that 1:1 translates hwirqs to an offset
++ * from the irq_start value
++ */
++struct of_irq_domain_simple {
++	struct of_irq_domain domain;
++	int irq_start;
++	int irq_size;
 +};
 +
- MACHINE_START(HARMONY, "harmony")
- 	.boot_params  = 0x00000100,
- 	.fixup		= tegra_harmony_fixup,
-@@ -207,4 +212,5 @@ MACHINE_START(HARMONY, "harmony")
- 	.init_irq       = tegra_init_irq,
- 	.timer          = &tegra_timer,
- 	.init_machine   = tegra_harmony_init,
-+	.dt_compat      = tegra_harmony_board_compat,
- MACHINE_END
++static unsigned int of_irq_domain_simple_map(struct of_irq_domain *domain,
++					     struct device_node *controller,
++					     const u32 *intspec, u32 intsize)
++{
++	struct of_irq_domain_simple *ds;
++
++	ds = container_of(domain, struct of_irq_domain_simple, domain);
++	if (intspec[0] >= ds->irq_size)
++		return NO_IRQ;
++	return ds->irq_start + intspec[0];
++}
++
++/**
++ * of_irq_domain_create_simple() - Set up a 'simple' translation range
++ */
++void of_irq_domain_add_simple(struct device_node *controller,
++			      int irq_start, int irq_size)
++{
++	struct of_irq_domain_simple *sd;
++
++	sd = kzalloc(sizeof(*sd), GFP_KERNEL);
++	if (!sd) {
++		WARN_ON(1);
++		return;
++	}
++
++	sd->irq_start = irq_start;
++	sd->irq_size = irq_size;
++	sd->domain.controller = of_node_get(controller);
++	sd->domain.map = of_irq_domain_simple_map;
++	of_irq_domain_add(&sd->domain);
++}
++
+ /**
+  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
+  * @device: Device node of the device whose interrupt is to be mapped
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 511dbc3..8e49a0e 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -63,6 +63,8 @@ struct of_irq_domain {
+ extern void of_irq_domain_add(struct of_irq_domain *domain);
+ extern void of_irq_set_default_domain(struct of_irq_domain *host);
+ extern struct of_irq_domain *of_irq_domain_find(struct device_node *controller);
++extern void of_irq_domain_add_simple(struct device_node *controller,
++				     int irq_start, int irq_size);
+ 
+ /*
+  * Workarounds only applied to 32bit powermac machines
