@@ -1,23 +1,11 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary to be
-	appended to zImage
-Date: Fri, 29 Apr 2011 15:14:31 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1104291509540.24613@xanadu.home>
-References: <20110413140030.GE12665@atomide.com>
-	<20110420054746.GA31127@S2100-06.ap.freescale.net>
-	<20110420073445.GB31127@S2100-06.ap.freescale.net>
-	<20110421080238.GE13688@atomide.com>
-	<20110421124618.GA15060@atomide.com>
-	<20110427142306.GI3755@atomide.com>
-	<alpine.LFD.2.00.1104271036520.24613@xanadu.home>
-	<20110427144335.GK3755@atomide.com> <20110429102623.GX3755@atomide.com>
-	<alpine.LFD.2.00.1104290909310.24613@xanadu.home>
-	<20110429135334.GR5126@n2100.arm.linux.org.uk>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: Tegra: dt: Set up an OF IRQ translation range
+Date: Fri, 29 Apr 2011 16:31:33 -0600
+Message-ID: <1304116293-25139-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20110429135334.GR5126-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,43 +15,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Apr 2011, Russell King - ARM Linux wrote:
+Without this, none of the devicetree devices in tegra-harmony.dts can
+map interrupts, and the system fails to boot.
 
-> On Fri, Apr 29, 2011 at 09:16:39AM -0400, Nicolas Pitre wrote:
-> > On Fri, 29 Apr 2011, Tony Lindgren wrote:
-> > 
-> > > If the compressed image is smaller than BSS, then we end up
-> > > having DT data in the BSS area. In this case the compressed
-> > > image is about 2.3 MB for LZMA.
-> > > 
-> > > The uncompress code does not know about the kernel BSS,
-> > > and does not necessarily relocate anything depending on the
-> > > compressed image load address.
-> > > 
-> > > So in which code do we want to relocate the DT data?
-> > > 
-> > > We could do it based on estimated BSS size in uncompress code,
-> > > or based on the real BSS size in __mmap_switched before BSS
-> > > gets reset.
-> > 
-> > Estimations for that kind of thing is always bound to create problems 
-> > some day.
-> > 
-> > The DT data should probably be moved out of the way from 
-> > arch/arm/kernel/head.S before the .bss is cleared, and even before 
-> > enabling the MMU, like in __vet_atags.
-> 
-> Err, no.  Moving stuff around becomes quite expensive when the cache is
-> not on.  It's far better to work out where to place it first time around
-> so its not in the way.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Note: This patch is based on Grant's latest
+git://git.secretlab.ca/git/linux-2.6 devicetree/test
+plus all the Tegra fixes I recently posted to linaro-dev, which in
+particular move tegra-harmony.dts to a different location.
 
-I don't think the DT data is that huge, but that's a point in favor of 
-doing it in the zImage code.  We'll just need to feed the total size of 
-the uncompressed kernel .bss section to zImage when compiling it.
+Question: It seems like the call to of_irq_domain_add_simple should be
+part of arch/arm/common/gic.c:gic_init(), rather than each SoC's DT board
+file having to do this. However, that'd require gic_init having an OF
+device node to pass to of_irq_domain_add_simple.
 
+Question 2: Should the range of IRQ numbers cover just the IRQs directly
+managed by the GIC itself, or cover the entire range of IRQ numbers for
+the SoC? Put another way, should it include mappings for a GPIO controller
+then aggregates interrupts from N GPIOs into 1 or M GIC interrupts, or not?
+Put yet another way, should the code pass INT_MAIN_NR or NR_IRQS for Tegra?
+I suspect the former, and that child interrupt devices should themselves
+call of_irq_domain_add_simple to set up their mappings?
 
-Nicolas
+Question 3: I'm not sure "arm,gic" is the correct sanctioned compatible value?
+
+ arch/arm/boot/dts/tegra-harmony.dts |    2 ++
+ arch/arm/mach-tegra/board-dt.c      |   13 +++++++++++++
+ 2 files changed, 15 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
+index 6fe09d7..1972f61 100644
+--- a/arch/arm/boot/dts/tegra-harmony.dts
++++ b/arch/arm/boot/dts/tegra-harmony.dts
+@@ -26,8 +26,10 @@
+ 		ranges;
+ 
+ 		intc: intc {
++			compatible = "arm,gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
++			reg = <0x50041000 0x1000 0x50040100 0x100 >;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
+index aa37783..894c7a3 100644
+--- a/arch/arm/mach-tegra/board-dt.c
++++ b/arch/arm/mach-tegra/board-dt.c
+@@ -22,7 +22,9 @@
+ #include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_fdt.h>
++#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/pda_power.h>
+ #include <linux/io.h>
+@@ -137,8 +139,19 @@ static struct of_device_id tegra_dt_match_table[] __initdata = {
+ 	{}
+ };
+ 
++struct of_device_id gic_match[] = {
++	{ .compatible = "arm,gic", }, {}
++};
++
+ static void __init tegra_dt_init(void)
+ {
++	struct device_node *node;
++
++	node = of_find_matching_node_by_address(NULL, gic_match,
++						TEGRA_ARM_INT_DIST_BASE);
++	if (node)
++		of_irq_domain_add_simple(node, INT_GIC_BASE, INT_MAIN_NR);
++
+ 	/*
+ 	 * Before registering devices; tell Linux about which device nodes
+ 	 * are intended to be registered so that it doesn't create devices
+-- 
+1.7.0.4
