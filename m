@@ -1,23 +1,16 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary to be
-	appended to zImage
-Date: Fri, 29 Apr 2011 09:21:22 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1104290918050.24613@xanadu.home>
-References: <20110413140030.GE12665@atomide.com>
-	<20110420054746.GA31127@S2100-06.ap.freescale.net>
-	<20110420073445.GB31127@S2100-06.ap.freescale.net>
-	<20110421080238.GE13688@atomide.com>
-	<20110421124618.GA15060@atomide.com>
-	<20110427142306.GI3755@atomide.com>
-	<alpine.LFD.2.00.1104271036520.24613@xanadu.home>
-	<20110427144335.GK3755@atomide.com> <20110429102623.GX3755@atomide.com>
-	<BANLkTi=jcb8Piki6RrijGOQG=wJ=ULv5Gw@mail.gmail.com>
-	<20110429130939.GB3755@atomide.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH] libfdt: include version number in soname
+Date: Fri, 29 Apr 2011 08:48:46 -0500
+Message-ID: <E1QFo3q-0001O9-IK@jdl.com>
+References: <1303380829-16965-1-git-send-email-pbonzini@redhat.com>
+	<20110425030733.GA6263@yookeroo> <4DB5B8D0.90802@redhat.com>
+	<20110426104527.GC6263@yookeroo> <4DB6A98B.6020107@redhat.com>
+	<20110426151912.GE6263@yookeroo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20110429130939.GB3755-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-reply-to: <20110426151912.GE6263@yookeroo> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,39 +20,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Apr 2011, Tony Lindgren wrote:
-
-> * Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> [110429 05:59]:
-> > On Fri, Apr 29, 2011 at 4:26 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110427 07:41]:
-> > >
-> > > If the compressed image is smaller than BSS, then we end up
-> > > having DT data in the BSS area. In this case the compressed
-> > > image is about 2.3 MB for LZMA.
-> > >
-> > > The uncompress code does not know about the kernel BSS,
-> > > and does not necessarily relocate anything depending on the
-> > > compressed image load address.
-> > >
-> > > So in which code do we want to relocate the DT data?
-> > >
-> > > We could do it based on estimated BSS size in uncompress code,
-> > > or based on the real BSS size in __mmap_switched before BSS
-> > > gets reset.
+> On Tue, Apr 26, 2011 at 01:16:27PM +0200, Paolo Bonzini wrote:
+> > On 04/26/2011 12:45 PM, David Gibson wrote:
+> > > 
+> > > libfdt: include version number in soname
+> > > 
+> > > From: Paolo Bonzini<pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > The libfdt shared library is only installed by its unversioned name.
+> > > Including it properly in a distribution requires installation of both
+> > > the versioned name (used in the binary-only package) and the unversioned
+> > > name (used in the development package).  The latter is just a symbolic
+> > > link, so you need to change the soname in turn to include the version.
+> > > 
+> > > While at it, use Makefile variables to shorten some lines and avoid
+> > > cut-and-paste typos; and clean up remnants of when shared libraries were
+> > > not supported on Darwin.
+> > > 
+> > > Signed-off-by: Paolo Bonzini<pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > > Signed-off-by: David Gibson<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 > > 
-> > How about telling the wrapper what the final size will be by scraping
-> > the __bss_end value out of System.map?
+> > This:
+> > 
+> > +	$(CC) $(LDFLAGS) -fPIC $(SHAREDLIB_LINK_OPTIONS)$(LIBFDT_SONAME) -o $(LIBFDT_lib) $^
+> > 
+> > should be $(LIBFDT_soname).
 > 
-> That sounds doable to me. It should probably be done in the uncompress
-> code so the kernel code can stay generic for the DT data handling.
-
-Well, that's probably doable too.  If the final kernel's .bss conflicts 
-with the DT data, then moving the DT data above the malloc space in the 
-decompressor is trivial too.
+> Ugh, yes, instead of $(LIBFDT_SONAME) to be clear.  I did check the
+> soname on my build, I must have made an accidental press of M-u after
+> I did so, sorry.
 
 
-Nicolas
+Applied with last-minute mod and pushed out.
+
+Consider this the candidate for a 1.3.0 release!
+
+Thanks!
+jdl
