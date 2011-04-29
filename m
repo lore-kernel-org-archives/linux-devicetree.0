@@ -1,11 +1,24 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH] dt/irq: add of_irq_domain_add_simple() helper
-Date: Fri, 29 Apr 2011 01:35:09 -0600
-Message-ID: <20110429073324.17840.37136.stgit@ponder>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary
+	to be appended to zImage
+Date: Fri, 29 Apr 2011 03:26:23 -0700
+Message-ID: <20110429102623.GX3755@atomide.com>
+References: <20110324231830.2586.7150.stgit@riker>
+	<20110328091259.GA18721@S2100-06.ap.freescale.net>
+	<20110413140030.GE12665@atomide.com>
+	<20110420054746.GA31127@S2100-06.ap.freescale.net>
+	<20110420073445.GB31127@S2100-06.ap.freescale.net>
+	<20110421080238.GE13688@atomide.com>
+	<20110421124618.GA15060@atomide.com>
+	<20110427142306.GI3755@atomide.com>
+	<alpine.LFD.2.00.1104271036520.24613@xanadu.home>
+	<20110427144335.GK3755@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110427144335.GK3755-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,99 +28,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-of_irq_domain_add_simple() is an easy way to generate an irq translation
-domain for simple irq controllers.  It assumes a flat 1:1 mapping from
-hardware irq number to an offset of the first linux irq number assigned
-to the controller
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110427 07:41]:
+> * Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> [110427 07:37]:
+> > On Wed, 27 Apr 2011, Tony Lindgren wrote:
+> > > 
+> > > I guess the issue is that when setup_machine_fdt gets called we only
+> > > have minimal MMU mapping done.
+> > 
+> > In head.S (the final kernel image one) there is a 1MB mapping 
+> > established when r2 contains a valid ATAG/DTB pointer.  See commit 
+> > 4d901c42 (you even ACK'd it).
+> 
+> Yeah thanks was just looking at that too :) Need to debug further..
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+OK figured this one out. Looks like we have an issue where kernel BSS
+can easily overlap the appended DT data. Then kernel __mmap_switched
+will clear the BSS and DT data.
 
-Following on from the irq_domain patch series I posted earlier, here is a simple
-method for registering a 1:1 translation.
+This happens for example with omap2plus_defconfig where we have:
 
-g.
+$ stat -c "%s" arch/arm/boot/Image
+6405100
 
- drivers/of/irq.c       |   44 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_irq.h |    2 ++
- 2 files changed, 46 insertions(+), 0 deletions(-)
+$ size kernel/built-in.o 
+   text    data     bss     dec     hex filename
+ 660576  110852 5475500 6246928  5f5210 kernel/built-in.o
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 6da0964..641590c 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -24,6 +24,7 @@
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/string.h>
-+#include <linux/slab.h>
- 
- /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
- #ifndef NO_IRQ
-@@ -147,6 +148,49 @@ unsigned int irq_create_of_mapping(struct device_node *controller,
- }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
- 
-+/*
-+ * A simple irq domain implementation that 1:1 translates hwirqs to an offset
-+ * from the irq_start value
-+ */
-+struct of_irq_domain_simple {
-+	struct of_irq_domain domain;
-+	int irq_start;
-+	int irq_size;
-+};
-+
-+static unsigned int of_irq_domain_simple_map(struct of_irq_domain *domain,
-+					     struct device_node *controller,
-+					     const u32 *intspec, u32 intsize)
-+{
-+	struct of_irq_domain_simple *ds;
-+
-+	ds = container_of(domain, struct of_irq_domain_simple, domain);
-+	if (intspec[0] >= ds->irq_size)
-+		return NO_IRQ;
-+	return ds->irq_start + intspec[0];
-+}
-+
-+/**
-+ * of_irq_domain_create_simple() - Set up a 'simple' translation range
-+ */
-+void of_irq_domain_add_simple(struct device_node *controller,
-+			      int irq_start, int irq_size)
-+{
-+	struct of_irq_domain_simple *sd;
-+
-+	sd = kzalloc(sizeof(*sd), GFP_KERNEL);
-+	if (!sd) {
-+		WARN_ON(1);
-+		return;
-+	}
-+
-+	sd->irq_start = irq_start;
-+	sd->irq_size = irq_size;
-+	sd->domain.controller = of_node_get(controller);
-+	sd->domain.map = of_irq_domain_simple_map;
-+	of_irq_domain_add(&sd->domain);
-+}
-+
- /**
-  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
-  * @device: Device node of the device whose interrupt is to be mapped
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 511dbc3..8e49a0e 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -63,6 +63,8 @@ struct of_irq_domain {
- extern void of_irq_domain_add(struct of_irq_domain *domain);
- extern void of_irq_set_default_domain(struct of_irq_domain *host);
- extern struct of_irq_domain *of_irq_domain_find(struct device_node *controller);
-+extern void of_irq_domain_add_simple(struct device_node *controller,
-+				     int irq_start, int irq_size);
- 
- /*
-  * Workarounds only applied to 32bit powermac machines
+If the compressed image is smaller than BSS, then we end up
+having DT data in the BSS area. In this case the compressed
+image is about 2.3 MB for LZMA.
+
+The uncompress code does not know about the kernel BSS,
+and does not necessarily relocate anything depending on the
+compressed image load address.
+
+So in which code do we want to relocate the DT data?
+
+We could do it based on estimated BSS size in uncompress code,
+or based on the real BSS size in __mmap_switched before BSS
+gets reset.
+
+Cheers,
+
+Tony
