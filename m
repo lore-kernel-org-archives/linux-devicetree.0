@@ -1,46 +1,69 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 0/6] General device tree irq domain infrastructure
-Date: Fri, 29 Apr 2011 11:43:55 -0600
-Message-ID: <20110429174355.GA21098@ponder.secretlab.ca>
-References: <20110428192227.8979.49181.stgit@ponder>
-	<4DBAE461.7000307@linutronix.de>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary to be
+	appended to zImage
+Date: Fri, 29 Apr 2011 15:14:31 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1104291509540.24613@xanadu.home>
+References: <20110413140030.GE12665@atomide.com>
+	<20110420054746.GA31127@S2100-06.ap.freescale.net>
+	<20110420073445.GB31127@S2100-06.ap.freescale.net>
+	<20110421080238.GE13688@atomide.com>
+	<20110421124618.GA15060@atomide.com>
+	<20110427142306.GI3755@atomide.com>
+	<alpine.LFD.2.00.1104271036520.24613@xanadu.home>
+	<20110427144335.GK3755@atomide.com> <20110429102623.GX3755@atomide.com>
+	<alpine.LFD.2.00.1104290909310.24613@xanadu.home>
+	<20110429135334.GR5126@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <4DBAE461.7000307@linutronix.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Michal Simek <monstr@monstr.eu>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, hpa@zytor.com, Dirk Brandewie <dirk.brandewie@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20110429135334.GR5126-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2011 at 06:16:33PM +0200, Sebastian Andrzej Siewior wrote:
-> Grant Likely wrote:
-> >I'd really like to get patches 1-4 merged into 2.6.40.  Please test.
-> >I'm also running through build testing here, and when it's complete
-> >I'll push it out to a 'devicetree/irq-domain' branch on
-> >git://git.secretlab.ca/git/linux-2.6
-> 
-> I pulled this, built and booted my x86-dt box and nothing exploded so far.
-> 
-> If you merge Linus' tree then you will get a conflict (sooner or later) in
-> ioapic_of_irq_map() in arch/x86/kernel/devicetree.c:
-> 
-> -       return io_apic_setup_irq_pin_once(*out_hwirq, cpu_to_node(0), &attr);
->  -      if (io_apic_setup_irq_pin(hwirq, cpu_to_node(0), &attr))
-> ++      if (io_apic_setup_irq_pin_once(hwirq, cpu_to_node(0), &attr))
-> 
-> Sebastian
+On Fri, 29 Apr 2011, Russell King - ARM Linux wrote:
 
-Thanks Sebastian.  Unless you say otherwise, I'll take that as an Acked-by.  :-)
+> On Fri, Apr 29, 2011 at 09:16:39AM -0400, Nicolas Pitre wrote:
+> > On Fri, 29 Apr 2011, Tony Lindgren wrote:
+> > 
+> > > If the compressed image is smaller than BSS, then we end up
+> > > having DT data in the BSS area. In this case the compressed
+> > > image is about 2.3 MB for LZMA.
+> > > 
+> > > The uncompress code does not know about the kernel BSS,
+> > > and does not necessarily relocate anything depending on the
+> > > compressed image load address.
+> > > 
+> > > So in which code do we want to relocate the DT data?
+> > > 
+> > > We could do it based on estimated BSS size in uncompress code,
+> > > or based on the real BSS size in __mmap_switched before BSS
+> > > gets reset.
+> > 
+> > Estimations for that kind of thing is always bound to create problems 
+> > some day.
+> > 
+> > The DT data should probably be moved out of the way from 
+> > arch/arm/kernel/head.S before the .bss is cleared, and even before 
+> > enabling the MMU, like in __vet_atags.
+> 
+> Err, no.  Moving stuff around becomes quite expensive when the cache is
+> not on.  It's far better to work out where to place it first time around
+> so its not in the way.
 
-g.
+I don't think the DT data is that huge, but that's a point in favor of 
+doing it in the zImage code.  We'll just need to feed the total size of 
+the uncompressed kernel .bss section to zImage when compiling it.
+
+
+Nicolas
