@@ -1,39 +1,31 @@
-From: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] libfdt: include version number in soname
-Date: Fri, 29 Apr 2011 16:50:06 +0200
-Message-ID: <4DBAD01E.7010106@redhat.com>
-References: <1303380829-16965-1-git-send-email-pbonzini@redhat.com>
-	<20110425030733.GA6263@yookeroo> <4DB5B8D0.90802@redhat.com>
-	<20110426104527.GC6263@yookeroo> <4DB6A98B.6020107@redhat.com>
-	<20110426151912.GE6263@yookeroo> <E1QFo3q-0001O9-IK@jdl.com>
-	<4DBAC5F0.8050409@redhat.com> <E1QFoza-0001mA-2y@jdl.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 0/6] General device tree irq domain infrastructure
+Date: Fri, 29 Apr 2011 18:16:33 +0200
+Message-ID: <4DBAE461.7000307@linutronix.de>
+References: <20110428192227.8979.49181.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1QFoza-0001mA-2y-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110428192227.8979.49181.stgit@ponder>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Michal Simek <monstr@monstr.eu>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, hpa@zytor.com, Dirk Brandewie <dirk.brandewie@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/2011 04:48 PM, Jon Loeliger wrote:
-> > >  Consider this the candidate for a 1.3.0 release!
-> >
-> >  Don't forget to bump the version number.;)
->
-> Yeah.  You want that now for testing?  Or just with the release?
+Grant Likely wrote:
+> I'd really like to get patches 1-4 merged into 2.6.40.  Please test.
+> I'm also running through build testing here, and when it's complete
+> I'll push it out to a 'devicetree/irq-domain' branch on
+> git://git.secretlab.ca/git/linux-2.6
 
-It should be done for a proper rc of course; anyway I did that myself 
-for testing and the git HEAD is fine as far as the shared library 
-support is concerned.
+I pulled this, built and booted my x86-dt box and nothing exploded so far.
 
-Paolo
+If you merge Linus' tree then you will get a conflict (sooner or later) in
+ioapic_of_irq_map() in arch/x86/kernel/devicetree.c:
+
+-       return io_apic_setup_irq_pin_once(*out_hwirq, cpu_to_node(0), &attr);
+  -      if (io_apic_setup_irq_pin(hwirq, cpu_to_node(0), &attr))
+++      if (io_apic_setup_irq_pin_once(hwirq, cpu_to_node(0), &attr))
+
+Sebastian
