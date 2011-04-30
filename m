@@ -1,69 +1,61 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] ARM: Tegra: Seaboard: Add devicetree support
-Date: Fri, 29 Apr 2011 22:12:31 -0600
-Message-ID: <1304136751-11629-2-git-send-email-swarren@nvidia.com>
-References: <1304136751-11629-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1304136751-11629-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: SDHCI enumeration order, dynamic mmcblkN IDs, and devicetree
+Date: Fri, 29 Apr 2011 21:34:37 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B0B3@HQMAIL01.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/tegra-seaboard.dts |   33 +++++++++++++++++++++++++++++++++
- arch/arm/mach-tegra/Makefile.boot    |    1 +
- 2 files changed, 34 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/tegra-seaboard.dts
+The SDHCI driver assigns dynamic device numbers (mmcblk0/1/...) to
+devices based on when they get probed, which IDs are free at that time,
+etc. Many boards have e.g. 1 fixed MMC soldered onto the board, and 1
+SD slot. There may or may not be a card in the SD slot at probe time,
+which can then cause the numbering of the fixed MMC to differ.
 
-diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
-new file mode 100644
-index 0000000..d5c9ad7
---- /dev/null
-+++ b/arch/arm/boot/dts/tegra-seaboard.dts
-@@ -0,0 +1,33 @@
-+/dts-v1/;
-+/include/ "tegra250.dts"
-+
-+/ {
-+	model = "NVIDIA Harmony";
-+	compatible = "nvidia,seaboard", "nvidia,tegra250";
-+
-+	chosen {
-+		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootdelay=2";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = < 0x00000000 0x1C000000
-+		        0x20000000 0x20000000 >;
-+	};
-+
-+	serial@70006300 {
-+		status = "ok";
-+		clock-frequency = < 216000000 >;
-+	};
-+
-+	sdhci@c8000400 {
-+		status = "ok";
-+		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
-+			<&gpio 57 0>, /* wp, gpio PH1 */
-+			<&gpio 70 0>; /* power, gpio PI6 */
-+	};
-+
-+	sdhci@c8000600 {
-+		status = "ok";
-+	};
-+};
-diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
-index c98addf..428ad12 100644
---- a/arch/arm/mach-tegra/Makefile.boot
-+++ b/arch/arm/mach-tegra/Makefile.boot
-@@ -3,3 +3,4 @@ params_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00000100
- initrd_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00800000
- 
- dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
-+dtb-$(CONFIG_MACH_SEABOARD) += tegra-seaboard.dtb
+Developers (even boot scripts) want to create simple hard-coded command-
+lines based on static device IDs, e.g. root=/dev/mmcblk1p3.
+
+To reconcile these two somewhat conflicting requirements, the order in
+which the SDHCI controllers are passed to platform_add_devices has been
+varied, so that all soldered-down storage is registered first (which
+synchronously probes the device and assigns the block device ID, which
+is therefore pseudo-static), followed by socketed storage, which then
+get a dynamic ID. When there is only 1 socketed controller, this dynamic
+ID ends up being pseudo-static too.
+
+The Tegra board files have been doing this for a little while, and the
+changes to do so were inspired by similar changes to some (IIRC) OMAP
+board files.
+
+Now to the devicetree specific issue:
+
+In the model where the board file registers all the platform devices,
+which then get matched to OF DT nodes, there is only a single board file,
+and hence only a single order of registration of SDHCI controllers. The
+order required to achieve pseudo-static numbering may not be the same
+for all boards; it depends on which SDHCI controllers are used for which
+purpose. Hence, this workaround essentially doesn't always work anymore.
+
+Is there a way in DT to influence the platform device probe order? If not,
+should there be? Or, are there other ways to work around this? (root=UUID
+would work, but it's a pain for me to type and set up if I'm constantly
+rebuilding filesystem images)
+
+Thanks for any hints!
+
 -- 
-1.7.1
+nvpublic
