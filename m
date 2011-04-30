@@ -1,87 +1,87 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: Tegra: dt: Set up an OF IRQ translation range
-Date: Sat, 30 Apr 2011 00:36:41 -0600
-Message-ID: <20110430063641.GC3103@ponder.secretlab.ca>
-References: <1304136608-11584-1-git-send-email-swarren@nvidia.com>
+Subject: Re: SDHCI enumeration order, dynamic mmcblkN IDs, and devicetree
+Date: Sat, 30 Apr 2011 01:40:32 -0600
+Message-ID: <20110430074032.GD3103@ponder.secretlab.ca>
+References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B0B3@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1304136608-11584-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B0B3-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2011 at 10:10:08PM -0600, Stephen Warren wrote:
-> Without this, none of the devicetree devices in tegra-harmony.dts can
-> map interrupts, and the system fails to boot.
+On Fri, Apr 29, 2011 at 09:34:37PM -0700, Stephen Warren wrote:
+> The SDHCI driver assigns dynamic device numbers (mmcblk0/1/...) to
+> devices based on when they get probed, which IDs are free at that time,
+> etc. Many boards have e.g. 1 fixed MMC soldered onto the board, and 1
+> SD slot. There may or may not be a card in the SD slot at probe time,
+> which can then cause the numbering of the fixed MMC to differ.
 > 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Developers (even boot scripts) want to create simple hard-coded command-
+> lines based on static device IDs, e.g. root=/dev/mmcblk1p3.
+> 
+> To reconcile these two somewhat conflicting requirements, the order in
+> which the SDHCI controllers are passed to platform_add_devices has been
+> varied, so that all soldered-down storage is registered first (which
+> synchronously probes the device and assigns the block device ID, which
+> is therefore pseudo-static), followed by socketed storage, which then
+> get a dynamic ID. When there is only 1 socketed controller, this dynamic
+> ID ends up being pseudo-static too.
+> 
+> The Tegra board files have been doing this for a little while, and the
+> changes to do so were inspired by similar changes to some (IIRC) OMAP
+> board files.
+> 
+> Now to the devicetree specific issue:
+> 
+> In the model where the board file registers all the platform devices,
+> which then get matched to OF DT nodes, there is only a single board file,
+> and hence only a single order of registration of SDHCI controllers. The
+> order required to achieve pseudo-static numbering may not be the same
+> for all boards; it depends on which SDHCI controllers are used for which
+> purpose. Hence, this workaround essentially doesn't always work anymore.
+> 
+> Is there a way in DT to influence the platform device probe order? If not,
+> should there be? Or, are there other ways to work around this? (root=UUID
+> would work, but it's a pain for me to type and set up if I'm constantly
+> rebuilding filesystem images)
+> 
+> Thanks for any hints!
 
-Merged into arm/dt: full tegra devicetree support patch, thanks.
+Anytime you need to assign global or user visible names, the best way
+to do it is to create properties in the /aliases node in the form:
+
+aliases {
+	mmc0 = &first-sdhci-label;
+	mmc1 = &second-
+};
+
+Then the driver has a canonical place to look to determine whether or
+not a name has already been assigned to a device; regardless of
+whether or not the device is registered yet.
+
+There isn't much in the way of support code for parsing the aliases
+node yet, but that is definitely the approach I would take.  You'll
+also need to make sure the implemented solution is applicable across
+all mmc controller drivers; not just tegra specific.  The details are
+probably fiddly to work out.
 
 g.
 
-> ---
-> v2: Add a Tegra-specific compatible value, search by that value, minor
->     formatting fixes.
+
 > 
->  arch/arm/boot/dts/tegra-harmony.dts |    3 +++
->  arch/arm/mach-tegra/board-dt.c      |   14 ++++++++++++++
->  2 files changed, 17 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
-> index 82fa0c2..a22c1bb 100644
-> --- a/arch/arm/boot/dts/tegra-harmony.dts
-> +++ b/arch/arm/boot/dts/tegra-harmony.dts
-> @@ -25,8 +25,11 @@
->  		ranges;
->  
->  		intc: intc {
-> +			compatible = "nvidia,tegra250-gic", "arm,gic";
->  			interrupt-controller;
->  			#interrupt-cells = <1>;
-> +			reg = < 0x50041000 0x1000
-> +			        0x50040100 0x100 >;
->  		};
->  	};
->  
-> diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
-> index 0efedb8..fb0d75d 100644
-> --- a/arch/arm/mach-tegra/board-dt.c
-> +++ b/arch/arm/mach-tegra/board-dt.c
-> @@ -22,7 +22,9 @@
->  #include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_fdt.h>
-> +#include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/pda_power.h>
->  #include <linux/io.h>
-> @@ -137,8 +139,20 @@ static struct of_device_id tegra_dt_match_table[] __initdata = {
->  	{}
->  };
->  
-> +struct of_device_id gic_match[] __initdata = {
-> +	{ .compatible = "nvidia,tegra250-gic", },
-> +	{}
-> +};
-> +
->  static void __init tegra_dt_init(void)
->  {
-> +	struct device_node *node;
-> +
-> +	node = of_find_matching_node_by_address(NULL, gic_match,
-> +						TEGRA_ARM_INT_DIST_BASE);
-> +	if (node)
-> +		of_irq_domain_add_simple(node, INT_GIC_BASE, INT_MAIN_NR);
-> +
->  	/*
->  	 * Before registering devices; tell Linux about which device nodes
->  	 * are intended to be registered so that it doesn't create devices
 > -- 
-> 1.7.1
+> nvpublic
 > 
