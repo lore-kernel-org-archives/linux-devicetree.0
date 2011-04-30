@@ -1,14 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: SDHCI enumeration order, dynamic mmcblkN IDs, and devicetree
-Date: Sat, 30 Apr 2011 01:40:32 -0600
-Message-ID: <20110430074032.GD3103@ponder.secretlab.ca>
-References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B0B3@HQMAIL01.nvidia.com>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/11] x86, olpc: add missing elements to device tree
+Date: Sat, 30 Apr 2011 13:32:20 +0100
+Message-ID: <1304166750-31125-2-git-send-email-dsd@laptop.org>
+References: <1304166750-31125-1-git-send-email-dsd@laptop.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B0B3-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <1304166750-31125-1-git-send-email-dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,70 +17,146 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2011 at 09:34:37PM -0700, Stephen Warren wrote:
-> The SDHCI driver assigns dynamic device numbers (mmcblk0/1/...) to
-> devices based on when they get probed, which IDs are free at that time,
-> etc. Many boards have e.g. 1 fixed MMC soldered onto the board, and 1
-> SD slot. There may or may not be a card in the SD slot at probe time,
-> which can then cause the numbering of the fixed MMC to differ.
-> 
-> Developers (even boot scripts) want to create simple hard-coded command-
-> lines based on static device IDs, e.g. root=/dev/mmcblk1p3.
-> 
-> To reconcile these two somewhat conflicting requirements, the order in
-> which the SDHCI controllers are passed to platform_add_devices has been
-> varied, so that all soldered-down storage is registered first (which
-> synchronously probes the device and assigns the block device ID, which
-> is therefore pseudo-static), followed by socketed storage, which then
-> get a dynamic ID. When there is only 1 socketed controller, this dynamic
-> ID ends up being pseudo-static too.
-> 
-> The Tegra board files have been doing this for a little while, and the
-> changes to do so were inspired by similar changes to some (IIRC) OMAP
-> board files.
-> 
-> Now to the devicetree specific issue:
-> 
-> In the model where the board file registers all the platform devices,
-> which then get matched to OF DT nodes, there is only a single board file,
-> and hence only a single order of registration of SDHCI controllers. The
-> order required to achieve pseudo-static numbering may not be the same
-> for all boards; it depends on which SDHCI controllers are used for which
-> purpose. Hence, this workaround essentially doesn't always work anymore.
-> 
-> Is there a way in DT to influence the platform device probe order? If not,
-> should there be? Or, are there other ways to work around this? (root=UUID
-> would work, but it's a pain for me to type and set up if I'm constantly
-> rebuilding filesystem images)
-> 
-> Thanks for any hints!
+In response to new device tree code in the kernel, OLPC will start
+using it for probing of certain devices. However, some firmware fixes
+are needed to put the devicetree into a usable state.
 
-Anytime you need to assign global or user visible names, the best way
-to do it is to create properties in the /aliases node in the form:
+Retain compatibility with old firmware by fixing up the device tree
+at boot-time if it does not contain the new nodes/properties that
+we need for probing. This is the same approach taken on PPC platforms.
 
-aliases {
-	mmc0 = &first-sdhci-label;
-	mmc1 = &second-
-};
+Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ arch/x86/platform/olpc/olpc_dt.c |  103 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 103 insertions(+), 0 deletions(-)
 
-Then the driver has a canonical place to look to determine whether or
-not a name has already been assigned to a device; regardless of
-whether or not the device is registered yet.
-
-There isn't much in the way of support code for parsing the aliases
-node yet, but that is definitely the approach I would take.  You'll
-also need to make sure the implemented solution is applicable across
-all mmc controller drivers; not just tegra specific.  The details are
-probably fiddly to work out.
-
-g.
-
-
-> 
-> -- 
-> nvpublic
-> 
+diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
+index d39f63d..d6ee929 100644
+--- a/arch/x86/platform/olpc/olpc_dt.c
++++ b/arch/x86/platform/olpc/olpc_dt.c
+@@ -165,6 +165,107 @@ static struct of_pdt_ops prom_olpc_ops __initdata = {
+ 	.pkg2path = olpc_dt_pkg2path,
+ };
+ 
++static phandle __init olpc_dt_finddevice(const char *path)
++{
++	phandle node;
++	const void *args[] = { path };
++	void *res[] = { &node };
++
++	if (olpc_ofw("finddevice", args, res)) {
++		pr_err("olpc_dt: finddevice failed!\n");
++		return 0;
++	}
++
++	if ((s32) node == -1)
++		return 0;
++
++	return node;
++}
++
++static int __init olpc_dt_interpret(const char *words)
++{
++	int result;
++	const void *args[] = { words };
++	void *res[] = { &result };
++
++	if (olpc_ofw("interpret", args, res)) {
++		pr_err("olpc_dt: interpret failed!\n");
++		return -1;
++	}
++
++	return result;
++}
++
++/*
++ * Extract board revision directly from OFW device tree.
++ * We can't use olpc_platform_info because that hasn't been set up yet.
++ */
++static u32 __init olpc_dt_get_board_revision(void)
++{
++	phandle node;
++	__be32 rev;
++	int r;
++
++	node = olpc_dt_finddevice("/");
++	if (!node)
++		return 0;
++
++	r = olpc_dt_getproperty(node, "board-revision-int",
++				(char *) &rev, sizeof(rev));
++	if (r < 0)
++		return 0;
++
++	return be32_to_cpu(rev);
++}
++
++void __init olpc_dt_fixup(void)
++{
++	int r;
++	char buf[64];
++	phandle node;
++	u32 board_rev;
++
++	node = olpc_dt_finddevice("/battery@0");
++	if (!node)
++		return;
++
++	/*
++	 * If the battery node has a compatible property, we are running a new
++	 * enough firmware and don't have fixups to make.
++	 */
++	r = olpc_dt_getproperty(node, "compatible", buf, sizeof(buf));
++	if (r > 0)
++		return;
++
++	pr_info("PROM DT: Old firmware detected, applying fixes\n");
++
++	/* Add olpc,xo1-battery compatible marker to battery node */
++	olpc_dt_interpret("\" /battery@0\" find-device"
++		" \" olpc,xo1-battery\" +compatible"
++		" device-end");
++
++	board_rev = olpc_dt_get_board_revision();
++	if (!board_rev)
++		return;
++
++	if (board_rev >= olpc_board_pre(0xd0)) {
++		/* XO-1.5: add dcon device */
++		olpc_dt_interpret("\" /pci/display@1\" find-device"
++			" new-device"
++			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
++			" finish-device device-end");
++	} else {
++		/* XO-1: add dcon device, mark RTC as olpc,xo1-rtc */
++		olpc_dt_interpret("\" /pci/display@1,1\" find-device"
++			" new-device"
++			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
++			" finish-device device-end"
++			" \" /rtc\" find-device"
++			" \" olpc,xo1-rtc\" +compatible"
++			" device-end");
++	}
++}
++
+ void __init olpc_dt_build_devicetree(void)
+ {
+ 	phandle root;
+@@ -172,6 +273,8 @@ void __init olpc_dt_build_devicetree(void)
+ 	if (!olpc_ofw_is_installed())
+ 		return;
+ 
++	olpc_dt_fixup();
++
+ 	root = olpc_dt_getsibling(0);
+ 	if (!root) {
+ 		pr_err("PROM: unable to get root node from OFW!\n");
+-- 
+1.7.4.4
