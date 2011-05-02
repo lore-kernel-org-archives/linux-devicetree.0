@@ -1,62 +1,75 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/2] ARM: Tegra: dt: Split out separate Tegra SoC DT
-Date: Mon, 2 May 2011 11:00:32 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B198@HQMAIL01.nvidia.com>
-References: <1304136751-11629-1-git-send-email-swarren@nvidia.com>
- <20110501145546.GC19918@quad.lixom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Subject: [PATCH v2 3/3] ARM: Tegra: Seaboard: Add devicetree support
+Date: Mon,  2 May 2011 12:50:31 -0600
+Message-ID: <1304362231-21909-3-git-send-email-swarren@nvidia.com>
+References: <1304362231-21909-1-git-send-email-swarren@nvidia.com>
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110501145546.GC19918-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1304362231-21909-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Sunday, May 01, 2011 8:56 AM:
-> On Fri, Apr 29, 2011 at 10:12:30PM -0600, Stephen Warren wrote:
-> > tegra250.dts describes everything within the Tegra SoC, but leaves all
-> > optional devices disabled.
-> >
-> > tegra-harmony.dts is now the configuration of the SoC for the board,
-> > i.e. it enables the optional devices that are required for the board,
-> > and provides any required platform data for those devics.
-> >
-> > The prevents every Tegra board having to repeat all the basic internal
-> > SoC wiring.
-> >
-> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> 
-> A mostly unrelated question below.
-> 
-> [...]
-> 
-> > +	serial@70006000 {
-> > +		compatible = "nvidia,tegra250-uart";
-> 
-> I know this is how Grant specified it, but shouldn't these also have
-> a compat for ns16550?
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v2: Rebased on latest devicetree/test, s/Harmony/Seaboard in model,
+    s/rootdelay/rootwait/.
 
-At present, I'm not sure it is technically compatible. If you look at
-drivers/tty/serial/of_serial.c, you'll see:
+Patch series tested on Harmony, Seaboard (non-clamshell and clamshell)
 
-static struct of_device_id __devinitdata of_platform_serial_table[] = {
-...
-        { .compatible = "ns16550",  .data = (void *)PORT_16550, },
-...
-        { .compatible = "nvidia,tegra250-uart",  .data = (void *)PORT_XSCALE, },
+ arch/arm/boot/dts/tegra-seaboard.dts |   34 ++++++++++++++++++++++++++++++++++
+ arch/arm/mach-tegra/Makefile.boot    |    1 +
+ 2 files changed, 35 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/tegra-seaboard.dts
 
-That PORT_XSCALE is different to the ns16550 entry. Arguably, that
-field should be something that comes from the device tree, just
-like e.g. reg-shift, but it certainly doesn't right now.
-
-Grant, what are your thoughts on this?
-
-Thanks.
-
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+new file mode 100644
+index 0000000..abcc7d7
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -0,0 +1,34 @@
++/dts-v1/;
++
++/memreserve/ 0x1c000000 0x04000000;
++/include/ "tegra250.dts"
++
++/ {
++	model = "NVIDIA Seaboard";
++	compatible = "nvidia,seaboard", "nvidia,tegra250";
++
++	chosen {
++		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootwait";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = < 0x00000000 0x40000000 >;
++	};
++
++	serial@70006300 {
++		status = "ok";
++		clock-frequency = < 216000000 >;
++	};
++
++	sdhci@c8000400 {
++		status = "ok";
++		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
++			<&gpio 57 0>, /* wp, gpio PH1 */
++			<&gpio 70 0>; /* power, gpio PI6 */
++	};
++
++	sdhci@c8000600 {
++		status = "ok";
++	};
++};
+diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
+index c98addf..428ad12 100644
+--- a/arch/arm/mach-tegra/Makefile.boot
++++ b/arch/arm/mach-tegra/Makefile.boot
+@@ -3,3 +3,4 @@ params_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00000100
+ initrd_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00800000
+ 
+ dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
++dtb-$(CONFIG_MACH_SEABOARD) += tegra-seaboard.dtb
 -- 
-nvpublic
+1.7.0.4
