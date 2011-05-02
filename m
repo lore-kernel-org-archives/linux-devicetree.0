@@ -1,100 +1,82 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Tegra: Seaboard: Add devicetree support
-Date: Sun, 1 May 2011 07:57:44 -0700
-Message-ID: <20110501145744.GD19918@quad.lixom.net>
-References: <1304136751-11629-1-git-send-email-swarren@nvidia.com>
- <1304136751-11629-2-git-send-email-swarren@nvidia.com>
- <20110501143825.GB19918@quad.lixom.net>
- <BANLkTimOJFxQGmPHMb2KPKQikL2sWZoQKQ@mail.gmail.com>
+From: Kushwaha Prabhakar-B32579 <B32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/2] powerpc: add support for MPIC message register API
+Date: Mon, 2 May 2011 03:41:03 +0000
+Message-ID: <071A08F2C6A57E4E94D980ECA553F8741984EE@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1303232375-25014-1-git-send-email-meador_inge@mentor.com>
+	<1303232375-25014-3-git-send-email-meador_inge@mentor.com>
+	<071A08F2C6A57E4E94D980ECA553F8741959CA@039-SN1MPN1-004.039d.mgd.msft.net>
+	<4DBAED5D.4060906@mentor.com>
+	<071A08F2C6A57E4E94D980ECA553F8741967EC@039-SN1MPN1-004.039d.mgd.msft.net>
+	<20110429123051.4ed1ca01@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTimOJFxQGmPHMb2KPKQikL2sWZoQKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110429123051.4ed1ca01-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 01, 2011 at 08:46:04AM -0600, Grant Likely wrote:
-> On Sun, May 1, 2011 at 8:38 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote=
-:
-> > Hi,
-> >
-> > On Fri, Apr 29, 2011 at 10:12:31PM -0600, Stephen Warren wrote:
-> >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >> =A0arch/arm/boot/dts/tegra-seaboard.dts | =A0 33 +++++++++++++++++=
-++++++++++++++++
-> >> =A0arch/arm/mach-tegra/Makefile.boot =A0 =A0| =A0 =A01 +
-> >> =A02 files changed, 34 insertions(+), 0 deletions(-)
-> >> =A0create mode 100644 arch/arm/boot/dts/tegra-seaboard.dts
-> >>
-> >> diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/=
-dts/tegra-seaboard.dts
-> >> new file mode 100644
-> >> index 0000000..d5c9ad7
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/tegra-seaboard.dts
-> >> @@ -0,0 +1,33 @@
-> >> +/dts-v1/;
-> >> +/include/ "tegra250.dts"
-> >> +
-> >> +/ {
-> >> + =A0 =A0 model =3D "NVIDIA Harmony";
-> >
-> > NVIDIA Seaboard?
-> >
-> >> + =A0 =A0 compatible =3D "nvidia,seaboard", "nvidia,tegra250";
-> >> +
-> >> + =A0 =A0 chosen {
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 bootargs =3D "vmalloc=3D192M video=3Dteg=
-rafb console=3DttyS0,115200n8 root=3D/dev/mmcblk1p3 rw rootdelay=3D2";
-> >
-> > I'm partial to rootwait instead of rootdelay, a little less fragile=
- for slow
-> > devices.
-> >
-> >> + =A0 =A0 memory {
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 device_type =3D "memory";
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 reg =3D < 0x00000000 0x1C000000
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0x20000000 0x20000000 >;
-> >> + =A0 =A0 };
-> >
-> > I guess a node for the graphics memory could be warranted
->=20
-> I've modified this in devicetree test to specify the entire memory
-> range, and carve out 0x1c000000..0x1fffffff with a memreserve section=
-=2E
->=20
-> >
-> >> +
-> >> + =A0 =A0 serial@70006300 {
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 status =3D "ok";
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D < 216000000 >;
-> >> + =A0 =A0 };
-> >> +
-> >> + =A0 =A0 sdhci@c8000400 {
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 status =3D "ok";
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 gpios =3D <&gpio 69 0>, /* cd, gpio PI5 =
-*/
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&gpio 57 0>, /* wp, gpi=
-o PH1 */
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&gpio 70 0>; /* power, =
-gpio PI6 */
-> >
-> > How would you represent just one missing gpio here? It might be bet=
-ter
-> > to have separate properties for each.
->=20
-> The gpio binding allows for empty entries by using '0' for the phandl=
-e.
-
-Hm, I'm still not much a fan of an opaque 3-entry array instead of name=
-d
-entries but I'm ok with either I suppose. How do other bindings do simi=
-lar things?
 
 
--Olof
+> 
+> >
+> >
+> > > > Hi,
+> > > >
+> > > > I have no comments about coding and architecture. It looks fine.
+> > > >
+> > > > Only have a query about its use case..
+> > > >    "Any application intended to use message interrupt requires to
+> > > > know
+> > > reg_num because of struct mpic_msgr* mpic_msgr_get(unsigned int
+> > > reg_num) API"
+> > > >
+> > > > It will be good to search available unit internally and provide
+> > > > its
+> > > pointer. It will make application more flexible.
+> > > >
+> > >
+> > > The problem is that you fundamentally cannot implement an allocator
+> > > for MSG registers if you're going to communicate with another kernel
+> > > (how would both kernels' allocators be synchronized?). So the
+> > > message register allocation must be decided at design time, not run
+> time.
+> > >
+> >
+> > I agree with you..  It is true while communicating with another kernel.
+> > But message interrupts can be used by different independent drivers
+> within same kernel. For eg. PCIe and Ethernet driver.
+> > As per current design both drivers needs to be in sync before
+> requesting any message unit for avoiding any conflict. As these drivers
+> are completely independent. It is very difficult.
+> >
+> > Can it be possible to provide new API to take care it.
+> 
+> Do you have a real use case in mind where these message registers (not
+> MSIs) are used internally in this manner?
+
+Yes, we use for PCIe host/agent test case scenario.
+Host usage message register to interrupt Agent...
+Agent uses message register to generate irq_out (automatically generate MSI) to interrupt master. Please see RM for more details about irq_out
+ 
+
+Note: PCIe host/agent test scenario is used internally and we are working on pushing it out..
+ 
+> Perhaps an allocator could be added in the same patchset that adds such a
+> user.
+> 
+
+Yaa. It can be done. Otherwise module has to query each message unit for its availability. 
+
+--Prabhakar
