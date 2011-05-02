@@ -1,74 +1,86 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: DTC failure on /memreserve/ if moved after /include/
-Date: Mon, 02 May 2011 16:06:01 -0500
-Message-ID: <E1QH0Jd-0004yN-6V@jdl.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF@HQMAIL01.nvidia.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: Tegra: Seaboard: Add devicetree support
+Date: Mon, 2 May 2011 15:06:45 -0600
+Message-ID: <20110502210645.GC10097@ponder.secretlab.ca>
+References: <1304362231-21909-1-git-send-email-swarren@nvidia.com>
+ <1304362231-21909-3-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1304362231-21909-3-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> The following from tegra-harmony.dts compiles fine:
+On Mon, May 02, 2011 at 12:50:31PM -0600, Stephen Warren wrote:
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Merged, thanks.
+
+g.
+
+> ---
+> v2: Rebased on latest devicetree/test, s/Harmony/Seaboard in model,
+>     s/rootdelay/rootwait/.
 > 
->     /dts-v1/;
+> Patch series tested on Harmony, Seaboard (non-clamshell and clamshell)
 > 
->     /memreserve/ 0x1c000000 0x04000000;
->     /include/ "tegra250.dts"
+>  arch/arm/boot/dts/tegra-seaboard.dts |   34 ++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-tegra/Makefile.boot    |    1 +
+>  2 files changed, 35 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/tegra-seaboard.dts
 > 
->     / {
+> diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+> new file mode 100644
+> index 0000000..abcc7d7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/tegra-seaboard.dts
+> @@ -0,0 +1,34 @@
+> +/dts-v1/;
+> +
+> +/memreserve/ 0x1c000000 0x04000000;
+> +/include/ "tegra250.dts"
+> +
+> +/ {
+> +	model = "NVIDIA Seaboard";
+> +	compatible = "nvidia,seaboard", "nvidia,tegra250";
+> +
+> +	chosen {
+> +		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootwait";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = < 0x00000000 0x40000000 >;
+> +	};
+> +
+> +	serial@70006300 {
+> +		status = "ok";
+> +		clock-frequency = < 216000000 >;
+> +	};
+> +
+> +	sdhci@c8000400 {
+> +		status = "ok";
+> +		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+> +			<&gpio 57 0>, /* wp, gpio PH1 */
+> +			<&gpio 70 0>; /* power, gpio PI6 */
+> +	};
+> +
+> +	sdhci@c8000600 {
+> +		status = "ok";
+> +	};
+> +};
+> diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
+> index c98addf..428ad12 100644
+> --- a/arch/arm/mach-tegra/Makefile.boot
+> +++ b/arch/arm/mach-tegra/Makefile.boot
+> @@ -3,3 +3,4 @@ params_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00000100
+>  initrd_phys-$(CONFIG_ARCH_TEGRA_2x_SOC)	:= 0x00800000
+>  
+>  dtb-$(CONFIG_MACH_HARMONY) += tegra-harmony.dtb
+> +dtb-$(CONFIG_MACH_SEABOARD) += tegra-seaboard.dtb
+> -- 
+> 1.7.0.4
 > 
-> However, if I re-order this as follows:
-> 
->     /dts-v1/;
->     /include/ "tegra250.dts"
-> 
->     /memreserve/ 0x1c000000 0x04000000;
-> 
->     / {
-> 
-> Then dtc fails:
->
-> Is this a dtc bug, or does the DTS syntax actually disallow this?
-
-
-Correct.  The grammar is explicitly:
-
-    sourcefile:
-	      DT_V1 ';' memreserves devicetree
-	    ;
-
-    memreserves:
-	      /* empty */
-	    | memreserve memreserves
-	    ;
-
-    memreserve:
-	      DT_MEMRESERVE addr addr ';'
-
-
-and then much later devicetree leads to...:
-
-
-    propdata:
-	      propdataprefix DT_STRING
-	    | propdataprefix '<' celllist '>'
-	    | propdataprefix '[' bytestring ']'
-	    | propdataprefix DT_REF
-	    | propdataprefix DT_INCBIN '(' DT_STRING ',' addr ',' addr ')'
-
-where INCBIN is the include mechanism.
-
-jdl
