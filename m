@@ -1,96 +1,47 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v5 4/8] arm/dt: probe for platforms via the device tree
-Date: Mon, 2 May 2011 15:55:37 -0600
-Message-ID: <20110502215537.GE10097@ponder.secretlab.ca>
-References: <20110429070135.12522.35745.stgit@ponder>
- <20110429071548.12522.56929.stgit@ponder>
- <20110502151542.GG2092@atomide.com>
- <BANLkTikue6jMUcQMv9GD4cZ=o5EEW7QDqQ@mail.gmail.com>
- <20110502163951.GC9243@atomide.com>
+Subject: Re: [PATCH v6 0/6] powerpc, 52xx: add charon board support
+Date: Mon, 2 May 2011 16:14:06 -0600
+Message-ID: <20110502221406.GA15043@ponder.secretlab.ca>
+References: <1291451028-22532-1-git-send-email-hs@denx.de>
+ <1300782452-528-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110502163951.GC9243@atomide.com>
+In-Reply-To: <1300782452-528-1-git-send-email-hs@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linuxppc-dev@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2011 at 07:39:54PM +0300, Tony Lindgren wrote:
-> * Grant Likely <grant.likely@secretlab.ca> [110502 18:31]:
-> > On Mon, May 2, 2011 at 9:15 AM, Tony Lindgren <tony@atomide.com> wr=
-ote:
-> > > * Grant Likely <grant.likely@secretlab.ca> [110429 00:13]:
-> > >> +
-> > >> +/**
-> > >> + * setup_machine_fdt - Machine setup when an dtb was passed to =
-the kernel
-> > >> + * @dt_phys: physical address of dt blob
-> > >> + *
-> > >> + * If a dtb was passed to the kernel in r2, then use it to choo=
-se the
-> > >> + * correct machine_desc and to setup the system.
-> > >> + */
-> > >> +struct machine_desc * __init setup_machine_fdt(unsigned int dt_=
-phys)
-> > >> +{
-> > > ...
-> > >
-> > >> +
-> > >> + =A0 =A0 /* Retrieve various information from the /chosen node =
-*/
-> > >> + =A0 =A0 of_scan_flat_dt(early_init_dt_scan_chosen, boot_comman=
-d_line);
-> > >
-> > > Just to make sure we're considering properly what this change mea=
-ns..
-> > >
-> > > Does this patch require using CONFIG_CMDLINE_FORCE for older boot=
-loaders
-> > > with the device tree append patch?
-> >=20
-> > With the current patch?  Yes, but there is a follow-on patch that w=
-as
-> > posted a while ago[1] that will copy ATAG data into the device tree=
- in
-> > the bootloader.  I've not been pushing to include that change since=
- it
-> > adds a lot of code to the wrapper and I'm not sure how deeply we wa=
-nt
-> > to support that use case.  Basically I want to have a better idea w=
-hat
-> > the supported use cases are before pushing something like that.
->=20
-> OK. Maybe that could be made simpler if we only copy the cmdline?
->=20
-> The cmdline is something that bootloaders typically allow to configur=
-e,
-> while the other ATAGs are static and should be in the .dts file.
+On Tue, Mar 22, 2011 at 09:27:26AM +0100, Heiko Schocher wrote:
+> cc: Wolfram Sang <w.sang@pengutronix.de>
+> cc: Grant Likely <grant.likely@secretlab.ca>
+> cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> cc: linux-fbdev@vger.kernel.org
+> cc: devicetree-discuss@ozlabs.org
+> cc: Ben Dooks <ben@simtec.co.uk>
+> cc: Vincent Sanders <vince@simtec.co.uk>
+> cc: Samuel Ortiz <sameo@linux.intel.com>
+> cc: linux-kernel@vger.kernel.org
+> cc: Randy Dunlap <rdunlap@xenotime.net>
+> cc: Wolfgang Denk <wd@denx.de>
+> cc: Paul Mundt <lethal@linux-sh.org>
+> 
+> changes since v5:
+> - repost complete patchseries, as Paul Mundt suggested
+> - rebased against current head
+> - add Acked-by from Samuel Ortiz (MFD parts)
+>   http://www.spinics.net/lists/linux-fbdev/msg02550.html
+>   http://linux.derkeiler.com/Mailing-Lists/Kernel/2011-01/msg11798.html
+> 
+>   and Benjamin Herrenschmidt (DTS parts)
+>   http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/088279.html
+> - removed patch 
+>   "powerpc, mpc5200: update mpc5200_defconfig to fit for charon board."
+>   therefore added
+>   "powerpc, tqm5200: update tqm5200_defconfig to fit for charon board."
 
-Once the libfdt code is pulled into to manipulate the command line,
-it becomes trivial to parse the rest of the atags too, so this
-probably won't make much difference (unless work is done to preparse
-the devicetree and provide to the zimage wrapper a direct offset to
-the cmdline buffer in the dtb, but that gets hairy and I really don't
-want to go down that path).
-
-> =20
-> > Adding a default command line to the .dts file instead of using
-> > CONFIG_CMDLINE_FORCE also works.
->=20
-> But that requires carrying extra patches for something that should
-> be user configured.. So not so nice for distros.
-
-Right, so this is only a stop-gap solution.  I'll add this to the list
-of topics to discuss in the device tree session at Linaro@UDS next
-week.
+Refresh my memory, why was the mpc5200_defconfig updated dropped?
 
 g.
-
->=20
-> Tony
-> =20
-> > [1] http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-March=
-/004652.html
