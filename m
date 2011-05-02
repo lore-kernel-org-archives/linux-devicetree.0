@@ -1,48 +1,74 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: Tegra: dt: s/rootdelay/rootwait/ in cmdline
- args
-Date: Mon, 2 May 2011 15:02:05 -0600
-Message-ID: <20110502210205.GA10097@ponder.secretlab.ca>
-References: <1304362231-21909-1-git-send-email-swarren@nvidia.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: DTC failure on /memreserve/ if moved after /include/
+Date: Mon, 02 May 2011 16:06:01 -0500
+Message-ID: <E1QH0Jd-0004yN-6V@jdl.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1304362231-21909-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org> 
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2011 at 12:50:29PM -0600, Stephen Warren wrote:
-> rootwait is more robust than rootdelay for slow devices.
+> The following from tegra-harmony.dts compiles fine:
 > 
-> Suggested-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>     /dts-v1/;
+> 
+>     /memreserve/ 0x1c000000 0x04000000;
+>     /include/ "tegra250.dts"
+> 
+>     / {
+> 
+> However, if I re-order this as follows:
+> 
+>     /dts-v1/;
+>     /include/ "tegra250.dts"
+> 
+>     /memreserve/ 0x1c000000 0x04000000;
+> 
+>     / {
+> 
+> Then dtc fails:
+>
+> Is this a dtc bug, or does the DTS syntax actually disallow this?
 
-Squashed into 'arm/dt: full tegra devicetree support', thanks.
 
-g.
+Correct.  The grammar is explicitly:
 
-> ---
-> v2: New patch for v2 of series
-> 
->  arch/arm/boot/dts/tegra-harmony.dts |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
-> index e87c27c..7fe007b 100644
-> --- a/arch/arm/boot/dts/tegra-harmony.dts
-> +++ b/arch/arm/boot/dts/tegra-harmony.dts
-> @@ -9,7 +9,7 @@
->  	interrupt-parent = <&intc>;
->  
->  	chosen {
-> -		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk0p2 rw rootdelay=2";
-> +		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk0p2 rw rootwait";
->  	};
->  
->  	memory {
-> -- 
-> 1.7.0.4
-> 
+    sourcefile:
+	      DT_V1 ';' memreserves devicetree
+	    ;
+
+    memreserves:
+	      /* empty */
+	    | memreserve memreserves
+	    ;
+
+    memreserve:
+	      DT_MEMRESERVE addr addr ';'
+
+
+and then much later devicetree leads to...:
+
+
+    propdata:
+	      propdataprefix DT_STRING
+	    | propdataprefix '<' celllist '>'
+	    | propdataprefix '[' bytestring ']'
+	    | propdataprefix DT_REF
+	    | propdataprefix DT_INCBIN '(' DT_STRING ',' addr ',' addr ')'
+
+where INCBIN is the include mechanism.
+
+jdl
