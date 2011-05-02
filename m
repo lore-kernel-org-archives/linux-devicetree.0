@@ -1,82 +1,108 @@
-From: Kushwaha Prabhakar-B32579 <B32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 2/2] powerpc: add support for MPIC message register API
-Date: Mon, 2 May 2011 03:41:03 +0000
-Message-ID: <071A08F2C6A57E4E94D980ECA553F8741984EE@039-SN1MPN1-004.039d.mgd.msft.net>
-References: <1303232375-25014-1-git-send-email-meador_inge@mentor.com>
-	<1303232375-25014-3-git-send-email-meador_inge@mentor.com>
-	<071A08F2C6A57E4E94D980ECA553F8741959CA@039-SN1MPN1-004.039d.mgd.msft.net>
-	<4DBAED5D.4060906@mentor.com>
-	<071A08F2C6A57E4E94D980ECA553F8741967EC@039-SN1MPN1-004.039d.mgd.msft.net>
-	<20110429123051.4ed1ca01@schlenkerla.am.freescale.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [RFC PATCH 0/4] ARM: Basic Xilinx Support
+Date: Sun, 01 May 2011 23:07:39 -0600
+Message-ID: <20110502045207.24800.91172.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110429123051.4ed1ca01-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, John Linn <john.linn@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Russell,
+
+Just for giggles, here is the Xilinx board support series reworked a
+bit to depend entirely on CONFIG_OF and not use any static device
+registrations other than what is needed to bootstrap the system, and
+adds as little code as possible in terms of new infrastructure.  All
+told, the 4th patch adds less than 950 lines of code to the kernel,
+which is pretty darn good for a whole new subarch.
+
+The zynq platform is a pretty ideal test case for this since the goal
+has been from day one to depend on CONFIG_OF.  The previous series
+only used static device registrations because device tree on arm isn't
+yet in mainline.  Plus, xilinx is already quite comfortable with how
+to use the device tree since their other two architectures (powerpc and
+microblaze) have depended on device tree for years now.
+
+I'd like to get your thoughts on the reuse of plat-versatile for the
+struct clk implementation.  I'm certainly not excited about creating
+yet another implementation, and versatile seems to be ideal to reuse.
+
+The previous version of this board support has already been in
+linux-next for quite a while now.  If you do decide to pick up
+device tree support for 2.6.40, then it would pretty low risk thing to
+queue up this board support also.
+
+The 2nd and 3rd patches aren't actually part of the board support, but
+I included them here because they're needed to get the patch to apply.
+The whole series is based on top of both the irq_domain series I
+posted last week and the latest arm device tree support series.
+
+g.
+
+---
+
+Grant Likely (4):
+      arm/dt: Add dt machine definition
+      of/address: Add of_find_matching_node_by_address helper
+      dt/irq: add of_irq_domain_add_simple() helper
+      ARM: Xilinx: Adding Xilinx board support
 
 
-> 
-> >
-> >
-> > > > Hi,
-> > > >
-> > > > I have no comments about coding and architecture. It looks fine.
-> > > >
-> > > > Only have a query about its use case..
-> > > >    "Any application intended to use message interrupt requires to
-> > > > know
-> > > reg_num because of struct mpic_msgr* mpic_msgr_get(unsigned int
-> > > reg_num) API"
-> > > >
-> > > > It will be good to search available unit internally and provide
-> > > > its
-> > > pointer. It will make application more flexible.
-> > > >
-> > >
-> > > The problem is that you fundamentally cannot implement an allocator
-> > > for MSG registers if you're going to communicate with another kernel
-> > > (how would both kernels' allocators be synchronized?). So the
-> > > message register allocation must be decided at design time, not run
-> time.
-> > >
-> >
-> > I agree with you..  It is true while communicating with another kernel.
-> > But message interrupts can be used by different independent drivers
-> within same kernel. For eg. PCIe and Ethernet driver.
-> > As per current design both drivers needs to be in sync before
-> requesting any message unit for avoiding any conflict. As these drivers
-> are completely independent. It is very difficult.
-> >
-> > Can it be possible to provide new API to take care it.
-> 
-> Do you have a real use case in mind where these message registers (not
-> MSIs) are used internally in this manner?
+ Documentation/devicetree/bindings/arm/xilinx.txt |    7 +
+ arch/arm/Kconfig                                 |   14 +
+ arch/arm/Makefile                                |    2 
+ arch/arm/boot/dts/zynq-ep107.dts                 |   52 ++++
+ arch/arm/include/asm/mach/arch.h                 |    9 +
+ arch/arm/mach-zynq/Makefile                      |    6 
+ arch/arm/mach-zynq/Makefile.boot                 |    3 
+ arch/arm/mach-zynq/board_dt.c                    |   36 +++
+ arch/arm/mach-zynq/common.c                      |  112 ++++++++
+ arch/arm/mach-zynq/common.h                      |   29 ++
+ arch/arm/mach-zynq/include/mach/clkdev.h         |   32 ++
+ arch/arm/mach-zynq/include/mach/debug-macro.S    |   36 +++
+ arch/arm/mach-zynq/include/mach/entry-macro.S    |   30 ++
+ arch/arm/mach-zynq/include/mach/hardware.h       |   18 +
+ arch/arm/mach-zynq/include/mach/io.h             |   33 ++
+ arch/arm/mach-zynq/include/mach/irqs.h           |   21 ++
+ arch/arm/mach-zynq/include/mach/memory.h         |   22 ++
+ arch/arm/mach-zynq/include/mach/system.h         |   28 ++
+ arch/arm/mach-zynq/include/mach/timex.h          |   23 ++
+ arch/arm/mach-zynq/include/mach/uart.h           |   25 ++
+ arch/arm/mach-zynq/include/mach/uncompress.h     |   51 ++++
+ arch/arm/mach-zynq/include/mach/vmalloc.h        |   20 +
+ arch/arm/mach-zynq/include/mach/zynq_soc.h       |   48 ++++
+ arch/arm/mach-zynq/timer.c                       |  298 ++++++++++++++++++++++
+ arch/arm/mm/Kconfig                              |    2 
+ drivers/of/address.c                             |   18 +
+ drivers/of/irq.c                                 |   44 +++
+ include/linux/of_address.h                       |    4 
+ include/linux/of_irq.h                           |    2 
+ 29 files changed, 1024 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/xilinx.txt
+ create mode 100644 arch/arm/boot/dts/zynq-ep107.dts
+ create mode 100644 arch/arm/mach-zynq/Makefile
+ create mode 100644 arch/arm/mach-zynq/Makefile.boot
+ create mode 100644 arch/arm/mach-zynq/board_dt.c
+ create mode 100644 arch/arm/mach-zynq/common.c
+ create mode 100644 arch/arm/mach-zynq/common.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/clkdev.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/debug-macro.S
+ create mode 100644 arch/arm/mach-zynq/include/mach/entry-macro.S
+ create mode 100644 arch/arm/mach-zynq/include/mach/hardware.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/io.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/irqs.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/memory.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/system.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/timex.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/uart.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/uncompress.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/vmalloc.h
+ create mode 100644 arch/arm/mach-zynq/include/mach/zynq_soc.h
+ create mode 100644 arch/arm/mach-zynq/timer.c
 
-Yes, we use for PCIe host/agent test case scenario.
-Host usage message register to interrupt Agent...
-Agent uses message register to generate irq_out (automatically generate MSI) to interrupt master. Please see RM for more details about irq_out
- 
-
-Note: PCIe host/agent test scenario is used internally and we are working on pushing it out..
- 
-> Perhaps an allocator could be added in the same patchset that adds such a
-> user.
-> 
-
-Yaa. It can be done. Otherwise module has to query each message unit for its availability. 
-
---Prabhakar
+-- 
+Signature
