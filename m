@@ -1,77 +1,63 @@
-From: Hollis Blanchard <hollis_blanchard@mentor.com>
-Subject: Re: [PATCH 2/2] powerpc: add support for MPIC message register API
-Date: Mon, 02 May 2011 09:03:53 -0700
-Message-ID: <4DBED5E9.2070201@mentor.com>
-References: <1303232375-25014-1-git-send-email-meador_inge@mentor.com>	<1303232375-25014-3-git-send-email-meador_inge@mentor.com>	<071A08F2C6A57E4E94D980ECA553F8741959CA@039-SN1MPN1-004.039d.mgd.msft.net>	<4DBAED5D.4060906@mentor.com>	<071A08F2C6A57E4E94D980ECA553F8741967EC@039-SN1MPN1-004.039d.mgd.msft.net>
-	<20110429123051.4ed1ca01@schlenkerla.am.freescale.net>
-	<071A08F2C6A57E4E94D980ECA553F8741984EE@039-SN1MPN1-004.039d.mgd.msft.net>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 4/8] arm/dt: probe for platforms via the device tree
+Date: Mon, 2 May 2011 19:39:54 +0300
+Message-ID: <20110502163951.GC9243@atomide.com>
+References: <20110429070135.12522.35745.stgit@ponder>
+	<20110429071548.12522.56929.stgit@ponder>
+	<20110502151542.GG2092@atomide.com>
+	<BANLkTikue6jMUcQMv9GD4cZ=o5EEW7QDqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <071A08F2C6A57E4E94D980ECA553F8741984EE@039-SN1MPN1-004.039d.mgd.msft.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Kushwaha Prabhakar-B32579 <B32579@freescale.com>
-Cc: Meador Inge <meador_inge@mentor.com>, Wood Scott-B07421 <B07421@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "openmcapi-dev@googlegroups.com" <openmcapi-dev@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <BANLkTikue6jMUcQMv9GD4cZ=o5EEW7QDqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/2011 08:41 PM, Kushwaha Prabhakar-B32579 wrote:
->>>>> Hi,
->>>>>
->>>>> I have no comments about coding and architecture. It looks fine.
->>>>>
->>>>> Only have a query about its use case..
->>>>>     "Any application intended to use message interrupt requires to
->>>>> know
->>>> reg_num because of struct mpic_msgr* mpic_msgr_get(unsigned int
->>>> reg_num) API"
->>>>> It will be good to search available unit internally and provide
->>>>> its
->>>> pointer. It will make application more flexible.
->>>> The problem is that you fundamentally cannot implement an allocator
->>>> for MSG registers if you're going to communicate with another kernel
->>>> (how would both kernels' allocators be synchronized?). So the
->>>> message register allocation must be decided at design time, not run time.
->>> I agree with you..  It is true while communicating with another kernel.
->>> But message interrupts can be used by different independent drivers
->> within same kernel. For eg. PCIe and Ethernet driver.
->>> As per current design both drivers needs to be in sync before
->> requesting any message unit for avoiding any conflict. As these drivers
->> are completely independent. It is very difficult.
->>> Can it be possible to provide new API to take care it.
->> Do you have a real use case in mind where these message registers (not
->> MSIs) are used internally in this manner?
-> Yes, we use for PCIe host/agent test case scenario.
-> Host usage message register to interrupt Agent...
-> Agent uses message register to generate irq_out (automatically generate MSI) to interrupt master. Please see RM for more details about irq_out
->
->
-> Note: PCIe host/agent test scenario is used internally and we are working on pushing it out..
-
-I believe this has been true for several years.
-
->> Perhaps an allocator could be added in the same patchset that adds such a
->> user.
-> Yaa. It can be done. Otherwise module has to query each message unit for its availability.
-
-No, instead the system designer should pick one. If it doesn't matter 
-which one, then the designer is free to pick any.
-
-An allocator can't work if you're going to mix drivers. For example, 
-driver A needs MSRG0, and driver B doesn't care. Driver B loads first, 
-the allocator selects MSGR0; driver A loads and fails. Having an 
-allocator at all will create this conflict.
-
-To prevent this scenario, either don't use a MSGR (can you configure 
-anything else for irq_out?), or have the system designer choose all MSGRs.
-
-Hollis Blanchard
-Mentor Graphics, Embedded Systems Division
+KiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+IFsxMTA1MDIgMTg6MzFd
+Ogo+IE9uIE1vbiwgTWF5IDIsIDIwMTEgYXQgOToxNSBBTSwgVG9ueSBMaW5kZ3JlbiA8dG9ueUBh
+dG9taWRlLmNvbT4gd3JvdGU6Cj4gPiAqIEdyYW50IExpa2VseSA8Z3JhbnQubGlrZWx5QHNlY3Jl
+dGxhYi5jYT4gWzExMDQyOSAwMDoxM106Cj4gPj4gKwo+ID4+ICsvKioKPiA+PiArICogc2V0dXBf
+bWFjaGluZV9mZHQgLSBNYWNoaW5lIHNldHVwIHdoZW4gYW4gZHRiIHdhcyBwYXNzZWQgdG8gdGhl
+IGtlcm5lbAo+ID4+ICsgKiBAZHRfcGh5czogcGh5c2ljYWwgYWRkcmVzcyBvZiBkdCBibG9iCj4g
+Pj4gKyAqCj4gPj4gKyAqIElmIGEgZHRiIHdhcyBwYXNzZWQgdG8gdGhlIGtlcm5lbCBpbiByMiwg
+dGhlbiB1c2UgaXQgdG8gY2hvb3NlIHRoZQo+ID4+ICsgKiBjb3JyZWN0IG1hY2hpbmVfZGVzYyBh
+bmQgdG8gc2V0dXAgdGhlIHN5c3RlbS4KPiA+PiArICovCj4gPj4gK3N0cnVjdCBtYWNoaW5lX2Rl
+c2MgKiBfX2luaXQgc2V0dXBfbWFjaGluZV9mZHQodW5zaWduZWQgaW50IGR0X3BoeXMpCj4gPj4g
+K3sKPiA+IC4uLgo+ID4KPiA+PiArCj4gPj4gKyDCoCDCoCAvKiBSZXRyaWV2ZSB2YXJpb3VzIGlu
+Zm9ybWF0aW9uIGZyb20gdGhlIC9jaG9zZW4gbm9kZSAqLwo+ID4+ICsgwqAgwqAgb2Zfc2Nhbl9m
+bGF0X2R0KGVhcmx5X2luaXRfZHRfc2Nhbl9jaG9zZW4sIGJvb3RfY29tbWFuZF9saW5lKTsKPiA+
+Cj4gPiBKdXN0IHRvIG1ha2Ugc3VyZSB3ZSdyZSBjb25zaWRlcmluZyBwcm9wZXJseSB3aGF0IHRo
+aXMgY2hhbmdlIG1lYW5zLi4KPiA+Cj4gPiBEb2VzIHRoaXMgcGF0Y2ggcmVxdWlyZSB1c2luZyBD
+T05GSUdfQ01ETElORV9GT1JDRSBmb3Igb2xkZXIgYm9vdGxvYWRlcnMKPiA+IHdpdGggdGhlIGRl
+dmljZSB0cmVlIGFwcGVuZCBwYXRjaD8KPiAKPiBXaXRoIHRoZSBjdXJyZW50IHBhdGNoPyAgWWVz
+LCBidXQgdGhlcmUgaXMgYSBmb2xsb3ctb24gcGF0Y2ggdGhhdCB3YXMKPiBwb3N0ZWQgYSB3aGls
+ZSBhZ29bMV0gdGhhdCB3aWxsIGNvcHkgQVRBRyBkYXRhIGludG8gdGhlIGRldmljZSB0cmVlIGlu
+Cj4gdGhlIGJvb3Rsb2FkZXIuICBJJ3ZlIG5vdCBiZWVuIHB1c2hpbmcgdG8gaW5jbHVkZSB0aGF0
+IGNoYW5nZSBzaW5jZSBpdAo+IGFkZHMgYSBsb3Qgb2YgY29kZSB0byB0aGUgd3JhcHBlciBhbmQg
+SSdtIG5vdCBzdXJlIGhvdyBkZWVwbHkgd2Ugd2FudAo+IHRvIHN1cHBvcnQgdGhhdCB1c2UgY2Fz
+ZS4gIEJhc2ljYWxseSBJIHdhbnQgdG8gaGF2ZSBhIGJldHRlciBpZGVhIHdoYXQKPiB0aGUgc3Vw
+cG9ydGVkIHVzZSBjYXNlcyBhcmUgYmVmb3JlIHB1c2hpbmcgc29tZXRoaW5nIGxpa2UgdGhhdC4K
+Ck9LLiBNYXliZSB0aGF0IGNvdWxkIGJlIG1hZGUgc2ltcGxlciBpZiB3ZSBvbmx5IGNvcHkgdGhl
+IGNtZGxpbmU/CgpUaGUgY21kbGluZSBpcyBzb21ldGhpbmcgdGhhdCBib290bG9hZGVycyB0eXBp
+Y2FsbHkgYWxsb3cgdG8gY29uZmlndXJlLAp3aGlsZSB0aGUgb3RoZXIgQVRBR3MgYXJlIHN0YXRp
+YyBhbmQgc2hvdWxkIGJlIGluIHRoZSAuZHRzIGZpbGUuCiAKPiBBZGRpbmcgYSBkZWZhdWx0IGNv
+bW1hbmQgbGluZSB0byB0aGUgLmR0cyBmaWxlIGluc3RlYWQgb2YgdXNpbmcKPiBDT05GSUdfQ01E
+TElORV9GT1JDRSBhbHNvIHdvcmtzLgoKQnV0IHRoYXQgcmVxdWlyZXMgY2FycnlpbmcgZXh0cmEg
+cGF0Y2hlcyBmb3Igc29tZXRoaW5nIHRoYXQgc2hvdWxkCmJlIHVzZXIgY29uZmlndXJlZC4uIFNv
+IG5vdCBzbyBuaWNlIGZvciBkaXN0cm9zLgoKVG9ueQogCj4gWzFdIGh0dHA6Ly9saXN0cy5vemxh
+YnMub3JnL3BpcGVybWFpbC9kZXZpY2V0cmVlLWRpc2N1c3MvMjAxMS1NYXJjaC8wMDQ2NTIuaHRt
+bApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0
+cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
+b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
