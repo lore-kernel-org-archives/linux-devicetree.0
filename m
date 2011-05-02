@@ -1,58 +1,48 @@
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-Subject: Re: Login prompt on a video console instead of serial port?
-Date: Mon, 2 May 2011 19:55:21 +0000
-Message-ID: <BANLkTikWMksVsvs8KzjdiZfRR-2WGD0Ftw@mail.gmail.com>
-References: <4DBF065C.3030407@freescale.com>
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: Tegra: dt: s/rootdelay/rootwait/ in cmdline
+ args
+Date: Mon, 2 May 2011 15:02:05 -0600
+Message-ID: <20110502210205.GA10097@ponder.secretlab.ca>
+References: <1304362231-21909-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4DBF065C.3030407@freescale.com>
-Content-Language: en-US
-Content-ID: <2EE6EB65EBBC31478A1DC96F6169254A@freescale.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Tabi Timur-B04825 <B04825@freescale.com>
-Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1304362231-21909-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Don't you have to spawn a terminal on the framebuffer for the login?
-Right now getty spawns the login on the serial port via /etc/inittab.
-Something similiar is probably needed for the framebuffer.
+On Mon, May 02, 2011 at 12:50:29PM -0600, Stephen Warren wrote:
+> rootwait is more robust than rootdelay for slow devices.
+> 
+> Suggested-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
--M
+Squashed into 'arm/dt: full tegra devicetree support', thanks.
 
+g.
 
-
-On Mon, May 2, 2011 at 2:30 PM, Timur Tabi <timur@freescale.com> wrote:
-> I'm using a Freescale P1022DS (PowerPC e500 core) system, which has a bui=
-lt-in
-> video controller. =A0I have a framebuffer driver that works fine, and if =
-I add
-> "video=3Dfslfb:1280x1024-32@60,monitor=3D0 console=3Dtty0" to the command=
--line, then
-> *most* of the kernel boot log appears on the serial port and the video di=
-splay.
->
-> However, the login prompt is always on the serial port. =A0This happens e=
-ven if I
-> delete the "console=3DttyS0,115200" from the command-line. =A0I presume t=
-his is
-> because the "linux,stdout-path" property in the device tree always points=
- to a
-> serial port node.
->
-> So my question is: what do I need to do get the login prompt on the video
-> console? =A0That is, stdout goes to /dev/fb0 but stdin is still from /dev=
-/ttyS0.
-> I presume I need to direct "linux,stdout-path" to the fslfb node in the d=
-evice
-> tree, but there doesn't appear to be support for "linux,stdin-path".
+> ---
+> v2: New patch for v2 of series
+> 
+>  arch/arm/boot/dts/tegra-harmony.dts |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
+> index e87c27c..7fe007b 100644
+> --- a/arch/arm/boot/dts/tegra-harmony.dts
+> +++ b/arch/arm/boot/dts/tegra-harmony.dts
+> @@ -9,7 +9,7 @@
+>  	interrupt-parent = <&intc>;
+>  
+>  	chosen {
+> -		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk0p2 rw rootdelay=2";
+> +		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk0p2 rw rootwait";
+>  	};
+>  
+>  	memory {
+> -- 
+> 1.7.0.4
+> 
