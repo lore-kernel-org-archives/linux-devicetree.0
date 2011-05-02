@@ -1,278 +1,47 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 3/6] video, sm501: add edid and commandline support
-Date: Mon, 2 May 2011 16:37:11 -0600
-Message-ID: <BANLkTik3L28mmL=LGZ_0nV7vSOX9Miw3ow@mail.gmail.com>
-References: <1291451028-22532-1-git-send-email-hs@denx.de> <1300782452-528-1-git-send-email-hs@denx.de>
- <1300782452-528-4-git-send-email-hs@denx.de> <20110502222716.GB15187@ponder.secretlab.ca>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC PATCH 4/4] ARM: Xilinx: Adding Xilinx board support
+Date: Tue, 3 May 2011 00:01:18 +0100
+Message-ID: <20110502230118.GE28001@n2100.arm.linux.org.uk>
+References: <90477150.2231869.1304372815517.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
+	<1319927287.2232106.1304373011082.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110502222716.GB15187@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linuxppc-dev@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1319927287.2232106.1304373011082.JavaMail.root-2//McUVsTWSpNjDeV5bKuMcQQQXLS/gekU1+q43GAIqQvBXZIOnqxg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: johnlinn-Wuw85uim5zDR7s880joybQ@public.gmane.org
+Cc: nicolas pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 2, 2011 at 4:27 PM, Grant Likely <grant.likely@secretlab.ca=
-> wrote:
-> On Tue, Mar 22, 2011 at 09:27:29AM +0100, Heiko Schocher wrote:
->> - add commandline options:
->> =A0 sm501fb.mode:
->> =A0 =A0 Specify resolution as "<xres>x<yres>[-<bpp>][@<refresh>]"
->> =A0 sm501fb.bpp:
->> =A0 =A0 Specify bit-per-pixel if not specified mode
->>
->> - Add support for encoding display mode information
->> =A0 in the device tree using verbatim EDID block.
->>
->> =A0 If the "edid" entry in the "smi,sm501" node is present,
->> =A0 the driver will build mode database using EDID data
->> =A0 and allow setting the display modes from this database.
->>
->> Signed-off-by: Heiko Schocher <hs@denx.de>
->
-> Merged, thanks.
+On Mon, May 02, 2011 at 09:50:11PM +0000, johnlinn-Wuw85uim5zDR7s880joybQ@public.gmane.org wrote:
+> Seems easy enough assuming we don't need the SCU early for the core count
+> and can get that from the device tree.
 
-This patch causes the following build warning:
+Beware.  Things may not be that trivial when you start considering some
+of the weirdnesses that some vendors start coming out with.
 
-  MODPOST vmlinux.o
-WARNING: vmlinux.o(.text+0x1d5572): Section mismatch in reference from
-the function sm501fb_init_fb() to the variable
-=2Edevinit.data:sm501_default_mode
-The function sm501fb_init_fb() references
-the variable __devinitdata sm501_default_mode.
-This is often because sm501fb_init_fb lacks a __devinitdata
-annotation or the annotation of sm501_default_mode is wrong.
+> Since the SCU and part of the GIC end up in the same 4K page they need to be
+> together (unless I'm thinking about that wrong).
+> 
+> SCU 0xF8000000
+> GIC_CPU 0xF8000100
+> GIC_DIS 0xF8001000
 
-WARNING: vmlinux.o(.text+0x1d557a): Section mismatch in reference from
-the function sm501fb_init_fb() to the variable
-=2Edevinit.data:sm501_default_mode
-The function sm501fb_init_fb() references
-the variable __devinitdata sm501_default_mode.
-This is often because sm501fb_init_fb lacks a __devinitdata
-annotation or the annotation of sm501_default_mode is wrong.
+It is preferable to use the same mapping, as it ensures that you're not
+going to create incompatible aliases.
 
-I've dropped the __devinitdata declaration in what I committed; can
-you investigate and post a fixup patch?
-
->
-> g.
->
->> cc: Wolfram Sang <w.sang@pengutronix.de>
->> cc: Grant Likely <grant.likely@secretlab.ca>
->> cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> cc: linux-fbdev@vger.kernel.org
->> cc: devicetree-discuss@ozlabs.org
->> cc: Ben Dooks <ben@simtec.co.uk>
->> cc: Vincent Sanders <vince@simtec.co.uk>
->> cc: Samuel Ortiz <sameo@linux.intel.com>
->> cc: linux-kernel@vger.kernel.org
->> cc: Randy Dunlap <rdunlap@xenotime.net>
->> cc: Wolfgang Denk <wd@denx.de>
->> cc: Paul Mundt <lethal@linux-sh.org>
->> ---
->> - changes since v1:
->> =A0 add Ben Dooks, Vincent Sanders and Samuel Ortiz to cc, as sugges=
-ted from
->> =A0 Paul Mundt.
->> - changes since v2:
->> =A0 add comments from Randy Dunlap:
->> =A0 - move parameter documentation to Documentation/fb/sm501.txt
->> - changes since v3:
->> =A0 - rebased against v2.6.38-rc2
->> =A0 - split in 3 patches
->> =A0 =A0 - of support patch
->> =A0 =A0 - i/o routine patch
->> =A0 =A0 - edid support patch
->> - changes since v4:
->> =A0 - add "info->pdata =3D &sm501fb_def_pdata;" in sm501fb_probe()
->> =A0 =A0 as Paul Mundt suggested (and I wrongly deleted)
->> =A0 - move kfree(info->edid_data); to patch 3/4
->> =A0 =A0 as edid_data is only allocated in the CONFIG_OF case
->> - changes for v6:
->> =A0 - repost complete patchserie
->> =A0 - rebased against current head
->>
->> =A0Documentation/fb/sm501.txt | =A0 10 +++++++
->> =A0drivers/video/sm501fb.c =A0 =A0| =A0 65 +++++++++++++++++++++++++=
-+++++++++++++++---
->> =A02 files changed, 70 insertions(+), 5 deletions(-)
->> =A0create mode 100644 Documentation/fb/sm501.txt
->>
->> diff --git a/Documentation/fb/sm501.txt b/Documentation/fb/sm501.txt
->> new file mode 100644
->> index 0000000..8d17aeb
->> --- /dev/null
->> +++ b/Documentation/fb/sm501.txt
->> @@ -0,0 +1,10 @@
->> +Configuration:
->> +
->> +You can pass the following kernel command line options to sm501 vid=
-eoframebuffer:
->> +
->> + =A0 =A0 sm501fb.bpp=3D =A0 =A0SM501 Display driver:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Specifiy bits-per-pixel if=
- not specified by 'mode'
->> +
->> + =A0 =A0 sm501fb.mode=3D =A0 SM501 Display driver:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Specify resolution as
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "<xres>x<yres>[-<bpp>][@<r=
-efresh>]"
->> diff --git a/drivers/video/sm501fb.c b/drivers/video/sm501fb.c
->> index 5df406c..f31252c 100644
->> --- a/drivers/video/sm501fb.c
->> +++ b/drivers/video/sm501fb.c
->> @@ -41,6 +41,26 @@
->> =A0#include <linux/sm501.h>
->> =A0#include <linux/sm501-regs.h>
->>
->> +#include "edid.h"
->> +
->> +static char *fb_mode =3D "640x480-16@60";
->> +static unsigned long default_bpp =3D 16;
->> +
->> +static struct fb_videomode __devinitdata sm501_default_mode =3D {
->> + =A0 =A0 .refresh =A0 =A0 =A0 =A0=3D 60,
->> + =A0 =A0 .xres =A0 =A0 =A0 =A0 =A0 =3D 640,
->> + =A0 =A0 .yres =A0 =A0 =A0 =A0 =A0 =3D 480,
->> + =A0 =A0 .pixclock =A0 =A0 =A0 =3D 20833,
->> + =A0 =A0 .left_margin =A0 =A0=3D 142,
->> + =A0 =A0 .right_margin =A0 =3D 13,
->> + =A0 =A0 .upper_margin =A0 =3D 21,
->> + =A0 =A0 .lower_margin =A0 =3D 1,
->> + =A0 =A0 .hsync_len =A0 =A0 =A0=3D 69,
->> + =A0 =A0 .vsync_len =A0 =A0 =A0=3D 3,
->> + =A0 =A0 .sync =A0 =A0 =A0 =A0 =A0 =3D FB_SYNC_HOR_HIGH_ACT | FB_SY=
-NC_VERT_HIGH_ACT,
->> + =A0 =A0 .vmode =A0 =A0 =A0 =A0 =A0=3D FB_VMODE_NONINTERLACED
->> +};
->> +
->> =A0#define NR_PALETTE =A0 256
->>
->> =A0enum sm501_controller {
->> @@ -77,6 +97,7 @@ struct sm501fb_info {
->> =A0 =A0 =A0 void __iomem =A0 =A0 =A0 =A0 =A0 =A0*regs2d; =A0 =A0 =A0=
- =A0/* 2d remapped registers */
->> =A0 =A0 =A0 void __iomem =A0 =A0 =A0 =A0 =A0 =A0*fbmem; =A0 =A0 =A0 =
-=A0 /* remapped framebuffer */
->> =A0 =A0 =A0 size_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fbmem_len; =A0=
- =A0 /* length of remapped region */
->> + =A0 =A0 u8 *edid_data;
->> =A0};
->>
->> =A0/* per-framebuffer private data */
->> @@ -1725,9 +1746,16 @@ static int sm501fb_init_fb(struct fb_info *fb=
-,
->> =A0 =A0 =A0 fb->var.vmode =A0 =A0 =A0 =A0 =A0 =3D FB_VMODE_NONINTERL=
-ACED;
->> =A0 =A0 =A0 fb->var.bits_per_pixel =A0=3D 16;
->>
->> + =A0 =A0 if (info->edid_data) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* Now build modedb from E=
-DID */
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fb_edid_to_monspecs(info->=
-edid_data, &fb->monspecs);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fb_videomode_to_modelist(f=
-b->monspecs.modedb,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0fb->monspecs.modedb_len,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0&fb->modelist);
->> + =A0 =A0 }
->> +
->> =A0 =A0 =A0 if (enable && (pd->flags & SM501FB_FLAG_USE_INIT_MODE) &=
-& 0) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* TODO read the mode from the current d=
-isplay */
->> -
->> =A0 =A0 =A0 } else {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (pd->def_mode) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(info->dev, "usi=
-ng supplied mode\n");
->> @@ -1737,12 +1765,34 @@ static int sm501fb_init_fb(struct fb_info *f=
-b,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fb->var.xres_virtual =3D=
- fb->var.xres;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fb->var.yres_virtual =3D=
- fb->var.yres;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D fb_find_mode(&fb->=
-var, fb,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (info->edid_data)
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D fb=
-_find_mode(&fb->var, fb, fb_mode,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 fb->monspecs.modedb,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 fb->monspecs.modedb_len,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 &sm501_default_mode, default_bpp);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 else
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D fb=
-_find_mode(&fb->var, fb,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0NULL, NULL, 0, NULL, 8);
->>
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (ret =3D=3D 0 || ret =3D=
-=3D 4) {
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(in=
-fo->dev,
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 "failed to get initial mode\n");
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 switch (ret) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 1:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i=
-nfo->dev, "using mode specified in "
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 "@mode\n");
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 2:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i=
-nfo->dev, "using mode specified in "
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 "@mode with ignored refresh rate\n");
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 3:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i=
-nfo->dev, "using mode default "
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 "mode\n");
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 4:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i=
-nfo->dev, "using mode from list\n");
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 default:
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i=
-nfo->dev, "ret =3D %d\n", ret);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_info(i=
-nfo->dev, "failed to find mode\n");
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -=
-EINVAL;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
->> @@ -2157,6 +2207,11 @@ static void __exit sm501fb_cleanup(void)
->> =A0module_init(sm501fb_init);
->> =A0module_exit(sm501fb_cleanup);
->>
->> +module_param_named(mode, fb_mode, charp, 0);
->> +MODULE_PARM_DESC(mode,
->> + =A0 =A0 "Specify resolution as \"<xres>x<yres>[-<bpp>][@<refresh>]=
-\" ");
->> +module_param_named(bpp, default_bpp, ulong, 0);
->> +MODULE_PARM_DESC(bpp, "Specify bit-per-pixel if not specified mode"=
-);
->> =A0MODULE_AUTHOR("Ben Dooks, Vincent Sanders");
->> =A0MODULE_DESCRIPTION("SM501 Framebuffer driver");
->> =A0MODULE_LICENSE("GPL v2");
->> --
->> 1.7.4
->>
->
-
-
-
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+But, before we get too bogged down with this, please realise that it is
+possible to setup early mappings from the device tree for things like the
+SCU.  Maybe not using ioremap(), but I'm sure we can find some way to use
+the iotable_init() stuff to setup some early mappings from DT for this
+stuff.
