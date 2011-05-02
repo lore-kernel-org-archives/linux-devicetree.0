@@ -1,164 +1,161 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [RFC PATCH 4/4] ARM: Xilinx: Adding Xilinx board support
-Date: Mon, 2 May 2011 10:39:32 +0200
-Message-ID: <201105021039.32374.arnd@arndb.de>
-References: <20110502045207.24800.91172.stgit@ponder> <20110502050800.24800.13738.stgit@ponder>
+Date: Mon, 02 May 2011 08:29:12 -0500
+Message-ID: <4DBEB1A8.3040202@gmail.com>
+References: <20110502045207.24800.91172.stgit@ponder>	<20110502050800.24800.13738.stgit@ponder>
+	<201105021039.32374.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110502050800.24800.13738.stgit@ponder>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, John Linn <john.linn@xilinx.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201105021039.32374.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 02 May 2011 07:08:00 Grant Likely wrote:
-> The 1st board support is minimal to get a system up and running
-> on the Xilinx platform.
-> 
-> This platform reuses the clock implementation from plat-versatile, and
-> it depends entirely on CONFIG_OF support.  There is only one board
-> support file which obtains all device information from a device tree
-> dtb file which is passed to the kernel at boot time.
+On 05/02/2011 03:39 AM, Arnd Bergmann wrote:
+> On Monday 02 May 2011 07:08:00 Grant Likely wrote:
+>> The 1st board support is minimal to get a system up and running
+>> on the Xilinx platform.
+>>
+>> This platform reuses the clock implementation from plat-versatile, and
+>> it depends entirely on CONFIG_OF support.  There is only one board
+>> support file which obtains all device information from a device tree
+>> dtb file which is passed to the kernel at boot time.
+>
+> Very cool stuff!
+>
+>> +
+>> +	amba {
+>> +		compatible = "simple-bus";
+>> +		#address-cells =<1>;
+>> +		#size-cells =<1>;
+>> +		ranges;
+>
+> Shouldn't we have a way to identify amba buses by the compatible property
+> as well, rather than only declaring it simple-bus?
+>
+> We might be able to do some more automatic probing in the amba
+> code in cases where the architected registers are actually filled
+> with meaningful data there.
+>
 
-Very cool stuff!
+Typically, I don't think anything but ARM's Primecell peripherals have 
+registers for probing. The GIC and PL310 don't have them.
 
-> +
-> +	amba {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
+However, this is what was used for an early version of the versatile dts:
 
-Shouldn't we have a way to identify amba buses by the compatible property
-as well, rather than only declaring it simple-bus?
+compatible = "arm,amba-bus";
 
-We might be able to do some more automatic probing in the amba
-code in cases where the architected registers are actually filled
-with meaningful data there.
+> Is the empty ranges property technically correct? Excuse my poor
+> knowledge of amba, but I would have assumed that only a range
+> of addresses is actually put on the bus, while others (e.g. RAM)
+> are not visible on AMBA.
+>
+>> +static struct of_device_id zynq_of_bus_ids[] __initdata = {
+>> +	{ .compatible = "simple-bus", },
+>> +	{}
+>> +};
+>> +
+>> +static struct of_device_id gic_match[] = {
+>> +	{ .compatible = "arm,gic", },
+>> +	{}
+>> +};
+>> +
+>> +/**
+>> + * xilinx_init_machine() - System specific initialization, intended to be
+>> + *			   called from board specific initialization.
+>> + */
+>> +void __init xilinx_init_machine(void)
+>> +{
+>> +	struct device_node *node = of_find_matching_node(NULL, gic_match);
+>> +
+>> +	if (node)
+>> +		of_irq_domain_add_simple(node, 0, NR_IRQS);
+>> +
+>> +#ifdef CONFIG_CACHE_L2X0
+>> +	/*
+>> +	 * 64KB way size, 8-way associativity, parity disabled
+>> +	 */
+>> +	l2x0_init(PL310_L2CC_BASE, 0x02060000, 0xF0F0FFFF);
+>> +#endif
+>> +
+>> +/**
+>> + * xilinx_irq_init() - Interrupt controller initialization for the GIC.
+>> + */
+>> +void __init xilinx_irq_init(void)
+>> +{
+>> +	gic_init(0, 29, SCU_GIC_DIST_BASE, SCU_GIC_CPU_BASE);
+>> +}
+>
+> I think we can do better than this, there is still more hardcoded stuff
+> in here than I think should be. I understand that you tried to minimize
+> the size of the patch set for obvious reasons, but none of this
+> seems too board specific to put into common code in one way or another.
+>
+> Of course we can not fix all of this at once, but maybe we can have
+> an explanation for each hardcoded setting on why it is still needed
+> and what would have to be done to make it go away.
 
-Is the empty ranges property technically correct? Excuse my poor
-knowledge of amba, but I would have assumed that only a range
-of addresses is actually put on the bus, while others (e.g. RAM)
-are not visible on AMBA.
+The SCU base address is probe-able:
 
-> +static struct of_device_id zynq_of_bus_ids[] __initdata = {
-> +	{ .compatible = "simple-bus", },
-> +	{}
-> +};
-> +
-> +static struct of_device_id gic_match[] = {
-> +	{ .compatible = "arm,gic", },
-> +	{}
-> +};
-> +
-> +/**
-> + * xilinx_init_machine() - System specific initialization, intended to be
-> + *			   called from board specific initialization.
-> + */
-> +void __init xilinx_init_machine(void)
-> +{
-> +	struct device_node *node = of_find_matching_node(NULL, gic_match);
-> +
-> +	if (node)
-> +		of_irq_domain_add_simple(node, 0, NR_IRQS);
-> +
-> +#ifdef CONFIG_CACHE_L2X0
-> +	/*
-> +	 * 64KB way size, 8-way associativity, parity disabled
-> +	 */
-> +	l2x0_init(PL310_L2CC_BASE, 0x02060000, 0xF0F0FFFF);
-> +#endif
-> +
-> +/**
-> + * xilinx_irq_init() - Interrupt controller initialization for the GIC.
-> + */
-> +void __init xilinx_irq_init(void)
-> +{
-> +	gic_init(0, 29, SCU_GIC_DIST_BASE, SCU_GIC_CPU_BASE);
-> +}
+	/* Get SCU base */
+	asm("mrc p15, 4, %0, c15, c0, 0" : "=r" (base));
 
-I think we can do better than this, there is still more hardcoded stuff
-in here than I think should be. I understand that you tried to minimize
-the size of the patch set for obvious reasons, but none of this
-seems too board specific to put into common code in one way or another.
+However, this is specific to the A9 and not an SCU feature.
 
-Of course we can not fix all of this at once, but maybe we can have
-an explanation for each hardcoded setting on why it is still needed
-and what would have to be done to make it go away.
+>
+>> +/* The minimum devices needed to be mapped before the VM system is up and
+>> + * running include the GIC, UART and Timer Counter.
+>> + */
+>> +
+>> +static struct map_desc io_desc[] __initdata = {
+>> +	{
+>> +		.virtual	= TTC0_VIRT,
+>> +		.pfn		= __phys_to_pfn(TTC0_PHYS),
+>> +		.length		= SZ_4K,
+>> +		.type		= MT_DEVICE,
+>> +	}, {
+>> +		.virtual	= SCU_PERIPH_VIRT,
+>> +		.pfn		= __phys_to_pfn(SCU_PERIPH_PHYS),
+>> +		.length		= SZ_8K,
+>> +		.type		= MT_DEVICE,
+>> +	}, {
+>> +		.virtual	= PL310_L2CC_VIRT,
+>> +		.pfn		= __phys_to_pfn(PL310_L2CC_PHYS),
+>> +		.length		= SZ_4K,
+>> +		.type		= MT_DEVICE,
+>> +	},
+>
+> I especially dislike the idea of having to set up iotables, these
+> seem completely counterintuitive when we probe the devices from the
+> device tree.
+>
+> AFAICT, all of init_irq, time_init and init_machine are called way after
+> mm_init, so you should have ioremap available by the time you need to
+> access these virtual memory ranges.
+>
 
-> +/* The minimum devices needed to be mapped before the VM system is up and
-> + * running include the GIC, UART and Timer Counter.
-> + */
-> +
-> +static struct map_desc io_desc[] __initdata = {
-> +	{
-> +		.virtual	= TTC0_VIRT,
-> +		.pfn		= __phys_to_pfn(TTC0_PHYS),
-> +		.length		= SZ_4K,
-> +		.type		= MT_DEVICE,
-> +	}, {
-> +		.virtual	= SCU_PERIPH_VIRT,
-> +		.pfn		= __phys_to_pfn(SCU_PERIPH_PHYS),
-> +		.length		= SZ_8K,
-> +		.type		= MT_DEVICE,
-> +	}, {
-> +		.virtual	= PL310_L2CC_VIRT,
-> +		.pfn		= __phys_to_pfn(PL310_L2CC_PHYS),
-> +		.length		= SZ_4K,
-> +		.type		= MT_DEVICE,
-> +	},
+The SCU is accessed before ioremap is up. The only reason it is accessed 
+early is to determine the number of cores present.
 
-I especially dislike the idea of having to set up iotables, these
-seem completely counterintuitive when we probe the devices from the
-device tree.
+The L2 can certainly be ioremapped and probed via DT. How about 
+something like this:
 
-AFAICT, all of init_irq, time_init and init_machine are called way after
-mm_init, so you should have ioremap available by the time you need to
-access these virtual memory ranges.
+	l2cc {
+		compatible = "arm,pl310-l2";
+		reg = <0xfff12000 0x1000>;
+		aux-value = <0>;
+		aux-mask = <0xffffffff>;
+	};
 
-I can understand why you'd want to special-case PCI I/O space windows
-and early serial port access, but I think we should handle them differently
-and give them fixed machine independent virtual addresses.
-
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/io.h
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/irqs.h
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/memory.h
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/system.h
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/timex.h
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/vmalloc.h
-
-These are all either completely generic versions that could be reused
-on a number of other machines, or they could be turned into such files.
-
-For the global inlude/asm-generic files, we have just added a mechanism
-to share that kind of file across multiple architectures using some
-Makefile magic. Should we perhaps do something similar here to avoid
-having to create more of the same files?
-
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/uart.h
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/include/mach/uncompress.h
-
-For these, it obviously won't work.
-
-> diff --git a/arch/arm/mach-zynq/timer.c b/arch/arm/mach-zynq/timer.c
-> new file mode 100644
-> index 0000000..c2c96cc
-> --- /dev/null
-> +++ b/arch/arm/mach-zynq/timer.c
-
-In the light of the recent discussions of drivers moving out of
-platforms into common Linux code, do we expect this to also
-happen to timers any time soon?
-
-	Arnd
+Rob
