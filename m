@@ -1,17 +1,15 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/8] arm/dt: probe for platforms via the device tree
-Date: Mon, 2 May 2011 19:39:54 +0300
-Message-ID: <20110502163951.GC9243@atomide.com>
-References: <20110429070135.12522.35745.stgit@ponder>
-	<20110429071548.12522.56929.stgit@ponder>
-	<20110502151542.GG2092@atomide.com>
-	<BANLkTikue6jMUcQMv9GD4cZ=o5EEW7QDqQ@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: SDHCI enumeration order, dynamic mmcblkN IDs, and devicetree
+Date: Mon, 2 May 2011 09:55:11 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B156@HQMAIL01.nvidia.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B0B3@HQMAIL01.nvidia.com>
+	<20110430074032.GD3103@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTikue6jMUcQMv9GD4cZ=o5EEW7QDqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110430074032.GD3103-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,42 +20,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-KiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+IFsxMTA1MDIgMTg6MzFd
-Ogo+IE9uIE1vbiwgTWF5IDIsIDIwMTEgYXQgOToxNSBBTSwgVG9ueSBMaW5kZ3JlbiA8dG9ueUBh
-dG9taWRlLmNvbT4gd3JvdGU6Cj4gPiAqIEdyYW50IExpa2VseSA8Z3JhbnQubGlrZWx5QHNlY3Jl
-dGxhYi5jYT4gWzExMDQyOSAwMDoxM106Cj4gPj4gKwo+ID4+ICsvKioKPiA+PiArICogc2V0dXBf
-bWFjaGluZV9mZHQgLSBNYWNoaW5lIHNldHVwIHdoZW4gYW4gZHRiIHdhcyBwYXNzZWQgdG8gdGhl
-IGtlcm5lbAo+ID4+ICsgKiBAZHRfcGh5czogcGh5c2ljYWwgYWRkcmVzcyBvZiBkdCBibG9iCj4g
-Pj4gKyAqCj4gPj4gKyAqIElmIGEgZHRiIHdhcyBwYXNzZWQgdG8gdGhlIGtlcm5lbCBpbiByMiwg
-dGhlbiB1c2UgaXQgdG8gY2hvb3NlIHRoZQo+ID4+ICsgKiBjb3JyZWN0IG1hY2hpbmVfZGVzYyBh
-bmQgdG8gc2V0dXAgdGhlIHN5c3RlbS4KPiA+PiArICovCj4gPj4gK3N0cnVjdCBtYWNoaW5lX2Rl
-c2MgKiBfX2luaXQgc2V0dXBfbWFjaGluZV9mZHQodW5zaWduZWQgaW50IGR0X3BoeXMpCj4gPj4g
-K3sKPiA+IC4uLgo+ID4KPiA+PiArCj4gPj4gKyDCoCDCoCAvKiBSZXRyaWV2ZSB2YXJpb3VzIGlu
-Zm9ybWF0aW9uIGZyb20gdGhlIC9jaG9zZW4gbm9kZSAqLwo+ID4+ICsgwqAgwqAgb2Zfc2Nhbl9m
-bGF0X2R0KGVhcmx5X2luaXRfZHRfc2Nhbl9jaG9zZW4sIGJvb3RfY29tbWFuZF9saW5lKTsKPiA+
-Cj4gPiBKdXN0IHRvIG1ha2Ugc3VyZSB3ZSdyZSBjb25zaWRlcmluZyBwcm9wZXJseSB3aGF0IHRo
-aXMgY2hhbmdlIG1lYW5zLi4KPiA+Cj4gPiBEb2VzIHRoaXMgcGF0Y2ggcmVxdWlyZSB1c2luZyBD
-T05GSUdfQ01ETElORV9GT1JDRSBmb3Igb2xkZXIgYm9vdGxvYWRlcnMKPiA+IHdpdGggdGhlIGRl
-dmljZSB0cmVlIGFwcGVuZCBwYXRjaD8KPiAKPiBXaXRoIHRoZSBjdXJyZW50IHBhdGNoPyAgWWVz
-LCBidXQgdGhlcmUgaXMgYSBmb2xsb3ctb24gcGF0Y2ggdGhhdCB3YXMKPiBwb3N0ZWQgYSB3aGls
-ZSBhZ29bMV0gdGhhdCB3aWxsIGNvcHkgQVRBRyBkYXRhIGludG8gdGhlIGRldmljZSB0cmVlIGlu
-Cj4gdGhlIGJvb3Rsb2FkZXIuICBJJ3ZlIG5vdCBiZWVuIHB1c2hpbmcgdG8gaW5jbHVkZSB0aGF0
-IGNoYW5nZSBzaW5jZSBpdAo+IGFkZHMgYSBsb3Qgb2YgY29kZSB0byB0aGUgd3JhcHBlciBhbmQg
-SSdtIG5vdCBzdXJlIGhvdyBkZWVwbHkgd2Ugd2FudAo+IHRvIHN1cHBvcnQgdGhhdCB1c2UgY2Fz
-ZS4gIEJhc2ljYWxseSBJIHdhbnQgdG8gaGF2ZSBhIGJldHRlciBpZGVhIHdoYXQKPiB0aGUgc3Vw
-cG9ydGVkIHVzZSBjYXNlcyBhcmUgYmVmb3JlIHB1c2hpbmcgc29tZXRoaW5nIGxpa2UgdGhhdC4K
-Ck9LLiBNYXliZSB0aGF0IGNvdWxkIGJlIG1hZGUgc2ltcGxlciBpZiB3ZSBvbmx5IGNvcHkgdGhl
-IGNtZGxpbmU/CgpUaGUgY21kbGluZSBpcyBzb21ldGhpbmcgdGhhdCBib290bG9hZGVycyB0eXBp
-Y2FsbHkgYWxsb3cgdG8gY29uZmlndXJlLAp3aGlsZSB0aGUgb3RoZXIgQVRBR3MgYXJlIHN0YXRp
-YyBhbmQgc2hvdWxkIGJlIGluIHRoZSAuZHRzIGZpbGUuCiAKPiBBZGRpbmcgYSBkZWZhdWx0IGNv
-bW1hbmQgbGluZSB0byB0aGUgLmR0cyBmaWxlIGluc3RlYWQgb2YgdXNpbmcKPiBDT05GSUdfQ01E
-TElORV9GT1JDRSBhbHNvIHdvcmtzLgoKQnV0IHRoYXQgcmVxdWlyZXMgY2FycnlpbmcgZXh0cmEg
-cGF0Y2hlcyBmb3Igc29tZXRoaW5nIHRoYXQgc2hvdWxkCmJlIHVzZXIgY29uZmlndXJlZC4uIFNv
-IG5vdCBzbyBuaWNlIGZvciBkaXN0cm9zLgoKVG9ueQogCj4gWzFdIGh0dHA6Ly9saXN0cy5vemxh
-YnMub3JnL3BpcGVybWFpbC9kZXZpY2V0cmVlLWRpc2N1c3MvMjAxMS1NYXJjaC8wMDQ2NTIuaHRt
-bApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0
-cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
-b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Grant Likely wrote at Saturday, April 30, 2011 1:41 AM:
+> On Fri, Apr 29, 2011 at 09:34:37PM -0700, Stephen Warren wrote:
+> > The SDHCI driver assigns dynamic device numbers (mmcblk0/1/...) to
+> > devices based on when they get probed, which IDs are free at that time,
+> > etc. Many boards have e.g. 1 fixed MMC soldered onto the board, and 1
+> > SD slot. There may or may not be a card in the SD slot at probe time,
+> > which can then cause the numbering of the fixed MMC to differ.
+> >
+> > Developers (even boot scripts) want to create simple hard-coded command-
+> > lines based on static device IDs, e.g. root=/dev/mmcblk1p3.
+> >
+> > To reconcile these two somewhat conflicting requirements, the order in
+> > which the SDHCI controllers are passed to platform_add_devices has been
+> > varied, so that all soldered-down storage is registered first (which
+> > synchronously probes the device and assigns the block device ID, which
+> > is therefore pseudo-static), followed by socketed storage, which then
+> > get a dynamic ID. When there is only 1 socketed controller, this dynamic
+> > ID ends up being pseudo-static too.
+> >
+> > The Tegra board files have been doing this for a little while, and the
+> > changes to do so were inspired by similar changes to some (IIRC) OMAP
+> > board files.
+> >
+> > Now to the devicetree specific issue:
+> >
+> > In the model where the board file registers all the platform devices,
+> > which then get matched to OF DT nodes, there is only a single board file,
+> > and hence only a single order of registration of SDHCI controllers. The
+> > order required to achieve pseudo-static numbering may not be the same
+> > for all boards; it depends on which SDHCI controllers are used for which
+> > purpose. Hence, this workaround essentially doesn't always work anymore.
+> >
+> > Is there a way in DT to influence the platform device probe order? If not,
+> > should there be? Or, are there other ways to work around this? (root=UUID
+> > would work, but it's a pain for me to type and set up if I'm constantly
+> > rebuilding filesystem images)
+> >
+> > Thanks for any hints!
+> 
+> Anytime you need to assign global or user visible names, the best way
+> to do it is to create properties in the /aliases node in the form:
+> 
+> aliases {
+> 	mmc0 = &first-sdhci-label;
+> 	mmc1 = &second-
+> };
+> 
+> Then the driver has a canonical place to look to determine whether or
+> not a name has already been assigned to a device; regardless of
+> whether or not the device is registered yet.
+
+I believe that's simply going to define names for the SDHCI controllers
+themselves (or allow the controllers to define their own names).
+
+The issue is that the SDHCI block device names and SDHCI controller
+names are in a different name-space; using the aliases node to define
+the desired names for the controllers isn't going to affect the names
+of the block devices that the controllers expose.
+
+That is, unless having an aliases node itself alters the probe order for
+the SDHCI controllers, but I doubt that's the case?
+
+> There isn't much in the way of support code for parsing the aliases
+> node yet, but that is definitely the approach I would take.  You'll
+> also need to make sure the implemented solution is applicable across
+> all mmc controller drivers; not just tegra specific.  The details are
+> probably fiddly to work out.
+
+I think any solution for Tegra would be generally applicable; it'd be
+implemented for the "sdhc-pltfm" device, which is shared between Tegra
+and a variety of other SoCs, and the mechanism (DT nodes, the way they
+are handled by the SDHCI drivers) should be portable to any other
+SDHCI driver as needed.
+
+-- 
+nvpublic
