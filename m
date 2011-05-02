@@ -1,278 +1,220 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ARM: Tegra: dt: Split out separate Tegra SoC DT
-Date: Mon, 2 May 2011 15:06:13 -0600
-Message-ID: <20110502210613.GB10097@ponder.secretlab.ca>
-References: <1304362231-21909-1-git-send-email-swarren@nvidia.com>
-	<1304362231-21909-2-git-send-email-swarren@nvidia.com>
+From: johnlinn@comcast.net
+Subject: Re: [RFC PATCH 4/4] ARM: Xilinx: Adding Xilinx board support
+Date: Mon, 2 May 2011 21:27:04 +0000 (UTC)
+Message-ID: <538266033.2230575.1304371624720.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
+References: <1518608384.2203937.1304349657551.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1304362231-21909-2-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518608384.2203937.1304349657551.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de
+Cc: john.linn@xilinx.com, grant.likely@secretlab.ca, nicolas.pitre@linaro.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2011 at 12:50:30PM -0600, Stephen Warren wrote:
-> tegra250.dts describes everything within the Tegra SoC, but leaves all
-> optional devices disabled.
-> 
-> tegra-harmony.dts is now the configuration of the SoC for the board,
-> i.e. it enables the optional devices that are required for the board,
-> and provides any required platform data for those devics.
-> 
-> The prevents every Tegra board having to repeat all the basic internal
-> SoC wiring.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Squashed into arm/dt: full tegra devicetree support, thanks
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de] 
+> Sent: Monday, May 02, 2011 2:40 AM
+> To: linux-arm-kernel@lists.infradead.org
+> Cc: grant.likely@secretlab.ca; Nicolas Pitre; Russell King;
+> devicetree-discuss@lists.ozlabs.org; linux-kernel@vger.kernel.org;
+> John
+> Linn
+> Subject: Re: [RFC PATCH 4/4] ARM: Xilinx: Adding Xilinx board support
+> 
+> On Monday 02 May 2011 07:08:00 Grant Likely wrote:
+> > The 1st board support is minimal to get a system up and running
+> > on the Xilinx platform.
+> > 
+> > This platform reuses the clock implementation from plat-versatile,
+> and
+> > it depends entirely on CONFIG_OF support.  There is only one board
+> > support file which obtains all device information from a device
+> tree
+> > dtb file which is passed to the kernel at boot time.
+> 
+> Very cool stuff!
+> 
+> > +
+> > +	amba {
+> > +		compatible = "simple-bus";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> 
+> Shouldn't we have a way to identify amba buses by the compatible
+> property
+> as well, rather than only declaring it simple-bus?
+> 
+> We might be able to do some more automatic probing in the amba
+> code in cases where the architected registers are actually filled
+> with meaningful data there.
+> 
+> Is the empty ranges property technically correct? Excuse my poor
+> knowledge of amba, but I would have assumed that only a range
+> of addresses is actually put on the bus, while others (e.g. RAM)
+> are not visible on AMBA.
+> 
 
-g.
+Grant can comment on the ranges technical correctness, I see it other
+places but that's doesn't mean it's right.
 
-> ---
-> v2: Rebased on latest devicetree/test; incorporated changes from there
->     into the new tegra250.dts.
+AFAIK, everything is visible from this bus including RAM.
+
+> > +static struct of_device_id zynq_of_bus_ids[] __initdata = {
+> > +	{ .compatible = "simple-bus", },
+> > +	{}
+> > +};
+> > +
+> > +static struct of_device_id gic_match[] = {
+> > +	{ .compatible = "arm,gic", },
+> > +	{}
+> > +};
+> > +
+> > +/**
+> > + * xilinx_init_machine() - System specific initialization,
+> intended
+> to be
+> > + *			   called from board specific initialization.
+> > + */
+> > +void __init xilinx_init_machine(void)
+> > +{
+> > +	struct device_node *node = of_find_matching_node(NULL,
+> gic_match);
+> > +
+> > +	if (node)
+> > +		of_irq_domain_add_simple(node, 0, NR_IRQS);
+> > +
+> > +#ifdef CONFIG_CACHE_L2X0
+> > +	/*
+> > +	 * 64KB way size, 8-way associativity, parity disabled
+> > +	 */
+> > +	l2x0_init(PL310_L2CC_BASE, 0x02060000, 0xF0F0FFFF);
+> > +#endif
+> > +
+> > +/**
+> > + * xilinx_irq_init() - Interrupt controller initialization for the
+> GIC.
+> > + */
+> > +void __init xilinx_irq_init(void)
+> > +{
+> > +	gic_init(0, 29, SCU_GIC_DIST_BASE, SCU_GIC_CPU_BASE);
+> > +}
 > 
->  arch/arm/boot/dts/tegra-harmony.dts |   86 ++-----------------------------
->  arch/arm/boot/dts/tegra250.dts      |   99 +++++++++++++++++++++++++++++++++++
->  2 files changed, 103 insertions(+), 82 deletions(-)
->  create mode 100644 arch/arm/boot/dts/tegra250.dts
+> I think we can do better than this, there is still more hardcoded
+> stuff
+> in here than I think should be. I understand that you tried to
+> minimize
+> the size of the patch set for obvious reasons, but none of this
+> seems too board specific to put into common code in one way or
+> another.
 > 
-> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
-> index 7fe007b..154649e 100644
-> --- a/arch/arm/boot/dts/tegra-harmony.dts
-> +++ b/arch/arm/boot/dts/tegra-harmony.dts
-> @@ -1,12 +1,11 @@
->  /dts-v1/;
->  
->  /memreserve/ 0x1c000000 0x04000000;
-> -/include/ "skeleton.dtsi"
-> +/include/ "tegra250.dts"
->  
->  / {
->  	model = "NVIDIA Tegra2 Harmony evaluation board";
->  	compatible = "nvidia,harmony", "nvidia,tegra250";
-> -	interrupt-parent = <&intc>;
->  
->  	chosen {
->  		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk0p2 rw rootwait";
-> @@ -17,97 +16,20 @@
->  		reg = < 0x00000000 0x40000000 >;
->  	};
->  
-> -	amba {
-> -		compatible = "simple-bus";
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		intc: interrupt-controller@50041000 {
-> -			compatible = "nvidia,tegra250-gic", "arm,gic";
-> -			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> -			reg = < 0x50041000 0x1000 >,
-> -			      < 0x50040100 0x0100 >;
-> -		};
-> -	};
-> -
-> -	gpio: gpio@6000d000 {
-> -		compatible = "nvidia,tegra250-gpio";
-> -		reg = < 0x6000d000 0x1000 >;
-> -		interrupts = < 64 65 66 67 87 119 121 >;
-> -		#gpio-cells = <2>;
-> -		gpio-controller;
-> -	};
-> -
-> -	serial@70006000 {
-> -		compatible = "nvidia,tegra250-uart";
-> -		reg = <0x70006000 0x40>;
-> -		reg-shift = <2>;
-> -		interrupts = < 68 >;
-> -		status = "disabled";
-> -	};
-> -
-> -	serial@70006040 {
-> -		compatible = "nvidia,tegra250-uart";
-> -		reg = <0x70006040 0x40>;
-> -		reg-shift = <2>;
-> -		interrupts = < 69 >;
-> -		status = "disabled";
-> -	};
-> -
-> -	serial@70006200 {
-> -		compatible = "nvidia,tegra250-uart";
-> -		reg = <0x70006200 0x100>;
-> -		reg-shift = <2>;
-> -		interrupts = < 78 >;
-> -		status = "disabled";
-> -	};
-> -
->  	serial@70006300 {
-> -		compatible = "nvidia,tegra250-uart";
-> -		reg = <0x70006300 0x100>;
-> -		reg-shift = <2>;
-> -		interrupts = < 122 >;
-> -
-> +		status = "ok";
->  		clock-frequency = < 216000000 >;
->  	};
->  
-> -	serial@70006400 {
-> -		compatible = "nvidia,tegra250-uart";
-> -		reg = <0x70006400 0x100>;
-> -		reg-shift = <2>;
-> -		interrupts = < 123 >;
-> -		status = "disabled";
-> -	};
-> -
-> -	sdhci@c8000000 {
-> -		compatible = "nvidia,tegra250-sdhci";
-> -		reg = <0xc8000000 0x200>;
-> -		interrupts = < 46 >;
-> -		status = "disabled";
-> -	};
-> -
->  	sdhci@c8000200 {
-> -		compatible = "nvidia,tegra250-sdhci";
-> -		reg = <0xc8000200 0x200>;
-> -		interrupts = < 47 >;
-> +		status = "ok";
->  		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
->  			<&gpio 57 0>, /* wp, gpio PH1 */
->  			<&gpio 155 0>; /* power, gpio PT3 */
->  	};
->  
-> -	sdhci@c8000400 {
-> -		compatible = "nvidia,tegra250-sdhci";
-> -		reg = <0xc8000400 0x200>;
-> -		interrupts = < 51 >;
-> -		status = "disabled";
-> -	};
-> -
->  	sdhci@c8000600 {
-> -		compatible = "nvidia,tegra250-sdhci";
-> -		reg = <0xc8000600 0x200>;
-> -		interrupts = < 63 >;
-> +		status = "ok";
->  		gpios = <&gpio 58 0>, /* cd, gpio PH2 */
->  			<&gpio 59 0>, /* wp, gpio PH3 */
->  			<&gpio 70 0>; /* power, gpio PI6 */
-> diff --git a/arch/arm/boot/dts/tegra250.dts b/arch/arm/boot/dts/tegra250.dts
-> new file mode 100644
-> index 0000000..f1801b8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/tegra250.dts
-> @@ -0,0 +1,99 @@
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "NVIDIA Tegra 250";
-> +	compatible = "nvidia,tegra250";
-> +	interrupt-parent = <&intc>;
-> +
-> +	amba {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		intc: interrupt-controller@50041000 {
-> +			compatible = "nvidia,tegra250-gic", "arm,gic";
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +			reg = < 0x50041000 0x1000 >,
-> +			      < 0x50040100 0x0100 >;
-> +		};
-> +	};
-> +
-> +	gpio: gpio@6000d000 {
-> +		compatible = "nvidia,tegra250-gpio";
-> +		reg = < 0x6000d000 0x1000 >;
-> +		interrupts = < 64 65 66 67 87 119 121 >;
-> +		#gpio-cells = <2>;
-> +		gpio-controller;
-> +	};
-> +
-> +	serial@70006000 {
-> +		compatible = "nvidia,tegra250-uart";
-> +		reg = <0x70006000 0x40>;
-> +		reg-shift = <2>;
-> +		interrupts = < 68 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	serial@70006040 {
-> +		compatible = "nvidia,tegra250-uart";
-> +		reg = <0x70006040 0x40>;
-> +		reg-shift = <2>;
-> +		interrupts = < 69 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	serial@70006200 {
-> +		compatible = "nvidia,tegra250-uart";
-> +		reg = <0x70006200 0x100>;
-> +		reg-shift = <2>;
-> +		interrupts = < 78 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	serial@70006300 {
-> +		compatible = "nvidia,tegra250-uart";
-> +		reg = <0x70006300 0x100>;
-> +		reg-shift = <2>;
-> +		interrupts = < 122 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	serial@70006400 {
-> +		compatible = "nvidia,tegra250-uart";
-> +		reg = <0x70006400 0x100>;
-> +		reg-shift = <2>;
-> +		interrupts = < 123 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	sdhci@c8000000 {
-> +		compatible = "nvidia,tegra250-sdhci";
-> +		reg = <0xc8000000 0x200>;
-> +		interrupts = < 46 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	sdhci@c8000200 {
-> +		compatible = "nvidia,tegra250-sdhci";
-> +		reg = <0xc8000200 0x200>;
-> +		interrupts = < 47 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	sdhci@c8000400 {
-> +		compatible = "nvidia,tegra250-sdhci";
-> +		reg = <0xc8000400 0x200>;
-> +		interrupts = < 51 >;
-> +		status = "disabled";
-> +	};
-> +
-> +	sdhci@c8000600 {
-> +		compatible = "nvidia,tegra250-sdhci";
-> +		reg = <0xc8000600 0x200>;
-> +		interrupts = < 63 >;
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> -- 
-> 1.7.0.4
+> Of course we can not fix all of this at once, but maybe we can have
+> an explanation for each hardcoded setting on why it is still needed
+> and what would have to be done to make it go away.
 > 
+
+Yes we could explain hard coded numbers.  Ideally GIC driver would support
+device tree it seems like to me.
+
+> > +/* The minimum devices needed to be mapped before the VM system is
+> up
+> and
+> > + * running include the GIC, UART and Timer Counter.
+> > + */
+> > +
+> > +static struct map_desc io_desc[] __initdata = {
+> > +	{
+> > +		.virtual	= TTC0_VIRT,
+> > +		.pfn		= __phys_to_pfn(TTC0_PHYS),
+> > +		.length		= SZ_4K,
+> > +		.type		= MT_DEVICE,
+> > +	}, {
+> > +		.virtual	= SCU_PERIPH_VIRT,
+> > +		.pfn		= __phys_to_pfn(SCU_PERIPH_PHYS),
+> > +		.length		= SZ_8K,
+> > +		.type		= MT_DEVICE,
+> > +	}, {
+> > +		.virtual	= PL310_L2CC_VIRT,
+> > +		.pfn		= __phys_to_pfn(PL310_L2CC_PHYS),
+> > +		.length		= SZ_4K,
+> > +		.type		= MT_DEVICE,
+> > +	},
+> 
+> I especially dislike the idea of having to set up iotables, these
+> seem completely counterintuitive when we probe the devices from the
+> device tree.
+> 
+> AFAICT, all of init_irq, time_init and init_machine are called way
+> after
+> mm_init, so you should have ioremap available by the time you need to
+> access these virtual memory ranges.
+> 
+
+Seems like the GIC driver could remap it's own memory but maybe that won't
+work across all platforms and then the platform would need to do it.
+
+Yes the timer driver could remap it's own memory.
+
+> I can understand why you'd want to special-case PCI I/O space windows
+> and early serial port access, but I think we should handle them
+> differently
+> and give them fixed machine independent virtual addresses.
+> 
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/io.h
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/irqs.h
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/memory.h
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/system.h
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/timex.h
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/vmalloc.h
+> 
+> These are all either completely generic versions that could be reused
+> on a number of other machines, or they could be turned into such
+> files.
+> 
+> For the global inlude/asm-generic files, we have just added a
+> mechanism
+> to share that kind of file across multiple architectures using some
+> Makefile magic. Should we perhaps do something similar here to avoid
+> having to create more of the same files?
+> 
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/uart.h
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/include/mach/uncompress.h
+> 
+> For these, it obviously won't work.
+> 
+> > diff --git a/arch/arm/mach-zynq/timer.c
+> b/arch/arm/mach-zynq/timer.c
+> > new file mode 100644
+> > index 0000000..c2c96cc
+> > --- /dev/null
+> > +++ b/arch/arm/mach-zynq/timer.c
+> 
+> In the light of the recent discussions of drivers moving out of
+> platforms into common Linux code, do we expect this to also
+> happen to timers any time soon?
+
+I'm not sure on the rest. Thanks Arnd, appreciate the help.
+
+-- John
+
+> 
+> 	Arnd
+> 
+> 
+> This email and any attachments are intended for the sole use of the
+> named recipient(s) and contain(s) confidential information that may be
+> proprietary, privileged or copyrighted under applicable law. If you
+> are not the intended recipient, do not read, copy, or forward this
+> email message or any attachments. Delete this email message and any
+> attachments immediately.
