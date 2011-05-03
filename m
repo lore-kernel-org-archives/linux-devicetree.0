@@ -1,53 +1,88 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 4/4] ARM: Xilinx: Adding Xilinx board support
-Date: Mon, 2 May 2011 17:36:04 -0600
-Message-ID: <BANLkTim4PFNbnD2LwZRwNKTQLiuNpGjrBw@mail.gmail.com>
-References: <90477150.2231869.1304372815517.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
- <1319927287.2232106.1304373011082.JavaMail.root@sz0140a.emeryville.ca.mail.comcast.net>
- <20110502230118.GE28001@n2100.arm.linux.org.uk>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: DTC failure on /memreserve/ if moved after /include/
+Date: Tue, 3 May 2011 11:01:28 +1000
+Message-ID: <20110503010128.GA3361@yookeroo>
+References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF@HQMAIL01.nvidia.com>
+	<E1QH0Jd-0004yN-6V@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110502230118.GE28001@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: johnlinn@comcast.net, Arnd Bergmann <arnd@arndb.de>, nicolas pitre <nicolas.pitre@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, john linn <john.linn@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1QH0Jd-0004yN-6V-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 2, 2011 at 5:01 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Mon, May 02, 2011 at 09:50:11PM +0000, johnlinn@comcast.net wrote:
->> Seems easy enough assuming we don't need the SCU early for the core =
-count
->> and can get that from the device tree.
->
-> Beware. =A0Things may not be that trivial when you start considering =
-some
-> of the weirdnesses that some vendors start coming out with.
->
->> Since the SCU and part of the GIC end up in the same 4K page they ne=
-ed to be
->> together (unless I'm thinking about that wrong).
->>
->> SCU 0xF8000000
->> GIC_CPU 0xF8000100
->> GIC_DIS 0xF8001000
->
-> It is preferable to use the same mapping, as it ensures that you're n=
-ot
-> going to create incompatible aliases.
->
-> But, before we get too bogged down with this, please realise that it =
-is
-> possible to setup early mappings from the device tree for things like=
- the
-> SCU. =A0Maybe not using ioremap(), but I'm sure we can find some way =
-to use
-> the iotable_init() stuff to setup some early mappings from DT for thi=
-s
-> stuff.
+On Mon, May 02, 2011 at 04:06:01PM -0500, Jon Loeliger wrote:
+> > The following from tegra-harmony.dts compiles fine:
+> > 
+> >     /dts-v1/;
+> > 
+> >     /memreserve/ 0x1c000000 0x04000000;
+> >     /include/ "tegra250.dts"
+> > 
+> >     / {
+> > 
+> > However, if I re-order this as follows:
+> > 
+> >     /dts-v1/;
+> >     /include/ "tegra250.dts"
+> > 
+> >     /memreserve/ 0x1c000000 0x04000000;
+> > 
+> >     / {
+> > 
+> > Then dtc fails:
+> >
+> > Is this a dtc bug, or does the DTS syntax actually disallow this?
+> 
+> 
+> Correct.  The grammar is explicitly:
+> 
+>     sourcefile:
+> 	      DT_V1 ';' memreserves devicetree
+> 	    ;
+> 
+>     memreserves:
+> 	      /* empty */
+> 	    | memreserve memreserves
+> 	    ;
+> 
+>     memreserve:
+> 	      DT_MEMRESERVE addr addr ';'
+> 
+> 
+> and then much later devicetree leads to...:
+> 
+> 
+>     propdata:
+> 	      propdataprefix DT_STRING
+> 	    | propdataprefix '<' celllist '>'
+> 	    | propdataprefix '[' bytestring ']'
+> 	    | propdataprefix DT_REF
+> 	    | propdataprefix DT_INCBIN '(' DT_STRING ',' addr ',' addr ')'
+> 
+> where INCBIN is the include mechanism.
 
-absolutely.
+Uh, no, incbin is different.  /include/ is processed at the lexical
+level and can appear in any order.
 
-g.
+What matters here is not the /include/ per se, but what appears in the
+included file.  I imagine it has some device tree content, and
+/memreserve/ can't appear after that.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
