@@ -1,20 +1,14 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/2] powerpc: add support for MPIC message register API
-Date: Tue, 3 May 2011 10:19:21 -0500
-Message-ID: <20110503101921.45f31d34@schlenkerla.am.freescale.net>
-References: <1303232375-25014-1-git-send-email-meador_inge@mentor.com>
-	<1303232375-25014-3-git-send-email-meador_inge@mentor.com>
-	<071A08F2C6A57E4E94D980ECA553F8741959CA@039-SN1MPN1-004.039d.mgd.msft.net>
-	<4DBAED5D.4060906@mentor.com>
-	<071A08F2C6A57E4E94D980ECA553F8741967EC@039-SN1MPN1-004.039d.mgd.msft.net>
-	<20110429123051.4ed1ca01@schlenkerla.am.freescale.net>
-	<071A08F2C6A57E4E94D980ECA553F8741984EE@039-SN1MPN1-004.039d.mgd.msft.net>
-	<4DBED5E9.2070201@mentor.com>
+From: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+Subject: Re: [PATCH v4] uio/pdrv_genirq: Add OF support
+Date: Tue, 3 May 2011 21:57:19 +0200
+Message-ID: <20110503195719.GA2737@local>
+References: <1304319115-32745-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DBED5E9.2070201-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1304319115-32745-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,32 +18,128 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 May 2011 09:03:53 -0700
-Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
-
-> On 05/01/2011 08:41 PM, Kushwaha Prabhakar-B32579 wrote:
-> >> Perhaps an allocator could be added in the same patchset that adds such a
-> >> user.
-> > Yaa. It can be done. Otherwise module has to query each message unit for its availability.
+On Mon, May 02, 2011 at 08:51:55AM +0200, Michal Simek wrote:
+> Adding OF binding to genirq.
+> Version string is setup to the "devicetree".
 > 
-> No, instead the system designer should pick one. If it doesn't matter 
-> which one, then the designer is free to pick any.
+> Compatible string is not setup for now but you can add your
+> custom compatible string to uio_of_genirq_match structure.
+> 
+> For example with "vendor,device" compatible string:
+> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> 	{ .compatible = "vendor,device", },
+> 	{ /* empty for now */ },
+> };
+> 
 
-We should avoid resorting to the notion of a "system designer" if possible
--- it's hard to avoid it when dealing with partitioning, but it shouldn't
-be needed for unpartitioned basic driver operation.
+Looks OK to me.
 
-> An allocator can't work if you're going to mix drivers. For example, 
-> driver A needs MSRG0, and driver B doesn't care. Driver B loads first, 
-> the allocator selects MSGR0; driver A loads and fails. Having an 
-> allocator at all will create this conflict.
+Thanks,
+Hans
 
-In the absence of partitioning, no driver should need a specific one.  With
-partitioning, let the system designer mark those resources as reserved so
-they don't get allocated. :-)
+> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 
--Scott
+Signed-off-by: Hans J. Koch <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+
+> 
+> ---
+> 
+> v4: Remove dev_info messages
+>     Check irq against -ENXIO for no irq
+> 
+> v3: Fix irq binding
+>     Use "devicetree" as version string
+> 
+> v2: Remove additional resource binding
+>     Setup correct version string
+>     Clear compatible string
+> ---
+>  drivers/uio/uio_pdrv_genirq.c |   39 +++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 39 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+> index 7174d51..ed6bf64 100644
+> --- a/drivers/uio/uio_pdrv_genirq.c
+> +++ b/drivers/uio/uio_pdrv_genirq.c
+> @@ -23,6 +23,10 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slab.h>
+>  
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +
+>  #define DRIVER_NAME "uio_pdrv_genirq"
+>  
+>  struct uio_pdrv_genirq_platdata {
+> @@ -97,6 +101,27 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>  	int ret = -EINVAL;
+>  	int i;
+>  
+> +	if (!uioinfo) {
+> +		int irq;
+> +
+> +		/* alloc uioinfo for one device */
+> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+> +		if (!uioinfo) {
+> +			ret = -ENOMEM;
+> +			dev_err(&pdev->dev, "unable to kmalloc\n");
+> +			goto bad2;
+> +		}
+> +		uioinfo->name = pdev->dev.of_node->name;
+> +		uioinfo->version = "devicetree";
+> +
+> +		/* Multiple IRQs are not supported */
+> +		irq = platform_get_irq(pdev, 0);
+> +		if (irq == -ENXIO)
+> +			uioinfo->irq = UIO_IRQ_NONE;
+> +		else
+> +			uioinfo->irq = irq;
+> +	}
+> +
+>  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+>  		dev_err(&pdev->dev, "missing platform_data\n");
+>  		goto bad0;
+> @@ -180,6 +205,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>  	kfree(priv);
+>  	pm_runtime_disable(&pdev->dev);
+>   bad0:
+> +	/* kfree uioinfo for CONFIG_OF */
+> +	if (!pdev->dev.platform_data)
+> +		kfree(uioinfo);
+> + bad2:
+>  	return ret;
+>  }
+>  
+> @@ -215,6 +244,15 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+>  	.runtime_resume = uio_pdrv_genirq_runtime_nop,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> +	{ /* empty for now */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
+> +#else
+> +# define uio_of_genirq_match NULL
+> +#endif
+> +
+>  static struct platform_driver uio_pdrv_genirq = {
+>  	.probe = uio_pdrv_genirq_probe,
+>  	.remove = uio_pdrv_genirq_remove,
+> @@ -222,6 +260,7 @@ static struct platform_driver uio_pdrv_genirq = {
+>  		.name = DRIVER_NAME,
+>  		.owner = THIS_MODULE,
+>  		.pm = &uio_pdrv_genirq_dev_pm_ops,
+> +		.of_match_table = uio_of_genirq_match,
+>  	},
+>  };
+>  
+> -- 
+> 1.5.5.6
+> 
+> 
