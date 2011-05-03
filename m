@@ -1,15 +1,13 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: DTC failure on /memreserve/ if moved after /include/
-Date: Tue, 3 May 2011 11:01:28 +1000
-Message-ID: <20110503010128.GA3361@yookeroo>
-References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF@HQMAIL01.nvidia.com>
-	<E1QH0Jd-0004yN-6V@jdl.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 0/6] General device tree irq domain infrastructure
+Date: Tue, 03 May 2011 11:43:19 +1000
+Message-ID: <1304386999.2513.293.camel@pasglop>
+References: <20110428192227.8979.49181.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1QH0Jd-0004yN-6V-CYoMK+44s/E@public.gmane.org>
+In-Reply-To: <20110428192227.8979.49181.stgit@ponder>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,70 +17,130 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2011 at 04:06:01PM -0500, Jon Loeliger wrote:
-> > The following from tegra-harmony.dts compiles fine:
-> > 
-> >     /dts-v1/;
-> > 
-> >     /memreserve/ 0x1c000000 0x04000000;
-> >     /include/ "tegra250.dts"
-> > 
-> >     / {
-> > 
-> > However, if I re-order this as follows:
-> > 
-> >     /dts-v1/;
-> >     /include/ "tegra250.dts"
-> > 
-> >     /memreserve/ 0x1c000000 0x04000000;
-> > 
-> >     / {
-> > 
-> > Then dtc fails:
-> >
-> > Is this a dtc bug, or does the DTS syntax actually disallow this?
+On Thu, 2011-04-28 at 14:01 -0600, Grant Likely wrote:
+> A lot of this series ends up being fixups to powerpc code; but the 4th
+> patch is of importance to every architecture using CONFIG_OF (except
+> SPARC, which has its own solution).
 > 
-> 
-> Correct.  The grammar is explicitly:
-> 
->     sourcefile:
-> 	      DT_V1 ';' memreserves devicetree
-> 	    ;
-> 
->     memreserves:
-> 	      /* empty */
-> 	    | memreserve memreserves
-> 	    ;
-> 
->     memreserve:
-> 	      DT_MEMRESERVE addr addr ';'
-> 
-> 
-> and then much later devicetree leads to...:
-> 
-> 
->     propdata:
-> 	      propdataprefix DT_STRING
-> 	    | propdataprefix '<' celllist '>'
-> 	    | propdataprefix '[' bytestring ']'
-> 	    | propdataprefix DT_REF
-> 	    | propdataprefix DT_INCBIN '(' DT_STRING ',' addr ',' addr ')'
-> 
-> where INCBIN is the include mechanism.
+> This series (finally!) factors out device tree irq domain decoding
+> from arch/powerpc and makes it generic for all architectures.  The
+> infrastructure is quite simple.  Any interrupt controller can embed
+> the of_irq_domain structure and register it with the core code.  After
+> that, device nodes referencing interrupts on that device tree node
+> will trigger a call to the domain's map function.
 
-Uh, no, incbin is different.  /include/ is processed at the lexical
-level and can appear in any order.
+This leads to an immediate reaction from me : why "of_irq_domain" ?
 
-What matters here is not the /include/ per se, but what appears in the
-included file.  I imagine it has some device tree content, and
-/memreserve/ can't appear after that.
+The concept of interrupt domains is completely orthogonal to "OF" and
+whether you use the device-tree or not.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Having a remapping mechanism allowing to deal with multiple interrupt
+domains without playing stupid numbering tricks is generally useful for
+architectures, regardless of their adoption of the device-tree.
+
+The irq domain has one and -only one- op that is related to OF which
+allows to map a device node to a domain, but that's 'optional' and only
+use if you use the OF resolving process. The whole mechanism can be (and
+is under some circumstances on ppc) without a device-tree relationship.
+
+We instanciate IRQs within domains manually in some cases, either
+because we lack proper DT informations or bcs the IRQs come from the
+firmware or as "created" out of the blue (device-tree). A domain pointer
+(or NULL for the default domain) is all is needed.
+
+Thus I object to tying this infrastructure generically to "OF" even if
+it's just a mater of naming of the domain structure and location of the
+code in the kernel tree.
+
+It should basically all go into kernel/irq/domains.c or something like
+that.
+
+Cheers,
+Ben.
+
+> PowerPC and x86 have been converted to use of_irq_domain.  MIPS and
+> Microblaze have it enabled, but nothing actually registers domains
+> yet, so a workaround is in place to preserve the current behaviour
+> until it is fixed.
+> 
+> I'd really like to get patches 1-4 merged into 2.6.40.  Please test.
+> I'm also running through build testing here, and when it's complete
+> I'll push it out to a 'devicetree/irq-domain' branch on
+> git://git.secretlab.ca/git/linux-2.6
+> 
+> It needs testing.  I've booted it on a powerpc board here without any
+> apparent regressions, but that isn't a very big sample.  I've also
+> build tested on everything I think is affected.
+> 
+> I'd also like to get it into linux-next.  Ben, if things checkout okay
+> over the next few days, would you be okay with me adding it to
+> linux-next, say around Wednesday next week?  As for merging, I think
+> this should probably go via your powerpc tree since the that's where
+> the bulk of the changes are, but I'm open to other suggestions).
+> 
+> Patches 5 & 6 are follow-on cleanup work to powerpc, but patch 6 is
+> RFC only since there is a locking problem that I haven't fixed yet.
+> 
+> Cheers,
+> g.
+> 
+> ---
+> 
+> Grant Likely (6):
+>       powerpc: stop exporting irq_map
+>       powerpc: make irq_{alloc,free}_virt private and remove count argument
+>       powerpc: Make struct irq_host semi-private by moving into irqhost.h
+>       dt: generalize of_irq_parse_and_map()
+>       powerpc: move irq_alloc_descs_at() call into irq_alloc_virt()
+>       powerpc: use irq_alloc_desc() to manage irq allocations
+> 
+> 
+>  arch/microblaze/kernel/irq.c                     |    7 -
+>  arch/microblaze/kernel/setup.c                   |    2 
+>  arch/mips/kernel/prom.c                          |   14 -
+>  arch/powerpc/include/asm/irq.h                   |   88 +------
+>  arch/powerpc/include/asm/irqhost.h               |   27 ++
+>  arch/powerpc/kernel/irq.c                        |  260 ++++++++++++----------
+>  arch/powerpc/platforms/512x/mpc5121_ads_cpld.c   |    5 
+>  arch/powerpc/platforms/52xx/media5200.c          |    5 
+>  arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |    1 
+>  arch/powerpc/platforms/52xx/mpc52xx_pic.c        |   80 +------
+>  arch/powerpc/platforms/82xx/pq2ads-pci-pic.c     |    5 
+>  arch/powerpc/platforms/85xx/socrates_fpga_pic.c  |   26 +-
+>  arch/powerpc/platforms/86xx/gef_pic.c            |   10 -
+>  arch/powerpc/platforms/8xx/m8xx_setup.c          |    2 
+>  arch/powerpc/platforms/cell/axon_msi.c           |   15 +
+>  arch/powerpc/platforms/cell/spider-pic.c         |   19 +-
+>  arch/powerpc/platforms/embedded6xx/flipper-pic.c |    9 -
+>  arch/powerpc/platforms/embedded6xx/hlwd-pic.c    |    9 -
+>  arch/powerpc/platforms/embedded6xx/wii.c         |    6 -
+>  arch/powerpc/platforms/iseries/irq.c             |   10 -
+>  arch/powerpc/platforms/powermac/pic.c            |   12 +
+>  arch/powerpc/platforms/pseries/ras.c             |    4 
+>  arch/powerpc/platforms/pseries/xics.c            |   14 +
+>  arch/powerpc/sysdev/cpm1.c                       |    8 -
+>  arch/powerpc/sysdev/cpm2_pic.c                   |   10 -
+>  arch/powerpc/sysdev/fsl_msi.c                    |    3 
+>  arch/powerpc/sysdev/i8259.c                      |    3 
+>  arch/powerpc/sysdev/ipic.c                       |   19 +-
+>  arch/powerpc/sysdev/mpc8xx_pic.c                 |   10 -
+>  arch/powerpc/sysdev/mpc8xxx_gpio.c               |   13 +
+>  arch/powerpc/sysdev/mpic.c                       |   33 +--
+>  arch/powerpc/sysdev/mpic_msi.c                   |    3 
+>  arch/powerpc/sysdev/mpic_pasemi_msi.c            |    5 
+>  arch/powerpc/sysdev/mv64x60_pic.c                |   14 +
+>  arch/powerpc/sysdev/qe_lib/qe_ic.c               |    9 -
+>  arch/powerpc/sysdev/uic.c                        |   13 +
+>  arch/powerpc/sysdev/xilinx_intc.c                |    9 -
+>  arch/x86/include/asm/irq_controller.h            |   12 -
+>  arch/x86/include/asm/prom.h                      |    1 
+>  arch/x86/kernel/devicetree.c                     |   77 +------
+>  drivers/of/irq.c                                 |  118 ++++++++++
+>  include/linux/of_irq.h                           |   31 +++
+>  42 files changed, 504 insertions(+), 517 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/irqhost.h
+>  delete mode 100644 arch/x86/include/asm/irq_controller.h
