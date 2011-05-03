@@ -1,51 +1,60 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: Login prompt on a video console instead of serial port?
-Date: Tue, 03 May 2011 15:41:04 +1000
-Message-ID: <1304401264.2513.303.camel@pasglop>
-References: <4DBF065C.3030407@freescale.com>
-	<BANLkTikWMksVsvs8KzjdiZfRR-2WGD0Ftw@mail.gmail.com>
-	<4DBF0DF1.6050207@freescale.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v6 0/6] powerpc, 52xx: add charon board support
+Date: Mon, 2 May 2011 23:42:39 -0600
+Message-ID: <BANLkTimacM29RHExZounuziF+7jARQxdTg@mail.gmail.com>
+References: <1291451028-22532-1-git-send-email-hs@denx.de> <1300782452-528-1-git-send-email-hs@denx.de>
+ <20110502221406.GA15043@ponder.secretlab.ca> <4DBF8FF6.8030100@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4DBF0DF1.6050207@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Timur Tabi <timur@freescale.com>
-Cc: McClintock Matthew-B29882 <B29882@freescale.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4DBF8FF6.8030100@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: hs@denx.de
+Cc: linuxppc-dev@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-05-02 at 15:02 -0500, Timur Tabi wrote:
-> McClintock Matthew-B29882 wrote:
-> > Don't you have to spawn a terminal on the framebuffer for the login?
-> 
-> I suppose, but I don't know how to do that.  And although that would technically
-> answer the question in the subject of this thread, I still would have *some*
-> boot output on the serial port.  It would be nice if I could get all of stdout
-> on the video display, and all of stdin from the serial port.
+On Mon, May 2, 2011 at 11:17 PM, Heiko Schocher <hs@denx.de> wrote:
+> Hello Grant,
+>
+> Grant Likely wrote:
+>> On Tue, Mar 22, 2011 at 09:27:26AM +0100, Heiko Schocher wrote:
+>>> cc: Wolfram Sang <w.sang@pengutronix.de>
+>>> cc: Grant Likely <grant.likely@secretlab.ca>
+>>> cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>>> cc: linux-fbdev@vger.kernel.org
+>>> cc: devicetree-discuss@ozlabs.org
+>>> cc: Ben Dooks <ben@simtec.co.uk>
+>>> cc: Vincent Sanders <vince@simtec.co.uk>
+>>> cc: Samuel Ortiz <sameo@linux.intel.com>
+>>> cc: linux-kernel@vger.kernel.org
+>>> cc: Randy Dunlap <rdunlap@xenotime.net>
+>>> cc: Wolfgang Denk <wd@denx.de>
+>>> cc: Paul Mundt <lethal@linux-sh.org>
+>>>
+>>> changes since v5:
+>>> - repost complete patchseries, as Paul Mundt suggested
+>>> - rebased against current head
+>>> - add Acked-by from Samuel Ortiz (MFD parts)
+>>> =A0 http://www.spinics.net/lists/linux-fbdev/msg02550.html
+>>> =A0 http://linux.derkeiler.com/Mailing-Lists/Kernel/2011-01/msg1179=
+8.html
+>>>
+>>> =A0 and Benjamin Herrenschmidt (DTS parts)
+>>> =A0 http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-February/08=
+8279.html
+>>> - removed patch
+>>> =A0 "powerpc, mpc5200: update mpc5200_defconfig to fit for charon b=
+oard."
+>>> =A0 therefore added
+>>> =A0 "powerpc, tqm5200: update tqm5200_defconfig to fit for charon b=
+oard."
+>>
+>> Refresh my memory, why was the mpc5200_defconfig updated dropped?
+>
+> Because it is a board based on the tqm5200 board port ... no other
+> reason.
 
-I don't think we have a way to do that unless you can make a serial
-"keyboard" device in the input layer. The VT layer will only get its
-input from such a thing, maybe that does exist in the depth of legacy
-code in there but it has nothing to do with your device-tree.
+Please send a patch to also update the mpc5200_defconfig.
 
-> > Right now getty spawns the login on the serial port via /etc/inittab.
-> > Something similiar is probably needed for the framebuffer.
-> 
-> getty appears to work only with serial devices, since it insists on a baud rate
-> as one of the parameters.
-
-No, or no existing distro would work :-)
-
-Just fake a baudrate for the tty's
-
-Cheers,
-Ben.
+g.
