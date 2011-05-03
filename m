@@ -1,31 +1,31 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 0/6] powerpc, 52xx: add charon board support
-Date: Tue, 3 May 2011 07:22:20 -0600
-Message-ID: <BANLkTi=b_ySGOxb2jXCvKdniesdNhqoUpQ@mail.gmail.com>
-References: <1291451028-22532-1-git-send-email-hs@denx.de> <1300782452-528-1-git-send-email-hs@denx.de>
- <20110502221406.GA15043@ponder.secretlab.ca> <4DBF8FF6.8030100@denx.de>
- <BANLkTimacM29RHExZounuziF+7jARQxdTg@mail.gmail.com> <4DBFADBE.5040603@denx.de>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: DTC failure on /memreserve/ if moved after /include/
+Date: Tue, 03 May 2011 08:48:47 -0500
+Message-ID: <E1QHFy3-0006A0-Dk@jdl.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF0497F1B1BF@HQMAIL01.nvidia.com>
+	<E1QH0Jd-0004yN-6V@jdl.com> <20110503010128.GA3361@yookeroo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4DBFADBE.5040603@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: hs@denx.de
-Cc: linuxppc-dev@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Wolfgang Denk <wd@denx.de>, Paul Mundt <lethal@linux-sh.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20110503010128.GA3361@yookeroo> 
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 3, 2011 at 1:24 AM, Heiko Schocher <hs@denx.de> wrote:
->
-> Ok. Done, just one more question:
->
-> Why you didn;t pick up the patches:
->
-> - powerpc, 5200: add support for charon board
-> =A0(Got an Acked-by from Wolfram Sang)
-> - powerpc, video: add SM501 support for charon board.
+> 
+> Uh, no, incbin is different.  /include/ is processed at the lexical
+> level and can appear in any order.
 
-I did pick them up and they are in my tree.  Actually, I squashed
-those two together since there was no reason to have them split apart.
+Crap.  Got confused.  Sorry.
 
-g.
+jdl
