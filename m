@@ -1,44 +1,57 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 4/6] dt: generalize irq_of_create_mapping()
-Date: Wed, 4 May 2011 10:05:02 -0600
-Message-ID: <20110504160502.GC3317@ponder.secretlab.ca>
-References: <20110428192227.8979.49181.stgit@ponder>
- <20110428200203.8979.3569.stgit@ponder>
- <1304387422.2513.301.camel@pasglop>
+From: "Hans J. Koch" <hjk@hansjkoch.de>
+Subject: Re: [PATCH v4] uio/pdrv_genirq: Add OF support
+Date: Wed, 4 May 2011 21:47:30 +0200
+Message-ID: <20110504194730.GA2820@local>
+References: <1304319115-32745-1-git-send-email-monstr@monstr.eu>
+ <20110503203412.GA2119@pengutronix.de>
+ <20110503221440.GB2737@local>
+ <4DC152F3.2050500@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1304387422.2513.301.camel@pasglop>
+In-Reply-To: <4DC152F3.2050500@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Michal Simek <monstr@monstr.eu>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, hpa@zytor.com, Dirk Brandewie <dirk.brandewie@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 03, 2011 at 11:50:22AM +1000, Benjamin Herrenschmidt wrote:
-> On Thu, 2011-04-28 at 14:02 -0600, Grant Likely wrote:
-> > This patch creates a common implementation of irq_of_create_mapping()
-> > and factors out the interrupt domain translation code from powerpc to
-> > make it available for all architectures.
+On Wed, May 04, 2011 at 03:21:55PM +0200, Michal Simek wrote:
+> Hans J. Koch wrote:
+> >On Tue, May 03, 2011 at 10:34:12PM +0200, Wolfram Sang wrote:
+> >>On Mon, May 02, 2011 at 08:51:55AM +0200, Michal Simek wrote:
+> >>>Adding OF binding to genirq.
+> >>>Version string is setup to the "devicetree".
+> >>>
+> >>>Compatible string is not setup for now but you can add your
+> >>>custom compatible string to uio_of_genirq_match structure.
+> >>>
+> >>>For example with "vendor,device" compatible string:
+> >>>static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> >>>	{ .compatible = "vendor,device", },
+> >>>	{ /* empty for now */ },
+> >>>};
+> >>>
+> >>>Signed-off-by: Michal Simek <monstr@monstr.eu>
+> >>[...]
+> >>
+> >>>+		/* alloc uioinfo for one device */
+> >>>+		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+> >>kfree in remove?
+> >
+> >Oh yes. Missed that one. It should probably look like the "bad0" case in probe().
 > 
-> I think you are going the wrong way around.
+> Yes, freeing uioinfo in uio_pdrv_genirq_remove make sense for CONFIG_OF.
 > 
-> First thing first, is to make the irq domain / mapping API generic
-> without the OF bits.
+> Please correct me if I am wrong dev.of_node is not NULL for OF. I
+> think yes that's why I would prefer to use this construct instead of
+> #ifdef CONFIG_OF.
 > 
-> IE. move the IRQ domain generically, get rid of irq_map by putting the
-> domain ptr & hw numbers in the irq desc/data etc...
-> 
-> Then you can move over the OF specific bits which are optional and
-> orthogonal to a large extent.
+> 	if (pdev->dev.of_node)
+> 		kfree(pdev->dev.platform_data);
 
-As discussed in my other reply, I disagree.  There isn't an immediate
-need for the mapping interface in common code.  It would be useful,
-sure, for some interrupt controllers, but for many of them
-irq_alloc_descs() and an irq_base value is all the functionality that
-is needed, and irq_host doesn't gain anything.
+Huh? You didn't allocate platform_data, so you shouldn't free it.
+It's uioinfo you allocated.
 
-The OF translation on the other hand is needed immediately by several
-architectures and are very much non-optional in that regard.
-
-g.
+Thanks,
+Hans
