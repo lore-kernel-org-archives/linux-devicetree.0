@@ -1,57 +1,73 @@
-From: "Hans J. Koch" <hjk@hansjkoch.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH v4] uio/pdrv_genirq: Add OF support
-Date: Wed, 4 May 2011 21:47:30 +0200
-Message-ID: <20110504194730.GA2820@local>
+Date: Wed, 4 May 2011 14:29:46 -0600
+Message-ID: <BANLkTing9GPbsur2vpRtpnDcxLUkrDFZmQ@mail.gmail.com>
 References: <1304319115-32745-1-git-send-email-monstr@monstr.eu>
- <20110503203412.GA2119@pengutronix.de>
- <20110503221440.GB2737@local>
- <4DC152F3.2050500@monstr.eu>
+	<20110503203412.GA2119@pengutronix.de> <20110503221440.GB2737@local>
+	<4DC152F3.2050500@monstr.eu> <20110504194730.GA2820@local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4DC152F3.2050500@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110504194730.GA2820@local>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 04, 2011 at 03:21:55PM +0200, Michal Simek wrote:
-> Hans J. Koch wrote:
-> >On Tue, May 03, 2011 at 10:34:12PM +0200, Wolfram Sang wrote:
-> >>On Mon, May 02, 2011 at 08:51:55AM +0200, Michal Simek wrote:
-> >>>Adding OF binding to genirq.
-> >>>Version string is setup to the "devicetree".
-> >>>
-> >>>Compatible string is not setup for now but you can add your
-> >>>custom compatible string to uio_of_genirq_match structure.
-> >>>
-> >>>For example with "vendor,device" compatible string:
-> >>>static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
-> >>>	{ .compatible = "vendor,device", },
-> >>>	{ /* empty for now */ },
-> >>>};
-> >>>
-> >>>Signed-off-by: Michal Simek <monstr@monstr.eu>
-> >>[...]
-> >>
-> >>>+		/* alloc uioinfo for one device */
-> >>>+		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
-> >>kfree in remove?
-> >
-> >Oh yes. Missed that one. It should probably look like the "bad0" case in probe().
-> 
-> Yes, freeing uioinfo in uio_pdrv_genirq_remove make sense for CONFIG_OF.
-> 
-> Please correct me if I am wrong dev.of_node is not NULL for OF. I
-> think yes that's why I would prefer to use this construct instead of
-> #ifdef CONFIG_OF.
-> 
-> 	if (pdev->dev.of_node)
-> 		kfree(pdev->dev.platform_data);
+On Wed, May 4, 2011 at 1:47 PM, Hans J. Koch <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org> wrote:
+> On Wed, May 04, 2011 at 03:21:55PM +0200, Michal Simek wrote:
+>> Hans J. Koch wrote:
+>> >On Tue, May 03, 2011 at 10:34:12PM +0200, Wolfram Sang wrote:
+>> >>On Mon, May 02, 2011 at 08:51:55AM +0200, Michal Simek wrote:
+>> >>>Adding OF binding to genirq.
+>> >>>Version string is setup to the "devicetree".
+>> >>>
+>> >>>Compatible string is not setup for now but you can add your
+>> >>>custom compatible string to uio_of_genirq_match structure.
+>> >>>
+>> >>>For example with "vendor,device" compatible string:
+>> >>>static const struct of_device_id __devinitconst uio_of_genirq_match[]=
+ =3D {
+>> >>> =A0 { .compatible =3D "vendor,device", },
+>> >>> =A0 { /* empty for now */ },
+>> >>>};
+>> >>>
+>> >>>Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+>> >>[...]
+>> >>
+>> >>>+ =A0 =A0 =A0 =A0 =A0/* alloc uioinfo for one device */
+>> >>>+ =A0 =A0 =A0 =A0 =A0uioinfo =3D kzalloc(sizeof(*uioinfo), GFP_KERNEL=
+);
+>> >>kfree in remove?
+>> >
+>> >Oh yes. Missed that one. It should probably look like the "bad0" case i=
+n probe().
+>>
+>> Yes, freeing uioinfo in uio_pdrv_genirq_remove make sense for CONFIG_OF.
+>>
+>> Please correct me if I am wrong dev.of_node is not NULL for OF. I
+>> think yes that's why I would prefer to use this construct instead of
+>> #ifdef CONFIG_OF.
+>>
+>> =A0 =A0 =A0 if (pdev->dev.of_node)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(pdev->dev.platform_data);
+>
+> Huh? You didn't allocate platform_data, so you shouldn't free it.
+> It's uioinfo you allocated.
 
-Huh? You didn't allocate platform_data, so you shouldn't free it.
-It's uioinfo you allocated.
+*never* set or modify the pdev->dev.platform_data pointer from a
+device driver.  If the data needs to be modified, or a new structure
+allocated, then rework the driver to store it in it's private data
+structure.  platform_data must be considered immutable by drivers.
+Otherwise you'll break unbindng and rebinding device drivers.
 
-Thanks,
-Hans
+g.
