@@ -1,16 +1,24 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: add DT support to the S3C SDI driver
-Date: Tue, 3 May 2011 20:18:36 -0600
-Message-ID: <BANLkTinw2abP=zT__dmBQdQ9hUfhh5R9Ww@mail.gmail.com>
-References: <20110413172547.GA27819@dandreoli.com>
-	<201104141151.50497.anarsoul@gmail.com>
-	<20110504010448.GA4952@ponder.secretlab.ca>
-	<BANLkTim9UT8epyp7ccFdKq6-uobU2h0wdA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv3] ARM:boot:device tree: Allow the device tree binary
+	to be appended to zImage
+Date: Wed, 4 May 2011 00:23:17 -0700
+Message-ID: <20110504072317.GU2092@atomide.com>
+References: <20110420073445.GB31127@S2100-06.ap.freescale.net>
+	<20110421080238.GE13688@atomide.com>
+	<20110421124618.GA15060@atomide.com>
+	<20110427142306.GI3755@atomide.com>
+	<alpine.LFD.2.00.1104271036520.24613@xanadu.home>
+	<20110427144335.GK3755@atomide.com>
+	<20110429102623.GX3755@atomide.com>
+	<alpine.LFD.2.00.1104290909310.24613@xanadu.home>
+	<20110429135334.GR5126@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1104291509540.24613@xanadu.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTim9UT8epyp7ccFdKq6-uobU2h0wdA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.00.1104291509540.24613-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,31 +28,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 3, 2011 at 8:07 PM, Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, May 4, 2011 at 3:04 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Thu, Apr 14, 2011 at 11:51:50AM +0300, Vasily Khoruzhick wrote:
->>> On Wednesday 13 April 2011 20:25:47 Domenico Andreoli wrote:
->>> > From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> >
->>> > This patch adds DeviceTree support to the S3C SDI driver.
->>> >
->>> > It implements all the configurations of the platform driver except the
->>> > set_power() callback and the ocr_avail mask.
->>> >
->>> > Signed-off-by: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>
->>> Hm, but is there any bootloader with dt support for s3c24xx?
->>
->> On current u-boot mainline, all arm platforms can now add devicetree
->> support by enabling CONFIG_OF_LIBFDT.
->
-> once u-boot is properly configured, is dtb built in it or is loaded from nvram?
+* Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> [110429 12:11]:
+> On Fri, 29 Apr 2011, Russell King - ARM Linux wrote:
+> 
+> > On Fri, Apr 29, 2011 at 09:16:39AM -0400, Nicolas Pitre wrote:
+> > > On Fri, 29 Apr 2011, Tony Lindgren wrote:
+> > > 
+> > > > If the compressed image is smaller than BSS, then we end up
+> > > > having DT data in the BSS area. In this case the compressed
+> > > > image is about 2.3 MB for LZMA.
+> > > > 
+> > > > The uncompress code does not know about the kernel BSS,
+> > > > and does not necessarily relocate anything depending on the
+> > > > compressed image load address.
+> > > > 
+> > > > So in which code do we want to relocate the DT data?
+> > > > 
+> > > > We could do it based on estimated BSS size in uncompress code,
+> > > > or based on the real BSS size in __mmap_switched before BSS
+> > > > gets reset.
+> > > 
+> > > Estimations for that kind of thing is always bound to create problems 
+> > > some day.
+> > > 
+> > > The DT data should probably be moved out of the way from 
+> > > arch/arm/kernel/head.S before the .bss is cleared, and even before 
+> > > enabling the MMU, like in __vet_atags.
+> > 
+> > Err, no.  Moving stuff around becomes quite expensive when the cache is
+> > not on.  It's far better to work out where to place it first time around
+> > so its not in the way.
+> 
+> I don't think the DT data is that huge, but that's a point in favor of 
+> doing it in the zImage code.  We'll just need to feed the total size of 
+> the uncompressed kernel .bss section to zImage when compiling it.
 
-Typically it is loaded from the same place the kernel is stored, but
-it can be loaded from any device supported by u-boot.
+One more thing to consider though.. I don't think we want to copy the
+DT data twice. It's not big right now, but could get large if we pass
+all the clocks in it.
 
-g.
+So this should be probably fixed in the original patch.. John got
+any thoughts on that?
+
+Regards,
+
+Tony
