@@ -1,137 +1,271 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [RFC PATCH v3 0/6] MIPS: Octeon: Use Device Tree.
-Date: Thu,  5 May 2011 10:02:23 -0700
-Message-ID: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: [RFC PATCH v3 5/6] MIPS: Octeon: Add irq_create_of_mapping() and GPIO interrupts.
+Date: Thu,  5 May 2011 10:02:28 -0700
+Message-ID: <1304614949-30460-6-git-send-email-ddaney@caviumnetworks.com>
+References: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
+Cc: David Daney <ddaney@caviumnetworks.com>
 List-Id: devicetree@vger.kernel.org
 
-After several weeks of fire fighting, I am back to my Octeon device
-tree patches.  
+This is needed for Octeon to use the Device Tree.
 
-New in v3:
+The GPIO interrupts are configured based on Device Tree properties
 
-More updates to device tree bindings, and perhaps more importantly
-descriptions/definitions of the bindings
+Signed-off-by: David Daney <ddaney@caviumnetworks.com>
+---
+ arch/mips/cavium-octeon/octeon-irq.c |  183 +++++++++++++++++++++++++++++++++-
+ 1 files changed, 182 insertions(+), 1 deletions(-)
 
-libfdt building moved to devices/of/libfdt.
-
-Cleanup and style improvements as suggested by Grant Likley.
-
-Omitted all the driver changes, as they are unchanged from the last
-set, and at this stage the patches are just an RFC.
-
-New in v2:
-
-Changed many device tree bindings.  They should be closer to the
-standard naming scheme now.
-
-Editing of the template device tree is done in the flattened form
-using libfdt.
-
-Standard platform driver functions used in preference to the
-of_platform variety.
-
-v1:
-
-Background: The Octeon family of SOCs has a variety of on-chip
-controllers for Ethernet, MDIO, I2C, and several other I/O devices.
-These chips are used on boards with a great variety of different
-configurations.  To date, the configuration and bus topology
-information has been hard coded in the drivers and support code.
-
-To facilitate supporting new chips and boards, we would like to make
-use use the Device Tree to encode the configuration information.
-
-I would like to get some feedback on the current code I am working
-with.  The migration approach is as follows:
-
-o Several device tree templates are statically linked into the kernel
-  image.  Based on SOC type and board type one of these is selected in
-  early boot.  Legacy configuration probing code is used to prune and
-  patch the device tree template.
-
-o New SOCs and boards will directly use a device tree passed by the
-  bootloader (This patch set doesn't actually implement this, but it
-  is trivial to add).
-
-
-
-1/6 -  Infrastructure to allow scripts/dtc/libfdt to be used in the
-       kernel.
-
-2/6 - OF patch to simplify of_find_node_by_path().
-
-3/6 - Add the statically linked Device Tree templates and bindings
-      descriptions.
-
-4/6 - Remove unused arch/mips/prom.c code that conflicts with
-      following patches.
-
-5/6 - irq_create_of_mapping() function.
-
-6/6 - Fix up Device Tree template for current environment.
-
-
-David Daney (6):
-  of: Allow scripts/dtc/libfdt to be used from kernel code
-  of: Make of_find_node_by_path() traverse /aliases for relative paths.
-  MIPS: Octeon: Add device tree source files.
-  MIPS: Prune some target specific code out of prom.c
-  MIPS: Octeon: Add irq_create_of_mapping() and GPIO interrupts.
-  MIPS: Octeon: Initialize and fixup device tree.
-
- .../devicetree/bindings/mips/cavium/bootbus.txt    |   37 ++
- .../devicetree/bindings/mips/cavium/ciu.txt        |   26 ++
- .../devicetree/bindings/mips/cavium/gpio.txt       |   48 +++
- .../devicetree/bindings/mips/cavium/mdio.txt       |   27 ++
- .../devicetree/bindings/mips/cavium/mix.txt        |   40 ++
- .../devicetree/bindings/mips/cavium/pip.txt        |   98 +++++
- .../devicetree/bindings/mips/cavium/twsi.txt       |   34 ++
- .../devicetree/bindings/mips/cavium/uart.txt       |   19 +
- .../devicetree/bindings/mips/cavium/uctl.txt       |   47 +++
- arch/mips/Kconfig                                  |    1 +
- arch/mips/cavium-octeon/.gitignore                 |    2 +
- arch/mips/cavium-octeon/Makefile                   |   15 +
- arch/mips/cavium-octeon/octeon-irq.c               |  183 ++++++++-
- arch/mips/cavium-octeon/octeon-platform.c          |  295 +++++++++++++
- arch/mips/cavium-octeon/octeon_3xxx.dts            |  431 ++++++++++++++++++++
- arch/mips/cavium-octeon/setup.c                    |   17 +
- arch/mips/kernel/prom.c                            |   49 ---
- drivers/of/Kconfig                                 |    3 +
- drivers/of/Makefile                                |    2 +
- drivers/of/base.c                                  |   41 ++-
- drivers/of/libfdt/Makefile                         |    8 +
- include/linux/libfdt.h                             |    8 +
- include/linux/libfdt_env.h                         |   13 +
- 23 files changed, 1393 insertions(+), 51 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/bootbus.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/ciu.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/gpio.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/mdio.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/mix.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/pip.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/twsi.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/uart.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/uctl.txt
- create mode 100644 arch/mips/cavium-octeon/.gitignore
- create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
- create mode 100644 drivers/of/libfdt/Makefile
- create mode 100644 include/linux/libfdt.h
- create mode 100644 include/linux/libfdt_env.h
-
+diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
+index ffd4ae6..68b711c 100644
+--- a/arch/mips/cavium-octeon/octeon-irq.c
++++ b/arch/mips/cavium-octeon/octeon-irq.c
+@@ -8,11 +8,14 @@
+ 
+ #include <linux/interrupt.h>
+ #include <linux/bitops.h>
++#include <linux/module.h>
+ #include <linux/percpu.h>
++#include <linux/of_irq.h>
+ #include <linux/irq.h>
+ #include <linux/smp.h>
+ 
+ #include <asm/octeon/octeon.h>
++#include <asm/octeon/cvmx-gpio-defs.h>
+ 
+ static DEFINE_RAW_SPINLOCK(octeon_irq_ciu0_lock);
+ static DEFINE_RAW_SPINLOCK(octeon_irq_ciu1_lock);
+@@ -58,6 +61,90 @@ static void __init octeon_irq_set_ciu_mapping(int irq, int line, int bit,
+ 	octeon_irq_ciu_to_irq[line][bit] = irq;
+ }
+ 
++static unsigned int octeon_irq_gpio_mapping(struct device_node *controller,
++					    const u32 *intspec,
++					    unsigned int intsize)
++{
++	struct of_irq oirq;
++	int i;
++	unsigned int irq = 0;
++	unsigned int type;
++	unsigned int ciu = 0, bit = 0;
++	unsigned int pin = be32_to_cpup(intspec);
++	unsigned int trigger = be32_to_cpup(intspec + 1);
++	bool set_edge_handler = false;
++
++	if (pin >= 16)
++		goto err;
++	i = of_irq_map_one(controller, 0, &oirq);
++	if (i)
++		goto err;
++	if (oirq.size != 2)
++		goto err_put;
++
++	ciu = oirq.specifier[0];
++	bit = oirq.specifier[1] + pin;
++
++	if (ciu >= 8 || bit >= 64)
++		goto err_put;
++
++	irq = octeon_irq_ciu_to_irq[ciu][bit];
++	if (!irq)
++		goto err_put;
++
++	switch (trigger & 3) {
++	case 0:
++		type = IRQ_TYPE_LEVEL_HIGH;
++		break;
++	case 1:
++		type = IRQ_TYPE_LEVEL_LOW;
++		break;
++	case 2:
++		type = IRQ_TYPE_EDGE_RISING;
++		set_edge_handler = true;
++		break;
++	case 3:
++		type = IRQ_TYPE_EDGE_FALLING;
++		set_edge_handler = true;
++		break;
++	}
++
++	irq_set_irq_type(irq, type);
++
++	if (set_edge_handler)
++		__irq_set_handler(irq, handle_edge_irq, 0, NULL);
++
++err_put:
++	of_node_put(oirq.controller);
++err:
++	return irq;
++}
++
++/*
++ * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux irq#
++ *
++ * Octeon irq maps are a pair of indexes.  The first selects either
++ * ciu0 or ciu1, the second is the bit within the ciu register.
++ */
++unsigned int irq_create_of_mapping(struct device_node *controller,
++				   const u32 *intspec, unsigned int intsize)
++{
++	unsigned int irq = 0;
++	unsigned int ciu, bit;
++
++	if (of_device_is_compatible(controller, "cavium,octeon-3860-gpio"))
++		return octeon_irq_gpio_mapping(controller, intspec, intsize);
++
++	ciu = be32_to_cpup(intspec);
++	bit = be32_to_cpup(intspec + 1);
++
++	if (ciu < 8 && bit < 64)
++		irq = octeon_irq_ciu_to_irq[ciu][bit];
++
++	return irq;
++}
++EXPORT_SYMBOL_GPL(irq_create_of_mapping);
++
+ static int octeon_coreid_for_cpu(int cpu)
+ {
+ #ifdef CONFIG_SMP
+@@ -505,6 +592,72 @@ static void octeon_irq_ciu_enable_all_v2(struct irq_data *data)
+ 	}
+ }
+ 
++static void octeon_irq_gpio_setup(struct irq_data *data)
++{
++	union cvmx_gpio_bit_cfgx cfg;
++	int bit = data->irq - OCTEON_IRQ_GPIO0;
++	u32 t = irqd_get_trigger_type(data);
++
++	cfg.u64 = 0;
++	cfg.s.int_en = 1;
++	cfg.s.int_type = (t & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING)) != 0;
++	cfg.s.rx_xor = (t & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING)) != 0;
++
++	/* 1 uS glitch filter*/
++	cfg.s.fil_cnt = 7;
++	cfg.s.fil_sel = 3;
++
++	cvmx_write_csr(CVMX_GPIO_BIT_CFGX(bit), cfg.u64);
++}
++
++static void octeon_irq_ciu_enable_gpio_v2(struct irq_data *data)
++{
++	octeon_irq_gpio_setup(data);
++	octeon_irq_ciu_enable_v2(data);
++}
++
++static void octeon_irq_ciu_enable_gpio(struct irq_data *data)
++{
++	octeon_irq_gpio_setup(data);
++	octeon_irq_ciu_enable(data);
++}
++
++static int octeon_irq_ciu_gpio_set_type(struct irq_data *data, unsigned int t)
++{
++	u32 current_type = irqd_get_trigger_type(data);
++
++	/* If the type has been set, don't change it */
++	if (current_type && current_type != t)
++		return -EINVAL;
++
++	irqd_set_trigger_type(data, t);
++	return IRQ_SET_MASK_OK;
++}
++
++static void octeon_irq_ciu_disable_gpio_v2(struct irq_data *data)
++{
++	int bit = data->irq - OCTEON_IRQ_GPIO0;
++	cvmx_write_csr(CVMX_GPIO_BIT_CFGX(bit), 0);
++
++	octeon_irq_ciu_disable_all_v2(data);
++}
++
++static void octeon_irq_ciu_disable_gpio(struct irq_data *data)
++{
++	int bit = data->irq - OCTEON_IRQ_GPIO0;
++	cvmx_write_csr(CVMX_GPIO_BIT_CFGX(bit), 0);
++
++	octeon_irq_ciu_disable_all(data);
++}
++
++static void octeon_irq_ciu_gpio_ack(struct irq_data *data)
++{
++	int bit = data->irq - OCTEON_IRQ_GPIO0;
++	u64 mask = 1ull << bit;
++
++	cvmx_write_csr(CVMX_GPIO_INT_CLR, mask);
++}
++
+ #ifdef CONFIG_SMP
+ 
+ static void octeon_irq_cpu_offline_ciu(struct irq_data *data)
+@@ -717,6 +870,31 @@ static struct irq_chip octeon_irq_chip_ciu_mbox = {
+ 	.flags = IRQCHIP_ONOFFLINE_ENABLED,
+ };
+ 
++static struct irq_chip octeon_irq_chip_ciu_gpio_v2 = {
++	.name = "CIU-GPIO",
++	.irq_enable = octeon_irq_ciu_enable_gpio_v2,
++	.irq_disable = octeon_irq_ciu_disable_gpio_v2,
++	.irq_ack = octeon_irq_ciu_gpio_ack,
++	.irq_mask = octeon_irq_ciu_disable_local_v2,
++	.irq_unmask = octeon_irq_ciu_enable_v2,
++	.irq_set_type = octeon_irq_ciu_gpio_set_type,
++#ifdef CONFIG_SMP
++	.irq_set_affinity = octeon_irq_ciu_set_affinity_v2,
++#endif
++};
++
++static struct irq_chip octeon_irq_chip_ciu_gpio = {
++	.name = "CIU-GPIO",
++	.irq_enable = octeon_irq_ciu_enable_gpio,
++	.irq_disable = octeon_irq_ciu_disable_gpio,
++	.irq_mask = octeon_irq_dummy_mask,
++	.irq_ack = octeon_irq_ciu_gpio_ack,
++	.irq_set_type = octeon_irq_ciu_gpio_set_type,
++#ifdef CONFIG_SMP
++	.irq_set_affinity = octeon_irq_ciu_set_affinity,
++#endif
++};
++
+ /*
+  * Watchdog interrupts are special.  They are associated with a single
+  * core, so we hardwire the affinity to that core.
+@@ -890,6 +1068,7 @@ static void __init octeon_irq_init_ciu(void)
+ 	struct irq_chip *chip_edge;
+ 	struct irq_chip *chip_mbox;
+ 	struct irq_chip *chip_wd;
++	struct irq_chip *chip_gpio;
+ 
+ 	octeon_irq_init_ciu_percpu();
+ 	octeon_irq_setup_secondary = octeon_irq_setup_secondary_ciu;
+@@ -904,6 +1083,7 @@ static void __init octeon_irq_init_ciu(void)
+ 		chip_edge = &octeon_irq_chip_ciu_edge_v2;
+ 		chip_mbox = &octeon_irq_chip_ciu_mbox_v2;
+ 		chip_wd = &octeon_irq_chip_ciu_wd_v2;
++		chip_gpio = &octeon_irq_chip_ciu_gpio_v2;
+ 	} else {
+ 		octeon_irq_ip2 = octeon_irq_ip2_v1;
+ 		octeon_irq_ip3 = octeon_irq_ip3_v1;
+@@ -911,6 +1091,7 @@ static void __init octeon_irq_init_ciu(void)
+ 		chip_edge = &octeon_irq_chip_ciu_edge;
+ 		chip_mbox = &octeon_irq_chip_ciu_mbox;
+ 		chip_wd = &octeon_irq_chip_ciu_wd;
++		chip_gpio = &octeon_irq_chip_ciu_gpio;
+ 	}
+ 	octeon_irq_ip4 = octeon_irq_ip4_mask;
+ 
+@@ -921,7 +1102,7 @@ static void __init octeon_irq_init_ciu(void)
+ 	for (i = 0; i < 16; i++)
+ 		octeon_irq_set_ciu_mapping(i + OCTEON_IRQ_WORKQ0, 0, i + 0, chip, handle_level_irq);
+ 	for (i = 0; i < 16; i++)
+-		octeon_irq_set_ciu_mapping(i + OCTEON_IRQ_GPIO0, 0, i + 16, chip, handle_level_irq);
++		octeon_irq_set_ciu_mapping(i + OCTEON_IRQ_GPIO0, 0, i + 16, chip_gpio, handle_level_irq);
+ 
+ 	octeon_irq_set_ciu_mapping(OCTEON_IRQ_MBOX0, 0, 32, chip_mbox, handle_percpu_irq);
+ 	octeon_irq_set_ciu_mapping(OCTEON_IRQ_MBOX1, 0, 33, chip_mbox, handle_percpu_irq);
 -- 
 1.7.2.3
