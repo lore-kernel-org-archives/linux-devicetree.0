@@ -1,26 +1,26 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH v2 6/7] mmc: sdhci: merge two sdhci-pltfm.h into one
-Date: Thu, 5 May 2011 18:13:00 +0400
-Message-ID: <20110505141300.GA17734@oksana.dev.rtsoft.ru>
-References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
- <1304601778-13837-7-git-send-email-shawn.guo@linaro.org>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 0/6] General device tree irq domain infrastructure
+Date: Thu, 05 May 2011 16:14:32 +0200
+Message-ID: <4DC2B0C8.6010306@linutronix.de>
+References: <20110428192227.8979.49181.stgit@ponder> <1304386999.2513.293.camel@pasglop> <20110504155227.GA3317@ponder.secretlab.ca> <1304555953.2513.390.camel@pasglop> <alpine.LFD.2.02.1105051026370.3005@ionos> <BANLkTimQ7GsUton3nvJof8YB8k6cnx4rFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1304601778-13837-7-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <w.sang@pengutronix.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BANLkTimQ7GsUton3nvJof8YB8k6cnx4rFQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, hpa@zytor.com, Dirk Brandewie <dirk.brandewie@gmail.com>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2011 at 09:22:57PM +0800, Shawn Guo wrote:
-> The structure sdhci_pltfm_data is not necessarily to be in a public
-> header like include/linux/mmc/sdhci-pltfm.h, so the patch moves it
-> into drivers/mmc/host/sdhci-pltfm.h and eliminates the former one.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-> Reviewed-by: Wolfram Sang <w.sang@pengutronix.de>
+Grant Likely wrote:
+> Okay, I'll take another hack at it.  Unfortunately I've got a great
+> big unmaskable interrupt in the form of UDS next week, but I'll be
+> back on it the week after.
 
-Acked-by: Anton Vorontsov <cbouatmailru@gmail.com>
+And I thought you were a NMI.
+
+> 
+> g.
+
+Sebastian
