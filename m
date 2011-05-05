@@ -1,34 +1,66 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 2/6] powerpc: make irq_{alloc, free}_virt private and
- remove count argument
-Date: Thu, 05 May 2011 10:39:55 +1000
-Message-ID: <1304555995.2513.391.camel@pasglop>
-References: <20110428192227.8979.49181.stgit@ponder>
-	 <20110428200153.8979.23873.stgit@ponder>
-	 <1304387267.2513.298.camel@pasglop>
-	 <20110504155905.GB3317@ponder.secretlab.ca>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v4] uio/pdrv_genirq: Add OF support
+Date: Thu, 05 May 2011 07:26:43 +0200
+Message-ID: <4DC23513.2090007@monstr.eu>
+References: <1304319115-32745-1-git-send-email-monstr@monstr.eu> <20110503203412.GA2119@pengutronix.de> <20110503221440.GB2737@local> <4DC152F3.2050500@monstr.eu> <20110504194730.GA2820@local>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110504155905.GB3317@ponder.secretlab.ca>
+In-Reply-To: <20110504194730.GA2820@local>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Michal Simek <monstr@monstr.eu>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, hpa@zytor.com, Dirk Brandewie <dirk.brandewie@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org
+To: "Hans J. Koch" <hjk@hansjkoch.de>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, john.williams@petalogix.com, linux-kernel@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2011-05-04 at 09:59 -0600, Grant Likely wrote:
+Hans J. Koch wrote:
+> On Wed, May 04, 2011 at 03:21:55PM +0200, Michal Simek wrote:
+>> Hans J. Koch wrote:
+>>> On Tue, May 03, 2011 at 10:34:12PM +0200, Wolfram Sang wrote:
+>>>> On Mon, May 02, 2011 at 08:51:55AM +0200, Michal Simek wrote:
+>>>>> Adding OF binding to genirq.
+>>>>> Version string is setup to the "devicetree".
+>>>>>
+>>>>> Compatible string is not setup for now but you can add your
+>>>>> custom compatible string to uio_of_genirq_match structure.
+>>>>>
+>>>>> For example with "vendor,device" compatible string:
+>>>>> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+>>>>> 	{ .compatible = "vendor,device", },
+>>>>> 	{ /* empty for now */ },
+>>>>> };
+>>>>>
+>>>>> Signed-off-by: Michal Simek <monstr@monstr.eu>
+>>>> [...]
+>>>>
+>>>>> +		/* alloc uioinfo for one device */
+>>>>> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+>>>> kfree in remove?
+>>> Oh yes. Missed that one. It should probably look like the "bad0" case in probe().
+>> Yes, freeing uioinfo in uio_pdrv_genirq_remove make sense for CONFIG_OF.
+>>
+>> Please correct me if I am wrong dev.of_node is not NULL for OF. I
+>> think yes that's why I would prefer to use this construct instead of
+>> #ifdef CONFIG_OF.
+>>
+>> 	if (pdev->dev.of_node)
+>> 		kfree(pdev->dev.platform_data);
 > 
-> Heh, I wondered about that, but there hasn't been any users for at
-> least 5 years (as evidenced by commit e12514650b, "Fix loop logic in
-> irq_alloc_virt()") so it was looking pretty dead, and it made the
-> patch to switch to using irq_alloc_desc*() quite a bit simpler if it
-> was removed.  :-)
-> 
-> I'm not particularly attached to this patch, so I can drop it from the
-> series. 
+> Huh? You didn't allocate platform_data, so you shouldn't free it.
+> It's uioinfo you allocated.
 
-Well, Willy recently added support for the MSI block allocation so ...
+grrr. I am stupid!
 
-Cheers,
-Ben.
+	/* kfree uioinfo for CONFIG_OF */
+	if (pdev->dev.of_node)
+		kfree(priv->uioinfo);
+
+
+Michal
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
