@@ -1,34 +1,106 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [RFC PATCH v3 0/6] MIPS: Octeon: Use Device Tree.
-Date: Thu, 05 May 2011 10:48:06 -0700
-Message-ID: <4DC2E2D6.1040502@caviumnetworks.com>
-References: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com> <BANLkTi=emL85ROThAEz_RsVXL-oJsL6aAQ@mail.gmail.com>
+From: Meador Inge <meador_inge@mentor.com>
+Subject: Re: [PATCH 2/2] powerpc: add support for MPIC message register API
+Date: Thu, 05 May 2011 16:41:29 -0500
+Message-ID: <4DC31989.8080703@mentor.com>
+References: <1303232375-25014-1-git-send-email-meador_inge@mentor.com>	<1303232375-25014-3-git-send-email-meador_inge@mentor.com>	<071A08F2C6A57E4E94D980ECA553F8741959CA@039-SN1MPN1-004.039d.mgd.msft.net>	<4DBAED5D.4060906@mentor.com>	<071A08F2C6A57E4E94D980ECA553F8741967EC@039-SN1MPN1-004.039d.mgd.msft.net>	<20110429123051.4ed1ca01@schlenkerla.am.freescale.net>	<071A08F2C6A57E4E94D980ECA553F8741984EE@039-SN1MPN1-004.039d.mgd.msft.net>	<4DBED5E9.2070201@mentor.com>
+	<20110503101921.45f31d34@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BANLkTi=emL85ROThAEz_RsVXL-oJsL6aAQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20110503101921.45f31d34@schlenkerla.am.freescale.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: Wood Scott-B07421 <B07421@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Hollis Blanchard <hollis_blanchard@mentor.com>, Kushwaha Prabhakar-B32579 <B32579@freescale.com>, "openmcapi-dev@googlegroups.com" <openmcapi-dev@googlegroups.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2011 10:40 AM, Grant Likely wrote:
-> On Thu, May 5, 2011 at 11:02 AM, David Daney<ddaney@caviumnetworks.com>  wrote:
-[...]
->>   drivers/of/libfdt/Makefile                         |    8 +
->
-> Out of curiosity, how big are the compiled libfdt object files?
->
+On 05/03/2011 10:19 AM, Scott Wood wrote:
+> In the absence of partitioning, no driver should need a specific one.  With
+> partitioning, let the system designer mark those resources as reserved so
+> they don't get allocated. :-)
 
-For my 64-bit mips64 kernel:
+That seem reasonable.  Back to the device tree then.  One option is to bring
+back the sister-send property 'mpic-msgr-send-mask', which was discussed some
+months back.  For example, consider:
 
-[ddaney@dd1 libfdt]$ mips64-linux-size *.o
-    text	   data	    bss	    dec	    hex	filename
-    7024	      0	      0	   7024	   1b70	built-in.o
-    1792	      0	      0	   1792	    700	fdt.o
-    4328	      0	      0	   4328	   10e8	fdt_ro.o
-     904	      0	      0	    904	    388	fdt_wip.o
+	/* OS 1 */
+	mpic_msgr_block0: mpic-msgr-block@41400 {
+		compatible = "fsl,mpic-v3.1-msgr";
+		reg = <0x41400 0x200>;
+		interrupts = <0xb0 2 0xb2 2>;
+		mpic-msgr-receive-mask = <0x5>;
+		mpic-msgr-send-mask = <0xa>;
+	};
+
+	mpic_msgr_block1: mpic-msgr-block@42400 {
+		compatible = "fsl,mpic-v3.1-msgr";
+		reg = <0x42400 0x200>;
+		interrupts = <0xb4 2 0xb6 2>;
+		mpic-msgr-receive-mask = <0x5>;
+	};
+
+	/* OS 2 */
+	mpic_msgr_block0: mpic-msgr-block@41400 {
+		compatible = "fsl,mpic-v3.1-msgr";
+		reg = <0x41400 0x200>;
+		interrupts = <0xb0 2 0xb2 2>;
+		mpic-msgr-receive-mask = <0xa>;
+		mpic-msgr-send-mask = <0x5>;
+	};
+
+	mpic_msgr_block1: mpic-msgr-block@42400 {
+		compatible = "fsl,mpic-v3.1-msgr";
+		reg = <0x42400 0x200>;
+		interrupts = <0xb4 2 0xb6 2>;
+		mpic-msgr-send-mask = <0x5>;
+	};
+
+In block0 for both OSes, all registers are partitioned and are thus not
+available for allocation.  In block1 for both OSes, registers 0 and 2 are
+reserved and registers 1 and 3 are available for general allocation.
+
+So any register mentioned in one of 'mpic-msgr-receive-mask' or
+'mpic-msgr-send-mask' is out of the running for general allocation.
+If neither of the properties appear, then all registers are available
+for general allocation.
+
+You could get into trouble with this method with cases like:
+
+	/* OS 1 */
+	mpic_msgr_block0: mpic-msgr-block@41400 {
+		compatible = "fsl,mpic-v3.1-msgr";
+		reg = <0x41400 0x200>;
+		interrupts = <0xb0 2 0xb2 2>;
+		mpic-msgr-send-mask = <0xa>;
+	};
+
+	/* OS 2 */
+	mpic_msgr_block0: mpic-msgr-block@41400 {
+		compatible = "fsl,mpic-v3.1-msgr";
+		reg = <0x41400 0x200>;
+		interrupts = <0xb0 2 0xb2 2>;
+		mpic-msgr-receive-mask = <0x5>;
+	};
+
+Now OS 1 has registers 0 and 2 available for general allocation, which
+OS 2 is receiving on.  However, we already have that problem if someone
+botches the masks.  So I am not very worried about that.
+
+Clearly this is just one method, but I think tagging what is available from the
+device tree is a must.
 
 
-David Daney
+Thoughts?
+
+
+-- 
+Meador Inge     | meador_inge AT mentor.com
+Mentor Embedded | http://www.mentor.com/embedded-software
