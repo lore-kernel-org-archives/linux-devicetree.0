@@ -1,26 +1,35 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 0/6] General device tree irq domain infrastructure
-Date: Thu, 05 May 2011 16:14:32 +0200
-Message-ID: <4DC2B0C8.6010306@linutronix.de>
-References: <20110428192227.8979.49181.stgit@ponder> <1304386999.2513.293.camel@pasglop> <20110504155227.GA3317@ponder.secretlab.ca> <1304555953.2513.390.camel@pasglop> <alpine.LFD.2.02.1105051026370.3005@ionos> <BANLkTimQ7GsUton3nvJof8YB8k6cnx4rFQ@mail.gmail.com>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH v2 5/7] mmc: sdhci: consolidate sdhci-of-esdhc and
+ sdhci-esdhc-imx
+Date: Thu, 5 May 2011 18:20:52 +0400
+Message-ID: <20110505142051.GA17915@oksana.dev.rtsoft.ru>
+References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
+ <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BANLkTimQ7GsUton3nvJof8YB8k6cnx4rFQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, hpa@zytor.com, Dirk Brandewie <dirk.brandewie@gmail.com>, devicetree-discuss@lists.ozlabs.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <w.sang@pengutronix.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> Okay, I'll take another hack at it.  Unfortunately I've got a great
-> big unmaskable interrupt in the form of UDS next week, but I'll be
-> back on it the week after.
-
-And I thought you were a NMI.
-
+On Thu, May 05, 2011 at 09:22:56PM +0800, Shawn Guo wrote:
+> This patch is to consolidate SDHCI driver for Freescale eSDHC
+> controller found on both MPCxxx and i.MX platforms.  It merges
+> sdhci-of-esdhc.c into sdhci-esdhc.c, so that the same pair of
+> .probe/.remove hook works with eSDHC for two platforms.
 > 
-> g.
+> As the results, sdhci-of-esdhc.c and sdhci-esdhc.h are removed, and
+> header esdhc.h containing the definition of esdhc_platform_data is
+> put into the public folder.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 
-Sebastian
+I'm not sure if that makes sense to merge these two.
+I'd rather vote for renaming sdhci-of-esdhc to sdhci-esdhc-mpc. :-)
+
+-- 
+Anton Vorontsov
+Email: cbouatmailru@gmail.com
