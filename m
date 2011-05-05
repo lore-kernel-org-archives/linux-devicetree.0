@@ -1,17 +1,14 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] net/fec: fix compile error introduced by dt support
-Date: Thu, 5 May 2011 23:20:23 +0800
-Message-ID: <20110505152022.GA21215@S2100-06.ap.freescale.net>
-References: <1301037238-4031-1-git-send-email-shawn.guo@linaro.org>
-	<20110331160940.GF26709@ponder.secretlab.ca>
-	<20110401074916.GI25866@S2100-06.ap.freescale.net>
-	<20110405045400.GA28956@ponder.secretlab.ca>
+Subject: Re: [PATCH] arm/dt: Fix babbage.dts memory node
+Date: Thu, 5 May 2011 23:23:56 +0800
+Message-ID: <20110505152355.GB21215@S2100-06.ap.freescale.net>
+References: <1303453526-27523-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110405045400.GA28956-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1303453526-27523-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,38 +22,38 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMDQsIDIwMTEgYXQgMTA6NTQ6MDBQTSAtMDYwMCwgR3JhbnQgTGlrZWx5IHdy
-b3RlOgo+IE9uIEZyaSwgQXByIDAxLCAyMDExIGF0IDAzOjQ5OjE2UE0gKzA4MDAsIFNoYXduIEd1
-byB3cm90ZToKPiA+IE9uIFRodSwgTWFyIDMxLCAyMDExIGF0IDEwOjA5OjQwQU0gLTA2MDAsIEdy
-YW50IExpa2VseSB3cm90ZToKPiA+ID4gT24gRnJpLCBNYXIgMjUsIDIwMTEgYXQgMDM6MTM6NThQ
-TSArMDgwMCwgU2hhd24gR3VvIHdyb3RlOgo+ID4gPiA+IEFmdGVyIGZlYyBkdCBzdXBwb3J0IGlz
-IGFkZGVkLCB0aGUgZm9sbG93aW5nIGNvbXBpbGUgZXJyb3Igd2lsbCBiZQo+ID4gPiA+IHNlZW4g
-d2hlbiBidWlsZGluZyBhIHB1cmUgbm9uLWR0IGtlcm5lbC4KPiA+ID4gPiAKPiA+ID4gPiBkcml2
-ZXJzL25ldC9mZWMuYzogSW4gZnVuY3Rpb24g4oCYZmVjX3Byb2Jl4oCZOgo+ID4gPiA+IGRyaXZl
-cnMvbmV0L2ZlYy5jOjEzODM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlv
-biDigJhvZl9tYXRjaF9kZXZpY2XigJkKPiA+ID4gPiBkcml2ZXJzL25ldC9mZWMuYzoxMzgzOiB3
-YXJuaW5nOiBhc3NpZ25tZW50IG1ha2VzIHBvaW50ZXIgZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBj
-YXN0Cj4gPiA+IAo+ID4gPiBFYXJsaWVyIHRvZGF5IEkgc3VnZ2VzdGVkIGZpeGluZyB0aGlzIGJ5
-IGFkZGluZyBhbiBlbXB0eQo+ID4gPiBpbXBsZW1lbnRhdGlvbiBvZiBvZl9tYXRjaF9kZXZpY2Us
-IGJ1dCBJIGZvcmdvdCB0aGF0IGFuIC5vZl9tYXRjaAo+ID4gPiBwb2ludGVyIGhhcyBiZWVuIGFk
-ZGVkIHRvIHN0cnVjdCBkZXZpY2UgZm9yIGV4YWN0bHkgdGhpcyBwdXJwb3NlLiAgWW91Cj4gPiA+
-IGNhbiB1c2UgdGhhdCBpbnN0ZWFkLgo+ID4gPiAKPiA+ID4gVGhhdCBjaGFuZ2UgaXMgY3VycmVu
-dGx5IGluIG1haW5saW5lLCBidXQgaXQgaGFzIG5vdCBiZWVuIGJhY2twb3J0ZWQKPiA+ID4gdG8g
-dGhlIExpbmFybyAyLjYuMzggdHJlZSAoeWV0KS4KPiA+ID4gCj4gPiBUaGlzIHNpbXBseSBpcyBh
-IGZpeCB0byBjb21taXQgNTQ4OThiODZmYTk4MTMzMTNiM2ViOTgxYzQ0NjEwZmY0ODNiMDA2Nwo+
-ID4gIm5ldC9mZWM6IGFkZCBkZXZpY2UgdHJlZSBtYXRjaGluZyBzdXBwb3J0Iiwgd2hpY2ggb25s
-eSBzaXRzIG9uIGJyYW5jaAo+ID4gZGV2aWNldHJlZS90ZXN0LTIuNi4zOCByaWdodCBub3cuICBI
-b3dldmVyLCAub2ZfbWF0Y2ggaXMgbm90IGF2YWlsYWJsZQo+ID4gb24gdGhhdCB0cmVlIHlldC4g
-IFNvIEkgY2FuIG5vdCBkbyBhbnl0aGluZyB1bnRpbCBldGhlciB0aGlzIHBhdGNoCj4gPiBzaG93
-cyBvbiBkZXZpY2V0cmVlL3Rlc3Qgb3IgLm9mX21hdGNoIGlzIGJhY2sgcG9ydGVkIG9uCj4gPiBk
-ZXZpY2V0cmVlL3Rlc3QtMi42LjM4LiAgT3IgeW91IGNhbiBzaW1wbHkgaWdub3JlIHRoaXMgcGF0
-Y2ggc2luY2UgSQo+ID4ganVzdCB3YW50IGxldCB5b3Uga25vdyBzdWNoIGEgY29tcGlsZSBlcnJv
-ci4KPiAKPiBPa2F5LCBvZl9tYXRjaCBpcyBpbiBteSBkZXZpY2V0cmVlL3Rlc3QgYnJhbmNoIG5v
-dyBzaW5jZSBJJ3ZlIHJlYmFzZWQKPiB0byAyLjYuMzgtcmMxLiAgSSdsbCBoYXBwaWx5IHRha2Ug
-YSBmaXh1cCBwYXRjaCBmcm9tIHlvdSBub3cuICA6LSkKPiAKU29ycnksIEdyYW50LiAgSSBvdmVy
-bG9va2VkIHRoaXMgcmVwbHksIGFuZCBub3RpY2VkIGl0IHdoZW4gcmUtdmlzaXRpbmcKdGhlIHRo
-cmVhZCB0b2RheS4gIEkganVzdCBzZW50IGFuIHVwZGF0ZWQgcGF0Y2guICBQbGVhc2UgdGFrZSBh
-IGxvb2suCgotLSAKUmVnYXJkcywKU2hhd24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNl
-dHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
-c3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Fri, Apr 22, 2011 at 02:25:26PM +0800, Shawn Guo wrote:
+> Without device_type property set as memory for the node, the generated
+> dtb can still work when it gets passed to kernel by u-boot, since
+> u-boot will fix it up.  But kernel will not boot due to that it fails
+> to parse the memory node, when the dtb is appended to kernel image as
+> it is.
+> 
+> The patch adds a property device_type="memory" for memory node to fix
+> the problem.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> It applies on branch devicetree/test.
+> 
+>  arch/arm/boot/dts/babbage.dts |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/babbage.dts b/arch/arm/boot/dts/babbage.dts
+> index 8f9b47c..4805168 100644
+> --- a/arch/arm/boot/dts/babbage.dts
+> +++ b/arch/arm/boot/dts/babbage.dts
+> @@ -21,6 +21,7 @@
+>  	interrupt-parent = <&tzic>;
+>  
+>  	memory {
+> +		device_type = "memory";
+>  		reg = <0x90000000 0x20000000>;
+>  	};
+>  
+> -- 
+Hi Grant, comments?
+
+-- 
+Regards,
+Shawn
