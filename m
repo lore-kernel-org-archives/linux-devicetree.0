@@ -1,69 +1,44 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH v2 1/7] mmc: sdhci: make sdhci-pltfm device drivers
- self registered
-Date: Thu, 5 May 2011 18:24:31 +0400
-Message-ID: <20110505142431.GA12444@oksana.dev.rtsoft.ru>
-References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
- <1304601778-13837-2-git-send-email-shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] net/fec: fix compile error introduced by dt support
+Date: Thu,  5 May 2011 23:18:13 +0800
+Message-ID: <1304608693-28943-1-git-send-email-shawn.guo@linaro.org>
+References: <20110405045400.GA28956@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1304601778-13837-2-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <w.sang@pengutronix.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110405045400.GA28956-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linaro-kerenl-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2011 at 09:22:52PM +0800, Shawn Guo wrote:
-[...]
-> +static int __devinit sdhci_cns3xxx_probe(struct platform_device *pdev)
-> +{
-> +	return sdhci_pltfm_register(pdev, &sdhci_cns3xxx_pdata);
-> +}
-> +
-> +static int __devexit sdhci_cns3xxx_remove(struct platform_device *pdev)
-> +{
-> +	return sdhci_pltfm_unregister(pdev);
-> +}
-> +
-> +static struct platform_driver sdhci_cns3xxx_driver = {
-> +	.driver		= {
-> +		.name	= "sdhci-cns3xxx",
-> +		.owner	= THIS_MODULE,
-> +	},
-> +	.probe		= sdhci_cns3xxx_probe,
-> +	.remove		= __devexit_p(sdhci_cns3xxx_remove),
-> +#ifdef CONFIG_PM
-> +	.suspend	= sdhci_pltfm_suspend,
-> +	.resume		= sdhci_pltfm_resume,
-> +#endif
-> +};
-> +
-> +static int __init sdhci_cns3xxx_init(void)
-> +{
-> +	return platform_driver_register(&sdhci_cns3xxx_driver);
-> +}
-> +module_init(sdhci_cns3xxx_init);
-> +
-> +static void __exit sdhci_cns3xxx_exit(void)
-> +{
-> +	platform_driver_unregister(&sdhci_cns3xxx_driver);
-> +}
-> +module_exit(sdhci_cns3xxx_exit);
-
-I don't think I like this duplicate code for each platform sub-
-driver. It's repetitive and annoying. :-/
-
-But considering that ARM will be multiplatform soon, we don't
-want to have every mach-* stuff in the single sdhci-pltfm.
-
-So... OK. If that compiles, I'm fine with it. :-D
-
-Acked-by: Anton Vorontsov <cbouatmailru@gmail.com>
-
-Thanks!
-
--- 
-Anton Vorontsov
-Email: cbouatmailru@gmail.com
+QWZ0ZXIgZmVjIGR0IHN1cHBvcnQgaXMgYWRkZWQsIHRoZSBmb2xsb3dpbmcgY29tcGlsZSBlcnJv
+ciB3aWxsIGJlCnNlZW4gd2hlbiBidWlsZGluZyBhIHB1cmUgbm9uLWR0IGtlcm5lbC4KCmRyaXZl
+cnMvbmV0L2ZlYy5jOiBJbiBmdW5jdGlvbiDigJhmZWNfcHJvYmXigJk6CmRyaXZlcnMvbmV0L2Zl
+Yy5jOjEzODM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhvZl9t
+YXRjaF9kZXZpY2XigJkKZHJpdmVycy9uZXQvZmVjLmM6MTM4Mzogd2FybmluZzogYXNzaWdubWVu
+dCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2FzdAoKVGhpcyBwYXRjaCBp
+cyB0byBmaXggdGhlIGVycm9yLgoKU2lnbmVkLW9mZi1ieTogU2hhd24gR3VvIDxzaGF3bi5ndW9A
+bGluYXJvLm9yZz4KLS0tCkNoYW5nZXMgc2luY2UgdjE6CiAqIFVzZSBvZl9tYXRjaCBwb2ludGVy
+IG5ld2x5IGFkZGVkIHRvIHN0cnVjdCBkZXZpY2UgdG8gZml4IHRoZSBlcnJvcgoKIGRyaXZlcnMv
+bmV0L2ZlYy5jIHwgICAgMiArLQogMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2VydGlvbnMoKyksIDEg
+ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZmVjLmMgYi9kcml2ZXJzL25l
+dC9mZWMuYwppbmRleCA2NTExMmExLi40MGIyYTI2IDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC9m
+ZWMuYworKysgYi9kcml2ZXJzL25ldC9mZWMuYwpAQCAtMTM3Niw3ICsxMzc2LDcgQEAgZmVjX3By
+b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJc3RydWN0IHJlc291cmNlICpyOwog
+CWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm9mX2lkOwogCi0Jb2ZfaWQgPSBvZl9tYXRjaF9k
+ZXZpY2UoZmVjX2R0X2lkcywgJnBkZXYtPmRldik7CisJb2ZfaWQgPSBwZGV2LT5kZXYub2ZfbWF0
+Y2g7CiAJaWYgKG9mX2lkKQogCQlwZGV2LT5pZF9lbnRyeSA9IChzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlX2lkICopb2ZfaWQtPmRhdGE7CiAKLS0gCjEuNy40LjEKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxp
+c3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxh
+YnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
