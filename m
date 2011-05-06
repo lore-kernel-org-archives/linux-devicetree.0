@@ -1,40 +1,41 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: Next formal dtc release?
-Date: Fri, 06 May 2011 08:46:39 -0500
-Message-ID: <E1QILMd-0008Db-VP@jdl.com>
-References: <20110420012610.GA6895@dvomlehn-lnx2.corp.sa.net>
-	<BANLkTi=JxBUEUGq_b+8w5c+LYq9-dKV+Bw@mail.gmail.com>
-	<E1QCNwx-0003YA-Pv@jdl.com>
-	<20110420221426.GA18409@dvomlehn-lnx2.corp.sa.net>
-	<20110421014128.GC11968@yookeroo>
-	<20110505065559.GX3811@pengutronix.de>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [RFC PATCH v3 1/6] of: Allow scripts/dtc/libfdt to be used from
+ kernel code
+Date: Fri, 06 May 2011 10:14:26 -0700
+Message-ID: <4DC42C72.1010306@caviumnetworks.com>
+References: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com> <1304614949-30460-2-git-send-email-ddaney@caviumnetworks.com> <4DC3D3D5.6060007@suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20110505065559.GX3811-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4DC3D3D5.6060007@suse.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.cz>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Because we have a pretty thorough testsuite, the current tip is nearly
-> > always suitable for release. That's one of the reasons we frequently
-> > forget to get around to doing a formal release.
-> 
-> any news about a release?
+On 05/06/2011 03:56 AM, Michal Marek wrote:
+> On 5.5.2011 19:02, David Daney wrote:
+>> --- /dev/null
+>> +++ b/drivers/of/libfdt/Makefile
+>> @@ -0,0 +1,8 @@
+>> +ccflags-y := -include linux/libfdt_env.h
+>> -I$(src)/../../../scripts/dtc/libfdt
+>> +
+>> +obj-y = fdt.o fdt_wip.o fdt_ro.o
+>> +
+>> +
+>> +$(obj)/%.o: $(src)/../../../scripts/dtc/libfdt/%.c FORCE
+>> + $(call cmd,force_checksrc)
+>> + $(call if_changed_rule,cc_o_c)
+>
+> It's just three source files, so you could use three one-line wrappers
+> that #include ../../../scripts/dtc/libfdt/<file>.c instead of copying
+> the %.c -> %.o rule here.
+>
 
-I am out of sorts Saturday, but I will try to do it Sunday.
-I have one "tested, it works" confirmation so far.  Others?
+Good idea, that does seem cleaner.
 
-I'm positing of a 1.3.0 release number for it.
+I will adjust the patch.
 
-jdl
+David Daney
