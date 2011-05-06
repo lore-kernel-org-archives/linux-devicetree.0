@@ -1,36 +1,71 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 7/7] ARM: mxc: remove esdhc.h and use the public one
-Date: Fri, 6 May 2011 10:39:59 +0200
-Message-ID: <20110506083959.GS11574@pengutronix.de>
-References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
- <1304601778-13837-8-git-send-email-shawn.guo@linaro.org>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [RFC PATCH v3 2/6] of: Make of_find_node_by_path() traverse /aliases
+ for relative paths.
+Date: Fri, 06 May 2011 14:05:48 +0400
+Message-ID: <4DC3C7FC.9050807@mvista.com>
+References: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com> <1304614949-30460-3-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1304601778-13837-8-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, sameo@linux.intel.com, Arnd Bergmann <arnd@arndb.de>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Saeed Bishara <saeed@marvell.com>, Wolfram Sang <w.sang@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, Xiaobo Xie <X.Xie@freescale.com>, kernel@pengutronix.de, Mike Rapoport <mike@compulab.co.il>, Olof Johansson <olof@lixom.net>, Anton Vorontsov <avorontsov@ru.mvista.com>, linuxppc-dev@lists.ozlabs.org, Albert Herranz <albert_herranz@yahoo.es>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1304614949-30460-3-git-send-email-ddaney@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Shawn,
+Hello.
 
-On Thu, May 05, 2011 at 09:22:58PM +0800, Shawn Guo wrote:
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+On 05-05-2011 21:02, David Daney wrote:
+
+> Currently all paths passed to of_find_node_by_path() must begin with a
+> '/', indicating a full path to the desired node.
+
+> Augment the look-up code so that if a path does *not* begin with '/',
+> the path is used as the name of an /aliases property.  The value of
+> this alias is then used as the full node path to be found.
+
+> Signed-off-by: David Daney<ddaney@caviumnetworks.com>
 > ---
->  .../plat-mxc/devices/platform-sdhci-esdhc-imx.c    |    1 -
->  arch/arm/plat-mxc/include/mach/devices-common.h    |    2 +-
-what about removing arch/arm/plat-mxc/include/mach/esdhc.h in this
-patch as advertised in the subject?
+>   drivers/of/base.c |   41 ++++++++++++++++++++++++++++++++++++++++-
+>   1 files changed, 40 insertions(+), 1 deletions(-)
 
-Best regards
-Uwe
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 632ebae..1a0a83e 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+[...]
+> @@ -348,14 +351,50 @@ EXPORT_SYMBOL(of_get_next_child);
+>   struct device_node *of_find_node_by_path(const char *path)
+>   {
+>   	struct device_node *np = allnodes;
+> +	struct device_node *aliases = NULL;
+> +	char *alias = NULL;
+> +	char *new_path = NULL;
+>
+>   	read_lock(&devtree_lock);
+> +
+> +	if (path[0] != '/') {
+> +		const char *ps;
+> +		aliases = of_find_node_by_path("/aliases");
+> +		if (!aliases)
+> +			goto out;
+> +
+> +		ps = strchr(path, '/');
+> +		if (ps) {
+> +			size_t len = ps - path;
+> +			alias = kmalloc(len + 1, GFP_KERNEL);
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+    How about error handling?
+
+> +			strncpy(alias, path, len);
+> +			alias[len] = 0;
+> +			path = of_get_property(aliases, alias, NULL);
+> +			if (!path)
+> +				goto out;
+> +			len = strlen(path) + strlen(ps) + 1;
+> +			new_path = kmalloc(len, GFP_KERNEL);
+
+    Here too...
+
+WBR, Sergei
