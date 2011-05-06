@@ -1,17 +1,26 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [RFC PATCH v3 2/6] of: Make of_find_node_by_path() traverse /aliases
- for relative paths.
-Date: Fri, 06 May 2011 14:05:48 +0400
-Message-ID: <4DC3C7FC.9050807@mvista.com>
-References: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com> <1304614949-30460-3-git-send-email-ddaney@caviumnetworks.com>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/6] of: Make of_find_node_by_path() traverse
+	/aliases for relative paths.
+Date: Fri, 06 May 2011 14:17:13 +0400
+Message-ID: <4DC3CAA9.5040203@mvista.com>
+References: <1304614949-30460-1-git-send-email-ddaney@caviumnetworks.com>
+	<1304614949-30460-3-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1304614949-30460-3-git-send-email-ddaney@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1304614949-30460-3-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hello.
@@ -25,7 +34,7 @@ On 05-05-2011 21:02, David Daney wrote:
 > the path is used as the name of an /aliases property.  The value of
 > this alias is then used as the full node path to be found.
 
-> Signed-off-by: David Daney<ddaney@caviumnetworks.com>
+> Signed-off-by: David Daney<ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 > ---
 >   drivers/of/base.c |   41 ++++++++++++++++++++++++++++++++++++++++-
 >   1 files changed, 40 insertions(+), 1 deletions(-)
@@ -55,17 +64,9 @@ On 05-05-2011 21:02, David Daney wrote:
 > +		if (ps) {
 > +			size_t len = ps - path;
 > +			alias = kmalloc(len + 1, GFP_KERNEL);
-
-    How about error handling?
-
 > +			strncpy(alias, path, len);
 > +			alias[len] = 0;
-> +			path = of_get_property(aliases, alias, NULL);
-> +			if (!path)
-> +				goto out;
-> +			len = strlen(path) + strlen(ps) + 1;
-> +			new_path = kmalloc(len, GFP_KERNEL);
 
-    Here too...
+    BTW, you could use kstrndup() (from mm/util.c) instead of the above 3 lines.
 
 WBR, Sergei
