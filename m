@@ -1,56 +1,85 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Multiple ic2 muxes in a device tree
-Date: Tue, 10 May 2011 23:31:54 +0200
-Message-ID: <BANLkTikvh72gvcfvF8j0FdBMHZKgP4C+ew@mail.gmail.com>
-References: <1B936DB9F22546409EE7E2F50AE76BEE02031931@dragon.enablence.com>
-	<4DC9A785.1040209@firmworks.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC 1/2] ARM: Tegra: Device Tree Support: Update how sdhci
+ devices	are initialized
+Date: Tue, 10 May 2011 15:03:18 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04986AA06A@HQMAIL01.nvidia.com>
+References: <20110510201108.22693.50319.stgit@riker>
+ <20110510201414.22693.7427.stgit@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DC9A785.1040209-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110510201414.22693.7427.stgit@riker>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-a
+Cc: "olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2011 at 11:00 PM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
-> I don't know much about how Linux handles i2c hierarchies, but I can spea=
-k with some authority about how it the device tree "should" be structured i=
-n order to conform to the principles already established for other buses.
->
-> Note that *each* pca9547 results in a subtree of the form:
-[...]
-> I understand the temptation to collapse the hierarchy by combining the mu=
-x node with its subordinate buses (using 2 address cells), but in my experi=
-ence, shortcuts like that have not aged well.
+John Bonesio wrote at Tuesday, May 10, 2011 2:14 PM:
+> This patch changes how sdhci devices are initialized so that a later patch can
+> easily add support for i2c devies.
+> 
+> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-... and we should defer to your wisdom in this regard.  :-)
+> @@ -134,6 +57,25 @@ static __initdata struct tegra_clk_init_table
+> tegra_dt_clk_init_table[] = {
+>  	{ NULL,		NULL,		0,		0},
+>  };
+> 
+> +static struct tegra_sdhci_platform_data sdhci_pdata1 = {
+> +	.cd_gpio        = -1,
+> +	.wp_gpio        = -1,
+> +	.power_gpio     = -1,
+> +};
+> +
+> +static struct tegra_sdhci_platform_data sdhci_pdata2 = {
+> +	.cd_gpio        = TEGRA_GPIO_SD2_CD,
+> +	.wp_gpio        = TEGRA_GPIO_SD2_WP,
+> +	.power_gpio     = TEGRA_GPIO_SD2_POWER,
+> +};
+> +
+> +static struct tegra_sdhci_platform_data sdhci_pdata4 = {
+> +	.cd_gpio        = TEGRA_GPIO_SD4_CD,
+> +	.wp_gpio        = TEGRA_GPIO_SD4_WP,
+> +	.power_gpio     = TEGRA_GPIO_SD4_POWER,
+> +	.is_8bit        = 1,
+> +};
+> +
 
-> =A0The case where a single-level hierarchy would work would be a simple i=
-2c-to-i2c bridge with only one child bus. =A0In this case, the existence of=
- multiple independent child buses argues for the two-level hierarchy, satis=
-fying the following requirements:
->
-> a) From the standpoint of a parent bus "looking down" at a pca9547, the p=
-ca9547 appears to be a single device at a well-defined address.
->
-> b) From the standpoint of a child device "looking up" at a pca9547, that =
-child is attached to a specific I2C bus with a standard one-cell I2C addres=
-s space.
->
-> Again, though, I'm unsure that this "correct" hierarchy is compatible wit=
-h the expectations of Linux drivers.
+So I understand why board-dt is itself registering the SDHCI platform
+devices itself; so that the pdev initialization path is identical
+between fully hard-coded boards and board-dt.c.
 
-Since Linux doesn't do any of this yet; I think we can make sure Linux
-implements something sane.
+However, I'm surprised that we would include the platform data for
+those devices within that argument; if we do that, we'll end up needing
+different platform data for every board, and devicetree won't have
+bought us anything.
 
-g.
+In other words, I understood that board-dt would register all the
+platform devices within Tegra, but not set up any of the plataform
+data, and the device drivers for those devices would be updated to
+get their platform data from devicetree if available, then fall back
+to old-style platform data. In other words, the way the SDHCI drivers
+work today in the devicetree/test branch.
+
+If my understanding is correct, shouldn't the chunk above and the
+one below be removed?
+
+>  static struct of_device_id tegra_dt_match_table[] __initdata = {
+>  	{ .compatible = "simple-bus", },
+>  	{}
+> @@ -164,6 +106,10 @@ static void __init tegra_dt_init(void)
+> 
+>  	harmony_pinmux_init();
+> 
+> +	tegra_sdhci_device1.dev.platform_data = &sdhci_pdata1;
+> +	tegra_sdhci_device2.dev.platform_data = &sdhci_pdata2;
+> +	tegra_sdhci_device4.dev.platform_data = &sdhci_pdata4;
+> +
+>  	platform_add_devices(harmony_devices, ARRAY_SIZE(harmony_devices));
+> 
+>  	/*
+
+-- 
+nvpublic
