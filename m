@@ -1,53 +1,120 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC 1/2] ARM: Tegra: Device Tree Support: Update how sdhci
- devices are initialized
-Date: Wed, 11 May 2011 20:21:32 +0200
-Message-ID: <BANLkTik2JxjT6aNYFOEGB9rg7q2zxC+nig@mail.gmail.com>
-References: <20110510201108.22693.50319.stgit@riker> <20110510201414.22693.7427.stgit@riker>
- <74CDBE0F657A3D45AFBB94109FB122FF04986AA06A@HQMAIL01.nvidia.com>
- <BANLkTingm7PCJPC-xCremYg_Ab7qFvPSag@mail.gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF04986AA077@HQMAIL01.nvidia.com>
- <4DC9BD39.30108@secretlab.ca> <74CDBE0F657A3D45AFBB94109FB122FF04986AA0A6@HQMAIL01.nvidia.com>
- <4DC9CB47.9000900@secretlab.ca> <74CDBE0F657A3D45AFBB94109FB122FF04986AA0E4@HQMAIL01.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04986AA0E4-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: [PATCH 3/8] pseries/iommu: find windows after kexec during boot
+Date: Wed, 11 May 2011 15:24:59 -0700
+Message-ID: <1305152704-4864-4-git-send-email-nacc@us.ibm.com>
+References: <1305152704-4864-1-git-send-email-nacc@us.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1305152704-4864-1-git-send-email-nacc@us.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milton Miller <miltonm@bga.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Will Schmidt <will_schmidt@vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2011 at 7:01 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
-ote:
-> John Bonesio wrote at Tuesday, May 10, 2011 5:33 PM:
-> +static struct tegra_sdhci_platform_data sdhci_pdata1 =3D {
-> + =A0 =A0 =A0 .cd_gpio =A0 =A0 =A0 =A0=3D -1,
-> + =A0 =A0 =A0 .wp_gpio =A0 =A0 =A0 =A0=3D -1,
-> + =A0 =A0 =A0 .power_gpio =A0 =A0 =3D -1,
-> +};
-> ...
-> + =A0 =A0 =A0 tegra_sdhci_device1.dev.platform_data =3D &sdhci_pdata1=
-;
->
-> The SDHCI driver has already been updated to get this platform data
-> from the OF node in the platform device; it doesn't need hard-coded
-> platform data to be passed to it.
->
-> Similarly, the following from your I2C patch shouldn't be required:
->
-> +static struct tegra_i2c_platform_data harmony_i2c1_platform_data =3D=
+From: Milton Miller <miltonm@bga.com>
+
+Move the discovery of windows previously setup from when the pci driver
+calls set_dma_mask to an arch_initcall.
+
+When kexecing into a kernel with dynamic dma windows allocated, we need
+to find the windows early so that memory hot remove will be able to
+delete the tces mapping the to be removed memory and memory hotplug add
+will map the new memory into the window.  We should not wait for the
+driver to be loaded and the device to be probed.  The iommu init hooks
+are before kmalloc is setup, so defer to arch_initcall.
+
+Signed-off-by: Milton Miller <miltonm@bga.com>
+Signed-off-by: Nishanth Aravamudan <nacc@us.ibm.com>
+---
+ arch/powerpc/platforms/pseries/iommu.c |   52 ++++++++++++++-----------------
+ 1 files changed, 24 insertions(+), 28 deletions(-)
+
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index a0421ac..a48f126 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -695,9 +695,9 @@ static void remove_ddw(struct device_node *np)
+ 			np->full_name, ret, ddr_avail[2], liobn);
+ 
+ delprop:
+-	ret = of_remove_property(np, win64);
++	ret = prom_remove_property(np, win64);
+ 	if (ret)
+-		pr_warning("%s: failed to remove direct window property: %d\n"
++		pr_warning("%s: failed to remove direct window property: %d\n",
+ 			np->full_name, ret);
+ }
+ 
+@@ -725,38 +725,38 @@ static u64 dupe_ddw_if_already_created(struct pci_dev *dev, struct device_node *
+ 	return dma_addr;
+ }
+ 
+-static u64 dupe_ddw_if_kexec(struct pci_dev *dev, struct device_node *pdn)
++static int find_existing_ddw_windows(void)
  {
-> + =A0 =A0 =A0 .bus_clk_rate =A0 =3D 400000,
-> +};
-> ...
-> + =A0 =A0 =A0 tegra_i2c_device1.dev.platform_data =3D &harmony_i2c1_p=
-latform_data;
-
-Correct.  John, you /should/ be able to simply drop the hunk in this
-patch that adds platform_data bits.  All you're doing with this patch
-is dropping the local declaration of the platform_devices and using
-the ones defined in arch/arm/mach-tegra/devices.c.  Setting the
-platform_data pointer is not required.
-
-g.
+-	struct device_node *dn;
+-	struct pci_dn *pcidn;
+ 	int len;
++	struct device_node *pdn;
+ 	struct direct_window *window;
+ 	const struct dynamic_dma_window_prop *direct64;
+-	u64 dma_addr = 0;
+ 
+-	dn = pci_device_to_OF_node(dev);
+-	pcidn = PCI_DN(dn);
+-	direct64 = of_get_property(pdn, DIRECT64_PROPNAME, &len);
+-	if (direct64) {
+-		if (len < sizeof(struct dynamic_dma_window_prop)) {
++	if (!firmware_has_feature(FW_FEATURE_LPAR))
++		return 0;
++
++	for_each_node_with_property(pdn, DIRECT64_PROPNAME) {
++		direct64 = of_get_property(pdn, DIRECT64_PROPNAME, &len);
++		if (!direct64)
++			continue;
++
++		window = kzalloc(sizeof(*window), GFP_KERNEL);
++		if (!window || len < sizeof(struct dynamic_dma_window_prop)) {
++			kfree(window);
+ 			remove_ddw(pdn);
+-		} else {
+-			window = kzalloc(sizeof(*window), GFP_KERNEL);
+-			if (!window) {
+-				remove_ddw(pdn);
+-			} else {
+-				window->device = pdn;
+-				window->prop = direct64;
+-				spin_lock(&direct_window_list_lock);
+-				list_add(&window->list, &direct_window_list);
+-				spin_unlock(&direct_window_list_lock);
+-				dma_addr = direct64->dma_base;
+-			}
++			continue;
+ 		}
++
++		window->device = pdn;
++		window->prop = direct64;
++		spin_lock(&direct_window_list_lock);
++		list_add(&window->list, &direct_window_list);
++		spin_unlock(&direct_window_list_lock);
+ 	}
+ 
+-	return dma_addr;
++	return 0;
+ }
++machine_arch_initcall(pseries, find_existing_ddw_windows);
+ 
+ static int query_ddw(struct pci_dev *dev, const u32 *ddr_avail,
+ 			struct ddw_query_response *query)
+@@ -854,10 +854,6 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	if (dma_addr != 0)
+ 		goto out_unlock;
+ 
+-	dma_addr = dupe_ddw_if_kexec(dev, pdn);
+-	if (dma_addr != 0)
+-		goto out_unlock;
+-
+ 	/*
+ 	 * the ibm,ddw-applicable property holds the tokens for:
+ 	 * ibm,query-pe-dma-window
+-- 
+1.7.4.1
