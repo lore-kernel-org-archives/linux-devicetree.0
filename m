@@ -1,24 +1,13 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: Make sure appended device tree data won't overlap
-	kernel BSS
-Date: Thu, 12 May 2011 05:59:52 -0700
-Message-ID: <20110512125952.GN31483@atomide.com>
-References: <alpine.LFD.2.00.1104271036520.24613@xanadu.home>
-	<20110427144335.GK3755@atomide.com>
-	<20110429102623.GX3755@atomide.com>
-	<alpine.LFD.2.00.1104290909310.24613@xanadu.home>
-	<20110429135334.GR5126@n2100.arm.linux.org.uk>
-	<alpine.LFD.2.00.1104291509540.24613@xanadu.home>
-	<20110504072317.GU2092@atomide.com>
-	<alpine.LFD.2.00.1105040936040.24613@xanadu.home>
-	<20110509111929.GA11410@atomide.com>
-	<20110509144949.GE30958@atomide.com>
+From: Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5] uio/pdrv_genirq: Add OF support
+Date: Thu, 12 May 2011 15:56:37 +0200
+Message-ID: <BANLkTi=GxtWP1OKL5OshD-3n-CAe19G36Q@mail.gmail.com>
+References: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
+	<20110506004748.GB2790@local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7602181680051439727=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110509144949.GE30958-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20110506004748.GB2790@local>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,138 +17,144 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110509 07:47]:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110509 14:16]:
-> > Do this before relocating the compressed kernel + device tree data.
-> > Otherwise we would have to split the copying into two parts, or copy
-> > the device tree data twice.
-> > 
-> > As we only have one register available, pass the size of kernel BSS
-> > via linker and do the following calculation using r1.
-> 
-> Blah, this still needs a bit more work.. The calculation is wrong
-> and we can get multiple relocations now.
+--===============7602181680051439727==
+Content-Type: multipart/alternative; boundary=0015175cdfe4ce62e104a3148eb9
 
-Here's a better version that also makes the stack usable early.
-That might become handy for further changes.
+--0015175cdfe4ce62e104a3148eb9
+Content-Type: text/plain; charset=ISO-8859-1
 
-Will still do a bit more testing on this on Friday.
+Hi,
 
-Tony
+On Fri, May 6, 2011 at 2:47 AM, Hans J. Koch <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org> wrote:
+
+> On Thu, May 05, 2011 at 08:40:44AM +0200, Michal Simek wrote:
+>
+> I think we've got it.
+>
+> Thanks,
+> Hans
+>
+> > Adding OF binding to genirq.
+> > Version string is setup to the "devicetree".
+> >
+> > Compatible string is not setup for now but you can add your
+> > custom compatible string to uio_of_genirq_match structure.
+> >
+> > For example with "vendor,device" compatible string:
+> > static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> >       { .compatible = "vendor,device", },
+> >       { /* empty for now */ },
+> > };
+> >
+> > Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+>
+> Signed-off-by: Hans J. Koch <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+>
+> > CC: Hans J. Koch <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+> > CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > CC: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+> > CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > CC: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+>
+
+Sorry for adding to this discussion so late...
+
+I fail to see how a device described in the device tree can be bound to this
+generic driver, as the match table is empty. I read in the description:
 
 
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Thu, 12 May 2011 05:29:49 -0700
-Subject: [PATCH] ARM: Make sure appended device tree data won't overlap kernel BSS
+> Compatible string is not setup for now but you can add your
+> custom compatible string to uio_of_genirq_match structure.
+>
+> For example with "vendor,device" compatible string:
+> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+>       { .compatible = "vendor,device", },
+>       { /* empty for now */ },
+> };
 
-Do this before relocating the compressed kernel + device tree data.
-Otherwise we would have to split the copying into two parts, or copy
-the device tree data twice.
+So, this would mean that for a given project, you need to modify the sources
+of the *generic* driver ?
 
-As we only have one register available, pass the size of kernel BSS
-via linker and do the calculation using r1, then save it to the stack.
+Thanks for clarifying,
+Thomas
 
-Note that this patch now makes the stack also usable earlier for
-CONFIG_ARM_APPENDED_DTB.
+--0015175cdfe4ce62e104a3148eb9
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Not-Yet-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Hi,<br><br><div class=3D"gmail_quote">On Fri, May 6, 2011 at 2:47 AM, Hans =
+J. Koch <span dir=3D"ltr">&lt;<a href=3D"mailto:hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org">hjk@hansj=
+koch.de</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D=
+"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex;">
+On Thu, May 05, 2011 at 08:40:44AM +0200, Michal Simek wrote:<br>
+<br>
+I think we&#39;ve got it.<br>
+<br>
+Thanks,<br>
+Hans<br>
+<div class=3D"im"><br>
+&gt; Adding OF binding to genirq.<br>
+&gt; Version string is setup to the &quot;devicetree&quot;.<br>
+&gt;<br>
+&gt; Compatible string is not setup for now but you can add your<br>
+&gt; custom compatible string to uio_of_genirq_match structure.<br>
+&gt;<br>
+&gt; For example with &quot;vendor,device&quot; compatible string:<br>
+&gt; static const struct of_device_id __devinitconst uio_of_genirq_match[] =
+=3D {<br>
+&gt; =A0 =A0 =A0 { .compatible =3D &quot;vendor,device&quot;, },<br>
+&gt; =A0 =A0 =A0 { /* empty for now */ },<br>
+&gt; };<br>
+&gt;<br>
+&gt; Signed-off-by: Michal Simek &lt;<a href=3D"mailto:monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org">mo=
+nstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org</a>&gt;<br>
+<br>
+</div>Signed-off-by: Hans J. Koch &lt;<a href=3D"mailto:hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org">h=
+jk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org</a>&gt;<br>
+<div><div></div><div class=3D"h5"><br>
+&gt; CC: Hans J. Koch &lt;<a href=3D"mailto:hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org">hjk@hansjkoch=
+.de</a>&gt;<br>
+&gt; CC: Arnd Bergmann &lt;<a href=3D"mailto:arnd-r2nGTMty4D4@public.gmane.org">arnd-r2nGTMty4D4@public.gmane.org</=
+a>&gt;<br>
+&gt; CC: John Williams &lt;<a href=3D"mailto:john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org">j=
+ohn.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org</a>&gt;<br>
+&gt; CC: Grant Likely &lt;<a href=3D"mailto:grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org">gran=
+t.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org</a>&gt;<br>
+&gt; CC: Wolfram Sang &lt;<a href=3D"mailto:w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org">w.sang@p=
+engutronix.de</a>&gt;<br>
+&gt;<br></div></div></blockquote><div><br>Sorry for adding to this discussi=
+on so late...<br><br>I fail to see how a
+ device described in the device tree can be bound to this generic=20
+driver, as the match table is empty. I read in the description:<div class=
+=3D"im"><br>
+<br>&gt; Compatible string is not setup for now but you can add your<br>
+&gt; custom compatible string to uio_of_genirq_match structure.<br>
+&gt;<br>
+&gt; For example with &quot;vendor,device&quot; compatible string:<br>
+&gt; static const struct of_device_id __devinitconst uio_of_genirq_match[] =
+=3D {<br>
+&gt; =A0 =A0 =A0 { .compatible =3D &quot;vendor,device&quot;, },<br>
+&gt; =A0 =A0 =A0 { /* empty for now */ },<br>
+&gt; };<br><br></div>So, this would mean that for a given project, you need=
+ to modify the sources of the *generic* driver ?<br><br>Thanks for clarifyi=
+ng, <br>Thomas<br><br></div></div>
 
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -98,6 +98,9 @@ endif
- ccflags-y := -fpic -fno-builtin
- asflags-y := -Wa,-march=all
- 
-+# Supply kernel BSS size to the decompressor via a linker symbol.
-+KBSS_SZ = $(shell size $(obj)/../../../../vmlinux | awk 'END{print $$3}')
-+LDFLAGS_vmlinux = --defsym _kbss_sz=$(KBSS_SZ)
- # Supply ZRELADDR to the decompressor via a linker symbol.
- ifneq ($(CONFIG_AUTO_ZRELADDR),y)
- LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -266,6 +266,25 @@ restart:	adr	r0, LC0
- 		add	lr, lr, #7
- 		bic	lr, lr, #7
- 
-+		/*
-+		 * Compensate for the appended device tree and make stack
-+		 * usable. Note if the linker script changes so the stack is
-+		 * not after the bss section, this code will be wrong.
-+		 */
-+		add	sp, sp, lr
-+
-+		/*
-+		 * Calculate and save the offset between kernel BSS end and
-+		 * device tree data start for later use to check they won't
-+		 * overlap.
-+		 */
-+		adr	r1, kbss_sz
-+		ldr	r1, [r1, #0]		@ kernel BSS size
-+		add	r1, r1, r4		@ add inflated kernel start
-+		add	r1, r1, r9		@ add inflated kernel size
-+		sub	r1, r1, r6		@ kbss end - dt start
-+		str	r1, [sp, #0]		@ save offset into stack
-+
- 		add	r10, r10, lr
- 		add	r6, r6, lr
- dtb_check_done:
-@@ -273,17 +292,29 @@ dtb_check_done:
- 
- /*
-  * Check to see if we will overwrite ourselves.
-+ *   r1  = corrupted
-  *   r4  = final kernel address
-  *   r9  = size of decompressed image
-  *   r10 = end of this image, including  bss/stack/malloc space if non XIP
-  * We basically want:
-  *   r4 - 16k page directory >= r10 -> OK
-  *   r4 + image length <= current position (pc) -> OK
-+ * For the appended device tree case, check that the device tree data does
-+ * not overlap the kernel BSS area.
-  */
- 		add	r10, r10, #16384
- 		cmp	r4, r10
- 		bhs	wont_overwrite
- 		add	r10, r4, r9
-+#if defined(CONFIG_ARM_APPENDED_DTB)
-+		cmp	lr, #0			@ device tree appended?
-+		beq	no_kbss_check		@ no, skip check
-+		ldr	r1, [sp, #0]		@ get kbss offset
-+		add	r1, r10, r1		@ inflated end + kbss offset
-+		cmp	r10, r1			@ DT start < kernel BSS end?
-+		movlt	r10, r1			@ yes, move past kernel BSS end
-+no_kbss_check:
-+#endif
- 		cmp	r10, pc
- 		bls	wont_overwrite
- 
-@@ -331,6 +362,10 @@ dtb_check_done:
- 		add	r0, r0, r6
- 		mov	pc, r0
- 
-+#ifdef CONFIG_ARM_APPENDED_DTB
-+kbss_sz:	.word	_kbss_sz		@ kernel BSS size
-+#endif
-+
- wont_overwrite:
- /*
-  * If delta is zero, we are running at the address we were linked at.
-@@ -376,13 +411,6 @@ wont_overwrite:
- 		add	r2, r2, lr
- 		add	r3, r3, lr
- 
--		/*
--		 * bump the stack pinter
--		 *
-- 		 * If the linker script changes so the stack is not after
--		 * the bss section, this code will be wrong.
--		 */
--		add	sp, sp, lr
- #else
- 
- 		/*
+--0015175cdfe4ce62e104a3148eb9--
+
+--===============7602181680051439727==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7602181680051439727==--
