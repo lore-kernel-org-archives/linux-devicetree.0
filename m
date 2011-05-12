@@ -1,110 +1,165 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC 3/3] ARM:Tegra: Device Tree Support: Initialize from wm8903
- the device tree
-Date: Thu, 12 May 2011 09:49:19 +0200
-Message-ID: <20110512074917.GA16250@opensource.wolfsonmicro.com>
-References: <20110511231905.10362.12844.stgit@riker>
- <20110511232711.10362.53256.stgit@riker>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: Make sure appended device tree data won't overlap
+	kernel BSS
+Date: Thu, 12 May 2011 05:59:52 -0700
+Message-ID: <20110512125952.GN31483@atomide.com>
+References: <alpine.LFD.2.00.1104271036520.24613@xanadu.home>
+	<20110427144335.GK3755@atomide.com>
+	<20110429102623.GX3755@atomide.com>
+	<alpine.LFD.2.00.1104290909310.24613@xanadu.home>
+	<20110429135334.GR5126@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1104291509540.24613@xanadu.home>
+	<20110504072317.GU2092@atomide.com>
+	<alpine.LFD.2.00.1105040936040.24613@xanadu.home>
+	<20110509111929.GA11410@atomide.com>
+	<20110509144949.GE30958@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110511232711.10362.53256.stgit@riker>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <20110509144949.GE30958-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2011 at 04:27:18PM -0700, John Bonesio wrote:
-> This patch makes it so the wm8903 is initialized from it's device tree node.
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110509 07:47]:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110509 14:16]:
+> > Do this before relocating the compressed kernel + device tree data.
+> > Otherwise we would have to split the copying into two parts, or copy
+> > the device tree data twice.
+> > 
+> > As we only have one register available, pass the size of kernel BSS
+> > via linker and do the following calculation using r1.
 > 
-> Signed-off-by: John Bonesio<bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
-> 
->  arch/arm/boot/dts/tegra-harmony.dts |   17 ++++++
->  sound/soc/codecs/wm8903.c           |   93 +++++++++++++++++++++++++++++++++--
+> Blah, this still needs a bit more work.. The calculation is wrong
+> and we can get multiple relocations now.
 
-This needs to be sent separately to the relevant mailing lists and
-maintainers.  You can't go making substantial changes to drivers without
-even telling the maintainers about it - this will apply to any device
-tree work you're doing.  In this case one of the maintainers happens to
-be me, but even so.
+Here's a better version that also makes the stack usable early.
+That might become handy for further changes.
 
-> +			interrupts = < 347 >;
-> +			irq-active-low = <0>;
-> +			micdet-cfg = <0>;
-> +			micdet-delay = <100>;
+Will still do a bit more testing on this on Friday.
 
-Some of this looks like chip default, why is it being configured?
+Tony
 
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
 
-The fact that this device is a GPIO controller is a physical property of
-the device, we shouldn't need to be putting it into the device tree.
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 12 May 2011 05:29:49 -0700
+Subject: [PATCH] ARM: Make sure appended device tree data won't overlap kernel BSS
 
-> +			gpio-num-cfg = < 5 >;
+Do this before relocating the compressed kernel + device tree data.
+Otherwise we would have to split the copying into two parts, or copy
+the device tree data twice.
 
-Similarly here, the device has a fixed number of GPIOs.
+As we only have one register available, pass the size of kernel BSS
+via linker and do the calculation using r1, then save it to the stack.
 
-> +			/* #define WM8903_GPIO_NO_CONFIG 0x8000 */
-> +			gpio-cfg = < 0x8000 0x8000 0 0x8000 0x8000 >;
+Note that this patch now makes the stack also usable earlier for
+CONFIG_ARM_APPENDED_DTB.
 
-This doesn't seem great for usability.  I'd suggest key/value pairs
-rather than an array.
+Not-Yet-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-> -	if (pdata && pdata->gpio_base)
-> +	wm8903->gpio_chip.base = -1;
-> +	if (pdata && pdata->gpio_base) {
->  		wm8903->gpio_chip.base = pdata->gpio_base;
-> -	else
-> -		wm8903->gpio_chip.base = -1;
-> +	} else if (codec->dev->of_node) {
-> +		prop = of_get_property(codec->dev->of_node, "gpio-base", NULL);
-> +		if (prop)
-> +			wm8903->gpio_chip.base = be32_to_cpup(prop);
-> +	}
-
-We have to do manual endianness conversions to read from the device
-tree?  Oh, well.
-
-> +
-> +		prop = of_get_property(codec->dev->of_node, "interrupts", NULL);
-> +		if (prop)
-> +			wm8903->irq = be32_to_cpup(prop);
-> +
-
-We have a standard way of passing the IRQ number to I2C devices, surely
-we should make sure that works at the bus level rather than having to
-replicate this code everywhere?
-
-> +		prop = of_get_property(codec->dev->of_node, "micdet-cfg", NULL);
-> +		if (prop)
-> +			micdet_cfg = be32_to_cpup(prop);
-> +
-> +		snd_soc_write(codec, WM8903_MIC_BIAS_CONTROL_0, micdet_cfg);
-> +
-> +		if (micdet_cfg)
-> +			snd_soc_update_bits(codec, WM8903_WRITE_SEQUENCER_0,
-> +					    WM8903_WSEQ_ENA, WM8903_WSEQ_ENA);
-> +		
-> +		/* If microphone detection is enabled in device tree but
-> +		 * detected via IRQ then interrupts can be lost before
-> +		 * the machine driver has set up microphone detection
-> +		 * IRQs as the IRQs are clear on read.  The detection
-> +		 * will be enabled when the machine driver configures.
-> +		 */
-> +		WARN_ON(!mic_gpio && (micdet_cfg & WM8903_MICDET_ENA));
-> +
-
-There's an awful lot of cut'n'paste code for the parsing code from the
-platform data code.
-
->  config SND_TEGRA_SOC_HARMONY
->  	tristate "SoC Audio support for Tegra Harmony reference board"
-> -	depends on SND_TEGRA_SOC && MACH_HARMONY && I2C
-> +	depends on SND_TEGRA_SOC && (MACH_HARMONY || MACH_TEGRA_DT) && I2C
-
-You've not added anything to the device tree to register the platform
-device for the machine and I rather fear this won't apply to current
-code.  You should develop against -next.
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -98,6 +98,9 @@ endif
+ ccflags-y := -fpic -fno-builtin
+ asflags-y := -Wa,-march=all
+ 
++# Supply kernel BSS size to the decompressor via a linker symbol.
++KBSS_SZ = $(shell size $(obj)/../../../../vmlinux | awk 'END{print $$3}')
++LDFLAGS_vmlinux = --defsym _kbss_sz=$(KBSS_SZ)
+ # Supply ZRELADDR to the decompressor via a linker symbol.
+ ifneq ($(CONFIG_AUTO_ZRELADDR),y)
+ LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -266,6 +266,25 @@ restart:	adr	r0, LC0
+ 		add	lr, lr, #7
+ 		bic	lr, lr, #7
+ 
++		/*
++		 * Compensate for the appended device tree and make stack
++		 * usable. Note if the linker script changes so the stack is
++		 * not after the bss section, this code will be wrong.
++		 */
++		add	sp, sp, lr
++
++		/*
++		 * Calculate and save the offset between kernel BSS end and
++		 * device tree data start for later use to check they won't
++		 * overlap.
++		 */
++		adr	r1, kbss_sz
++		ldr	r1, [r1, #0]		@ kernel BSS size
++		add	r1, r1, r4		@ add inflated kernel start
++		add	r1, r1, r9		@ add inflated kernel size
++		sub	r1, r1, r6		@ kbss end - dt start
++		str	r1, [sp, #0]		@ save offset into stack
++
+ 		add	r10, r10, lr
+ 		add	r6, r6, lr
+ dtb_check_done:
+@@ -273,17 +292,29 @@ dtb_check_done:
+ 
+ /*
+  * Check to see if we will overwrite ourselves.
++ *   r1  = corrupted
+  *   r4  = final kernel address
+  *   r9  = size of decompressed image
+  *   r10 = end of this image, including  bss/stack/malloc space if non XIP
+  * We basically want:
+  *   r4 - 16k page directory >= r10 -> OK
+  *   r4 + image length <= current position (pc) -> OK
++ * For the appended device tree case, check that the device tree data does
++ * not overlap the kernel BSS area.
+  */
+ 		add	r10, r10, #16384
+ 		cmp	r4, r10
+ 		bhs	wont_overwrite
+ 		add	r10, r4, r9
++#if defined(CONFIG_ARM_APPENDED_DTB)
++		cmp	lr, #0			@ device tree appended?
++		beq	no_kbss_check		@ no, skip check
++		ldr	r1, [sp, #0]		@ get kbss offset
++		add	r1, r10, r1		@ inflated end + kbss offset
++		cmp	r10, r1			@ DT start < kernel BSS end?
++		movlt	r10, r1			@ yes, move past kernel BSS end
++no_kbss_check:
++#endif
+ 		cmp	r10, pc
+ 		bls	wont_overwrite
+ 
+@@ -331,6 +362,10 @@ dtb_check_done:
+ 		add	r0, r0, r6
+ 		mov	pc, r0
+ 
++#ifdef CONFIG_ARM_APPENDED_DTB
++kbss_sz:	.word	_kbss_sz		@ kernel BSS size
++#endif
++
+ wont_overwrite:
+ /*
+  * If delta is zero, we are running at the address we were linked at.
+@@ -376,13 +411,6 @@ wont_overwrite:
+ 		add	r2, r2, lr
+ 		add	r3, r3, lr
+ 
+-		/*
+-		 * bump the stack pinter
+-		 *
+- 		 * If the linker script changes so the stack is not after
+-		 * the bss section, this code will be wrong.
+-		 */
+-		add	sp, sp, lr
+ #else
+ 
+ 		/*
