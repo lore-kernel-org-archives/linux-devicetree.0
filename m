@@ -1,91 +1,117 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: Tegra: dt: Split out separate Tegra SoC DT
-Date: Fri, 13 May 2011 01:01:49 +0200
-Message-ID: <BANLkTimHcXOZa61yC5F=TDoiaUk4cA3=4g@mail.gmail.com>
-References: <1304136751-11629-1-git-send-email-swarren@nvidia.com>
- <20110501145546.GC19918@quad.lixom.net> <74CDBE0F657A3D45AFBB94109FB122FF0497F1B198@HQMAIL01.nvidia.com>
- <BANLkTikC9bAWiGsLP48djMB-jTR767JeNg@mail.gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF04986AA33D@HQMAIL01.nvidia.com>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: Make sure appended device tree data won't overlap
+	kernel BSS
+Date: Fri, 13 May 2011 09:39:39 +0200 (CEST)
+Message-ID: <alpine.LFD.2.00.1105130930330.2762@xanadu.home>
+References: <alpine.LFD.2.00.1104271036520.24613@xanadu.home>
+	<20110427144335.GK3755@atomide.com> <20110429102623.GX3755@atomide.com>
+	<alpine.LFD.2.00.1104290909310.24613@xanadu.home>
+	<20110429135334.GR5126@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1104291509540.24613@xanadu.home>
+	<20110504072317.GU2092@atomide.com>
+	<alpine.LFD.2.00.1105040936040.24613@xanadu.home>
+	<20110509111929.GA11410@atomide.com>
+	<20110509144949.GE30958@atomide.com>
+	<20110512125952.GN31483@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04986AA33D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20110512125952.GN31483-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 12, 2011 at 6:40 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
-ote:
-> Grant Likely wrote at Monday, May 02, 2011 2:16 PM:
->> On Mon, May 2, 2011 at 12:00 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>=
- wrote:
->> > Olof Johansson wrote at Sunday, May 01, 2011 8:56 AM:
->> >> On Fri, Apr 29, 2011 at 10:12:30PM -0600, Stephen Warren wrote:
->> >> A mostly unrelated question below.
->> >>
->> >> [...]
->> >>
->> >> > + =A0 serial@70006000 {
->> >> > + =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,tegra250-uart";
->> >>
->> >> I know this is how Grant specified it, but shouldn't these also h=
-ave
->> >> a compat for ns16550?
->> >
->> > At present, I'm not sure it is technically compatible. If you look=
- at
->> > drivers/tty/serial/of_serial.c, you'll see:
->> >
->> > static struct of_device_id __devinitdata of_platform_serial_table[=
-] =3D {
->> > ...
->> > =A0 =A0 =A0 =A0{ .compatible =3D "ns16550", =A0.data =3D (void *)P=
-ORT_16550, },
->> > ...
->> > =A0 =A0 =A0 =A0{ .compatible =3D "nvidia,tegra250-uart", =A0.data =
-=3D (void *)PORT_XSCALE, },
->> >
->> > That PORT_XSCALE is different to the ns16550 entry. Arguably, that
->> > field should be something that comes from the device tree, just
->> > like e.g. reg-shift, but it certainly doesn't right now.
->> >
->> > Grant, what are your thoughts on this?
->>
->> Heh, when I added that line I just mirrored the 'type' of 16550 as
->> detected by the 8250.c driver when it probes and made a mental note
->> that it should be revisited. =A0I don't know the hardware very well,=
- so
->> I cannot easily say what the right thing to do is, but making it
->> ns16550 compatible does seem to make sense.
->
-> I looked into this a bit more and found the following:
->
-> In all the existing board files for Tegra, none of the
-> plat_serial8250_port initializations specify any type value, and equa=
-lly
-> the flags do not include UPF_FIXED_TYPE. This causes the UART driver =
-to
-> probe (run tests on) the hardware to determine exactly what type of U=
-ART
-> is present.
->
-> However, of_serial.c does set UPF_FIXED_TYPE, and hence port->type mu=
-st
-> have a valid value. I suspect it'd be a bad idea to change this since
-> it'd affect a ton of extant PPC platforms.
->
-> Equally, PORT_XSCALE does imply different HW behavior to any of the
-> other types, so tegra250.dtsi shouldn't just specify that it's compat=
-ible
-> with "ns16550".
+On Thu, 12 May 2011, Tony Lindgren wrote:
 
-I investigated and found the same thing, and that is why I set up the
-current code the way I did; to preserve the current behaviour.
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110509 07:47]:
+> > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [110509 14:16]:
+> > > Do this before relocating the compressed kernel + device tree data.
+> > > Otherwise we would have to split the copying into two parts, or copy
+> > > the device tree data twice.
+> > > 
+> > > As we only have one register available, pass the size of kernel BSS
+> > > via linker and do the following calculation using r1.
+> > 
+> > Blah, this still needs a bit more work.. The calculation is wrong
+> > and we can get multiple relocations now.
+> 
+> Here's a better version that also makes the stack usable early.
+> That might become handy for further changes.
+> 
+> Will still do a bit more testing on this on Friday.
+> 
+> Tony
+> 
+> 
+> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Date: Thu, 12 May 2011 05:29:49 -0700
+> Subject: [PATCH] ARM: Make sure appended device tree data won't overlap kernel BSS
+> 
+> Do this before relocating the compressed kernel + device tree data.
+> Otherwise we would have to split the copying into two parts, or copy
+> the device tree data twice.
+> 
+> As we only have one register available, pass the size of kernel BSS
+> via linker and do the calculation using r1, then save it to the stack.
+> 
+> Note that this patch now makes the stack also usable earlier for
+> CONFIG_ARM_APPENDED_DTB.
+> 
+> Not-Yet-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> 
+> --- a/arch/arm/boot/compressed/Makefile
+> +++ b/arch/arm/boot/compressed/Makefile
+> @@ -98,6 +98,9 @@ endif
+>  ccflags-y := -fpic -fno-builtin
+>  asflags-y := -Wa,-march=all
+>  
+> +# Supply kernel BSS size to the decompressor via a linker symbol.
+> +KBSS_SZ = $(shell size $(obj)/../../../../vmlinux | awk 'END{print $$3}')
+> +LDFLAGS_vmlinux = --defsym _kbss_sz=$(KBSS_SZ)
+>  # Supply ZRELADDR to the decompressor via a linker symbol.
+>  ifneq ($(CONFIG_AUTO_ZRELADDR),y)
+>  LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
+> --- a/arch/arm/boot/compressed/head.S
+> +++ b/arch/arm/boot/compressed/head.S
+> @@ -266,6 +266,25 @@ restart:	adr	r0, LC0
+>  		add	lr, lr, #7
+>  		bic	lr, lr, #7
+>  
+> +		/*
+> +		 * Compensate for the appended device tree and make stack
+> +		 * usable. Note if the linker script changes so the stack is
+> +		 * not after the bss section, this code will be wrong.
+> +		 */
+> +		add	sp, sp, lr
+> +
+> +		/*
+> +		 * Calculate and save the offset between kernel BSS end and
+> +		 * device tree data start for later use to check they won't
+> +		 * overlap.
+> +		 */
+> +		adr	r1, kbss_sz
+> +		ldr	r1, [r1, #0]		@ kernel BSS size
+> +		add	r1, r1, r4		@ add inflated kernel start
+> +		add	r1, r1, r9		@ add inflated kernel size
+> +		sub	r1, r1, r6		@ kbss end - dt start
+> +		str	r1, [sp, #0]		@ save offset into stack
 
-However, is the current behaviour even right?  My impression from the
-code is that probing for the type of ns16550 is little more than an
-accident.  Is xscale really the best behaviour to select fro this
-device?
+This is actually outside the stack area if you want to be strictly 
+correct.  Should be "str r1, [sp, #-4]!".
 
-g.
+Anyway, both this patch tand the DT append patch won't apply or work 
+correctly anymore due to my latest cleanup series without minor 
+adjustments.
+
+
+Nicolas
