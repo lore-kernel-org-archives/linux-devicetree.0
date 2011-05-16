@@ -1,38 +1,45 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 10/11] x86, olpc: Add XO-1 RTC driver
-Date: Mon, 16 May 2011 11:18:07 +0200
-Message-ID: <20110516091807.GB26487@linutronix.de>
-References: <1304166750-31125-1-git-send-email-dsd@laptop.org>
-	<1304166750-31125-11-git-send-email-dsd@laptop.org>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH 1/2] powerpc/5200: mpc5200b.dtsi: add spi node address- and
+	size-cells properties
+Date: Mon, 16 May 2011 18:02:43 +0200
+Message-ID: <1305561764-5942-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1304166750-31125-11-git-send-email-dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-* Daniel Drake | 2011-04-30 13:32:29 [+0100]:
+Both, #address-cells and #size-cells properties are required
+for spi bus node, so add them.
 
->Add a driver to configure the XO-1 RTC via CS5536 MSRs, to be used as a
->system wakeup source via olpc-xo1-pm.
->
->Device detection is based on finding the relevant device tree node.
->
->Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
->Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+---
+ arch/powerpc/boot/dts/mpc5200b.dtsi |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-Looks good to me.
-
-Sebastian
+diff --git a/arch/powerpc/boot/dts/mpc5200b.dtsi b/arch/powerpc/boot/dts/mpc5200b.dtsi
+index bc27548..7ab286a 100644
+--- a/arch/powerpc/boot/dts/mpc5200b.dtsi
++++ b/arch/powerpc/boot/dts/mpc5200b.dtsi
+@@ -147,6 +147,8 @@
+ 		};
+ 
+ 		spi@f00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			compatible = "fsl,mpc5200b-spi","fsl,mpc5200-spi";
+ 			reg = <0xf00 0x20>;
+ 			interrupts = <2 13 0 2 14 0>;
+-- 
+1.7.1
