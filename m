@@ -1,14 +1,12 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH 2/2] powerpc/5200: dts: digsy_mtc.dts: update to add can, pci,
-	serial and spi
-Date: Mon, 16 May 2011 18:02:44 +0200
-Message-ID: <1305561764-5942-2-git-send-email-agust@denx.de>
-References: <1305561764-5942-1-git-send-email-agust@denx.de>
+From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: device_tree binding for "amba bus"
+Date: Tue, 17 May 2011 13:28:33 -0700
+Message-ID: <f9ae780a-2747-427f-826a-e0b510ca8afb@VA3EHSMHS001.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1305561764-5942-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+Content-Class: urn:content-classes:message
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,112 +16,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add new nodes to describe more hardware the board is
-equipped with:
- - two can nodes for SJA1000 on localbus
- - pci node to support Coral-PA graphics controller
- - serial node for SC28L92 DUART on localbus
- - spi node for MSP430 device
+Grant,
 
-Also correct i2c eeprom node name.
+I've taken a quick look at the arm trace buffer driver
+(arch/arm/kernel/etm.c).
+This driver uses the amba bus driver (drivers/amba/bus.c).
+It appears that this driver does three things:
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
----
- arch/powerpc/boot/dts/digsy_mtc.dts |   50 ++++++++++++++++++++++++++++++++--
- 1 files changed, 47 insertions(+), 3 deletions(-)
+1) ensures that the clock named "apb_pclk" is running.
+2) ensures that the regulator named "vcore" is on.
+3) queries the core to verify that a hardcoded register has the correct
+value.
 
-diff --git a/arch/powerpc/boot/dts/digsy_mtc.dts b/arch/powerpc/boot/dts/digsy_mtc.dts
-index 27bd267..e205d17 100644
---- a/arch/powerpc/boot/dts/digsy_mtc.dts
-+++ b/arch/powerpc/boot/dts/digsy_mtc.dts
-@@ -38,6 +38,14 @@
- 			status = "disabled";
- 		};
- 
-+		spi@f00 {
-+			msp430@0 {
-+				compatible = "spidev";
-+				spi-max-frequency = <32000>;
-+				reg = <0>;
-+			};
-+		};
-+
- 		psc@2000 {		// PSC1
- 			status = "disabled";
- 		};
-@@ -73,11 +81,16 @@
- 		};
- 
- 		i2c@3d00 {
--			rtc@50 {
-+			eeprom@50 {
- 				compatible = "at,24c08";
- 				reg = <0x50>;
- 			};
- 
-+			rtc@56 {
-+				compatible = "mc,rv3029c2";
-+				reg = <0x56>;
-+			};
-+
- 			rtc@68 {
- 				compatible = "dallas,ds1339";
- 				reg = <0x68>;
-@@ -90,11 +103,22 @@
- 	};
- 
- 	pci@f0000d00 {
--		status = "disabled";
-+		interrupt-map-mask = <0xf800 0 0 7>;
-+		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3
-+				 0xc000 0 0 2 &mpc5200_pic 0 0 3
-+				 0xc000 0 0 3 &mpc5200_pic 0 0 3
-+				 0xc000 0 0 4 &mpc5200_pic 0 0 3>;
-+		clock-frequency = <0>; // From boot loader
-+		interrupts = <2 8 0 2 9 0 2 10 0>;
-+		bus-range = <0 0>;
-+		ranges = <0x42000000 0 0x80000000 0x80000000 0 0x10000000
-+			  0x02000000 0 0x90000000 0x90000000 0 0x10000000
-+			  0x01000000 0 0x00000000 0xa0000000 0 0x01000000>;
- 	};
- 
- 	localbus {
--		ranges = <0 0 0xff000000 0x1000000>;
-+		ranges = <0 0 0xff000000 0x1000000
-+			  4 0 0x60000000 0x0001000>;
- 
- 		// 16-bit flash device at LocalPlus Bus CS0
- 		flash@0,0 {
-@@ -122,5 +146,25 @@
- 				reg = <0x00f00000 0x100000>;
- 			};
- 		};
-+
-+		can@4,0 {
-+			compatible = "nxp,sja1000";
-+			reg = <4 0x000 0x80>;
-+			nxp,external-clock-frequency = <24000000>;
-+			interrupts = <1 2 3>; // Level-low
-+		};
-+
-+		can@4,100 {
-+			compatible = "nxp,sja1000";
-+			reg = <4 0x100 0x80>;
-+			nxp,external-clock-frequency = <24000000>;
-+			interrupts = <1 2 3>;  // Level-low
-+		};
-+
-+		serial@4,200 {
-+			compatible = "nxp,sc28l92";
-+			reg = <4 0x200 0x10>;
-+			interrupts = <1 3 3>;
-+		};
- 	};
- };
--- 
-1.7.1
+None of this seems terribly interesting enough to justify a bus that has
+a
+small number of users:
+
+drivers/tty/serial/amba-pl010.c, line 788
+drivers/tty/serial/amba-pl011.c, line 1477
+drivers/input/serio/ambakmi.c, line 197
+drivers/watchdog/sp805_wdt.c, line 359
+drivers/rtc/rtc-pl031.c, line 478
+drivers/rtc/rtc-pl030.c, line 183
+drivers/char/hw_random/nomadik-rng.c, line 97
+drivers/mmc/host/mmci.c, line 1049
+drivers/video/amba-clcd.c, line 538
+drivers/gpio/pl061.c, line 344
+drivers/spi/amba-pl022.c, line 2284
+drivers/dma/amba-pl08x.c, line 2062
+drivers/dma/pl330.c, line 841
+sound/arm/aaci.c, line 1125
+arch/arm/kernel/etm.c:
+line 421
+line 625
+
+And at the very least the hardcoded nature of the names seems, well...
+hardcoded.
+
+Any thoughts about how to abstract this in a device tree?
+(My thoughts: devices need to reference a clock, devices need to
+reference a regulator,
+and it seems to me that the register check could be pulled out into a
+single call that the
+devices that care about it can do themselves during probe() )
+
+Steve
+
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
