@@ -1,12 +1,14 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: device_tree binding for "amba bus"
-Date: Tue, 17 May 2011 13:28:33 -0700
-Message-ID: <f9ae780a-2747-427f-826a-e0b510ca8afb@VA3EHSMHS001.ehs.local>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: device_tree binding for "amba bus"
+Date: Tue, 17 May 2011 23:41:34 +0100
+Message-ID: <20110517224134.GC2266@n2100.arm.linux.org.uk>
+References: <f9ae780a-2747-427f-826a-e0b510ca8afb@VA3EHSMHS001.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
+Content-Disposition: inline
+In-Reply-To: <f9ae780a-2747-427f-826a-e0b510ca8afb-+Ck8Kgl/v09ZbvUCbuG1mrjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,55 +18,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+To: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Tue, May 17, 2011 at 01:28:33PM -0700, Stephen Neuendorffer wrote:
+> None of this seems terribly interesting enough to justify a bus that has
+> a small number of users:
 
-I've taken a quick look at the arm trace buffer driver
-(arch/arm/kernel/etm.c).
-This driver uses the amba bus driver (drivers/amba/bus.c).
-It appears that this driver does three things:
+However, without this infrastructure, drivers have to start doing those
+three points you bring up themselves, manually, with additional code,
+which makes for additional bugs.  No thanks.  Let's keep the bus
+abstraction there as it serves to ensure that the right things happen
+at the right time.
 
-1) ensures that the clock named "apb_pclk" is running.
-2) ensures that the regulator named "vcore" is on.
-3) queries the core to verify that a hardcoded register has the correct
-value.
+> And at the very least the hardcoded nature of the names seems, well...
+> hardcoded.
 
-None of this seems terribly interesting enough to justify a bus that has
-a
-small number of users:
+What hardcoded names?  Driver names no matter what bus are part of the
+_userspace_ API - remember that almost everything in the device model
+is exported to userspace and is therefore part of the kernel's userspace
+API.  So logically the driver names do want to be stable.
 
-drivers/tty/serial/amba-pl010.c, line 788
-drivers/tty/serial/amba-pl011.c, line 1477
-drivers/input/serio/ambakmi.c, line 197
-drivers/watchdog/sp805_wdt.c, line 359
-drivers/rtc/rtc-pl031.c, line 478
-drivers/rtc/rtc-pl030.c, line 183
-drivers/char/hw_random/nomadik-rng.c, line 97
-drivers/mmc/host/mmci.c, line 1049
-drivers/video/amba-clcd.c, line 538
-drivers/gpio/pl061.c, line 344
-drivers/spi/amba-pl022.c, line 2284
-drivers/dma/amba-pl08x.c, line 2062
-drivers/dma/pl330.c, line 841
-sound/arm/aaci.c, line 1125
-arch/arm/kernel/etm.c:
-line 421
-line 625
+> Any thoughts about how to abstract this in a device tree?
+> (My thoughts: devices need to reference a clock, devices need to
+> reference a regulator,
+> and it seems to me that the register check could be pulled out into a
+> single call that the
+> devices that care about it can do themselves during probe() )
 
-And at the very least the hardcoded nature of the names seems, well...
-hardcoded.
+And another during their remove callback - and where do they store the
+data associated with that?  Will the drivers need to have a certain
+base driver_data structure?
 
-Any thoughts about how to abstract this in a device tree?
-(My thoughts: devices need to reference a clock, devices need to
-reference a regulator,
-and it seems to me that the register check could be pulled out into a
-single call that the
-devices that care about it can do themselves during probe() )
-
-Steve
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+This all sounds like getting rather icky and prone to bugs.
