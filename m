@@ -1,53 +1,46 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: DT and endianness
-Date: Wed, 18 May 2011 09:56:17 -0600
-Message-ID: <BANLkTi=7s0p8qXLoirSZksyfkx3vBhYCBQ@mail.gmail.com>
-References: <4DD38BFA.7090904@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: fix race when matching drivers
+Date: Wed, 18 May 2011 10:21:39 -0600
+Message-ID: <20110518162139.GA11027@ponder.secretlab.ca>
+References: <BANLkTikhKqcpdadpM3RQdYvDrPn46_v6_Q@mail.gmail.com>
+ <20110517.134312.226762699.davem@davemloft.net>
+ <alpine.SOC.1.00.1105021259220.6200@math.ut.ee>
+ <1305732459_6563@mail4.comsite.net>
+ <20110518154517.GA26070@entuzijast.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DD38BFA.7090904-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110518154517.GA26070@entuzijast.net>
+Sender: sparclinux-owner@vger.kernel.org
+To: Josip Rodin <joy@entuzijast.net>
+Cc: Milton Miller <miltonm@bga.com>, David Miller <davem@davemloft.net>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2011 at 3:06 AM, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org> wrote:
-> Hey Grant,
->
-> I have been working over the last few days trying to
-> evaluate what part of the data files in OMAP can be moved
-> to Device tree. One basic issue I am stuck with trying
-> to extract data out of the device tree blob is the
-> endianess differences. The dtb file seems to be in
-> big-endian format while my kernel is compiled for
-> little-endian. I know this might be quite a common
-> issue with all ARM arch;s but I could not find any
-> obvious pointers on how to get around this.
-> Any help is greatly appreciated.
+On Wed, May 18, 2011 at 05:45:17PM +0200, Josip Rodin wrote:
+> On Wed, May 18, 2011 at 10:27:39AM -0500, Milton Miller wrote:
+> > --- work.git.orig/include/linux/of_device.h	2011-05-18 09:57:01.014386816 -0500
+> > +++ work.git/include/linux/of_device.h	2011-05-18 09:58:27.537431575 -0500
+> > @@ -21,8 +21,15 @@ extern void of_device_make_bus_id(struct
+> >  static inline int of_driver_match_device(struct device *dev,
+> >  					 const struct device_driver *drv)
+> >  {
+> > -	dev->of_match = of_match_device(drv->of_match_table, dev);
+> > -	return dev->of_match != NULL;
+> > +	const struct of_device_id *match;
+> > +
+> > +	match = of_match_device(drv->of_match_table, dev);
+> > +	if (match) {
+> > +		dev->of_match = of_match_device(drv->of_match_table, dev);
+> > +		return 1;
+> > +	}
+> > +
+> > +	return 0;
+> >  }
+> 
+> Err, is there some reason to avoid simply assigning the existing result:
+> dev->of_match = match; ?
 
-Yes, the dtb data is always big-endian encoded, regardless of
-architecture.  This is on purpose so that any arch can parse any other
-architecture's dtb format.  be32_to_cpu() is your friend.
+Good point.  I've committed and am currently testing the modified version.
 
 g.
-
-
->
-> Thanks,
-> Rajendra
->
-
-
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
