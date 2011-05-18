@@ -1,37 +1,41 @@
-From: Greg KH <gregkh@suse.de>
-Subject: Re: [PATCH 1/2] of: fix race when matching drivers
-Date: Wed, 18 May 2011 12:54:49 -0700
-Message-ID: <20110518195449.GA28653@suse.de>
+From: Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: revert addition of of_match to struct
+	device
+Date: Wed, 18 May 2011 12:55:14 -0700
+Message-ID: <20110518195514.GB28653@suse.de>
 References: <20110518185751.28986.69446.stgit@ponder>
- <20110518192100.28986.94335.stgit@ponder>
+	<20110518192105.28986.53198.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110518192100.28986.94335.stgit@ponder>
-Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, sparclinux@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, David Miller <davem@davemloft.net>, Josip Rodin <joy@entuzijast.net>
+In-Reply-To: <20110518192105.28986.53198.stgit@ponder>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Josip Rodin <joy-TwbeF3gwir6QvBXZIOnqxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2011 at 01:21:00PM -0600, Grant Likely wrote:
-> From: Milton Miller <miltonm@bga.com>
+On Wed, May 18, 2011 at 01:21:05PM -0600, Grant Likely wrote:
+> Commit b826291c, "drivercore/dt: add a match table pointer to struct
+> device" added an of_match pointer to struct device to cache the
+> of_match_table entry discovered at driver match time.  This was unsafe
+> because matching is not an atomic operation with probing a driver.  If
+> two or more drivers are attempted to be matched to a driver at the
+> same time, then the cached matching entry pointer could get
+> overwritten.
 > 
-> If two drivers are probing devices at the same time, both will write
-> their match table result to the dev->of_match cache at the same time.
+> This patch reverts the of_match cache pointer and reworks all users to
+> call of_match_device() directly instead.
 > 
-> Only write the result if the device matches.
-> 
-> In a thread titled "SBus devices sometimes detected, sometimes not",
-> Meelis reported his SBus hme was not detected about 50% of the time.
-> >From the debug suggested by Grant it was obvious another driver matched
-> some devices between the call to match the hme and the hme discovery
-> failling.
-> 
-> Reported-by: Meelis Roos <mroos@linux.ee>
-> Signed-off-by: Milton Miller <miltonm@bga.com>
-> [grant.likely: modified to only call of_match_device() once]
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-
+Acked-by: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
