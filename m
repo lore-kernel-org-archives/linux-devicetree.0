@@ -1,211 +1,71 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers/amba: probe via device tree reworked
-Date: Wed, 18 May 2011 12:47:53 -0600
-Message-ID: <20110518184753.GB25861@ponder.secretlab.ca>
-References: <1305742487-28325-1-git-send-email-robherring2@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [git pull][PATCH 0/2] Fix regression caused by addition of 'of_match'
+Date: Wed, 18 May 2011 13:20:55 -0600
+Message-ID: <20110518185751.28986.69446.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1305742487-28325-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, gregkh@suse.de, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, sparclinux@vger.kernel.org, Linus Torvalds <torvalds@linux-foundati>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2011 at 01:14:47PM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> This reworks the original amba bus device tree probing to be more inline with
-> how platform bus probing via device tree is done using a match table.
+Hi Linus,
 
-You should also mention that this patch builds on the code currently
-in devicetree/test on git://git.secretlab.ca/git/linux-2.6.  Otherwise
-people will be very confused about what this applies to.
+Here is Milton's patch to fix up the race condition on devicetree
+driver matching observed on SPARC, plus a follow up patch to remove
+the whole of_match thing entirely, which I've tested on my platforms,
+but has not yet been verified by anyone else.
 
-> The amba bus code doesn't support creation of parent devices, so a flat tree
-> is created even if the device tree contains a heirarchy of devices.
+I'll leave it up to you whether to take both commits, or just the
+first one.  The second does eventually need to be committed to 2.6.39,
+whether by you or in -stable, but it is a much bigger commit and it
+hasn't had any testing beyond what I've done here (a handful of
+powerpc, sparc, x86, and mips defconfigs, plus boot testing on
+powerpc and making sure each driver was compiled in at least one
+config).
 
-Hmmm, why do you say this?  The code doesn't currently set the parent
-pointer, but nothing prevents a caller of amba_device_register() from
-setting the parent pointer before it is registered.  I also don't see
-anything in the amba bus code that assume it must all be flat in the
-driver model.  What bit am I missing?
+I've pushed it all out to my git server as show below...
 
-> Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/amba/bus.c       |   84 +++++++++++++++++++++++++++++++++++++++++-----
->  include/linux/amba/bus.h |    4 ++-
->  2 files changed, 78 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index ed5c49d..4e46b54 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -7,6 +7,7 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   */
-> +#define DEBUG
+---
+The following changes since commit 2e9521fd656f05a716b5294a7dbebd37ced05e43:
 
-I assume this was left in by accident.
+Merge branch 'v4l_for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-2.6 (2011-05-18 03:16:38 -0700)
 
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/device.h>
-> @@ -797,7 +798,7 @@ EXPORT_SYMBOL(amba_request_regions);
->  EXPORT_SYMBOL(amba_release_regions);
->  
->  #ifdef CONFIG_OF
-> -static int of_amba_device_create(struct device_node *node,struct device *parent)
-> +static struct amba_device *of_amba_device_create(struct device_node *node,struct device *parent)
->  {
->  	struct amba_device *dev;
->  	const void *prop;
-> @@ -805,7 +806,7 @@ static int of_amba_device_create(struct device_node *node,struct device *parent)
->  
->  	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
->  	if (!dev)
-> -		return -ENOMEM;
-> +		return NULL;
->  
->  	/* setup generic device info */
->  	dev->dev.coherent_dma_mask = ~0;
-> @@ -839,22 +840,87 @@ static int of_amba_device_create(struct device_node *node,struct device *parent)
->  				    "probed value (0x%08x) don't agree.",
->  				    of_read_ulong(prop, 1), dev->periphid);
->  
-> -	return 0;
-> +	return dev;
->  
->  err_free:
->  	kfree(dev);
-> -	return ret;
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * of_amba_bus_create() - Create a device for a node and its children.
-> + * @bus: device node of the bus to instantiate
-> + * @matches: match table for bus nodes
-> + * disallow recursive creation of child buses
-> + * @parent: parent for new device, or NULL for top level.
-> + *
-> + * Recursively create devices for all the child nodes.
-> + */
-> +static int of_amba_bus_create(struct device_node *bus,
-> +				  const struct of_device_id *matches,
-> +				  struct device *parent, bool strict)
-> +{
-> +	struct device_node *child;
-> +	struct amba_device *dev = NULL;
-> +	int rc = 0;
-> +
-> +	/* Make sure it has a compatible property */
-> +	if (strict && (!of_get_property(bus, "compatible", NULL))) {
-> +		pr_debug("%s() - skipping %s, no compatible prop\n",
-> +			 __func__, bus->full_name);
-> +		return 0;
-> +	}
+are available in the git repository at:
 
-The whole 'strict' thing was to work around some poor ideas originally
-implemented in the powerpc version.  Don't duplicate that logic, just
-assume strict is always true...`
+  git://git.secretlab.ca/git/linux-2.6 devicetree/merge
 
-> +
-> +	if (of_device_is_compatible(bus, "arm,amba-device"))
-> +		dev = of_amba_device_create(bus, parent);
+Grant Likely (1):
+      drivercore: revert addition of of_match to struct device
 
-The AMBA bus itself should be a platform_device, and should be the
-parent for all the child nodes.
+Milton Miller (1):
+      of: fix race when matching drivers
 
-> +	else if (!of_match_node(matches, bus))
-> +		return 0;
-> +
-> +	for_each_child_of_node(bus, child) {
-> +		pr_debug("   create child: %s\n", child->full_name);
-> +		rc = of_amba_bus_create(child, matches, parent, strict);
-> +		if (rc) {
-> +			of_node_put(child);
-> +			break;
-> +		}
-> +	}
-> +	return rc;
->  }
->  
-> -void of_amba_bus_populate(struct device_node *node, struct device *parent)
-> +/**
-> + * of_amba_bus_probe() - Probe the device-tree for amba buses
-> + * @root: parent of the first level to probe or NULL for the root of the tree
-> + * @matches: match table for bus nodes
-> + * @parent: parent to hook devices from, NULL for toplevel
-> + *
-> + * Note that children of the provided root are not instantiated as devices
-> + * unless the specified root itself matches the bus list and is not NULL.
-> + */
-> +int of_amba_bus_probe(struct device_node *root,
-> +		       const struct of_device_id *matches,
-> +		       struct device *parent)
 
-Don't follow the of_platform_bus_probe() pattern.  It's subtly broken
-(or at least confusing).  Follow the of_platform_populate()
-pattern instead (in devicetree/test, and has been posted to the list).
+ arch/powerpc/platforms/83xx/suspend.c      |    7 +++++--
+ arch/powerpc/sysdev/fsl_msi.c              |    7 +++++--
+ arch/sparc/kernel/pci_sabre.c              |    5 ++++-
+ arch/sparc/kernel/pci_schizo.c             |    8 ++++++--
+ drivers/atm/fore200e.c                     |    7 +++++--
+ drivers/char/hw_random/n2-drv.c            |    7 +++++--
+ drivers/char/ipmi/ipmi_si_intf.c           |    7 +++++--
+ drivers/char/xilinx_hwicap/xilinx_hwicap.c |   14 +++++++++-----
+ drivers/edac/ppc4xx_edac.c                 |    2 +-
+ drivers/i2c/busses/i2c-mpc.c               |    9 ++++++---
+ drivers/mmc/host/sdhci-of-core.c           |    7 +++++--
+ drivers/mtd/maps/physmap_of.c              |    7 +++++--
+ drivers/net/can/mscan/mpc5xxx_can.c        |    7 +++++--
+ drivers/net/fs_enet/fs_enet-main.c         |    9 ++++++---
+ drivers/net/fs_enet/mii-fec.c              |    7 +++++--
+ drivers/net/sunhme.c                       |    7 +++++--
+ drivers/scsi/qlogicpti.c                   |    7 +++++--
+ drivers/tty/serial/of_serial.c             |    7 +++++--
+ drivers/usb/gadget/fsl_qe_udc.c            |    7 +++++--
+ drivers/watchdog/mpc8xxx_wdt.c             |    7 +++++--
+ include/linux/device.h                     |    1 -
+ include/linux/of_device.h                  |    8 ++++++--
+ 22 files changed, 108 insertions(+), 46 deletions(-)
 
->  {
-> +	int rc = 0;
->  	struct device_node *child;
->  
-> -	for_each_child_of_node(node, child) {
-> -		if (of_device_is_compatible(child, "arm,amba-device"))
-> -			of_amba_device_create(child, parent);
-> +	root = root ? of_node_get(root) : of_find_node_by_path("/");
-> +	if (!root)
-> +		return -EINVAL;
-> +
-> +	/* Do a self check of bus type, if there's a match, create children */
-> +	if (of_match_node(matches, root)) {
-> +		rc = of_amba_bus_create(root, matches, parent, false);
-> +	} else for_each_child_of_node(root, child) {
-> +		if (!of_match_node(matches, child))
-> +			continue;
-> +		rc = of_amba_bus_create(child, matches, parent, false);
-> +		if (rc)
-> +			break;
->  	}
-> +
-> +	of_node_put(root);
-> +	return rc;
->  }
-> -EXPORT_SYMBOL(of_amba_bus_populate);
-> +EXPORT_SYMBOL(of_amba_bus_probe);
->  
->  #endif /* CONFIG_OF */
-> diff --git a/include/linux/amba/bus.h b/include/linux/amba/bus.h
-> index cb17dfd..6df9535 100644
-> --- a/include/linux/amba/bus.h
-> +++ b/include/linux/amba/bus.h
-> @@ -96,7 +96,9 @@ void amba_release_regions(struct amba_device *);
->  
->  #ifdef CONFIG_OF
->  struct device_node;
-> -void of_amba_bus_populate(struct device_node *node, struct device *parent);
-> +int of_amba_bus_probe(struct device_node *root,
-> +		      const struct of_device_id *matches,
-> +		      struct device *parent);
->  #endif
->  
->  #endif
-> -- 
-> 1.7.4.1
-> 
+-- 
+Signature
