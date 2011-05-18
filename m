@@ -1,63 +1,40 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers/amba: probe via device tree reworked
-Date: Wed, 18 May 2011 14:22:45 -0600
-Message-ID: <20110518202245.GC25861@ponder.secretlab.ca>
-References: <1305742487-28325-1-git-send-email-robherring2@gmail.com>
-	<20110518184753.GB25861@ponder.secretlab.ca>
-	<4DD4205E.9040705@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] of: fix race when matching drivers
+Date: Wed, 18 May 2011 17:03:40 -0400 (EDT)
+Message-ID: <20110518.170340.1970357603006374415.davem@davemloft.net>
+References: <20110518185751.28986.69446.stgit@ponder>
+	<20110518192100.28986.94335.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4DD4205E.9040705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20110518192100.28986.94335.stgit@ponder>
+Sender: sparclinux-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: devicetree-discuss@lists.ozlabs.org, gregkh@suse.de, linux-kernel@vger.kernel.org, miltonm@bga.com, sparclinux@vger.kernel.org, torvalds@linux-foundation.org, joy@entuzijast.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2011 at 02:39:10PM -0500, Rob Herring wrote:
-> On 05/18/2011 01:47 PM, Grant Likely wrote:
-> >On Wed, May 18, 2011 at 01:14:47PM -0500, Rob Herring wrote:
-> >>From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >>
-> >>This reworks the original amba bus device tree probing to be more inline with
-> >>how platform bus probing via device tree is done using a match table.
-> >
-> >You should also mention that this patch builds on the code currently
-> >in devicetree/test on git://git.secretlab.ca/git/linux-2.6.  Otherwise
-> >people will be very confused about what this applies to.
-> >
+From: Grant Likely <grant.likely@secretlab.ca>
+Date: Wed, 18 May 2011 13:21:00 -0600
+
+> From: Milton Miller <miltonm@bga.com>
 > 
-> Yeah. I was ultimately expecting to squash this one into the first
-> amba bus patch assuming you agree with the general direction. Would
-> you rather me combine it and send that out instead of an incremental
-> patch?
-
-yes.
-
+> If two drivers are probing devices at the same time, both will write
+> their match table result to the dev->of_match cache at the same time.
 > 
-> >>The amba bus code doesn't support creation of parent devices, so a flat tree
-> >>is created even if the device tree contains a heirarchy of devices.
-> >
-> >Hmmm, why do you say this?  The code doesn't currently set the parent
-> >pointer, but nothing prevents a caller of amba_device_register() from
-> >setting the parent pointer before it is registered.  I also don't see
-> >anything in the amba bus code that assume it must all be flat in the
-> >driver model.  What bit am I missing?
+> Only write the result if the device matches.
 > 
-> The problem is not setting a parent pointer. That can be passed in.
-> The problem I had was creating an amba_device for the bus, but your
-> comment below to use a platform device clarifies that issue.
+> In a thread titled "SBus devices sometimes detected, sometimes not",
+> Meelis reported his SBus hme was not detected about 50% of the time.
+>>From the debug suggested by Grant it was obvious another driver matched
+> some devices between the call to match the hme and the hme discovery
+> failling.
+> 
+> Reported-by: Meelis Roos <mroos@linux.ee>
+> Signed-off-by: Milton Miller <miltonm@bga.com>
+> [grant.likely: modified to only call of_match_device() once]
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 
-okay, good.
+Tested on SunBlade2500 and Niagara2+
 
-g.
+Acked-by: David S. Miller <davem@davemloft.net>
