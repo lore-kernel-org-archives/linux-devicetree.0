@@ -1,15 +1,11 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
-Date: Thu, 19 May 2011 18:30:23 -0500
-Message-ID: <4DD5A80F.5020807@gmail.com>
-References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>
-	<1305829704-11774-3-git-send-email-robherring2@gmail.com>
-	<20110519200158.GW5109@ponder.secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] arm/dt: Add ST-Ericsson u8500 device tree support
+Date: Thu, 19 May 2011 17:34:49 -0600
+Message-ID: <20110519233232.19042.44284.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110519200158.GW5109-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,163 +15,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Niklas Hernaeus <niklas.hernaeus-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Per Forlin <per.forlin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+Adds support for passing a device tree for booting the u8500 board.
 
-On 05/19/2011 03:01 PM, Grant Likely wrote:
-> On Thu, May 19, 2011 at 01:28:24PM -0500, Rob Herring wrote:
->> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Add functions to parse the AMBA bus through the device tree.
->>
->> Based on the original version by Jeremy Kerr. This reworks the original amba
->> bus device tree probing to be more inline with how platform bus probing via
->> device tree is done using a match table.
->>
->> Cc: Jeremy Kerr<jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
->> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> ---
->>   drivers/amba/bus.c       |  133 ++++++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/amba/bus.h |    7 +++
->>   2 files changed, 140 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
->> index 7025593..8e55754 100644
->> --- a/drivers/amba/bus.c
->> +++ b/drivers/amba/bus.c
->> @@ -13,6 +13,11 @@
->>   #include<linux/string.h>
->>   #include<linux/slab.h>
->>   #include<linux/io.h>
->> +#include<linux/of.h>
->> +#include<linux/of_irq.h>
->> +#include<linux/of_address.h>
->> +#include<linux/of_device.h>
->> +#include<linux/of_platform.h>
->>   #include<linux/pm.h>
->>   #include<linux/pm_runtime.h>
->>   #include<linux/amba/bus.h>
->> @@ -780,3 +785,131 @@ EXPORT_SYMBOL(amba_device_unregister);
->>   EXPORT_SYMBOL(amba_find_device);
->>   EXPORT_SYMBOL(amba_request_regions);
->>   EXPORT_SYMBOL(amba_release_regions);
->> +
->> +#ifdef CONFIG_OF
->> +int of_amba_device_create(struct device_node *node,struct device *parent)
->> +{
->> +	struct amba_device *dev;
->> +	const void *prop;
->> +	int i, ret;
->> +
->> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
->> +	if (!dev)
->> +		return -ENOMEM;
->> +
->> +	/* setup generic device info */
->> +	dev->dev.coherent_dma_mask = ~0;
->> +	dev->dev.of_node = node;
->> +	dev->dev.parent = parent;
->> +	of_device_make_bus_id(&dev->dev);
->> +
->> +	/* setup amba-specific device info */
->> +	dev->dma_mask = ~0;
->> +
->> +	/* Decode the IRQs and address ranges */
->> +	for (i = 0; i<  AMBA_NR_IRQS; i++)
->> +		dev->irq[i] = irq_of_parse_and_map(node, i);
->> +
->> +	ret = of_address_to_resource(node, 0,&dev->res);
->> +	if (ret)
->> +		goto err_free;
->> +
->> +	ret = amba_device_register(dev,&iomem_resource);
->> +	if (ret)
->> +		goto err_free;
->> +
->> +	/* Sanity check the arm,amba-deviceid value */
->> +	prop = of_get_property(node, "arm,amba-deviceid", NULL);
->> +	if (!prop)
->> +		dev_warn(&dev->dev, "arm,amba-deviceid property missing; "
->> +				    "probe gives 0x%08x.\n", dev->periphid);
->> +
->> +	if (prop&&  (dev->periphid != of_read_ulong(prop, 1)))
->> +		dev_warn(&dev->dev, "arm,amba-deviceid value (0x%08lx) and "
->> +				    "probed value (0x%08x) don't agree.",
->> +				    of_read_ulong(prop, 1), dev->periphid);
->> +
->> +	return 0;
->> +
->> +err_free:
->> +	kfree(dev);
->> +	return ret;
->> +}
->> +
->> +/**
->> + * of_amba_bus_create() - Create a device for a node and its children.
->> + * @bus: device node of the bus to instantiate
->> + * @matches: match table for bus nodes
->> + * disallow recursive creation of child buses
->> + * @parent: parent for new device, or NULL for top level.
->> + *
->> + * Recursively create devices for all the child nodes.
->> + */
->> +static int of_amba_bus_create(struct device_node *bus,
->> +			      const struct of_device_id *matches,
->> +			      struct device *parent)
->> +{
->> +	struct of_platform_prepare_data *prep;
->> +	struct device_node *child;
->> +	struct platform_device *dev;
->> +	int rc = 0;
->> +
->> +	/* Make sure it has a compatible property */
->> +	if (!of_get_property(bus, "compatible", NULL)) {
->> +		pr_debug("%s() - skipping %s, no compatible prop\n",
->> +			 __func__, bus->full_name);
->> +		return 0;
->> +	}
->> +
->> +	if (!of_match_node(matches, bus))
->> +		return 0;
->> +
->> +	dev = of_platform_device_create(bus, NULL, parent);
->> +	if (!dev)
->> +		return 0;
->
-> Hahaha, I think I see where we're getting our models crossed.
->
-> The use-case of of_amba_bus_populate should be that the device
-> representing the amba bus (which will be a platform device) should
-> have already been created before calling of_amba_bus_populate().
-> of_amba_bus_populate should then be responsible for creating all the
-> child devices that are on the AMBA bus.
->
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
 
-That was one option I had thought about. I happened to put amba call 
-first so I hit the issue. It's a bit fragile to require a certain 
-calling order.
+Completely untested.  Not even compiled.  Per, this should be all you
+need to change in the kernel to get DT support working on the u8500.
 
-> of_platform_populate does the same thing, except it has some added and
-> *optional* helper logic that allows the populate code to dive deeper
-> into the device hierarchy for any nodes that match the passed in
-> device table.
->
-That's a bit of an orthogonal problem. In my case, all devices are 
-created from the DT. This issue is scanning the devicetree multiple times.
+g.
 
-> I'd actually like to be able to integrate AMBA population in
-> of_platform_populate() when it encounters an AMBA bus, but I'm not
-> sure the result will be pretty.  I haven't had a chance to try it.
->
 
-That seems like a bad idea to me. It's fine with 1 other bus type, but 
-if you had 10 others it would get messy.
+ arch/arm/boot/dts/u8500-hrefv60.dts |    7 +++++++
+ arch/arm/mach-ux500/Makefile.boot   |    1 +
+ arch/arm/mach-ux500/board-mop500.c  |    6 ++++++
+ 3 files changed, 14 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/u8500-hrefv60.dts
 
-Perhaps scanning the tree for buses first and then scanning for devices 
-is a better solution.
-
-Rob
+diff --git a/arch/arm/boot/dts/u8500-hrefv60.dts b/arch/arm/boot/dts/u8500-hrefv60.dts
+new file mode 100644
+index 0000000..3e12e8b
+--- /dev/null
++++ b/arch/arm/boot/dts/u8500-hrefv60.dts
+@@ -0,0 +1,7 @@
++/dts-v1/;
++/include/ "skeleton.dtsi"
++
++/ {
++	model = "ST-Ericsson U8500 HREFv60+ Reference Platform";
++	compatible = "stericsson,hrefv60plus";
++};
+diff --git a/arch/arm/mach-ux500/Makefile.boot b/arch/arm/mach-ux500/Makefile.boot
+index c7e75ac..9c83bfb 100644
+--- a/arch/arm/mach-ux500/Makefile.boot
++++ b/arch/arm/mach-ux500/Makefile.boot
+@@ -2,3 +2,4 @@
+ params_phys-y	:= 0x00000100
+ initrd_phys-y	:= 0x00800000
+ 
++dtb-$(CONFIG_MACH_U8500) += u8500-hrefv60.dtb
+diff --git a/arch/arm/mach-ux500/board-mop500.c b/arch/arm/mach-ux500/board-mop500.c
+index cc64bf4..59b7ddb 100644
+--- a/arch/arm/mach-ux500/board-mop500.c
++++ b/arch/arm/mach-ux500/board-mop500.c
+@@ -468,10 +468,16 @@ MACHINE_START(U8500, "ST-Ericsson MOP500 platform")
+ 	.init_machine	= mop500_init_machine,
+ MACHINE_END
+ 
++static const char *u8500_dt_match[] __initdata = {
++	"stericsson,hrefv60plus",
++	NULL
++};
++
+ MACHINE_START(HREFV60, "ST-Ericsson U8500 Platform HREFv60+")
+ 	.boot_params	= 0x100,
+ 	.map_io		= u8500_map_io,
+ 	.init_irq	= ux500_init_irq,
+ 	.timer		= &ux500_timer,
+ 	.init_machine	= mop500_init_machine,
++	.dt_match	= u8500_dt_match,
+ MACHINE_END
