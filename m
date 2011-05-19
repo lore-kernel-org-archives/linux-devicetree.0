@@ -1,196 +1,84 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 10/11] x86, olpc: Add XO-1 RTC driver
-Date: Thu, 19 May 2011 13:35:25 -0600
-Message-ID: <20110519193525.GS5109@ponder.secretlab.ca>
-References: <1304166750-31125-1-git-send-email-dsd@laptop.org>
- <1304166750-31125-11-git-send-email-dsd@laptop.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: check for devices already created fron DT scan
+Date: Thu, 19 May 2011 13:54:13 -0600
+Message-ID: <20110519195413.GV5109@ponder.secretlab.ca>
+References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>
+	<1305829704-11774-2-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1304166750-31125-11-git-send-email-dsd@laptop.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org, dilinger@queued.net, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1305829704-11774-2-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 30, 2011 at 01:32:29PM +0100, Daniel Drake wrote:
-> Add a driver to configure the XO-1 RTC via CS5536 MSRs, to be used as a
-> system wakeup source via olpc-xo1-pm.
+On Thu, May 19, 2011 at 01:28:23PM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Device detection is based on finding the relevant device tree node.
+> of_platform_bus_create may create duplicate devices if already
+> added when scanning other buses like amba bus.
 > 
-> Signed-off-by: Daniel Drake <dsd@laptop.org>
-> Cc: devicetree-discuss@lists.ozlabs.org
-
-Looks good to me.
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/rtc/olpc-xo1-rtc.txt       |    5 +
->  arch/x86/Kconfig                                   |    7 ++
->  arch/x86/platform/olpc/Makefile                    |    1 +
->  arch/x86/platform/olpc/olpc-xo1-rtc.c              |   82 ++++++++++++++++++++
->  include/linux/cs5535.h                             |    5 +
->  5 files changed, 100 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
->  create mode 100644 arch/x86/platform/olpc/olpc-xo1-rtc.c
+>  drivers/of/platform.c |    8 ++++++++
+>  1 files changed, 8 insertions(+), 0 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
-> new file mode 100644
-> index 0000000..a2891ce
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
-> @@ -0,0 +1,5 @@
-> +OLPC XO-1 RTC
-> +~~~~~~~~~~~~~
-> +
-> +Required properties:
-> + - compatible : "olpc,xo1-rtc"
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 583e1c5..eb9f377 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2072,6 +2072,13 @@ config OLPC_XO1_PM
->  	---help---
->  	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 9b785be..7bf74fb 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -234,6 +234,13 @@ static int of_platform_bus_create(struct device_node *bus,
+>  		return 0;
+>  	}
 >  
-> +config OLPC_XO1_RTC
-> +	bool "OLPC XO-1 Real Time Clock"
-> +	depends on OLPC_XO1_PM && RTC_DRV_CMOS
-> +	---help---
-> +	  Add support for the XO-1 real time clock, which can be used as a
-> +	  programmable wakeup source.
-> +
->  config OLPC_XO1_SCI
->  	bool "OLPC XO-1 SCI extras"
->  	depends on OLPC && OLPC_XO1_PM && POWER_SUPPLY
-> diff --git a/arch/x86/platform/olpc/Makefile b/arch/x86/platform/olpc/Makefile
-> index 1ec5ade..8922b9b 100644
-> --- a/arch/x86/platform/olpc/Makefile
-> +++ b/arch/x86/platform/olpc/Makefile
-> @@ -1,3 +1,4 @@
->  obj-$(CONFIG_OLPC)		+= olpc.o olpc_ofw.o olpc_dt.o
->  obj-$(CONFIG_OLPC_XO1_PM)		+= olpc-xo1-pm.o xo1-wakeup.o
-> +obj-$(CONFIG_OLPC_XO1_RTC)	+= olpc-xo1-rtc.o
->  obj-$(CONFIG_OLPC_XO1_SCI)	+= olpc-xo1-sci.o
-> diff --git a/arch/x86/platform/olpc/olpc-xo1-rtc.c b/arch/x86/platform/olpc/olpc-xo1-rtc.c
-> new file mode 100644
-> index 0000000..476cc98
-> --- /dev/null
-> +++ b/arch/x86/platform/olpc/olpc-xo1-rtc.c
-> @@ -0,0 +1,82 @@
-> +/*
-> + * Support for OLPC XO-1 Real Time Clock (RTC)
-> + *
-> + * Copyright (C) 2011 One Laptop per Child
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/mc146818rtc.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/rtc.h>
-> +#include <linux/of.h>
-> +
-> +#include <asm/msr.h>
-> +#include <asm/olpc.h>
-> +
-> +static void rtc_wake_on(struct device *dev)
-> +{
-> +	olpc_xo1_pm_wakeup_set(CS5536_PM_RTC);
-> +}
-> +
-> +static void rtc_wake_off(struct device *dev)
-> +{
-> +	olpc_xo1_pm_wakeup_clear(CS5536_PM_RTC);
-> +}
-> +
-> +static struct resource rtc_platform_resource[] = {
-> +	[0] = {
-> +		.start	= RTC_PORT(0),
-> +		.end	= RTC_PORT(1),
-> +		.flags	= IORESOURCE_IO,
-> +	},
-> +	[1] = {
-> +		.start	= RTC_IRQ,
-> +		.end	= RTC_IRQ,
-> +		.flags	= IORESOURCE_IRQ,
-> +	}
-> +};
-> +
-> +static struct cmos_rtc_board_info rtc_info = {
-> +	.rtc_day_alarm = 0,
-> +	.rtc_mon_alarm = 0,
-> +	.rtc_century = 0,
-> +	.wake_on = rtc_wake_on,
-> +	.wake_off = rtc_wake_off,
-> +};
-> +
-> +static struct platform_device xo1_rtc_device = {
-> +	.name = "rtc_cmos",
-> +	.id = -1,
-> +	.num_resources = ARRAY_SIZE(rtc_platform_resource),
-> +	.dev.platform_data = &rtc_info,
-> +	.resource = rtc_platform_resource,
-> +};
-> +
-> +static int __init xo1_rtc_init(void)
-> +{
-> +	int r;
-> +	struct device_node *node;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "olpc,xo1-rtc");
-> +	if (!node)
+> +	/* Has the device already been registered? */
+> +	if (of_find_device_by_node(bus)) {
+> +		pr_debug("%s() - skipping %s, already registered\n",
+> +			 __func__, bus->full_name);
 > +		return 0;
-> +	of_node_put(node);
+> +	}
 > +
-> +	pr_info("olpc-xo1-rtc: Initializing OLPC XO-1 RTC\n");
-> +	rdmsrl(MSR_RTC_DOMA_OFFSET, rtc_info.rtc_day_alarm);
-> +	rdmsrl(MSR_RTC_MONA_OFFSET, rtc_info.rtc_mon_alarm);
-> +	rdmsrl(MSR_RTC_CEN_OFFSET, rtc_info.rtc_century);
-> +
-> +	r = platform_device_register(&xo1_rtc_device);
-> +	if (r)
-> +		return r;
-> +
-> +	device_init_wakeup(&xo1_rtc_device.dev, 1);
-> +	return 0;
-> +}
-> +arch_initcall(xo1_rtc_init);
-> +
-> diff --git a/include/linux/cs5535.h b/include/linux/cs5535.h
-> index f2b4a2f..3f98d81 100644
-> --- a/include/linux/cs5535.h
-> +++ b/include/linux/cs5535.h
-> @@ -38,6 +38,10 @@
->  #define MSR_MFGPT_NR		0x51400029
->  #define MSR_MFGPT_SETUP		0x5140002B
->  
-> +#define MSR_RTC_DOMA_OFFSET	0x51400055
-> +#define MSR_RTC_MONA_OFFSET	0x51400056
-> +#define MSR_RTC_CEN_OFFSET	0x51400057
-> +
->  #define MSR_LX_SPARE_MSR	0x80000011	/* DC-specific */
->  
->  #define MSR_GX_GLD_MSR_CONFIG	0xC0002001
-> @@ -81,6 +85,7 @@
->  
->  /* CS5536_PM1_EN bits */
->  #define CS5536_PM_PWRBTN	(1 << 8)
-> +#define CS5536_PM_RTC		(1 << 10)
->  
->  /* CS5536_PM_GPE0_STS bits */
->  #define CS5536_GPIOM7_PME_FLAG	(1 << 31)
+
+Intriguing, I hadn't though about doing it this way, and it would
+hugely simplify the of_platform_prepare() logic that I posted a few
+weeks back.  I need to think about this...
+
+However, there is a potential race condition with static device
+registrations that also use of_platform_prepare().  If there every
+exists a multi-threaded device registration scenario, then it could be
+possible for this check to pass, the other thread register a
+conflicting device, and then this finishes creating it.  However,
+since device registration is pretty much always a single threaded
+affair, I'm probably just being paranoid.
+
+Also, of_find_device_by_node() casts a rather wide net.  There are a
+few small use-cases where multiple devices will have the same node
+pointer.  It would be better to restrict it to devices with the same
+parent, or devices on the same bus type.
+
+>  	dev = of_platform_device_create(bus, NULL, parent);
+>  	if (!dev || !of_match_node(matches, bus))
+>  		return 0;
+> @@ -326,4 +333,5 @@ int of_platform_populate(struct device_node *root,
+>  	of_node_put(root);
+>  	return rc;
+>  }
+> +EXPORT_SYMBOL(of_platform_populate);
+
+This is an unrelated change.  Does it belong in this patch?
+
+>  #endif /* !CONFIG_SPARC */
 > -- 
-> 1.7.4.4
+> 1.7.4.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
