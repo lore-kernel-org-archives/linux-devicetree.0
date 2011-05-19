@@ -1,66 +1,58 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH v2 5/7] mmc: sdhci: consolidate sdhci-of-esdhc and
- sdhci-esdhc-imx
-Date: Thu, 19 May 2011 11:48:42 +0200
-Message-ID: <20110519094841.GB2219@pengutronix.de>
-References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
- <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Pinmux with device tree
+Date: Thu, 19 May 2011 19:30:52 +0800
+Message-ID: <BANLkTim94SKgWvUF6_PWb9O5YsuNk120Bw@mail.gmail.com>
+References: <BANLkTin5wBtR4zkgsQ6dw1jQP8yQGCDS2Q@mail.gmail.com>
+	<4DD41F02.4050108@firmworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4DD41F02.4050108-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 19, 2011 at 3:33 AM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
+> On 5/18/2011 6:34 AM, Simon Glass wrote:
+>>
+>> Hi,
+>>
+>> I see a new pinmux system in the LKML. Has anyone looked at how to
+>> represent pinmux settings in the device tree?
+>>
+>> On a related topic, the examples that are used for GPIOs assume a
+>> flags word which describes things like pull-ups, direction, etc. This
+>> seems pretty cumbersome and gets worse with pinmuxes. People editing
+>> the device trees want to see symbolic information rather than a coded
+>> number, a bit like a #define. I can see this can be done with strings
+>> but this is inefficient in time and space, and is error-prone. =A0Is
+>> there support for this in device trees that I have missed?
+>
+> Open Firmware deals with this by defining both a numerical representation
+> and a text representation. =A0The numerical representation appears in mem=
+ory
+> in device tree property values, and the corresponding text representation=
+ is
+> for display and human input.
+>
+Could it be supported by flattened device tree? It seems that open firmware
+isn't popular in ARM system.
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> +config MMC_SDHCI_ESDHC
-> +	bool
-> +	depends on MMC_SDHCI
-> +	select MMC_SDHCI_PLTFM
-> +	help
-> +	  This selects SDHCI driver for Freescale eSDHC controller.
-
-bool is not a good choice here, because if ESDHC_IMX is selected as a
-module (-m), it will get converted here to built-in (-y). Same goes for
-MMC_SDHCI_PLTFM. If I change both into tristate and then compile, I get
-a build error:
-
-ERROR: "sdhci_pltfm_suspend" [drivers/mmc/host/sdhci-esdhc.ko] undefined!
-ERROR: "sdhci_get_of_property" [drivers/mmc/host/sdhci-esdhc.ko] undefined!
-ERROR: "sdhci_pltfm_init" [drivers/mmc/host/sdhci-esdhc.ko] undefined!
-ERROR: "sdhci_pltfm_free" [drivers/mmc/host/sdhci-esdhc.ko] undefined!
-
-So, the module-support seems to be missing for the library.
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk3U53kACgkQD27XaX1/VRtYigCfaUQ0Zm6JgulAx7GPts/7nUwP
-pi8AoKgWBD6yoBCrQblL/2kel4qUhfy/
-=1g4j
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+> It primarily applies to unit addresses, i.e. the "reg" property value, but
+> the idea generalizes. =A0The device tree compiler could accept the symbol=
+ic
+> names, converting them into well-defined bitfield values which would be
+> stored in integer cells within property values.
+>
+>
+>
