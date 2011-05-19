@@ -1,17 +1,18 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 Subject: Re: Pinmux with device tree
-Date: Thu, 19 May 2011 16:36:57 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1105191625050.14430@xanadu.home>
+Date: Thu, 19 May 2011 10:54:52 -1000
+Message-ID: <4DD5839C.2020809@firmworks.com>
 References: <BANLkTin5wBtR4zkgsQ6dw1jQP8yQGCDS2Q@mail.gmail.com>
 	<4DD41F02.4050108@firmworks.com>
 	<BANLkTim94SKgWvUF6_PWb9O5YsuNk120Bw@mail.gmail.com>
 	<20110519171029.GH3085@ponder.secretlab.ca>
 	<4DD576BD.7090307@firmworks.com>
+	<alpine.LFD.2.00.1105191625050.14430@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <4DD576BD.7090307-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1105191625050.14430-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,52 +22,65 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 May 2011, Mitch Bradley wrote:
+On 5/19/2011 10:36 AM, Nicolas Pitre wrote:
+> On Thu, 19 May 2011, Mitch Bradley wrote:
+>
+>> On 5/19/2011 7:10 AM, Grant Likely wrote:
+>>> Why is it error prone?  It is probably less error prone than using
+>>> magic integer values.  :-)  As for time and space inefficiencies,
+>>> we're talking about tiny amounts of data and processors now in the GHz
+>>> range with GBs of memory.  The time and space required is pretty much
+>>> in the noise.
+>>
+>> Ideally, the device tree is exported by the firmware, whose storage device is
+>> often much much smaller than the RAM size.  Since I began doing firmware,
+>> average RAM sizes have increased by a factor of 4000 and RAM speed has
+>> increased by a factor of about 1000.  In that time, boot ROM size has
+>> increased by a factor of about 8 and the speed, in some cases, has decreased.
+>>
+>> During a substantial portion of the firmware startup sequence, the CPU may be
+>> executing in a crippled mode, with caches unavailable.
+>>
+>> On my current project, I have to fit everything in 1 MiB of slow SPI FLASH.
+>> "Everything" includes microcode wads for things like the wireless module,
+>> extensive manufacturing and field diagnostics for every hardware device,
+>> crypto code and keys for boot security, drivers for on-board devices and a
+>> myriad of USB devices, sound clips for a startup jingle, graphics images for
+>> "pretty boot" and for language-neutral reporting of diagnostic results,
+>> unit-specific manufacturing info, filesystem and network protocol code, and a
+>> wireless multicast facility for mass updating of the OS onto an arbitrary
+>> number of units.
+>>
+>> So, in my world, space is always an issue.
+>
+> I'm guessing that in such a scenario you have the kernel stored
+> somewhere else, right?  You therefore simply have to store the FDT data
+> along with the kernel in that other location, and have your boot
+> firmware load an additional and relatively small file.
 
-> On 5/19/2011 7:10 AM, Grant Likely wrote:
-> > Why is it error prone?  It is probably less error prone than using
-> > magic integer values.  :-)  As for time and space inefficiencies,
-> > we're talking about tiny amounts of data and processors now in the GHz
-> > range with GBs of memory.  The time and space required is pretty much
-> > in the noise.
-> 
-> Ideally, the device tree is exported by the firmware, whose storage device is
-> often much much smaller than the RAM size.  Since I began doing firmware,
-> average RAM sizes have increased by a factor of 4000 and RAM speed has
-> increased by a factor of about 1000.  In that time, boot ROM size has
-> increased by a factor of about 8 and the speed, in some cases, has decreased.
-> 
-> During a substantial portion of the firmware startup sequence, the CPU may be
-> executing in a crippled mode, with caches unavailable.
-> 
-> On my current project, I have to fit everything in 1 MiB of slow SPI FLASH.
-> "Everything" includes microcode wads for things like the wireless module,
-> extensive manufacturing and field diagnostics for every hardware device,
-> crypto code and keys for boot security, drivers for on-board devices and a
-> myriad of USB devices, sound clips for a startup jingle, graphics images for
-> "pretty boot" and for language-neutral reporting of diagnostic results,
-> unit-specific manufacturing info, filesystem and network protocol code, and a
-> wireless multicast facility for mass updating of the OS onto an arbitrary
-> number of units.
-> 
-> So, in my world, space is always an issue.
+There is no stored FDT.  The firmware generates the device tree 
+dynamically from a combination of static information and dynamic probing.
 
-I'm guessing that in such a scenario you have the kernel stored 
-somewhere else, right?  You therefore simply have to store the FDT data 
-along with the kernel in that other location, and have your boot 
-firmware load an additional and relatively small file.
-
-It is very important that the DT data be updateable independently from 
-the firmware, just like the kernel is.  Ideally, the DT would indeed be 
-exported by the firmware, but that works only in theory.  In practice it 
-_will_ contain bugs that might be visible only after kernel development 
-has progressed, and therefore it is primordial to be able to update it 
-easily.  Hence in practice it is best if it is not exported/generated by 
-the firmware directly.
+>
+> It is very important that the DT data be updateable independently from
+> the firmware, just like the kernel is.  Ideally, the DT would indeed be
+> exported by the firmware, but that works only in theory.  In practice it
+> _will_ contain bugs that might be visible only after kernel development
+> has progressed, and therefore it is primordial to be able to update it
+> easily.  Hence in practice it is best if it is not exported/generated by
+> the firmware directly.
 
 
-Nicolas
+In our world it works in practice.  We control the hardware, firmware, 
+and OS releases.  In many cases, a firmware update is less expensive 
+than an OS release by several orders of magnitude.
+
+
+>
+>
+> Nicolas
+>
