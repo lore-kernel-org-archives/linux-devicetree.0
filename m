@@ -1,44 +1,59 @@
-From: Nishanth Aravamudan <nacc@us.ibm.com>
-Subject: Re: [PATCH 5/8] powerpc: override dma_get_required_mask by platform
- hook and ops
-Date: Thu, 19 May 2011 10:46:25 -0700
-Message-ID: <20110519174625.GA3338@us.ibm.com>
-References: <1305152704-4864-1-git-send-email-nacc@us.ibm.com>
- <1305152704-4864-6-git-send-email-nacc@us.ibm.com>
- <1305791036.7481.52.camel@pasglop>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] dt: check for devices already created fron DT scan
+Date: Thu, 19 May 2011 13:28:23 -0500
+Message-ID: <1305829704-11774-2-git-send-email-robherring2@gmail.com>
+References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1305791036.7481.52.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Milton Miller <miltonm@bga.com>, Paul Mackerras <paulus@samba.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, FUJITA Tomonori <fujita.tomonori@lab.ntt.co.jp>, Anton Blanchard <anton@samba.org>, Sonny Rao <sonnyrao@linux.vnet.ibm.com>, Will Schmidt <will_schmidt@vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, cbe-oss-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1305829704-11774-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19.05.2011 [17:43:56 +1000], Benjamin Herrenschmidt wrote:
-> On Wed, 2011-05-11 at 15:25 -0700, Nishanth Aravamudan wrote:
-> > From: Milton Miller <miltonm@bga.com>
-> > 
-> > The hook dma_get_required_mask is supposed to return the mask required
-> > by the platform to operate efficently.  The generic version of
-> > dma_get_required_mask in driver/base/platform.c returns a mask based
-> > only on max_pfn.  However, this is likely too big for iommu systems
-> > and could be too small for platforms that require a dma offset or have
-> > a secondary window at a high offset.
-> 
-> The result of those 3 patches doesn't build on top of my current tree,
-> the generic dma_ops lacks the dma_get_required_mask hook. I'll have a
-> look again after the merge window.
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Hrm, I think it's because for whatever reason [1] I forgot to cc you on 6/8?
+of_platform_bus_create may create duplicate devices if already
+added when scanning other buses like amba bus.
 
-https://lkml.org/lkml/2011/5/11/473
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/of/platform.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
--Nish
-
-[1] AKA over-reliance on get_maintainer.pl and lack of mental oversight!
-
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 9b785be..7bf74fb 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -234,6 +234,13 @@ static int of_platform_bus_create(struct device_node *bus,
+ 		return 0;
+ 	}
+ 
++	/* Has the device already been registered? */
++	if (of_find_device_by_node(bus)) {
++		pr_debug("%s() - skipping %s, already registered\n",
++			 __func__, bus->full_name);
++		return 0;
++	}
++
+ 	dev = of_platform_device_create(bus, NULL, parent);
+ 	if (!dev || !of_match_node(matches, bus))
+ 		return 0;
+@@ -326,4 +333,5 @@ int of_platform_populate(struct device_node *root,
+ 	of_node_put(root);
+ 	return rc;
+ }
++EXPORT_SYMBOL(of_platform_populate);
+ #endif /* !CONFIG_SPARC */
 -- 
-Nishanth Aravamudan <nacc@us.ibm.com>
-IBM Linux Technology Center
+1.7.4.1
