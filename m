@@ -1,15 +1,12 @@
-From: Stephen Neuendorffer <stephen.neuendorffer-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/2] drivers/amba: probe via device tree
-Date: Fri, 20 May 2011 09:08:17 -0700
-Message-ID: <a42f0c27-2811-4b68-bedf-7dfaa7bff6ff@VA3EHSMHS025.ehs.local>
-References: <1305829704-11774-1-git-send-email-robherring2@gmail.com><20110519233958.GB18181@ponder.secretlab.ca><4DD66B8A.5040404@gmail.com>
-	<201105201621.03801.arnd@arndb.de> <4DD68614.6090209@gmail.com>
+From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/2] powerpc: define and implement MPIC message register
+	support
+Date: Fri, 20 May 2011 11:36:37 -0500
+Message-ID: <1305909399-26969-1-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <4DD68614.6090209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,116 +16,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch set defines a binding for FSL MPIC message registers and implements
+an API for accessing those message registers.  Testing was done on a MPC8572DS
+in an Linux-Linux AMP setup using OpenMCAPI (www.openmcapi.org) to communicate
+between OS instances.  The message register API is used by the OpenMCAPI shared 
+memory driver to send notifications between cores.
 
+* v2 - Incorporate feedback from Scott Wood
+   * Make binding less implementation specific.
+   * Add 'mpic-' prefix to message register node properties and aliases.
+   * Remove 'interrupt-parent' from binding.
+   * Fixed some example bugs with receive masks.
 
-> -----Original Message-----
-> From:
-devicetree-discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlaKREJ1Ck/qmQ@public.gmane.org
-org [mailto:devicetree-
-> discuss-bounces+stephen.neuendorffer=xilinx.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On
-Behalf Of Rob Herring
-> Sent: Friday, May 20, 2011 8:18 AM
-> To: Arnd Bergmann
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Jeremy Kerr;
-linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
-> 
-> Arnd,
-> 
-> On 05/20/2011 09:21 AM, Arnd Bergmann wrote:
-> > On Friday 20 May 2011 15:24:26 Rob Herring wrote:
-> >> Maybe we are looking this in the wrong way.
-> >>
-> >> AMBA is not really the bus, but certain types of devices on the
-bus.
-> >> Granted, it may actually be an AMBA bus vs. vendor bus (i.MX AIPS),
-but
-> >> that is really transparent to s/w. Separating AMBA devices in the
-> >> devicetree is really Linux requirements defining the devicetree
-> >> structure. It is certainly conceivable that an OS could make no
-> >> distinction. In my case, there is a mixture of regular platform
-devices
-> >> and AMBA(Primecell really) devices all interleaved on the same bus.
-> >
-> > I don't see how that would work. If the bus is AMBA, it should
-> > only have AMBA devices on it, otherwise how would they be connected?
-> >
-> The ARM definition of AMBA encompasses a lot of things. It is the
-> definition of the AXI, AHB and APB buses. It also has the definition
-of
-> the peripheral ID register definitions which primarily only ARM Ltd
-> peripherals implement. You can have those bus types yet not have any
-> peripherals with the ID registers. The Linux amba bus primarily deals
-> with just the peripheral ID for probe matching. There is also bus
-clock
-> handling, but that's not really unique to an AMBA bus. Arguably the
-> platform bus could have bus clock handling as well.
+Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
-I tried to bring up exactly this issue, but I don't think I got my point
-across
-effectively.  (probably because I started off with "why the hell does
-this exist???")
-(face palm)  The amba_bus driver really deals with a bunch of issues
-that
-are specific to a very small number of platforms and the style of cores
-from ARM.
+Meador Inge (2):
+  powerpc: document the FSL MPIC message register binding
+  powerpc: add support for MPIC message register API
 
-> > Whether software is supposed to know care about this is a different
-> > question. The device tree should generally reflect the block
-> > diagram of the hardware,
-> 
-> Agreed.
-> 
-> > and I would expect the AMBA devices be
-> > on a different level from the rest there.
-> >
-> But this part is not true.
-> 
-> >> Based on this, I think of_platform_populate should always just
-match
-> >> against "simple-bus" and make the matches parameter define the
-device
-> >> creation hook rather than the bus type. Or you could have both
-> >> bus_matches and dev_matches parameters.
-> >
-> > I think it would be much better to only look at the parent bus for
-> > device to add, never at the device itself.
-> >
-> > If the bus is AMBA, add all devices as amba_device, if it's
-simple-bus,
-> > add all devices as platform_device.
-> >
-> That is how it is currently, but the reality is that I only have 1 bus
-> with both ARM Primecell peripherals and other peripherals which are
-> standard platform bus devices. i2c-designware is one example. It is on
-> the APB just like the pl011 uart. So do you propose I create a amba
-> driver for it? It has no peripheral ID registers, so that may not even
-work.
-
-Same here.  I don't know what the right solution for it is, but I find
-amba_bus
-solution to get in the way more than help.  I had to hack the etm/etb
-driver
-and the amba_bus to shreds to get it to work for me at all.
-I think most of what amba_bus does could be better handled by:
-1) generic support in platform bus for clock enabling/power domains.
-These are system concerns that most drivers shouldn't really know/care
-about, and
-will likely vary between SOCs.
-2) helper functions for drivers for primecell devices that does the
-peripheral id checking.
-
-I realize that this is to some extent, jumping to a solution (which got
-me into trouble
-the first time around), but if someone has a better suggestion for a
-better way to do it,
-then I'm all ears.
-
-Steve
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+ .../devicetree/bindings/powerpc/fsl/mpic-msgr.txt  |   62 +++++
+ arch/powerpc/include/asm/mpic_msgr.h               |   35 +++
+ arch/powerpc/platforms/Kconfig                     |    8 +
+ arch/powerpc/sysdev/Makefile                       |    3 +-
+ arch/powerpc/sysdev/mpic_msgr.c                    |  279 ++++++++++++++++++++
+ 5 files changed, 386 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mpic-msgr.txt
+ create mode 100644 arch/powerpc/include/asm/mpic_msgr.h
+ create mode 100644 arch/powerpc/sysdev/mpic_msgr.c
