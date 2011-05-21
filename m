@@ -1,16 +1,16 @@
-From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
-Date: Sat, 21 May 2011 06:00:05 +0200
-Message-ID: <80f20ac921a33e9f0bf3e249f539a8ef@kernel.crashing.org>
-References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>
-	<20110519233958.GB18181@ponder.secretlab.ca>
-	<4DD66B8A.5040404@gmail.com> <201105201621.03801.arnd@arndb.de>
-	<4DD68614.6090209@gmail.com>
-Mime-Version: 1.0 (Apple Message framework v624)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH v4 1/6] of: Allow scripts/dtc/libfdt to be used from
+	kernel code
+Date: Sat, 21 May 2011 16:33:45 +1000
+Message-ID: <20110521063345.GB14828@yookeroo.fritz.box>
+References: <1305930343-31259-1-git-send-email-ddaney@caviumnetworks.com>
+	<1305930343-31259-2-git-send-email-ddaney@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DD68614.6090209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1305930343-31259-2-git-send-email-ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,29 +20,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> The ARM definition of AMBA encompasses a lot of things. It is the 
-> definition of the AXI, AHB and APB buses.
+On Fri, May 20, 2011 at 03:25:38PM -0700, David Daney wrote:
+> To use it you need to do this in your Kconfig:
+> 
+> 	select LIBFDT
+> 
+> And in the Makefile of the code using libfdt something like:
+> 
+> ccflags-y := -include linux/libfdt_env.h -I$(src)/../../../scripts/dtc/libfdt
+> 
+> Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/of/Kconfig          |    3 +++
+>  drivers/of/Makefile         |    2 ++
+>  drivers/of/libfdt/Makefile  |    3 +++
+>  drivers/of/libfdt/fdt.c     |    2 ++
+>  drivers/of/libfdt/fdt_ro.c  |    2 ++
+>  drivers/of/libfdt/fdt_wip.c |    2 ++
 
-So the device tree, which describes the hardware, should call the buses
-axi, ahb or apb as appropriate, and describe the actual physical 
-connections.
-The Linux kernel is free to ignore that if it so wishes.
+No fdt_sw.c or fdt_rw.c?
 
->  It also has the definition of the peripheral ID register definitions 
-> which primarily only ARM Ltd peripherals implement. You can have those 
-> bus types yet not have any peripherals with the ID registers.
+>  include/linux/libfdt.h      |    8 ++++++++
+>  include/linux/libfdt_env.h  |   13 +++++++++++++
+>  8 files changed, 35 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/of/libfdt/Makefile
+>  create mode 100644 drivers/of/libfdt/fdt.c
+>  create mode 100644 drivers/of/libfdt/fdt_ro.c
 
-The devices are identified in the device tree, you do not need to read
-the ID registers to find them.  You should have some way of figuring out
-which devices have the AMBA ID block; maybe add something to the 
-"compatible"
-property and have all devices that use this have this register block as 
-the
-first entry in the "reg" property?
-
-
-Segher
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
