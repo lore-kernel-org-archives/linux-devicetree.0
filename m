@@ -1,15 +1,14 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
-Date: Sun, 22 May 2011 10:46:03 -0500
-Message-ID: <4DD92FBB.2050601@gmail.com>
-References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>	<20110519233958.GB18181@ponder.secretlab.ca>	<4DD66B8A.5040404@gmail.com>
-	<201105201621.03801.arnd@arndb.de>	<4DD68614.6090209@gmail.com>	<a42f0c27-2811-4b68-bedf-7dfaa7bff6ff@VA3EHSMHS025.ehs.local>	<BANLkTi=8vX1Cs_fzpQXZBuuDuLYLu1FGmg@mail.gmail.com>
-	<20110521234725.GB17672@n2100.arm.linux.org.uk>
+From: Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: i2c child devices: binding to uio device driver
+Date: Mon, 23 May 2011 10:13:54 +0200
+Message-ID: <BANLkTim08mWohWkqF0veHbz0+ydikHTAFA@mail.gmail.com>
+References: <BANLkTimSBReyncTANTyy4jhah=-QvPigwQ@mail.gmail.com>
+	<20110519155808.GC3085@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110521234725.GB17672-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20110519155808.GC3085-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,28 +18,122 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2011 06:47 PM, Russell King - ARM Linux wrote:
-> On Sat, May 21, 2011 at 11:42:34AM -0600, Grant Likely wrote:
->> Russell, it seems to me that the primary behaviour that amba_bus has
->> over platform_bus is the clock management, and secondarily
->> verification of the type of device by the device id.  Am I correct, or
->> am I missing something?
+Hi Grant,
+
+On Thu, May 19, 2011 at 5:58 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+> On Thu, May 19, 2011 at 05:32:32PM +0200, Thomas De Schampheleire wrote:
+>> Hi,
+>>
+>> I am using the uio framework (userspace i/o) to handle devices in
+>> userspace. This includes memory access and interrupt handling.
+>> For i2c devices, I'm using the i2c-dev interface, to talk to these
+>> devices from userspace. This already works fine.
+>>
+>> One of my i2c devices also has an interrupt line connected to the
+>> processor. To be able to handle this interrupt with uio, I need to
+>> have a kernel driver matched against the i2c device. However, the i2c
+>> device described in the device tree does not bind with the driver. Is
+>> this behavior supported, and if so, what am I doing wrong? Do I have
+>> to create a dummy bus (non-i2c) and add a shadow node for the
+>> interrupt?
 >
-> It matches by vendor/device ID just like PCI does, and does the bus
-> clock management and power management in a really nice way, which I
-> doubt platform devices will ever do.
+> You're wandering into new territory here. =A0It is definitely the right
+> thing to do to describe your i2c device in the device tree with the
+> interrupt fully specified.
 >
+> What you probably need to do is create a uio helper driver for your
+> device that takes care of finding the device node, mapping the
+> interrupt, and proving the interrupt handling UIO hook to userspace.
+> The easiest way to work this out would be to make your uio helper
+> actually bind to the i2c device created by the device node (this is
+> probably the best way too), but you don't have to. =A0As long as you
+> arrange for you uio helper to get called at some point, you can get it
+> to find the appropriate node in the DT, map the interrupt, and export
+> it to userspace.
 
-Matching by ID is just one aspect of PCI. AMBA devices require defining 
-the base address and irq just like platform devices. Having the ID is 
-optional on AMBA buses. In PCI the bus and devices are probe-able. For 
-AMBA, the bus is not probe-able, only the devices (or maybe not).
+Binding the helper driver with the i2c device in the device tree is
+indeed what I am trying to achieve. Unfortunately, the binding does
+not happen, the probe function of my driver never gets called.
 
-I believe OMAP is doing clock and power mgt at the bus level for 
-platform devices.
+For the other UIO devices in this system (non-I2C), the mechanism is as fol=
+lows:
+1. the devices are described in the device tree, as children under
+their respective bus node (e.g. localbus)
+2. the platform code (arch/powerpc/platforms/85xx/corenet_ds.c)
+iterates over all buses it understands, among which 'simple-bus'.
+3. for each child device on the bus, a bind operation with a driver is
+attempted, based on the device 'compatible' string
 
-Rob
+This works perfectly.
+However, the i2c bus does not have any of the matched bus types, like
+simple-bus, and as such it is handled differently. The i2c bus driver
+(drivers/i2c/busses/i2c-mpc.c) calls of_register_i2c_devices (in
+drivers/of/of_i2c.c), which handles the i2c-specific part of the
+device, but does not (as far as I understand and observe) treat the
+device as a regular device with a match table.
+
+Maybe I misunderstand something. Is this where I need to play with
+modaliases? How does this work in the context of device trees?
+
+>
+> g.
+>
+>>
+>> My device tree nodes look like this:
+>>
+>> =A0 =A0 =A0 =A0 soc@fe000000 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c@118100 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cell-index =3D <1>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fsl-i2c";
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x118100 0x100>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <38 2 0 0=
+>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dfsrr;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mydevice@68 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatib=
+le =3D "mymanufacturer,mydevice";
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D =
+<0x68>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrup=
+ts =3D <7 1 0 0>; /* External
+>> IRQ7, active-low level */
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>
+> This looks to be correct.
+>
+>>
+>> The device driver then has:
+>>
+>> static const struct of_device_id mydevice_ids[] =3D {
+>> =A0 =A0 =A0 =A0 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .compatible =3D "mymanufacturer,mydevice"
+>> =A0 =A0 =A0 =A0 },
+>> =A0 =A0 =A0 =A0 {},
+>> };
+>> static struct of_platform_driver mydevice_driver =3D {
+>
+> You don't want to do this. =A0This is an i2c device, not a platform
+> device. =A0If anything, this should be an i2c_driver and you should use
+> the normal creation of i2c devices from the DT.
+
+Ok, so this may be the reason why my driver does not get registered
+against the device...
+
+>
+> BTW, of_platform_driver is deprecated and is just a wrapper around
+> plain platform_driver on recent kernels. =A0platform_driver should be
+> used directly now.
+
+Yes, I heard about this change. But if I recall correctly, this change
+is not yet in 2.6.34, right?
+
+Thanks,
+Thomas
