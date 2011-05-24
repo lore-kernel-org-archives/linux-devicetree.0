@@ -1,66 +1,54 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH v2 5/7] mmc: sdhci: consolidate sdhci-of-esdhc and
- sdhci-esdhc-imx
-Date: Tue, 24 May 2011 21:40:54 +0200
-Message-ID: <20110524194054.GC25727@pengutronix.de>
-References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
- <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
+From: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
+Subject: Re: [PATCH v5] uio/pdrv_genirq: Add OF support
+Date: Wed, 25 May 2011 00:04:08 +0200
+Message-ID: <20110524220408.GB16040@local>
+References: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
+	<4DDB960F.4050902@monstr.eu> <20110524123625.GC31517@suse.de>
+	<20110524150215.GA2723@local> <20110524151413.GA25076@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
+In-Reply-To: <20110524151413.GA25076-l3A5Bk7waGM@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 24, 2011 at 08:14:13AM -0700, Greg KH wrote:
+> On Tue, May 24, 2011 at 05:02:16PM +0200, Hans J. Koch wrote:
+> > On Tue, May 24, 2011 at 05:36:25AM -0700, Greg KH wrote:
+> > > On Tue, May 24, 2011 at 01:27:11PM +0200, Michal Simek wrote:
+> > > > Hi Greg,
+> > > > 
+> > > > can you please add it to your tree? I see you have sent pull request.
+> > > 
+> > > It's too late for the merge window for this, sorry.  I needed to have
+> > > this before it opened up, and in the linux-next tree for a week or so
+> > > before that.
+> > > 
+> > > Sorry.
+> > > 
+> > > Can you resend it in a format that I can apply it in, as well as getting
+> > > an ack from Hans?
+> > 
+> > There was already a "Signed-off-by:" from me, and a "Reviewed-by:" from
+> > Wolfram Sang, so that should be OK.
+> 
+> There was on the forwarded patch?  Sorry, I missed it, if only it was in
+> a format that could have been applied :)
 
---3siQDZowHQqNOShm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I forwarded the original patch (added Signed-of-by and Reviewed-by tags)
+to you.
 
-On Thu, May 05, 2011 at 09:22:56PM +0800, Shawn Guo wrote:
-> This patch is to consolidate SDHCI driver for Freescale eSDHC
-> controller found on both MPCxxx and i.MX platforms.  It merges
-> sdhci-of-esdhc.c into sdhci-esdhc.c, so that the same pair of
-> .probe/.remove hook works with eSDHC for two platforms.
->=20
-> As the results, sdhci-of-esdhc.c and sdhci-esdhc.h are removed, and
-> header esdhc.h containing the definition of esdhc_platform_data is
-> put into the public folder.
->=20
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-
-I agree with Anton about not merging the two...
-
-> +#ifndef CONFIG_MMC_SDHCI_ESDHC_IMX
-> +#define cpu_is_mx25()	(0)
-> +#define cpu_is_mx35()	(0)
-> +#define cpu_is_mx51()	(0)
-> +#define cpu_is_imx()	(0)
-> +#else
-> +#define cpu_is_imx()	(1)
-> +#endif
-
-=2E.. e.g. that looks a bit frightening.
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---3siQDZowHQqNOShm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk3cCcYACgkQD27XaX1/VRtUwQCgoIV85fwgIwLJrNnpZcKcpuon
-2t8AnAurv1dsjn89lmIF70htQOUZ02xt
-=L9v8
------END PGP SIGNATURE-----
-
---3siQDZowHQqNOShm--
+HTH,
+Hans
