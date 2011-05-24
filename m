@@ -1,51 +1,157 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [RFC PATCH v4 1/6] of: Allow scripts/dtc/libfdt to be used from
- kernel code
-Date: Mon, 23 May 2011 09:47:56 -0700
-Message-ID: <4DDA8FBC.1090904@caviumnetworks.com>
-References: <1305930343-31259-1-git-send-email-ddaney@caviumnetworks.com> <1305930343-31259-2-git-send-email-ddaney@caviumnetworks.com> <20110521063345.GB14828@yookeroo.fritz.box>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v5] uio/pdrv_genirq: Add OF support
+Date: Tue, 24 May 2011 13:27:11 +0200
+Message-ID: <4DDB960F.4050902@monstr.eu>
+References: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110521063345.GB14828@yookeroo.fritz.box>
+In-Reply-To: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, "Hans J. Koch" <hjk@hansjkoch.de>, Arnd Bergmann <arnd@arndb.de>, John Williams <john.williams@petalogix.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Greg Kroah-Hartman <gregkh@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2011 11:33 PM, David Gibson wrote:
-> On Fri, May 20, 2011 at 03:25:38PM -0700, David Daney wrote:
->> To use it you need to do this in your Kconfig:
->>
->> 	select LIBFDT
->>
->> And in the Makefile of the code using libfdt something like:
->>
->> ccflags-y := -include linux/libfdt_env.h -I$(src)/../../../scripts/dtc/libfdt
->>
->> Signed-off-by: David Daney<ddaney@caviumnetworks.com>
->> ---
->>   drivers/of/Kconfig          |    3 +++
->>   drivers/of/Makefile         |    2 ++
->>   drivers/of/libfdt/Makefile  |    3 +++
->>   drivers/of/libfdt/fdt.c     |    2 ++
->>   drivers/of/libfdt/fdt_ro.c  |    2 ++
->>   drivers/of/libfdt/fdt_wip.c |    2 ++
->
-> No fdt_sw.c or fdt_rw.c?
->
+Hi Greg,
 
-I had no immediate need for them.  They could of course be added, but 
-that would potentially waste space.
+can you please add it to your tree? I see you have sent pull request.
 
-Let's see if I can make it into an archive library.
+Thanks,
+Michal
 
-David Daney
+Michal Simek wrote:
+> Adding OF binding to genirq.
+> Version string is setup to the "devicetree".
+> 
+> Compatible string is not setup for now but you can add your
+> custom compatible string to uio_of_genirq_match structure.
+> 
+> For example with "vendor,device" compatible string:
+> static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> 	{ .compatible = "vendor,device", },
+> 	{ /* empty for now */ },
+> };
+> 
+> Signed-off-by: Michal Simek <monstr@monstr.eu>
+> CC: Hans J. Koch <hjk@hansjkoch.de>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: John Williams <john.williams@petalogix.com>
+> CC: Grant Likely <grant.likely@secretlab.ca>
+> CC: Wolfram Sang <w.sang@pengutronix.de>
+> 
+> ---
+> v5: Free uioinfo in genirq_remove
+>     Use pdev->dev.of_node for OF detection
+> 
+> v4: Remove dev_info messages
+>     Check irq against -ENXIO for no irq
+> 
+> v3: Fix irq binding
+>     Use "devicetree" as version string
+> 
+> v2: Remove additional resource binding
+>     Setup correct version string
+>     Clear compatible string
+> ---
+>  drivers/uio/uio_pdrv_genirq.c |   44 +++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 44 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+> index 7174d51..24bb395 100644
+> --- a/drivers/uio/uio_pdrv_genirq.c
+> +++ b/drivers/uio/uio_pdrv_genirq.c
+> @@ -23,6 +23,10 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slab.h>
+>  
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +
+>  #define DRIVER_NAME "uio_pdrv_genirq"
+>  
+>  struct uio_pdrv_genirq_platdata {
+> @@ -97,6 +101,27 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>  	int ret = -EINVAL;
+>  	int i;
+>  
+> +	if (!uioinfo) {
+> +		int irq;
+> +
+> +		/* alloc uioinfo for one device */
+> +		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+> +		if (!uioinfo) {
+> +			ret = -ENOMEM;
+> +			dev_err(&pdev->dev, "unable to kmalloc\n");
+> +			goto bad2;
+> +		}
+> +		uioinfo->name = pdev->dev.of_node->name;
+> +		uioinfo->version = "devicetree";
+> +
+> +		/* Multiple IRQs are not supported */
+> +		irq = platform_get_irq(pdev, 0);
+> +		if (irq == -ENXIO)
+> +			uioinfo->irq = UIO_IRQ_NONE;
+> +		else
+> +			uioinfo->irq = irq;
+> +	}
+> +
+>  	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+>  		dev_err(&pdev->dev, "missing platform_data\n");
+>  		goto bad0;
+> @@ -180,6 +205,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+>  	kfree(priv);
+>  	pm_runtime_disable(&pdev->dev);
+>   bad0:
+> +	/* kfree uioinfo for OF */
+> +	if (pdev->dev.of_node)
+> +		kfree(uioinfo);
+> + bad2:
+>  	return ret;
+>  }
+>  
+> @@ -189,6 +218,11 @@ static int uio_pdrv_genirq_remove(struct platform_device *pdev)
+>  
+>  	uio_unregister_device(priv->uioinfo);
+>  	pm_runtime_disable(&pdev->dev);
+> +
+> +	/* kfree uioinfo for OF */
+> +	if (pdev->dev.of_node)
+> +		kfree(priv->uioinfo);
+> +
+>  	kfree(priv);
+>  	return 0;
+>  }
+> @@ -215,6 +249,15 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+>  	.runtime_resume = uio_pdrv_genirq_runtime_nop,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id __devinitconst uio_of_genirq_match[] = {
+> +	{ /* empty for now */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
+> +#else
+> +# define uio_of_genirq_match NULL
+> +#endif
+> +
+>  static struct platform_driver uio_pdrv_genirq = {
+>  	.probe = uio_pdrv_genirq_probe,
+>  	.remove = uio_pdrv_genirq_remove,
+> @@ -222,6 +265,7 @@ static struct platform_driver uio_pdrv_genirq = {
+>  		.name = DRIVER_NAME,
+>  		.owner = THIS_MODULE,
+>  		.pm = &uio_pdrv_genirq_dev_pm_ops,
+> +		.of_match_table = uio_of_genirq_match,
+>  	},
+>  };
+>  
 
->>   include/linux/libfdt.h      |    8 ++++++++
->>   include/linux/libfdt_env.h  |   13 +++++++++++++
->>   8 files changed, 35 insertions(+), 0 deletions(-)
->>   create mode 100644 drivers/of/libfdt/Makefile
->>   create mode 100644 drivers/of/libfdt/fdt.c
->>   create mode 100644 drivers/of/libfdt/fdt_ro.c
->
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
