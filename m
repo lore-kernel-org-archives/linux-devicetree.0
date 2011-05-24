@@ -1,76 +1,55 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5] uio/pdrv_genirq: Add OF support
-Date: Tue, 24 May 2011 18:24:53 +0200
-Message-ID: <20110524162452.GA22936@pengutronix.de>
-References: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
-	<4DDB960F.4050902@monstr.eu> <20110524123625.GC31517@suse.de>
-	<20110524150215.GA2723@local>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH v2 2/7] mmc: sdhci: eliminate sdhci_of_host and
+ sdhci_of_data
+Date: Tue, 24 May 2011 21:26:13 +0200
+Message-ID: <20110524192613.GA25727@pengutronix.de>
+References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
+ <1304601778-13837-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6513683441442794438=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110524150215.GA2723@local>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1304601778-13837-3-git-send-email-shawn.guo@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============6513683441442794438==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
-Content-Disposition: inline
-
-
---EeQfGwPcQSOJBaQU
+--qMm9M+Fa2AknHoGS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 05, 2011 at 09:22:53PM +0800, Shawn Guo wrote:
+> The patch migrates the use of sdhci_of_host and sdhci_of_data to
+> sdhci_pltfm_host and sdhci_pltfm_data, so that the former pair can
+> be eliminated.
+>=20
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
 
-> There was some unanswered question by Thomas De Scham, though.
+We might be able to get rid of the migrated entries in sdhci-pltfm.h, but t=
+his
+is a task for later IMO.
 
-The answers to his question can be found in the discussions around previous
-versions of the patch.
-
-Regards,
-
-   Wolfram
+Reviewed-by: Wolfram Sang <w.sang@pengutronix.de>
 
 --=20
 Pengutronix e.K.                           | Wolfram Sang                |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
---EeQfGwPcQSOJBaQU
+--qMm9M+Fa2AknHoGS
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAk3b29QACgkQD27XaX1/VRu3jgCdGp5T1+7zqRpnZ5uWHUVkYFNi
-RzoAoMTFOCCUbGzIcSxkKfM0xsC0L5vq
-=dUQI
+iEYEARECAAYFAk3cBlUACgkQD27XaX1/VRsn3gCdHYNVwx8eKSD/hq4IJUyCEbUu
+1voAoLnI6BfV2jruGUeJnGeBJXnELkiB
+=BQlA
 -----END PGP SIGNATURE-----
 
---EeQfGwPcQSOJBaQU--
-
---===============6513683441442794438==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6513683441442794438==--
+--qMm9M+Fa2AknHoGS--
