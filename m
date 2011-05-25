@@ -1,76 +1,55 @@
 From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
-Date: Wed, 25 May 2011 11:02:26 +0800
-Message-ID: <20110525030225.GA30394@S2100-06.ap.freescale.net>
-References: <20110519233958.GB18181@ponder.secretlab.ca>
- <4DD66B8A.5040404@gmail.com>
- <201105201621.03801.arnd@arndb.de>
- <4DD68614.6090209@gmail.com>
- <a42f0c27-2811-4b68-bedf-7dfaa7bff6ff@VA3EHSMHS025.ehs.local>
- <BANLkTi=8vX1Cs_fzpQXZBuuDuLYLu1FGmg@mail.gmail.com>
- <4DDA2AC0.1060406@gaisler.com>
- <20110523095829.GG17672@n2100.arm.linux.org.uk>
- <BANLkTink1rrC8F3Gjhqt84gYzOibX+AgDQ@mail.gmail.com>
- <4DDBC8C7.4000001@gmail.com>
+Subject: Re: [PATCH v2 5/7] mmc: sdhci: consolidate sdhci-of-esdhc and
+ sdhci-esdhc-imx
+Date: Wed, 25 May 2011 14:06:37 +0800
+Message-ID: <20110525060637.GA30583@S2100-06.ap.freescale.net>
+References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
+ <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
+ <20110524194054.GC25727@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4DDBC8C7.4000001@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Jeremy Kerr <jeremy.kerr@canonical.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20110524194054.GC25727@pengutronix.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 24, 2011 at 10:03:35AM -0500, Rob Herring wrote:
-> Grant,
+On Tue, May 24, 2011 at 09:40:54PM +0200, Wolfram Sang wrote:
+> On Thu, May 05, 2011 at 09:22:56PM +0800, Shawn Guo wrote:
+> > This patch is to consolidate SDHCI driver for Freescale eSDHC
+> > controller found on both MPCxxx and i.MX platforms.  It merges
+> > sdhci-of-esdhc.c into sdhci-esdhc.c, so that the same pair of
+> > .probe/.remove hook works with eSDHC for two platforms.
+> > 
+> > As the results, sdhci-of-esdhc.c and sdhci-esdhc.h are removed, and
+> > header esdhc.h containing the definition of esdhc_platform_data is
+> > put into the public folder.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > 
-> On 05/23/2011 10:09 AM, Grant Likely wrote:
-> >On Mon, May 23, 2011 at 3:58 AM, Russell King - ARM Linux
-> ><linux@arm.linux.org.uk>  wrote:
-> >>On Mon, May 23, 2011 at 11:37:04AM +0200, Kristoffer Glembo wrote:
-> >>>Grant Likely wrote:
-> >>>>In the case we're talking about the bus really is an AMBA bus, and all
-> >>>>the devices on it are in some sense real amba devices.  The problem is
-> >>>>that not all of the devices on the bus implement peripheral ID
-> >>>>registers or other mechanisms that good upstanding AMBA devices are
-> >>>>expected to have.
-> >>>
-> >>>Before we go hardware bashing of non primecell AMBA devices I would just
-> >>>want to point out that the primecell stuff is not part of the AMBA
-> >>>specification.
-> >>
-> >>And before we go down that route, let me point out that the 'amba bus'
-> >>stuff in the kernel is there to support primecells, rather than all
-> >>devices which the AMBA specification covers.
-> >>
-> >>The reason it's called 'amba' is because back in 2001 or so when the
-> >>first primecell drivers were created, there was little information
-> >>available as to what AMBA, AHB, or APB even covered.  All I had to go
-> >>on were the primecell documents themselves.  The higher level documents
-> >>were not available to me.
-> >>
-> >>So, despite it being called 'amba', it really is just for primecells
-> >>and if we didn't have the exposure to userspace, I'd have renamed it to
-> >>'apb' or similar instead.
-> >
-> >Okay, that clarifies things a lot, and lends weight to the arguement
-> >that it is perfectly normal and acceptable to have both amba_devices
-> >and platform_devices on the same bus segment.  Are there any cases
-> >where amba primecells are being driven by platform_drivers?  If so,
-> >should those drivers have an amba_driver registration added?
+> I agree with Anton about not merging the two...
 > 
-> I would be surprised if there are any implemented as
-> platform_drivers that are not duplicates of an amba driver. The STMP
-> uart is actually a pl011 and it's platform driver was recently
+> > +#ifndef CONFIG_MMC_SDHCI_ESDHC_IMX
+> > +#define cpu_is_mx25()	(0)
+> > +#define cpu_is_mx35()	(0)
+> > +#define cpu_is_mx51()	(0)
+> > +#define cpu_is_imx()	(0)
+> > +#else
+> > +#define cpu_is_imx()	(1)
+> > +#endif
+> 
+> ... e.g. that looks a bit frightening.
+> 
+Agree.
 
-It (duart than auart) is a platform driver in Freesccale BSP, and was
-turned into 'amba' one when being upstreamed.
-
-> removed IIRC. So I think we can consider platform drivers something
-> that should be fixed in this case.
-> 
+The use of cpu_is_mx..() in the driver itself seems a churn to me
+even without this consolidation patch.  Is it possible for us to
+eliminate them by using pdata, and eventually device tree?  When we
+are there, I might want to revisit the consolidation again.
 
 -- 
 Regards,
 Shawn
+
