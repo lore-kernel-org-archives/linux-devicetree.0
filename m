@@ -1,37 +1,51 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5] uio/pdrv_genirq: Add OF support
-Date: Wed, 25 May 2011 09:28:52 +0200
-Message-ID: <201105250928.52674.arnd@arndb.de>
-References: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
-	<20110524162452.GA22936@pengutronix.de>
-	<BANLkTinOe5nDB27JKPTNpNyEgKgM0qS=rA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
+Date: Wed, 25 May 2011 11:03:28 +0200
+Message-ID: <BANLkTinrBgA8Zw03AzGFxAiY-84Hgxfcxg@mail.gmail.com>
+References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>
+	<a42f0c27-2811-4b68-bedf-7dfaa7bff6ff@VA3EHSMHS025.ehs.local>
+	<BANLkTi=8vX1Cs_fzpQXZBuuDuLYLu1FGmg@mail.gmail.com>
+	<201105221203.03970.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTinOe5nDB27JKPTNpNyEgKgM0qS=rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201105221203.03970.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Kevin Hilman <khilman@ti.com>, Segher Boessenkool <segher@kernel.crashing.org>, Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Jeremy Kerr <jeremy.kerr@canonical.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 May 2011 09:27:57 Thomas De Schampheleire wrote:
-> On Tue, May 24, 2011 at 6:24 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> I agree. After reading the entire thread a second time, I found the
-> answer: current 'workaround' is to let users modify the generic
-> driver's match table, while the real fix is to add runtime adding of
-> compatible strings to platform devices.
-> 
-> However, the latter functionality is not yet present, right?
+2011/5/22 Arnd Bergmann <arnd@arndb.de>:
+> On Saturday 21 May 2011 19:42:34 Grant Likely wrote:
+>> 1) drop amba-bus entirely and use platform_device everywhere, similar
+>> to what OMAP has done
+>> 2) strictly create amba_devices for nodes compatible with "arm,amba-device"
+>> 3) be intelligent about amba device creation; create an amba_device
+>> only for devices we know are driven with amba_driver.
+>
+> Or maybe
+>
+> 4) Use amba_device for all devices on an amba bus (identified by
+> the compatible property of the bus), but mark the ones that do
+> not have primecell compatible registers so that the amba bus
+> does not try to look at them but instead takes the information
+> from the device tree.
 
-That is correct, yes.
+Currently the amba/primecell bus driver in drivers/amba/bus.c
+will have the hardware registers override any data provided
+from the board.
 
-	Arnd
+There are pending patches to instead have the board potentially
+override the hardware, see:
+http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=6829/1
+
+The reason is that some of our hardware has newer revisions
+of the PrimeCells and still the hardware registers have not
+been updated properly. (Yes, the people involved have been
+informed.)
+
+So you also have a case where you may want to provide an ID
+and have it override the ID present in the hardware.
+
+Yours,
+Linus Walleij
