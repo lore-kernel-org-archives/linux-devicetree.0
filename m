@@ -1,58 +1,49 @@
-From: Nishanth Aravamudan <nacc@us.ibm.com>
-Subject: Re: [PATCH 5/8] powerpc: override dma_get_required_mask by platform
-	hook and ops
-Date: Wed, 25 May 2011 11:47:38 -0700
-Message-ID: <20110525184738.GA10283@us.ibm.com>
-References: <1305152704-4864-1-git-send-email-nacc@us.ibm.com>
-	<1305152704-4864-6-git-send-email-nacc@us.ibm.com>
-	<1305791036.7481.52.camel@pasglop>
-	<20110519174625.GA3338@us.ibm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH v3 0/2] amba bus device tree probing
+Date: Wed, 25 May 2011 16:31:11 -0500
+Message-ID: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <20110519174625.GA3338@us.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: cbe-oss-dev@lists.ozlabs.org, FUJITA Tomonori <fujita.tomonori@lab.ntt.co.jp>, Arnd Bergmann <arnd@arndb.de>, Sonny Rao <sonnyrao@linux.vnet.ibm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Paul Mackerras <paulus@samba.org>, Anton Blanchard <anton@samba.org>, Will Schmidt <will_schmidt@vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ben,
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-On 19.05.2011 [10:46:25 -0700], Nishanth Aravamudan wrote:
-> On 19.05.2011 [17:43:56 +1000], Benjamin Herrenschmidt wrote:
-> > On Wed, 2011-05-11 at 15:25 -0700, Nishanth Aravamudan wrote:
-> > > From: Milton Miller <miltonm@bga.com>
-> > > 
-> > > The hook dma_get_required_mask is supposed to return the mask required
-> > > by the platform to operate efficently.  The generic version of
-> > > dma_get_required_mask in driver/base/platform.c returns a mask based
-> > > only on max_pfn.  However, this is likely too big for iommu systems
-> > > and could be too small for platforms that require a dma offset or have
-> > > a secondary window at a high offset.
-> > 
-> > The result of those 3 patches doesn't build on top of my current tree,
-> > the generic dma_ops lacks the dma_get_required_mask hook. I'll have a
-> > look again after the merge window.
-> 
-> Hrm, I think it's because for whatever reason [1] I forgot to cc you on 6/8?
-> 
-> https://lkml.org/lkml/2011/5/11/473
+This is updated amba bus DT probe support. It has changed significantly since
+v2 based on the discussion and the conclusions from that discussion:
 
-Were you able to find the patch I refer to above?
+- The Linux amba_bus is really for ARM Primecell peripherals, not a type of bus.
+- The amba_bus is not going to be replaced by platform_bus.
 
-Thanks,
-Nish
+The bus scanning is done entirely by of_platform_bus_populate/probe and only
+the device creation is handled by the amba bus code. This patch set can support
+Grant's options 2 or 3 depending on the match table used.
+
+Applies to devicetree/next on git://git.secretlab.ca/git/linux-2.6
+
+Rob
+
+Rob Herring (2):
+  drivers/amba: create devices from device tree
+  dt: add custom device creation to platform bus scan
+
+ drivers/amba/bus.c          |   51 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/of/platform.c       |   27 ++++++++++++++++------
+ include/linux/amba/bus.h    |    5 ++++
+ include/linux/of_platform.h |   11 ++++++--
+ 4 files changed, 83 insertions(+), 11 deletions(-)
 
 -- 
-Nishanth Aravamudan <nacc@us.ibm.com>
-IBM Linux Technology Center
+1.7.4.1
