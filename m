@@ -1,70 +1,58 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: i2c child devices: binding to uio device driver
-Date: Wed, 25 May 2011 13:28:39 +0200
-Message-ID: <201105251328.39337.arnd@arndb.de>
-References: <BANLkTimSBReyncTANTyy4jhah=-QvPigwQ@mail.gmail.com>
-	<20110519155808.GC3085@ponder.secretlab.ca>
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: Re: [PATCH 5/8] powerpc: override dma_get_required_mask by platform
+	hook and ops
+Date: Wed, 25 May 2011 11:47:38 -0700
+Message-ID: <20110525184738.GA10283@us.ibm.com>
+References: <1305152704-4864-1-git-send-email-nacc@us.ibm.com>
+	<1305152704-4864-6-git-send-email-nacc@us.ibm.com>
+	<1305791036.7481.52.camel@pasglop>
+	<20110519174625.GA3338@us.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110519155808.GC3085-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <20110519174625.GA3338@us.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: cbe-oss-dev@lists.ozlabs.org, FUJITA Tomonori <fujita.tomonori@lab.ntt.co.jp>, Arnd Bergmann <arnd@arndb.de>, Sonny Rao <sonnyrao@linux.vnet.ibm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Paul Mackerras <paulus@samba.org>, Anton Blanchard <anton@samba.org>, Will Schmidt <will_schmidt@vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 19 May 2011, Grant Likely wrote:
-> On Thu, May 19, 2011 at 05:32:32PM +0200, Thomas De Schampheleire wrote:
-> > Hi,
+Ben,
+
+On 19.05.2011 [10:46:25 -0700], Nishanth Aravamudan wrote:
+> On 19.05.2011 [17:43:56 +1000], Benjamin Herrenschmidt wrote:
+> > On Wed, 2011-05-11 at 15:25 -0700, Nishanth Aravamudan wrote:
+> > > From: Milton Miller <miltonm@bga.com>
+> > > 
+> > > The hook dma_get_required_mask is supposed to return the mask required
+> > > by the platform to operate efficently.  The generic version of
+> > > dma_get_required_mask in driver/base/platform.c returns a mask based
+> > > only on max_pfn.  However, this is likely too big for iommu systems
+> > > and could be too small for platforms that require a dma offset or have
+> > > a secondary window at a high offset.
 > > 
-> > I am using the uio framework (userspace i/o) to handle devices in
-> > userspace. This includes memory access and interrupt handling.
-> > For i2c devices, I'm using the i2c-dev interface, to talk to these
-> > devices from userspace. This already works fine.
-
-Ok.
-
-> > One of my i2c devices also has an interrupt line connected to the
-> > processor. To be able to handle this interrupt with uio, I need to
-> > have a kernel driver matched against the i2c device. However, the i2c
-> > device described in the device tree does not bind with the driver. Is
-> > this behavior supported, and if so, what am I doing wrong? Do I have
-> > to create a dummy bus (non-i2c) and add a shadow node for the
-> > interrupt?
+> > The result of those 3 patches doesn't build on top of my current tree,
+> > the generic dma_ops lacks the dma_get_required_mask hook. I'll have a
+> > look again after the merge window.
 > 
-> You're wandering into new territory here.  It is definitely the right
-> thing to do to describe your i2c device in the device tree with the
-> interrupt fully specified.
+> Hrm, I think it's because for whatever reason [1] I forgot to cc you on 6/8?
+> 
+> https://lkml.org/lkml/2011/5/11/473
 
-Agreed.
+Were you able to find the patch I refer to above?
 
-> What you probably need to do is create a uio helper driver for your
-> device that takes care of finding the device node, mapping the
-> interrupt, and proving the interrupt handling UIO hook to userspace.
-> The easiest way to work this out would be to make your uio helper
-> actually bind to the i2c device created by the device node (this is
-> probably the best way too), but you don't have to.  As long as you
-> arrange for you uio helper to get called at some point, you can get it
-> to find the appropriate node in the DT, map the interrupt, and export
-> it to userspace.
+Thanks,
+Nish
 
-My feeling is that you should not be using a UIO device for this
-case, but rather extend the i2c-dev interface to provide an interrupt
-passthrough for devices that have an interrupt line. In that case,
-you will not need any UIO bindings, and the same i2c-dev user space
-driver will simply work without much extra work on any such device.
-
-The best way to hook up the interrupt into i2c-dev is probably
-to provide a poll() callback for waiting for an interrupt, which
-signals POLLMSG, plus a new i2c-dev ioctl that is used to clear the
-interrupt state.
-
-	Arnd
+-- 
+Nishanth Aravamudan <nacc@us.ibm.com>
+IBM Linux Technology Center
