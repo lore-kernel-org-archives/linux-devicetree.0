@@ -1,54 +1,63 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 5/7] mmc: sdhci: consolidate sdhci-of-esdhc and
- sdhci-esdhc-imx
-Date: Wed, 25 May 2011 08:46:19 +0200
-Message-ID: <20110525064619.GI9774@pengutronix.de>
-References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
- <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
- <20110524194054.GC25727@pengutronix.de>
- <20110525060637.GA30583@S2100-06.ap.freescale.net>
+From: Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5] uio/pdrv_genirq: Add OF support
+Date: Wed, 25 May 2011 09:27:57 +0200
+Message-ID: <BANLkTinOe5nDB27JKPTNpNyEgKgM0qS=rA@mail.gmail.com>
+References: <1304577644-4024-1-git-send-email-monstr@monstr.eu>
+	<4DDB960F.4050902@monstr.eu> <20110524123625.GC31517@suse.de>
+	<20110524150215.GA2723@local>
+	<20110524162452.GA22936@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110525060637.GA30583@S2100-06.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110524162452.GA22936-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg KH <gregkh-l3A5Bk7waGM@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Shawn,
+Hi,
 
-> > > +#ifndef CONFIG_MMC_SDHCI_ESDHC_IMX
-> > > +#define cpu_is_mx25()	(0)
-> > > +#define cpu_is_mx35()	(0)
-> > > +#define cpu_is_mx51()	(0)
-> > > +#define cpu_is_imx()	(0)
-> > > +#else
-> > > +#define cpu_is_imx()	(1)
-> > > +#endif
-> >=20
-> > ... e.g. that looks a bit frightening.
-> >=20
-> Agree.
->=20
-> The use of cpu_is_mx..() in the driver itself seems a churn to me
-> even without this consolidation patch.  Is it possible for us to
-> eliminate them by using pdata, and eventually device tree?  When we
-> are there, I might want to revisit the consolidation again.
-An alternative that allows letting the logic in the driver and still
-getting rid of the cpu_is_ stuff is using platform ids. See
-drivers/spi/spi_imx.c for an example. Instead of an index into an array
-(as it's for the imx-spi driver) driver_data can hold flags, too, which
-should be enough most of the time.
+On Tue, May 24, 2011 at 6:24 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>
+>> There was some unanswered question by Thomas De Scham, though.
+>
+> The answers to his question can be found in the discussions around previo=
+us
+> versions of the patch.
+>
 
-Best regards
-Uwe
+I agree. After reading the entire thread a second time, I found the
+answer: current 'workaround' is to let users modify the generic
+driver's match table, while the real fix is to add runtime adding of
+compatible strings to platform devices.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+However, the latter functionality is not yet present, right?
+
+Thanks,
+Thomas
+
+> Regards,
+>
+> =A0 Wolfram
+>
+> --
+> Pengutronix e.K. =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | Wo=
+lfram Sang =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0|
+> Industrial Linux Solutions =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | http://www.p=
+engutronix.de/ =A0|
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+>
