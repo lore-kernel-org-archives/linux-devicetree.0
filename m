@@ -1,40 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] drivers/amba: probe via device tree
-Date: Wed, 25 May 2011 11:07:18 +0200
-Message-ID: <BANLkTin4xKHbxysxN8M-5AP2143VkoLG=g@mail.gmail.com>
-References: <1305829704-11774-1-git-send-email-robherring2@gmail.com>
-	<20110519233958.GB18181@ponder.secretlab.ca>
-	<4DD66B8A.5040404@gmail.com>
-	<201105201621.03801.arnd@arndb.de>
-	<4DD68614.6090209@gmail.com>
-	<a42f0c27-2811-4b68-bedf-7dfaa7bff6ff@VA3EHSMHS025.ehs.local>
-	<BANLkTi=8vX1Cs_fzpQXZBuuDuLYLu1FGmg@mail.gmail.com>
-	<4DDA2AC0.1060406@gaisler.com>
-	<20110523095829.GG17672@n2100.arm.linux.org.uk>
-	<BANLkTink1rrC8F3Gjhqt84gYzOibX+AgDQ@mail.gmail.com>
-	<4DDBC8C7.4000001@gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v2 5/7] mmc: sdhci: consolidate sdhci-of-esdhc and
+ sdhci-esdhc-imx
+Date: Wed, 25 May 2011 17:36:02 +0800
+Message-ID: <20110525093601.GA2070@S2100-06.ap.freescale.net>
+References: <1304601778-13837-1-git-send-email-shawn.guo@linaro.org>
+ <1304601778-13837-6-git-send-email-shawn.guo@linaro.org>
+ <20110524194054.GC25727@pengutronix.de>
+ <20110525060637.GA30583@S2100-06.ap.freescale.net>
+ <20110525064619.GI9774@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4DDBC8C7.4000001@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kevin Hilman <khilman@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Jeremy Kerr <jeremy.kerr@canonical.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110525064619.GI9774@pengutronix.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-2011/5/24 Rob Herring <robherring2@gmail.com>:
+Hi Uwe,
 
-> I think having "arm,amba-deviceid" is not needed. The current code does
-> nothing but warn if it doesn't match the h/w value. The drivers already have
-> a list of id's that they support and the amba bus only matches against the
-> h/w id value. The only use I can see is overriding a broken h/w value.
+On Wed, May 25, 2011 at 08:46:19AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello Shawn,
+>=20
+> > > > +#ifndef CONFIG_MMC_SDHCI_ESDHC_IMX
+> > > > +#define cpu_is_mx25()	(0)
+> > > > +#define cpu_is_mx35()	(0)
+> > > > +#define cpu_is_mx51()	(0)
+> > > > +#define cpu_is_imx()	(0)
+> > > > +#else
+> > > > +#define cpu_is_imx()	(1)
+> > > > +#endif
+> > >=20
+> > > ... e.g. that looks a bit frightening.
+> > >=20
+> > Agree.
+> >=20
+> > The use of cpu_is_mx..() in the driver itself seems a churn to me
+> > even without this consolidation patch.  Is it possible for us to
+> > eliminate them by using pdata, and eventually device tree?  When we
+> > are there, I might want to revisit the consolidation again.
+> An alternative that allows letting the logic in the driver and still
+> getting rid of the cpu_is_ stuff is using platform ids. See
+> drivers/spi/spi_imx.c for an example. Instead of an index into an arr=
+ay
+> (as it's for the imx-spi driver) driver_data can hold flags, too, whi=
+ch
+> should be enough most of the time.
+>=20
+Yeah, this is definitely a solution I can try later.  But for now, I
+would drop the esdhc consolidation patch.
 
-We have this usecase in the Ux500. See these patches:
-http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=6829/1
-http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=6830/1
+--=20
+Regards,
+Shawn
 
-Alas, it's not yet merged for the old boardfile world usecase, and
-causing us problems to drive our hardware already.
-
-Yours,
-Linus Walleij
