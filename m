@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v3 1/2] drivers/amba: create devices from device tree
-Date: Wed, 25 May 2011 16:31:12 -0500
-Message-ID: <1306359073-16274-2-git-send-email-robherring2@gmail.com>
+Subject: [RFC PATCH v3 2/2] dt: add custom device creation to platform bus scan
+Date: Wed, 25 May 2011 16:31:13 -0500
+Message-ID: <1306359073-16274-3-git-send-email-robherring2@gmail.com>
 References: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,15 +23,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Add a function to create amba bus devices (i.e. primecell peripherals) from
-device tree nodes. The device tree scanning is done by
-of_platform_probe/populate functions which can call of_amba_device_create
-based on a match table entry.
-
-Nodes with a "arm,amba-deviceid" property can override the h/w peripheral id
-value.
-
-Based on the original work by Jeremy Kerr.
+Add support to the platform bus scanning to call custom device creation
+functions. This enables creation of non-platform devices like amba_bus.
 
 Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
@@ -40,89 +33,101 @@ Cc: arnd-r2nGTMty4D4@public.gmane.org
 Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/amba/bus.c       |   51 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/amba/bus.h |    5 ++++
- 2 files changed, 56 insertions(+), 0 deletions(-)
+ drivers/of/platform.c       |   27 +++++++++++++++++++--------
+ include/linux/of_platform.h |   11 ++++++++---
+ 2 files changed, 27 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 7025593..6438ffd 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -13,6 +13,11 @@
- #include <linux/string.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
- #include <linux/amba/bus.h>
-@@ -780,3 +785,49 @@ EXPORT_SYMBOL(amba_device_unregister);
- EXPORT_SYMBOL(amba_find_device);
- EXPORT_SYMBOL(amba_request_regions);
- EXPORT_SYMBOL(amba_release_regions);
-+
-+#ifdef CONFIG_OF
-+int of_amba_device_create(struct device_node *node, struct device *parent)
-+{
-+	struct amba_device *dev;
-+	const void *prop;
-+	int i, ret;
-+
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
-+
-+	/* setup generic device info */
-+	dev->dev.coherent_dma_mask = ~0;
-+	dev->dev.of_node = node;
-+	dev->dev.parent = parent;
-+	of_device_make_bus_id(&dev->dev);
-+
-+	/* setup amba-specific device info */
-+	dev->dma_mask = ~0;
-+
-+	/* Allow the arm,amba-deviceid value to override the h/w value */
-+	prop = of_get_property(node, "arm,amba-deviceid", NULL);
-+	if (prop)
-+		dev->periphid = of_read_ulong(prop, 1);
-+
-+	/* Decode the IRQs and address ranges */
-+	for (i = 0; i < AMBA_NR_IRQS; i++)
-+		dev->irq[i] = irq_of_parse_and_map(node, i);
-+
-+	ret = of_address_to_resource(node, 0, &dev->res);
-+	if (ret)
-+		goto err_free;
-+
-+	ret = amba_device_register(dev, &iomem_resource);
-+	if (ret)
-+		goto err_free;
-+
-+	return 0;
-+
-+err_free:
-+	kfree(dev);
-+	return ret;
-+}
-+
-+#endif /* CONFIG_OF */
-diff --git a/include/linux/amba/bus.h b/include/linux/amba/bus.h
-index fcbbe71..08349c3 100644
---- a/include/linux/amba/bus.h
-+++ b/include/linux/amba/bus.h
-@@ -94,4 +94,9 @@ void amba_release_regions(struct amba_device *);
- #define amba_manf(d)	AMBA_MANF_BITS((d)->periphid)
- #define amba_part(d)	AMBA_PART_BITS((d)->periphid)
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 9b785be..8c0f43400 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -176,9 +176,9 @@ EXPORT_SYMBOL(of_device_alloc);
+  * Returns pointer to created platform device, or NULL if a device was not
+  * registered.  Unavailable devices will not get registered.
+  */
+-struct platform_device *of_platform_device_create(struct device_node *np,
+-					    const char *bus_id,
+-					    struct device *parent)
++struct device *of_platform_device_create(struct device_node *np,
++					 const char *bus_id,
++					 struct device *parent)
+ {
+ 	struct platform_device *dev;
  
-+#ifdef CONFIG_OF
-+struct device_node;
-+int of_amba_device_create(struct device_node *node, struct device *parent);
-+#endif
+@@ -205,7 +205,7 @@ struct platform_device *of_platform_device_create(struct device_node *np,
+ 		return NULL;
+ 	}
+ 
+-	return dev;
++	return &dev->dev;
+ }
+ EXPORT_SYMBOL(of_platform_device_create);
+ 
+@@ -224,7 +224,9 @@ static int of_platform_bus_create(struct device_node *bus,
+ 				  struct device *parent, bool strict)
+ {
+ 	struct device_node *child;
+-	struct platform_device *dev;
++	struct device *dev;
++	struct of_device_id *id;
++	struct of_platform_match_data *mdata;
+ 	int rc = 0;
+ 
+ 	/* Make sure it has a compatible property */
+@@ -234,13 +236,22 @@ static int of_platform_bus_create(struct device_node *bus,
+ 		return 0;
+ 	}
+ 
+-	dev = of_platform_device_create(bus, NULL, parent);
+-	if (!dev || !of_match_node(matches, bus))
++	id = of_match_node(matches, bus);
++	if (!id)
++		return 0;
 +
- #endif
++	/* Found a matching node, so create the device */
++	mdata = id->data;
++	if (mdata && mdata->dev_create)
++		dev = mdata->dev_create(bus, parent);
++	else
++		dev = of_platform_device_create(bus, NULL, parent);
++	if (!dev)
+ 		return 0;
+ 
+ 	for_each_child_of_node(bus, child) {
+ 		pr_debug("   create child: %s\n", child->full_name);
+-		rc = of_platform_bus_create(child, matches, &dev->dev, strict);
++		rc = of_platform_bus_create(child, matches, dev, strict);
+ 		if (rc) {
+ 			of_node_put(child);
+ 			break;
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 43c723d..f59d25e 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -40,6 +40,11 @@ struct of_platform_driver
+ #define	to_of_platform_driver(drv) \
+ 	container_of(drv,struct of_platform_driver, driver)
+ 
++struct of_platform_match_data {
++	struct device *	(*dev_create)(struct device_node *node,
++				      struct device *parent);
++};
++
+ /* Platform drivers register/unregister */
+ extern struct platform_device *of_device_alloc(struct device_node *np,
+ 					 const char *bus_id,
+@@ -48,9 +53,9 @@ extern struct platform_device *of_find_device_by_node(struct device_node *np);
+ 
+ #if !defined(CONFIG_SPARC) /* SPARC has its own device registration method */
+ /* Platform devices and busses creation */
+-extern struct platform_device *of_platform_device_create(struct device_node *np,
+-						   const char *bus_id,
+-						   struct device *parent);
++extern struct device *of_platform_device_create(struct device_node *np,
++						const char *bus_id,
++						struct device *parent);
+ 
+ extern int of_platform_bus_probe(struct device_node *root,
+ 				 const struct of_device_id *matches,
 -- 
 1.7.4.1
