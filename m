@@ -1,13 +1,16 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v3 2/2] dt: add custom device creation to platform bus scan
-Date: Wed, 25 May 2011 16:31:13 -0500
-Message-ID: <1306359073-16274-3-git-send-email-robherring2@gmail.com>
-References: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: Pinmux with device tree
+Date: Wed, 25 May 2011 20:43:27 -0700
+Message-ID: <BANLkTi=ws+018nu6egtufCgr_tFCDamQng@mail.gmail.com>
+References: <BANLkTin5wBtR4zkgsQ6dw1jQP8yQGCDS2Q@mail.gmail.com>
+	<4DD41F02.4050108@firmworks.com>
+	<BANLkTim94SKgWvUF6_PWb9O5YsuNk120Bw@mail.gmail.com>
+	<20110519171029.GH3085@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1306359073-16274-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20110519171029.GH3085-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,117 +20,116 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Thu, May 19, 2011 at 10:10 AM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Thu, May 19, 2011 at 07:30:52PM +0800, Haojian Zhuang wrote:
+>> On Thu, May 19, 2011 at 3:33 AM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
+>> > On 5/18/2011 6:34 AM, Simon Glass wrote:
+>> >>
+>> >> Hi,
+>> >>
+>> >> I see a new pinmux system in the LKML. Has anyone looked at how to
+>> >> represent pinmux settings in the device tree?
+>> >>
+>> >> On a related topic, the examples that are used for GPIOs assume a
+>> >> flags word which describes things like pull-ups, direction, etc. This
+>> >> seems pretty cumbersome and gets worse with pinmuxes. People editing
+>> >> the device trees want to see symbolic information rather than a coded
+>> >> number, a bit like a #define. I can see this can be done with strings
+>> >> but this is inefficient in time and space, and is error-prone. =A0Is
+>> >> there support for this in device trees that I have missed?
+>
+> Why is it error prone? =A0It is probably less error prone than using
+> magic integer values. =A0:-) =A0As for time and space inefficiencies,
+> we're talking about tiny amounts of data and processors now in the GHz
+> range with GBs of memory. =A0The time and space required is pretty much
+> in the noise.
 
-Add support to the platform bus scanning to call custom device creation
-functions. This enables creation of non-platform devices like amba_bus.
+It strikes me that for a pinmux I want to say:
 
-Cc: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- drivers/of/platform.c       |   27 +++++++++++++++++++--------
- include/linux/of_platform.h |   11 ++++++++---
- 2 files changed, 27 insertions(+), 11 deletions(-)
+<&pingroup_gaa spi2 pullup normal>
+<&pingroup_gab spi2 pullup tristatel>
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 9b785be..8c0f43400 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -176,9 +176,9 @@ EXPORT_SYMBOL(of_device_alloc);
-  * Returns pointer to created platform device, or NULL if a device was not
-  * registered.  Unavailable devices will not get registered.
-  */
--struct platform_device *of_platform_device_create(struct device_node *np,
--					    const char *bus_id,
--					    struct device *parent)
-+struct device *of_platform_device_create(struct device_node *np,
-+					 const char *bus_id,
-+					 struct device *parent)
- {
- 	struct platform_device *dev;
- 
-@@ -205,7 +205,7 @@ struct platform_device *of_platform_device_create(struct device_node *np,
- 		return NULL;
- 	}
- 
--	return dev;
-+	return &dev->dev;
- }
- EXPORT_SYMBOL(of_platform_device_create);
- 
-@@ -224,7 +224,9 @@ static int of_platform_bus_create(struct device_node *bus,
- 				  struct device *parent, bool strict)
- {
- 	struct device_node *child;
--	struct platform_device *dev;
-+	struct device *dev;
-+	struct of_device_id *id;
-+	struct of_platform_match_data *mdata;
- 	int rc = 0;
- 
- 	/* Make sure it has a compatible property */
-@@ -234,13 +236,22 @@ static int of_platform_bus_create(struct device_node *bus,
- 		return 0;
- 	}
- 
--	dev = of_platform_device_create(bus, NULL, parent);
--	if (!dev || !of_match_node(matches, bus))
-+	id = of_match_node(matches, bus);
-+	if (!id)
-+		return 0;
-+
-+	/* Found a matching node, so create the device */
-+	mdata = id->data;
-+	if (mdata && mdata->dev_create)
-+		dev = mdata->dev_create(bus, parent);
-+	else
-+		dev = of_platform_device_create(bus, NULL, parent);
-+	if (!dev)
- 		return 0;
- 
- 	for_each_child_of_node(bus, child) {
- 		pr_debug("   create child: %s\n", child->full_name);
--		rc = of_platform_bus_create(child, matches, &dev->dev, strict);
-+		rc = of_platform_bus_create(child, matches, dev, strict);
- 		if (rc) {
- 			of_node_put(child);
- 			break;
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 43c723d..f59d25e 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -40,6 +40,11 @@ struct of_platform_driver
- #define	to_of_platform_driver(drv) \
- 	container_of(drv,struct of_platform_driver, driver)
- 
-+struct of_platform_match_data {
-+	struct device *	(*dev_create)(struct device_node *node,
-+				      struct device *parent);
-+};
-+
- /* Platform drivers register/unregister */
- extern struct platform_device *of_device_alloc(struct device_node *np,
- 					 const char *bus_id,
-@@ -48,9 +53,9 @@ extern struct platform_device *of_find_device_by_node(struct device_node *np);
- 
- #if !defined(CONFIG_SPARC) /* SPARC has its own device registration method */
- /* Platform devices and busses creation */
--extern struct platform_device *of_platform_device_create(struct device_node *np,
--						   const char *bus_id,
--						   struct device *parent);
-+extern struct device *of_platform_device_create(struct device_node *np,
-+						const char *bus_id,
-+						struct device *parent);
- 
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
--- 
-1.7.4.1
+or similar, with some definitions something like:
+
+spi2: #4
+pullup: #1
+normal: #0
+tristate: #0
+
+The same for GPIOs since specifying an integer with bitflags is not
+great for humans.
+
+>
+> A bigger issue is the fact that a GPIO binding has already been
+> established using integers. =A0To change it to something else must be
+> done in such a way as to not break existing users.
+
+Well we could support bitfields:
+
+bitfield gpio 0:0 {input, output}
+bitfield pull 2:1 {normal, reserved, pulldown, pullup}
+bitfield tristate 3:3 {tristate, normal}
+
+then some magic could piece it together into a cell:
+
+<&gpio32> <gpio:input, pulldown, tristate>
+
+if you really want to go that far!
+
+>
+> However, pinmux description is entirely orthogonal to GPIO
+> controllers. =A0The gpio binding is about matching gpio consumers to
+> gpio providers. =A0It says nothing about how the gpios are actually
+> routed on the chip.
+>
+> A pinmux binding is more about the specific configuration of the
+> chip, and is very likely going to be something chip specific,
+> although there may be some common infrastructure and patterns for
+> describing the functionality. =A0I have no problem with defining a new
+> binding for describing pinmux.
+>
+> I'll be very nervous if I see any implementation that tries to encode
+> pinmux information into the gpio binding.
+
+Yes they are completely separate. I feel that numbers are almost good
+enough for GPIOs but are a bit of a stretch for pinmuxes. What sort of
+symbolic support is actually available in FDT?
+
+>
+>> >
+>> > Open Firmware deals with this by defining both a numerical representat=
+ion
+>> > and a text representation. =A0The numerical representation appears in =
+memory
+>> > in device tree property values, and the corresponding text representat=
+ion is
+>> > for display and human input.
+>> >
+>> Could it be supported by flattened device tree? It seems that open firmw=
+are
+>> isn't popular in ARM system.
+>
+> The flat tree is directly derived from the Open Firmware design. =A0Yes,
+> this could be expressed by device tree, however we don't have any
+> syntax for the dt compiler right now to support the use case. =A0Plus,
+> I want to tread carefully here since it may also be possible that
+> firmware will want to modify the data, and it becomes a lot more
+> complex if it needs to keep two separate representations within the
+> same tree in sync.
+>
+> One option would be to allow interrupt controllers to have a static
+> lookup property which matches bitfields in the interrupt specifier
+> with human readable names.
+>
+> g.
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
