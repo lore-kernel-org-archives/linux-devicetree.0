@@ -1,16 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/2] dt: add custom device creation to platform
-	bus scan
-Date: Thu, 26 May 2011 13:43:22 -0500
-Message-ID: <4DDE9F4A.5050507@gmail.com>
-References: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
-	<1306359073-16274-3-git-send-email-robherring2@gmail.com>
-	<201105261511.23659.arnd@arndb.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] powerpc: document the FSL MPIC message register
+	binding
+Date: Thu, 26 May 2011 15:03:51 -0500
+Message-ID: <20110526150351.12af61a8@schlenkerla.am.freescale.net>
+References: <1305909399-26969-1-git-send-email-meador_inge@mentor.com>
+	<1305909399-26969-2-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201105261511.23659.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1305909399-26969-2-git-send-email-meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,107 +19,93 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+On Fri, 20 May 2011 11:36:38 -0500
+Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
 
-On 05/26/2011 08:11 AM, Arnd Bergmann wrote:
-> On Wednesday 25 May 2011, Rob Herring wrote:
->>
->> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Add support to the platform bus scanning to call custom device creation
->> functions. This enables creation of non-platform devices like amba_bus.
->>
->> Cc: Jeremy Kerr<jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
->> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
->> Cc: arnd-r2nGTMty4D4@public.gmane.org
->> Cc: Linus Walleij<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
-> This creates a confusing mix of match table entries: Normally,
-> all entries in the match table are meant to identify child buses,
-> but if I read your patch correctly, you now also need to match
-> on the amba devices themselves, including the creation of
-> platform devices for each child device node under an amba
-> device.
->
-We should only create devices for each matching bus and the immediate 
-children of each bus. A child device of an amba device would be 
-something like an i2c bus which we don't want to create devices for. Or 
-am I missing something?
+> This binding documents how the message register blocks found in some FSL
+> MPIC implementations shall be represented in a device tree.
+> 
+> Signed-off-by: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Cc: Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-> I don't think that was the intention. Maybe we need to pass
-> two match tables into of_platform_bus_probe() instead:
-> one to identify the buses, and another one that is used
-> to create the actual devices.
->
-That was my original thinking too, but some reason I had concluded 1 
-could get by with just 1 table. After more thought, I think you are 
-right. In fact, I broke platform device creation with this patch. I need 
-to be able to tell if no match means create a platform device (child of 
-bus) or not (child of a device).
+Acked-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Here's an updated version with just the interesting hunk. I've tested it 
-with a made up bus structure that looks something like this:
-
-soc bus
-  -plat dev
-  -amba dev
-  -sub-bus
-    -plat dev
-    -amba dev
-  -plat dev
-
-As of_platform_bus_probe is not recommended to be used by Grant, I only 
-plan to add 2 match tables to of_platform_bus_populate.
-
-@@ -234,18 +237,32 @@ static int of_platform_bus_create(struct 
-device_node *bus,
-  		return 0;
-  	}
-
--	dev = of_platform_device_create(bus, NULL, parent);
--	if (!dev || !of_match_node(matches, bus))
--		return 0;
--
--	for_each_child_of_node(bus, child) {
--		pr_debug("   create child: %s\n", child->full_name);
--		rc = of_platform_bus_create(child, matches, &dev->dev, strict);
--		if (rc) {
--			of_node_put(child);
--			break;
-+	id = of_match_node(bus_matches, bus);
-+	if (id) {
-+		dev = of_platform_device_create(bus, NULL, parent);
-+		if (!dev)
-+			return 0;
-+		for_each_child_of_node(bus, child) {
-+			pr_debug("   create child: %s\n", child->full_name);
-+			rc = of_platform_bus_create(child, bus_matches,
-+						    dev_matches, dev, strict);
-+			if (rc) {
-+				of_node_put(child);
-+				break;
-+			}
-  		}
-+		return rc;
-  	}
-+
-+	id = of_match_node(dev_matches, bus);
-+	mdata = id ? id->data : NULL;
-+	if (id && mdata && mdata->dev_create)
-+		dev = mdata->dev_create(bus, parent);
-+	else
-+		dev = of_platform_device_create(bus, NULL, parent);
-+	if (!dev)
-+		return 0;
-+
-  	return rc;
-  }
-
-
-Rob
+> ---
+>  .../devicetree/bindings/powerpc/fsl/mpic-msgr.txt  |   62 ++++++++++++++++++++
+>  1 files changed, 62 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mpic-msgr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpic-msgr.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpic-msgr.txt
+> new file mode 100644
+> index 0000000..385dba6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic-msgr.txt
+> @@ -0,0 +1,62 @@
+> +* FSL MPIC Message Registers
+> +
+> +This binding specifies what properties must be available in the device tree
+> +representation of the message register groups found in some FSL MPIC
+> +implementations.
+> +
+> +Required properties:
+> +
+> +    - compatible: Specifies the compatibility list for the message register
+> +      block.  The type shall be <string> and the value shall be of the form
+> +      "fsl,mpic-v<version>-msgr", where <version> is the version number of
+> +      the MPIC containing the message registers.
+> +
+> +    - reg: Specifies the base physical address(s) and size(s) of the
+> +      message register block's addressable register space.  The type shall be
+> +      <prop-encoded-array>.
+> +
+> +    - interrupts: Specifies a list of interrupt source and level-sense pairs.
+> +      The type shall be <prop-encoded-array>.  The length shall be equal to
+> +      the number of bits set in the 'msg-receive-mask' property value.
+> +
+> +Optional properties:
+> +
+> +    - mpic-msgr-receive-mask: Specifies what registers in the containing block
+> +      are allowed to receive interrupts.  The value is a bit mask where a set
+> +      bit at bit 'n' indicates that message register 'n' can receive interrupts.
+> +      The type shall be <prop-encoded-array>.  If not present, then all of
+> +      the message registers in the block are available.
+> +
+> +Aliases:
+> +
+> +    An alias should be created for every message register block.  They are not
+> +    required, though.  However, are particular implementation of this binding
+> +    may require aliases to be present.  Aliases are of the form
+> +    'mpic-msgr-block<n>', where <n> is an integer specifying the block's number.
+> +    Numbers shall start at 0.
+> +
+> +Example:
+> +
+> +	aliases {
+> +		mpic-msgr-block0 = &mpic_msgr_block0;
+> +		mpic-msgr-block1 = &mpic_msgr_block1;
+> +	};
+> +
+> +	mpic_msgr_block0: mpic-msgr-block@41400 {
+> +		compatible = "fsl,mpic-v3.1-msgr";
+> +		reg = <0x41400 0x200>;
+> +		// Message registers 0 and 2 in this block can receive interrupts on
+> +		// sources 0xb0 and 0xb2, respectively.
+> +		interrupts = <0xb0 2 0xb2 2>;
+> +		mpic-msgr-receive-mask = <0x5>;
+> +	};
+> +
+> +	mpic_msgr_block1: mpic-msgr-block@42400 {
+> +		compatible = "fsl,mpic-v3.1-msgr";
+> +		reg = <0x42400 0x200>;
+> +		// Message registers 0 and 2 in this block can receive interrupts on
+> +		// sources 0xb4 and 0xb6, respectively.
+> +		interrupts = <0xb4 2 0xb6 2>;
+> +		mpic-msgr-receive-mask = <0x5>;
+> +	};
+> +
