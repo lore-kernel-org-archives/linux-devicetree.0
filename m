@@ -1,42 +1,78 @@
-From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 RESEND] watchdog: Add driver for Altera Watchdog Timer
-Date: Fri, 27 May 2011 10:23:09 +0200
-Message-ID: <20110527082309.GB16394@infomag.iguana.be>
-References: <1300461573-12268-1-git-send-email-tklauser@distanz.ch>
+From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: linaro-uboot: device tree without ramdisk and boot_relocate_fdt cause
+	illegal memory access in kernel
+Date: Fri, 27 May 2011 16:52:38 +0800
+Message-ID: <BANLkTikK9EVVZrRa1--8n1j_OXv2qK8XmA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1300461573-12268-1-git-send-email-tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tobias,
+Hi all,
+i am using linaro uboot(u-boot-linaro-stable.git).  i have let our
+prima2 board support device tree with some workaround in uboot.  two
+problems i have meet:
+1. device tree without ramdisk
+now uboot used commands like
+"bootm kernel_address  ramdisk_address dtb_address"
+to start linux kernel.
+in many cases, people have no ramdisk at all, but the following codes
+will still stop people to use device tree to start kernel since it got
+an illegal ramdisk:
 
-> This driver adds support for the Altera Timer in the Watchdog Timer
-> configuration. This component is usually found on SOPC (System on
-> Programmable Chip) for Altera FPGAs.
-> 
-> Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> (for the devicetree binding)
+common/cmd_bootm.c:
+        if (((images.os.type == IH_TYPE_KERNEL) ||
+             (images.os.type == IH_TYPE_MULTI)) &&
+            (images.os.os == IH_OS_LINUX)) {
+                /* find ramdisk */
+                ret = boot_get_ramdisk (argc, argv, &images, IH_INITRD_ARCH,
+                                &images.rd_start, &images.rd_end);
+                if (ret) {
+                        puts ("Ramdisk image is corrupt or invalid\n");
+                       return 1;
+                }
 
-Signed-off-by: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+#if defined(CONFIG_OF_LIBFDT)
+                /* find flattened device tree */
+                ret = boot_get_fdt (flag, argc, argv, &images,
+                                    &images.ft_addr, &images.ft_len);
+                if (ret) {
+                        puts ("Could not find a valid device tree\n");
+                        return 1;
+                }
+then i delete the first return 1 to let uboot ignore the ramdisk checking.
 
-I presume this will go in together with the other nios2 architecture patches?
+2. boot_relocate_fdt in common/image.c
+this function will relocate fdt to an new address by:
+lmb_alloc_base(lmb, of_len, 0x1000, getenv_bootm_mapsize() + getenv_bootm_low())
 
-I presume this will go in together with the other nios2 architecture patches?
+but the return address is probably not in the initilized scale which
+kernel will build mapping in head.S. then in the function
+setup_machine_fdt() of arch/arm/kernel/devtree.c, when executing:
+         devtree = phys_to_virt(dt_phys);
 
-Kind regards,
-Wim.
+        /* check device tree validity */
+        if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
+                return NULL;
+kernel will die due to illegal memory access since dt_phys was not
+mapped to virtual address yet.
+
+For problem1 , could uboot have a way to ignore ramdisk by itself?
+since we need 3 param in bootm to support device tree. For problem2,
+could uboot just relocate fdt to the original address of old ATAG,
+OFF+ 0x100?
+
+Thanks
+Barry
