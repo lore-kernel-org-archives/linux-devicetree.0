@@ -1,119 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/2] dt: add custom device creation to platform bus
-	scan
-Date: Fri, 27 May 2011 14:06:18 +0200
-Message-ID: <201105271406.18841.arnd@arndb.de>
-References: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
-	<201105261511.23659.arnd@arndb.de> <4DDE9F4A.5050507@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DDE9F4A.5050507-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v4 0/4] Consolidate sdhci pltfm & OF drivers and get them self registered
+Date: Fri, 27 May 2011 23:48:11 +0800
+Message-ID: <1306511295-2433-1-git-send-email-shawn.guo@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <avorontsov@ru.mvista.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <w.sang@pengutronix.de>, kernel@pengutronix.de, sameo@linux.intel.com, Chris Ball <cjb@laptop.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 May 2011, Rob Herring wrote:
-> On 05/26/2011 08:11 AM, Arnd Bergmann wrote:
-> > On Wednesday 25 May 2011, Rob Herring wrote:
-> > This creates a confusing mix of match table entries: Normally,
-> > all entries in the match table are meant to identify child buses,
-> > but if I read your patch correctly, you now also need to match
-> > on the amba devices themselves, including the creation of
-> > platform devices for each child device node under an amba
-> > device.
-> >
-> We should only create devices for each matching bus and the immediate 
-> children of each bus. A child device of an amba device would be 
-> something like an i2c bus which we don't want to create devices for. Or 
-> am I missing something?
+Changes since v3:
+ * Update Kconfig and Makefile to fix module build failure
 
-Exactly, that was my point.
+Changes since v2:
+ * Drop imx mpc esdhc consolidation
+ * Fix checkpatch errors
+ * Add sdhci-of-core.c copyright into sdhci-pltfm.c
 
-> > I don't think that was the intention. Maybe we need to pass
-> > two match tables into of_platform_bus_probe() instead:
-> > one to identify the buses, and another one that is used
-> > to create the actual devices.
-> >
-> That was my original thinking too, but some reason I had concluded 1 
-> could get by with just 1 table. After more thought, I think you are 
-> right. In fact, I broke platform device creation with this patch. I need 
-> to be able to tell if no match means create a platform device (child of 
-> bus) or not (child of a device).
+Changes since v1:
+ * Rebase on cjb's mmc-next tree
+ * Introduce helper function pair sdhci_pltfm_register and
+   sdhci_pltfm_unregister
+ * Eliminate variable 'scratch' in .remove hook to make the code
+   look simple
+ * Return ERR_PTR in sdhci_pltfm_init and use IS_ERR/PTR_ERR to check
+   return value in .probe hooks
+ * Correct MODULE_AUTHOR statement
+ * Split esdhc conlidation patch to ease reviewing
 
-Ok.
+Shawn Guo (4):
+      mmc: sdhci: make sdhci-pltfm device drivers self registered
+      mmc: sdhci: eliminate sdhci_of_host and sdhci_of_data
+      mmc: sdhci: make sdhci-of device drivers self registered
+      mmc: sdhci: merge two sdhci-pltfm.h into one
 
-> @@ -234,18 +237,32 @@ static int of_platform_bus_create(struct 
-> device_node *bus,
->   		return 0;
->   	}
-> 
-> -	dev = of_platform_device_create(bus, NULL, parent);
-> -	if (!dev || !of_match_node(matches, bus))
-> -		return 0;
-> -
-> -	for_each_child_of_node(bus, child) {
-> -		pr_debug("   create child: %s\n", child->full_name);
-> -		rc = of_platform_bus_create(child, matches, &dev->dev, strict);
-> -		if (rc) {
-> -			of_node_put(child);
-> -			break;
-> +	id = of_match_node(bus_matches, bus);
-> +	if (id) {
-> +		dev = of_platform_device_create(bus, NULL, parent);
-> +		if (!dev)
-> +			return 0;
-> +		for_each_child_of_node(bus, child) {
-> +			pr_debug("   create child: %s\n", child->full_name);
-> +			rc = of_platform_bus_create(child, bus_matches,
-> +						    dev_matches, dev, strict);
-> +			if (rc) {
-> +				of_node_put(child);
-> +				break;
-> +			}
->   		}
-> +		return rc;
->   	}
-> +
-> +	id = of_match_node(dev_matches, bus);
-> +	mdata = id ? id->data : NULL;
-> +	if (id && mdata && mdata->dev_create)
-> +		dev = mdata->dev_create(bus, parent);
-> +	else
-> +		dev = of_platform_device_create(bus, NULL, parent);
-> +	if (!dev)
-> +		return 0;
-> +
-
-Yes, that looks like it should work.
-
-It still feels a bit strange, because it's not exactly how we normally
-probe devices: In all other cases, we bind a device to a driver when we
-find it, and that driver in turn scans it, and potentially creates
-child devices that it finds.
-
-What we do here is to let the platform decide how to interpret the
-data that is coming in. To make the probing more well-behaved, another
-approach would be:
-
-* Bind a platform_driver to compatible="arm,amba" (or whatever we
-  had in the binding).
-
-* In that driver, do nothing except register an amba_device as a child.
-
-This would create a somewhat deeper device hierarchy, but be still
-completely logical: you have a device that cannot be probed (identified
-simply by its register space), which can be probed internally because
-the registers actually have a meaning.
-
-	Arnd
+ drivers/mmc/host/Kconfig           |   42 ++----
+ drivers/mmc/host/Makefile          |   23 ++--
+ drivers/mmc/host/sdhci-cns3xxx.c   |   43 ++++++-
+ drivers/mmc/host/sdhci-dove.c      |   42 ++++++-
+ drivers/mmc/host/sdhci-esdhc-imx.c |  114 +++++++++++-----
+ drivers/mmc/host/sdhci-of-core.c   |  250 ---------------------------------
+ drivers/mmc/host/sdhci-of-esdhc.c  |   85 +++++++++---
+ drivers/mmc/host/sdhci-of-hlwd.c   |   66 ++++++++--
+ drivers/mmc/host/sdhci-of.h        |   42 ------
+ drivers/mmc/host/sdhci-pltfm.c     |  266 ++++++++++++++++++++----------------
+ drivers/mmc/host/sdhci-pltfm.h     |   39 +++++-
+ drivers/mmc/host/sdhci-tegra.c     |  116 +++++++++++-----
+ include/linux/mmc/sdhci-pltfm.h    |   35 -----
+ 13 files changed, 574 insertions(+), 589 deletions(-)
