@@ -1,37 +1,42 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 0/4] Consolidate sdhci pltfm & OF drivers and get them
- self registered
-Date: Fri, 27 May 2011 14:29:06 -0600
-Message-ID: <20110527202906.GF6645@ponder.secretlab.ca>
-References: <1306321314-2493-1-git-send-email-shawn.guo@linaro.org>
- <20110527072647.GE31953@ponder.secretlab.ca>
- <m3pqn4ruv9.fsf@pullcord.laptop.org>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [RFC 0/2] ARM: Tegra: Device Tree: Audio
+Date: Fri, 27 May 2011 13:56:58 -0700
+Message-ID: <20110527205444.21000.90209.stgit@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <m3pqn4ruv9.fsf@pullcord.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <cbouatmailru@gmail.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <w.sang@pengutronix.de>, kernel@pengutronix.de, sameo@linux.intel.com, patches@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2011 at 12:06:18PM -0400, Chris Ball wrote:
-> Hi Grant,
-> 
-> On Fri, May 27 2011, Grant Likely wrote:
-> > Any chance we can get this series into $NEXT_KERNEL?
-> 
-> I think I'd rather not in this case, hope that's okay.  It hasn't seen
-> testing in linux-next yet, there's a reasonable chance of it breaking
-> sdhci-pltfm users in subtle ways -- we haven't had much testing from
-> the individual -pltfm driver maintainers yet -- and the mmc merge was
-> (relatively) huge already this cycle.
-> 
-> I'll certainly push it to linux-next as soon as -rc1 is released,
-> though.  Sound okay?
+This patch series is continuing work to get board specific devices initialized
+from device tree nodes rather than using the current static platform_device
+registration.
 
-okay.
+This patch series is for comments only. It is not intended to be submitted as a
+patch at this time. I am looking for comments on the overall approach.
 
-g.
+This series is based upon an earlier RFC series I submitted around May 11th
+beginning with, "[RFC 0/3] ARM: Tegra: Device Tree: i2c & wm8903".
+I haven't yet addressed the replies to that earlier series, but I intend to.
 
+I am also aware that some of these files have changed since I've started on
+this work. I haven't yet rebased to the latest.
+
+---
+
+John Bonesio (2):
+      ARM:Tegra: Device Tree Support: Initialize the audio card from the device tree.
+      ARM:Tegra: Device Tree Support: Initialize audio card gpio's from the device tree.
+
+
+ arch/arm/boot/dts/tegra-harmony.dts |   10 ++++++++
+ arch/arm/mach-tegra/board-dt.c      |    3 ++
+ sound/soc/codecs/wm8903.c           |    5 ++++
+ sound/soc/tegra/harmony.c           |   46 ++++++++++++++++++++++++++++++++---
+ 4 files changed, 60 insertions(+), 4 deletions(-)
+
+-- 
+- John
