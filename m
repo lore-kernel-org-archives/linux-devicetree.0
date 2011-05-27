@@ -1,40 +1,37 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH v4 3/6] MIPS: Octeon: Add device tree source files.
-Date: Fri, 27 May 2011 14:13:45 -0600
-Message-ID: <20110527201345.GC6645@ponder.secretlab.ca>
-References: <1305930343-31259-1-git-send-email-ddaney@caviumnetworks.com>
- <1305930343-31259-4-git-send-email-ddaney@caviumnetworks.com>
- <20110527015618.GC5032@ponder.secretlab.ca>
- <4DDFD892.1040309@caviumnetworks.com>
+Subject: Re: [PATCH v3 0/4] Consolidate sdhci pltfm & OF drivers and get them
+ self registered
+Date: Fri, 27 May 2011 14:29:06 -0600
+Message-ID: <20110527202906.GF6645@ponder.secretlab.ca>
+References: <1306321314-2493-1-git-send-email-shawn.guo@linaro.org>
+ <20110527072647.GE31953@ponder.secretlab.ca>
+ <m3pqn4ruv9.fsf@pullcord.laptop.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4DDFD892.1040309@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <m3pqn4ruv9.fsf@pullcord.laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Saeed Bishara <saeed@marvell.com>, Mike Rapoport <mike@compulab.co.il>, Anton Vorontsov <cbouatmailru@gmail.com>, Xiaobo Xie <X.Xie@freescale.com>, Albert Herranz <albert_herranz@yahoo.es>, Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <w.sang@pengutronix.de>, kernel@pengutronix.de, sameo@linux.intel.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2011 at 10:00:02AM -0700, David Daney wrote:
-> On 05/26/2011 06:56 PM, Grant Likely wrote:
-> >>+- #interrupt-cells: Must be<2>.  The first cell is the GPIO pin
-> >>+   connected to the interrupt source.  The second cell is the interrupt
-> >>+   triggering protocol and may have one of four values:
-> >>+   0 - level triggered active high.
-> >>+   1 - level triggered active low
-> >>+   2 - edge triggered on the rising edge.
-> >>+   3 - edge triggered on the falling edge.
-> >
-> >Since you're choosing arbitrary values here anyway, it's convenient to
-> >follow the lead of include/linux/irq.h and using 1->edge rising,
-> >2->edge falling, 4->level high, 8->level low.  In the past every irq
-> >controller kind of did it's own thing, but that's not very scalable.
-> >
+On Fri, May 27, 2011 at 12:06:18PM -0400, Chris Ball wrote:
+> Hi Grant,
 > 
-> OK.  I will use those still somewhat arbitrary values instead.
+> On Fri, May 27 2011, Grant Likely wrote:
+> > Any chance we can get this series into $NEXT_KERNEL?
+> 
+> I think I'd rather not in this case, hope that's okay.  It hasn't seen
+> testing in linux-next yet, there's a reasonable chance of it breaking
+> sdhci-pltfm users in subtle ways -- we haven't had much testing from
+> the individual -pltfm driver maintainers yet -- and the mmc merge was
+> (relatively) huge already this cycle.
+> 
+> I'll certainly push it to linux-next as soon as -rc1 is released,
+> though.  Sound okay?
 
-Indeed, they are still completely arbitrary, but at least they are the
-same completely arbitrary values.  :-)
+okay.
 
 g.
+
