@@ -1,78 +1,39 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: linaro-uboot: device tree without ramdisk and boot_relocate_fdt cause
-	illegal memory access in kernel
-Date: Fri, 27 May 2011 16:52:38 +0800
-Message-ID: <BANLkTikK9EVVZrRa1--8n1j_OXv2qK8XmA@mail.gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] Consolidate sdhci pltfm & OF drivers and get them
+	self registered
+Date: Fri, 27 May 2011 17:07:39 +0800
+Message-ID: <20110527090738.GC30146@S2100-06.ap.freescale.net>
+References: <1306321314-2493-1-git-send-email-shawn.guo@linaro.org>
+	<20110527072647.GE31953@ponder.secretlab.ca>
+	<20110527080650.GA11592@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110527080650.GA11592-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Saeed Bishara <saeed-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xiaobo Xie <X.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mike Rapoport <mike-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-i am using linaro uboot(u-boot-linaro-stable.git).  i have let our
-prima2 board support device tree with some workaround in uboot.  two
-problems i have meet:
-1. device tree without ramdisk
-now uboot used commands like
-"bootm kernel_address  ramdisk_address dtb_address"
-to start linux kernel.
-in many cases, people have no ramdisk at all, but the following codes
-will still stop people to use device tree to start kernel since it got
-an illegal ramdisk:
+On Fri, May 27, 2011 at 10:06:50AM +0200, Wolfram Sang wrote:
+> 
+> > Any chance we can get this series into $NEXT_KERNEL?
+> 
+> From the looks, I think it still has problems being a module. Will try
+> to test it today.
+> 
+Sorry.  I forgot testing module build.  I'm fixing it.
 
-common/cmd_bootm.c:
-        if (((images.os.type == IH_TYPE_KERNEL) ||
-             (images.os.type == IH_TYPE_MULTI)) &&
-            (images.os.os == IH_OS_LINUX)) {
-                /* find ramdisk */
-                ret = boot_get_ramdisk (argc, argv, &images, IH_INITRD_ARCH,
-                                &images.rd_start, &images.rd_end);
-                if (ret) {
-                        puts ("Ramdisk image is corrupt or invalid\n");
-                       return 1;
-                }
-
-#if defined(CONFIG_OF_LIBFDT)
-                /* find flattened device tree */
-                ret = boot_get_fdt (flag, argc, argv, &images,
-                                    &images.ft_addr, &images.ft_len);
-                if (ret) {
-                        puts ("Could not find a valid device tree\n");
-                        return 1;
-                }
-then i delete the first return 1 to let uboot ignore the ramdisk checking.
-
-2. boot_relocate_fdt in common/image.c
-this function will relocate fdt to an new address by:
-lmb_alloc_base(lmb, of_len, 0x1000, getenv_bootm_mapsize() + getenv_bootm_low())
-
-but the return address is probably not in the initilized scale which
-kernel will build mapping in head.S. then in the function
-setup_machine_fdt() of arch/arm/kernel/devtree.c, when executing:
-         devtree = phys_to_virt(dt_phys);
-
-        /* check device tree validity */
-        if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
-                return NULL;
-kernel will die due to illegal memory access since dt_phys was not
-mapped to virtual address yet.
-
-For problem1 , could uboot have a way to ignore ramdisk by itself?
-since we need 3 param in bootm to support device tree. For problem2,
-could uboot just relocate fdt to the original address of old ATAG,
-OFF+ 0x100?
-
-Thanks
-Barry
+-- 
+Regards,
+Shawn
