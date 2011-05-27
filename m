@@ -1,106 +1,73 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [RFC PATCH v4 4/6] MIPS: Prune some target specific code out
- of prom.c
-Date: Fri, 27 May 2011 10:05:36 -0700
-Message-ID: <4DDFD9E0.2090701@caviumnetworks.com>
-References: <1305930343-31259-1-git-send-email-ddaney@caviumnetworks.com> <1305930343-31259-5-git-send-email-ddaney@caviumnetworks.com> <20110527015845.GD5032@ponder.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH v4 1/6] of: Allow scripts/dtc/libfdt to be used from
+ kernel code
+Date: Fri, 27 May 2011 14:12:40 -0600
+Message-ID: <20110527201240.GB6645@ponder.secretlab.ca>
+References: <1305930343-31259-1-git-send-email-ddaney@caviumnetworks.com>
+ <1305930343-31259-2-git-send-email-ddaney@caviumnetworks.com>
+ <20110521063345.GB14828@yookeroo.fritz.box>
+ <4DDA8FBC.1090904@caviumnetworks.com>
+ <20110527032402.GD7793@yookeroo.fritz.box>
+ <4DDFD622.1000102@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110527015845.GD5032@ponder.secretlab.ca>
+Content-Disposition: inline
+In-Reply-To: <4DDFD622.1000102@caviumnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org, ralf@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2011 06:58 PM, Grant Likely wrote:
-> On Fri, May 20, 2011 at 03:25:41PM -0700, David Daney wrote:
->> This code is not common enough to be in a shared file.  It is also not
->> used by any existing boards, so just remove it.
->>
->> Signed-off-by: David Daney<ddaney@caviumnetworks.com>
->> ---
->>   arch/mips/kernel/prom.c |   49 -----------------------------------------------
->>   1 files changed, 0 insertions(+), 49 deletions(-)
->>
->> diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
->> index a19811e9..a07b6f1 100644
->> --- a/arch/mips/kernel/prom.c
->> +++ b/arch/mips/kernel/prom.c
->> @@ -59,52 +59,3 @@ void __init early_init_dt_setup_initrd_arch(unsigned long start,
->>   	initrd_below_start_ok = 1;
->>   }
->>   #endif
->> -
->> -/*
->> - * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux irq#
->> - *
->> - * Currently the mapping mechanism is trivial; simple flat hwirq numbers are
->> - * mapped 1:1 onto Linux irq numbers.  Cascaded irq controllers are not
->> - * supported.
->> - */
->> -unsigned int irq_create_of_mapping(struct device_node *controller,
->> -				   const u32 *intspec, unsigned int intsize)
->> -{
->> -	return intspec[0];
->> -}
->> -EXPORT_SYMBOL_GPL(irq_create_of_mapping);
->
-> In $NEXT_KERNEL+1 irq_create_of_mapping will be replaced by common
-> infrastructure code after irq_domain is merged, so this will become
-> irrelevant anyway.
+On Fri, May 27, 2011 at 09:49:38AM -0700, David Daney wrote:
+> On 05/26/2011 08:24 PM, David Gibson wrote:
+> >On Mon, May 23, 2011 at 09:47:56AM -0700, David Daney wrote:
+> >>On 05/20/2011 11:33 PM, David Gibson wrote:
+> >>>On Fri, May 20, 2011 at 03:25:38PM -0700, David Daney wrote:
+> >>>>To use it you need to do this in your Kconfig:
+> >>>>
+> >>>>	select LIBFDT
+> >>>>
+> >>>>And in the Makefile of the code using libfdt something like:
+> >>>>
+> >>>>ccflags-y := -include linux/libfdt_env.h -I$(src)/../../../scripts/dtc/libfdt
+> >>>>
+> >>>>Signed-off-by: David Daney<ddaney@caviumnetworks.com>
+> >>>>---
+> >>>>  drivers/of/Kconfig          |    3 +++
+> >>>>  drivers/of/Makefile         |    2 ++
+> >>>>  drivers/of/libfdt/Makefile  |    3 +++
+> >>>>  drivers/of/libfdt/fdt.c     |    2 ++
+> >>>>  drivers/of/libfdt/fdt_ro.c  |    2 ++
+> >>>>  drivers/of/libfdt/fdt_wip.c |    2 ++
+> >>>
+> >>>No fdt_sw.c or fdt_rw.c?
+> >>>
+> >>
+> >>I had no immediate need for them.  They could of course be added,
+> >>but that would potentially waste space.
+> >>
+> >>Let's see if I can make it into an archive library.
+> >
+> >That would be preferable.  It's more or less designed to work that way
+> >so that everything is available without using unnecessary space in the
+> >binary.
+> >
+> 
+> Well, I was looking at this some more:
+> 
+> Grant specifically requested that this go in drivers/of/libfdt,
+> however I am fairly sure that building archive libraries there will
+> require changes to the upper level Makefile infrastructure.
+> 
+> If I go back to lib/libfdt, like my first version, I can easily
+> achieve archive library behavior, but then it is separated from from
+> drivers/of.
+> 
+> Personally I am starting to like the lib/libfdt home more than
+> drivers/of.  If Grant doesn't object, I think I will move it back
+> there.
 
-Yes, I saw your patch.  I will be tracking that as it gets merged.
+okay.
 
->
->> -
->> -void __init early_init_devtree(void *params)
->> -{
->> -	/* Setup flat device-tree pointer */
->> -	initial_boot_params = params;
->> -
->> -	/* Retrieve various informations from the /chosen node of the
->> -	 * device-tree, including the platform type, initrd location and
->> -	 * size, and more ...
->> -	 */
->> -	of_scan_flat_dt(early_init_dt_scan_chosen, NULL);
->> -
->> -	/* Scan memory nodes */
->> -	of_scan_flat_dt(early_init_dt_scan_root, NULL);
->> -	of_scan_flat_dt(early_init_dt_scan_memory_arch, NULL);
->> -}
->> -
->> -void __init device_tree_init(void)
->> -{
->> -	unsigned long base, size;
->> -
->> -	if (!initial_boot_params)
->> -		return;
->> -
->> -	base = virt_to_phys((void *)initial_boot_params);
->> -	size = be32_to_cpu(initial_boot_params->totalsize);
->> -
->> -	/* Before we do anything, lets reserve the dt blob */
->> -	reserve_mem_mach(base, size);
->> -
->> -	unflatten_device_tree();
->> -
->> -	/* free the space reserved for the dt blob */
->> -	free_mem_mach(base, size);
->> -}
->
-> I'm a little concerned that the MIPS platforms are not sharing the
-> same DT init code.  This isn't really something that should need to be
-> customized per-platform.
->
-
-For better or worse, the Octeon kernel is booted with a protocol 
-completely different than any other MIPS board.  So there has to be some 
-custom code to find and initialize the device tree.
-
-For boards that boot with the u-boot 'bootm' protocol, I think we need 
-to pass the device tree in the environment like other architectures do. 
-  The bootm code could, I think, be made common to all MIPS ports.
-
-David Daney
+g.
