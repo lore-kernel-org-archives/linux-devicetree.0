@@ -1,13 +1,18 @@
-From: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: mmp: add device tree support on ttc dkb board
-Date: Mon, 23 May 2011 19:05:38 +0800
-Message-ID: <1306148738-1013-1-git-send-email-haojian.zhuang@marvell.com>
-References: <2011052302>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH v4 1/6] of: Allow scripts/dtc/libfdt to be used from
+	kernel code
+Date: Fri, 27 May 2011 13:24:02 +1000
+Message-ID: <20110527032402.GD7793@yookeroo.fritz.box>
+References: <1305930343-31259-1-git-send-email-ddaney@caviumnetworks.com>
+	<1305930343-31259-2-git-send-email-ddaney@caviumnetworks.com>
+	<20110521063345.GB14828@yookeroo.fritz.box>
+	<4DDA8FBC.1090904@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2011052302>
+Content-Disposition: inline
+In-Reply-To: <4DDA8FBC.1090904-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,68 +22,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, May 23, 2011 at 09:47:56AM -0700, David Daney wrote:
+> On 05/20/2011 11:33 PM, David Gibson wrote:
+> >On Fri, May 20, 2011 at 03:25:38PM -0700, David Daney wrote:
+> >>To use it you need to do this in your Kconfig:
+> >>
+> >>	select LIBFDT
+> >>
+> >>And in the Makefile of the code using libfdt something like:
+> >>
+> >>ccflags-y := -include linux/libfdt_env.h -I$(src)/../../../scripts/dtc/libfdt
+> >>
+> >>Signed-off-by: David Daney<ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> >>---
+> >>  drivers/of/Kconfig          |    3 +++
+> >>  drivers/of/Makefile         |    2 ++
+> >>  drivers/of/libfdt/Makefile  |    3 +++
+> >>  drivers/of/libfdt/fdt.c     |    2 ++
+> >>  drivers/of/libfdt/fdt_ro.c  |    2 ++
+> >>  drivers/of/libfdt/fdt_wip.c |    2 ++
+> >
+> >No fdt_sw.c or fdt_rw.c?
+> >
+> 
+> I had no immediate need for them.  They could of course be added,
+> but that would potentially waste space.
+> 
+> Let's see if I can make it into an archive library.
 
-The board support of ttc dkb is minimal to system boot.
+That would be preferable.  It's more or less designed to work that way
+so that everything is available without using unnecessary space in the
+binary.
 
-Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/ttc-dkb.dts   |   12 ++++++++++++
- arch/arm/mach-mmp/Makefile.boot |    2 ++
- arch/arm/mach-mmp/ttc_dkb.c     |    6 ++++++
- 3 files changed, 20 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/ttc-dkb.dts
-
-diff --git a/arch/arm/boot/dts/ttc-dkb.dts b/arch/arm/boot/dts/ttc-dkb.dts
-new file mode 100644
-index 0000000..f41d666
---- /dev/null
-+++ b/arch/arm/boot/dts/ttc-dkb.dts
-@@ -0,0 +1,12 @@
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Marvell TTC DKB";
-+	compatible = "mrvl,ttc-dkb", "mrvl,pxa910-dkb";
-+
-+	memory {
-+		reg = <0x00000000 0x10000000>;
-+	};
-+};
-diff --git a/arch/arm/mach-mmp/Makefile.boot b/arch/arm/mach-mmp/Makefile.boot
-index 574a4aa..d6fe1fc 100644
---- a/arch/arm/mach-mmp/Makefile.boot
-+++ b/arch/arm/mach-mmp/Makefile.boot
-@@ -1 +1,3 @@
-    zreladdr-y	:= 0x00008000
-+
-+dtb-$(CONFIG_MACH_TTC_DKB)	+= mmp-dkb.dtb
-diff --git a/arch/arm/mach-mmp/ttc_dkb.c b/arch/arm/mach-mmp/ttc_dkb.c
-index e411039..7f7e7fe 100644
---- a/arch/arm/mach-mmp/ttc_dkb.c
-+++ b/arch/arm/mach-mmp/ttc_dkb.c
-@@ -124,10 +124,16 @@ static void __init ttc_dkb_init(void)
- 	platform_add_devices(ARRAY_AND_SIZE(ttc_dkb_devices));
- }
- 
-+static const char *ttc_dkb_dt_match[] __initdata = {
-+	"mrvl,ttc-dkb",
-+	NULL,
-+};
-+
- MACHINE_START(TTC_DKB, "PXA910-based TTC_DKB Development Platform")
- 	.map_io		= mmp_map_io,
- 	.nr_irqs	= TTCDKB_NR_IRQS,
- 	.init_irq       = pxa910_init_irq,
- 	.timer          = &pxa910_timer,
- 	.init_machine   = ttc_dkb_init,
-+	.dt_compat	= ttc_dkb_dt_match,
- MACHINE_END
 -- 
-1.7.4.1
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
