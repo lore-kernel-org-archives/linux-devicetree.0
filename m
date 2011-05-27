@@ -1,109 +1,248 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: linaro-uboot: device tree without ramdisk and boot_relocate_fdt
-	cause illegal memory access in kernel
-Date: Fri, 27 May 2011 17:31:42 +0800
-Message-ID: <20110527093141.GE30146@S2100-06.ap.freescale.net>
-References: <BANLkTikK9EVVZrRa1--8n1j_OXv2qK8XmA@mail.gmail.com>
+From: Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: i2c child devices: binding to uio device driver
+Date: Fri, 27 May 2011 12:33:18 +0200
+Message-ID: <BANLkTimYs5+cr_E_kW-s3oQdnhf0582Lbw@mail.gmail.com>
+References: <BANLkTimSBReyncTANTyy4jhah=-QvPigwQ@mail.gmail.com>
+	<20110519155808.GC3085@ponder.secretlab.ca>
+	<BANLkTim08mWohWkqF0veHbz0+ydikHTAFA@mail.gmail.com>
+	<BANLkTimKP0Bo3C5rqzJg5AAc1p9evmfxaA@mail.gmail.com>
+	<20110527071738.GC31953@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTikK9EVVZrRa1--8n1j_OXv2qK8XmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110527071738.GC31953-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2011 at 04:52:38PM +0800, Barry Song wrote:
-> Hi all,
-> i am using linaro uboot(u-boot-linaro-stable.git).  i have let our
-> prima2 board support device tree with some workaround in uboot.  two
-> problems i have meet:
-> 1. device tree without ramdisk
-> now uboot used commands like
-> "bootm kernel_address  ramdisk_address dtb_address"
-> to start linux kernel.
-> in many cases, people have no ramdisk at all, but the following codes
-> will still stop people to use device tree to start kernel since it got
-> an illegal ramdisk:
-> 
-> common/cmd_bootm.c:
->         if (((images.os.type == IH_TYPE_KERNEL) ||
->              (images.os.type == IH_TYPE_MULTI)) &&
->             (images.os.os == IH_OS_LINUX)) {
->                 /* find ramdisk */
->                 ret = boot_get_ramdisk (argc, argv, &images, IH_INITRD_ARCH,
->                                 &images.rd_start, &images.rd_end);
->                 if (ret) {
->                         puts ("Ramdisk image is corrupt or invalid\n");
->                        return 1;
->                 }
-> 
-> #if defined(CONFIG_OF_LIBFDT)
->                 /* find flattened device tree */
->                 ret = boot_get_fdt (flag, argc, argv, &images,
->                                     &images.ft_addr, &images.ft_len);
->                 if (ret) {
->                         puts ("Could not find a valid device tree\n");
->                         return 1;
->                 }
-> then i delete the first return 1 to let uboot ignore the ramdisk checking.
-> 
-> 2. boot_relocate_fdt in common/image.c
-> this function will relocate fdt to an new address by:
-> lmb_alloc_base(lmb, of_len, 0x1000, getenv_bootm_mapsize() + getenv_bootm_low())
-> 
-> but the return address is probably not in the initilized scale which
-> kernel will build mapping in head.S. then in the function
-> setup_machine_fdt() of arch/arm/kernel/devtree.c, when executing:
->          devtree = phys_to_virt(dt_phys);
-> 
->         /* check device tree validity */
->         if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
->                 return NULL;
-> kernel will die due to illegal memory access since dt_phys was not
-> mapped to virtual address yet.
-> 
-> For problem1 , could uboot have a way to ignore ramdisk by itself?
-> since we need 3 param in bootm to support device tree. For problem2,
+On Fri, May 27, 2011 at 9:17 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+> On Wed, May 25, 2011 at 08:39:26AM +0200, Thomas De Schampheleire wrote:
+>> Hi,
+>>
+>> On Mon, May 23, 2011 at 10:13 AM, Thomas De Schampheleire
+>> <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > Hi Grant,
+>> >
+>> > On Thu, May 19, 2011 at 5:58 PM, Grant Likely <grant.likely@secretlab.=
+ca> wrote:
+>> >> On Thu, May 19, 2011 at 05:32:32PM +0200, Thomas De Schampheleire wro=
+te:
+>> >>> Hi,
+>> >>>
+>> >>> I am using the uio framework (userspace i/o) to handle devices in
+>> >>> userspace. This includes memory access and interrupt handling.
+>> >>> For i2c devices, I'm using the i2c-dev interface, to talk to these
+>> >>> devices from userspace. This already works fine.
+>> >>>
+>> >>> One of my i2c devices also has an interrupt line connected to the
+>> >>> processor. To be able to handle this interrupt with uio, I need to
+>> >>> have a kernel driver matched against the i2c device. However, the i2c
+>> >>> device described in the device tree does not bind with the driver. Is
+>> >>> this behavior supported, and if so, what am I doing wrong? Do I have
+>> >>> to create a dummy bus (non-i2c) and add a shadow node for the
+>> >>> interrupt?
+>> >>
+>> >> You're wandering into new territory here. =A0It is definitely the rig=
+ht
+>> >> thing to do to describe your i2c device in the device tree with the
+>> >> interrupt fully specified.
+>> >>
+>> >> What you probably need to do is create a uio helper driver for your
+>> >> device that takes care of finding the device node, mapping the
+>> >> interrupt, and proving the interrupt handling UIO hook to userspace.
+>> >> The easiest way to work this out would be to make your uio helper
+>> >> actually bind to the i2c device created by the device node (this is
+>> >> probably the best way too), but you don't have to. =A0As long as you
+>> >> arrange for you uio helper to get called at some point, you can get it
+>> >> to find the appropriate node in the DT, map the interrupt, and export
+>> >> it to userspace.
+>> >
+>> > Binding the helper driver with the i2c device in the device tree is
+>> > indeed what I am trying to achieve. Unfortunately, the binding does
+>> > not happen, the probe function of my driver never gets called.
+>> >
+>> > For the other UIO devices in this system (non-I2C), the mechanism is a=
+s follows:
+>> > 1. the devices are described in the device tree, as children under
+>> > their respective bus node (e.g. localbus)
+>> > 2. the platform code (arch/powerpc/platforms/85xx/corenet_ds.c)
+>> > iterates over all buses it understands, among which 'simple-bus'.
+>> > 3. for each child device on the bus, a bind operation with a driver is
+>> > attempted, based on the device 'compatible' string
+>> >
+>> > This works perfectly.
+>> > However, the i2c bus does not have any of the matched bus types, like
+>> > simple-bus, and as such it is handled differently. The i2c bus driver
+>> > (drivers/i2c/busses/i2c-mpc.c) calls of_register_i2c_devices (in
+>> > drivers/of/of_i2c.c), which handles the i2c-specific part of the
+>> > device, but does not (as far as I understand and observe) treat the
+>> > device as a regular device with a match table.
+>> >
+>> > Maybe I misunderstand something. Is this where I need to play with
+>> > modaliases? How does this work in the context of device trees?
+>> >
+>> >>
+>> >> g.
+>> >>
+>> >>>
+>> >>> My device tree nodes look like this:
+>> >>>
+>> >>> =A0 =A0 =A0 =A0 soc@fe000000 {
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c@118100 {
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <=
+1>;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cell-index =3D <1>;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fsl-=
+i2c";
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x118100 0x=
+100>;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <38 2=
+ 0 0>;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dfsrr;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 mydevice@68 {
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 comp=
+atible =3D "mymanufacturer,mydevice";
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =
+=3D <0x68>;
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 inte=
+rrupts =3D <7 1 0 0>; /* External
+>> >>> IRQ7, active-low level */
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> >>
+>> >> This looks to be correct.
+>> >>
+>> >>>
+>> >>> The device driver then has:
+>> >>>
+>> >>> static const struct of_device_id mydevice_ids[] =3D {
+>> >>> =A0 =A0 =A0 =A0 {
+>> >>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .compatible =3D "mymanufacturer,myde=
+vice"
+>> >>> =A0 =A0 =A0 =A0 },
+>> >>> =A0 =A0 =A0 =A0 {},
+>> >>> };
+>> >>> static struct of_platform_driver mydevice_driver =3D {
+>> >>
+>> >> You don't want to do this. =A0This is an i2c device, not a platform
+>> >> device. =A0If anything, this should be an i2c_driver and you should u=
+se
+>> >> the normal creation of i2c devices from the DT.
+>> >
+>> > Ok, so this may be the reason why my driver does not get registered
+>> > against the device...
+>>
+>>
+>> I have it working now. The bottom line was indeed, as you hinted, to
+>> transform the platform driver into an i2c driver, and make sure that
+>> it gets bound to the device. Here indeed, I need to specify the right
+>> modalias in the compatible string.
+>
+> Glad to hear. =A0Thanks for reporting back. =A0Comments below.
 
-bootm kernel_address - dtb_address
+Seems that I spoke too soon.
+Although the binding of the device and the driver works correctly, I
+now have problems with using the i2c device from userspace. After
+having transformed my platform driver into an i2c driver, setting the
+same slave address from userspace fails. This is not what I wanted.
 
-Use '-' for ramdisk address, if you do not have a ramdisk image.
+How do I get around this? To get proper binding I need an I2C device,
+but to be able to use i2c-dev I shouldn't have an I2C device.
 
-> could uboot just relocate fdt to the original address of old ATAG,
-> OFF+ 0x100?
-> 
-Do you have the following commit on your kernel tree?
+It seems that Arnd's suggestion to make i2c-dev interrupt aware, comes
+into play here. However, how will i2c-dev know which interrupts belong
+to which device? To use i2c-dev without interrupts, all you need in
+the device tree is the i2c controller nodes.
 
-commit 4d901c4271951d110afb13ee9aa73d27a6c8e53d
-Author: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Date:   Wed Feb 2 16:33:17 2011 +0100
+>
+>>
+>> For the record, here is what needed to be done:
+>> * In the device tree, add a child node to the i2c controller node. The
+>> model part of the first compatible string, should correspond to the
+>> 'type' string you will specify in the driver. In this node, you can
+>> also specify any interrupt assignments.
+>>
+>> * The driver should be a regular i2c driver, but the 'type' field in
+>> struct i2c_device_id should match what you specified in the device
+>> tree. For example, if the device tree has 'mymanufacturer,mydevice' as
+>> compatible string, then:
+>>
+>> static struct i2c_device_id mydevice_ids[] =3D {
+>> =A0 =A0 =A0 =A0 { "mydevice", 0 },
+>> =A0 =A0 =A0 =A0 { }
+>> };
+>>
+>> static struct i2c_driver mydevice_driver =3D {
+>> =A0 =A0 =A0 =A0 .driver =3D {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =3D "mydevice",
+>> =A0 =A0 =A0 =A0 },
+>>
+>> =A0 =A0 =A0 =A0 .id_table =A0 =A0 =A0 =3D mydevice_ids,
+>> =A0 =A0 =A0 =A0 .probe =A0 =A0 =A0 =A0 =A0=3D mydevice_probe,
+>> =A0 =A0 =A0 =A0 .remove =A0 =A0 =A0 =A0 =3D __devexit_p(mydevice_remove),
+>> };
+>
+> This is a heuristic for getting device tree nodes to work with
+> existing i2c drivers. =A0However, it is very important that you *do not*
+> lie about what the device is in the compatible property to get it to
+> bind to the device. =A0So, if the value that best describes the device
+> is not in the i2c_device_id list, then you should add a proper
+> i2c_driver->driver->of_match_table that does a correct match to a
+> device tree compatible property.
+>
+> I may very well remove the heuristic at some point in the future and
+> require all device tree binding to use the of_match_table method.
 
-    ARM: 6648/1: map ATAGs when not in first 1MB of RAM
+Thanks for the hint. Unfortunately, I'm still at 2.6.34 and these
+changes were made in later kernel versions.
+I'll certainly keep that in mind once we update, though.
 
-    If ATAGs or DTB pointer is not within first 1MB of RAM, then the boot params
-    will not be mapped early enough, so map the 1MB region that r2 points to. Only
-    map the first 1MB when r2 is 0.
+>
+>>
+>> * In the probe function, to get the interrupt information out of the
+>> device tree, you first have to find the correct node, for example
+>> based on compatible string:
+>>
+>> =A0 =A0 =A0 =A0 np =3D of_find_compatible_node(NULL, NULL, "mymanufactur=
+er,mydevice");
+>> =A0 =A0 =A0 =A0 if (NULL =3D=3D np) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&client->dev, "couldn't find cor=
+responding
+>> node in device tree\n");
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_find_node;
+>> =A0 =A0 =A0 =A0 }
+>
+> You don't need to jump through this hoop. =A0The node pointer is already
+> populated in client->dev->of_node.
+>
+>>
+>> =A0 =A0 =A0 =A0 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int irq =3D of_irq_to_resource(np, 0, NU=
+LL);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (unlikely(irq =3D=3D NO_IRQ)) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_warn(&client->dev, "=
+couldn't obtain
+>> interrupt information from device tree\n");
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ... (handle the UIO part)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+>> =A0 =A0 =A0 =A0 }
+>
+> Similarly, the irq should already be populated in client->irq.
 
-    Some assembly improvements from Nicolas Pitre.
+Again, this great feature was only introduced in later versions than
+2.6.34. But thanks for mentioning this, I wasn't aware of it before.
 
-    Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-    Acked-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-    Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-    Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-
-You can get it from linux-linaro-2.6.38 tree.
-
--- 
-Regards,
-Shawn
+Thomas
