@@ -1,93 +1,33 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: linaro-uboot: device tree without ramdisk and boot_relocate_fdt
-	cause illegal memory access in kernel
-Date: Sat, 28 May 2011 22:54:53 +0800
-Message-ID: <BANLkTi=Nu7d2eoBOpP9JvgkfcizKatGnDQ@mail.gmail.com>
-References: <BANLkTikK9EVVZrRa1--8n1j_OXv2qK8XmA@mail.gmail.com>
-	<20110527093141.GE30146@S2100-06.ap.freescale.net>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [RFC 2/2] ARM:Tegra: Device Tree Support: Initialize audio card
+ gpio's from the device tree.
+Date: Sat, 28 May 2011 09:24:47 +0800
+Message-ID: <20110528012427.GB5971@opensource.wolfsonmicro.com>
+References: <20110527205444.21000.90209.stgit@riker>
+ <20110527205721.21000.78599.stgit@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110527093141.GE30146-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-dev <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110527205721.21000.78599.stgit@riker>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-aGkgU2hhd24sCnRoYW5rcyBhIGxvdC4KLWJhcnJ5CgoyMDExLzUvMjcgU2hhd24gR3VvIDxzaGF3
-bi5ndW9AZnJlZXNjYWxlLmNvbT46Cj4gT24gRnJpLCBNYXkgMjcsIDIwMTEgYXQgMDQ6NTI6MzhQ
-TSArMDgwMCwgQmFycnkgU29uZyB3cm90ZToKPj4gSGkgYWxsLAo+PiBpIGFtIHVzaW5nIGxpbmFy
-byB1Ym9vdCh1LWJvb3QtbGluYXJvLXN0YWJsZS5naXQpLiDCoGkgaGF2ZSBsZXQgb3VyCj4+IHBy
-aW1hMiBib2FyZCBzdXBwb3J0IGRldmljZSB0cmVlIHdpdGggc29tZSB3b3JrYXJvdW5kIGluIHVi
-b290LiDCoHR3bwo+PiBwcm9ibGVtcyBpIGhhdmUgbWVldDoKPj4gMS4gZGV2aWNlIHRyZWUgd2l0
-aG91dCByYW1kaXNrCj4+IG5vdyB1Ym9vdCB1c2VkIGNvbW1hbmRzIGxpa2UKPj4gImJvb3RtIGtl
-cm5lbF9hZGRyZXNzIMKgcmFtZGlza19hZGRyZXNzIGR0Yl9hZGRyZXNzIgo+PiB0byBzdGFydCBs
-aW51eCBrZXJuZWwuCj4+IGluIG1hbnkgY2FzZXMsIHBlb3BsZSBoYXZlIG5vIHJhbWRpc2sgYXQg
-YWxsLCBidXQgdGhlIGZvbGxvd2luZyBjb2Rlcwo+PiB3aWxsIHN0aWxsIHN0b3AgcGVvcGxlIHRv
-IHVzZSBkZXZpY2UgdHJlZSB0byBzdGFydCBrZXJuZWwgc2luY2UgaXQgZ290Cj4+IGFuIGlsbGVn
-YWwgcmFtZGlzazoKPj4KPj4gY29tbW9uL2NtZF9ib290bS5jOgo+PiDCoCDCoCDCoCDCoCBpZiAo
-KChpbWFnZXMub3MudHlwZSA9PSBJSF9UWVBFX0tFUk5FTCkgfHwKPj4gwqAgwqAgwqAgwqAgwqAg
-wqAgwqAoaW1hZ2VzLm9zLnR5cGUgPT0gSUhfVFlQRV9NVUxUSSkpICYmCj4+IMKgIMKgIMKgIMKg
-IMKgIMKgIChpbWFnZXMub3Mub3MgPT0gSUhfT1NfTElOVVgpKSB7Cj4+IMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIC8qIGZpbmQgcmFtZGlzayAqLwo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBy
-ZXQgPSBib290X2dldF9yYW1kaXNrIChhcmdjLCBhcmd2LCAmaW1hZ2VzLCBJSF9JTklUUkRfQVJD
-SCwKPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmlt
-YWdlcy5yZF9zdGFydCwgJmltYWdlcy5yZF9lbmQpOwo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCBpZiAocmV0KSB7Cj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHB1dHMg
-KCJSYW1kaXNrIGltYWdlIGlzIGNvcnJ1cHQgb3IgaW52YWxpZFxuIik7Cj4+IMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcmV0dXJuIDE7Cj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIH0KPj4KPj4gI2lmIGRlZmluZWQoQ09ORklHX09GX0xJQkZEVCkKPj4gwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgLyogZmluZCBmbGF0dGVuZWQgZGV2aWNlIHRyZWUgKi8KPj4gwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgcmV0ID0gYm9vdF9nZXRfZmR0IChmbGFnLCBhcmdjLCBhcmd2LCAmaW1h
-Z2VzLAo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCAmaW1hZ2VzLmZ0X2FkZHIsICZpbWFnZXMuZnRfbGVuKTsKPj4gwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgaWYgKHJldCkgewo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCBwdXRzICgiQ291bGQgbm90IGZpbmQgYSB2YWxpZCBkZXZpY2UgdHJlZVxuIik7Cj4+IMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJldHVybiAxOwo+PiDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCB9Cj4+IHRoZW4gaSBkZWxldGUgdGhlIGZpcnN0IHJldHVybiAxIHRvIGxldCB1
-Ym9vdCBpZ25vcmUgdGhlIHJhbWRpc2sgY2hlY2tpbmcuCj4+Cj4+IDIuIGJvb3RfcmVsb2NhdGVf
-ZmR0IGluIGNvbW1vbi9pbWFnZS5jCj4+IHRoaXMgZnVuY3Rpb24gd2lsbCByZWxvY2F0ZSBmZHQg
-dG8gYW4gbmV3IGFkZHJlc3MgYnk6Cj4+IGxtYl9hbGxvY19iYXNlKGxtYiwgb2ZfbGVuLCAweDEw
-MDAsIGdldGVudl9ib290bV9tYXBzaXplKCkgKyBnZXRlbnZfYm9vdG1fbG93KCkpCj4+Cj4+IGJ1
-dCB0aGUgcmV0dXJuIGFkZHJlc3MgaXMgcHJvYmFibHkgbm90IGluIHRoZSBpbml0aWxpemVkIHNj
-YWxlIHdoaWNoCj4+IGtlcm5lbCB3aWxsIGJ1aWxkIG1hcHBpbmcgaW4gaGVhZC5TLiB0aGVuIGlu
-IHRoZSBmdW5jdGlvbgo+PiBzZXR1cF9tYWNoaW5lX2ZkdCgpIG9mIGFyY2gvYXJtL2tlcm5lbC9k
-ZXZ0cmVlLmMsIHdoZW4gZXhlY3V0aW5nOgo+PiDCoCDCoCDCoCDCoCDCoGRldnRyZWUgPSBwaHlz
-X3RvX3ZpcnQoZHRfcGh5cyk7Cj4+Cj4+IMKgIMKgIMKgIMKgIC8qIGNoZWNrIGRldmljZSB0cmVl
-IHZhbGlkaXR5ICovCj4+IMKgIMKgIMKgIMKgIGlmIChiZTMyX3RvX2NwdShkZXZ0cmVlLT5tYWdp
-YykgIT0gT0ZfRFRfSEVBREVSKQo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZXR1cm4gTlVM
-TDsKPj4ga2VybmVsIHdpbGwgZGllIGR1ZSB0byBpbGxlZ2FsIG1lbW9yeSBhY2Nlc3Mgc2luY2Ug
-ZHRfcGh5cyB3YXMgbm90Cj4+IG1hcHBlZCB0byB2aXJ0dWFsIGFkZHJlc3MgeWV0Lgo+Pgo+PiBG
-b3IgcHJvYmxlbTEgLCBjb3VsZCB1Ym9vdCBoYXZlIGEgd2F5IHRvIGlnbm9yZSByYW1kaXNrIGJ5
-IGl0c2VsZj8KPj4gc2luY2Ugd2UgbmVlZCAzIHBhcmFtIGluIGJvb3RtIHRvIHN1cHBvcnQgZGV2
-aWNlIHRyZWUuIEZvciBwcm9ibGVtMiwKPgo+IGJvb3RtIGtlcm5lbF9hZGRyZXNzIC0gZHRiX2Fk
-ZHJlc3MKPgo+IFVzZSAnLScgZm9yIHJhbWRpc2sgYWRkcmVzcywgaWYgeW91IGRvIG5vdCBoYXZl
-IGEgcmFtZGlzayBpbWFnZS4KPgo+PiBjb3VsZCB1Ym9vdCBqdXN0IHJlbG9jYXRlIGZkdCB0byB0
-aGUgb3JpZ2luYWwgYWRkcmVzcyBvZiBvbGQgQVRBRywKPj4gT0ZGKyAweDEwMD8KPj4KPiBEbyB5
-b3UgaGF2ZSB0aGUgZm9sbG93aW5nIGNvbW1pdCBvbiB5b3VyIGtlcm5lbCB0cmVlPwo+Cj4gY29t
-bWl0IDRkOTAxYzQyNzE5NTFkMTEwYWZiMTNlZTlhYTczZDI3YTZjOGU1M2QKPiBBdXRob3I6IFJv
-YiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KPiBEYXRlOiDCoCBXZWQgRmViIDIg
-MTY6MzM6MTcgMjAxMSArMDEwMAo+Cj4gwqAgwqBBUk06IDY2NDgvMTogbWFwIEFUQUdzIHdoZW4g
-bm90IGluIGZpcnN0IDFNQiBvZiBSQU0KPgo+IMKgIMKgSWYgQVRBR3Mgb3IgRFRCIHBvaW50ZXIg
-aXMgbm90IHdpdGhpbiBmaXJzdCAxTUIgb2YgUkFNLCB0aGVuIHRoZSBib290IHBhcmFtcwo+IMKg
-IMKgd2lsbCBub3QgYmUgbWFwcGVkIGVhcmx5IGVub3VnaCwgc28gbWFwIHRoZSAxTUIgcmVnaW9u
-IHRoYXQgcjIgcG9pbnRzIHRvLiBPbmx5Cj4gwqAgwqBtYXAgdGhlIGZpcnN0IDFNQiB3aGVuIHIy
-IGlzIDAuCj4KPiDCoCDCoFNvbWUgYXNzZW1ibHkgaW1wcm92ZW1lbnRzIGZyb20gTmljb2xhcyBQ
-aXRyZS4KPgo+IMKgIMKgQWNrZWQtYnk6IFRvbnkgTGluZGdyZW4gPHRvbnlAYXRvbWlkZS5jb20+
-Cj4gwqAgwqBBY2tlZC1ieTogTmljb2xhcyBQaXRyZSA8bmljb2xhcy5waXRyZUBsaW5hcm8ub3Jn
-Pgo+IMKgIMKgU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYi5oZXJyaW5nQGNhbHhlZGEu
-Y29tPgo+IMKgIMKgU2lnbmVkLW9mZi1ieTogUnVzc2VsbCBLaW5nIDxybWsra2VybmVsQGFybS5s
-aW51eC5vcmcudWs+Cj4KPiBZb3UgY2FuIGdldCBpdCBmcm9tIGxpbnV4LWxpbmFyby0yLjYuMzgg
-dHJlZS4KCj4KPiAtLQo+IFJlZ2FyZHMsCj4gU2hhd24KPgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
-CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
-Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Fri, May 27, 2011 at 01:57:26PM -0700, John Bonesio wrote:
+
+>  	harmony_audio: audio_card {
+>  		compatible = "nvidia,harmony-audio";
+> +
+> +		gpios = <&codec 226 0>, /* spkr_en, gpio wm8903 #2 */
+> +			<&gpio 178 0>, /* hp_det, gpio PW2 */
+> +			<&gpio 184 0>, /* int_mic_en, gpio PX0 */
+> +			<&gpio 185 0>; /* ext_mic_en, gpio PX1 */
+> +
+
+This is a step back from the usability of the existing platform data -
+the platform data uses a series of individually named GPIOs while this
+uses an array of GPIO numbers with magic indexes.  The fact that you
+need comments explaining what the functions of the array elements are
+is a bit of a red flag here.
