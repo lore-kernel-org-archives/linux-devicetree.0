@@ -1,25 +1,13 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC 2/2] ARM:Tegra: Device Tree Support: Initialize audio card
-	gpio's from the device tree.
-Date: Tue, 31 May 2011 10:55:03 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF0498E1C22D@HQMAIL01.nvidia.com>
-References: <20110527205444.21000.90209.stgit@riker>
-	<20110527205721.21000.78599.stgit@riker>
-	<20110528012427.GB5971@opensource.wolfsonmicro.com>
-	<BANLkTinKLcYmStvBEGDcN84BapJXe5Y5bg@mail.gmail.com>
-	<20110530033826.GE4130@opensource.wolfsonmicro.com>
-	<20110530061155.GC23517@ponder.secretlab.ca>
-	<4DE336A1.5040509@firmworks.com>
-	<20110530070138.GA5036@opensource.wolfsonmicro.com>
-	<8d2515b13c817cc956b185d043bcef00@kernel.crashing.org>
-	<BANLkTi=hkScxYpt449CQCky+bLU3UvkC_A@mail.gmail.com>
-	<4DE403C5.7060003@firmworks.com>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: PCI EDAC on MPC85xx
+Date: Tue, 31 May 2011 13:41:04 -0500
+Message-ID: <7373D079-743D-4D49-BDC6-2BEAF14C43DF@kernel.crashing.org>
+References: <20110531131737.GA29164@doriath.ww600.siemens.net>
+Mime-Version: 1.0 (Apple Message framework v1084)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DE403C5.7060003-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20110531131737.GA29164-nIupHZaCssqR2kOLt6zJ8ErlnG4Plg33XqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -29,106 +17,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mitch Bradley wrote at Monday, May 30, 2011 2:53 PM:
-> ...
-> GPIOs share the need to "point across the tree to different nodes", but
-> it is unclear that there is a need for a entirely different hierarchy.
+
+On May 31, 2011, at 8:17 AM, Dmitry Eremin-Solenikov wrote:
+
+> Hello,
 > 
-> That suggests the possibility of using the device tree addressing
-> mechanism as much as possible.  Normal device tree addresses could be
-> used to specify GPIO numbers.
+> Long time ago (around July of 2010), I've reported a problem of binding
+> pci error reporting driver to the hardware (See
+> http://thread.gmane.org/gmane.linux.kernel.edac/181). Grant Likely has
+> come with a patch to create platform devices (of_platform at that time),
+> for device_nodes which have "compatible" properties
+> (http://article.gmane.org/gmane.linux.ports.ppc.embedded/36981).
 > 
-> Suppose we have:
+> The patch was not applied at that time and the problem still arises at
+> 3.0-rc1. Should the patch in question be applied, or is there any new
+> solution?
+> Current version of that patch which I have in my tree is attached
+> to this mail (no original signoff by Grant).
 > 
->     gpio-controller1: gpio-controller {
->         #address-cells = <2>;
->         #mode-cells = <2>;
->         gpio1: gpio@12,0 {
->             reg = <12 0>;
->             mode = <55 66>;
->             usage = "Audio Codec chip select";  /* Optional */
->         }
->     };
->     gpio-controller2: gpio-controller {
->         #address-cells = <1>;
->         #mode-cells = <1>;
->         gpio2: gpio@4 {
->             reg = <4>;
->             #mode-cells = <1>;
->         }
->     };
-
-A quick note on the way that Tegra's devicetree files are broken up in
-Grant's devicetree/test branch:
-
-* There's "tegra250.dtsi" which defines everything on the Tegra SoC
-  itself.
-* There's a per-board e.g. harmony.dts which includes tegra250.dtsi,
-  And additionally:
-  ** Defines all devices on the board
-  ** Hence, defines the usage of e.g. all the Tegra GPIOs for the
-     board.
-
-I like this model, because it shares the complete definition of the
-Tegra SoC in a single file, rather than duplicating it with cut/paste
-into every board file.
-
-As such, the code quoted above would be in tegra250.dtsi.
-
-This has two relevant implications here:
-
-1) The names "gpio1" and "gpio2" would be driven by the Tegra SoC's
-naming of those GPIO pins, and not any board-specific naming, e.g.
-"tegra_gpio_px1", "tegra_gpio_pb5". Equally, the usage comment would
-be at the client/reference site, not the GPIO definition site.
-
-2) The GPIO mode should be defined by the client/user of the GPIO, not
-the SoC's definition of that GPIO.
-
-Without those two conditions, we couldn't share anything through
-tegra250.dtsi.
-
-Re-iteration of these implications below.
-
->     [...]
->     chipsel-gpio =  <&gpio1>,
->         <&gpio-controller1 13 0 55 77>,
->         <0>, /* holes are permitted, means no GPIO 2 */
->         <&gpio2 88>,
->         <&gpio-controller2 5 1>;
-
-> A GPIO spec consist of:
+> -- 
+> With best wishes
+> Dmitry
 > 
-> 1) A reference to either a gpio-controller or a gpio device node.
-> 
-> 2) 0 or more address cells, according to the value of #address-cells in
-> the referenced node.  If the node has no #address-cells property, the
-> value is assumed to be 0.
+> <0001-of-device-Register-children-with-a-compatible-value-.patch>
 
-I'd expect address cells only if referencing a gpio-controller; if
-referencing a gpio device node, the address would be implicit.
+I think the desired solution here was to create a new node in the fsl_pci code that the edac code would bind against.
 
-> 3) 0 or more mode cells, according to the value of #mode-cells in the
-> referenced node.
-
-Yes, I agree. Although, I think your (3) is inconsistent with the gpio
-controller definitions you wrote above, which include the mode
-definitions in the controller instead of the user.
-
-> In the example, the chipsel-gpio specs are interpreted as:
-> 
-> <&gpio1>  -  refers to a pre-bound gpio device node, in which the
-> address (12 0) and mode (55 66) are specified within that node.
-
-Just re-iterating: I'd prefer mode to be solely in the reference, and
-not in the gpio controller.
-
-Does this SoC/board segregation make sense to everyone? Obviously it
-does to me:-)
-
--- 
-nvpublic
+- k
