@@ -1,52 +1,44 @@
-From: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] powerpc: document the FSL MPIC message register
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v3 1/2] powerpc: document the FSL MPIC message register
 	binding
-Date: Tue, 31 May 2011 14:19:51 -0500
-Message-ID: <4DE53F57.2050402@mentor.com>
-References: <1305909399-26969-1-git-send-email-meador_inge@mentor.com>	<1305909399-26969-2-git-send-email-meador_inge@mentor.com>
-	<20110526150643.3e01f9a6@schlenkerla.am.freescale.net>
+Date: Tue, 31 May 2011 14:23:52 -0500
+Message-ID: <20110531142352.2c272483@schlenkerla.am.freescale.net>
+References: <1306869543-18812-1-git-send-email-meador_inge@mentor.com>
+	<1306869543-18812-2-git-send-email-meador_inge@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110526150643.3e01f9a6-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1306869543-18812-2-git-send-email-meador_inge@mentor.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Meador Inge <meador_inge@mentor.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Hollis Blanchard <hollis_blanchard@mentor.com>, openmcapi-dev@googlegroups.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2011 03:06 PM, Scott Wood wrote:
->> > +    - interrupts: Specifies a list of interrupt source and level-sense pairs.
->> > +      The type shall be <prop-encoded-array>.  The length shall be equal to
->> > +      the number of bits set in the 'msg-receive-mask' property value.
-> Oh, just noticed -- mismatch between msg-receive-mask here...
-> 
->> > +
->> > +Optional properties:
->> > +
->> > +    - mpic-msgr-receive-mask: Specifies what registers in the containing block
->> > +      are allowed to receive interrupts.  The value is a bit mask where a set
->> > +      bit at bit 'n' indicates that message register 'n' can receive interrupts.
->> > +      The type shall be <prop-encoded-array>.  If not present, then all of
->> > +      the message registers in the block are available.
-> ...and mpic-msgr-receive-mask here.
-> 
-> Might want to just say "equal to the number of registers that are
-> available for receiving interrupts", to more clearly apply to the case where
-> mpic-msgr-receive-mask is missing.
-> 
+On Tue, 31 May 2011 14:19:02 -0500
+Meador Inge <meador_inge@mentor.com> wrote:
 
-Thanks; fixed.
+> This binding documents how the message register blocks found in some FSL
+> MPIC implementations shall be represented in a device tree.
+> 
+> Signed-off-by: Meador Inge <meador_inge@mentor.com>
+> Cc: Hollis Blanchard <hollis_blanchard@mentor.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Scott Wood <scottwood@freescale.com>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/mpic-msgr.txt  |   62 ++++++++++++++++++++
+>  1 files changed, 62 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mpic-msgr.txt
 
--- 
-Meador Inge
-CodeSourcery / Mentor Embedded
-http://www.mentor.com/embedded-software
+ACK
+
+-Scott
