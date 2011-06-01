@@ -1,73 +1,128 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC 1/2] ARM:Tegra: Device Tree Support: Initialize the audio
- card from the device tree.
-Date: Wed, 1 Jun 2011 10:47:06 -0600
-Message-ID: <BANLkTi=PtEhxxmZo2DqvmySCmnEd3LbezQ@mail.gmail.com>
-References: <20110527205444.21000.90209.stgit@riker> <20110527205706.21000.34832.stgit@riker>
- <BANLkTi=NMjBjWVv_o3PocejhgGr8TdG+1Q@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/2] dt: add custom device creation to platform
+	bus scan
+Date: Wed, 01 Jun 2011 11:52:09 -0500
+Message-ID: <4DE66E39.2070300@gmail.com>
+References: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
+	<201105261511.23659.arnd@arndb.de> <4DDE9F4A.5050507@gmail.com>
+	<201105271406.18841.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BANLkTi=NMjBjWVv_o3PocejhgGr8TdG+1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201105271406.18841.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 1, 2011 at 1:07 AM, Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2011/5/28 John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>:
->> This patch makes it so the top level audio card is initialized from =
-the device
->> tree. This is just the first step getting the audio complex of devic=
-es
->> iniialized from device tree nodes.
->>
->> Signed-off-by: John Bonesio<bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> ---
->>
->> =A0arch/arm/boot/dts/tegra-harmony.dts | =A0 =A04 +++
->> =A0arch/arm/mach-tegra/board-dt.c =A0 =A0 =A0| =A0 =A03 ++
->> =A0sound/soc/tegra/harmony.c =A0 =A0 =A0 =A0 =A0 | =A0 45 ++++++++++=
-++++++++++++++++++++++---
->> =A03 files changed, 48 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts=
-/tegra-harmony.dts
->> index 05521a5..217a7f0 100644
->> --- a/arch/arm/boot/dts/tegra-harmony.dts
->> +++ b/arch/arm/boot/dts/tegra-harmony.dts
->> @@ -53,6 +53,10 @@
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0clock-frequency =3D <400000>;
->> =A0 =A0 =A0 =A0};
->>
->> + =A0 =A0 =A0 harmony_audio: audio_card {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,harmony-audio";
->> + =A0 =A0 =A0 };
->> +
->> =A0 =A0 =A0 =A0serial@70006300 {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0status =3D "ok";
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0clock-frequency =3D < 216000000 >;
->> diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/bo=
-ard-dt.c
->> index c498e84..a569ad9 100644
->> --- a/arch/arm/mach-tegra/board-dt.c
->> +++ b/arch/arm/mach-tegra/board-dt.c
->> @@ -56,6 +56,9 @@ static struct platform_device *tegra250_devices[] =
-__initdata =3D {
->> =A0 =A0 =A0 =A0&tegra_i2c_device2,
->> =A0 =A0 =A0 =A0&tegra_i2c_device3,
->> =A0 =A0 =A0 =A0&tegra_i2c_device4,
->> + =A0 =A0 =A0 &tegra_i2s_device1,
->> + =A0 =A0 =A0 &tegra_das_device,
->> + =A0 =A0 =A0 &tegra_pcm_device,
+On 05/27/2011 07:06 AM, Arnd Bergmann wrote:
+> On Thursday 26 May 2011, Rob Herring wrote:
+>> On 05/26/2011 08:11 AM, Arnd Bergmann wrote:
+>>> On Wednesday 25 May 2011, Rob Herring wrote:
+>>> This creates a confusing mix of match table entries: Normally,
+>>> all entries in the match table are meant to identify child buses,
+>>> but if I read your patch correctly, you now also need to match
+>>> on the amba devices themselves, including the creation of
+>>> platform devices for each child device node under an amba
+>>> device.
+>>>
+>> We should only create devices for each matching bus and the immediate
+>> children of each bus. A child device of an amba device would be
+>> something like an i2c bus which we don't want to create devices for. Or
+>> am I missing something?
 >
-> i am thinking whether platform_device should be created by
-> of_platform_device_create after scanning device tree, but not by
-> hard-code? looks like the two patches are only trying to let device
-> tree deliver gpio to drivers?
+> Exactly, that was my point.
+>
+>>> I don't think that was the intention. Maybe we need to pass
+>>> two match tables into of_platform_bus_probe() instead:
+>>> one to identify the buses, and another one that is used
+>>> to create the actual devices.
+>>>
+>> That was my original thinking too, but some reason I had concluded 1
+>> could get by with just 1 table. After more thought, I think you are
+>> right. In fact, I broke platform device creation with this patch. I need
+>> to be able to tell if no match means create a platform device (child of
+>> bus) or not (child of a device).
+>
+> Ok.
+>
+>> @@ -234,18 +237,32 @@ static int of_platform_bus_create(struct
+>> device_node *bus,
+>>    		return 0;
+>>    	}
+>>
+>> -	dev = of_platform_device_create(bus, NULL, parent);
+>> -	if (!dev || !of_match_node(matches, bus))
+>> -		return 0;
+>> -
+>> -	for_each_child_of_node(bus, child) {
+>> -		pr_debug("   create child: %s\n", child->full_name);
+>> -		rc = of_platform_bus_create(child, matches,&dev->dev, strict);
+>> -		if (rc) {
+>> -			of_node_put(child);
+>> -			break;
+>> +	id = of_match_node(bus_matches, bus);
+>> +	if (id) {
+>> +		dev = of_platform_device_create(bus, NULL, parent);
+>> +		if (!dev)
+>> +			return 0;
+>> +		for_each_child_of_node(bus, child) {
+>> +			pr_debug("   create child: %s\n", child->full_name);
+>> +			rc = of_platform_bus_create(child, bus_matches,
+>> +						    dev_matches, dev, strict);
+>> +			if (rc) {
+>> +				of_node_put(child);
+>> +				break;
+>> +			}
+>>    		}
+>> +		return rc;
+>>    	}
+>> +
+>> +	id = of_match_node(dev_matches, bus);
+>> +	mdata = id ? id->data : NULL;
+>> +	if (id&&  mdata&&  mdata->dev_create)
+>> +		dev = mdata->dev_create(bus, parent);
+>> +	else
+>> +		dev = of_platform_device_create(bus, NULL, parent);
+>> +	if (!dev)
+>> +		return 0;
+>> +
+>
+> Yes, that looks like it should work.
+>
+> It still feels a bit strange, because it's not exactly how we normally
+> probe devices: In all other cases, we bind a device to a driver when we
+> find it, and that driver in turn scans it, and potentially creates
+> child devices that it finds.
+>
+> What we do here is to let the platform decide how to interpret the
+> data that is coming in. To make the probing more well-behaved, another
+> approach would be:
+>
+> * Bind a platform_driver to compatible="arm,amba" (or whatever we
+>    had in the binding).
+>
+> * In that driver, do nothing except register an amba_device as a child.
+>
+> This would create a somewhat deeper device hierarchy, but be still
+> completely logical: you have a device that cannot be probed (identified
+> simply by its register space), which can be probed internally because
+> the registers actually have a meaning.
 
-Can you please restate your question?  I don't think I understand what
-you are trying to ask.
+Shouldn't the hierarchy in linux reflect the h/w? It seems a bit 
+pointless to me to create a device just to create another device. 
+amba_bus is already a bit strange in that it is not really a bus type, 
+but a certain class of peripherals.
 
-g.
+I'd like to hear Grant's thoughts on this.
+
+Rob
