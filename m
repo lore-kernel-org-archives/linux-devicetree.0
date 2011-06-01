@@ -1,110 +1,73 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: l2x0: Add OF based initialization
-Date: Wed,  1 Jun 2011 11:37:50 -0500
-Message-ID: <1306946270-18379-4-git-send-email-robherring2@gmail.com>
-References: <1306946270-18379-1-git-send-email-robherring2@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC 1/2] ARM:Tegra: Device Tree Support: Initialize the audio
+ card from the device tree.
+Date: Wed, 1 Jun 2011 10:47:06 -0600
+Message-ID: <BANLkTi=PtEhxxmZo2DqvmySCmnEd3LbezQ@mail.gmail.com>
+References: <20110527205444.21000.90209.stgit@riker> <20110527205706.21000.34832.stgit@riker>
+ <BANLkTi=NMjBjWVv_o3PocejhgGr8TdG+1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1306946270-18379-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <BANLkTi=NMjBjWVv_o3PocejhgGr8TdG+1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Wed, Jun 1, 2011 at 1:07 AM, Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2011/5/28 John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>:
+>> This patch makes it so the top level audio card is initialized from =
+the device
+>> tree. This is just the first step getting the audio complex of devic=
+es
+>> iniialized from device tree nodes.
+>>
+>> Signed-off-by: John Bonesio<bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> ---
+>>
+>> =A0arch/arm/boot/dts/tegra-harmony.dts | =A0 =A04 +++
+>> =A0arch/arm/mach-tegra/board-dt.c =A0 =A0 =A0| =A0 =A03 ++
+>> =A0sound/soc/tegra/harmony.c =A0 =A0 =A0 =A0 =A0 | =A0 45 ++++++++++=
+++++++++++++++++++++++---
+>> =A03 files changed, 48 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts=
+/tegra-harmony.dts
+>> index 05521a5..217a7f0 100644
+>> --- a/arch/arm/boot/dts/tegra-harmony.dts
+>> +++ b/arch/arm/boot/dts/tegra-harmony.dts
+>> @@ -53,6 +53,10 @@
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0clock-frequency =3D <400000>;
+>> =A0 =A0 =A0 =A0};
+>>
+>> + =A0 =A0 =A0 harmony_audio: audio_card {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,harmony-audio";
+>> + =A0 =A0 =A0 };
+>> +
+>> =A0 =A0 =A0 =A0serial@70006300 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0status =3D "ok";
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0clock-frequency =3D < 216000000 >;
+>> diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/bo=
+ard-dt.c
+>> index c498e84..a569ad9 100644
+>> --- a/arch/arm/mach-tegra/board-dt.c
+>> +++ b/arch/arm/mach-tegra/board-dt.c
+>> @@ -56,6 +56,9 @@ static struct platform_device *tegra250_devices[] =
+__initdata =3D {
+>> =A0 =A0 =A0 =A0&tegra_i2c_device2,
+>> =A0 =A0 =A0 =A0&tegra_i2c_device3,
+>> =A0 =A0 =A0 =A0&tegra_i2c_device4,
+>> + =A0 =A0 =A0 &tegra_i2s_device1,
+>> + =A0 =A0 =A0 &tegra_das_device,
+>> + =A0 =A0 =A0 &tegra_pcm_device,
+>
+> i am thinking whether platform_device should be created by
+> of_platform_device_create after scanning device tree, but not by
+> hard-code? looks like the two patches are only trying to let device
+> tree deliver gpio to drivers?
 
-This adds probing for pl310 cache controller via device tree. An example
-binding looks like this:
+Can you please restate your question?  I don't think I understand what
+you are trying to ask.
 
-L2: l2-cache {
-	compatible = "arm,pl310-cache", "cache";
-	reg = <0xfff12000 0x1000>;
-	aux-value = <0>;
-	aux-mask = <0xffffffff>;
-	cache-unified;
-	cache-level = <2>;
-};
-
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/include/asm/hardware/cache-l2x0.h |    1 +
- arch/arm/mm/cache-l2x0.c                   |   36 ++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/include/asm/hardware/cache-l2x0.h
-index 16bd480..1d36632 100644
---- a/arch/arm/include/asm/hardware/cache-l2x0.h
-+++ b/arch/arm/include/asm/hardware/cache-l2x0.h
-@@ -74,6 +74,7 @@
- 
- #ifndef __ASSEMBLY__
- extern void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask);
-+extern int l2x0_of_init(void);
- #endif
- 
- #endif
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index ef59099..6dd521c 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -16,9 +16,12 @@
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  */
-+#include <linux/err.h>
- #include <linux/init.h>
- #include <linux/spinlock.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/hardware/cache-l2x0.h>
-@@ -344,3 +347,36 @@ void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask)
- 	printk(KERN_INFO "l2x0: %d ways, CACHE_ID 0x%08x, AUX_CTRL 0x%08x, Cache size: %d B\n",
- 			ways, cache_id, aux, l2x0_size);
- }
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id l2x0_ids[] __initdata = {
-+	{ .compatible = "arm,pl310-cache" },
-+	{ .compatible = "arm,l220-cache" },
-+	{ .compatible = "arm,l210-cache" },
-+};
-+
-+int __init l2x0_of_init(void)
-+{
-+	struct device_node *np;
-+	void __iomem *l2_base;
-+	__u32 aux_val = 0;
-+	__u32 aux_mask = ~0UL;
-+	const __be32 *val;
-+
-+	np = of_find_matching_node(NULL, l2x0_ids);
-+	if (!np)
-+		return -ENODEV;
-+	l2_base = of_iomap(np, 0);
-+	if (!l2_base)
-+		return -ENOMEM;
-+
-+	if ((val = of_get_property(np, "aux-value", NULL)) != NULL);
-+		aux_val = of_read_ulong(val, 1);
-+
-+	if ((val = of_get_property(np, "aux-mask", NULL)) != NULL);
-+		aux_mask = of_read_ulong(val, 1);
-+
-+	l2x0_init(l2_base, aux_val, aux_mask);
-+	return 0;
-+}
-+#endif
--- 
-1.7.4.1
+g.
