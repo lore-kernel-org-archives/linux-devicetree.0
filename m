@@ -1,35 +1,41 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC 2/2] ARM:Tegra: Device Tree Support: Initialize audio card
- gpio's from the device tree.
-Date: Wed, 1 Jun 2011 17:18:56 +0100
-Message-ID: <20110601161856.GB15583@opensource.wolfsonmicro.com>
-References: <20110530033826.GE4130@opensource.wolfsonmicro.com>
- <20110530061155.GC23517@ponder.secretlab.ca>
- <4DE336A1.5040509@firmworks.com>
- <20110530070138.GA5036@opensource.wolfsonmicro.com>
- <8d2515b13c817cc956b185d043bcef00@kernel.crashing.org>
- <BANLkTi=hkScxYpt449CQCky+bLU3UvkC_A@mail.gmail.com>
- <4DE403C5.7060003@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF0498E1C22D@HQMAIL01.nvidia.com>
- <4DE536AD.5080200@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF0498E1C3F5@HQMAIL01.nvidia.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] DT bindings Cortex A9 peripherals
+Date: Wed,  1 Jun 2011 11:37:47 -0500
+Message-ID: <1306946270-18379-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF0498E1C3F5-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2011 at 08:59:55AM -0700, Stephen Warren wrote:
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-> My perspective is that cut/pasting the entire SoC definition into a board
-> definition is the devicetree equivalent of having more than one driver
-> per chip, not sharing gpio/pinmux/... code, etc. in the kernel; the very
-> stuff that caused Linus to complain about the state of ARM Linux.
+This series adds DT based initialization and bindings for the pmu, gic and l2x0
+found on Cortex-A9's.
 
-Very strongly agreed, we've had to do that in the past because of
-limitations in the device tree infrastructure but if we end up having to
-cut'n'paste that's not going to be great for maintainability.
+Rob
+
+Rob Herring (3):
+  ARM: pmu: add OF probing support
+  ARM: gic: add OF based initialization
+  ARM: l2x0: Add OF based initialization
+
+ arch/arm/common/gic.c                      |   35 +++++++++++++++++++++++++++
+ arch/arm/include/asm/hardware/cache-l2x0.h |    1 +
+ arch/arm/include/asm/hardware/gic.h        |    1 +
+ arch/arm/kernel/pmu.c                      |   23 ++++++++++++++----
+ arch/arm/mm/cache-l2x0.c                   |   36 ++++++++++++++++++++++++++++
+ 5 files changed, 91 insertions(+), 5 deletions(-)
+
+-- 
+1.7.4.1
