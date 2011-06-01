@@ -1,61 +1,57 @@
-From: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: PCI EDAC on MPC85xx
-Date: Tue, 31 May 2011 23:25:05 +0400
-Message-ID: <BANLkTikNxFktd6c4rM9E0Xc+f6mQ=FGu7A@mail.gmail.com>
-References: <20110531131737.GA29164@doriath.ww600.siemens.net>
-	<7373D079-743D-4D49-BDC6-2BEAF14C43DF@kernel.crashing.org>
+From: Josh Triplett <josh@joshtriplett.org>
+Subject: Hooking up SM501 on TQM5200 (MPC5200) board via device tree?
+Date: Tue, 31 May 2011 22:07:01 -0700
+Message-ID: <20110601050659.GA7789@leaf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <7373D079-743D-4D49-BDC6-2BEAF14C43DF-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Cc: Jamey Sharp <jamey@minilop.net>
 List-Id: devicetree@vger.kernel.org
 
-On 5/31/11, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->
-> On May 31, 2011, at 8:17 AM, Dmitry Eremin-Solenikov wrote:
->
->> Hello,
->>
->> Long time ago (around July of 2010), I've reported a problem of binding
->> pci error reporting driver to the hardware (See
->> http://thread.gmane.org/gmane.linux.kernel.edac/181). Grant Likely has
->> come with a patch to create platform devices (of_platform at that time),
->> for device_nodes which have "compatible" properties
->> (http://article.gmane.org/gmane.linux.ports.ppc.embedded/36981).
->>
->> The patch was not applied at that time and the problem still arises at
->> 3.0-rc1. Should the patch in question be applied, or is there any new
->> solution?
->> Current version of that patch which I have in my tree is attached
->> to this mail (no original signoff by Grant).
->>
->> --
->> With best wishes
->> Dmitry
->>
->> <0001-of-device-Register-children-with-a-compatible-value-.patch>
->
-> I think the desired solution here was to create a new node in the fsl_pci
-> code that the edac code would bind against.
+We have a TQM5200 board, which has GPIO lines hooked up to an SM501.
+I've managed to come up with the following patch to the tqm5200 device
+tree, which manages to convince the sm501 driver to attach an sm501-fb:
 
-Sorry, got mistaken then by Grant=B4s patch. Will provide an update on this=
- topic
-soon.
+--- a/arch/powerpc/boot/dts/tqm5200.dts  2009-11-23 03:13:27.000000000 -0800
++++ b/arch/powerpc/boot/dts/tqm5200.dts  2011-05-31 22:00:28.000580627 -0700
+@@ -177,7 +177,8 @@
+                compatible = "fsl,mpc5200-lpb","simple-bus";
+                #address-cells = <2>;
+                #size-cells = <1>;
+-               ranges = <0 0 0xfc000000 0x02000000>;
++               ranges = <0 0 0xfc000000 0x02000000
++                         1 0 0xe0000000 0x04000000>;
+ 
+                flash@0,0 {
+                        compatible = "cfi-flash";
+@@ -187,6 +188,13 @@
+                        #size-cells = <1>;
+                        #address-cells = <1>;
+                };
++
++               display@1,0 {
++                       compatible = "smi,sm501";
++                       reg = <1 0x00000000 0x00800000
++                              1 0x03e00000 0x00200000>;
++                       interrupts = <1 1 3>;
++               };
+        };
+ 
+        pci@f0000d00 {
 
 
--- =
+However, this doesn't hook up the sm501-gpio bits.  Reading the sm501
+driver carefully, it looks like it only hooks up sm501-gpio if it has
+platform_data available which sets some flags and other information.
+So, if I understand correctly, hooking up sm501-gpio would require
+adding functionality the driver to get the GPIO information from the
+device tree in preference to the platform_data, if available, and fall
+back to the platform_data for existing users?
 
-With best wishes
-Dmitry
+What should the necessary device tree properties look like to replace
+sm501_initdata?
+
+- Josh Triplett
