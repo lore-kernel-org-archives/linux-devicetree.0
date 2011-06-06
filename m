@@ -1,8 +1,7 @@
 From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [RFC PATCH v5 1/6] of/lib: Allow scripts/dtc/libfdt to be used from
-	kernel code
-Date: Mon,  6 Jun 2011 12:19:41 -0700
-Message-ID: <1307387986-27069-2-git-send-email-ddaney@caviumnetworks.com>
+Subject: [RFC PATCH v5 4/6] MIPS: Prune some target specific code out of prom.c
+Date: Mon,  6 Jun 2011 12:19:44 -0700
+Message-ID: <1307387986-27069-5-git-send-email-ddaney@caviumnetworks.com>
 References: <1307387986-27069-1-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,153 +21,71 @@ To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9Mq
 Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-libfdt is part of the device tree support in scripts/dtc/libfdt.  For
-some platforms that use the Device Tree, we want to be able to edit
-the flattened device tree form.
-
-We don't want to burden kernel builds that do not require it, so we
-gate compilation of libfdt files with CONFIG_LIBFDT.  So if it is
-needed, you need to do this in your Kconfig:
-
-	select LIBFDT
-
-And in the Makefile of the code using libfdt something like:
-
-ccflags-y := -I$(src)/../../../scripts/dtc/libfdt
+This code is not common enough to be in a shared file.  It is also not
+used by any existing boards, so just remove it.
 
 Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 ---
- include/linux/libfdt.h     |    8 ++++++++
- include/linux/libfdt_env.h |   13 +++++++++++++
- lib/Kconfig                |    6 ++++++
- lib/Makefile               |    5 +++++
- lib/fdt.c                  |    2 ++
- lib/fdt_ro.c               |    2 ++
- lib/fdt_rw.c               |    2 ++
- lib/fdt_strerror.c         |    2 ++
- lib/fdt_sw.c               |    2 ++
- lib/fdt_wip.c              |    2 ++
- 10 files changed, 44 insertions(+), 0 deletions(-)
- create mode 100644 include/linux/libfdt.h
- create mode 100644 include/linux/libfdt_env.h
- create mode 100644 lib/fdt.c
- create mode 100644 lib/fdt_ro.c
- create mode 100644 lib/fdt_rw.c
- create mode 100644 lib/fdt_strerror.c
- create mode 100644 lib/fdt_sw.c
- create mode 100644 lib/fdt_wip.c
+ arch/mips/kernel/prom.c |   50 -----------------------------------------------
+ 1 files changed, 0 insertions(+), 50 deletions(-)
 
-diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
-new file mode 100644
-index 0000000..4c0306c
---- /dev/null
-+++ b/include/linux/libfdt.h
-@@ -0,0 +1,8 @@
-+#ifndef _INCLUDE_LIBFDT_H_
-+#define _INCLUDE_LIBFDT_H_
-+
-+#include <linux/libfdt_env.h>
-+#include "../../scripts/dtc/libfdt/fdt.h"
-+#include "../../scripts/dtc/libfdt/libfdt.h"
-+
-+#endif /* _INCLUDE_LIBFDT_H_ */
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-new file mode 100644
-index 0000000..01508c7
---- /dev/null
-+++ b/include/linux/libfdt_env.h
-@@ -0,0 +1,13 @@
-+#ifndef _LIBFDT_ENV_H
-+#define _LIBFDT_ENV_H
-+
-+#include <linux/string.h>
-+
-+#include <asm/byteorder.h>
-+
-+#define fdt32_to_cpu(x) be32_to_cpu(x)
-+#define cpu_to_fdt32(x) cpu_to_be32(x)
-+#define fdt64_to_cpu(x) be64_to_cpu(x)
-+#define cpu_to_fdt64(x) cpu_to_be64(x)
-+
-+#endif /* _LIBFDT_ENV_H */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 830181c..893a7db 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -262,4 +262,10 @@ config AVERAGE
- 
- 	  If unsure, say N.
- 
-+#
-+# libfdt files, only selected if needed.
-+#
-+config LIBFDT
-+	bool
-+
- endmenu
-diff --git a/lib/Makefile b/lib/Makefile
-index 6b597fd..06c2336 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -112,6 +112,11 @@ obj-$(CONFIG_AVERAGE) += average.o
- 
- obj-$(CONFIG_CPU_RMAP) += cpu_rmap.o
- 
-+libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o
-+$(foreach file, $(libfdt_files), \
-+	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
-+lib-$(CONFIG_LIBFDT) += $(libfdt_files)
-+
- hostprogs-y	:= gen_crc32table
- clean-files	:= crc32table.h
- 
-diff --git a/lib/fdt.c b/lib/fdt.c
-new file mode 100644
-index 0000000..97f2006
---- /dev/null
-+++ b/lib/fdt.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt.c"
-diff --git a/lib/fdt_ro.c b/lib/fdt_ro.c
-new file mode 100644
-index 0000000..f73c04e
---- /dev/null
-+++ b/lib/fdt_ro.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_ro.c"
-diff --git a/lib/fdt_rw.c b/lib/fdt_rw.c
-new file mode 100644
-index 0000000..0c1f0f4
---- /dev/null
-+++ b/lib/fdt_rw.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_rw.c"
-diff --git a/lib/fdt_strerror.c b/lib/fdt_strerror.c
-new file mode 100644
-index 0000000..8713e3f
---- /dev/null
-+++ b/lib/fdt_strerror.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_strerror.c"
-diff --git a/lib/fdt_sw.c b/lib/fdt_sw.c
-new file mode 100644
-index 0000000..9ac7e50
---- /dev/null
-+++ b/lib/fdt_sw.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_sw.c"
-diff --git a/lib/fdt_wip.c b/lib/fdt_wip.c
-new file mode 100644
-index 0000000..45b3fc3
---- /dev/null
-+++ b/lib/fdt_wip.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_wip.c"
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 5b7eade..a07b6f1 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -59,53 +59,3 @@ void __init early_init_dt_setup_initrd_arch(unsigned long start,
+ 	initrd_below_start_ok = 1;
+ }
+ #endif
+-
+-/*
+- * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux irq#
+- *
+- * Currently the mapping mechanism is trivial; simple flat hwirq numbers are
+- * mapped 1:1 onto Linux irq numbers.  Cascaded irq controllers are not
+- * supported.
+- */
+-unsigned int irq_create_of_mapping(struct device_node *controller,
+-				   const u32 *intspec, unsigned int intsize)
+-{
+-	return intspec[0];
+-}
+-EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+-
+-void __init early_init_devtree(void *params)
+-{
+-	/* Setup flat device-tree pointer */
+-	initial_boot_params = params;
+-
+-	/* Retrieve various informations from the /chosen node of the
+-	 * device-tree, including the platform type, initrd location and
+-	 * size, and more ...
+-	 */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, arcs_cmdline);
+-
+-
+-	/* Scan memory nodes */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-	of_scan_flat_dt(early_init_dt_scan_memory_arch, NULL);
+-}
+-
+-void __init device_tree_init(void)
+-{
+-	unsigned long base, size;
+-
+-	if (!initial_boot_params)
+-		return;
+-
+-	base = virt_to_phys((void *)initial_boot_params);
+-	size = be32_to_cpu(initial_boot_params->totalsize);
+-
+-	/* Before we do anything, lets reserve the dt blob */
+-	reserve_mem_mach(base, size);
+-
+-	unflatten_device_tree();
+-
+-	/* free the space reserved for the dt blob */
+-	free_mem_mach(base, size);
+-}
 -- 
 1.7.2.3
