@@ -1,8 +1,7 @@
 From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [RFC PATCH v5 2/6] of: Make of_find_node_by_path() traverse /aliases
-	for relative paths.
-Date: Mon,  6 Jun 2011 12:19:42 -0700
-Message-ID: <1307387986-27069-3-git-send-email-ddaney@caviumnetworks.com>
+Subject: [RFC PATCH v5 6/6] MIPS: Octeon: Initialize and fixup device tree.
+Date: Mon,  6 Jun 2011 12:19:46 -0700
+Message-ID: <1307387986-27069-7-git-send-email-ddaney@caviumnetworks.com>
 References: <1307387986-27069-1-git-send-email-ddaney@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,106 +21,434 @@ To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9Mq
 Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently all paths passed to of_find_node_by_path() must begin with a
-'/', indicating a full path to the desired node.
-
-Augment the look-up code so that if a path does *not* begin with '/',
-the path is used as the name of an /aliases property.  The value of
-this alias is then used as the full node path to be found.
-
 Signed-off-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 ---
- drivers/of/base.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 files changed, 62 insertions(+), 3 deletions(-)
+ arch/mips/Kconfig                         |    1 +
+ arch/mips/cavium-octeon/Makefile          |    3 +
+ arch/mips/cavium-octeon/octeon-platform.c |  319 +++++++++++++++++++++++++++++
+ arch/mips/cavium-octeon/setup.c           |   39 ++++
+ 4 files changed, 362 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 632ebae..4165084 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -340,22 +340,81 @@ EXPORT_SYMBOL(of_get_next_child);
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d2849b4..97f044a 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1402,6 +1402,7 @@ config CPU_CAVIUM_OCTEON
+ 	select WEAK_ORDERING
+ 	select CPU_SUPPORTS_HIGHMEM
+ 	select CPU_SUPPORTS_HUGEPAGES
++	select LIBFDT
+ 	help
+ 	  The Cavium Octeon processor is a highly integrated chip containing
+ 	  many ethernet hardware widgets for networking tasks. The processor
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index b8d4f63..a11b35a 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -9,6 +9,9 @@
+ # Copyright (C) 2005-2009 Cavium Networks
+ #
  
- /**
-  *	of_find_node_by_path - Find a node matching a full OF path
-- *	@path:	The full path to match
-+ *	@path: Either the full path to match, or if the path does not
-+ *	       start with '/', the name of a property of the /aliases
-+ *	       node (an alias).  In the case of an alias, the node
-+ *	       matching the alias' value will be returned.
-  *
-  *	Returns a node pointer with refcount incremented, use
-  *	of_node_put() on it when done.
-  */
- struct device_node *of_find_node_by_path(const char *path)
- {
--	struct device_node *np = allnodes;
-+	struct device_node *np = NULL;
-+	struct device_node *aliases = NULL;
-+	char *alias = NULL;
-+	char *new_path = NULL;
-+	char *ps;
++CFLAGS_octeon-platform.o = -I$(src)/../../../scripts/dtc/libfdt
++CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
++
+ obj-y := cpu.o setup.o serial.o octeon-platform.o octeon-irq.o csrc-octeon.o
+ obj-y += dma-octeon.o flash_setup.o
+ obj-y += octeon-memcpy.o
+diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
+index cd61d72..17329e5 100644
+--- a/arch/mips/cavium-octeon/octeon-platform.c
++++ b/arch/mips/cavium-octeon/octeon-platform.c
+@@ -13,10 +13,16 @@
+ #include <linux/usb.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
++#include <linux/slab.h>
+ #include <linux/platform_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_fdt.h>
++#include <linux/libfdt.h>
  
- 	read_lock(&devtree_lock);
--	for (; np; np = np->allnext) {
+ #include <asm/octeon/octeon.h>
+ #include <asm/octeon/cvmx-rnm-defs.h>
++#include <asm/octeon/cvmx-helper.h>
++#include <asm/octeon/cvmx-helper-board.h>
+ 
+ static struct octeon_cf_data octeon_cf_data;
+ 
+@@ -440,6 +446,319 @@ device_initcall(octeon_ohci_device_init);
+ 
+ #endif /* CONFIG_USB */
+ 
++static struct of_device_id __initdata octeon_ids[] = {
++	{ .compatible = "simple-bus", },
++	{ .compatible = "cavium,octeon-6335-uctl", },
++	{ .compatible = "cavium,octeon-3860-bootbus", },
++	{},
++};
 +
-+	/*
-+	 * The following code has three possibilities:
-+	 * 1) '/' at start of string; path == ps; (based at root)
-+	 * 2) '/' at offset in string; path < ps; (relative to alias)
-+	 * 3) '/' not found; ps == NULL; (alias only)
-+	 *
-+	 * If ps != path, then it is either a pure alias (ps == NULL),
-+	 * or an alias with a relative path (path < ps).  Either way,
-+	 * look up the path pointed to by the alias.
-+	 */
-+	ps = strchr(path, '/');
-+	if (path != ps) {
-+		aliases = of_find_node_by_path("/aliases");
-+		if (!aliases)
-+			goto out;
++static bool __init octeon_has_88e1145(void)
++{
++	return !OCTEON_IS_MODEL(OCTEON_CN52XX) &&
++	       !OCTEON_IS_MODEL(OCTEON_CN6XXX) &&
++	       !OCTEON_IS_MODEL(OCTEON_CN56XX);
++}
 +
-+		/*
-+		 * Duplicate the alias part of the string so it can be
-+		 * NULL terminated.
-+		 */
-+		alias = kstrndup(path,
-+				 ps ? (ps - path) : strlen(path), GFP_KERNEL);
-+		if (!alias)
-+			goto out;
-+		path = of_get_property(aliases, alias, NULL);
-+		if (!path || path[0] != '/')
-+			goto out;
++static void __init octeon_fdt_set_phy(int eth, int phy_addr)
++{
++	const __be32 *phy_handle;
++	const __be32 *reg;
++	u32 phandle;
++	int phy;
++	const char *p;
++	int current_len;
++	char new_name[20];
 +
-+		/* If ps is not NULL, then there is a relative path to append */
-+		if (ps) {
-+			new_path = kzalloc(strlen(path) + strlen(ps) + 1,
-+					   GFP_KERNEL);
-+			if (!new_path)
-+				goto out;
++	phy_handle = fdt_getprop(initial_boot_params, eth, "phy-handle", NULL);
++	if (!phy_handle)
++		return;
 +
-+			sprintf(new_path, "%s%s", path, ps);
-+			path = new_path;
++	phandle = be32_to_cpup(phy_handle);
++	phy = fdt_node_offset_by_phandle(initial_boot_params, phandle);
++	if (phy_addr < 0 || phy < 0) {
++		/* Delete the PHY things */
++		fdt_nop_property(initial_boot_params, eth, "phy-handle");
++		if (phy >= 0)
++			fdt_nop_node(initial_boot_params, phy);
++		return;
++	}
++
++	if (octeon_has_88e1145()) {
++		fdt_nop_property(initial_boot_params, phy, "marvell,reg-init");
++		memset(new_name, 0, sizeof(new_name));
++		strcpy(new_name, "marvell,88e1145");
++		p = fdt_getprop(initial_boot_params, phy, "compatible",
++				&current_len);
++		if (p && current_len >= strlen(new_name))
++			fdt_setprop_inplace(initial_boot_params, phy,
++					"compatible", new_name, current_len);
++	}
++
++	reg = fdt_getprop(initial_boot_params, phy, "reg", NULL);
++	if (phy_addr == be32_to_cpup(reg))
++		return;
++
++	fdt_setprop_inplace_cell(initial_boot_params, phy, "reg", phy_addr);
++
++	snprintf(new_name, sizeof(new_name), "ethernet-phy@%x", phy_addr);
++
++	p = fdt_get_name(initial_boot_params, phy, &current_len);
++	if (p && current_len == strlen(new_name))
++		fdt_set_name(initial_boot_params, phy, new_name);
++	else
++		pr_err("Error: could not rename ethernet phy: <%s>", p);
++}
++
++static void __init octeon_fdt_set_mac_addr(int n, u64 *pmac)
++{
++	u8 new_mac[6];
++	u64 mac = *pmac;
++	int r;
++
++	new_mac[0] = (mac >> 40) & 0xff;
++	new_mac[1] = (mac >> 32) & 0xff;
++	new_mac[2] = (mac >> 24) & 0xff;
++	new_mac[3] = (mac >> 16) & 0xff;
++	new_mac[4] = (mac >> 8) & 0xff;
++	new_mac[5] = mac & 0xff;
++
++	r = fdt_setprop_inplace(initial_boot_params, n, "local-mac-address",
++				new_mac, sizeof(new_mac));
++
++	if (r) {
++		pr_err("Setting \"local-mac-address\" failed %d", r);
++		return;
++	}
++	*pmac = mac + 1;
++}
++
++static void __init octeon_fdt_rm_ethernet(int node)
++{
++	const __be32 *phy_handle;
++
++	phy_handle = fdt_getprop(initial_boot_params, node, "phy-handle", NULL);
++	if (phy_handle) {
++		u32 ph = be32_to_cpup(phy_handle);
++		int p = fdt_node_offset_by_phandle(initial_boot_params, ph);
++		if (p >= 0)
++			fdt_nop_node(initial_boot_params, p);
++	}
++	fdt_nop_node(initial_boot_params, node);
++}
++
++static void __init octeon_fdt_pip_port(int iface, int i, int p, u64 *pmac)
++{
++	char name_buffer[20];
++	int eth;
++	int phy_addr;
++
++	snprintf(name_buffer, sizeof(name_buffer), "ethernet@%x", p);
++	eth = fdt_subnode_offset(initial_boot_params, iface, name_buffer);
++	if (eth < 0)
++		return;
++	if (p >= cvmx_helper_ports_on_interface(i)) {
++		pr_notice("Deleting port %x:%x\n", i, p);
++		octeon_fdt_rm_ethernet(eth);
++		return;
++	}
++
++	phy_addr = cvmx_helper_board_get_mii_address(16 * i + p);
++	octeon_fdt_set_phy(eth, phy_addr);
++	octeon_fdt_set_mac_addr(eth, pmac);
++}
++
++static void __init octeon_fdt_pip_iface(int pip, int idx, u64 *pmac)
++{
++	char name_buffer[20];
++	int iface;
++	int p;
++
++	cvmx_helper_interface_enumerate(idx);
++	snprintf(name_buffer, sizeof(name_buffer), "interface@%d", idx);
++	iface = fdt_subnode_offset(initial_boot_params, pip, name_buffer);
++	if (iface < 0)
++		return;
++
++	for (p = 0; p < 16; p++)
++		octeon_fdt_pip_port(iface, idx, p, pmac);
++}
++
++int __init octeon_prune_device_tree(void)
++{
++	int i, max_port, uart_mask;
++	const char *pip_path;
++	char name_buffer[20];
++	int aliases;
++	u64 mac_addr_base;
++
++	if (fdt_check_header(initial_boot_params))
++		panic("Corrupt Device Tree.");
++
++	aliases = fdt_path_offset(initial_boot_params, "/aliases");
++	if (aliases < 0) {
++		pr_err("Error: No /aliases node in device tree.");
++		return -EINVAL;
++	}
++
++
++	mac_addr_base =
++		((octeon_bootinfo->mac_addr_base[0] & 0xffull)) << 40 |
++		((octeon_bootinfo->mac_addr_base[1] & 0xffull)) << 32 |
++		((octeon_bootinfo->mac_addr_base[2] & 0xffull)) << 24 |
++		((octeon_bootinfo->mac_addr_base[3] & 0xffull)) << 16 |
++		((octeon_bootinfo->mac_addr_base[4] & 0xffull)) << 8 |
++		(octeon_bootinfo->mac_addr_base[5] & 0xffull);
++
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX) || OCTEON_IS_MODEL(OCTEON_CN63XX))
++		max_port = 2;
++	else if (OCTEON_IS_MODEL(OCTEON_CN56XX))
++		max_port = 1;
++	else
++		max_port = 0;
++
++	for (i = 0; i < 2; i++) {
++		const char *alias_prop;
++		int mgmt;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "mix%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++		if (alias_prop) {
++			mgmt = fdt_path_offset(initial_boot_params, alias_prop);
++			if (mgmt < 0)
++				continue;
++			if (i >= max_port) {
++				pr_notice("Deleting mix%d\n", i);
++				octeon_fdt_rm_ethernet(mgmt);
++				fdt_nop_property(initial_boot_params, aliases,
++						 name_buffer);
++			} else {
++				octeon_fdt_set_phy(mgmt, i);
++				octeon_fdt_set_mac_addr(mgmt, &mac_addr_base);
++			}
 +		}
 +	}
 +
-+	/*
-+	 * At this point, path now points to the full unaliased path
-+	 * to a node, regardless of whether or not it started with an
-+	 * alias.
-+	 */
++	pip_path = fdt_getprop(initial_boot_params, aliases, "pip", NULL);
++	if (pip_path) {
++		int pip = fdt_path_offset(initial_boot_params, pip_path);
++		if (pip  >= 0)
++			for (i = 0; i < 4; i++)
++				octeon_fdt_pip_iface(pip, i, &mac_addr_base);
++	}
 +
-+	for (np = allnodes; np; np = np->allnext) {
- 		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
- 		    && of_node_get(np))
- 			break;
++	/* I2C */
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX) ||
++	    OCTEON_IS_MODEL(OCTEON_CN63XX) ||
++	    OCTEON_IS_MODEL(OCTEON_CN56XX))
++		max_port = 2;
++	else
++		max_port = 1;
++
++	for (i = 0; i < 2; i++) {
++		const char *alias_prop;
++		int i2c;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "twsi%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++
++		if (alias_prop) {
++			i2c = fdt_path_offset(initial_boot_params, alias_prop);
++			if (i2c < 0)
++				continue;
++			if (i >= max_port) {
++				pr_notice("Deleting twsi%d\n", i);
++				fdt_nop_node(initial_boot_params, i2c);
++				fdt_nop_property(initial_boot_params, aliases,
++						 name_buffer);
++			}
++		}
++	}
++
++	/* SMI/MDIO Same number of ports as I2C*/
++
++	for (i = 0; i < 2; i++) {
++		const char *alias_prop;
++		int i2c;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "smi%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++
++		if (alias_prop) {
++			i2c = fdt_path_offset(initial_boot_params, alias_prop);
++			if (i2c < 0)
++				continue;
++			if (i >= max_port) {
++				pr_notice("Deleting smi%d\n", i);
++				fdt_nop_node(initial_boot_params, i2c);
++				fdt_nop_property(initial_boot_params, aliases,
++						 name_buffer);
++			}
++		}
++	}
++
++	/* Serial */
++	uart_mask = 0;
++
++#ifdef CONFIG_CAVIUM_OCTEON_2ND_KERNEL
++	/*
++	 * If we are configured to run as the second of two kernels,
++	 * disable uart0 and enable uart1. Uart0 is owned by the first
++	 * kernel
++	 */
++	uart_mask |= 2; /* uart1 */
++#else
++	/*
++	 * We are configured for the first kernel. We'll enable uart0
++	 * if the bootloader told us to use 0, otherwise will enable
++	 * uart 1.
++	 */
++	if (octeon_get_boot_uart() == 0)
++		uart_mask |= 1; /* uart0 */
++	if (octeon_get_boot_uart() == 1)
++		uart_mask |= 2; /* uart1 */
++
++#ifdef CONFIG_KGDB
++	uart_mask |= 2; /* uart1 */
++#endif
++#endif
++
++	/* Right now CN52XX is the only chip with a third uart */
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX))
++		uart_mask |= 4; /* uart2 */
++
++	for (i = 0; i < 3; i++) {
++		const char *alias_prop;
++		int uart;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "uart%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++
++		if (alias_prop) {
++			uart = fdt_path_offset(initial_boot_params, alias_prop);
++			if (uart_mask & (1 << i))
++				continue;
++			pr_notice("Deleting uart%d\n", i);
++			fdt_nop_node(initial_boot_params, uart);
++			fdt_nop_property(initial_boot_params, aliases,
++					 name_buffer);
++		}
++	}
++
++	return 0;
++}
++
++static int __init octeon_publish_devices(void)
++{
++	return of_platform_bus_probe(NULL, octeon_ids, NULL);
++}
++device_initcall(octeon_publish_devices);
++
++
+ MODULE_AUTHOR("David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Platform driver for Octeon SOC");
+diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+index 36221b3..15f876e 100644
+--- a/arch/mips/cavium-octeon/setup.c
++++ b/arch/mips/cavium-octeon/setup.c
+@@ -20,6 +20,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/serial_core.h>
+ #include <linux/serial_8250.h>
++#include <linux/of_fdt.h>
++#include <linux/libfdt.h>
+ #ifdef CONFIG_BLK_DEV_INITRD
+ #include <linux/initrd.h>
+ #endif
+@@ -797,3 +799,40 @@ void prom_free_prom_memory(void)
  	}
-+out:
-+	if (aliases)
-+		of_node_put(aliases);
- 	read_unlock(&devtree_lock);
-+	kfree(alias);
-+	kfree(new_path);
- 	return np;
+ #endif
  }
- EXPORT_SYMBOL(of_find_node_by_path);
++
++int octeon_prune_device_tree(void);
++
++extern const char __dtb_octeon_3xxx_begin;
++extern const char __dtb_octeon_3xxx_end;
++void __init device_tree_init(void)
++{
++	int dt_size;
++	struct boot_param_header *fdt;
++	bool do_prune;
++
++	if (octeon_bootinfo->minor_version >= 3 && octeon_bootinfo->fdt_addr) {
++		fdt = (struct boot_param_header *)PHYS_TO_XKSEG_CACHED(octeon_bootinfo->fdt_addr);
++		if (fdt_check_header(fdt))
++			panic("Corrupt Device Tree passed to kernel.");
++		dt_size = be32_to_cpu(fdt->totalsize);
++		do_prune = false;
++	} else {
++		fdt = (struct boot_param_header *)&__dtb_octeon_3xxx_begin;
++		dt_size = &__dtb_octeon_3xxx_end - &__dtb_octeon_3xxx_begin;
++		do_prune = true;
++	}
++
++	/* Copy the default tree from init memory. */
++	initial_boot_params = early_init_dt_alloc_memory_arch(dt_size, 8);
++	if (initial_boot_params == NULL)
++		panic("Could not allocate initial_boot_params\n");
++	memcpy(initial_boot_params, fdt, dt_size);
++
++	if (do_prune) {
++		octeon_prune_device_tree();
++		pr_info("Using internal Device Tree.\n");
++	} else {
++		pr_info("Using passed Device Tree.\n");
++	}
++	unflatten_device_tree();
++}
 -- 
 1.7.2.3
