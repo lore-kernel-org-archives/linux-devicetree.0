@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] ARM: gic: add OF based initialization
-Date: Tue,  7 Jun 2011 09:22:20 -0500
-Message-ID: <1307456541-11026-3-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 3/3] ARM: l2x0: Add OF based initialization
+Date: Tue,  7 Jun 2011 09:22:21 -0500
+Message-ID: <1307456541-11026-4-git-send-email-robherring2@gmail.com>
 References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,125 +22,134 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-This adds gic initialization using device tree data. An example device tree
+This adds probing for pl310 cache controller via device tree. An example
 binding looks like this:
 
-intc: interrupt-controller@fff11000 {
-        compatible = "arm,cortex-a9-gic";
-        #interrupt-cells = <1>;
-        interrupt-controller;
-        reg = <0xfff11000 0x1000>,
-              <0xfff10100 0x100>;
-        irq-start = <29>;
+L2: l2-cache {
+	compatible = "arm,pl310-cache", "cache";
+	reg = <0xfff12000 0x1000>;
+	aux-value = <0>;
+	aux-mask = <0xffffffff>;
+	cache-unified;
+	cache-level = <2>;
 };
 
 Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/gic.txt |   31 +++++++++++++++++++++
- arch/arm/common/gic.c                         |   36 +++++++++++++++++++++++++
- arch/arm/include/asm/hardware/gic.h           |    1 +
- 3 files changed, 68 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+ Documentation/devicetree/bindings/arm/l2cc.txt |   35 ++++++++++++++++++++++
+ arch/arm/include/asm/hardware/cache-l2x0.h     |    1 +
+ arch/arm/mm/cache-l2x0.c                       |   38 ++++++++++++++++++++++++
+ 3 files changed, 74 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/l2cc.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
 new file mode 100644
-index 0000000..491a503
+index 0000000..17082be
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -0,0 +1,31 @@
-+* ARM Generic Interrupt Controller
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -0,0 +1,35 @@
++* ARM L2 Cache Controller
 +
-+Some ARM cores have an interrupt controller called GIC. The ARM GIC
-+representation in the device tree should be done as under:-
++ARM cores often have a separate level 2 cache controller. There are various
++implementations of the L2 cache controller with compatible programming models.
++The ARM L2 cache representation in the device tree should be done as under:-
 +
 +Required properties:
 +
-+- compatible : should be one of:
-+	"arm,cortex-a9-gic"
-+	"arm,arm11mp-gic"
-+	"nvidia,tegra250-gic"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source.  The type shall be a <u32> and the value shall be 1.
-+- reg : Specifies base physical address(s) and size of the GIC registers. The
-+  first 2 values are the GIC distributor register base and size. The 2nd 2
-+  values are the GIC cpu interface register base and size.
-+- irq-start : The first actual interrupt that is connected to h/w.
++- compatible : should be one of
++	"arm,pl310-cache"
++	"arm,l220-cache"
++	"arm,l210-cache"
++- cache-unified : Specifies the cache is a unified cache.
++- cache-level : Should be set to 2 for a level 2 cache.
++- reg : Physical base address and size of cache controller's memory mapped
++  registers.
++
++Optional properties:
++
++- aux-value : Value to set the Auxillary Control register to. Setting masked
++  bits is undefined. Default value is 0.
++- aux-mask : Mask of bits to preserve in the Auxillary Control register.
++  Default value is 0xffffffff.
 +
 +Example:
 +
-+intc: interrupt-controller@fff11000 {
-+        compatible = "arm,cortex-a9-gic";
-+        #interrupt-cells = <1>;
-+        interrupt-controller;
-+        reg = <0xfff11000 0x1000>,
-+              <0xfff10100 0x100>;
-+        irq-start = <29>;
++L2: l2-cache {
++        compatible = "arm,pl310-cache", "cache";
++        reg = <0xfff12000 0x1000>;
++        aux-value = <0>;
++        aux-mask = <0xffffffff>;
++        cache-unified;
++        cache-level = <2>;
 +};
 +
-+
-diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-index 4ddd0a6..024414d 100644
---- a/arch/arm/common/gic.c
-+++ b/arch/arm/common/gic.c
-@@ -28,6 +28,8 @@
- #include <linux/smp.h>
- #include <linux/cpumask.h>
+diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/include/asm/hardware/cache-l2x0.h
+index 16bd480..1d36632 100644
+--- a/arch/arm/include/asm/hardware/cache-l2x0.h
++++ b/arch/arm/include/asm/hardware/cache-l2x0.h
+@@ -74,6 +74,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ extern void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask);
++extern int l2x0_of_init(void);
+ #endif
+ 
+ #endif
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index ef59099..910f530 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -16,9 +16,12 @@
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+  */
++#include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/spinlock.h>
  #include <linux/io.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
  
- #include <asm/irq.h>
- #include <asm/mach/irq.h>
-@@ -401,3 +403,37 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
+ #include <asm/cacheflush.h>
+ #include <asm/hardware/cache-l2x0.h>
+@@ -344,3 +347,38 @@ void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask)
+ 	printk(KERN_INFO "l2x0: %d ways, CACHE_ID 0x%08x, AUX_CTRL 0x%08x, Cache size: %d B\n",
+ 			ways, cache_id, aux, l2x0_size);
  }
- #endif
 +
 +#ifdef CONFIG_OF
-+static struct of_device_id gic_ids[] __initdata = {
-+	{ .compatible = "arm,cortex-a9-gic" },
++static struct of_device_id l2x0_ids[] __initdata = {
++	{ .compatible = "arm,pl310-cache" },
++	{ .compatible = "arm,l220-cache" },
++	{ .compatible = "arm,l210-cache" },
 +};
 +
-+void __init gic_of_init(void)
++int __init l2x0_of_init(void)
 +{
 +	struct device_node *np;
-+	void __iomem *cpu_base;
-+	void __iomem *dist_base;
-+	__u32 irq_start = 16;
++	void __iomem *l2_base;
++	__u32 aux_val = 0;
++	__u32 aux_mask = ~0UL;
 +	const __be32 *val;
 +
-+	np = of_find_matching_node(NULL, gic_ids);
++	np = of_find_matching_node(NULL, l2x0_ids);
 +	if (!np)
-+		panic("unable to find compatible gic node in dtb\n");
++		return -ENODEV;
++	l2_base = of_iomap(np, 0);
++	if (!l2_base)
++		return -ENOMEM;
 +
-+	dist_base = of_iomap(np, 0);
-+	if (!dist_base)
-+		panic("unable to map gic dist registers\n");
-+
-+	cpu_base = of_iomap(np, 1);
-+	if (!cpu_base)
-+		panic("unable to map gic cpu registers\n");
-+
-+	val = of_get_property(np, "irq-start", NULL);
++	val = of_get_property(np, "aux-value", NULL);
 +	if (val != NULL)
-+		irq_start = of_read_ulong(val, 1);
-+	of_node_put(np);
++		aux_val = of_read_ulong(val, 1);
 +
-+	gic_init(0, irq_start, dist_base, cpu_base);
++	val = of_get_property(np, "aux-mask", NULL);
++	if (val != NULL)
++		aux_mask = of_read_ulong(val, 1);
++
++	l2x0_init(l2_base, aux_val, aux_mask);
++	return 0;
 +}
 +#endif
-diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
-index 0691f9d..954a08e 100644
---- a/arch/arm/include/asm/hardware/gic.h
-+++ b/arch/arm/include/asm/hardware/gic.h
-@@ -37,6 +37,7 @@ extern void __iomem *gic_cpu_base_addr;
- extern struct irq_chip gic_arch_extn;
- 
- void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
-+void gic_of_init(void);
- void gic_secondary_init(unsigned int);
- void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
- void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
 -- 
 1.7.4.1
