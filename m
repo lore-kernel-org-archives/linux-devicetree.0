@@ -1,95 +1,77 @@
-From: Josh Triplett <josh@joshtriplett.org>
-Subject: Re: Hooking up SM501 on TQM5200 (MPC5200) board via device tree?
-Date: Tue, 7 Jun 2011 20:09:40 -0700
-Message-ID: <20110608030940.GA18383@leaf>
-References: <20110601050659.GA7789@leaf>
- <20110603205138.GI17972@ponder.secretlab.ca>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/2] dt: add custom device creation to platform
+	bus scan
+Date: Tue, 07 Jun 2011 22:12:47 -0500
+Message-ID: <4DEEE8AF.50603@gmail.com>
+References: <1306359073-16274-1-git-send-email-robherring2@gmail.com>
+	<4DE66E39.2070300@gmail.com>
+	<BANLkTimTdVKspjJ8GD4M90wiKCC0SzkgpA@mail.gmail.com>
+	<201106012329.20651.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110603205138.GI17972@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, Jamey Sharp <jamey@minilop.net>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201106012329.20651.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2011 at 02:51:38PM -0600, Grant Likely wrote:
-> On Tue, May 31, 2011 at 10:07:01PM -0700, Josh Triplett wrote:
-> > We have a TQM5200 board, which has GPIO lines hooked up to an SM501.
-> > I've managed to come up with the following patch to the tqm5200 device
-> > tree, which manages to convince the sm501 driver to attach an sm501-fb:
-> > 
-> > --- a/arch/powerpc/boot/dts/tqm5200.dts  2009-11-23 03:13:27.000000000 -0800
-> > +++ b/arch/powerpc/boot/dts/tqm5200.dts  2011-05-31 22:00:28.000580627 -0700
-> > @@ -177,7 +177,8 @@
-> >                 compatible = "fsl,mpc5200-lpb","simple-bus";
-> >                 #address-cells = <2>;
-> >                 #size-cells = <1>;
-> > -               ranges = <0 0 0xfc000000 0x02000000>;
-> > +               ranges = <0 0 0xfc000000 0x02000000
-> > +                         1 0 0xe0000000 0x04000000>;
-> >  
-> >                 flash@0,0 {
-> >                         compatible = "cfi-flash";
-> > @@ -187,6 +188,13 @@
-> >                         #size-cells = <1>;
-> >                         #address-cells = <1>;
-> >                 };
-> > +
-> > +               display@1,0 {
-> > +                       compatible = "smi,sm501";
-> > +                       reg = <1 0x00000000 0x00800000
-> > +                              1 0x03e00000 0x00200000>;
-> > +                       interrupts = <1 1 3>;
-> > +               };
-> >         };
-> >  
-> >         pci@f0000d00 {
-> > 
-> > 
-> > However, this doesn't hook up the sm501-gpio bits.  Reading the sm501
-> > driver carefully, it looks like it only hooks up sm501-gpio if it has
-> > platform_data available which sets some flags and other information.
-> > So, if I understand correctly, hooking up sm501-gpio would require
-> > adding functionality the driver to get the GPIO information from the
-> > device tree in preference to the platform_data, if available, and fall
-> > back to the platform_data for existing users?
-> > 
-> > What should the necessary device tree properties look like to replace
-> > sm501_initdata?
-> > 
-> > - Josh Triplett
-> 
-> You need to look at Documentation/devicetree/bindings/gpio/gpio.txt.
-> 
-> Also, you need to add bits to the sm501-gpio driver to register a
-> dynamically allocated range of gpio pins and to populate the
-> gpiochip->of_node pointer.  If that points at a device tree node, then
-> the core code will take care of setting up translation for you.
+On 06/01/2011 04:29 PM, Arnd Bergmann wrote:
+> On Wednesday 01 June 2011, Grant Likely wrote:
+>>>
+>>> Shouldn't the hierarchy in linux reflect the h/w? It seems a bit pointless
+>>> to me to create a device just to create another device. amba_bus is already
+>>> a bit strange in that it is not really a bus type, but a certain class of
+>>> peripherals.
+>>>
+>>> I'd like to hear Grant's thoughts on this.
+>>
+>> AMBA and platform_devices are "special" in that they don't have
+>> requirements on their parent device.  I see absolutely zero issue with
+>> having platform_device and amba_device as siblings.
+>
+> Hmm, if we accept that platform and AMBA devices are just different from
+> all the others, maybe we can do a simpler solution and just hardcode that
+> difference in the of_platform_bus_create function. It probably doesn't
+> hurt if we grow a handful of these at most, as long as we wouldn't add
+> code for a lot of different bus types to the common probing function.
+>
+> 	Arnd
 
-What would the resulting device tree look like, given that the sm501
-driver handles several different types of devices?  sm501 doesn't have a
-separate gpio driver; it just has a flag to enable GPIO.  The GPIO
-controller also doesn't have independent resources; as far as I can
-tell, the sm501 knows everything it needs to know in order to drive the
-gpio, except the boolean presence or absence of gpio.
+The simplest solutions are usually the best. With that, the 2nd patch 
+becomes:
 
-Currently, to get the sm501 hooked up at all, I wrote this:
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 9b785be..6955932 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -21,6 +21,7 @@
+  #include <linux/of_irq.h>
+  #include <linux/of_platform.h>
+  #include <linux/platform_device.h>
++#include <linux/amba/bus.h>
 
-display@1,0 {
-    compatible = "smi,sm501";
-    reg = <1 0x00000000 0x00800000
-           1 0x03e00000 0x00200000>;
-    interrupts = <1 1 3>;
-};
+  static int of_dev_node_match(struct device *dev, void *data)
+  {
+@@ -234,6 +235,11 @@ static int of_platform_bus_create(struct 
+device_node *bus,
+                 return 0;
+         }
 
-To hook up the gpio, would I nest an entire gpio@... { ...;
-gpio-controller; } stanza inside that or next to that, or just add the
-gpio-controller; and #gpio-cells lines inside the existing stanza for
-the sm501?
-
-Does the gpio@ bit have any semantic significance, or just the
-gpio-controller line and the compatible line?
-
-- Josh Triplett
++       if (of_device_is_compatible(bus, "arm,amba-device")) {
++               of_amba_device_create(bus, parent);
++               return 0;
++       }
++
+         dev = of_platform_device_create(bus, NULL, parent);
+         if (!dev || !of_match_node(matches, bus))
+                 return 0;
