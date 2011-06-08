@@ -1,15 +1,14 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] dt: add of_platform_populate() for creating device
-	from the device tree
-Date: Wed, 08 Jun 2011 09:20:05 -0500
-Message-ID: <4DEF8515.5060004@gmail.com>
-References: <20110316083046.1154.89723.stgit@localhost6.localdomain6>
-	<20110316083348.1154.4764.stgit@localhost6.localdomain6>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] powerpc/85xx:DTS: Fix tbi node location for Px020RDB
+Date: Wed, 8 Jun 2011 08:57:46 -0600
+Message-ID: <20110608145746.GD8499@ponder.secretlab.ca>
+References: <1307501379-3160-1-git-send-email-prabhakar@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110316083348.1154.4764.stgit-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1307501379-3160-1-git-send-email-prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,151 +18,189 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: meet2prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Wed, Jun 08, 2011 at 08:19:39AM +0530, Prabhakar Kushwaha wrote:
+> ten-bit interface (TBI) module is part of SoC not board.
+> 
+> Move tbi entries from board related dts files to Si dts.
+> 
+> Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-This is a bit old, but my testing has uncovered a few issues.
+Looks okay to me.
 
-On 03/16/2011 03:33 AM, Grant Likely wrote:
-> of_platform_populate() is similar to of_platform_bus_probe() except
-> that it strictly enforces that all device nodes must have a compatible
-> property, and it can be used to register devices (not buses) which are
-> children of the root node.
->
-> This patch also modifies MPC5200 support to use the new function.
->
-> Signed-off-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+g.
+
 > ---
->   arch/powerpc/platforms/52xx/mpc52xx_common.c |   10 ++---
->   drivers/of/platform.c                        |   54 ++++++++++++++++++++++++--
->   include/linux/of_platform.h                  |    3 +
->   3 files changed, 57 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/52xx/mpc52xx_common.c b/arch/powerpc/platforms/52xx/mpc52xx_common.c
-> index 41f3a7e..5767a8a 100644
-> --- a/arch/powerpc/platforms/52xx/mpc52xx_common.c
-> +++ b/arch/powerpc/platforms/52xx/mpc52xx_common.c
-> @@ -97,13 +97,11 @@ struct mpc52xx_gpio_wkup __iomem *wkup_gpio;
->    *					of the localplus bus to the of_platform
->    *					bus.
->    */
-> -void __init
-> -mpc52xx_declare_of_platform_devices(void)
-> +void __init mpc52xx_declare_of_platform_devices(void)
->   {
-> -	/* Find every child of the SOC node and add it to of_platform */
-> -	if (of_platform_bus_probe(NULL, mpc52xx_bus_ids, NULL))
-> -		printk(KERN_ERR __FILE__ ": "
-> -			"Error while probing of_platform bus\n");
-> +	/* Find all the 'platform' devices and register them. */
-> +	if (of_platform_populate(NULL, mpc52xx_bus_ids, NULL))
-> +		pr_err(__FILE__ ": Error while populating devices from DT\n");
->   }
->
->   /*
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 63d3cb7..9b785be 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -221,19 +221,26 @@ EXPORT_SYMBOL(of_platform_device_create);
->    */
->   static int of_platform_bus_create(struct device_node *bus,
->   				  const struct of_device_id *matches,
-> -				  struct device *parent)
-> +				  struct device *parent, bool strict)
->   {
->   	struct device_node *child;
->   	struct platform_device *dev;
->   	int rc = 0;
->
-> +	/* Make sure it has a compatible property */
-> +	if (strict&&  (!of_get_property(bus, "compatible", NULL))) {
-> +		pr_debug("%s() - skipping %s, no compatible prop\n",
-> +			 __func__, bus->full_name);
-> +		return 0;
-> +	}
-> +
->   	dev = of_platform_device_create(bus, NULL, parent);
->   	if (!dev || !of_match_node(matches, bus))
->   		return 0;
->
->   	for_each_child_of_node(bus, child) {
->   		pr_debug("   create child: %s\n", child->full_name);
-> -		rc = of_platform_bus_create(child, matches,&dev->dev);
-> +		rc = of_platform_bus_create(child, matches,&dev->dev, strict);
->   		if (rc) {
->   			of_node_put(child);
->   			break;
-> @@ -267,11 +274,11 @@ int of_platform_bus_probe(struct device_node *root,
->
->   	/* Do a self check of bus type, if there's a match, create children */
->   	if (of_match_node(matches, root)) {
-> -		rc = of_platform_bus_create(root, matches, parent);
-> +		rc = of_platform_bus_create(root, matches, parent, false);
->   	} else for_each_child_of_node(root, child) {
->   		if (!of_match_node(matches, child))
->   			continue;
-> -		rc = of_platform_bus_create(child, matches, parent);
-> +		rc = of_platform_bus_create(child, matches, parent, false);
->   		if (rc)
->   			break;
->   	}
-> @@ -280,4 +287,43 @@ int of_platform_bus_probe(struct device_node *root,
->   	return rc;
->   }
->   EXPORT_SYMBOL(of_platform_bus_probe);
-> +
-> +/**
-> + * of_platform_populate() - Populate platform_devices from device tree data
-> + * @root: parent of the first level to probe or NULL for the root of the tree
-> + * @matches: match table, NULL to use the default
-> + * @parent: parent to hook devices from, NULL for toplevel
-> + *
-> + * Similar to of_platform_bus_probe(), this function walks the device tree
-> + * and creates devices from nodes.  It differs in that it follows the modern
-> + * convention of requiring all device nodes to have a 'compatible' property,
-> + * and it is suitable for creating devices which are children of the root
-> + * node (of_platform_bus_probe will only create children of the root which
-> + * are selected by the @matches argument).
-> + *
-> + * New board support should be using this function instead of
-> + * of_platform_bus_probe().
-> + *
-> + * Returns 0 on success,<  0 on failure.
-> + */
-> +int of_platform_populate(struct device_node *root,
-> +			const struct of_device_id *matches,
-> +			struct device *parent)
-> +{
-> +	struct device_node *child;
-> +	int rc = 0;
-> +
-> +	root = root ? of_node_get(root) : of_find_node_by_path("/");
-> +	if (!root)
-> +		return -EINVAL;
-> +
-> +	for_each_child_of_node(root, child) {
-
-This needs a check of of_match_node. Otherwise, a device is created for 
-all top level nodes, not just the matching node.
-
-		if (!of_match_node(matches, child))
-			continue;
-
-> +		rc = of_platform_bus_create(child, matches, parent, true);
-> +		if (rc)
-> +			break;
-> +	}
-> +
-> +	of_node_put(root);
-> +	return rc;
-> +}
-
-Missing EXPORT_SYMBOL.
-
-Since this is only in next, do you want to fix it or I can submit a patch.
-
-Rob
+>  Based upon http://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git (branch next)
+> 
+>  arch/powerpc/boot/dts/p1020rdb.dts            |    9 ---------
+>  arch/powerpc/boot/dts/p1020rdb_camp_core0.dts |    8 --------
+>  arch/powerpc/boot/dts/p1020si.dtsi            |    6 +++++-
+>  arch/powerpc/boot/dts/p2020rdb.dts            |    8 --------
+>  arch/powerpc/boot/dts/p2020rdb_camp_core0.dts |    8 --------
+>  arch/powerpc/boot/dts/p2020si.dtsi            |    6 +++++-
+>  6 files changed, 10 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/powerpc/boot/dts/p1020rdb.dts b/arch/powerpc/boot/dts/p1020rdb.dts
+> index d6a8ae4..a4e5d6c 100644
+> --- a/arch/powerpc/boot/dts/p1020rdb.dts
+> +++ b/arch/powerpc/boot/dts/p1020rdb.dts
+> @@ -211,14 +211,6 @@
+>  			};
+>  		};
+>  
+> -		mdio@25000 {
+> -
+> -			tbi0: tbi-phy@11 {
+> -				reg = <0x11>;
+> -				device_type = "tbi-phy";
+> -			};
+> -		};
+> -
+>  		enet0: ethernet@b0000 {
+>  			fixed-link = <1 1 1000 0 0>;
+>  			phy-connection-type = "rgmii-id";
+> @@ -227,7 +219,6 @@
+>  
+>  		enet1: ethernet@b1000 {
+>  			phy-handle = <&phy0>;
+> -			tbi-handle = <&tbi0>;
+>  			phy-connection-type = "sgmii";
+>  
+>  		};
+> diff --git a/arch/powerpc/boot/dts/p1020rdb_camp_core0.dts b/arch/powerpc/boot/dts/p1020rdb_camp_core0.dts
+> index f0bf7f4..abab234 100644
+> --- a/arch/powerpc/boot/dts/p1020rdb_camp_core0.dts
+> +++ b/arch/powerpc/boot/dts/p1020rdb_camp_core0.dts
+> @@ -114,20 +114,12 @@
+>  			};
+>  		};
+>  
+> -		mdio@25000 {
+> -			tbi0: tbi-phy@11 {
+> -				reg = <0x11>;
+> -				device_type = "tbi-phy";
+> -			};
+> -		};
+> -
+>  		enet0: ethernet@b0000 {
+>  			status = "disabled";
+>  		};
+>  
+>  		enet1: ethernet@b1000 {
+>  			phy-handle = <&phy0>;
+> -			tbi-handle = <&tbi0>;
+>  			phy-connection-type = "sgmii";
+>  		};
+>  
+> diff --git a/arch/powerpc/boot/dts/p1020si.dtsi b/arch/powerpc/boot/dts/p1020si.dtsi
+> index 5c5acb6..7844d2e 100644
+> --- a/arch/powerpc/boot/dts/p1020si.dtsi
+> +++ b/arch/powerpc/boot/dts/p1020si.dtsi
+> @@ -190,7 +190,10 @@
+>  			#size-cells = <0>;
+>  			compatible = "fsl,etsec2-tbi";
+>  			reg = <0x25000 0x1000 0xb1030 0x4>;
+> -
+> +			tbi0: tbi-phy@11 {
+> +				reg = <0x11>;
+> +				device_type = "tbi-phy";
+> +			};
+>  		};
+>  
+>  		enet0: ethernet@b0000 {
+> @@ -229,6 +232,7 @@
+>  			fsl,num_tx_queues = <0x8>;
+>  			local-mac-address = [ 00 00 00 00 00 00 ];
+>  			interrupt-parent = <&mpic>;
+> +			tbi-handle = <&tbi0>;
+>  
+>  			queue-group@0 {
+>  				#address-cells = <1>;
+> diff --git a/arch/powerpc/boot/dts/p2020rdb.dts b/arch/powerpc/boot/dts/p2020rdb.dts
+> index 1d7a05f..2941cbb 100644
+> --- a/arch/powerpc/boot/dts/p2020rdb.dts
+> +++ b/arch/powerpc/boot/dts/p2020rdb.dts
+> @@ -213,13 +213,6 @@
+>  				};
+>  		};
+>  
+> -		mdio@25520 {
+> -			tbi0: tbi-phy@11 {
+> -				reg = <0x11>;
+> -				device_type = "tbi-phy";
+> -			};
+> -		};
+> -
+>  		mdio@26520 {
+>  			status = "disabled";
+>  		};
+> @@ -243,7 +236,6 @@
+>  		};
+>  
+>  		enet1: ethernet@25000 {
+> -			tbi-handle = <&tbi0>;
+>  			phy-handle = <&phy0>;
+>  			phy-connection-type = "sgmii";
+>  		};
+> diff --git a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
+> index fc8dddd..4641f3d 100644
+> --- a/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
+> +++ b/arch/powerpc/boot/dts/p2020rdb_camp_core0.dts
+> @@ -124,13 +124,6 @@
+>  			};
+>  		};
+>  
+> -		mdio@25520 {
+> -			tbi0: tbi-phy@11 {
+> -				reg = <0x11>;
+> -				device_type = "tbi-phy";
+> -			};
+> -		};
+> -
+>  		mdio@26520 {
+>  			status = "disabled";
+>  		};
+> @@ -140,7 +133,6 @@
+>  		};
+>  
+>  		enet1: ethernet@25000 {
+> -			tbi-handle = <&tbi0>;
+>  			phy-handle = <&phy0>;
+>  			phy-connection-type = "sgmii";
+>  
+> diff --git a/arch/powerpc/boot/dts/p2020si.dtsi b/arch/powerpc/boot/dts/p2020si.dtsi
+> index 6def17f..9317075 100644
+> --- a/arch/powerpc/boot/dts/p2020si.dtsi
+> +++ b/arch/powerpc/boot/dts/p2020si.dtsi
+> @@ -235,6 +235,10 @@
+>  			#size-cells = <0>;
+>  			compatible = "fsl,gianfar-tbi";
+>  			reg = <0x26520 0x20>;
+> +			tbi0: tbi-phy@11 {
+> +				reg = <0x11>;
+> +				device_type = "tbi-phy";
+> +			};
+>  		};
+>  
+>  		mdio@26520 {
+> @@ -270,7 +274,7 @@
+>  			local-mac-address = [ 00 00 00 00 00 00 ];
+>  			interrupts = <35 2 36 2 40 2>;
+>  			interrupt-parent = <&mpic>;
+> -
+> +			tbi-handle = <&tbi0>;
+>  		};
+>  
+>  		enet2: ethernet@26000 {
+> -- 
+> 1.7.3
+> 
+> 
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
