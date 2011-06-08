@@ -1,102 +1,146 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: pmu: add OF probing support
-Date: Wed, 08 Jun 2011 11:40:01 -0500
-Message-ID: <4DEFA5E1.9010600@gmail.com>
-References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
-	<1307456541-11026-2-git-send-email-robherring2@gmail.com>
-	<000001cc25f4$64c2d5c0$2e488140$@rutland@arm.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [RFC] of/dtb: Add missing pieces of the in-kernel dtb support
+Date: Wed, 8 Jun 2011 20:15:32 +0200
+Message-ID: <20110608181532.GA23871@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <000001cc25f4$64c2d5c0$2e488140$@rutland-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-15
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Michal Marek <mmarek@suse.cz>, Dirk Brandewie <dirk.brandewie@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kbuild@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+This are the remaining pieces of Dirk's in-kernel-dtb-support which did
+not found their way upstream. Most of the support was merged via
+different trees except this.
+I still need this because I don't (yet) have a bootloader with dtb
+support for my CE4100. Ralf has a similar on few of this boards and he
+poked me.
+I'm exporting of_flat_dt_find_compatible_dtb() within the kernel because
+it may be required by others in case the kernel calls into firmware for
+the name of the required blob. See [0].
+initial_dtb is currently x86 specific. Do we want to keep it that way or
+should be renamed?
+Should this patch be splitted into thee smaller (x86, Makefile.lib, fdt)
+or is okay?
 
-On 06/08/2011 10:54 AM, Mark Rutland wrote:
-> Hi,
->
->>   static int __devinit pmu_device_probe(struct platform_device *pdev)
->>   {
->> +	enum arm_pmu_type type = pdev->id;
->>
->> -	if (pdev->id<  0 || pdev->id>= ARM_NUM_PMU_DEVICES) {
->> +	if (pdev->dev.of_node)
->> +		type = ARM_PMU_DEVICE_CPU;
->> +
->> +	if (type<  0 || type>= ARM_NUM_PMU_DEVICES) {
->>   		pr_warning("received registration request for unknown "
->>   				"device %d\n", pdev->id);
->>   		return -EINVAL;
->>   	}
->>
->> -	if (pmu_devices[pdev->id])
->> +	if (pmu_devices[type])
->>   		pr_warning("registering new PMU device type %d overwrites "
->> -				"previous registration!\n", pdev->id);
->> +				"previous registration!\n", type);
->>   	else
->>   		pr_info("registered new PMU device of type %d\n",
->> -				pdev->id);
->> +				type);
->>
->> -	pmu_devices[pdev->id] = pdev;
->> +	pmu_devices[type] = pdev;
->>   	return 0;
->>   }
->
-> I don't think this is the best way to handle the type when we've got an FDT
-> description:
->
-> * release_pmu hasn't been updated to match the type logic here, so it might do
->    anything when handed a platform_device initialised by FDT code.
->
-> * the warning message for an invalid registration still uses pdev->id rather
->    than type. This can't currently be reached when the PMU was handed to us via
->    FDT, but it may confuse refactoring later on.
->
-> * If we want to add a new PMU type, we'll have to add more logic to
->    pmu_device_probe. Given that work is going on to add support for system PMUs,
->    this doesn't seem particularly brilliant.
->
->> +static struct of_device_id pmu_device_ids[] = {
->> +	{ .compatible = "arm,cortex-a9-pmu" },
->> +	{ .compatible = "arm,cortex-a8-pmu" },
->> +	{ .compatible = "arm,arm1136-pmu" },
->> +	{ .compatible = "arm,arm1176-pmu" },
->> +	{},
->> +};
->> +
->>   static struct platform_driver pmu_driver = {
->>   	.driver		= {
->>   		.name	= "arm-pmu",
->> +		.of_match_table = pmu_device_ids,
->>   	},
->>   	.probe		= pmu_device_probe,
->>   };
->
-> This all seems fine for handling CPU PMUs.
->
-> I think that a better strategy would be to separate the type logic from the
-> registration. I have a patch for this:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2011-June/052455.html
->
-> With it, you won't need to change pmu_device_probe, and adding FDT support
-> should just be a matter of adding the of_match_table.
->
+[0] http://www.linux-mips.org/archives/linux-mips/2011-06/msg00059.html
 
-Okay. I'll rebase mine on top of your changes.
+Cc: Dirk Brandewie <dirk.brandewie@gmail.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/platform/ce4100/Makefile |    4 +++
+ drivers/of/fdt.c                  |   47 +++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h            |    5 ++++
+ scripts/Makefile.lib              |    3 ++
+ 4 files changed, 59 insertions(+), 0 deletions(-)
 
-Rob
+diff --git a/arch/x86/platform/ce4100/Makefile b/arch/x86/platform/ce4100/Makefile
+index 91fc929..ee6e836 100644
+--- a/arch/x86/platform/ce4100/Makefile
++++ b/arch/x86/platform/ce4100/Makefile
+@@ -1 +1,5 @@
+ obj-$(CONFIG_X86_INTEL_CE)	+= ce4100.o
++
++ifdef CONFIG_OF
++obj-$(CONFIG_X86_INTEL_CE) += falconfalls.dtb.o
++endif
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 65200af..ea9e557 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -17,6 +17,8 @@
+ #include <linux/string.h>
+ #include <linux/errno.h>
+ #include <linux/slab.h>
++#include <linux/io.h>
++#include <asm-generic/vmlinux.lds.h>
+ 
+ #ifdef CONFIG_PPC
+ #include <asm/machdep.h>
+@@ -713,4 +715,49 @@ void __init unflatten_device_tree(void)
+ 		of_chosen = of_find_node_by_path("/chosen@0");
+ }
+ 
++extern uint8_t __dtb_start[];
++extern uint8_t __dtb_end[];
++phys_addr_t __init of_flat_dt_find_compatible_dtb(char *name)
++{
++	void *rc = NULL;
++	unsigned long root, size;
++	struct boot_param_header  *orig_initial_boot_params;
++	uint8_t *blob;
++
++	orig_initial_boot_params = initial_boot_params;
++	blob = __dtb_start;
++	initial_boot_params = (struct boot_param_header *)blob;
++
++	while (blob < __dtb_end &&
++		(be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER)) {
++		root = of_get_flat_dt_root();
++		if (of_flat_dt_is_compatible(root, name) > 0) {
++			rc = blob;
++			printk(KERN_INFO "Found dtb for '%s'\n", name);
++			break;
++		}
++
++		size =  be32_to_cpu(initial_boot_params->totalsize);
++		blob =  PTR_ALIGN(blob + size, STRUCT_ALIGNMENT);
++		initial_boot_params = (struct boot_param_header *)blob;
++	}
++
++	initial_boot_params = orig_initial_boot_params;
++
++	if (rc == NULL)
++		return 0;
++	return virt_to_phys(rc);
++}
++
++static int __init of_flat_dtb_compat_setup(char *line)
++{
++	if (initial_dtb) {
++		printk(KERN_ERR "Using bootloader's dtb instead of cmd line\n");
++		return 0;
++	}
++	initial_dtb = of_flat_dt_find_compatible_dtb(line);
++	return 0;
++}
++early_param("dtb_compat", of_flat_dtb_compat_setup);
++
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index c84d900..58d7e3a 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -117,8 +117,13 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ /* Other Prototypes */
+ extern void unflatten_device_tree(void);
+ extern void early_init_devtree(void *);
++extern phys_addr_t of_flat_dt_find_compatible_dtb(char *name);
+ #else /* CONFIG_OF_FLATTREE */
+ static inline void unflatten_device_tree(void) {}
++static inline phys_addr_t of_flat_dt_find_compatible_dtb(char *name)
++{
++	return 0;
++}
+ #endif /* CONFIG_OF_FLATTREE */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 93b2b59..150b9ba 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -224,6 +224,9 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $<
+ 
++$(obj)/%.dtb: $(obj)/%.dts
++	$(call if_changed,dtc)
++
+ # Bzip2
+ # ---------------------------------------------------------------------------
+ 
+-- 
+1.7.4.4
+
