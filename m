@@ -1,17 +1,18 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [uclinux-dist-devel] touch screen ads7846/7843 devicetree support
-Date: Thu, 9 Jun 2011 14:07:38 +0800
-Message-ID: <BANLkTik5BfiUeNFn-dXah86h+nhK6hU6vg@mail.gmail.com>
+Date: Thu, 9 Jun 2011 04:12:01 -0400
+Message-ID: <BANLkTinPxdivqTyK-yTBihg8iOp3YppN4A@mail.gmail.com>
 References: <4D410C4C.7070005@wytron.com.tw>
 	<AANLkTinJheHYyjUUAK7guNXqepp9KJ3xk6u-4JrmAbee@mail.gmail.com>
 	<4D414FED.706@wytron.com.tw>
 	<544AC56F16B56944AEC3BD4E3D591771324C105D75@LIMKCMBX1.ad.analog.com>
 	<20110202160355.GE20275@angua.secretlab.ca>
+	<BANLkTik5BfiUeNFn-dXah86h+nhK6hU6vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110202160355.GE20275-MrY2KI0G/OVr83L8+7iqerDks+cytr/Z@public.gmane.org>
+In-Reply-To: <BANLkTik5BfiUeNFn-dXah86h+nhK6hU6vg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,44 +22,14 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>, Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Hennerich,
-	Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, "uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nios2 development list <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>, "Hennerich,
+	Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <device-drivers-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>, "uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org" <uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS8yLzMgR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNhPjoKPiBPbiBU
-aHUsIEphbiAyNywgMjAxMSBhdCAxMjoyNDowMVBNICswMDAwLCBIZW5uZXJpY2gsIE1pY2hhZWwg
-d3JvdGU6Cj4+IFRob21hcyBDaG91IHdyb3RlIG9uIDIwMTEtMDEtMjc6Cj4+ID4gT24gMDEvMjcv
-MjAxMSAwMjoxOCBQTSwgTWlrZSBGcnlzaW5nZXIgd3JvdGU6Cj4+ID4+IE9uIFRodSwgSmFuIDI3
-LCAyMDExIGF0IDAxOjEwLCBUaG9tYXMgQ2hvdSB3cm90ZToKPj4gPj4+IFdlIG5lZWQgZGV2aWNl
-dHJlZSBzdXBwb3J0IG9uIGFkczc4NDYvNzg0MyB0b3VjaCBzY3JlZW4gZHJpdmVyLiBEbwo+PiA+
-Pj4geW91IGhhdmUgcGxhbiBvbiBpdD8gV2UgYXJlIG1vdmluZyB0byBkZXZpY2V0cmVlIG9uIG5p
-b3MyLCBzbyBkbwo+PiA+IGFybS9taXBzL3g4Ni4KPj4gPj4KPj4gPj4gd2hhdCBwYXJ0IGFyZSB5
-b3UgdXNpbmcgZXhhY3RseSA/Cj4+ID4+IC1taWtlCj4+ID4+Cj4+ID4KPj4gPiBhZDc4NDMgaXMg
-dXNlZCBpbiBhIHBvcHVsYXIgbmlvczIgZGV2IGtpdCwgTkVFSy4KPj4KPj4gVGhpcyBkcml2ZXIg
-aXMgYSBTUEkgYnVzIGNsaWVudCBkcml2ZXIuIFBQQyBpcyB1c2luZyBkZXZpY2V0cmVlIGZvciBh
-Z2VzIG5vdywKPj4gYW5kIHRoZXkgZG9uJ3QgaGF2ZSBwcm9ibGVtcyBpbnN0YW50aWF0aW5nIHRo
-aXMgb3IgYW55IG90aGVyIFNQSSBidXMgZHJpdmVyLgo+Cj4gSG93ZXZlciwgdGhlIG1ldGhvZCB1
-c2VkIGlzIGJ5IGFwcGx5aW5nIGEgaGV1cmlzdGljIChvZl9tb2RhbGlhc19ub2RlKQo+IHdoaWNo
-IHRyaWVzIHRvIG5hbWUgdGhlIGRldmljZSBpbiBhIHdheSB0aGF0IHdpbGwgbWF0Y2ggYW4gZXhp
-c3RpbmcKPiBkZXZpY2UgZHJpdmVyLiDCoEl0IHdvcmtzIGZvciBhIGxvdCBvZiBzcGkgZHJpdmVy
-cywgYnV0IGl0IGlzbid0Cj4gYWx3YXlzIHJlbGlhYmxlLgo+Cj4gQWx0ZXJuYXRpdmVseSwgaWYg
-b2ZfbWF0Y2hfdGFibGUgaXMgcG9wdWxhdGVkIGluIHRoZSBzcGlfZHJpdmVyLCB0aGVuCj4gdGhl
-IG5vcm1hbCBkZXZpY2UgdHJlZSBtYXRjaCBiZWhhdmlvdXIgd2lsbCBhbHdheXMgd29yay4KCm5v
-dCBsaWtlIGkyY19kcml2ZXIgYW5kIHBsYXRmb3JtX2RyaXZlciwgaXQgaXMgcmVhbGx5IGRpZmZp
-Y3VsdCB0bwpmaW5kIG1hbnkgc3BpIGNsaWVudCBkcml2ZXJzIHVzaW5nIGRldmljZSB0cmVlIGZv
-IHRoZSBtb21lbnQuIG1vc3Qgc3BpCmJvYXJkcyBzdGlsbCB1c2Ugc3BpX2JvYXJkX2luZm8gdG8g
-cmVnaXN0ZXIgc3BpIGNsaWVudC4gdGhlc2Ugc3BpCmNsaWVudCBkcml2ZXJzIGRvIHdvcmsgd2Vs
-bCB3aXRoIHNwaSBob3N0IGJhc2VkIG9uIGRldmljZSB0cmVlIGF0IG1vc3QKY2FzZXMuIHRoZSBp
-ZGVhbCBzcGkgY2xpZW50IHNob3VsZCBiZSBhIGNoaWxkIG5vZGUgb2Ygc3BpIGhvc3QgaW4KZGV2
-aWNlIHRyZWUsIHRoZW4gdXNlIG9mX21hdGNoX3RhYmxlIHRvIGdldCBwcm9iZWQuCmkgYW0gd29y
-a2luZyBvbiBhZHM3ODQ2IGFzIGFuIGV4YW1wbGUgZm9yIG91ciB0ZWFtIHRvIHVzZSBkZXZpY2Ug
-dHJlZQppbiBzcGkgY2xpZW50IGRyaXZlcnMgYW5kIHdpbGwgc2VuZCBhIHBhdGNoLgoKQlRXLCBp
-cyBhZHM3ODQ2IGZyb20gVEk/IG9yIGFtIGkgd3Jvbmc/IHdoeSBpcyB0aGlzIHF1ZXN0aW9uIHBv
-c3RlZCBpbgpBREknIG1haWxsaXN0PwoKPgo+IGcuCj4KPiBfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwo+IFVjbGludXgtZGlzdC1kZXZlbCBtYWlsaW5nIGxp
-c3QKPiBVY2xpbnV4LWRpc3QtZGV2ZWxAYmxhY2tmaW4udWNsaW51eC5vcmcKPiBodHRwczovL2Js
-YWNrZmluLnVjbGludXgub3JnL21haWxtYW4vbGlzdGluZm8vdWNsaW51eC1kaXN0LWRldmVsCj4K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJl
-ZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9y
-ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Thu, Jun 9, 2011 at 02:07, Barry Song wrote:
+> BTW, is ads7846 from TI? or am i wrong? why is this question posted in
+> ADI' maillist?
+
+ads7846 is a TI part, but the driver supports more than just that part
+-mike
