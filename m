@@ -1,11 +1,13 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/4] amba bus devicetree probing
-Date: Fri, 10 Jun 2011 15:48:39 -0500
-Message-ID: <1307738923-7564-1-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v4 1/4] dt: check root nodes for match on of_platform_populate
+Date: Fri, 10 Jun 2011 15:48:40 -0500
+Message-ID: <1307738923-7564-2-git-send-email-robherring2@gmail.com>
+References: <1307738923-7564-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1307738923-7564-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,30 +23,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-This is updated amba bus DT probe support. Amba devices are now handled as a
-special case in the device tree bus scanning code. Found devices with a
-"arm,amba-device" compatible property will be created by of_amba_device_create.
+of_platform_populate will create platform devices for the top-level nodes
+if they have a compatible string, but regardless of a match or not.
 
-The first 2 patches are fixes for of_platform_populate.
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/of/platform.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-Applies to devicetree/next on git://git.secretlab.ca/git/linux-2.6
-
-Compile tested with DT enabled and AMBA bus enabled or disabled. 
-
-Rob
-
-Rob Herring (4):
-  dt: check root nodes for match on of_platform_populate
-  dt: add EXPORT_SYMBOL to of_platform_populate
-  drivers/amba: create devices from device tree
-  dt: add amba device creation to platform bus scan
-
- Documentation/devicetree/bindings/arm/amba.txt |   21 ++++++++++
- drivers/amba/bus.c                             |   51 ++++++++++++++++++++++++
- drivers/of/platform.c                          |    9 ++++
- include/linux/amba/bus.h                       |   18 ++++++++
- 4 files changed, 99 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/amba.txt
-
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 9b785be..dc56a77 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -318,6 +318,8 @@ int of_platform_populate(struct device_node *root,
+ 		return -EINVAL;
+ 
+ 	for_each_child_of_node(root, child) {
++		if (!of_match_node(matches, child))
++			continue;
+ 		rc = of_platform_bus_create(child, matches, parent, true);
+ 		if (rc)
+ 			break;
 -- 
 1.7.4.1
