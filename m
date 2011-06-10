@@ -1,13 +1,11 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 10/11] x86, olpc: Add XO-1 RTC driver
-Date: Thu,  9 Jun 2011 21:05:35 +0100
-Message-ID: <1307649936-23655-11-git-send-email-dsd@laptop.org>
-References: <1307649936-23655-1-git-send-email-dsd@laptop.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/4] amba bus devicetree probing
+Date: Fri, 10 Jun 2011 15:48:39 -0500
+Message-ID: <1307738923-7564-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1307649936-23655-1-git-send-email-dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,178 +15,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver to configure the XO-1 RTC via CS5536 MSRs, to be used as a
-system wakeup source via olpc-xo1-pm.
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Device detection is based on finding the relevant device tree node.
+This is updated amba bus DT probe support. Amba devices are now handled as a
+special case in the device tree bus scanning code. Found devices with a
+"arm,amba-device" compatible property will be created by of_amba_device_create.
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
----
- .../devicetree/bindings/rtc/olpc-xo1-rtc.txt       |    5 +
- arch/x86/Kconfig                                   |    7 ++
- arch/x86/platform/olpc/Makefile                    |    1 +
- arch/x86/platform/olpc/olpc-xo1-rtc.c              |   82 ++++++++++++++++++++
- include/linux/cs5535.h                             |    5 +
- 5 files changed, 100 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
- create mode 100644 arch/x86/platform/olpc/olpc-xo1-rtc.c
+The first 2 patches are fixes for of_platform_populate.
 
-diff --git a/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
-new file mode 100644
-index 0000000..a2891ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
-@@ -0,0 +1,5 @@
-+OLPC XO-1 RTC
-+~~~~~~~~~~~~~
-+
-+Required properties:
-+ - compatible : "olpc,xo1-rtc"
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 267a887..d8a6952 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2079,6 +2079,13 @@ config OLPC_XO1_PM
- 	---help---
- 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
- 
-+config OLPC_XO1_RTC
-+	bool "OLPC XO-1 Real Time Clock"
-+	depends on OLPC_XO1_PM && RTC_DRV_CMOS
-+	---help---
-+	  Add support for the XO-1 real time clock, which can be used as a
-+	  programmable wakeup source.
-+
- config OLPC_XO1_SCI
- 	bool "OLPC XO-1 SCI extras"
- 	depends on OLPC && OLPC_XO1_PM && POWER_SUPPLY
-diff --git a/arch/x86/platform/olpc/Makefile b/arch/x86/platform/olpc/Makefile
-index 1ec5ade..8922b9b 100644
---- a/arch/x86/platform/olpc/Makefile
-+++ b/arch/x86/platform/olpc/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_OLPC)		+= olpc.o olpc_ofw.o olpc_dt.o
- obj-$(CONFIG_OLPC_XO1_PM)		+= olpc-xo1-pm.o xo1-wakeup.o
-+obj-$(CONFIG_OLPC_XO1_RTC)	+= olpc-xo1-rtc.o
- obj-$(CONFIG_OLPC_XO1_SCI)	+= olpc-xo1-sci.o
-diff --git a/arch/x86/platform/olpc/olpc-xo1-rtc.c b/arch/x86/platform/olpc/olpc-xo1-rtc.c
-new file mode 100644
-index 0000000..476cc98
---- /dev/null
-+++ b/arch/x86/platform/olpc/olpc-xo1-rtc.c
-@@ -0,0 +1,82 @@
-+/*
-+ * Support for OLPC XO-1 Real Time Clock (RTC)
-+ *
-+ * Copyright (C) 2011 One Laptop per Child
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/mc146818rtc.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+#include <linux/of.h>
-+
-+#include <asm/msr.h>
-+#include <asm/olpc.h>
-+
-+static void rtc_wake_on(struct device *dev)
-+{
-+	olpc_xo1_pm_wakeup_set(CS5536_PM_RTC);
-+}
-+
-+static void rtc_wake_off(struct device *dev)
-+{
-+	olpc_xo1_pm_wakeup_clear(CS5536_PM_RTC);
-+}
-+
-+static struct resource rtc_platform_resource[] = {
-+	[0] = {
-+		.start	= RTC_PORT(0),
-+		.end	= RTC_PORT(1),
-+		.flags	= IORESOURCE_IO,
-+	},
-+	[1] = {
-+		.start	= RTC_IRQ,
-+		.end	= RTC_IRQ,
-+		.flags	= IORESOURCE_IRQ,
-+	}
-+};
-+
-+static struct cmos_rtc_board_info rtc_info = {
-+	.rtc_day_alarm = 0,
-+	.rtc_mon_alarm = 0,
-+	.rtc_century = 0,
-+	.wake_on = rtc_wake_on,
-+	.wake_off = rtc_wake_off,
-+};
-+
-+static struct platform_device xo1_rtc_device = {
-+	.name = "rtc_cmos",
-+	.id = -1,
-+	.num_resources = ARRAY_SIZE(rtc_platform_resource),
-+	.dev.platform_data = &rtc_info,
-+	.resource = rtc_platform_resource,
-+};
-+
-+static int __init xo1_rtc_init(void)
-+{
-+	int r;
-+	struct device_node *node;
-+
-+	node = of_find_compatible_node(NULL, NULL, "olpc,xo1-rtc");
-+	if (!node)
-+		return 0;
-+	of_node_put(node);
-+
-+	pr_info("olpc-xo1-rtc: Initializing OLPC XO-1 RTC\n");
-+	rdmsrl(MSR_RTC_DOMA_OFFSET, rtc_info.rtc_day_alarm);
-+	rdmsrl(MSR_RTC_MONA_OFFSET, rtc_info.rtc_mon_alarm);
-+	rdmsrl(MSR_RTC_CEN_OFFSET, rtc_info.rtc_century);
-+
-+	r = platform_device_register(&xo1_rtc_device);
-+	if (r)
-+		return r;
-+
-+	device_init_wakeup(&xo1_rtc_device.dev, 1);
-+	return 0;
-+}
-+arch_initcall(xo1_rtc_init);
-+
-diff --git a/include/linux/cs5535.h b/include/linux/cs5535.h
-index 72954c6..c077aec 100644
---- a/include/linux/cs5535.h
-+++ b/include/linux/cs5535.h
-@@ -40,6 +40,10 @@
- #define MSR_MFGPT_NR		0x51400029
- #define MSR_MFGPT_SETUP		0x5140002B
- 
-+#define MSR_RTC_DOMA_OFFSET	0x51400055
-+#define MSR_RTC_MONA_OFFSET	0x51400056
-+#define MSR_RTC_CEN_OFFSET	0x51400057
-+
- #define MSR_LX_SPARE_MSR	0x80000011	/* DC-specific */
- 
- #define MSR_GX_GLD_MSR_CONFIG	0xC0002001
-@@ -95,6 +99,7 @@ static inline int cs5535_pic_unreqz_select_high(unsigned int group,
- 
- /* CS5536_PM1_EN bits */
- #define CS5536_PM_PWRBTN	(1 << 8)
-+#define CS5536_PM_RTC		(1 << 10)
- 
- /* CS5536_PM_GPE0_STS bits */
- #define CS5536_GPIOM7_PME_FLAG	(1 << 31)
+Applies to devicetree/next on git://git.secretlab.ca/git/linux-2.6
+
+Compile tested with DT enabled and AMBA bus enabled or disabled. 
+
+Rob
+
+Rob Herring (4):
+  dt: check root nodes for match on of_platform_populate
+  dt: add EXPORT_SYMBOL to of_platform_populate
+  drivers/amba: create devices from device tree
+  dt: add amba device creation to platform bus scan
+
+ Documentation/devicetree/bindings/arm/amba.txt |   21 ++++++++++
+ drivers/amba/bus.c                             |   51 ++++++++++++++++++++++++
+ drivers/of/platform.c                          |    9 ++++
+ include/linux/amba/bus.h                       |   18 ++++++++
+ 4 files changed, 99 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/amba.txt
+
 -- 
-1.7.5.2
+1.7.4.1
