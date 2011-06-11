@@ -1,13 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5] drivers/amba: create devices from device tree
-Date: Fri, 10 Jun 2011 20:10:50 -0500
-Message-ID: <4DF2C09A.7000805@gmail.com>
-References: <20110610232246.30375.44324.stgit@ponder>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Please cherry-pick "tty/serial: Add explicit PORT_TEGRA type" to
+	devicetree/test
+Date: Fri, 10 Jun 2011 20:35:25 -0600
+Message-ID: <20110611023525.GA11600@ponder.secretlab.ca>
+References: <74CDBE0F657A3D45AFBB94109FB122FF0498A47E0E@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110610232246.30375.44324.stgit@ponder>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF0498A47E0E-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,41 +19,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2011 06:26 PM, Rob Herring wrote:
-> Add a function to create amba_devices (i.e. primecell peripherals)
-> from device tree nodes. The device tree scanning is done by the
-> of_platform_populate() function which can call of_amba_device_create
-> based on a match table entry.
->
-> Nodes with a "arm,primecell-periphid" property can override the h/w
-> peripheral id value.
->
-> Based on the original work by Jeremy Kerr.
->
-> v5: - restored Jeremy's original s-o-b line
->      - changed to using arm,primecell compatible value
->      - moved all code to driver/of/platform.c so platform and amba
->        devices are created in the same way.
-> (v4 was posted by Rob Herring)
->
-> Signed-off-by: Jeremy Kerr<jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> Acked-by: Linus Walleij<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
-> [grant.likely: add Jeremy's original s-o-b line, changes from review
->                 comments, and moved all code to drivers/of/platform.c]
-> Signed-off-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
->
-> Hey Rob.  I took a good look at the patches you posted, and how all
-> this stuff was being done, and it turns out to be a lot less impact if
-> all of it is rolled into driver/of/platform.c.  Take a look and let me
-> know what you think.
+On Fri, May 20, 2011 at 12:42:25PM -0700, Stephen Warren wrote:
+> Grant, could you please cherry-pick, or otherwise pick up:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty-2.6.git
+> 4539c24fe4f92c09ee668ef959d3e8180df619b9
+> tty/serial: Add explicit PORT_TEGRA type
+> (from the tty-next branch)
+> 
+> Into your devicetree/test branch. With that in place, I'll be able to
+> fix up the of_serial.c registration for nvidia,tegra250-uart to use
+> PORT_TEGRA instead of PORT_XSCALE, as we discussed earlier.
 
-Looks good. I will test it out on my tree.
+Hi Stephen.
 
-Rob
+I never did get the chance to actually cherry pick this, but
+devicetree/test has since been rebased to v3.0-rc2, so all
+should be good.  I'll also fixup the PORT_TEGRA bit in my tree.
+
+g.
