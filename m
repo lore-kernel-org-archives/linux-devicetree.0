@@ -1,92 +1,122 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 16:15:23 +0200
-Message-ID: <201106121615.24059.arnd@arndb.de>
+Date: Sun, 12 Jun 2011 15:34:28 +0100
+Message-ID: <20110612143428.GI10283@n2100.arm.linux.org.uk>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612112219.GD16318@ibawizard.net>
 	<20110612115820.GF10283@n2100.arm.linux.org.uk>
+	<201106121615.24059.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110612115820.GF10283@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Tony Lindgren <tony@atomide.com>, Petr =?utf-8?q?=C5=A0tetiar?= <ynezz@true.cz>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201106121615.24059.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 12 June 2011 13:58:20 Russell King - ARM Linux wrote:
-> Exactly my point - I have quite a number of platforms here which will
-> never be able to have a boot loader capable of modifying a DT blob for
-> the kernel.
+On Sun, Jun 12, 2011 at 04:15:23PM +0200, Arnd Bergmann wrote:
+> On Sunday 12 June 2011 13:58:20 Russell King - ARM Linux wrote:
+> > Exactly my point - I have quite a number of platforms here which will
+> > never be able to have a boot loader capable of modifying a DT blob for
+> > the kernel.
+> > 
+> > One of the points of Nicolas' patch set is to allow existing boot loaders
+> > to boot kernels where the hardware description is contained in a DT blob
+> > encapsulated with the kernel.  That's great but the way things are currently
+> > setup, it means that the boot loader does nothing more than loading and
+> > executing - and we lose the existing flexibility for the boot loader to
+> > pass platform specific information to the kernel.
+> > 
+> > So, what I'm considering to do is update the boot protocol such that the
+> > base address of the DT blob is provided in r3, separately from the ATAG
+> > pointer in r2.
+> >
+> > This means that boot loaders can provide a DT blob (r2 = 0 r3 => DT) or
+> > they can provide ATAGs (r2 => atag, r3 = indeterminant).  We can then
+> > cater for the situation where we have an ATAG boot loader, but a kernel
+> > with an appended DT description (r2 => atag, r3 => DT) and have the ATAG
+> > information override the DT for things like memory layout and the command
+> > line string.
 > 
-> One of the points of Nicolas' patch set is to allow existing boot loaders
-> to boot kernels where the hardware description is contained in a DT blob
-> encapsulated with the kernel.  That's great but the way things are currently
-> setup, it means that the boot loader does nothing more than loading and
-> executing - and we lose the existing flexibility for the boot loader to
-> pass platform specific information to the kernel.
-> 
-> So, what I'm considering to do is update the boot protocol such that the
-> base address of the DT blob is provided in r3, separately from the ATAG
-> pointer in r2.
->
-> This means that boot loaders can provide a DT blob (r2 = 0 r3 => DT) or
-> they can provide ATAGs (r2 => atag, r3 = indeterminant).  We can then
-> cater for the situation where we have an ATAG boot loader, but a kernel
-> with an appended DT description (r2 => atag, r3 => DT) and have the ATAG
-> information override the DT for things like memory layout and the command
-> line string.
+> But when you have both atag and DT and the atag overrides the DT, that
+> means we have incorrect information in the DT, and code might later
+> rely on that information.
 
-But when you have both atag and DT and the atag overrides the DT, that
-means we have incorrect information in the DT, and code might later
-rely on that information.
+I don't think you're considering real-world usage scenarios, but instead
+concentrating on the use issues.  If you only do that you're boxing
+yourself into a corner and will cause a world of pain for folk who would
+just like the kernel to be usable.
 
-IMHO when we allow passing a DT to a kernel while booting from an
-existing boot loader that only knows about atag, the code that loads
-the DT should be responsible for updating the DT with the atag information,
-not pass two conflicting sets of data into the actual kernel.
+The information in ATAGs which will either never be in DT or which should
+override what is in DT is:
 
-> Let me give a situation where this matters: you have a boot loader which
-> loads a kernel from disk and executes it.  You have 256MB of RAM fitted
-> to the machine.  You replace this kernel with a DT-enabled kernel which
-> has the DT blob appended to the kernel.  The DT blob says you have 256MB
-> of RAM.
-> 
-> You remove a 128MB DIMM because its gone faulty.  You try to boot.  The
-> boot loader provides the kernel with an ATAG telling it that there's
-> 128MB of RAM.  However, the kernel ignores the ATAGs and instead looks
-> at the encapsulated DT information which tells it that there's 256MB
-> of RAM.  Your kernel OOPSes.  You reboot, and try passing a command
-> line argument of 'mem=128M'. The kernel again ignores this because its
-> an ATAG.
-> 
-> The result: you can't boot the platform.
->
-> Another case: your flash has become corrupted, and the kernel won't mount
-> the flash based rootfs.  You want to boot from a root-NFS export to sort
-> the problem out, but the kernel ignores your new command line telling it
-> to do so.
-> 
-> The result: you can't boot the platform.
-> 
-> Another case: you have a Thecus N2100 acting as a server, with a pair
-> of drives setup as raid 1.  You reboot it one day and it refuses to build
-> the raid 1 rootfs, and so panics at boot.  You want to change the kernel
-> command line so that it mounts root from somewhere else, but because
-> you're using a DT based kernel, it ignores you.
-> 
-> The result: you can't boot the platform.
+- memory parameters
+- command line
+- initrd location
+- system serial number
+- system revision number
 
-So we need to at least the command line and the memory layout to be adapted
-in the in-memory DT, from the atags. Any other tags?
+Things like the serial number will _never_ be in DT (do you want to build
+a DT image unique to each platform?)  initrd location will never be in
+DT either (it depends where the boot loader placed it.) ... and so forth.
 
-	Arnd
+This is the kind of information which should override whatever is in
+DT because the DT contained information could well be wrong or outdated,
+and its not the kind of information that anything other than core code
+should be dealing with in any case.
+
+> IMHO when we allow passing a DT to a kernel while booting from an
+> existing boot loader that only knows about atag, the code that loads
+> the DT should be responsible for updating the DT with the atag information,
+> not pass two conflicting sets of data into the actual kernel.
+
+So, that means Nicolas' patches which allow a DT to be appended to the
+image need to have DT and ATAG parsing in them to update the DT stuff
+with the ATAG information.
+
+> > Let me give a situation where this matters: you have a boot loader which
+> > loads a kernel from disk and executes it.  You have 256MB of RAM fitted
+> > to the machine.  You replace this kernel with a DT-enabled kernel which
+> > has the DT blob appended to the kernel.  The DT blob says you have 256MB
+> > of RAM.
+> > 
+> > You remove a 128MB DIMM because its gone faulty.  You try to boot.  The
+> > boot loader provides the kernel with an ATAG telling it that there's
+> > 128MB of RAM.  However, the kernel ignores the ATAGs and instead looks
+> > at the encapsulated DT information which tells it that there's 256MB
+> > of RAM.  Your kernel OOPSes.  You reboot, and try passing a command
+> > line argument of 'mem=128M'. The kernel again ignores this because its
+> > an ATAG.
+> > 
+> > The result: you can't boot the platform.
+> >
+> > Another case: your flash has become corrupted, and the kernel won't mount
+> > the flash based rootfs.  You want to boot from a root-NFS export to sort
+> > the problem out, but the kernel ignores your new command line telling it
+> > to do so.
+> > 
+> > The result: you can't boot the platform.
+> > 
+> > Another case: you have a Thecus N2100 acting as a server, with a pair
+> > of drives setup as raid 1.  You reboot it one day and it refuses to build
+> > the raid 1 rootfs, and so panics at boot.  You want to change the kernel
+> > command line so that it mounts root from somewhere else, but because
+> > you're using a DT based kernel, it ignores you.
+> > 
+> > The result: you can't boot the platform.
+> 
+> So we need to at least the command line and the memory layout to be adapted
+> in the in-memory DT, from the atags. Any other tags?
+
+See above.
