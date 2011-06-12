@@ -1,171 +1,83 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/3] ARM: zImage: Allow the appending of a device tree
-	binary
-Date: Sun, 12 Jun 2011 09:01:17 -0600
-Message-ID: <20110612150117.GB4013@ponder.secretlab.ca>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Sun, 12 Jun 2011 17:01:22 +0200
+Message-ID: <201106121701.22418.arnd@arndb.de>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-	<1307858800-16712-3-git-send-email-nicolas.pitre@linaro.org>
+	<201106121615.24059.arnd@arndb.de>
+	<20110612143428.GI10283@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1307858800-16712-3-git-send-email-nicolas.pitre@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: John Bonesio <bones@secretlab.ca>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110612143428.GI10283-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Petr =?utf-8?q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 12, 2011 at 02:06:39AM -0400, Nicolas Pitre wrote:
-> From: John Bonesio <bones@secretlab.ca>
+On Sunday 12 June 2011 16:34:28 Russell King - ARM Linux wrote:
+> I don't think you're considering real-world usage scenarios, but instead
+> concentrating on the use issues.  If you only do that you're boxing
+> yourself into a corner and will cause a world of pain for folk who would
+> just like the kernel to be usable.
 > 
-> This patch provides the ability to boot using a device tree that is appended
-> to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+> The information in ATAGs which will either never be in DT or which should
+> override what is in DT is:
 > 
-> Signed-off-by: John Bonesio <bones@secretlab.ca>
-> [nico: adjusted to latest zImage changes plus additional cleanups]
-> Signed-off-by: Nicolas Pitre <nicolas.pitre@linaro.org>
+> - memory parameters
+> - command line
+> - initrd location
+> - system serial number
+> - system revision number
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+With a device-tree aware boot loader, this is exactly the kind of
+information that should be put in the device tree by the boot loader,
+along with other parts like local-mac-address and actual presence
+of optional devices where the kernel might not have a generic way
+of probing whether they are there.
 
-> ---
->  arch/arm/Kconfig                |    8 ++++
->  arch/arm/boot/compressed/head.S |   70 +++++++++++++++++++++++++++++++++++++--
->  2 files changed, 75 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 9adc278..66b7d1e 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1727,6 +1727,14 @@ config ZBOOT_ROM_MMCIF
->  	  which in turn loads the rest the kernel image to RAM using the
->  	  MMCIF hardware block.
->  
-> +config ARM_APPENDED_DTB
-> +	bool "Use appended device tree blob to zImage"
-> +	depends on OF && !ZBOOT_ROM
-> +	help
-> +	  With this option, the boot code will look for a device tree binary
-> +	  (dtb) appended to zImage
-> +	  (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-> +
->  config CMDLINE
->  	string "Default kernel command string"
->  	default ""
-> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> index f9da419..4bc009c 100644
-> --- a/arch/arm/boot/compressed/head.S
-> +++ b/arch/arm/boot/compressed/head.S
-> @@ -216,6 +216,59 @@ restart:	adr	r0, LC0
->  		mov	r10, r6
->  #endif
->  
-> +		mov	r5, #0			@ init dtb size to 0
-> +#ifdef CONFIG_ARM_APPENDED_DTB
-> +/*
-> + *   r0  = delta
-> + *   r2  = BSS start
-> + *   r3  = BSS end
-> + *   r4  = final kernel address
-> + *   r5  = appended dtb size (still unknown)
-> + *   r6  = _edata
-> + *   r7  = architecture ID
-> + *   r8  = atags/device tree pointer
-> + *   r9  = size of decompressed image
-> + *   r10 = end of this image, including  bss/stack/malloc space if non XIP
-> + *   r11 = GOT start
-> + *   r12 = GOT end
-> + *   sp  = stack pointer
-> + *
-> + * if there are device trees (dtb) appended to zImage, advance r10 so that the
-> + * dtb data will get relocated along with the kernel if necessary.
-> + */
-> +
-> +		ldr	lr, [r6, #0]
-> +#ifndef __ARMEB__
-> +		ldr	r1, =0xedfe0dd0		@ sig is 0xd00dfeed big endian
-> +#else
-> +		ldr	r1, =0xd00dfeed
-> +#endif
-> +		cmp	lr, r1
-> +		bne	dtb_check_done		@ not found
-> +
-> +		mov	r8, r6			@ use the appended device tree
-> +
-> +		/* Get the dtb's size */
-> +		ldr	r5, [r6, #4]
-> +#ifndef __ARMEB__
-> +		/* convert lr (dtb size) to little endian */
-> +		eor	r1, r5, r5, ror #16
-> +		bic	r1, r1, #0x00ff0000
-> +		mov	r5, r5, ror #8
-> +		eor	r5, r5, r1, lsr #8
-> +#endif
-> +
-> +		/* preserve 64-bit alignment */
-> +		add	r5, r5, #7
-> +		bic	r5, r5, #7
-> +
-> +		/* relocate some pointers past the appended dtb */
-> +		add	r6, r6, r5
-> +		add	r10, r10, r5
-> +		add	sp, sp, r5
-> +dtb_check_done:
-> +#endif
-> +
->  /*
->   * Check to see if we will overwrite ourselves.
->   *   r4  = final kernel address
-> @@ -285,14 +338,16 @@ wont_overwrite:
->   *   r2  = BSS start
->   *   r3  = BSS end
->   *   r4  = kernel execution address
-> + *   r5  = appended dtb size (0 if not present)
->   *   r7  = architecture ID
->   *   r8  = atags pointer
->   *   r11 = GOT start
->   *   r12 = GOT end
->   *   sp  = stack pointer
->   */
-> -		teq	r0, #0
-> +		orrs	r1, r0, r5
->  		beq	not_relocated
-> +
->  		add	r11, r11, r0
->  		add	r12, r12, r0
->  
-> @@ -307,12 +362,21 @@ wont_overwrite:
->  
->  		/*
->  		 * Relocate all entries in the GOT table.
-> +		 * Bump bss entries to _edata + dtb size
->  		 */
->  1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
-> -		add	r1, r1, r0		@ table.  This fixes up the
-> -		str	r1, [r11], #4		@ C references.
-> +		add	r1, r1, r0		@ This fixes up C references
-> +		cmp	r1, r2			@ if entry >= bss_start &&
-> +		cmphs	r3, r1			@       bss_end > entry
-> +		addhi	r1, r1, r5		@    entry += dtb size
-> +		str	r1, [r11], #4		@ next entry
->  		cmp	r11, r12
->  		blo	1b
-> +
-> +		/* bump our bss pointers too */
-> +		add	r2, r2, r5
-> +		add	r3, r3, r5
-> +
->  #else
->  
->  		/*
-> -- 
-> 1.7.4
-> 
+> This is the kind of information which should override whatever is in
+> DT because the DT contained information could well be wrong or outdated,
+> and its not the kind of information that anything other than core code
+> should be dealing with in any case.
+
+Of course it should override the device tree, I'm not arguing that.
+All I'm saying is that we don't need to special-case this or support
+both formats once the kernel is there as long as we move the information
+into appropriate DT-representation of the same data.
+
+The attributes you are looking for are for the information you listed:
+
+/memory/*
+/chosen/bootargs
+/chosen/linux,initrd-{start,end}
+/serial-number
+/compatible
+
+PowerPC was facing the exact same problem, see arch/powerpc/boot/main.c
+for the solution used there. The way that the boot entry point on powerpc
+works is to have a boot-protocol specific entry from which all the
+necessary information is taken and then put into a flattened device tree
+either built from scratch (in case of real OF) or patched into a prebuilt
+device tree. From there we pass the flattened device tree with all the
+correct information into the actual boot stage. In some cases, the entry
+points are identical and we just jump back to the start with the updated
+information.
+
+Having a complete and correct device tree is essential for instance to make
+kexec work, because the new kernel will only have the information from
+the device tree available but not have access to atags, uefi of open
+firmware.
+
+It may be a good idea to preserve the atags in a new property in the
+device tree, so we are able to inspect them later.
+
+	Arnd
