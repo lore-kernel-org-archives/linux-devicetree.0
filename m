@@ -1,53 +1,62 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 11:40:48 +0100
-Message-ID: <20110612104048.GE10283@n2100.arm.linux.org.uk>
+Date: Sun, 12 Jun 2011 13:22:19 +0200
+Message-ID: <20110612112219.GD16318@ibawizard.net>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612081541.GA10283@n2100.arm.linux.org.uk>
 	<20110612083414.GA29516@S2100-06.ap.freescale.net>
-	<20110612092131.GC10283@n2100.arm.linux.org.uk>
-	<20110612095217.GD10283@n2100.arm.linux.org.uk>
-	<20110612104215.GC29516@S2100-06.ap.freescale.net>
+Reply-To: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20110612104215.GC29516-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20110612083414.GA29516@S2100-06.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, John Bonesio <bones@secretlab.ca>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 12, 2011 at 06:42:16PM +0800, Shawn Guo wrote:
-> On Sun, Jun 12, 2011 at 10:52:17AM +0100, Russell King - ARM Linux wrote:
-> > On Sun, Jun 12, 2011 at 05:38:23PM +0800, Shawn Guo wrote:
-> > > On Sun, Jun 12, 2011 at 10:21:31AM +0100, Russell King - ARM Linux wrote:
-> > > > What if your platform doesn't use uboot?
-> > > 
-> > > Add dtb parsing support with the help from libfdt, I guess.  It is
-> > > some amount of work, but it's not a rewrite of bootloader, IMHO.
-> > 
-> > I guess you're suggesting that this wrapper uses libfdt to merge
-> > the ATAGs with the DT info?
-> > 
-> No, ATAGs does not play at all in this case.  For u-boot example
-> again, if it boots a dt kernel, dtb will be parsed to get cmdline
-> node overwritten as bootargs env value, and then it boots the dt
-> kernel with this updated dtb.
+Shawn Guo <shawn.guo@freescale.com> [2011-06-12 16:34:15]:
 
-You've missed my point entirely.  What you're saying is that we have to
-re-build and replace the boot loader in order to pass a command line into
-a kernel using the DT wrapper.
+> On Sun, Jun 12, 2011 at 09:15:41AM +0100, Russell King - ARM Linux wrote:
+> > 
+> > One thing which has been bugging me for some time is that the DT stuff
+> > completely overrides the ATAGs.  This is wrong with solutions like this.
+> > 
+> > We have a set of perfectly good boot loaders which provide correct
+> > information to the kernel via ATAGs.  If we start moving everything
+> > over to DT, then we run into a problem because the ATAGs are ignored -
+> > stuff such as the RAM size and command line passed from the boot loader
+> > will be entirely ignored, instead these having to be encoded into the
+> > kernel at build time.
+> > 
+> What u-boot does right now is replacing the parameters in dtb with
+> its for those it's interested in, for example command line is one,
+> before it passes dtb to kernel.
 
-I'm saying that you shouldn't have to, and the kernel should accept the
-memory size and command line from the ATAGs _in addition_ to the
-appended DT blob, and the ATAGs in that case should take precidence.
+If I understand it all correctly, there must be some 'legacy bootloader
+support' added to the kernel, layer which would convert the ATAGs to the DT.
+Or something like that.
+
+Please note, that there are some boards out there, which use some kind of
+proprietary bootloaders, so you can't update or change them easily. You either
+don't have source code, you're limited by the available space (2KB eeprom) so
+you can't add much more things into that bootloader or you're limited by the
+size of the MBR (yes, even such bootloaders exists).
+
+Ok, everything could be reverse engineered, EEPROM could be exchanged for the
+bigger one etc., second stage bootloader could be written for the MBR one, but
+it's not as easy as you think, at least not as "Add dtb parsing support with
+the help from libfdt. It is some amount of work, but it's not a rewrite of
+bootloader, IMHO."
+
+-- ynezz
