@@ -1,7 +1,7 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 16:59:40 +0100
-Message-ID: <20110612155940.GM10283@n2100.arm.linux.org.uk>
+Date: Sun, 12 Jun 2011 14:59:29 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1106121454510.2142@xanadu.home>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612112219.GD16318@ibawizard.net>
 	<20110612115820.GF10283@n2100.arm.linux.org.uk>
@@ -9,12 +9,12 @@ References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612145751.GA4013@ponder.secretlab.ca>
 	<20110612151931.GK10283@n2100.arm.linux.org.uk>
 	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
+	<20110612155940.GM10283@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.00.1106121145570.2142-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+In-Reply-To: <20110612155940.GM10283-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,41 +24,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?ISO-8859-15?Q?Petr_=A6tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 12, 2011 at 11:47:59AM -0400, Nicolas Pitre wrote:
-> On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
-> > And we've ended up with a fucked up situation which is extremely
-> > fragile, and actually makes me _NOT_ want to convert any existing
-> > platforms to use DT in the least.
+On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
+
+> On Sun, Jun 12, 2011 at 11:47:59AM -0400, Nicolas Pitre wrote:
+> > On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
+> > > And we've ended up with a fucked up situation which is extremely
+> > > fragile, and actually makes me _NOT_ want to convert any existing
+> > > platforms to use DT in the least.
+> > 
+> > Agreed.  I don't think that anything older than OMAP2 is worth 
+> > converting to DT.  The return on the investment is simply not worth it, 
+> > other than for experimental purposes.
 > 
-> Agreed.  I don't think that anything older than OMAP2 is worth 
-> converting to DT.  The return on the investment is simply not worth it, 
-> other than for experimental purposes.
+> I think you haven't appreciated the situation - let's take PXA as an
+> example.  PXA has been around for years, and IP in the latest silicon
+> is present in many of the older silicons too.
+> 
+> There's two issues here:
+> 
+> 1. If we port existing drivers over to use DT as a means to shrink the
+> size of the kernel, we need _all_ PXA using platforms to use DT.
+> 
+> 2. If we continue having board support for PXA submitted, we want it to
+> use DT support.
+> 
+> The result will be a mess of some bits of PXA using DT, other bits using
+> statically declared stuff.  It may get to the point where on some PXA
+> platforms DT is used to describe some of the system, and on a different
+> PXA platform, it describes some other but needs some static stuff.
+> 
+> I don't see this as a sustainable way forward.  If we're going to move a
+> particular SoC over to DT, we need to move the entire SoC over.  We can't
+> do this half-heartedly.
+> 
+> And that means we _must_ deal with accepting ATAGs from existing boot
+> loaders, with that information taking precidence over the DT blob
+> supplied with the kernel.
 
-I think you haven't appreciated the situation - let's take PXA as an
-example.  PXA has been around for years, and IP in the latest silicon
-is present in many of the older silicons too.
+Well... OK.  Let's see how this can be accommodated with the existing 
+patch floating around doing that.
 
-There's two issues here:
+@Grant: could you post the patch you have for that?  Let's see how this 
+can be made to play nicely with the DTB append patch.
 
-1. If we port existing drivers over to use DT as a means to shrink the
-size of the kernel, we need _all_ PXA using platforms to use DT.
 
-2. If we continue having board support for PXA submitted, we want it to
-use DT support.
-
-The result will be a mess of some bits of PXA using DT, other bits using
-statically declared stuff.  It may get to the point where on some PXA
-platforms DT is used to describe some of the system, and on a different
-PXA platform, it describes some other but needs some static stuff.
-
-I don't see this as a sustainable way forward.  If we're going to move a
-particular SoC over to DT, we need to move the entire SoC over.  We can't
-do this half-heartedly.
-
-And that means we _must_ deal with accepting ATAGs from existing boot
-loaders, with that information taking precidence over the DT blob
-supplied with the kernel.
+Nicolas
