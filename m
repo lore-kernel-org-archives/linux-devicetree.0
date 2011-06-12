@@ -1,7 +1,7 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 14:59:29 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1106121454510.2142@xanadu.home>
+Date: Sun, 12 Jun 2011 13:26:13 -0600
+Message-ID: <737CB01A-32EE-44F7-A3CB-CD0E36B0E5AB@bsdimp.com>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612112219.GD16318@ibawizard.net>
 	<20110612115820.GF10283@n2100.arm.linux.org.uk>
@@ -10,7 +10,7 @@ References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612151931.GK10283@n2100.arm.linux.org.uk>
 	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
 	<20110612155940.GM10283@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
+Mime-Version: 1.0 (Apple Message framework v1084)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
@@ -25,20 +25,20 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?ISO-8859-15?Q?Petr_=A6tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?windows-1252?Q?Petr_=8Atetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
 
+On Jun 12, 2011, at 9:59 AM, Russell King - ARM Linux wrote:
 > On Sun, Jun 12, 2011 at 11:47:59AM -0400, Nicolas Pitre wrote:
-> > On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
-> > > And we've ended up with a fucked up situation which is extremely
-> > > fragile, and actually makes me _NOT_ want to convert any existing
-> > > platforms to use DT in the least.
-> > 
-> > Agreed.  I don't think that anything older than OMAP2 is worth 
-> > converting to DT.  The return on the investment is simply not worth it, 
-> > other than for experimental purposes.
+>> On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
+>>> And we've ended up with a fucked up situation which is extremely
+>>> fragile, and actually makes me _NOT_ want to convert any existing
+>>> platforms to use DT in the least.
+>> 
+>> Agreed.  I don't think that anything older than OMAP2 is worth 
+>> converting to DT.  The return on the investment is simply not worth it, 
+>> other than for experimental purposes.
 > 
 > I think you haven't appreciated the situation - let's take PXA as an
 > example.  PXA has been around for years, and IP in the latest silicon
@@ -65,11 +65,6 @@ On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
 > loaders, with that information taking precidence over the DT blob
 > supplied with the kernel.
 
-Well... OK.  Let's see how this can be accommodated with the existing 
-patch floating around doing that.
+The only other way out would be to have a small ATAG interpreter that modified/generated the DT so that the rest of the kernel could rely on it completely. This would fatten what is a very slim later right now, but it would mean the whole rest of the kernel could trust the DT blob as gospel.
 
-@Grant: could you post the patch you have for that?  Let's see how this 
-can be made to play nicely with the DTB append patch.
-
-
-Nicolas
+Warner
