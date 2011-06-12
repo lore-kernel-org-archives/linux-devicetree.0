@@ -1,57 +1,64 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 11:47:59 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1106121145570.2142@xanadu.home>
+Date: Sun, 12 Jun 2011 16:59:40 +0100
+Message-ID: <20110612155940.GM10283@n2100.arm.linux.org.uk>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612112219.GD16318@ibawizard.net>
 	<20110612115820.GF10283@n2100.arm.linux.org.uk>
 	<201106121615.24059.arnd@arndb.de>
 	<20110612145751.GA4013@ponder.secretlab.ca>
 	<20110612151931.GK10283@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110612151931.GK10283@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, =?ISO-8859-15?Q?Petr_=A6tetiar?= <ynezz@true.cz>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.00.1106121145570.2142-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
-
-> On Sun, Jun 12, 2011 at 08:57:51AM -0600, Grant Likely wrote:
-> > On Sun, Jun 12, 2011 at 04:15:23PM +0200, Arnd Bergmann wrote:
-> > > But when you have both atag and DT and the atag overrides the DT, that
-> > > means we have incorrect information in the DT, and code might later
-> > > rely on that information.
-> > > 
-> > > IMHO when we allow passing a DT to a kernel while booting from an
-> > > existing boot loader that only knows about atag, the code that loads
-> > > the DT should be responsible for updating the DT with the atag information,
-> > > not pass two conflicting sets of data into the actual kernel.
-> > 
-> > I completely agree here.  I /started/ from the position that ATAGs and
-> > DTB would coexist, and after extensive debate[1] my opinion turned around
-> > to it should be one or the other.  Otherwise there are all kinds of
-> > questions about accuracy of the information and which takes
-> > precedence.
+On Sun, Jun 12, 2011 at 11:47:59AM -0400, Nicolas Pitre wrote:
+> On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
+> > And we've ended up with a fucked up situation which is extremely
+> > fragile, and actually makes me _NOT_ want to convert any existing
+> > platforms to use DT in the least.
 > 
-> And we've ended up with a fucked up situation which is extremely
-> fragile, and actually makes me _NOT_ want to convert any existing
-> platforms to use DT in the least.
+> Agreed.  I don't think that anything older than OMAP2 is worth 
+> converting to DT.  The return on the investment is simply not worth it, 
+> other than for experimental purposes.
 
-Agreed.  I don't think that anything older than OMAP2 is worth 
-converting to DT.  The return on the investment is simply not worth it, 
-other than for experimental purposes.
+I think you haven't appreciated the situation - let's take PXA as an
+example.  PXA has been around for years, and IP in the latest silicon
+is present in many of the older silicons too.
 
+There's two issues here:
 
-Nicolas
+1. If we port existing drivers over to use DT as a means to shrink the
+size of the kernel, we need _all_ PXA using platforms to use DT.
+
+2. If we continue having board support for PXA submitted, we want it to
+use DT support.
+
+The result will be a mess of some bits of PXA using DT, other bits using
+statically declared stuff.  It may get to the point where on some PXA
+platforms DT is used to describe some of the system, and on a different
+PXA platform, it describes some other but needs some static stuff.
+
+I don't see this as a sustainable way forward.  If we're going to move a
+particular SoC over to DT, we need to move the entire SoC over.  We can't
+do this half-heartedly.
+
+And that means we _must_ deal with accepting ATAGs from existing boot
+loaders, with that information taking precidence over the DT blob
+supplied with the kernel.
