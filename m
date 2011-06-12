@@ -1,44 +1,35 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Please cherry-pick "tty/serial: Add explicit PORT_TEGRA type" to
-	devicetree/test
-Date: Fri, 10 Jun 2011 20:35:25 -0600
-Message-ID: <20110611023525.GA11600@ponder.secretlab.ca>
-References: <74CDBE0F657A3D45AFBB94109FB122FF0498A47E0E@HQMAIL01.nvidia.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Sun, 12 Jun 2011 02:06:37 -0400
+Message-ID: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF0498A47E0E-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: John Bonesio <bones@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2011 at 12:42:25PM -0700, Stephen Warren wrote:
-> Grant, could you please cherry-pick, or otherwise pick up:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty-2.6.git
-> 4539c24fe4f92c09ee668ef959d3e8180df619b9
-> tty/serial: Add explicit PORT_TEGRA type
-> (from the tty-next branch)
-> 
-> Into your devicetree/test branch. With that in place, I'll be able to
-> fix up the of_serial.c registration for nvidia,tegra250-uart to use
-> PORT_TEGRA instead of PORT_XSCALE, as we discussed earlier.
+This is a resend of those patches with fixups after the latest changes
+in mainline.
 
-Hi Stephen.
+[PATCH 1/3] ARM: zImage: ensure it is always a multiple of 64 bits in size
+This one is new and trivial.
 
-I never did get the chance to actually cherry pick this, but
-devicetree/test has since been rebased to v3.0-rc2, so all
-should be good.  I'll also fixup the PORT_TEGRA bit in my tree.
+[PATCH 2/3] ARM: zImage: Allow the appending of a device tree binary
+Mostly John Bonesio's version with some adjustments and cleanups.
 
-g.
+[PATCH 3/3] ARM: zImage: make sure appended DTB doesn't get overwritten by kernel .bss
+New, simpler alternative to Tony Lindgren's version.
+
+
+Nicolas
