@@ -1,62 +1,113 @@
-From: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 13:22:19 +0200
-Message-ID: <20110612112219.GD16318@ibawizard.net>
+Date: Sun, 12 Jun 2011 12:58:20 +0100
+Message-ID: <20110612115820.GF10283@n2100.arm.linux.org.uk>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612081541.GA10283@n2100.arm.linux.org.uk>
 	<20110612083414.GA29516@S2100-06.ap.freescale.net>
-Reply-To: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
+	<20110612112219.GD16318@ibawizard.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110612083414.GA29516@S2100-06.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, John Bonesio <bones@secretlab.ca>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20110612112219.GD16318-iAOvNCVgjNNH4x6Dk/4f9A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo <shawn.guo@freescale.com> [2011-06-12 16:34:15]:
-
-> On Sun, Jun 12, 2011 at 09:15:41AM +0100, Russell King - ARM Linux wrote:
-> > 
-> > One thing which has been bugging me for some time is that the DT stuff
-> > completely overrides the ATAGs.  This is wrong with solutions like this.
-> > 
-> > We have a set of perfectly good boot loaders which provide correct
-> > information to the kernel via ATAGs.  If we start moving everything
-> > over to DT, then we run into a problem because the ATAGs are ignored -
-> > stuff such as the RAM size and command line passed from the boot loader
-> > will be entirely ignored, instead these having to be encoded into the
-> > kernel at build time.
-> > 
-> What u-boot does right now is replacing the parameters in dtb with
-> its for those it's interested in, for example command line is one,
-> before it passes dtb to kernel.
-
-If I understand it all correctly, there must be some 'legacy bootloader
-support' added to the kernel, layer which would convert the ATAGs to the DT.
-Or something like that.
-
-Please note, that there are some boards out there, which use some kind of
-proprietary bootloaders, so you can't update or change them easily. You either
-don't have source code, you're limited by the available space (2KB eeprom) so
-you can't add much more things into that bootloader or you're limited by the
-size of the MBR (yes, even such bootloaders exists).
-
-Ok, everything could be reverse engineered, EEPROM could be exchanged for the
-bigger one etc., second stage bootloader could be written for the MBR one, but
-it's not as easy as you think, at least not as "Add dtb parsing support with
-the help from libfdt. It is some amount of work, but it's not a rewrite of
-bootloader, IMHO."
-
--- ynezz
+T24gU3VuLCBKdW4gMTIsIDIwMTEgYXQgMDE6MjI6MTlQTSArMDIwMCwgUGV0ciDFoHRldGlhciB3
+cm90ZToKPiBTaGF3biBHdW8gPHNoYXduLmd1b0BmcmVlc2NhbGUuY29tPiBbMjAxMS0wNi0xMiAx
+NjozNDoxNV06Cj4gCj4gPiBPbiBTdW4sIEp1biAxMiwgMjAxMSBhdCAwOToxNTo0MUFNICswMTAw
+LCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4gPiA+IAo+ID4gPiBPbmUgdGhpbmcg
+d2hpY2ggaGFzIGJlZW4gYnVnZ2luZyBtZSBmb3Igc29tZSB0aW1lIGlzIHRoYXQgdGhlIERUIHN0
+dWZmCj4gPiA+IGNvbXBsZXRlbHkgb3ZlcnJpZGVzIHRoZSBBVEFHcy4gIFRoaXMgaXMgd3Jvbmcg
+d2l0aCBzb2x1dGlvbnMgbGlrZSB0aGlzLgo+ID4gPiAKPiA+ID4gV2UgaGF2ZSBhIHNldCBvZiBw
+ZXJmZWN0bHkgZ29vZCBib290IGxvYWRlcnMgd2hpY2ggcHJvdmlkZSBjb3JyZWN0Cj4gPiA+IGlu
+Zm9ybWF0aW9uIHRvIHRoZSBrZXJuZWwgdmlhIEFUQUdzLiAgSWYgd2Ugc3RhcnQgbW92aW5nIGV2
+ZXJ5dGhpbmcKPiA+ID4gb3ZlciB0byBEVCwgdGhlbiB3ZSBydW4gaW50byBhIHByb2JsZW0gYmVj
+YXVzZSB0aGUgQVRBR3MgYXJlIGlnbm9yZWQgLQo+ID4gPiBzdHVmZiBzdWNoIGFzIHRoZSBSQU0g
+c2l6ZSBhbmQgY29tbWFuZCBsaW5lIHBhc3NlZCBmcm9tIHRoZSBib290IGxvYWRlcgo+ID4gPiB3
+aWxsIGJlIGVudGlyZWx5IGlnbm9yZWQsIGluc3RlYWQgdGhlc2UgaGF2aW5nIHRvIGJlIGVuY29k
+ZWQgaW50byB0aGUKPiA+ID4ga2VybmVsIGF0IGJ1aWxkIHRpbWUuCj4gPiA+IAo+ID4gV2hhdCB1
+LWJvb3QgZG9lcyByaWdodCBub3cgaXMgcmVwbGFjaW5nIHRoZSBwYXJhbWV0ZXJzIGluIGR0YiB3
+aXRoCj4gPiBpdHMgZm9yIHRob3NlIGl0J3MgaW50ZXJlc3RlZCBpbiwgZm9yIGV4YW1wbGUgY29t
+bWFuZCBsaW5lIGlzIG9uZSwKPiA+IGJlZm9yZSBpdCBwYXNzZXMgZHRiIHRvIGtlcm5lbC4KPiAK
+PiBJZiBJIHVuZGVyc3RhbmQgaXQgYWxsIGNvcnJlY3RseSwgdGhlcmUgbXVzdCBiZSBzb21lICds
+ZWdhY3kgYm9vdGxvYWRlcgo+IHN1cHBvcnQnIGFkZGVkIHRvIHRoZSBrZXJuZWwsIGxheWVyIHdo
+aWNoIHdvdWxkIGNvbnZlcnQgdGhlIEFUQUdzIHRvIHRoZSBEVC4KPiBPciBzb21ldGhpbmcgbGlr
+ZSB0aGF0Lgo+IAo+IFBsZWFzZSBub3RlLCB0aGF0IHRoZXJlIGFyZSBzb21lIGJvYXJkcyBvdXQg
+dGhlcmUsIHdoaWNoIHVzZSBzb21lIGtpbmQgb2YKPiBwcm9wcmlldGFyeSBib290bG9hZGVycywg
+c28geW91IGNhbid0IHVwZGF0ZSBvciBjaGFuZ2UgdGhlbSBlYXNpbHkuIFlvdSBlaXRoZXIKPiBk
+b24ndCBoYXZlIHNvdXJjZSBjb2RlLCB5b3UncmUgbGltaXRlZCBieSB0aGUgYXZhaWxhYmxlIHNw
+YWNlICgyS0IgZWVwcm9tKSBzbwo+IHlvdSBjYW4ndCBhZGQgbXVjaCBtb3JlIHRoaW5ncyBpbnRv
+IHRoYXQgYm9vdGxvYWRlciBvciB5b3UncmUgbGltaXRlZCBieSB0aGUKPiBzaXplIG9mIHRoZSBN
+QlIgKHllcywgZXZlbiBzdWNoIGJvb3Rsb2FkZXJzIGV4aXN0cykuCgpFeGFjdGx5IG15IHBvaW50
+IC0gSSBoYXZlIHF1aXRlIGEgbnVtYmVyIG9mIHBsYXRmb3JtcyBoZXJlIHdoaWNoIHdpbGwKbmV2
+ZXIgYmUgYWJsZSB0byBoYXZlIGEgYm9vdCBsb2FkZXIgY2FwYWJsZSBvZiBtb2RpZnlpbmcgYSBE
+VCBibG9iIGZvcgp0aGUga2VybmVsLgoKT25lIG9mIHRoZSBwb2ludHMgb2YgTmljb2xhcycgcGF0
+Y2ggc2V0IGlzIHRvIGFsbG93IGV4aXN0aW5nIGJvb3QgbG9hZGVycwp0byBib290IGtlcm5lbHMg
+d2hlcmUgdGhlIGhhcmR3YXJlIGRlc2NyaXB0aW9uIGlzIGNvbnRhaW5lZCBpbiBhIERUIGJsb2IK
+ZW5jYXBzdWxhdGVkIHdpdGggdGhlIGtlcm5lbC4gIFRoYXQncyBncmVhdCBidXQgdGhlIHdheSB0
+aGluZ3MgYXJlIGN1cnJlbnRseQpzZXR1cCwgaXQgbWVhbnMgdGhhdCB0aGUgYm9vdCBsb2FkZXIg
+ZG9lcyBub3RoaW5nIG1vcmUgdGhhbiBsb2FkaW5nIGFuZApleGVjdXRpbmcgLSBhbmQgd2UgbG9z
+ZSB0aGUgX2V4aXN0aW5nXyBmbGV4aWJpbGl0eSBmb3IgdGhlIGJvb3QgbG9hZGVyIHRvCnBhc3Mg
+cGxhdGZvcm0gc3BlY2lmaWMgaW5mb3JtYXRpb24gdG8gdGhlIGtlcm5lbC4KClNvLCB3aGF0IEkn
+bSBjb25zaWRlcmluZyB0byBkbyBpcyB1cGRhdGUgdGhlIGJvb3QgcHJvdG9jb2wgc3VjaCB0aGF0
+IHRoZQpiYXNlIGFkZHJlc3Mgb2YgdGhlIERUIGJsb2IgaXMgcHJvdmlkZWQgaW4gcjMsIHNlcGFy
+YXRlbHkgZnJvbSB0aGUgQVRBRwpwb2ludGVyIGluIHIyLgoKVGhpcyBtZWFucyB0aGF0IGJvb3Qg
+bG9hZGVycyBjYW4gcHJvdmlkZSBhIERUIGJsb2IgKHIyID0gMCByMyA9PiBEVCkgb3IKdGhleSBj
+YW4gcHJvdmlkZSBBVEFHcyAocjIgPT4gYXRhZywgcjMgPSBpbmRldGVybWluYW50KS4gIFdlIGNh
+biB0aGVuCmNhdGVyIGZvciB0aGUgc2l0dWF0aW9uIHdoZXJlIHdlIGhhdmUgYW4gQVRBRyBib290
+IGxvYWRlciwgYnV0IGEga2VybmVsCndpdGggYW4gYXBwZW5kZWQgRFQgZGVzY3JpcHRpb24gKHIy
+ID0+IGF0YWcsIHIzID0+IERUKSBhbmQgaGF2ZSB0aGUgQVRBRwppbmZvcm1hdGlvbiBvdmVycmlk
+ZSB0aGUgRFQgZm9yIHRoaW5ncyBsaWtlIG1lbW9yeSBsYXlvdXQgYW5kIHRoZSBjb21tYW5kCmxp
+bmUgc3RyaW5nLgoKVGhpcyBpcyB0aGUgb25seSBzZW5zaWJsZSB3YXkgb2YgbWFpbnRhaW5pbmcg
+Y29tcGF0aWJpbGl0eSB3aXRoIHRoZQpleGlzdGluZyBib290IHByb3RvY29sLCB3aGljaCBpcyBh
+biBhYnNvbHV0ZSBfbXVzdF8gaWYgd2UgYXJlIGdvaW5nIHRvCmNvbnZlcnQgc29tZSBvZiB0aGUg
+ZXhpc3RpbmcgU29DcyAobGlrZSBQWEEpIHRvIERUIGFuZCBnZXQgcmlkIG9mIHRoZQpsZWdhY3kg
+c3RhdGljIGRlc2NyaXB0aW9ucyBvZiB0aGUgb24tYm9hcmQgZGV2aWNlcyAod2hpY2ggaXMgdGhl
+IHdob2xlCnBvaW50IHdlJ3JlIGdvaW5nIGRvd24gdGhpcyBwYXRoLikKCkl0J3MgZWl0aGVyIHRo
+YXQgb3Igd2UnbGwgaGF2ZSB0byByZWZ1c2UgdG8gY29udmVydCBleGlzdGluZyBTb0NzIHRvCkRU
+IHRvIG1haW50YWluIGNvbXBhdGliaWxpdHkgZm9yIGV4aXN0aW5nIGJvYXJkcyAtIHdoaWNoIG1h
+a2VzIERUCnN1cHBvcnQgdG90YWxseSBwb2ludGxlc3MuCgpMZXQgbWUgZ2l2ZSBhIHNpdHVhdGlv
+biB3aGVyZSB0aGlzIG1hdHRlcnM6IHlvdSBoYXZlIGEgYm9vdCBsb2FkZXIgd2hpY2gKbG9hZHMg
+YSBrZXJuZWwgZnJvbSBkaXNrIGFuZCBleGVjdXRlcyBpdC4gIFlvdSBoYXZlIDI1Nk1CIG9mIFJB
+TSBmaXR0ZWQKdG8gdGhlIG1hY2hpbmUuICBZb3UgcmVwbGFjZSB0aGlzIGtlcm5lbCB3aXRoIGEg
+RFQtZW5hYmxlZCBrZXJuZWwgd2hpY2gKaGFzIHRoZSBEVCBibG9iIGFwcGVuZGVkIHRvIHRoZSBr
+ZXJuZWwuICBUaGUgRFQgYmxvYiBzYXlzIHlvdSBoYXZlIDI1Nk1CCm9mIFJBTS4KCllvdSByZW1v
+dmUgYSAxMjhNQiBESU1NIGJlY2F1c2UgaXRzIGdvbmUgZmF1bHR5LiAgWW91IHRyeSB0byBib290
+LiAgVGhlCmJvb3QgbG9hZGVyIHByb3ZpZGVzIHRoZSBrZXJuZWwgd2l0aCBhbiBBVEFHIHRlbGxp
+bmcgaXQgdGhhdCB0aGVyZSdzCjEyOE1CIG9mIFJBTS4gIEhvd2V2ZXIsIHRoZSBrZXJuZWwgaWdu
+b3JlcyB0aGUgQVRBR3MgYW5kIGluc3RlYWQgbG9va3MKYXQgdGhlIGVuY2Fwc3VsYXRlZCBEVCBp
+bmZvcm1hdGlvbiB3aGljaCB0ZWxscyBpdCB0aGF0IHRoZXJlJ3MgMjU2TUIKb2YgUkFNLiAgWW91
+ciBrZXJuZWwgT09QU2VzLiAgWW91IHJlYm9vdCwgYW5kIHRyeSBwYXNzaW5nIGEgY29tbWFuZAps
+aW5lIGFyZ3VtZW50IG9mICdtZW09MTI4TScuIFRoZSBrZXJuZWwgYWdhaW4gaWdub3JlcyB0aGlz
+IGJlY2F1c2UgaXRzCmFuIEFUQUcuCgpUaGUgcmVzdWx0OiB5b3UgY2FuJ3QgYm9vdCB0aGUgcGxh
+dGZvcm0uCgpBbm90aGVyIGNhc2U6IHlvdXIgZmxhc2ggaGFzIGJlY29tZSBjb3JydXB0ZWQsIGFu
+ZCB0aGUga2VybmVsIHdvbid0IG1vdW50CnRoZSBmbGFzaCBiYXNlZCByb290ZnMuICBZb3Ugd2Fu
+dCB0byBib290IGZyb20gYSByb290LU5GUyBleHBvcnQgdG8gc29ydAp0aGUgcHJvYmxlbSBvdXQs
+IGJ1dCB0aGUga2VybmVsIGlnbm9yZXMgeW91ciBuZXcgY29tbWFuZCBsaW5lIHRlbGxpbmcgaXQK
+dG8gZG8gc28uCgpUaGUgcmVzdWx0OiB5b3UgY2FuJ3QgYm9vdCB0aGUgcGxhdGZvcm0uCgpBbm90
+aGVyIGNhc2U6IHlvdSBoYXZlIGEgVGhlY3VzIE4yMTAwIGFjdGluZyBhcyBhIHNlcnZlciwgd2l0
+aCBhIHBhaXIKb2YgZHJpdmVzIHNldHVwIGFzIHJhaWQgMS4gIFlvdSByZWJvb3QgaXQgb25lIGRh
+eSBhbmQgaXQgcmVmdXNlcyB0byBidWlsZAp0aGUgcmFpZCAxIHJvb3RmcywgYW5kIHNvIHBhbmlj
+cyBhdCBib290LiAgWW91IHdhbnQgdG8gY2hhbmdlIHRoZSBrZXJuZWwKY29tbWFuZCBsaW5lIHNv
+IHRoYXQgaXQgbW91bnRzIHJvb3QgZnJvbSBzb21ld2hlcmUgZWxzZSwgYnV0IGJlY2F1c2UKeW91
+J3JlIHVzaW5nIGEgRFQgYmFzZWQga2VybmVsLCBpdCBpZ25vcmVzIHlvdS4KClRoZSByZXN1bHQ6
+IHlvdSBjYW4ndCBib290IHRoZSBwbGF0Zm9ybS4KClRoaXMgYmVoYXZpb3VyIGZyb20gYSBEVCBi
+YXNlZCBrZXJuZWwgaXMganVzdCBub3QgYWNjZXB0YWJsZSwgYW5kIGl0J3MKYWxzbyBub3QgYWNj
+ZXB0YWJsZSB0byBleHBlY3QgcGxhdGZvcm1zIHRvIHVwZGF0ZSB0aGVpciBib290IGxvYWRlcnMg
+dG8KY29wZSB3aXRoIERULgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vz
+c0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZp
+Y2V0cmVlLWRpc2N1c3MK
