@@ -1,47 +1,116 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Sun, 12 Jun 2011 22:31:44 -0600
-Message-ID: <BANLkTik_hH9tZ5MMbOYzhZwLFTFQyJyfRg@mail.gmail.com>
-References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH] input: touchscreen: add OF match table for ads7846
+Date: Mon, 13 Jun 2011 16:15:26 +0800
+Message-ID: <BANLkTimxhKWg1QwLEFpGKgg01DRkddmmTw@mail.gmail.com>
+References: <1307672920-6261-1-git-send-email-Baohua.Song@csr.com> <BANLkTinTGHpyzg69OTcvmsGVLGK3qbZM7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: John Bonesio <bones@secretlab.ca>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <BANLkTinTGHpyzg69OTcvmsGVLGK3qbZM7g@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, Thomas Chou <thomas@wytron.com.tw>, devicetree-discuss@lists.ozlabs.org, Zhiwu Song <zhiwu.song@csr.com>, uclinux-dist-devel@blackfin.uclinux.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 12, 2011 at 12:06 AM, Nicolas Pitre
-<nicolas.pitre@linaro.org> wrote:
-> This is a resend of those patches with fixups after the latest changes
-> in mainline.
+Hi Grant,
+Thanks.
+
+2011/6/13 Grant Likely <grant.likely@secretlab.ca>:
+> On Thu, Jun 9, 2011 at 8:28 PM, Barry Song <Baohua.Song@csr.com> wrot=
+e:
+>> The current ads7846 has no OF match table. The method used is by app=
+lying a heuristic (of_modalias_node) which tries to name the device in =
+a way that will match an existing device driver.
+>> This patch adds explicit OF match table for ads7846, then the normal=
+ device tree match behaviour will always work.
+>> It has been tested on PRIMA2 EVB board of CSR with a SPI's child nod=
+e like the below:
+>> ts@0 {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D "ti,ads7845";
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D <0x0>;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0spi-max-frequency =3D <31250>;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D <90>;
+>> };
+>>
+>> Signed-off-by: Barry Song <21cnbao@gmail.com>
+>> Cc: Grant Likely <grant.likely@secretlab.ca>
+>> cc: Thomas Chou <thomas@wytron.com.tw>
+>> ---
+>> =C2=A0drivers/input/touchscreen/ads7846.c | =C2=A0 14 ++++++++++++++
 >
-> [PATCH 1/3] ARM: zImage: ensure it is always a multiple of 64 bits in size
-> This one is new and trivial.
+> There should also be documentation for the new binding added to
+> Documentation/devicetree/bindings for the new compatible strings.
+
+Which directory do you think is the best to place this document? or do
+we build a new diretory named
+Documentation/devicetree/bindings/input/touchscreen/ ?
+The dir Documentation/devicetree/bindings seems to be for spi host,
+not for spi clients.
+
 >
-> [PATCH 2/3] ARM: zImage: Allow the appending of a device tree binary
-> Mostly John Bonesio's version with some adjustments and cleanups.
+>> =C2=A01 files changed, 14 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/tou=
+chscreen/ads7846.c
+>> index 5196861..643138b 100644
+>> --- a/drivers/input/touchscreen/ads7846.c
+>> +++ b/drivers/input/touchscreen/ads7846.c
+>> @@ -28,6 +28,7 @@
+>> =C2=A0#include <linux/slab.h>
+>> =C2=A0#include <linux/pm.h>
+>> =C2=A0#include <linux/gpio.h>
+>> +#include <linux/of.h>
+>> =C2=A0#include <linux/spi/spi.h>
+>> =C2=A0#include <linux/spi/ads7846.h>
+>> =C2=A0#include <linux/regulator/consumer.h>
+>> @@ -1425,12 +1426,25 @@ static int __devexit ads7846_remove(struct s=
+pi_device *spi)
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>> =C2=A0}
+>>
+>> +#if defined(CONFIG_OF)
+>> +static struct of_device_id ads7846_spi_of_match_table[] __devinitda=
+ta =3D {
+>> + =C2=A0 =C2=A0 =C2=A0 { .compatible =3D "ti,ads7846", },
+>> + =C2=A0 =C2=A0 =C2=A0 { .compatible =3D "ti,ads7845", },
+>> + =C2=A0 =C2=A0 =C2=A0 { .compatible =3D "ti,ads7843", },
+>> + =C2=A0 =C2=A0 =C2=A0 {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ads7846_spi_of_match_table);
 >
-> [PATCH 3/3] ARM: zImage: make sure appended DTB doesn't get overwritten by kernel .bss
-> New, simpler alternative to Tony Lindgren's version.
+> #else
+> #define ads7846_spi_of_match_table NULL
+>
+>> +#endif
+>> +
+>> =C2=A0static struct spi_driver ads7846_driver =3D {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0.driver =3D {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name =C2=A0 =
+=3D "ads7846",
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.bus =C2=A0 =C2=
+=A0=3D &spi_bus_type,
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.owner =C2=A0=
+=3D THIS_MODULE,
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.pm =C2=A0 =C2=
+=A0 =3D &ads7846_pm,
+>> +#if defined(CONFIG_OF)
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .of_match_table =3D=
+ ads7846_spi_of_match_table,
+>> +#endif
+>
+> With the #else =C2=A0block added above, you can drop the #if/#endif
+> protection around of_match_table.
 
-I've gone ahead and added the series to devicetree/test for anyone who
-want to play with it.
+ok. thanks
 
-Thanks,
-g.
-
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+>
+> Otherwise:
+>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
