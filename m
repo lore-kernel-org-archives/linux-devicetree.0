@@ -1,42 +1,61 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: zImage: Allow the appending of a device tree
-	binary
-Date: Mon, 13 Jun 2011 12:26:04 +0100
-Message-ID: <20110613112604.GB12325@n2100.arm.linux.org.uk>
-References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-	<1307858800-16712-3-git-send-email-nicolas.pitre@linaro.org>
-	<20110613104648.GD10951@atomide.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] input: touchscreen: add OF match table for ads7846
+Date: Mon, 13 Jun 2011 07:24:03 -0600
+Message-ID: <BANLkTinAtt2yWc=3VXqdAo4unJbTswKx0g@mail.gmail.com>
+References: <1307672920-6261-1-git-send-email-Baohua.Song@csr.com>
+ <BANLkTinTGHpyzg69OTcvmsGVLGK3qbZM7g@mail.gmail.com> <BANLkTimxhKWg1QwLEFpGKgg01DRkddmmTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110613104648.GD10951-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <BANLkTimxhKWg1QwLEFpGKgg01DRkddmmTw@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Barry Song <21cnbao@gmail.com>
+Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, Thomas Chou <thomas@wytron.com.tw>, devicetree-discuss@lists.ozlabs.org, Zhiwu Song <zhiwu.song@csr.com>, uclinux-dist-devel@blackfin.uclinux.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2011 at 03:46:49AM -0700, Tony Lindgren wrote:
-> * Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [110611 23:03]:
-> > From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > 
-> > This patch provides the ability to boot using a device tree that is appended
-> > to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-> > 
-> > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > [nico: adjusted to latest zImage changes plus additional cleanups]
-> > Signed-off-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Looks like this rebased version has two nice improvments: It uses r5
-> instead of lr, and keeps stack usable early on :)
+On Mon, Jun 13, 2011 at 2:15 AM, Barry Song <21cnbao@gmail.com> wrote:
+> Hi Grant,
+> Thanks.
+>
+> 2011/6/13 Grant Likely <grant.likely@secretlab.ca>:
+>> On Thu, Jun 9, 2011 at 8:28 PM, Barry Song <Baohua.Song@csr.com> wro=
+te:
+>>> The current ads7846 has no OF match table. The method used is by ap=
+plying a heuristic (of_modalias_node) which tries to name the device in=
+ a way that will match an existing device driver.
+>>> This patch adds explicit OF match table for ads7846, then the norma=
+l device tree match behaviour will always work.
+>>> It has been tested on PRIMA2 EVB board of CSR with a SPI's child no=
+de like the below:
+>>> ts@0 {
+>>> =A0 =A0 =A0 =A0compatible =3D "ti,ads7845";
+>>> =A0 =A0 =A0 =A0reg =3D <0x0>;
+>>> =A0 =A0 =A0 =A0spi-max-frequency =3D <31250>;
+>>> =A0 =A0 =A0 =A0interrupts =3D <90>;
+>>> };
+>>>
+>>> Signed-off-by: Barry Song <21cnbao@gmail.com>
+>>> Cc: Grant Likely <grant.likely@secretlab.ca>
+>>> cc: Thomas Chou <thomas@wytron.com.tw>
+>>> ---
+>>> =A0drivers/input/touchscreen/ads7846.c | =A0 14 ++++++++++++++
+>>
+>> There should also be documentation for the new binding added to
+>> Documentation/devicetree/bindings for the new compatible strings.
+>
+> Which directory do you think is the best to place this document? or d=
+o
+> we build a new diretory named
+> Documentation/devicetree/bindings/input/touchscreen/ ?
+> The dir Documentation/devicetree/bindings seems to be for spi host,
+> not for spi clients.
 
-One of the comments still refers to lr though.
+Documentation/devicetree/bindings/input sounds appropriate.
+
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
