@@ -1,16 +1,16 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/3] ARM: zImage: Allow the appending of a device tree
-	binary
-Date: Mon, 13 Jun 2011 03:46:49 -0700
-Message-ID: <20110613104648.GD10951@atomide.com>
+Subject: Re: [PATCH 3/3] ARM: zImage: make sure appended DTB doesn't get
+	overwritten by kernel .bss
+Date: Mon, 13 Jun 2011 03:47:57 -0700
+Message-ID: <20110613104757.GE10951@atomide.com>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-	<1307858800-16712-3-git-send-email-nicolas.pitre@linaro.org>
+	<1307858800-16712-4-git-send-email-nicolas.pitre@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1307858800-16712-3-git-send-email-nicolas.pitre@linaro.org>
+In-Reply-To: <1307858800-16712-4-git-send-email-nicolas.pitre@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,16 +25,20 @@ Cc: John Bonesio <bones@secretlab.ca>, Grant Likely <grant.likely@secretlab.ca>,
 List-Id: devicetree@vger.kernel.org
 
 * Nicolas Pitre <nicolas.pitre@linaro.org> [110611 23:03]:
-> From: John Bonesio <bones@secretlab.ca>
+> The appended DTB gets relocated with the decompressor code to get out
+> of the way of the decompressed kernel.  However the .bss section may
+> be larger than the relocated code and data, therefore overwriting the
+> DTB.  Let's make sure the relocation takes care of moving zImage so
+> no conflict with .bss occurs.
 > 
-> This patch provides the ability to boot using a device tree that is appended
-> to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+> Thanks to Tony Lindgren <tony@atomide.com> for figuring out this issue.
 > 
-> Signed-off-by: John Bonesio <bones@secretlab.ca>
-> [nico: adjusted to latest zImage changes plus additional cleanups]
+> While at it, let's clean up the code a bit so that the wont_overwrite
+> symbol is used while determining if a conflict exists, making the above
+> change more precise as well as eliminating some ARM/THUMB alternates.
+> 
 > Signed-off-by: Nicolas Pitre <nicolas.pitre@linaro.org>
 
-Looks like this rebased version has two nice improvments: It uses r5
-instead of lr, and keeps stack usable early on :)
+Great, this simplifies things:
 
 Acked-by: Tony Lindgren <tony@atomide.com>
