@@ -1,181 +1,146 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: gic: add OF based initialization
-Date: Mon, 13 Jun 2011 10:53:16 -0600
-Message-ID: <20110613165316.GF18161@ponder.secretlab.ca>
-References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
-	<1307456541-11026-3-git-send-email-robherring2@gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [RFC] (early draft) dt: Linux dt usage model documentation
+Date: Mon, 13 Jun 2011 10:12:22 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04992C01C8@HQMAIL01.nvidia.com>
+References: <20110613132935.16600.94753.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1307456541-11026-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20110613132935.16600.94753.stgit@ponder>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Randy Dunlap <rdunlap@xenotime.net>, linaro-dev@lists.linaro.
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2011 at 09:22:20AM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> This adds gic initialization using device tree data. An example device tree
-> binding looks like this:
-> 
-> intc: interrupt-controller@fff11000 {
->         compatible = "arm,cortex-a9-gic";
->         #interrupt-cells = <1>;
->         interrupt-controller;
->         reg = <0xfff11000 0x1000>,
->               <0xfff10100 0x100>;
->         irq-start = <29>;
-> };
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Grant Likely wrote at Monday, June 13, 2011 7:32 AM:
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 > ---
->  Documentation/devicetree/bindings/arm/gic.txt |   31 +++++++++++++++++++++
->  arch/arm/common/gic.c                         |   36 +++++++++++++++++++++++++
->  arch/arm/include/asm/hardware/gic.h           |    1 +
->  3 files changed, 68 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> new file mode 100644
-> index 0000000..491a503
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -0,0 +1,31 @@
-> +* ARM Generic Interrupt Controller
+> Hey all,
+> 
+> This is an early draft of the usage model document for the device
+> tree, but I wanted to get it out there for feedback, and so that some
+> of the Linaro engineers could get started on migrating board ports.
+
+This looks great. I'll certainly raise awareness of this documentation
+within NVIDIA. I'd written a few brief internal notes on this topic, but
+yours is much more complete.
+
+As far as the content goes, it all looks good to me. Of course, I'm already
+somewhat familiar with DT...
+
+So, unfortunately, almost all I have to contribute to below are some nit-
+pick typos etc.
+
+...
+> +The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
+> +structure and language for describing hardware.  More specifically, it
+> +is an description of hardware that is readable by an operating system
+      ^^ a
+
+...
+> +<h2>History</h2>
+
+Should the HTML tags be here?
+
+...
+> +In the majority of cases, the machine identity is irrelevant, and the
+> +kernel will instead select setup code based on the machines core
+
+machine's
+
+...
+> +The reasoning behind this scheme is the observation that in the majority
+> +of cases, a single machine_desc can support a large number of boards
+> +if that all use the same SoC, or same family of SoCs.  However,
+      ^^^^ they (or delete "if")
+
+...
+> +Instead, the compatible list allows a generic machine_desc to provide
+> +support for a wide common set of boards by specifying "less
+> +compatible" value in the dt_compat list.  In the example above,
+> +generic board support can claim compatibility with "ti,omap3" or
+> +"ti,omap3450".  If a bug was discovered on the original beagleboard
+> +that required special workaround code during early boot, then a new
+> +machine_desc could be added which implements the workarounds and only
+> +matches on "ti,beagleboard".
+
+The exact example above is "ti,omap3-beagleboard".
+
+...
+> +Most of this data is contained in the /chosen node, and when booting
+> +Linux it will look something like this:
 > +
-> +Some ARM cores have an interrupt controller called GIC. The ARM GIC
-> +representation in the device tree should be done as under:-
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 loglevel=8";
+> +		initrd-start = &lt;0xc8000000&gt;;
+> +		initrd-end = &lt;0xc8200000&gt;;
+
+HTML conversion issue here too.
+
+...
+> +The simplest case is when .init_machine() is only responsible for
+> +registering a block of platform_devices.  Platform devices are concept
+
+are *a* concept
+
+> +About now is a good time to lay out an example.  Here is part of the
+> +device tree for the NVIDIA Tegra board.
+...
+> +	sound {
+> +		compatible = "nvidia,harmony-sound";
+> +		i2s-controller = <&i2s-1>;
+> +		i2s-codec = <&wm8903>;
+> +	};
+
+I'm not sure if the bindings for ASoC devices are agreed upon well enough
+yet to include that part of the example?
+
+...
+> +In the Tegra example, this accounts for the /soc and /sound nodes, but
+> +what about the children of the soc node?  Shouldn't they be registered
+> +as platform devices too?  For Linux DT support, the generic behaviour
+> +is for child devices to be registered by the parent's device driver at
+> +driver .probe() time.  So, an i2c bus device driver will register a
+see right margin:                                                    ^^ an?
+
+...
+> +i2c_client for each child node, an spi bus driver will register
+> +it's spi_device children, and similarly for other bus_types.
+   ^^ its
+
+> +It turns out that registering children of certain platform_devices as
+> +more platform_devices is a common pattern, and the device tree support
+> +code reflects that.  The second argument to of_platform_populate() is
+> +an of_device_id table, and any node that matches an entry in that
+> +table will also get it's child nodes registered.  In the tegra case,
+> +the code can look something like this:
 > +
-> +Required properties:
-> +
-> +- compatible : should be one of:
-> +	"arm,cortex-a9-gic"
-> +	"arm,arm11mp-gic"
-> +	"nvidia,tegra250-gic"
-
-This doesn't match the implementation in this patch.  The
-implementation only matches against the cortex-a9 gic.
-
-Also, I expect that the gic is different between the arm,cortex-a9-gic
-and the arm,arm11-mp-gic.  Is the tegra also a different gic
-implementation?  Or can it be expected that the tegra gic will simply
-claim compatibility with the a9 gic?
-
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source.  The type shall be a <u32> and the value shall be 1.
-> +- reg : Specifies base physical address(s) and size of the GIC registers. The
-> +  first 2 values are the GIC distributor register base and size. The 2nd 2
-> +  values are the GIC cpu interface register base and size.
-> +- irq-start : The first actual interrupt that is connected to h/w.
-
-Drop irq-start.  That's a Linux internal implementation detail, and
-Linux can easily handle dynamic assignment of irq ranges.
-
-If board support code still has special needs on specific platforms,
-then we can manually override the assigned range for that specific
-platform only as a short term workaround.
-
-> +
-> +Example:
-> +
-> +intc: interrupt-controller@fff11000 {
-> +        compatible = "arm,cortex-a9-gic";
-> +        #interrupt-cells = <1>;
-> +        interrupt-controller;
-> +        reg = <0xfff11000 0x1000>,
-> +              <0xfff10100 0x100>;
-> +        irq-start = <29>;
+> +static struct of_device_id harmony_bus_ids[] __initdata = {
+> +	{ .compatible = "simple-bus", },
+> +	{}
 > +};
 > +
-> +
-> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-> index 4ddd0a6..024414d 100644
-> --- a/arch/arm/common/gic.c
-> +++ b/arch/arm/common/gic.c
-> @@ -28,6 +28,8 @@
->  #include <linux/smp.h>
->  #include <linux/cpumask.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->  
->  #include <asm/irq.h>
->  #include <asm/mach/irq.h>
-> @@ -401,3 +403,37 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
->  	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
->  }
->  #endif
-> +
-> +#ifdef CONFIG_OF
-> +static struct of_device_id gic_ids[] __initdata = {
-> +	{ .compatible = "arm,cortex-a9-gic" },
-> +};
-> +
-> +void __init gic_of_init(void)
+> +static void __init harmony_init_machine(void)
 > +{
-> +	struct device_node *np;
-> +	void __iomem *cpu_base;
-> +	void __iomem *dist_base;
-> +	__u32 irq_start = 16;
-> +	const __be32 *val;
-> +
-> +	np = of_find_matching_node(NULL, gic_ids);
-> +	if (!np)
-> +		panic("unable to find compatible gic node in dtb\n");
-> +
-> +	dist_base = of_iomap(np, 0);
-> +	if (!dist_base)
-> +		panic("unable to map gic dist registers\n");
-> +
-> +	cpu_base = of_iomap(np, 1);
-> +	if (!cpu_base)
-> +		panic("unable to map gic cpu registers\n");
-> +
-> +	val = of_get_property(np, "irq-start", NULL);
-> +	if (val != NULL)
-> +		irq_start = of_read_ulong(val, 1);
-> +	of_node_put(np);
-> +
-> +	gic_init(0, irq_start, dist_base, cpu_base);
-
-This can only handle a single gic in a system.  This is a start, but
-multiple interrupt controllers must be supported, like for the Samsung
-socs.
-
-I've been toying with writing some code that walks the interrupt
-controller tree, finds the root controller, and then sets up each
-child controller as a cascade.
-
+> +	/* ... */
+> +	of_platform_populate(NULL, harmony_bus_ids, NULL);
 > +}
-> +#endif
-> diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
-> index 0691f9d..954a08e 100644
-> --- a/arch/arm/include/asm/hardware/gic.h
-> +++ b/arch/arm/include/asm/hardware/gic.h
-> @@ -37,6 +37,7 @@ extern void __iomem *gic_cpu_base_addr;
->  extern struct irq_chip gic_arch_extn;
->  
->  void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
-> +void gic_of_init(void);
->  void gic_secondary_init(unsigned int);
->  void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
->  void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
-> -- 
-> 1.7.4.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> +
+> +"simple-bus" is defined in the ePAPR 1.0 specification as a property
+> +meaning a simple memory mapped bus, so the of_platform_populate() code
+> +could be written to just assume simple-bus compatible nodes will
+> +always be traversed.  However, we pass it in as an argument so that
+> +board support code can always override the default behaviour.
+
+An example for I2C drivers enumerating their I2C child devices might be
+educational, so as to push the description of the DT enumeration model
+all the way through the entire tree.
+
+...
+
+-- 
+nvpublic
+
