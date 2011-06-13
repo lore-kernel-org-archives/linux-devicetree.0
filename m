@@ -1,7 +1,7 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
 Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Mon, 13 Jun 2011 02:51:42 -0700
-Message-ID: <20110613095142.GA10951@atomide.com>
+Date: Mon, 13 Jun 2011 02:59:31 -0700
+Message-ID: <20110613095931.GB10951@atomide.com>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612112219.GD16318@ibawizard.net>
 	<20110612115820.GF10283@n2100.arm.linux.org.uk>
@@ -10,43 +10,39 @@ References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
 	<20110612151931.GK10283@n2100.arm.linux.org.uk>
 	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
 	<20110612155940.GM10283@n2100.arm.linux.org.uk>
-	<alpine.LFD.2.00.1106121454510.2142@xanadu.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.00.1106121454510.2142-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20110612155940.GM10283@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [110612 11:55]:
-> On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
+* Russell King - ARM Linux <linux@arm.linux.org.uk> [110612 08:55]:
 > 
-> > I don't see this as a sustainable way forward.  If we're going to move a
-> > particular SoC over to DT, we need to move the entire SoC over.  We can't
-> > do this half-heartedly.
-> > 
-> > And that means we _must_ deal with accepting ATAGs from existing boot
-> > loaders, with that information taking precidence over the DT blob
-> > supplied with the kernel.
-> 
-> Well... OK.  Let's see how this can be accommodated with the existing 
-> patch floating around doing that.
+> I don't see this as a sustainable way forward.  If we're going to move a
+> particular SoC over to DT, we need to move the entire SoC over.  We can't
+> do this half-heartedly.
 
-I agree that we need to parse the user configurable ATAGs to support
-existing hardware properly. Otherwise we have edit the .dts for each board
-to change the user configurable things, which is not nice for distros.
+Agreed. In addition to ATAGs, we need to also consider the large chunks
+of data in kernel that Linus originally complained about. We absolutely don't
+want to have the same in two places both in .dts files and in platform data
+for things like mux, clocks, hwmod data etc.
+
+So we need to make sure the DT append support works transparently for
+existing bootloaders so we can just drop the the old data instead of
+keeping it around.
 
 Regards,
 
