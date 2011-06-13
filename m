@@ -1,17 +1,22 @@
 From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: zImage: Allow the appending of a device tree
-	binary
-Date: Mon, 13 Jun 2011 10:08:55 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1106131008220.2142@xanadu.home>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Mon, 13 Jun 2011 10:14:07 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1106131010150.2142@xanadu.home>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-	<1307858800-16712-3-git-send-email-nicolas.pitre@linaro.org>
-	<20110613104648.GD10951@atomide.com>
-	<20110613112604.GB12325@n2100.arm.linux.org.uk>
+	<20110612112219.GD16318@ibawizard.net>
+	<20110612115820.GF10283@n2100.arm.linux.org.uk>
+	<201106121615.24059.arnd@arndb.de>
+	<20110612145751.GA4013@ponder.secretlab.ca>
+	<20110612151931.GK10283@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
+	<20110612155940.GM10283@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1106121454510.2142@xanadu.home>
+	<20110613095142.GA10951@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110613112604.GB12325-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20110613095142.GA10951-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,29 +26,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?ISO-8859-15?Q?Petr_=A6tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 Jun 2011, Russell King - ARM Linux wrote:
+On Mon, 13 Jun 2011, Tony Lindgren wrote:
 
-> On Mon, Jun 13, 2011 at 03:46:49AM -0700, Tony Lindgren wrote:
-> > * Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [110611 23:03]:
-> > > From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > > 
-> > > This patch provides the ability to boot using a device tree that is appended
-> > > to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-> > > 
-> > > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > > [nico: adjusted to latest zImage changes plus additional cleanups]
-> > > Signed-off-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> * Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [110612 11:55]:
+> > On Sun, 12 Jun 2011, Russell King - ARM Linux wrote:
 > > 
-> > Looks like this rebased version has two nice improvments: It uses r5
-> > instead of lr, and keeps stack usable early on :)
+> > > I don't see this as a sustainable way forward.  If we're going to move a
+> > > particular SoC over to DT, we need to move the entire SoC over.  We can't
+> > > do this half-heartedly.
+> > > 
+> > > And that means we _must_ deal with accepting ATAGs from existing boot
+> > > loaders, with that information taking precidence over the DT blob
+> > > supplied with the kernel.
+> > 
+> > Well... OK.  Let's see how this can be accommodated with the existing 
+> > patch floating around doing that.
 > 
-> One of the comments still refers to lr though.
+> I agree that we need to parse the user configurable ATAGs to support
+> existing hardware properly. Otherwise we have edit the .dts for each board
+> to change the user configurable things, which is not nice for distros.
 
-Heh.  Fixed.
+You mean "existing bootloaders", right?
+
+Updated bootloaders should translate user configurable information into 
+proper DT records and pass the resulting DTB to the kernel separately.
 
 
 Nicolas
