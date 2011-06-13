@@ -1,21 +1,16 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Mon, 13 Jun 2011 02:59:31 -0700
-Message-ID: <20110613095931.GB10951@atomide.com>
+Subject: Re: [PATCH 1/3] ARM: zImage: ensure it is always a multiple of 64
+	bits in size
+Date: Mon, 13 Jun 2011 03:43:05 -0700
+Message-ID: <20110613104305.GC10951@atomide.com>
 References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-	<20110612112219.GD16318@ibawizard.net>
-	<20110612115820.GF10283@n2100.arm.linux.org.uk>
-	<201106121615.24059.arnd@arndb.de>
-	<20110612145751.GA4013@ponder.secretlab.ca>
-	<20110612151931.GK10283@n2100.arm.linux.org.uk>
-	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
-	<20110612155940.GM10283@n2100.arm.linux.org.uk>
+	<1307858800-16712-2-git-send-email-nicolas.pitre@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20110612155940.GM10283@n2100.arm.linux.org.uk>
+In-Reply-To: <1307858800-16712-2-git-send-email-nicolas.pitre@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,25 +20,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>, linux-arm-kernel@lists.infradead.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: John Bonesio <bones@secretlab.ca>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Russell King - ARM Linux <linux@arm.linux.org.uk> [110612 08:55]:
+* Nicolas Pitre <nicolas.pitre@linaro.org> [110611 23:02]:
+> This is needed for proper alignment when the DTB appending feature
+> is used.
 > 
-> I don't see this as a sustainable way forward.  If we're going to move a
-> particular SoC over to DT, we need to move the entire SoC over.  We can't
-> do this half-heartedly.
+> Signed-off-by: Nicolas Pitre <nicolas.pitre@linaro.org>
 
-Agreed. In addition to ATAGs, we need to also consider the large chunks
-of data in kernel that Linus originally complained about. We absolutely don't
-want to have the same in two places both in .dts files and in platform data
-for things like mux, clocks, hwmod data etc.
+Acked-by: Tony Lindgren <tony@atomide.com>
 
-So we need to make sure the DT append support works transparently for
-existing bootloaders so we can just drop the the old data instead of
-keeping it around.
-
-Regards,
-
-Tony
+> ---
+>  arch/arm/boot/compressed/vmlinux.lds.in |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/compressed/vmlinux.lds.in b/arch/arm/boot/compressed/vmlinux.lds.in
+> index ea80abe..6c02db1 100644
+> --- a/arch/arm/boot/compressed/vmlinux.lds.in
+> +++ b/arch/arm/boot/compressed/vmlinux.lds.in
+> @@ -47,6 +47,9 @@ SECTIONS
+>    .got			: { *(.got) }
+>    _got_end = .;
+>    .got.plt		: { *(.got.plt) }
+> +
+> +  /* ensure the zImage file size is always a multiple of 64 bits */
+> +  .pad			: { BYTE(0); . = ALIGN(8); }
+>    _edata = .;
+>  
+>    . = BSS_START;
+> -- 
+> 1.7.4
+> 
