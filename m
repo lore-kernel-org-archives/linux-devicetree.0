@@ -1,24 +1,17 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Mon, 13 Jun 2011 09:17:49 -0600
-Message-ID: <BANLkTinzibE6krCMdtzw57TLM91W4Chpqg@mail.gmail.com>
-References: <20110612112219.GD16318@ibawizard.net>
-	<20110612115820.GF10283@n2100.arm.linux.org.uk>
-	<201106121615.24059.arnd@arndb.de>
-	<20110612145751.GA4013@ponder.secretlab.ca>
-	<20110612151931.GK10283@n2100.arm.linux.org.uk>
-	<alpine.LFD.2.00.1106121145570.2142@xanadu.home>
-	<20110612155940.GM10283@n2100.arm.linux.org.uk>
-	<alpine.LFD.2.00.1106121454510.2142@xanadu.home>
-	<20110613095142.GA10951@atomide.com>
-	<alpine.LFD.2.00.1106131010150.2142@xanadu.home>
-	<20110613142044.GC13643@n2100.arm.linux.org.uk>
-	<alpine.LFD.2.00.1106131058080.2142@xanadu.home>
+Subject: Re: [PATCH 1/3] ARM: pmu: add OF probing support
+Date: Mon, 13 Jun 2011 10:44:14 -0600
+Message-ID: <20110613164414.GE18161@ponder.secretlab.ca>
+References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
+	<1307456541-11026-2-git-send-email-robherring2@gmail.com>
+	<000001cc25f4$64c2d5c0$2e488140$@rutland@arm.com>
+	<4DEFA5E1.9010600@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LFD.2.00.1106131058080.2142@xanadu.home>
+Content-Disposition: inline
+In-Reply-To: <4DEFA5E1.9010600@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,65 +21,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, John Bonesio <bones@secretlab.ca>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2011 at 9:14 AM, Nicolas Pitre <nicolas.pitre@linaro.org> w=
-rote:
-> On Mon, 13 Jun 2011, Russell King - ARM Linux wrote:
->
->> On Mon, Jun 13, 2011 at 10:14:07AM -0400, Nicolas Pitre wrote:
->> > On Mon, 13 Jun 2011, Tony Lindgren wrote:
->> >
->> > > I agree that we need to parse the user configurable ATAGs to support
->> > > existing hardware properly. Otherwise we have edit the .dts for each=
- board
->> > > to change the user configurable things, which is not nice for distro=
-s.
->> >
->> > You mean "existing bootloaders", right?
->> >
->> > Updated bootloaders should translate user configurable information into
->> > proper DT records and pass the resulting DTB to the kernel separately.
->>
->> OMAP is one of the code bases where this really matters - they have a
->> _lot_ of existing platforms with boot loaders which do the ATAG stuff.
->> They also have a lot of code in arch/arm that needs to be converted to
->> a DT representation.
->
-> Yes, agreed. =A0I just wanted to make the situation clear above, so people
-> aren't confused in believing that the DT data is always static. =A0New
-> bootloaders should have the same ability to dynamically change some of
-> the parameters passed to the kernel. =A0So the issue is not about existing
-> hardware, but rather about existing bootloaders.
->
->> With the current situation where you can have either ATAGs or DT but
->> not both, they're currently facing either having to break all the
->> existing platforms by ignoring the ATAGs _or_ keeping two copies of
->> a considerable amount of data - one in DT form and one in its existing
->> form.
->>
->> At present, DT can only be used sensibly on brand new SoCs where there
->> are no existing platforms with ATAG based boot loaders to worry about.
->> As things stand at present, even with your patch series, existing SoCs
->> have no viable path to transition to DT.
->
-> As I said, I'm now convinced that the patch adding a shim to translate
-> ATAGs into DT entries should be added to this series. =A0I was reluctant
-> initially for insentive purposes, but your argument clearly tilted the
-> balance the other way.
+On Wed, Jun 08, 2011 at 11:40:01AM -0500, Rob Herring wrote:
+> Mark,
+> 
+> On 06/08/2011 10:54 AM, Mark Rutland wrote:
+> >Hi,
+> >
+> >>  static int __devinit pmu_device_probe(struct platform_device *pdev)
+> >>  {
+> >>+	enum arm_pmu_type type = pdev->id;
+> >>
+> >>-	if (pdev->id<  0 || pdev->id>= ARM_NUM_PMU_DEVICES) {
+> >>+	if (pdev->dev.of_node)
+> >>+		type = ARM_PMU_DEVICE_CPU;
+> >>+
+> >>+	if (type<  0 || type>= ARM_NUM_PMU_DEVICES) {
+> >>  		pr_warning("received registration request for unknown "
+> >>  				"device %d\n", pdev->id);
+> >>  		return -EINVAL;
+> >>  	}
+> >>
+> >>-	if (pmu_devices[pdev->id])
+> >>+	if (pmu_devices[type])
+> >>  		pr_warning("registering new PMU device type %d overwrites "
+> >>-				"previous registration!\n", pdev->id);
+> >>+				"previous registration!\n", type);
+> >>  	else
+> >>  		pr_info("registered new PMU device of type %d\n",
+> >>-				pdev->id);
+> >>+				type);
+> >>
+> >>-	pmu_devices[pdev->id] = pdev;
+> >>+	pmu_devices[type] = pdev;
+> >>  	return 0;
+> >>  }
+> >
+> >I don't think this is the best way to handle the type when we've got an FDT
+> >description:
+> >
+> >* release_pmu hasn't been updated to match the type logic here, so it might do
+> >   anything when handed a platform_device initialised by FDT code.
+> >
+> >* the warning message for an invalid registration still uses pdev->id rather
+> >   than type. This can't currently be reached when the PMU was handed to us via
+> >   FDT, but it may confuse refactoring later on.
+> >
+> >* If we want to add a new PMU type, we'll have to add more logic to
+> >   pmu_device_probe. Given that work is going on to add support for system PMUs,
+> >   this doesn't seem particularly brilliant.
+> >
+> >>+static struct of_device_id pmu_device_ids[] = {
+> >>+	{ .compatible = "arm,cortex-a9-pmu" },
+> >>+	{ .compatible = "arm,cortex-a8-pmu" },
+> >>+	{ .compatible = "arm,arm1136-pmu" },
+> >>+	{ .compatible = "arm,arm1176-pmu" },
+> >>+	{},
+> >>+};
+> >>+
+> >>  static struct platform_driver pmu_driver = {
+> >>  	.driver		= {
+> >>  		.name	= "arm-pmu",
+> >>+		.of_match_table = pmu_device_ids,
+> >>  	},
+> >>  	.probe		= pmu_device_probe,
+> >>  };
+> >
+> >This all seems fine for handling CPU PMUs.
+> >
+> >I think that a better strategy would be to separate the type logic from the
+> >registration. I have a patch for this:
+> >http://lists.infradead.org/pipermail/linux-arm-kernel/2011-June/052455.html
+> >
+> >With it, you won't need to change pmu_device_probe, and adding FDT support
+> >should just be a matter of adding the of_match_table.
+> >
+> 
+> Okay. I'll rebase mine on top of your changes.
 
-John Bonesio was the author of that patch.
-
-John, can you dust of the ATAGs-->DT conversion patch and get it
-rebased to my current devicetree/test branch?  I've picked up Nicolas'
-3 patch series which includes your dtb append patch into
-devicetree/test.
+The DT binding looks good to me though.
 
 g.
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
