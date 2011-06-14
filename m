@@ -1,487 +1,346 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [RFC] (early draft) dt: Linux dt usage model documentation
-Date: Tue, 14 Jun 2011 13:10:33 +1000
-Message-ID: <20110614031033.GA4996@yookeroo.fritz.box>
-References: <20110613132935.16600.94753.stgit@ponder>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Tue, 14 Jun 2011 03:09:02 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1106140300500.2142@xanadu.home>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<20110612081541.GA10283@n2100.arm.linux.org.uk>
+	<20110612083414.GA29516@S2100-06.ap.freescale.net>
+	<20110612092131.GC10283@n2100.arm.linux.org.uk>
+	<20110612095217.GD10283@n2100.arm.linux.org.uk>
+	<20110612104215.GC29516@S2100-06.ap.freescale.net>
+	<20110612104048.GE10283@n2100.arm.linux.org.uk>
+	<8yaaadlfi3q.fsf@huya.qualcomm.com>
+	<alpine.LFD.2.00.1106131910570.2142@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110613132935.16600.94753.stgit@ponder>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, Randy Dunlap <rdunlap@xenotime.net>, linaro-dev@lists.linaro.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1106131910570.2142-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Comments below.  Only really considering gaps in content or emphasis
-here, not poor wording or grammatical errors.
+On Mon, 13 Jun 2011, Nicolas Pitre wrote:
 
-On Mon, Jun 13, 2011 at 07:32:15AM -0600, Grant Likely wrote:
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> ---
+> > Unless I'm missing something, I don't see a clean way of supporting this
+> > that doesn't involve the kernel being able to parse the ATAGS as well.
 > 
-> Hey all,
-> 
-> This is an early draft of the usage model document for the device
-> tree, but I wanted to get it out there for feedback, and so that some
-> of the Linaro engineers could get started on migrating board ports.
-> 
-> g.
-> 
->  Documentation/devicetree/usage-model |  403 ++++++++++++++++++++++++++++++++++
->  1 files changed, 403 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/usage-model
-> 
-> diff --git a/Documentation/devicetree/usage-model b/Documentation/devicetree/usage-model
-> new file mode 100644
-> index 0000000..4203119
-> --- /dev/null
-> +++ b/Documentation/devicetree/usage-model
-> @@ -0,0 +1,403 @@
-> +Linux and the Device Tree
-> +The Linux usage model for device tree data
-> +
-> +Author: Grant Likely <grant.likely@secretlab.ca>
-> +
-> +This article describes how Linux uses the device tree.  An overview of
-> +the device tree data format can be found at the <a
-> +href="http://devicetree.org/Device_Tree_Usage">Device Tree Usage</a>
-> +page on <a href="http://devicetree.org">devicetree.org</a>.
-> +
-> +
-> +	All the cool architectures are using device tree.  I want to
-> +	use device tree too!
-> +
-> +The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
-> +structure and language for describing hardware.  More specifically, it
-> +is an description of hardware that is readable by an operating system
-> +so that the operating system doesn't need to hard code details of the
-> +machine.
-> +
-> +Structurally, the DT is a tree, or acyclic graph with named nodes, and
-> +nodes may have an arbitrary number of named properties encapsulating
-> +arbitrary data.  A mechanism also exists to create arbitrary
-> +links from one node to another outside of the natural tree structure..
-> +
-> +Conceptually, a common set of usage conventions, called 'bindings',
-> +is defined for how data should appear in the tree to describe typical
-> +hardware characteristics including data busses, interrupt lines, gpio
-> +connections, and peripheral devices.
-> +
-> +As much as possible, hardware is described using existing bindings to
-> +maximize use of existing support code, but since property and node
-> +names are simply text strings, it is easy to extend existing bindings
-> +or create new ones by defining new nodes and properties.
+> FYI: I've dug up the patch from John Bonesio doing just that.  While the 
+> patch doesn't apply anymore, it looks trivial enough.  I should have it 
+> working by tomorrow.
 
-I think this could do with some expansion to mention that a lot of the
-core bindings come from the OF working group way back when.  There are
-plenty of newer "flat tree era" bindings, but particularly for busses
-rather than individual devices, we should look to the old, old
-bindings for precedent.
+Well, here it is.  It compiles, but otherwise completely untested.
 
-In fact, I think it might be worth explicitly talking about how we
-ended up with two different i2c bindings (the old OF one, and the
-flat-tree era one) as a cautionary tale of insufficient research into
-existing bindings.
+This applies on top of the 3 other patches I posted when this thread was 
+started.
 
-> +<h2>History</h2>
-> +The DT was originally created by Open Firmware as part of the
-> +communication method for passing data from Open Firmware to a client
-> +program (like to an operating system).  An operating system used the
-> +Device Tree to discover the topology of the hardware at runtime, and
-> +thereby support a majority of available hardware without hard coded
-> +information (assuming drivers were available for all devices).
-> +
-> +Since Open Firmware is commonly used on PowerPC and SPARC platforms,
-> +the Linux support for those architectures has for a long time used the
-> +Device Tree.
-> +
-> +In 2005, when PowerPC Linux began a major cleanup and to merge 32 bit
-> +and 64 support, the decision was made to require DT support on all
-> +powerpc platforms, regardless of whether or not they used Open
-> +Firmware.  To do this, a DT representation called the Flattened Device
-> +Tree (FDT) was created which could be passed to the kernel as a binary
-> +blob without requiring a real Open Firmware implementation.  U-Boot,
-> +kexec, and other bootloaders were modified to support both passing a
-> +Device Tree Binary (dtb) and to modify a dtb at boot time.
+While this could be cleaned up further, the functionality should all be 
+there and usable.
 
-And there's the option of having a wrapper for non-dt bootloaders
-which patches a canned dtb with whatever info it gets from the
-firmware.
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Tue, 14 Jun 2011 02:40:33 -0400
+Subject: [PATCH] ARM: zImage: allow supplementing appended DTB with traditional ATAG data
 
-> +Some time later, FDT infrastructure was generalized to be usable by
-> +all architectures.  At the time of this writing, 5 mainlined
-> +architectures (arm, mips, powerpc, sparc, and x86) and 1 out of
-> +mainline architecture (nios) have some level of DT support.
-> +
-> +<h2>Data Model</h2>
-> +If you haven't already read the
-> +href="http://devicetree.org/Device_Tree_Usage">Device Tree Usage</a>
-> +page, then go read it now.  It's okay, I'll wait....
-> +
-> +<h3>High Level View</h3>
-> +The most important thing to understand is that the DT is simply a data
-> +structure that describes the hardware.  There is nothing magical about
-> +it, and it doesn't magically make all hardware configuration problems
-> +go away.  What it does do is provide a language for decoupling the
-> +hardware configuration from the board and device driver support in the
-> +Linux kernel (or any other operating system for that matter).  Using
-> +it allows board and device support to become data driven; to make
-> +setup decisions based on data passed into the kernel instead of on
-> +per-machine hard coded selections.
-> +
-> +Ideally, data driven platform setup should result in less code
-> +duplication and make it easier to support a wide range of hardware
-> +with a single kernel image.
-> +
-> +Linux uses DT data for three major purposes:
-> +1) platform identification,
-> +2) runtime configuration, and
-> +3) device population.
-> +
-> +<h4>Platform Identification</h4>
-> +First and foremost, the kernel will use data in the DT to identify the
-> +specific machine.  In a perfect world, the specific platform shouldn't
-> +matter to the kernel because all platform details would be described
-> +perfectly by the device tree in a consistent and reliable manner.
-> +Hardware is not perfect though, and so the kernel must identify the
-> +machine during early boot so that it has the opportunity to run
-> +machine specific fixups.
-> +
-> +In the majority of cases, the machine identity is irrelevant, and the
-> +kernel will instead select setup code based on the machines core
-> +cpu or SoC.  On ARM for example, setup_arch() in
-> +arch/arm/kernel/setup.c will call setup_machine_fdt() in
-> +arch/arm/kernel/devicetree.c which searches through the machine_desc
-> +table and selects the machine_desc which best matches the device tree
-> +data.  It determines the best match by looking at the 'compatible'
-> +property in the root device tree node, and comparing it with the
-> +dt_compat list in struct machine_desc.
-> +
-> +The 'compatible' property contains a sorted list of strings starting
-> +with the exact name of the machine, followed by an optional list of
-> +boards it is compatible with sorted from most compatible to list.  For
-> +example, the root compatible properties for the TI BeagleBoard and its
-> +successor, the BeagleBoard xM board might look like:
-> +
-> +	compatible = "ti,omap3-beagleboard", "ti,omap3450", "ti,omap3";
-> +	compatible = "ti,omap3-beagleboard-xm", "ti,omap3450", "ti,omap3";
-> +
-> +Where "ti,omap3-beagleboard-xm" specifies the exact model, it also
-> +claims that it compatible with the OMAP 3450 SoC, and the omap3 family
-> +of SoCs in general.  You'll notice that the list is sorted from most
-> +specific (exact board) to least specific (SoC family).
-> +
-> +Astute readers might point out that the Beagle xM could also claim
-> +compatibility with the original Beagle board.  However, one should be
-> +cautioned about doing so at the board level since there is typically a
-> +high level of change from one board to another, even within the same
-> +product line, that it is hard to nail down exactly is meant when one
-> +board claims to be compatible with another.  For the top level, it is
-> +better to err on the side of caution and not claim one board is
-> +compatible with another.  The notable exception would be when one
-> +board is a carrier for another, such as a cpu module attached to a
-> +carrier board.
-> +
-> +One more note on compatible values.  Any string used in a compatible
-> +property must be documented as to what it indicates.  Add
-> +documentation for compatible strings in Documentation/devicetree/bindings.
+This is based on an older patch from John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>.
 
-Uh.. do we really want to point people to the kernel tree for the
-binding documentation?  I thought the idea is that devicetree.org
-would take over as the binding repository.  Having them in the kernel
-tree encourages Linux-specific behaviour, whereas the device tree
-should aim to be an OS-neutral structure.  This is not just
-theoretical, there are FreeBSD people working on using DTs for several
-of their platforms.
+Signed-off-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> +Again on ARM, the for each machine_desc, the kernel looks to see if
-> +any of the dt_compat list entries appear in the compatible property.
-> +If one does, then that machine_desc is a candidate for driving the
-> +machine.  After searching the entire table of machine_descs,
-> +setup_machine_fdt() returns the 'most compatible' machine_desc based
-> +on which entry in the compatible property each machine_desc matches
-> +against.  If no matching machine_desc is found, then it returns NULL.
-> +
-> +The reasoning behind this scheme is the observation that in the majority
-> +of cases, a single machine_desc can support a large number of boards
-> +if that all use the same SoC, or same family of SoCs.  However,
-> +invariably there will be some exceptions where a specific board will
-> +require special setup code that is not useful in the generic case.
-> +Special cases could be handled by explicitly checking for the
-> +troublesome board(s) in generic setup code, but doing so very quickly
-> +becomes ugly and/or unmaintainable if it is more than just a couple of
-> +cases.
-> +
-> +Instead, the compatible list allows a generic machine_desc to provide
-> +support for a wide common set of boards by specifying "less
-> +compatible" value in the dt_compat list.  In the example above,
-> +generic board support can claim compatibility with "ti,omap3" or
-> +"ti,omap3450".  If a bug was discovered on the original beagleboard
-> +that required special workaround code during early boot, then a new
-> +machine_desc could be added which implements the workarounds and only
-> +matches on "ti,beagleboard".
-> +
-> +PowerPC uses a slightly different scheme where it calls the .probe()
-> +hook from each machine_desc, and the first one returning TRUE is used.
-> +However, this approach does not take into account the priority of the
-> +compatible list, and probably should be avoided for new architecture
-> +support.
-> +
-> +<h4>Runtime configuration</h4>
-> +In most cases, a DT will be the sole method of communicating data from
-> +firmware to the kernel, so also gets used to pass in runtime and
-> +configuration data like the kernel parameters string and the location
-> +of an initrd image.
-> +
-> +Most of this data is contained in the /chosen node, and when booting
-> +Linux it will look something like this:
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 loglevel=8";
-> +		initrd-start = &lt;0xc8000000&gt;;
-> +		initrd-end = &lt;0xc8200000&gt;;
-> +	};
-> +
-> +The bootargs property contains the kernel arguments, and the initrd-*
-> +properties define the address and size of an initrd blob.  The
-> +chosen node may also optionally contain an arbitrary number of
-> +additional properties for platform specific configuration data.
-
-Hrm, yeah.  It is important to talk about this usage, but we should
-also discourage adding random linux-configuration specific bits to
-random bindings all over the place.
-
-> +During early boot, the architecture setup code calls of_scan_flat_dt()
-> +several times with different helper callbacks to parse device tree
-> +data before paging is setup.  The of_scan_flat_dt() code scans through
-> +the device tree and uses the helpers to extract information required
-> +during early boot.  Typically the early_init_dt_scan_chosen() helper
-> +is used to parse the chosen node including kernel parameters,
-> +early_init_dt_scan_root() to initialize the DT address space model,
-> +and early_init_dt_scan_memory() to determine the size and
-> +location of usable RAM.
-> +
-> +On ARM, the function setup_machine_fdt() is responsible for early
-> +scanning of the device tree after selecting the correct machine_desc
-> +that supports the board.
-> +
-> +<h4>Device population</h4>
-> +After the board has been identified, and after the early configuration data
-> +has been parsed, then kernel initialization can proceed in the normal
-> +way.  At some point in this process, unflatten_device_tree() is called
-> +to convert the data into a more efficient runtime representation.
-> +This is also when machine specific setup hooks will get called, like
-> +the machine_desc .init_early(), .init_irq() and .init_machine() hooks
-> +on ARM.  The remainder of this section uses examples from the ARM
-> +implementation, but all architectures will do pretty much the same
-> +thing when using a DT.
-> +
-> +As can be guessed by the names, .init_early() is used for any machine
-> +specific setup that needs to be executed early in the boot process,
-> +and .init_irq() is used to set up interrupt handling.  Using a DT
-> +doesn't materially change the behaviour of either of these functions.
-> +If a DT is provided, then both .init_early() and .init_irq() are able
-> +to call any of the DT query functions (of_* in include/linux/of*.h) to
-> +get additional data about the platform.
-> +
-> +The most interesting hook in the DT context is .init_machine() which
-> +is primarily responsible for populating the Linux device model with
-> +data about the platform.  Historically this has been implemented on
-> +embedded platforms by defining a set of static clock structures,
-> +platform_devices, and other data in the board support .c file, and
-> +registering it en-masse in .init_machine().  When DT is used, then
-> +instead of hard coding static devices for each platform, the list of
-> +devices can be obtained by parsing the DT, and allocating device
-> +structures dynamically.
-> +
-> +The simplest case is when .init_machine() is only responsible for
-> +registering a block of platform_devices.  Platform devices are concept
-> +used by Linux for memory or io mapped devices which cannot be detected
-> +by hardware, and for 'composite' or 'virtual' devices (more on those
-> +later).  While there is no 'platform device' terminology for the DT,
-> +platform devices roughly correspond to device nodes at the root of the
-> +tree and children of simple memory mapped bus nodes.
-> +
-> +About now is a good time to lay out an example.  Here is part of the
-> +device tree for the NVIDIA Tegra board.
-> +
-> +/{
-> +	compatible = "nvidia,harmony", "nvidia,tegra250";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	interrupt-parent = <&intc>;
-> +
-> +	chosen { };
-> +	aliases { };
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x40000000>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "nvidia,tegra250-soc", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		intc: interrupt-controller@50041000 {
-> +			compatible = "nvidia,tegra250-gic";
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +			reg = <0x50041000 0x1000>, < 0x50040100 0x0100 >;
-> +		};
-> +
-> +		serial@70006300 {
-> +			compatible = "nvidia,tegra250-uart";
-> +			reg = <0x70006300 0x100>;
-> +			interrupts = <122>;
-> +		};
-> +
-> +		i2s-1: i2s@70002800 {
-> +			compatible = "nvidia,tegra250-i2s";
-> +			reg = <0x70002800 0x100>;
-> +			interrupts = <77>;
-> +			codec = <&wm8903>;
-> +		};
-> +
-> +		i2c@7000c000 {
-> +			compatible = "nvidia,tegra250-i2c";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0x7000c000 0x100>;
-> +			interrupts = <70>;
-> +
-> +			wm8903: codec@1a {
-> +				compatible = "wlf,wm8903";
-> +				reg = <0x1a>;
-> +				interrupts = <347>;
-> +			};
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "nvidia,harmony-sound";
-> +		i2s-controller = <&i2s-1>;
-> +		i2s-codec = <&wm8903>;
-> +	};
-> +};
-> +
-> +At .machine_init() time, Tegra board support code will need to look at
-> +this DT and decide which nodes to create platform_devices for.
-> +However, looking at the tree, it is not immediately obvious what kind
-> +of device each node represents, or even if a node represents a device
-> +at all.  The /chosen, /aliases, and /memory nodes are informational
-> +nodes that don't describe devices (although arguably memory could be
-> +considered a device).  The children of the /soc node are memory mapped
-> +devices, but the codec@1a is an i2c device, and the sound node
-> +represents not a device, but rather how other devices are connected
-> +together to create the audio subsystem.  I know what each device is
-> +because I'm familiar with the board design, but how does the kernel
-> +know what to do with each node?
-
-I wonder if we should explain that the /sound node is in some senses a
-hack - and thereby an example of compromise in binding design for
-practicality.  In theory the "correct" way of doing things would be to
-have all the codecs / sound busses / connections and whatnot
-individually described in the device tree, with all all the links
-between them specified.  But this would be a pain both from the dt
-construction and kernel driver point of view, hence the /sound node,
-corresponding to the kernel "sound fabric" driver.  It seems to be
-this document might be the right place for discussion of this sort of
-design trade-off.
-
-> +The trick is that the kernel starts at the root of the tree and looks
-> +for nodes that have a 'compatible' property.  First, it is generally
-> +assumed that any node with a 'compatible' property represents a device
-> +of some kind, and second, it can be assumed that any node at the root
-> +of the tree is either directly attached to the processor bus, or is a
-> +miscellaneous system device that cannot be described any other way.
-> +For each of these nodes, Linux allocates and registers a
-> +platform_device, which in turn may get bound to a platform_driver.
-> +
-> +Why is using a platform_device for these nodes a safe assumption?
-> +Well, for the way that Linux models devices, just about all bus_types
-> +assume that its devices are children of a bus controller.  For
-> +example, each i2c_client is a child of an i2c_master.  Each spi_device
-> +is a child of an spi bus.  Similarly for USB, PCI, MDIO, etc.  The
-> +same hierarchy is also found in the DT, where i2c device nodes only
-> +ever appear as children of an i2c bus node.  Ditto for spi, mdio, usb,
-> +etc.  The only devices which do not require a specific type of parent
-> +device are platform_devices (and amba_devices, but more on that
-> +later), which will happily live at the base of the Linux /sys/devices
-> +tree.  Therefore, if a DT node is at the root of the tree, then it
-> +really probably is best registered as a platform_device.
-> +
-> +Linux board support code calls of_platform_populate(NULL, NULL, NULL)
-> +to kick of discovery of devices at the root of the tree.  The
-> +parameters are all NULL because when starting from the root of the
-> +tree, there is no need to provide a starting node (the first NULL), a
-> +parent struct device (the last NULL), and we're not using a match
-> +table (yet).  For a board that only needs to register devices,
-> +.init_machine() can be completely empty except for the
-> +of_platform_populate() call.
-> +
-> +In the Tegra example, this accounts for the /soc and /sound nodes, but
-> +what about the children of the soc node?  Shouldn't they be registered
-> +as platform devices too?  For Linux DT support, the generic behaviour
-> +is for child devices to be registered by the parent's device driver at
-> +driver .probe() time.  So, an i2c bus device driver will register a
-> +i2c_client for each child node, an spi bus driver will register
-> +it's spi_device children, and similarly for other bus_types.
-> +According to that model, a driver could be written that binds to the
-> +soc node and simply registers platform_devices for each of it's
-> +children.  The board support code would allocate and register an soc
-> +device, an soc device driver would bind to the soc device, and
-> +register platform_devices for /soc/interrupt-controller, /soc/serial,
-> +/soc/i2s, and /soc/i2c in it's .probe() hook.  Easy, right?  Although
-> +it is a lot of mucking about for just registering platform devices.
-> +
-> +It turns out that registering children of certain platform_devices as
-> +more platform_devices is a common pattern, and the device tree support
-> +code reflects that.  The second argument to of_platform_populate() is
-> +an of_device_id table, and any node that matches an entry in that
-> +table will also get it's child nodes registered.  In the tegra case,
-> +the code can look something like this:
-> +
-> +static struct of_device_id harmony_bus_ids[] __initdata = {
-> +	{ .compatible = "simple-bus", },
-> +	{}
-> +};
-> +
-> +static void __init harmony_init_machine(void)
-> +{
-> +	/* ... */
-> +	of_platform_populate(NULL, harmony_bus_ids, NULL);
-> +}
-> +
-> +"simple-bus" is defined in the ePAPR 1.0 specification as a property
-> +meaning a simple memory mapped bus, so the of_platform_populate() code
-> +could be written to just assume simple-bus compatible nodes will
-> +always be traversed.  However, we pass it in as an argument so that
-> +board support code can always override the default behaviour.
-> +
-> +<h2>Appendix A: AMBA devices</h2>
-> +
-> +ARM Primecells are a certain kind of device attached to the ARM AMBA
-> +bus which include some support for hardware detection and power
-> +management.  In Linux, struct amba_device and the amba_bus_type is
-> +used to represent Primecell devices.  However, the fiddly bit is that
-> +not all devices on an AMBA bus are Primecells, and for Linux it is
-> +typical for both amba_device and platform_device instances to be
-> +siblings of the same bus segment.
-> +
-> +When using the DT, this creates problems for of_platform_populate()
-> +because it must decide whether to register each node as either a
-> +platform_device or an amba_device.  This unfortunately complicates the
-> +device creation model a little bit, but the solution turns out not to
-> +be too invasive.  If a node is compatible with "arm,amba-primecell", then
-> +of_platform_populate() will register it as an amba_device instead of a
-> +platform_device.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 66b7d1e..166bd2a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1735,6 +1735,17 @@ config ARM_APPENDED_DTB
+ 	  (dtb) appended to zImage
+ 	  (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+ 
++config ARM_ATAG_DTB_COMPAT
++	bool "Supplement the appended DTB with traditional ATAG information"
++	depends on ARM_APPENDED_DTB
++	help
++	  Some old bootloaders can't be updated to a DTB capable one, yet
++	  they provide ATAGs with memory configuration, the ramdisk address,
++	  the kernel cmdline string, etc.  To allow a device tree enabled
++	  kernel to be used with such bootloaders, this option allows
++	  zImage to extract the information from the ATAG list and store it
++	  at run time into the appended DTB.
++
+ config CMDLINE
+ 	string "Default kernel command string"
+ 	default ""
+diff --git a/arch/arm/boot/compressed/.gitignore b/arch/arm/boot/compressed/.gitignore
+index c602896..e0936a1 100644
+--- a/arch/arm/boot/compressed/.gitignore
++++ b/arch/arm/boot/compressed/.gitignore
+@@ -5,3 +5,12 @@ piggy.lzo
+ piggy.lzma
+ vmlinux
+ vmlinux.lds
++
++# borrowed libfdt files
++fdt.c
++fdt.h
++fdt_ro.c
++fdt_rw.c
++fdt_wip.c
++libfdt.h
++libfdt_internal.h
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 48bead9..4b94995 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -83,19 +83,36 @@ suffix_$(CONFIG_KERNEL_GZIP) = gzip
+ suffix_$(CONFIG_KERNEL_LZO)  = lzo
+ suffix_$(CONFIG_KERNEL_LZMA) = lzma
+ 
++# libfdt files for the ATAG compatibility mode
++
++libfdt		:= fdt_rw.c fdt_ro.c fdt_wip.c fdt.c
++libfdt_hdrs	:= fdt.h libfdt.h libfdt_internal.h
++
++libfdt_objs	:= $(addsuffix .o, $(basename $(libfdt)))
++
++$(addprefix $(obj)/,$(libfdt) $(libfdt_hdrs)): $(obj)/%: $(srctree)/scripts/dtc/libfdt/%
++	$(call if_changed,shipped)
++
++$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
++	$(addprefix $(obj)/,$(libfdt_hdrs))
++
++ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
++OBJS	+= $(libfdt_objs) atags_to_fdt.o 
++endif
++
+ targets       := vmlinux vmlinux.lds \
+ 		 piggy.$(suffix_y) piggy.$(suffix_y).o \
+ 		 font.o font.c head.o misc.o $(OBJS)
+ 
+ # Make sure files are removed during clean
+-extra-y       += piggy.gzip piggy.lzo piggy.lzma lib1funcs.S
++extra-y       += piggy.gzip piggy.lzo piggy.lzma lib1funcs.S $(libfdt) $(libfdt_hdrs)
+ 
+ ifeq ($(CONFIG_FUNCTION_TRACER),y)
+ ORIG_CFLAGS := $(KBUILD_CFLAGS)
+ KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
+ endif
+ 
+-ccflags-y := -fpic -fno-builtin
++ccflags-y := -fpic -fno-builtin -I$(src)
+ asflags-y := -Wa,-march=all
+ 
+ # Supply kernel BSS size to the decompressor via a linker symbol.
+@@ -118,7 +135,7 @@ LDFLAGS_vmlinux += -X
+ LDFLAGS_vmlinux += -T
+ 
+ # For __aeabi_uidivmod
+-lib1funcs = $(obj)/lib1funcs.o
++lib1funcs = $(obj)/lib1funcs.o $(obj)/../../lib/lib.a
+ 
+ $(obj)/lib1funcs.S: $(srctree)/arch/$(SRCARCH)/lib/lib1funcs.S FORCE
+ 	$(call cmd,shipped)
+diff --git a/arch/arm/boot/compressed/atags_to_fdt.c b/arch/arm/boot/compressed/atags_to_fdt.c
+new file mode 100644
+index 0000000..11c1a88
+--- /dev/null
++++ b/arch/arm/boot/compressed/atags_to_fdt.c
+@@ -0,0 +1,71 @@
++#include <asm/setup.h>
++#include <libfdt.h>
++
++static int setprop(void *fdt, const char *node_path, const char *property,
++		   uint32_t *val_array, int size)
++{
++	int offset = fdt_path_offset(fdt, node_path);
++	if (offset < 0)
++		return offset;
++	return fdt_setprop(fdt, offset, property, val_array, size);
++}
++
++static int setprop_string(void *fdt, const char *node_path,
++			  const char *property, const char *string)
++{
++	int offset = fdt_path_offset(fdt, node_path);
++	if (offset < 0)
++		return offset;
++	return fdt_setprop_string(fdt, offset, property, string);
++}
++
++static int setprop_cell(void *fdt, const char *node_path,
++			const char *property, uint32_t val)
++{
++	int offset = fdt_path_offset(fdt, node_path);
++	if (offset < 0)
++		return offset;
++	return fdt_setprop_cell(fdt, offset, property, val);
++}
++
++int atags_to_fdt(void *dt,  void *atag_list)
++{
++	struct tag *atag = atag_list;
++
++	/* make sure we've got an aligned pointer */
++	if ((u32)atag_list & 0x3)
++		return -1;
++
++	/* if we get a DTB here we're done already */
++	if (*(u32 *)atag_list == fdt32_to_cpu(FDT_MAGIC))
++	       return 0;	
++
++	/* validate the ATAG */
++	if (atag->hdr.tag != ATAG_CORE ||
++	    (atag->hdr.size != tag_size(tag_core) &&
++	     atag->hdr.size != 2))
++		return -1;
++
++	for_each_tag(atag, atag_list) {
++		if (atag->hdr.tag == ATAG_CMDLINE) {
++			setprop_string(dt, "/chosen", "bootargs",
++			                  atag->u.cmdline.cmdline);
++		} else if (atag->hdr.tag == ATAG_MEM) {
++			uint32_t mem_reg_property[2];
++			mem_reg_property[0] = cpu_to_fdt32(atag->u.mem.start);
++			mem_reg_property[1] = cpu_to_fdt32(atag->u.mem.size);
++			setprop(dt, "/memory", "reg", mem_reg_property,
++			           sizeof(mem_reg_property));
++		} else if (atag->hdr.tag == ATAG_INITRD2) {
++			uint32_t initrd_start, initrd_size;
++			initrd_start = atag->u.initrd.start;
++			initrd_size = atag->u.initrd.size;
++			setprop_cell(dt, "/chosen", "linux,initrd-start",
++			                initrd_start);
++			setprop_cell(dt, "/chosen", "linux,initrd-end",
++			                initrd_start + initrd_size);
++		}
++	}
++
++	return 0;
++}
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index d4f8db2..5a0a2409 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -246,6 +246,36 @@ restart:	adr	r0, LC0
+ 		cmp	lr, r1
+ 		bne	dtb_check_done		@ not found
+ 
++#ifdef CONFIG_ARM_ATAG_DTB_COMPAT
++		/*
++		 * OK... Let's do some funky business here.
++		 * If we do have a DTB appended to zImage, and we do have
++		 * an ATAG list around, we want the later to be translated
++		 * and folded into the former here.  To be on the safe side,
++		 * let's temporarily move  the stack away into the malloc
++		 * area.  No GOT fixup has occurred yet, but none of the
++		 * code we're about to call uses any global variable.
++		*/
++		add	sp, sp, #0x10000
++		stmfd	sp!, {r0-r3, ip, lr}
++		mov	r0, r6
++		mov	r1, r8
++		bl	atags_to_fdt
++		
++		/*
++		 * If that didn't work (non-zero return), there is no ATAG
++		 * at the location pointed by r8.  Try the typical 0x100
++		 * offset from start of RAM.
++		 */
++		cmp	r0, #0
++		mov	r0, r6
++		sub	r1, r4, #(TEXT_OFFSET - 0x100)
++		blne	atags_to_fdt
++
++		ldmfd	sp!, {r0-r3, ip, lr}
++		sub	sp, sp, #0x10000
++#endif
++
+ 		mov	r8, r6			@ use the appended device tree
+ 
+ 		/*
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+new file mode 100644
+index 0000000..1f4e718
+--- /dev/null
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -0,0 +1,15 @@
++#ifndef _ARM_LIBFDT_ENV_H
++#define _ARM_LIBFDT_ENV_H
++
++#include <linux/types.h>
++#include <linux/string.h>
++#include <asm/byteorder.h>
++
++#define fdt16_to_cpu(x)		be16_to_cpu(x)
++#define cpu_to_fdt16(x)		cpu_to_be16(x)
++#define fdt32_to_cpu(x)		be32_to_cpu(x)
++#define cpu_to_fdt32(x)		cpu_to_be32(x)
++#define fdt64_to_cpu(x)		be64_to_cpu(x)
++#define cpu_to_fdt64(x)		cpu_to_be64(x)
++
++#endif
+diff --git a/arch/arm/boot/compressed/misc.c b/arch/arm/boot/compressed/misc.c
+index 832d372..747de6b 100644
+--- a/arch/arm/boot/compressed/misc.c
++++ b/arch/arm/boot/compressed/misc.c
+@@ -136,6 +136,55 @@ void *memcpy(void *__dest, __const void *__src, size_t __n)
+ 	return __dest;
+ }
+ 
++void *memmove(void *__dest, __const void *__src, size_t __n)
++{
++	unsigned char *d = __dest;
++	const unsigned char *s = __src;
++
++	if (__dest <= __src)
++		return memcpy(__dest, __src, __n);
++
++	while (--__n >= 0)
++		d[__n] = s[__n];
++
++	return __dest;
++}
++
++size_t strlen(const char *s)
++{
++	const char *sc;
++
++	for (sc = s; *sc != '\0'; ++sc)
++		/* nothing */;
++	return sc - s;
++}
++
++int memcmp(const void *cs, const void *ct, size_t count)
++{
++	const unsigned char *su1, *su2;
++	int res = 0;
++
++	for (su1 = cs, su2 = ct; 0 < count; ++su1, ++su2, count--)
++		if ((res = *su1 - *su2) != 0)
++			break;
++	return res;
++}
++
++int strcmp(const char *cs, const char *ct)
++{
++	unsigned char c1, c2;
++
++	while (1) {
++		c1 = *cs++;
++		c2 = *ct++;
++		if (c1 != c2)
++			return c1 < c2 ? -1 : 1;
++		if (!c1)
++			break;
++	}
++	return 0;
++}
++
+ /*
+  * gzip declarations
+  */
