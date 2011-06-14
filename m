@@ -1,16 +1,23 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/3] ARM: gic: add OF based initialization
-Date: Tue, 14 Jun 2011 07:56:28 -0600
-Message-ID: <BANLkTi=eYVftJLyckv5Jpz-Qq1KpPc7AgQ@mail.gmail.com>
-References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
-	<1307456541-11026-3-git-send-email-robherring2@gmail.com>
-	<20110613165316.GF18161@ponder.secretlab.ca>
-	<20110613221447.GI13643@n2100.arm.linux.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Tue, 14 Jun 2011 07:53:29 -0700
+Message-ID: <20110614145329.GK23145@atomide.com>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<20110612081541.GA10283@n2100.arm.linux.org.uk>
+	<20110612083414.GA29516@S2100-06.ap.freescale.net>
+	<20110612092131.GC10283@n2100.arm.linux.org.uk>
+	<20110612095217.GD10283@n2100.arm.linux.org.uk>
+	<20110612104215.GC29516@S2100-06.ap.freescale.net>
+	<20110612104048.GE10283@n2100.arm.linux.org.uk>
+	<8yaaadlfi3q.fsf@huya.qualcomm.com>
+	<alpine.LFD.2.00.1106131910570.2142@xanadu.home>
+	<alpine.LFD.2.00.1106140300500.2142@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110613221447.GI13643@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.00.1106140300500.2142@xanadu.home>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,76 +27,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, John Bonesio <bones@secretlab.ca>, David Brown <davidb@codeaurora.org>, Shawn Guo <shawn.guo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2011 at 4:14 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Mon, Jun 13, 2011 at 10:53:16AM -0600, Grant Likely wrote:
->> On Tue, Jun 07, 2011 at 09:22:20AM -0500, Rob Herring wrote:
->> > +- interrupt-controller : Identifies the node as an interrupt controll=
-er
->> > +- #interrupt-cells : Specifies the number of cells needed to encode an
->> > + =A0interrupt source. =A0The type shall be a <u32> and the value shal=
-l be 1.
->> > +- reg : Specifies base physical address(s) and size of the GIC regist=
-ers. The
->> > + =A0first 2 values are the GIC distributor register base and size. Th=
-e 2nd 2
->> > + =A0values are the GIC cpu interface register base and size.
->> > +- irq-start : The first actual interrupt that is connected to h/w.
->>
->> Drop irq-start. =A0That's a Linux internal implementation detail, and
->> Linux can easily handle dynamic assignment of irq ranges.
->
-> Something has to be done with the IRQs on GIC, because Linux probably
-> won't have a 1:1 mapping between the hardware IRQ numbers and the Linux
-> IRQ numbers
->
-> Have you seen the patches from Marc which deal with the per-CPU
-> interrupts by creating individual Linux IRQ numbers for each CPU for
-> each per-CPU interrupt? =A0So you can end up with 16 per-CPU x 4 CPUs =3D
-> 64 Linux interrupts for 16 "hardware" interrupts.
->
-> How would DT deal with that - and how would you specify a connection
-> between a per-CPU PMU and one of the per-CPU interrupts?
+* Nicolas Pitre <nicolas.pitre@linaro.org> [110614 00:04]:
+> +
+> +	for_each_tag(atag, atag_list) {
+> +		if (atag->hdr.tag == ATAG_CMDLINE) {
+> +			setprop_string(dt, "/chosen", "bootargs",
+> +			                  atag->u.cmdline.cmdline);
+> +		} else if (atag->hdr.tag == ATAG_MEM) {
+> +			uint32_t mem_reg_property[2];
+> +			mem_reg_property[0] = cpu_to_fdt32(atag->u.mem.start);
+> +			mem_reg_property[1] = cpu_to_fdt32(atag->u.mem.size);
+> +			setprop(dt, "/memory", "reg", mem_reg_property,
+> +			           sizeof(mem_reg_property));
+> +		} else if (atag->hdr.tag == ATAG_INITRD2) {
+> +			uint32_t initrd_start, initrd_size;
+> +			initrd_start = atag->u.initrd.start;
+> +			initrd_size = atag->u.initrd.size;
+> +			setprop_cell(dt, "/chosen", "linux,initrd-start",
+> +			                initrd_start);
+> +			setprop_cell(dt, "/chosen", "linux,initrd-end",
+> +			                initrd_start + initrd_size);
+> +		}
+> +	}
 
-In general, bindings focus on the hardware and hardware configuration
-instead of what Linux needs internally.  For a lot of interrupt
-controllers, an irq specifier consists of two u32 values.  The first
-value being the hardware irq number (perhaps 0-15 in this case), and
-the second value being a set of flags.
+I think Russell posted a complete list of the ATAGs to translate
+somewhere, but at least ATAG_REVISION is missing here. That's being
+used quite a bit as system_rev to set things dynamically.
 
-Without looking deeply and the GIC interface details, I suspect that
-the CPU affinity would best be represented as a field in the flags
-value.
+Regards,
 
-The per-CPU PMU connections then wouldn't be any different from any
-other irq in that the irq specifier would include a CPU affinity
-value.
-
->
-> The sensible thing from a DT point of view I think would be to ignore
-> that abstraction, and have some kind of mapping layer between DT and
-> drivers which knew about that.
-
-Yup, and that is exactly what is done.  On powerpc it uses the virtual
-irq infrastructure.  For ARM and everyone else, there are patches on
-list for irq_domain which implements the required behaviour.  The
-interrupt controller driver can make decisions about how to map the
-hardware irq to a linux irq number.  For most irq controllers, it will
-be a simple 1:1 mapping, but for something complex like the gic, it
-can do something different if need be.
-
-> =A0But that sounds like a world of pain.
-
-Actually, it turns out not to be.  We've been needing/wanting some
-form of irq_domains anyway for a while now to better manage hwirq ->
-linuxirq mappings.  Adding DT to the mix means also suppling a DT
-decode function to get the hwirq number from the interrupt specifier.
-
-I'll be reposting a bunch of patches in the next few days that fills
-in most of the missing pieces for irq mapping.
-
-g.
+Tony
