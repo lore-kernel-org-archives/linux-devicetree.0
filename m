@@ -1,49 +1,49 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] (early draft) dt: Linux dt usage model documentation
-Date: Mon, 13 Jun 2011 17:32:04 -0600
-Message-ID: <BANLkTik-+6RSbE2ycm4zz+Cxm12UEnpC5g@mail.gmail.com>
-References: <20110613132935.16600.94753.stgit@ponder> <d8b25dce-9086-45e3-8dc7-012947e47ed2@VA3EHSMHS018.ehs.local>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Mon, 13 Jun 2011 17:13:04 -0700
+Message-ID: <8ya62o9fey7.fsf@huya.qualcomm.com>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<20110612081541.GA10283@n2100.arm.linux.org.uk>
+	<20110612083414.GA29516@S2100-06.ap.freescale.net>
+	<20110612112219.GD16318@ibawizard.net>
+	<20110612115820.GF10283@n2100.arm.linux.org.uk>
+	<alpine.LFD.2.00.1106121051380.2142@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <d8b25dce-9086-45e3-8dc7-012947e47ed2@VA3EHSMHS018.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Neuendorffer <stephen.neuendorffer@xilinx.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Randy Dunlap <rdunlap@xenotime.net>, linaro-dev@lists.linaro.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1106121051380.2142-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org> (Nicolas Pitre's
+	message of "Sun, 12 Jun 2011 11:41:40 -0400 (EDT)")
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2011 at 5:29 PM, Stephen Neuendorffer
-<stephen.neuendorffer@xilinx.com> wrote:
->
->> +Some time later, FDT infrastructure was generalized to be usable by
->> +all architectures. =A0At the time of this writing, 5 mainlined
->> +architectures (arm, mips, powerpc, sparc, and x86) and 1 out of
->
-> microblaze too?
+On Sun, Jun 12 2011, Nicolas Pitre wrote:
 
-Oops, I knew I was missing something.  Thanks
+> It is not pointless.  Never it was in the cards to convert old platforms 
+> first.  The most problematic platforms responsible for the high volume 
+> of changes that has gone in mainline lately are the modern ones, not PXA 
+> based ones.  So DT is going to be most effective for the new stuff to 
+> come.  And realistically that's where we might get developers attention, 
+> not with those platforms being end-of-lived by their manufacturers.
 
-g.
+New stuff doesn't necessarily mean new boot loaders.  I don't have a lot
+of control over the bootloaders on MSM.  We can probably move away from
+ATAGS, but only after every kernel that could possibly boot on that
+target will work with DT.  I don't see that happening for at least a
+year.
 
->
->> +mainline architecture (nios) have some level of DT support.
->> +
->
-> Steve
->
-> This email and any attachments are intended for the sole use of the n=
-amed recipient(s) and contain(s) confidential information that may be p=
-roprietary, privileged or copyrighted under applicable law. If you are =
-not the intended recipient, do not read, copy, or forward this email me=
-ssage or any attachments. Delete this email message and any attachments=
- immediately.
->
->
->
+David
 
-
-
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
