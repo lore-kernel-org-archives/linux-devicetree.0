@@ -1,52 +1,95 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH v3 RESEND] watchdog: Add driver for Altera
-	Watchdog	Timer
-Date: Tue, 14 Jun 2011 15:48:59 +0200
-Message-ID: <20110614134859.GP20966@distanz.ch>
-References: <1300461573-12268-1-git-send-email-tklauser@distanz.ch>
-	<20110527082309.GB16394@infomag.iguana.be>
-Reply-To: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/3] ARM: gic: add OF based initialization
+Date: Tue, 14 Jun 2011 07:56:28 -0600
+Message-ID: <BANLkTi=eYVftJLyckv5Jpz-Qq1KpPc7AgQ@mail.gmail.com>
+References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
+	<1307456541-11026-3-git-send-email-robherring2@gmail.com>
+	<20110613165316.GF18161@ponder.secretlab.ca>
+	<20110613221447.GI13643@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110527082309.GB16394-flHiHfN8CTwhDM6iD19NGrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/options/nios2-dev>,
-	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sopc.et.ntust.edu.tw/pipermail/nios2-dev>
-List-Post: <mailto:nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
-List-Help: <mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=help>
-List-Subscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/listinfo/nios2-dev>,
-	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=subscribe>
-Sender: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
-Errors-To: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110613221447.GI13643@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wim
+On Mon, Jun 13, 2011 at 4:14 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Mon, Jun 13, 2011 at 10:53:16AM -0600, Grant Likely wrote:
+>> On Tue, Jun 07, 2011 at 09:22:20AM -0500, Rob Herring wrote:
+>> > +- interrupt-controller : Identifies the node as an interrupt controll=
+er
+>> > +- #interrupt-cells : Specifies the number of cells needed to encode an
+>> > + =A0interrupt source. =A0The type shall be a <u32> and the value shal=
+l be 1.
+>> > +- reg : Specifies base physical address(s) and size of the GIC regist=
+ers. The
+>> > + =A0first 2 values are the GIC distributor register base and size. Th=
+e 2nd 2
+>> > + =A0values are the GIC cpu interface register base and size.
+>> > +- irq-start : The first actual interrupt that is connected to h/w.
+>>
+>> Drop irq-start. =A0That's a Linux internal implementation detail, and
+>> Linux can easily handle dynamic assignment of irq ranges.
+>
+> Something has to be done with the IRQs on GIC, because Linux probably
+> won't have a 1:1 mapping between the hardware IRQ numbers and the Linux
+> IRQ numbers
+>
+> Have you seen the patches from Marc which deal with the per-CPU
+> interrupts by creating individual Linux IRQ numbers for each CPU for
+> each per-CPU interrupt? =A0So you can end up with 16 per-CPU x 4 CPUs =3D
+> 64 Linux interrupts for 16 "hardware" interrupts.
+>
+> How would DT deal with that - and how would you specify a connection
+> between a per-CPU PMU and one of the per-CPU interrupts?
 
-On 2011-05-27 at 10:23:09 +0200, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org> wrote:
-> > This driver adds support for the Altera Timer in the Watchdog Timer
-> > configuration. This component is usually found on SOPC (System on
-> > Programmable Chip) for Altera FPGAs.
-> > 
-> > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> > Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> > Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> (for the devicetree binding)
-> 
-> Signed-off-by: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> 
-> I presume this will go in together with the other nios2 architecture patches?
+In general, bindings focus on the hardware and hardware configuration
+instead of what Linux needs internally.  For a lot of interrupt
+controllers, an irq specifier consists of two u32 values.  The first
+value being the hardware irq number (perhaps 0-15 in this case), and
+the second value being a set of flags.
 
-It will probably take some time until we get to the point where we're
-ready to submit nios2 arch patches. We started out with individual
-drivers to get used to the submission and review process. Most of them
-got taken by the respective subsystem maintainers.
+Without looking deeply and the GIC interface details, I suspect that
+the CPU affinity would best be represented as a field in the flags
+value.
 
-So if you want to take the driver through your tree, please go ahead.
-Otherwise I will resubmit it once we're ready to submit the nios2 arch.
+The per-CPU PMU connections then wouldn't be any different from any
+other irq in that the irq specifier would include a CPU affinity
+value.
 
-Cheers
-Tobias
+>
+> The sensible thing from a DT point of view I think would be to ignore
+> that abstraction, and have some kind of mapping layer between DT and
+> drivers which knew about that.
+
+Yup, and that is exactly what is done.  On powerpc it uses the virtual
+irq infrastructure.  For ARM and everyone else, there are patches on
+list for irq_domain which implements the required behaviour.  The
+interrupt controller driver can make decisions about how to map the
+hardware irq to a linux irq number.  For most irq controllers, it will
+be a simple 1:1 mapping, but for something complex like the gic, it
+can do something different if need be.
+
+> =A0But that sounds like a world of pain.
+
+Actually, it turns out not to be.  We've been needing/wanting some
+form of irq_domains anyway for a while now to better manage hwirq ->
+linuxirq mappings.  Adding DT to the mix means also suppling a DT
+decode function to get the hwirq number from the interrupt specifier.
+
+I'll be reposting a bunch of patches in the next few days that fills
+in most of the missing pieces for irq mapping.
+
+g.
