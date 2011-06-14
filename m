@@ -1,82 +1,72 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Tue, 14 Jun 2011 17:32:49 -0500
-Message-ID: <4DF7E191.1050705@gmail.com>
-References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>	<20110614145329.GK23145@atomide.com>	<alpine.LFD.2.00.1106141322530.2142@xanadu.home>
-	<201106142232.02217.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201106142232.02217.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: David Brown <davidb@codeaurora.org>
+Subject: [PATCH] Support multiple MEM tags with atags->fdt conversion
+Date: Tue, 14 Jun 2011 16:27:54 -0700
+Message-ID: <1308094074-24898-1-git-send-email-davidb@codeaurora.org>
+References: <alpine.LFD.2.00.1106140300500.2142@xanadu.home>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.00.1106140300500.2142@xanadu.home>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: David Brown <davidb@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@freescale.com>, Tony Lindgren <tony@atomide.com>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/14/2011 03:32 PM, Arnd Bergmann wrote:
-> On Tuesday 14 June 2011 19:28:49 Nicolas Pitre wrote:
->> On Tue, 14 Jun 2011, Tony Lindgren wrote:
->>
->>> * Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [110614 00:04]:
->>>> +
->>>> +   for_each_tag(atag, atag_list) {
->>>> +           if (atag->hdr.tag == ATAG_CMDLINE) {
->>>> +                   setprop_string(dt, "/chosen", "bootargs",
->>>> +                                     atag->u.cmdline.cmdline);
->>>> +           } else if (atag->hdr.tag == ATAG_MEM) {
->>>> +                   uint32_t mem_reg_property[2];
->>>> +                   mem_reg_property[0] = cpu_to_fdt32(atag->u.mem.start);
->>>> +                   mem_reg_property[1] = cpu_to_fdt32(atag->u.mem.size);
->>>> +                   setprop(dt, "/memory", "reg", mem_reg_property,
->>>> +                              sizeof(mem_reg_property));
->>>> +           } else if (atag->hdr.tag == ATAG_INITRD2) {
->>>> +                   uint32_t initrd_start, initrd_size;
->>>> +                   initrd_start = atag->u.initrd.start;
->>>> +                   initrd_size = atag->u.initrd.size;
->>>> +                   setprop_cell(dt, "/chosen", "linux,initrd-start",
->>>> +                                   initrd_start);
->>>> +                   setprop_cell(dt, "/chosen", "linux,initrd-end",
->>>> +                                   initrd_start + initrd_size);
->>>> +           }
->>>> +   }
->>>
->>> I think Russell posted a complete list of the ATAGs to translate
->>> somewhere, but at least ATAG_REVISION is missing here. That's being
->>> used quite a bit as system_rev to set things dynamically.
->>
->> No problem.  This is a work in progress.  We still can test the concept 
->> and fine tune the actual set of ATAGs being translated.
-> 
-> Let's talk about the revision field now, because it doesn't have a
-> direct correspondence in existing attributes.
-> 
-> Functionality-wise, this would probably be the "compatible" property
-> of the root node, with its most specific name to match, but that's not
-> trivial to generate.
-> 
-> In some cases, the system revisions have significant differences in their
-> devices (why else would you care about the revision), which means that you
-> actually need a different device tree per revision anyway. If that's the
-> common case, we could just ignore it completely or instead have a way
-> to choose a specific device tree from a list based on the revision.
-> 
-> Another option would be to merge both the ATAG_REVISION and ATAG_SERIAL
-> into a string and put them into the root "serial-number" property that
-> is fairly easy to do, but would be harder to parse if you actually rely
-> on specific values.
-> 
+Some targets have multiple memory regions.  Parse up to 8 of these
+when converting the atags to fdt.
 
-IIRC, system_rev at least can be specified on the kernel command line,
-so you could just append the cmd line. However, if you force the
-built-in command line to be used that would not work,
+Signed-off-by: David Brown <davidb@codeaurora.org>
+---
+With this change, I am able to boot MSM8x60 combining ATAGS and my DT.
+It seems to work as long as my device tree has placeholders for all of
+the properties I need.
 
-Rob
+It still seems rather clunky, especially that it requires bootimg from
+a zImage.
+
+David
+
+ arch/arm/boot/compressed/atags_to_fdt.c |   16 +++++++++++-----
+ 1 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/compressed/atags_to_fdt.c b/arch/arm/boot/compressed/atags_to_fdt.c
+index 11c1a88..ac93e28 100644
+--- a/arch/arm/boot/compressed/atags_to_fdt.c
++++ b/arch/arm/boot/compressed/atags_to_fdt.c
+@@ -31,6 +31,8 @@ static int setprop_cell(void *fdt, const char *node_path,
+ int atags_to_fdt(void *dt,  void *atag_list)
+ {
+ 	struct tag *atag = atag_list;
++	uint32_t mem_reg_property[16];
++	int memcount = 0;
+ 
+ 	/* make sure we've got an aligned pointer */
+ 	if ((u32)atag_list & 0x3)
+@@ -51,11 +53,10 @@ int atags_to_fdt(void *dt,  void *atag_list)
+ 			setprop_string(dt, "/chosen", "bootargs",
+ 			                  atag->u.cmdline.cmdline);
+ 		} else if (atag->hdr.tag == ATAG_MEM) {
+-			uint32_t mem_reg_property[2];
+-			mem_reg_property[0] = cpu_to_fdt32(atag->u.mem.start);
+-			mem_reg_property[1] = cpu_to_fdt32(atag->u.mem.size);
+-			setprop(dt, "/memory", "reg", mem_reg_property,
+-			           sizeof(mem_reg_property));
++			if (memcount >= sizeof(mem_reg_property)/sizeof(uint32_t))
++				continue;
++			mem_reg_property[memcount++] = cpu_to_fdt32(atag->u.mem.start);
++			mem_reg_property[memcount++] = cpu_to_fdt32(atag->u.mem.size);
+ 		} else if (atag->hdr.tag == ATAG_INITRD2) {
+ 			uint32_t initrd_start, initrd_size;
+ 			initrd_start = atag->u.initrd.start;
+@@ -67,5 +68,10 @@ int atags_to_fdt(void *dt,  void *atag_list)
+ 		}
+ 	}
+ 
++	if (memcount) {
++		setprop(dt, "/memory", "reg", mem_reg_property,
++				4*memcount);
++	}
++
+ 	return 0;
+ }
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
