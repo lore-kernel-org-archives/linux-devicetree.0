@@ -1,67 +1,38 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH 2/2] tty: of_serial: support for 32 bit accesses
-Date: Wed, 15 Jun 2011 15:49:06 +0100
-Message-ID: <20110615144906.GI24628@pulham.picochip.com>
-References: <1308142199-17972-1-git-send-email-jamie@jamieiles.com>
- <1308142199-17972-2-git-send-email-jamie@jamieiles.com>
- <BANLkTimfXsqbhsCf0ZfhU8JewOaoJNWPeA@mail.gmail.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH] Support multiple MEM tags with atags->fdt conversion
+Date: Wed, 15 Jun 2011 15:50:37 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1106151540230.2142@xanadu.home>
+References: <1308094074-24898-1-git-send-email-davidb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTimfXsqbhsCf0ZfhU8JewOaoJNWPeA@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Jamie Iles <jamie@jamieiles.com>, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1308094074-24898-1-git-send-email-davidb@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@freescale.com>, Tony Lindgren <tony@atomide.com>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2011 at 07:27:48AM -0600, Grant Likely wrote:
-> On Wed, Jun 15, 2011 at 6:49 AM, Jamie Iles <jamie@jamieiles.com> wro=
-te:
-[...]
-> > diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of=
-_serial.c
-> > index 4675243..50810a0 100644
-> > --- a/drivers/tty/serial/of_serial.c
-> > +++ b/drivers/tty/serial/of_serial.c
-> > @@ -65,6 +65,23 @@ static int __devinit of_platform_serial_setup(st=
-ruct platform_device *ofdev,
-> >
-> > =A0 =A0 =A0 =A0port->irq =3D irq_of_parse_and_map(np, 0);
-> > =A0 =A0 =A0 =A0port->iotype =3D UPIO_MEM;
-> > + =A0 =A0 =A0 prop =3D of_get_property(np, "io-width", &prop_size);
-> > + =A0 =A0 =A0 if (prop && (prop_size =3D=3D sizeof(u32))) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 switch (be32_to_cpup(prop)) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 1:
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 port->iotype =3D UPIO=
-_MEM;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 4:
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 port->iotype =3D UPIO=
-_MEM32;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 default:
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_warn(&ofdev->dev,
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0"u=
-nsupported io width (%d bytes)\n",
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0be=
-32_to_cpup(prop));
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
->=20
-> Nit: since this is failing out, it should be dev_err instead of
-> dev_warn, but otherwise:
->=20
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+On Tue, 14 Jun 2011, David Brown wrote:
 
-OK, thanks.  I'll wait for some comments on the binding documentation=20
-for the of_serial driver then repost with the change to dev_err().
+> Some targets have multiple memory regions.  Parse up to 8 of these
+> when converting the atags to fdt.
+> 
+> Signed-off-by: David Brown <davidb@codeaurora.org>
 
-Thanks,
+I've added your patch to my zImage patch queue.
 
-Jamie
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> With this change, I am able to boot MSM8x60 combining ATAGS and my DT.
+> It seems to work as long as my device tree has placeholders for all of
+> the properties I need.
+
+I think those missing nodes should simply be created if missing.  I 
+however don't see any function in the libfdt API to do that -- there is 
+fdt_add_subnode() but no fdt_add_node().  Any DT expert please?
+
+Also, should the DTB be enlarged in order to add new nodes, or even 
+modify existing ones with larger properties?  In other words, 
+should something like fdt_move(fdt, fdt, fdt_totalsize(fdt)+HEADROOM) be 
+used beforehand?
+
+
+Nicolas
