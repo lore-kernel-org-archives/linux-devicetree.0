@@ -1,55 +1,56 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [RFC] (early draft) dt: Linux dt usage model documentation
-Date: Wed, 15 Jun 2011 15:13:37 +0800
-Message-ID: <20110615071336.GC31712@S2100-06.ap.freescale.net>
-References: <20110613132935.16600.94753.stgit@ponder>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Wed, 15 Jun 2011 01:08:21 -0700
+Message-ID: <20110615080821.GM23145@atomide.com>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<201106142232.02217.arnd@arndb.de>
+	<alpine.LFD.2.00.1106141650520.2142@xanadu.home>
+	<201106142342.29405.arnd@arndb.de>
+	<BANLkTim5C340ZB4Hu1xFQpHAkcWJEgKjMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20110613132935.16600.94753.stgit@ponder>
-Sender: linux-doc-owner@vger.kernel.org
+In-Reply-To: <BANLkTim5C340ZB4Hu1xFQpHAkcWJEgKjMw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, Randy Dunlap <rdunlap@xenotime.net>, linaro-dev@lists.linaro.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Mon, Jun 13, 2011 at 07:32:15AM -0600, Grant Likely wrote:
-[...]
-> +Linux board support code calls of_platform_populate(NULL, NULL, NULL)
-> +to kick of discovery of devices at the root of the tree.  The
-> +parameters are all NULL because when starting from the root of the
-> +tree, there is no need to provide a starting node (the first NULL), a
-> +parent struct device (the last NULL), and we're not using a match
-> +table (yet).  For a board that only needs to register devices,
-> +.init_machine() can be completely empty except for the
-> +of_platform_populate() call.
-> +
-> +In the Tegra example, this accounts for the /soc and /sound nodes, but
-> +what about the children of the soc node?  Shouldn't they be registered
-> +as platform devices too?  For Linux DT support, the generic behaviour
-> +is for child devices to be registered by the parent's device driver at
-> +driver .probe() time.  So, an i2c bus device driver will register a
-> +i2c_client for each child node, an spi bus driver will register
-> +it's spi_device children, and similarly for other bus_types.
-> +According to that model, a driver could be written that binds to the
-> +soc node and simply registers platform_devices for each of it's
-> +children.  The board support code would allocate and register an soc
-> +device, an soc device driver would bind to the soc device, and
-> +register platform_devices for /soc/interrupt-controller, /soc/serial,
-> +/soc/i2s, and /soc/i2c in it's .probe() hook.  Easy, right?  Although
-
-I do not quite understand what the "soc device driver" is here.
-Looking at the devicetree/test code, I do not find this driver and
-its .probe() hook.  Instead, of_platform_bus_create will create
-platform_device for the provided device_node, and also recursively
-create devices for all the child nodes, no?
-
-> +it is a lot of mucking about for just registering platform devices.
-> +
-
--- 
-Regards,
-Shawn
-
+KiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+IFsxMTA2MTQgMTU6MDJd
+Ogo+IE9uIFR1ZSwgSnVuIDE0LCAyMDExIGF0IDM6NDIgUE0sIEFybmQgQmVyZ21hbm4gPGFybmRA
+YXJuZGIuZGU+IHdyb3RlOgo+ID4gT24gVHVlc2RheSAxNCBKdW5lIDIwMTEgMjM6MjE6NTIgTmlj
+b2xhcyBQaXRyZSB3cm90ZToKPiA+PiBPdGhlcndpc2UsIGlmIHRoZSByZXZpc2lvbiBudW1iZXIg
+aXMgZWZmZWN0aXZlbHkgbm9uIHByb2JhYmxlLCB0aGVuIEkKPiA+PiB3b3VsZCBndWVzcyBpdCBp
+cyB0aGUgZGV2aWNlIHRyZWUncyBwdXJwb3NlIHRvIGNhcnJ5IHRoYXQgaW5mb3JtYXRpb24KPiA+
+PiBzb21laG93LCByaWdodD8gwqBNYXliZSB0aGlzIGNhbiBiZSBhcHBlbmRlZCB0byB0aGUgYm9h
+cmQgbmFtZSBzdHJpbmc/Cj4gPgo+ID4gVGhhdCdzIHdoYXQgSSBtZWFudCB3aXRoIGFkZGluZyBp
+dCB0byAiY29tcGF0aWJsZSIsIHdoaWNoIGlzIGEgbGlzdCBvZgo+ID4gc3RyaW5ncyB3aXRoIHZh
+cnlpbmcgZGVncmVlcyBvZiBkZXRhaWxlZCBpbmZvcm1hdGlvbiwgZS5nLgo+ID4KPiA+IMKgdGks
+b21hcDcKPiA+IMKgdGksb21hcDctc3F1aXJyZWxib2FyZAo+ID4gwqB0aSxvbWFwNy1zcXVpcnJl
+bGJvYXJkLXYzCj4gPiDCoHRpLG9tYXA3LXNxdWlycmVsYm9hcmQtdjMuMTdiCj4gPgo+ID4gWW91
+IGNhbiBtYXRjaCB0aGUgbGlzdCBhZ2FpbnN0IGEgc3BlY2lmaWMgcmV2aXNpb24gb3IgYSBsZXNz
+IHNwZWNpZmljCj4gPiBpZGVudGlmaWVyIGlmIHlvdSBqdXN0IHdhbnQgdG8ga25vdyB3aGV0aGVy
+IHlvdSBhcmUgb24gYSBzcXVpcnJlbGJvYXJkCj4gPiBvciBhIGhhbXN0ZXJib2FyZC4KPiAKPiBZ
+ZXMsIHRoYXQncyBnZW5lcmFsbHkgdGhlIHJpZ2h0IHdheSB0byBoYW5kbGUgaXQuICBJbiBwcmFj
+dGljZSBJJ3ZlCj4gbm90IHNlZW4gbWFueSBjYXNlcyB3aGVyZSBpdCBpcyByZWFsbHkgcmVxdWly
+ZWQsIGJ1dCBpdCBkb2Vzbid0IGh1cnQKPiBpZiBzb21lYm9keSB3YW50cyB0byBpbmNsdWRlIGl0
+IGluIHRoZSBEVCBmb3IgdGhlaXIgYm9hcmQuCgpBcHBlbmRpbmcgdGhlIEFUQUdfUkVWSVNJT04g
+dG8gImNvbXBhdGlibGUiIGFuZCBhbHNvIHNldHRpbmcgc3lzdGVtX3Jldgp0byBBVEFHX1JFVklT
+SU9OIGxpa2Ugd2UgYWxyZWFkeSBkbyBzaG91bGQgd29yay4KCkp1c3QgdG8gY2xhcmlmeSB0aGlu
+Z3MgYWJpdDogV2UganVzdCBjYW4ndCBnZW5lcmF0ZSAuZHRzIGZpbGVzIGZvciBhbGwKZXhpc3Rp
+bmcgaGFyZHdhcmUuIEl0IHdvdWxkIHJlcXVpcmUgZHVtcGluZyBvdXQgc3lzdGVtX3JldiBhbmQg
+b3RoZXIgQVRBR3MKb24gdGVucyBvciBodW5kZWRzIG9mIHBpZWNlcyBvZiBoYXJkd2FyZS4KClJl
+Z2FyZHMsCgpUb255CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
