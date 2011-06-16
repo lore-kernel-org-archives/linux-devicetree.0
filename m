@@ -1,498 +1,105 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 11/11] arm/versatile: Add device tree support
-Date: Thu, 16 Jun 2011 09:42:02 -0600
-Message-ID: <20110616154202.GD3795@ponder.secretlab.ca>
-References: <20110616042653.29371.2052.stgit@ponder>
-	<20110616044311.29371.49018.stgit@ponder>
-	<4DFA10DF.10305@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC] (early draft) dt: Linux dt usage model documentation
+Date: Fri, 17 Jun 2011 00:26:01 +0800
+Message-ID: <20110616162600.GA9611@S2100-06.ap.freescale.net>
+References: <20110613132935.16600.94753.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4DFA10DF.10305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20110613132935.16600.94753.stgit@ponder>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2011 at 09:19:11AM -0500, Rob Herring wrote:
-> On 06/15/2011 11:43 PM, Grant Likely wrote:
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/versatile-ab.dts
-> > @@ -0,0 +1,185 @@
-> > +/dts-v1/;
-> > +/include/ "skeleton.dtsi"
-> > +
-> > +/ {
-> > +	model = "ARM Versatile AB";
-> > +	compatible = "arm,versatile-ab";
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	interrupt-parent = <&vic>;
-> > +
-> > +	memory {
-> > +		reg = <0x0 0x08000000>;
-> > +	};
-> > +
-> > +	flash@34000000 {
-> > +		compatible = "arm,versatile-flash";
-> 
-> Seems like this should be a flash part number.
+On Mon, Jun 13, 2011 at 07:32:15AM -0600, Grant Likely wrote:
+[...]
+> +About now is a good time to lay out an example.  Here is part of the
+> +device tree for the NVIDIA Tegra board.
+> +
+> +/{
+> +	compatible = "nvidia,harmony", "nvidia,tegra250";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&intc>;
+> +
+> +	chosen { };
+> +	aliases { };
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x40000000>;
+> +	};
+> +
+> +	soc {
+> +		compatible = "nvidia,tegra250-soc", "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		intc: interrupt-controller@50041000 {
+> +			compatible = "nvidia,tegra250-gic";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			reg = <0x50041000 0x1000>, < 0x50040100 0x0100 >;
+> +		};
+> +
+> +		serial@70006300 {
+> +			compatible = "nvidia,tegra250-uart";
+> +			reg = <0x70006300 0x100>;
+> +			interrupts = <122>;
+> +		};
+> +
+> +		i2s-1: i2s@70002800 {
 
-Indeed it should.  I haven't looked up the details of the flash device
-yet though.  The DT physmap binding needs to be implemented here too
-so that partitions can be described.
+It seem dtc does not compile the label name "i2s-1".  Instead,
+"i2s_1" seems good.
 
-> > +		dma@10130000 {
-> > +			compatible = "arm,primecell";
-> 
-> Should have a more specific compatible string. arm,pl081 IIRC?
+> +			compatible = "nvidia,tegra250-i2s";
+> +			reg = <0x70002800 0x100>;
+> +			interrupts = <77>;
+> +			codec = <&wm8903>;
+> +		};
+> +
+> +		i2c@7000c000 {
+> +			compatible = "nvidia,tegra250-i2c";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
 
-Probably.  I've not looked up the details in the versatile
-documentation yet though.
+#size-cells should be 0 ...
 
-> 
-> > +			reg = <0x10130000 0x1000>;
-> > +			interrupts = <17>;
-> > +		};
-> > +
-> > +		uart0: uart@101f1000 {
-> > +			compatible = "arm,pl011", "arm,primecell";
-> > +			reg = <0x101f1000 0x1000>;
-> > +			interrupts = <12>;
-> > +		};
-> > +
-> > +		uart1: uart@101f2000 {
-> > +			compatible = "arm,pl011", "arm,primecell";
-> > +			reg = <0x101f2000 0x1000>;
-> > +			interrupts = <13>;
-> > +		};
-> > +
-> > +		uart2: uart@101f3000 {
-> > +			compatible = "arm,pl011", "arm,primecell";
-> > +			reg = <0x101f3000 0x1000>;
-> > +			interrupts = <14>;
-> > +		};
-> > +
-> > +		smc@10100000 {
-> > +			compatible = "arm,primecell";
-> 
-> ditto
-> 
-> > +			reg = <0x10100000 0x1000>;
-> > +		};
-> > +
-> > +		mpmc@10110000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x10110000 0x1000>;
-> > +		};
-> > +
-> > +		display@10120000 {
-> > +			compatible = "arm,pl110", "arm,primecell";
-> > +			reg = <0x10120000 0x1000>;
-> > +			interrupts = <16>;
-> > +		};
-> > +
-> > +		sctl@101e0000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x101e0000 0x1000>;
-> > +		};
-> > +
-> > +		watchdog@101e1000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x101e1000 0x1000>;
-> > +			interrupts = <0>;
-> > +		};
-> > +
-> > +		gpio0: gpio@101e4000 {
-> > +			compatible = "arm,primecell";
-> 
-> arm,pl061
-> 
-> > +			reg = <0x101e4000 0x1000>;
-> > +			gpio-controller;
-> > +			interrupts = <6>;
-> > +			#gpio-cells = <2>;
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <2>;
-> > +		};
-> > +
-> > +		gpio1: gpio@101e5000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x101e5000 0x1000>;
-> > +			interrupts = <7>;
-> > +			gpio-controller;
-> > +			#gpio-cells = <2>;
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <2>;
-> > +		};
-> > +
-> > +		rtc@101e8000 {
-> > +			compatible = "arm,primecell";
-> 
-> arm,pl031 (or pl030?)
-> 
-> > +			reg = <0x101e8000 0x1000>;
-> > +			interrupts = <10>;
-> > +		};
-> > +
-> > +		sci@101f0000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x101f0000 0x1000>;
-> > +			interrupts = <15>;
-> > +		};
-> > +
-> > +		ssp@101f4000 {
-> > +			compatible = "arm,primecell";
-> 
-> arm,pl022
-> 
-> > +			reg = <0x101f4000 0x1000>;
-> > +			interrupts = <11>;
-> > +		};
-> > +
-> > +		fpga {
-> > +			compatible = "arm,versatile-fpga", "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0 0x10000000 0x10000>;
-> > +
-> > +			aaci@4000 {
-> > +				compatible = "arm,primecell";
-> > +				reg = <0x4000 0x1000>;
-> > +				interrupts = <24>;
-> > +			};
-> > +			mmc@5000 {
-> > +				compatible = "arm,primecell";
-> > +				reg = < 0x5000 0x1000>;
-> > +				interrupts = <22>;
-> > +			};
-> > +			kmi@6000 {
-> > +				compatible = "arm,pl050", "arm,primecell";
-> > +				reg = <0x6000 0x1000>;
-> > +				interrupt-parent = <&sic>;
-> > +				interrupts = <3>;
-> > +			};
-> > +			kmi@7000 {
-> > +				compatible = "arm,pl050", "arm,primecell";
-> > +				reg = <0x7000 0x1000>;
-> > +				interrupt-parent = <&sic>;
-> > +				interrupts = <4>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
-> > new file mode 100644
-> > index 0000000..d1934af
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/versatile-pb.dts
-> > @@ -0,0 +1,48 @@
-> > +/include/ "versatile-ab.dts"
-> > +
-> > +/ {
-> > +	model = "ARM Versatile PB";
-> > +	compatible = "arm,versatile-pb";
-> > +
-> > +	amba {
-> > +		gpio2: gpio@101e6000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x101e6000 0x1000>;
-> > +			interrupts = <8>;
-> > +			gpio-controller;
-> > +			#gpio-cells = <2>;
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <2>;
-> > +		};
-> > +
-> > +		gpio3: gpio@101e7000 {
-> > +			compatible = "arm,primecell";
-> > +			reg = <0x101e7000 0x1000>;
-> > +			interrupts = <9>;
-> > +			gpio-controller;
-> > +			#gpio-cells = <2>;
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <2>;
-> > +		};
-> > +
-> > +		fpga {
-> > +			uart@9000 {
-> > +				compatible = "arm,pl011", "arm,primecell";
-> > +				reg = <0x9000 0x1000>;
-> > +				interrupt-parent = <&sic>;
-> > +				interrupts = <6>;
-> > +			};
-> > +			sci@a000 {
-> > +				compatible = "arm,primecell";
-> > +				reg = <0xa000 0x1000>;
-> > +				interrupt-parent = <&sic>;
-> > +				interrupts = <5>;
-> > +			};
-> > +			mmc@b000 {
-> > +				compatible = "arm,primecell";
-> > +				reg = <0xb000 0x1000>;
-> > +				interrupts = <23>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
-> > index 9cdec5a..c1f38f6 100644
-> > --- a/arch/arm/mach-versatile/Kconfig
-> > +++ b/arch/arm/mach-versatile/Kconfig
-> > @@ -17,4 +17,12 @@ config MACH_VERSATILE_AB
-> >  	  Include support for the ARM(R) Versatile Application Baseboard
-> >  	  for the ARM926EJ-S.
-> >  
-> > +config MACH_VERSATILE_DT
-> > +	bool "Support Versatile platform from device tree"
-> > +	select USE_OF
-> > +	select CPU_ARM926T
-> > +	help
-> > +	  Include support for the ARM(R) Versatile/PB platform,
-> > +	  using the device tree for discovery
-> > +
-> >  endmenu
-> > diff --git a/arch/arm/mach-versatile/Makefile b/arch/arm/mach-versatile/Makefile
-> > index 97cf4d8..81fa3fe 100644
-> > --- a/arch/arm/mach-versatile/Makefile
-> > +++ b/arch/arm/mach-versatile/Makefile
-> > @@ -5,4 +5,5 @@
-> >  obj-y					:= core.o
-> >  obj-$(CONFIG_ARCH_VERSATILE_PB)		+= versatile_pb.o
-> >  obj-$(CONFIG_MACH_VERSATILE_AB)		+= versatile_ab.o
-> > +obj-$(CONFIG_MACH_VERSATILE_DT)		+= versatile_dt.o
-> >  obj-$(CONFIG_PCI)			+= pci.o
-> > diff --git a/arch/arm/mach-versatile/core.c b/arch/arm/mach-versatile/core.c
-> > index 0c99cf0..80e010b 100644
-> > --- a/arch/arm/mach-versatile/core.c
-> > +++ b/arch/arm/mach-versatile/core.c
-> > @@ -24,6 +24,8 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/sysdev.h>
-> >  #include <linux/interrupt.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_platform.h>
-> >  #include <linux/amba/bus.h>
-> >  #include <linux/amba/clcd.h>
-> >  #include <linux/amba/pl061.h>
-> > @@ -83,13 +85,26 @@ static struct fpga_irq_data sic_irq = {
-> >  #define PIC_MASK	0
-> >  #endif
-> >  
-> > +/* Lookup table for finding a DT node that represents the vic instance */
-> > +static struct of_device_id vic_of_match[] __initdata = {
-> 
-> __initconst
+> +			reg = <0x7000c000 0x100>;
+> +			interrupts = <70>;
+> +
+> +			wm8903: codec@1a {
+> +				compatible = "wlf,wm8903";
+> +				reg = <0x1a>;
 
-fixed, thanks.
+... Otherwise, reg needs a size here.
 
-> 
-> > +	{ .compatible = "arm,vic", },
-> > +	{}
-> > +};
-> > +
-> > +static struct of_device_id sic_of_match[] __initdata = {
-> 
-> ditto
-> 
-> > +	{ .compatible = "arm,sic", },
-> > +	{}
-> > +};
-> > +
-> >  void __init versatile_init_irq(void)
-> >  {
-> >  	vic_init(VA_VIC_BASE, IRQ_VIC_START, ~0, 0);
-> > +	irq_domain_generate_simple(vic_of_match, VERSATILE_VIC_BASE, IRQ_VIC_START);
-> >  
-> >  	writel(~0, VA_SIC_BASE + SIC_IRQ_ENABLE_CLEAR);
-> >  
-> >  	fpga_irq_init(IRQ_VICSOURCE31, ~PIC_MASK, &sic_irq);
-> > +	irq_domain_generate_simple(sic_of_match, VERSATILE_SIC_BASE, IRQ_SIC_START);
-> >  
-> >  	/*
-> >  	 * Interrupts on secondary controller from 0 to 8 are routed to
-> > @@ -646,6 +661,52 @@ static struct amba_device *amba_devs[] __initdata = {
-> >  	&kmi1_device,
-> >  };
-> >  
-> > +#ifdef CONFIG_OF
-> > +/*
-> > + * Lookup table for attaching a specific name and platform_data pointer to
-> > + * devices as they get created by of_platform_populate().  Ideally this table
-> > + * would not exist, but the current clock implementation depends on some devices
-> > + * having a specific name.
-> > + */
-> > +struct of_dev_auxdata versatile_auxdata_lookup[] __initdata = {
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_MMCI0_BASE, "fpga:05", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_KMI0_BASE, "fpga:06", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_KMI1_BASE, "fpga:07", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART3_BASE, "fpga:09", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_MMCI1_BASE, "fpga:0b", NULL),
-> > +
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_CLCD_BASE, "dev:20", &clcd_plat_data),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART0_BASE, "dev:f1", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART1_BASE, "dev:f2", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART2_BASE, "dev:f3", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SSP_BASE, "dev:f4", NULL),
-> > +
-> > +#if 0
-> > +	/*
-> > +	 * These entries are unnecessary because no clocks referencing
-> > +	 * them.  I've left them in for now as place holders in case
-> > +	 * any of them need to be added back, but they should be
-> > +	 * removed before actually committing this patch.  --gcl
-> > +	 */
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_AACI_BASE, "fpga:04", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SCI1_BASE, "fpga:0a", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SMC_BASE, "dev:00", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_MPMC_BASE, "dev:10", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_DMAC_BASE, "dev:30", NULL),
-> > +
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SCTL_BASE, "dev:e0", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_WATCHDOG_BASE, "dev:e1", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO0_BASE, "dev:e4", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO1_BASE, "dev:e5", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO2_BASE, "dev:e6", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO3_BASE, "dev:e7", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_RTC_BASE, "dev:e8", NULL),
-> > +	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SCI_BASE, "dev:f0", NULL),
-> > +#endif
-> > +	{}
-> > +};
-> > +#endif
-> > +
-> >  #ifdef CONFIG_LEDS
-> >  #define VA_LEDS_BASE (__io_address(VERSATILE_SYS_BASE) + VERSATILE_SYS_LED_OFFSET)
-> >  
-> > diff --git a/arch/arm/mach-versatile/core.h b/arch/arm/mach-versatile/core.h
-> > index fd6404e..c97b070 100644
-> > --- a/arch/arm/mach-versatile/core.h
-> > +++ b/arch/arm/mach-versatile/core.h
-> > @@ -23,6 +23,7 @@
-> >  #define __ASM_ARCH_VERSATILE_H
-> >  
-> >  #include <linux/amba/bus.h>
-> > +#include <linux/of_platform.h>
-> >  
-> >  extern void __init versatile_init(void);
-> >  extern void __init versatile_init_early(void);
-> > @@ -31,6 +32,10 @@ extern void __init versatile_map_io(void);
-> >  extern struct sys_timer versatile_timer;
-> >  extern unsigned int mmc_status(struct device *dev);
-> >  
-> > +#ifdef CONFIG_OF
-> 
-> Don't really need the ifdef.
+> +				interrupts = <347>;
+> +			};
+> +		};
+> +	};
+> +
+> +	sound {
+> +		compatible = "nvidia,harmony-sound";
+> +		i2s-controller = <&i2s-1>;
+> +		i2s-codec = <&wm8903>;
+> +	};
+> +};
+> +
 
-True, fixed.
-
-> 
-> > +extern struct of_dev_auxdata versatile_auxdata_lookup[];
-> > +#endif
-> > +
-> >  #define AMBA_DEVICE(name,busid,base,plat)			\
-> >  static struct amba_device name##_device = {			\
-> >  	.dev		= {					\
-> > diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
-> > new file mode 100644
-> > index 0000000..f476a11
-> > --- /dev/null
-> > +++ b/arch/arm/mach-versatile/versatile_dt.c
-> > @@ -0,0 +1,66 @@
-> > +/*
-> > + * Versatile board support using the device tree
-> > + *
-> > + *  Copyright (C) 2010 Secret Lab Technologies Ltd.
-> > + *  Copyright (C) 2009 Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> > + *  Copyright (C) 2004 ARM Limited
-> > + *  Copyright (C) 2000 Deep Blue Solutions Ltd
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License
-> > + * along with this program; if not, write to the Free Software
-> > + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-> > + */
-> > +
-> > +#include <linux/init.h>
-> > +#include <linux/device.h>
-> > +#include <linux/sysdev.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/clkdev.h>
-> > +#include <linux/amba/bus.h>
-> > +#include <linux/amba/pl061.h>
-> > +#include <linux/amba/mmci.h>
-> 
-> A lot of these headers are not needed.
-
-Trimmed.
-
-> 
-> > +#include <linux/io.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_fdt.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_platform.h>
-> > +
-> > +#include <mach/hardware.h>
-> > +#include <asm/irq.h>
-> > +#include <asm/mach-types.h>
-> > +
-> > +#include <asm/mach/arch.h>
-> > +
-> > +#include "core.h"
-> > +
-> > +static void __init versatile_dt_init(void)
-> > +{
-> > +	of_platform_populate(NULL, of_default_bus_match_table,
-> > +			     versatile_auxdata_lookup, NULL);
-> > +}
-> > +
-> > +static const char *versatile_dt_match[] __initdata = {
-> 
-> __initconst
-
-fixed.
-
-Thanks,
-g.
-
-> 
-> > +	"arm,versatile-ab",
-> > +	"arm,versatile-pb",
-> > +	NULL,
-> > +};
-> > +
-> > +DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
-> > +	.map_io		= versatile_map_io,
-> > +	.init_early	= versatile_init_early,
-> > +	.init_irq	= versatile_init_irq,
-> > +	.timer		= &versatile_timer,
-> > +	.init_machine	= versatile_dt_init,
-> > +	.dt_compat	= versatile_dt_match,
-> > +MACHINE_END
-> > 
-> > _______________________________________________
-> > devicetree-discuss mailing list
-> > devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+-- 
+Regards,
+Shawn
