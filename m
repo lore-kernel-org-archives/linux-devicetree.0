@@ -1,41 +1,79 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 03/11] dt/irq: add irq_domain_add_simple() helper
-Date: Thu, 16 Jun 2011 09:21:20 -0500
-Message-ID: <4DFA1160.5020208@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 11/11] arm/versatile: Add device tree support
+Date: Thu, 16 Jun 2011 08:56:59 -0600
+Message-ID: <20110616145659.GC3795@ponder.secretlab.ca>
 References: <20110616042653.29371.2052.stgit@ponder>
-	<20110616044141.29371.76366.stgit@ponder>
-	<4DFA0D83.6070604@gmail.com>
+ <20110616044311.29371.49018.stgit@ponder>
+ <201106161620.37205.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4DFA0D83.6070604-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201106161620.37205.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Forgot one thing.
-
-On 06/16/2011 09:04 AM, Rob Herring wrote:
-> Grant,
+On Thu, Jun 16, 2011 at 04:20:37PM +0200, Arnd Bergmann wrote:
+> On Thursday 16 June 2011, Grant Likely wrote:
+> > This patch adds a new versatile platform for when using the device
+> > tree.  Add platform and amba devices are discovered and registered by
+> > parsing the device tree.  Clocks and initial io mappings are still
+> > configured statically.
 > 
-> On 06/15/2011 11:41 PM, Grant Likely wrote:
->> irq_domain_add_simple() is an easy way to generate an irq translation
->> domain for simple irq controllers.  It assumes a flat 1:1 mapping from
->> hardware irq number to an offset of the first linux irq number assigned
->> to the controller
->>
+> Hi Grant,
+> 
+> Two small questions about the device tree contents:
+> 
+> > +       i2c@10002000 {
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +               compatible = "arm,versatile-i2c";
+> > +               reg = <0x10002000 0x1000>;
+> > +
+> > +               rtc@68 {
+> > +                       compatible = "dallas,ds1338";
+> > +                       reg = <0x68>;
+> > +               };
+> > +       };
+> > +
+> > +       net@10010000 {
+> > +               compatible = "smsc,lan91c111";
+> > +               reg = <0x10010000 0x10000>;
+> > +               interrupts = <25>;
+> > +       };
+> > +
+> > +       lcd@10008000 {
+> > +               compatible = "arm,versatile-lcd";
+> > +               reg = <0x10008000 0x1000>;
+> > +       };
+> 
+> Why are these devices on the top level, rather than on the AMBA bus or
+> the FPGA? From the documentation, it seems that they are implemented
+> in the FPGA, which would also match the address layout.
 
-The description and headline are a bit out of date since adding
-irq_domain_generate_simple.
+Mostly because I 'faked' this device tree based on what is currently
+in the kernel for the Versatile platform.  I need to look at the
+documentation and make it reflect reality, including setting up ranges
+correctly (as you commented on below).
 
-Rob
+> 
+> > +       amba {
+> > +               compatible = "arm,amba-bus";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               ranges;
+> > +
+> > +               vic: intc@10140000 {
+> > +                       compatible = "arm,versatile-vic", "arm,vic";
+> > +                       interrupt-controller;
+> > +                       #interrupt-cells = <1>;
+> > +                       reg = <0x10140000 0x1000>;
+> > +               };
+> > +
+> 
+> Why the empty ranges property? All device registers are based on 0x10000000,
+> so I'd expect this to be described like that here.
+> 
+> 	Arnd
