@@ -1,63 +1,116 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] Support multiple MEM tags with atags->fdt conversion
-Date: Thu, 16 Jun 2011 11:43:53 +1000
-Message-ID: <20110616014353.GB16214@yookeroo.fritz.box>
-References: <1308094074-24898-1-git-send-email-davidb@codeaurora.org>
- <alpine.LFD.2.00.1106151540230.2142@xanadu.home>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [RFC PATCH 00/11] Full device tree support for ARM Versatile
+Date: Wed, 15 Jun 2011 22:40:29 -0600
+Message-ID: <20110616042653.29371.2052.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.00.1106151540230.2142@xanadu.home>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: David Brown <davidb@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2011 at 03:50:37PM -0400, Nicolas Pitre wrote:
-> On Tue, 14 Jun 2011, David Brown wrote:
-> 
-> > Some targets have multiple memory regions.  Parse up to 8 of these
-> > when converting the atags to fdt.
-> > 
-> > Signed-off-by: David Brown <davidb@codeaurora.org>
-> 
-> I've added your patch to my zImage patch queue.
-> 
-> > With this change, I am able to boot MSM8x60 combining ATAGS and my DT.
-> > It seems to work as long as my device tree has placeholders for all of
-> > the properties I need.
-> 
-> I think those missing nodes should simply be created if missing.  I 
-> however don't see any function in the libfdt API to do that -- there is 
-> fdt_add_subnode() but no fdt_add_node().  Any DT expert please?
+This series of patches is all over the place, and touches both
+core infrastructure and board ports.  The patches also vary quite a
+bit in terms of quality and readiness for merging.  However, I wanted
+to get the whole lot out onto the list together so it can be seen
+exactly what needs to be done to convert an ARM platform over to
+registering devices directly out of the DT.
 
-fdt_add_subnode() will create a new node as you require.  The
-"subnode" is just supposed to indicate that the parameters are in the
-form of the offset of the parent node and the new node's immediate
-name, rather than taking a full path name for the new node.
+This first 3 patches are an early implementation of irq_domains, plus
+some helpers to make creating a simple irq_domain easy.  I've already
+posted the first patch before, and I haven't responded to any comments
+yet.  These patches are needed so that DT irq connections can be
+correctly mapped into the Linux IRQ numberspace.
 
-> Also, should the DTB be enlarged in order to add new nodes, or even 
-> modify existing ones with larger properties?  In other words, 
-> should something like fdt_move(fdt, fdt, fdt_totalsize(fdt)+HEADROOM) be 
-> used beforehand?
+Patches 4-7 modify the core DT infrastructure to create a new helper
+for registering devices (has slightly different semantics from the
+older of_platform_bus_probe()), working with AMBA devices, and
+allowing platform code to provide a lookup table of 'preferred' names
+and platform_data for DT described devices.
 
-Yes, you will need to do this, fdt_open_into() is the function you
-want.  Without making room first, adding nodes or expanding existing
-properties will return -FDT_ERR_NOSPACE.  Once you've made whatever
-edits you need, you can use fdt_pack() to collapse the tree back to
-its minimum size.
+The use of platform_data here is sure to raise an eyebrow or two, but
+I assure you it is both necessary and temporary.  Necessary because it
+allows platforms to transition to DT without having to fix all
+name-based clock connections and platform_data usage in device
+drivers.  Temporary because platform lookup tables will get removed
+after the drivers do get fixed.
 
-Although this is somewhat awkward, this approach is a deliberate
-design decision, to avoid making libfdt dependent on a working general
-purpose allocator, which may not be available when libfdt is used in
-very limited environments such as a firmware/bootloader.
+Patch 8 is a trivial powerpc patch to migrate a platform to the newer
+infrastructure, and patches 9 & 10 are also trivial infrastructure
+additions.
 
-If you do find things you need to do which libfdt doesn't support, I'm
-more than happy to extend it as necessary.
+Patch 11 is the main event.  It creates a new versatile machine
+definition which matches against a versatile device tree, and all
+device registrations are generated from DT data.  I've tested this one
+on the QEMU versatile model, but not real hardware.  Most certainly
+not everything is working here yet.  However, it is an example of how
+to migrate a platform over to using the DT.
+
+Cheers,
+g.
+
+---
+
+Grant Likely (11):
+      irq: add irq_domain translation infrastructure
+      of/address: Add of_find_matching_node_by_address helper
+      dt/irq: add irq_domain_add_simple() helper
+      dt: add of_platform_populate() for creating device from the device tree
+      dt: Add default match table for bus ids
+      drivers/amba: create devices from device tree
+      dt/platform: allow device name to be overridden
+      powerpc/5200: convert mpc5200 to use of_platform_populate()
+      arm/dt: Add dt machine definition
+      arm/dt: Add skeleton dtsi file
+      arm/versatile: Add device tree support
+
+
+ .../devicetree/bindings/arm/primecell.txt          |   21 ++
+ arch/arm/boot/dts/skeleton.dtsi                    |   13 +
+ arch/arm/boot/dts/versatile-ab.dts                 |  185 +++++++++++++++++++
+ arch/arm/boot/dts/versatile-pb.dts                 |   48 +++++
+ arch/arm/include/asm/mach/arch.h                   |    9 +
+ arch/arm/include/asm/prom.h                        |    5 -
+ arch/arm/kernel/devtree.c                          |   14 -
+ arch/arm/mach-versatile/Kconfig                    |    8 +
+ arch/arm/mach-versatile/Makefile                   |    1 
+ arch/arm/mach-versatile/core.c                     |   61 ++++++
+ arch/arm/mach-versatile/core.h                     |    5 +
+ arch/arm/mach-versatile/versatile_dt.c             |   66 +++++++
+ arch/microblaze/include/asm/irq.h                  |   10 -
+ arch/microblaze/kernel/irq.c                       |    7 -
+ arch/mips/include/asm/irq.h                        |    5 -
+ arch/mips/kernel/prom.c                            |   14 -
+ arch/powerpc/include/asm/irq.h                     |    1 
+ arch/powerpc/platforms/52xx/mpc52xx_common.c       |   10 -
+ arch/x86/include/asm/irq_controller.h              |   12 -
+ arch/x86/include/asm/prom.h                        |   10 -
+ arch/x86/kernel/devicetree.c                       |  101 +++-------
+ drivers/of/address.c                               |   18 ++
+ drivers/of/platform.c                              |  196 +++++++++++++++++++-
+ include/linux/irq.h                                |   92 +++++++++
+ include/linux/of_address.h                         |    4 
+ include/linux/of_irq.h                             |    2 
+ include/linux/of_platform.h                        |   40 ++++
+ kernel/irq/Makefile                                |    2 
+ kernel/irq/irqdomain.c                             |  193 ++++++++++++++++++++
+ 29 files changed, 994 insertions(+), 159 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/primecell.txt
+ create mode 100644 arch/arm/boot/dts/skeleton.dtsi
+ create mode 100644 arch/arm/boot/dts/versatile-ab.dts
+ create mode 100644 arch/arm/boot/dts/versatile-pb.dts
+ create mode 100644 arch/arm/mach-versatile/versatile_dt.c
+ delete mode 100644 arch/x86/include/asm/irq_controller.h
+ create mode 100644 kernel/irq/irqdomain.c
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Signature
