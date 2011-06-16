@@ -1,47 +1,63 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
+From: David Gibson <david@gibson.dropbear.id.au>
 Subject: Re: [PATCH] Support multiple MEM tags with atags->fdt conversion
-Date: Wed, 15 Jun 2011 16:20:15 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1106151618570.2142@xanadu.home>
-References: <1308094074-24898-1-git-send-email-davidb@codeaurora.org> <alpine.LFD.2.00.1106151540230.2142@xanadu.home> <8ya8vt2am2i.fsf@huya.qualcomm.com>
+Date: Thu, 16 Jun 2011 11:43:53 +1000
+Message-ID: <20110616014353.GB16214@yookeroo.fritz.box>
+References: <1308094074-24898-1-git-send-email-davidb@codeaurora.org>
+ <alpine.LFD.2.00.1106151540230.2142@xanadu.home>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <8ya8vt2am2i.fsf@huya.qualcomm.com>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.00.1106151540230.2142@xanadu.home>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: David Brown <davidb@codeaurora.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@freescale.com>, Tony Lindgren <tony@atomide.com>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: David Brown <davidb@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 15 Jun 2011, David Brown wrote:
-
-> On Wed, Jun 15 2011, Nicolas Pitre wrote:
+On Wed, Jun 15, 2011 at 03:50:37PM -0400, Nicolas Pitre wrote:
+> On Tue, 14 Jun 2011, David Brown wrote:
 > 
-> > On Tue, 14 Jun 2011, David Brown wrote:
-> >
-> >> Some targets have multiple memory regions.  Parse up to 8 of these
-> >> when converting the atags to fdt.
-> >> 
-> >> Signed-off-by: David Brown <davidb@codeaurora.org>
-> >
-> > I've added your patch to my zImage patch queue.
-> >
-> >> With this change, I am able to boot MSM8x60 combining ATAGS and my DT.
-> >> It seems to work as long as my device tree has placeholders for all of
-> >> the properties I need.
-> >
-> > I think those missing nodes should simply be created if missing.  I 
-> > however don't see any function in the libfdt API to do that -- there is 
-> > fdt_add_subnode() but no fdt_add_node().  Any DT expert please?
+> > Some targets have multiple memory regions.  Parse up to 8 of these
+> > when converting the atags to fdt.
+> > 
+> > Signed-off-by: David Brown <davidb@codeaurora.org>
 > 
-> It does seem to only work if I already have nodes that are large enough
-> to hold the properties coming from the ATAG.  For example, I have to
-> have an array of memory reg values large enough, as well as a command
-> line large enough to hold the one passed from the bootloader.
+> I've added your patch to my zImage patch queue.
 > 
-> If the DTB's command line is smaller than the one from ATAG, it just
-> silently leaves the DTB one in place.
+> > With this change, I am able to boot MSM8x60 combining ATAGS and my DT.
+> > It seems to work as long as my device tree has placeholders for all of
+> > the properties I need.
+> 
+> I think those missing nodes should simply be created if missing.  I 
+> however don't see any function in the libfdt API to do that -- there is 
+> fdt_add_subnode() but no fdt_add_node().  Any DT expert please?
 
-That I can explain, and that looks easy to fix.
+fdt_add_subnode() will create a new node as you require.  The
+"subnode" is just supposed to indicate that the parameters are in the
+form of the offset of the parent node and the new node's immediate
+name, rather than taking a full path name for the new node.
 
+> Also, should the DTB be enlarged in order to add new nodes, or even 
+> modify existing ones with larger properties?  In other words, 
+> should something like fdt_move(fdt, fdt, fdt_totalsize(fdt)+HEADROOM) be 
+> used beforehand?
 
-Nicolas
+Yes, you will need to do this, fdt_open_into() is the function you
+want.  Without making room first, adding nodes or expanding existing
+properties will return -FDT_ERR_NOSPACE.  Once you've made whatever
+edits you need, you can use fdt_pack() to collapse the tree back to
+its minimum size.
+
+Although this is somewhat awkward, this approach is a deliberate
+design decision, to avoid making libfdt dependent on a working general
+purpose allocator, which may not be available when libfdt is used in
+very limited environments such as a firmware/bootloader.
+
+If you do find things you need to do which libfdt doesn't support, I'm
+more than happy to extend it as necessary.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
