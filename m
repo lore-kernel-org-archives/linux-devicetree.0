@@ -1,58 +1,39 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] powerpc: add support for MPIC message register API
-Date: Fri, 17 Jun 2011 11:58:28 -0500
-Message-ID: <20110617115828.3cebd5c9@schlenkerla.am.freescale.net>
-References: <1306869543-18812-1-git-send-email-meador_inge@mentor.com>
-	<1306869543-18812-3-git-send-email-meador_inge@mentor.com>
-	<1308288784.32158.30.camel@pasglop>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: [PATCH] Support multiple MEM tags with atags->fdt conversion
+Date: Fri, 17 Jun 2011 13:23:07 -0700
+Message-ID: <8yalix0qkb8.fsf@huya.qualcomm.com>
+References: <1308094074-24898-1-git-send-email-davidb@codeaurora.org>
+	<alpine.LFD.2.00.1106151540230.2142@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1308288784.32158.30.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.00.1106151540230.2142@xanadu.home> (Nicolas Pitre's
+	message of "Wed, 15 Jun 2011 15:50:37 -0400 (EDT)")
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@freescale.com>, Tony Lindgren <tony@atomide.com>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Jun 2011 15:33:04 +1000
-Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+On Wed, Jun 15 2011, Nicolas Pitre wrote:
 
-> On Tue, 2011-05-31 at 14:19 -0500, Meador Inge wrote:
-> > +void mpic_msgr_enable(struct mpic_msgr *msgr)
-> > +{
-> > +	out_be32(msgr->mer, in_be32(msgr->mer) | (1 << msgr->num));
-> > +}
-> > +EXPORT_SYMBOL(mpic_msgr_enable);
-> 
-> Why are all those exported non-GPL ? We have a policy of making new
-> in-kernel APIs generally GPL only.
+> I think those missing nodes should simply be created if missing.  I 
+> however don't see any function in the libfdt API to do that -- there is 
+> fdt_add_subnode() but no fdt_add_node().  Any DT expert please?
+>
+> Also, should the DTB be enlarged in order to add new nodes, or even 
+> modify existing ones with larger properties?  In other words, 
+> should something like fdt_move(fdt, fdt, fdt_totalsize(fdt)+HEADROOM) be 
+> used beforehand?
 
->From Documentation/DocBook/kernel-hacking.tmpl:
+I've tried adding some padding to my DTB by passing '-p 1024'.  It does
+seem to try and do something, but I'm getting a fault in memmove() from
+fdt_splice() that I'm still trying to track down.
 
-  <sect1 id="sym-exportsymbols-gpl">
-   <title><function>EXPORT_SYMBOL_GPL()</function>   
-    <filename class="headerfile">include/linux/module.h</filename></title>
-                                                     
-   <para>                                            
-    Similar to <function>EXPORT_SYMBOL()</function> except that the
-    symbols exported by <function>EXPORT_SYMBOL_GPL()</function> can
-    only be seen by modules with a                   
-    <function>MODULE_LICENSE()</function> that specifies a GPL
-    compatible license.  It implies that the function is considered
-    an internal implementation issue, and not really an interface.
-   </para>                                           
-  </sect1>
+It looks like the expansion is possible, though, at least once
+everything is right.
 
-When did this change from "considered an internal implementation issue, and
-not really an interface" to "all new interfaces"?
+David
 
--Scott
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
