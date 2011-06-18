@@ -1,14 +1,15 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add basic device support for imx51 babbage
-Date: Sat, 18 Jun 2011 10:29:27 -0600
-Message-ID: <20110618162927.GM8195@ponder.secretlab.ca>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] serial/imx: add device tree support
+Date: Sat, 18 Jun 2011 20:11:32 +0200
+Message-ID: <201106182011.33146.arnd@arndb.de>
 References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
+	<201106181821.46574.arnd@arndb.de>
+	<20110618162655.GK8195@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1308410354-21387-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20110618162655.GK8195-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,51 +19,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 18, 2011 at 11:19:11PM +0800, Shawn Guo wrote:
-> This patch set adds the basic device tree support for imx51 babbage
-> board.  With uart and fec dt support added, the dt kernel can boot
-> into console with nfs root on babbage, so that we get a good base
-> to start playing dt and converting further drivers to use dt on
-> imx51.
-> 
-> It creates the platform imx51-dt for using the device tree, and
-> leaves existing board support files alone, so nothing should be
-> broken.  The plan is to add stuff step by step into imx51-dt to
-> get it support every existing imx51 boards, and then remove the
-> existing board files.
-> 
-> It works against Linus tree plus the dt infrastructure patches
-> posted by Grant Likely as part of the following series.
-> 
->   [RFC PATCH 00/11] Full device tree support for ARM Versatile
-> 
-> Comments are appreciated.
-> 
-> Shawn Guo (3):
->       serial/imx: add device tree support
->       net/fec: add device tree support
->       ARM: mx5: add basic device tree support for imx51 babbage
+On Saturday 18 June 2011 18:26:55 Grant Likely wrote:
+> On Sat, Jun 18, 2011 at 06:21:46PM +0200, Arnd Bergmann wrote:
 
-Good work!  Other than minor comments, this series looks awesome.
-
-g.
-
+> > Should this also support the "clock-frequency" property that 8250-style
+> > serial ports support [1]?
+> > 
+> > For the flow-control properties, should we name that more generic? The
+> > same property certainly makes sense for other serial-ports if it does
+> > here. OTOH, I'm not sure it's actually reliable, because it also depends
+> > on whether the other side of the connection and the cable support hw flow
+> > control.
 > 
->  Documentation/devicetree/bindings/net/fsl-fec.txt  |   14 +++
->  .../bindings/tty/serial/fsl-imx-uart.txt           |   21 +++++
->  arch/arm/boot/dts/imx51-babbage.dts                |   89 ++++++++++++++++++++
->  arch/arm/mach-mx5/Kconfig                          |    8 ++
->  arch/arm/mach-mx5/Makefile                         |    1 +
->  arch/arm/mach-mx5/imx51-dt.c                       |   70 +++++++++++++++
->  drivers/net/fec.c                                  |   28 ++++++
->  drivers/tty/serial/imx.c                           |   81 ++++++++++++++++--
->  8 files changed, 302 insertions(+), 10 deletions(-)
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> I'd like to see a few use cases before defining a common property.
+> That said, has-rts-cts does sound like a useful generic property.
+> Or maybe named "uart-has-rts-cts" to make it clear that it is a uart
+> specific binding?
+> 
+
+
+Sounds ok to me.
+
+	Arnd
