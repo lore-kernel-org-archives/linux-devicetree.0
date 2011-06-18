@@ -1,13 +1,15 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/3] ARM: mx5: add basic device tree support for imx51 babbage
-Date: Sat, 18 Jun 2011 23:19:14 +0800
-Message-ID: <1308410354-21387-4-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] serial/imx: add device tree support
+Date: Sat, 18 Jun 2011 10:19:34 -0600
+Message-ID: <20110618161934.GH8195@ponder.secretlab.ca>
 References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
+	<1308410354-21387-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1308410354-21387-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1308410354-21387-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,225 +19,205 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the i.mx51 dt platform with uart and fec support.
-It also adds the dts file imx51 babbage, so that we can have a dt
-kernel on babbage booting into console with nfs root.
+On Sat, Jun 18, 2011 at 11:19:12PM +0800, Shawn Guo wrote:
+> It adds device tree data parsing support for imx tty/serial driver.
+> 
+> Signed-off-by: Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> Signed-off-by: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  .../bindings/tty/serial/fsl-imx-uart.txt           |   21 +++++
+>  drivers/tty/serial/imx.c                           |   81 +++++++++++++++++---
+>  2 files changed, 92 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> new file mode 100644
+> index 0000000..7648e17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> @@ -0,0 +1,21 @@
+> +* Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
+> +
+> +Required properties:
+> +- compatible : should be "fsl,<soc>-uart", "fsl,imx-uart"
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/imx51-babbage.dts |   89 +++++++++++++++++++++++++++++++++++
- arch/arm/mach-mx5/Kconfig           |    8 +++
- arch/arm/mach-mx5/Makefile          |    1 +
- arch/arm/mach-mx5/imx51-dt.c        |   70 +++++++++++++++++++++++++++
- 4 files changed, 168 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx51-babbage.dts
- create mode 100644 arch/arm/mach-mx5/imx51-dt.c
+I'd make this "fsl,<soc>-uart", "fsl,imx51-uart"
 
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-new file mode 100644
-index 0000000..7976932
---- /dev/null
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -0,0 +1,89 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX51 Babbage";
-+	compatible = "fsl,imx51-babbage", "fsl,imx51";
-+	interrupt-parent = <&tzic>;
-+
-+	chosen {
-+		bootargs = "console=ttymxc0,115200 root=/dev/mmcblk0p3 rootwait";
-+	};
-+
-+	memory {
-+		reg = <0x90000000 0x20000000>;
-+	};
-+
-+	tzic: tz-interrupt-controller@e0000000 {
-+		compatible = "fsl,imx51-tzic", "fsl,tzic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0xe0000000 0x4000>;
-+	};
-+
-+	aips@70000000 { /* aips-1 */
-+		compatible = "fsl,aips-bus", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x70000000 0x10000000>;
-+		ranges;
-+
-+		spba {
-+			compatible = "fsl,spba-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x70000000 0x40000>;
-+			ranges;
-+
-+			uart@7000c000 {
-+				compatible = "fsl,imx51-uart", "fsl,imx-uart";
-+				reg = <0x7000c000 0x4000>;
-+				interrupts = <33>;
-+				id = <3>;
-+				fsl,has-rts-cts;
-+			};
-+		};
-+
-+		uart@73fbc000 {
-+			compatible = "fsl,imx51-uart", "fsl,imx-uart";
-+			reg = <0x73fbc000 0x4000>;
-+			interrupts = <31>;
-+			id = <1>;
-+			fsl,has-rts-cts;
-+		};
-+
-+		uart@73fc0000 {
-+			compatible = "fsl,imx51-uart", "fsl,imx-uart";
-+			reg = <0x73fc0000 0x4000>;
-+			interrupts = <32>;
-+			id = <2>;
-+			fsl,has-rts-cts;
-+		};
-+	};
-+
-+	aips@80000000 {	/* aips-2 */
-+		compatible = "fsl,aips-bus", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x80000000 0x10000000>;
-+		ranges;
-+
-+		fec@83fec000 {
-+			compatible = "fsl,imx51-fec", "fsl,fec";
-+			reg = <0x83fec000 0x4000>;
-+			interrupts = <87>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-index 799fbc4..8bdd0c4 100644
---- a/arch/arm/mach-mx5/Kconfig
-+++ b/arch/arm/mach-mx5/Kconfig
-@@ -62,6 +62,14 @@ endif # ARCH_MX50_SUPPORTED
- if ARCH_MX51
- comment "i.MX51 machines:"
- 
-+config MACH_IMX51_DT
-+	bool "Support i.MX51 platforms from device tree"
-+	select SOC_IMX51
-+	select USE_OF
-+	help
-+	  Include support for Freescale i.MX51 based platforms
-+	  using the device tree for discovery
-+
- config MACH_MX51_BABBAGE
- 	bool "Support MX51 BABBAGE platforms"
- 	select SOC_IMX51
-diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-index 0b9338c..47b483f 100644
---- a/arch/arm/mach-mx5/Makefile
-+++ b/arch/arm/mach-mx5/Makefile
-@@ -7,6 +7,7 @@ obj-y   := cpu.o mm.o clock-mx51-mx53.o devices.o ehci.o system.o
- obj-$(CONFIG_SOC_IMX50) += mm-mx50.o
- 
- obj-$(CONFIG_CPU_FREQ_IMX)    += cpu_op-mx51.o
-+obj-$(CONFIG_MACH_IMX51_DT) += imx51-dt.o
- obj-$(CONFIG_MACH_MX51_BABBAGE) += board-mx51_babbage.o
- obj-$(CONFIG_MACH_MX51_3DS) += board-mx51_3ds.o
- obj-$(CONFIG_MACH_MX53_EVK) += board-mx53_evk.o
-diff --git a/arch/arm/mach-mx5/imx51-dt.c b/arch/arm/mach-mx5/imx51-dt.c
-new file mode 100644
-index 0000000..8bfdb91
---- /dev/null
-+++ b/arch/arm/mach-mx5/imx51-dt.c
-@@ -0,0 +1,70 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/of_platform.h>
-+
-+#include <asm/mach/arch.h>
-+#include <asm/mach/time.h>
-+
-+#include <mach/common.h>
-+#include <mach/mx51.h>
-+
-+/*
-+ * Lookup table for attaching a specific name and platform_data pointer to
-+ * devices as they get created by of_platform_populate().  Ideally this table
-+ * would not exist, but the current clock implementation depends on some devices
-+ * having a specific name.
-+ */
-+static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART1_BASE_ADDR, "imx-uart.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART2_BASE_ADDR, "imx-uart.1", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART3_BASE_ADDR, "imx-uart.2", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-fec", MX51_FEC_BASE_ADDR, "fec.0", NULL),
-+	{}
-+};
-+
-+static const struct of_device_id tzic_of_match[] __initconst = {
-+	{ .compatible = "fsl,imx51-tzic", },
-+	{}
-+};
-+
-+static void __init imx51_dt_init(void)
-+{
-+	irq_domain_generate_simple(tzic_of_match, MX51_TZIC_BASE_ADDR, 0);
-+
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+			     imx51_auxdata_lookup, NULL);
-+}
-+
-+static void __init imx51_timer_init(void)
-+{
-+	mx51_clocks_init(32768, 24000000, 22579200, 0);
-+}
-+
-+static struct sys_timer imx51_timer = {
-+	.init = imx51_timer_init,
-+};
-+
-+static const char *imx51_dt_board_compat[] __initdata = {
-+	"fsl,imx51-babbage",
-+	NULL
-+};
-+
-+DT_MACHINE_START(IMX51_DT, "Freescale i.MX51 (Device Tree Support)")
-+	.map_io		= mx51_map_io,
-+	.init_early	= imx51_init_early,
-+	.init_irq	= mx51_init_irq,
-+	.timer		= &imx51_timer,
-+	.init_machine	= imx51_dt_init,
-+	.dt_compat	= imx51_dt_board_compat,
-+MACHINE_END
--- 
-1.7.4.1
+It's better to anchor these things on real silicon, or a real ip block
+specification rather than something pseudo-generic.  Subsequent chips,
+like the imx53, should simply claim compatibility with the older
+fsl,imx51-uart.
+
+(in essence, "fsl,imx51-uart" becomes the generic string without the
+downside of having no obvious recourse when new silicon shows up that
+is an imx part, but isn't compatible with the imx51 uart.
+
+> +- reg : address and length of the register set for the device
+> +- interrupts : should contain uart interrupt
+> +- id : should be the port ID defined by soc
+> +
+> +Optional properties:
+> +- fsl,has-rts-cts : indicate it has rts-cts
+> +- fsl,irda-mode : support irda mode
+> +
+> +Example:
+> +
+> +uart@73fbc000 {
+> +	compatible = "fsl,imx51-uart", "fsl,imx-uart";
+> +	reg = <0x73fbc000 0x4000>;
+> +	interrupts = <31>;
+> +	id = <1>;
+> +	fsl,has-rts-cts;
+> +};
+> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> index a544731..2769353 100644
+> --- a/drivers/tty/serial/imx.c
+> +++ b/drivers/tty/serial/imx.c
+> @@ -45,6 +45,8 @@
+>  #include <linux/delay.h>
+>  #include <linux/rational.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>  
+>  #include <asm/io.h>
+>  #include <asm/irq.h>
+> @@ -1223,6 +1225,63 @@ static int serial_imx_resume(struct platform_device *dev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static int serial_imx_probe_dt(struct imx_port *sport,
+> +		struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	const __be32 *line;
+> +
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	line = of_get_property(node, "id", NULL);
+> +	if (!line)
+> +		return -ENODEV;
+> +
+> +	sport->port.line = be32_to_cpup(line) - 1;
+
+Hmmm, I really would like to be rid of this.  Instead, if uarts must
+be enumerated, the driver should look for a /aliases/uart* property
+that matches the of_node.  Doing it that way is already established in
+the OpenFirmware documentation, and it ensures there are no overlaps
+in the global namespace.
+
+We do need some infrastructure to make that easier though.  Would you
+have time to help put that together?
+
+> +
+> +	if (of_get_property(node, "fsl,has-rts-cts", NULL))
+> +		sport->have_rtscts = 1;
+> +
+> +	if (of_get_property(node, "fsl,irda-mode", NULL))
+> +		sport->use_irda = 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id imx_uart_dt_ids[] = {
+> +	{ .compatible = "fsl,imx-uart" },
+> +	{},
+> +};
+> +#else
+> +static int serial_imx_probe_dt(struct imx_port *sport,
+> +		struct platform_device *pdev)
+> +{
+> +	return -ENODEV;
+> +}
+> +#define imx_uart_dt_ids NULL
+> +#endif
+> +
+> +static int serial_imx_probe_pdata(struct imx_port *sport,
+> +		struct platform_device *pdev)
+> +{
+> +	struct imxuart_platform_data *pdata = pdev->dev.platform_data;
+> +
+> +	if (!pdata)
+> +		return 0;
+> +
+> +	if (pdata->flags & IMXUART_HAVE_RTSCTS)
+> +		sport->have_rtscts = 1;
+> +
+> +	if (pdata->flags & IMXUART_IRDA)
+> +		sport->use_irda = 1;
+> +
+> +	sport->port.line = pdev->id;
+> +
+> +	return 0;
+> +}
+> +
+>  static int serial_imx_probe(struct platform_device *pdev)
+>  {
+>  	struct imx_port *sport;
+> @@ -1235,6 +1294,12 @@ static int serial_imx_probe(struct platform_device *pdev)
+>  	if (!sport)
+>  		return -ENOMEM;
+>  
+> +	ret = serial_imx_probe_dt(sport, pdev);
+> +	if (ret == -ENODEV)
+> +		ret = serial_imx_probe_pdata(sport, pdev);
+> +	if (ret)
+> +		goto free;
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (!res) {
+>  		ret = -ENODEV;
+> @@ -1259,7 +1324,6 @@ static int serial_imx_probe(struct platform_device *pdev)
+>  	sport->port.fifosize = 32;
+>  	sport->port.ops = &imx_pops;
+>  	sport->port.flags = UPF_BOOT_AUTOCONF;
+> -	sport->port.line = pdev->id;
+>  	init_timer(&sport->timer);
+>  	sport->timer.function = imx_timeout;
+>  	sport->timer.data     = (unsigned long)sport;
+> @@ -1273,17 +1337,13 @@ static int serial_imx_probe(struct platform_device *pdev)
+>  
+>  	sport->port.uartclk = clk_get_rate(sport->clk);
+>  
+> -	imx_ports[pdev->id] = sport;
+> +	if (imx_ports[sport->port.line]) {
+> +		ret = -EBUSY;
+> +		goto clkput;
+> +	}
+> +	imx_ports[sport->port.line] = sport;
+>  
+>  	pdata = pdev->dev.platform_data;
+> -	if (pdata && (pdata->flags & IMXUART_HAVE_RTSCTS))
+> -		sport->have_rtscts = 1;
+> -
+> -#ifdef CONFIG_IRDA
+> -	if (pdata && (pdata->flags & IMXUART_IRDA))
+> -		sport->use_irda = 1;
+> -#endif
+> -
+>  	if (pdata && pdata->init) {
+>  		ret = pdata->init(pdev);
+>  		if (ret)
+> @@ -1344,6 +1404,7 @@ static struct platform_driver serial_imx_driver = {
+>  	.driver		= {
+>  		.name	= "imx-uart",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = imx_uart_dt_ids,
+>  	},
+>  };
+>  
+> -- 
+> 1.7.4.1
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
