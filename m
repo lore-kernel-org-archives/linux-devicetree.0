@@ -1,35 +1,43 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 2/2] powerpc: add support for MPIC message register API
-Date: Sat, 18 Jun 2011 08:58:53 +1000
-Message-ID: <1308351533.32158.61.camel@pasglop>
-References: <1306869543-18812-1-git-send-email-meador_inge@mentor.com>
-	<1306869543-18812-3-git-send-email-meador_inge@mentor.com>
-	<1308288784.32158.30.camel@pasglop>
-	<20110617115828.3cebd5c9@schlenkerla.am.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20110617115828.3cebd5c9@schlenkerla.am.freescale.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Meador Inge <meador_inge@mentor.com>, openmcapi-dev@googlegroups.com, devicetree-discuss@lists.ozlabs.org, Hollis Blanchard <hollis_blanchard@mentor.com>, linuxppc-dev@lists.ozlabs.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH 0/3] Add basic device support for imx51 babbage
+Date: Sat, 18 Jun 2011 23:19:11 +0800
+Message-ID: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2011-06-17 at 11:58 -0500, Scott Wood wrote:
-> When did this change from "considered an internal implementation
-> issue, and not really an interface" to "all new interfaces"?
+This patch set adds the basic device tree support for imx51 babbage
+board.  With uart and fec dt support added, the dt kernel can boot
+into console with nfs root on babbage, so that we get a good base
+to start playing dt and converting further drivers to use dt on
+imx51.
 
-Interesting blurb... that's not everybody's opinion and I would argue
-that supporting AMP kernels isn't something we want to do with closed
-source crap.
+It creates the platform imx51-dt for using the device tree, and
+leaves existing board support files alone, so nothing should be
+broken.  The plan is to add stuff step by step into imx51-dt to
+get it support every existing imx51 boards, and then remove the
+existing board files.
 
-Ben.
+It works against Linus tree plus the dt infrastructure patches
+posted by Grant Likely as part of the following series.
+
+  [RFC PATCH 00/11] Full device tree support for ARM Versatile
+
+Comments are appreciated.
+
+Shawn Guo (3):
+      serial/imx: add device tree support
+      net/fec: add device tree support
+      ARM: mx5: add basic device tree support for imx51 babbage
+
+ Documentation/devicetree/bindings/net/fsl-fec.txt  |   14 +++
+ .../bindings/tty/serial/fsl-imx-uart.txt           |   21 +++++
+ arch/arm/boot/dts/imx51-babbage.dts                |   89 ++++++++++++++++++++
+ arch/arm/mach-mx5/Kconfig                          |    8 ++
+ arch/arm/mach-mx5/Makefile                         |    1 +
+ arch/arm/mach-mx5/imx51-dt.c                       |   70 +++++++++++++++
+ drivers/net/fec.c                                  |   28 ++++++
+ drivers/tty/serial/imx.c                           |   81 ++++++++++++++++--
+ 8 files changed, 302 insertions(+), 10 deletions(-)
