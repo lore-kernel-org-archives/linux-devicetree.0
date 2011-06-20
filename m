@@ -1,174 +1,254 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH 6/6] arm: exynos4: Add a new Exynos4 device tree enabled machine
-Date: Mon, 20 Jun 2011 16:32:32 +0530
-Message-ID: <1308567752-13451-7-git-send-email-thomas.abraham@linaro.org>
-References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
-Content-Transfer-Encoding: 7BIT
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/6] serial: samsung: Keep a copy of platform data in
+ driver's private data
+Date: Mon, 20 Jun 2011 09:54:58 -0600
+Message-ID: <BANLkTikLfbiL0ZpLiysA6qUxv8sj-AVS+A@mail.gmail.com>
+References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org> <1308567752-13451-2-git-send-email-thomas.abraham@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
+In-Reply-To: <1308567752-13451-2-git-send-email-thomas.abraham@linaro.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org, patches@linaro.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, linaro-dev@lists.linaro.org, patches@linaro.org, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Basic Exynos4 machine with device tree support that can boot on a Exynos4
-based smdkv310 board and bring up the console.
+On Mon, Jun 20, 2011 at 5:02 AM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
+> The driver depends on pdev->dev.platform_data to retrive information
+> about the platform data even after the initialization. To add device
+> tree support, this has to be changed in way that the platform data
+> is avialable from driver's private data. This patch adds support
+> for keeping a copy of the plaform data in s3c24xx_uart_info and using
+> it when needed after the initialization.
+>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+> =A0drivers/tty/serial/s5pv210.c | =A0 12 ++++++++++--
+> =A0drivers/tty/serial/samsung.c | =A0 24 ++++++++++++++++++++----
+> =A0drivers/tty/serial/samsung.h | =A0 =A04 +++-
+> =A03 files changed, 33 insertions(+), 7 deletions(-)
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- Documentation/devicetree/bindings/arm/samsung.txt |    3 +-
- arch/arm/mach-exynos4/Kconfig                     |   11 +++
- arch/arm/mach-exynos4/Makefile                    |    1 +
- arch/arm/mach-exynos4/mach-exynos4-dt.c           |   94 +++++++++++++++++++++
- 4 files changed, 108 insertions(+), 1 deletions(-)
- create mode 100644 arch/arm/mach-exynos4/mach-exynos4-dt.c
+Hi Thomas.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung.txt b/Documentation/devicetree/bindings/arm/samsung.txt
-index 594cb97..80d29bb 100644
---- a/Documentation/devicetree/bindings/arm/samsung.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung.txt
-@@ -4,6 +4,7 @@ Samsung Exynos4 S5PV310 SoC based SMDKV310 eval board
-     Samsung's Exynos4 family of application processors.
- 
- Required root node properties:
--    - compatible = "samsung,smdkv310","samsung,s5pv310"
-+    - compatible = "samsung,smdkv310","samsung,s5pv310", "samsung,exynos4210'.
-         (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
-         (b) "samsung,s5pv310"  - for boards based on S5PV310 SoC.
-+	(c) "samsung,exynos4210" - for boards based on Exynos4210 processor.
-diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-index 1435fc3..412e0c5 100644
---- a/arch/arm/mach-exynos4/Kconfig
-+++ b/arch/arm/mach-exynos4/Kconfig
-@@ -186,6 +186,17 @@ config MACH_NURI
- 	help
- 	  Machine support for Samsung Mobile NURI Board.
- 
-+config MACH_EXYNOS4_DT
-+	bool "Samsung's Exynos4 Machine with DT support"
-+	select CPU_EXYNOS4210
-+	select USE_OF
-+	select S3C_DEV_WDT
-+	select S3C_DEV_HSMMC
-+	select S3C_DEV_HSMMC2
-+	select EXYNOS4_SETUP_SDHCI
-+	help
-+	  Machine support for Samsung Exynos4 machine with device tree enabled.
-+
- endmenu
- 
- comment "Configuration for HSMMC bus width"
-diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
-index 60fe5ec..6491e5b 100644
---- a/arch/arm/mach-exynos4/Makefile
-+++ b/arch/arm/mach-exynos4/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_MACH_SMDKV310)		+= mach-smdkv310.o
- obj-$(CONFIG_MACH_ARMLEX4210)		+= mach-armlex4210.o
- obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
- obj-$(CONFIG_MACH_NURI)			+= mach-nuri.o
-+obj-$(CONFIG_MACH_EXYNOS4_DT)		+= mach-exynos4-dt.o
- 
- # device support
- 
-diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-new file mode 100644
-index 0000000..34267d8
---- /dev/null
-+++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-@@ -0,0 +1,94 @@
-+/*
-+ * Samsung's Exynos4210 device tree enabled machine.
-+ *
-+ * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ * Copyright (c) 2010-2011 Linaro Ltd.
-+ * 		www.linaro.org
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+#include <linux/serial_core.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/irq.h>
-+
-+#include <asm/mach/arch.h>
-+#include <asm/mach-types.h>
-+
-+#include <plat/regs-serial.h>
-+#include <plat/exynos4.h>
-+#include <plat/cpu.h>
-+#include <plat/sdhci.h>
-+
-+#include <mach/map.h>
-+
-+static struct s3c_sdhci_platdata smdkv310_hsmmc0_pdata __initdata = {
-+	.cd_type		= S3C_SDHCI_CD_INTERNAL,
-+	.clk_type		= S3C_SDHCI_CLK_DIV_EXTERNAL,
-+#ifdef CONFIG_EXYNOS4_SDHCI_CH0_8BIT
-+	.max_width		= 8,
-+	.host_caps		= MMC_CAP_8_BIT_DATA,
-+#endif
-+};
-+
-+static struct s3c_sdhci_platdata smdkv310_hsmmc2_pdata __initdata = {
-+	.cd_type		= S3C_SDHCI_CD_INTERNAL,
-+	.clk_type		= S3C_SDHCI_CLK_DIV_EXTERNAL,
-+#ifdef CONFIG_EXYNOS4_SDHCI_CH2_8BIT
-+	.max_width		= 8,
-+	.host_caps		= MMC_CAP_8_BIT_DATA,
-+#endif
-+};
-+
-+static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
-+	OF_DEV_AUXDATA("samsung,s3c-sdhci", EXYNOS4_PA_HSMMC(2),
-+				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
-+	OF_DEV_AUXDATA("samsung,s3c-sdhci", EXYNOS4_PA_HSMMC(0),
-+				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
-+	OF_DEV_AUXDATA("samsung,s5pv210-uart", S5P_PA_UART0,
-+				"s5pv210-uart.0", NULL),
-+	OF_DEV_AUXDATA("samsung,s5pv210-uart", S5P_PA_UART1,
-+				"s5pv210-uart.1", NULL),
-+	{},
-+};
-+
-+static void __init exynos4_dt_map_io(void)
-+{
-+	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
-+	s3c24xx_init_clocks(24000000);
-+}
-+
-+static const struct of_device_id intc_of_match[] __initconst = {
-+	{ .compatible = "samsung,exynos4-gic", },
-+	{}
-+};
-+
-+static void __init exynos4_dt_machine_init(void)
-+{
-+	s3c_sdhci0_set_platdata(&smdkv310_hsmmc0_pdata);
-+	s3c_sdhci2_set_platdata(&smdkv310_hsmmc2_pdata);
-+
-+	irq_domain_generate_simple(intc_of_match, EXYNOS4_PA_GIC_DIST, 0);
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+				exynos4_auxdata_lookup, NULL);
-+}
-+
-+static char const *exynos4_dt_compat[] __initdata = {
-+	"samsung,exynos4210",
-+	NULL
-+};
-+
-+DT_MACHINE_START(SMDKV310, "Samsung Exynos4 DT")
-+	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
-+	.boot_params	= S5P_PA_SDRAM + 0x100,
-+	.init_irq	= exynos4_init_irq,
-+	.map_io		= exynos4_dt_map_io,
-+	.init_machine	= exynos4_dt_machine_init,
-+	.timer		= &exynos4_timer,
-+	.dt_compat	= exynos4_dt_compat,
-+MACHINE_END
--- 
-1.6.6.rc2
+Don't forget you need to cc Alan Cox and the linux-serial mailing list
+for tty driver patches.
+
+Comments below...
+
+>
+> diff --git a/drivers/tty/serial/s5pv210.c b/drivers/tty/serial/s5pv21=
+0.c
+> index d6b2423..3b2021a 100644
+> --- a/drivers/tty/serial/s5pv210.c
+> +++ b/drivers/tty/serial/s5pv210.c
+> @@ -27,9 +27,13 @@
+> =A0static int s5pv210_serial_setsource(struct uart_port *port,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0struct s3c24xx_uart_clksrc *clk)
+> =A0{
+> - =A0 =A0 =A0 struct s3c2410_uartcfg *cfg =3D port->dev->platform_dat=
+a;
+> + =A0 =A0 =A0 struct s3c24xx_uart_port *ourport;
+> + =A0 =A0 =A0 struct s3c2410_uartcfg *cfg;
+> =A0 =A0 =A0 =A0unsigned long ucon =3D rd_regl(port, S3C2410_UCON);
+>
+> + =A0 =A0 =A0 ourport =3D container_of(port, struct s3c24xx_uart_port=
+, port);
+> + =A0 =A0 =A0 cfg =3D &ourport->info->cfg;
+> +
+> =A0 =A0 =A0 =A0if ((cfg->clocks_size) =3D=3D 1)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
+>
+> @@ -50,9 +54,13 @@ static int s5pv210_serial_setsource(struct uart_po=
+rt *port,
+> =A0static int s5pv210_serial_getsource(struct uart_port *port,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0struct s3c24xx_uart_clksrc *clk)
+> =A0{
+> - =A0 =A0 =A0 struct s3c2410_uartcfg *cfg =3D port->dev->platform_dat=
+a;
+> + =A0 =A0 =A0 struct s3c24xx_uart_port *ourport;
+> + =A0 =A0 =A0 struct s3c2410_uartcfg *cfg;
+> =A0 =A0 =A0 =A0u32 ucon =3D rd_regl(port, S3C2410_UCON);
+>
+> + =A0 =A0 =A0 ourport =3D container_of(port, struct s3c24xx_uart_port=
+, port);
+> + =A0 =A0 =A0 cfg =3D &ourport->info->cfg;
+> +
+> =A0 =A0 =A0 =A0clk->divisor =3D 1;
+>
+> =A0 =A0 =A0 =A0if ((cfg->clocks_size) =3D=3D 1)
+> diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsun=
+g.c
+> index 7ead421..77d900f 100644
+> --- a/drivers/tty/serial/samsung.c
+> +++ b/drivers/tty/serial/samsung.c
+> @@ -42,6 +42,7 @@
+> =A0#include <linux/delay.h>
+> =A0#include <linux/clk.h>
+> =A0#include <linux/cpufreq.h>
+> +#include <linux/slab.h>
+>
+> =A0#include <asm/irq.h>
+>
+> @@ -169,10 +170,13 @@ static inline struct s3c24xx_uart_info *s3c24xx=
+_port_to_info(struct uart_port *p
+>
+> =A0static inline struct s3c2410_uartcfg *s3c24xx_port_to_cfg(struct u=
+art_port *port)
+> =A0{
+> + =A0 =A0 =A0 struct s3c24xx_uart_port *ourport;
+> +
+> =A0 =A0 =A0 =A0if (port->dev =3D=3D NULL)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return NULL;
+>
+> - =A0 =A0 =A0 return (struct s3c2410_uartcfg *)port->dev->platform_da=
+ta;
+> + =A0 =A0 =A0 ourport =3D container_of(port, struct s3c24xx_uart_port=
+, port);
+> + =A0 =A0 =A0 return &ourport->info->cfg;
+> =A0}
+>
+> =A0static int s3c24xx_serial_rx_fifocnt(struct s3c24xx_uart_port *our=
+port,
+> @@ -1053,7 +1057,7 @@ static int s3c24xx_serial_init_port(struct s3c2=
+4xx_uart_port *ourport,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+struct platform_device *platdev)
+> =A0{
+> =A0 =A0 =A0 =A0struct uart_port *port =3D &ourport->port;
+> - =A0 =A0 =A0 struct s3c2410_uartcfg *cfg;
+> + =A0 =A0 =A0 struct s3c2410_uartcfg *cfg =3D platdev->dev.platform_d=
+ata;
+> =A0 =A0 =A0 =A0struct resource *res;
+> =A0 =A0 =A0 =A0int ret;
+>
+> @@ -1062,14 +1066,24 @@ static int s3c24xx_serial_init_port(struct s3=
+c24xx_uart_port *ourport,
+> =A0 =A0 =A0 =A0if (platdev =3D=3D NULL)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ENODEV;
+>
+> - =A0 =A0 =A0 cfg =3D s3c24xx_dev_to_cfg(&platdev->dev);
+> -
+> =A0 =A0 =A0 =A0if (port->mapbase !=3D 0)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
+>
+> + =A0 =A0 =A0 if (cfg) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy((void *)&info->cfg, cfg, sizeof(=
+struct s3c2410_uartcfg));
+
+"info->cfg =3D *cfg;" should be sufficient.
+
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->cfg.clocks =3D kzalloc(sizeof(str=
+uct s3c24xx_uart_clksrc) *
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 cfg->clocks_size, GFP_KERNEL);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!info->cfg.clocks)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy(info->cfg.clocks, cfg->clocks,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 sizeof(struct s3c24xx_u=
+art_clksrc) * cfg->clocks_size);
+> + =A0 =A0 =A0 }
+
+ewwh. There has to be a better way to do this.  Part of the point of
+putting a copy of pdata into the private data structure is to simplify
+the driver so that kzallocing wouldn't be necessary.  With that clock
+table, the driver actually gets more complex because both DT and
+non-DT paths now need to kzalloc a clock array.
+
+=46rom what I can tell, the list of clocks on all mainlined platforms i=
+s
+a static array of one or two entries; min & max baud are always set to
+0, and names are one of:
+- uclk & pclk
+- uclk
+- uclk1
+- fclk (with divisor either 10 or 0)
+- pclk_low & uclk1
+
+You could also make the clock structure a static array of 2 elements
+in the private data structure.  That would simplify both this code and
+the followon DT patch.
+
+Also, peaking forward at what the 2nd patch does, I think that it
+might just be a little premature to try and decode the clock info from
+the DT.  But I'll address that issue when replying to the second
+patch.
+
+> +
+> + =A0 =A0 =A0 cfg =3D &info->cfg;
+> =A0 =A0 =A0 =A0if (cfg->hwport > CONFIG_SERIAL_SAMSUNG_UARTS) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0printk(KERN_ERR "%s: port %d bigger th=
+an %d\n", __func__,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg->hwport, CONFIG_SERIA=
+L_SAMSUNG_UARTS);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(info->cfg.clocks);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ERANGE;
+> =A0 =A0 =A0 =A0}
+>
+> @@ -1181,11 +1195,13 @@ EXPORT_SYMBOL_GPL(s3c24xx_serial_probe);
+> =A0int __devexit s3c24xx_serial_remove(struct platform_device *dev)
+> =A0{
+> =A0 =A0 =A0 =A0struct uart_port *port =3D s3c24xx_dev_to_port(&dev->d=
+ev);
+> + =A0 =A0 =A0 struct s3c24xx_uart_info *info =3D s3c24xx_port_to_info=
+(port);
+>
+> =A0 =A0 =A0 =A0if (port) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0s3c24xx_serial_cpufreq_deregister(to_o=
+urport(port));
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device_remove_file(&dev->dev, &dev_att=
+r_clock_source);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0uart_remove_one_port(&s3c24xx_uart_drv=
+, port);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(info->cfg.clocks);
+> =A0 =A0 =A0 =A0}
+>
+> =A0 =A0 =A0 =A0return 0;
+> diff --git a/drivers/tty/serial/samsung.h b/drivers/tty/serial/samsun=
+g.h
+> index a69d9a5..4f2f6f5 100644
+> --- a/drivers/tty/serial/samsung.h
+> +++ b/drivers/tty/serial/samsung.h
+> @@ -24,6 +24,9 @@ struct s3c24xx_uart_info {
+>
+> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0has_divslot:1;
+>
+> + =A0 =A0 =A0 /* copy of platform data */
+
+I'd change this to "copy of /configuration/ data" since the data
+doesn't necessarily come from the platform_data pointer anymore.
+
+> + =A0 =A0 =A0 struct s3c2410_uartcfg =A0cfg;
+> +
+> =A0 =A0 =A0 =A0/* clock source control */
+>
+> =A0 =A0 =A0 =A0int (*get_clksrc)(struct uart_port *, struct s3c24xx_u=
+art_clksrc *clk);
+> @@ -56,7 +59,6 @@ struct s3c24xx_uart_port {
+> =A0/* conversion functions */
+>
+> =A0#define s3c24xx_dev_to_port(__dev) (struct uart_port *)dev_get_drv=
+data(__dev)
+> -#define s3c24xx_dev_to_cfg(__dev) (struct s3c2410_uartcfg *)((__dev)=
+->platform_data)
+>
+> =A0/* register access controls */
+>
+> --
+> 1.6.6.rc2
+>
+>
+> _______________________________________________
+> linaro-dev mailing list
+> linaro-dev@lists.linaro.org
+> http://lists.linaro.org/mailman/listinfo/linaro-dev
+>
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
