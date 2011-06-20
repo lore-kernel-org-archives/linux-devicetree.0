@@ -1,15 +1,12 @@
-From: "Mark Rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: RE: [PATCH 1/3] ARM: pmu: add OF probing support
-Date: Wed, 8 Jun 2011 16:54:47 +0100
-Message-ID: <12042.8135422573$1308591163@news.gmane.org>
-References: <1307456541-11026-1-git-send-email-robherring2@gmail.com>
-	<1307456541-11026-2-git-send-email-robherring2@gmail.com>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] of/gpio: Add new method for getting gpios under different
+	property names
+Date: Mon, 20 Jun 2011 15:50:16 -0700
+Message-ID: <20110620225016.4530.73978.stgit@riker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1307456541-11026-2-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-gb
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,77 +16,132 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: 'Rob Herring' <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds a new routine, of_get_named_gpio_flags(), which takes the
+property name as a parameter rather than assuming "gpios".
 
->  static int __devinit pmu_device_probe(struct platform_device *pdev)
->  {
-> +	enum arm_pmu_type type = pdev->id;
-> 
-> -	if (pdev->id < 0 || pdev->id >= ARM_NUM_PMU_DEVICES) {
-> +	if (pdev->dev.of_node)
-> +		type = ARM_PMU_DEVICE_CPU;
-> +
-> +	if (type < 0 || type >= ARM_NUM_PMU_DEVICES) {
->  		pr_warning("received registration request for unknown "
->  				"device %d\n", pdev->id);
->  		return -EINVAL;
->  	}
-> 
-> -	if (pmu_devices[pdev->id])
-> +	if (pmu_devices[type])
->  		pr_warning("registering new PMU device type %d overwrites "
-> -				"previous registration!\n", pdev->id);
-> +				"previous registration!\n", type);
->  	else
->  		pr_info("registered new PMU device of type %d\n",
-> -				pdev->id);
-> +				type);
-> 
-> -	pmu_devices[pdev->id] = pdev;
-> +	pmu_devices[type] = pdev;
->  	return 0;
->  }
+of_get_gpio_flags() is modified to call of_get_named_gpio_flags() with "gpios"
+as the property parameter.
 
-I don't think this is the best way to handle the type when we've got an FDT
-description:
+Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
 
-* release_pmu hasn't been updated to match the type logic here, so it might do
-  anything when handed a platform_device initialised by FDT code.
+ drivers/of/gpio.c       |   12 +++++++-----
+ include/linux/of_gpio.h |   42 ++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 45 insertions(+), 9 deletions(-)
 
-* the warning message for an invalid registration still uses pdev->id rather
-  than type. This can't currently be reached when the PMU was handed to us via
-  FDT, but it may confuse refactoring later on.
-
-* If we want to add a new PMU type, we'll have to add more logic to
-  pmu_device_probe. Given that work is going on to add support for system PMUs,
-  this doesn't seem particularly brilliant.
-
-> +static struct of_device_id pmu_device_ids[] = {
-> +	{ .compatible = "arm,cortex-a9-pmu" },
-> +	{ .compatible = "arm,cortex-a8-pmu" },
-> +	{ .compatible = "arm,arm1136-pmu" },
-> +	{ .compatible = "arm,arm1176-pmu" },
-> +	{},
-> +};
-> +
->  static struct platform_driver pmu_driver = {
->  	.driver		= {
->  		.name	= "arm-pmu",
-> +		.of_match_table = pmu_device_ids,
->  	},
->  	.probe		= pmu_device_probe,
->  };
-
-This all seems fine for handling CPU PMUs.
-
-I think that a better strategy would be to separate the type logic from the
-registration. I have a patch for this:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2011-June/052455.html
-
-With it, you won't need to change pmu_device_probe, and adding FDT support
-should just be a matter of adding the of_match_table.
-
-Mark
+diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
+index 9059603..6e6a786 100644
+--- a/drivers/of/gpio.c
++++ b/drivers/of/gpio.c
+@@ -20,9 +20,11 @@
+ #include <linux/of_gpio.h>
+ #include <linux/slab.h>
+ 
++
+ /**
+- * of_get_gpio_flags - Get a GPIO number and flags to use with GPIO API
++ * of_get_named_gpio_flags - Get a GPIO number and flags to use with GPIO API
+  * @np:		device node to get GPIO from
++ * @list_name:	property name that contains a list
+  * @index:	index of the GPIO
+  * @flags:	a flags pointer to fill in
+  *
+@@ -30,8 +32,8 @@
+  * value on the error condition. If @flags is not NULL the function also fills
+  * in flags for the GPIO.
+  */
+-int of_get_gpio_flags(struct device_node *np, int index,
+-		      enum of_gpio_flags *flags)
++int of_get_named_gpio_flags(struct device_node *np, const char *list_name,
++                           int index, enum of_gpio_flags *flags)
+ {
+ 	int ret;
+ 	struct device_node *gpio_np;
+@@ -40,7 +42,7 @@ int of_get_gpio_flags(struct device_node *np, int index,
+ 	const void *gpio_spec;
+ 	const __be32 *gpio_cells;
+ 
+-	ret = of_parse_phandles_with_args(np, "gpios", "#gpio-cells", index,
++	ret = of_parse_phandles_with_args(np, list_name, "#gpio-cells", index,
+ 					  &gpio_np, &gpio_spec);
+ 	if (ret) {
+ 		pr_debug("%s: can't parse gpios property\n", __func__);
+@@ -79,7 +81,7 @@ err0:
+ 	pr_debug("%s exited with status %d\n", __func__, ret);
+ 	return ret;
+ }
+-EXPORT_SYMBOL(of_get_gpio_flags);
++EXPORT_SYMBOL(of_get_named_gpio_flags);
+ 
+ /**
+  * of_gpio_count - Count GPIOs for a device
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index 6598c04..920f195 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -46,8 +46,9 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
+ 	return container_of(gc, struct of_mm_gpio_chip, gc);
+ }
+ 
+-extern int of_get_gpio_flags(struct device_node *np, int index,
+-			     enum of_gpio_flags *flags);
++extern int of_get_named_gpio_flags(struct device_node *np,
++		const char *list_name, int index, enum of_gpio_flags *flags);
++
+ extern unsigned int of_gpio_count(struct device_node *np);
+ 
+ extern int of_mm_gpiochip_add(struct device_node *np,
+@@ -60,8 +61,8 @@ extern struct gpio_chip *of_node_to_gpiochip(struct device_node *np);
+ #else /* CONFIG_OF_GPIO */
+ 
+ /* Drivers may not strictly depend on the GPIO support, so let them link. */
+-static inline int of_get_gpio_flags(struct device_node *np, int index,
+-				    enum of_gpio_flags *flags)
++static inline int of_get_named_gpio_flags(struct device_node *np,
++		const char *list_name, int index, enum of_gpio_flags *flags)
+ {
+ 	return -ENOSYS;
+ }
+@@ -77,6 +78,39 @@ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
+ #endif /* CONFIG_OF_GPIO */
+ 
+ /**
++ * of_get_gpio_flags - Get a GPIO number and flags to use with GPIO API
++ * @np:		device node to get GPIO from
++ * @index:	index of the GPIO
++ * @flags:	a flags pointer to fill in
++ *
++ * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
++ * value on the error condition. If @flags is not NULL the function also fills
++ * in flags for the GPIO.
++ */
++static inline int of_get_gpio_flags(struct device_node *np, int index,
++		      enum of_gpio_flags *flags)
++{
++	return of_get_named_gpio_flags(np, "gpios", index, flags);
++}
++
++
++/**
++ * of_get_named_gpio - Get a GPIO number to use with GPIO API
++ * @np:		device node to get GPIO from
++ * @list_name:	property name that contains a list
++ * @index:	index of the GPIO
++ *
++ * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
++ * value on the error condition.
++ */
++static inline int of_get_named_gpio(struct device_node *np,
++                                   const char *list_name, int index)
++{
++	return of_get_named_gpio_flags(np, list_name, index, NULL);
++}
++
++
++/**
+  * of_get_gpio - Get a GPIO number to use with GPIO API
+  * @np:		device node to get GPIO from
+  * @index:	index of the GPIO
