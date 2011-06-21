@@ -1,93 +1,58 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/5] drivers/amba: create devices from device tree
-Date: Tue, 21 Jun 2011 15:07:09 -0500
-Message-ID: <4E00F9ED.1020500@gmail.com>
-References: <20110621181127.18176.1384.stgit@ponder>
-	<20110621184503.18176.88260.stgit@ponder>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] allow DTB to be appended to the ARM zImage with ATAG
+	conversion
+Date: Tue, 21 Jun 2011 14:59:38 -0700
+Message-ID: <8yatybieth1.fsf@huya.qualcomm.com>
+References: <1308632955-11070-1-git-send-email-nico@fluxnic.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110621184503.18176.88260.stgit@ponder>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1308632955-11070-1-git-send-email-nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> (Nicolas
+	Pitre's message of "Tue, 21 Jun 2011 01:09:11 -0400")
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Mon, Jun 20 2011, Nicolas Pitre wrote:
 
-On 06/21/2011 01:45 PM, Grant Likely wrote:
-> Add a function to create amba_devices (i.e. primecell peripherals)
-> from device tree nodes. The device tree scanning is done by the
-> of_platform_populate() function which can call of_amba_device_create
-> based on a match table entry.
-> 
-> Nodes with a "arm,primecell-periphid" property can override the h/w
-> peripheral id value.
-> 
-> Based on the original work by Jeremy Kerr.
-> 
-> Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> [grant.likely: add Jeremy's original s-o-b line, changes from review
->                comments, and moved all code to drivers/of/platform.c]
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> ---
->  .../devicetree/bindings/arm/primecell.txt          |   21 ++++++
->  drivers/of/platform.c                              |   71 ++++++++++++++++++++
->  2 files changed, 92 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/primecell.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/primecell.txt b/Documentation/devicetree/bindings/arm/primecell.txt
-> new file mode 100644
-> index 0000000..1d5d7a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/primecell.txt
-> @@ -0,0 +1,21 @@
-> +* ARM Primecell Peripherals
-> +
-> +ARM, Ltd. Primecell peripherals have a standard id register that can be used to
-> +identify the peripheral type, vendor, and revision. This value can be used for
-> +driver matching.
-> +
-> +Required properties:
-> +
-> +- compatible : should be a specific value for peripheral and "arm,primecell"
+> Yet another resend, this time with a patch to convert some ATAGs and
+> fold them into the appended DTB.  Additional ATAgs and their corresponding
+> DTB representation is still up for discussion.  In particular,
+> ATAG_REVISION and ATAG_SERIAL were mentioned as missing but there is
+> no direct DT equivalent for them.  One suggestion was to fold them into
+> the kernel cmdline string.  Anything else?
+>
+> Testing would also be appreciated.
+>
+> [PATCH 1/4] ARM: zImage: ensure it is always a multiple of 64 bits in size
+> [PATCH 2/4] ARM: zImage: Allow the appending of a device tree binary
+> [PATCH 3/4] ARM: zImage: make sure appended DTB doesn't get overwritten by kernel .bss
+> [PATCH 4/4] ARM: zImage: allow supplementing appended DTB with traditional ATAG data
 
-Can I review what I wrote... Perhaps we should put strings in for all
-existing drivers in the kernel. This should be a complete list:
+The first three appear to be in Grant's devicetree/arm branch (as far as
+I can tell), so I've tested the last one.
 
-arm,pl010
-arm,pl011
-st,pl011
-arm,pl022
-st,pl022
-st,pl023
-arm,pl030
-arm,pl031
-st,pl031
-arm,pl061
-arm,pl050
-arm,pl080
-arm,pl081
-st,pl080
-arm,pl110
-arm,pl180
-arm,pl330
-arm,sp804
-arm,sp805
+I get the same behavior on MSM8660, this works as long as the DTB has
+the attributes with enough padding in them to hold the values written.
+If the fdt code tries expanding the tree (I create the DTB sith -p
+1024), then my device goes off in the weeds somewhere.  I'm trying to
+track this down, it seems to be failing in a memmove, even though that
+memmove appears valid to me.  I'm still investigating that.
 
+Otherwise, it looks good.
 
-Otherwise, they may never get added.
+David
 
-Rob
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
