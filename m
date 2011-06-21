@@ -1,53 +1,164 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] powerpc: add support for MPIC message register API
-Date: Tue, 21 Jun 2011 17:47:52 +1000
-Message-ID: <1308642472.32158.157.camel@pasglop>
-References: <1306869543-18812-1-git-send-email-meador_inge@mentor.com>
-	<1306869543-18812-3-git-send-email-meador_inge@mentor.com>
-	<1308288784.32158.30.camel@pasglop>
-	<20110617115828.3cebd5c9@schlenkerla.am.freescale.net>
-	<1308351533.32158.61.camel@pasglop>
-	<20110620105946.23708a43@schlenkerla.am.freescale.net>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 1/6] serial: samsung: Keep a copy of platform data in
+ driver's private data
+Date: Tue, 21 Jun 2011 16:37:44 +0530
+Message-ID: <BANLkTi=m9QYhVoj-e916D-u79ymZFTup4A@mail.gmail.com>
+References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
+	<1308567752-13451-2-git-send-email-thomas.abraham@linaro.org>
+	<BANLkTikLfbiL0ZpLiysA6qUxv8sj-AVS+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110620105946.23708a43-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Meador Inge <meador_inge-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, openmcapi-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hollis Blanchard <hollis_blanchard-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <BANLkTikLfbiL0ZpLiysA6qUxv8sj-AVS+A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, linaro-dev@lists.linaro.org, patches@linaro.org, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-06-20 at 10:59 -0500, Scott Wood wrote:
-> On Sat, 18 Jun 2011 08:58:53 +1000
-> Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> 
-> > On Fri, 2011-06-17 at 11:58 -0500, Scott Wood wrote:
-> > > When did this change from "considered an internal implementation
-> > > issue, and not really an interface" to "all new interfaces"?
-> > 
-> > Interesting blurb... that's not everybody's opinion and I would argue
-> > that supporting AMP kernels isn't something we want to do with closed
-> > source crap.
-> 
-> I'm not advocating "closed source crap", just that if something is
-> "policy" (as opposed to opinion), it'd be nice if the documentation
-> actually matched.
+Hi Grant,
 
-Well, in Linux, the line between opinion and policy is quite blurred.
+On 20 June 2011 21:24, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Mon, Jun 20, 2011 at 5:02 AM, Thomas Abraham
+> <thomas.abraham@linaro.org> wrote:
+>> The driver depends on pdev->dev.platform_data to retrive information
+>> about the platform data even after the initialization. To add device
+>> tree support, this has to be changed in way that the platform data
+>> is avialable from driver's private data. This patch adds support
+>> for keeping a copy of the plaform data in s3c24xx_uart_info and usin=
+g
+>> it when needed after the initialization.
+>>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> =A0drivers/tty/serial/s5pv210.c | =A0 12 ++++++++++--
+>> =A0drivers/tty/serial/samsung.c | =A0 24 ++++++++++++++++++++----
+>> =A0drivers/tty/serial/samsung.h | =A0 =A04 +++-
+>> =A03 files changed, 33 insertions(+), 7 deletions(-)
+>
+> Hi Thomas.
+>
+> Don't forget you need to cc Alan Cox and the linux-serial mailing lis=
+t
+> for tty driver patches.
 
-I don't know for sure what Linus himself thinks here and various other
-maintainers have expressed various opinions as well. As far as I'm
-concerned, I don't see the point in encouraging binary junk, especially
-for low level interfaces like this one.
+Ok. I will do that when I submit the next version of the patch.
 
-Cheers,
-Ben.
+>
+> Comments below...
+>
+>>
+>> diff --git a/drivers/tty/serial/s5pv210.c b/drivers/tty/serial/s5pv2=
+10.c
+>> index d6b2423..3b2021a 100644
+>> --- a/drivers/tty/serial/s5pv210.c
+>> +++ b/drivers/tty/serial/s5pv210.c
+>> @@ -27,9 +27,13 @@
+
+<snip>
+
+>> + =A0 =A0 =A0 if (cfg) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy((void *)&info->cfg, cfg, sizeof=
+(struct s3c2410_uartcfg));
+>
+> "info->cfg =3D *cfg;" should be sufficient.
+>
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->cfg.clocks =3D kzalloc(sizeof(st=
+ruct s3c24xx_uart_clksrc) *
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 cfg->clocks_size, GFP_KERNEL);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!info->cfg.clocks)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy(info->cfg.clocks, cfg->clocks,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 sizeof(struct s3c24xx_=
+uart_clksrc) * cfg->clocks_size);
+>> + =A0 =A0 =A0 }
+>
+> ewwh. There has to be a better way to do this. =A0Part of the point o=
+f
+> putting a copy of pdata into the private data structure is to simplif=
+y
+> the driver so that kzallocing wouldn't be necessary. =A0With that clo=
+ck
+> table, the driver actually gets more complex because both DT and
+> non-DT paths now need to kzalloc a clock array.
+>
+> From what I can tell, the list of clocks on all mainlined platforms i=
+s
+> a static array of one or two entries; min & max baud are always set t=
+o
+> 0, and names are one of:
+> - uclk & pclk
+> - uclk
+> - uclk1
+> - fclk (with divisor either 10 or 0)
+> - pclk_low & uclk1
+>
+> You could also make the clock structure a static array of 2 elements
+> in the private data structure. =A0That would simplify both this code =
+and
+> the followon DT patch.
+>
+> Also, peaking forward at what the 2nd patch does, I think that it
+> might just be a little premature to try and decode the clock info fro=
+m
+> the DT. =A0But I'll address that issue when replying to the second
+> patch.
+
+Thanks for the suggestion. I had not thought about these issues. One
+possible option in this case is using Sylwester's suggestion of
+changing exynos4 clkdev support to be similar to the omap clkdev
+support. That way, an additional level of indirection is possible. The
+uart driver could than be modified to lookup clock with generic names
+like "uart_clksrc0", "uart_clksrc1" and "uart_clksrc2". With this,
+there will be no need to pass clock names to the uart driver. I will
+check if this can be done.
+
+>
+>> +
+>> + =A0 =A0 =A0 cfg =3D &info->cfg;
+>> =A0 =A0 =A0 =A0if (cfg->hwport > CONFIG_SERIAL_SAMSUNG_UARTS) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0printk(KERN_ERR "%s: port %d bigger t=
+han %d\n", __func__,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg->hwport, CONFIG_SERI=
+AL_SAMSUNG_UARTS);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(info->cfg.clocks);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ERANGE;
+>> =A0 =A0 =A0 =A0}
+>>
+>> @@ -1181,11 +1195,13 @@ EXPORT_SYMBOL_GPL(s3c24xx_serial_probe);
+>> =A0int __devexit s3c24xx_serial_remove(struct platform_device *dev)
+>> =A0{
+>> =A0 =A0 =A0 =A0struct uart_port *port =3D s3c24xx_dev_to_port(&dev->=
+dev);
+>> + =A0 =A0 =A0 struct s3c24xx_uart_info *info =3D s3c24xx_port_to_inf=
+o(port);
+>>
+>> =A0 =A0 =A0 =A0if (port) {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0s3c24xx_serial_cpufreq_deregister(to_=
+ourport(port));
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device_remove_file(&dev->dev, &dev_at=
+tr_clock_source);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0uart_remove_one_port(&s3c24xx_uart_dr=
+v, port);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(info->cfg.clocks);
+>> =A0 =A0 =A0 =A0}
+>>
+>> =A0 =A0 =A0 =A0return 0;
+>> diff --git a/drivers/tty/serial/samsung.h b/drivers/tty/serial/samsu=
+ng.h
+>> index a69d9a5..4f2f6f5 100644
+>> --- a/drivers/tty/serial/samsung.h
+>> +++ b/drivers/tty/serial/samsung.h
+>> @@ -24,6 +24,9 @@ struct s3c24xx_uart_info {
+>>
+>> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0has_divslot:1;
+>>
+>> + =A0 =A0 =A0 /* copy of platform data */
+>
+> I'd change this to "copy of /configuration/ data" since the data
+> doesn't necessarily come from the platform_data pointer anymore.
+
+Ok. I will change this. Thanks for reviewing the patches.
+
+Thomas.
