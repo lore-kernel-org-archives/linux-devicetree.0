@@ -1,7 +1,8 @@
 From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: [PATCH 2/4] ARM: zImage: Allow the appending of a device tree binary
-Date: Tue, 21 Jun 2011 01:09:13 -0400
-Message-ID: <1308632955-11070-3-git-send-email-nico@fluxnic.net>
+Subject: [PATCH 3/4] ARM: zImage: make sure appended DTB doesn't get
+	overwritten by kernel .bss
+Date: Tue, 21 Jun 2011 01:09:14 -0400
+Message-ID: <1308632955-11070-4-git-send-email-nico@fluxnic.net>
 References: <1308632955-11070-1-git-send-email-nico@fluxnic.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,145 +22,82 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This patch provides the ability to boot using a device tree that is appended
-to the raw binary zImage (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+The appended DTB gets relocated with the decompressor code to get out
+of the way of the decompressed kernel.  However the kernel's .bss section
+may be larger than the relocated code and data, and then the DTB gets
+overwritten.  Let's make sure the relocation takes care of moving zImage
+far enough so no such conflict with .bss occurs.
 
-Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-[nico: adjusted to latest zImage changes plus additional cleanups]
+Thanks to Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> for figuring out this issue.
+
+While at it, let's clean up the code a bit so that the wont_overwrite
+symbol is used while determining if a conflict exists, making the above
+change more precise as well as eliminating some ARM/THUMB alternates.
+
 Signed-off-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/Kconfig                |    8 ++++
- arch/arm/boot/compressed/head.S |   70 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 75 insertions(+), 3 deletions(-)
+ arch/arm/boot/compressed/Makefile |    3 +++
+ arch/arm/boot/compressed/head.S   |   19 +++++++++++++++----
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 9adc278..66b7d1e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1727,6 +1727,14 @@ config ZBOOT_ROM_MMCIF
- 	  which in turn loads the rest the kernel image to RAM using the
- 	  MMCIF hardware block.
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 23aad07..48bead9 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -98,6 +98,9 @@ endif
+ ccflags-y := -fpic -fno-builtin
+ asflags-y := -Wa,-march=all
  
-+config ARM_APPENDED_DTB
-+	bool "Use appended device tree blob to zImage"
-+	depends on OF && !ZBOOT_ROM
-+	help
-+	  With this option, the boot code will look for a device tree binary
-+	  (dtb) appended to zImage
-+	  (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
-+
- config CMDLINE
- 	string "Default kernel command string"
- 	default ""
++# Supply kernel BSS size to the decompressor via a linker symbol.
++KBSS_SZ = $(shell size $(obj)/../../../../vmlinux | awk 'END{print $$3}')
++LDFLAGS_vmlinux = --defsym _kernel_bss_size=$(KBSS_SZ)
+ # Supply ZRELADDR to the decompressor via a linker symbol.
+ ifneq ($(CONFIG_AUTO_ZRELADDR),y)
+ LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
 diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-index f9da419..b791b5e 100644
+index b791b5e..d4f8db2 100644
 --- a/arch/arm/boot/compressed/head.S
 +++ b/arch/arm/boot/compressed/head.S
-@@ -216,6 +216,59 @@ restart:	adr	r0, LC0
- 		mov	r10, r6
- #endif
+@@ -248,6 +248,18 @@ restart:	adr	r0, LC0
  
-+		mov	r5, #0			@ init dtb size to 0
-+#ifdef CONFIG_ARM_APPENDED_DTB
-+/*
-+ *   r0  = delta
-+ *   r2  = BSS start
-+ *   r3  = BSS end
-+ *   r4  = final kernel address
-+ *   r5  = appended dtb size (still unknown)
-+ *   r6  = _edata
-+ *   r7  = architecture ID
-+ *   r8  = atags/device tree pointer
-+ *   r9  = size of decompressed image
-+ *   r10 = end of this image, including  bss/stack/malloc space if non XIP
-+ *   r11 = GOT start
-+ *   r12 = GOT end
-+ *   sp  = stack pointer
-+ *
-+ * if there are device trees (dtb) appended to zImage, advance r10 so that the
-+ * dtb data will get relocated along with the kernel if necessary.
-+ */
+ 		mov	r8, r6			@ use the appended device tree
+ 
++		/*
++		 * Make sure that the DTB doesn't end up in the final
++		 * kernel's .bss area. To do so, we adjust the decompressed
++		 * kernel size to compensate if that .bss size is larger
++		 * than the relocated code.
++		 */
++		ldr	r5, =_kernel_bss_size
++		adr	r1, wont_overwrite
++		sub	r1, r6, r1
++		subs	r1, r5, r1
++		addhi	r9, r9, r1
 +
-+		ldr	lr, [r6, #0]
-+#ifndef __ARMEB__
-+		ldr	r1, =0xedfe0dd0		@ sig is 0xd00dfeed big endian
-+#else
-+		ldr	r1, =0xd00dfeed
-+#endif
-+		cmp	lr, r1
-+		bne	dtb_check_done		@ not found
-+
-+		mov	r8, r6			@ use the appended device tree
-+
-+		/* Get the dtb's size */
-+		ldr	r5, [r6, #4]
-+#ifndef __ARMEB__
-+		/* convert r5 (dtb size) to little endian */
-+		eor	r1, r5, r5, ror #16
-+		bic	r1, r1, #0x00ff0000
-+		mov	r5, r5, ror #8
-+		eor	r5, r5, r1, lsr #8
-+#endif
-+
-+		/* preserve 64-bit alignment */
-+		add	r5, r5, #7
-+		bic	r5, r5, #7
-+
-+		/* relocate some pointers past the appended dtb */
-+		add	r6, r6, r5
-+		add	r10, r10, r5
-+		add	sp, sp, r5
-+dtb_check_done:
-+#endif
-+
- /*
-  * Check to see if we will overwrite ourselves.
-  *   r4  = final kernel address
-@@ -285,14 +338,16 @@ wont_overwrite:
-  *   r2  = BSS start
-  *   r3  = BSS end
-  *   r4  = kernel execution address
-+ *   r5  = appended dtb size (0 if not present)
-  *   r7  = architecture ID
-  *   r8  = atags pointer
-  *   r11 = GOT start
-  *   r12 = GOT end
-  *   sp  = stack pointer
+ 		/* Get the dtb's size */
+ 		ldr	r5, [r6, #4]
+ #ifndef __ARMEB__
+@@ -276,15 +288,14 @@ dtb_check_done:
+  *   r10 = end of this image, including  bss/stack/malloc space if non XIP
+  * We basically want:
+  *   r4 - 16k page directory >= r10 -> OK
+- *   r4 + image length <= current position (pc) -> OK
++ *   r4 + image length <= address of wont_overwrite -> OK
   */
--		teq	r0, #0
-+		orrs	r1, r0, r5
- 		beq	not_relocated
-+
- 		add	r11, r11, r0
- 		add	r12, r12, r0
+ 		add	r10, r10, #16384
+ 		cmp	r4, r10
+ 		bhs	wont_overwrite
+ 		add	r10, r4, r9
+-   ARM(		cmp	r10, pc		)
+- THUMB(		mov	lr, pc		)
+- THUMB(		cmp	r10, lr		)
++		adr	r9, wont_overwrite
++		cmp	r10, r9
+ 		bls	wont_overwrite
  
-@@ -307,12 +362,21 @@ wont_overwrite:
- 
- 		/*
- 		 * Relocate all entries in the GOT table.
-+		 * Bump bss entries to _edata + dtb size
- 		 */
- 1:		ldr	r1, [r11, #0]		@ relocate entries in the GOT
--		add	r1, r1, r0		@ table.  This fixes up the
--		str	r1, [r11], #4		@ C references.
-+		add	r1, r1, r0		@ This fixes up C references
-+		cmp	r1, r2			@ if entry >= bss_start &&
-+		cmphs	r3, r1			@       bss_end > entry
-+		addhi	r1, r1, r5		@    entry += dtb size
-+		str	r1, [r11], #4		@ next entry
- 		cmp	r11, r12
- 		blo	1b
-+
-+		/* bump our bss pointers too */
-+		add	r2, r2, r5
-+		add	r3, r3, r5
-+
- #else
- 
- 		/*
+ /*
 -- 
 1.7.4
