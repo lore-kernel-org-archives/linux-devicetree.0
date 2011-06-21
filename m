@@ -1,33 +1,61 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/6] serial: samsung: Add device tree support for
-	s5pv210 uart driver
-Date: Tue, 21 Jun 2011 12:27:35 +0100
-Message-ID: <20110621112734.GA25032@sirena.org.uk>
-References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org> <1308567752-13451-3-git-send-email-thomas.abraham@linaro.org> <BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 6/6] arm: exynos4: Add a new Exynos4 device tree enabled machine
+Date: Tue, 21 Jun 2011 17:00:41 +0530
+Message-ID: <BANLkTi=OVkGVP-FJkjHbd9tLuQE9gAFP9A@mail.gmail.com>
+References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
+	<1308567752-13451-7-git-send-email-thomas.abraham@linaro.org>
+	<BANLkTinaXg+_4xQiMCUw-aeGFeZs1iNuCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
+In-Reply-To: <BANLkTinaXg+_4xQiMCUw-aeGFeZs1iNuCQ@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linaro-dev@lists.linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, linaro-dev@lists.linaro.org, patches@linaro.org, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2011 at 10:43:50AM -0600, Grant Likely wrote:
+On 20 June 2011 22:25, Grant Likely <grant.likely@secretlab.ca> wrote:
 
-> I think I've commented on this before, but I do try to avoid direct
-> coding registers into the DT.  That said, sometimes there really isn't
-> a nice human-friendly way of encoding things and direct register
-> values is the best approach.
+<snip>
 
-Hrm, that's going to mean a *lot* of code doing parsing, especially if
-we also follow through and also have proper parsers for all the
-bitfields and don't just push the magic numbers down a level.  In
-principal I agree with you that that's what we should be doing but in
-practice it seems like an awful lot of effort on all sides.
+>> +
+>> +static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initc=
+onst =3D {
+>> + =A0 =A0 =A0 OF_DEV_AUXDATA("samsung,s3c-sdhci", EXYNOS4_PA_HSMMC(2=
+),
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "s3c-s=
+dhci.2", &s3c_hsmmc2_def_platdata),
+>> + =A0 =A0 =A0 OF_DEV_AUXDATA("samsung,s3c-sdhci", EXYNOS4_PA_HSMMC(0=
+),
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "s3c-s=
+dhci.0", &s3c_hsmmc0_def_platdata),
+>> + =A0 =A0 =A0 OF_DEV_AUXDATA("samsung,s5pv210-uart", S5P_PA_UART0,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "s5pv2=
+10-uart.0", NULL),
+>> + =A0 =A0 =A0 OF_DEV_AUXDATA("samsung,s5pv210-uart", S5P_PA_UART1,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "s5pv2=
+10-uart.1", NULL),
+>> + =A0 =A0 =A0 {},
+>> +};
 
-I'm not against it but if we're going to go down this road I think we
-need to put some work into helpers to cut down on the parsing code.  The
-obvious one is a helper which maps a table of strings into numbers for
-things like selecting multi-function pin functions.
+<snip>
+
+>> +static void __init exynos4_dt_machine_init(void)
+>> +{
+>> + =A0 =A0 =A0 s3c_sdhci0_set_platdata(&smdkv310_hsmmc0_pdata);
+>> + =A0 =A0 =A0 s3c_sdhci2_set_platdata(&smdkv310_hsmmc2_pdata);
+>
+> Are these two lines still necessary?
+
+Yes, but these are temporary. The data from smdkv310_hsmmc0_pdata is
+copied to s3c_hsmmc2_def_platdata which is then used as platform data.
+I will remove them in the next version of the patch.
+
+Thanks,
+Thomas.
+
+>
+> Otherwise, the patch looks good to me.
+>
+> g.
