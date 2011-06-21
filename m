@@ -1,35 +1,44 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: Tegra: i2c driver
-Date: Tue, 21 Jun 2011 16:34:46 -0600
-Message-ID: <BANLkTi=S8ddKE_ahHXDhW75hhPohqS+gRQ@mail.gmail.com>
-References: <20110621002318.8086.48367.stgit@riker> <BANLkTi=aaSnT-incv3FhOZ0Yp8CtYf31mA@mail.gmail.com>
- <BANLkTinJOf+L1kE9gQ99=uA_HK2_+Hts-AyAD8QuWNAa-rZ9+Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BANLkTinJOf+L1kE9gQ99=uA_HK2_+Hts-AyAD8QuWNAa-rZ9+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/3] serial/imx: add device tree support
+Date: Wed, 22 Jun 2011 00:52:47 +0200
+Message-ID: <ba379b3b42f1659f4f6649c78b8bb1b2@kernel.crashing.org>
+References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
+	<1308410354-21387-2-git-send-email-shawn.guo@linaro.org>
+	<20110618161934.GH8195@ponder.secretlab.ca>
+	<20110619073000.GA23171@S2100-06.ap.freescale.net>
+	<20110621135558.GB9228@S2101-09.ap.freescale.net>
+	<BANLkTim4vunTm1176MRw3pqRZnunu4=9jg@mail.gmail.com>
+	<4E00F290.2010303@firmworks.com>
+	<BANLkTik9LXTJ--fRwUBscokWraPwOZnpHA@mail.gmail.com>
+	<4E011678.4030208@firmworks.com>
+	<BANLkTikBUo3jO=R0amkdxU1V3QMJoOUkEw@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v624)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <BANLkTikBUo3jO=R0amkdxU1V3QMJoOUkEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2011 at 4:11 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Mon, Jun 20, 2011 at 9:59 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Mon, Jun 20, 2011 at 6:23 PM, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>> This patch modifies the tegra i2c driver so that it can be initiailized
->>> using the device tree along with the devices connected to the i2c bus.
->>>
->>> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>
->> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->
-> Acked-by: OIof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
->
->
-> (with the same suggestion to change subject as Stephen/Grant discussed
-> later in the thread).
+> Ah, we're having an impedance mismatch.  I'm thinking specifically
+> about the device tree compiler and some syntactic sugar for using the
+> label definition to generate /also/ create alias properties. The
+> hairiness is related to that and the way that dtc is implemented, not
+> with the final aliases themselves.
 
-Ben, would you like a new patch with the new subject line, or will you
-fix it up when you merge it?
+You can generate DTC-style aliases from OFW-style aliases instead (or
+as well), it has other advantages (like being more readable, and having
+the aliases grouped together).
 
-g.
+
+Segher
