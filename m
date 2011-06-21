@@ -1,32 +1,59 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] ARM: Tegra: i2c driver
-Date: Tue, 21 Jun 2011 15:11:50 -0700
-Message-ID: <BANLkTinJOf+L1kE9gQ99=uA_HK2_+Hts-AyAD8QuWNAa-rZ9+Q@mail.gmail.com>
-References: <20110621002318.8086.48367.stgit@riker>
-	<BANLkTi=aaSnT-incv3FhOZ0Yp8CtYf31mA@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/3] serial/imx: add device tree support
+Date: Tue, 21 Jun 2011 16:33:57 -0600
+Message-ID: <BANLkTikBUo3jO=R0amkdxU1V3QMJoOUkEw@mail.gmail.com>
+References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
+ <1308410354-21387-2-git-send-email-shawn.guo@linaro.org> <20110618161934.GH8195@ponder.secretlab.ca>
+ <20110619073000.GA23171@S2100-06.ap.freescale.net> <20110621135558.GB9228@S2101-09.ap.freescale.net>
+ <BANLkTim4vunTm1176MRw3pqRZnunu4=9jg@mail.gmail.com> <4E00F290.2010303@firmworks.com>
+ <BANLkTik9LXTJ--fRwUBscokWraPwOZnpHA@mail.gmail.com> <4E011678.4030208@firmworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BANLkTi=aaSnT-incv3FhOZ0Yp8CtYf31mA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4E011678.4030208@firmworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: patches@linaro.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Liu <jason.hui@linaro.org>, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@freescale.com>, Jeremy Kerr <jeremy.kerr@canonical.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2011 at 9:59 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Mon, Jun 20, 2011 at 6:23 PM, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> This patch modifies the tegra i2c driver so that it can be initiailized
->> using the device tree along with the devices connected to the i2c bus.
+On Tue, Jun 21, 2011 at 4:08 PM, Mitch Bradley <wmb@firmworks.com> wrot=
+e:
+> On 6/21/2011 9:38 AM, Grant Likely wrote:
 >>
->> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> On Tue, Jun 21, 2011 at 1:35 PM, Mitch Bradley<wmb@firmworks.com> =A0=
+wrote:
+>>>
+>>> What is the problem with
+>>>
+>>> aliases{
+>>> =A0 serial0 =3D "/uart@7000c000";
+>>> }
+>>>
+>>> Properties in the alias node are supposed to have string values.
+>>
+>> ?
+>>
+>> Not sure I follow. =A0Indeed, properties in the aliases node are str=
+ing
+>> values.
+>>
+>> Are you referring to how I was proposing some dtc syntax for
+>> generating the alias strings?
 >
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>
+> The point is that if you refer to the node explicitly by its string n=
+ame,
+> the need for a label disappears and the problem of overriding a defau=
+lt
+> alias disappears (assuming that a later redefinition of a property ta=
+kes
+> precedence over an earlier one, as is the OFW convention).
 
-Acked-by: OIof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Ah, we're having an impedance mismatch.  I'm thinking specifically
+about the device tree compiler and some syntactic sugar for using the
+label definition to generate /also/ create alias properties. The
+hairiness is related to that and the way that dtc is implemented, not
+with the final aliases themselves.
 
-
-(with the same suggestion to change subject as Stephen/Grant discussed
-later in the thread).
-
-
--Olof
+g.
