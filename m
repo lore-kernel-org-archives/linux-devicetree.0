@@ -1,16 +1,16 @@
 From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 1/6] serial: samsung: Keep a copy of platform data in
- driver's private data
-Date: Tue, 21 Jun 2011 16:37:44 +0530
-Message-ID: <BANLkTi=m9QYhVoj-e916D-u79ymZFTup4A@mail.gmail.com>
+Subject: Re: [PATCH 2/6] serial: samsung: Add device tree support for s5pv210
+ uart driver
+Date: Tue, 21 Jun 2011 16:56:23 +0530
+Message-ID: <BANLkTikNXfCXF1ZH=wTeeuSz2DC7BE_5Cg@mail.gmail.com>
 References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
-	<1308567752-13451-2-git-send-email-thomas.abraham@linaro.org>
-	<BANLkTikLfbiL0ZpLiysA6qUxv8sj-AVS+A@mail.gmail.com>
+	<1308567752-13451-3-git-send-email-thomas.abraham@linaro.org>
+	<BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <BANLkTikLfbiL0ZpLiysA6qUxv8sj-AVS+A@mail.gmail.com>
+In-Reply-To: <BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
 Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, linaro-dev@lists.linaro.org, patches@linaro.org, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
@@ -18,147 +18,174 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Grant,
 
-On 20 June 2011 21:24, Grant Likely <grant.likely@secretlab.ca> wrote:
-> On Mon, Jun 20, 2011 at 5:02 AM, Thomas Abraham
-> <thomas.abraham@linaro.org> wrote:
->> The driver depends on pdev->dev.platform_data to retrive information
->> about the platform data even after the initialization. To add device
->> tree support, this has to be changed in way that the platform data
->> is avialable from driver's private data. This patch adds support
->> for keeping a copy of the plaform data in s3c24xx_uart_info and usin=
-g
->> it when needed after the initialization.
->>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> ---
->> =A0drivers/tty/serial/s5pv210.c | =A0 12 ++++++++++--
->> =A0drivers/tty/serial/samsung.c | =A0 24 ++++++++++++++++++++----
->> =A0drivers/tty/serial/samsung.h | =A0 =A04 +++-
->> =A03 files changed, 33 insertions(+), 7 deletions(-)
+On 20 June 2011 22:13, Grant Likely <grant.likely@secretlab.ca> wrote:
 >
-> Hi Thomas.
+> For custom properties, you should prefix the property name with 'sams=
+ung,'.
 >
-> Don't forget you need to cc Alan Cox and the linux-serial mailing lis=
-t
-> for tty driver patches.
+> This looks very much like directly encoding the Linux flags into the
+> device tree. =A0The binding should be completely contained within
+> itself, and not refer to OS implementation details. =A0It is fine to =
+use
+> the same values that Linux happens to use, but they need to still be
+> explicitly documented as to what they mean. =A0Also, a 'flags' proper=
+ty
+> usually isn't very friendly to mere-mortals when the explicit
+> behaviour can be enabled with the presence of a named property. =A0Fo=
+r
+> example; something like a "samsung,uart-has-rtscts" to enable rts/cts=
+=2E
 
-Ok. I will do that when I submit the next version of the patch.
-
->
-> Comments below...
->
->>
->> diff --git a/drivers/tty/serial/s5pv210.c b/drivers/tty/serial/s5pv2=
-10.c
->> index d6b2423..3b2021a 100644
->> --- a/drivers/tty/serial/s5pv210.c
->> +++ b/drivers/tty/serial/s5pv210.c
->> @@ -27,9 +27,13 @@
-
-<snip>
-
->> + =A0 =A0 =A0 if (cfg) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy((void *)&info->cfg, cfg, sizeof=
-(struct s3c2410_uartcfg));
->
-> "info->cfg =3D *cfg;" should be sufficient.
->
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->cfg.clocks =3D kzalloc(sizeof(st=
-ruct s3c24xx_uart_clksrc) *
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 cfg->clocks_size, GFP_KERNEL);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!info->cfg.clocks)
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memcpy(info->cfg.clocks, cfg->clocks,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 sizeof(struct s3c24xx_=
-uart_clksrc) * cfg->clocks_size);
->> + =A0 =A0 =A0 }
->
-> ewwh. There has to be a better way to do this. =A0Part of the point o=
-f
-> putting a copy of pdata into the private data structure is to simplif=
-y
-> the driver so that kzallocing wouldn't be necessary. =A0With that clo=
-ck
-> table, the driver actually gets more complex because both DT and
-> non-DT paths now need to kzalloc a clock array.
->
-> From what I can tell, the list of clocks on all mainlined platforms i=
-s
-> a static array of one or two entries; min & max baud are always set t=
-o
-> 0, and names are one of:
-> - uclk & pclk
-> - uclk
-> - uclk1
-> - fclk (with divisor either 10 or 0)
-> - pclk_low & uclk1
->
-> You could also make the clock structure a static array of 2 elements
-> in the private data structure. =A0That would simplify both this code =
-and
-> the followon DT patch.
->
-> Also, peaking forward at what the 2nd patch does, I think that it
-> might just be a little premature to try and decode the clock info fro=
-m
-> the DT. =A0But I'll address that issue when replying to the second
-> patch.
-
-Thanks for the suggestion. I had not thought about these issues. One
-possible option in this case is using Sylwester's suggestion of
-changing exynos4 clkdev support to be similar to the omap clkdev
-support. That way, an additional level of indirection is possible. The
-uart driver could than be modified to lookup clock with generic names
-like "uart_clksrc0", "uart_clksrc1" and "uart_clksrc2". With this,
-there will be no need to pass clock names to the uart driver. I will
-check if this can be done.
+I will ensure that the next version of the patch do not have any linux
+specific bindings.
 
 >
 >> +
->> + =A0 =A0 =A0 cfg =3D &info->cfg;
->> =A0 =A0 =A0 =A0if (cfg->hwport > CONFIG_SERIAL_SAMSUNG_UARTS) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0printk(KERN_ERR "%s: port %d bigger t=
-han %d\n", __func__,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfg->hwport, CONFIG_SERI=
-AL_SAMSUNG_UARTS);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(info->cfg.clocks);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ERANGE;
->> =A0 =A0 =A0 =A0}
->>
->> @@ -1181,11 +1195,13 @@ EXPORT_SYMBOL_GPL(s3c24xx_serial_probe);
->> =A0int __devexit s3c24xx_serial_remove(struct platform_device *dev)
->> =A0{
->> =A0 =A0 =A0 =A0struct uart_port *port =3D s3c24xx_dev_to_port(&dev->=
-dev);
->> + =A0 =A0 =A0 struct s3c24xx_uart_info *info =3D s3c24xx_port_to_inf=
-o(port);
->>
->> =A0 =A0 =A0 =A0if (port) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0s3c24xx_serial_cpufreq_deregister(to_=
-ourport(port));
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device_remove_file(&dev->dev, &dev_at=
-tr_clock_source);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0uart_remove_one_port(&s3c24xx_uart_dr=
-v, port);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(info->cfg.clocks);
->> =A0 =A0 =A0 =A0}
->>
->> =A0 =A0 =A0 =A0return 0;
->> diff --git a/drivers/tty/serial/samsung.h b/drivers/tty/serial/samsu=
-ng.h
->> index a69d9a5..4f2f6f5 100644
->> --- a/drivers/tty/serial/samsung.h
->> +++ b/drivers/tty/serial/samsung.h
->> @@ -24,6 +24,9 @@ struct s3c24xx_uart_info {
->>
->> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0has_divslot:1;
->>
->> + =A0 =A0 =A0 /* copy of platform data */
+>> +- has_fracval : Set to 1, if the controller supports fractional par=
+t of
+>> + =A0 =A0 =A0 for the baud divisor, otherwise, set to 0.
 >
-> I'd change this to "copy of /configuration/ data" since the data
-> doesn't necessarily come from the platform_data pointer anymore.
+> Boolean stuff often doesn't need a value. =A0If the property is prese=
+nt,
+> it is a '1'. =A0If it isn't, then it is a '0'.
+>
+>> +
+>> +- ucon_default : Default board specific setting of UCON register.
+>> +
+>> +- ulcon_default : Default board specific setting of ULCON register.
+>> +
+>> +- ufcon_default : Default board specific setting of UFCON register.
+>
+> I think I've commented on this before, but I do try to avoid direct
+> coding registers into the DT. =A0That said, sometimes there really is=
+n't
+> a nice human-friendly way of encoding things and direct register
+> values is the best approach.
 
-Ok. I will change this. Thanks for reviewing the patches.
+Instead of default register values, is it acceptable to include custom
+properties like "samsung,txfifo-trig-level" and then convert it to
+corresponding register settings?
 
+>
+>> +
+>> +- uart_clksrc : One or more child nodes representing the clock sour=
+ces that
+>> + =A0 =A0 =A0 could be used to derive the buad rate. Each of these c=
+hild nodes
+>> + =A0 =A0 =A0 has four required properties.
+>> +
+>> + =A0 =A0 =A0 - name : Name of the parent clock.
+>> + =A0 =A0 =A0 - divisor : divisor from the clock to the uart control=
+ler.
+>> + =A0 =A0 =A0 - min_baud : Minimum baud rate for which this clock ca=
+n be used.
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Set to zero, if there =
+is no limitation.
+>> + =A0 =A0 =A0 - max_buad : Maximum baud rate for which this clock ca=
+n be used.
+>
+> typo: s/buad/baud/
+>
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Set to zero, if there =
+is no limitation.
+>
+> This looks to be directly encoding the current Linux implementation
+> details into the device tree (it is a direct copy of the config
+> structure members), and it doesn't use the common clock binding. =A0I=
+t's
+> fine to use sub nodes for each clock attachment, particularly because
+> it looks like the uart is able to apply it's own divisor to the clock
+> input, but I would definitely encode the data using the existing
+> struct clock binding.
+>
+>> +
+>> +Optional properties:
+>> +- fifosize: Size of the tx/rx fifo used in the controller. If not s=
+pecified,
+>> + =A0 =A0 =A0 the default value of the fifosize is 16.
+>> diff --git a/drivers/tty/serial/s5pv210.c b/drivers/tty/serial/s5pv2=
+10.c
+>> index 3b2021a..9aacbda 100644
+>> --- a/drivers/tty/serial/s5pv210.c
+>> +++ b/drivers/tty/serial/s5pv210.c
+>> @@ -18,6 +18,7 @@
+>> =A0#include <linux/init.h>
+>> =A0#include <linux/serial_core.h>
+>> =A0#include <linux/serial.h>
+>> +#include <linux/of.h>
+>>
+>> =A0#include <asm/irq.h>
+>> =A0#include <mach/hardware.h>
+>> @@ -131,15 +132,39 @@ static struct s3c24xx_uart_info *s5p_uart_inf[=
+] =3D {
+>> =A0/* device management */
+>> =A0static int s5p_serial_probe(struct platform_device *pdev)
+>> =A0{
+>> - =A0 =A0 =A0 return s3c24xx_serial_probe(pdev, s5p_uart_inf[pdev->i=
+d]);
+>> + =A0 =A0 =A0 const void *prop;
+>> + =A0 =A0 =A0 unsigned int port =3D pdev->id;
+>> + =A0 =A0 =A0 unsigned int fifosize =3D 16;
+>> + =A0 =A0 =A0 static unsigned int probe_index;
+>> +
+>> + =A0 =A0 =A0 if (pdev->dev.of_node) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D of_get_property(pdev->dev.of_=
+node, "fifosize", NULL);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prop)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fifosize =3D be32_to_c=
+pu(*(u32 *)prop);
+>
+> Okay, this is getting ugly (not your fault, but this pattern has
+> become too common. =A0Can you craft and post a patch that adds the
+> following functions to drivers/of/base.c and include/linux/of.h
+>
+> /* offset in cells, not bytes */
+> int dt_decode_u32(struct *property, int offset, u32 *out_val)
+> {
+> =A0 =A0 =A0 =A0if (!property || !property->value)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> =A0 =A0 =A0 =A0if ((offset + 1) * 4 > property->length)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> =A0 =A0 =A0 =A0*out_val =3D of_read_number(property->value + (offset =
+* 4), 1);
+> =A0 =A0 =A0 =A0return 0;
+> }
+> int dt_decode_u64(struct *property, int offset, u64 *out_val)
+> {
+> ...
+> }
+> int dt_decode_string(struct *property, int index, char **out_string);
+> {
+> ...
+> }
+>
+> Plus a set of companion functions:
+> int dt_getprop_u32(struct device_node *np, char *propname, int offset=
+,
+> u32 *out_val)
+> {
+> =A0 =A0 =A0 =A0return dt_decode_u32(of_find_property(np, propname, NU=
+LL),
+> offset, out_val);
+> }
+> int dt_getprop_u64(struct *device_node, char *propname, int offset,
+> u64 *out_val);
+> {
+> ...
+> }
+> int dt_getprop_string(struct *device_node, char *propname, int index,
+> char **out_string);
+> {
+> ...
+> }
+>
+> Then you'll be able to simply do the following to decode each
+> property, with fifosize being left alone if the property cannot be
+> found or decoded:
+>
+> dt_getprop_u32(pdev->dev.of_node, "samsung,fifosize", &fifosize);
+
+Sure. I will write the above listed functions and submit a patch.
+
+Thanks,
 Thomas.
