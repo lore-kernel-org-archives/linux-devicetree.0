@@ -1,87 +1,40 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: [PATCH 4/4] ARM: zImage: allow supplementing appended DTB with
-	traditional ATAG data
-Date: Tue, 21 Jun 2011 10:32:19 -0700
-Message-ID: <8yad3i7nl98.fsf@huya.qualcomm.com>
-References: <1308632955-11070-1-git-send-email-nico@fluxnic.net>
-	<1308632955-11070-5-git-send-email-nico@fluxnic.net>
-	<20110621070058.GA9228@S2101-09.ap.freescale.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: Tegra: i2c driver
+Date: Tue, 21 Jun 2011 12:24:05 -0600
+Message-ID: <BANLkTinUkAL_JwOhSSx5o9QYVH9G_B=5sw@mail.gmail.com>
+References: <20110621002318.8086.48367.stgit@riker> <74CDBE0F657A3D45AFBB94109FB122FF049D2EB8AD@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110621070058.GA9228@S2101-09.ap.freescale.net> (Shawn Guo's
-	message of "Tue, 21 Jun 2011 15:00:59 +0800")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nico@fluxnic.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF049D2EB8AD-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ken Radtke <kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org" <lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21 2011, Shawn Guo wrote:
-
-> On Tue, Jun 21, 2011 at 01:09:15AM -0400, Nicolas Pitre wrote:
->> From: Nicolas Pitre <nicolas.pitre@linaro.org>
->> 
->> Some old bootloaders can't be updated to a device tree capable one,
->> yet they provide ATAGs with memory configuration, the ramdisk address,
->> the kernel cmdline string, etc.  To allow a device tree enabled
->> kernel to be used with such bootloaders, it is necessary to convert those
->> ATAGs into FDT properties and fold them into the DTB appended to zImage.
->> 
->> Currently the following ATAGs are converted:
->> 
->> 	ATAG_CMDLINE
->> 	ATAG_MEM (up to 8 memory regions)
->> 	ATAG_INITRD2
->> 
->> If the corresponding information already exists in the appended DTB, it
->> is replaced, otherwise the required node is created to hold it.
->> 
->> The code looks for ATAGs at the location pointed by the value of r2 upon
->> entry into the zImage code.  If no ATAGs are found there, an attempt at
->> finding ATAGs at the typical 0x100 offset from start of RAM is made.
->> Otherwise the DTB is left unchanged.
->> 
->> Thisstarted from an older patch from John Bonesio <bones@secretlab.ca>,
->> with contributions from David Brown <davidb@codeaurora.org>.
->> 
->> Signed-off-by: Nicolas Pitre <nicolas.pitre@linaro.org>
->> ---
+On Tue, Jun 21, 2011 at 11:27 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> John Bonesio wrote at Monday, June 20, 2011 6:23 PM:
+>> This patch modifies the tegra i2c driver so that it can be initiailized
+>> using the device tree along with the devices connected to the i2c bus.
 >
-> With this patch applied, I saw nothing coming from kernel on imx51
-> babbage serial port.
+> The patch title "ARM: Tegra: i2c driver" doesn't really describe what the
+> patch does and has the wrong tag; It sounds like adding a new driver.
+> Perhaps "i2c: Tegra: Add DeviceTree support"?
 
-Can you try seeing if it works with padding in the DTB that you are
-using?  Right now, I'm using something like:
+Yes, sounds appropriate to me.
 
-/ {
-	...
-	memory {
-		reg = <0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
-	};
-	chosen {
-		bootargs = "                              "; /* Enough for arg */
-		linux,initrd-start = <0>;
-		linux,initrd-end = <0>;
-	};
-};
+g.
 
-I get problems if the fdt code tries to expand the tree, even if I add
-padding when running the dtc (I've tried -p 1024).
+>
+> The code looks fine.
+>
+> --
+> nvpublic
+>
+>
 
-Hopefully, I'll get some time today to try and figure out what is going
-on.
 
-David
 
 -- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
