@@ -1,77 +1,77 @@
-From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH] ARM: Tegra: i2c driver
-Date: Mon, 20 Jun 2011 17:23:18 -0700
-Message-ID: <20110621002318.8086.48367.stgit@riker>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Tue, 21 Jun 2011 11:40:59 +1000
+Message-ID: <20110621014059.GN16214@yookeroo.fritz.box>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<20110612081541.GA10283@n2100.arm.linux.org.uk>
+	<20110612083414.GA29516@S2100-06.ap.freescale.net>
+	<20110612112219.GD16318@ibawizard.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110612112219.GD16318-iAOvNCVgjNNH4x6Dk/4f9A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch modifies the tegra i2c driver so that it can be initiailized
-using the device tree along with the devices connected to the i2c bus.
-
-Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
-
- drivers/i2c/busses/i2c-tegra.c |   17 ++++++++++++++++-
- 1 files changed, 16 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4d93196..d2393e6 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -26,6 +26,7 @@
- #include <linux/delay.h>
- #include <linux/slab.h>
- #include <linux/i2c-tegra.h>
-+#include <linux/of_i2c.h>
- 
- #include <asm/unaligned.h>
- 
-@@ -540,6 +541,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	struct resource *iomem;
- 	struct clk *clk;
- 	struct clk *i2c_clk;
-+	const unsigned int *prop;
- 	void *base;
- 	int irq;
- 	int ret = 0;
-@@ -597,7 +599,17 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->irq = irq;
- 	i2c_dev->cont_id = pdev->id;
- 	i2c_dev->dev = &pdev->dev;
--	i2c_dev->bus_clk_rate = pdata ? pdata->bus_clk_rate : 100000;
-+
-+	i2c_dev->bus_clk_rate = 100000; /* default clock rate */
-+	if (pdata) {
-+		i2c_dev->bus_clk_rate = pdata->bus_clk_rate;
-+
-+	} else if (i2c_dev->dev->of_node) {    /* if there is a device tree node ... */
-+		prop = of_get_property(i2c_dev->dev->of_node,
-+				"clock-frequency", NULL);
-+		if (prop)
-+			i2c_dev->bus_clk_rate = be32_to_cpup(prop);
-+	}
- 
- 	if (pdev->id == 3)
- 		i2c_dev->is_dvc = 1;
-@@ -627,6 +639,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->adapter.algo = &tegra_i2c_algo;
- 	i2c_dev->adapter.dev.parent = &pdev->dev;
- 	i2c_dev->adapter.nr = pdev->id;
-+	i2c_dev->adapter.dev.of_node = pdev->dev.of_node;
- 
- 	ret = i2c_add_numbered_adapter(&i2c_dev->adapter);
- 	if (ret) {
-@@ -634,6 +647,8 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		goto err_free_irq;
- 	}
- 
-+	of_i2c_register_devices(&i2c_dev->adapter);
-+
- 	return 0;
- err_free_irq:
- 	free_irq(i2c_dev->irq, i2c_dev);
+T24gU3VuLCBKdW4gMTIsIDIwMTEgYXQgMDE6MjI6MTlQTSArMDIwMCwgUGV0ciDFoHRldGlhciB3
+cm90ZToKPiBTaGF3biBHdW8gPHNoYXduLmd1b0BmcmVlc2NhbGUuY29tPiBbMjAxMS0wNi0xMiAx
+NjozNDoxNV06Cj4gCj4gPiBPbiBTdW4sIEp1biAxMiwgMjAxMSBhdCAwOToxNTo0MUFNICswMTAw
+LCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4gPiA+IAo+ID4gPiBPbmUgdGhpbmcg
+d2hpY2ggaGFzIGJlZW4gYnVnZ2luZyBtZSBmb3Igc29tZSB0aW1lIGlzIHRoYXQgdGhlIERUIHN0
+dWZmCj4gPiA+IGNvbXBsZXRlbHkgb3ZlcnJpZGVzIHRoZSBBVEFHcy4gIFRoaXMgaXMgd3Jvbmcg
+d2l0aCBzb2x1dGlvbnMgbGlrZSB0aGlzLgo+ID4gPiAKPiA+ID4gV2UgaGF2ZSBhIHNldCBvZiBw
+ZXJmZWN0bHkgZ29vZCBib290IGxvYWRlcnMgd2hpY2ggcHJvdmlkZSBjb3JyZWN0Cj4gPiA+IGlu
+Zm9ybWF0aW9uIHRvIHRoZSBrZXJuZWwgdmlhIEFUQUdzLiAgSWYgd2Ugc3RhcnQgbW92aW5nIGV2
+ZXJ5dGhpbmcKPiA+ID4gb3ZlciB0byBEVCwgdGhlbiB3ZSBydW4gaW50byBhIHByb2JsZW0gYmVj
+YXVzZSB0aGUgQVRBR3MgYXJlIGlnbm9yZWQgLQo+ID4gPiBzdHVmZiBzdWNoIGFzIHRoZSBSQU0g
+c2l6ZSBhbmQgY29tbWFuZCBsaW5lIHBhc3NlZCBmcm9tIHRoZSBib290IGxvYWRlcgo+ID4gPiB3
+aWxsIGJlIGVudGlyZWx5IGlnbm9yZWQsIGluc3RlYWQgdGhlc2UgaGF2aW5nIHRvIGJlIGVuY29k
+ZWQgaW50byB0aGUKPiA+ID4ga2VybmVsIGF0IGJ1aWxkIHRpbWUuCj4gPiA+IAo+ID4gV2hhdCB1
+LWJvb3QgZG9lcyByaWdodCBub3cgaXMgcmVwbGFjaW5nIHRoZSBwYXJhbWV0ZXJzIGluIGR0YiB3
+aXRoCj4gPiBpdHMgZm9yIHRob3NlIGl0J3MgaW50ZXJlc3RlZCBpbiwgZm9yIGV4YW1wbGUgY29t
+bWFuZCBsaW5lIGlzIG9uZSwKPiA+IGJlZm9yZSBpdCBwYXNzZXMgZHRiIHRvIGtlcm5lbC4KPiAK
+PiBJZiBJIHVuZGVyc3RhbmQgaXQgYWxsIGNvcnJlY3RseSwgdGhlcmUgbXVzdCBiZSBzb21lICds
+ZWdhY3kgYm9vdGxvYWRlcgo+IHN1cHBvcnQnIGFkZGVkIHRvIHRoZSBrZXJuZWwsIGxheWVyIHdo
+aWNoIHdvdWxkIGNvbnZlcnQgdGhlIEFUQUdzIHRvIHRoZSBEVC4KPiBPciBzb21ldGhpbmcgbGlr
+ZSB0aGF0LgoKTW9yZSBsaWtlbHkgY29tYmluZSB0aGUgQVRBR3MgaW5mb3JtYXRpb24gd2l0aCBh
+IHNrZWxldG9uIERULCBidXQgeWVzLAp5b3UgcHJvYmFibHkgd2FudCBzb21ldGhpbmcgbGlrZSB0
+aGlzLiAgT24gcG93ZXJwYywgdGhpcyByb2xlIGlzCnVzdWFsbHkgdGFrZW4gYnkgdGhlIHpJbWFn
+ZSB3cmFwcGVyIGNvZGUsIHNpdHRpbmcgYmV0d2VlbiB0aGUgcGxhdGZvcm0KZmlybXdhcmUgYW5k
+IHRoZSBrZXJuZWwgcHJvcGVyLiAgSG93ZXZlciwgdGhlcmUncyBubyBpbmhlcmVudCByZWFzb24K
+aXQgY291bGRuJ3QgYmUgZWFybHkgY29kZSBpbiB0aGUgdm1saW51eCBpbnN0ZWFkLiAgSnVzdCBh
+cyBsb25nIGFzCnRoZXJlIGlzIGEgd2VsbCBkZWZpbmVkIHBvaW50IGFmdGVyIHdoaWNoIHRoZSBE
+VCBpbmZvcm1hdGlvbiBpcwphdXRob3JpdGF0aXZlLgoKPiBQbGVhc2Ugbm90ZSwgdGhhdCB0aGVy
+ZSBhcmUgc29tZSBib2FyZHMgb3V0IHRoZXJlLCB3aGljaCB1c2Ugc29tZSBraW5kIG9mCj4gcHJv
+cHJpZXRhcnkgYm9vdGxvYWRlcnMsIHNvIHlvdSBjYW4ndCB1cGRhdGUgb3IgY2hhbmdlIHRoZW0g
+ZWFzaWx5LiBZb3UgZWl0aGVyCj4gZG9uJ3QgaGF2ZSBzb3VyY2UgY29kZSwgeW91J3JlIGxpbWl0
+ZWQgYnkgdGhlIGF2YWlsYWJsZSBzcGFjZSAoMktCIGVlcHJvbSkgc28KPiB5b3UgY2FuJ3QgYWRk
+IG11Y2ggbW9yZSB0aGluZ3MgaW50byB0aGF0IGJvb3Rsb2FkZXIgb3IgeW91J3JlIGxpbWl0ZWQg
+YnkgdGhlCj4gc2l6ZSBvZiB0aGUgTUJSICh5ZXMsIGV2ZW4gc3VjaCBib290bG9hZGVycyBleGlz
+dHMpLgoKUmlnaHQuICBTYW1zIHNpdHVhdGlvbiBvbiBwb3dlcnBjIC0gYW5kIGluZGVlZCB0aGVy
+ZSBhcmUgbG90cyBvZgpjcmFwcHkgcHJvcHJpZXRhcnkgYm9vdGxvYWRlcnMgZWFjaCB3aXRoIHRo
+ZWlyIG93biB3aGFja3kgd2F5IG9mCmNvbnZleWluZyB0aGUgc2NyYXBzIG9mIGluZm9ybWF0aW9u
+IHRoZXkgZ2l2ZSB5b3UuICBGb3IgdGhpcyByZWFzb24gd2UKaGF2ZSBhIHZhcmlldHkgb2YgcGxh
+dGZvcm0tc3BlY2lmaWMgYm9vdHdyYXBwZXJzIHdoaWNoIGhhbmRsZSB0aGVzZQpib290bG9hZGVy
+cywgdHJhbnNmb3JtaW5nIHRoZWlyIGluZm9ybWF0aW9uIGludG8gRFQgZm9ybSBmb3IgdGhlCmtl
+cm5lbCBwcm9wZXIgdG8gY29uc3VtZS4KCk5vIHJlYXNvbiB5b3UgY2FuJ3QgZG8gdGhlIHNhbWUg
+dGhpbmcgb24gQVJNLCB3aGV0aGVyIHRoZSBnbHVlCndyYXBwZXJzIGFyZSB3cmFwcGVycyBhcyBz
+dWNoLCBvciBzcGVjaWFsIGVhcmx5IHBpZWNlcyBvZiBrZXJuZWwgY29kZS4KCi0tIApEYXZpZCBH
+aWJzb24JCQl8IEknbGwgaGF2ZSBteSBtdXNpYyBiYXJvcXVlLCBhbmQgbXkgY29kZQpkYXZpZCBB
+VCBnaWJzb24uZHJvcGJlYXIuaWQuYXUJfCBtaW5pbWFsaXN0LCB0aGFuayB5b3UuICBOT1QgX3Ro
+ZV8gX290aGVyXwoJCQkJfCBfd2F5XyBfYXJvdW5kXyEKaHR0cDovL3d3dy5vemxhYnMub3JnL35k
+Z2lic29uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRl
+dmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96
+bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlz
+Y3Vzcwo=
