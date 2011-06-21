@@ -1,48 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] serial/imx: add device tree support
-Date: Tue, 21 Jun 2011 16:58:50 -0600
-Message-ID: <BANLkTinmahnoJ2Rip2jzP=tt6wrhRQN3sA@mail.gmail.com>
-References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
-	<1308410354-21387-2-git-send-email-shawn.guo@linaro.org>
-	<20110618161934.GH8195@ponder.secretlab.ca>
-	<20110619073000.GA23171@S2100-06.ap.freescale.net>
-	<20110621135558.GB9228@S2101-09.ap.freescale.net>
-	<BANLkTim4vunTm1176MRw3pqRZnunu4=9jg@mail.gmail.com>
-	<4E00F290.2010303@firmworks.com>
-	<BANLkTik9LXTJ--fRwUBscokWraPwOZnpHA@mail.gmail.com>
-	<4E011678.4030208@firmworks.com>
-	<BANLkTikBUo3jO=R0amkdxU1V3QMJoOUkEw@mail.gmail.com>
-	<ba379b3b42f1659f4f6649c78b8bb1b2@kernel.crashing.org>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: [PATCH 4/4] ARM: zImage: allow supplementing appended DTB with
+	traditional ATAG data
+Date: Tue, 21 Jun 2011 16:13:35 -0700
+Message-ID: <8ya7h8edbhc.fsf@huya.qualcomm.com>
+References: <1308632955-11070-1-git-send-email-nico@fluxnic.net>
+	<1308632955-11070-5-git-send-email-nico@fluxnic.net>
+	<8yaliwueqr4.fsf@huya.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <ba379b3b42f1659f4f6649c78b8bb1b2-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8yaliwueqr4.fsf@huya.qualcomm.com> (David Brown's message of
+	"Tue, 21 Jun 2011 15:58:23 -0700")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Pitre <nico@fluxnic.net>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2011 at 4:52 PM, Segher Boessenkool
-<segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->> Ah, we're having an impedance mismatch. =A0I'm thinking specifically
->> about the device tree compiler and some syntactic sugar for using the
->> label definition to generate /also/ create alias properties. The
->> hairiness is related to that and the way that dtc is implemented, not
->> with the final aliases themselves.
+On Tue, Jun 21 2011, David Brown wrote:
+
+> On Mon, Jun 20 2011, Nicolas Pitre wrote:
 >
-> You can generate DTC-style aliases from OFW-style aliases instead (or
-> as well), it has other advantages (like being more readable, and having
-> the aliases grouped together).
+>> +void *memmove(void *__dest, __const void *__src, size_t __n)
+>> +{
+>> +	unsigned char *d = __dest;
+>> +	const unsigned char *s = __src;
+>> +
+>> +	if (__dest == __src)
+>> +		return __dest;
+>> +
+>> +	if (__dest < __src)
+>> +		return memcpy(__dest, __src, __n);
+>> +
+>> +	while (--__n >= 0)
+>> +		d[__n] = s[__n];
+>> +
+>> +	return __dest;
+>> +}
+>
+> Ahh, found it.  size_t is unsigned, so the while loop never terminates.
+> Something like:
+>
+> 	for (; __n; __n--)
+> 		d[__n] = s[__n];
 
-There is no difference between OFW and DTC aliases as far as I'm aware.
+Ugh.  How about if I don't replace a broken version with a different
+broken version.
 
-g.
+	while (__n) {
+		__n--;
+                d[__n] = s[__n];
+	}
+
+Now, I don't need any extra fields in my DTB, and it correctly inserts
+the ATAG values.
+
+David
+
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
