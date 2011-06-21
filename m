@@ -1,22 +1,16 @@
-From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/3] serial/imx: add device tree support
-Date: Wed, 22 Jun 2011 00:52:47 +0200
-Message-ID: <ba379b3b42f1659f4f6649c78b8bb1b2@kernel.crashing.org>
-References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
-	<1308410354-21387-2-git-send-email-shawn.guo@linaro.org>
-	<20110618161934.GH8195@ponder.secretlab.ca>
-	<20110619073000.GA23171@S2100-06.ap.freescale.net>
-	<20110621135558.GB9228@S2101-09.ap.freescale.net>
-	<BANLkTim4vunTm1176MRw3pqRZnunu4=9jg@mail.gmail.com>
-	<4E00F290.2010303@firmworks.com>
-	<BANLkTik9LXTJ--fRwUBscokWraPwOZnpHA@mail.gmail.com>
-	<4E011678.4030208@firmworks.com>
-	<BANLkTikBUo3jO=R0amkdxU1V3QMJoOUkEw@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v624)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: zImage: allow supplementing appended DTB with
+	traditional ATAG data
+Date: Tue, 21 Jun 2011 15:58:23 -0700
+Message-ID: <8yaliwueqr4.fsf@huya.qualcomm.com>
+References: <1308632955-11070-1-git-send-email-nico@fluxnic.net>
+	<1308632955-11070-5-git-send-email-nico@fluxnic.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTikBUo3jO=R0amkdxU1V3QMJoOUkEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1308632955-11070-5-git-send-email-nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> (Nicolas
+	Pitre's message of "Tue, 21 Jun 2011 01:09:15 -0400")
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,19 +20,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Ah, we're having an impedance mismatch.  I'm thinking specifically
-> about the device tree compiler and some syntactic sugar for using the
-> label definition to generate /also/ create alias properties. The
-> hairiness is related to that and the way that dtc is implemented, not
-> with the final aliases themselves.
+On Mon, Jun 20 2011, Nicolas Pitre wrote:
 
-You can generate DTC-style aliases from OFW-style aliases instead (or
-as well), it has other advantages (like being more readable, and having
-the aliases grouped together).
+> +void *memmove(void *__dest, __const void *__src, size_t __n)
+> +{
+> +	unsigned char *d = __dest;
+> +	const unsigned char *s = __src;
+> +
+> +	if (__dest == __src)
+> +		return __dest;
+> +
+> +	if (__dest < __src)
+> +		return memcpy(__dest, __src, __n);
+> +
+> +	while (--__n >= 0)
+> +		d[__n] = s[__n];
+> +
+> +	return __dest;
+> +}
 
+Ahh, found it.  size_t is unsigned, so the while loop never terminates.
+Something like:
 
-Segher
+	for (; __n; __n--)
+		d[__n] = s[__n];
+
+makes that work for me.
+
+This allows me to not need to pad or have any of the chosen attributes.
+I do need to have a memory attribute, however, and I'll see if I can
+figure out what is happening there.
+
+Fun debugging when the loop overwrites the code itself, but it keeps
+working because it is in the cache.
+
+David
+
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
