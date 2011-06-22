@@ -1,273 +1,90 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 2/6] serial: samsung: Add device tree support for s5pv210
- uart driver
-Date: Wed, 22 Jun 2011 21:52:23 +0530
-Message-ID: <BANLkTi=RxEpBrALEQbBD_z6ZiEW24-wsng@mail.gmail.com>
-References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
-	<1308567752-13451-3-git-send-email-thomas.abraham@linaro.org>
-	<BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] powerpc/85xx:DTS: Fix tbi node location for Px020RDB
+Date: Wed, 22 Jun 2011 10:34:34 -0600
+Message-ID: <BANLkTi=zjnaFWbSAxj0Cr3_FpGxNcqvQ9Q@mail.gmail.com>
+References: <1307501379-3160-1-git-send-email-prabhakar@freescale.com>
+	<F9CD495E-12BF-467D-BE96-CC11486F70B8@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, linaro-dev@lists.linaro.org, patches@linaro.org, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <F9CD495E-12BF-467D-BE96-CC11486F70B8@kernel.crashing.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Kumar Gala <galak@kernel.crashing.org>
+Cc: meet2prabhu@gmail.com, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, Prabhakar Kushwaha <prabhakar@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On 20 June 2011 22:13, Grant Likely <grant.likely@secretlab.ca> wrote:
-> Okay, this is getting ugly (not your fault, but this pattern has
-> become too common. =A0Can you craft and post a patch that adds the
-> following functions to drivers/of/base.c and include/linux/of.h
+On Wed, Jun 22, 2011 at 5:34 AM, Kumar Gala <galak@kernel.crashing.org> wro=
+te:
 >
-> /* offset in cells, not bytes */
-> int dt_decode_u32(struct *property, int offset, u32 *out_val)
-> {
-> =A0 =A0 =A0 =A0if (!property || !property->value)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
-> =A0 =A0 =A0 =A0if ((offset + 1) * 4 > property->length)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
-> =A0 =A0 =A0 =A0*out_val =3D of_read_number(property->value + (offset =
-* 4), 1);
-> =A0 =A0 =A0 =A0return 0;
-> }
-> int dt_decode_u64(struct *property, int offset, u64 *out_val)
-> {
-> ...
-> }
-> int dt_decode_string(struct *property, int index, char **out_string);
-> {
-> ...
-> }
+> On Jun 7, 2011, at 9:49 PM, Prabhakar Kushwaha wrote:
 >
-> Plus a set of companion functions:
-> int dt_getprop_u32(struct device_node *np, char *propname, int offset=
-,
-> u32 *out_val)
-> {
-> =A0 =A0 =A0 =A0return dt_decode_u32(of_find_property(np, propname, NU=
-LL),
-> offset, out_val);
-> }
-> int dt_getprop_u64(struct *device_node, char *propname, int offset,
-> u64 *out_val);
-> {
-> ...
-> }
-> int dt_getprop_string(struct *device_node, char *propname, int index,
-> char **out_string);
-> {
-> ...
-> }
+>> ten-bit interface (TBI) module is part of SoC not board.
+>>
+>> Move tbi entries from board related dts files to Si dts.
+>>
+>> Signed-off-by: Prabhakar Kushwaha <prabhakar@freescale.com>
+>> ---
+>> Based upon http://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.=
+git (branch next)
+>>
+>> arch/powerpc/boot/dts/p1020rdb.dts =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A09 ---=
+------
+>> arch/powerpc/boot/dts/p1020rdb_camp_core0.dts | =A0 =A08 --------
+>> arch/powerpc/boot/dts/p1020si.dtsi =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A06 +++=
+++-
+>> arch/powerpc/boot/dts/p2020rdb.dts =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A08 ---=
+-----
+>> arch/powerpc/boot/dts/p2020rdb_camp_core0.dts | =A0 =A08 --------
+>> arch/powerpc/boot/dts/p2020si.dtsi =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A06 +++=
+++-
+>> 6 files changed, 10 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/arch/powerpc/boot/dts/p1020rdb.dts b/arch/powerpc/boot/dts/=
+p1020rdb.dts
+>> index d6a8ae4..a4e5d6c 100644
+>> --- a/arch/powerpc/boot/dts/p1020rdb.dts
+>> +++ b/arch/powerpc/boot/dts/p1020rdb.dts
+>> @@ -211,14 +211,6 @@
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>>
+>> - =A0 =A0 =A0 =A0 =A0 =A0 mdio@25000 {
+>> -
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 tbi0: tbi-phy@11 {
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x11>;
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 device_type =
+=3D "tbi-phy";
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> - =A0 =A0 =A0 =A0 =A0 =A0 };
+>> -
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 enet0: ethernet@b0000 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fixed-link =3D <1 1 1000 0 0=
+>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy-connection-type =3D "rgm=
+ii-id";
+>> @@ -227,7 +219,6 @@
+>>
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 enet1: ethernet@b1000 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy-handle =3D <&phy0>;
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 tbi-handle =3D <&tbi0>;
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy-connection-type =3D "sgm=
+ii";
+>>
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
 >
-> Then you'll be able to simply do the following to decode each
-> property, with fifosize being left alone if the property cannot be
-> found or decoded:
->
-> dt_getprop_u32(pdev->dev.of_node, "samsung,fifosize", &fifosize);
+> I'm not sure we should do this. =A0The phy address we pick is board speci=
+fic so it should NOT be in .dtsi
 
-I have added the functions as you have suggested and the diff is
-listed below. Could you please review the diff and suggest any changes
-required.
+Ah, okay.  I was under the impression that the tbi address was
+internal to the SoC, and not configurable.
 
-
- drivers/of/base.c  |  129 ++++++++++++++++++++++++++++++++++++++++++++=
-++++++++
- include/linux/of.h |   10 ++++
- 2 files changed, 139 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 632ebae..73f0144 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -596,6 +596,135 @@ struct device_node
-*of_find_node_by_phandle(phandle handle)
- EXPORT_SYMBOL(of_find_node_by_phandle);
-
- /**
-+ * of_read_property_u32 - Reads a indexed 32-bit property value
-+ * @prop:	property to read from.
-+ * @offset:	cell number to read.
-+ * value:	returned cell value
-+ *
-+ * Returns a indexed 32-bit value of a property cell, -EINVAL in case =
-the cell
-+ * does not exist
-+ */
-+int of_read_property_u32(struct property *prop, u32 offset, u32 *value=
-)
-+{
-+	if (!prop || !prop->value)
-+		return -EINVAL;
-+	if ((offset + 1) * 4 > prop->length)
-+		return -EINVAL;
-+
-+	*value =3D of_read_ulong(prop->value + (offset * 4), 1);
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_read_property_u32);
-+
-+/**
-+ * of_getprop_u32 - Find a property in a device node and read a 32-bit=
- value
-+ * @np:		device node from which the property value is to be read.
-+ * @propname	name of the property to be searched.
-+ * @offset:	cell number to read.
-+ * @value:	returned value of the cell
-+ *
-+ * Search for a property in a device node and read a indexed 32-bit va=
-lue of a
-+ * property cell. Returns the 32-bit cell value, -EINVAL in case the
-property or
-+ * the indexed cell does not exist.
-+ */
-+int
-+of_getprop_u32(struct device_node *np, char *propname, int offset, u32=
- *value)
-+{
-+	return of_read_property_u32(of_find_property(np, propname, NULL),
-+					offset, value);
-+}
-+EXPORT_SYMBOL(of_getprop_u32);
-+
-+/**
-+ * of_read_property_u64 - Reads a indexed 64-bit property value
-+ * @prop:	property to read from.
-+ * @offset:	cell number to read (each cell is 64-bits).
-+ * @value:	returned cell value
-+ *
-+ * Returns a indexed 64-bit value of a property cell, -EINVAL in case =
-the cell
-+ * does not exist
-+ */
-+int of_read_property_u64(struct property *prop, int offset, u64 *value=
-)
-+{
-+	if (!prop || !prop->value)
-+		return -EINVAL;
-+	if ((offset + 1) * 8 > prop->length)
-+		return -EINVAL;
-+
-+	*value =3D of_read_number(prop->value + (offset * 8), 2);
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_read_property_u64);
-+
-+/**
-+ * of_getprop_u64 - Find a property in a device node and read a 64-bit=
- value
-+ * @np:		device node from which the property value is to be read.
-+ * @propname	name of the property to be searched.
-+ * @offset:	cell number to read (each cell is 64-bits).
-+ * @value:	returned value of the cell
-+ *
-+ * Search for a property in a device node and read a indexed 64-bit va=
-lue of a
-+ * property cell. Returns the 64-bit cell value, -EINVAL in case the
-property or
-+ * the indexed cell does not exist.
-+ */
-+int
-+of_getprop_u64(struct device_node *np, char *propname, int offset, u64=
- *value)
-+{
-+	return of_read_property_u64(of_find_property(np, propname, NULL),
-+					offset, value);
-+}
-+EXPORT_SYMBOL(of_getprop_u64);
-+
-+/**
-+ * of_read_property_string - Returns a pointer to a indexed null termi=
-nated
-+ *				property value string
-+ * @prop:	property to read from.
-+ * @offset:	index of the property string to be read.
-+ * @string:	pointer to a null terminated string, valid only if the ret=
-urn
-+ *		value is 0.
-+ *
-+ * Returns a pointer to a indexed null terminated property cell string=
-, -EINVAL
-+ * in case the cell does not exist.
-+ */
-+int of_read_property_string(struct property *prop, int offset, char **=
-string)
-+{
-+	char *c;
-+
-+	if (!prop || !prop->value)
-+		return -EINVAL;
-+
-+	c =3D (char *)prop->value;
-+	while (offset--)
-+		while (*c++)
-+			;
-+
-+	*string =3D c;
-+	return 0;
-+}
-+
-+/**
-+ * of_getprop_string - Find a property in a device node and read a nul=
-l
-+ *			terminated string property
-+ * @np:		device node from which the property value is to be read.
-+ * @propname	name of the property to be searched.
-+ * @offset:	cell number to read (each cell contains a null-terminated
-+ *		string).
-+ * @string:	pointer to a null terminated string, valid only if the ret=
-urn
-+ *		value is 0.
-+ *
-+ * Search for a property in a device node and return a pointer to a in=
-dexed
-+ * string value of a property cell. Returns a pointer to a string, -EI=
-NVAL
-+ * in case the property or the indexed cell does not exist.
-+ */
-+int of_getprop_string(struct device_node *np, char *propname, int offs=
-et,
-+			char **string)
-+{
-+	return of_read_property_string(of_find_property(np, propname, NULL),
-+					offset, string);
-+}
-+EXPORT_SYMBOL(of_getprop_string);
-+
-+/**
-  * of_parse_phandle - Resolve a phandle property to a device_node poin=
-ter
-  * @np: Pointer to device node holding phandle property
-  * @phandle_name: Name of property holding a phandle value
-diff --git a/include/linux/of.h b/include/linux/of.h
-index bfc0ed1..aff2786 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -195,6 +195,16 @@ extern struct device_node *of_find_node_with_prope=
-rty(
- extern struct property *of_find_property(const struct device_node *np,
- 					 const char *name,
- 					 int *lenp);
-+extern int of_read_property_u32(struct property *prop, u32 offset, u32=
- *value);
-+extern int of_getprop_u32(struct device_node *np, char *propname, int =
-offset,
-+				u32 *value);
-+extern int of_read_property_u64(struct property *prop, int offset, u64=
- *value);
-+extern int of_getprop_u64(struct device_node *np, char *propname, int =
-offset,
-+				u64 *value);
-+extern int of_read_property_string(struct property *prop, int offset,
-+				char **string);
-+extern int of_getprop_string(struct device_node *np, char *propname,
-int offset,
-+				char **string);
- extern int of_device_is_compatible(const struct device_node *device,
- 				   const char *);
- extern int of_device_is_available(const struct device_node *device);
---=20
-1.6.6.rc2
+g.
