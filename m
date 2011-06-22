@@ -1,146 +1,79 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] serial/imx: add device tree support
-Date: Wed, 22 Jun 2011 09:52:11 -0600
-Message-ID: <BANLkTimsk2eWKPi2hnHbaAn-vSMKmdYsGQ@mail.gmail.com>
-References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
-	<1308410354-21387-2-git-send-email-shawn.guo@linaro.org>
-	<20110618161934.GH8195@ponder.secretlab.ca>
-	<20110619073000.GA23171@S2100-06.ap.freescale.net>
-	<20110621135558.GB9228@S2101-09.ap.freescale.net>
-	<BANLkTim4vunTm1176MRw3pqRZnunu4=9jg@mail.gmail.com>
-	<20110622153353.GA25799@S2100-06.ap.freescale.net>
+From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] i2c: Tegra: Add DeviceTree support
+Date: Wed, 22 Jun 2011 09:16:56 -0700
+Message-ID: <20110622161656.30052.33366.stgit@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110622153353.GA25799@S2100-06.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: patches@linaro.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Liu <jason.hui@linaro.org>, linux-kernel@vger.kernel.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2011 at 9:33 AM, Shawn Guo <shawn.guo@freescale.com> wrote:
-> On Tue, Jun 21, 2011 at 01:13:50PM -0600, Grant Likely wrote:
->> On Tue, Jun 21, 2011 at 7:55 AM, Shawn Guo <shawn.guo@freescale.com> wro=
-te:
->> > Hi Grant,
->> >
->> > I just gave a try to use aliases node for identify the device index.
->> > Please take a look and let me know if it's what you expect.
->>
->> Thanks Shawn. =A0This is definitely on track. =A0Comments below...
->>
->> >
->> > On Sun, Jun 19, 2011 at 03:30:02PM +0800, Shawn Guo wrote:
->> > [...]
->> >> > >
->> >> > > +#ifdef CONFIG_OF
->> >> > > +static int serial_imx_probe_dt(struct imx_port *sport,
->> >> > > + =A0 =A0 =A0 =A0 struct platform_device *pdev)
->> >> > > +{
->> >> > > + struct device_node *node =3D pdev->dev.of_node;
->> >> > > + const __be32 *line;
->> >> > > +
->> >> > > + if (!node)
->> >> > > + =A0 =A0 =A0 =A0 return -ENODEV;
->> >> > > +
->> >> > > + line =3D of_get_property(node, "id", NULL);
->> >> > > + if (!line)
->> >> > > + =A0 =A0 =A0 =A0 return -ENODEV;
->> >> > > +
->> >> > > + sport->port.line =3D be32_to_cpup(line) - 1;
->> >> >
->> >> > Hmmm, I really would like to be rid of this. =A0Instead, if uarts m=
-ust
->> >> > be enumerated, the driver should look for a /aliases/uart* property
->> >> > that matches the of_node. =A0Doing it that way is already establish=
-ed in
->> >> > the OpenFirmware documentation, and it ensures there are no overlaps
->> >> > in the global namespace.
->> >> >
->> >>
->> >> I just gave one more try to avoid using 'aliases', and you gave a
->> >> 'no' again. =A0Now, I know how hard you are on this. =A0Okay, I start
->> >> thinking about your suggestion seriously :)
->> >>
->> >> > We do need some infrastructure to make that easier though. =A0Would=
- you
->> >> > have time to help put that together?
->> >> >
->> >> Ok, I will give it a try.
->> >>
->> >
->> > diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/i=
-mx51-babbage.dts
->> > index da0381a..f4a5c3c 100644
->> > --- a/arch/arm/boot/dts/imx51-babbage.dts
->> > +++ b/arch/arm/boot/dts/imx51-babbage.dts
->> > @@ -18,6 +18,12 @@
->> > =A0 =A0 =A0 =A0compatible =3D "fsl,imx51-babbage", "fsl,imx51";
->> > =A0 =A0 =A0 =A0interrupt-parent =3D <&tzic>;
->> >
->> > + =A0 =A0 =A0 aliases {
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 serial0 =3D &uart0;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 serial1 =3D &uart1;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 serial2 =3D &uart2;
->> > + =A0 =A0 =A0 };
->> > +
->>
->> Hmmm. =A0David Gibson had tossed out an idea of automatically generating
->> aliases from labels. =A0It may be time to revisit that idea.
->>
->> David, perhaps using this format for a label should turn it into an
->> alias (prefix label with an asterisk):
->>
->> =A0 =A0 =A0 =A0 *thealias: i2c@12340000 { /*...*/ };
->>
->> .... although that approach gets *really* hairy when considering that
->> different boards will want different enumeration. =A0How would one
->> override an automatic alias defined by an included .dts file?
->>
-> Another dependency the patch has to wait for? =A0Or we can go ahead and
-> utilize the facility later when it gets ready?
+This patch modifies the tegra i2c driver so that it can be initiailized
+using the device tree along with the devices connected to the i2c bus.
 
-No, this isn't something you need to wait for.  Just musing on future
-enhancements.
+Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Acked-by: OIof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+---
 
->> Also, when obtaining an enumeration for a device, you'll need to be
->> careful about what number gets returned. =A0If the node doesn't match a
->> given alias, but aliases do exist for other devices of like type, then
->> you need to be careful not to assign a number already assigned to
->> another device via an alias (this of course assumes the driver
->> supports dynamics enumeration, which many drivers will). =A0It would be
->>
-> Some words not finished?
+ drivers/i2c/busses/i2c-tegra.c |   17 ++++++++++++++++-
+ 1 files changed, 16 insertions(+), 1 deletions(-)
 
-heh, that happens sometimes.  I tend to be a bit scattered when
-replying to email.  Just ignore the last sentence fragment.
-
->> > - =A0 =A0 =A0 line =3D of_get_property(node, "id", NULL);
->> > - =A0 =A0 =A0 if (!line)
->> > + =A0 =A0 =A0 line =3D of_get_device_index(node, "serial");
->> > + =A0 =A0 =A0 if (IS_ERR_VALUE(line))
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ENODEV;
->>
->> Personally, it an alias isn't present, then I'd dynamically assign a por=
-t id.
->>
-> We probably can not. =A0The driver works with being told the correct
-> port id which is defined by soc. =A0Instead of dynamically assigning
-> a port id, we have to tell the driver the exact hardware port id of
-> the device that is being probed.
-
-Are you sure?  It doesn't look like the driver behaviour uses id for
-anything other than an index into the statically allocated serial port
-instance table.  I don't see any change of behaviour based on the port
-number anywhere.
-
-g.
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 4d93196..d2393e6 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -26,6 +26,7 @@
+ #include <linux/delay.h>
+ #include <linux/slab.h>
+ #include <linux/i2c-tegra.h>
++#include <linux/of_i2c.h>
+ 
+ #include <asm/unaligned.h>
+ 
+@@ -540,6 +541,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	struct resource *iomem;
+ 	struct clk *clk;
+ 	struct clk *i2c_clk;
++	const unsigned int *prop;
+ 	void *base;
+ 	int irq;
+ 	int ret = 0;
+@@ -597,7 +599,17 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	i2c_dev->irq = irq;
+ 	i2c_dev->cont_id = pdev->id;
+ 	i2c_dev->dev = &pdev->dev;
+-	i2c_dev->bus_clk_rate = pdata ? pdata->bus_clk_rate : 100000;
++
++	i2c_dev->bus_clk_rate = 100000; /* default clock rate */
++	if (pdata) {
++		i2c_dev->bus_clk_rate = pdata->bus_clk_rate;
++
++	} else if (i2c_dev->dev->of_node) {    /* if there is a device tree node ... */
++		prop = of_get_property(i2c_dev->dev->of_node,
++				"clock-frequency", NULL);
++		if (prop)
++			i2c_dev->bus_clk_rate = be32_to_cpup(prop);
++	}
+ 
+ 	if (pdev->id == 3)
+ 		i2c_dev->is_dvc = 1;
+@@ -627,6 +639,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	i2c_dev->adapter.algo = &tegra_i2c_algo;
+ 	i2c_dev->adapter.dev.parent = &pdev->dev;
+ 	i2c_dev->adapter.nr = pdev->id;
++	i2c_dev->adapter.dev.of_node = pdev->dev.of_node;
+ 
+ 	ret = i2c_add_numbered_adapter(&i2c_dev->adapter);
+ 	if (ret) {
+@@ -634,6 +647,8 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 		goto err_free_irq;
+ 	}
+ 
++	of_i2c_register_devices(&i2c_dev->adapter);
++
+ 	return 0;
+ err_free_irq:
+ 	free_irq(i2c_dev->irq, i2c_dev);
