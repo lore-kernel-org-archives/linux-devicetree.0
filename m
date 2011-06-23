@@ -1,79 +1,100 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] serial/imx: add device tree support
-Date: Wed, 22 Jun 2011 21:35:19 -0600
-Message-ID: <BANLkTimgqmJDsAc+6aboszK33aBO2XiC6Q@mail.gmail.com>
-References: <1308410354-21387-1-git-send-email-shawn.guo@linaro.org>
-	<1308410354-21387-2-git-send-email-shawn.guo@linaro.org>
-	<20110618161934.GH8195@ponder.secretlab.ca>
-	<20110619073000.GA23171@S2100-06.ap.freescale.net>
-	<20110621135558.GB9228@S2101-09.ap.freescale.net>
-	<BANLkTim4vunTm1176MRw3pqRZnunu4=9jg@mail.gmail.com>
-	<20110622153353.GA25799@S2100-06.ap.freescale.net>
-	<BANLkTimsk2eWKPi2hnHbaAn-vSMKmdYsGQ@mail.gmail.com>
-	<20110623001234.GB25799@S2100-06.ap.freescale.net>
+From: Aggrwal Poonam-B10812 <B10812@freescale.com>
+Subject: RE: [PATCH] powerpc/85xx:DTS: Fix tbi node location for Px020RDB
+Date: Thu, 23 Jun 2011 07:24:06 +0000
+Message-ID: <45903308677306428B6EE7E6FF5A52041419B6@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1307501379-3160-1-git-send-email-prabhakar@freescale.com>
+	<F9CD495E-12BF-467D-BE96-CC11486F70B8@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110623001234.GB25799-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <F9CD495E-12BF-467D-BE96-CC11486F70B8@kernel.crashing.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Kumar Gala <galak@kernel.crashing.org>, Kushwaha Prabhakar-B32579 <B32579@freescale.com>
+Cc: "meet2prabhu@gmail.com" <meet2prabhu@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2011 at 6:12 PM, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Wed, Jun 22, 2011 at 09:52:11AM -0600, Grant Likely wrote:
-> [...]
->>
->> >> > - =A0 =A0 =A0 line =3D of_get_property(node, "id", NULL);
->> >> > - =A0 =A0 =A0 if (!line)
->> >> > + =A0 =A0 =A0 line =3D of_get_device_index(node, "serial");
->> >> > + =A0 =A0 =A0 if (IS_ERR_VALUE(line))
->> >> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ENODEV;
->> >>
->> >> Personally, it an alias isn't present, then I'd dynamically assign a =
-port id.
->> >>
->> > We probably can not. =A0The driver works with being told the correct
->> > port id which is defined by soc. =A0Instead of dynamically assigning
->> > a port id, we have to tell the driver the exact hardware port id of
->> > the device that is being probed.
->>
->> Are you sure? =A0It doesn't look like the driver behaviour uses id for
->> anything other than an index into the statically allocated serial port
->> instance table. =A0I don't see any change of behaviour based on the port
->> number anywhere.
->>
-> Sorry, I did not make this clear. =A0In serial_imx_probe(), the port
-> gets created and then saved as below.
->
-> =A0 =A0 =A0 =A0imx_ports[sport->port.line] =3D sport;
->
-> While in imx_console_setup(), it addresses the port as following.
->
-> =A0 =A0 =A0 =A0sport =3D imx_ports[co->index];
->
-> When users specify their console as ttymxc0, they mean they are
-> using the first i.mx uart hardware port, in turn ttymxc1 for the
-> second port ...
->
-> That said, imx_port[0] has to be the first hardware port, imx_port[1]
-> has to be the second one ... =A0That's why port id sport->port.line
-> can not be dynamically assigned, otherwise console may not work.
 
-My point still stands.  If there is no number specifically assigned to
-a device, then numbering should be dynamic.  That's standard behaviour
-for Linux device drivers, and I get nervous every time I see a driver
-that make an assumption to the contrary, especially when there is no
-good reason for it.  Besides, you still can ensure the console is
-reliable by having an alias for the console device.
 
-g.
+> -----Original Message-----
+> From: linuxppc-dev-bounces+poonam.aggrwal=freescale.com@lists.ozlabs.org
+> [mailto:linuxppc-dev-
+> bounces+poonam.aggrwal=freescale.com@lists.ozlabs.org] On Behalf Of Kumar
+> Gala
+> Sent: Wednesday, June 22, 2011 5:04 PM
+> To: Kushwaha Prabhakar-B32579
+> Cc: meet2prabhu@gmail.com; devicetree-discuss@lists.ozlabs.org; linuxppc-
+> dev@lists.ozlabs.org
+> Subject: Re: [PATCH] powerpc/85xx:DTS: Fix tbi node location for Px020RDB
+> 
+> 
+> On Jun 7, 2011, at 9:49 PM, Prabhakar Kushwaha wrote:
+> 
+> > ten-bit interface (TBI) module is part of SoC not board.
+> >
+> > Move tbi entries from board related dts files to Si dts.
+> >
+> > Signed-off-by: Prabhakar Kushwaha <prabhakar@freescale.com>
+> > ---
+> > Based upon
+> http://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git (branch
+> next)
+> >
+> > arch/powerpc/boot/dts/p1020rdb.dts            |    9 ---------
+> > arch/powerpc/boot/dts/p1020rdb_camp_core0.dts |    8 --------
+> > arch/powerpc/boot/dts/p1020si.dtsi            |    6 +++++-
+> > arch/powerpc/boot/dts/p2020rdb.dts            |    8 --------
+> > arch/powerpc/boot/dts/p2020rdb_camp_core0.dts |    8 --------
+> > arch/powerpc/boot/dts/p2020si.dtsi            |    6 +++++-
+> > 6 files changed, 10 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/arch/powerpc/boot/dts/p1020rdb.dts
+> b/arch/powerpc/boot/dts/p1020rdb.dts
+> > index d6a8ae4..a4e5d6c 100644
+> > --- a/arch/powerpc/boot/dts/p1020rdb.dts
+> > +++ b/arch/powerpc/boot/dts/p1020rdb.dts
+> > @@ -211,14 +211,6 @@
+> > 			};
+> > 		};
+> >
+> > -		mdio@25000 {
+> > -
+> > -			tbi0: tbi-phy@11 {
+> > -				reg = <0x11>;
+> > -				device_type = "tbi-phy";
+> > -			};
+> > -		};
+> > -
+> > 		enet0: ethernet@b0000 {
+> > 			fixed-link = <1 1 1000 0 0>;
+> > 			phy-connection-type = "rgmii-id";
+> > @@ -227,7 +219,6 @@
+> >
+> > 		enet1: ethernet@b1000 {
+> > 			phy-handle = <&phy0>;
+> > -			tbi-handle = <&tbi0>;
+> > 			phy-connection-type = "sgmii";
+> >
+> > 		};
+> 
+> I'm not sure we should do this.  The phy address we pick is board
+> specific so it should NOT be in .dtsi
+The TBI phy and it's address is internal to SOC.
+
+Regards
+Poonam
+> 
+> - k
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
