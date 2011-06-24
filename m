@@ -1,216 +1,326 @@
-From: Manjunatha GK <manjugk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Converting i2c-omap driver to use device tree
-Date: Fri, 24 Jun 2011 17:46:21 +0530
-Message-ID: <BANLkTi=uk6X8kGQWQfT9ew=rwOB5C+4mwg@mail.gmail.com>
-References: <BANLkTin0zaE6M=0+9bq6sCvCVO_PJqYseA@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 2/6] serial: samsung: Add device tree support for s5pv210
+ uart driver
+Date: Fri, 24 Jun 2011 17:57:59 +0530
+Message-ID: <BANLkTimyEQfRjfbOj9ULnTcmQ3GLJnWxrw@mail.gmail.com>
+References: <1308567752-13451-1-git-send-email-thomas.abraham@linaro.org>
+	<1308567752-13451-3-git-send-email-thomas.abraham@linaro.org>
+	<BANLkTi=+FKz-uPtSv572y5ORorMeGR8Anw@mail.gmail.com>
+	<BANLkTi=RxEpBrALEQbBD_z6ZiEW24-wsng@mail.gmail.com>
+	<BANLkTi=EVA6LckzWSFMQ07okD4gw-z5Zag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1090741046076939273=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTin0zaE6M=0+9bq6sCvCVO_PJqYseA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org\"" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <BANLkTi=EVA6LckzWSFMQ07okD4gw-z5Zag@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, linaro-dev@lists.linaro.org, patches@linaro.org, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1090741046076939273==
-Content-Type: multipart/alternative; boundary=000e0ce0ccf26e9bde04a6742b0f
+Hi Grant,
 
---000e0ce0ccf26e9bde04a6742b0f
-Content-Type: text/plain; charset=ISO-8859-1
+On 24 June 2011 01:38, Grant Likely <grant.likely@secretlab.ca> wrote:
+> Despite the fact that this is exactly what I asked you to write, this
+> ends up being rather ugly. =A0(I originally put in the '*4' to match =
+the
+> behaviour of the existing of_read_number(), but that was a mistake.
+> tglx also pointed it out). =A0How about this instead:
 
-On 23 June 2011 19:45, Manjunatha GK <manjugk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Your draft implementation below is suggesting that the offset should
+be in bytes and not cells and so maybe you are suggesting the new
+approach to support multi-format property values. I have changed the
+implementation as per your code below.
 
-> Hi Grant,
-> I am trying to convert i2c-omap driver to use device tree. Since omap i2c
-> driver uses it's own mechanism to register as platform device, I have
-> commented out i2c device registration part from board file and trying to use
-> DT data in probe function of i2c driver.
 >
-> I have i2c node declared under omap4-panda.dts as:
+> int of_read_property_u32(struct property *prop, unsigned int offset,
+> u32 *out_value)
+> {
+> =A0 =A0 =A0 =A0if (!prop || !out_value)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> =A0 =A0 =A0 =A0if (!prop->value)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ENODATA;
+> =A0 =A0 =A0 =A0if (offset + sizeof(*out_value) > prop->length)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EOVERFLOW;
+> =A0 =A0 =A0 =A0*out_value =3D be32_to_cpup(prop->data + offset);
+> =A0 =A0 =A0 =A0return 0;
+> }
+
+[...]
+
+>> +/**
+>> + * of_read_property_string - Returns a pointer to a indexed null te=
+rminated
+>> + * =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 property=
+ value string
+>> + * @prop: =A0 =A0 =A0property to read from.
+>> + * @offset: =A0 =A0index of the property string to be read.
+>> + * @string: =A0 =A0pointer to a null terminated string, valid only =
+if the return
+>> + * =A0 =A0 =A0 =A0 =A0 =A0 value is 0.
+>> + *
+>> + * Returns a pointer to a indexed null terminated property cell str=
+ing, -EINVAL
+>> + * in case the cell does not exist.
+>> + */
+>> +int of_read_property_string(struct property *prop, int offset, char=
+ **string)
+>> +{
+>> + =A0 =A0 =A0 char *c;
+>> +
+>> + =A0 =A0 =A0 if (!prop || !prop->value)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
 >
-> +       i2c@48072000 {
-> +               compatible = "ti,omap_i2c";
-> +               reg = <0x48072000 0x80>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               twl@48 {
-> +                       compatible = "twl6030,4030-6030";
-> +                       reg = < 0x48 >;
-> +               };
-> +       };
+> Ditto here about return values.
 >
-> and board file is changed as:
+>> +
+>> + =A0 =A0 =A0 c =3D (char *)prop->value;
 >
-> @@ -685,6 +686,10 @@ static void __init omap4_panda_init(void)
->  {
->         int package = OMAP_PACKAGE_CBS;
+> You don't need the cast. =A0prop->value is a void* pointer. =A0Howeve=
+r,
+> 'c' does need to be const char.
 >
-> +#ifdef CONFIG_OF
-> +       of_platform_prepare(NULL, NULL);
-> +#endif /* CONFIG_OF */
-> +
->         if (omap_rev() == OMAP4430_REV_ES1_0)
->                 package = OMAP_PACKAGE_CBL;
->         omap4_mux_init(board_mux, NULL, package);
-> @@ -700,6 +705,7 @@ static void __init omap4_panda_init(void)
->         omap4_ehci_init();
->         usb_musb_init(&musb_board_data);
->         omap4_panda_display_init();
-> +       of_platform_populate(NULL, NULL, NULL, NULL);
->  }
+>> + =A0 =A0 =A0 while (offset--)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 while (*c++)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ;
 >
-> I have commented out device registration for I2C1 in board file:
+> Rather than open coding this, you should use the string library
+> functions. =A0Something like:
 >
-> diff --git a/arch/arm/mach-omap2/board-omap4panda.c
-> b/arch/arm/mach-omap2/board-omap4panda.c
-> index c9d1e13..0c31f35 100644
-> --- a/arch/arm/mach-omap2/board-omap4panda.c
-> +++ b/arch/arm/mach-omap2/board-omap4panda.c
-> @@ -409,7 +410,7 @@ static struct i2c_board_info __initdata
-> panda_i2c_eeprom[] = {
+> =A0 =A0 =A0 =A0c =3D prop->value;
+> =A0 =A0 =A0 =A0while (offset-- && (c - prop->value) < prop->size)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0c +=3D strlen(c) + 1;
+> =A0 =A0 =A0 =A0if ((c - prop->value) + strlen(c) >=3D prop->size)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EOVERFLOW;
+> =A0 =A0 =A0 =A0*out_value =3D c;
 >
->  static int __init omap4_panda_i2c_init(void)
->  {
-> -       omap4_pmic_init("twl6030", &omap4_panda_twldata);
-> +       //omap4_pmic_init("twl6030", &omap4_panda_twldata);
-> @@ -685,6 +686,10 @@ static void __init omap4_panda_init(void)
->  {
->         int package = OMAP_PACKAGE_CBS;
->
-> +#ifdef CONFIG_OF
-> +       of_platform_prepare(NULL, NULL);
-> +#endif /* CONFIG_OF */
-> +
->         if (omap_rev() == OMAP4430_REV_ES1_0)
->                 package = OMAP_PACKAGE_CBL;
->         omap4_mux_init(board_mux, NULL, package);
-> @@ -700,6 +705,7 @@ static void __init omap4_panda_init(void)
->         omap4_ehci_init();
->         usb_musb_init(&musb_board_data);
->         omap4_panda_display_init();
-> +       of_platform_populate(NULL, NULL, NULL, NULL);
->  }
->
-> and i2c-omap is modified as:
->
-> +static const struct of_device_id omap_i2c_of_match[];
->  static int __devinit
->  omap_i2c_probe(struct platform_device *pdev)
->  {
-> @@ -1162,6 +1169,12 @@ static int omap_i2c_resume(struct device *dev)
->         return 0;
->  }
->
-> +static const struct of_device_id omap_i2c_of_match[] = {
-> +       {.compatible = "omap_i2c", },
->
+> Plus it catches more error conditions that way.
 
-I tried also with:
- +       {.compatible = "ti,omap_i2c", },
-still probe will not get called.
+If we change the offset to represent bytes and not cell index in the
+u32 and u64 versions, shouldn't offset represent bytes for the string
+version as well? In case of multi-format property values, there could
+be u32 or u64 values intermixed with string values. So, some
+modifications have been made to your above implementation of the
+string version.
 
--Manjunath
+The new diff is listed below. Would there be any changes required. If
+this is acceptable, I will submit a separate patch.
 
---000e0ce0ccf26e9bde04a6742b0f
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+ drivers/of/base.c  |  142 ++++++++++++++++++++++++++++++++++++++++++++=
+++++++++
+ include/linux/of.h |   12 ++++
+ 2 files changed, 154 insertions(+), 0 deletions(-)
 
-<br><br><div class=3D"gmail_quote">On 23 June 2011 19:45, Manjunatha GK <sp=
-an dir=3D"ltr">&lt;<a href=3D"mailto:manjugk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">manjugk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org=
-</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin=
-:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex;">
-Hi Grant,<br>I am trying to convert i2c-omap driver to use device tree. Sin=
-ce omap i2c driver uses it&#39;s own mechanism to register as platform devi=
-ce, I have commented out i2c device registration part from board file and t=
-rying to use DT data in probe function of i2c driver.<br>
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 632ebae..e9acbea 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -596,6 +596,148 @@ struct device_node
+*of_find_node_by_phandle(phandle handle)
+ EXPORT_SYMBOL(of_find_node_by_phandle);
 
-<br>I have i2c node declared under omap4-panda.dts as:<br><br>+=A0=A0=A0=A0=
-=A0=A0 i2c@48072000 {<br>+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compat=
-ible =3D &quot;ti,omap_i2c&quot;;<br>+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 reg =3D &lt;0x48072000 0x80&gt;;<br>+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 #address-cells =3D &lt;1&gt;;<br>
+ /**
++ * of_read_property_u32 - Reads a 32-bit property value
++ * @prop:	property to read from.
++ * @offset:	offset into property value to read from (in bytes).
++ * @out_value:	returned value.
++ *
++ * Returns a 32-bit value from a property. Returns -EINVAL, if the
+property does
++ * not exist, -ENODATA, if property does not have a value, -EOVERFLOW,=
+ if
++ * reading from offset overshoots the length of the property.
++ */
++int of_read_property_u32(struct property *prop, u32 offset, u32 *out_v=
+alue)
++{
++	if (!prop || !out_value)
++		return -EINVAL;
++	if (!prop->value)
++		return -ENODATA;
++	if (offset + sizeof(*out_value) > prop->length)
++		return -EOVERFLOW;
++
++	*out_value =3D be32_to_cpup(prop->value + offset);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_read_property_u32);
++
++/**
++ * of_getprop_u32 - Find a property in a device node and read a 32-bit=
+ value
++ * @np:		device node from which the property value is to be read.
++ * @propname	name of the property to be searched.
++ * @offset:	offset into property value to read from (in bytes).
++ * @out_value:	returned value.
++ *
++ * Search for a property in a device node and read a 32-bit value from=
+ a
++ * property. Returns -EINVAL, if the property does not exist, -ENODATA=
+, if
++ * property does not have a value, -EOVERFLOW, if reading from offset
+overshoots
++ * the length of the property.
++ */
++int of_getprop_u32(struct device_node *np, char *propname, int offset,
++			u32 *out_value)
++{
++	return of_read_property_u32(of_find_property(np, propname, NULL),
++					offset, out_value);
++}
++EXPORT_SYMBOL_GPL(of_getprop_u32);
++
++/**
++ * of_read_property_u64 - Reads a 64-bit property value
++ * @prop:	property to read from.
++ * @offset:	offset into property value to read from (in bytes).
++ * @out_value:	returned value.
++ *
++ * Returns a 64-bit value from a property. Returns -EINVAL, if the
+property does
++ * not exist, -ENODATA, if property does not have a value, -EOVERFLOW,=
+ if
++ * reading from offset overshoots the length of the property.
++ */
++int of_read_property_u64(struct property *prop, int offset, u64 *out_v=
+alue)
++{
++	if (!prop || !out_value)
++		return -EINVAL;
++	if (!prop->value)
++		return -ENODATA;
++	if (offset + sizeof(*out_value) > prop->length)
++		return -EOVERFLOW;
++	*out_value =3D be32_to_cpup(prop->value + offset);
++	*out_value =3D (*out_value << 32) |
++			be32_to_cpup(prop->value + offset + sizeof(u32));
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_read_property_u64);
++
++/**
++ * of_getprop_u64 - Find a property in a device node and read a 64-bit=
+ value
++ * @np:		device node from which the property value is to be read.
++ * @propname	name of the property to be searched.
++ * @offset:	offset into property value to read from (in bytes).
++ * @out_value:	returned value.
++ *
++ * Search for a property in a device node and read a 64-bit value from=
+ a
++ * property. Returns -EINVAL, if the property does not exist, -ENODATA=
+, if
++ * property does not have a value, -EOVERFLOW, if reading from offset
+overshoots
++ * the length of the property.
++ */
++int of_getprop_u64(struct device_node *np, char *propname, int offset,
++			u64 *out_value)
++{
++	return of_read_property_u64(of_find_property(np, propname, NULL),
++					offset, out_value);
++}
++EXPORT_SYMBOL_GPL(of_getprop_u64);
++
++/**
++ * of_read_property_string - Returns a pointer to a null terminated
++ *				property string value
++ * @prop:	property to read from.
++ * @offset:	offset into property value to read from (in bytes).
++ * @string:	pointer to a null terminated string, valid only if the ret=
+urn
++ *		value is 0.
++ *
++ * Returns a pointer to a null terminated property string value.
+Returns -EINVAL,
++ * if the property does not exist, -ENODATA, if property does not have=
+ a value,
++ * -EOVERFLOW, if the offset overshoots the length of the property, -E=
+ILSEQ, if
++ * the string is not null-terminated within the length of the property=
+=2E
++ */
++int
++of_read_property_string(struct property *prop, int offset, char **out_=
+string)
++{
++	if (!prop || !out_string)
++		return -EINVAL;
++	if (!prop->value)
++		return -ENODATA;
++	if (offset >=3D prop->length)
++		return -EOVERFLOW;
++	if (strnlen(prop->value + offset, prop->length - offset)
++			+ offset =3D=3D prop->length)
++		return -EILSEQ;
++	*out_string =3D prop->value + offset;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_read_property_string);
++
++/**
++ * of_getprop_string - Find a property in a device node and read a nul=
+l
++ *			terminated string value
++ * @np:		device node from which the property value is to be read.
++ * @propname	name of the property to be searched.
++ * @offset:	offset into property value to read from (in bytes).
++ * @out_string:	pointer to a null terminated string, valid only if the=
+ return
++ *		value is 0.
++ *
++ * Search for a property in a device node and return a pointer to a st=
+ring
++ * value of a property. Returns -EINVAL, if the property does not exis=
+t,
++ * -ENODATA, if property does not have a value, -EOVERFLOW, if the off=
+set
++ * overshoots the length of the property, -EILSEQ, if the string is no=
+t
++ * null-terminated within the length of the property.
++ */
++int of_getprop_string(struct device_node *np, char *propname, int offs=
+et,
++			char **out_string)
++{
++	return of_read_property_string(of_find_property(np, propname, NULL),
++					offset, out_string);
++}
++EXPORT_SYMBOL_GPL(of_getprop_string);
++
++/**
+  * of_parse_phandle - Resolve a phandle property to a device_node poin=
+ter
+  * @np: Pointer to device node holding phandle property
+  * @phandle_name: Name of property holding a phandle value
+diff --git a/include/linux/of.h b/include/linux/of.h
+index bfc0ed1..f5c1065 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -195,6 +195,18 @@ extern struct device_node *of_find_node_with_prope=
+rty(
+ extern struct property *of_find_property(const struct device_node *np,
+ 					 const char *name,
+ 					 int *lenp);
++extern int of_read_property_u32(struct property *prop, u32 offset,
++				u32 *out_value);
++extern int of_getprop_u32(struct device_node *np, char *propname, int =
+offset,
++				u32 *out_value);
++extern int of_read_property_u64(struct property *prop, int offset,
++				u64 *out_value);
++extern int of_getprop_u64(struct device_node *np, char *propname, int =
+offset,
++				u64 *out_value);
++extern int of_read_property_string(struct property *prop, int offset,
++				char **out_string);
++extern int of_getprop_string(struct device_node *np, char *propname,
+int offset,
++				char **out_string);
+ extern int of_device_is_compatible(const struct device_node *device,
+ 				   const char *);
+ extern int of_device_is_available(const struct device_node *device);
 
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #size-cells =3D &lt;0&gt;;<br>+=
-<br>+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 twl@48 {<br>+=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D &quot=
-;twl6030,4030-6030&quot;;<br>+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 reg =3D &lt; 0x48 &gt;;<br>+=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 };<br>+=A0=A0=A0=A0=A0=A0 };<br>
 
-<br>and board file is changed as:<br><br>@@ -685,6 +686,10 @@ static void _=
-_init omap4_panda_init(void)<br>=A0{<br>=A0=A0=A0=A0=A0=A0=A0 int package =
-=3D OMAP_PACKAGE_CBS;<br>=A0<br>+#ifdef CONFIG_OF<br>+=A0=A0=A0=A0=A0=A0 of=
-_platform_prepare(NULL, NULL);<br>
-
-+#endif /* CONFIG_OF */<br>+<br>=A0=A0=A0=A0=A0=A0=A0 if (omap_rev() =3D=3D=
- OMAP4430_REV_ES1_0)<br>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 packa=
-ge =3D OMAP_PACKAGE_CBL;<br>=A0=A0=A0=A0=A0=A0=A0 omap4_mux_init(board_mux,=
- NULL, package);<br>@@ -700,6 +705,7 @@ static void __init omap4_panda_init=
-(void)<br>
-
-=A0=A0=A0=A0=A0=A0=A0 omap4_ehci_init();<br>=A0=A0=A0=A0=A0=A0=A0 usb_musb_=
-init(&amp;musb_board_data);<br>=A0=A0=A0=A0=A0=A0=A0 omap4_panda_display_in=
-it();<br>+=A0=A0=A0=A0=A0=A0 of_platform_populate(NULL, NULL, NULL, NULL);<=
-br>=A0}<br><br>I have commented out device registration for I2C1 in board f=
-ile:<br>
-
-<br>diff --git a/arch/arm/mach-omap2/board-omap4panda.c b/arch/arm/mach-oma=
-p2/board-omap4panda.c<br>index c9d1e13..0c31f35 100644<br>--- a/arch/arm/ma=
-ch-omap2/board-omap4panda.c<br>+++ b/arch/arm/mach-omap2/board-omap4panda.c=
-<br>
-
-@@ -409,7 +410,7 @@ static struct i2c_board_info __initdata panda_i2c_eepro=
-m[] =3D {<br>=A0<br>=A0static int __init omap4_panda_i2c_init(void)<br>=A0{=
-<br>-=A0=A0=A0=A0=A0=A0 omap4_pmic_init(&quot;twl6030&quot;, &amp;omap4_pan=
-da_twldata);<br>
-
-+=A0=A0=A0=A0=A0=A0 //omap4_pmic_init(&quot;twl6030&quot;, &amp;omap4_panda=
-_twldata);<br>@@ -685,6 +686,10 @@ static void __init omap4_panda_init(void=
-)<br>=A0{<br>=A0=A0=A0=A0=A0=A0=A0 int package =3D OMAP_PACKAGE_CBS;<br>=A0=
-<br>+#ifdef CONFIG_OF<br>+=A0=A0=A0=A0=A0=A0 of_platform_prepare(NULL, NULL=
-);<br>
-
-+#endif /* CONFIG_OF */<br>+<br>=A0=A0=A0=A0=A0=A0=A0 if (omap_rev() =3D=3D=
- OMAP4430_REV_ES1_0)<br>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 packa=
-ge =3D OMAP_PACKAGE_CBL;<br>=A0=A0=A0=A0=A0=A0=A0 omap4_mux_init(board_mux,=
- NULL, package);<br>@@ -700,6 +705,7 @@ static void __init omap4_panda_init=
-(void)<br>
-
-=A0=A0=A0=A0=A0=A0=A0 omap4_ehci_init();<br>=A0=A0=A0=A0=A0=A0=A0 usb_musb_=
-init(&amp;musb_board_data);<br>=A0=A0=A0=A0=A0=A0=A0 omap4_panda_display_in=
-it();<br>+=A0=A0=A0=A0=A0=A0 of_platform_populate(NULL, NULL, NULL, NULL);<=
-br>=A0}<br><br>and i2c-omap is modified as:<br><br>
-+static const struct of_device_id omap_i2c_of_match[];<br>
-=A0static int __devinit<br>=A0omap_i2c_probe(struct platform_device *pdev)<=
-br>=A0{<br>@@ -1162,6 +1169,12 @@ static int omap_i2c_resume(struct device =
-*dev)<br>=A0=A0=A0=A0=A0=A0=A0 return 0;<br>=A0}<br>=A0<br>+static const st=
-ruct of_device_id omap_i2c_of_match[] =3D {<br>
-
-+=A0=A0=A0=A0=A0=A0 {.compatible =3D &quot;omap_i2c&quot;, },<br></blockquo=
-te><div>=A0</div><div>I tried also with:<br>=A0+=A0=A0=A0=A0=A0=A0 {.compat=
-ible =3D &quot;ti,omap_i2c&quot;, },<br>still probe will not get called.<br=
-><br>-Manjunath<br>
-</div></div><br>
-
---000e0ce0ccf26e9bde04a6742b0f--
-
---===============1090741046076939273==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1090741046076939273==--
+Thanks,
+Thomas.
