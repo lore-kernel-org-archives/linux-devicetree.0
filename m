@@ -1,246 +1,238 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 5/5] ARM: mx5: add basic device tree support for imx51
-	babbage
-Date: Sat, 25 Jun 2011 02:04:36 +0800
-Message-ID: <1308938676-31121-6-git-send-email-shawn.guo@linaro.org>
-References: <1308938676-31121-1-git-send-email-shawn.guo@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1308938676-31121-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: [PATCH 1/4] powerpc: override dma_get_required_mask by platform hook and ops
+Date: Fri, 24 Jun 2011 12:05:22 -0700
+Message-ID: <1308942325-4813-2-git-send-email-nacc@us.ibm.com>
+References: <1308942325-4813-1-git-send-email-nacc@us.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1308942325-4813-1-git-send-email-nacc@us.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milton Miller <miltonm@bga.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, benh@kernel.crashing.org, Paul Mackerras <paulus@samba.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, FUJITA Tomonori <fujita.tomonori@lab.ntt.co.jp>, Nishanth Aravamudan <nacc@us.ibm.com>, Anton Blanchard <anton@samba.org>, Sonny Rao <sonnyrao@linux.vnet.ibm.com>, Yinghai Lu <yinghai@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Will Schmidt <will_schmidt@vnet.ibm.com>, cbe-oss-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the i.mx51 dt platform with uart and fec support.
-It also adds the dts file imx51 babbage, so that we can have a dt
-kernel on babbage booting into console with nfs root.
+From: Milton Miller <miltonm@bga.com>
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+The hook dma_get_required_mask is supposed to return the mask required
+by the platform to operate efficently.  The generic version of
+dma_get_required_mask in driver/base/platform.c returns a mask based
+only on max_pfn.  However, this is likely too big for iommu systems
+and could be too small for platforms that require a dma offset or have
+a secondary window at a high offset.
+
+Override the default, provide a hook in ppc_md used by pseries lpar and
+cell, and provide the default answer based on memblock_end_of_DRAM(),
+with hooks for get_dma_offset, and provide an implementation for iommu
+that looks at the defined table size.  Coverting from the end address
+to the required bit mask is based on the generic implementation.
+
+The need for this was discovered when the qla2xxx driver switched to
+64 bit dma then reverted to 32 bit when dma_get_required_mask said
+32 bits was sufficient.
+
+Signed-off-by: Milton Miller <miltonm@bga.com>
+Signed-off-by: Nishanth Aravamudan <nacc@us.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Cc: benh@kernel.crashing.org
 ---
- arch/arm/boot/dts/imx51-babbage.dts |   93 +++++++++++++++++++++++++++++++++++
- arch/arm/mach-mx5/Kconfig           |    8 +++
- arch/arm/mach-mx5/Makefile          |    1 +
- arch/arm/mach-mx5/imx51-dt.c        |   70 ++++++++++++++++++++++++++
- 4 files changed, 172 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx51-babbage.dts
- create mode 100644 arch/arm/mach-mx5/imx51-dt.c
+ arch/powerpc/include/asm/dma-mapping.h |    3 ++
+ arch/powerpc/include/asm/machdep.h     |    3 +-
+ arch/powerpc/kernel/dma-iommu.c        |   13 ++++++++++
+ arch/powerpc/kernel/dma.c              |   39 ++++++++++++++++++++++++++++++++
+ arch/powerpc/platforms/cell/iommu.c    |   12 +++++++++
+ arch/powerpc/platforms/pseries/iommu.c |   27 ++++++++++++++++++++++
+ 6 files changed, 96 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-new file mode 100644
-index 0000000..402cc44
---- /dev/null
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -0,0 +1,93 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX51 Babbage";
-+	compatible = "fsl,imx51-babbage", "fsl,imx51";
-+	interrupt-parent = <&tzic>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttymxc0,115200 root=/dev/mmcblk0p3 rootwait";
-+	};
-+
-+	memory {
-+		reg = <0x90000000 0x20000000>;
-+	};
-+
-+	tzic: tz-interrupt-controller@e0000000 {
-+		compatible = "fsl,imx51-tzic", "fsl,tzic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0xe0000000 0x4000>;
-+	};
-+
-+	aips@70000000 { /* aips-1 */
-+		compatible = "fsl,aips-bus", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x70000000 0x10000000>;
-+		ranges;
-+
-+		spba {
-+			compatible = "fsl,spba-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x70000000 0x40000>;
-+			ranges;
-+
-+			uart2: uart@7000c000 {
-+				compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+				reg = <0x7000c000 0x4000>;
-+				interrupts = <33>;
-+				fsl,uart-has-rtscts;
-+			};
-+		};
-+
-+		uart0: uart@73fbc000 {
-+			compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+			reg = <0x73fbc000 0x4000>;
-+			interrupts = <31>;
-+			fsl,uart-has-rtscts;
-+		};
-+
-+		uart1: uart@73fc0000 {
-+			compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+			reg = <0x73fc0000 0x4000>;
-+			interrupts = <32>;
-+			fsl,uart-has-rtscts;
-+		};
-+	};
-+
-+	aips@80000000 {	/* aips-2 */
-+		compatible = "fsl,aips-bus", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x80000000 0x10000000>;
-+		ranges;
-+
-+		fec@83fec000 {
-+			compatible = "fsl,imx51-fec", "fsl,imx27-fec";
-+			reg = <0x83fec000 0x4000>;
-+			interrupts = <87>;
-+			phy-mode = "mii";
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-index 799fbc4..8bdd0c4 100644
---- a/arch/arm/mach-mx5/Kconfig
-+++ b/arch/arm/mach-mx5/Kconfig
-@@ -62,6 +62,14 @@ endif # ARCH_MX50_SUPPORTED
- if ARCH_MX51
- comment "i.MX51 machines:"
+diff --git a/arch/powerpc/include/asm/dma-mapping.h b/arch/powerpc/include/asm/dma-mapping.h
+index dd70fac..8135e66 100644
+--- a/arch/powerpc/include/asm/dma-mapping.h
++++ b/arch/powerpc/include/asm/dma-mapping.h
+@@ -20,6 +20,8 @@
  
-+config MACH_IMX51_DT
-+	bool "Support i.MX51 platforms from device tree"
-+	select SOC_IMX51
-+	select USE_OF
-+	help
-+	  Include support for Freescale i.MX51 based platforms
-+	  using the device tree for discovery
-+
- config MACH_MX51_BABBAGE
- 	bool "Support MX51 BABBAGE platforms"
- 	select SOC_IMX51
-diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-index 0b9338c..47b483f 100644
---- a/arch/arm/mach-mx5/Makefile
-+++ b/arch/arm/mach-mx5/Makefile
-@@ -7,6 +7,7 @@ obj-y   := cpu.o mm.o clock-mx51-mx53.o devices.o ehci.o system.o
- obj-$(CONFIG_SOC_IMX50) += mm-mx50.o
+ #define DMA_ERROR_CODE		(~(dma_addr_t)0x0)
  
- obj-$(CONFIG_CPU_FREQ_IMX)    += cpu_op-mx51.o
-+obj-$(CONFIG_MACH_IMX51_DT) += imx51-dt.o
- obj-$(CONFIG_MACH_MX51_BABBAGE) += board-mx51_babbage.o
- obj-$(CONFIG_MACH_MX51_3DS) += board-mx51_3ds.o
- obj-$(CONFIG_MACH_MX53_EVK) += board-mx53_evk.o
-diff --git a/arch/arm/mach-mx5/imx51-dt.c b/arch/arm/mach-mx5/imx51-dt.c
-new file mode 100644
-index 0000000..8bfdb91
---- /dev/null
-+++ b/arch/arm/mach-mx5/imx51-dt.c
-@@ -0,0 +1,70 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++#define ARCH_HAS_DMA_GET_REQUIRED_MASK
 +
-+#include <linux/irq.h>
-+#include <linux/of_platform.h>
-+
-+#include <asm/mach/arch.h>
-+#include <asm/mach/time.h>
-+
-+#include <mach/common.h>
-+#include <mach/mx51.h>
-+
-+/*
-+ * Lookup table for attaching a specific name and platform_data pointer to
-+ * devices as they get created by of_platform_populate().  Ideally this table
-+ * would not exist, but the current clock implementation depends on some devices
-+ * having a specific name.
-+ */
-+static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART1_BASE_ADDR, "imx-uart.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART2_BASE_ADDR, "imx-uart.1", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART3_BASE_ADDR, "imx-uart.2", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-fec", MX51_FEC_BASE_ADDR, "fec.0", NULL),
-+	{}
-+};
-+
-+static const struct of_device_id tzic_of_match[] __initconst = {
-+	{ .compatible = "fsl,imx51-tzic", },
-+	{}
-+};
-+
-+static void __init imx51_dt_init(void)
+ /* Some dma direct funcs must be visible for use in other dma_ops */
+ extern void *dma_direct_alloc_coherent(struct device *dev, size_t size,
+ 				       dma_addr_t *dma_handle, gfp_t flag);
+@@ -69,6 +71,7 @@ static inline unsigned long device_to_mask(struct device *dev)
+  */
+ #ifdef CONFIG_PPC64
+ extern struct dma_map_ops dma_iommu_ops;
++extern u64 dma_iommu_get_required_mask(struct device *dev);
+ #endif
+ extern struct dma_map_ops dma_direct_ops;
+ 
+diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
+index 47cacdd..58fc216 100644
+--- a/arch/powerpc/include/asm/machdep.h
++++ b/arch/powerpc/include/asm/machdep.h
+@@ -85,8 +85,9 @@ struct machdep_calls {
+ 	void		(*pci_dma_dev_setup)(struct pci_dev *dev);
+ 	void		(*pci_dma_bus_setup)(struct pci_bus *bus);
+ 
+-	/* Platform set_dma_mask override */
++	/* Platform set_dma_mask and dma_get_required_mask overrides */
+ 	int		(*dma_set_mask)(struct device *dev, u64 dma_mask);
++	u64		(*dma_get_required_mask)(struct device *dev);
+ 
+ 	int		(*probe)(void);
+ 	void		(*setup_arch)(void); /* Optional, may be NULL */
+diff --git a/arch/powerpc/kernel/dma-iommu.c b/arch/powerpc/kernel/dma-iommu.c
+index e755415..1f2a711 100644
+--- a/arch/powerpc/kernel/dma-iommu.c
++++ b/arch/powerpc/kernel/dma-iommu.c
+@@ -90,6 +90,19 @@ static int dma_iommu_dma_supported(struct device *dev, u64 mask)
+ 		return 1;
+ }
+ 
++u64 dma_iommu_get_required_mask(struct device *dev)
 +{
-+	irq_domain_generate_simple(tzic_of_match, MX51_TZIC_BASE_ADDR, 0);
++	struct iommu_table *tbl = get_iommu_table_base(dev);
++	u64 mask;
++	if (!tbl)
++		return 0;
 +
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+			     imx51_auxdata_lookup, NULL);
++	mask = 1ULL < (fls_long(tbl->it_offset + tbl->it_size) - 1);
++	mask += mask - 1;
++
++	return mask;
 +}
 +
-+static void __init imx51_timer_init(void)
+ struct dma_map_ops dma_iommu_ops = {
+ 	.alloc_coherent	= dma_iommu_alloc_coherent,
+ 	.free_coherent	= dma_iommu_free_coherent,
+diff --git a/arch/powerpc/kernel/dma.c b/arch/powerpc/kernel/dma.c
+index d238c08..97fe867 100644
+--- a/arch/powerpc/kernel/dma.c
++++ b/arch/powerpc/kernel/dma.c
+@@ -172,6 +172,45 @@ int dma_set_mask(struct device *dev, u64 dma_mask)
+ }
+ EXPORT_SYMBOL(dma_set_mask);
+ 
++u64 dma_get_required_mask(struct device *dev)
 +{
-+	mx51_clocks_init(32768, 24000000, 22579200, 0);
++	struct dma_map_ops *dma_ops = get_dma_ops(dev);
++	u64 mask, end = 0;
++
++	if (ppc_md.dma_get_required_mask)
++		return ppc_md.dma_get_required_mask(dev);
++
++	if (unlikely(dma_ops == NULL))
++		return 0;
++
++#ifdef CONFIG_PPC64
++	else if (dma_ops == &dma_iommu_ops)
++		return dma_iommu_get_required_mask(dev);
++#endif
++#ifdef CONFIG_SWIOTLB
++	else if (dma_ops == &swiotlb_dma_ops) {
++		u64 max_direct_dma_addr = dev->archdata.max_direct_dma_addr;
++
++		end = memblock_end_of_DRAM();
++		if (max_direct_dma_addr && end > max_direct_dma_addr)
++			end = max_direct_dma_addr;
++		end += get_dma_offset(dev);
++	}
++#endif
++	else if (dma_ops == &dma_direct_ops)
++		end = memblock_end_of_DRAM() + get_dma_offset(dev);
++	else {
++		WARN_ONCE(1, "%s: unknown ops %p\n", __func__, dma_ops);
++		end = memblock_end_of_DRAM();
++	}
++
++	mask = 1ULL << (fls64(end) - 1);
++	mask += mask - 1;
++
++	return mask;
++}
++EXPORT_SYMBOL_GPL(dma_get_required_mask);
++
+ static int __init dma_init(void)
+ {
+        dma_debug_init(PREALLOC_DMA_DEBUG_ENTRIES);
+diff --git a/arch/powerpc/platforms/cell/iommu.c b/arch/powerpc/platforms/cell/iommu.c
+index 26a0671..5ef55f3 100644
+--- a/arch/powerpc/platforms/cell/iommu.c
++++ b/arch/powerpc/platforms/cell/iommu.c
+@@ -1159,6 +1159,17 @@ static int __init setup_iommu_fixed(char *str)
+ }
+ __setup("iommu_fixed=", setup_iommu_fixed);
+ 
++static u64 cell_dma_get_required_mask(struct device *dev)
++{
++	if (!dev->dma_mask)
++		return 0;
++
++	if (iommu_fixed_disabled && get_dma_ops(dev) == &dma_iommu_ops)
++		return dma_iommu_get_required_mask(dev);
++
++	return DMA_BIT_MASK(64);
 +}
 +
-+static struct sys_timer imx51_timer = {
-+	.init = imx51_timer_init,
-+};
+ static int __init cell_iommu_init(void)
+ {
+ 	struct device_node *np;
+@@ -1175,6 +1186,7 @@ static int __init cell_iommu_init(void)
+ 
+ 	/* Setup various ppc_md. callbacks */
+ 	ppc_md.pci_dma_dev_setup = cell_pci_dma_dev_setup;
++	ppc_md.dma_get_required_mask = cell_dma_get_required_mask;
+ 	ppc_md.tce_build = tce_build_cell;
+ 	ppc_md.tce_free = tce_free_cell;
+ 
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index 01faab9..fe5eded 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -1077,12 +1077,38 @@ check_mask:
+ 	return 0;
+ }
+ 
++static u64 dma_get_required_mask_pSeriesLP(struct device *dev)
++{
++	if (!dev->dma_mask)
++		return 0;
 +
-+static const char *imx51_dt_board_compat[] __initdata = {
-+	"fsl,imx51-babbage",
-+	NULL
-+};
++	if (!disable_ddw && dev_is_pci(dev)) {
++		struct pci_dev *pdev = to_pci_dev(dev);
++		struct device_node *dn;
 +
-+DT_MACHINE_START(IMX51_DT, "Freescale i.MX51 (Device Tree Support)")
-+	.map_io		= mx51_map_io,
-+	.init_early	= imx51_init_early,
-+	.init_irq	= mx51_init_irq,
-+	.timer		= &imx51_timer,
-+	.init_machine	= imx51_dt_init,
-+	.dt_compat	= imx51_dt_board_compat,
-+MACHINE_END
++		dn = pci_device_to_OF_node(pdev);
++
++		/* search upwards for ibm,dma-window */
++		for (; dn && PCI_DN(dn) && !PCI_DN(dn)->iommu_table;
++				dn = dn->parent)
++			if (of_get_property(dn, "ibm,dma-window", NULL))
++				break;
++		/* if there is a ibm,ddw-applicable property require 64 bits */
++		if (dn && PCI_DN(dn) &&
++				of_get_property(dn, "ibm,ddw-applicable", NULL))
++			return DMA_BIT_MASK(64);
++	}
++
++	return dma_iommu_get_required_mask(dev);
++}
++
+ #else  /* CONFIG_PCI */
+ #define pci_dma_bus_setup_pSeries	NULL
+ #define pci_dma_dev_setup_pSeries	NULL
+ #define pci_dma_bus_setup_pSeriesLP	NULL
+ #define pci_dma_dev_setup_pSeriesLP	NULL
+ #define dma_set_mask_pSeriesLP		NULL
++#define dma_get_required_mask_pSeriesLP	NULL
+ #endif /* !CONFIG_PCI */
+ 
+ static int iommu_mem_notifier(struct notifier_block *nb, unsigned long action,
+@@ -1186,6 +1212,7 @@ void iommu_init_early_pSeries(void)
+ 		ppc_md.pci_dma_bus_setup = pci_dma_bus_setup_pSeriesLP;
+ 		ppc_md.pci_dma_dev_setup = pci_dma_dev_setup_pSeriesLP;
+ 		ppc_md.dma_set_mask = dma_set_mask_pSeriesLP;
++		ppc_md.dma_get_required_mask = dma_get_required_mask_pSeriesLP;
+ 	} else {
+ 		ppc_md.tce_build = tce_build_pSeries;
+ 		ppc_md.tce_free  = tce_free_pSeries;
 -- 
 1.7.4.1
