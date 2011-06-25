@@ -1,173 +1,108 @@
-From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/2] Character literal parsing
-Date: Fri, 24 Jun 2011 14:47:05 -0700
-Message-ID: <BANLkTi=EEuuYSZdLeE1UFsdT=xuEZREkEs+R_FcdQo6JPA-fEQ@mail.gmail.com>
-References: <1308871239-32683-1-git-send-email-robotboy@chromium.org>
-	<8yawrgb3smr.fsf@huya.qualcomm.com>
-	<BANLkTi=iUqMwag-A6t1ubDgSAN9xqWuTMwLG32EKKWuwVbigyg@mail.gmail.com>
-	<8yafwmz3pg3.fsf@huya.qualcomm.com>
-	<BANLkTinDPNfXWUOWPR3HmZatE=ohzO0Ybg@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH 1/4] dt: early platform devices support
+Date: Sat, 25 Jun 2011 12:11:42 +0100
+Message-ID: <20110625121142.4c73ca70@taxman.wild-wind.fr.eu.org>
+References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
+	<1308924659-31894-2-git-send-email-marc.zyngier@arm.com>
+	<BANLkTi=7cM2dXniHM4mnXs46KaTc05hh-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2381812625661402800=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTinDPNfXWUOWPR3HmZatE=ohzO0Ybg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <BANLkTi=7cM2dXniHM4mnXs46KaTc05hh-Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Greg Kroah-Hartman <greg@kroah.com>, devicetree-discuss@lists.ozlabs.org, Kay Sievers <kay.sievers@vrfy.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============2381812625661402800==
-Content-Type: multipart/alternative; boundary=0016e640d0347ebcec04a67c24d5
-
---0016e640d0347ebcec04a67c24d5
-Content-Type: text/plain; charset=ISO-8859-1
-
-On Fri, Jun 24, 2011 at 2:34 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>wrote:
-
-> On Fri, Jun 24, 2011 at 3:11 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> wrote:
-> > On Fri, Jun 24 2011, Anton Staaf wrote:
-> >
-> >> On Fri, Jun 24, 2011 at 1:02 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> wrote:
-> >>
-> >>
-> >>     Does this mean that the dtc inside the kernel is going to be the
-> >>     required tool to use to build device trees?  This change doesn't
-> change
-> >>     the DTB format, so it's as much of a concern, but was wondering if
-> we're
-> >>     intending to keep things compatible.
-> >>
-> >>
-> >> To be honest, I don't know enough to say either way.  I am using the
-> character
-> >> literals in a device tree that is used to configure a single firmware
-> image for
-> >> multiple boards.  That device tree is not currently passed on to the
-> kernel.
-> >>
-> >> Your question makes me think that there are two device tree compilers
-> that I
-> >> should be paying attention to, is that the case?  Or was it a more
-> general
-> >> comment about diverging from a historic syntax for device tree source
-> files?
-> >
-> > Both, really.  There is a dtc at
-> > git://git.kernel.org/pub/scm/linux/kernel/git/galak/dtc.git but it seems
-> > older than the one in the kernel.
->
-> The kernel one is simply a copy of the upstream dtc.  You should craft
-> your patches against:
->
-> git://git.jdl.com/software/dtc.git
->
-> >
-> > Also, the dts form is defined in the ePAPR documents, and this would be
-> > a (minor) divergence from that.
->
-> dts is not set in stone, and is certainly subject to enhancements
-> providing it doesn't break existing users.
->
->
-Adding character literals does not (as far as I can tell) conflict with any
-existing syntax.  All exiting dts files should compile to the exact same
-blobs with my patches.  And of coarse, all of the existing test cases pass
-cleanly.  It would also be a good idea for me to add test cases for
-character literals.  I will do that and update the patch set if we decide to
-accept the change to the syntax.
-
--Anton
-
---0016e640d0347ebcec04a67c24d5
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><br><div class=3D"gmail_quote">On Fri, Jun 24, 2011 at 2:34 PM, Grant L=
-ikely <span dir=3D"ltr">&lt;<a href=3D"mailto:grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org">gr=
-ant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail=
-_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:=
-1ex;">
-<div class=3D"im">On Fri, Jun 24, 2011 at 3:11 PM, David Brown &lt;<a href=
-=3D"mailto:davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org</a>&gt; wrote:<br>
-&gt; On Fri, Jun 24 2011, Anton Staaf wrote:<br>
-&gt;<br>
-&gt;&gt; On Fri, Jun 24, 2011 at 1:02 PM, David Brown &lt;<a href=3D"mailto=
-:davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org</a>&gt; wrote:<br>
-&gt;&gt;<br>
-&gt;&gt;<br>
-&gt;&gt; =A0 =A0 Does this mean that the dtc inside the kernel is going to =
-be the<br>
-&gt;&gt; =A0 =A0 required tool to use to build device trees? =A0This change=
- doesn&#39;t change<br>
-&gt;&gt; =A0 =A0 the DTB format, so it&#39;s as much of a concern, but was =
-wondering if we&#39;re<br>
-&gt;&gt; =A0 =A0 intending to keep things compatible.<br>
-&gt;&gt;<br>
-&gt;&gt;<br>
-&gt;&gt; To be honest, I don&#39;t know enough to say either way. =A0I am u=
-sing the character<br>
-&gt;&gt; literals in a device tree that is used to configure a single firmw=
-are image for<br>
-&gt;&gt; multiple boards. =A0That device tree is not currently passed on to=
- the kernel.<br>
-&gt;&gt;<br>
-&gt;&gt; Your question makes me think that there are two device tree compil=
-ers that I<br>
-&gt;&gt; should be paying attention to, is that the case? =A0Or was it a mo=
-re general<br>
-&gt;&gt; comment about diverging from a historic syntax for device tree sou=
-rce files?<br>
-&gt;<br>
-&gt; Both, really. =A0There is a dtc at<br>
-&gt; git://<a href=3D"http://git.kernel.org/pub/scm/linux/kernel/git/galak/=
-dtc.git" target=3D"_blank">git.kernel.org/pub/scm/linux/kernel/git/galak/dt=
-c.git</a> but it seems<br>
-&gt; older than the one in the kernel.<br>
-<br>
-</div>The kernel one is simply a copy of the upstream dtc. =A0You should cr=
-aft<br>
-your patches against:<br>
-<div class=3D"im"><br>
-git://<a href=3D"http://git.jdl.com/software/dtc.git" target=3D"_blank">git=
-.jdl.com/software/dtc.git</a><br>
-<br>
-&gt;<br>
-</div><div class=3D"im">&gt; Also, the dts form is defined in the ePAPR doc=
-uments, and this would be<br>
-&gt; a (minor) divergence from that.<br>
-<br>
-</div>dts is not set in stone, and is certainly subject to enhancements<br>
-providing it doesn&#39;t break existing users.<br>
-<font color=3D"#888888"><br></font></blockquote><div>=A0</div></div>Adding =
-character literals does not (as far as I can tell) conflict with any existi=
-ng syntax. =A0All exiting dts files should compile to the exact same blobs =
-with my patches. =A0And of coarse, all of the existing test cases pass clea=
-nly. =A0It would also be a good idea for me to add test cases for character=
- literals. =A0I will do that and update the patch set if we decide to accep=
-t the change to the syntax.<div>
-<br></div><div>-Anton</div><div><br></div>
-
---0016e640d0347ebcec04a67c24d5--
-
---===============2381812625661402800==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2381812625661402800==--
+T24gRnJpLCAyNCBKdW4gMjAxMSAyMjo0OTo1NiAtMDYwMApHcmFudCBMaWtlbHkgPGdyYW50Lmxp
+a2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgoKPiBbY2MnaW5nIGxpbnV4IGtlcm5lbCBzaW5jZSBJ
+IGRpc2N1c3MgZHJpdmVyIGNvcmUgaXNzdWVzXQo+IFtjYydpbmcgZ3JlZyBhbmQga2F5LCAnY2F1
+c2UgSSd2ZSBpbmNsdWRlZCBhIHBhdGNoIEknZCBsaWtlIHlvdSB0bwo+IGxvb2sgYXQgKHNlZSBl
+bmQgb2YgZW1haWwpXQo+IAo+IE9uIEZyaSwgSnVuIDI0LCAyMDExIGF0IDg6MTAgQU0sIE1hcmMg
+WnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlOgo+ID4gQWRkIHN1cHBvcnQgZm9y
+IHBvcHVsYXRpbmcgZWFybHkgcGxhdGZvcm0gZGV2aWNlcyBmcm9tIHRoZSBkZXZpY2UKPiA+IHRy
+ZWUsIGJ5IHdhbGtpbmcgdGhlIHRyZWUgYW5kIGFkZGluZyBub2RlcyB3aG9zZSAnY29tcGF0aWJs
+ZScKPiA+IHByb3BlcnR5IG1hdGNoZXMgdGhlICdjbGFzcycgc3RyaW5nIHBhc3NlZCBhcyBhIHBh
+cmFtZXRlci4KPiA+Cj4gPiBUaGlzIGFsbG93cyBkZXZpY2VzIHRvIGJlIHByb2JlZCBsb25nIGJl
+Zm9yZSB0aGUgd2hvbGUgZGV2aWNlCj4gPiBpbmZyYXN0cnVjdHVyZSBpcyBhdmFpbGFibGUuCj4g
+Pgo+ID4gU2lnbmVkLW9mZi1ieTogTWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT4K
+PiA+IC0tLQo+ID4gwqBkcml2ZXJzL29mL3BsYXRmb3JtLmMgwqAgwqAgwqAgfCDCoCAyNiArKysr
+KysrKysrKysrKysrKysrKysrKysrKwo+ID4gwqBpbmNsdWRlL2xpbnV4L29mX3BsYXRmb3JtLmgg
+fCDCoCDCoDEgKwo+ID4gwqAyIGZpbGVzIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyksIDAgZGVs
+ZXRpb25zKC0pCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvcGxhdGZvcm0uYyBiL2Ry
+aXZlcnMvb2YvcGxhdGZvcm0uYwo+ID4gaW5kZXggZTc1YWYzOS4uMmEzMjNlZSAxMDA2NDQKPiA+
+IC0tLSBhL2RyaXZlcnMvb2YvcGxhdGZvcm0uYwo+ID4gKysrIGIvZHJpdmVycy9vZi9wbGF0Zm9y
+bS5jCj4gPiBAQCAtNDU4LDQgKzQ1OCwzMCBAQCBpbnQgb2ZfcGxhdGZvcm1fcG9wdWxhdGUoc3Ry
+dWN0IGRldmljZV9ub2RlICpyb290LAo+ID4gwqAgwqAgwqAgwqBvZl9ub2RlX3B1dChyb290KTsK
+PiA+IMKgIMKgIMKgIMKgcmV0dXJuIHJjOwo+ID4gwqB9Cj4gPiArCj4gPiArLyoqCj4gPiArICog
+b2ZfZWFybHlfcGxhdGZvcm1fcG9wdWxhdGUoKSAtIFBvcHVsYXRlIGVhcmx5IHBsYXRmb3JtIGRl
+dmljZXMgZnJvbSBEVAo+ID4gKyAqIEBjbGFzczogc3RyaW5nIHRvIGNvbXBhcmUgdG8gdGhlICdj
+b21wYXRpYmxlJyBhdHRyaWJ1dGVzCj4gPiArICoKPiA+ICsgKiBUaGlzIGZ1bmN0aW9uIHdhbGtz
+IHRoZSBkZXZpY2UgdHJlZSBhbmQgcmVnaXN0ZXIgZGV2aWNlcyB3aG9zZQo+ID4gKyAqICdjb21w
+YXRpYmxlJyBwcm9wZXJ0eSBtYXRjaGVzIHRoZSAnY2xhc3MnIHBhcmFtZXRlci4KPiA+ICsgKgo+
+ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCA8IDAgb24gZmFpbHVyZS4KPiA+ICsgKi8KPiA+
+ICtpbnQgb2ZfZWFybHlfcGxhdGZvcm1fcG9wdWxhdGUoY29uc3QgY2hhciAqY2xhc3MpCj4gPiAr
+ewo+ID4gKyDCoCDCoCDCoCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2Owo+ID4gKyDCoCDC
+oCDCoCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gTlVMTDsKPiA+ICsKPiA+ICsgwqAgwqAgwqAg
+d2hpbGUgKChucCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKG5wLCBOVUxMLCBjbGFzcykpKSB7
+Cj4gCj4gZm9yX2VhY2hfY29tcGF0aWJsZV9ub2RlKCkKPiAKPiA+ICsgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgcGRldiA9IG9mX2RldmljZV9hbGxvYyhucCwgTlVMTCwgTlVMTCk7Cj4gPiArIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIGlmICghcGRldikKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgcmV0dXJuIC1FTk9NRU07Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGxpc3Rf
+ZGVsKCZwZGV2LT5kZXYuZGV2cmVzX2hlYWQpOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBt
+ZW1zZXQoJnBkZXYtPmRldi5kZXZyZXNfaGVhZCwgMCwgc2l6ZW9mKHBkZXYtPmRldi5kZXZyZXNf
+aGVhZCkpOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBlYXJseV9wbGF0Zm9ybV9hZGRfZGV2
+aWNlcygmcGRldiwgMSk7Cj4gCj4gSSdtIG5vdCBzdXJlIHRoaXMgd2lsbCB3b3JrIHJlbGlhYmx5
+LiAgVGhlIG9mX3BsYXRmb3JtIHNlbWFudGljcyBhcmUKPiBzdGlsbCBzbGlnaHRseSBkaWZmZXJl
+bnQgZnJvbSAncmVndWxhcicgcGxhdGZvcm0gZGV2aWNlcyAod2hpY2ggSSBkbwo+IGludGVuZCB0
+byBmaXggdGhvdWdoKSwgc28gaXQgbWF5IGNhdXNlIHByb2JsZW1zIHdpdGggaG93IHRoZSBkZXZp
+Y2UKPiBuYW1lIGdldHMgYXNzaWduZWQuICBJJ2QgbmVlZCB0byBkaWcgaW50byBpdCB0aG91Z2gu
+Cj4gCj4gPiArIMKgIMKgIMKgIH0KPiA+ICsKPiA+ICsgwqAgwqAgwqAgcmV0dXJuIDA7Cj4gPiAr
+fQo+IAo+IEhtbW0sIEknZCByZWFsbHkgcmF0aGVyIG5vdCBnbyBkb3duIHRoZSBwYXRoIG9mIGhh
+dmluZyBkaWZmZXJlbnQKPiAnY2xhc3Nlcycgb2YgZGV2aWNlcyB0aGF0IG5lZWQgdG8gYmUgcmVn
+aXN0ZXJlZCBhdCBkaWZmZXJlbnQgdGltZXMuCj4gVGhlcmUganVzdCBpc24ndCBhIHJlYWxseSBn
+b29kIGdlbmVyaWMgd2F5IHRvIGtub3cgd2hpY2ggZGV2aWNlcwo+IHNob3VsZCBiZSB0aGUgJ2Vh
+cmx5JyBvbmVzLCBpdCBnZXRzIGhhaXJ5IHdpdGggcmVnYXJkIHRvIG1ha2luZyBzdXJlCj4gZGV2
+aWNlcyBkb24ndCBnZXQgcmVnaXN0ZXJlZCB0d2ljZSwgYW5kIGl0IGRvZXNuJ3QgYWN0dWFsbHkg
+c29sdmUgdGhlCj4gcHJvYmxlbSB0aGF0IHRoZXJlIGlzIG5vIHdheSB0byBoYW5kbGUgZGVwZW5k
+ZW5jaWVzIGJldHdlZW4gZGV2aWNlcyBpbgo+IHRoZSBMaW51eCBkZXZpY2UgbW9kZWwuCj4gCj4g
+V2hhdCBJIC93YW50LyB0byBkbyBpcyBhbGxvdyBkcml2ZXJzIHRvIGRlZmVyIGluaXRpYWxpemF0
+aW9uIGF0IC5wcm9iZQo+IHRpbWUgaWYgc29tZSBvZiB0aGUgcmVzb3VyY2VzIGl0IG5lZWRzIGFy
+ZW4ndCB5ZXQgYXZhaWxhYmxlLgo+IFVuZm9ydHVuYXRlbHksIHRoYXQgZG9lc24ndCB3b3JrIHNv
+IHdlbGwgZm9yIGludGVycnVwdCBjb250cm9sbGVycwo+IHNpbmNlIGlycSBudW1iZXJzIGFyZSBl
+eHBlY3RlZCB0byBiZSBjb3JyZWN0bHkgcG9wdWxhdGVkIGluIHRoZQo+IHBsYXRmb3JtIGRldmlj
+ZSByZXNvdXJjZSB0YWJsZS4gIFdoYXQgY29tcGxpY2F0ZXMgdGhpbmdzIGZ1cnRoZXIgaXMKPiB0
+aGF0IG1vc3QgZ3BpbyBjb250cm9sbGVycyBhcmUgZG91YmxpbmcgYXMgaXJxIGNvbnRyb2xsZXJz
+IG5vd2RheXMsCj4gYW5kIHRob3NlIGFyZSB0eXBpY2FsbHkgbW9kZWxsZWQgd2l0aCBwbGF0Zm9y
+bSBkZXZpY2VzIHRoZW1zZWx2ZXMuCgpXaGlsZSBJIHRvdGFsbHkgYWdyZWUgd2l0aCBhbGwgdGhl
+IGFib3ZlLCB0aGlzIHBhdGNoIHRyaWVzIHRvIGFkZHJlc3MgYQpzbGlnaHRseSBkaWZmZXJlbnQg
+cHJvYmxlbS4gT24gdG9wIG9mIGRldmljZS9kZXZpY2UgZGVwZW5kZW5jaWVzLCB0aGVyZQppcyBh
+bHNvIGEgbnVtYmVyIG9mIGltcGxpY2l0IGRlcGVuZGVuY2llcy4KCkluIHRoZSBjYXNlIEknbSBj
+dXJyZW50bHkgdHJ5aW5nIHRvIHNvbHZlLCB0aGUga2VybmVsIGV4cGVjdHMgYSB0aW1lcgp0byBi
+ZSB1cCBhbmQgcnVubmluZyB3aGVuIGhpdHRpbmcgdGhlIGRlbGF5IGxvb3AgY2FsaWJyYXRpb24u
+IEF0IHRoYXQKc3RhZ2UsIGl0IGlzIGltcG9zc2libGUgdG8gcmVnaXN0ZXIgYSBwbGF0Zm9ybSBk
+ZXZpY2UsIGhlbmNlIHRoZSB1c2UKKGFidXNlPykgb2YgZWFybHkgcGxhdGZvcm0gZGV2aWNlcy4K
+ClRoZSBjdXJyZW50IEFSTSBjb2RlIHJlbGllcyBvbiB0aGUgdGltZXJzICpub3QqIGJlaW5nIGEg
+c3RhbmRhcmQKZGV2aWNlLCBhbmQgYmVpbmcgZGlyZWN0bHkgc2V0dXAgYnkgYW4gYm9hcmQgc3Bl
+Y2lmaWMgbWV0aG9kLiBUaGUgU01QCnRpbWVycyBhcmUgZXZlbiB3b3JzZSwgYXMgdGhleSBhcmUg
+ZGlyZWN0bHkgY2FsbGVkIGJ5IHRoZSBjb3JlIGNvZGUsCm1lYW5pbmcgdGhhdCB3ZSBjYW4gb25s
+eSBoYXZlICpvbmUqIGltcGxlbWVudGF0aW9uIGF0IGEgdGltZSBpbiB0aGUKa2VybmVsLgoKU28g
+dGhlIGVhcmx5IHBsYXRmb3JtIHN0dWZmIGlzIGEgcG90ZW50aWFsIHNvbHV0aW9uIGZvciB0aGF0
+LCB0aG91Z2gKdGhlcmUgaXMgbm8gd2F5IGl0IHdvdWxkIGhhbmRsZSBhbnkga2luZCBvZiBkZXBl
+bmRlbmN5LiBXaGF0IEkgZHJlYW0gb2YKaXMgdG8gaGF2ZSB0aGUgZnVsbCBkZXZpY2UvZHJpdmVy
+IGluZnJhc3RydWN0dXJlIGF2YWlsYWJsZSBtdWNoCmVhcmxpZXIsIGJlZm9yZSB0aGUgcmVzdCBv
+ZiB0aGUga2VybmVsIHN0YXJ0cyByZWx5aW5nIG9uIHNvbWUgaGFyZHdhcmUKYmVpbmcgdXAgYW5k
+IHJ1bm5pbmcuLi4KCkNoZWVycywKCglNLgotLSAKSSdtIHRoZSBzbGltZSBvb3ppbicgb3V0IGZy
+b20geW91ciBUViBzZXQuLi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
