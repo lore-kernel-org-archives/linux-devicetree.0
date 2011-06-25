@@ -1,108 +1,183 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC PATCH 1/4] dt: early platform devices support
-Date: Sat, 25 Jun 2011 12:11:42 +0100
-Message-ID: <20110625121142.4c73ca70@taxman.wild-wind.fr.eu.org>
-References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
-	<1308924659-31894-2-git-send-email-marc.zyngier@arm.com>
-	<BANLkTi=7cM2dXniHM4mnXs46KaTc05hh-Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <BANLkTi=7cM2dXniHM4mnXs46KaTc05hh-Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Greg Kroah-Hartman <greg@kroah.com>, devicetree-discuss@lists.ozlabs.org, Kay Sievers <kay.sievers@vrfy.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Daniel Drake <dsd@laptop.org>
+Subject: [PATCH v3 10/11] x86, olpc: Add XO-1 RTC driver
+Date: Sat, 25 Jun 2011 17:34:17 +0100
+Message-ID: <1309019658-1712-11-git-send-email-dsd@laptop.org>
+References: <1309019658-1712-1-git-send-email-dsd@laptop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1309019658-1712-1-git-send-email-dsd@laptop.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, dilinger@queued.net, bigeasy@linutronix.de, Daniel Drake <dsd@laptop.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyNCBKdW4gMjAxMSAyMjo0OTo1NiAtMDYwMApHcmFudCBMaWtlbHkgPGdyYW50Lmxp
-a2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgoKPiBbY2MnaW5nIGxpbnV4IGtlcm5lbCBzaW5jZSBJ
-IGRpc2N1c3MgZHJpdmVyIGNvcmUgaXNzdWVzXQo+IFtjYydpbmcgZ3JlZyBhbmQga2F5LCAnY2F1
-c2UgSSd2ZSBpbmNsdWRlZCBhIHBhdGNoIEknZCBsaWtlIHlvdSB0bwo+IGxvb2sgYXQgKHNlZSBl
-bmQgb2YgZW1haWwpXQo+IAo+IE9uIEZyaSwgSnVuIDI0LCAyMDExIGF0IDg6MTAgQU0sIE1hcmMg
-WnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlOgo+ID4gQWRkIHN1cHBvcnQgZm9y
-IHBvcHVsYXRpbmcgZWFybHkgcGxhdGZvcm0gZGV2aWNlcyBmcm9tIHRoZSBkZXZpY2UKPiA+IHRy
-ZWUsIGJ5IHdhbGtpbmcgdGhlIHRyZWUgYW5kIGFkZGluZyBub2RlcyB3aG9zZSAnY29tcGF0aWJs
-ZScKPiA+IHByb3BlcnR5IG1hdGNoZXMgdGhlICdjbGFzcycgc3RyaW5nIHBhc3NlZCBhcyBhIHBh
-cmFtZXRlci4KPiA+Cj4gPiBUaGlzIGFsbG93cyBkZXZpY2VzIHRvIGJlIHByb2JlZCBsb25nIGJl
-Zm9yZSB0aGUgd2hvbGUgZGV2aWNlCj4gPiBpbmZyYXN0cnVjdHVyZSBpcyBhdmFpbGFibGUuCj4g
-Pgo+ID4gU2lnbmVkLW9mZi1ieTogTWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT4K
-PiA+IC0tLQo+ID4gwqBkcml2ZXJzL29mL3BsYXRmb3JtLmMgwqAgwqAgwqAgfCDCoCAyNiArKysr
-KysrKysrKysrKysrKysrKysrKysrKwo+ID4gwqBpbmNsdWRlL2xpbnV4L29mX3BsYXRmb3JtLmgg
-fCDCoCDCoDEgKwo+ID4gwqAyIGZpbGVzIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyksIDAgZGVs
-ZXRpb25zKC0pCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvcGxhdGZvcm0uYyBiL2Ry
-aXZlcnMvb2YvcGxhdGZvcm0uYwo+ID4gaW5kZXggZTc1YWYzOS4uMmEzMjNlZSAxMDA2NDQKPiA+
-IC0tLSBhL2RyaXZlcnMvb2YvcGxhdGZvcm0uYwo+ID4gKysrIGIvZHJpdmVycy9vZi9wbGF0Zm9y
-bS5jCj4gPiBAQCAtNDU4LDQgKzQ1OCwzMCBAQCBpbnQgb2ZfcGxhdGZvcm1fcG9wdWxhdGUoc3Ry
-dWN0IGRldmljZV9ub2RlICpyb290LAo+ID4gwqAgwqAgwqAgwqBvZl9ub2RlX3B1dChyb290KTsK
-PiA+IMKgIMKgIMKgIMKgcmV0dXJuIHJjOwo+ID4gwqB9Cj4gPiArCj4gPiArLyoqCj4gPiArICog
-b2ZfZWFybHlfcGxhdGZvcm1fcG9wdWxhdGUoKSAtIFBvcHVsYXRlIGVhcmx5IHBsYXRmb3JtIGRl
-dmljZXMgZnJvbSBEVAo+ID4gKyAqIEBjbGFzczogc3RyaW5nIHRvIGNvbXBhcmUgdG8gdGhlICdj
-b21wYXRpYmxlJyBhdHRyaWJ1dGVzCj4gPiArICoKPiA+ICsgKiBUaGlzIGZ1bmN0aW9uIHdhbGtz
-IHRoZSBkZXZpY2UgdHJlZSBhbmQgcmVnaXN0ZXIgZGV2aWNlcyB3aG9zZQo+ID4gKyAqICdjb21w
-YXRpYmxlJyBwcm9wZXJ0eSBtYXRjaGVzIHRoZSAnY2xhc3MnIHBhcmFtZXRlci4KPiA+ICsgKgo+
-ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCA8IDAgb24gZmFpbHVyZS4KPiA+ICsgKi8KPiA+
-ICtpbnQgb2ZfZWFybHlfcGxhdGZvcm1fcG9wdWxhdGUoY29uc3QgY2hhciAqY2xhc3MpCj4gPiAr
-ewo+ID4gKyDCoCDCoCDCoCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2Owo+ID4gKyDCoCDC
-oCDCoCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gTlVMTDsKPiA+ICsKPiA+ICsgwqAgwqAgwqAg
-d2hpbGUgKChucCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKG5wLCBOVUxMLCBjbGFzcykpKSB7
-Cj4gCj4gZm9yX2VhY2hfY29tcGF0aWJsZV9ub2RlKCkKPiAKPiA+ICsgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgcGRldiA9IG9mX2RldmljZV9hbGxvYyhucCwgTlVMTCwgTlVMTCk7Cj4gPiArIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIGlmICghcGRldikKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgcmV0dXJuIC1FTk9NRU07Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGxpc3Rf
-ZGVsKCZwZGV2LT5kZXYuZGV2cmVzX2hlYWQpOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBt
-ZW1zZXQoJnBkZXYtPmRldi5kZXZyZXNfaGVhZCwgMCwgc2l6ZW9mKHBkZXYtPmRldi5kZXZyZXNf
-aGVhZCkpOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBlYXJseV9wbGF0Zm9ybV9hZGRfZGV2
-aWNlcygmcGRldiwgMSk7Cj4gCj4gSSdtIG5vdCBzdXJlIHRoaXMgd2lsbCB3b3JrIHJlbGlhYmx5
-LiAgVGhlIG9mX3BsYXRmb3JtIHNlbWFudGljcyBhcmUKPiBzdGlsbCBzbGlnaHRseSBkaWZmZXJl
-bnQgZnJvbSAncmVndWxhcicgcGxhdGZvcm0gZGV2aWNlcyAod2hpY2ggSSBkbwo+IGludGVuZCB0
-byBmaXggdGhvdWdoKSwgc28gaXQgbWF5IGNhdXNlIHByb2JsZW1zIHdpdGggaG93IHRoZSBkZXZp
-Y2UKPiBuYW1lIGdldHMgYXNzaWduZWQuICBJJ2QgbmVlZCB0byBkaWcgaW50byBpdCB0aG91Z2gu
-Cj4gCj4gPiArIMKgIMKgIMKgIH0KPiA+ICsKPiA+ICsgwqAgwqAgwqAgcmV0dXJuIDA7Cj4gPiAr
-fQo+IAo+IEhtbW0sIEknZCByZWFsbHkgcmF0aGVyIG5vdCBnbyBkb3duIHRoZSBwYXRoIG9mIGhh
-dmluZyBkaWZmZXJlbnQKPiAnY2xhc3Nlcycgb2YgZGV2aWNlcyB0aGF0IG5lZWQgdG8gYmUgcmVn
-aXN0ZXJlZCBhdCBkaWZmZXJlbnQgdGltZXMuCj4gVGhlcmUganVzdCBpc24ndCBhIHJlYWxseSBn
-b29kIGdlbmVyaWMgd2F5IHRvIGtub3cgd2hpY2ggZGV2aWNlcwo+IHNob3VsZCBiZSB0aGUgJ2Vh
-cmx5JyBvbmVzLCBpdCBnZXRzIGhhaXJ5IHdpdGggcmVnYXJkIHRvIG1ha2luZyBzdXJlCj4gZGV2
-aWNlcyBkb24ndCBnZXQgcmVnaXN0ZXJlZCB0d2ljZSwgYW5kIGl0IGRvZXNuJ3QgYWN0dWFsbHkg
-c29sdmUgdGhlCj4gcHJvYmxlbSB0aGF0IHRoZXJlIGlzIG5vIHdheSB0byBoYW5kbGUgZGVwZW5k
-ZW5jaWVzIGJldHdlZW4gZGV2aWNlcyBpbgo+IHRoZSBMaW51eCBkZXZpY2UgbW9kZWwuCj4gCj4g
-V2hhdCBJIC93YW50LyB0byBkbyBpcyBhbGxvdyBkcml2ZXJzIHRvIGRlZmVyIGluaXRpYWxpemF0
-aW9uIGF0IC5wcm9iZQo+IHRpbWUgaWYgc29tZSBvZiB0aGUgcmVzb3VyY2VzIGl0IG5lZWRzIGFy
-ZW4ndCB5ZXQgYXZhaWxhYmxlLgo+IFVuZm9ydHVuYXRlbHksIHRoYXQgZG9lc24ndCB3b3JrIHNv
-IHdlbGwgZm9yIGludGVycnVwdCBjb250cm9sbGVycwo+IHNpbmNlIGlycSBudW1iZXJzIGFyZSBl
-eHBlY3RlZCB0byBiZSBjb3JyZWN0bHkgcG9wdWxhdGVkIGluIHRoZQo+IHBsYXRmb3JtIGRldmlj
-ZSByZXNvdXJjZSB0YWJsZS4gIFdoYXQgY29tcGxpY2F0ZXMgdGhpbmdzIGZ1cnRoZXIgaXMKPiB0
-aGF0IG1vc3QgZ3BpbyBjb250cm9sbGVycyBhcmUgZG91YmxpbmcgYXMgaXJxIGNvbnRyb2xsZXJz
-IG5vd2RheXMsCj4gYW5kIHRob3NlIGFyZSB0eXBpY2FsbHkgbW9kZWxsZWQgd2l0aCBwbGF0Zm9y
-bSBkZXZpY2VzIHRoZW1zZWx2ZXMuCgpXaGlsZSBJIHRvdGFsbHkgYWdyZWUgd2l0aCBhbGwgdGhl
-IGFib3ZlLCB0aGlzIHBhdGNoIHRyaWVzIHRvIGFkZHJlc3MgYQpzbGlnaHRseSBkaWZmZXJlbnQg
-cHJvYmxlbS4gT24gdG9wIG9mIGRldmljZS9kZXZpY2UgZGVwZW5kZW5jaWVzLCB0aGVyZQppcyBh
-bHNvIGEgbnVtYmVyIG9mIGltcGxpY2l0IGRlcGVuZGVuY2llcy4KCkluIHRoZSBjYXNlIEknbSBj
-dXJyZW50bHkgdHJ5aW5nIHRvIHNvbHZlLCB0aGUga2VybmVsIGV4cGVjdHMgYSB0aW1lcgp0byBi
-ZSB1cCBhbmQgcnVubmluZyB3aGVuIGhpdHRpbmcgdGhlIGRlbGF5IGxvb3AgY2FsaWJyYXRpb24u
-IEF0IHRoYXQKc3RhZ2UsIGl0IGlzIGltcG9zc2libGUgdG8gcmVnaXN0ZXIgYSBwbGF0Zm9ybSBk
-ZXZpY2UsIGhlbmNlIHRoZSB1c2UKKGFidXNlPykgb2YgZWFybHkgcGxhdGZvcm0gZGV2aWNlcy4K
-ClRoZSBjdXJyZW50IEFSTSBjb2RlIHJlbGllcyBvbiB0aGUgdGltZXJzICpub3QqIGJlaW5nIGEg
-c3RhbmRhcmQKZGV2aWNlLCBhbmQgYmVpbmcgZGlyZWN0bHkgc2V0dXAgYnkgYW4gYm9hcmQgc3Bl
-Y2lmaWMgbWV0aG9kLiBUaGUgU01QCnRpbWVycyBhcmUgZXZlbiB3b3JzZSwgYXMgdGhleSBhcmUg
-ZGlyZWN0bHkgY2FsbGVkIGJ5IHRoZSBjb3JlIGNvZGUsCm1lYW5pbmcgdGhhdCB3ZSBjYW4gb25s
-eSBoYXZlICpvbmUqIGltcGxlbWVudGF0aW9uIGF0IGEgdGltZSBpbiB0aGUKa2VybmVsLgoKU28g
-dGhlIGVhcmx5IHBsYXRmb3JtIHN0dWZmIGlzIGEgcG90ZW50aWFsIHNvbHV0aW9uIGZvciB0aGF0
-LCB0aG91Z2gKdGhlcmUgaXMgbm8gd2F5IGl0IHdvdWxkIGhhbmRsZSBhbnkga2luZCBvZiBkZXBl
-bmRlbmN5LiBXaGF0IEkgZHJlYW0gb2YKaXMgdG8gaGF2ZSB0aGUgZnVsbCBkZXZpY2UvZHJpdmVy
-IGluZnJhc3RydWN0dXJlIGF2YWlsYWJsZSBtdWNoCmVhcmxpZXIsIGJlZm9yZSB0aGUgcmVzdCBv
-ZiB0aGUga2VybmVsIHN0YXJ0cyByZWx5aW5nIG9uIHNvbWUgaGFyZHdhcmUKYmVpbmcgdXAgYW5k
-IHJ1bm5pbmcuLi4KCkNoZWVycywKCglNLgotLSAKSSdtIHRoZSBzbGltZSBvb3ppbicgb3V0IGZy
-b20geW91ciBUViBzZXQuLi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Add a driver to configure the XO-1 RTC via CS5536 MSRs, to be used as a
+system wakeup source via olpc-xo1-pm.
+
+Device detection is based on finding the relevant device tree node.
+
+Signed-off-by: Daniel Drake <dsd@laptop.org>
+Acked-by: Andres Salomon <dilinger@queued.net>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ .../devicetree/bindings/rtc/olpc-xo1-rtc.txt       |    5 +
+ arch/x86/Kconfig                                   |    7 ++
+ arch/x86/platform/olpc/Makefile                    |    1 +
+ arch/x86/platform/olpc/olpc-xo1-rtc.c              |   82 ++++++++++++++++++++
+ include/linux/cs5535.h                             |    5 +
+ 5 files changed, 100 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
+ create mode 100644 arch/x86/platform/olpc/olpc-xo1-rtc.c
+
+diff --git a/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
+new file mode 100644
+index 0000000..a2891ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
+@@ -0,0 +1,5 @@
++OLPC XO-1 RTC
++~~~~~~~~~~~~~
++
++Required properties:
++ - compatible : "olpc,xo1-rtc"
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 38af371..de81496 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2082,6 +2082,13 @@ config OLPC_XO1_PM
+ 	---help---
+ 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+ 
++config OLPC_XO1_RTC
++	bool "OLPC XO-1 Real Time Clock"
++	depends on OLPC_XO1_PM && RTC_DRV_CMOS
++	---help---
++	  Add support for the XO-1 real time clock, which can be used as a
++	  programmable wakeup source.
++
+ config OLPC_XO1_SCI
+ 	bool "OLPC XO-1 SCI extras"
+ 	depends on OLPC && OLPC_XO1_PM && POWER_SUPPLY
+diff --git a/arch/x86/platform/olpc/Makefile b/arch/x86/platform/olpc/Makefile
+index 1ec5ade..8922b9b 100644
+--- a/arch/x86/platform/olpc/Makefile
++++ b/arch/x86/platform/olpc/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_OLPC)		+= olpc.o olpc_ofw.o olpc_dt.o
+ obj-$(CONFIG_OLPC_XO1_PM)		+= olpc-xo1-pm.o xo1-wakeup.o
++obj-$(CONFIG_OLPC_XO1_RTC)	+= olpc-xo1-rtc.o
+ obj-$(CONFIG_OLPC_XO1_SCI)	+= olpc-xo1-sci.o
+diff --git a/arch/x86/platform/olpc/olpc-xo1-rtc.c b/arch/x86/platform/olpc/olpc-xo1-rtc.c
+new file mode 100644
+index 0000000..476cc98
+--- /dev/null
++++ b/arch/x86/platform/olpc/olpc-xo1-rtc.c
+@@ -0,0 +1,82 @@
++/*
++ * Support for OLPC XO-1 Real Time Clock (RTC)
++ *
++ * Copyright (C) 2011 One Laptop per Child
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/mc146818rtc.h>
++#include <linux/platform_device.h>
++#include <linux/rtc.h>
++#include <linux/of.h>
++
++#include <asm/msr.h>
++#include <asm/olpc.h>
++
++static void rtc_wake_on(struct device *dev)
++{
++	olpc_xo1_pm_wakeup_set(CS5536_PM_RTC);
++}
++
++static void rtc_wake_off(struct device *dev)
++{
++	olpc_xo1_pm_wakeup_clear(CS5536_PM_RTC);
++}
++
++static struct resource rtc_platform_resource[] = {
++	[0] = {
++		.start	= RTC_PORT(0),
++		.end	= RTC_PORT(1),
++		.flags	= IORESOURCE_IO,
++	},
++	[1] = {
++		.start	= RTC_IRQ,
++		.end	= RTC_IRQ,
++		.flags	= IORESOURCE_IRQ,
++	}
++};
++
++static struct cmos_rtc_board_info rtc_info = {
++	.rtc_day_alarm = 0,
++	.rtc_mon_alarm = 0,
++	.rtc_century = 0,
++	.wake_on = rtc_wake_on,
++	.wake_off = rtc_wake_off,
++};
++
++static struct platform_device xo1_rtc_device = {
++	.name = "rtc_cmos",
++	.id = -1,
++	.num_resources = ARRAY_SIZE(rtc_platform_resource),
++	.dev.platform_data = &rtc_info,
++	.resource = rtc_platform_resource,
++};
++
++static int __init xo1_rtc_init(void)
++{
++	int r;
++	struct device_node *node;
++
++	node = of_find_compatible_node(NULL, NULL, "olpc,xo1-rtc");
++	if (!node)
++		return 0;
++	of_node_put(node);
++
++	pr_info("olpc-xo1-rtc: Initializing OLPC XO-1 RTC\n");
++	rdmsrl(MSR_RTC_DOMA_OFFSET, rtc_info.rtc_day_alarm);
++	rdmsrl(MSR_RTC_MONA_OFFSET, rtc_info.rtc_mon_alarm);
++	rdmsrl(MSR_RTC_CEN_OFFSET, rtc_info.rtc_century);
++
++	r = platform_device_register(&xo1_rtc_device);
++	if (r)
++		return r;
++
++	device_init_wakeup(&xo1_rtc_device.dev, 1);
++	return 0;
++}
++arch_initcall(xo1_rtc_init);
++
+diff --git a/include/linux/cs5535.h b/include/linux/cs5535.h
+index 72954c6..c077aec 100644
+--- a/include/linux/cs5535.h
++++ b/include/linux/cs5535.h
+@@ -40,6 +40,10 @@
+ #define MSR_MFGPT_NR		0x51400029
+ #define MSR_MFGPT_SETUP		0x5140002B
+ 
++#define MSR_RTC_DOMA_OFFSET	0x51400055
++#define MSR_RTC_MONA_OFFSET	0x51400056
++#define MSR_RTC_CEN_OFFSET	0x51400057
++
+ #define MSR_LX_SPARE_MSR	0x80000011	/* DC-specific */
+ 
+ #define MSR_GX_GLD_MSR_CONFIG	0xC0002001
+@@ -95,6 +99,7 @@ static inline int cs5535_pic_unreqz_select_high(unsigned int group,
+ 
+ /* CS5536_PM1_EN bits */
+ #define CS5536_PM_PWRBTN	(1 << 8)
++#define CS5536_PM_RTC		(1 << 10)
+ 
+ /* CS5536_PM_GPE0_STS bits */
+ #define CS5536_GPIOM7_PME_FLAG	(1 << 31)
+-- 
+1.7.5.4
