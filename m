@@ -1,183 +1,162 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: [PATCH v3 10/11] x86, olpc: Add XO-1 RTC driver
-Date: Sat, 25 Jun 2011 17:34:17 +0100
-Message-ID: <1309019658-1712-11-git-send-email-dsd@laptop.org>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 01/11] x86, olpc: add missing elements to device tree
+Date: Sat, 25 Jun 2011 17:34:08 +0100
+Message-ID: <1309019658-1712-2-git-send-email-dsd@laptop.org>
 References: <1309019658-1712-1-git-send-email-dsd@laptop.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1309019658-1712-1-git-send-email-dsd@laptop.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, dilinger@queued.net, bigeasy@linutronix.de, Daniel Drake <dsd@laptop.org>, devicetree-discuss@lists.ozlabs.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1309019658-1712-1-git-send-email-dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a driver to configure the XO-1 RTC via CS5536 MSRs, to be used as a
-system wakeup source via olpc-xo1-pm.
+In response to new device tree code in the kernel, OLPC will start
+using it for probing of certain devices. However, some firmware fixes
+are needed to put the devicetree into a usable state.
 
-Device detection is based on finding the relevant device tree node.
+Retain compatibility with old firmware by fixing up the device tree
+at boot-time if it does not contain the new nodes/properties that
+we need for probing. This is the same approach taken on PPC platforms.
 
-Signed-off-by: Daniel Drake <dsd@laptop.org>
-Acked-by: Andres Salomon <dilinger@queued.net>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- .../devicetree/bindings/rtc/olpc-xo1-rtc.txt       |    5 +
- arch/x86/Kconfig                                   |    7 ++
- arch/x86/platform/olpc/Makefile                    |    1 +
- arch/x86/platform/olpc/olpc-xo1-rtc.c              |   82 ++++++++++++++++++++
- include/linux/cs5535.h                             |    5 +
- 5 files changed, 100 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
- create mode 100644 arch/x86/platform/olpc/olpc-xo1-rtc.c
+ arch/x86/platform/olpc/olpc_dt.c |  103 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 103 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
-new file mode 100644
-index 0000000..a2891ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/olpc-xo1-rtc.txt
-@@ -0,0 +1,5 @@
-+OLPC XO-1 RTC
-+~~~~~~~~~~~~~
-+
-+Required properties:
-+ - compatible : "olpc,xo1-rtc"
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 38af371..de81496 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2082,6 +2082,13 @@ config OLPC_XO1_PM
- 	---help---
- 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
+index d39f63d..d6ee929 100644
+--- a/arch/x86/platform/olpc/olpc_dt.c
++++ b/arch/x86/platform/olpc/olpc_dt.c
+@@ -165,6 +165,107 @@ static struct of_pdt_ops prom_olpc_ops __initdata = {
+ 	.pkg2path = olpc_dt_pkg2path,
+ };
  
-+config OLPC_XO1_RTC
-+	bool "OLPC XO-1 Real Time Clock"
-+	depends on OLPC_XO1_PM && RTC_DRV_CMOS
-+	---help---
-+	  Add support for the XO-1 real time clock, which can be used as a
-+	  programmable wakeup source.
-+
- config OLPC_XO1_SCI
- 	bool "OLPC XO-1 SCI extras"
- 	depends on OLPC && OLPC_XO1_PM && POWER_SUPPLY
-diff --git a/arch/x86/platform/olpc/Makefile b/arch/x86/platform/olpc/Makefile
-index 1ec5ade..8922b9b 100644
---- a/arch/x86/platform/olpc/Makefile
-+++ b/arch/x86/platform/olpc/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_OLPC)		+= olpc.o olpc_ofw.o olpc_dt.o
- obj-$(CONFIG_OLPC_XO1_PM)		+= olpc-xo1-pm.o xo1-wakeup.o
-+obj-$(CONFIG_OLPC_XO1_RTC)	+= olpc-xo1-rtc.o
- obj-$(CONFIG_OLPC_XO1_SCI)	+= olpc-xo1-sci.o
-diff --git a/arch/x86/platform/olpc/olpc-xo1-rtc.c b/arch/x86/platform/olpc/olpc-xo1-rtc.c
-new file mode 100644
-index 0000000..476cc98
---- /dev/null
-+++ b/arch/x86/platform/olpc/olpc-xo1-rtc.c
-@@ -0,0 +1,82 @@
-+/*
-+ * Support for OLPC XO-1 Real Time Clock (RTC)
-+ *
-+ * Copyright (C) 2011 One Laptop per Child
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/mc146818rtc.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+#include <linux/of.h>
-+
-+#include <asm/msr.h>
-+#include <asm/olpc.h>
-+
-+static void rtc_wake_on(struct device *dev)
++static phandle __init olpc_dt_finddevice(const char *path)
 +{
-+	olpc_xo1_pm_wakeup_set(CS5536_PM_RTC);
-+}
++	phandle node;
++	const void *args[] = { path };
++	void *res[] = { &node };
 +
-+static void rtc_wake_off(struct device *dev)
-+{
-+	olpc_xo1_pm_wakeup_clear(CS5536_PM_RTC);
-+}
-+
-+static struct resource rtc_platform_resource[] = {
-+	[0] = {
-+		.start	= RTC_PORT(0),
-+		.end	= RTC_PORT(1),
-+		.flags	= IORESOURCE_IO,
-+	},
-+	[1] = {
-+		.start	= RTC_IRQ,
-+		.end	= RTC_IRQ,
-+		.flags	= IORESOURCE_IRQ,
++	if (olpc_ofw("finddevice", args, res)) {
++		pr_err("olpc_dt: finddevice failed!\n");
++		return 0;
 +	}
-+};
 +
-+static struct cmos_rtc_board_info rtc_info = {
-+	.rtc_day_alarm = 0,
-+	.rtc_mon_alarm = 0,
-+	.rtc_century = 0,
-+	.wake_on = rtc_wake_on,
-+	.wake_off = rtc_wake_off,
-+};
++	if ((s32) node == -1)
++		return 0;
 +
-+static struct platform_device xo1_rtc_device = {
-+	.name = "rtc_cmos",
-+	.id = -1,
-+	.num_resources = ARRAY_SIZE(rtc_platform_resource),
-+	.dev.platform_data = &rtc_info,
-+	.resource = rtc_platform_resource,
-+};
++	return node;
++}
 +
-+static int __init xo1_rtc_init(void)
++static int __init olpc_dt_interpret(const char *words)
 +{
-+	int r;
-+	struct device_node *node;
++	int result;
++	const void *args[] = { words };
++	void *res[] = { &result };
 +
-+	node = of_find_compatible_node(NULL, NULL, "olpc,xo1-rtc");
++	if (olpc_ofw("interpret", args, res)) {
++		pr_err("olpc_dt: interpret failed!\n");
++		return -1;
++	}
++
++	return result;
++}
++
++/*
++ * Extract board revision directly from OFW device tree.
++ * We can't use olpc_platform_info because that hasn't been set up yet.
++ */
++static u32 __init olpc_dt_get_board_revision(void)
++{
++	phandle node;
++	__be32 rev;
++	int r;
++
++	node = olpc_dt_finddevice("/");
 +	if (!node)
 +		return 0;
-+	of_node_put(node);
 +
-+	pr_info("olpc-xo1-rtc: Initializing OLPC XO-1 RTC\n");
-+	rdmsrl(MSR_RTC_DOMA_OFFSET, rtc_info.rtc_day_alarm);
-+	rdmsrl(MSR_RTC_MONA_OFFSET, rtc_info.rtc_mon_alarm);
-+	rdmsrl(MSR_RTC_CEN_OFFSET, rtc_info.rtc_century);
++	r = olpc_dt_getproperty(node, "board-revision-int",
++				(char *) &rev, sizeof(rev));
++	if (r < 0)
++		return 0;
 +
-+	r = platform_device_register(&xo1_rtc_device);
-+	if (r)
-+		return r;
-+
-+	device_init_wakeup(&xo1_rtc_device.dev, 1);
-+	return 0;
++	return be32_to_cpu(rev);
 +}
-+arch_initcall(xo1_rtc_init);
 +
-diff --git a/include/linux/cs5535.h b/include/linux/cs5535.h
-index 72954c6..c077aec 100644
---- a/include/linux/cs5535.h
-+++ b/include/linux/cs5535.h
-@@ -40,6 +40,10 @@
- #define MSR_MFGPT_NR		0x51400029
- #define MSR_MFGPT_SETUP		0x5140002B
- 
-+#define MSR_RTC_DOMA_OFFSET	0x51400055
-+#define MSR_RTC_MONA_OFFSET	0x51400056
-+#define MSR_RTC_CEN_OFFSET	0x51400057
++void __init olpc_dt_fixup(void)
++{
++	int r;
++	char buf[64];
++	phandle node;
++	u32 board_rev;
 +
- #define MSR_LX_SPARE_MSR	0x80000011	/* DC-specific */
++	node = olpc_dt_finddevice("/battery@0");
++	if (!node)
++		return;
++
++	/*
++	 * If the battery node has a compatible property, we are running a new
++	 * enough firmware and don't have fixups to make.
++	 */
++	r = olpc_dt_getproperty(node, "compatible", buf, sizeof(buf));
++	if (r > 0)
++		return;
++
++	pr_info("PROM DT: Old firmware detected, applying fixes\n");
++
++	/* Add olpc,xo1-battery compatible marker to battery node */
++	olpc_dt_interpret("\" /battery@0\" find-device"
++		" \" olpc,xo1-battery\" +compatible"
++		" device-end");
++
++	board_rev = olpc_dt_get_board_revision();
++	if (!board_rev)
++		return;
++
++	if (board_rev >= olpc_board_pre(0xd0)) {
++		/* XO-1.5: add dcon device */
++		olpc_dt_interpret("\" /pci/display@1\" find-device"
++			" new-device"
++			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
++			" finish-device device-end");
++	} else {
++		/* XO-1: add dcon device, mark RTC as olpc,xo1-rtc */
++		olpc_dt_interpret("\" /pci/display@1,1\" find-device"
++			" new-device"
++			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
++			" finish-device device-end"
++			" \" /rtc\" find-device"
++			" \" olpc,xo1-rtc\" +compatible"
++			" device-end");
++	}
++}
++
+ void __init olpc_dt_build_devicetree(void)
+ {
+ 	phandle root;
+@@ -172,6 +273,8 @@ void __init olpc_dt_build_devicetree(void)
+ 	if (!olpc_ofw_is_installed())
+ 		return;
  
- #define MSR_GX_GLD_MSR_CONFIG	0xC0002001
-@@ -95,6 +99,7 @@ static inline int cs5535_pic_unreqz_select_high(unsigned int group,
- 
- /* CS5536_PM1_EN bits */
- #define CS5536_PM_PWRBTN	(1 << 8)
-+#define CS5536_PM_RTC		(1 << 10)
- 
- /* CS5536_PM_GPE0_STS bits */
- #define CS5536_GPIOM7_PME_FLAG	(1 << 31)
++	olpc_dt_fixup();
++
+ 	root = olpc_dt_getsibling(0);
+ 	if (!root) {
+ 		pr_err("PROM: unable to get root node from OFW!\n");
 -- 
 1.7.5.4
