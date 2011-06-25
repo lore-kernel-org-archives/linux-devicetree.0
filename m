@@ -1,13 +1,17 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 01/11] x86, olpc: add missing elements to device tree
-Date: Sat, 25 Jun 2011 17:34:08 +0100
-Message-ID: <1309019658-1712-2-git-send-email-dsd@laptop.org>
-References: <1309019658-1712-1-git-send-email-dsd@laptop.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] dt: early platform devices support
+Date: Sat, 25 Jun 2011 14:44:35 -0600
+Message-ID: <20110625204435.GA15026@ponder.secretlab.ca>
+References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
+	<1308924659-31894-2-git-send-email-marc.zyngier@arm.com>
+	<BANLkTi=7cM2dXniHM4mnXs46KaTc05hh-Q@mail.gmail.com>
+	<20110625121142.4c73ca70@taxman.wild-wind.fr.eu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1309019658-1712-1-git-send-email-dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110625121142.4c73ca70-cwr+A0SHHwyvmEsGQKTYaQ42X47YVq0KHZ5vskTnxNA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,146 +21,144 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Greg Kroah-Hartman <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kay Sievers <kay.sievers-tD+1rO4QERM@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In response to new device tree code in the kernel, OLPC will start
-using it for probing of certain devices. However, some firmware fixes
-are needed to put the devicetree into a usable state.
+On Sat, Jun 25, 2011 at 12:11:42PM +0100, Marc Zyngier wrote:
+> On Fri, 24 Jun 2011 22:49:56 -0600
+> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> =
 
-Retain compatibility with old firmware by fixing up the device tree
-at boot-time if it does not contain the new nodes/properties that
-we need for probing. This is the same approach taken on PPC platforms.
+> > [cc'ing linux kernel since I discuss driver core issues]
+> > [cc'ing greg and kay, 'cause I've included a patch I'd like you to
+> > look at (see end of email)]
+> > =
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
----
- arch/x86/platform/olpc/olpc_dt.c |  103 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 103 insertions(+), 0 deletions(-)
+> > On Fri, Jun 24, 2011 at 8:10 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wr=
+ote:
+> > > Add support for populating early platform devices from the device
+> > > tree, by walking the tree and adding nodes whose 'compatible'
+> > > property matches the 'class' string passed as a parameter.
+> > >
+> > > This allows devices to be probed long before the whole device
+> > > infrastructure is available.
+> > >
+> > > Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> > > ---
+> > > =A0drivers/of/platform.c =A0 =A0 =A0 | =A0 26 +++++++++++++++++++++++=
++++
+> > > =A0include/linux/of_platform.h | =A0 =A01 +
+> > > =A02 files changed, 27 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > index e75af39..2a323ee 100644
+> > > --- a/drivers/of/platform.c
+> > > +++ b/drivers/of/platform.c
+> > > @@ -458,4 +458,30 @@ int of_platform_populate(struct device_node *roo=
+t,
+> > > =A0 =A0 =A0 =A0of_node_put(root);
+> > > =A0 =A0 =A0 =A0return rc;
+> > > =A0}
+> > > +
+> > > +/**
+> > > + * of_early_platform_populate() - Populate early platform devices fr=
+om DT
+> > > + * @class: string to compare to the 'compatible' attributes
+> > > + *
+> > > + * This function walks the device tree and register devices whose
+> > > + * 'compatible' property matches the 'class' parameter.
+> > > + *
+> > > + * Returns 0 on success, < 0 on failure.
+> > > + */
+> > > +int of_early_platform_populate(const char *class)
+> > > +{
+> > > + =A0 =A0 =A0 struct platform_device *pdev;
+> > > + =A0 =A0 =A0 struct device_node *np =3D NULL;
+> > > +
+> > > + =A0 =A0 =A0 while ((np =3D of_find_compatible_node(np, NULL, class)=
+)) {
+> > =
 
-diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
-index d39f63d..d6ee929 100644
---- a/arch/x86/platform/olpc/olpc_dt.c
-+++ b/arch/x86/platform/olpc/olpc_dt.c
-@@ -165,6 +165,107 @@ static struct of_pdt_ops prom_olpc_ops __initdata = {
- 	.pkg2path = olpc_dt_pkg2path,
- };
- 
-+static phandle __init olpc_dt_finddevice(const char *path)
-+{
-+	phandle node;
-+	const void *args[] = { path };
-+	void *res[] = { &node };
-+
-+	if (olpc_ofw("finddevice", args, res)) {
-+		pr_err("olpc_dt: finddevice failed!\n");
-+		return 0;
-+	}
-+
-+	if ((s32) node == -1)
-+		return 0;
-+
-+	return node;
-+}
-+
-+static int __init olpc_dt_interpret(const char *words)
-+{
-+	int result;
-+	const void *args[] = { words };
-+	void *res[] = { &result };
-+
-+	if (olpc_ofw("interpret", args, res)) {
-+		pr_err("olpc_dt: interpret failed!\n");
-+		return -1;
-+	}
-+
-+	return result;
-+}
-+
-+/*
-+ * Extract board revision directly from OFW device tree.
-+ * We can't use olpc_platform_info because that hasn't been set up yet.
-+ */
-+static u32 __init olpc_dt_get_board_revision(void)
-+{
-+	phandle node;
-+	__be32 rev;
-+	int r;
-+
-+	node = olpc_dt_finddevice("/");
-+	if (!node)
-+		return 0;
-+
-+	r = olpc_dt_getproperty(node, "board-revision-int",
-+				(char *) &rev, sizeof(rev));
-+	if (r < 0)
-+		return 0;
-+
-+	return be32_to_cpu(rev);
-+}
-+
-+void __init olpc_dt_fixup(void)
-+{
-+	int r;
-+	char buf[64];
-+	phandle node;
-+	u32 board_rev;
-+
-+	node = olpc_dt_finddevice("/battery@0");
-+	if (!node)
-+		return;
-+
-+	/*
-+	 * If the battery node has a compatible property, we are running a new
-+	 * enough firmware and don't have fixups to make.
-+	 */
-+	r = olpc_dt_getproperty(node, "compatible", buf, sizeof(buf));
-+	if (r > 0)
-+		return;
-+
-+	pr_info("PROM DT: Old firmware detected, applying fixes\n");
-+
-+	/* Add olpc,xo1-battery compatible marker to battery node */
-+	olpc_dt_interpret("\" /battery@0\" find-device"
-+		" \" olpc,xo1-battery\" +compatible"
-+		" device-end");
-+
-+	board_rev = olpc_dt_get_board_revision();
-+	if (!board_rev)
-+		return;
-+
-+	if (board_rev >= olpc_board_pre(0xd0)) {
-+		/* XO-1.5: add dcon device */
-+		olpc_dt_interpret("\" /pci/display@1\" find-device"
-+			" new-device"
-+			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
-+			" finish-device device-end");
-+	} else {
-+		/* XO-1: add dcon device, mark RTC as olpc,xo1-rtc */
-+		olpc_dt_interpret("\" /pci/display@1,1\" find-device"
-+			" new-device"
-+			" \" dcon\" device-name \" olpc,xo1-dcon\" +compatible"
-+			" finish-device device-end"
-+			" \" /rtc\" find-device"
-+			" \" olpc,xo1-rtc\" +compatible"
-+			" device-end");
-+	}
-+}
-+
- void __init olpc_dt_build_devicetree(void)
- {
- 	phandle root;
-@@ -172,6 +273,8 @@ void __init olpc_dt_build_devicetree(void)
- 	if (!olpc_ofw_is_installed())
- 		return;
- 
-+	olpc_dt_fixup();
-+
- 	root = olpc_dt_getsibling(0);
- 	if (!root) {
- 		pr_err("PROM: unable to get root node from OFW!\n");
--- 
-1.7.5.4
+> > for_each_compatible_node()
+> > =
+
+> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdev =3D of_device_alloc(np, NULL, NULL=
+);
+> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!pdev)
+> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 list_del(&pdev->dev.devres_head);
+> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 memset(&pdev->dev.devres_head, 0, sizeo=
+f(pdev->dev.devres_head));
+> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 early_platform_add_devices(&pdev, 1);
+> > =
+
+> > I'm not sure this will work reliably.  The of_platform semantics are
+> > still slightly different from 'regular' platform devices (which I do
+> > intend to fix though), so it may cause problems with how the device
+> > name gets assigned.  I'd need to dig into it though.
+> > =
+
+> > > + =A0 =A0 =A0 }
+> > > +
+> > > + =A0 =A0 =A0 return 0;
+> > > +}
+> > =
+
+> > Hmmm, I'd really rather not go down the path of having different
+> > 'classes' of devices that need to be registered at different times.
+> > There just isn't a really good generic way to know which devices
+> > should be the 'early' ones, it gets hairy with regard to making sure
+> > devices don't get registered twice, and it doesn't actually solve the
+> > problem that there is no way to handle dependencies between devices in
+> > the Linux device model.
+> > =
+
+> > What I /want/ to do is allow drivers to defer initialization at .probe
+> > time if some of the resources it needs aren't yet available.
+> > Unfortunately, that doesn't work so well for interrupt controllers
+> > since irq numbers are expected to be correctly populated in the
+> > platform device resource table.  What complicates things further is
+> > that most gpio controllers are doubling as irq controllers nowdays,
+> > and those are typically modelled with platform devices themselves.
+> =
+
+> While I totally agree with all the above, this patch tries to address a
+> slightly different problem. On top of device/device dependencies, there
+> is also a number of implicit dependencies.
+> =
+
+> In the case I'm currently trying to solve, the kernel expects a timer
+> to be up and running when hitting the delay loop calibration. At that
+> stage, it is impossible to register a platform device, hence the use
+> (abuse?) of early platform devices.
+
+:-)  Unfortunately I never did get a chance to read through your
+entire patch set, so I missed this.
+
+> The current ARM code relies on the timers *not* being a standard
+> device, and being directly setup by an board specific method. The SMP
+> timers are even worse, as they are directly called by the core code,
+> meaning that we can only have *one* implementation at a time in the
+> kernel.
+> =
+
+> So the early platform stuff is a potential solution for that, though
+> there is no way it would handle any kind of dependency. What I dream of
+> is to have the full device/driver infrastructure available much
+> earlier, before the rest of the kernel starts relying on some hardware
+> being up and running...
+
+My suggestion: don't use platform_device for this.  I think it is
+entirely the wrong model.  Keep the timers *not* standard devices.
+
+Instead, use a timer setup function that accepts a list of compatible
+properties and an initialization hook for each timer type.  Since
+timers have exist, have to be called by core code, and cannot ever be
+built as modules, the Linux device model really doesn't offer much
+advantage.
+
+It is completely valid and often done to access device tree data from
+early setup code without any context of a struct device.
+
+g.
