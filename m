@@ -1,15 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] ARM: dt: Add TWD bindings and driver support
-Date: Sun, 26 Jun 2011 02:09:02 -0600
-Message-ID: <20110626080902.GA24241@ponder.secretlab.ca>
-References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
-	<1308924659-31894-5-git-send-email-marc.zyngier@arm.com>
+Subject: Re: Converting i2c-omap driver to use device tree
+Date: Sun, 26 Jun 2011 02:12:02 -0600
+Message-ID: <20110626081202.GB24241@ponder.secretlab.ca>
+References: <BANLkTin0zaE6M=0+9bq6sCvCVO_PJqYseA@mail.gmail.com>
+	<BANLkTi=DmNC6BbwDU+4smFvbc+LzFLiiOA@mail.gmail.com>
+	<BANLkTi==YKS854=YDGG44BRy_km31LqifQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1308924659-31894-5-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <BANLkTi==YKS854=YDGG44BRy_km31LqifQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,152 +20,141 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Manjunatha GK <manjugk-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org\"" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2011 at 03:10:59PM +0100, Marc Zyngier wrote:
-> Add device tree support to the arm_smp_twd driver.
+On Fri, Jun 24, 2011 at 07:08:34PM +0530, Manjunatha GK wrote:
+> Hi Thomas,
 > 
-> The DT bindings for the TWD are defined as such:
-> - one timer node per CPU, using corresponding PPI
->   interrupt controller
-> - provides both timer and watchdog interrupt
+> On 24 June 2011 18:13, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 > 
-> Tested on RealView PB11MPCore and VExpress.
+> > Hi Manjunath,
+> >
+> > I will try to give some comments based on whatever little I know about
+> > DT. My comments maybe wrong too, I am still learning DT.
+> >
+> > On 23 June 2011 19:45, Manjunatha GK <manjugk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > > Hi Grant,
+> > > I am trying to convert i2c-omap driver to use device tree. Since omap i2c
+> > > driver uses it's own mechanism to register as platform device, I have
+> > > commented out i2c device registration part from board file and trying to
+> > use
+> > > DT data in probe function of i2c driver.
+> > >
+> > > I have i2c node declared under omap4-panda.dts as:
+> > >
+> > > +       i2c@48072000 {
+> > > +               compatible = "ti,omap_i2c";
+> > > +               reg = <0x48072000 0x80>;
+> > > +               #address-cells = <1>;
+> > > +               #size-cells = <0>;
+> >
+> > Shouldn't size-cells = 1 ?
+> >
+> > > +
+> > > +               twl@48 {
+> > > +                       compatible = "twl6030,4030-6030";
+> > > +                       reg = < 0x48 >;
+> > > +               };
+> > > +       };
+> > >
+> > > and board file is changed as:
+> > >
+> > > @@ -685,6 +686,10 @@ static void __init omap4_panda_init(void)
+> > >  {
+> > >         int package = OMAP_PACKAGE_CBS;
+> > >
+> > > +#ifdef CONFIG_OF
+> > > +       of_platform_prepare(NULL, NULL);
+> > > +#endif /* CONFIG_OF */
+> >
+> > Is of_platform_prepare still required?
+> >
 > 
-> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/twd.txt |   54 ++++++++++++++
->  drivers/clocksource/arm_smp_twd.c             |   92 +++++++++++++++++++++---
->  2 files changed, 134 insertions(+), 12 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/twd.txt
+> not required. removed now.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/twd.txt b/Documentation/devicetree/bindings/arm/twd.txt
-> new file mode 100644
-> index 0000000..3823a81
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/twd.txt
-> @@ -0,0 +1,54 @@
-> +* ARM Timer Watchdog
-> +
-> +ARM SMP cores are often associated with a TWD providing a per-cpu timer
-> +and a per-cpu watchdog. Usually wired to the PPI interface of a GIC.
-> +
-> +Main node properties:
-> +
-> +- compatible		: "arm,smp-twd", "localtimer"
+> 
+> > > +
+> > >         if (omap_rev() == OMAP4430_REV_ES1_0)
+> > >                 package = OMAP_PACKAGE_CBL;
+> > >         omap4_mux_init(board_mux, NULL, package);
+> > > @@ -700,6 +705,7 @@ static void __init omap4_panda_init(void)
+> > >         omap4_ehci_init();
+> > >         usb_musb_init(&musb_board_data);
+> > >         omap4_panda_display_init();
+> > > +       of_platform_populate(NULL, NULL, NULL, NULL);
+> >
+> > Is it not required to provide the second parameter (matches) atleast?
+> > It depends on your dts file I guess. Maybe a proper matching is not
+> > happening.
+> >
+> yes. updated with second parameter as per entry in dts file.
+> 
+> >
+> > >  }
+> > >
+> > > I have commented out device registration for I2C1 in board file:
+> > >
+> > > diff --git a/arch/arm/mach-omap2/board-omap4panda.c
+> > > b/arch/arm/mach-omap2/board-omap4panda.c
+> > > index c9d1e13..0c31f35 100644
+> > > --- a/arch/arm/mach-omap2/board-omap4panda.c
+> > > +++ b/arch/arm/mach-omap2/board-omap4panda.c
+> > > @@ -409,7 +410,7 @@ static struct i2c_board_info __initdata
+> > > panda_i2c_eeprom[] = {
+> > >
+> > >  static int __init omap4_panda_i2c_init(void)
+> > >  {
+> > > -       omap4_pmic_init("twl6030", &omap4_panda_twldata);
+> > > +       //omap4_pmic_init("twl6030", &omap4_panda_twldata);
+> > > @@ -685,6 +686,10 @@ static void __init omap4_panda_init(void)
+> > >  {
+> > >         int package = OMAP_PACKAGE_CBS;
+> > >
+> > > +#ifdef CONFIG_OF
+> > > +       of_platform_prepare(NULL, NULL);
+> > > +#endif /* CONFIG_OF */
+> > > +
+> > >         if (omap_rev() == OMAP4430_REV_ES1_0)
+> > >                 package = OMAP_PACKAGE_CBL;
+> > >         omap4_mux_init(board_mux, NULL, package);
+> > > @@ -700,6 +705,7 @@ static void __init omap4_panda_init(void)
+> > >         omap4_ehci_init();
+> > >         usb_musb_init(&musb_board_data);
+> > >         omap4_panda_display_init();
+> > > +       of_platform_populate(NULL, NULL, NULL, NULL);
+> > >  }
+> > >
+> > > and i2c-omap is modified as:
+> > >
+> > > +static const struct of_device_id omap_i2c_of_match[];
+> > >  static int __devinit
+> > >  omap_i2c_probe(struct platform_device *pdev)
+> > >  {
+> > > @@ -1162,6 +1169,12 @@ static int omap_i2c_resume(struct device *dev)
+> > >         return 0;
+> > >  }
+> > >
+> > > +static const struct of_device_id omap_i2c_of_match[] = {
+> > > +       {.compatible = "omap_i2c", },
+> > > +       {},
+> > > +}
+> > > +MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
+> > >
+> > > With the above changes, i was expecting probe function to be called since
+> > > device gets binded to driver. But probe will never get called.
+> > >
+> > > Did I miss anything with above procedure?
+> >
+> > What about platform_driver->driver.of_match_table? Is it populated
+> > (set to omap_i2c_of_match)?
+> >
+> 
+> Yes. This entry was missing with my changes. With of_match_table, probe is
+> getting called.
+> Thanks for the pointer.
 
-"localtimer" isn't a very good compatible value.  Compatible is
-intended to identify the specific hardware, and "localtimer" is a very
-generic name.
-
-Also, as commented on for the gic, I'd like to see some level of
-versioning on the arm,smp-twd string.
-
-> +- reg			: register mapping for the registers.
-> +- #address-cells	: <1>
-> +- #size-cells		: <0>
-> +
-> +Timer sub nodes (one per CPU)
-> +
-> +- interrupt-parent	: phandle to the corresponding gic-ppi.
-> +- interrupts		: <IRQtimer IRQwatchdog> (usually <29 30>)
-> +- reg			: index of the CPU this timer is connected to.
-> +
-> +Example (ARM RealView PB11-MPCore):
-> +
-> +localtimer@1f000600 {
-> +	compatible = "arm,smp-twd", "localtimer";
-> +	reg = <0x1f000600 0x100>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	/*
-> +	 * One timer per CPU, bound to the corresponding
-> +	 * PPI interface.
-> +	 */
-> +	timer@0 {
-> +		interrupt-parent = <&gic0ppi0>;
-> +		interrupts = <29 30>;
-> +		reg = <0>;
-> +	};
-> +
-> +	timer@1 {
-> +		interrupt-parent = <&gic0ppi1>;
-> +		interrupts = <29 30>;
-> +		reg = <1>;
-> +	};
-> +
-> +	timer@2 {
-> +		interrupt-parent = <&gic0ppi2>;
-> +		interrupts = <29 30>;
-> +		reg = <2>;
-> +	};
-> +
-> +	timer@3 {
-> +		interrupt-parent = <&gic0ppi3>;
-> +		interrupts = <29 30>;
-> +		reg = <3>;
-> +	};
-> +};
-> diff --git a/drivers/clocksource/arm_smp_twd.c b/drivers/clocksource/arm_smp_twd.c
-> index 65f4669..586acad 100644
-> --- a/drivers/clocksource/arm_smp_twd.c
-> +++ b/drivers/clocksource/arm_smp_twd.c
-> @@ -19,6 +19,9 @@
->  #include <linux/interrupt.h>
->  #include <linux/ioport.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  #include <linux/clk.h>
->  #include <linux/cpufreq.h>
->  #include <linux/err.h>
-> @@ -37,11 +40,11 @@
->  #define TWD_TIMER_CONTROL_IT_ENABLE	(1 << 2)
->  
->  static void __iomem *twd_base;
-> -static int twd_ppi;
->  
->  static struct clk *twd_clk;
->  static unsigned long twd_timer_rate;
->  static DEFINE_PER_CPU(bool, irq_reqd);
-> +static DEFINE_PER_CPU(int, twd_irq);
->  static struct clock_event_device __percpu *twd_evt;
->  
->  static void twd_set_mode(enum clock_event_mode mode,
-> @@ -223,7 +226,7 @@ static void __cpuinit twd_setup(void *data)
->  	clk->rating = 450;
->  	clk->set_mode = twd_set_mode;
->  	clk->set_next_event = twd_set_next_event;
-> -	clk->irq = gic_ppi_to_vppi(twd_ppi);
-> +	clk->irq = __get_cpu_var(twd_irq);
->  	clk->cpumask = cpumask_of(smp_processor_id());
->  
->  	pr_debug("Configuring %s on cpu #%d\n", clk->name, smp_processor_id());
-> @@ -290,31 +293,90 @@ static struct notifier_block __cpuinitdata twd_cpu_nb = {
->  	.notifier_call = twd_cpu_notify,
->  };
->  
-> -static int twd_probe(struct platform_device *pdev)
-> +#ifdef CONFIG_OF
-> +static struct device_node *twd_get_timer_node(struct device_node *twd_np,
-> +					      struct device_node *child,
-> +					      int *timer_nr)
-> +{
-> +	child = of_get_next_child(twd_np, child);
-> +	if (child) {
-> +		const __be32 *reg;
-> +		reg = of_get_property(child, "reg", NULL);
-> +		if (!reg)
-> +			*timer_nr = -1;
-> +		else
-> +			*timer_nr = be32_to_cpu(*reg);
-
-There's a new function that should be done and merged in time for
-v3.1 that will help with reading properties.  Keep an eye out for
-of_getprop_u32()
+Glad to hear you got it sorted out.
 
 g.
