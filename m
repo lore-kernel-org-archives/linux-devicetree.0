@@ -1,107 +1,50 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH][upstream] powerpc: Adding bindings for flexcan controller
-Date: Sun, 26 Jun 2011 21:10:47 +0200
-Message-ID: <4E078437.5010708@grandegger.com>
-References: <1303221511-12903-1-git-send-email-Bhaskar.Upadhaya@freescale.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: "Early" devices and the DT
+Date: Sun, 26 Jun 2011 15:22:39 -0400
+Message-ID: <4E0786FF.9010002@firmworks.com>
+References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>	<1308924659-31894-3-git-send-email-marc.zyngier@arm.com>	<20110625204742.GB15026@ponder.secretlab.ca>	<4E06513B.4030706@gmail.com>
+	<BANLkTimy6iyQyyvNUK3Kc6skSKyVxBwWPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-In-Reply-To: <1303221511-12903-1-git-send-email-Bhaskar.Upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
-List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
-Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Bhaskar Upadhaya <Bhaskar.Upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: SocketCAN Core Mailing List <socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, inuxppc-dev-50dRxjG7WBCY5r8RbUyfqNHuzzzSOjJt@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <BANLkTimy6iyQyyvNUK3Kc6skSKyVxBwWPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2011 03:58 PM, Bhaskar Upadhaya wrote:
-> From: Bhaskar Upadhaya <bhaskar.upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Signed-off-by: Bhaskar Upadhaya <bhaskar.upadhaya-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Acked-By: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> Based upon git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git (branch -> master)
-> 
->  .../devicetree/bindings/net/can/fsl-flexcan.txt    |   61 ++++++++++++++++++++
->  1 files changed, 61 insertions(+), 0 deletions(-)
->  create mode 100755 Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> new file mode 100755
-> index 0000000..1a729f0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> @@ -0,0 +1,61 @@
-> +CAN Device Tree Bindings
-> +------------------------
-> +2011 Freescale Semiconductor, Inc.
-> +
-> +fsl,flexcan-v1.0 nodes
-> +-----------------------
-> +In addition to the required compatible-, reg- and interrupt-properties, you can
-> +also specify which clock source shall be used for the controller.
-> +
-> +CPI Clock- Can Protocol Interface Clock
-> +	This CLK_SRC bit of CTRL(control register) selects the clock source to
-> +	the CAN Protocol Interface(CPI) to be either the peripheral clock
-> +	(driven by the PLL) or the crystal oscillator clock. The selected clock
-> +	is the one fed to the prescaler to generate the Serial Clock (Sclock).
-> +	The PRESDIV field of CTRL(control register) controls a prescaler that
-> +	generates the Serial Clock (Sclock), whose period defines the
-> +	time quantum used to compose the CAN waveform.
-> +
-> +Can Engine Clock Source
-> +	There are two sources for CAN clock
-> +	- Platform Clock  It represents the bus clock
-> +	- Oscillator Clock
-> +
-> +	Peripheral Clock (PLL)
-> +	--------------
-> +		     |
-> +		    ---------		      -------------
-> +		    |       |CPI Clock	      | Prescaler |       Sclock
-> +		    |       |---------------->| (1.. 256) |------------>
-> +		    ---------		      -------------
-> +                     |  |
-> +	--------------  ---------------------CLK_SRC
-> +	Oscillator Clock
-> +
-> +- fsl,flexcan-clock-source : CAN Engine Clock Source.This property selects
-> +			     the peripheral clock. PLL clock is fed to the
-> +			     prescaler to generate the Serial Clock (Sclock).
-> +			     Valid values are "oscillator" and "platform"
-> +			     "oscillator": CAN engine clock source is oscillator clock.
-> +			     "platform" The CAN engine clock source is the bus clock
-> +		             (platform clock).
-> +
-> +- fsl,flexcan-clock-divider : for the reference and system clock, an additional
-> +			      clock divider can be specified.
-> +- clock-frequency: frequency required to calculate the bitrate for FlexCAN.
-> +
-> +Note:
-> +	- v1.0 of flexcan-v1.0 represent the IP block version for P1010 SOC.
-> +	- P1010 does not have oscillator as the Clock Source.So the default
-> +	  Clock Source is platform clock.
-> +Examples:
-> +
-> +	can0@1c000 {
-> +		compatible = "fsl,flexcan-v1.0";
-> +		reg = <0x1c000 0x1000>;
-> +		interrupts = <48 0x2>;
-> +		interrupt-parent = <&mpic>;
-> +		fsl,flexcan-clock-source = "platform";
-> +		fsl,flexcan-clock-divider = <2>;
-> +		clock-frequency = <fixed by u-boot>;
-> +	};
+Some solutions to the early device problem
 
-I just realized that this patch has hit the mainline kernel but I do not
-find the implementation for that new binding. Have I missed something?
+a) Most complex:  Use new properties to create a dependency graph.  This 
+is probably the most general solution, but also probably the hardest for 
+people to think about and maintain.
 
-Wolfgang.
+b) Define a set of init phases 0,1,2,...  and mark each early device 
+node with a phase number property.  Scan the tree for each phase and 
+handle only the devices with that phase number.  Unmarked nodes are 
+handled last.
+
+c) Similar to b, but instead of properties in nodes, have properties 
+like "linux-phase0", "linux-phase1", etc in /chosen, whose values are 
+lists of phandles.
+
+Admittedly, this is to some extent Linux-specific, but there is a fair 
+chance that it would be useful to other OSs, as most OSs have similar 
+ordering requirements for certain core devices.  I know that Windows 
+works this way - the Windows kernel startup code scans the NT device 
+tree multiple times, picking off different devices in different phases.
+
+Some devices might appear in multiple phases.  For example, you might 
+want to init a serial device in phase 0, in a simplified mode that 
+doesn't depend on interrupts, then do the interrupt controller in phase 
+1, then do the timer in phase 2 and also reinit the serial port to use 
+interrupts in phase 2.
