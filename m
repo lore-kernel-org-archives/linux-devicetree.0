@@ -1,17 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 2/4] ARM: dt: register local timers as early platform
-	devices
-Date: Sun, 26 Jun 2011 01:00:41 -0600
-Message-ID: <BANLkTimy6iyQyyvNUK3Kc6skSKyVxBwWPA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] ARM: dt: add GIC bindings and driver support
+Date: Sun, 26 Jun 2011 02:01:35 -0600
+Message-ID: <20110626080135.GC15026@ponder.secretlab.ca>
 References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
-	<1308924659-31894-3-git-send-email-marc.zyngier@arm.com>
-	<20110625204742.GB15026@ponder.secretlab.ca>
-	<4E06513B.4030706@gmail.com>
+	<1308924659-31894-4-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E06513B.4030706-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1308924659-31894-4-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,113 +19,664 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[cc'ing Russell since discussing addition of early_platform_device to
-arm core code]
+On Fri, Jun 24, 2011 at 03:10:58PM +0100, Marc Zyngier wrote:
+> Convert the GIC driver to use the DT infrastructure. That involves
+> introducing IRQ domains for the various types of interrupts (PPI and
+> SPI).
+> 
+> The DT bindings for the GIC are defined as such:
+> - one interrupt-controller for SPIs
+> - one interrupt-controller for PPIs per CPU
+> - interrupt signalling for secondary GICs.
+> 
+> Tested on RealView PB11MPCore and VExpress.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-On Sat, Jun 25, 2011 at 3:20 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Grant,
->
-> On 06/25/2011 03:47 PM, Grant Likely wrote:
->> On Fri, Jun 24, 2011 at 03:10:57PM +0100, Marc Zyngier wrote:
->>> Use of_early_platform_populate() to collect nodes with the
->>> "localtimer" compatible property and register them with
->>> the early platform "bus".
->>>
->>> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>> =A0arch/arm/kernel/time.c | =A0 =A04 ++++
->>> =A01 files changed, 4 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
->>> index 32d0df8..08a28ef 100644
->>> --- a/arch/arm/kernel/time.c
->>> +++ b/arch/arm/kernel/time.c
->>> @@ -25,6 +25,7 @@
->>> =A0#include <linux/timer.h>
->>> =A0#include <linux/irq.h>
->>> =A0#include <linux/platform_device.h>
->>> +#include <linux/of_platform.h>
->>>
->>> =A0#include <linux/mc146818rtc.h>
->>>
->>> @@ -156,6 +157,9 @@ static void __init __arm_late_time_init(void)
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0arm_late_time_init();
->>>
->>> =A0#ifdef CONFIG_LOCAL_TIMER_DEVICES
->>> +#ifdef CONFIG_OF_FLATTREE
->>> + =A0 =A0of_early_platform_populate("localtimer");
->>> +#endif
->>
->> Rather than #ifdeffing around the function call, it is often cleaner
->> to have an #else in the header file that defines an empty static
->> inline.
->>
->>> =A0 =A0 =A0early_platform_driver_register_all("localtimer");
->>> =A0 =A0 =A0early_platform_driver_probe("localtimer", 1, 0);
->>
->> I suggested in my other reply that early_platform_driver should not be
->> used. =A0It looks like it is already being used, so I'll back off a bit
->> from that position. =A0However, the structure of the code really
->> shouldn't be any different between clock devices being statically
->> declared vs. clock data being obtained from the DT.
->>
->
-> It's not really already being used. It is added in Marc's previous patch
-> series to move timers to drivers/clocksource.
->
-> Deferring driver probe doesn't really help for timers as they have to be
-> up early. If early platform drivers shouldn't be used, then why was it
-> accepted into the kernel in the first place? It doesn't make sense that
-> it is okay for one arch (sh), but not another (arm), ...
+Hi Mark,
 
-There is lots of things in the kernel that aren't necessarily a good
-idea.  From what I've seen of early platform devices, I'm not thrilled
-with the approach.  If Russell & crew think it is the right solution
-for ARM, then I'm not going to make a big stink about it, but I cannot
-say I like the model.
+Thanks for doing this work.  Comments below.
 
->... or that it is okay
-> for non-DT, but not for DT.
+> ---
+>  Documentation/devicetree/bindings/arm/gic.txt |   92 ++++++++
+>  arch/arm/common/gic.c                         |  312 ++++++++++++++++++++-----
+>  arch/arm/include/asm/hardware/gic.h           |    4 +
+>  3 files changed, 352 insertions(+), 56 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> new file mode 100644
+> index 0000000..9975345
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -0,0 +1,92 @@
+> +* ARM Generic Interrupt Controller
+> +
+> +ARM SMP cores are often associated with a GIC, providing per processor
+> +interrupts (PPI), shared processor interrupts (SPI) and software
+> +generated interrupts (SGI).
+> +
+> +Primary GIC is attached directly to the CPU. Secondary GICs are
+> +cascaded into the upward interrupt controller.
+> +
+> +Main node properties:
+> +
+> +- compatible	: "arm,gic"
 
-For registering devices from the DT, it is definitely problematic in a
-way that it isn't for non-DT.  When using the DT, how does the
-platform know which devices should be registered as 'early' devices?
-And once that is done, the population code has then ensure that
-devices registered early don't end up with duplicate registrations,
-while not difficult, it does complicate both the code and the
-conceptual model of registering DT nodes as devices.  I tried to
-implement something very similar with of_platform_prepare(), but when
-I look at the result I'm just ashamed with myself.
+I'm nervous about simply "arm,gic" with no specific silicon or core
+version number attached to it.  Specifications for standard cores such
+as this could very well change with newer versions of the core.  I'd
+like to see either the core version specified, or this value anchored
+on a specific chip implementation.
 
->From my perspective, there is a very limited set of devices that need
-to be dealt with early; timer, irq controller, and lldebug console.
->From what I've been told, timers are currently called directly by core
-code, and need to be reworked to allow multiplatform kernels.  irq
-controllers (or at least the root ones) are initialized with (struct
-machine_desc*)->init_irq().  lldebug is currently selected at build
-time so that it is available right from head.S.  That's a pretty small
-list.  Everything else is just another device, and I don't see
-fiddling about with early registration or fiddling with init order to
-be a maintainable approach in the long run.  Doing so means that for
-each system, someone has to /choose/ which devices are special, and
-the decision could be different for each board, and for each kernel
-version.  It would be far better to have a driver model that treats
-all devices as peers, and is intelligent enough to handle ordering
-issues gracefully.
+> +- reg		: one register mapping for the distributor interface
+> +  		  another one for the CPU interface
+> +- #address-cells: <1>
+> +- #size-cells	: <0>
+> +- interrupts	: optionnal, used on secondary GICs only
 
-This isn't a big deal for non-DT because using individual board .c
-files makes it easy to encode those per-board decisions, whereas the
-DT model is a whole lot simpler if a generic & consistent approach can
-be used.
+sp.  optional
+
+> +
+> +PPI sub nodes: one node per CPU (primary GIC only)
+> +
+> +- interrupt-controller	: required
+> +- #interrupt-cells	: <1>
+> +- reg			: index of the CPU this PPI controller is
+> +			  connected to.
+> +
+> +SPI sub node:
+> +
+> +- interrupt-controller	: required
+> +- #interrupt-cells	: <2> First parameter is the interrupt number,
+> +  			  second is 0 for level-high, 1 for edge-rising.
+
+Is there any possibility of level-low or edge-falling?  Since irq flags
+are essentially arbitrary values chosen by the writer of the binding,
+I generally recommend that the best arbitrary values are the ones
+currently used by the kernel for IRQF_TRIGGER_*:
+	edge-rising: 1
+	edge-falling: 2
+	level-high: 4
+	level-low: 8
+
+> +
+> +Primary GIC example (ARM RealView PB11-MPCore):
+> +
+> +gic@1f001000 {
+> +	compatible = "arm,gic";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	reg = <0x1f001000 0x1000>, /* Distributor interface */
+> +	      <0x1f000100 0x100>;  /* CPU interface */
+> +
+> +	/* One PPI controller per CPU, only on primary GIC */
+> +	gic0ppi0: gic-ppi@0 {
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <0>;
+> +	};
+> +
+> +	gic0ppi1: gic-ppi@1 {
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <1>;
+> +	};
+> +
+> +	gic0ppi2: gic-ppi@2 {
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <2>;
+> +	};
+> +
+> +	gic0ppi3: gic-ppi@3 {
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <3>;
+> +	};
+
+I don't know much about the GIC PPIs, so it is hard to provide good
+feedback on this binding.  Are the PPI interrupts configurable in any
+way, or are certain PPI inputs hard wired to specific ppi
+controllers?  In other words, does this binding reflect how the device
+is hard wired, or is irq affinity a software decision?  If it is
+hardwired, then the above binding probably makes sense.  If it is a
+software configuration, then I would suggest dropping the per-ppi
+nodes and having a flat irq number space that only reflects the
+hardware attachments, and use a flags field in the irq specifier if
+the ppi affinity isn't something that the kernel can dynamically
+assign.
+
+> +
+> +	/* One global SPI controller per GIC, defined on all GICs */
+> +	gic0spi: gic-spi {
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>; /* IRQ, level/edge */
+> +	};
+> +};
+> +
+> +Secondary GIC example (ARM RealView PB11-MPCore):
+> +
+> +gic@1e001000 {
+> +	compatible = "arm,gic";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	interrupt-parent = <&gic0spi>;
+> +
+> +	reg = <0x1e001000 0x1000>, /* Distributor interface */
+> +	      <0x1e000000 0x100>;  /* CPU interface */
+> +
+> +	interrupts = <42 0>; /* Cascade */
+> +
+> +	/* One global SPI controller per GIC, defined on all GICs */
+> +	gic1spi: gic-spi {
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +};
+> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+> index c5acc76..34907ea 100644
+> --- a/arch/arm/common/gic.c
+> +++ b/arch/arm/common/gic.c
+> @@ -28,6 +28,9 @@
+>  #include <linux/smp.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/io.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+>  
+>  #include <asm/irq.h>
+>  #include <asm/mach/irq.h>
+> @@ -40,15 +43,15 @@ void __iomem *gic_cpu_base_addr __read_mostly;
+>  
+>  struct gic_chip_data {
+>  	unsigned int irq_offset;
+> +	unsigned int nr_irqs;
+
+nr_irq probably needs to be part of struct irq_domain.  I should
+change that.
+
+>  	void __iomem *dist_base;
+>  	void __iomem *cpu_base;
+> +	struct irq_domain spi_dom;
+> +};
+> +
+>  #ifdef CONFIG_ARM_GIC_VPPI
+> -	/* These fields must be 0 on secondary GICs */
+> -	int	     ppi_base;
+> -	int	     vppi_base;
+> -	u16	     nrppis;
+> +static DEFINE_PER_CPU(struct irq_domain, gic_ppi_domains);
+>  #endif
+> -};
+>  
+>  /*
+>   * Supported arch specific GIC irq extension.
+> @@ -271,36 +274,26 @@ void __init gic_cascade_irq(unsigned int gic_nr, unsigned int irq)
+>  #ifdef CONFIG_ARM_GIC_VPPI
+>  unsigned int gic_ppi_to_vppi(unsigned int irq)
+>  {
+> -	struct gic_chip_data *chip_data = irq_get_chip_data(irq);
+> -	unsigned int vppi_irq;
+> -	unsigned int ppi;
+> +	struct irq_domain *dom = &__get_cpu_var(gic_ppi_domains);
+>  
+> -	WARN_ON(!chip_data->vppi_base);
+> +	return irq_domain_to_irq(dom, irq);
+> +}
+>  
+> -	ppi = irq - chip_data->ppi_base;
+> -	vppi_irq = ppi + chip_data->nrppis * smp_processor_id();
+> -	vppi_irq += chip_data->vppi_base;
+> +unsigned int gic_ppi_to_cpu_vppi(unsigned int irq, int cpu)
+> +{
+> +	struct irq_domain *dom = &per_cpu(gic_ppi_domains, cpu);
+>  
+> -	return vppi_irq;
+> +	return irq_domain_to_irq(dom, irq);
+>  }
+>  
+>  static void gic_handle_ppi(unsigned int irq, struct irq_desc *desc)
+>  {
+> -	unsigned int vppi_irq;
+> -
+> -	vppi_irq = gic_ppi_to_vppi(irq);
+> -	generic_handle_irq(vppi_irq);
+> +	generic_handle_irq(gic_ppi_to_vppi(irq));
+>  }
+>  
+>  static struct irq_data *gic_vppi_to_ppi(struct irq_data *d)
+>  {
+> -	struct gic_chip_data *chip_data = irq_data_get_irq_chip_data(d);
+> -	unsigned int ppi_irq;
+> -
+> -	ppi_irq = d->irq - chip_data->vppi_base - chip_data->nrppis * smp_processor_id();
+> -	ppi_irq += chip_data->ppi_base;
+> -
+> -	return irq_get_irq_data(ppi_irq);
+> +	return irq_get_irq_data(d->irq - d->domain->irq_base);
+>  }
+>  
+>  static void gic_ppi_eoi_irq(struct irq_data *d)
+> @@ -345,15 +338,115 @@ static struct irq_chip gic_ppi_chip = {
+>  	.irq_set_type		= gic_ppi_set_type,
+>  	.irq_set_wake		= gic_ppi_set_wake,
+>  };
+> +
+> +#ifdef CONFIG_OF
+> +static int git_dt_translate(struct irq_domain *dom,
+> +			    struct device_node *controler,
+> +			    const u32 *intspec, unsigned int intsize,
+> +			    irq_hw_number_t *out_hwirq, unsigned int *out_type)
+> +{
+> +	if (dom->of_node != controler)
+> +		return -1;
+
+-EINVAL
+
+> +
+> +	if (intsize > 1) {
+> +		if (intspec[1])
+> + 			*out_type = IRQ_TYPE_EDGE_RISING;
+
+nit: inconsistent whitespace.
+
+> +		else
+> +			*out_type = IRQ_TYPE_LEVEL_HIGH;
+> +	} else
+> +		*out_type = IRQ_TYPE_NONE;
+
+I would do something like (assuming you take my suggestion above about
+arbitrary values):
+
+	if (intsize < 2 || intspec[0] > (max_gic_hwirq_number))
+		return -EINVAL;
+	/* Binding uses save values as IRQF_TRIGGER_* macros */
+	*out_type = intspec[1] & IRQ_TRIGGER_MASK;
+	*out_hwirq = intspec[0];
+	return 0;
+
+> +
+> +static struct irq_domain_ops gic_ppi_domain_ops = {
+> +	.dt_translate = git_dt_translate,
+> +};
+> +
+> +static struct of_device_id gic_ids[] = {
+> +	{ .compatible = "arm,gic", },
+> +	{ },
+> +};
+> +
+> +static struct device_node *gic_get_node(struct device_node *np)
+> +{
+> +	return of_find_matching_node(np, gic_ids);
+> +}
+> +
+> +static struct device_node *gic_get_ppi_node(struct device_node *gic_np,
+> +					    int cpu_nr)
+> +{
+> +	struct device_node *np = NULL;
+> +
+> +	if (!gic_np)
+> +		return NULL;
+> +
+> +	while ((np = of_get_next_child(gic_np, np))) {
+
+for_each_child_of_node()
+
+> +		const __be32 *reg;
+> +
+> +		if (strcmp(np->name, "gic-ppi"))
+> +			continue;
+
+Generally, its a good idea to differentiate what a node represents by
+compatible property, not name.  This would be a slight change to your
+binding, but I think it would be more consistent overall.
+
+> +		reg = of_get_property(np, "reg", NULL);
+> +		if (!reg)	/* Duh? */
+> +			continue;
+> +		if (be32_to_cpu(*reg) == cpu_nr)
+> +			break;
+> +	}
+> +
+> +	return np;
+> +}
+> +
+> +static struct device_node *gic_get_spi_node(struct device_node *gic_np)
+> +{
+> +	struct device_node *np = NULL;
+> +
+> +	if (!gic_np)
+> +		return NULL;
+> +
+> +	while ((np = of_get_next_child(gic_np, np))) {
+
+for_each_child_of_node()
+
+> +		if (!strcmp(np->name, "gic-spi"))
+> +			break;
+> +	}
+> +
+> +	return np;
+> +}
+> +#else
+
+/* CONFIG_BLAH */ comments are generally appreciated on #else/#endif
+statements.
+
+> +static struct irq_domain_ops gic_ppi_domain_ops; /* Use the defaults */
+> +
+> +static struct device_node *gic_get_node(struct device_node *np)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static struct device_node *gic_get_ppi_node(struct device_node *gic_np,
+> +					    int cpu_nr)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static struct device_node *gic_get_spi_node(struct device_node *gic_np)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+>  #endif
+>  
+> +static const char *get_of_name(struct device_node *np)
+> +{
+> +	return np ? np->full_name : "";
+> +}
+> +
+>  static void __init gic_dist_init(struct gic_chip_data *gic,
+> -	unsigned int irq_start)
+> +				 unsigned int irq_start,
+> +				 struct device_node *gic_node)
+>  {
+> -	unsigned int gic_irqs, irq_limit, i, nrvppis = 0;
+> +	unsigned int gic_irqs, irq_limit, i, c;
+>  	void __iomem *base = gic->dist_base;
+>  	u32 cpumask = 1 << smp_processor_id();
+> -	u32 dist_ctr, nrcpus;
+> +	u32 dist_ctr, nrcpus, reg;
+> +	u32 ppi_base = 0;
+> +	u16 nrppis = 0;
+>  
+>  	cpumask |= cpumask << 8;
+>  	cpumask |= cpumask << 16;
+> @@ -372,29 +465,26 @@ static void __init gic_dist_init(struct gic_chip_data *gic,
+>  	/* Find out how many CPUs are supported (8 max). */
+>  	nrcpus = ((dist_ctr >> 5) & 7) + 1;
+>  
+> -#ifdef CONFIG_ARM_GIC_VPPI
+>  	/*
+>  	 * Nobody would be insane enough to use PPIs on a secondary
+>  	 * GIC, right?
+>  	 */
+>  	if (gic == &gic_data[0]) {
+> -		gic->nrppis = 16 - (irq_start % 16);
+> -		gic->ppi_base = gic->irq_offset + 32 - gic->nrppis;
+> -		nrvppis = gic->nrppis * nrcpus;
+> -	} else {
+> -		gic->ppi_base = 0;
+> -		gic->vppi_base = 0;
+> +		ppi_base = irq_start & 31;
+> +		nrppis = 16 - (ppi_base & 15);
+>  	}
+> -#endif
+>  
+>  	pr_info("Configuring GIC with %d sources (%d additional PPIs)\n",
+> -		gic_irqs, nrvppis);
+> +		gic_irqs, nrppis * nrcpus);
+>  
+>  	/*
+> -	 * Set all global interrupts to be level triggered, active low.
+> +	 * Set all global interrupts to be level triggered, active high.
+>  	 */
+> -	for (i = 32; i < gic_irqs; i += 16)
+> -		writel_relaxed(0, base + GIC_DIST_CONFIG + i * 4 / 16);
+> +	for (i = 32; i < gic_irqs; i += 16) {
+> +		reg = readl_relaxed(base + GIC_DIST_CONFIG + i * 4 / 16);
+> +		reg &= 0x55555555;
+> +		writel_relaxed(reg, base + GIC_DIST_CONFIG + i * 4 / 16);
+> +	}
+
+Have you got some unrelated fixups in this patch?  It isn't obvious to
+me whether or not this hunk is related to setting up irq_domains.
+
+>  
+>  	/*
+>  	 * Set all global interrupts to this CPU only.
+> @@ -425,30 +515,69 @@ static void __init gic_dist_init(struct gic_chip_data *gic,
+>  	/*
+>  	 * Setup the Linux IRQ subsystem.
+>  	 */
+> -	for (i = irq_start; i < irq_limit; i++) {
+> +
+> +	gic->nr_irqs = gic_irqs;
+> +	gic->spi_dom.irq_base = irq_start & ~31;
+> +	gic->spi_dom.ops = &gic_ppi_domain_ops;
+> +	gic->spi_dom.of_node = gic_get_spi_node(gic_node);
+> +
+> +	pr_info("GIC SPI domain %s [%d:%d]\n",
+> +		get_of_name(gic->spi_dom.of_node), irq_start, irq_limit - 1);
+> +
+> +	irq_domain_add(&gic->spi_dom);
+> +	
+> +	for (i = ppi_base; i < (irq_limit - gic->spi_dom.irq_base); i++) {
+> +		unsigned int irq = irq_domain_map(&gic->spi_dom, i);
+> +		pr_debug("GIC mapping %s:%d to IRQ%d\n",
+> +			 get_of_name(gic->spi_dom.of_node), i, irq);
+>  #ifdef CONFIG_ARM_GIC_VPPI
+> -		if (nrvppis && gic_irq_is_ppi(gic, i))
+> -			irq_set_chip_and_handler(i, &gic_chip, gic_handle_ppi);
+> +		if (nrppis && gic_irq_is_ppi(gic, irq))
+> +			irq_set_chip_and_handler(irq, &gic_chip, gic_handle_ppi);
+>  		else
+>  #endif
+>  		{
+> -			irq_set_chip_and_handler(i, &gic_chip,
+> +			irq_set_chip_and_handler(irq, &gic_chip,
+>  						 handle_fasteoi_irq);
+> -			set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+> +			set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+>  		}
+> -		irq_set_chip_data(i, gic);
+> +		irq_set_chip_data(irq, gic);
+>  	}
+>  
+>  #ifdef CONFIG_ARM_GIC_VPPI
+> -	if (!nrvppis)
+> +	if (!nrppis)
+>  		goto out;
+> -	gic->vppi_base = irq_alloc_descs(-1, 0, nrvppis, 0);
+> -	if (WARN_ON(gic->vppi_base < 0))
+> -		goto out;
+> -	for (i = gic->vppi_base; i < (gic->vppi_base + nrvppis); i++) {
+> -		irq_set_chip_and_handler(i, &gic_ppi_chip, handle_percpu_irq);
+> -		irq_set_chip_data(i, gic);
+> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+> +	for (c = 0; c < nrcpus; c++) {
+> +		struct irq_domain *dom = &per_cpu(gic_ppi_domains, c);
+> +		int base;
+> +
+> +		base = irq_alloc_descs(-1, 0, nrppis, 0);
+> +		if (WARN_ON(base < 0))
+> +			goto out;
+> +
+> +		/*
+> +		 * We cheat here, and fold ppi_base into irq_base, as
+> +		 * it saves us some work at runtime.
+> +		 */
+> +		dom->irq_base = base - ppi_base;
+> +		dom->ops = &gic_ppi_domain_ops;
+> +		dom->of_node = gic_get_ppi_node(gic_node, c);
+> +
+> +		pr_info("GIC PPI domain %s [%d:%d] for CPU %d\n",
+> +			get_of_name(dom->of_node), base, base + nrppis - 1, c);
+> +
+> +		irq_domain_add(dom);
+> +
+> +		for (i = 0; i < nrppis; i++) {
+> +			unsigned int irq = irq_domain_map(dom, i + irq_start);
+> +
+> +			pr_debug("GIC mapping %s:%d to IRQ%d\n",
+> +				 get_of_name(dom->of_node), i, irq);
+> +
+> +			irq_set_chip_and_handler(irq, &gic_ppi_chip,
+> +						 handle_percpu_irq);
+> +			irq_set_chip_data(irq, gic);
+> +			set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+> +		}
+>  	}
+>  out:
+>  #endif
+> @@ -479,8 +608,9 @@ static void __cpuinit gic_cpu_init(struct gic_chip_data *gic)
+>  	writel_relaxed(1, base + GIC_CPU_CTRL);
+>  }
+>  
+> -void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+> -	void __iomem *dist_base, void __iomem *cpu_base)
+> +static void __init gic_init_one(unsigned int gic_nr, unsigned int irq_start,
+> +				void __iomem *dist_base, void __iomem *cpu_base,
+> +				struct device_node *gic_node)
+>  {
+>  	struct gic_chip_data *gic;
+>  
+> @@ -494,10 +624,80 @@ void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+>  	if (gic_nr == 0)
+>  		gic_cpu_base_addr = cpu_base;
+>  
+> -	gic_dist_init(gic, irq_start);
+> +	gic_dist_init(gic, irq_start, gic_node);
+>  	gic_cpu_init(gic);
+>  }
+>  
+> +void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+> +		     void __iomem *dist_base, void __iomem *cpu_base)
+> +{
+> +	gic_init_one(gic_nr, irq_start, dist_base, cpu_base, NULL);
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static void __init gic_of_init_one(int idx, unsigned int irq_start,
+> +				   struct device_node *np)
+> +{
+> +	void __iomem *dist_base;
+> +	void __iomem *cpu_base;
+> +
+> +	dist_base = of_iomap(np, 0);
+> +	cpu_base  = of_iomap(np, 1);
+> +	if (!dist_base || ! cpu_base) {
+> +		pr_err("Cannot map %s\n", np->full_name);
+> +		return;
+> +	}
+> +
+> +	/* Assume we use the full 16 PPIs */
+> +	gic_init_one(idx, irq_start, dist_base, cpu_base, np);
+> +}
+> +
+> +void __init gic_of_init(void)
+> +{
+> +	struct device_node *np = NULL;
+> +	unsigned int irq_start = 0;
+> +	int i = 0;
+> +
+> +	/* Look for the GIC providing PPIs first */
+> +	while((np = gic_get_node(np))) {
+> +		struct device_node *ppi_np;
+> +		ppi_np = gic_get_ppi_node(np, 0);
+> +		of_node_put(ppi_np);
+> +		if (!ppi_np)
+> +			continue;
+> +			
+> +		/* Assume we use the full 16 PPIs */
+> +		gic_of_init_one(i, 16, np);
+> +		irq_start += gic_data[i].nr_irqs;
+> +		i++;
+> +		break;
+> +	}
+> +	of_node_put(np);
+> +	np = NULL;
+> +
+> +	/* Now all the others */
+> +	while((np = gic_get_node(np))) {
+> +		struct device_node *ppi_np;
+> +		int irq;
+> +		ppi_np = gic_get_ppi_node(np, 0);
+> +		of_node_put(ppi_np);
+> +		if (ppi_np)
+> +			continue;
+> +			
+> +		gic_of_init_one(i, irq_start, np);
+> +		irq = irq_of_parse_and_map(np, 0);
+> +		if (irq != IRQ_NONE) {
+> +			pr_info("GIC %s cascading to IRQ%d",
+> +				np->full_name, irq);
+> +			gic_cascade_irq(i, irq);
+> +		}
+> +		irq_start += gic_data[i].nr_irqs;
+> +		i++;
+> +	}
+> +	of_node_put(np);
+> +}
+> +#endif
+
+I see what you're doing here, but I don't think it is the best
+approach in the long run.  Rather than walking all the
+interrupt-controller nodes looking for primary and secondary gics
+while ignoring all others, I think there needs to be a function that
+finds all the interrupt controller nodes, sorts them based on
+dependencies, and calls their initialization hook in order.  Other
+architectures will use such a thing.  I've been intending to do it for
+powerpc for quite a while node.
+
+Would you be willing to tackle such a beast?  I've got a fairly good
+idea what it needs to look like, but I just haven't had the time to do
+it.
+
+> +
+
+Overall the patch looks like it is in the right direction.
 
 g.
 
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+>  void __cpuinit gic_secondary_init(unsigned int gic_nr)
+>  {
+>  	BUG_ON(gic_nr >= MAX_GIC_NR);
+> diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
+> index 069d4c0..04cfe33 100644
+> --- a/arch/arm/include/asm/hardware/gic.h
+> +++ b/arch/arm/include/asm/hardware/gic.h
+> @@ -39,16 +39,20 @@ extern void __iomem *gic_cpu_base_addr;
+>  extern struct irq_chip gic_arch_extn;
+>  
+>  void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
+> +void gic_of_init(void);
+>  void gic_secondary_init(unsigned int);
+>  void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
+>  void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
+>  #ifdef CONFIG_ARM_GIC_VPPI
+>  unsigned int gic_ppi_to_vppi(unsigned int irq);
+> +unsigned int gic_ppi_to_cpu_vppi(unsigned int irq, int cpu);
+>  #else
+>  static inline unsigned int gic_ppi_to_vppi(unsigned int irq)
+>  {
+>  	return irq;
+>  }
+> +
+> +#define gic_ppi_to_cpu_vppi(i,c) gic_ppi_to_vppi(i)
+>  #endif
+>  
+>  #endif
+> -- 
+> 1.7.0.4
+> 
+> 
