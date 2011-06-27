@@ -1,62 +1,124 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC PATCH] irq: add irq_domain translation infrastructure
-Date: Mon, 27 Jun 2011 19:24:19 +1000
-Message-ID: <1309166659.32158.380.camel@pasglop>
-References: <20110526065438.23444.69386.stgit@ponder>
-	<20110627090059.GA31287@linutronix.de>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH 1/4] dt: early platform devices support
+Date: Mon, 27 Jun 2011 10:54:30 +0100
+Message-ID: <4E085356.7060407@arm.com>
+References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
+	<1308924659-31894-2-git-send-email-marc.zyngier@arm.com>
+	<BANLkTi=7cM2dXniHM4mnXs46KaTc05hh-Q@mail.gmail.com>
+	<20110625121142.4c73ca70@taxman.wild-wind.fr.eu.org>
+	<20110625204435.GA15026@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110627090059.GA31287-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110625204435.GA15026@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Greg Kroah-Hartman <greg@kroah.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kay Sievers <kay.sievers@vrfy.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-06-27 at 11:00 +0200, Sebastian Andrzej Siewior wrote:
-> * Grant Likely | 2011-05-26 00:54:38 [-0600]:
+On 25/06/11 21:44, Grant Likely wrote:
+> On Sat, Jun 25, 2011 at 12:11:42PM +0100, Marc Zyngier wrote:
+>> On Fri, 24 Jun 2011 22:49:56 -0600
+>> The current ARM code relies on the timers *not* being a standard
+>> device, and being directly setup by an board specific method. The SMP
+>> timers are even worse, as they are directly called by the core code,
+>> meaning that we can only have *one* implementation at a time in the
+>> kernel.
+>>
+>> So the early platform stuff is a potential solution for that, though
+>> there is no way it would handle any kind of dependency. What I dream of
+>> is to have the full device/driver infrastructure available much
+>> earlier, before the rest of the kernel starts relying on some hardware
+>> being up and running...
 > 
-> >diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-> >index 39645b6..9891cd4 100644
-> >--- a/arch/x86/kernel/devicetree.c
-> >+++ b/arch/x86/kernel/devicetree.c
-> >@@ -371,36 +321,49 @@ static struct of_ioapic_type of_ioapic_type[] =
-> > 	},
-> > };
-> > 
-> >-static int ioapic_xlate(struct irq_domain *id, const u32 *intspec, u32 intsize,
-> >-			u32 *out_hwirq, u32 *out_type)
-> >+static int ioapic_dt_translate(struct irq_domain *domain,
-> >+				struct device_node *controller,
-> >+				const u32 *intspec, u32 intsize,
-> >+				irq_hw_number_t *out_hwirq, u32 *out_type)
-> > {
-> >-	struct mp_ioapic_gsi *gsi_cfg;
-> > 	struct io_apic_irq_attr attr;
-> > 	struct of_ioapic_type *it;
-> > 	u32 line, idx, type;
-> >+	int rc;
-> > 
-> >-	if (intsize < 2)
-> >+	if (controller != domain->of_node)
-> > 		return -EINVAL;
+> My suggestion: don't use platform_device for this.  I think it is
+> entirely the wrong model.  Keep the timers *not* standard devices.
 > 
-> Is there a reason not havining the (controller != domain->of_node) check
-> in irq_create_of_mapping()?
+> Instead, use a timer setup function that accepts a list of compatible
+> properties and an initialization hook for each timer type.  Since
+> timers have exist, have to be called by core code, and cannot ever be
+> built as modules, the Linux device model really doesn't offer much
+> advantage.
+> 
+> It is completely valid and often done to access device tree data from
+> early setup code without any context of a struct device.
 
-Not all domains are associated with a single OF node.
+Grant,
 
-Take xics, where there can be quite a few "source controllers" which act
-as device-tree interrupt parents but there's a single global domain.
- 
+There's a few conflicting aspects we need to reconcile here:
+- We want to keep the early setup code as simple as possible so it
+doesn't rely on anything (well, as little as possible)
+- We want to move driver code out of arch/arm (they often are generic,
+not specific to a particular architecture)
+- We want to support DT and non-DT in a similar way (some ARM platforms
+will never see a DT port)
+
+If I follow your advice, I end up with something like the following
+thing in the core code:
+
+extern int timerx_probe(struct of_device_id *id);
+struct of_device_id timerx_ids[] = {
+	...
+};
+
+extern int timery_probe(struct of_device_id *id);
+struct of_device_id timery_ids[] = {
+	...
+};
+
+extern int timerz_probe(struct of_device_id *id);
+struct of_device_id timerz_ids[] = {
+	...
+};
+
+struct arm_timer_probe {
+	struct of_device_if **ids;
+	int (*probe)(struct of_device_id *);
+};
+
+struct arm_timer_probe arm_timer_probe_list[] = {
+	{ .ids = timerx_ids, probe = timerx_probe, },
+	{ .ids = timery_ids, probe = timery_probe, },
+	{ .ids = timerz_ids, probe = timerz_probe, },
+	{ },
+};
+
+... with some additional #ifdef-ery to make that work. This could solve
+the first two points above, though each timer_probe function has to
+parse the tree itself to gather resources (code duplication).
+
+If you add the non-DT support in the picture, you get an additional,
+completely separate code path, where the platform code directly calls
+into the driver code, each platform inventing its own stuff. Again.
+
+I think we all agree that early_platform_device are distasteful. They
+abuse the platform_device and command line. They give you a false sense
+of infrastructure.
+
+But they also offer you:
+- a clean separation between core code and drivers, with a standardized
+interface
+- drivers shared across architectures (sh & shmobile, for example)
+- use of common code (fetching resources from DT)
+- a relative independence from the level of DT support (the driver only
+knows about platform devices).
+
+If there are issues in the early platform stuff, I'd rather tackle them
+instead of just inventing yet another custom mechanism. And if we decide
+that it is terminally broken, I hope we can agree on something generic
+enough to satisfy the above requirements.
+
 Cheers,
-Ben.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
