@@ -1,92 +1,111 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH 3/4] ARM: dt: add GIC bindings and driver support
-Date: Mon, 27 Jun 2011 09:02:07 -0600
-Message-ID: <BANLkTin5q7uVCAobvoaBqsUHHn7zJs-x_Q@mail.gmail.com>
-References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
-	<1308924659-31894-4-git-send-email-marc.zyngier@arm.com>
-	<20110626080135.GC15026@ponder.secretlab.ca>
-	<4E085B2E.5030605@arm.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv3 2/2] tty: of_serial: support for 32 bit accesses
+Date: Mon, 27 Jun 2011 10:57:26 -0600
+Message-ID: <BANLkTin2Bs6HxOmVHzbsxdwEViy6-DBtTw@mail.gmail.com>
+References: <1309177954-8786-1-git-send-email-jamie@jamieiles.com> <1309177954-8786-2-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E085B2E.5030605-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1309177954-8786-2-git-send-email-jamie@jamieiles.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 27, 2011 at 4:27 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 26/06/11 09:01, Grant Likely wrote:
->> I see what you're doing here, but I don't think it is the best
->> approach in the long run. =A0Rather than walking all the
->> interrupt-controller nodes looking for primary and secondary gics
->> while ignoring all others, I think there needs to be a function that
->> finds all the interrupt controller nodes, sorts them based on
->> dependencies, and calls their initialization hook in order. =A0Other
->> architectures will use such a thing. =A0I've been intending to do it for
->> powerpc for quite a while node.
->>
->> Would you be willing to tackle such a beast? =A0I've got a fairly good
->> idea what it needs to look like, but I just haven't had the time to do
->> it.
+On Mon, Jun 27, 2011 at 6:32 AM, Jamie Iles <jamie@jamieiles.com> wrote=
+:
+> Some platforms e.g. TI Davinci require 32-bit accesses to the UARTs.
+> The of_serial driver currently registers all UARTs as UPIO_MEM. =A0Ad=
+d a
+> new attribute "io-width" to allow the port to be registered with
+> different IO width requirements.
 >
-> I can give it a go.
+> Acked-by: Alan Cox <alan@linux.intel.com>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
 
-Awesome, thanks.
-
-Okay, here is the general description of what needs to happen in ugly
-pseudo code:
-
-typedef void (*irq_init_cb_t)(struct intc_desc *intc_desc);
-
-of_irq_init(struct of_device_id *irq_init)
-{
-        struct device_node *np;
-        struct intc_desc *intc_desc;
-
-        for_each_matching_node(np, match_table) {
-                if (!of_find_property(np, "interrupt-controller"))
-                        continue;
-                /* Here, we allocate and populate an intc_desc with
-the node pointer, interrupt-parent device_node etc. */
-                intc_desc =3D of_alloc_intc_desc(np);
-                list_add(&intc_desc->list, intc_desc_list);
-        }
-
-        /* The root irq controller is the one without an
-interrupt-parent.  That one
-         * goes first, followed by the controllers that reference it,
-followed by the
-         * ones that reference the 2nd level controllers, etc
-         */
-        of_irq_sort_descs();
-
-        list_for_each_entry(intc_desc, intc_desc_list, list) {
-                irq_init_cb_t *irq_init_cb;
-                match =3D of_match_node(matches, desc->np);
-                irq_init_cb =3D match->data;
-                irq_init_cp(intc_desc);
-        }
-}
-
-There's some ugliness in there with using of_device_id to get the
-callback pointer because there is no typechecking when doing it that
-way, but that just reflects the current infrastructure in
-include/linux/of.h.  It doesn't have to be that way.
-
-This doesn't work for all irq controllers, nor does it have to.
-Anything on GPIO lines for instance can probably be deferred to
-regular platform devices.  The main thing that is interesting here is
-to get the core interrupt controllers bootstrapped so that other core
-hardware, like timers, can use it immediately.
+Alan, who should pick this series up?  Should I take it via the
+devicetree/next tree?
 
 g.
+
+> ---
+> =A0.../devicetree/bindings/tty/serial/of-serial.txt =A0 | =A0 =A03 ++=
++
+> =A0drivers/tty/serial/of_serial.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 17 +++++++++++++++++
+> =A02 files changed, 20 insertions(+), 0 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/tty/serial/of-serial.t=
+xt b/Documentation/devicetree/bindings/tty/serial/of-serial.txt
+> index 35e53ae..93260d0 100644
+> --- a/Documentation/devicetree/bindings/tty/serial/of-serial.txt
+> +++ b/Documentation/devicetree/bindings/tty/serial/of-serial.txt
+> @@ -21,6 +21,9 @@ Optional properties:
+> =A0- reg-shift : quantity to shift the register offsets by.
+> =A0- used-by-rtas : set to indicate that the port is in use by the Op=
+enFirmware
+> =A0 RTAS and should not be registered.
+> +- io-width : the size (in bytes) of the IO accesses that should be p=
+erformed
+> + =A0on the device. =A0There are some systems that require 32-bit acc=
+esses to the
+> + =A0UART (e.g. TI davinci).
+>
+> =A0Example:
+>
+> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_s=
+erial.c
+> index c911b24..dfcad6f 100644
+> --- a/drivers/tty/serial/of_serial.c
+> +++ b/drivers/tty/serial/of_serial.c
+> @@ -65,6 +65,23 @@ static int __devinit of_platform_serial_setup(stru=
+ct platform_device *ofdev,
+>
+> =A0 =A0 =A0 =A0port->irq =3D irq_of_parse_and_map(np, 0);
+> =A0 =A0 =A0 =A0port->iotype =3D UPIO_MEM;
+> + =A0 =A0 =A0 prop =3D of_get_property(np, "io-width", &prop_size);
+> + =A0 =A0 =A0 if (prop && (prop_size =3D=3D sizeof(u32))) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 switch (be32_to_cpup(prop)) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 1:
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 port->iotype =3D UPIO_M=
+EM;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 case 4:
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 port->iotype =3D UPIO_M=
+EM32;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 default:
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_warn(&ofdev->dev,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0"uns=
+upported io width (%d bytes)\n",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0be32=
+_to_cpup(prop));
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 }
+> +
+> =A0 =A0 =A0 =A0port->type =3D type;
+> =A0 =A0 =A0 =A0port->uartclk =3D be32_to_cpup(clk);
+> =A0 =A0 =A0 =A0port->flags =3D UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UP=
+=46_IOREMAP
+> --
+> 1.7.4.1
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
