@@ -1,15 +1,13 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] ARM: dt: Add TWD bindings and driver support
-Date: Mon, 27 Jun 2011 11:39:59 +0100
-Message-ID: <4E085DFF.9010600@arm.com>
-References: <1308924659-31894-1-git-send-email-marc.zyngier@arm.com>
-	<1308924659-31894-5-git-send-email-marc.zyngier@arm.com>
-	<20110626080902.GA24241@ponder.secretlab.ca>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCHv3 2/2] tty: of_serial: support for 32 bit accesses
+Date: Mon, 27 Jun 2011 13:32:34 +0100
+Message-ID: <1309177954-8786-2-git-send-email-jamie@jamieiles.com>
+References: <1309177954-8786-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110626080902.GA24241-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1309177954-8786-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,165 +17,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/06/11 09:09, Grant Likely wrote:
-> On Fri, Jun 24, 2011 at 03:10:59PM +0100, Marc Zyngier wrote:
->> Add device tree support to the arm_smp_twd driver.
->>
->> The DT bindings for the TWD are defined as such:
->> - one timer node per CPU, using corresponding PPI
->>   interrupt controller
->> - provides both timer and watchdog interrupt
->>
->> Tested on RealView PB11MPCore and VExpress.
->>
->> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/twd.txt |   54 ++++++++++++++
->>  drivers/clocksource/arm_smp_twd.c             |   92 +++++++++++++++++++++---
->>  2 files changed, 134 insertions(+), 12 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/twd.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/twd.txt b/Documentation/devicetree/bindings/arm/twd.txt
->> new file mode 100644
->> index 0000000..3823a81
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/twd.txt
->> @@ -0,0 +1,54 @@
->> +* ARM Timer Watchdog
->> +
->> +ARM SMP cores are often associated with a TWD providing a per-cpu timer
->> +and a per-cpu watchdog. Usually wired to the PPI interface of a GIC.
->> +
->> +Main node properties:
->> +
->> +- compatible		: "arm,smp-twd", "localtimer"
-> 
-> "localtimer" isn't a very good compatible value.  Compatible is
-> intended to identify the specific hardware, and "localtimer" is a very
-> generic name.
+Some platforms e.g. TI Davinci require 32-bit accesses to the UARTs.
+The of_serial driver currently registers all UARTs as UPIO_MEM.  Add a
+new attribute "io-width" to allow the port to be registered with
+different IO width requirements.
 
-This is the early_device class name creeping in. I usually used the
-"device_type" property, but been told this wasn't the right way...
+Acked-by: Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+---
+ .../devicetree/bindings/tty/serial/of-serial.txt   |    3 +++
+ drivers/tty/serial/of_serial.c                     |   17 +++++++++++++++++
+ 2 files changed, 20 insertions(+), 0 deletions(-)
 
-Of course, if we get rid of the idea of early devices, this is a moot point.
-
-> Also, as commented on for the gic, I'd like to see some level of
-> versioning on the arm,smp-twd string.
-
-There's only one version of TWD at the moment, so I guess I'll tie it to
-the CPU core implementation, e.g: "arm,twd-11mpcore", "arm,twd-cortex-a9"...
-
->> +- reg			: register mapping for the registers.
->> +- #address-cells	: <1>
->> +- #size-cells		: <0>
->> +
->> +Timer sub nodes (one per CPU)
->> +
->> +- interrupt-parent	: phandle to the corresponding gic-ppi.
->> +- interrupts		: <IRQtimer IRQwatchdog> (usually <29 30>)
->> +- reg			: index of the CPU this timer is connected to.
->> +
->> +Example (ARM RealView PB11-MPCore):
->> +
->> +localtimer@1f000600 {
->> +	compatible = "arm,smp-twd", "localtimer";
->> +	reg = <0x1f000600 0x100>;
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +
->> +	/*
->> +	 * One timer per CPU, bound to the corresponding
->> +	 * PPI interface.
->> +	 */
->> +	timer@0 {
->> +		interrupt-parent = <&gic0ppi0>;
->> +		interrupts = <29 30>;
->> +		reg = <0>;
->> +	};
->> +
->> +	timer@1 {
->> +		interrupt-parent = <&gic0ppi1>;
->> +		interrupts = <29 30>;
->> +		reg = <1>;
->> +	};
->> +
->> +	timer@2 {
->> +		interrupt-parent = <&gic0ppi2>;
->> +		interrupts = <29 30>;
->> +		reg = <2>;
->> +	};
->> +
->> +	timer@3 {
->> +		interrupt-parent = <&gic0ppi3>;
->> +		interrupts = <29 30>;
->> +		reg = <3>;
->> +	};
->> +};
->> diff --git a/drivers/clocksource/arm_smp_twd.c b/drivers/clocksource/arm_smp_twd.c
->> index 65f4669..586acad 100644
->> --- a/drivers/clocksource/arm_smp_twd.c
->> +++ b/drivers/clocksource/arm_smp_twd.c
->> @@ -19,6 +19,9 @@
->>  #include <linux/interrupt.h>
->>  #include <linux/ioport.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->>  #include <linux/clk.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/err.h>
->> @@ -37,11 +40,11 @@
->>  #define TWD_TIMER_CONTROL_IT_ENABLE	(1 << 2)
->>  
->>  static void __iomem *twd_base;
->> -static int twd_ppi;
->>  
->>  static struct clk *twd_clk;
->>  static unsigned long twd_timer_rate;
->>  static DEFINE_PER_CPU(bool, irq_reqd);
->> +static DEFINE_PER_CPU(int, twd_irq);
->>  static struct clock_event_device __percpu *twd_evt;
->>  
->>  static void twd_set_mode(enum clock_event_mode mode,
->> @@ -223,7 +226,7 @@ static void __cpuinit twd_setup(void *data)
->>  	clk->rating = 450;
->>  	clk->set_mode = twd_set_mode;
->>  	clk->set_next_event = twd_set_next_event;
->> -	clk->irq = gic_ppi_to_vppi(twd_ppi);
->> +	clk->irq = __get_cpu_var(twd_irq);
->>  	clk->cpumask = cpumask_of(smp_processor_id());
->>  
->>  	pr_debug("Configuring %s on cpu #%d\n", clk->name, smp_processor_id());
->> @@ -290,31 +293,90 @@ static struct notifier_block __cpuinitdata twd_cpu_nb = {
->>  	.notifier_call = twd_cpu_notify,
->>  };
->>  
->> -static int twd_probe(struct platform_device *pdev)
->> +#ifdef CONFIG_OF
->> +static struct device_node *twd_get_timer_node(struct device_node *twd_np,
->> +					      struct device_node *child,
->> +					      int *timer_nr)
->> +{
->> +	child = of_get_next_child(twd_np, child);
->> +	if (child) {
->> +		const __be32 *reg;
->> +		reg = of_get_property(child, "reg", NULL);
->> +		if (!reg)
->> +			*timer_nr = -1;
->> +		else
->> +			*timer_nr = be32_to_cpu(*reg);
-> 
-> There's a new function that should be done and merged in time for
-> v3.1 that will help with reading properties.  Keep an eye out for
-> of_getprop_u32()
-
-Yup, spotted. Will use it as soon as it appears in a tree nearby.
-
-	M.
+diff --git a/Documentation/devicetree/bindings/tty/serial/of-serial.txt b/Documentation/devicetree/bindings/tty/serial/of-serial.txt
+index 35e53ae..93260d0 100644
+--- a/Documentation/devicetree/bindings/tty/serial/of-serial.txt
++++ b/Documentation/devicetree/bindings/tty/serial/of-serial.txt
+@@ -21,6 +21,9 @@ Optional properties:
+ - reg-shift : quantity to shift the register offsets by.
+ - used-by-rtas : set to indicate that the port is in use by the OpenFirmware
+   RTAS and should not be registered.
++- io-width : the size (in bytes) of the IO accesses that should be performed
++  on the device.  There are some systems that require 32-bit accesses to the
++  UART (e.g. TI davinci).
+ 
+ Example:
+ 
+diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+index c911b24..dfcad6f 100644
+--- a/drivers/tty/serial/of_serial.c
++++ b/drivers/tty/serial/of_serial.c
+@@ -65,6 +65,23 @@ static int __devinit of_platform_serial_setup(struct platform_device *ofdev,
+ 
+ 	port->irq = irq_of_parse_and_map(np, 0);
+ 	port->iotype = UPIO_MEM;
++	prop = of_get_property(np, "io-width", &prop_size);
++	if (prop && (prop_size == sizeof(u32))) {
++		switch (be32_to_cpup(prop)) {
++		case 1:
++			port->iotype = UPIO_MEM;
++			break;
++		case 4:
++			port->iotype = UPIO_MEM32;
++			break;
++		default:
++			dev_warn(&ofdev->dev,
++				 "unsupported io width (%d bytes)\n",
++				 be32_to_cpup(prop));
++			return -EINVAL;
++		}
++	}
++
+ 	port->type = type;
+ 	port->uartclk = be32_to_cpup(clk);
+ 	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
 -- 
-Jazz is not dead. It just smells funny...
+1.7.4.1
