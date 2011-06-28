@@ -1,186 +1,115 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/gpio: Add new method for getting gpios under different
-	property names
-Date: Tue, 28 Jun 2011 15:42:58 -0600
-Message-ID: <BANLkTimLmK=dx3cSVeiD__Tq4WF0zgC98w@mail.gmail.com>
-References: <20110620225016.4530.73978.stgit@riker>
+Subject: Re: [PATCH] i2c: Tegra: Add DeviceTree support
+Date: Tue, 28 Jun 2011 16:16:31 -0600
+Message-ID: <BANLkTim3_3SA3-F2qLhMdGns2sPijh07Yw@mail.gmail.com>
+References: <20110622161656.30052.33366.stgit@riker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110620225016.4530.73978.stgit@riker>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110622161656.30052.33366.stgit@riker>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2011 at 4:50 PM, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> This patch adds a new routine, of_get_named_gpio_flags(), which takes the
-> property name as a parameter rather than assuming "gpios".
->
-> of_get_gpio_flags() is modified to call of_get_named_gpio_flags() with "g=
-pios"
-> as the property parameter.
+On Wed, Jun 22, 2011 at 10:16 AM, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wro=
+te:
+> This patch modifies the tegra i2c driver so that it can be initiailiz=
+ed
+> using the device tree along with the devices connected to the i2c bus=
+=2E
 >
 > Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Acked-by: OIof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 
-Merged, thanks.
+I just noticed something.  This patch is incomplete because it does
+not have the of_match_table addition (that bit showed up in the 'fill
+in' patch that you sent me privately.)  Please respin and include the
+of_match_table hunk.
+
+Thanks,
 g.
 
 > ---
 >
-> =A0drivers/of/gpio.c =A0 =A0 =A0 | =A0 12 +++++++-----
-> =A0include/linux/of_gpio.h | =A0 42 +++++++++++++++++++++++++++++++++++++=
-+----
-> =A02 files changed, 45 insertions(+), 9 deletions(-)
+> =A0drivers/i2c/busses/i2c-tegra.c | =A0 17 ++++++++++++++++-
+> =A01 files changed, 16 insertions(+), 1 deletions(-)
 >
-> diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
-> index 9059603..6e6a786 100644
-> --- a/drivers/of/gpio.c
-> +++ b/drivers/of/gpio.c
-> @@ -20,9 +20,11 @@
-> =A0#include <linux/of_gpio.h>
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-=
+tegra.c
+> index 4d93196..d2393e6 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -26,6 +26,7 @@
+> =A0#include <linux/delay.h>
 > =A0#include <linux/slab.h>
+> =A0#include <linux/i2c-tegra.h>
+> +#include <linux/of_i2c.h>
 >
+> =A0#include <asm/unaligned.h>
+>
+> @@ -540,6 +541,7 @@ static int tegra_i2c_probe(struct platform_device=
+ *pdev)
+> =A0 =A0 =A0 =A0struct resource *iomem;
+> =A0 =A0 =A0 =A0struct clk *clk;
+> =A0 =A0 =A0 =A0struct clk *i2c_clk;
+> + =A0 =A0 =A0 const unsigned int *prop;
+> =A0 =A0 =A0 =A0void *base;
+> =A0 =A0 =A0 =A0int irq;
+> =A0 =A0 =A0 =A0int ret =3D 0;
+> @@ -597,7 +599,17 @@ static int tegra_i2c_probe(struct platform_devic=
+e *pdev)
+> =A0 =A0 =A0 =A0i2c_dev->irq =3D irq;
+> =A0 =A0 =A0 =A0i2c_dev->cont_id =3D pdev->id;
+> =A0 =A0 =A0 =A0i2c_dev->dev =3D &pdev->dev;
+> - =A0 =A0 =A0 i2c_dev->bus_clk_rate =3D pdata ? pdata->bus_clk_rate :=
+ 100000;
 > +
-> =A0/**
-> - * of_get_gpio_flags - Get a GPIO number and flags to use with GPIO API
-> + * of_get_named_gpio_flags - Get a GPIO number and flags to use with GPI=
-O API
-> =A0* @np: =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device node to get GPIO from
-> + * @list_name: property name that contains a list
-> =A0* @index: =A0 =A0 index of the GPIO
-> =A0* @flags: =A0 =A0 a flags pointer to fill in
-> =A0*
-> @@ -30,8 +32,8 @@
-> =A0* value on the error condition. If @flags is not NULL the function als=
-o fills
-> =A0* in flags for the GPIO.
-> =A0*/
-> -int of_get_gpio_flags(struct device_node *np, int index,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 enum of_gpio_flags *flags)
-> +int of_get_named_gpio_flags(struct device_node *np, const char *list_nam=
-e,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int index, enum of_=
-gpio_flags *flags)
-> =A0{
-> =A0 =A0 =A0 =A0int ret;
-> =A0 =A0 =A0 =A0struct device_node *gpio_np;
-> @@ -40,7 +42,7 @@ int of_get_gpio_flags(struct device_node *np, int index,
-> =A0 =A0 =A0 =A0const void *gpio_spec;
-> =A0 =A0 =A0 =A0const __be32 *gpio_cells;
+> + =A0 =A0 =A0 i2c_dev->bus_clk_rate =3D 100000; /* default clock rate=
+ */
+> + =A0 =A0 =A0 if (pdata) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_dev->bus_clk_rate =3D pdata->bus_cl=
+k_rate;
+> +
+> + =A0 =A0 =A0 } else if (i2c_dev->dev->of_node) { =A0 =A0/* if there =
+is a device tree node ... */
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 prop =3D of_get_property(i2c_dev->dev->=
+of_node,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "clock-=
+frequency", NULL);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (prop)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_dev->bus_clk_rate =3D=
+ be32_to_cpup(prop);
+> + =A0 =A0 =A0 }
 >
-> - =A0 =A0 =A0 ret =3D of_parse_phandles_with_args(np, "gpios", "#gpio-cel=
-ls", index,
-> + =A0 =A0 =A0 ret =3D of_parse_phandles_with_args(np, list_name, "#gpio-c=
-ells", index,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0&gpio_np, &gpio_spec);
+> =A0 =A0 =A0 =A0if (pdev->id =3D=3D 3)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0i2c_dev->is_dvc =3D 1;
+> @@ -627,6 +639,7 @@ static int tegra_i2c_probe(struct platform_device=
+ *pdev)
+> =A0 =A0 =A0 =A0i2c_dev->adapter.algo =3D &tegra_i2c_algo;
+> =A0 =A0 =A0 =A0i2c_dev->adapter.dev.parent =3D &pdev->dev;
+> =A0 =A0 =A0 =A0i2c_dev->adapter.nr =3D pdev->id;
+> + =A0 =A0 =A0 i2c_dev->adapter.dev.of_node =3D pdev->dev.of_node;
+>
+> =A0 =A0 =A0 =A0ret =3D i2c_add_numbered_adapter(&i2c_dev->adapter);
 > =A0 =A0 =A0 =A0if (ret) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pr_debug("%s: can't parse gpios property\n=
-", __func__);
-> @@ -79,7 +81,7 @@ err0:
-> =A0 =A0 =A0 =A0pr_debug("%s exited with status %d\n", __func__, ret);
-> =A0 =A0 =A0 =A0return ret;
-> =A0}
-> -EXPORT_SYMBOL(of_get_gpio_flags);
-> +EXPORT_SYMBOL(of_get_named_gpio_flags);
+> @@ -634,6 +647,8 @@ static int tegra_i2c_probe(struct platform_device=
+ *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto err_free_irq;
+> =A0 =A0 =A0 =A0}
 >
-> =A0/**
-> =A0* of_gpio_count - Count GPIOs for a device
-> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-> index 6598c04..920f195 100644
-> --- a/include/linux/of_gpio.h
-> +++ b/include/linux/of_gpio.h
-> @@ -46,8 +46,9 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chi=
-p(struct gpio_chip *gc)
-> =A0 =A0 =A0 =A0return container_of(gc, struct of_mm_gpio_chip, gc);
-> =A0}
->
-> -extern int of_get_gpio_flags(struct device_node *np, int index,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0enum of_gpio_fla=
-gs *flags);
-> +extern int of_get_named_gpio_flags(struct device_node *np,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const char *list_name, int index, enum of_g=
-pio_flags *flags);
+> + =A0 =A0 =A0 of_i2c_register_devices(&i2c_dev->adapter);
 > +
-> =A0extern unsigned int of_gpio_count(struct device_node *np);
->
-> =A0extern int of_mm_gpiochip_add(struct device_node *np,
-> @@ -60,8 +61,8 @@ extern struct gpio_chip *of_node_to_gpiochip(struct dev=
-ice_node *np);
-> =A0#else /* CONFIG_OF_GPIO */
->
-> =A0/* Drivers may not strictly depend on the GPIO support, so let them li=
-nk. */
-> -static inline int of_get_gpio_flags(struct device_node *np, int index,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 enu=
-m of_gpio_flags *flags)
-> +static inline int of_get_named_gpio_flags(struct device_node *np,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 const char *list_name, int index, enum of_g=
-pio_flags *flags)
-> =A0{
-> =A0 =A0 =A0 =A0return -ENOSYS;
-> =A0}
-> @@ -77,6 +78,39 @@ static inline void of_gpiochip_remove(struct gpio_chip=
- *gc) { }
-> =A0#endif /* CONFIG_OF_GPIO */
->
-> =A0/**
-> + * of_get_gpio_flags - Get a GPIO number and flags to use with GPIO API
-> + * @np: =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device node to get GPIO from
-> + * @index: =A0 =A0 index of the GPIO
-> + * @flags: =A0 =A0 a flags pointer to fill in
-> + *
-> + * Returns GPIO number to use with Linux generic GPIO API, or one of the=
- errno
-> + * value on the error condition. If @flags is not NULL the function also=
- fills
-> + * in flags for the GPIO.
-> + */
-> +static inline int of_get_gpio_flags(struct device_node *np, int index,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 enum of_gpio_flags *flags)
-> +{
-> + =A0 =A0 =A0 return of_get_named_gpio_flags(np, "gpios", index, flags);
-> +}
-> +
-> +
-> +/**
-> + * of_get_named_gpio - Get a GPIO number to use with GPIO API
-> + * @np: =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device node to get GPIO from
-> + * @list_name: property name that contains a list
-> + * @index: =A0 =A0 index of the GPIO
-> + *
-> + * Returns GPIO number to use with Linux generic GPIO API, or one of the=
- errno
-> + * value on the error condition.
-> + */
-> +static inline int of_get_named_gpio(struct device_node *np,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 con=
-st char *list_name, int index)
-> +{
-> + =A0 =A0 =A0 return of_get_named_gpio_flags(np, list_name, index, NULL);
-> +}
-> +
-> +
-> +/**
-> =A0* of_get_gpio - Get a GPIO number to use with GPIO API
-> =A0* @np: =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0device node to get GPIO from
-> =A0* @index: =A0 =A0 index of the GPIO
+> =A0 =A0 =A0 =A0return 0;
+> =A0err_free_irq:
+> =A0 =A0 =A0 =A0free_irq(i2c_dev->irq, i2c_dev);
 >
 >
 
 
 
--- =
-
+--=20
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
