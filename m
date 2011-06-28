@@ -1,103 +1,148 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Converting i2c-omap driver to use device tree
-Date: Tue, 28 Jun 2011 13:38:54 -0600
-Message-ID: <20110628193854.GA26182@ponder.secretlab.ca>
-References: <BANLkTin0zaE6M=0+9bq6sCvCVO_PJqYseA@mail.gmail.com>
-	<BANLkTi=DmNC6BbwDU+4smFvbc+LzFLiiOA@mail.gmail.com>
-	<BANLkTi==YKS854=YDGG44BRy_km31LqifQ@mail.gmail.com>
-	<20110626081202.GB24241@ponder.secretlab.ca>
-	<BANLkTimJU1ecxAroZMdWDdcAg6icH1mXyA@mail.gmail.com>
-	<BANLkTinNVzgGhEXSfQf+WpSMtoUDN-5Jag@mail.gmail.com>
+Subject: Re: [RFC 2/2] ARM:Tegra: Device Tree Support: Initialize audio card
+ gpio's from the device tree.
+Date: Tue, 28 Jun 2011 15:39:20 -0600
+Message-ID: <BANLkTi=1wHXzFqLJrF77t3Z9grye8pA-Mw@mail.gmail.com>
+References: <20110527205444.21000.90209.stgit@riker> <20110527205721.21000.78599.stgit@riker>
+ <20110528012427.GB5971@opensource.wolfsonmicro.com> <BANLkTinKLcYmStvBEGDcN84BapJXe5Y5bg@mail.gmail.com>
+ <20110530033826.GE4130@opensource.wolfsonmicro.com> <20110530061155.GC23517@ponder.secretlab.ca>
+ <4DE336A1.5040509@firmworks.com> <20110530070138.GA5036@opensource.wolfsonmicro.com>
+ <8d2515b13c817cc956b185d043bcef00@kernel.crashing.org> <BANLkTi=hkScxYpt449CQCky+bLU3UvkC_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BANLkTinNVzgGhEXSfQf+WpSMtoUDN-5Jag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Manjunatha GK <manjugk-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org\"" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <BANLkTi=hkScxYpt449CQCky+bLU3UvkC_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMjgsIDIwMTEgYXQgMDc6NDg6MjlQTSArMDUzMCwgTWFuanVuYXRoYSBHSyB3
-cm90ZToKPiBHcmFudCwKPiBJIGFtIGFibGUgdG8gc29ydCBvdXQgdGhpcyBpc3N1ZSBhbmQgaSBj
-YW4gc2VlIGlycSBudW1iZXJzIGdldHRpbmcgcG9wdWxhdGVkCj4gaW4gaTJjIGRyaXZlci4KPiAK
-PiBJIGhhdmUgc29tZSBvdGhlciBxdWVyaWVzIHJlbGF0ZWQgdG8gaGFuZGxpbmcgU29DIHNwZWNp
-ZmljIGRhdGEuIEkgd2lsbCBwb3N0Cj4gdGhlIHF1ZXJ5IHdpdGggc2VwYXJhdGUgdGhyZWFkLgo+
-IAo+IC1NYW5qdW5hdGgKPiAKPiBPbiAyNyBKdW5lIDIwMTEgMDA6MjEsIE1hbmp1bmF0aGEgR0sg
-PG1hbmp1Z2tAdGkuY29tPiB3cm90ZToKPiAKPiA+IEhpIEdyYW50LAo+ID4KPiA+IE9uIDI2IEp1
-bmUgMjAxMSAxMzo0MiwgR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNhPiB3
-cm90ZToKPiA+Cj4gPj4gT24gRnJpLCBKdW4gMjQsIDIwMTEgYXQgMDc6MDg6MzRQTSArMDUzMCwg
-TWFuanVuYXRoYSBHSyB3cm90ZToKPiA+PiA+IEhpIFRob21hcywKPiA+PiA+Cj4gPj4gPiBPbiAy
-NCBKdW5lIDIwMTEgMTg6MTMsIFRob21hcyBBYnJhaGFtIDx0aG9tYXMuYWJyYWhhbUBsaW5hcm8u
-b3JnPgo+ID4+IHdyb3RlOgo+ID4+ID4KPiA+PiA+ID4gSGkgTWFuanVuYXRoLAo+ID4+ID4gPgo+
-ID4+Cj4gPgo+ID4gWy4uLl0KPiA+Cj4gPiA+ID4gPgo+ID4+ID4gPiA+IFdpdGggdGhlIGFib3Zl
-IGNoYW5nZXMsIGkgd2FzIGV4cGVjdGluZyBwcm9iZSBmdW5jdGlvbiB0byBiZSBjYWxsZWQKPiA+
-PiBzaW5jZQo+ID4+ID4gPiA+IGRldmljZSBnZXRzIGJpbmRlZCB0byBkcml2ZXIuIEJ1dCBwcm9i
-ZSB3aWxsIG5ldmVyIGdldCBjYWxsZWQuCj4gPj4gPiA+ID4KPiA+PiA+ID4gPiBEaWQgSSBtaXNz
-IGFueXRoaW5nIHdpdGggYWJvdmUgcHJvY2VkdXJlPwo+ID4+ID4gPgo+ID4+ID4gPiBXaGF0IGFi
-b3V0IHBsYXRmb3JtX2RyaXZlci0+ZHJpdmVyLm9mX21hdGNoX3RhYmxlPyBJcyBpdCBwb3B1bGF0
-ZWQKPiA+PiA+ID4gKHNldCB0byBvbWFwX2kyY19vZl9tYXRjaCk/Cj4gPj4gPiA+Cj4gPj4gPgo+
-ID4+ID4gWWVzLiBUaGlzIGVudHJ5IHdhcyBtaXNzaW5nIHdpdGggbXkgY2hhbmdlcy4gV2l0aCBv
-Zl9tYXRjaF90YWJsZSwgcHJvYmUKPiA+PiBpcwo+ID4+ID4gZ2V0dGluZyBjYWxsZWQuCj4gPj4g
-PiBUaGFua3MgZm9yIHRoZSBwb2ludGVyLgo+ID4+Cj4gPj4gR2xhZCB0byBoZWFyIHlvdSBnb3Qg
-aXQgc29ydGVkIG91dC4KPiA+Pgo+ID4KPiA+IFllcy4gTm93IEkgYW0gYWJsZSB0byBnZXQgaTJj
-IGJhc2UgYWRkcmVzcyBmcm9tIERUIHRocm91Z2ggZGV2aWNlIG5vZGUKPiA+IHN0cnVjdHVyZSBi
-dXQgbm90IGFibGUgdG8gZ2V0IGlycSBudW1iZXIgZnJvbSBEVC4gVGhlIC5kdHMgZW50cmllcyBh
-cmU6Cj4gPgo+ID4gKyAgICAgICBnaWM6IGludGNANDgyNDEwMDAgewo+ID4gKyAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAiYXJtLG9tYXAtZ2ljIiwgImFybSxnaWMiOwo+ID4gKyAgICAgICAg
-ICAgICAgIGludGVycnVwdC1jb250cm9sbGVyOwo+ID4gKyAgICAgICAgICAgICAgICNpbnRlcnJ1
-cHQtY2VsbHMgPSA8MT47Cj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4NDgyNDEwMDAgMHgx
-MDAwPjsKPiA+ICsgICAgICAgfTsKPiA+ICsKPiA+ICsgICAgICAgaTJjQDQ4MDcyMDAwIHsKPiA+
-ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDg4PjsKPiA+ICsgICAgICAgICAgICAgICBp
-bnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Owo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAidGksb21hcF9pMmMiOwo+ID4gKyAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+
-Owo+ID4gKyAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ID4gKyAgICAgICAgICAg
-ICAgIHJlZyA9IDwweDQ4MDcyMDAwIDB4ODA+Owo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgIHR3
-bEAweDQ4IHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidGksdHds
-NjAzMCI7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8IDB4NDggPjsKPiA+ICsg
-ICAgICAgICAgICAgICB9Owo+ID4gKwo+ID4gKyAgICAgICB9Owo+ID4KPiA+IEZyb20gdGhlIGRl
-YnVnIGxvZywgaXQgaXMgb2JzZXJ2ZWQgdGhhdCwgdGhlIGludGVycnVwdHMgZmllbGQgd2lsbCBu
-b3QKPiA+IGV4aXN0cyBpbiBkZXZpY2Vfbm9kZSBkYXRhIHN0cnVjdHVyZS4gSXQgY2FwdHVyZXMg
-YWxsIHRoZSBmaWVsZHMgZnJvbSB0aGUKPiA+IGFib3V0IGkyYyBEVCBlbnRyaWVzIGV4Y2VwdCBp
-bnRlcnJ1cHRzIGZpZWxkLgo+ID4KPiA+IFsgICAgMC4yOTMxODJdIG9mX2lycV9tYXBfb25lOiBk
-ZXY9L2kyY0A0ODA3MjAwMCwgaW5kZXg9MAo+ID4gWyAgICAwLjI5MzIxMl0gb2ZfZmluZF9wcm9w
-ZXJ0eTsgcHAtPm5hbWU6IGNvbXBhdGlibGUgICAgbmFtZTogaW50ZXJydXB0cwo+ID4gWyAgICAw
-LjI5MzIxMl0gb2ZfZmluZF9wcm9wZXJ0eTsgcHAtPm5hbWU6IHJlZyAgIG5hbWU6IGludGVycnVw
-dHMKPiA+IFsgICAgMC4yOTMyNDNdIG9mX2ZpbmRfcHJvcGVydHk7IHBwLT5uYW1lOiAjYWRkcmVz
-cy1jZWxscyAgICAgICAgbmFtZToKPiA+IGludGVycnVwdHMKPiA+IFsgICAgMC4yOTMyNDNdIG9m
-X2ZpbmRfcHJvcGVydHk7IHBwLT5uYW1lOiAjc2l6ZS1jZWxscyAgIG5hbWU6IGludGVycnVwdHMK
-PiA+IFsgICAgMC4yOTMyNzNdIG9mX2ZpbmRfcHJvcGVydHk7IHBwLT5uYW1lOiBuYW1lICBuYW1l
-OiBpbnRlcnJ1cHRzCj4gPiBbICAgIDAuMjkzMzA0XSBvbWFwX2kyY19wcm9iZTogaTJjOiBkZXYt
-PmJhc2U6IGZhMDcyMDAwCj4gPiBbICAgIDAuMjkzMzA0XSBvbWFwX2kyY19wcm9iZTogaTJjOiBk
-ZXYtPmlycTogZmZmZmZmZmYKPiA+Cj4gPiBBbnkgc3BlY2lmaWMgcmVhc29uIGZvciBtaXNzaW5n
-IGVudHJpZXMgaW4gZGV2aWNlIG5vZGUgc3RydWN0dXJlcz8KPiA+Cj4gPiBTaW5jZSB5b3UgZXhw
-bG9yZWQgb3RoZXIgQVJNIGJvYXJkcywgaXMgdGhpcyBpbnRlcnJ1cHRzIGZpZWxkIHVzZWQgYW5k
-Cj4gPiB0ZXN0ZWQ/CgpXaGF0IHRyZWUgZG8geW91IGhhdmUgeW91ciB3b3JrIGJhc2VkIG9uIHRv
-cCBvZj8gIERvIHlvdSBoYXZlIHRoZQppcnFfZG9tYWluIHBhdGNoIGFwcGxpZWQ/ICBJZiBzbywg
-dGhlbiB0aGUgcHJvYmxlbSBpcyBtb3N0IGxpa2VseSB0aGF0IGFuCmlycV9kb21haW4gaGFzIG5v
-dCBiZWVuIHJlZ2lzdGVyZWQgZm9yIHRoZSBPTUFQIGludGVycnVwdCBjb250cm9sbGVyCih3aGlj
-aCBpcyBub3Qgc3VycHJpc2luZyBzaW5jZSB0aGUgZ2ljIGhhcyBub3QgYmVlbiBjb252ZXJ0ZWQg
-dG8gdXNlCmlycV9kb21haW4geWV0KS4gIFRoZXJlIGFyZSBwYXRjaGVzIHRoYXQgaGF2ZSBiZWVu
-IHBvc3RlZCB0byB0aGUgbGlzdAp0byBkbyBzbywgYnV0IHRoZXkgYXJlIG5vdCBmaW5pc2hlZCB5
-ZXQuICBJbiB0aGUgbWVhbiB0aW1lIHlvdSBjYW4gdXNlCmlycV9kb21haW5fZ2VuZXJhdGVfc2lt
-cGxlKCkgdG8gY3JlYXRlIGFuIGlycV9kb21haW4gcmVnaXN0cmF0aW9uIGZvcgp0aGUgT01BUCB0
-aGF0IHdpbGwgZ2V0IHlvdSBwYXN0IHRoaXMgc3RlcC4KClNlYXJjaCB0aGUgZGV2aWNldHJlZS90
-ZXN0IGJyYW5jaCBmb3IgaXJxX2RvbWFpbl9nZW5lcmF0ZV9zaW1wbGUoKSB0bwpzZWUgaG93IHRv
-IHVzZSBpdC4KCmcuCgo+ID4KPiA+IC1NYW5qdW5hdGgKPiA+Cj4gPgo+IAo+IAo+IC0tIAo+IE1h
-bmp1bmF0aGEgR0sKPiAKPiBMaW5hcm8ub3JnIDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiogKiri
-lIIgKk9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcwo+IAo+IEZvbGxvdyAqTGluYXJv
-OiAqRmFjZWJvb2sgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gfAo+IFR3
-aXR0ZXI8aHR0cDovL3R3aXR0ZXIuY29tLyMlMjEvbGluYXJvb3JnPnwKPiBCbG9nIDxodHRwOi8v
-d3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmlj
-ZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Mon, May 30, 2011 at 1:20 PM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+> On Mon, May 30, 2011 at 12:54 PM, Segher Boessenkool
+> <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+>>>> I'm currently dealing with an SoC that has over a hundred GPIOs.
+>>>> Whatever we choose, I think it should be able to handle an insane
+>>>> number of GPIOs without getting any more cumbersome that is
+>>>> necessary.
+>>>
+>>> This is *consumer* side GPIOs, not bindings for the device providin=
+g the
+>>> GPIOs. =A0If a single device needs to use hundreds of GPIOs I'd exp=
+ect
+>>> many of them will be block functions so you'd have a binding with a=
+n
+>>> array for things like "databus" and "addrbus".
+>>
+>> But please name them like "databus-gpio", so that it is obvious what=
+ it
+>> is. =A0Also have to think about how this will work with multiple GPI=
+O
+>> controllers: do you require the GPIO controller node to be part of e=
+very
+>> GPIO description, or do you do some "gpio-parent" scheme as well, ho=
+w
+>> does that interact with not having a single array of GPIOs?
+>>
+>> Better write this down as a binding, before committing to it :-)
+>
+> Here's my thinking: Exactly the same binding for "gpios" as is now,
+> except can use different property names, like "chipsel-gpios" or
+> "wp-gpio". =A0Here is a draft patch to the binding:
+
+I know there is still some debate on this, but I'm going to go ahead
+and commit this extension since it draws naturally from what we're
+already using, and it does not preclude doing a node binding at some
+point in the future.
+
+g.
+
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt
+> b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index edaa84d..21dd4f9 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -4,17 +4,45 @@ Specifying GPIO information for devices
+> =A01) gpios property
+> =A0-----------------
+>
+> -Nodes that makes use of GPIOs should define them using `gpios' prope=
+rty,
+> -format of which is: <&gpio-controller1-phandle gpio1-specifier
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&gpio-controller2-phandle gp=
+io2-specifier
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00 /* holes are permitted, me=
+ans no GPIO 3 */
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&gpio-controller4-phandle gp=
+io4-specifier
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0...>;
+> +Nodes that makes use of GPIOs should specify them using one or more
+> +properties, each containing a 'gpio-list':
+>
+> -Note that gpio-specifier length is controller dependent.
+> + =A0 =A0 =A0 gpio-list ::=3D <single-gpio> [gpio-list]
+> + =A0 =A0 =A0 single-gpio ::=3D <gpio-phandle> <gpio-specifier>
+> + =A0 =A0 =A0 gpio-phandle : phandle to gpio controller node
+> + =A0 =A0 =A0 gpio-specifier : Array of #gpio-cells specifying specif=
+ic gpio
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(controller specific=
+)
+> +
+> +GPIO properties should be named either "gpios" or "*-gpio". =A0Exact
+> +meaning of each gpio property must be documented in the device tree
+> +binding for each device.
+> +
+> +For example, the following could be used to describe gpios pins to u=
+se
+> +as chip select lines; with chip selects 0, 1 and 3 populated, and ch=
+ip
+> +select 2 left empty:
+> +
+> + =A0 =A0 =A0 gpio1: gpio1 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpio-controller
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#gpio-cells =3D <2>;
+> + =A0 =A0 =A0 };
+> + =A0 =A0 =A0 gpio2: gpio2 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpio-controller
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#gpio-cells =3D <1>;
+> + =A0 =A0 =A0 };
+> + =A0 =A0 =A0 [...]
+> + =A0 =A0 =A0 =A0chipsel-gpio =3D <&gpio1 12 0>,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&gpio1 13 0>,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <0>, /* holes are permi=
+tted, means no GPIO 2 */
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&gpio2 2>;
+> +
+> +Note that gpio-specifier length is controller dependent. =A0In the
+> +above example, &gpio1 uses 2 cells to specify a gpio, while &gpio2
+> +only uses one.
+>
+> =A0gpio-specifier may encode: bank, pin position inside the bank,
+> =A0whether pin is open-drain and whether pin is logically inverted.
+> +Exact meaning of each specifier cell is controller specific, and mus=
+t
+> +be documented in the device tree binding for the device.
+>
+> =A0Example of the node using GPIOs:
+>
+> @@ -28,8 +56,8 @@ and empty GPIO flags as accepted by the "qe_pio_e"
+> gpio-controller.
+> =A02) gpio-controller nodes
+> =A0------------------------
+>
+> -Every GPIO controller node must have #gpio-cells property defined,
+> -this information will be used to translate gpio-specifiers.
+> +Every GPIO controller node must both an empty "gpio-controller"
+> +property, and have #gpio-cells contain the size of the gpio-specifie=
+r.
+>
+> =A0Example of two SOC GPIO banks defined as gpio-controller nodes:
+>
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
