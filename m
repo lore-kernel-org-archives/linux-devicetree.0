@@ -1,18 +1,13 @@
-From: Manjunatha GK <manjugk-l0cyMroinI0@public.gmane.org>
-Subject: Re: Converting i2c-omap driver to use device tree
-Date: Wed, 29 Jun 2011 10:23:25 +0530
-Message-ID: <BANLkTimDM6XYf3X=eRhZUDUij1TkhQGBnQ@mail.gmail.com>
-References: <BANLkTin0zaE6M=0+9bq6sCvCVO_PJqYseA@mail.gmail.com>
-	<BANLkTi=DmNC6BbwDU+4smFvbc+LzFLiiOA@mail.gmail.com>
-	<BANLkTi==YKS854=YDGG44BRy_km31LqifQ@mail.gmail.com>
-	<20110626081202.GB24241@ponder.secretlab.ca>
-	<BANLkTimJU1ecxAroZMdWDdcAg6icH1mXyA@mail.gmail.com>
-	<BANLkTinNVzgGhEXSfQf+WpSMtoUDN-5Jag@mail.gmail.com>
-	<20110628193854.GA26182@ponder.secretlab.ca>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
+Date: Wed, 29 Jun 2011 23:29:44 +0200
+Message-ID: <201106292329.44447.arnd@arndb.de>
+References: <1309231954-23260-1-git-send-email-bs14@csr.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6921072534210603608=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110628193854.GA26182-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1309231954-23260-1-git-send-email-bs14-kQvG35nSl+M@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,123 +17,324 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org\"" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Barry Song <bs14-kQvG35nSl+M@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Bin Shi <Bin.Shi-kQvG35nSl+M@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Zhiwu Song <Zhiwu.Song-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>, Binghua Duan <binghua.duan-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Yuping Luo <Yuping.Luo-kQvG35nSl+M@public.gmane.org>, Huayi Li <Huayi.Li-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============6921072534210603608==
-Content-Type: multipart/alternative; boundary=20cf30266eda90a4e204a6d29093
+On Tuesday 28 June 2011, Barry Song wrote:
+> This patch adds the basic support for this SoC and EVB board based on device
+> tree. It is following the ZYNQ of Grant Likely in some degree.
 
---20cf30266eda90a4e204a6d29093
-Content-Type: text/plain; charset=ISO-8859-1
+Hi Barry,
 
-On 29 June 2011 01:08, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-[...]
+There are a few more things I noticed this time around, and some comments
+about code that changed since v1.
 
-> > >
-> > > Any specific reason for missing entries in device node structures?
-> > >
-> > > Since you explored other ARM boards, is this interrupts field used and
-> > > tested?
->
-> What tree do you have your work based on top of?
+> the device hierarchy in SiRFprimaII is as below
+> 
+> AXI(0-0x3FFFFFFF)
+>             memory
+> AXI(0x40000000-0xC0000000)
+>             CPUIF(sirf-iobus)
+>                          INTC
+>                          MEMC
+>                          LCD
+>                          VPP
+>                          GRAPHIC
+>                          MULTIMEDIA
+>                          GPS
+>                          UART
+>                          ...
+>                          hard-coded PCI bridge
+>                                  SD/MMC
+>                          rtc-iobrg
+>                                  RTC
+> 
+
+Is this really just one bus with a huge address space, or rather some
+nested buses? I'd prefer to have the device tree representation as
+close as possible to the actual layout.
+
+This also includes using bus-local addresses for the 'reg' properties,
+rather than global addresses.
+
+>  1. clock: use dev_id instead of con_id
+>  2. Kconfig: delete ISA_DMA
+>  3. irq: implement int controller based on DT
+> 	 move to GENERIC_IRQ_CHIP framework
+>  4. timer: implement timer based on DT
+>  5. entry-macro.S: use get_irqnr_preamble to load the base address only once
+>     per IRQ exception.
+>  6. others:
+> 	use readl_relaxed instead of __raw_readl
+> 	adjust Kconfig order for PRIMA2
+> 	use clk_get_sys instead of clk_get for system level clock
+> 	use BUG_ON(IS_ERR(clk)) instead of BUG_ON(IS_ERR_OR_NULL(clk));
+> 	fix typo for CLOCK_TICK_RATE
+> 	("sirf,xxx", "sirf,prima2-xxx")  instead of ("sirf,xxx") in dts
+> 
+
+Good progress!
+
+> new file mode 100644
+> index 0000000..1777e98
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/prima2-cb.dts
+> @@ -0,0 +1,50 @@
+> +/dts-v1/;
+> +/ {
+> +	model = "SIRF Prima2 EVB";
+> +	compatible = "sirf,prima2-cb", "sirf,prima2";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&intc>;
+> +
+> +	memory {
+> +		reg = <0x00000000 0x20000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "mem=512M real_root=/dev/mmcblk0p2 console=ttyS1 earlyprintk";
+> +		linux,stdout-path = &uart1;
+> +	};
+> +
+> +	amba {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		intc: interrupt-controller@0x80020000 {
+> +			interrupt-controller;
+> +			compatible = "sirf,intc", "sirf,prima2-intc";
+> +			reg = <0x80020000 0x1000>;
+> +			#interrupt-cells = <1>;
+> +		};
+
+Some more commends on the device tree properties:
+
+I think the namespace for the compatible values is supposed to start with
+the stock ticker name of the company making the device as a unique
+identifier. This means you'd have to use 
+"csrxf,sirf-intc", "csrxf,sirf-prima2-intc" as the value, instead
+of starting with the product name. I don't know exactly how strictly
+we apply that rule, but I've taken the devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+mailing list on Cc, maybe someone can clarify.
+
+> +		timer0: timer@0xb0020000 {
+> +			compatible = "sirf,tick", "sirf,prima2-tick";
+> +			reg = <0xb0020000 0x1000>;
+> +			interrupts = <0>;
+> +		};
+> +
+> +		uart0: uart@0xb0050000 {
+> +			compatible = "sirf,uart", "sirf,prima2-uart";
+> +			reg = <0xb0050000 0x1000>;
+> +			interrupts = <17>;
+> +		};
+> +
+> +		uart1: uart@0xb0060000 {
+> +			compatible = "sirf,uart", "sirf,prima2-uart";
+> +			reg = <0xb0060000 0x1000>;
+> +			interrupts = <18>;
+> +		};
+> +	};
+> +};
+
+When you use local addresses, this would become something like
+
+	axi1 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges <0 0x80000000 0x10000000>;
+
+		intc: interrupt-controller@20000 {
+			interrupt-controller;
+			compatible = "sirf,intc", "sirf,prima2-intc";
+			reg = <0x20000 0x1000>;
+			#interrupt-cells = <1>;
+		};
+	}
+	axi2 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges <0 0xb0000000 0x10000000>;
+
+		timer0: timer@20000 {
+			reg = <0x20000 0x1000>;
+		};
+
+		uart0: uart@50000 {
+			reg = <0x50000 0x1000>;
+		};
+
+		uart1: uart@60000 {
+			reg = <0x60000 0x1000>;
+		};
+	};
 
 
-git://git.secretlab.ca/git/linux-2.6.git
-branch: devicetree/test
 
-Do you have the irq_domain patch applied?
+> +
+> diff --git a/arch/arm/mach-prima2/Makefile b/arch/arm/mach-prima2/Makefile
+> new file mode 100644
+> index 0000000..c51d60d
+> --- /dev/null
+> +++ b/arch/arm/mach-prima2/Makefile
+> @@ -0,0 +1 @@
+> +obj-y := timer.o irq.o clock.o common.o board_dt.o
 
-If so, then the problem is most likely that an
-> irq_domain has not been registered for the OMAP interrupt controller
-> (which is not surprising since the gic has not been converted to use
-> irq_domain yet).  There are patches that have been posted to the list
-> to do so, but they are not finished yet.
+Minor detail:
 
-ok.
+better put these in a list with one file per line, like
+
+obj-y	+= timer.o
+obj-y	+= irq.o
+
+That makes the list more consistent when you add conditional files.
+
+> +++ b/arch/arm/mach-prima2/board_dt.c
+> @@ -0,0 +1,28 @@
+> +/*
+> + * This file contains code for boards with device tree support.
+> + *
+> + * Copyright (c) 2011 Cambridge Silicon Radio Limited, a CSR plc group company.
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +#include <linux/of.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach-types.h>
+> +#include <mach/hardware.h>
+> +#include "common.h"
+> +
+> +static const char *prima2cb_dt_match[] __initdata = {
+> +       "sirf,prima2-cb",
+> +       NULL
+> +};
+> +
+> +MACHINE_START(PRIMA2_EVB, "prima2cb")
+> +       .boot_params    = SIRFSOC_SDRAM_PA + 0x100,
+> +       .init_early     = sirfsoc_init_clk,
+> +       .map_io         = sirfsoc_map_io,
+> +       .init_irq       = sirfsoc_of_init_irq,
+> +       .timer          = &sirfsoc_timer,
+> +       .init_machine   = sirfsoc_mach_init,
+> +       .dt_compat      = prima2cb_dt_match,
+> +MACHINE_END
+
+How about removing the remaining board file entirely and merging the contents into
+common.c? We don't want to have board specific files any more, so the naming
+and the split is rather obsolete.
+
+It probably makes sense to pick a new name for the combined file, too, but I
+can't think of a good one. Maybe one of platform.c, prima2.c or core.c.
+
+> +#define IOTABLE_ENTRY(region) {\
+> +	.virtual 	= SIRFSOC_##region##_VA_BASE, \
+> +	.pfn	 	= __phys_to_pfn(SIRFSOC_##region##_PA_BASE),\
+> +	.length		= SIRFSOC_##region##_SIZE, \
+> +	.type 		= MT_DEVICE, \
+> +}
+> +
+> +static struct map_desc sirfsoc_iodesc[] __initdata = {
+> +	IOTABLE_ENTRY(UART1),
+> +	IOTABLE_ENTRY(CLOCK),
+> +	IOTABLE_ENTRY(RSTC),
+> +#ifdef CONFIG_CACHE_L2X0
+> +	IOTABLE_ENTRY(L2CC),
+> +#endif
+> +};
+
+I've thought about this some more, and I think you can get rid of most
+entries in the global table after all:
+
+* sirfsoc_init_clk() can get the physical address from the device tree
+and call iotable_init for just one entry.
+
+* RSTC does not seem to be needed early at all, you can simply ioremap it.
+
+* L2CC is only accessed from an arch_initcall, which is late enough
+  for ioremap.
+
+* UART1 is only needed for early printk, so I would put the function
+  that does this remaining iotable_init() call into a separate file
+  that only gets compiled when that is enabled.
+
+> +void __init sirfsoc_map_io(void)
+> +{
+> +	iotable_init(sirfsoc_iodesc, ARRAY_SIZE(sirfsoc_iodesc));
+> +}
+> +
+> +#define L2X0_ADDR_FILTERING_START       0xC00
+> +#define L2X0_ADDR_FILTERING_END         0xC04
+> +
+> +static int __init sirfsoc_init(void)
+> +{
+> +#ifdef CONFIG_CACHE_L2X0
+> +	if (!(readl_relaxed(SIRFSOC_L2CC_VA_BASE + L2X0_CTRL) & 1)) {
+> +		/*
+> +		 * set the physical memory windows L2 cache will cover
+> +		 */
+> +		writel_relaxed(PHYS_OFFSET + 1024 * 1024 * 1024,
+> +			SIRFSOC_L2CC_VA_BASE + L2X0_ADDR_FILTERING_END);
+> +		writel_relaxed(PHYS_OFFSET | 0x1,
+> +			SIRFSOC_L2CC_VA_BASE + L2X0_ADDR_FILTERING_START);
+> +
+> +		writel_relaxed(0,
+> +			SIRFSOC_L2CC_VA_BASE + L2X0_TAG_LATENCY_CTRL);
+> +		writel_relaxed(0,
+> +			SIRFSOC_L2CC_VA_BASE + L2X0_DATA_LATENCY_CTRL);
+> +	}
+> +	l2x0_init((void __iomem *)SIRFSOC_L2CC_VA_BASE, 0x00040000,
+> +		0x00000000);
+> +#endif
+> +
+> +	return 0;
+> +}
+> +arch_initcall(sirfsoc_init);
+
+I would also suggest moving the l2x0 code into a new l2x0.c file that
+is conditionally compiled. In the header file, you then do
+
+#ifdef CONFIG_CACHE_L2X0
+extern void sirfsoc_l2x0_init(void);
+#else
+static inline void sirfsoc_l2x0_init(void) {}
+#endif
+
+> +#ifndef __ASM_ARCH_IRQS_H
+> +#define __ASM_ARCH_IRQS_H
+> +
+> +#define SIRFSOC_INTENAL_IRQ_START  0
+> +#define SIRFSOC_INTENAL_IRQ_END    59
+
+Typo, I assume: INTERNAL, not INTENAL
 
 
-> In the mean time you can use
-> irq_domain_generate_simple() to create an irq_domain registration for
-> the OMAP that will get you past this step.
->
-> Search the devicetree/test branch for irq_domain_generate_simple() to
-> see how to use it.
->
-> I realized this hence used
+> +
+> +static struct of_device_id intc_ids[]  = {
+> +	{ .compatible = "sirf,intc" },
+> +	{ .compatible = "sirf,prima2-intc" },
+> +};
 
-node = of_find_matching_node_by_address(NULL, omap_dt_gic_match,
-                                                OMAP44XX_GIC_DIST_BASE);
-        if (node)
-                irq_domain_add_simple(node, 0);
+You should only list one of these in the driver: The idea is that as 
+long as all variants of the hardware are identical, you can just list
+the most general name (sirf,intc), and if you need to tell the difference
+you list the more specific names and add a .data=... member that you
+use to differentiate between them. Note that it's usually easier to
+change the code than to change the device tree, so we want to have 
+the full list in the device tree, but the code just needs to pick
+one that fits the purpose.
 
-which resolved the irq issue.
+It's the same for the other drivers.
 
-Thanks for the info.
+> +static void __init sirfsoc_of_timer_map(void);
 
--Manjunath
+You can remove this forward declaration if you move the sched_clock()
+function down.
 
---20cf30266eda90a4e204a6d29093
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><br><div class=3D"gmail_quote">On 29 June 2011 01:08, Grant Likely <spa=
-n dir=3D"ltr">&lt;<a href=3D"mailto:grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org">grant.likely=
-@secretlab.ca</a>&gt;</span> wrote:<br><div>[...] <br></div><blockquote cla=
-ss=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left: 1px sol=
-id rgb(204, 204, 204); padding-left: 1ex;">
-<div><div class=3D"h5">
-&gt; &gt;<br>
-&gt; &gt; Any specific reason for missing entries in device node structures=
-?<br>
-&gt; &gt;<br>
-&gt; &gt; Since you explored other ARM boards, is this interrupts field use=
-d and<br>
-&gt; &gt; tested?<br>
-<br>
-</div></div>What tree do you have your work based on top of? =A0</blockquot=
-e><div>=A0</div>git://<a href=3D"http://git.secretlab.ca/git/linux-2.6.git"=
->git.secretlab.ca/git/linux-2.6.git</a><br>branch: devicetree/test<br><br><=
-blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border=
--left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-Do you have the irq_domain patch applied? =A0 </blockquote><div></div><bloc=
-kquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-lef=
-t: 1px solid rgb(204, 204, 204); padding-left: 1ex;">If so, then the proble=
-m is most likely that an<br>
-
-irq_domain has not been registered for the OMAP interrupt controller<br>
-(which is not surprising since the gic has not been converted to use<br>
-irq_domain yet). =A0There are patches that have been posted to the list<br>
-to do so, but they are not finished yet. =A0</blockquote><div>ok.<br>=A0</d=
-iv><blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; bo=
-rder-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">In the mean ti=
-me you can use<br>
-
-irq_domain_generate_simple() to create an irq_domain registration for<br>
-the OMAP that will get you past this step.<br>
-<br>
-Search the devicetree/test branch for irq_domain_generate_simple() to<br>
-see how to use it.<br>
-<br></blockquote><div>I realized this hence used =A0=A0=A0=A0=A0=A0=A0 <br>=
-<br>node =3D of_find_matching_node_by_address(NULL, omap_dt_gic_match,<br>=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OMAP44XX=
-_GIC_DIST_BASE);<br>=A0=A0=A0=A0=A0=A0=A0 if (node)<br>
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 irq_domain_add_simple(node, 0=
-);<br><br>which resolved the irq issue.<br><br>Thanks for the info.<br>
-</div></div><br>-Manjunath<br>
-
---20cf30266eda90a4e204a6d29093--
-
---===============6921072534210603608==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6921072534210603608==--
+	Arnd
