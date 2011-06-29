@@ -1,109 +1,144 @@
-From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH v3] i2c: Tegra: Add DeviceTree support
-Date: Tue, 28 Jun 2011 16:51:19 -0700
-Message-ID: <20110628234958.10494.25196.stgit@riker>
+From: Manjunatha GK <manjugk-l0cyMroinI0@public.gmane.org>
+Subject: Re: Converting i2c-omap driver to use device tree
+Date: Wed, 29 Jun 2011 10:23:25 +0530
+Message-ID: <BANLkTimDM6XYf3X=eRhZUDUij1TkhQGBnQ@mail.gmail.com>
+References: <BANLkTin0zaE6M=0+9bq6sCvCVO_PJqYseA@mail.gmail.com>
+	<BANLkTi=DmNC6BbwDU+4smFvbc+LzFLiiOA@mail.gmail.com>
+	<BANLkTi==YKS854=YDGG44BRy_km31LqifQ@mail.gmail.com>
+	<20110626081202.GB24241@ponder.secretlab.ca>
+	<BANLkTimJU1ecxAroZMdWDdcAg6icH1mXyA@mail.gmail.com>
+	<BANLkTinNVzgGhEXSfQf+WpSMtoUDN-5Jag@mail.gmail.com>
+	<20110628193854.GA26182@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kradtke-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6921072534210603608=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110628193854.GA26182-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org\"" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch modifies the tegra i2c driver so that it can be initiailized
-using the device tree along with the devices connected to the i2c bus.
+--===============6921072534210603608==
+Content-Type: multipart/alternative; boundary=20cf30266eda90a4e204a6d29093
 
-Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Acked-by: OIof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
----
+--20cf30266eda90a4e204a6d29093
+Content-Type: text/plain; charset=ISO-8859-1
 
-Sorry about the previous patch. It's not complete. This is the right one.
+On 29 June 2011 01:08, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+[...]
 
-- John
+> > >
+> > > Any specific reason for missing entries in device node structures?
+> > >
+> > > Since you explored other ARM boards, is this interrupts field used and
+> > > tested?
+>
+> What tree do you have your work based on top of?
 
- drivers/i2c/busses/i2c-tegra.c |   29 ++++++++++++++++++++++++++++-
- 1 files changed, 28 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4d93196..b1d1456 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -26,6 +26,7 @@
- #include <linux/delay.h>
- #include <linux/slab.h>
- #include <linux/i2c-tegra.h>
-+#include <linux/of_i2c.h>
- 
- #include <asm/unaligned.h>
- 
-@@ -540,6 +541,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	struct resource *iomem;
- 	struct clk *clk;
- 	struct clk *i2c_clk;
-+	const unsigned int *prop;
- 	void *base;
- 	int irq;
- 	int ret = 0;
-@@ -597,7 +599,17 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->irq = irq;
- 	i2c_dev->cont_id = pdev->id;
- 	i2c_dev->dev = &pdev->dev;
--	i2c_dev->bus_clk_rate = pdata ? pdata->bus_clk_rate : 100000;
-+
-+	i2c_dev->bus_clk_rate = 100000; /* default clock rate */
-+	if (pdata) {
-+		i2c_dev->bus_clk_rate = pdata->bus_clk_rate;
-+
-+	} else if (i2c_dev->dev->of_node) {    /* if there is a device tree node ... */
-+		prop = of_get_property(i2c_dev->dev->of_node,
-+				"clock-frequency", NULL);
-+		if (prop)
-+			i2c_dev->bus_clk_rate = be32_to_cpup(prop);
-+	}
- 
- 	if (pdev->id == 3)
- 		i2c_dev->is_dvc = 1;
-@@ -627,6 +639,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->adapter.algo = &tegra_i2c_algo;
- 	i2c_dev->adapter.dev.parent = &pdev->dev;
- 	i2c_dev->adapter.nr = pdev->id;
-+	i2c_dev->adapter.dev.of_node = pdev->dev.of_node;
- 
- 	ret = i2c_add_numbered_adapter(&i2c_dev->adapter);
- 	if (ret) {
-@@ -634,6 +647,8 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		goto err_free_irq;
- 	}
- 
-+	of_i2c_register_devices(&i2c_dev->adapter);
-+
- 	return 0;
- err_free_irq:
- 	free_irq(i2c_dev->irq, i2c_dev);
-@@ -698,6 +713,17 @@ static int tegra_i2c_resume(struct platform_device *pdev)
- }
- #endif
- 
-+#if defined(CONFIG_OF)
-+/* Match table for of_platform binding */
-+static const struct of_device_id tegra_i2c_of_match[] __devinitconst = {
-+        { .compatible = "nvidia,tegra250-i2c", },
-+        {},
-+};
-+MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
-+#else
-+#define tegra_i2c_of_match NULL
-+#endif
-+
- static struct platform_driver tegra_i2c_driver = {
- 	.probe   = tegra_i2c_probe,
- 	.remove  = tegra_i2c_remove,
-@@ -708,6 +734,7 @@ static struct platform_driver tegra_i2c_driver = {
- 	.driver  = {
- 		.name  = "tegra-i2c",
- 		.owner = THIS_MODULE,
-+		.of_match_table = tegra_i2c_of_match,
- 	},
- };
- 
+git://git.secretlab.ca/git/linux-2.6.git
+branch: devicetree/test
+
+Do you have the irq_domain patch applied?
+
+If so, then the problem is most likely that an
+> irq_domain has not been registered for the OMAP interrupt controller
+> (which is not surprising since the gic has not been converted to use
+> irq_domain yet).  There are patches that have been posted to the list
+> to do so, but they are not finished yet.
+
+ok.
+
+
+> In the mean time you can use
+> irq_domain_generate_simple() to create an irq_domain registration for
+> the OMAP that will get you past this step.
+>
+> Search the devicetree/test branch for irq_domain_generate_simple() to
+> see how to use it.
+>
+> I realized this hence used
+
+node = of_find_matching_node_by_address(NULL, omap_dt_gic_match,
+                                                OMAP44XX_GIC_DIST_BASE);
+        if (node)
+                irq_domain_add_simple(node, 0);
+
+which resolved the irq issue.
+
+Thanks for the info.
+
+-Manjunath
+
+--20cf30266eda90a4e204a6d29093
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<br><br><div class=3D"gmail_quote">On 29 June 2011 01:08, Grant Likely <spa=
+n dir=3D"ltr">&lt;<a href=3D"mailto:grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org">grant.likely=
+@secretlab.ca</a>&gt;</span> wrote:<br><div>[...] <br></div><blockquote cla=
+ss=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left: 1px sol=
+id rgb(204, 204, 204); padding-left: 1ex;">
+<div><div class=3D"h5">
+&gt; &gt;<br>
+&gt; &gt; Any specific reason for missing entries in device node structures=
+?<br>
+&gt; &gt;<br>
+&gt; &gt; Since you explored other ARM boards, is this interrupts field use=
+d and<br>
+&gt; &gt; tested?<br>
+<br>
+</div></div>What tree do you have your work based on top of? =A0</blockquot=
+e><div>=A0</div>git://<a href=3D"http://git.secretlab.ca/git/linux-2.6.git"=
+>git.secretlab.ca/git/linux-2.6.git</a><br>branch: devicetree/test<br><br><=
+blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border=
+-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
+Do you have the irq_domain patch applied? =A0 </blockquote><div></div><bloc=
+kquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-lef=
+t: 1px solid rgb(204, 204, 204); padding-left: 1ex;">If so, then the proble=
+m is most likely that an<br>
+
+irq_domain has not been registered for the OMAP interrupt controller<br>
+(which is not surprising since the gic has not been converted to use<br>
+irq_domain yet). =A0There are patches that have been posted to the list<br>
+to do so, but they are not finished yet. =A0</blockquote><div>ok.<br>=A0</d=
+iv><blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; bo=
+rder-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">In the mean ti=
+me you can use<br>
+
+irq_domain_generate_simple() to create an irq_domain registration for<br>
+the OMAP that will get you past this step.<br>
+<br>
+Search the devicetree/test branch for irq_domain_generate_simple() to<br>
+see how to use it.<br>
+<br></blockquote><div>I realized this hence used =A0=A0=A0=A0=A0=A0=A0 <br>=
+<br>node =3D of_find_matching_node_by_address(NULL, omap_dt_gic_match,<br>=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OMAP44XX=
+_GIC_DIST_BASE);<br>=A0=A0=A0=A0=A0=A0=A0 if (node)<br>
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 irq_domain_add_simple(node, 0=
+);<br><br>which resolved the irq issue.<br><br>Thanks for the info.<br>
+</div></div><br>-Manjunath<br>
+
+--20cf30266eda90a4e204a6d29093--
+
+--===============6921072534210603608==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6921072534210603608==--
