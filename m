@@ -1,340 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Wed, 29 Jun 2011 23:29:44 +0200
-Message-ID: <201106292329.44447.arnd@arndb.de>
-References: <1309231954-23260-1-git-send-email-bs14@csr.com>
+From: Meador Inge <meador_inge@mentor.com>
+Subject: Re: [openmcapi-dev] Re: [PATCH v3 2/2] powerpc: add support for MPIC
+	message register API
+Date: Wed, 29 Jun 2011 22:04:20 -0500
+Message-ID: <4E0BE7B4.1020901@mentor.com>
+References: <1306869543-18812-1-git-send-email-meador_inge@mentor.com>	
+	<1306869543-18812-3-git-send-email-meador_inge@mentor.com>
+	<1308288784.32158.30.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1309231954-23260-1-git-send-email-bs14-kQvG35nSl+M@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Barry Song <bs14-kQvG35nSl+M@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Bin Shi <Bin.Shi-kQvG35nSl+M@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Zhiwu Song <Zhiwu.Song-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>, Binghua Duan <binghua.duan-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Yuping Luo <Yuping.Luo-kQvG35nSl+M@public.gmane.org>, Huayi Li <Huayi.Li-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1308288784.32158.30.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: openmcapi-dev@googlegroups.com, Hollis Blanchard <hollis_blanchard@mentor.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 June 2011, Barry Song wrote:
-> This patch adds the basic support for this SoC and EVB board based on device
-> tree. It is following the ZYNQ of Grant Likely in some degree.
+On 06/17/2011 12:33 AM, Benjamin Herrenschmidt wrote:
 
-Hi Barry,
+> On Tue, 2011-05-31 at 14:19 -0500, Meador Inge wrote:
+>> Some MPIC implementations contain one or more blocks of message registers
+>> that are used to send messages between cores via IPIs.  A simple API has
+>> been added to access (get/put, read, write, etc ...) these message registers.
+>> The available message registers are initially discovered via nodes in the
+>> device tree.  A separate commit contains a binding for the message register
+>> nodes.
 
-There are a few more things I noticed this time around, and some comments
-about code that changed since v1.
+<snip>
 
-> the device hierarchy in SiRFprimaII is as below
 > 
-> AXI(0-0x3FFFFFFF)
->             memory
-> AXI(0x40000000-0xC0000000)
->             CPUIF(sirf-iobus)
->                          INTC
->                          MEMC
->                          LCD
->                          VPP
->                          GRAPHIC
->                          MULTIMEDIA
->                          GPS
->                          UART
->                          ...
->                          hard-coded PCI bridge
->                                  SD/MMC
->                          rtc-iobrg
->                                  RTC
+> Ok, so we have another scheme of:
 > 
-
-Is this really just one bus with a huge address space, or rather some
-nested buses? I'd prefer to have the device tree representation as
-close as possible to the actual layout.
-
-This also includes using bus-local addresses for the 'reg' properties,
-rather than global addresses.
-
->  1. clock: use dev_id instead of con_id
->  2. Kconfig: delete ISA_DMA
->  3. irq: implement int controller based on DT
-> 	 move to GENERIC_IRQ_CHIP framework
->  4. timer: implement timer based on DT
->  5. entry-macro.S: use get_irqnr_preamble to load the base address only once
->     per IRQ exception.
->  6. others:
-> 	use readl_relaxed instead of __raw_readl
-> 	adjust Kconfig order for PRIMA2
-> 	use clk_get_sys instead of clk_get for system level clock
-> 	use BUG_ON(IS_ERR(clk)) instead of BUG_ON(IS_ERR_OR_NULL(clk));
-> 	fix typo for CLOCK_TICK_RATE
-> 	("sirf,xxx", "sirf,prima2-xxx")  instead of ("sirf,xxx") in dts
+>  - Count all devices in the system of a given type
+>  - Assign them numbers
+>  - API uses number
 > 
+> That sucks... unless you have an allocator. And even then.
+> 
+> I'd rather clients use something like struct mpic_msgr (or msg_reg or
+> message_reg) as the "handle" to one of these things.
+> 
+> It can be obtained via an allocator or a device tree parsing routine if
+> there's a fixed relationship between clients and registers, I don't
+> really know how that stuff is to be used, but in any case, the whole
+> thing stinks as it is.
 
-Good progress!
+Ben,
 
-> new file mode 100644
-> index 0000000..1777e98
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/prima2-cb.dts
-> @@ -0,0 +1,50 @@
-> +/dts-v1/;
-> +/ {
-> +	model = "SIRF Prima2 EVB";
-> +	compatible = "sirf,prima2-cb", "sirf,prima2";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	interrupt-parent = <&intc>;
-> +
-> +	memory {
-> +		reg = <0x00000000 0x20000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "mem=512M real_root=/dev/mmcblk0p2 console=ttyS1 earlyprintk";
-> +		linux,stdout-path = &uart1;
-> +	};
-> +
-> +	amba {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		intc: interrupt-controller@0x80020000 {
-> +			interrupt-controller;
-> +			compatible = "sirf,intc", "sirf,prima2-intc";
-> +			reg = <0x80020000 0x1000>;
-> +			#interrupt-cells = <1>;
-> +		};
+I posted a more detailed response a few days back:
+http://patchwork.ozlabs.org/patch/98075/.  In
+that response, I tried to put forth the rationale
+for allocating the registers statically due to
+the AMP use case.  With that in mind, do you
+still disagree with the design?  If so, do
+you have any suggestions for how it could be
+better?
 
-Some more commends on the device tree properties:
-
-I think the namespace for the compatible values is supposed to start with
-the stock ticker name of the company making the device as a unique
-identifier. This means you'd have to use 
-"csrxf,sirf-intc", "csrxf,sirf-prima2-intc" as the value, instead
-of starting with the product name. I don't know exactly how strictly
-we apply that rule, but I've taken the devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-mailing list on Cc, maybe someone can clarify.
-
-> +		timer0: timer@0xb0020000 {
-> +			compatible = "sirf,tick", "sirf,prima2-tick";
-> +			reg = <0xb0020000 0x1000>;
-> +			interrupts = <0>;
-> +		};
-> +
-> +		uart0: uart@0xb0050000 {
-> +			compatible = "sirf,uart", "sirf,prima2-uart";
-> +			reg = <0xb0050000 0x1000>;
-> +			interrupts = <17>;
-> +		};
-> +
-> +		uart1: uart@0xb0060000 {
-> +			compatible = "sirf,uart", "sirf,prima2-uart";
-> +			reg = <0xb0060000 0x1000>;
-> +			interrupts = <18>;
-> +		};
-> +	};
-> +};
-
-When you use local addresses, this would become something like
-
-	axi1 {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges <0 0x80000000 0x10000000>;
-
-		intc: interrupt-controller@20000 {
-			interrupt-controller;
-			compatible = "sirf,intc", "sirf,prima2-intc";
-			reg = <0x20000 0x1000>;
-			#interrupt-cells = <1>;
-		};
-	}
-	axi2 {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges <0 0xb0000000 0x10000000>;
-
-		timer0: timer@20000 {
-			reg = <0x20000 0x1000>;
-		};
-
-		uart0: uart@50000 {
-			reg = <0x50000 0x1000>;
-		};
-
-		uart1: uart@60000 {
-			reg = <0x60000 0x1000>;
-		};
-	};
-
-
-
-> +
-> diff --git a/arch/arm/mach-prima2/Makefile b/arch/arm/mach-prima2/Makefile
-> new file mode 100644
-> index 0000000..c51d60d
-> --- /dev/null
-> +++ b/arch/arm/mach-prima2/Makefile
-> @@ -0,0 +1 @@
-> +obj-y := timer.o irq.o clock.o common.o board_dt.o
-
-Minor detail:
-
-better put these in a list with one file per line, like
-
-obj-y	+= timer.o
-obj-y	+= irq.o
-
-That makes the list more consistent when you add conditional files.
-
-> +++ b/arch/arm/mach-prima2/board_dt.c
-> @@ -0,0 +1,28 @@
-> +/*
-> + * This file contains code for boards with device tree support.
-> + *
-> + * Copyright (c) 2011 Cambridge Silicon Radio Limited, a CSR plc group company.
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach-types.h>
-> +#include <mach/hardware.h>
-> +#include "common.h"
-> +
-> +static const char *prima2cb_dt_match[] __initdata = {
-> +       "sirf,prima2-cb",
-> +       NULL
-> +};
-> +
-> +MACHINE_START(PRIMA2_EVB, "prima2cb")
-> +       .boot_params    = SIRFSOC_SDRAM_PA + 0x100,
-> +       .init_early     = sirfsoc_init_clk,
-> +       .map_io         = sirfsoc_map_io,
-> +       .init_irq       = sirfsoc_of_init_irq,
-> +       .timer          = &sirfsoc_timer,
-> +       .init_machine   = sirfsoc_mach_init,
-> +       .dt_compat      = prima2cb_dt_match,
-> +MACHINE_END
-
-How about removing the remaining board file entirely and merging the contents into
-common.c? We don't want to have board specific files any more, so the naming
-and the split is rather obsolete.
-
-It probably makes sense to pick a new name for the combined file, too, but I
-can't think of a good one. Maybe one of platform.c, prima2.c or core.c.
-
-> +#define IOTABLE_ENTRY(region) {\
-> +	.virtual 	= SIRFSOC_##region##_VA_BASE, \
-> +	.pfn	 	= __phys_to_pfn(SIRFSOC_##region##_PA_BASE),\
-> +	.length		= SIRFSOC_##region##_SIZE, \
-> +	.type 		= MT_DEVICE, \
-> +}
-> +
-> +static struct map_desc sirfsoc_iodesc[] __initdata = {
-> +	IOTABLE_ENTRY(UART1),
-> +	IOTABLE_ENTRY(CLOCK),
-> +	IOTABLE_ENTRY(RSTC),
-> +#ifdef CONFIG_CACHE_L2X0
-> +	IOTABLE_ENTRY(L2CC),
-> +#endif
-> +};
-
-I've thought about this some more, and I think you can get rid of most
-entries in the global table after all:
-
-* sirfsoc_init_clk() can get the physical address from the device tree
-and call iotable_init for just one entry.
-
-* RSTC does not seem to be needed early at all, you can simply ioremap it.
-
-* L2CC is only accessed from an arch_initcall, which is late enough
-  for ioremap.
-
-* UART1 is only needed for early printk, so I would put the function
-  that does this remaining iotable_init() call into a separate file
-  that only gets compiled when that is enabled.
-
-> +void __init sirfsoc_map_io(void)
-> +{
-> +	iotable_init(sirfsoc_iodesc, ARRAY_SIZE(sirfsoc_iodesc));
-> +}
-> +
-> +#define L2X0_ADDR_FILTERING_START       0xC00
-> +#define L2X0_ADDR_FILTERING_END         0xC04
-> +
-> +static int __init sirfsoc_init(void)
-> +{
-> +#ifdef CONFIG_CACHE_L2X0
-> +	if (!(readl_relaxed(SIRFSOC_L2CC_VA_BASE + L2X0_CTRL) & 1)) {
-> +		/*
-> +		 * set the physical memory windows L2 cache will cover
-> +		 */
-> +		writel_relaxed(PHYS_OFFSET + 1024 * 1024 * 1024,
-> +			SIRFSOC_L2CC_VA_BASE + L2X0_ADDR_FILTERING_END);
-> +		writel_relaxed(PHYS_OFFSET | 0x1,
-> +			SIRFSOC_L2CC_VA_BASE + L2X0_ADDR_FILTERING_START);
-> +
-> +		writel_relaxed(0,
-> +			SIRFSOC_L2CC_VA_BASE + L2X0_TAG_LATENCY_CTRL);
-> +		writel_relaxed(0,
-> +			SIRFSOC_L2CC_VA_BASE + L2X0_DATA_LATENCY_CTRL);
-> +	}
-> +	l2x0_init((void __iomem *)SIRFSOC_L2CC_VA_BASE, 0x00040000,
-> +		0x00000000);
-> +#endif
-> +
-> +	return 0;
-> +}
-> +arch_initcall(sirfsoc_init);
-
-I would also suggest moving the l2x0 code into a new l2x0.c file that
-is conditionally compiled. In the header file, you then do
-
-#ifdef CONFIG_CACHE_L2X0
-extern void sirfsoc_l2x0_init(void);
-#else
-static inline void sirfsoc_l2x0_init(void) {}
-#endif
-
-> +#ifndef __ASM_ARCH_IRQS_H
-> +#define __ASM_ARCH_IRQS_H
-> +
-> +#define SIRFSOC_INTENAL_IRQ_START  0
-> +#define SIRFSOC_INTENAL_IRQ_END    59
-
-Typo, I assume: INTERNAL, not INTENAL
-
-
-> +
-> +static struct of_device_id intc_ids[]  = {
-> +	{ .compatible = "sirf,intc" },
-> +	{ .compatible = "sirf,prima2-intc" },
-> +};
-
-You should only list one of these in the driver: The idea is that as 
-long as all variants of the hardware are identical, you can just list
-the most general name (sirf,intc), and if you need to tell the difference
-you list the more specific names and add a .data=... member that you
-use to differentiate between them. Note that it's usually easier to
-change the code than to change the device tree, so we want to have 
-the full list in the device tree, but the code just needs to pick
-one that fits the purpose.
-
-It's the same for the other drivers.
-
-> +static void __init sirfsoc_of_timer_map(void);
-
-You can remove this forward declaration if you move the sched_clock()
-function down.
-
-	Arnd
+-- 
+Meador Inge
+CodeSourcery / Mentor Embedded
+http://www.mentor.com/embedded-software
