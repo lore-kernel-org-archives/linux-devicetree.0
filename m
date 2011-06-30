@@ -1,12 +1,15 @@
-From: "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>
-Subject: [RFC PATCH 5/5] OMAP: I2C: Convert I2C driver to use device tree
-Date: Thu, 30 Jun 2011 15:07:27 +0500
-Message-ID: <1309426647-31587-6-git-send-email-manjugk@ti.com>
-References: <1309426647-31587-1-git-send-email-manjugk@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
+Date: Thu, 30 Jun 2011 12:36:25 +0200
+Message-ID: <201106301236.25822.arnd@arndb.de>
+References: <1309231954-23260-1-git-send-email-bs14@csr.com>
+	<201106292329.44447.arnd@arndb.de>
+	<BANLkTinfKCMcutMDQ+mpdD4EUy9mCpZs+w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <BANLkTinfKCMcutMDQ+mpdD4EUy9mCpZs+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,118 +19,194 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 30 June 2011, Barry Song wrote:
 
-The OMAP I2C driver is modified to use platform_device data from
-device tree data structures.
+> > Is this really just one bus with a huge address space, or rather some
+> > nested buses? I'd prefer to have the device tree representation as
+> > close as possible to the actual layout.
+> 
+> there are two AXI buses in prima2. AXI-1 connect to memory, AXI-2 is
+> transferred to CSR self-defined IOBUS by CPUIF, then 1 intterupt
+> controller and 9 IO bridges are connected to the IOBUS .
+> The 9 IO bridges are SYSIOBG, PERIIOBG,CPURTCIOBG, UUSIOBG, GRAPHIOBG,
+> MEDIAIOBG, DSPIOBG, DISPIOBG, MEMIOBG. Every iobrg connect to a group
+> of controllers.
+> For example, DISPIOBG connect to VPP and LCD, SYSIOBG connect to CLKC,
+> RSTC, RSC and CPHIFBG, DSPIOBG connect to DSPIF, GPS and DSP.
+> PERIIOBG connect to TIMER, NAND, AUDIO, UART0, UART1, UART2, USP0,
+> USP1, USP2, SPI0, I2C0, I2C1, GPIO, *SYS2PCI* and so on. Then
+> *SYS2PCI* connect to SD.
+> 
+> The indendation descible the device hierarchy
+> AXI-1
+>          Memory
+> AXI-2
+>          interrupt controller
+>          IOBG...
+>                   xxxx
+>          IOBG...
+>                   xxxx
+>          IOBG...
+>                   xxxx
+>          IOBG...
+>                   xxxx
+>          IOBG...
+>                   xxxx
+>          IOBG...
+>                   SYS2PCI
+>                             SD
+> 
+> i have get the IC guy Weizeng involved, maybe he can explain better than me :-)
 
-Signed-off-by: G, Manjunath Kondaiah <manjugk-l0cyMroinI0@public.gmane.org>
----
- drivers/i2c/busses/i2c-omap.c |   30 +++++++++++++++++++++++++++++-
- 1 files changed, 29 insertions(+), 1 deletions(-)
+I think it would be good to represent the IOBG devices in the device tree then.
+You don't need to represent AXI-1 because memory is special anyway, and I would
+not bother to list SYS2PCI if the intention of that block was to hide the fact
+that it's PCI behind it. Properly instantiating it as a PCI bridge would be
+a lot of work that is probably not worth it.
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index ae1545b..d4ccc52 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -38,9 +38,13 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/of_i2c.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
- #include <linux/slab.h>
- #include <linux/i2c-omap.h>
- #include <linux/pm_runtime.h>
-+#include <plat/i2c.h>
- 
- /* I2C controller revisions */
- #define OMAP_I2C_REV_2			0x20
-@@ -972,6 +976,7 @@ static const struct i2c_algorithm omap_i2c_algo = {
- 	.functionality	= omap_i2c_func,
- };
- 
-+static const struct of_device_id omap_i2c_of_match[];
- static int __devinit
- omap_i2c_probe(struct platform_device *pdev)
- {
-@@ -979,10 +984,15 @@ omap_i2c_probe(struct platform_device *pdev)
- 	struct i2c_adapter	*adap;
- 	struct resource		*mem, *irq, *ioarea;
- 	struct omap_i2c_bus_platform_data *pdata = pdev->dev.platform_data;
-+	const struct of_device_id *match;
- 	irq_handler_t isr;
- 	int r;
- 	u32 speed = 0;
- 
-+	match = of_match_device(omap_i2c_of_match, &pdev->dev);
-+	if (!match)
-+		dev_err(&pdev->dev, "DT: i2c device match not found.......\n");
-+
- 	/* NOTE: driver uses the static register mapping */
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!mem) {
-@@ -1007,10 +1017,19 @@ omap_i2c_probe(struct platform_device *pdev)
- 		r = -ENOMEM;
- 		goto err_release_region;
- 	}
--
-+	/* I2C device without DT might use this */
- 	if (pdata != NULL) {
- 		speed = pdata->clkrate;
- 		dev->set_mpu_wkup_lat = pdata->set_mpu_wkup_lat;
-+	} else if (pdev->dev.of_node) {
-+		const unsigned int *prop;
-+		prop = of_get_property(pdev->dev.of_node,
-+				"clock-frequency", NULL);
-+		if (prop)
-+			speed = be32_to_cpup(prop);
-+		else
-+			speed = 100;
-+		dev->set_mpu_wkup_lat = NULL;
- 	} else {
- 		speed = 100;	/* Default speed */
- 		dev->set_mpu_wkup_lat = NULL;
-@@ -1045,6 +1064,7 @@ omap_i2c_probe(struct platform_device *pdev)
- 
- 	dev->rev = omap_i2c_read_reg(dev, OMAP_I2C_REV_REG) & 0xff;
- 
-+
- 	if (dev->rev <= OMAP_I2C_REV_ON_3430)
- 		dev->errata |= I2C_OMAP3_1P153;
- 
-@@ -1073,6 +1093,7 @@ omap_i2c_probe(struct platform_device *pdev)
- 				       (1000 * speed / 8);
- 	}
- 
-+
- 	/* reset ASAP, clearing any IRQs */
- 	omap_i2c_init(dev);
- 
-@@ -1162,6 +1183,12 @@ static int omap_i2c_resume(struct device *dev)
- 	return 0;
- }
- 
-+static const struct of_device_id omap_i2c_of_match[] = {
-+	{.compatible = "ti,omap_i2c", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
-+
- static struct dev_pm_ops omap_i2c_pm_ops = {
- 	.suspend = omap_i2c_suspend,
- 	.resume = omap_i2c_resume,
-@@ -1178,6 +1205,7 @@ static struct platform_driver omap_i2c_driver = {
- 		.name	= "omap_i2c",
- 		.owner	= THIS_MODULE,
- 		.pm	= OMAP_I2C_PM_OPS,
-+		.of_match_table = omap_i2c_of_match,
- 	},
- };
- 
--- 
-1.7.4.1
+My usual plea to hardware developers: Please make the registers
+autodiscoverable from software! On an AMBA bus, please use the PrimeCell
+register layout. If you always have an IOBG device behind, they should
+all have the same identifier for that kind of bus bridge.
+
+For the IOBG, it would be ideal to have a similar way of finding and
+configuring the connected hardware, including:
+
+* unique identifier for each distinct IP block
+* revision of that block
+* MMIO ranges and sizes, relative to the bus
+* interrupt numbers, relative to a local interrupt controller
+* location identifier (like PCI bus/device/fn number) that can be
+  referred to by other devices
+* clock management for that device
+* power management for that device
+
+If your IODB infrastructure already has this, you should create a new
+bus-type for this in Linux, which will let you detect all devices
+in a consistent manner without having to list them in the device tree.
+
+> > I think the namespace for the compatible values is supposed to start with
+> > the stock ticker name of the company making the device as a unique
+> > identifier. This means you'd have to use
+> > "csrxf,sirf-intc", "csrxf,sirf-prima2-intc" as the value, instead
+> > of starting with the product name. I don't know exactly how strictly
+> > we apply that rule, but I've taken the devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > mailing list on Cc, maybe someone can clarify.
+> 
+> in fact, SiRF is a company name. it was merged into CSR 4 years ago.
+> Due to history reason, now the SoC names are still headed by sirf.
+> the logo in SiRFprimaII chip is CSR.
+> So the "SiRF" of SiRFprimaII should mean two things: old company name,
+>  heritable CPU production-line. Anyway, "csr, sirf-intc" seems to make
+> more senses than "sirf, intc".
+> 
+> could we change "csrxf,sirf-intc", "csrxf,sirf-prima2-intc" to
+> "csr,sirf-intc", "csr,sirf-prima2-intc"?
+
+Not sure how strict we interpret the rules about stock ticker symbols.
+'CSR' on wallstreet is 'China Security & Surveillance Tech. Inc'. If they
+ever decide to produce embedded Linux machines, we'd get a conflict, unless
+they also use "csst" (their .com domain name) as a prefix.
+
+> > better put these in a list with one file per line, like
+> >
+> > obj-y   += timer.o
+> > obj-y   += irq.o
+> >
+> > That makes the list more consistent when you add conditional files.
+> 
+> Then it could be:
+> obj-y += timer.o
+> obj-y += irq.o
+> obj-y += clock.o
+> obj-y += common.o
+> obj-$(CONFIG_CACHE_L2X0) := l2x0.o
+
+
+Right. Note that you have a := in there, which needs to be +=.
+
+
+> > It probably makes sense to pick a new name for the combined file, too, but I
+> > can't think of a good one. Maybe one of platform.c, prima2.c or core.c.
+> 
+> i am not sure the original purpose of board_dt.c. and i am guessing
+> whether Grant created that single board file to contain multiple
+> boards. For example:
+> 
+> MACHINE_START(PRIMA2_XXX, "prima2xxx")
+>        .boot_params    = SIRFSOC_SDRAM_PA + 0x100,
+>        .init_early     = sirfsoc_init_clk,
+>        .map_io         = sirfsoc_map_io,
+>        .init_irq       = sirfsoc_of_init_irq,
+>        .timer          = &sirfsoc_timer,
+>        .init_machine   = sirfsoc_mach_init,
+>        .dt_compat      = prima2xxx_dt_match,
+> MACHINE_END
+> 
+> MACHINE_START(PRIMA2_YYY, "prima2yyy")
+>        .boot_params    = SIRFSOC_SDRAM_PA + 0x100,
+>        .init_early     = sirfsoc_init_clk,
+>        .map_io         = sirfsoc_map_io,
+>        .init_irq       = sirfsoc_of_init_irq,
+>        .timer          = &sirfsoc_timer,
+>        .init_machine   = sirfsoc_mach_init,
+>        .dt_compat      = prima2yyy_dt_match,
+> MACHINE_END
+
+No, this wouldn't make any sense when the only difference is the dt_compat
+field: At that point you would just list all the possible boards in the
+global dt_match table.
+
+> after creating a new file named mach-prima2/l2x0.c,  it seems we only
+> need to change Makefile to:
+> obj-$(CONFIG_CACHE_L2X0) := l2x0.o
+> the head file is not needed.
+> 
+> Currently, rob's OF-based L2 cache is not merged yet. then i only
+> write the following:
+> 
+> static int __init sirfsoc_of_l2x_init(void)
+> {
+>         struct device_node *np;
+>         void __iomem *sirfsoc_l2x_base;
+> 
+>         np = of_find_matching_node(NULL, l2x_ids);
+>         if (!np)
+>                 panic("unable to find compatible intc node in dtb\n");
+> 
+>         sirfsoc_l2x_base = of_iomap(np, 0);
+>         if (!sirfsoc_l2x_base)
+>                 panic("unable to map l2x cpu registers\n");
+> 
+>         of_node_put(np);
+> 
+>         if (!(readl_relaxed(sirfsoc_l2x_base + L2X0_CTRL) & 1)) {
+>                 /*
+>                  * set the physical memory windows L2 cache will cover
+>                  */
+>                 writel_relaxed(PLAT_PHYS_OFFSET + 1024 * 1024 * 1024,
+>                         sirfsoc_l2x_base + L2X0_ADDR_FILTERING_END);
+>                 writel_relaxed(PLAT_PHYS_OFFSET | 0x1,
+>                         sirfsoc_l2x_base + L2X0_ADDR_FILTERING_START);
+> 
+>                 writel_relaxed(0,
+>                         sirfsoc_l2x_base + L2X0_TAG_LATENCY_CTRL);
+>                 writel_relaxed(0,
+>                         sirfsoc_l2x_base + L2X0_DATA_LATENCY_CTRL);
+>         }
+>         l2x0_init((void __iomem *)sirfsoc_l2x_base, 0x00040000,
+>                 0x00000000);
+> 
+>         return 0;
+> }
+> early_initcall(sirfsoc_of_l2x_init);
+> 
+> After Rob's patch is merged, i think sirfsoc_of_l2x_init can be much simpler.
+> 
+Yes. Rob/Olof, what's the status of that patch?
+
+	Arnd
