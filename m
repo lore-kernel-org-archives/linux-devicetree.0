@@ -1,123 +1,44 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Fri, 1 Jul 2011 18:19:43 +0200
-Message-ID: <201107011819.43316.arnd@arndb.de>
+Date: Fri, 1 Jul 2011 18:26:57 +0200
+Message-ID: <201107011826.57660.arnd@arndb.de>
 References: <1309231954-23260-1-git-send-email-bs14@csr.com>
 	<201106301236.25822.arnd@arndb.de>
-	<BANLkTikoMu3ccUxj5KRmKzdReQcBqK4Y9Q@mail.gmail.com>
+	<BANLkTinkHcuXuWpCxq3tnU_10trPTjDucg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BANLkTikoMu3ccUxj5KRmKzdReQcBqK4Y9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <BANLkTinkHcuXuWpCxq3tnU_10trPTjDucg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Barry Song <21cnbao@gmail.com>
+Cc: linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, workgroup.linux@csr.com, Grant Likely <grant.likely@secretlab.ca>, weizeng.he@csr.com, Olof Johansson <olof@lixom.net>, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On Friday 01 July 2011, Barry Song wrote:
-> It looks like we can new a common function named as of_io_earlymap()
-> or something in drivers/of/address.c. of_iomap() does ioremap,
-> of_io_earlymap() does early static mapping?
-> Then all SoCs can call this function to do early static mapping. if
-> so, some lines can be deleted in sirfsoc_of_clk_init(). How do you
-> think about newing the function in drivers/of/address.c?
+> except Wall St and stock, i really didn't realize CSR is something
+> related with 'China Security & Surveillance Tech. Inc' . it seems CSR
+> is much more extensively known as a company in Wireless Technology,
+> Audio, Connectivity and GPS.
+> if we lost this name, people might not know it came from that CSR
+> focusing on Wireless/Audio/Connectivity/GPS. people will ask, what is
+> CSRXF? if we really use stock sticker symbols, CSR.L is the more
+> normal symbol in UK market. if we move to stock sticker symbol, could
+> we use CSR.L?
 
-I think that's a good idea, but the ARM specific implementation cannot
-be in common code. Other architectures have stuff similar to iotable_init
-in asm/fixmap.h. If we decide on a function prototype for this, the
-implementation can be arch/*/.
+CSR.L sounds ok to me, but I don't know if there are limitations on the
+character set used here, can we have dots?
 
-How about this:
-
-extern void of_set_fixmap(struct device_node *np, int index,
-	unsigned long of_fixmap_offset, pgprot_t flags); 
-
-> For DEBUG_LL uart, i have moved the static mapping to a new file named
-> lluart.c too:
-> +#include <linux/kernel.h>
-> +#include <asm/page.h>
-> +#include <asm/mach/map.h>
-> +#include <mach/map.h>
-> +#include <mach/uart.h>
-> +
-> +void __init sirfsoc_map_lluart(void)
-> +{
-> +       struct map_desc sirfsoc_lluart_map = {
-> +               .virtual        = SIRFSOC_UART1_VA_BASE,
-> +               .pfn            = __phys_to_pfn(SIRFSOC_UART1_PA_BASE),
-> +               .length         = SIRFSOC_UART1_SIZE,
-> +               .type           = MT_DEVICE,
-> +       };
-> +
-> +       iotable_init(&sirfsoc_lluart_map, 1);
-> +}
-> +
-> 
-> only when DEBUG_LL is selected, this file will be compiled. Otherwise,
-> an empty sirfsoc_map_lluart is used:
-
-Ok, sounds good.
-
-> +/* TODO:
-> + * add APIs to control reset of every module
-> + */
-
-Hmm, how about this: You enumerate every bit in the reset registers, and
-then add a device tree property to the devices where this is needed containing
-the number. Then you just need a simple interface like
-
-void sirfsoc_reset_device(struct device *dev)
-{
-	int len, i;
-	unsigned int *reset_bits = of_get_property(dev->of_node, "reset-bit", &len);
-
-	for (i = 0; i<len/4; i++)
-		sirfsoc_reset_line(reset_bits[i]);
-}
-
-
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <asm/mach-types.h>
-> +#include <asm/mach/arch.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include "common.h"
-> +
-> +static struct of_device_id sirfsoc_of_bus_ids[] __initdata = {
-> +       { .compatible = "simple-bus", },
-> +       {},
-> +};
-> +
-> +void __init sirfsoc_mach_init(void)
-> +{
-> +       of_platform_bus_probe(NULL, sirfsoc_of_bus_ids, NULL);
-> +}
-> +
-> +static const char *prima2cb_dt_match[] __initdata = {
-> +       "sirf,prima2-cb",
-> +       NULL
-> +};
-> +
-> +MACHINE_START(PRIMA2_EVB, "prima2cb")
-> +       .boot_params    = 0x00000100,
-> +       .init_early     = sirfsoc_of_clk_init,
-> +       .map_io         = sirfsoc_map_lluart,
-> +       .init_irq       = sirfsoc_of_irq_init,
-> +       .timer          = &sirfsoc_timer,
-> +       .init_machine   = sirfsoc_mach_init,
-> +       .dt_compat      = prima2cb_dt_match,
-> +MACHINE_END
-
-Very nice!
+Maybe the best solution after all is to go with 'sirf,...': it is
+actually a company name, and you own the .com address, and there is
+no other company listed on wallstreet with that shortcut.
 
 	Arnd
