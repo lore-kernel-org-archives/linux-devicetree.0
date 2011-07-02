@@ -1,72 +1,425 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Sat, 2 Jul 2011 21:34:19 +0200
-Message-ID: <201107022134.19690.arnd@arndb.de>
-References: <1309231954-23260-1-git-send-email-bs14@csr.com>
-	<201107011819.43316.arnd@arndb.de>
-	<20110702122527.GH21898@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110702122527.GH21898-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jonas Bonn <jonas@southpole.se>
+Subject: [PATCH v2 02/19] OpenRISC: Device tree
+Date: Sat,  2 Jul 2011 23:15:35 +0200
+Message-ID: <1309641352-18714-3-git-send-email-jonas@southpole.se>
+References: <1309641352-18714-1-git-send-email-jonas@southpole.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1309641352-18714-1-git-send-email-jonas@southpole.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Cc: Jonas Bonn <jonas@southpole.se>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 02 July 2011 14:25:27 Russell King - ARM Linux wrote:
-> On Fri, Jul 01, 2011 at 06:19:43PM +0200, Arnd Bergmann wrote:
-> > On Friday 01 July 2011, Barry Song wrote:
-> > > It looks like we can new a common function named as of_io_earlymap()
-> > > or something in drivers/of/address.c. of_iomap() does ioremap,
-> > > of_io_earlymap() does early static mapping?
-> > > Then all SoCs can call this function to do early static mapping. if
-> > > so, some lines can be deleted in sirfsoc_of_clk_init(). How do you
-> > > think about newing the function in drivers/of/address.c?
-> > 
-> > I think that's a good idea, but the ARM specific implementation cannot
-> > be in common code. Other architectures have stuff similar to iotable_init
-> > in asm/fixmap.h. If we decide on a function prototype for this, the
-> > implementation can be arch/*/.
-> 
-> One of the issues with fixmap is that its based around single pages
-> and indexing an area.  It's idiotic to use such a thing if you have
-> to map the ISA memory regions for VGA.
-> 
-> Plus, of course, forcing everything down the route of ioremap() and
-> fixmap forces everyone to use 2-level page tables and 4K page table
-> entries, avoiding the possibility of having just a single 1st level
-> page table entry covering their IO space.  Not only does it increase
-> TLB pressure but it also makes page table walking more expensive.
 
-I didn't mean converting ARM to use fixmap, but having a common prototype
-for the function to do an early mapping of devices, regardless if it's
-based on fixmap or iotable.
+The OpenRISC architecture uses the device tree infrastructure for the
+platform description.  This is currently limited to having a device tree
+built into the kernel, but work is underway within the OpenRISC project
+to define how this device tree blob should be passed into the kernel from
+an external resource.
 
-We already discussed the issue of large TLBs for iotable before. If
-we ever want to conver that to the fixmap API, we would first have
-to extend it with a more straightforward way to do large mappings,
-and I'm not going to start that discussion.
+Signed-off-by: Jonas Bonn <jonas@southpole.se>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ arch/openrisc/boot/dts/atlys.dts   |   78 +++++++++++++++++++++++++
+ arch/openrisc/boot/dts/or1ksim.dts |   73 ++++++++++++++++++++++++
+ arch/openrisc/include/asm/prom.h   |   92 ++++++++++++++++++++++++++++++
+ arch/openrisc/kernel/prom.c        |  109 ++++++++++++++++++++++++++++++++++++
+ arch/openrisc/kernel/setup.c       |    3 +-
+ 5 files changed, 353 insertions(+), 2 deletions(-)
+ create mode 100644 arch/openrisc/boot/dts/atlys.dts
+ create mode 100644 arch/openrisc/boot/dts/or1ksim.dts
+ create mode 100644 arch/openrisc/include/asm/prom.h
+ create mode 100644 arch/openrisc/kernel/prom.c
 
-I actually didn't know that we had fixmap support on ARM until I looked
-now. In fact there are now at least three interfaces that would let you
-establish early mappings:
-
-* iotable (ARM only)
-* fixmap (some architectures, unused on ARM except for kmap_atomic)
-* early_ioremap (x86 only, built on top of fixmap)
-
-Maybe we could implement early_ioremap on ARM on top of iotable,
-with support for large pages, and build of_io_earlymap() as suggested
-by Barry on top of that?
-
-	Arnd
+diff --git a/arch/openrisc/boot/dts/atlys.dts b/arch/openrisc/boot/dts/atlys.dts
+new file mode 100644
+index 0000000..cd028b9
+--- /dev/null
++++ b/arch/openrisc/boot/dts/atlys.dts
+@@ -0,0 +1,78 @@
++/dts-v1/;
++/ {
++	compatible = "digilent,atlys";
++	#size-cells = <1>;
++	#address-cells = <1>;
++
++	chosen {
++		bootargs = "console=tty0 console=uart,mmio,0x90000000,115200 debug video=ocfb:640x480-16@60";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x8000000>;
++	};
++
++	cpus {
++		cpu@0 {
++			compatible = "opencores,openrisc-1200";
++			clock-frequency = <50000000>;
++		};
++	};
++
++	/* The "soc" node */
++
++	soc {
++		/* Every node with children must specify address-cells and
++		   size-cells; they are not inherited */
++		#address-cells = <1>;
++		#size-cells = <1>;
++		device_type = "soc";
++
++		/* This is also a 1:1 mapping but limits size of mappable
++		   region to 0x40000000 */
++		ranges = <0x80000000 0x80000000 0x40000000>;
++
++		/* An alternative is to specify an empty ranges here to
++		   indicates 1:1 mapping of SOC addresses (device addresses)
++		   to CPU addresses */
++		/*ranges;*/
++
++		/* This SOC has only a single, implicit PIC, so define it
++		   early and put the interrupt-parent property in the 'soc'
++		   node so that it's inherited by all the children using
++		   interrupts.
++		*/
++		interrupt-parent = <&pic>;
++
++		/* Devices with interrupts need a 'parent', so we need to
++		   define a controller */
++		pic: pic@0 {
++			compatible = "opencores,or1k-pic";
++			#interrupt-cells = <1>;
++			interrupt-controller;
++		};
++
++		serial0: serial@90000000 {
++			/* FIXME: device_type is still needed here...
++			   should remove requirement from of_serial driver */
++			device_type = "serial";
++			compatible = "opencores,uart", "ns16550a";
++			reg = <0x90000000 0x100>;
++			interrupts = <2>;
++			clock-frequency = <50000000>;
++		};
++
++		enet0: ethoc@92000000 {
++			compatible = "opencores,ethoc", "ethoc";
++			reg = <0x92000000 0x53>;
++			interrupts = <4>;
++			local-mac-address = [02 de ad be ef 02];
++		};
++
++		fb0: ocfb@97000000 {
++			compatible = "opencores,ocfb", "ocfb";
++			reg = <0x97000000 0x1000>;
++		};
++	};
++};
+diff --git a/arch/openrisc/boot/dts/or1ksim.dts b/arch/openrisc/boot/dts/or1ksim.dts
+new file mode 100644
+index 0000000..6a025ea
+--- /dev/null
++++ b/arch/openrisc/boot/dts/or1ksim.dts
+@@ -0,0 +1,73 @@
++/dts-v1/;
++/ {
++	compatible = "opencores,or1ksim";
++	#size-cells = <1>;
++	#address-cells = <1>;
++
++	chosen {
++		bootargs = "console=uart,mmio,0x90000000,115200 debug";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x2000000>;
++	};
++
++	cpus {
++		cpu@0 {
++			compatible = "opencores,openrisc-1200";
++			clock-frequency = <20000000>;
++		};
++	};
++
++	/* The "soc" node */
++
++	soc {
++		/* Every node with children must specify address-cells and
++		   size-cells; they are not inherited */
++		#address-cells = <1>;
++		#size-cells = <1>;
++		device_type = "soc";
++
++		/* This is also a 1:1 mapping but limits size of mappable
++		   region to 0x40000000 */
++		ranges = <0x80000000 0x80000000 0x40000000>;
++
++		/* An alternative is to specify an empty ranges here to
++		   indicates 1:1 mapping of SOC addresses (device addresses)
++		   to CPU addresses */
++		/*ranges;*/
++
++		/* This SOC has only a single, implicit PIC, so define it
++		   early and put the interrupt-parent property in the 'soc'
++		   node so that it's inherited by all the children using
++		   interrupts.
++		*/
++		interrupt-parent = <&pic>;
++
++		/* Devices with interrupts need a 'parent', so we need to
++		   define a controller */
++		pic: pic@0 {
++			compatible = "opencores,or1k-pic";
++			#interrupt-cells = <1>;
++			interrupt-controller;
++		};
++
++		serial0: serial@90000000 {
++			/* FIXME: device_type is still needed here...
++			   should remove requirement from of_serial driver */
++			device_type = "serial";
++			compatible = "opencores,uart", "ns16550a";
++			reg = <0x90000000 0x100>;
++			interrupts = <2>;
++			clock-frequency = <20000000>;
++		};
++
++		enet0: ethoc@92000000 {
++			compatible = "opencores,ethoc", "ethoc";
++			reg = <0x92000000 0x53>;
++			interrupts = <4>;
++			local-mac-address = [02 de ad be ef 02];
++		};
++	};
++};
+diff --git a/arch/openrisc/include/asm/prom.h b/arch/openrisc/include/asm/prom.h
+new file mode 100644
+index 0000000..3818902
+--- /dev/null
++++ b/arch/openrisc/include/asm/prom.h
+@@ -0,0 +1,92 @@
++/*
++ * OpenRISC Linux
++ *
++ * Linux architectural port borrowing liberally from similar works of
++ * others.  All original copyrights apply as per the original source
++ * declaration.
++ *
++ * OpenRISC implementation:
++ * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
++ * et al.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/of.h>	/* linux/of.h gets to determine #include ordering */
++
++#ifndef _ASM_OPENRISC_PROM_H
++#define _ASM_OPENRISC_PROM_H
++#ifdef __KERNEL__
++#ifndef __ASSEMBLY__
++
++#include <linux/types.h>
++#include <asm/irq.h>
++#include <asm/atomic.h>
++#include <linux/of_irq.h>
++#include <linux/of_fdt.h>
++#include <linux/of_address.h>
++#include <linux/proc_fs.h>
++#include <linux/platform_device.h>
++#define HAVE_ARCH_DEVTREE_FIXUPS
++
++/* Other Prototypes */
++extern int early_uartlite_console(void);
++
++#ifdef CONFIG_PCI
++/*
++ * PCI <-> OF matching functions
++ * (XXX should these be here?)
++ */
++struct pci_bus;
++struct pci_dev;
++extern int pci_device_from_OF_node(struct device_node *node,
++					u8 *bus, u8 *devfn);
++extern struct device_node *pci_busdev_to_OF_node(struct pci_bus *bus,
++							int devfn);
++extern struct device_node *pci_device_to_OF_node(struct pci_dev *dev);
++extern void pci_create_OF_bus_map(void);
++#endif
++
++/* Parse the ibm,dma-window property of an OF node into the busno, phys and
++ * size parameters.
++ */
++void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
++		unsigned long *busno, unsigned long *phys, unsigned long *size);
++
++extern void kdump_move_device_tree(void);
++
++/* CPU OF node matching */
++struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
++
++/* Get the MAC address */
++extern const void *of_get_mac_address(struct device_node *np);
++
++/**
++ * of_irq_map_pci - Resolve the interrupt for a PCI device
++ * @pdev:	the device whose interrupt is to be resolved
++ * @out_irq:	structure of_irq filled by this function
++ *
++ * This function resolves the PCI interrupt for a given PCI device. If a
++ * device-node exists for a given pci_dev, it will use normal OF tree
++ * walking. If not, it will implement standard swizzling and walk up the
++ * PCI tree until an device-node is found, at which point it will finish
++ * resolving using the OF tree walking.
++ */
++struct pci_dev;
++extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
++
++/* This routine is here to provide compatibility with how powerpc
++ * handles IRQ mapping for OF device nodes.  We precompute and permanently
++ * register them in the platform_device objects, whereas powerpc computes them
++ * on request.
++ */
++static inline void irq_dispose_mapping(unsigned int virq)
++{
++}
++
++#endif /* __ASSEMBLY__ */
++#endif /* __KERNEL__ */
++#endif /* _ASM_OPENRISC_PROM_H */
+diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
+new file mode 100644
+index 0000000..2bb5a8c
+--- /dev/null
++++ b/arch/openrisc/kernel/prom.c
+@@ -0,0 +1,109 @@
++/*
++ * OpenRISC prom.c
++ *
++ * Linux architectural port borrowing liberally from similar works of
++ * others.  All original copyrights apply as per the original source
++ * declaration.
++ *
++ * Modifications for the OpenRISC architecture:
++ * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
++ *
++ *      This program is free software; you can redistribute it and/or
++ *      modify it under the terms of the GNU General Public License
++ *      as published by the Free Software Foundation; either version
++ *      2 of the License, or (at your option) any later version.
++ *
++ * Architecture specific procedures for creating, accessing and
++ * interpreting the device tree.
++ *
++ */
++
++#include <stdarg.h>
++#include <linux/kernel.h>
++#include <linux/string.h>
++#include <linux/init.h>
++#include <linux/threads.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/pci.h>
++#include <linux/stringify.h>
++#include <linux/delay.h>
++#include <linux/initrd.h>
++#include <linux/bitops.h>
++#include <linux/module.h>
++#include <linux/kexec.h>
++#include <linux/debugfs.h>
++#include <linux/irq.h>
++#include <linux/memblock.h>
++#include <linux/of_fdt.h>
++
++#include <asm/prom.h>
++#include <asm/page.h>
++#include <asm/processor.h>
++#include <asm/irq.h>
++#include <linux/io.h>
++#include <asm/system.h>
++#include <asm/mmu.h>
++#include <asm/pgtable.h>
++#include <asm/sections.h>
++#include <asm/setup.h>
++
++extern char cmd_line[COMMAND_LINE_SIZE];
++
++void __init early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	size &= PAGE_MASK;
++	memblock_add(base, size);
++}
++
++void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
++{
++	return __va(memblock_alloc(size, align));
++}
++
++void __init early_init_devtree(void *params)
++{
++	u8 *alloc;
++
++	/* Setup flat device-tree pointer */
++	initial_boot_params = params;
++
++
++	/* Retrieve various informations from the /chosen node of the
++	 * device-tree, including the platform type, initrd location and
++	 * size, TCE reserve, and more ...
++	 */
++	of_scan_flat_dt(early_init_dt_scan_chosen, cmd_line);
++
++	/* Scan memory nodes and rebuild MEMBLOCKs */
++	memblock_init();
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
++
++	/* Save command line for /proc/cmdline and then parse parameters */
++	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
++//	parse_early_param();
++
++	memblock_analyze();
++
++	/* We must copy the flattend device tree from init memory to regular
++	 * memory because the device tree references the strings in it
++	 * directly.
++	 */
++
++	alloc = __va(memblock_alloc(initial_boot_params->totalsize, PAGE_SIZE));
++
++	memcpy(alloc, initial_boot_params, initial_boot_params->totalsize);
++
++	initial_boot_params = (void *) alloc;
++}
++
++#ifdef CONFIG_BLK_DEV_INITRD
++void __init early_init_dt_setup_initrd_arch(unsigned long start,
++		unsigned long end)
++{
++	initrd_start = (unsigned long)__va(start);
++	initrd_end = (unsigned long)__va(end);
++	initrd_below_start_ok = 1;
++}
++#endif
+diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+index 49342e9..6ce6583 100644
+--- a/arch/openrisc/kernel/setup.c
++++ b/arch/openrisc/kernel/setup.c
+@@ -173,8 +173,7 @@ void __init setup_cpuinfo(void)
+ 	unsigned long iccfgr,dccfgr;
+ 	unsigned long cache_set_size, cache_ways;;
+ 
+-	cpu = (struct device_node *) of_find_compatible_node(NULL,
+-	                                NULL, "opencores,openrisc-1200");
++	cpu = of_find_compatible_node(NULL, NULL, "opencores,openrisc-1200");
+ 	if (!cpu) {
+ 		panic("No compatible CPU found in device tree...\n");
+ 	}
+-- 
+1.7.4.1
