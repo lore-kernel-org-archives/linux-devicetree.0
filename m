@@ -1,425 +1,154 @@
-From: Jonas Bonn <jonas@southpole.se>
-Subject: [PATCH v2 02/19] OpenRISC: Device tree
-Date: Sat,  2 Jul 2011 23:15:35 +0200
-Message-ID: <1309641352-18714-3-git-send-email-jonas@southpole.se>
-References: <1309641352-18714-1-git-send-email-jonas@southpole.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1309641352-18714-1-git-send-email-jonas@southpole.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: Jonas Bonn <jonas@southpole.se>, devicetree-discuss@lists.ozlabs.org
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] dt: add helper functions to read u32 and string property
+	values
+Date: Sun, 3 Jul 2011 11:55:28 +0800
+Message-ID: <20110703035527.GB9742@S2100-06.ap.freescale.net>
+References: <1309449370-9554-1-git-send-email-thomas.abraham@linaro.org>
+	<20110630181353.GA6674@ponder.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110630181353.GA6674-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 30, 2011 at 12:13:53PM -0600, Grant Likely wrote:
+> On Thu, Jun 30, 2011 at 09:26:10PM +0530, Thomas Abraham wrote:
+> > Add helper functions to retrive unsigned integer and string property values from
+> > properties of a device node. These helper functions can be used to lookup a
+> > property in a device node, perform error checking and read the property value.
+> > 
+> > [grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org: Proposal and initial implementation]
+> > Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Merged, thanks.  Bonus points to anyone who submits patches converting
+> existing code to this new api.
+> 
+> g.
+> 
+> > ---
+> >  drivers/of/base.c  |   59 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/of.h |    4 +++
+> >  2 files changed, 63 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index 632ebae..4823b53 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -596,6 +596,65 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+> >  EXPORT_SYMBOL(of_find_node_by_phandle);
+> >  
+> >  /**
+> > + * of_property_read_u32 - Find a property in a device node and read the
+> > + *				32-bit property value
+> > + * @np:		device node from which the property value is to be read.
+> > + * @propname:	name of the property to be searched.
+> > + * @out_value:	returned value, valid if return value is 0.
+> > + *
+> > + * Search for a property in a device node and read a 32-bit value from a
+> > + * property. Returns -EINVAL, if the property does not exist, -ENODATA, if
+> > + * property does not have a value, -EOVERFLOW, if the property data isn't
+> > + * large enough, and 0 on success.
+> > + *
+> > + * The out_value is modified only if a valid u32 value can be decoded.
+> > + */
+> > +int of_property_read_u32(struct device_node *np, char *propname, u32 *out_value)
+> > +{
+> > +	struct property *prop = of_find_property(np, propname, NULL);
+> > +
+> > +	if (!prop)
+> > +		return -EINVAL;
+> > +	if (!prop->value)
+> > +		return -ENODATA;
+> > +	if (sizeof(*out_value) > prop->length)
+> > +		return -EOVERFLOW;
+> > +	*out_value = be32_to_cpup(prop->value);
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_property_read_u32);
+> > +
+> > +/**
+> > + * of_property_read_string - Find a property in a device node and return a
+> > + *				pointer to the property string value.
+> > + * @np:		device node from which the property value is to be read.
+> > + * @propname:	name of the property to be searched.
+> > + * @out_string:	pointer to a null terminated string, valid only if the return
+> > + *		value is 0.
+> > + *
+> > + * Returns a pointer to a null terminated property value string. Returns
+> > + * -EINVAL, if the property does not exist, -ENODATA, if property does not have
+> > + * a value, -EILSEQ, if the string is not null-terminated within the length of
+> > + * the property value, and 0 on success.
+> > + *
+> > + * The out_string value is modified only if a valid string can be decoded.
+> > + */
+> > +int of_property_read_string(struct device_node *np, char *propname,
+> > +				char **out_string)
 
-The OpenRISC architecture uses the device tree infrastructure for the
-platform description.  This is currently limited to having a device tree
-built into the kernel, but work is underway within the OpenRISC project
-to define how this device tree blob should be passed into the kernel from
-an external resource.
+When converting my dt code to use this api, the following type
+mismatch warning is being seen in a lot of places.
 
-Signed-off-by: Jonas Bonn <jonas@southpole.se>
-Cc: devicetree-discuss@lists.ozlabs.org
----
- arch/openrisc/boot/dts/atlys.dts   |   78 +++++++++++++++++++++++++
- arch/openrisc/boot/dts/or1ksim.dts |   73 ++++++++++++++++++++++++
- arch/openrisc/include/asm/prom.h   |   92 ++++++++++++++++++++++++++++++
- arch/openrisc/kernel/prom.c        |  109 ++++++++++++++++++++++++++++++++++++
- arch/openrisc/kernel/setup.c       |    3 +-
- 5 files changed, 353 insertions(+), 2 deletions(-)
- create mode 100644 arch/openrisc/boot/dts/atlys.dts
- create mode 100644 arch/openrisc/boot/dts/or1ksim.dts
- create mode 100644 arch/openrisc/include/asm/prom.h
- create mode 100644 arch/openrisc/kernel/prom.c
+'char **' but argument is of type 'const char **'
 
-diff --git a/arch/openrisc/boot/dts/atlys.dts b/arch/openrisc/boot/dts/atlys.dts
-new file mode 100644
-index 0000000..cd028b9
---- /dev/null
-+++ b/arch/openrisc/boot/dts/atlys.dts
-@@ -0,0 +1,78 @@
-+/dts-v1/;
-+/ {
-+	compatible = "digilent,atlys";
-+	#size-cells = <1>;
-+	#address-cells = <1>;
-+
-+	chosen {
-+		bootargs = "console=tty0 console=uart,mmio,0x90000000,115200 debug video=ocfb:640x480-16@60";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x8000000>;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "opencores,openrisc-1200";
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+	/* The "soc" node */
-+
-+	soc {
-+		/* Every node with children must specify address-cells and
-+		   size-cells; they are not inherited */
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		device_type = "soc";
-+
-+		/* This is also a 1:1 mapping but limits size of mappable
-+		   region to 0x40000000 */
-+		ranges = <0x80000000 0x80000000 0x40000000>;
-+
-+		/* An alternative is to specify an empty ranges here to
-+		   indicates 1:1 mapping of SOC addresses (device addresses)
-+		   to CPU addresses */
-+		/*ranges;*/
-+
-+		/* This SOC has only a single, implicit PIC, so define it
-+		   early and put the interrupt-parent property in the 'soc'
-+		   node so that it's inherited by all the children using
-+		   interrupts.
-+		*/
-+		interrupt-parent = <&pic>;
-+
-+		/* Devices with interrupts need a 'parent', so we need to
-+		   define a controller */
-+		pic: pic@0 {
-+			compatible = "opencores,or1k-pic";
-+			#interrupt-cells = <1>;
-+			interrupt-controller;
-+		};
-+
-+		serial0: serial@90000000 {
-+			/* FIXME: device_type is still needed here...
-+			   should remove requirement from of_serial driver */
-+			device_type = "serial";
-+			compatible = "opencores,uart", "ns16550a";
-+			reg = <0x90000000 0x100>;
-+			interrupts = <2>;
-+			clock-frequency = <50000000>;
-+		};
-+
-+		enet0: ethoc@92000000 {
-+			compatible = "opencores,ethoc", "ethoc";
-+			reg = <0x92000000 0x53>;
-+			interrupts = <4>;
-+			local-mac-address = [02 de ad be ef 02];
-+		};
-+
-+		fb0: ocfb@97000000 {
-+			compatible = "opencores,ocfb", "ocfb";
-+			reg = <0x97000000 0x1000>;
-+		};
-+	};
-+};
-diff --git a/arch/openrisc/boot/dts/or1ksim.dts b/arch/openrisc/boot/dts/or1ksim.dts
-new file mode 100644
-index 0000000..6a025ea
---- /dev/null
-+++ b/arch/openrisc/boot/dts/or1ksim.dts
-@@ -0,0 +1,73 @@
-+/dts-v1/;
-+/ {
-+	compatible = "opencores,or1ksim";
-+	#size-cells = <1>;
-+	#address-cells = <1>;
-+
-+	chosen {
-+		bootargs = "console=uart,mmio,0x90000000,115200 debug";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x2000000>;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "opencores,openrisc-1200";
-+			clock-frequency = <20000000>;
-+		};
-+	};
-+
-+	/* The "soc" node */
-+
-+	soc {
-+		/* Every node with children must specify address-cells and
-+		   size-cells; they are not inherited */
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		device_type = "soc";
-+
-+		/* This is also a 1:1 mapping but limits size of mappable
-+		   region to 0x40000000 */
-+		ranges = <0x80000000 0x80000000 0x40000000>;
-+
-+		/* An alternative is to specify an empty ranges here to
-+		   indicates 1:1 mapping of SOC addresses (device addresses)
-+		   to CPU addresses */
-+		/*ranges;*/
-+
-+		/* This SOC has only a single, implicit PIC, so define it
-+		   early and put the interrupt-parent property in the 'soc'
-+		   node so that it's inherited by all the children using
-+		   interrupts.
-+		*/
-+		interrupt-parent = <&pic>;
-+
-+		/* Devices with interrupts need a 'parent', so we need to
-+		   define a controller */
-+		pic: pic@0 {
-+			compatible = "opencores,or1k-pic";
-+			#interrupt-cells = <1>;
-+			interrupt-controller;
-+		};
-+
-+		serial0: serial@90000000 {
-+			/* FIXME: device_type is still needed here...
-+			   should remove requirement from of_serial driver */
-+			device_type = "serial";
-+			compatible = "opencores,uart", "ns16550a";
-+			reg = <0x90000000 0x100>;
-+			interrupts = <2>;
-+			clock-frequency = <20000000>;
-+		};
-+
-+		enet0: ethoc@92000000 {
-+			compatible = "opencores,ethoc", "ethoc";
-+			reg = <0x92000000 0x53>;
-+			interrupts = <4>;
-+			local-mac-address = [02 de ad be ef 02];
-+		};
-+	};
-+};
-diff --git a/arch/openrisc/include/asm/prom.h b/arch/openrisc/include/asm/prom.h
-new file mode 100644
-index 0000000..3818902
---- /dev/null
-+++ b/arch/openrisc/include/asm/prom.h
-@@ -0,0 +1,92 @@
-+/*
-+ * OpenRISC Linux
-+ *
-+ * Linux architectural port borrowing liberally from similar works of
-+ * others.  All original copyrights apply as per the original source
-+ * declaration.
-+ *
-+ * OpenRISC implementation:
-+ * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
-+ * et al.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/of.h>	/* linux/of.h gets to determine #include ordering */
-+
-+#ifndef _ASM_OPENRISC_PROM_H
-+#define _ASM_OPENRISC_PROM_H
-+#ifdef __KERNEL__
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/types.h>
-+#include <asm/irq.h>
-+#include <asm/atomic.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_address.h>
-+#include <linux/proc_fs.h>
-+#include <linux/platform_device.h>
-+#define HAVE_ARCH_DEVTREE_FIXUPS
-+
-+/* Other Prototypes */
-+extern int early_uartlite_console(void);
-+
-+#ifdef CONFIG_PCI
-+/*
-+ * PCI <-> OF matching functions
-+ * (XXX should these be here?)
-+ */
-+struct pci_bus;
-+struct pci_dev;
-+extern int pci_device_from_OF_node(struct device_node *node,
-+					u8 *bus, u8 *devfn);
-+extern struct device_node *pci_busdev_to_OF_node(struct pci_bus *bus,
-+							int devfn);
-+extern struct device_node *pci_device_to_OF_node(struct pci_dev *dev);
-+extern void pci_create_OF_bus_map(void);
-+#endif
-+
-+/* Parse the ibm,dma-window property of an OF node into the busno, phys and
-+ * size parameters.
-+ */
-+void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
-+		unsigned long *busno, unsigned long *phys, unsigned long *size);
-+
-+extern void kdump_move_device_tree(void);
-+
-+/* CPU OF node matching */
-+struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
-+
-+/* Get the MAC address */
-+extern const void *of_get_mac_address(struct device_node *np);
-+
-+/**
-+ * of_irq_map_pci - Resolve the interrupt for a PCI device
-+ * @pdev:	the device whose interrupt is to be resolved
-+ * @out_irq:	structure of_irq filled by this function
-+ *
-+ * This function resolves the PCI interrupt for a given PCI device. If a
-+ * device-node exists for a given pci_dev, it will use normal OF tree
-+ * walking. If not, it will implement standard swizzling and walk up the
-+ * PCI tree until an device-node is found, at which point it will finish
-+ * resolving using the OF tree walking.
-+ */
-+struct pci_dev;
-+extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
-+
-+/* This routine is here to provide compatibility with how powerpc
-+ * handles IRQ mapping for OF device nodes.  We precompute and permanently
-+ * register them in the platform_device objects, whereas powerpc computes them
-+ * on request.
-+ */
-+static inline void irq_dispose_mapping(unsigned int virq)
-+{
-+}
-+
-+#endif /* __ASSEMBLY__ */
-+#endif /* __KERNEL__ */
-+#endif /* _ASM_OPENRISC_PROM_H */
-diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
-new file mode 100644
-index 0000000..2bb5a8c
---- /dev/null
-+++ b/arch/openrisc/kernel/prom.c
-@@ -0,0 +1,109 @@
-+/*
-+ * OpenRISC prom.c
-+ *
-+ * Linux architectural port borrowing liberally from similar works of
-+ * others.  All original copyrights apply as per the original source
-+ * declaration.
-+ *
-+ * Modifications for the OpenRISC architecture:
-+ * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
-+ *
-+ *      This program is free software; you can redistribute it and/or
-+ *      modify it under the terms of the GNU General Public License
-+ *      as published by the Free Software Foundation; either version
-+ *      2 of the License, or (at your option) any later version.
-+ *
-+ * Architecture specific procedures for creating, accessing and
-+ * interpreting the device tree.
-+ *
-+ */
-+
-+#include <stdarg.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/init.h>
-+#include <linux/threads.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <linux/pci.h>
-+#include <linux/stringify.h>
-+#include <linux/delay.h>
-+#include <linux/initrd.h>
-+#include <linux/bitops.h>
-+#include <linux/module.h>
-+#include <linux/kexec.h>
-+#include <linux/debugfs.h>
-+#include <linux/irq.h>
-+#include <linux/memblock.h>
-+#include <linux/of_fdt.h>
-+
-+#include <asm/prom.h>
-+#include <asm/page.h>
-+#include <asm/processor.h>
-+#include <asm/irq.h>
-+#include <linux/io.h>
-+#include <asm/system.h>
-+#include <asm/mmu.h>
-+#include <asm/pgtable.h>
-+#include <asm/sections.h>
-+#include <asm/setup.h>
-+
-+extern char cmd_line[COMMAND_LINE_SIZE];
-+
-+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
-+{
-+	size &= PAGE_MASK;
-+	memblock_add(base, size);
-+}
-+
-+void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
-+{
-+	return __va(memblock_alloc(size, align));
-+}
-+
-+void __init early_init_devtree(void *params)
-+{
-+	u8 *alloc;
-+
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = params;
-+
-+
-+	/* Retrieve various informations from the /chosen node of the
-+	 * device-tree, including the platform type, initrd location and
-+	 * size, TCE reserve, and more ...
-+	 */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, cmd_line);
-+
-+	/* Scan memory nodes and rebuild MEMBLOCKs */
-+	memblock_init();
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-+	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-+
-+	/* Save command line for /proc/cmdline and then parse parameters */
-+	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
-+//	parse_early_param();
-+
-+	memblock_analyze();
-+
-+	/* We must copy the flattend device tree from init memory to regular
-+	 * memory because the device tree references the strings in it
-+	 * directly.
-+	 */
-+
-+	alloc = __va(memblock_alloc(initial_boot_params->totalsize, PAGE_SIZE));
-+
-+	memcpy(alloc, initial_boot_params, initial_boot_params->totalsize);
-+
-+	initial_boot_params = (void *) alloc;
-+}
-+
-+#ifdef CONFIG_BLK_DEV_INITRD
-+void __init early_init_dt_setup_initrd_arch(unsigned long start,
-+		unsigned long end)
-+{
-+	initrd_start = (unsigned long)__va(start);
-+	initrd_end = (unsigned long)__va(end);
-+	initrd_below_start_ok = 1;
-+}
-+#endif
-diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-index 49342e9..6ce6583 100644
---- a/arch/openrisc/kernel/setup.c
-+++ b/arch/openrisc/kernel/setup.c
-@@ -173,8 +173,7 @@ void __init setup_cpuinfo(void)
- 	unsigned long iccfgr,dccfgr;
- 	unsigned long cache_set_size, cache_ways;;
- 
--	cpu = (struct device_node *) of_find_compatible_node(NULL,
--	                                NULL, "opencores,openrisc-1200");
-+	cpu = of_find_compatible_node(NULL, NULL, "opencores,openrisc-1200");
- 	if (!cpu) {
- 		panic("No compatible CPU found in device tree...\n");
- 	}
--- 
-1.7.4.1
+This is because the existing codes usually get string from
+of_get_property and assign it to a 'const char *'.
+
+I'm wondering if we should drop the const during converting or
+change the api with const added to out_string to get converting
+a little bit easier.
+
+Regards,
+Shawn
+
+> > +{
+> > +	struct property *prop = of_find_property(np, propname, NULL);
+> > +	if (!prop)
+> > +		return -EINVAL;
+> > +	if (!prop->value)
+> > +		return -ENODATA;
+> > +	if (strnlen(prop->value, prop->length) == prop->length)
+> > +		return -EILSEQ;
+> > +	*out_string = prop->value;
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_property_read_string);
+> > +
+> > +/**
+> >   * of_parse_phandle - Resolve a phandle property to a device_node pointer
+> >   * @np: Pointer to device node holding phandle property
+> >   * @phandle_name: Name of property holding a phandle value
+> > diff --git a/include/linux/of.h b/include/linux/of.h
+> > index bfc0ed1..4fc4c1b 100644
+> > --- a/include/linux/of.h
+> > +++ b/include/linux/of.h
+> > @@ -195,6 +195,10 @@ extern struct device_node *of_find_node_with_property(
+> >  extern struct property *of_find_property(const struct device_node *np,
+> >  					 const char *name,
+> >  					 int *lenp);
+> > +extern int of_property_read_u32(struct device_node *np, char *propname,
+> > +					u32 *out_value);
+> > +extern int of_property_read_string(struct device_node *np, char *propname,
+> > +					char **out_string);
+> >  extern int of_device_is_compatible(const struct device_node *device,
+> >  				   const char *);
+> >  extern int of_device_is_available(const struct device_node *device);
+> > -- 
+> > 1.6.6.rc2
+> > 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
