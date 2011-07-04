@@ -1,112 +1,78 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio/mxc: get rid of the uses of cpu_is_mx()
-Date: Mon, 4 Jul 2011 18:20:09 +0800
-Message-ID: <20110704102008.GH10245@S2100-06.ap.freescale.net>
-References: <1309681017-22970-1-git-send-email-shawn.guo@linaro.org>
-	<1309681017-22970-2-git-send-email-shawn.guo@linaro.org>
-	<20110704064603.GW6069@pengutronix.de>
-	<20110704092800.GG10245@S2100-06.ap.freescale.net>
-	<20110704094921.GG6069@pengutronix.de>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 1/2] serial/imx: get rid of the uses of cpu_is_mx1()
+Date: Mon, 4 Jul 2011 18:26:59 +0800
+Message-ID: <20110704102657.GI10245@S2100-06.ap.freescale.net>
+References: <1309679760-22796-1-git-send-email-shawn.guo@linaro.org>
+ <1309679760-22796-2-git-send-email-shawn.guo@linaro.org>
+ <20110703211007.GB13742@ponder.secretlab.ca>
+ <20110704021923.GA10245@S2100-06.ap.freescale.net>
+ <20110704073320.GB4338@pengutronix.de>
+ <20110704084324.GE10245@S2100-06.ap.freescale.net>
+ <20110704092805.GH4338@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110704094921.GG6069-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20110704092805.GH4338@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-serial@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 04, 2011 at 11:49:21AM +0200, Sascha Hauer wrote:
-> On Mon, Jul 04, 2011 at 05:28:01PM +0800, Shawn Guo wrote:
-> > On Mon, Jul 04, 2011 at 08:46:03AM +0200, Sascha Hauer wrote:
-> > > On Sun, Jul 03, 2011 at 04:16:56PM +0800, Shawn Guo wrote:
-> > > > The patch removes all the uses of cpu_is_mx().  Instead, it utilizes
-> > > > platform_device_id to distinguish the gpio differences among SoCs.
-> > > > 
-> > > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > > > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > ---
-> > > >  arch/arm/mach-imx/mm-imx1.c                   |    8 +-
-> > > >  arch/arm/mach-imx/mm-imx21.c                  |   12 +-
-> > > >  arch/arm/mach-imx/mm-imx25.c                  |    8 +-
-> > > >  arch/arm/mach-imx/mm-imx27.c                  |   12 +-
-> > > >  arch/arm/mach-imx/mm-imx31.c                  |    6 +-
-> > > >  arch/arm/mach-imx/mm-imx35.c                  |    6 +-
-> > > >  arch/arm/mach-mx5/mm-mx50.c                   |   12 +-
-> > > >  arch/arm/mach-mx5/mm.c                        |   22 ++--
-> > > >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c |    4 +-
-> > > >  arch/arm/plat-mxc/include/mach/common.h       |    2 +-
-> > > >  drivers/gpio/gpio-mxc.c                       |  123 +++++++++++++++++++++----
-> > > >  11 files changed, 151 insertions(+), 64 deletions(-)
-> > > 
-> > > 
-> > > Summarizing the renames up:
-> > > 
-> > > i.MX1  -> imx1-gpio
-> > > i.MX21 -> imx2-gpio
-> > > i.MX25 -> imx-gpio
-> > > i.MX27 -> imx2-gpio
-> > > i.MX31 -> imx-gpio
-> > > i.MX35 -> imx-gpio
-> > > i.MX50 -> imx-gpio
-> > > i.MX51 -> imx-gpio
-> > > i.MX53 -> imx-gpio
-> > > 
-> > > This is not consitent. Please either use the full SoC name for all
-> > > device ids or use something like imx-gpio-v1, v2...
-> > > It's not good that the i.MX25 is not a imx2 and that the 'modern'
-> > > i.MXs only have imx-gpio. We all know that your hardware designers
-> > > will be creative enough to change the register layout again in the
-> > > future.
-> > > 
-> > Ok, here it is.  It's avoid confusion in machine code, but every
-> > time we add a new soc we need to change touch this table, even if
-> > the new soc has a total compatible gpio to IMX_GPIO.  I'm fine with
-> > either way.
-> 
-> I'm also fine with imx1-gpio, imx21-gpio and imx31-gpio and all others
-> get a compatible entry with these like you did in the uart driver.
-> I only want to avoid to have a imx2-gpio when a i.MX25 is incompatible
-> with this.
-> When we do so it's probably worth to put this into a comment somewhere
-> next to the id table. I can imagine people wonder why only such ancient
-> SoCs are supported.
-> 
-So I'm going to do the following to address your concern.  Please let
-me know if you still do not buy it.
+On Mon, Jul 04, 2011 at 11:28:05AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello Shawn,
+>=20
+> On Mon, Jul 04, 2011 at 04:43:25PM +0800, Shawn Guo wrote:
+> > On Mon, Jul 04, 2011 at 09:33:20AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > On Mon, Jul 04, 2011 at 10:19:25AM +0800, Shawn Guo wrote:
+> > > > > > +static struct platform_device_id imx_uart_devtype[] =3D {
+> > > > > > +	{
+> > > > > > +		.name =3D "imx1-uart",
+> > > > > > +		.driver_data =3D IMX1_UART,
+> > > > > > +	}, {
+> > > > > > +		.name =3D "imx-uart",
+> > > > > > +		.driver_data =3D IMX2_UART,
+> > > It feels strange to introduce IMX2 today meaning
+> > > i.MX{21,25,27,31,35,50,51,53}. I didn't check the changes in deta=
+il, but
+> > > if the only relevant change is that the UTS register is at a diff=
+erent
+> >=20
+> > No, it's not the only relevant change.  The patch also changes a co=
+uple of
+> > 'if (!cpu_is_imx1())' to 'if (IS_IMX2_UART())'.
+> >=20
+> > The 'IMX2' in 'IMX2_UART' does not necessarily mean i.MX{21,25,27,
+> > 31,35,50,51,53}.  It actually means i.MX{21,25,27,31,35,50,51,53} a=
+ll
+> > have the same UART block which was firstly introduced on IMX2.
+> This is ugly. IMHO something like imx_uart_v2 would be much better.
 
-static struct platform_device_id mxc_gpio_devtype[] = {
-        {
-                .name = "imx1-gpio",
-                .driver_data = IMX1_GPIO,
-        }, {
-                .name = "imx21-gpio",
-                .driver_data = IMX2_GPIO,
-        }, {
-                .name = "imx25-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                .name = "imx27-gpio",
-                .driver_data = IMX2_GPIO,
-        }, {
-                .name = "imx-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                /* sentinel */
-        }
-};
+I will be very careful to define version number for IP block while
+hardware people do not.  When some day they do, we will probably have
+the version number we defined today conflicting with the one they
+will define.
 
--- 
+> For a driver that supports all i.MX generations
+>=20
+> 	if (IS_IMX2_UART())
+>=20
+> is simply misleading. Even if you had documented at the definition
+> of imx_uart_type (and/or IS_IMX2_UART) that IMX2_UART means everythin=
+g
+> currently known but MX1, just looking at the if condition yields wron=
+g
+> expectations.
+>=20
+To address your concern, I will rename IMX2_UART to IMX_UART.
+
+--=20
 Regards,
 Shawn
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
