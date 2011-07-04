@@ -1,117 +1,135 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Mon, 4 Jul 2011 10:55:55 +0800
-Message-ID: <CAGsJ_4yHrYRQKO7tMeJhjj_aEhV69xnJSZzuHhq8hnBrmnG+dg@mail.gmail.com>
-References: <1309231954-23260-1-git-send-email-bs14@csr.com>
-	<201106301236.25822.arnd@arndb.de>
-	<BANLkTikoMu3ccUxj5KRmKzdReQcBqK4Y9Q@mail.gmail.com>
-	<201107011819.43316.arnd@arndb.de>
+From: Jonas Bonn <jonas@southpole.se>
+Subject: Re: [PATCH v2 02/19] OpenRISC: Device tree
+Date: Mon, 04 Jul 2011 06:58:28 +0200
+Message-ID: <1309755508.16393.18.camel@localhost>
+References: <1309641352-18714-1-git-send-email-jonas@southpole.se>
+	 <1309641352-18714-3-git-send-email-jonas@southpole.se>
+	 <CACxGe6tFX=EQjaL-4EjSXquY5eh+bca29=d=cE5-YAVCUVRCvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201107011819.43316.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tFX=EQjaL-4EjSXquY5eh+bca29=d=cE5-YAVCUVRCvA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS83LzIgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gRnJpZGF5IDAxIEp1
-bHkgMjAxMSwgQmFycnkgU29uZyB3cm90ZToKPj4gSXQgbG9va3MgbGlrZSB3ZSBjYW4gbmV3IGEg
-Y29tbW9uIGZ1bmN0aW9uIG5hbWVkIGFzIG9mX2lvX2Vhcmx5bWFwKCkKPj4gb3Igc29tZXRoaW5n
-IGluIGRyaXZlcnMvb2YvYWRkcmVzcy5jLiBvZl9pb21hcCgpIGRvZXMgaW9yZW1hcCwKPj4gb2Zf
-aW9fZWFybHltYXAoKSBkb2VzIGVhcmx5IHN0YXRpYyBtYXBwaW5nPwo+PiBUaGVuIGFsbCBTb0Nz
-IGNhbiBjYWxsIHRoaXMgZnVuY3Rpb24gdG8gZG8gZWFybHkgc3RhdGljIG1hcHBpbmcuIGlmCj4+
-IHNvLCBzb21lIGxpbmVzIGNhbiBiZSBkZWxldGVkIGluIHNpcmZzb2Nfb2ZfY2xrX2luaXQoKS4g
-SG93IGRvIHlvdQo+PiB0aGluayBhYm91dCBuZXdpbmcgdGhlIGZ1bmN0aW9uIGluIGRyaXZlcnMv
-b2YvYWRkcmVzcy5jPwo+Cj4gSSB0aGluayB0aGF0J3MgYSBnb29kIGlkZWEsIGJ1dCB0aGUgQVJN
-IHNwZWNpZmljIGltcGxlbWVudGF0aW9uIGNhbm5vdAo+IGJlIGluIGNvbW1vbiBjb2RlLiBPdGhl
-ciBhcmNoaXRlY3R1cmVzIGhhdmUgc3R1ZmYgc2ltaWxhciB0byBpb3RhYmxlX2luaXQKPiBpbiBh
-c20vZml4bWFwLmguIElmIHdlIGRlY2lkZSBvbiBhIGZ1bmN0aW9uIHByb3RvdHlwZSBmb3IgdGhp
-cywgdGhlCj4gaW1wbGVtZW50YXRpb24gY2FuIGJlIGFyY2gvKi8uCj4KPiBIb3cgYWJvdXQgdGhp
-czoKPgo+IGV4dGVybiB2b2lkIG9mX3NldF9maXhtYXAoc3RydWN0IGRldmljZV9ub2RlICpucCwg
-aW50IGluZGV4LAo+IMKgIMKgIMKgIMKgdW5zaWduZWQgbG9uZyBvZl9maXhtYXBfb2Zmc2V0LCBw
-Z3Byb3RfdCBmbGFncyk7Cj4KPj4gRm9yIERFQlVHX0xMIHVhcnQsIGkgaGF2ZSBtb3ZlZCB0aGUg
-c3RhdGljIG1hcHBpbmcgdG8gYSBuZXcgZmlsZSBuYW1lZAo+PiBsbHVhcnQuYyB0b286Cj4+ICsj
-aW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+ICsjaW5jbHVkZSA8YXNtL3BhZ2UuaD4KPj4gKyNp
-bmNsdWRlIDxhc20vbWFjaC9tYXAuaD4KPj4gKyNpbmNsdWRlIDxtYWNoL21hcC5oPgo+PiArI2lu
-Y2x1ZGUgPG1hY2gvdWFydC5oPgo+PiArCj4+ICt2b2lkIF9faW5pdCBzaXJmc29jX21hcF9sbHVh
-cnQodm9pZCkKPj4gK3sKPj4gKyDCoCDCoCDCoCBzdHJ1Y3QgbWFwX2Rlc2Mgc2lyZnNvY19sbHVh
-cnRfbWFwID0gewo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC52aXJ0dWFsIMKgIMKgIMKgIMKg
-PSBTSVJGU09DX1VBUlQxX1ZBX0JBU0UsCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgLnBmbiDC
-oCDCoCDCoCDCoCDCoCDCoD0gX19waHlzX3RvX3BmbihTSVJGU09DX1VBUlQxX1BBX0JBU0UpLAo+
-PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC5sZW5ndGggwqAgwqAgwqAgwqAgPSBTSVJGU09DX1VB
-UlQxX1NJWkUsCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgLnR5cGUgwqAgwqAgwqAgwqAgwqAg
-PSBNVF9ERVZJQ0UsCj4+ICsgwqAgwqAgwqAgfTsKPj4gKwo+PiArIMKgIMKgIMKgIGlvdGFibGVf
-aW5pdCgmc2lyZnNvY19sbHVhcnRfbWFwLCAxKTsKPj4gK30KPj4gKwo+Pgo+PiBvbmx5IHdoZW4g
-REVCVUdfTEwgaXMgc2VsZWN0ZWQsIHRoaXMgZmlsZSB3aWxsIGJlIGNvbXBpbGVkLiBPdGhlcndp
-c2UsCj4+IGFuIGVtcHR5IHNpcmZzb2NfbWFwX2xsdWFydCBpcyB1c2VkOgo+Cj4gT2ssIHNvdW5k
-cyBnb29kLgo+Cj4+ICsvKiBUT0RPOgo+PiArICogYWRkIEFQSXMgdG8gY29udHJvbCByZXNldCBv
-ZiBldmVyeSBtb2R1bGUKPj4gKyAqLwo+Cj4gSG1tLCBob3cgYWJvdXQgdGhpczogWW91IGVudW1l
-cmF0ZSBldmVyeSBiaXQgaW4gdGhlIHJlc2V0IHJlZ2lzdGVycywgYW5kCj4gdGhlbiBhZGQgYSBk
-ZXZpY2UgdHJlZSBwcm9wZXJ0eSB0byB0aGUgZGV2aWNlcyB3aGVyZSB0aGlzIGlzIG5lZWRlZCBj
-b250YWluaW5nCj4gdGhlIG51bWJlci4gVGhlbiB5b3UganVzdCBuZWVkIGEgc2ltcGxlIGludGVy
-ZmFjZSBsaWtlCj4KPiB2b2lkIHNpcmZzb2NfcmVzZXRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRl
-dikKPiB7Cj4gwqAgwqAgwqAgwqBpbnQgbGVuLCBpOwo+IMKgIMKgIMKgIMKgdW5zaWduZWQgaW50
-ICpyZXNldF9iaXRzID0gb2ZfZ2V0X3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgInJlc2V0LWJpdCIs
-ICZsZW4pOwo+Cj4gwqAgwqAgwqAgwqBmb3IgKGkgPSAwOyBpPGxlbi80OyBpKyspCj4gwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqBzaXJmc29jX3Jlc2V0X2xpbmUocmVzZXRfYml0c1tpXSk7Cj4gfQoK
-R3JlYXQgaWRlYS4gaW4gZmFjdCB0aGVyZSBpcyBvbmx5IG9uZSByZXNldCBiaXQgZm9yIGV2ZXJ5
-IGRldmljZS4gU28KbWF5YmUgdGhlIHJzdGMuYyBjYW4gYmU6Ci8qCiAqIHJlc2V0IGNvbnRyb2xs
-ZXIgZm9yIENTUiBTaVJGcHJpbWFJSQogKgogKiBDb3B5cmlnaHQgKGMpIDIwMTEgQ2FtYnJpZGdl
-IFNpbGljb24gUmFkaW8gTGltaXRlZCwgYSBDU1IgcGxjIGdyb3VwIGNvbXBhbnkuCiAqCiAqIExp
-Y2Vuc2VkIHVuZGVyIEdQTHYyIG9yIGxhdGVyLgogKi8KCiNpbmNsdWRlIDxsaW51eC9rZXJuZWwu
-aD4KI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+CiNpbmNsdWRlIDxsaW51eC9pby5oPgojaW5jbHVk
-ZSA8bGludXgvZGVsYXkuaD4KI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgojaW5jbHVkZSA8bGlu
-dXgvb2YuaD4KI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KCnZvaWQgX19pb21lbSAqc2ly
-ZnNvY19yc3RjX2Jhc2U7CnN0YXRpYyBERUZJTkVfTVVURVgocnN0Y19sb2NrKTsKCnN0YXRpYyBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJzdGNfaWRzW10gID0gewoJeyAuY29tcGF0aWJsZSA9ICJzaXJm
-LHJzdGMiIH0sCn07CgpzdGF0aWMgaW50IF9faW5pdCBzaXJmc29jX29mX3JzdGNfaW5pdCh2b2lk
-KQp7CglzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOwoKCW5wID0gb2ZfZmluZF9tYXRjaGluZ19ub2Rl
-KE5VTEwsIHJzdGNfaWRzKTsKCWlmICghbnApCgkJcGFuaWMoInVuYWJsZSB0byBmaW5kIGNvbXBh
-dGlibGUgcnN0YyBub2RlIGluIGR0YlxuIik7CgoJc2lyZnNvY19yc3RjX2Jhc2UgPSBvZl9pb21h
-cChucCwgMCk7CglpZiAoIXNpcmZzb2NfcnN0Y19iYXNlKQoJCXBhbmljKCJ1bmFibGUgdG8gbWFw
-IHJzdGMgY3B1IHJlZ2lzdGVyc1xuIik7CgoJb2Zfbm9kZV9wdXQobnApOwoKCXJldHVybiAwOwp9
-CmVhcmx5X2luaXRjYWxsKHNpcmZzb2Nfb2ZfcnN0Y19pbml0KTsKCmludCBzaXJmc29jX3Jlc2V0
-X2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpCnsKCWNvbnN0IHVuc2lnbmVkIGludCAqcHJvcCA9
-IG9mX2dldF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJyZXNldC1iaXQiLCBOVUxMKTsKCXVuc2ln
-bmVkIGludCByZXNldF9iaXQ7CgoJaWYgKCFwcm9wKQoJCXJldHVybiAtRU5PREVWOwoKCXJlc2V0
-X2JpdCA9IGJlMzJfdG9fY3B1cChwcm9wKTsKCgltdXRleF9sb2NrKCZyc3RjX2xvY2spOwoKCS8q
-CgkgKiBXcml0aW5nIDEgdG8gdGhpcyBiaXQgcmVzZXRzIGNvcnJlc3BvbmRpbmcgYmxvY2suCgkg
-KiBXcml0aW5nIDAgdG8gdGhpcyBiaXQgZGUtYXNzZXJ0cyByZXNldCBzaWduYWwgb2YKCSAqIHRo
-ZSBjb3JyZXNwb25kaW5nIGJsb2NrLgoJICovCgl3cml0ZWwoc2lyZnNvY19yc3RjX2Jhc2UgKyAo
-cmVzZXRfYml0IC8gMzIpICogNCwKCQlyZWFkbChzaXJmc29jX3JzdGNfYmFzZSArIChyZXNldF9i
-aXQgLyAzMikgKiA0KSB8IHJlc2V0X2JpdCk7Cgltc2xlZXAoMTApOwoJd3JpdGVsKHNpcmZzb2Nf
-cnN0Y19iYXNlICsgKHJlc2V0X2JpdCAvIDMyKSAqIDQsCgkJcmVhZGwoc2lyZnNvY19yc3RjX2Jh
-c2UgKyAocmVzZXRfYml0IC8gMzIpICogNCkgJiB+cmVzZXRfYml0KTsKCgltdXRleF91bmxvY2so
-JnJzdGNfbG9jayk7CgoJcmV0dXJuIDA7Cn0KPgo+Cj4+ICsjaW5jbHVkZSA8bGludXgvaW5pdC5o
-Pgo+PiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+PiArI2luY2x1ZGUgPGFzbS9tYWNoLXR5
-cGVzLmg+Cj4+ICsjaW5jbHVkZSA8YXNtL21hY2gvYXJjaC5oPgo+PiArI2luY2x1ZGUgPGxpbnV4
-L29mLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPj4gKyNpbmNsdWRlICJj
-b21tb24uaCIKPj4gKwo+PiArc3RhdGljIHN0cnVjdCBvZl9kZXZpY2VfaWQgc2lyZnNvY19vZl9i
-dXNfaWRzW10gX19pbml0ZGF0YSA9IHsKPj4gKyDCoCDCoCDCoCB7IC5jb21wYXRpYmxlID0gInNp
-bXBsZS1idXMiLCB9LAo+PiArIMKgIMKgIMKgIHt9LAo+PiArfTsKPj4gKwo+PiArdm9pZCBfX2lu
-aXQgc2lyZnNvY19tYWNoX2luaXQodm9pZCkKPj4gK3sKPj4gKyDCoCDCoCDCoCBvZl9wbGF0Zm9y
-bV9idXNfcHJvYmUoTlVMTCwgc2lyZnNvY19vZl9idXNfaWRzLCBOVUxMKTsKPj4gK30KPj4gKwo+
-PiArc3RhdGljIGNvbnN0IGNoYXIgKnByaW1hMmNiX2R0X21hdGNoW10gX19pbml0ZGF0YSA9IHsK
-Pj4gKyDCoCDCoCDCoCAic2lyZixwcmltYTItY2IiLAo+PiArIMKgIMKgIMKgIE5VTEwKPj4gK307
-Cj4+ICsKPj4gK01BQ0hJTkVfU1RBUlQoUFJJTUEyX0VWQiwgInByaW1hMmNiIikKPj4gKyDCoCDC
-oCDCoCAuYm9vdF9wYXJhbXMgwqAgwqA9IDB4MDAwMDAxMDAsCj4+ICsgwqAgwqAgwqAgLmluaXRf
-ZWFybHkgwqAgwqAgPSBzaXJmc29jX29mX2Nsa19pbml0LAo+PiArIMKgIMKgIMKgIC5tYXBfaW8g
-wqAgwqAgwqAgwqAgPSBzaXJmc29jX21hcF9sbHVhcnQsCj4+ICsgwqAgwqAgwqAgLmluaXRfaXJx
-IMKgIMKgIMKgID0gc2lyZnNvY19vZl9pcnFfaW5pdCwKPj4gKyDCoCDCoCDCoCAudGltZXIgwqAg
-wqAgwqAgwqAgwqA9ICZzaXJmc29jX3RpbWVyLAo+PiArIMKgIMKgIMKgIC5pbml0X21hY2hpbmUg
-wqAgPSBzaXJmc29jX21hY2hfaW5pdCwKPj4gKyDCoCDCoCDCoCAuZHRfY29tcGF0IMKgIMKgIMKg
-PSBwcmltYTJjYl9kdF9tYXRjaCwKPj4gK01BQ0hJTkVfRU5ECj4KPiBWZXJ5IG5pY2UhCj4KPiDC
-oCDCoCDCoCDCoEFybmQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NA
-bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNl
-dHJlZS1kaXNjdXNzCg==
+
+On Sun, 2011-07-03 at 14:51 -0600, Grant Likely wrote:
+> On Sat, Jul 2, 2011 at 3:15 PM, Jonas Bonn <jonas@southpole.se> wrote:
+> Does it really make sense to have an SoC node for this board?  I
+> assume this is for a soft CPU system on a Diligent FPGA board.  It is
+> best if the device tree structure matches the actual bus layout of the
+> chip and/or FPGA design.  If the devices are directly on the CPU bus,
+> then it is better to do without an soc node entirely and just put
+> everything at the root.
+
+Not sure I quite understand the distinction here.  Yes, it's a soft CPU,
+but conceptually it has an internal bus (Wishbone) comparable to the
+Avalon bus that the peripherals sit on.  I'd say it's an SoC; but I need
+to ask: what constitutes a valid use of the "soc" node?
+
+> > diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+> > index 49342e9..6ce6583 100644
+> > --- a/arch/openrisc/kernel/setup.c
+> > +++ b/arch/openrisc/kernel/setup.c
+> > @@ -173,8 +173,7 @@ void __init setup_cpuinfo(void)
+> >        unsigned long iccfgr,dccfgr;
+> >        unsigned long cache_set_size, cache_ways;;
+> >
+> > -       cpu = (struct device_node *) of_find_compatible_node(NULL,
+> > -                                       NULL, "opencores,openrisc-1200");
+> > +       cpu = of_find_compatible_node(NULL, NULL, "opencores,openrisc-1200");
+> 
+> This looks odd.  Is it a stale hunk from a previous patch version?
+> 
+
+Hmmm... no, it's a hunk that should have been in patch 01/19 of the
+series.  That said, there's a bit of devicetree code in that patch too.
+Can I just say, "please have a look there, too", or do I need to pull
+those bits out into the devicetree patch?
+
+I've pasted in just the relevant parts from patch 01/19 below for ease
+of review.
+
+/Jonas
+
+>From arch/openrisc/kernel/setup.c:
+
++static inline unsigned int fcpu(struct device_node *cpu, char *n)
++{
++        const int *val;
++        return (val = of_get_property(cpu, n, NULL)) ? *val : 0;
++}
++
++void __init setup_cpuinfo(void)
++{
++       struct device_node *cpu = NULL;
++       unsigned long iccfgr,dccfgr;
++       unsigned long cache_set_size, cache_ways;;
++
++       cpu = (struct device_node *) of_find_compatible_node(NULL,
++                                       NULL,
+"opencores,openrisc-1200");
++       if (!cpu) {
++               panic("No compatible CPU found in device tree...\n");
++       }
++
++       iccfgr = mfspr(SPR_ICCFGR);
++       cache_ways = 1 << (iccfgr & SPR_ICCFGR_NCW);
++       cache_set_size = 1 << ((iccfgr & SPR_ICCFGR_NCS) >> 3);
++       cpuinfo.icache_block_size = 16 << ((iccfgr & SPR_ICCFGR_CBS) >>
+7);
++       cpuinfo.icache_size = cache_set_size * cache_ways *
+cpuinfo.icache_block_size;
++
++       dccfgr = mfspr(SPR_DCCFGR);
++       cache_ways = 1 << (dccfgr & SPR_DCCFGR_NCW);
++       cache_set_size = 1 << ((dccfgr & SPR_DCCFGR_NCS) >> 3);
++       cpuinfo.dcache_block_size = 16 << ((dccfgr & SPR_DCCFGR_CBS) >>
+7);
++       cpuinfo.dcache_size = cache_set_size * cache_ways *
+cpuinfo.dcache_block_size;
++
++       cpuinfo.clock_frequency =  fcpu(cpu, "clock-frequency");
++
++       of_node_put(cpu);
++
++       print_cpuinfo();
++}
++
++/**
++ * or32_early_setup
++ *
++ * Handles the pointer to the device tree that this kernel is to use
++ * for establishing the available platform devices.
++ *
++ * For now, this is limited to using the built-in device tree.  In the
+future,
++ * it is intended that this function will take a pointer to the device
+tree
++ * that is potentially built-in, but potentially also passed in by the
++ * bootloader, or discovered by some equally clever means...
++ */
++
++void __init or32_early_setup(void) {
++
++       early_init_devtree((void *) __dtb_start);
++
++       printk(KERN_INFO "Compiled-in FDT at 0x%08x\n",
++              (unsigned int) __dtb_start);
++}
++
++const struct of_device_id openrisc_bus_ids[] = {
++        { .type = "soc", },
++        { .compatible = "soc", },
++        {},
++};
++
++static int __init openrisc_device_probe(void)
++{
++        of_platform_bus_probe(NULL, openrisc_bus_ids, NULL);
++        return 0;
++}
++device_initcall(openrisc_device_probe);
