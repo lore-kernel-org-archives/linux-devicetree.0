@@ -1,109 +1,91 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio/mxc: get rid of the uses of cpu_is_mx()
-Date: Mon, 4 Jul 2011 17:28:01 +0800
-Message-ID: <20110704092800.GG10245@S2100-06.ap.freescale.net>
-References: <1309681017-22970-1-git-send-email-shawn.guo@linaro.org>
-	<1309681017-22970-2-git-send-email-shawn.guo@linaro.org>
-	<20110704064603.GW6069@pengutronix.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 1/2] serial/imx: get rid of the uses of cpu_is_mx1()
+Date: Mon, 4 Jul 2011 11:28:05 +0200
+Message-ID: <20110704092805.GH4338@pengutronix.de>
+References: <1309679760-22796-1-git-send-email-shawn.guo@linaro.org>
+ <1309679760-22796-2-git-send-email-shawn.guo@linaro.org>
+ <20110703211007.GB13742@ponder.secretlab.ca>
+ <20110704021923.GA10245@S2100-06.ap.freescale.net>
+ <20110704073320.GB4338@pengutronix.de>
+ <20110704084324.GE10245@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110704064603.GW6069-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20110704084324.GE10245@S2100-06.ap.freescale.net>
+Sender: linux-serial-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-serial@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 04, 2011 at 08:46:03AM +0200, Sascha Hauer wrote:
-> On Sun, Jul 03, 2011 at 04:16:56PM +0800, Shawn Guo wrote:
-> > The patch removes all the uses of cpu_is_mx().  Instead, it utilizes
-> > platform_device_id to distinguish the gpio differences among SoCs.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  arch/arm/mach-imx/mm-imx1.c                   |    8 +-
-> >  arch/arm/mach-imx/mm-imx21.c                  |   12 +-
-> >  arch/arm/mach-imx/mm-imx25.c                  |    8 +-
-> >  arch/arm/mach-imx/mm-imx27.c                  |   12 +-
-> >  arch/arm/mach-imx/mm-imx31.c                  |    6 +-
-> >  arch/arm/mach-imx/mm-imx35.c                  |    6 +-
-> >  arch/arm/mach-mx5/mm-mx50.c                   |   12 +-
-> >  arch/arm/mach-mx5/mm.c                        |   22 ++--
-> >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c |    4 +-
-> >  arch/arm/plat-mxc/include/mach/common.h       |    2 +-
-> >  drivers/gpio/gpio-mxc.c                       |  123 +++++++++++++++++++++----
-> >  11 files changed, 151 insertions(+), 64 deletions(-)
-> 
-> 
-> Summarizing the renames up:
-> 
-> i.MX1  -> imx1-gpio
-> i.MX21 -> imx2-gpio
-> i.MX25 -> imx-gpio
-> i.MX27 -> imx2-gpio
-> i.MX31 -> imx-gpio
-> i.MX35 -> imx-gpio
-> i.MX50 -> imx-gpio
-> i.MX51 -> imx-gpio
-> i.MX53 -> imx-gpio
-> 
-> This is not consitent. Please either use the full SoC name for all
-> device ids or use something like imx-gpio-v1, v2...
-> It's not good that the i.MX25 is not a imx2 and that the 'modern'
-> i.MXs only have imx-gpio. We all know that your hardware designers
-> will be creative enough to change the register layout again in the
-> future.
-> 
-Ok, here it is.  It's avoid confusion in machine code, but every
-time we add a new soc we need to change touch this table, even if
-the new soc has a total compatible gpio to IMX_GPIO.  I'm fine with
-either way.
+Hello Shawn,
 
-static struct platform_device_id mxc_gpio_devtype[] = {
-        {
-                .name = "imx1-gpio",
-                .driver_data = IMX1_GPIO,
-        }, {
-                .name = "imx21-gpio",
-                .driver_data = IMX2_GPIO,
-        }, {
-                .name = "imx25-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                .name = "imx27-gpio",
-                .driver_data = IMX2_GPIO,
-        }, {
-                .name = "imx31-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                .name = "imx35-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                .name = "imx50-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                .name = "imx51-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                .name = "imx53-gpio",
-                .driver_data = IMX_GPIO,
-        }, {
-                /* sentinel */
-        }
-};
+On Mon, Jul 04, 2011 at 04:43:25PM +0800, Shawn Guo wrote:
+> On Mon, Jul 04, 2011 at 09:33:20AM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Jul 04, 2011 at 10:19:25AM +0800, Shawn Guo wrote:
+> > > > > +static struct platform_device_id imx_uart_devtype[] =3D {
+> > > > > +	{
+> > > > > +		.name =3D "imx1-uart",
+> > > > > +		.driver_data =3D IMX1_UART,
+> > > > > +	}, {
+> > > > > +		.name =3D "imx-uart",
+> > > > > +		.driver_data =3D IMX2_UART,
+> > It feels strange to introduce IMX2 today meaning
+> > i.MX{21,25,27,31,35,50,51,53}. I didn't check the changes in detail=
+, but
+> > if the only relevant change is that the UTS register is at a differ=
+ent
+>=20
+> No, it's not the only relevant change.  The patch also changes a coup=
+le of
+> 'if (!cpu_is_imx1())' to 'if (IS_IMX2_UART())'.
+>=20
+> The 'IMX2' in 'IMX2_UART' does not necessarily mean i.MX{21,25,27,
+> 31,35,50,51,53}.  It actually means i.MX{21,25,27,31,35,50,51,53} all
+> have the same UART block which was firstly introduced on IMX2.
+This is ugly. IMHO something like imx_uart_v2 would be much better.
+=46or a driver that supports all i.MX generations
 
--- 
-Regards,
-Shawn
+	if (IS_IMX2_UART())
+
+is simply misleading. Even if you had documented at the definition
+of imx_uart_type (and/or IS_IMX2_UART) that IMX2_UART means everything
+currently known but MX1, just looking at the if condition yields wrong
+expectations.
+
+	if (cpu_is_imx1())
+
+is much better (in this aspect). (At least until Freescale comes up wit=
+h
+a new SOC in the mx1 family that includes a completely new UART block
+:-)
+
+With
+
+	if (somehow_get_current_driver_data() & SOME_FLAG)
+		do_the(things, that, "are only needed with SOME_FLAG");
+
+you can have both, even local understandable code and no dependency on
+the cpu_is_... stuff.
+
+> It's actually a change respecting the existing code, which defines
+> MX2_ONEMS for all imx except imx1.
+IMHO that's a bad excuse. Take it the other way 'round: You can do
+better than the existing code (and even fix it on the go if you're
+motivated).
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
