@@ -1,41 +1,89 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: x86 FDT and bootloader
-Date: Mon, 4 Jul 2011 00:51:29 -0600
-Message-ID: <20110704065129.GN15152@ponder.secretlab.ca>
-References: <BANLkTi=481j5L7tc1nBdC5qQsYwTzSSGEg@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/2] serial/imx: add device tree probe support
+Date: Mon, 4 Jul 2011 08:58:20 +0200
+Message-ID: <20110704065820.GY6069@pengutronix.de>
+References: <1309679760-22796-1-git-send-email-shawn.guo@linaro.org>
+ <1309679760-22796-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <BANLkTi=481j5L7tc1nBdC5qQsYwTzSSGEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1309679760-22796-3-git-send-email-shawn.guo@linaro.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Jason Liu <jason.hui@linaro.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2011 at 01:59:51PM +0200, Christian Gmeiner wrote:
-> Hi list,
+On Sun, Jul 03, 2011 at 03:56:00PM +0800, Shawn Guo wrote:
+> It adds device tree probe support for imx tty/serial driver.
 > 
-> I am very new to device trees and have some questions. I am working on an
-> embedded x86 device, which has some extra chips connected to an i2c bus.
-> As it is not possible to probe for these devices - no ID register etc
-> - I am looking
-> into DT/FDT.
-> How is it possible to pass the FDT to the linux kernel via grub? How far is FDT
-> support for x86?
+> Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
+> Signed-off-by: Jason Liu <jason.hui@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  .../bindings/tty/serial/fsl-imx-uart.txt           |   19 +++++
+>  drivers/tty/serial/imx.c                           |   82 +++++++++++++++++---
+>  2 files changed, 91 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> new file mode 100644
+> index 0000000..a9c0406
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> @@ -0,0 +1,19 @@
+> +* Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,<soc>-uart"
+> +- reg : Address and length of the register set for the device
+> +- interrupts : Should contain uart interrupt
+> +
+> +Optional properties:
+> +- fsl,uart-has-rtscts : Indicate the uart has rts and cts
+> +- fsl,irda-mode : Indicate the uart supports irda mode
+> +
+> +Example:
+> +
+> +uart@73fbc000 {
+> +	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
+> +	reg = <0x73fbc000 0x4000>;
+> +	interrupts = <31>;
+> +	fsl,uart-has-rtscts;
+> +};
+> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> index 983f3bd..483c447 100644
+> --- a/drivers/tty/serial/imx.c
+> +++ b/drivers/tty/serial/imx.c
+> @@ -45,6 +45,8 @@
+>  #include <linux/delay.h>
+>  #include <linux/rational.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <asm/io.h>
+>  #include <asm/irq.h>
+> @@ -239,6 +241,12 @@ static struct platform_device_id imx_uart_devtype[] = {
+>  	}
+>  };
+>  
+> +static struct of_device_id imx_uart_dt_ids[] = {
+> +	{ .compatible = "fsl,imx1-uart", .data = &imx_uart_devdata[IMX1_UART], },
+> +	{ .compatible = "fsl,imx21-uart", .data = &imx_uart_devdata[IMX2_UART], },
+> +	{ /* sentinel */ },
+> +};
 
-I don't think any work has been done to pass DT using grub.  Right now
-(IIRC) the DT is passed via the x86 boot protocol
-(Documentation/x86/boot.txt), but I don't see the device tree bits in
-the current mainline version of that document.
+Isn't this table a bit too small? What about the other SoCs?
 
-g.
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
