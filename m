@@ -1,128 +1,117 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 2/2] serial/imx: add device tree probe support
-Date: Mon, 4 Jul 2011 10:36:47 +0800
-Message-ID: <20110704023646.GB10245@S2100-06.ap.freescale.net>
-References: <1309679760-22796-1-git-send-email-shawn.guo@linaro.org>
- <1309679760-22796-3-git-send-email-shawn.guo@linaro.org>
- <20110703211434.GC13742@ponder.secretlab.ca>
+From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
+Date: Mon, 4 Jul 2011 10:55:55 +0800
+Message-ID: <CAGsJ_4yHrYRQKO7tMeJhjj_aEhV69xnJSZzuHhq8hnBrmnG+dg@mail.gmail.com>
+References: <1309231954-23260-1-git-send-email-bs14@csr.com>
+	<201106301236.25822.arnd@arndb.de>
+	<BANLkTikoMu3ccUxj5KRmKzdReQcBqK4Y9Q@mail.gmail.com>
+	<201107011819.43316.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110703211434.GC13742@ponder.secretlab.ca>
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Jason Liu <jason.hui@linaro.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-serial@vger.kernel.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201107011819.43316.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 03, 2011 at 03:14:34PM -0600, Grant Likely wrote:
-> On Sun, Jul 03, 2011 at 03:56:00PM +0800, Shawn Guo wrote:
-> > It adds device tree probe support for imx tty/serial driver.
-> > 
-> > Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
-> > Signed-off-by: Jason Liu <jason.hui@linaro.org>
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> 
-> Minor comments below, but otherwise looks okay to me.  Feel free to
-> add the following when you respin with the first patch:
-> 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
-> 
-> I don't see any reason preventing this from being ready to be queued
-> up for v3.1
-> 
-> g.
-> 
-> > ---
-> >  .../bindings/tty/serial/fsl-imx-uart.txt           |   19 +++++
-> >  drivers/tty/serial/imx.c                           |   82 +++++++++++++++++---
-> >  2 files changed, 91 insertions(+), 10 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
-> > new file mode 100644
-> > index 0000000..a9c0406
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
-> > @@ -0,0 +1,19 @@
-> > +* Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
-> > +
-> > +Required properties:
-> > +- compatible : Should be "fsl,<soc>-uart"
-> > +- reg : Address and length of the register set for the device
-> > +- interrupts : Should contain uart interrupt
-> > +
-> > +Optional properties:
-> > +- fsl,uart-has-rtscts : Indicate the uart has rts and cts
-> > +- fsl,irda-mode : Indicate the uart supports irda mode
-> > +
-> > +Example:
-> > +
-> > +uart@73fbc000 {
-> > +	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-> > +	reg = <0x73fbc000 0x4000>;
-> > +	interrupts = <31>;
-> > +	fsl,uart-has-rtscts;
-> > +};
-> > diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> > index 983f3bd..483c447 100644
-> > --- a/drivers/tty/serial/imx.c
-> > +++ b/drivers/tty/serial/imx.c
-> > @@ -45,6 +45,8 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/rational.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  
-> >  #include <asm/io.h>
-> >  #include <asm/irq.h>
-> > @@ -239,6 +241,12 @@ static struct platform_device_id imx_uart_devtype[] = {
-> >  	}
-> >  };
-> >  
-> > +static struct of_device_id imx_uart_dt_ids[] = {
-> > +	{ .compatible = "fsl,imx1-uart", .data = &imx_uart_devdata[IMX1_UART], },
-> > +	{ .compatible = "fsl,imx21-uart", .data = &imx_uart_devdata[IMX2_UART], },
-> > +	{ /* sentinel */ },
-> 
-> Nit: drop the ',' from the last entry so that nobody inadvertently
-> adds another entry to the list.
-> 
-Ok, will make the change on other patches where the comment applies.
-
-> > +};
-> > +
-> >  /*
-> >   * Handle any change of modem status signal since we were last called.
-> >   */
-> > @@ -1261,6 +1269,58 @@ static int serial_imx_resume(struct platform_device *dev)
-> >  	return 0;
-> >  }
-> >  
-> > +#ifdef CONFIG_OF
-> > +static int serial_imx_probe_dt(struct imx_port *sport,
-> > +		struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	const struct of_device_id *of_id =
-> > +			of_match_device(imx_uart_dt_ids, &pdev->dev);
-> > +
-> > +	if (!np)
-> > +		return -ENODEV;
-> > +
-> > +	pdev->id = of_alias_get_id(np, "serial");
-> > +	if (pdev->id < 0)
-> > +		return -ENODEV;
-> 
-> If you're bailing here, it would be friendly to spit out a klog
-> message saying why the driver has bailed.
-> 
-Ok, will make the change on other patches where the comment applies.
-
-Regards,
-Shawn
-
+MjAxMS83LzIgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gRnJpZGF5IDAxIEp1
+bHkgMjAxMSwgQmFycnkgU29uZyB3cm90ZToKPj4gSXQgbG9va3MgbGlrZSB3ZSBjYW4gbmV3IGEg
+Y29tbW9uIGZ1bmN0aW9uIG5hbWVkIGFzIG9mX2lvX2Vhcmx5bWFwKCkKPj4gb3Igc29tZXRoaW5n
+IGluIGRyaXZlcnMvb2YvYWRkcmVzcy5jLiBvZl9pb21hcCgpIGRvZXMgaW9yZW1hcCwKPj4gb2Zf
+aW9fZWFybHltYXAoKSBkb2VzIGVhcmx5IHN0YXRpYyBtYXBwaW5nPwo+PiBUaGVuIGFsbCBTb0Nz
+IGNhbiBjYWxsIHRoaXMgZnVuY3Rpb24gdG8gZG8gZWFybHkgc3RhdGljIG1hcHBpbmcuIGlmCj4+
+IHNvLCBzb21lIGxpbmVzIGNhbiBiZSBkZWxldGVkIGluIHNpcmZzb2Nfb2ZfY2xrX2luaXQoKS4g
+SG93IGRvIHlvdQo+PiB0aGluayBhYm91dCBuZXdpbmcgdGhlIGZ1bmN0aW9uIGluIGRyaXZlcnMv
+b2YvYWRkcmVzcy5jPwo+Cj4gSSB0aGluayB0aGF0J3MgYSBnb29kIGlkZWEsIGJ1dCB0aGUgQVJN
+IHNwZWNpZmljIGltcGxlbWVudGF0aW9uIGNhbm5vdAo+IGJlIGluIGNvbW1vbiBjb2RlLiBPdGhl
+ciBhcmNoaXRlY3R1cmVzIGhhdmUgc3R1ZmYgc2ltaWxhciB0byBpb3RhYmxlX2luaXQKPiBpbiBh
+c20vZml4bWFwLmguIElmIHdlIGRlY2lkZSBvbiBhIGZ1bmN0aW9uIHByb3RvdHlwZSBmb3IgdGhp
+cywgdGhlCj4gaW1wbGVtZW50YXRpb24gY2FuIGJlIGFyY2gvKi8uCj4KPiBIb3cgYWJvdXQgdGhp
+czoKPgo+IGV4dGVybiB2b2lkIG9mX3NldF9maXhtYXAoc3RydWN0IGRldmljZV9ub2RlICpucCwg
+aW50IGluZGV4LAo+IMKgIMKgIMKgIMKgdW5zaWduZWQgbG9uZyBvZl9maXhtYXBfb2Zmc2V0LCBw
+Z3Byb3RfdCBmbGFncyk7Cj4KPj4gRm9yIERFQlVHX0xMIHVhcnQsIGkgaGF2ZSBtb3ZlZCB0aGUg
+c3RhdGljIG1hcHBpbmcgdG8gYSBuZXcgZmlsZSBuYW1lZAo+PiBsbHVhcnQuYyB0b286Cj4+ICsj
+aW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+ICsjaW5jbHVkZSA8YXNtL3BhZ2UuaD4KPj4gKyNp
+bmNsdWRlIDxhc20vbWFjaC9tYXAuaD4KPj4gKyNpbmNsdWRlIDxtYWNoL21hcC5oPgo+PiArI2lu
+Y2x1ZGUgPG1hY2gvdWFydC5oPgo+PiArCj4+ICt2b2lkIF9faW5pdCBzaXJmc29jX21hcF9sbHVh
+cnQodm9pZCkKPj4gK3sKPj4gKyDCoCDCoCDCoCBzdHJ1Y3QgbWFwX2Rlc2Mgc2lyZnNvY19sbHVh
+cnRfbWFwID0gewo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC52aXJ0dWFsIMKgIMKgIMKgIMKg
+PSBTSVJGU09DX1VBUlQxX1ZBX0JBU0UsCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgLnBmbiDC
+oCDCoCDCoCDCoCDCoCDCoD0gX19waHlzX3RvX3BmbihTSVJGU09DX1VBUlQxX1BBX0JBU0UpLAo+
+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC5sZW5ndGggwqAgwqAgwqAgwqAgPSBTSVJGU09DX1VB
+UlQxX1NJWkUsCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgLnR5cGUgwqAgwqAgwqAgwqAgwqAg
+PSBNVF9ERVZJQ0UsCj4+ICsgwqAgwqAgwqAgfTsKPj4gKwo+PiArIMKgIMKgIMKgIGlvdGFibGVf
+aW5pdCgmc2lyZnNvY19sbHVhcnRfbWFwLCAxKTsKPj4gK30KPj4gKwo+Pgo+PiBvbmx5IHdoZW4g
+REVCVUdfTEwgaXMgc2VsZWN0ZWQsIHRoaXMgZmlsZSB3aWxsIGJlIGNvbXBpbGVkLiBPdGhlcndp
+c2UsCj4+IGFuIGVtcHR5IHNpcmZzb2NfbWFwX2xsdWFydCBpcyB1c2VkOgo+Cj4gT2ssIHNvdW5k
+cyBnb29kLgo+Cj4+ICsvKiBUT0RPOgo+PiArICogYWRkIEFQSXMgdG8gY29udHJvbCByZXNldCBv
+ZiBldmVyeSBtb2R1bGUKPj4gKyAqLwo+Cj4gSG1tLCBob3cgYWJvdXQgdGhpczogWW91IGVudW1l
+cmF0ZSBldmVyeSBiaXQgaW4gdGhlIHJlc2V0IHJlZ2lzdGVycywgYW5kCj4gdGhlbiBhZGQgYSBk
+ZXZpY2UgdHJlZSBwcm9wZXJ0eSB0byB0aGUgZGV2aWNlcyB3aGVyZSB0aGlzIGlzIG5lZWRlZCBj
+b250YWluaW5nCj4gdGhlIG51bWJlci4gVGhlbiB5b3UganVzdCBuZWVkIGEgc2ltcGxlIGludGVy
+ZmFjZSBsaWtlCj4KPiB2b2lkIHNpcmZzb2NfcmVzZXRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRl
+dikKPiB7Cj4gwqAgwqAgwqAgwqBpbnQgbGVuLCBpOwo+IMKgIMKgIMKgIMKgdW5zaWduZWQgaW50
+ICpyZXNldF9iaXRzID0gb2ZfZ2V0X3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgInJlc2V0LWJpdCIs
+ICZsZW4pOwo+Cj4gwqAgwqAgwqAgwqBmb3IgKGkgPSAwOyBpPGxlbi80OyBpKyspCj4gwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqBzaXJmc29jX3Jlc2V0X2xpbmUocmVzZXRfYml0c1tpXSk7Cj4gfQoK
+R3JlYXQgaWRlYS4gaW4gZmFjdCB0aGVyZSBpcyBvbmx5IG9uZSByZXNldCBiaXQgZm9yIGV2ZXJ5
+IGRldmljZS4gU28KbWF5YmUgdGhlIHJzdGMuYyBjYW4gYmU6Ci8qCiAqIHJlc2V0IGNvbnRyb2xs
+ZXIgZm9yIENTUiBTaVJGcHJpbWFJSQogKgogKiBDb3B5cmlnaHQgKGMpIDIwMTEgQ2FtYnJpZGdl
+IFNpbGljb24gUmFkaW8gTGltaXRlZCwgYSBDU1IgcGxjIGdyb3VwIGNvbXBhbnkuCiAqCiAqIExp
+Y2Vuc2VkIHVuZGVyIEdQTHYyIG9yIGxhdGVyLgogKi8KCiNpbmNsdWRlIDxsaW51eC9rZXJuZWwu
+aD4KI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+CiNpbmNsdWRlIDxsaW51eC9pby5oPgojaW5jbHVk
+ZSA8bGludXgvZGVsYXkuaD4KI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgojaW5jbHVkZSA8bGlu
+dXgvb2YuaD4KI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KCnZvaWQgX19pb21lbSAqc2ly
+ZnNvY19yc3RjX2Jhc2U7CnN0YXRpYyBERUZJTkVfTVVURVgocnN0Y19sb2NrKTsKCnN0YXRpYyBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJzdGNfaWRzW10gID0gewoJeyAuY29tcGF0aWJsZSA9ICJzaXJm
+LHJzdGMiIH0sCn07CgpzdGF0aWMgaW50IF9faW5pdCBzaXJmc29jX29mX3JzdGNfaW5pdCh2b2lk
+KQp7CglzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOwoKCW5wID0gb2ZfZmluZF9tYXRjaGluZ19ub2Rl
+KE5VTEwsIHJzdGNfaWRzKTsKCWlmICghbnApCgkJcGFuaWMoInVuYWJsZSB0byBmaW5kIGNvbXBh
+dGlibGUgcnN0YyBub2RlIGluIGR0YlxuIik7CgoJc2lyZnNvY19yc3RjX2Jhc2UgPSBvZl9pb21h
+cChucCwgMCk7CglpZiAoIXNpcmZzb2NfcnN0Y19iYXNlKQoJCXBhbmljKCJ1bmFibGUgdG8gbWFw
+IHJzdGMgY3B1IHJlZ2lzdGVyc1xuIik7CgoJb2Zfbm9kZV9wdXQobnApOwoKCXJldHVybiAwOwp9
+CmVhcmx5X2luaXRjYWxsKHNpcmZzb2Nfb2ZfcnN0Y19pbml0KTsKCmludCBzaXJmc29jX3Jlc2V0
+X2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpCnsKCWNvbnN0IHVuc2lnbmVkIGludCAqcHJvcCA9
+IG9mX2dldF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJyZXNldC1iaXQiLCBOVUxMKTsKCXVuc2ln
+bmVkIGludCByZXNldF9iaXQ7CgoJaWYgKCFwcm9wKQoJCXJldHVybiAtRU5PREVWOwoKCXJlc2V0
+X2JpdCA9IGJlMzJfdG9fY3B1cChwcm9wKTsKCgltdXRleF9sb2NrKCZyc3RjX2xvY2spOwoKCS8q
+CgkgKiBXcml0aW5nIDEgdG8gdGhpcyBiaXQgcmVzZXRzIGNvcnJlc3BvbmRpbmcgYmxvY2suCgkg
+KiBXcml0aW5nIDAgdG8gdGhpcyBiaXQgZGUtYXNzZXJ0cyByZXNldCBzaWduYWwgb2YKCSAqIHRo
+ZSBjb3JyZXNwb25kaW5nIGJsb2NrLgoJICovCgl3cml0ZWwoc2lyZnNvY19yc3RjX2Jhc2UgKyAo
+cmVzZXRfYml0IC8gMzIpICogNCwKCQlyZWFkbChzaXJmc29jX3JzdGNfYmFzZSArIChyZXNldF9i
+aXQgLyAzMikgKiA0KSB8IHJlc2V0X2JpdCk7Cgltc2xlZXAoMTApOwoJd3JpdGVsKHNpcmZzb2Nf
+cnN0Y19iYXNlICsgKHJlc2V0X2JpdCAvIDMyKSAqIDQsCgkJcmVhZGwoc2lyZnNvY19yc3RjX2Jh
+c2UgKyAocmVzZXRfYml0IC8gMzIpICogNCkgJiB+cmVzZXRfYml0KTsKCgltdXRleF91bmxvY2so
+JnJzdGNfbG9jayk7CgoJcmV0dXJuIDA7Cn0KPgo+Cj4+ICsjaW5jbHVkZSA8bGludXgvaW5pdC5o
+Pgo+PiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+PiArI2luY2x1ZGUgPGFzbS9tYWNoLXR5
+cGVzLmg+Cj4+ICsjaW5jbHVkZSA8YXNtL21hY2gvYXJjaC5oPgo+PiArI2luY2x1ZGUgPGxpbnV4
+L29mLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPj4gKyNpbmNsdWRlICJj
+b21tb24uaCIKPj4gKwo+PiArc3RhdGljIHN0cnVjdCBvZl9kZXZpY2VfaWQgc2lyZnNvY19vZl9i
+dXNfaWRzW10gX19pbml0ZGF0YSA9IHsKPj4gKyDCoCDCoCDCoCB7IC5jb21wYXRpYmxlID0gInNp
+bXBsZS1idXMiLCB9LAo+PiArIMKgIMKgIMKgIHt9LAo+PiArfTsKPj4gKwo+PiArdm9pZCBfX2lu
+aXQgc2lyZnNvY19tYWNoX2luaXQodm9pZCkKPj4gK3sKPj4gKyDCoCDCoCDCoCBvZl9wbGF0Zm9y
+bV9idXNfcHJvYmUoTlVMTCwgc2lyZnNvY19vZl9idXNfaWRzLCBOVUxMKTsKPj4gK30KPj4gKwo+
+PiArc3RhdGljIGNvbnN0IGNoYXIgKnByaW1hMmNiX2R0X21hdGNoW10gX19pbml0ZGF0YSA9IHsK
+Pj4gKyDCoCDCoCDCoCAic2lyZixwcmltYTItY2IiLAo+PiArIMKgIMKgIMKgIE5VTEwKPj4gK307
+Cj4+ICsKPj4gK01BQ0hJTkVfU1RBUlQoUFJJTUEyX0VWQiwgInByaW1hMmNiIikKPj4gKyDCoCDC
+oCDCoCAuYm9vdF9wYXJhbXMgwqAgwqA9IDB4MDAwMDAxMDAsCj4+ICsgwqAgwqAgwqAgLmluaXRf
+ZWFybHkgwqAgwqAgPSBzaXJmc29jX29mX2Nsa19pbml0LAo+PiArIMKgIMKgIMKgIC5tYXBfaW8g
+wqAgwqAgwqAgwqAgPSBzaXJmc29jX21hcF9sbHVhcnQsCj4+ICsgwqAgwqAgwqAgLmluaXRfaXJx
+IMKgIMKgIMKgID0gc2lyZnNvY19vZl9pcnFfaW5pdCwKPj4gKyDCoCDCoCDCoCAudGltZXIgwqAg
+wqAgwqAgwqAgwqA9ICZzaXJmc29jX3RpbWVyLAo+PiArIMKgIMKgIMKgIC5pbml0X21hY2hpbmUg
+wqAgPSBzaXJmc29jX21hY2hfaW5pdCwKPj4gKyDCoCDCoCDCoCAuZHRfY29tcGF0IMKgIMKgIMKg
+PSBwcmltYTJjYl9kdF9tYXRjaCwKPj4gK01BQ0hJTkVfRU5ECj4KPiBWZXJ5IG5pY2UhCj4KPiDC
+oCDCoCDCoCDCoEFybmQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NA
+bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNl
+dHJlZS1kaXNjdXNzCg==
