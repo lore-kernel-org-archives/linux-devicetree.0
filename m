@@ -1,17 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio/mxc: get rid of the uses of cpu_is_mx()
-Date: Mon, 4 Jul 2011 10:59:44 -0600
-Message-ID: <20110704165944.GG28042@ponder.secretlab.ca>
-References: <1309681017-22970-1-git-send-email-shawn.guo@linaro.org>
-	<1309681017-22970-2-git-send-email-shawn.guo@linaro.org>
-	<20110704061028.GE15152@ponder.secretlab.ca>
-	<20110704165627.GA10594@S2100-06.ap.freescale.net>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] ARM: l2x0: Add OF based initialization
+Date: Mon,  4 Jul 2011 15:15:56 -0500
+Message-ID: <1309810556-6224-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110704165627.GA10594-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,535 +15,258 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 12:56:29AM +0800, Shawn Guo wrote:
-> On Mon, Jul 04, 2011 at 12:10:28AM -0600, Grant Likely wrote:
-> > On Sun, Jul 03, 2011 at 04:16:56PM +0800, Shawn Guo wrote:
-> > > The patch removes all the uses of cpu_is_mx().  Instead, it utilizes
-> > > platform_device_id to distinguish the gpio differences among SoCs.
-> > > 
-> > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > ---
-> > >  arch/arm/mach-imx/mm-imx1.c                   |    8 +-
-> > >  arch/arm/mach-imx/mm-imx21.c                  |   12 +-
-> > >  arch/arm/mach-imx/mm-imx25.c                  |    8 +-
-> > >  arch/arm/mach-imx/mm-imx27.c                  |   12 +-
-> > >  arch/arm/mach-imx/mm-imx31.c                  |    6 +-
-> > >  arch/arm/mach-imx/mm-imx35.c                  |    6 +-
-> > >  arch/arm/mach-mx5/mm-mx50.c                   |   12 +-
-> > >  arch/arm/mach-mx5/mm.c                        |   22 ++--
-> > >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c |    4 +-
-> > >  arch/arm/plat-mxc/include/mach/common.h       |    2 +-
-> > >  drivers/gpio/gpio-mxc.c                       |  123 +++++++++++++++++++++----
-> > >  11 files changed, 151 insertions(+), 64 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/mach-imx/mm-imx1.c b/arch/arm/mach-imx/mm-imx1.c
-> > > index f2a6566..2bded59 100644
-> > > --- a/arch/arm/mach-imx/mm-imx1.c
-> > > +++ b/arch/arm/mach-imx/mm-imx1.c
-> > > @@ -50,12 +50,12 @@ void __init mx1_init_irq(void)
-> > >  
-> > >  void __init imx1_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX1_GPIO1_BASE_ADDR, SZ_256,
-> > > +	mxc_register_gpio("imx1-gpio", 0, MX1_GPIO1_BASE_ADDR, SZ_256,
-> > >  						MX1_GPIO_INT_PORTA, 0);
-> > > -	mxc_register_gpio(1, MX1_GPIO2_BASE_ADDR, SZ_256,
-> > > +	mxc_register_gpio("imx1-gpio", 1, MX1_GPIO2_BASE_ADDR, SZ_256,
-> > >  						MX1_GPIO_INT_PORTB, 0);
-> > > -	mxc_register_gpio(2, MX1_GPIO3_BASE_ADDR, SZ_256,
-> > > +	mxc_register_gpio("imx1-gpio", 2, MX1_GPIO3_BASE_ADDR, SZ_256,
-> > >  						MX1_GPIO_INT_PORTC, 0);
-> > > -	mxc_register_gpio(3, MX1_GPIO4_BASE_ADDR, SZ_256,
-> > > +	mxc_register_gpio("imx1-gpio", 3, MX1_GPIO4_BASE_ADDR, SZ_256,
-> > >  						MX1_GPIO_INT_PORTD, 0);
-> > >  }
-> > > diff --git a/arch/arm/mach-imx/mm-imx21.c b/arch/arm/mach-imx/mm-imx21.c
-> > > index 4f32a8a..d02e20d 100644
-> > > --- a/arch/arm/mach-imx/mm-imx21.c
-> > > +++ b/arch/arm/mach-imx/mm-imx21.c
-> > > @@ -77,12 +77,12 @@ void __init mx21_init_irq(void)
-> > >  
-> > >  void __init imx21_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX21_GPIO1_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > -	mxc_register_gpio(1, MX21_GPIO2_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > -	mxc_register_gpio(2, MX21_GPIO3_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > -	mxc_register_gpio(3, MX21_GPIO4_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > -	mxc_register_gpio(4, MX21_GPIO5_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > -	mxc_register_gpio(5, MX21_GPIO6_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 0, MX21_GPIO1_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 1, MX21_GPIO2_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 2, MX21_GPIO3_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 3, MX21_GPIO4_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 4, MX21_GPIO5_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 5, MX21_GPIO6_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
-> > >  
-> > >  	imx_add_imx_dma();
-> > >  }
-> > > diff --git a/arch/arm/mach-imx/mm-imx25.c b/arch/arm/mach-imx/mm-imx25.c
-> > > index 1e0c956..bbe93a5 100644
-> > > --- a/arch/arm/mach-imx/mm-imx25.c
-> > > +++ b/arch/arm/mach-imx/mm-imx25.c
-> > > @@ -86,10 +86,10 @@ static struct sdma_platform_data imx25_sdma_pdata __initdata = {
-> > >  
-> > >  void __init imx25_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX25_GPIO1_BASE_ADDR, SZ_16K, MX25_INT_GPIO1, 0);
-> > > -	mxc_register_gpio(1, MX25_GPIO2_BASE_ADDR, SZ_16K, MX25_INT_GPIO2, 0);
-> > > -	mxc_register_gpio(2, MX25_GPIO3_BASE_ADDR, SZ_16K, MX25_INT_GPIO3, 0);
-> > > -	mxc_register_gpio(3, MX25_GPIO4_BASE_ADDR, SZ_16K, MX25_INT_GPIO4, 0);
-> > > +	mxc_register_gpio("imx-gpio", 0, MX25_GPIO1_BASE_ADDR, SZ_16K, MX25_INT_GPIO1, 0);
-> > > +	mxc_register_gpio("imx-gpio", 1, MX25_GPIO2_BASE_ADDR, SZ_16K, MX25_INT_GPIO2, 0);
-> > > +	mxc_register_gpio("imx-gpio", 2, MX25_GPIO3_BASE_ADDR, SZ_16K, MX25_INT_GPIO3, 0);
-> > > +	mxc_register_gpio("imx-gpio", 3, MX25_GPIO4_BASE_ADDR, SZ_16K, MX25_INT_GPIO4, 0);
-> > >  
-> > >  	imx_add_imx_sdma(MX25_SDMA_BASE_ADDR, MX25_INT_SDMA, &imx25_sdma_pdata);
-> > >  }
-> > > diff --git a/arch/arm/mach-imx/mm-imx27.c b/arch/arm/mach-imx/mm-imx27.c
-> > > index 944e02d..5a62969 100644
-> > > --- a/arch/arm/mach-imx/mm-imx27.c
-> > > +++ b/arch/arm/mach-imx/mm-imx27.c
-> > > @@ -77,12 +77,12 @@ void __init mx27_init_irq(void)
-> > >  
-> > >  void __init imx27_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX27_GPIO1_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > -	mxc_register_gpio(1, MX27_GPIO2_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > -	mxc_register_gpio(2, MX27_GPIO3_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > -	mxc_register_gpio(3, MX27_GPIO4_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > -	mxc_register_gpio(4, MX27_GPIO5_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > -	mxc_register_gpio(5, MX27_GPIO6_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 0, MX27_GPIO1_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 1, MX27_GPIO2_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 2, MX27_GPIO3_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 3, MX27_GPIO4_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 4, MX27_GPIO5_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > > +	mxc_register_gpio("imx2-gpio", 5, MX27_GPIO6_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
-> > >  
-> > >  	imx_add_imx_dma();
-> > >  }
-> > > diff --git a/arch/arm/mach-imx/mm-imx31.c b/arch/arm/mach-imx/mm-imx31.c
-> > > index a1ff96f..7017c4a 100644
-> > > --- a/arch/arm/mach-imx/mm-imx31.c
-> > > +++ b/arch/arm/mach-imx/mm-imx31.c
-> > > @@ -78,9 +78,9 @@ void __init imx31_soc_init(void)
-> > >  {
-> > >  	int to_version = mx31_revision() >> 4;
-> > >  
-> > > -	mxc_register_gpio(0, MX31_GPIO1_BASE_ADDR, SZ_16K, MX31_INT_GPIO1, 0);
-> > > -	mxc_register_gpio(1, MX31_GPIO2_BASE_ADDR, SZ_16K, MX31_INT_GPIO2, 0);
-> > > -	mxc_register_gpio(2, MX31_GPIO3_BASE_ADDR, SZ_16K, MX31_INT_GPIO3, 0);
-> > > +	mxc_register_gpio("imx-gpio", 0, MX31_GPIO1_BASE_ADDR, SZ_16K, MX31_INT_GPIO1, 0);
-> > > +	mxc_register_gpio("imx-gpio", 1, MX31_GPIO2_BASE_ADDR, SZ_16K, MX31_INT_GPIO2, 0);
-> > > +	mxc_register_gpio("imx-gpio", 2, MX31_GPIO3_BASE_ADDR, SZ_16K, MX31_INT_GPIO3, 0);
-> > >  
-> > >  	if (to_version == 1) {
-> > >  		strncpy(imx31_sdma_pdata.fw_name, "sdma-imx31-to1.bin",
-> > > diff --git a/arch/arm/mach-imx/mm-imx35.c b/arch/arm/mach-imx/mm-imx35.c
-> > > index da530ca..568a5c6 100644
-> > > --- a/arch/arm/mach-imx/mm-imx35.c
-> > > +++ b/arch/arm/mach-imx/mm-imx35.c
-> > > @@ -95,9 +95,9 @@ void __init imx35_soc_init(void)
-> > >  {
-> > >  	int to_version = mx35_revision() >> 4;
-> > >  
-> > > -	mxc_register_gpio(0, MX35_GPIO1_BASE_ADDR, SZ_16K, MX35_INT_GPIO1, 0);
-> > > -	mxc_register_gpio(1, MX35_GPIO2_BASE_ADDR, SZ_16K, MX35_INT_GPIO2, 0);
-> > > -	mxc_register_gpio(2, MX35_GPIO3_BASE_ADDR, SZ_16K, MX35_INT_GPIO3, 0);
-> > > +	mxc_register_gpio("imx-gpio", 0, MX35_GPIO1_BASE_ADDR, SZ_16K, MX35_INT_GPIO1, 0);
-> > > +	mxc_register_gpio("imx-gpio", 1, MX35_GPIO2_BASE_ADDR, SZ_16K, MX35_INT_GPIO2, 0);
-> > > +	mxc_register_gpio("imx-gpio", 2, MX35_GPIO3_BASE_ADDR, SZ_16K, MX35_INT_GPIO3, 0);
-> > >  
-> > >  	if (to_version == 1) {
-> > >  		strncpy(imx35_sdma_pdata.fw_name, "sdma-imx35-to1.bin",
-> > > diff --git a/arch/arm/mach-mx5/mm-mx50.c b/arch/arm/mach-mx5/mm-mx50.c
-> > > index 28c3f60..39e4a17 100644
-> > > --- a/arch/arm/mach-mx5/mm-mx50.c
-> > > +++ b/arch/arm/mach-mx5/mm-mx50.c
-> > > @@ -62,10 +62,10 @@ void __init mx50_init_irq(void)
-> > >  
-> > >  void __init imx50_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX50_GPIO1_BASE_ADDR, SZ_16K, MX50_INT_GPIO1_LOW, MX50_INT_GPIO1_HIGH);
-> > > -	mxc_register_gpio(1, MX50_GPIO2_BASE_ADDR, SZ_16K, MX50_INT_GPIO2_LOW, MX50_INT_GPIO2_HIGH);
-> > > -	mxc_register_gpio(2, MX50_GPIO3_BASE_ADDR, SZ_16K, MX50_INT_GPIO3_LOW, MX50_INT_GPIO3_HIGH);
-> > > -	mxc_register_gpio(3, MX50_GPIO4_BASE_ADDR, SZ_16K, MX50_INT_GPIO4_LOW, MX50_INT_GPIO4_HIGH);
-> > > -	mxc_register_gpio(4, MX50_GPIO5_BASE_ADDR, SZ_16K, MX50_INT_GPIO5_LOW, MX50_INT_GPIO5_HIGH);
-> > > -	mxc_register_gpio(5, MX50_GPIO6_BASE_ADDR, SZ_16K, MX50_INT_GPIO6_LOW, MX50_INT_GPIO6_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 0, MX50_GPIO1_BASE_ADDR, SZ_16K, MX50_INT_GPIO1_LOW, MX50_INT_GPIO1_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 1, MX50_GPIO2_BASE_ADDR, SZ_16K, MX50_INT_GPIO2_LOW, MX50_INT_GPIO2_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 2, MX50_GPIO3_BASE_ADDR, SZ_16K, MX50_INT_GPIO3_LOW, MX50_INT_GPIO3_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 3, MX50_GPIO4_BASE_ADDR, SZ_16K, MX50_INT_GPIO4_LOW, MX50_INT_GPIO4_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 4, MX50_GPIO5_BASE_ADDR, SZ_16K, MX50_INT_GPIO5_LOW, MX50_INT_GPIO5_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 5, MX50_GPIO6_BASE_ADDR, SZ_16K, MX50_INT_GPIO6_LOW, MX50_INT_GPIO6_HIGH);
-> > >  }
-> > > diff --git a/arch/arm/mach-mx5/mm.c b/arch/arm/mach-mx5/mm.c
-> > > index 1b7059f..1444140 100644
-> > > --- a/arch/arm/mach-mx5/mm.c
-> > > +++ b/arch/arm/mach-mx5/mm.c
-> > > @@ -142,23 +142,23 @@ static struct sdma_platform_data imx53_sdma_pdata __initdata = {
-> > >  
-> > >  void __init imx51_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX51_GPIO1_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO1_LOW, MX51_MXC_INT_GPIO1_HIGH);
-> > > -	mxc_register_gpio(1, MX51_GPIO2_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO2_LOW, MX51_MXC_INT_GPIO2_HIGH);
-> > > -	mxc_register_gpio(2, MX51_GPIO3_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO3_LOW, MX51_MXC_INT_GPIO3_HIGH);
-> > > -	mxc_register_gpio(3, MX51_GPIO4_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO4_LOW, MX51_MXC_INT_GPIO4_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 0, MX51_GPIO1_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO1_LOW, MX51_MXC_INT_GPIO1_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 1, MX51_GPIO2_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO2_LOW, MX51_MXC_INT_GPIO2_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 2, MX51_GPIO3_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO3_LOW, MX51_MXC_INT_GPIO3_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 3, MX51_GPIO4_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO4_LOW, MX51_MXC_INT_GPIO4_HIGH);
-> > >  
-> > >  	imx_add_imx_sdma(MX51_SDMA_BASE_ADDR, MX51_INT_SDMA, &imx51_sdma_pdata);
-> > >  }
-> > >  
-> > >  void __init imx53_soc_init(void)
-> > >  {
-> > > -	mxc_register_gpio(0, MX53_GPIO1_BASE_ADDR, SZ_16K, MX53_INT_GPIO1_LOW, MX53_INT_GPIO1_HIGH);
-> > > -	mxc_register_gpio(1, MX53_GPIO2_BASE_ADDR, SZ_16K, MX53_INT_GPIO2_LOW, MX53_INT_GPIO2_HIGH);
-> > > -	mxc_register_gpio(2, MX53_GPIO3_BASE_ADDR, SZ_16K, MX53_INT_GPIO3_LOW, MX53_INT_GPIO3_HIGH);
-> > > -	mxc_register_gpio(3, MX53_GPIO4_BASE_ADDR, SZ_16K, MX53_INT_GPIO4_LOW, MX53_INT_GPIO4_HIGH);
-> > > -	mxc_register_gpio(4, MX53_GPIO5_BASE_ADDR, SZ_16K, MX53_INT_GPIO5_LOW, MX53_INT_GPIO5_HIGH);
-> > > -	mxc_register_gpio(5, MX53_GPIO6_BASE_ADDR, SZ_16K, MX53_INT_GPIO6_LOW, MX53_INT_GPIO6_HIGH);
-> > > -	mxc_register_gpio(6, MX53_GPIO7_BASE_ADDR, SZ_16K, MX53_INT_GPIO7_LOW, MX53_INT_GPIO7_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 0, MX53_GPIO1_BASE_ADDR, SZ_16K, MX53_INT_GPIO1_LOW, MX53_INT_GPIO1_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 1, MX53_GPIO2_BASE_ADDR, SZ_16K, MX53_INT_GPIO2_LOW, MX53_INT_GPIO2_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 2, MX53_GPIO3_BASE_ADDR, SZ_16K, MX53_INT_GPIO3_LOW, MX53_INT_GPIO3_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 3, MX53_GPIO4_BASE_ADDR, SZ_16K, MX53_INT_GPIO4_LOW, MX53_INT_GPIO4_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 4, MX53_GPIO5_BASE_ADDR, SZ_16K, MX53_INT_GPIO5_LOW, MX53_INT_GPIO5_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 5, MX53_GPIO6_BASE_ADDR, SZ_16K, MX53_INT_GPIO6_LOW, MX53_INT_GPIO6_HIGH);
-> > > +	mxc_register_gpio("imx-gpio", 6, MX53_GPIO7_BASE_ADDR, SZ_16K, MX53_INT_GPIO7_LOW, MX53_INT_GPIO7_HIGH);
-> > >  
-> > >  	imx_add_imx_sdma(MX53_SDMA_BASE_ADDR, MX53_INT_SDMA, &imx53_sdma_pdata);
-> > >  }
-> > > diff --git a/arch/arm/plat-mxc/devices/platform-gpio-mxc.c b/arch/arm/plat-mxc/devices/platform-gpio-mxc.c
-> > > index cf1b7fd..a7919a2 100644
-> > > --- a/arch/arm/plat-mxc/devices/platform-gpio-mxc.c
-> > > +++ b/arch/arm/plat-mxc/devices/platform-gpio-mxc.c
-> > > @@ -8,7 +8,7 @@
-> > >   */
-> > >  #include <mach/devices-common.h>
-> > >  
-> > > -struct platform_device *__init mxc_register_gpio(int id,
-> > > +struct platform_device *__init mxc_register_gpio(char *name, int id,
-> > >  	resource_size_t iobase, resource_size_t iosize, int irq, int irq_high)
-> > >  {
-> > >  	struct resource res[] = {
-> > > @@ -28,5 +28,5 @@ struct platform_device *__init mxc_register_gpio(int id,
-> > >  	};
-> > >  
-> > >  	return platform_device_register_resndata(&mxc_aips_bus,
-> > > -			"gpio-mxc", id, res, ARRAY_SIZE(res), NULL, 0);
-> > > +			name, id, res, ARRAY_SIZE(res), NULL, 0);
-> > >  }
-> > > diff --git a/arch/arm/plat-mxc/include/mach/common.h b/arch/arm/plat-mxc/include/mach/common.h
-> > > index 91fa263..4e3d978 100644
-> > > --- a/arch/arm/plat-mxc/include/mach/common.h
-> > > +++ b/arch/arm/plat-mxc/include/mach/common.h
-> > > @@ -64,7 +64,7 @@ extern int mx51_clocks_init(unsigned long ckil, unsigned long osc,
-> > >  			unsigned long ckih1, unsigned long ckih2);
-> > >  extern int mx53_clocks_init(unsigned long ckil, unsigned long osc,
-> > >  			unsigned long ckih1, unsigned long ckih2);
-> > > -extern struct platform_device *mxc_register_gpio(int id,
-> > > +extern struct platform_device *mxc_register_gpio(char *name, int id,
-> > >  	resource_size_t iobase, resource_size_t iosize, int irq, int irq_high);
-> > >  extern int mxc_register_device(struct platform_device *pdev, void *data);
-> > >  extern void mxc_set_cpu_type(unsigned int type);
-> > > diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> > > index 2f6a81b..7ae71d6 100644
-> > > --- a/drivers/gpio/gpio-mxc.c
-> > > +++ b/drivers/gpio/gpio-mxc.c
-> > > @@ -27,9 +27,34 @@
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/slab.h>
-> > >  #include <linux/basic_mmio_gpio.h>
-> > > -#include <mach/hardware.h>
-> > >  #include <asm-generic/bug.h>
-> > >  
-> > > +enum mxc_gpio_type {
-> > > +	IMX1_GPIO,
-> > > +	IMX2_GPIO,
-> > > +	IMX_GPIO,
-> > > +};
-> > > +
-> > > +/* device type dependent stuff */
-> > > +struct mxc_gpio_hwdata {
-> > > +	unsigned dr_reg;
-> > > +	unsigned gdir_reg;
-> > > +	unsigned psr_reg;
-> > > +	unsigned icr1_reg;
-> > > +	unsigned icr2_reg;
-> > > +	unsigned imr_reg;
-> > > +	unsigned isr_reg;
-> > > +	unsigned low_level;
-> > > +	unsigned high_level;
-> > > +	unsigned rise_edge;
-> > > +	unsigned fall_edge;
-> > > +};
-> > > +
-> > > +struct mxc_gpio_data {
-> > > +	struct mxc_gpio_hwdata *hwdata;
-> > > +	enum mxc_gpio_type devtype;
-> > > +};
-> > > +
-> > >  struct mxc_gpio_port {
-> > >  	struct list_head node;
-> > >  	void __iomem *base;
-> > > @@ -38,6 +63,82 @@ struct mxc_gpio_port {
-> > >  	int virtual_irq_start;
-> > >  	struct bgpio_chip bgc;
-> > >  	u32 both_edges;
-> > > +	struct mxc_gpio_data *devdata;
-> > > +};
-> > > +
-> > > +#define IS_IMX2_GPIO()	(port->devdata->devtype == IMX2_GPIO)
-> > 
-> > 'tis better to program in C than CPP. :)  A static inline would go better
-> > here.
-> > 
-> > Also, when you change to using discrete mxc_gpio_hwdata
-> > instances instead of a single table, you can change this test to be:
-> > 
-> > static inline int is_imx2_gpio(port) {
-> > 	return port->devdata == &imx2_gpio_hwdata;
-> > }
-> > 
-> imx1 and imx2 shares the same hwdata, so we can not use the approach
-> to distinguish imx2 from imx1.
-> 
-> Anyway, I'm killing IS_IMX2_GPIO since it's only used once and does
-> not deserve a macro or inline function.
-> 
-> > > +
-> > > +#define GPIO_DR		(port->devdata->hwdata->dr_reg)
-> > > +#define GPIO_GDIR	(port->devdata->hwdata->gdir_reg)
-> > > +#define GPIO_PSR	(port->devdata->hwdata->psr_reg)
-> > > +#define GPIO_ICR1	(port->devdata->hwdata->icr1_reg)
-> > > +#define GPIO_ICR2	(port->devdata->hwdata->icr2_reg)
-> > > +#define GPIO_IMR	(port->devdata->hwdata->imr_reg)
-> > > +#define GPIO_ISR	(port->devdata->hwdata->isr_reg)
-> > > +
-> > > +#define GPIO_INT_LOW_LEV	(port->devdata->hwdata->low_level)
-> > > +#define GPIO_INT_HIGH_LEV	(port->devdata->hwdata->high_level)
-> > > +#define GPIO_INT_RISE_EDGE	(port->devdata->hwdata->rise_edge)
-> > > +#define GPIO_INT_FALL_EDGE	(port->devdata->hwdata->fall_edge)
-> > > +#define GPIO_INT_NONE		0x4
-> > 
-> > This ends up creating a lot more indirection in the driver which may
-> > have a measurable have a performance impact.  Plus, these new macros
-> > depend on local context that will break in unexpected ways if someone
-> > changes the 'port' name.
-> > 
-> > Unfortunately, to fix this property will require a lot more lines of
-> > code change because every GPIO_* reference will need to be fixed, but
-> > I'd rather see that than a set of ugly macros that just happen to be
-> > convenient in the short term.
-> > 
-> The comments remind me one fact that these stuff are actually soc
-> dependent than port, because we can never run on a soc that gets
-> UART1 as IMX1_GPIO while UART2 as IMX2_GPIO.  The fact is if we are
-> running on IMX1, all UART ports must be IMX1_GPIO, and if on IMX2,
-> all ports must be IMX2_GPIO.  Based on this observation, we can
-> define global static variables for hwdata and hwtype and get them
-> set up during probe for only one port, so that your above two concerns
-> can be address without touch every GPIO_* lines.  Here is the patch.
-> Please let me know what you think.
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Sure, if you want to do it that way.  I'm personally not fond of the
-approach, but I don't see anything dangerous with it other than it
-will require a refactoring of the driver if the assumption above ever
-proves to be untrue on a future device.  I won't nack the patch over
-it though.
+This adds probing for ARM L2x0 cache controllers via device tree. Support
+includes the L210, L220, and PL310 controllers. The binding allows setting
+up cache RAM latencies and filter addresses (PL310 only).
 
-g.
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+I've tested this version and fixed some issues from the one I sent to the
+CSR platform thread.
 
-> 
-> ---8<-----------
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 2f6a81b..19a173c 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -27,9 +27,29 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/basic_mmio_gpio.h>
-> -#include <mach/hardware.h>
->  #include <asm-generic/bug.h>
->  
-> +enum mxc_gpio_hwtype {
-> +	IMX1_GPIO,
-> +	IMX2_GPIO,
-> +	IMX_GPIO,
-> +};
-> +
-> +/* device type dependent stuff */
-> +struct mxc_gpio_hwdata {
-> +	unsigned dr_reg;
-> +	unsigned gdir_reg;
-> +	unsigned psr_reg;
-> +	unsigned icr1_reg;
-> +	unsigned icr2_reg;
-> +	unsigned imr_reg;
-> +	unsigned isr_reg;
-> +	unsigned low_level;
-> +	unsigned high_level;
-> +	unsigned rise_edge;
-> +	unsigned fall_edge;
-> +};
-> +
->  struct mxc_gpio_port {
->  	struct list_head node;
->  	void __iomem *base;
-> @@ -40,6 +60,72 @@ struct mxc_gpio_port {
->  	u32 both_edges;
->  };
->  
-> +static struct mxc_gpio_hwdata imx1_imx2_gpio_hwdata = {
-> +	.dr_reg		= 0x1c,
-> +	.gdir_reg	= 0x00,
-> +	.psr_reg	= 0x24,
-> +	.icr1_reg	= 0x28,
-> +	.icr2_reg	= 0x2c,
-> +	.imr_reg	= 0x30,
-> +	.isr_reg	= 0x34,
-> +	.low_level	= 0x03,
-> +	.high_level	= 0x02,
-> +	.rise_edge	= 0x00,
-> +	.fall_edge	= 0x01,
-> +};
-> +
-> +static struct mxc_gpio_hwdata imx_gpio_hwdata = {
-> +	.dr_reg		= 0x00,
-> +	.gdir_reg	= 0x04,
-> +	.psr_reg	= 0x08,
-> +	.icr1_reg	= 0x0c,
-> +	.icr2_reg	= 0x10,
-> +	.imr_reg	= 0x14,
-> +	.isr_reg	= 0x18,
-> +	.low_level	= 0x00,
-> +	.high_level	= 0x01,
-> +	.rise_edge	= 0x02,
-> +	.fall_edge	= 0x03,
-> +};
-> +
-> +static enum mxc_gpio_hwtype mxs_gpio_hwtype;
-> +static struct mxc_gpio_hwdata *mxc_gpio_hwdata;
-> +
-> +#define GPIO_DR			(mxc_gpio_hwdata->dr_reg)
-> +#define GPIO_GDIR		(mxc_gpio_hwdata->gdir_reg)
-> +#define GPIO_PSR		(mxc_gpio_hwdata->psr_reg)
-> +#define GPIO_ICR1		(mxc_gpio_hwdata->icr1_reg)
-> +#define GPIO_ICR2		(mxc_gpio_hwdata->icr2_reg)
-> +#define GPIO_IMR		(mxc_gpio_hwdata->imr_reg)
-> +#define GPIO_ISR		(mxc_gpio_hwdata->isr_reg)
-> +
-> +#define GPIO_INT_LOW_LEV	(mxc_gpio_hwdata->low_level)
-> +#define GPIO_INT_HIGH_LEV	(mxc_gpio_hwdata->high_level)
-> +#define GPIO_INT_RISE_EDGE	(mxc_gpio_hwdata->rise_edge)
-> +#define GPIO_INT_FALL_EDGE	(mxc_gpio_hwdata->fall_edge)
-> +#define GPIO_INT_NONE		0x4
-> +
-> +static struct platform_device_id mxc_gpio_devtype[] = {
-> +	{
-> +		.name = "imx1-gpio",
-> +		.driver_data = IMX1_GPIO,
-> +	}, {
-> +		.name = "imx21-gpio",
-> +		.driver_data = IMX2_GPIO,
-> +	}, {
-> +		.name = "imx25-gpio",
-> +		.driver_data = IMX_GPIO,
-> +	}, {
-> +		.name = "imx27-gpio",
-> +		.driver_data = IMX2_GPIO,
-> +	}, {
-> +		.name = "imx-gpio",
-> +		.driver_data = IMX_GPIO,
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +
->  /*
->   * MX2 has one interrupt *for all* gpio ports. The list is used
->   * to save the references to all ports, so that mx2_gpio_irq_handler
-> @@ -47,22 +133,6 @@ struct mxc_gpio_port {
->   */
->  static LIST_HEAD(mxc_gpio_ports);
->  
-> -#define cpu_is_mx1_mx2()	(cpu_is_mx1() || cpu_is_mx2())
-> -
-> -#define GPIO_DR		(cpu_is_mx1_mx2() ? 0x1c : 0x00)
-> -#define GPIO_GDIR	(cpu_is_mx1_mx2() ? 0x00 : 0x04)
-> -#define GPIO_PSR	(cpu_is_mx1_mx2() ? 0x24 : 0x08)
-> -#define GPIO_ICR1	(cpu_is_mx1_mx2() ? 0x28 : 0x0C)
-> -#define GPIO_ICR2	(cpu_is_mx1_mx2() ? 0x2C : 0x10)
-> -#define GPIO_IMR	(cpu_is_mx1_mx2() ? 0x30 : 0x14)
-> -#define GPIO_ISR	(cpu_is_mx1_mx2() ? 0x34 : 0x18)
-> -
-> -#define GPIO_INT_LOW_LEV	(cpu_is_mx1_mx2() ? 0x3 : 0x0)
-> -#define GPIO_INT_HIGH_LEV	(cpu_is_mx1_mx2() ? 0x2 : 0x1)
-> -#define GPIO_INT_RISE_EDGE	(cpu_is_mx1_mx2() ? 0x0 : 0x2)
-> -#define GPIO_INT_FALL_EDGE	(cpu_is_mx1_mx2() ? 0x1 : 0x3)
-> -#define GPIO_INT_NONE		0x4
-> -
->  /* Note: This driver assumes 32 GPIOs are handled in one register */
->  
->  static int gpio_set_irq_type(struct irq_data *d, u32 type)
-> @@ -236,12 +306,27 @@ static void __init mxc_gpio_init_gc(struct mxc_gpio_port *port)
->  			       IRQ_NOREQUEST, 0);
->  }
->  
-> +static void __devinit mxc_gpio_get_hw(struct platform_device *pdev)
-> +{
-> +	if (mxc_gpio_hwdata)
-> +		return;
-> +
-> +	mxs_gpio_hwtype = pdev->id_entry->driver_data;
-> +
-> +	if (mxs_gpio_hwtype == IMX1_GPIO || mxs_gpio_hwtype == IMX2_GPIO)
-> +		mxc_gpio_hwdata = &imx1_imx2_gpio_hwdata;
-> +	else
-> +		mxc_gpio_hwdata = &imx_gpio_hwdata;
-> +}
-> +
->  static int __devinit mxc_gpio_probe(struct platform_device *pdev)
->  {
->  	struct mxc_gpio_port *port;
->  	struct resource *iores;
->  	int err;
->  
-> +	mxc_gpio_get_hw(pdev);
-> +
->  	port = kzalloc(sizeof(struct mxc_gpio_port), GFP_KERNEL);
->  	if (!port)
->  		return -ENOMEM;
-> @@ -280,7 +365,7 @@ static int __devinit mxc_gpio_probe(struct platform_device *pdev)
->  	/* gpio-mxc can be a generic irq chip */
->  	mxc_gpio_init_gc(port);
->  
-> -	if (cpu_is_mx2()) {
-> +	if (mxs_gpio_hwtype == IMX2_GPIO) {
->  		/* setup one handler for all GPIO interrupts */
->  		if (pdev->id == 0)
->  			irq_set_chained_handler(port->irq,
-> @@ -332,6 +417,7 @@ static struct platform_driver mxc_gpio_driver = {
->  		.owner	= THIS_MODULE,
->  	},
->  	.probe		= mxc_gpio_probe,
-> +	.id_table	= mxc_gpio_devtype,
->  };
->  
->  static int __init gpio_mxc_init(void)
-> -- 
-> 1.7.4.1
-> -- 
-> Regards,
-> Shawn
-> 
+Changes in v3:
+- Allow platforms to set aux ctrl reg with aux_value and aux_mask.
+- Add RAM latency and filter address bindings based on CSR's platform needs.
+
+ Documentation/devicetree/bindings/arm/l2cc.txt |   40 ++++++++
+ arch/arm/include/asm/hardware/cache-l2x0.h     |   17 ++++
+ arch/arm/mm/cache-l2x0.c                       |  120 ++++++++++++++++++++++++
+ 3 files changed, 177 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/l2cc.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+new file mode 100644
+index 0000000..79e66fb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -0,0 +1,40 @@
++* ARM L2 Cache Controller
++
++ARM cores often have a separate level 2 cache controller. There are various
++implementations of the L2 cache controller with compatible programming models.
++The ARM L2 cache representation in the device tree should be done as under:-
++
++Required properties:
++
++- compatible : should be one of
++	"arm,pl310-cache"
++	"arm,l220-cache"
++	"arm,l210-cache"
++- cache-unified : Specifies the cache is a unified cache.
++- cache-level : Should be set to 2 for a level 2 cache.
++- reg : Physical base address and size of cache controller's memory mapped
++  registers.
++
++Optional properties:
++
++- data-latency : Cycles of latency for Data RAM accesses. Specifies 3 cells of
++  read, write and setup latencies. Controllers without setup latency control
++  should use 0.
++- tag-latency : Cycles of latency for Tag RAM accesses. Specifies 3 cells of
++  read, write and setup latencies. Controllers without setup latency control
++  should use 0.
++- dirty-latency : Cycles of latency for reads of Dirty RAMs. This is a single
++  cell.t
++- filter-ranges : <start end> Address range the  
++
++Example:
++
++L2: l2-cache {
++        compatible = "arm,pl310-cache", "cache";
++        reg = <0xfff12000 0x1000>;
++        data-latency = <1 1 1>;
++        tag-latency = <2 2 2>;
++        cache-unified;
++        cache-level = <2>;
++};
++
+diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/include/asm/hardware/cache-l2x0.h
+index 16bd480..8fe149f 100644
+--- a/arch/arm/include/asm/hardware/cache-l2x0.h
++++ b/arch/arm/include/asm/hardware/cache-l2x0.h
+@@ -47,6 +47,8 @@
+ #define L2X0_CLEAN_INV_WAY		0x7FC
+ #define L2X0_LOCKDOWN_WAY_D		0x900
+ #define L2X0_LOCKDOWN_WAY_I		0x904
++#define L2X0_ADDR_FILTER_START		0xC00
++#define L2X0_ADDR_FILTER_END		0xC04
+ #define L2X0_TEST_OPERATION		0xF00
+ #define L2X0_LINE_DATA			0xF10
+ #define L2X0_LINE_TAG			0xF30
+@@ -62,6 +64,14 @@
+ #define L2X0_CACHE_ID_PART_L310		(3 << 6)
+ 
+ #define L2X0_AUX_CTRL_MASK			0xc0000fff
++#define L2X0_AUX_CTRL_DATA_RD_LATENCY_SHIFT	0
++#define L2X0_AUX_CTRL_DATA_RD_LATENCY_MASK	0x7
++#define L2X0_AUX_CTRL_DATA_WR_LATENCY_SHIFT	3
++#define L2X0_AUX_CTRL_DATA_WR_LATENCY_MASK	(0x7 << 3)
++#define L2X0_AUX_CTRL_TAG_LATENCY_SHIFT		6
++#define L2X0_AUX_CTRL_TAG_LATENCY_MASK		(0x7 << 6)
++#define L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT	9
++#define L2X0_AUX_CTRL_DIRTY_LATENCY_MASK	(0x7 << 9)
+ #define L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT	16
+ #define L2X0_AUX_CTRL_WAY_SIZE_SHIFT		17
+ #define L2X0_AUX_CTRL_WAY_SIZE_MASK		(0x3 << 17)
+@@ -72,8 +82,15 @@
+ #define L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT	29
+ #define L2X0_AUX_CTRL_EARLY_BRESP_SHIFT		30
+ 
++#define L2X0_LATENCY_CTRL_SETUP_SHIFT	0
++#define L2X0_LATENCY_CTRL_RD_SHIFT	4
++#define L2X0_LATENCY_CTRL_WR_SHIFT	8
++
++#define L2X0_ADDR_FILTER_EN		1
++
+ #ifndef __ASSEMBLY__
+ extern void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask);
++extern int l2x0_of_init(__u32 aux_val, __u32 aux_mask);
+ #endif
+ 
+ #endif
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index ef59099..649be84 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -16,9 +16,12 @@
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+  */
++#include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/spinlock.h>
+ #include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/hardware/cache-l2x0.h>
+@@ -344,3 +347,120 @@ void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask)
+ 	printk(KERN_INFO "l2x0: %d ways, CACHE_ID 0x%08x, AUX_CTRL 0x%08x, Cache size: %d B\n",
+ 			ways, cache_id, aux, l2x0_size);
+ }
++
++#ifdef CONFIG_OF
++static const struct of_device_id l2x0_ids[] __initconst = {
++	{ .compatible = "arm,pl310-cache" },
++	{ .compatible = "arm,l220-cache" },
++	{ .compatible = "arm,l210-cache" },
++	{}
++};
++
++static void __init l2x0_of_set_address_filter(const struct device_node *np)
++{
++	u32 start, end;
++	const u32 *prop;
++	int len;
++	int is_pl310 = of_device_is_compatible(np, "arm,pl310-cache");
++
++	if (!is_pl310 || (readl_relaxed(l2x0_base + L2X0_CTRL) & 1))
++		return;
++
++	prop = of_get_property(np, "filter-ranges", &len);
++	if (!prop || (len != (2 * sizeof(prop))))
++		return;
++
++	start = be32_to_cpup(prop++) | L2X0_ADDR_FILTER_EN;
++	end = be32_to_cpup(prop++);
++	writel_relaxed(end, l2x0_base + L2X0_ADDR_FILTER_END);
++	writel_relaxed(start, l2x0_base + L2X0_ADDR_FILTER_START);
++}
++
++static void __init l2x0_of_set_ram_timings(const struct device_node *np,
++					  __u32 *aux_val, __u32 *aux_mask)
++{
++	u32 data_rd = 0, data_wr = 0, data_setup = 0;
++	u32 tag_rd = 0, tag_wr = 0, tag_setup = 0;
++	u32 dirty = 0;
++	const u32 *prop;
++	int len;
++	int is_pl310 = of_device_is_compatible(np, "arm,pl310-cache");
++
++	if (readl_relaxed(l2x0_base + L2X0_CTRL) & 1)
++		return;
++
++	prop = of_get_property(np, "data-latency", &len);
++	if (prop && (len == (3 * sizeof(prop)))) {
++		data_rd = be32_to_cpup(prop++);
++		data_wr = be32_to_cpup(prop++);
++		data_setup = be32_to_cpup(prop);
++	}
++
++	prop = of_get_property(np, "tag-latency", &len);
++	if (prop && (len == (3 * sizeof(prop)))) {
++		tag_rd = be32_to_cpup(prop++);
++		tag_wr = be32_to_cpup(prop++);
++		tag_setup = be32_to_cpup(prop);
++	}
++
++	prop = of_get_property(np, "dirty-latency", &len);
++	if (prop && (len == sizeof(prop)))
++		dirty = be32_to_cpup(prop);
++
++	if (is_pl310 && tag_wr && tag_rd && tag_setup)
++		writel_relaxed(
++			(--tag_wr << L2X0_LATENCY_CTRL_WR_SHIFT) |
++			(--tag_rd << L2X0_LATENCY_CTRL_RD_SHIFT) |
++			(--tag_setup << L2X0_LATENCY_CTRL_SETUP_SHIFT),
++			l2x0_base + L2X0_TAG_LATENCY_CTRL);
++
++	if (is_pl310 && data_wr && data_rd && data_setup)
++		writel_relaxed(
++			(--data_wr << L2X0_LATENCY_CTRL_WR_SHIFT) |
++			(--data_rd << L2X0_LATENCY_CTRL_RD_SHIFT) |
++			(--data_setup << L2X0_LATENCY_CTRL_SETUP_SHIFT),
++			l2x0_base + L2X0_TAG_LATENCY_CTRL);
++
++	if (!is_pl310 && tag_rd) {
++		*aux_val &= ~L2X0_AUX_CTRL_TAG_LATENCY_MASK;
++		*aux_val |= --tag_rd << L2X0_AUX_CTRL_TAG_LATENCY_SHIFT;
++		*aux_mask &= ~L2X0_AUX_CTRL_TAG_LATENCY_MASK;
++	}
++
++	if (!is_pl310 && data_rd) {
++		*aux_val &= ~L2X0_AUX_CTRL_DATA_RD_LATENCY_MASK;
++		*aux_val |= --data_rd << L2X0_AUX_CTRL_DATA_RD_LATENCY_SHIFT;
++		*aux_mask &= ~L2X0_AUX_CTRL_DATA_RD_LATENCY_MASK;
++	}
++
++	if (!is_pl310 && data_wr) {
++		*aux_val &= ~L2X0_AUX_CTRL_DATA_WR_LATENCY_MASK;
++		*aux_val |= --data_wr << L2X0_AUX_CTRL_DATA_WR_LATENCY_SHIFT;
++		*aux_mask &= ~L2X0_AUX_CTRL_DATA_WR_LATENCY_MASK;
++	}
++
++	if (!is_pl310 && dirty) {
++		*aux_val &= ~L2X0_AUX_CTRL_DIRTY_LATENCY_MASK;
++		*aux_val |= --dirty << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
++		*aux_mask &= ~L2X0_AUX_CTRL_DIRTY_LATENCY_MASK;
++	}
++}
++
++int __init l2x0_of_init(__u32 aux_val, __u32 aux_mask)
++{
++	struct device_node *np;
++	void __iomem *l2_base;
++
++	np = of_find_matching_node(NULL, l2x0_ids);
++	if (!np)
++		return -ENODEV;
++	l2_base = of_iomap(np, 0);
++	if (!l2_base)
++		return -ENOMEM;
++
++	l2x0_of_set_address_filter(np);
++	l2x0_of_set_ram_timings(np, &aux_val, &aux_mask);
++	l2x0_init(l2_base, aux_val, aux_mask);
++	return 0;
++}
++#endif
+-- 
+1.7.4.1
