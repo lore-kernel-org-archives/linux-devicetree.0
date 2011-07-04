@@ -1,15 +1,14 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 02/19] OpenRISC: Device tree
-Date: Mon, 04 Jul 2011 07:39:38 +1000
-Message-ID: <1309729178.14501.264.camel@pasglop>
-References: <1309641352-18714-1-git-send-email-jonas@southpole.se>
-	<1309641352-18714-3-git-send-email-jonas@southpole.se>
-	<CACxGe6tFX=EQjaL-4EjSXquY5eh+bca29=d=cE5-YAVCUVRCvA@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] dt: add 'const' for of_property_read_string parameter
+	**out_string
+Date: Mon,  4 Jul 2011 09:01:18 +0800
+Message-ID: <1309741278-26776-1-git-send-email-shawn.guo@linaro.org>
+References: <20110703210312.GA13742@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6tFX=EQjaL-4EjSXquY5eh+bca29=d=cE5-YAVCUVRCvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110703210312.GA13742-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,35 +18,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2011-07-03 at 14:51 -0600, Grant Likely wrote:
-> > +
-> > +#ifdef CONFIG_PCI
-> > +/*
-> > + * PCI <-> OF matching functions
-> > + * (XXX should these be here?)
-> > + */
-> > +struct pci_bus;
-> > +struct pci_dev;
-> > +extern int pci_device_from_OF_node(struct device_node *node,
-> > +                                       u8 *bus, u8 *devfn);
-> > +extern struct device_node *pci_busdev_to_OF_node(struct pci_bus
-> *bus,
-> > +                                                       int devfn);
-> > +extern struct device_node *pci_device_to_OF_node(struct pci_dev
-> *dev);
-> > +extern void pci_create_OF_bus_map(void);
-> > +#endif
+The existing dt codes usually call of_get_property to get a string
+property and save it as a 'const char *'.  The patch adds'const' for
+of_property_read_string parameter **out_string to make the converting
+of existing code a little easier.
 
-Don't copy these from powermac or microblaze. the OF_bus_map is
-something that should not spread :-)
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/base.c  |    2 +-
+ include/linux/of.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-You get all you need of the above from generic code with my patches to
-PCI <-> OF matching, which should be in linux-next and are going to be
-merged in the next merge window.
-
-Cheers,
-Ben.
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index b8b65fd..57ec27b 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -639,7 +639,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u32);
+  * The out_string pointer is modified only if a valid string can be decoded.
+  */
+ int of_property_read_string(struct device_node *np, char *propname,
+-				char **out_string)
++				const char **out_string)
+ {
+ 	struct property *prop = of_find_property(np, propname, NULL);
+ 	if (!prop)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4fc4c1b..b238520 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -198,7 +198,7 @@ extern struct property *of_find_property(const struct device_node *np,
+ extern int of_property_read_u32(struct device_node *np, char *propname,
+ 					u32 *out_value);
+ extern int of_property_read_string(struct device_node *np, char *propname,
+-					char **out_string);
++					const char **out_string);
+ extern int of_device_is_compatible(const struct device_node *device,
+ 				   const char *);
+ extern int of_device_is_available(const struct device_node *device);
+-- 
+1.7.4.1
