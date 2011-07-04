@@ -1,129 +1,109 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] serial/imx: add device tree probe support
-Date: Mon, 4 Jul 2011 11:10:27 +0200
-Message-ID: <20110704091027.GG4338@pengutronix.de>
-References: <1309679760-22796-1-git-send-email-shawn.guo@linaro.org>
- <1309679760-22796-3-git-send-email-shawn.guo@linaro.org>
- <20110704065820.GY6069@pengutronix.de>
- <20110704073826.GC4338@pengutronix.de>
- <20110704090527.GF10245@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio/mxc: get rid of the uses of cpu_is_mx()
+Date: Mon, 4 Jul 2011 17:28:01 +0800
+Message-ID: <20110704092800.GG10245@S2100-06.ap.freescale.net>
+References: <1309681017-22970-1-git-send-email-shawn.guo@linaro.org>
+	<1309681017-22970-2-git-send-email-shawn.guo@linaro.org>
+	<20110704064603.GW6069@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110704090527.GF10245@S2100-06.ap.freescale.net>
-Sender: linux-serial-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Jason Liu <jason.hui@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Jeremy Kerr <jeremy.kerr@canonical.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>
+In-Reply-To: <20110704064603.GW6069-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 04, 2011 at 05:05:27PM +0800, Shawn Guo wrote:
-> On Mon, Jul 04, 2011 at 09:38:26AM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jul 04, 2011 at 08:58:20AM +0200, Sascha Hauer wrote:
-> > > On Sun, Jul 03, 2011 at 03:56:00PM +0800, Shawn Guo wrote:
-> > > > It adds device tree probe support for imx tty/serial driver.
-> > > >=20
-> > > > Signed-off-by: Jeremy Kerr <jeremy.kerr@canonical.com>
-> > > > Signed-off-by: Jason Liu <jason.hui@linaro.org>
-> > > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > > > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>
-> > > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > > ---
-> > > >  .../bindings/tty/serial/fsl-imx-uart.txt           |   19 ++++=
-+
-> > > >  drivers/tty/serial/imx.c                           |   82 ++++=
-+++++++++++++---
-> > > >  2 files changed, 91 insertions(+), 10 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/tty/seria=
-l/fsl-imx-uart.txt
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/tty/serial/fsl-i=
-mx-uart.txt b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart=
-=2Etxt
-> > > > new file mode 100644
-> > > > index 0000000..a9c0406
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart=
-=2Etxt
-> > > > @@ -0,0 +1,19 @@
-> > > > +* Freescale i.MX Universal Asynchronous Receiver/Transmitter (=
-UART)
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible : Should be "fsl,<soc>-uart"
-> > > > +- reg : Address and length of the register set for the device
-> > > > +- interrupts : Should contain uart interrupt
-> > > > +
-> > > > +Optional properties:
-> > > > +- fsl,uart-has-rtscts : Indicate the uart has rts and cts
-> > > > +- fsl,irda-mode : Indicate the uart supports irda mode
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +uart@73fbc000 {
-> > > > +	compatible =3D "fsl,imx51-uart", "fsl,imx21-uart";
-> > > > +	reg =3D <0x73fbc000 0x4000>;
-> > > > +	interrupts =3D <31>;
-> > > > +	fsl,uart-has-rtscts;
-> > > > +};
-> > > > diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.=
-c
-> > > > index 983f3bd..483c447 100644
-> > > > --- a/drivers/tty/serial/imx.c
-> > > > +++ b/drivers/tty/serial/imx.c
-> > > > @@ -45,6 +45,8 @@
-> > > >  #include <linux/delay.h>
-> > > >  #include <linux/rational.h>
-> > > >  #include <linux/slab.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/of_device.h>
-> > > > =20
-> > > >  #include <asm/io.h>
-> > > >  #include <asm/irq.h>
-> > > > @@ -239,6 +241,12 @@ static struct platform_device_id imx_uart_=
-devtype[] =3D {
-> > > >  	}
-> > > >  };
-> > > > =20
-> > > > +static struct of_device_id imx_uart_dt_ids[] =3D {
-> > > > +	{ .compatible =3D "fsl,imx1-uart", .data =3D &imx_uart_devdat=
-a[IMX1_UART], },
-> > > > +	{ .compatible =3D "fsl,imx21-uart", .data =3D &imx_uart_devda=
-ta[IMX2_UART], },
-> > > > +	{ /* sentinel */ },
-> > > > +};
-> > >=20
-> > > Isn't this table a bit too small? What about the other SoCs?
-> > I'd expect that using fsl,imx21-uart on imx51 would result in a wor=
-king
-> > port, but it feels stange and if that's the intention the example a=
-bove
-> > needs fixing.
-> >=20
-> Here is what I have in dts file for uart.  The 'compatible' tells
-> that it's a imx51-uart and compatible with imx21-uart.
->=20
-> uart0: uart@73fbc000 {
-> 	compatible =3D "fsl,imx51-uart", "fsl,imx21-uart";
-> 	reg =3D <0x73fbc000 0x4000>;
-> 	interrupts =3D <31>;
-> 	fsl,uart-has-rtscts;
-> };
-/me learned something new about dt. Sorry for the noise.
+On Mon, Jul 04, 2011 at 08:46:03AM +0200, Sascha Hauer wrote:
+> On Sun, Jul 03, 2011 at 04:16:56PM +0800, Shawn Guo wrote:
+> > The patch removes all the uses of cpu_is_mx().  Instead, it utilizes
+> > platform_device_id to distinguish the gpio differences among SoCs.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm/mach-imx/mm-imx1.c                   |    8 +-
+> >  arch/arm/mach-imx/mm-imx21.c                  |   12 +-
+> >  arch/arm/mach-imx/mm-imx25.c                  |    8 +-
+> >  arch/arm/mach-imx/mm-imx27.c                  |   12 +-
+> >  arch/arm/mach-imx/mm-imx31.c                  |    6 +-
+> >  arch/arm/mach-imx/mm-imx35.c                  |    6 +-
+> >  arch/arm/mach-mx5/mm-mx50.c                   |   12 +-
+> >  arch/arm/mach-mx5/mm.c                        |   22 ++--
+> >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c |    4 +-
+> >  arch/arm/plat-mxc/include/mach/common.h       |    2 +-
+> >  drivers/gpio/gpio-mxc.c                       |  123 +++++++++++++++++++++----
+> >  11 files changed, 151 insertions(+), 64 deletions(-)
+> 
+> 
+> Summarizing the renames up:
+> 
+> i.MX1  -> imx1-gpio
+> i.MX21 -> imx2-gpio
+> i.MX25 -> imx-gpio
+> i.MX27 -> imx2-gpio
+> i.MX31 -> imx-gpio
+> i.MX35 -> imx-gpio
+> i.MX50 -> imx-gpio
+> i.MX51 -> imx-gpio
+> i.MX53 -> imx-gpio
+> 
+> This is not consitent. Please either use the full SoC name for all
+> device ids or use something like imx-gpio-v1, v2...
+> It's not good that the i.MX25 is not a imx2 and that the 'modern'
+> i.MXs only have imx-gpio. We all know that your hardware designers
+> will be creative enough to change the register layout again in the
+> future.
+> 
+Ok, here it is.  It's avoid confusion in machine code, but every
+time we add a new soc we need to change touch this table, even if
+the new soc has a total compatible gpio to IMX_GPIO.  I'm fine with
+either way.
 
-Best regards
-Uwe
+static struct platform_device_id mxc_gpio_devtype[] = {
+        {
+                .name = "imx1-gpio",
+                .driver_data = IMX1_GPIO,
+        }, {
+                .name = "imx21-gpio",
+                .driver_data = IMX2_GPIO,
+        }, {
+                .name = "imx25-gpio",
+                .driver_data = IMX_GPIO,
+        }, {
+                .name = "imx27-gpio",
+                .driver_data = IMX2_GPIO,
+        }, {
+                .name = "imx31-gpio",
+                .driver_data = IMX_GPIO,
+        }, {
+                .name = "imx35-gpio",
+                .driver_data = IMX_GPIO,
+        }, {
+                .name = "imx50-gpio",
+                .driver_data = IMX_GPIO,
+        }, {
+                .name = "imx51-gpio",
+                .driver_data = IMX_GPIO,
+        }, {
+                .name = "imx53-gpio",
+                .driver_data = IMX_GPIO,
+        }, {
+                /* sentinel */
+        }
+};
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Shawn
