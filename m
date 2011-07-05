@@ -1,13 +1,20 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: l2x0: Add OF based initialization
-Date: Tue, 5 Jul 2011 10:11:35 +0800
-Message-ID: <CAGsJ_4xTiyoOP+bqk2gajzfMRBFkSJ_xzumWY=9F=90JBp4-aw@mail.gmail.com>
-References: <1309810556-6224-1-git-send-email-robherring2@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio/mxc: get rid of the uses of cpu_is_mx()
+Date: Tue, 5 Jul 2011 11:01:22 +0800
+Message-ID: <20110705030121.GB10594@S2100-06.ap.freescale.net>
+References: <1309681017-22970-1-git-send-email-shawn.guo@linaro.org>
+	<1309681017-22970-2-git-send-email-shawn.guo@linaro.org>
+	<20110704064603.GW6069@pengutronix.de>
+	<20110704092800.GG10245@S2100-06.ap.freescale.net>
+	<20110704094921.GG6069@pengutronix.de>
+	<20110704102008.GH10245@S2100-06.ap.freescale.net>
+	<20110704164457.GJ6069@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1309810556-6224-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110704164457.GJ6069-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,203 +24,241 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS83LzUgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcyQGdtYWlsLmNvbT46Cj4gRnJvbTogUm9i
-IEhlcnJpbmcgPHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tPgo+Cj4gVGhpcyBhZGRzIHByb2Jpbmcg
-Zm9yIEFSTSBMMngwIGNhY2hlIGNvbnRyb2xsZXJzIHZpYSBkZXZpY2UgdHJlZS4gU3VwcG9ydAo+
-IGluY2x1ZGVzIHRoZSBMMjEwLCBMMjIwLCBhbmQgUEwzMTAgY29udHJvbGxlcnMuIFRoZSBiaW5k
-aW5nIGFsbG93cyBzZXR0aW5nCj4gdXAgY2FjaGUgUkFNIGxhdGVuY2llcyBhbmQgZmlsdGVyIGFk
-ZHJlc3NlcyAoUEwzMTAgb25seSkuCj4KPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9i
-LmhlcnJpbmdAY2FseGVkYS5jb20+Cj4gLS0tCj4gSSd2ZSB0ZXN0ZWQgdGhpcyB2ZXJzaW9uIGFu
-ZCBmaXhlZCBzb21lIGlzc3VlcyBmcm9tIHRoZSBvbmUgSSBzZW50IHRvIHRoZQo+IENTUiBwbGF0
-Zm9ybSB0aHJlYWQuCj4KPiBDaGFuZ2VzIGluIHYzOgo+IC0gQWxsb3cgcGxhdGZvcm1zIHRvIHNl
-dCBhdXggY3RybCByZWcgd2l0aCBhdXhfdmFsdWUgYW5kIGF1eF9tYXNrLgo+IC0gQWRkIFJBTSBs
-YXRlbmN5IGFuZCBmaWx0ZXIgYWRkcmVzcyBiaW5kaW5ncyBiYXNlZCBvbiBDU1IncyBwbGF0Zm9y
-bSBuZWVkcy4KClJvYiwgVGhhbmtzIGEgbG90IGZvciBhZGRpbmcgc3VwcG9ydCBmb3IgQ1NSJ3Mg
-cGxhcmZvcm0uIFJBTSBsYXRlbmN5CmhhcyBiZWVuIGFuIGlzc3VlIGZvciBleHlub3M0LCB0ZWdy
-YSwgcmVhbHZpZXcsIHZleHByZXNzIGFuZCBDU1IuCmZpbHRlciBhZGRyZXNzIGlzIG9ubHkgaW4g
-Q1NSIGJ5IG5vdy4KCj4KPiDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-bDJjYy50eHQgfCDCoCA0MCArKysrKysrKwo+IMKgYXJjaC9hcm0vaW5jbHVkZS9hc20vaGFyZHdh
-cmUvY2FjaGUtbDJ4MC5oIMKgIMKgIHwgwqAgMTcgKysrKwo+IMKgYXJjaC9hcm0vbW0vY2FjaGUt
-bDJ4MC5jIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHwgwqAxMjAgKysrKysrKysr
-KysrKysrKysrKysrKysrCj4gwqAzIGZpbGVzIGNoYW5nZWQsIDE3NyBpbnNlcnRpb25zKCspLCAw
-IGRlbGV0aW9ucygtKQo+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9hcm0vbDJjYy50eHQKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2wyY2MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9sMmNjLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-MDAwMDAwMC4uNzllNjZmYgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2wyY2MudHh0Cj4gQEAgLTAsMCArMSw0MCBAQAo+ICsqIEFS
-TSBMMiBDYWNoZSBDb250cm9sbGVyCj4gKwo+ICtBUk0gY29yZXMgb2Z0ZW4gaGF2ZSBhIHNlcGFy
-YXRlIGxldmVsIDIgY2FjaGUgY29udHJvbGxlci4gVGhlcmUgYXJlIHZhcmlvdXMKPiAraW1wbGVt
-ZW50YXRpb25zIG9mIHRoZSBMMiBjYWNoZSBjb250cm9sbGVyIHdpdGggY29tcGF0aWJsZSBwcm9n
-cmFtbWluZyBtb2RlbHMuCj4gK1RoZSBBUk0gTDIgY2FjaGUgcmVwcmVzZW50YXRpb24gaW4gdGhl
-IGRldmljZSB0cmVlIHNob3VsZCBiZSBkb25lIGFzIHVuZGVyOi0KPiArCj4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgb25lIG9mCj4gKyDCoCDC
-oCDCoCAiYXJtLHBsMzEwLWNhY2hlIgo+ICsgwqAgwqAgwqAgImFybSxsMjIwLWNhY2hlIgo+ICsg
-wqAgwqAgwqAgImFybSxsMjEwLWNhY2hlIgo+ICstIGNhY2hlLXVuaWZpZWQgOiBTcGVjaWZpZXMg
-dGhlIGNhY2hlIGlzIGEgdW5pZmllZCBjYWNoZS4KPiArLSBjYWNoZS1sZXZlbCA6IFNob3VsZCBi
-ZSBzZXQgdG8gMiBmb3IgYSBsZXZlbCAyIGNhY2hlLgo+ICstIHJlZyA6IFBoeXNpY2FsIGJhc2Ug
-YWRkcmVzcyBhbmQgc2l6ZSBvZiBjYWNoZSBjb250cm9sbGVyJ3MgbWVtb3J5IG1hcHBlZAo+ICsg
-wqByZWdpc3RlcnMuCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBkYXRhLWxh
-dGVuY3kgOiBDeWNsZXMgb2YgbGF0ZW5jeSBmb3IgRGF0YSBSQU0gYWNjZXNzZXMuIFNwZWNpZmll
-cyAzIGNlbGxzIG9mCj4gKyDCoHJlYWQsIHdyaXRlIGFuZCBzZXR1cCBsYXRlbmNpZXMuIENvbnRy
-b2xsZXJzIHdpdGhvdXQgc2V0dXAgbGF0ZW5jeSBjb250cm9sCj4gKyDCoHNob3VsZCB1c2UgMC4K
-PiArLSB0YWctbGF0ZW5jeSA6IEN5Y2xlcyBvZiBsYXRlbmN5IGZvciBUYWcgUkFNIGFjY2Vzc2Vz
-LiBTcGVjaWZpZXMgMyBjZWxscyBvZgo+ICsgwqByZWFkLCB3cml0ZSBhbmQgc2V0dXAgbGF0ZW5j
-aWVzLiBDb250cm9sbGVycyB3aXRob3V0IHNldHVwIGxhdGVuY3kgY29udHJvbAo+ICsgwqBzaG91
-bGQgdXNlIDAuCj4gKy0gZGlydHktbGF0ZW5jeSA6IEN5Y2xlcyBvZiBsYXRlbmN5IGZvciByZWFk
-cyBvZiBEaXJ0eSBSQU1zLiBUaGlzIGlzIGEgc2luZ2xlCj4gKyDCoGNlbGwudAo+ICstIGZpbHRl
-ci1yYW5nZXMgOiA8c3RhcnQgZW5kPiBBZGRyZXNzIHJhbmdlIHRoZQo+ICsKPiArRXhhbXBsZToK
-PiArCj4gK0wyOiBsMi1jYWNoZSB7Cj4gKyDCoCDCoCDCoCDCoGNvbXBhdGlibGUgPSAiYXJtLHBs
-MzEwLWNhY2hlIiwgImNhY2hlIjsKPiArIMKgIMKgIMKgIMKgcmVnID0gPDB4ZmZmMTIwMDAgMHgx
-MDAwPjsKPiArIMKgIMKgIMKgIMKgZGF0YS1sYXRlbmN5ID0gPDEgMSAxPjsKPiArIMKgIMKgIMKg
-IMKgdGFnLWxhdGVuY3kgPSA8MiAyIDI+Owo+ICsgwqAgwqAgwqAgwqBjYWNoZS11bmlmaWVkOwo+
-ICsgwqAgwqAgwqAgwqBjYWNoZS1sZXZlbCA9IDwyPjsKPiArfTsKPiArCj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWwyeDAuaCBiL2FyY2gvYXJtL2lu
-Y2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWwyeDAuaAo+IGluZGV4IDE2YmQ0ODAuLjhmZTE0OWYg
-MTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vaGFyZHdhcmUvY2FjaGUtbDJ4MC5o
-Cj4gKysrIGIvYXJjaC9hcm0vaW5jbHVkZS9hc20vaGFyZHdhcmUvY2FjaGUtbDJ4MC5oCj4gQEAg
-LTQ3LDYgKzQ3LDggQEAKPiDCoCNkZWZpbmUgTDJYMF9DTEVBTl9JTlZfV0FZIMKgIMKgIMKgIMKg
-IMKgIMKgIDB4N0ZDCj4gwqAjZGVmaW5lIEwyWDBfTE9DS0RPV05fV0FZX0QgwqAgwqAgwqAgwqAg
-wqAgwqAweDkwMAo+IMKgI2RlZmluZSBMMlgwX0xPQ0tET1dOX1dBWV9JIMKgIMKgIMKgIMKgIMKg
-IMKgMHg5MDQKPiArI2RlZmluZSBMMlgwX0FERFJfRklMVEVSX1NUQVJUIMKgIMKgIMKgIMKgIDB4
-QzAwCj4gKyNkZWZpbmUgTDJYMF9BRERSX0ZJTFRFUl9FTkQgwqAgwqAgwqAgwqAgwqAgMHhDMDQK
-PiDCoCNkZWZpbmUgTDJYMF9URVNUX09QRVJBVElPTiDCoCDCoCDCoCDCoCDCoCDCoDB4RjAwCj4g
-wqAjZGVmaW5lIEwyWDBfTElORV9EQVRBIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIDB4RjEwCj4g
-wqAjZGVmaW5lIEwyWDBfTElORV9UQUcgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAweEYzMAo+
-IEBAIC02Miw2ICs2NCwxNCBAQAo+IMKgI2RlZmluZSBMMlgwX0NBQ0hFX0lEX1BBUlRfTDMxMCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCgzIDw8IDYpCj4KPiDCoCNkZWZpbmUgTDJYMF9BVVhfQ1RS
-TF9NQVNLIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIDB4YzAwMDBmZmYKPiArI2RlZmlu
-ZSBMMlgwX0FVWF9DVFJMX0RBVEFfUkRfTEFURU5DWV9TSElGVCDCoCDCoDAKPiArI2RlZmluZSBM
-MlgwX0FVWF9DVFJMX0RBVEFfUkRfTEFURU5DWV9NQVNLIMKgIMKgIDB4Nwo+ICsjZGVmaW5lIEwy
-WDBfQVVYX0NUUkxfREFUQV9XUl9MQVRFTkNZX1NISUZUIMKgIMKgMwo+ICsjZGVmaW5lIEwyWDBf
-QVVYX0NUUkxfREFUQV9XUl9MQVRFTkNZX01BU0sgwqAgwqAgKDB4NyA8PCAzKQo+ICsjZGVmaW5l
-IEwyWDBfQVVYX0NUUkxfVEFHX0xBVEVOQ1lfU0hJRlQgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqA2
-Cj4gKyNkZWZpbmUgTDJYMF9BVVhfQ1RSTF9UQUdfTEFURU5DWV9NQVNLIMKgIMKgIMKgIMKgICgw
-eDcgPDwgNikKPiArI2RlZmluZSBMMlgwX0FVWF9DVFJMX0RJUlRZX0xBVEVOQ1lfU0hJRlQgwqAg
-wqAgwqA5Cj4gKyNkZWZpbmUgTDJYMF9BVVhfQ1RSTF9ESVJUWV9MQVRFTkNZX01BU0sgwqAgwqAg
-wqAgKDB4NyA8PCA5KQo+IMKgI2RlZmluZSBMMlgwX0FVWF9DVFJMX0FTU09DSUFUSVZJVFlfU0hJ
-RlQgwqAgwqAgwqAxNgo+IMKgI2RlZmluZSBMMlgwX0FVWF9DVFJMX1dBWV9TSVpFX1NISUZUIMKg
-IMKgIMKgIMKgIMKgIDE3Cj4gwqAjZGVmaW5lIEwyWDBfQVVYX0NUUkxfV0FZX1NJWkVfTUFTSyDC
-oCDCoCDCoCDCoCDCoCDCoCgweDMgPDwgMTcpCj4gQEAgLTcyLDggKzgyLDE1IEBACj4gwqAjZGVm
-aW5lIEwyWDBfQVVYX0NUUkxfSU5TVFJfUFJFRkVUQ0hfU0hJRlQgwqAgwqAgMjkKPiDCoCNkZWZp
-bmUgTDJYMF9BVVhfQ1RSTF9FQVJMWV9CUkVTUF9TSElGVCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oDMwCj4KPiArI2RlZmluZSBMMlgwX0xBVEVOQ1lfQ1RSTF9TRVRVUF9TSElGVCDCoDAKPiArI2Rl
-ZmluZSBMMlgwX0xBVEVOQ1lfQ1RSTF9SRF9TSElGVCDCoCDCoCA0Cj4gKyNkZWZpbmUgTDJYMF9M
-QVRFTkNZX0NUUkxfV1JfU0hJRlQgwqAgwqAgOAo+ICsKPiArI2RlZmluZSBMMlgwX0FERFJfRklM
-VEVSX0VOIMKgIMKgIMKgIMKgIMKgIMKgMQo+ICsKPiDCoCNpZm5kZWYgX19BU1NFTUJMWV9fCj4g
-wqBleHRlcm4gdm9pZCBfX2luaXQgbDJ4MF9pbml0KHZvaWQgX19pb21lbSAqYmFzZSwgX191MzIg
-YXV4X3ZhbCwgX191MzIgYXV4X21hc2spOwo+ICtleHRlcm4gaW50IGwyeDBfb2ZfaW5pdChfX3Uz
-MiBhdXhfdmFsLCBfX3UzMiBhdXhfbWFzayk7Cj4gwqAjZW5kaWYKPgo+IMKgI2VuZGlmCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL21tL2NhY2hlLWwyeDAuYyBiL2FyY2gvYXJtL21tL2NhY2hlLWwy
-eDAuYwo+IGluZGV4IGVmNTkwOTkuLjY0OWJlODQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vbW0v
-Y2FjaGUtbDJ4MC5jCj4gKysrIGIvYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jCj4gQEAgLTE2LDkg
-KzE2LDEyIEBACj4gwqAqIGFsb25nIHdpdGggdGhpcyBwcm9ncmFtOyBpZiBub3QsIHdyaXRlIHRv
-IHRoZSBGcmVlIFNvZnR3YXJlCj4gwqAqIEZvdW5kYXRpb24sIEluYy4sIDU5IFRlbXBsZSBQbGFj
-ZSwgU3VpdGUgMzMwLCBCb3N0b24sIE1BIDAyMTExLTEzMDcgVVNBCj4gwqAqLwo+ICsjaW5jbHVk
-ZSA8bGludXgvZXJyLmg+Cj4gwqAjaW5jbHVkZSA8bGludXgvaW5pdC5oPgo+IMKgI2luY2x1ZGUg
-PGxpbnV4L3NwaW5sb2NrLmg+Cj4gwqAjaW5jbHVkZSA8bGludXgvaW8uaD4KPiArI2luY2x1ZGUg
-PGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+Cj4KPiDCoCNpbmNs
-dWRlIDxhc20vY2FjaGVmbHVzaC5oPgo+IMKgI2luY2x1ZGUgPGFzbS9oYXJkd2FyZS9jYWNoZS1s
-MngwLmg+Cj4gQEAgLTM0NCwzICszNDcsMTIwIEBAIHZvaWQgX19pbml0IGwyeDBfaW5pdCh2b2lk
-IF9faW9tZW0gKmJhc2UsIF9fdTMyIGF1eF92YWwsIF9fdTMyIGF1eF9tYXNrKQo+IMKgIMKgIMKg
-IMKgcHJpbnRrKEtFUk5fSU5GTyAibDJ4MDogJWQgd2F5cywgQ0FDSEVfSUQgMHglMDh4LCBBVVhf
-Q1RSTCAweCUwOHgsIENhY2hlIHNpemU6ICVkIEJcbiIsCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqB3YXlzLCBjYWNoZV9pZCwgYXV4LCBsMngwX3NpemUpOwo+IMKgfQo+ICsK
-PiArI2lmZGVmIENPTkZJR19PRgo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBs
-MngwX2lkc1tdIF9faW5pdGNvbnN0ID0gewo+ICsgwqAgwqAgwqAgeyAuY29tcGF0aWJsZSA9ICJh
-cm0scGwzMTAtY2FjaGUiIH0sCj4gKyDCoCDCoCDCoCB7IC5jb21wYXRpYmxlID0gImFybSxsMjIw
-LWNhY2hlIiB9LAo+ICsgwqAgwqAgwqAgeyAuY29tcGF0aWJsZSA9ICJhcm0sbDIxMC1jYWNoZSIg
-fSwKPiArIMKgIMKgIMKgIHt9Cj4gK307Cj4gKwo+ICtzdGF0aWMgdm9pZCBfX2luaXQgbDJ4MF9v
-Zl9zZXRfYWRkcmVzc19maWx0ZXIoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpucCkKPiArewo+
-ICsgwqAgwqAgwqAgdTMyIHN0YXJ0LCBlbmQ7Cj4gKyDCoCDCoCDCoCBjb25zdCB1MzIgKnByb3A7
-Cj4gKyDCoCDCoCDCoCBpbnQgbGVuOwo+ICsgwqAgwqAgwqAgaW50IGlzX3BsMzEwID0gb2ZfZGV2
-aWNlX2lzX2NvbXBhdGlibGUobnAsICJhcm0scGwzMTAtY2FjaGUiKTsKPiArCj4gKyDCoCDCoCDC
-oCBpZiAoIWlzX3BsMzEwIHx8IChyZWFkbF9yZWxheGVkKGwyeDBfYmFzZSArIEwyWDBfQ1RSTCkg
-JiAxKSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJldHVybjsKPiArCj4gKyDCoCDCoCDCoCBw
-cm9wID0gb2ZfZ2V0X3Byb3BlcnR5KG5wLCAiZmlsdGVyLXJhbmdlcyIsICZsZW4pOwo+ICsgwqAg
-wqAgwqAgaWYgKCFwcm9wIHx8IChsZW4gIT0gKDIgKiBzaXplb2YocHJvcCkpKSkKPiArIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIHJldHVybjsKPiArCj4gKyDCoCDCoCDCoCBzdGFydCA9IGJlMzJfdG9f
-Y3B1cChwcm9wKyspIHwgTDJYMF9BRERSX0ZJTFRFUl9FTjsKPiArIMKgIMKgIMKgIGVuZCA9IGJl
-MzJfdG9fY3B1cChwcm9wKyspOwo+ICsgwqAgwqAgwqAgd3JpdGVsX3JlbGF4ZWQoZW5kLCBsMngw
-X2Jhc2UgKyBMMlgwX0FERFJfRklMVEVSX0VORCk7Cj4gKyDCoCDCoCDCoCB3cml0ZWxfcmVsYXhl
-ZChzdGFydCwgbDJ4MF9iYXNlICsgTDJYMF9BRERSX0ZJTFRFUl9TVEFSVCk7Cj4gK30KPiArCj4g
-K3N0YXRpYyB2b2lkIF9faW5pdCBsMngwX29mX3NldF9yYW1fdGltaW5ncyhjb25zdCBzdHJ1Y3Qg
-ZGV2aWNlX25vZGUgKm5wLAo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgX191MzIgKmF1eF92YWwsIF9fdTMyICphdXhfbWFzaykK
-PiArewo+ICsgwqAgwqAgwqAgdTMyIGRhdGFfcmQgPSAwLCBkYXRhX3dyID0gMCwgZGF0YV9zZXR1
-cCA9IDA7Cj4gKyDCoCDCoCDCoCB1MzIgdGFnX3JkID0gMCwgdGFnX3dyID0gMCwgdGFnX3NldHVw
-ID0gMDsKPiArIMKgIMKgIMKgIHUzMiBkaXJ0eSA9IDA7Cj4gKyDCoCDCoCDCoCBjb25zdCB1MzIg
-KnByb3A7Cj4gKyDCoCDCoCDCoCBpbnQgbGVuOwo+ICsgwqAgwqAgwqAgaW50IGlzX3BsMzEwID0g
-b2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJhcm0scGwzMTAtY2FjaGUiKTsKPiArCj4gKyDC
-oCDCoCDCoCBpZiAocmVhZGxfcmVsYXhlZChsMngwX2Jhc2UgKyBMMlgwX0NUUkwpICYgMSkKPiAr
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJldHVybjsKPiArCj4gKyDCoCDCoCDCoCBwcm9wID0gb2Zf
-Z2V0X3Byb3BlcnR5KG5wLCAiZGF0YS1sYXRlbmN5IiwgJmxlbik7Cj4gKyDCoCDCoCDCoCBpZiAo
-cHJvcCAmJiAobGVuID09ICgzICogc2l6ZW9mKHByb3ApKSkpIHsKPiArIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIGRhdGFfcmQgPSBiZTMyX3RvX2NwdXAocHJvcCsrKTsKPiArIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIGRhdGFfd3IgPSBiZTMyX3RvX2NwdXAocHJvcCsrKTsKPiArIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIGRhdGFfc2V0dXAgPSBiZTMyX3RvX2NwdXAocHJvcCk7Cj4gKyDCoCDCoCDCoCB9Cj4g
-Kwo+ICsgwqAgwqAgwqAgcHJvcCA9IG9mX2dldF9wcm9wZXJ0eShucCwgInRhZy1sYXRlbmN5Iiwg
-Jmxlbik7Cj4gKyDCoCDCoCDCoCBpZiAocHJvcCAmJiAobGVuID09ICgzICogc2l6ZW9mKHByb3Ap
-KSkpIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHRhZ19yZCA9IGJlMzJfdG9fY3B1cChwcm9w
-KyspOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgdGFnX3dyID0gYmUzMl90b19jcHVwKHByb3Ar
-Kyk7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCB0YWdfc2V0dXAgPSBiZTMyX3RvX2NwdXAocHJv
-cCk7Cj4gKyDCoCDCoCDCoCB9Cj4gKwo+ICsgwqAgwqAgwqAgcHJvcCA9IG9mX2dldF9wcm9wZXJ0
-eShucCwgImRpcnR5LWxhdGVuY3kiLCAmbGVuKTsKPiArIMKgIMKgIMKgIGlmIChwcm9wICYmIChs
-ZW4gPT0gc2l6ZW9mKHByb3ApKSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGRpcnR5ID0gYmUz
-Ml90b19jcHVwKHByb3ApOwo+ICsKPiArIMKgIMKgIMKgIGlmIChpc19wbDMxMCAmJiB0YWdfd3Ig
-JiYgdGFnX3JkICYmIHRhZ19zZXR1cCkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHdyaXRlbF9y
-ZWxheGVkKAo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKC0tdGFnX3dyIDw8
-IEwyWDBfTEFURU5DWV9DVFJMX1dSX1NISUZUKSB8Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCAoLS10YWdfcmQgPDwgTDJYMF9MQVRFTkNZX0NUUkxfUkRfU0hJRlQpIHwKPiAr
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICgtLXRhZ19zZXR1cCA8PCBMMlgwX0xB
-VEVOQ1lfQ1RSTF9TRVRVUF9TSElGVCksCj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCBsMngwX2Jhc2UgKyBMMlgwX1RBR19MQVRFTkNZX0NUUkwpOwo+ICsKPiArIMKgIMKgIMKg
-IGlmIChpc19wbDMxMCAmJiBkYXRhX3dyICYmIGRhdGFfcmQgJiYgZGF0YV9zZXR1cCkKPiArIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIHdyaXRlbF9yZWxheGVkKAo+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgKC0tZGF0YV93ciA8PCBMMlgwX0xBVEVOQ1lfQ1RSTF9XUl9TSElGVCkg
-fAo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKC0tZGF0YV9yZCA8PCBMMlgw
-X0xBVEVOQ1lfQ1RSTF9SRF9TSElGVCkgfAo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgKC0tZGF0YV9zZXR1cCA8PCBMMlgwX0xBVEVOQ1lfQ1RSTF9TRVRVUF9TSElGVCksCj4g
-KyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBsMngwX2Jhc2UgKyBMMlgwX1RBR19M
-QVRFTkNZX0NUUkwpOwo+ICsKPiArIMKgIMKgIMKgIGlmICghaXNfcGwzMTAgJiYgdGFnX3JkKSB7
-Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqYXV4X3ZhbCAmPSB+TDJYMF9BVVhfQ1RSTF9UQUdf
-TEFURU5DWV9NQVNLOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKmF1eF92YWwgfD0gLS10YWdf
-cmQgPDwgTDJYMF9BVVhfQ1RSTF9UQUdfTEFURU5DWV9TSElGVDsKPiArIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgICphdXhfbWFzayAmPSB+TDJYMF9BVVhfQ1RSTF9UQUdfTEFURU5DWV9NQVNLOwo+ICsg
-wqAgwqAgwqAgfQo+ICsKPiArIMKgIMKgIMKgIGlmICghaXNfcGwzMTAgJiYgZGF0YV9yZCkgewo+
-ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKmF1eF92YWwgJj0gfkwyWDBfQVVYX0NUUkxfREFUQV9S
-RF9MQVRFTkNZX01BU0s7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqYXV4X3ZhbCB8PSAtLWRh
-dGFfcmQgPDwgTDJYMF9BVVhfQ1RSTF9EQVRBX1JEX0xBVEVOQ1lfU0hJRlQ7Cj4gKyDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCAqYXV4X21hc2sgJj0gfkwyWDBfQVVYX0NUUkxfREFUQV9SRF9MQVRFTkNZ
-X01BU0s7Cj4gKyDCoCDCoCDCoCB9Cj4gKwo+ICsgwqAgwqAgwqAgaWYgKCFpc19wbDMxMCAmJiBk
-YXRhX3dyKSB7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqYXV4X3ZhbCAmPSB+TDJYMF9BVVhf
-Q1RSTF9EQVRBX1dSX0xBVEVOQ1lfTUFTSzsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgICphdXhf
-dmFsIHw9IC0tZGF0YV93ciA8PCBMMlgwX0FVWF9DVFJMX0RBVEFfV1JfTEFURU5DWV9TSElGVDsK
-PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgICphdXhfbWFzayAmPSB+TDJYMF9BVVhfQ1RSTF9EQVRB
-X1dSX0xBVEVOQ1lfTUFTSzsKPiArIMKgIMKgIMKgIH0KPiArCj4gKyDCoCDCoCDCoCBpZiAoIWlz
-X3BsMzEwICYmIGRpcnR5KSB7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqYXV4X3ZhbCAmPSB+
-TDJYMF9BVVhfQ1RSTF9ESVJUWV9MQVRFTkNZX01BU0s7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCAqYXV4X3ZhbCB8PSAtLWRpcnR5IDw8IEwyWDBfQVVYX0NUUkxfRElSVFlfTEFURU5DWV9TSElG
-VDsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgICphdXhfbWFzayAmPSB+TDJYMF9BVVhfQ1RSTF9E
-SVJUWV9MQVRFTkNZX01BU0s7Cj4gKyDCoCDCoCDCoCB9Cj4gK30KPiArCj4gK2ludCBfX2luaXQg
-bDJ4MF9vZl9pbml0KF9fdTMyIGF1eF92YWwsIF9fdTMyIGF1eF9tYXNrKQo+ICt7Cj4gKyDCoCDC
-oCDCoCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOwo+ICsgwqAgwqAgwqAgdm9pZCBfX2lvbWVtICps
-Ml9iYXNlOwo+ICsKPiArIMKgIMKgIMKgIG5wID0gb2ZfZmluZF9tYXRjaGluZ19ub2RlKE5VTEws
-IGwyeDBfaWRzKTsKPiArIMKgIMKgIMKgIGlmICghbnApCj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCByZXR1cm4gLUVOT0RFVjsKPiArIMKgIMKgIMKgIGwyX2Jhc2UgPSBvZl9pb21hcChucCwgMCk7
-Cj4gKyDCoCDCoCDCoCBpZiAoIWwyX2Jhc2UpCj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZXR1
-cm4gLUVOT01FTTsKPiArCj4gKyDCoCDCoCDCoCBsMngwX29mX3NldF9hZGRyZXNzX2ZpbHRlcihu
-cCk7Cj4gKyDCoCDCoCDCoCBsMngwX29mX3NldF9yYW1fdGltaW5ncyhucCwgJmF1eF92YWwsICZh
-dXhfbWFzayk7Cj4gKyDCoCDCoCDCoCBsMngwX2luaXQobDJfYmFzZSwgYXV4X3ZhbCwgYXV4X21h
-c2spOwo+ICsgwqAgwqAgwqAgcmV0dXJuIDA7Cj4gK30KPiArI2VuZGlmCj4gLS0KPiAxLjcuNC4x
-Cj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4g
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwKPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlz
-Y3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9k
-ZXZpY2V0cmVlLWRpc2N1c3MK
+On Mon, Jul 04, 2011 at 06:44:57PM +0200, Sascha Hauer wrote:
+> On Mon, Jul 04, 2011 at 06:20:09PM +0800, Shawn Guo wrote:
+> > On Mon, Jul 04, 2011 at 11:49:21AM +0200, Sascha Hauer wrote:
+> > > On Mon, Jul 04, 2011 at 05:28:01PM +0800, Shawn Guo wrote:
+> > > > On Mon, Jul 04, 2011 at 08:46:03AM +0200, Sascha Hauer wrote:
+> > > > > On Sun, Jul 03, 2011 at 04:16:56PM +0800, Shawn Guo wrote:
+> > > > > > The patch removes all the uses of cpu_is_mx().  Instead, it utilizes
+> > > > > > platform_device_id to distinguish the gpio differences among SoCs.
+> > > > > > 
+> > > > > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > > > > > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > > > ---
+> > > > > >  arch/arm/mach-imx/mm-imx1.c                   |    8 +-
+> > > > > >  arch/arm/mach-imx/mm-imx21.c                  |   12 +-
+> > > > > >  arch/arm/mach-imx/mm-imx25.c                  |    8 +-
+> > > > > >  arch/arm/mach-imx/mm-imx27.c                  |   12 +-
+> > > > > >  arch/arm/mach-imx/mm-imx31.c                  |    6 +-
+> > > > > >  arch/arm/mach-imx/mm-imx35.c                  |    6 +-
+> > > > > >  arch/arm/mach-mx5/mm-mx50.c                   |   12 +-
+> > > > > >  arch/arm/mach-mx5/mm.c                        |   22 ++--
+> > > > > >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c |    4 +-
+> > > > > >  arch/arm/plat-mxc/include/mach/common.h       |    2 +-
+> > > > > >  drivers/gpio/gpio-mxc.c                       |  123 +++++++++++++++++++++----
+> > > > > >  11 files changed, 151 insertions(+), 64 deletions(-)
+> > > > > 
+> > > > > 
+> > > > > Summarizing the renames up:
+> > > > > 
+> > > > > i.MX1  -> imx1-gpio
+> > > > > i.MX21 -> imx2-gpio
+> > > > > i.MX25 -> imx-gpio
+> > > > > i.MX27 -> imx2-gpio
+> > > > > i.MX31 -> imx-gpio
+> > > > > i.MX35 -> imx-gpio
+> > > > > i.MX50 -> imx-gpio
+> > > > > i.MX51 -> imx-gpio
+> > > > > i.MX53 -> imx-gpio
+> > > > > 
+> > > > > This is not consitent. Please either use the full SoC name for all
+> > > > > device ids or use something like imx-gpio-v1, v2...
+> > > > > It's not good that the i.MX25 is not a imx2 and that the 'modern'
+> > > > > i.MXs only have imx-gpio. We all know that your hardware designers
+> > > > > will be creative enough to change the register layout again in the
+> > > > > future.
+> > > > > 
+> > > > Ok, here it is.  It's avoid confusion in machine code, but every
+> > > > time we add a new soc we need to change touch this table, even if
+> > > > the new soc has a total compatible gpio to IMX_GPIO.  I'm fine with
+> > > > either way.
+> > > 
+> > > I'm also fine with imx1-gpio, imx21-gpio and imx31-gpio and all others
+> > > get a compatible entry with these like you did in the uart driver.
+> > > I only want to avoid to have a imx2-gpio when a i.MX25 is incompatible
+> > > with this.
+> > > When we do so it's probably worth to put this into a comment somewhere
+> > > next to the id table. I can imagine people wonder why only such ancient
+> > > SoCs are supported.
+> > > 
+> > So I'm going to do the following to address your concern.  Please let
+> > me know if you still do not buy it.
+> > 
+> > static struct platform_device_id mxc_gpio_devtype[] = {
+> >         {
+> >                 .name = "imx1-gpio",
+> >                 .driver_data = IMX1_GPIO,
+> >         }, {
+> >                 .name = "imx21-gpio",
+> >                 .driver_data = IMX2_GPIO,
+> >         }, {
+> >                 .name = "imx25-gpio",
+> >                 .driver_data = IMX_GPIO,
+> >         }, {
+> >                 .name = "imx27-gpio",
+> >                 .driver_data = IMX2_GPIO,
+> >         }, {
+> >                 .name = "imx-gpio",
+> >                 .driver_data = IMX_GPIO,
+> >         }, {
+> >                 /* sentinel */
+> >         }
+> > };
+> 
+> Read again. We have three different types of gpio irq controllers, they
+> are first seen in the imx1, imx21 and imx31. So all others can be made
+> compatible with these three. No need for imx-gpio, imx25-gpio and
+> imx27-gpio. The mxc_gpio_devtype would look like this:
+> 
+> static struct platform_device_id mxc_gpio_devtype[] = {
+> 	{
+> 		.name = "imx1-gpio",
+> 		.driver_data = IMX1_GPIO,
+> 	}, {
+> 		.name = "imx21-gpio",
+> 		.driver_data = IMX21_GPIO,
+> 	}, {
+> 		.name = "imx31-gpio",
+> 		.driver_data = IMX31_GPIO,
+> 	}, {
+> 	}
+> };
+> 
+This is really what I want to do with dt match table.  But before we
+totally remove platform device probe and switch it over to dt, I'm
+unsure we want to do this.  It will require the following changes on
+platform device code registration right now.  I guess this is
+something you do not want, right?
+
+diff --git a/arch/arm/mach-imx/mm-imx25.c b/arch/arm/mach-imx/mm-imx25.c
+index 1e0c956..ba3009e 100644
+--- a/arch/arm/mach-imx/mm-imx25.c
++++ b/arch/arm/mach-imx/mm-imx25.c
+@@ -86,10 +86,10 @@ static struct sdma_platform_data imx25_sdma_pdata __initdata = {
+
+ void __init imx25_soc_init(void)
+ {
+-       mxc_register_gpio(0, MX25_GPIO1_BASE_ADDR, SZ_16K, MX25_INT_GPIO1, 0);
+-       mxc_register_gpio(1, MX25_GPIO2_BASE_ADDR, SZ_16K, MX25_INT_GPIO2, 0);
+-       mxc_register_gpio(2, MX25_GPIO3_BASE_ADDR, SZ_16K, MX25_INT_GPIO3, 0);
+-       mxc_register_gpio(3, MX25_GPIO4_BASE_ADDR, SZ_16K, MX25_INT_GPIO4, 0);
++       mxc_register_gpio("imx31-gpio", 0, MX25_GPIO1_BASE_ADDR, SZ_16K, MX25_INT_GPIO1, 0);
++       mxc_register_gpio("imx31-gpio", 1, MX25_GPIO2_BASE_ADDR, SZ_16K, MX25_INT_GPIO2, 0);
++       mxc_register_gpio("imx31-gpio", 2, MX25_GPIO3_BASE_ADDR, SZ_16K, MX25_INT_GPIO3, 0);
++       mxc_register_gpio("imx31-gpio", 3, MX25_GPIO4_BASE_ADDR, SZ_16K, MX25_INT_GPIO4, 0);
+
+        imx_add_imx_sdma(MX25_SDMA_BASE_ADDR, MX25_INT_SDMA, &imx25_sdma_pdata);
+ }
+
+diff --git a/arch/arm/mach-imx/mm-imx27.c b/arch/arm/mach-imx/mm-imx27.c
+index 944e02d..81a7870 100644
+--- a/arch/arm/mach-imx/mm-imx27.c
++++ b/arch/arm/mach-imx/mm-imx27.c
+@@ -77,12 +77,12 @@ void __init mx27_init_irq(void)
+
+ void __init imx27_soc_init(void)
+ {
+-       mxc_register_gpio(0, MX27_GPIO1_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
+-       mxc_register_gpio(1, MX27_GPIO2_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
+-       mxc_register_gpio(2, MX27_GPIO3_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
+-       mxc_register_gpio(3, MX27_GPIO4_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
+-       mxc_register_gpio(4, MX27_GPIO5_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
+-       mxc_register_gpio(5, MX27_GPIO6_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
++       mxc_register_gpio("imx21-gpio", 0, MX27_GPIO1_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
++       mxc_register_gpio("imx21-gpio", 1, MX27_GPIO2_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
++       mxc_register_gpio("imx21-gpio", 2, MX27_GPIO3_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
++       mxc_register_gpio("imx21-gpio", 3, MX27_GPIO4_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
++       mxc_register_gpio("imx21-gpio", 4, MX27_GPIO5_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
++       mxc_register_gpio("imx21-gpio", 5, MX27_GPIO6_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
+
+        imx_add_imx_dma();
+ }
+
+diff --git a/arch/arm/mach-imx/mm-imx35.c b/arch/arm/mach-imx/mm-imx35.c
+index da530ca..8b98205 100644
+--- a/arch/arm/mach-imx/mm-imx35.c
++++ b/arch/arm/mach-imx/mm-imx35.c
+@@ -95,9 +95,9 @@ void __init imx35_soc_init(void)
+ {
+        int to_version = mx35_revision() >> 4;
+
+-       mxc_register_gpio(0, MX35_GPIO1_BASE_ADDR, SZ_16K, MX35_INT_GPIO1, 0);
+-       mxc_register_gpio(1, MX35_GPIO2_BASE_ADDR, SZ_16K, MX35_INT_GPIO2, 0);
+-       mxc_register_gpio(2, MX35_GPIO3_BASE_ADDR, SZ_16K, MX35_INT_GPIO3, 0);
++       mxc_register_gpio("imx31-gpio", 0, MX35_GPIO1_BASE_ADDR, SZ_16K, MX35_INT_GPIO1, 0);
++       mxc_register_gpio("imx31-gpio", 1, MX35_GPIO2_BASE_ADDR, SZ_16K, MX35_INT_GPIO2, 0);
++       mxc_register_gpio("imx31-gpio", 2, MX35_GPIO3_BASE_ADDR, SZ_16K, MX35_INT_GPIO3, 0);
+
+        if (to_version == 1) {
+                strncpy(imx35_sdma_pdata.fw_name, "sdma-imx35-to1.bin",
+diff --git a/arch/arm/mach-mx5/mm-mx50.c b/arch/arm/mach-mx5/mm-mx50.c
+index 28c3f60..5c20b33 100644
+--- a/arch/arm/mach-mx5/mm-mx50.c
++++ b/arch/arm/mach-mx5/mm-mx50.c
+@@ -62,10 +62,10 @@ void __init mx50_init_irq(void)
+
+ void __init imx50_soc_init(void)
+ {
+-       mxc_register_gpio(0, MX50_GPIO1_BASE_ADDR, SZ_16K, MX50_INT_GPIO1_LOW, MX50_INT_GPIO1_HIGH);
+-       mxc_register_gpio(1, MX50_GPIO2_BASE_ADDR, SZ_16K, MX50_INT_GPIO2_LOW, MX50_INT_GPIO2_HIGH);
+-       mxc_register_gpio(2, MX50_GPIO3_BASE_ADDR, SZ_16K, MX50_INT_GPIO3_LOW, MX50_INT_GPIO3_HIGH);
+-       mxc_register_gpio(3, MX50_GPIO4_BASE_ADDR, SZ_16K, MX50_INT_GPIO4_LOW, MX50_INT_GPIO4_HIGH);
+-       mxc_register_gpio(4, MX50_GPIO5_BASE_ADDR, SZ_16K, MX50_INT_GPIO5_LOW, MX50_INT_GPIO5_HIGH);
+-       mxc_register_gpio(5, MX50_GPIO6_BASE_ADDR, SZ_16K, MX50_INT_GPIO6_LOW, MX50_INT_GPIO6_HIGH);
++       mxc_register_gpio("imx31-gpio", 0, MX50_GPIO1_BASE_ADDR, SZ_16K, MX50_INT_GPIO1_LOW, MX50_INT_GPIO1_HIGH);
++       mxc_register_gpio("imx31-gpio", 1, MX50_GPIO2_BASE_ADDR, SZ_16K, MX50_INT_GPIO2_LOW, MX50_INT_GPIO2_HIGH);
++       mxc_register_gpio("imx31-gpio", 2, MX50_GPIO3_BASE_ADDR, SZ_16K, MX50_INT_GPIO3_LOW, MX50_INT_GPIO3_HIGH);
++       mxc_register_gpio("imx31-gpio", 3, MX50_GPIO4_BASE_ADDR, SZ_16K, MX50_INT_GPIO4_LOW, MX50_INT_GPIO4_HIGH);
++       mxc_register_gpio("imx31-gpio", 4, MX50_GPIO5_BASE_ADDR, SZ_16K, MX50_INT_GPIO5_LOW, MX50_INT_GPIO5_HIGH);
++       mxc_register_gpio("imx31-gpio", 5, MX50_GPIO6_BASE_ADDR, SZ_16K, MX50_INT_GPIO6_LOW, MX50_INT_GPIO6_HIGH);
+ }
+
+diff --git a/arch/arm/mach-mx5/mm.c b/arch/arm/mach-mx5/mm.c
+index 1b7059f..82ad5be 100644
+--- a/arch/arm/mach-mx5/mm.c
++++ b/arch/arm/mach-mx5/mm.c
+@@ -142,23 +142,23 @@ static struct sdma_platform_data imx53_sdma_pdata __initdata = {
+
+ void __init imx51_soc_init(void)
+ {
+-       mxc_register_gpio(0, MX51_GPIO1_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO1_LOW, MX51_MXC_INT_GPIO1_HIGH);
+-       mxc_register_gpio(1, MX51_GPIO2_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO2_LOW, MX51_MXC_INT_GPIO2_HIGH);
+-       mxc_register_gpio(2, MX51_GPIO3_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO3_LOW, MX51_MXC_INT_GPIO3_HIGH);
+-       mxc_register_gpio(3, MX51_GPIO4_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO4_LOW, MX51_MXC_INT_GPIO4_HIGH);
++       mxc_register_gpio("imx31-gpio", 0, MX51_GPIO1_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO1_LOW, MX51_MXC_INT_GPIO1_HIGH);
++       mxc_register_gpio("imx31-gpio", 1, MX51_GPIO2_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO2_LOW, MX51_MXC_INT_GPIO2_HIGH);
++       mxc_register_gpio("imx31-gpio", 2, MX51_GPIO3_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO3_LOW, MX51_MXC_INT_GPIO3_HIGH);
++       mxc_register_gpio("imx31-gpio", 3, MX51_GPIO4_BASE_ADDR, SZ_16K, MX51_MXC_INT_GPIO4_LOW, MX51_MXC_INT_GPIO4_HIGH);
+
+        imx_add_imx_sdma(MX51_SDMA_BASE_ADDR, MX51_INT_SDMA, &imx51_sdma_pdata);
+ }
+
+ void __init imx53_soc_init(void)
+ {
+-       mxc_register_gpio(0, MX53_GPIO1_BASE_ADDR, SZ_16K, MX53_INT_GPIO1_LOW, MX53_INT_GPIO1_HIGH);
+-       mxc_register_gpio(1, MX53_GPIO2_BASE_ADDR, SZ_16K, MX53_INT_GPIO2_LOW, MX53_INT_GPIO2_HIGH);
+-       mxc_register_gpio(2, MX53_GPIO3_BASE_ADDR, SZ_16K, MX53_INT_GPIO3_LOW, MX53_INT_GPIO3_HIGH);
+-       mxc_register_gpio(3, MX53_GPIO4_BASE_ADDR, SZ_16K, MX53_INT_GPIO4_LOW, MX53_INT_GPIO4_HIGH);
+-       mxc_register_gpio(4, MX53_GPIO5_BASE_ADDR, SZ_16K, MX53_INT_GPIO5_LOW, MX53_INT_GPIO5_HIGH);
+-       mxc_register_gpio(5, MX53_GPIO6_BASE_ADDR, SZ_16K, MX53_INT_GPIO6_LOW, MX53_INT_GPIO6_HIGH);
+-       mxc_register_gpio(6, MX53_GPIO7_BASE_ADDR, SZ_16K, MX53_INT_GPIO7_LOW, MX53_INT_GPIO7_HIGH);
++       mxc_register_gpio("imx31-gpio", 0, MX53_GPIO1_BASE_ADDR, SZ_16K, MX53_INT_GPIO1_LOW, MX53_INT_GPIO1_HIGH);
++       mxc_register_gpio("imx31-gpio", 1, MX53_GPIO2_BASE_ADDR, SZ_16K, MX53_INT_GPIO2_LOW, MX53_INT_GPIO2_HIGH);
++       mxc_register_gpio("imx31-gpio", 2, MX53_GPIO3_BASE_ADDR, SZ_16K, MX53_INT_GPIO3_LOW, MX53_INT_GPIO3_HIGH);
++       mxc_register_gpio("imx31-gpio", 3, MX53_GPIO4_BASE_ADDR, SZ_16K, MX53_INT_GPIO4_LOW, MX53_INT_GPIO4_HIGH);
++       mxc_register_gpio("imx31-gpio", 4, MX53_GPIO5_BASE_ADDR, SZ_16K, MX53_INT_GPIO5_LOW, MX53_INT_GPIO5_HIGH);
++       mxc_register_gpio("imx31-gpio", 5, MX53_GPIO6_BASE_ADDR, SZ_16K, MX53_INT_GPIO6_LOW, MX53_INT_GPIO6_HIGH);
++       mxc_register_gpio("imx31-gpio", 6, MX53_GPIO7_BASE_ADDR, SZ_16K, MX53_INT_GPIO7_LOW, MX53_INT_GPIO7_HIGH);
+
+        imx_add_imx_sdma(MX53_SDMA_BASE_ADDR, MX53_INT_SDMA, &imx53_sdma_pdata);
+ }
+
+-- 
+Regards,
+Shawn
