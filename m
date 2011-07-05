@@ -1,38 +1,30 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Tue, 5 Jul 2011 13:10:14 +0200
-Message-ID: <201107051310.14405.arnd@arndb.de>
-References: <1309231954-23260-1-git-send-email-bs14@csr.com>
-	<201107041653.50962.arnd@arndb.de>
-	<CAGsJ_4wf0Lhe2yHg1fE2QAF40=J6ZoubpfLFWQ6X9o3db0O8LQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v2 0/2] Add device tree probe support for tty/serial/imx
+Date: Tue, 5 Jul 2011 23:05:36 +0800
+Message-ID: <1309878338-25697-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGsJ_4wf0Lhe2yHg1fE2QAF40=J6ZoubpfLFWQ6X9o3db0O8LQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 July 2011, Barry Song wrote:
-> > If your hardware can do that, you can replace the msleep() with a
-> > single readl or a readl()/msleep(1) loop?
-> 
-> i can't agree more. if there is such a register in chip, we would have
-> used it. ic guys confirmed there isn't such a register. so..delay...
+The first patch removes the use of cpu_is_mx1().  The second patch
+adds device tree probe with a dependency on the following patch.
 
-Ok, fair enough. Maybe add a comment then to provide an explanation
-why you are waiting for exactly 10ms. This will show up when people
-try to optimize boot time, so it's good to know for the reader if it
-can be made shorter or not.
+  http://article.gmane.org/gmane.linux.drivers.devicetree/6128
 
-	Arnd
+Changes since v1:
+ * Address review comments given by Grant and Uwe
+
+Shawn Guo (2):
+      serial/imx: get rid of the uses of cpu_is_mx1()
+      serial/imx: add device tree probe support
+
+ .../bindings/tty/serial/fsl-imx-uart.txt           |   19 +++
+ arch/arm/mach-imx/clock-imx1.c                     |    6 +-
+ arch/arm/plat-mxc/devices/platform-imx-uart.c      |    2 +-
+ drivers/tty/serial/imx.c                           |  148 +++++++++++++++++---
+ 4 files changed, 149 insertions(+), 26 deletions(-)
+
