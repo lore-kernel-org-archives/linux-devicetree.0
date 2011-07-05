@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/9] Split out is_printable_string() into util.c
-Date: Tue,  5 Jul 2011 12:02:49 -0700
-Message-ID: <1309892577-23828-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH 5/9] Add utilfdt for common functions, adjust dtget
+Date: Tue,  5 Jul 2011 12:02:53 -0700
+Message-ID: <1309892577-23828-6-git-send-email-sjg@chromium.org>
 References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,159 +20,308 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This useful function is split out so it will be available to programs
-other than ftdump.
+This adds a new utility library for performing libfdt operations, and
+modifies dtget to use it.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- Makefile.ftdump |    3 ++-
- ftdump.c        |   28 +++-------------------------
- util.c          |   28 ++++++++++++++++++++++++++++
- util.h          |   11 +++++++++++
- 4 files changed, 44 insertions(+), 26 deletions(-)
+ Makefile.dtget |    3 +-
+ dtget.c        |   55 +++------------------------
+ utilfdt.c      |  113 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ utilfdt.h      |   58 ++++++++++++++++++++++++++++
+ 4 files changed, 180 insertions(+), 49 deletions(-)
+ create mode 100644 utilfdt.c
+ create mode 100644 utilfdt.h
 
-diff --git a/Makefile.ftdump b/Makefile.ftdump
-index b70905a..2744a18 100644
---- a/Makefile.ftdump
-+++ b/Makefile.ftdump
-@@ -5,7 +5,8 @@
- #
+diff --git a/Makefile.dtget b/Makefile.dtget
+index edda499..fd01055 100644
+--- a/Makefile.dtget
++++ b/Makefile.dtget
+@@ -6,7 +6,8 @@
  
- FTDUMP_SRCS = \
--	ftdump.c
-+	ftdump.c \
-+	util.c
+ DTGET_SRCS = \
+ 	dtget.c \
+-	util.c
++	util.c \
++	utilfdt.c
  
- FTDUMP_GEN_SRCS =
+ DTGET_GEN_SRCS =
  
-diff --git a/ftdump.c b/ftdump.c
-index bce6535..db932e3 100644
---- a/ftdump.c
-+++ b/ftdump.c
-@@ -11,36 +11,14 @@
- #include <fdt.h>
- #include <libfdt_env.h>
+diff --git a/dtget.c b/dtget.c
+index 0ee577c..cbcd4d2 100644
+--- a/dtget.c
++++ b/dtget.c
+@@ -15,8 +15,7 @@
+ #include <libfdt.h>
  
-+#include "util.h"
-+
- #define FTDUMP_BUF_SIZE	65536
+ #include "util.h"
+-
+-#define FTDUMP_BUF_SIZE	65536
++#include "utilfdt.h"
  
- #define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
- #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
- #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
- 
--static int is_printable_string(const void *data, int len)
--{
--	const char *s = data;
--	const char *ss;
--
--	/* zero length is not */
--	if (len == 0)
--		return 0;
--
--	/* must terminate with zero */
--	if (s[len - 1] != '\0')
--		return 0;
--
--	ss = s;
--	while (*s && isprint(*s))
--		s++;
--
--	/* not zero, or not done yet */
--	if (*s != '\0' || (s + 1 - ss) < len)
--		return 0;
--
--	return 1;
--}
--
- static void print_data(const char *data, int len)
+ static void report_error(const char *where, int err)
  {
- 	int i;
-@@ -50,7 +28,7 @@ static void print_data(const char *data, int len)
- 	if (len == 0)
- 		return;
+@@ -62,31 +61,16 @@ static void show_data(const char *format, int type, const char *data, int len)
+ static int show_data_for_key(const void *blob, const char *format, int type,
+ 			     char *key)
+ {
+-	char *ptr, *prop;
++	char *prop;
+ 	int node, guess_node = 0;
+ 	const void *value;
+ 	int len;
  
--	if (is_printable_string(data, len)) {
-+	if (util_is_printable_string(data, len)) {
- 		printf(" = \"%s\"", (const char *)data);
- 	} else if ((len % 4) == 0) {
- 		printf(" = <");
-diff --git a/util.c b/util.c
-index d7ac27d..994436f 100644
---- a/util.c
-+++ b/util.c
-@@ -1,6 +1,9 @@
- /*
-  * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
-  *
-+ * util_is_printable_string contributed by
-+ *	Pantelis Antoniou <pantelis.antoniou AT gmail.com>
+-	/* First extract the property from the end */
+-	ptr = strrchr(key, '/');
+-	if (!ptr) {
+-		fprintf(stderr, "No node found in key '%s'\n", key);
+-		return 5;
+-	}
+-
+-	if (ptr == key) {
+-		guess_node = fdt_path_offset(blob, key);
+-		node = fdt_path_offset(blob, "/");
+-	} else {
+-		*ptr = '\0';
+-		node = fdt_path_offset(blob, key);
+-		*ptr = '/';
+-	}
++	node = util_decode_key(blob, key, &prop, &guess_node);
+ 	if (node < 0) {
+ 		report_error(key, node);
+ 		return 7;
+ 	}
+-	prop = ptr + 1;
+ 	value = fdt_getprop(blob, node, prop, &len);
+ 	if (!value) {
+ 		report_error(prop, len);
+@@ -103,40 +87,15 @@ static int show_data_for_key(const void *blob, const char *format, int type,
+ static int do_dtget(const char *filename, const char *format, int type,
+ 		    char **key, int key_count)
+ {
+-	FILE *fp;
+-	char *buf;
+-	size_t size;
++	char *blob;
+ 	int i, ret;
+ 
+-	if (strcmp(filename, "-") == 0) {
+-		fp = stdin;
+-	} else {
+-		fp = fopen(filename, "rb");
+-		if (fp == NULL) {
+-			fprintf(stderr, "unable to open %s\n", filename);
+-			return 10;
+-		}
+-	}
+-
+-	buf = malloc(FTDUMP_BUF_SIZE);
+-	if (!buf) {
+-		fprintf(stderr, "Couldn't allocate %d byte buffer\n",
+-			FTDUMP_BUF_SIZE);
++	blob = util_read_fdt(filename);
++	if (!blob)
+ 		return 10;
+-	}
+ 
+-	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
+-	if (!feof(fp)) {
+-		fprintf(stderr, "file too large (maximum is %d bytes)\n",
+-			FTDUMP_BUF_SIZE);
+-		return 10;
+-	}
+-	if (ferror(fp)) {
+-		fprintf(stderr, "file read error\n");
+-		return 10;
+-	}
+ 	for (i = 0; i < key_count; i++) {
+-		ret = show_data_for_key(buf, format, type, key[i]);
++		ret = show_data_for_key(blob, format, type, key[i]);
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/utilfdt.c b/utilfdt.c
+new file mode 100644
+index 0000000..3cbd566
+--- /dev/null
++++ b/utilfdt.c
+@@ -0,0 +1,113 @@
++/*
++ * Copyright 2001 The Chromium Authors, All Rights Reserved.
 + *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License as
-  * published by the Free Software Foundation; either version 2 of the
-@@ -17,6 +20,7 @@
-  *                                                                   USA
-  */
- 
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
++
 +#include <ctype.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <stdarg.h>
-@@ -57,3 +61,27 @@ char *join_path(const char *path, const char *name)
- 	memcpy(str+lenp, name, lenn+1);
- 	return str;
- }
-+
-+int util_is_printable_string(const void *data, int len)
-+{
-+	const char *s = data;
-+	const char *ss;
-+
-+	/* zero length is not */
-+	if (len == 0)
-+		return 0;
-+
-+	/* must terminate with zero */
-+	if (s[len - 1] != '\0')
-+		return 0;
-+
-+	ss = s;
-+	while (*s && isprint(*s))
-+		s++;
-+
-+	/* not zero, or not done yet */
-+	if (*s != '\0' || (s + 1 - ss) < len)
-+		return 0;
-+
-+	return 1;
-+}
-diff --git a/util.h b/util.h
-index 9cead84..cc68933 100644
---- a/util.h
-+++ b/util.h
-@@ -1,6 +1,8 @@
- #ifndef _UTIL_H
- #define _UTIL_H
- 
++#include <stdio.h>
++#include <stdlib.h>
 +#include <stdarg.h>
++#include <string.h>
 +
- /*
-  * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
-  *
-@@ -53,4 +55,13 @@ static inline void *xrealloc(void *p, size_t len)
- extern char *xstrdup(const char *s);
- extern char *join_path(const char *path, const char *name);
- 
-+/**
-+ * Check a string of a given length to see if it is all printable and
-+ * has a valid terminator.
++#include "libfdt.h"
++#include "utilfdt.h"
++
++#define FTDUMP_BUF_SIZE	65536
++
++char *util_read_fdt(const char *filename)
++{
++	FILE *fp;
++	char *buf;
++	int size;
++
++	if (strcmp(filename, "-") == 0) {
++		fp = stdin;
++	} else {
++		fp = fopen(filename, "rb");
++		if (fp == NULL) {
++			fprintf(stderr, "unable to open '%s'\n", filename);
++			return NULL;
++		}
++	}
++
++	buf = malloc(FTDUMP_BUF_SIZE);
++	if (!buf) {
++		fprintf(stderr, "Couldn't allocate %d byte buffer\n",
++			FTDUMP_BUF_SIZE);
++		return NULL;
++	}
++
++	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
++	if (!feof(fp)) {
++		fprintf(stderr, "file too large (maximum is %d bytes)\n",
++			FTDUMP_BUF_SIZE);
++	} else if (ferror(fp))
++		fprintf(stderr, "file read error\n");
++	else
++		return buf;
++	free(buf);
++	return NULL;
++}
++
++int util_write_fdt(const char *buf, const char *filename)
++{
++	FILE *fp;
++	size_t size, written;
++
++	if (strcmp(filename, "-") == 0) {
++		fp = stdout;
++	} else {
++		fp = fopen(filename, "wb");
++		if (fp == NULL) {
++			fprintf(stderr, "unable to open %s\n", filename);
++			return -1;
++		}
++	}
++
++	size = fdt_totalsize(buf);
++	written = fwrite(buf, 1, size, fp);
++	if (size != written) {
++		fprintf(stderr, "file write failed\n");
++		return -1;
++	}
++	return 0;
++}
++
++int util_decode_key(const char *blob, char *key, char **prop, int *guess_node)
++{
++	int node;
++	char *ptr;
++
++	/* First extract the property from the end */
++	*guess_node = 0;
++	ptr = strrchr(key, '/');
++	if (!ptr) {
++		fprintf(stderr, "No node found in key '%s'\n", key);
++		return -FDT_ERR_NOTFOUND;
++	}
++
++	if (ptr == key) {
++		*guess_node = fdt_path_offset(blob, key);
++		node = fdt_path_offset(blob, "/");
++	} else {
++		*ptr = '\0';
++		node = fdt_path_offset(blob, key);
++		*ptr = '/';
++	}
++	*prop = ptr + 1;
++	return node;
++}
+diff --git a/utilfdt.h b/utilfdt.h
+new file mode 100644
+index 0000000..79c218f
+--- /dev/null
++++ b/utilfdt.h
+@@ -0,0 +1,58 @@
++#ifndef _UTILFDT_H
++#define _UTILFDT_H
++
++/*
++ * Copyright 2001 The Chromium Authors, All Rights Reserved.
 + *
-+ * @param data	The string to check
-+ * @param len	The string length including terminator
-+ * @return 1 if a valid printable string, 0 if not */
-+int util_is_printable_string(const void *data, int len);
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
 +
- #endif /* _UTIL_H */
++/**
++ * Read a device tree file into a buffer.
++ *
++ * @param filename	The filename to read, or - for stdin
++ * @return		Poiner to allocated buffer containing fdt, or NULL
++ *			on error
++ */
++char *util_read_fdt(const char *filename);
++
++/**
++ * Write a device tree buffer to a file.
++ *
++ * @param filename	The filename to write, or - for stdout
++ * @param buf		Poiner to buffer containing fdt
++ * @return 0 if ok, -1 on error
++ */
++int util_write_fdt(const char *buf, const char *filename);
++
++/**
++ * Decode a node and property from a key string.
++ *
++ * This converts a key of the form /lcd/width into a node offset (/lcd) and
++ * a property (width).
++ *
++ * @param blob		Device tree blob
++ * @param key		Key string to decode
++ * @param prop		Returns pointer to property string within key
++ * @param guess_node	Normally <= 0, but if not then this is the offset of
++ *			a node that the caller MAY be referring to. For example
++ *			if key="/width" and there is a node /width, then
++ *			guess_node will return the offset of /width. It is used
++ *			to print a helpful error message.
++ */
++int util_decode_key(const char *blob, char *key, char **prop, int *guess_node);
++
++#endif /* _UTILFDT_H */
 -- 
 1.7.3.1
