@@ -1,61 +1,91 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Tegra device name for device tree
-Date: Tue, 5 Jul 2011 12:29:56 -0600
-Message-ID: <CACxGe6tWC2bQ=cRp=odY+suJe5DVym1L6peurk_Ldu-mY_rTzA@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF049E21BE97@HQMAIL01.nvidia.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 0/9] Add dtget and dtput for access to fdt from build system
+Date: Tue,  5 Jul 2011 12:02:48 -0700
+Message-ID: <1309892577-23828-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF049E21BE97-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 5, 2011 at 12:22 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Grant et. al.,
->
-> It recently dawned on me that all the Tegra DeviceTree support is using a
-> marketing name for the SoC ("tegra250"). NVIDIA would prefer that we use
-> engineering names for the SoC (e.g. "tegra20" now, "tegra30" for an
-> upcoming SoC). The primary motivation for this is that engineering names
-> tend to be more stable and map more directly to the HW design.
->
-> Is it still possible to make this change, if I submit the appropriate
-> patches to do this?
+This patch set adds two new utilities:
 
-Yes, please do.  I'm completely in support of that.
+   dtget for reading properties from a device tree binary file
+   dtput for updating the device tree binary file
 
-> So, far, I see devicetree/next only refers to the Tegra serial port,
-> whereas devicetree/arm and devicetree/test refer to more Tegra devices in
-> this way. I'm not quite sure how the flow of patches works between these 3
-> trees. For the serial port, I obviously need to submit a patch against
-> devicetree/next, but I'm not so sure about which of devicetree/arm or
-> devicetree/test to target for the other devices.
+These are useful in scripts where configuration or other information must be
+passed to the running system from the build system or vice versa. For example,
+dtget can be used to obtain the LCD screen width/height for use with preparing
+custom bitmap images for display on the screen. Going the other way, dtput can
+be used to set configuration parameters known only to the build or
+manufacturing test system, for example a hardware ID or the particular type
+of boot EEPROM used on this PCB.
 
-devicetree/next is the stuff I'm actually merging.  devicetree/test is
-stuff being experimented with, and devicetree/arm is stuff I expect to
-get merged, but I'm not actually merging through my tree (or just
-isn't quite ready yet).  You can use devicetree/test as a staging
-ground for getting things ready for upstream.  Let me know if anything
-you see in devicetree/test needs to get upstreamed ASAP because your
-work depends on it, and we'll figure out how/when to get it done.
+It is desirable to use these utilities rather than parsing or updating the
+device tree source file, since this parsing is already implemented in dtc and
+it makes no sense to reimplement it in a script. It also means that the build
+system and the run-time environment see the same device tree values, so that
+parsing or updating bugs do not creap in.
 
-g.
+I believe that these utilities belong with dtc rather than libfdt since they
+are more useful in the build system context rather than at run-time. At
+run-time it is easier and better to use the provided library rather than
+these utiltiies. But for build scripts and production automation, these
+uitilites are better.
+
+Some effort has been made to add tests and to use a sensible parameter format,
+but comments are welcome on these and any other part of this patch set.
 
 
->
-> Sorry for bringing this up so late in the game.
->
-> Thanks!
->
-> --
-> nvpublic
->
->
+Simon Glass (9):
+  Split out is_printable_string() into util.c
+  Add dtget utility to read property values from device tree
+  Add basic tests for dtget
+  Add missing tests to .gitignore
+  Add utilfdt for common functions, adjust dtget
+  Add new dtput utility to write values to fdt
+  Add some tests for dtput
+  Add dtput to .gitignore
+  dtput: Support adding strings with spaces
 
-
+ .gitignore             |    2 +
+ Makefile               |   14 ++++
+ Makefile.dtget         |   14 ++++
+ Makefile.dtput         |   14 ++++
+ Makefile.ftdump        |    3 +-
+ dtget.c                |  166 +++++++++++++++++++++++++++++++++++++++
+ dtput.c                |  204 ++++++++++++++++++++++++++++++++++++++++++++++++
+ ftdump.c               |   28 +------
+ tests/.gitignore       |    2 +
+ tests/dtget-runtest.sh |   30 +++++++
+ tests/dtget-test.dts   |   63 +++++++++++++++
+ tests/dtput-runtest.sh |   50 ++++++++++++
+ tests/run_tests.sh     |   73 +++++++++++++++++-
+ tests/tests.sh         |    2 +
+ util.c                 |   28 +++++++
+ util.h                 |   11 +++
+ utilfdt.c              |  113 ++++++++++++++++++++++++++
+ utilfdt.h              |   58 ++++++++++++++
+ 18 files changed, 848 insertions(+), 27 deletions(-)
+ create mode 100644 Makefile.dtget
+ create mode 100644 Makefile.dtput
+ create mode 100644 dtget.c
+ create mode 100644 dtput.c
+ create mode 100755 tests/dtget-runtest.sh
+ create mode 100644 tests/dtget-test.dts
+ create mode 100644 tests/dtput-runtest.sh
+ create mode 100644 utilfdt.c
+ create mode 100644 utilfdt.h
 
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+1.7.3.1
