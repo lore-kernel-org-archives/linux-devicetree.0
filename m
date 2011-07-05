@@ -1,7 +1,7 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH v2 1/3] gpio/mxc: get gpio range/base from gpio core
-Date: Tue, 5 Jul 2011 23:19:24 +0800
-Message-ID: <1309879166-25788-2-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH v2 3/3] gpio/mxc: add device tree probe support
+Date: Tue, 5 Jul 2011 23:19:26 +0800
+Message-ID: <1309879166-25788-4-git-send-email-shawn.guo@linaro.org>
 References: <1309879166-25788-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,150 +18,96 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, patches@linaro.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of assigning the gpio range based on pdev->id, the patch
-makes changes to get the range from gpio core that is dynamically
-allocated.
-
-As a result, the uses of pdev->id can be removed from the driver.
-This will make dt migration of the driver easier.
+The patch adds device tree probe support for gpio-mxc driver.
 
 Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- arch/arm/plat-mxc/include/mach/gpio.h |   13 +++++++++----
- arch/arm/plat-mxc/include/mach/irqs.h |   21 +++------------------
- drivers/gpio/gpio-mxc.c               |   18 ++++++++++--------
- 3 files changed, 22 insertions(+), 30 deletions(-)
+ .../devicetree/bindings/gpio/fsl-imx-gpio.txt      |   22 ++++++++++++++++++++
+ drivers/gpio/gpio-mxc.c                            |   18 +++++++++++++++-
+ 2 files changed, 39 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
 
-diff --git a/arch/arm/plat-mxc/include/mach/gpio.h b/arch/arm/plat-mxc/include/mach/gpio.h
-index 31c820c..abdf5d7 100644
---- a/arch/arm/plat-mxc/include/mach/gpio.h
-+++ b/arch/arm/plat-mxc/include/mach/gpio.h
-@@ -23,10 +23,15 @@
- #include <mach/hardware.h>
- #include <asm-generic/gpio.h>
- 
--
--/* There's a off-by-one betweem the gpio bank number and the gpiochip */
--/* range e.g. GPIO_1_5 is gpio 5 under linux */
--#define IMX_GPIO_NR(bank, nr)		(((bank) - 1) * 32 + (nr))
-+/*
-+ * There's a off-by-one betweem the gpio bank number and the gpiochip
-+ * range e.g. GPIO_1_5 is gpio 5 under linux.
-+ *
-+ * When gpio core allocates gpio range for a bank, it starts from the
-+ * end of the total range.  That is to say, bank 0 will get a higher
-+ * gpio range than bank 1.
-+ */
-+#define IMX_GPIO_NR(bank, nr)	(ARCH_NR_GPIOS - (bank) * 32 + (nr))
- 
- /* use gpiolib dispatchers */
- #define gpio_get_value		__gpio_get_value
-diff --git a/arch/arm/plat-mxc/include/mach/irqs.h b/arch/arm/plat-mxc/include/mach/irqs.h
-index 35c89bc..00e812b 100644
---- a/arch/arm/plat-mxc/include/mach/irqs.h
-+++ b/arch/arm/plat-mxc/include/mach/irqs.h
-@@ -11,6 +11,8 @@
- #ifndef __ASM_ARCH_MXC_IRQS_H__
- #define __ASM_ARCH_MXC_IRQS_H__
- 
-+#include <asm-generic/gpio.h>
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+new file mode 100644
+index 0000000..4363ae4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+@@ -0,0 +1,22 @@
++* Freescale i.MX/MXC GPIO controller
 +
- /*
-  * SoCs with TZIC interrupt controller have 128 IRQs, those with AVIC have 64
-  */
-@@ -22,30 +24,13 @@
- 
- #define MXC_GPIO_IRQ_START	MXC_INTERNAL_IRQS
- 
--/* these are ordered by size to support multi-SoC kernels */
--#if defined CONFIG_SOC_IMX53
--#define MXC_GPIO_IRQS		(32 * 7)
--#elif defined CONFIG_ARCH_MX2
--#define MXC_GPIO_IRQS		(32 * 6)
--#elif defined CONFIG_SOC_IMX50
--#define MXC_GPIO_IRQS		(32 * 6)
--#elif defined CONFIG_ARCH_MX1
--#define MXC_GPIO_IRQS		(32 * 4)
--#elif defined CONFIG_ARCH_MX25
--#define MXC_GPIO_IRQS		(32 * 4)
--#elif defined CONFIG_SOC_IMX51
--#define MXC_GPIO_IRQS		(32 * 4)
--#elif defined CONFIG_ARCH_MX3
--#define MXC_GPIO_IRQS		(32 * 3)
--#endif
--
- /*
-  * The next 16 interrupts are for board specific purposes.  Since
-  * the kernel can only run on one machine at a time, we can re-use
-  * these.  If you need more, increase MXC_BOARD_IRQS, but keep it
-  * within sensible limits.
-  */
--#define MXC_BOARD_IRQ_START	(MXC_INTERNAL_IRQS + MXC_GPIO_IRQS)
-+#define MXC_BOARD_IRQ_START	(MXC_INTERNAL_IRQS + ARCH_NR_GPIOS)
- 
- #ifdef CONFIG_MACH_MX31ADS_WM1133_EV1
- #define MXC_BOARD_IRQS  80
++Required properties:
++- compatible : Should be "fsl,<soc>-gpio"
++- reg : Address and length of the register set for the device
++- interrupts : Should be the port interrupt shared by all 32 pins, if
++  one number.  If two numbers, the first one is the interrupt shared
++  by low 16 pins and the second one is for high 16 pins.
++- gpio-controller : Marks the device node as a gpio controller.
++- #gpio-cells : Should be two.  The first cell is the pin number and
++  the second cell is used to specify optional parameters (currently
++  unused).
++
++Example:
++
++gpio0: gpio@73f84000 {
++	compatible = "fsl,imx51-gpio", "fsl,imx31-gpio";
++	reg = <0x73f84000 0x4000>;
++	interrupts = <50 51>;
++	gpio-controller;
++	#gpio-cells = <2>;
++};
 diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 2f6a81b..8241680 100644
+index 4875690..059d44a 100644
 --- a/drivers/gpio/gpio-mxc.c
 +++ b/drivers/gpio/gpio-mxc.c
-@@ -240,14 +240,13 @@ static int __devinit mxc_gpio_probe(struct platform_device *pdev)
+@@ -27,6 +27,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/basic_mmio_gpio.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <asm-generic/bug.h>
+ 
+ enum mxc_gpio_hwtype {
+@@ -126,6 +128,13 @@ static struct platform_device_id mxc_gpio_devtype[] = {
+ 	}
+ };
+ 
++static const struct of_device_id mxc_gpio_dt_ids[] = {
++	{ .compatible = "fsl,imx1-gpio", .data = &mxc_gpio_devtype[IMX1_GPIO], },
++	{ .compatible = "fsl,imx21-gpio", .data = &mxc_gpio_devtype[IMX2_GPIO], },
++	{ .compatible = "fsl,imx31-gpio", .data = &mxc_gpio_devtype[IMX_GPIO], },
++	{ /* sentinel */ }
++};
++
+ /*
+  * MX2 has one interrupt *for all* gpio ports. The list is used
+  * to save the references to all ports, so that mx2_gpio_irq_handler
+@@ -308,7 +317,13 @@ static void __init mxc_gpio_init_gc(struct mxc_gpio_port *port)
+ 
+ static void __devinit mxc_gpio_get_hw(struct platform_device *pdev)
  {
- 	struct mxc_gpio_port *port;
- 	struct resource *iores;
-+	static int once = 0;
- 	int err;
- 
- 	port = kzalloc(sizeof(struct mxc_gpio_port), GFP_KERNEL);
- 	if (!port)
- 		return -ENOMEM;
- 
--	port->virtual_irq_start = MXC_GPIO_IRQ_START + pdev->id * 32;
--
- 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!iores) {
- 		err = -ENODEV;
-@@ -277,14 +276,13 @@ static int __devinit mxc_gpio_probe(struct platform_device *pdev)
- 	writel(0, port->base + GPIO_IMR);
- 	writel(~0, port->base + GPIO_ISR);
- 
--	/* gpio-mxc can be a generic irq chip */
--	mxc_gpio_init_gc(port);
--
- 	if (cpu_is_mx2()) {
- 		/* setup one handler for all GPIO interrupts */
--		if (pdev->id == 0)
-+		if (!once) {
- 			irq_set_chained_handler(port->irq,
- 						mx2_gpio_irq_handler);
-+			once = 1;
-+		}
- 	} else {
- 		/* setup one handler for each entry */
- 		irq_set_chained_handler(port->irq, mx3_gpio_irq_handler);
-@@ -304,12 +302,16 @@ static int __devinit mxc_gpio_probe(struct platform_device *pdev)
- 	if (err)
- 		goto out_iounmap;
- 
--	port->bgc.gc.base = pdev->id * 32;
--
- 	err = gpiochip_add(&port->bgc.gc);
- 	if (err)
- 		goto out_bgpio_remove;
- 
-+	/* Here, we get a gpio number range/base assigned by gpio core */
-+	port->virtual_irq_start = MXC_GPIO_IRQ_START + port->bgc.gc.base;
+-	enum mxc_gpio_hwtype hwtype = pdev->id_entry->driver_data;
++	const struct of_device_id *of_id =
++			of_match_device(mxc_gpio_dt_ids, &pdev->dev);
++	enum mxc_gpio_hwtype hwtype;
 +
-+	/* gpio-mxc can be a generic irq chip */
-+	mxc_gpio_init_gc(port);
-+
- 	list_add_tail(&port->node, &mxc_gpio_ports);
++	if (of_id)
++		pdev->id_entry = of_id->data;
++	hwtype = pdev->id_entry->driver_data;
  
- 	return 0;
+ 	if (mxc_gpio_hwtype) {
+ 		/*
+@@ -426,6 +441,7 @@ static struct platform_driver mxc_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "gpio-mxc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = mxc_gpio_dt_ids,
+ 	},
+ 	.probe		= mxc_gpio_probe,
+ 	.id_table	= mxc_gpio_devtype,
 -- 
 1.7.4.1
