@@ -1,11 +1,13 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 0/9] Add dtget and dtput for access to fdt from build system
-Date: Tue,  5 Jul 2011 12:02:48 -0700
-Message-ID: <1309892577-23828-1-git-send-email-sjg@chromium.org>
+Subject: [PATCH 3/9] Add basic tests for dtget
+Date: Tue,  5 Jul 2011 12:02:51 -0700
+Message-ID: <1309892577-23828-4-git-send-email-sjg@chromium.org>
+References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1309892577-23828-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,74 +20,198 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds two new utilities:
 
-   dtget for reading properties from a device tree binary file
-   dtput for updating the device tree binary file
-
-These are useful in scripts where configuration or other information must be
-passed to the running system from the build system or vice versa. For example,
-dtget can be used to obtain the LCD screen width/height for use with preparing
-custom bitmap images for display on the screen. Going the other way, dtput can
-be used to set configuration parameters known only to the build or
-manufacturing test system, for example a hardware ID or the particular type
-of boot EEPROM used on this PCB.
-
-It is desirable to use these utilities rather than parsing or updating the
-device tree source file, since this parsing is already implemented in dtc and
-it makes no sense to reimplement it in a script. It also means that the build
-system and the run-time environment see the same device tree values, so that
-parsing or updating bugs do not creap in.
-
-I believe that these utilities belong with dtc rather than libfdt since they
-are more useful in the build system context rather than at run-time. At
-run-time it is easier and better to use the provided library rather than
-these utiltiies. But for build scripts and production automation, these
-uitilites are better.
-
-Some effort has been made to add tests and to use a sensible parameter format,
-but comments are welcome on these and any other part of this patch set.
-
-
-Simon Glass (9):
-  Split out is_printable_string() into util.c
-  Add dtget utility to read property values from device tree
-  Add basic tests for dtget
-  Add missing tests to .gitignore
-  Add utilfdt for common functions, adjust dtget
-  Add new dtput utility to write values to fdt
-  Add some tests for dtput
-  Add dtput to .gitignore
-  dtput: Support adding strings with spaces
-
- .gitignore             |    2 +
- Makefile               |   14 ++++
- Makefile.dtget         |   14 ++++
- Makefile.dtput         |   14 ++++
- Makefile.ftdump        |    3 +-
- dtget.c                |  166 +++++++++++++++++++++++++++++++++++++++
- dtput.c                |  204 ++++++++++++++++++++++++++++++++++++++++++++++++
- ftdump.c               |   28 +------
- tests/.gitignore       |    2 +
- tests/dtget-runtest.sh |   30 +++++++
- tests/dtget-test.dts   |   63 +++++++++++++++
- tests/dtput-runtest.sh |   50 ++++++++++++
- tests/run_tests.sh     |   73 +++++++++++++++++-
- tests/tests.sh         |    2 +
- util.c                 |   28 +++++++
- util.h                 |   11 +++
- utilfdt.c              |  113 ++++++++++++++++++++++++++
- utilfdt.h              |   58 ++++++++++++++
- 18 files changed, 848 insertions(+), 27 deletions(-)
- create mode 100644 Makefile.dtget
- create mode 100644 Makefile.dtput
- create mode 100644 dtget.c
- create mode 100644 dtput.c
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ tests/dtget-runtest.sh |   30 ++++++++++++++++++++++
+ tests/dtget-test.dts   |   63 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/run_tests.sh     |   33 ++++++++++++++++++++++++-
+ tests/tests.sh         |    1 +
+ 4 files changed, 126 insertions(+), 1 deletions(-)
  create mode 100755 tests/dtget-runtest.sh
  create mode 100644 tests/dtget-test.dts
- create mode 100644 tests/dtput-runtest.sh
- create mode 100644 utilfdt.c
- create mode 100644 utilfdt.h
 
+diff --git a/tests/dtget-runtest.sh b/tests/dtget-runtest.sh
+new file mode 100755
+index 0000000..aa2b744
+--- /dev/null
++++ b/tests/dtget-runtest.sh
+@@ -0,0 +1,30 @@
++#! /bin/sh
++
++. ./tests.sh
++
++LOG="tmp.log.$$"
++EXPECT="tmp.expect.$$"
++
++rm -f $TMPFILE $LOG
++
++echo "$1" >$EXPECT
++shift
++
++verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
++ret="$?"
++
++if [ "$ret" -gt 127 ]; then
++    signame=$(kill -l $[ret - 128])
++    FAIL "Killed by SIG$signame"
++fi
++
++diff $EXPECT $LOG
++ret="$?"
++
++rm -f $LOG $EXPECT
++
++if [ "$ret" -eq 0 ]; then
++	PASS
++else
++	FAIL
++fi
+diff --git a/tests/dtget-test.dts b/tests/dtget-test.dts
+new file mode 100644
+index 0000000..79f9633
+--- /dev/null
++++ b/tests/dtget-test.dts
+@@ -0,0 +1,63 @@
++/dts-v1/;
++
++/memreserve/ 0x1000000000000000 0x0000000002000000;
++memrsv2: /memreserve/ 0x2000000000000000 0x0100000000000000;
++/memreserve/ 0x0000000000000000 0x0000000000000014;
++
++/ {
++	model = "MyBoardName";
++	compatible = "MyBoardName", "MyBoardFamilyName";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		linux,phandle = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		PowerPC,970@0 {
++			name = "PowerPC,970";
++			device_type = "cpu";
++			reg = <0x00000000>;
++			clock-frequency = <1600000000>;
++			timebase-frequency = <33333333>;
++			linux,boot-cpu;
++			i-cache-size = <65536>;
++			d-cache-size = <32768>;
++		};
++
++		PowerPC,970@1 {
++			name = "PowerPC,970";
++			device_type = "cpu";
++			reg = <0x00000001>;
++			clock-frequency = <1600000000>;
++			timebase-frequency = <33333333>;
++			i-cache-size = <65536>;
++			d-cache-size = <32768>;
++		};
++
++	};
++
++	node: randomnode {
++		prop: string = str: "foo", "stuffstuff\t\t\t\n\n\n" str_end: ;
++		blob = [byte: 0a 0b 0c 0d byte_mid: de ea ad be ef byte_end: ];
++		ref = < cell: &{/memory@0} 0x0 cell_mid: 0xffffffff cell_end: >;
++		mixed = "abc", pre: [1234] post: , gap: < aligned: 0xa 0xb 0xc>;
++		tricky1 = [61 lt1: 62 63 00];
++		subnode: child {
++		};
++		/* subnode_end: is auto-generated by node emit */
++	};
++	/* node_end: is auto-generated by node emit */
++
++	memory@0 {
++		device_type = "memory";
++		memreg: reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
++	};
++
++	chosen {
++		bootargs = "root=/dev/sda2";
++		linux,platform = <0x600>;
++	};
++
++};
++
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 72dda32..01a2b60 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -83,6 +83,12 @@ asm_to_so_test () {
+     run_wrap_test asm_to_so "$@"
+ }
+ 
++run_dtget_test () {
++    echo -n "$1:	"
++    shift
++    base_run_test sh dtget-runtest.sh "$@"
++}
++
+ tree1_tests () {
+     TREE=$1
+ 
+@@ -388,6 +394,28 @@ dtbs_equal_tests () {
+     cmp_tests test_tree1.dtb $WRONG_TREE1
+ }
+ 
++dtget_tests () {
++    file=dtget-test.dtb
++    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
++
++    # run_dtget_test <test-name> <expected-result> <args>...
++    run_dtget_test "Simple string" "MyBoardName" $file "/model"
++    run_dtget_test "Multiple string i" "77 121 66 111 \
++97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
++108 121 78 97 109 101 0" $file "/compatible"
++    run_dtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
++	-t s $file "/compatible"
++    run_dtget_test "Integer" "32768" $file "/cpus/PowerPC,970@1/d-cache-size"
++    run_dtget_test "Integer hex" "8000" -f %x $file \
++	"/cpus/PowerPC,970@1/d-cache-size"
++    run_dtget_test "Integer list" "61 62 63 00" -f %02x -t b $file \
++	"/randomnode/tricky1"
++    run_dtget_test "Byte list short" "a b c d de ea ad be ef" -f %x -t b \
++	$file "/randomnode/blob"
++    run_dtget_test "Integer list short" "a0b0c0d deeaadbe ef000000" -f %x \
++	-t i $file "/randomnode/blob"
++}
++
+ while getopts "vt:m" ARG ; do
+     case $ARG in
+ 	"v")
+@@ -403,7 +431,7 @@ while getopts "vt:m" ARG ; do
+ done
+ 
+ if [ -z "$TESTSETS" ]; then
+-    TESTSETS="libfdt dtc dtbs_equal"
++    TESTSETS="libfdt dtc dtbs_equal dtget"
+ fi
+ 
+ # Make sure we don't have stale blobs lying around
+@@ -420,6 +448,9 @@ for set in $TESTSETS; do
+ 	"dtbs_equal")
+ 	    dtbs_equal_tests
+ 	    ;;
++	"dtget")
++	    dtget_tests
++	    ;;
+     esac
+ done
+ 
+diff --git a/tests/tests.sh b/tests/tests.sh
+index 30ffead..cf7f19e 100644
+--- a/tests/tests.sh
++++ b/tests/tests.sh
+@@ -11,6 +11,7 @@ FAIL () {
+ }
+ 
+ DTC=../dtc
++DTGET=../dtget
+ 
+ verbose_run () {
+     if [ -z "$QUIET_TEST" ]; then
 -- 
 1.7.3.1
