@@ -1,76 +1,38 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] gpio/mxc: get gpio range/base from gpio core
-Date: Tue, 5 Jul 2011 18:56:57 +0200
-Message-ID: <20110705165657.GK6069@pengutronix.de>
-References: <1309879166-25788-1-git-send-email-shawn.guo@linaro.org>
-	<1309879166-25788-2-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/3] mmc: sdhci-esdhc-imx: add device tree probe support
+Date: Tue, 5 Jul 2011 11:20:48 -0600
+Message-ID: <CACxGe6sxRZbWO_HzfCZzn2S=o06M=JyAiuLZig4v=cNgCuu9OQ@mail.gmail.com>
+References: <1309681851-23052-1-git-send-email-shawn.guo@linaro.org>
+ <1309681851-23052-4-git-send-email-shawn.guo@linaro.org> <20110704062548.GI15152@ponder.secretlab.ca>
+ <20110705153509.GA14954@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1309879166-25788-2-git-send-email-shawn.guo@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20110705153509.GA14954@S2100-06.ap.freescale.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>, Chris Ball <cjb@laptop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 11:19:24PM +0800, Shawn Guo wrote:
-> Instead of assigning the gpio range based on pdev->id, the patch
-> makes changes to get the range from gpio core that is dynamically
-> allocated.
-> 
-> As a result, the uses of pdev->id can be removed from the driver.
-> This will make dt migration of the driver easier.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  arch/arm/plat-mxc/include/mach/gpio.h |   13 +++++++++----
->  arch/arm/plat-mxc/include/mach/irqs.h |   21 +++------------------
->  drivers/gpio/gpio-mxc.c               |   18 ++++++++++--------
->  3 files changed, 22 insertions(+), 30 deletions(-)
-> 
-> diff --git a/arch/arm/plat-mxc/include/mach/gpio.h b/arch/arm/plat-mxc/include/mach/gpio.h
-> index 31c820c..abdf5d7 100644
-> --- a/arch/arm/plat-mxc/include/mach/gpio.h
-> +++ b/arch/arm/plat-mxc/include/mach/gpio.h
-> @@ -23,10 +23,15 @@
->  #include <mach/hardware.h>
->  #include <asm-generic/gpio.h>
->  
-> -
-> -/* There's a off-by-one betweem the gpio bank number and the gpiochip */
-> -/* range e.g. GPIO_1_5 is gpio 5 under linux */
-> -#define IMX_GPIO_NR(bank, nr)		(((bank) - 1) * 32 + (nr))
-> +/*
-> + * There's a off-by-one betweem the gpio bank number and the gpiochip
-> + * range e.g. GPIO_1_5 is gpio 5 under linux.
-> + *
-> + * When gpio core allocates gpio range for a bank, it starts from the
-> + * end of the total range.  That is to say, bank 0 will get a higher
-> + * gpio range than bank 1.
-> + */
-> +#define IMX_GPIO_NR(bank, nr)	(ARCH_NR_GPIOS - (bank) * 32 + (nr))
+On Tue, Jul 5, 2011 at 9:35 AM, Shawn Guo <shawn.guo@freescale.com> wro=
+te:
+> On Mon, Jul 04, 2011 at 12:25:48AM -0600, Grant Likely wrote:
+>> > + =A0 =A0"none" : No CD
+>> > + =A0 =A0"controller" : Uses eSDHC controller internal CD signal
+>> > + =A0 =A0"gpio" : Uses GPIO pin for CD
+>>
+>> I would say the presence of a "cd-gpios" property would implicitly
+>> mean gpio is to be used for the CD pin.
+>>
+> Yes, you are right. =A0But I would say this is a direct translation o=
+f
+> the existing platform_data. =A0After all, we are sharing most of code
+> path between platform and dt.
 
-That is not a good idea. First of all not all boards use this macro.
-This could be fixed, but it is a no go to allocate the gpios dynamically
-and add a macro which makes assumptions on the range which gets
-allocated.
+Meh, that's just implementation detail and the DT bindings should
+*not* be focused on what Linux happens to currently do.  Define a
+binding that makes sense first and foremost, and then make the driver
+use it.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+g.
