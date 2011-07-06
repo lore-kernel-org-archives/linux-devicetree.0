@@ -1,49 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ARM: l2x0: Add OF based initialization
-Date: Wed, 6 Jul 2011 23:26:53 +0200
-Message-ID: <201107062326.53737.arnd@arndb.de>
-References: <1309984979-8847-1-git-send-email-robherring2@gmail.com>
-	<1309984979-8847-2-git-send-email-robherring2@gmail.com>
-	<20110706210237.GB5371@ponder.secretlab.ca>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [RFC PATCH 1/5] OMAP3:I2C: Add device tree nodes for beagle
+ board
+Date: Wed, 6 Jul 2011 16:26:26 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF049E21C203@HQMAIL01.nvidia.com>
+References: <1309426647-31587-1-git-send-email-manjugk@ti.com>
+	<1309426647-31587-2-git-send-email-manjugk@ti.com>
+ <20110706185546.GJ4871@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110706210237.GB5371-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, workgroup.linux-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110706185546.GJ4871@ponder.secretlab.ca>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, "G, Manjunath Kondaiah" <manjugk@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 July 2011 23:02:37 Grant Likely wrote:
+Grant Likely wrote at Wednesday, July 06, 2011 12:56 PM:
+> On Thu, Jun 30, 2011 at 03:07:23PM +0500, G, Manjunath Kondaiah wrote:
+> > Add I2C and it's child device nodes for beagle board.
+> > The I2C1 controller child devices are not populated and it
+> > should be handled along with OMAP clock changes.
+...
+> > diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+...
+> > +	i2c@48070000 {
+...
+> > +		clock-frequency = <2600>;
+> > +		status = "disabled";
 > 
-> On Wed, Jul 06, 2011 at 03:42:59PM -0500, Rob Herring wrote:
-> > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > This adds probing for ARM L2x0 cache controllers via device tree. Support
-> > includes the L210, L220, and PL310 controllers. The binding allows setting
-> > up cache RAM latencies and filter addresses (PL310 only).
-> > 
-> > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> 
-> By rights, this should go via the arm tree, but it depends on patches
-> that are already in devicetree/next.  Arnd, how do you want to handle
-> this?  I want to avoid rebasing devicetree/next.
+> Drop 'status' when you move this node definition to
+> arch/arm/boot/dts/omap3.dtsi.  Board overlay files that include the
+> omap3.dtsi should explicitly disable any devices that it does not use
+> (which is opposite to what tegra currently does, but I'm going to
+> change that).
 
-It's outside of the scope of the arm-soc tree really, the l2x0 code
-is clearly core arm stuff, so it belongs into Russell's tree.
+Purely out of idle curiosity: What's the benefit of one way over the other?
 
-I think it's best if Russell can provide an Ack for this and you
-put it in the tree that already has the dependencies.
+-- 
+nvpublic
 
-	Arnd
