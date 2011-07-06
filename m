@@ -1,168 +1,88 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Wed, 6 Jul 2011 15:44:20 +0200
-Message-ID: <201107061544.20859.arnd@arndb.de>
-References: <1309945678-18813-1-git-send-email-bs14@csr.com>
-	<201107061341.38591.arnd@arndb.de>
-	<CAGsJ_4zzrsKZRR4KCaeFGL9iT5OfMdhKjJE1wG3CGh8M2U4-UQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v2 3/3] mmc: sdhci-esdhc-imx: add device tree probe
+ support
+Date: Wed, 6 Jul 2011 23:43:15 +0800
+Message-ID: <20110706154314.GC4034@S2100-06.ap.freescale.net>
+References: <1309879568-25837-1-git-send-email-shawn.guo@linaro.org>
+ <1309879568-25837-4-git-send-email-shawn.guo@linaro.org>
+ <CACxGe6sj4yt7o1yohgdgRxx0aBGrCyYxA3qHmV-npCArjNWWUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGsJ_4zzrsKZRR4KCaeFGL9iT5OfMdhKjJE1wG3CGh8M2U4-UQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Barry Song <bs14-kQvG35nSl+M@public.gmane.org>, Bin Shi <Bin.Shi-kQvG35nSl+M@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Zhiwu Song <Zhiwu.Song-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>, Binghua Duan <binghua.duan-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Yuping Luo <Yuping.Luo-kQvG35nSl+M@public.gmane.org>, Huayi Li <Huayi.Li-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6sj4yt7o1yohgdgRxx0aBGrCyYxA3qHmV-npCArjNWWUw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 July 2011, Barry Song wrote:
-
-> > I would normally recommend defining the ranges so that addresses are local
-> > to the respective bus, like
+On Tue, Jul 05, 2011 at 11:54:34AM -0600, Grant Likely wrote:
+> On Tue, Jul 5, 2011 at 9:26 AM, Shawn Guo <shawn.guo@linaro.org> wrot=
+e:
+> > The patch adds device tree probe support for sdhci-esdhc-imx driver=
+=2E
 > >
-> >        axi {
-> >                ranges = <0 0x40000000 0x80000000>;
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > Cc: Wolfram Sang <w.sang@pengutronix.de>
+> > Cc: Chris Ball <cjb@laptop.org>
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > ---
+> > =A0.../devicetree/bindings/mmc/fsl-imx-esdhc.txt =A0 =A0 =A0| =A0 4=
+0 ++++++++
+> > =A0drivers/mmc/host/sdhci-esdhc-imx.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0102 +++++++++++++++++++-
+> > =A02 files changed, 137 insertions(+), 5 deletions(-)
+> > =A0create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx=
+-esdhc.txt
 > >
-> >                sys-iobg {
-> >                        ranges = <0 0x48000000 0x40000>;
-> >                        clock-controller@0x88000000 {
-> >                               compatible = "sirf,prima2-clkc";
-> >                               reg = <0 0x1000>;
-> >                        }
-> >
-> >                        reset-controller@0x88010000 {
-> >                               compatible = "sirf,prima2-rstc";
-> >                               reg = <0x10000 0x1000>;
-> >                        };
-> >                }
-> >        }
-> 
-> i am not sure whether it make us a little more difficult to know the
-> real address at first glance.we will need to calculate.
-> all addresses are 1:1 mapped in this chip. bus map can work even
-> though we only give "ranges;" without real "ranges = <0x....>;".
+> > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.tx=
+t b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> > new file mode 100644
+> > index 0000000..351d239
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> > @@ -0,0 +1,40 @@
+> > +* Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.=
+MX
+> > +
+> > +The Enhanced Secure Digital Host Controller on Freescale i.MX fami=
+ly
+> > +provides an interface for MMC, SD, and SDIO types of memory cards.
+> > +
+> > +Required properties:
+> > +- compatible : Should be "fsl,<chip>-esdhc"
+> > +- reg : Should contain eSDHC registers location and length
+> > +- interrupts : Should contain eSDHC interrupt
+> > +- cd-type : String, card detection (CD) method. =A0Supported value=
+s are:
+> > + =A0 =A0"none" : No CD
+> > + =A0 =A0"controller" : Uses eSDHC controller internal CD signal
+> > + =A0 =A0"gpio" : Uses GPIO pin for CD
+> > + =A0 =A0"permanent" : No CD because card is permanently wired to h=
+ost
+> > +- wp-type : String, write protection (WP) method. =A0Supported val=
+ues are:
+> > + =A0 =A0"none" : No WP
+> > + =A0 =A0"controller" : Uses eSDHC controller internal WP signal
+> > + =A0 =A0"gpio" : Uses GPIO pin for WP
+> > +- gpios : Should specify GPIOs in this order: CD GPIO, WP GPIO, if
+> > + =A0properties cd-type and wp-type are "gpio".
+>=20
+> Again, be explicit in your gpios property names.  Create a different
+> property for each gpio: cd-gpios and wp-gpios.
+>=20
+> As for wp-type and cd-type, I think you can drop them.  Default to
+> internal controller CD and WP pins.  Use gpio if cd-gpios or wp-gpios
+> is present, and define specific properties for the no-wp, no-cd and
+> fixed-card cases.  (can you tell that I'm not a fan of the "*-type"
+> binding for this driver?)  :-)
+>=20
+I would let default be no CD/WP, and define properties for
+controller internal CD/WP and wired case, if you do not see a
+problem with it.
 
-So each iobg still passes down the entire 32-bit address?
+--=20
+Regards,
+Shawn
 
-Note that you never have to do the calculation in the driver
-source, of_iomap and the resource logic both take care of this.
-
-There are multiple ways to handle this, and an empty ranges property
-usually works fine, but I find that less readable.
-
-Another way to handle these is to have a separate range for
-each child bus, as in arch/powerpc/boot/dts/gef_ppc9a.dts
-
-To stay in the example, this would mean doing something like
-
-        axi {
-		#address-cells = <2>;
-                #size-cells = <1>;
-
-                ranges = <0 0 0x80000000 0x08000000 // axi devices
-			  1 0 0x88000000 0x08000000 // sys-iobg
-			  2 0 0x90000000 0x00010000 // mem-iobg
-			  3 0 0x90010000 0x07fe0000 // disp-iobg
-                          ... >;
-
-                l2-cache-controller@80040000 {
-                        compatible = "arm,pl310-cache";
-                        reg = <0 0x40000 0x1000>;
-                        interrupts = <59>;
-                };
-
-                sys-iobg {
-			#address-cells = <1>;
-        	        #size-cells = <1>;
-                        ranges = <1 0 0 0x40000>;
-                        clock-controller@88000000 {
-                               compatible = "sirf,prima2-clkc";
-                               reg = <0 0x1000>;
-                        }
-
-                        reset-controller@88010000 {
-                               compatible = "sirf,prima2-rstc";
-                               reg = <0x10000 0x1000>;
-                        };
-                }
-        }
-
-
-
-> >> +
-> >> +                     graphics-iobg {
-> >> +                             compatible = "simple-bus";
-> >> +                             #address-cells = <1>;
-> >> +                             #size-cells = <1>;
-> >> +                             ranges = <0x98000000 0x98000000 0x8000000>;
-> >> +
-> >> +                             graphics@0x98000000 {
-> >> +                                     compatible = "sirf,prima2-graphics";
-> >> +                                     reg = <0x98000000 0x8000000>;
-> >> +                                     interrupts = <6>;
-> >> +                             };
-> >> +                     };
-> >
-> > Are the display and graphics units CSR developments? If the GPU is
-> > in fact licensed from someone else (powervr, arm, ...), you should
-> > probably list the actual name of the device.
-> 
-> GPU is powervr sgx 531, so could we define compatible as "powervr,sgx531"?
-
-Probably yes. You should have a look if there are already bindings for
-this that define other attributes. Also, if there is any customization
-inside of the chip, you should have another more specific identifier
-that makes it possible that this is the version that csr has modified.
-
-> >> +                     multimedia-iobg {
-> >> +                             compatible = "simple-bus";
-> >> +                             #address-cells = <1>;
-> >> +                             #size-cells = <1>;
-> >> +                             ranges = <0xa0000000 0xa0000000 0x8000000>;
-> >> +
-> >> +                             multimedia@0xa0000000 {
-> >> +                                     compatible = "sirf,prima2-multimedia";
-> >> +                                     reg = <0xa0000000 0x8000000>;
-> >> +                                     interrupts = <5>;
-> >> +                             };
-> >> +                     };
-> >
-> > "multimedia" sounds like a too generic term. What does this do?
-> 
->  video decoding.
-
-sirf,prima2-video-codec is probably better than, but if anyone has other
-suggestions, you could use something else.
-
-> > Are these proprietary uarts, or are they compatible to 8250 and the
-> > like? You might want to set a clock-frequency property as of_serial.c
-> > uses.
-> 
-> it is not compatible with 8250 .
-
-ok
-
-> > Are these rtc implementations related? From the register layout, I would
-> > guess that they are supposed to be used by the same driver, so it's
-> > probably a good idea to add a "compatible" property with a common name
-> > for all three.
-> 
-> in fact, because they are slow, they can't be accessed by mapped
-> address directly, the only common point they have is we need to access
-> them through mapped address in rtc-iobg indirectly just like we access
-> i2c/spi/nand devices.
-> 
-> they are three different devices with different purpose and register
-> layout in fact.
-
-Ok.
-
-	Arnd
