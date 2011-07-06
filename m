@@ -1,16 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] Add dtget utility to read property values from
-	device tree
-Date: Wed, 6 Jul 2011 12:41:13 -0600
-Message-ID: <20110706184113.GB4871@ponder.secretlab.ca>
+Subject: Re: [PATCH 3/9] Add basic tests for dtget
+Date: Wed, 6 Jul 2011 12:42:33 -0600
+Message-ID: <20110706184233.GC4871@ponder.secretlab.ca>
 References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-3-git-send-email-sjg@chromium.org>
+	<1309892577-23828-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1309892577-23828-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1309892577-23828-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,302 +23,209 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 12:02:50PM -0700, Simon Glass wrote:
-> This simply utility makes it easy for scripts to read values from the device
-> tree.
+On Tue, Jul 05, 2011 at 12:02:51PM -0700, Simon Glass wrote:
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Looks okay to me.
+Yay, testcases.  :-)
 
 g.
 
 > ---
->  .gitignore     |    1 +
->  Makefile       |    7 ++
->  Makefile.dtget |   13 ++++
->  dtget.c        |  207 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 228 insertions(+), 0 deletions(-)
->  create mode 100644 Makefile.dtget
->  create mode 100644 dtget.c
+>  tests/dtget-runtest.sh |   30 ++++++++++++++++++++++
+>  tests/dtget-test.dts   |   63 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+Rather than creating a new dts file, these test should probably
+leverage the existing ones in the tests directory.
+
+>  tests/run_tests.sh     |   33 ++++++++++++++++++++++++-
+>  tests/tests.sh         |    1 +
+>  4 files changed, 126 insertions(+), 1 deletions(-)
+>  create mode 100755 tests/dtget-runtest.sh
+>  create mode 100644 tests/dtget-test.dts
 > 
-> diff --git a/.gitignore b/.gitignore
-> index ae7a46a..cde4fa5 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -10,3 +10,4 @@ lex.yy.c
->  /ftdump
->  /convert-dtsv0
->  /version_gen.h
-> +/dtget
-> diff --git a/Makefile b/Makefile
-> index 22f79a0..3401a65 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -106,10 +106,12 @@ endef
->  include Makefile.convert-dtsv0
->  include Makefile.dtc
->  include Makefile.ftdump
-> +include Makefile.dtget
->  
->  BIN += convert-dtsv0
->  BIN += dtc
->  BIN += ftdump
-> +BIN += dtget
->  
->  SCRIPTS = dtdiff
->  
-> @@ -120,6 +122,7 @@ ifneq ($(DEPTARGETS),)
->  -include $(DTC_OBJS:%.o=%.d)
->  -include $(CONVERT_OBJS:%.o=%.d)
->  -include $(FTDUMP_OBJS:%.o=%.d)
-> +-include $(DTGET_OBJS:%.o=%.d)
->  endif
->  
->  
-> @@ -180,6 +183,10 @@ convert-dtsv0: $(CONVERT_OBJS)
->  
->  ftdump:	$(FTDUMP_OBJS)
->  
-> +dtget:	$(DTGET_OBJS) $(LIBFDT_archive)
-> +	$(VECHO) LD $@
-> +	$(LINK.c) -o $@ $^
-> +
->  
->  #
->  # Testsuite rules
-> diff --git a/Makefile.dtget b/Makefile.dtget
-> new file mode 100644
-> index 0000000..edda499
+> diff --git a/tests/dtget-runtest.sh b/tests/dtget-runtest.sh
+> new file mode 100755
+> index 0000000..aa2b744
 > --- /dev/null
-> +++ b/Makefile.dtget
-> @@ -0,0 +1,13 @@
-> +#
-> +# This is not a complete Makefile.
-> +# Instead, it is designed to be easily embeddable
-> +# into other systems of Makefiles.
-> +#
+> +++ b/tests/dtget-runtest.sh
+> @@ -0,0 +1,30 @@
+> +#! /bin/sh
 > +
-> +DTGET_SRCS = \
-> +	dtget.c \
-> +	util.c
+> +. ./tests.sh
 > +
-> +DTGET_GEN_SRCS =
+> +LOG="tmp.log.$$"
+> +EXPECT="tmp.expect.$$"
 > +
-> +DTGET_OBJS = $(DTGET_SRCS:%.c=%.o) $(DTGET_GEN_SRCS:%.c=%.o)
-> diff --git a/dtget.c b/dtget.c
+> +rm -f $TMPFILE $LOG
+> +
+> +echo "$1" >$EXPECT
+> +shift
+> +
+> +verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
+> +ret="$?"
+> +
+> +if [ "$ret" -gt 127 ]; then
+> +    signame=$(kill -l $[ret - 128])
+> +    FAIL "Killed by SIG$signame"
+> +fi
+> +
+> +diff $EXPECT $LOG
+> +ret="$?"
+> +
+> +rm -f $LOG $EXPECT
+> +
+> +if [ "$ret" -eq 0 ]; then
+> +	PASS
+> +else
+> +	FAIL
+> +fi
+> diff --git a/tests/dtget-test.dts b/tests/dtget-test.dts
 > new file mode 100644
-> index 0000000..0ee577c
+> index 0000000..79f9633
 > --- /dev/null
-> +++ b/dtget.c
-> @@ -0,0 +1,207 @@
-> +/*
-> + * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
-> + * Distributed under the terms of the GNU General Public License v2
-> + *
-> + * is_printable_string from ftdump.c
-> + * Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
-> + */
+> +++ b/tests/dtget-test.dts
+> @@ -0,0 +1,63 @@
+> +/dts-v1/;
 > +
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <getopt.h>
-> +#include <ctype.h>
+> +/memreserve/ 0x1000000000000000 0x0000000002000000;
+> +memrsv2: /memreserve/ 0x2000000000000000 0x0100000000000000;
+> +/memreserve/ 0x0000000000000000 0x0000000000000014;
 > +
-> +#include <libfdt.h>
+> +/ {
+> +	model = "MyBoardName";
+> +	compatible = "MyBoardName", "MyBoardFamilyName";
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
 > +
-> +#include "util.h"
+> +	cpus {
+> +		linux,phandle = <0x1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		PowerPC,970@0 {
+> +			name = "PowerPC,970";
+> +			device_type = "cpu";
+> +			reg = <0x00000000>;
+> +			clock-frequency = <1600000000>;
+> +			timebase-frequency = <33333333>;
+> +			linux,boot-cpu;
+> +			i-cache-size = <65536>;
+> +			d-cache-size = <32768>;
+> +		};
 > +
-> +#define FTDUMP_BUF_SIZE	65536
+> +		PowerPC,970@1 {
+> +			name = "PowerPC,970";
+> +			device_type = "cpu";
+> +			reg = <0x00000001>;
+> +			clock-frequency = <1600000000>;
+> +			timebase-frequency = <33333333>;
+> +			i-cache-size = <65536>;
+> +			d-cache-size = <32768>;
+> +		};
 > +
-> +static void report_error(const char *where, int err)
-> +{
-> +	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
-> +}
-> +
-> +static void show_data(const char *format, int type, const char *data, int len)
-> +{
-> +	int i, size;
-> +	const char *p = data, *s;
-> +	int value;
-> +	int is_string;
-> +
-> +	/* no data, don't print */
-> +	if (len == 0)
-> +		return;
-> +
-> +	is_string = type == 's' ||
-> +		(!type && util_is_printable_string(data, len));
-> +	if (is_string) {
-> +		for (s = data; s - data < len; s += strlen(s) + 1) {
-> +			if (s != data)
-> +				printf(" ");
-> +			printf(format ? format : "%s", (const char *)s);
-> +		}
-> +		return;
-> +	}
-> +	if (type == 'i')
-> +		size = 4;
-> +	else if (type == 'b')
-> +		size = 1;
-> +	else
-> +		size = len % 4 == 0 ? 4 : 1;
-> +	for (i = 0; i < len; i += size, p += size) {
-> +		if (i)
-> +			printf(" ");
-> +		value = size == 4 ? fdt32_to_cpu(*(const uint32_t *)p) :
-> +			*(const unsigned char *)p;
-> +		printf(format ? format : "%d", value);
-> +	}
-> +}
-> +
-> +static int show_data_for_key(const void *blob, const char *format, int type,
-> +			     char *key)
-> +{
-> +	char *ptr, *prop;
-> +	int node, guess_node = 0;
-> +	const void *value;
-> +	int len;
-> +
-> +	/* First extract the property from the end */
-> +	ptr = strrchr(key, '/');
-> +	if (!ptr) {
-> +		fprintf(stderr, "No node found in key '%s'\n", key);
-> +		return 5;
-> +	}
-> +
-> +	if (ptr == key) {
-> +		guess_node = fdt_path_offset(blob, key);
-> +		node = fdt_path_offset(blob, "/");
-> +	} else {
-> +		*ptr = '\0';
-> +		node = fdt_path_offset(blob, key);
-> +		*ptr = '/';
-> +	}
-> +	if (node < 0) {
-> +		report_error(key, node);
-> +		return 7;
-> +	}
-> +	prop = ptr + 1;
-> +	value = fdt_getprop(blob, node, prop, &len);
-> +	if (!value) {
-> +		report_error(prop, len);
-> +		if (guess_node)
-> +			fprintf(stderr, "(Node %s exists but you didn't "
-> +				"specify a property to print)\n", key);
-> +		return 8;
-> +	}
-> +	show_data(format, type, value, len);
-> +	printf("\n");
-> +	return 0;
-> +}
-> +
-> +static int do_dtget(const char *filename, const char *format, int type,
-> +		    char **key, int key_count)
-> +{
-> +	FILE *fp;
-> +	char *buf;
-> +	size_t size;
-> +	int i, ret;
-> +
-> +	if (strcmp(filename, "-") == 0) {
-> +		fp = stdin;
-> +	} else {
-> +		fp = fopen(filename, "rb");
-> +		if (fp == NULL) {
-> +			fprintf(stderr, "unable to open %s\n", filename);
-> +			return 10;
-> +		}
-> +	}
-> +
-> +	buf = malloc(FTDUMP_BUF_SIZE);
-> +	if (!buf) {
-> +		fprintf(stderr, "Couldn't allocate %d byte buffer\n",
-> +			FTDUMP_BUF_SIZE);
-> +		return 10;
-> +	}
-> +
-> +	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
-> +	if (!feof(fp)) {
-> +		fprintf(stderr, "file too large (maximum is %d bytes)\n",
-> +			FTDUMP_BUF_SIZE);
-> +		return 10;
-> +	}
-> +	if (ferror(fp)) {
-> +		fprintf(stderr, "file read error\n");
-> +		return 10;
-> +	}
-> +	for (i = 0; i < key_count; i++) {
-> +		ret = show_data_for_key(buf, format, type, key[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void usage(const char *msg)
-> +{
-> +	if (msg)
-> +		fprintf(stderr, "Error: %s\n\n", msg);
-> +	fprintf(stderr, "dtget - read values from device tree\n\n");
-> +	fprintf(stderr, "Usage: dtget <options> <dt file> <key>...\n");
-> +	fprintf(stderr, "Options:\n");
-> +	fprintf(stderr, "\t-f, --format <fmt>\tPrintf format string to use "
-> +		"for value\n");
-> +	fprintf(stderr, "\t-t, --type <typechar>\tForce type to be string "
-> +		"(s), int(i) or byte(b)\n");
-> +	fprintf(stderr, "\t-h, --help\t\tPrint this help\n\n");
-> +	fprintf(stderr, "\t<key> is <node>/<property>, for example "
-> +		"/lcd/width for the width\n");
-> +	fprintf(stderr, "\tproperty in the LCD node\n");
-> +	exit(2);
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int c;
-> +	int ret;
-> +	char *format = NULL;
-> +	int type = 0;
-> +	char *filename = NULL;
-> +	static struct option long_options[] = {
-> +		{"format", 1, 0, 'f'},
-> +		{"help", 1, 0, 'h'},
-> +		{"type", 1, 0, 't'},
-> +		{0, 0, 0, 0}
 > +	};
 > +
-> +	for (;;) {
-> +		c = getopt_long(argc, argv, "f:ht:", long_options, NULL);
-> +		if (c == -1)
-> +			break;
+> +	node: randomnode {
+> +		prop: string = str: "foo", "stuffstuff\t\t\t\n\n\n" str_end: ;
+> +		blob = [byte: 0a 0b 0c 0d byte_mid: de ea ad be ef byte_end: ];
+> +		ref = < cell: &{/memory@0} 0x0 cell_mid: 0xffffffff cell_end: >;
+> +		mixed = "abc", pre: [1234] post: , gap: < aligned: 0xa 0xb 0xc>;
+> +		tricky1 = [61 lt1: 62 63 00];
+> +		subnode: child {
+> +		};
+> +		/* subnode_end: is auto-generated by node emit */
+> +	};
+> +	/* node_end: is auto-generated by node emit */
 > +
-> +		switch (c) {
-> +		case 'h':
-> +		case '?':
-> +			usage("");
+> +	memory@0 {
+> +		device_type = "memory";
+> +		memreg: reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
+> +	};
 > +
-> +		case 'f':
-> +			format = optarg;
-> +			break;
+> +	chosen {
+> +		bootargs = "root=/dev/sda2";
+> +		linux,platform = <0x600>;
+> +	};
 > +
-> +		case 't':
-> +			type = *optarg;
-> +			break;
-> +		}
-> +	}
+> +};
 > +
-> +	if (optind < argc)
-> +		filename = argv[optind++];
-> +	if (!filename)
-> +		usage("Missing filename");
-> +	if (optind == argc)
-> +		usage("Missing key(s)");
-> +
-> +	ret = do_dtget(filename, format, type, argv + optind, argc - optind);
-> +	return ret;
+> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> index 72dda32..01a2b60 100755
+> --- a/tests/run_tests.sh
+> +++ b/tests/run_tests.sh
+> @@ -83,6 +83,12 @@ asm_to_so_test () {
+>      run_wrap_test asm_to_so "$@"
+>  }
+>  
+> +run_dtget_test () {
+> +    echo -n "$1:	"
+> +    shift
+> +    base_run_test sh dtget-runtest.sh "$@"
 > +}
+> +
+>  tree1_tests () {
+>      TREE=$1
+>  
+> @@ -388,6 +394,28 @@ dtbs_equal_tests () {
+>      cmp_tests test_tree1.dtb $WRONG_TREE1
+>  }
+>  
+> +dtget_tests () {
+> +    file=dtget-test.dtb
+> +    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
+> +
+> +    # run_dtget_test <test-name> <expected-result> <args>...
+> +    run_dtget_test "Simple string" "MyBoardName" $file "/model"
+> +    run_dtget_test "Multiple string i" "77 121 66 111 \
+> +97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
+> +108 121 78 97 109 101 0" $file "/compatible"
+> +    run_dtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
+> +	-t s $file "/compatible"
+> +    run_dtget_test "Integer" "32768" $file "/cpus/PowerPC,970@1/d-cache-size"
+> +    run_dtget_test "Integer hex" "8000" -f %x $file \
+> +	"/cpus/PowerPC,970@1/d-cache-size"
+> +    run_dtget_test "Integer list" "61 62 63 00" -f %02x -t b $file \
+> +	"/randomnode/tricky1"
+> +    run_dtget_test "Byte list short" "a b c d de ea ad be ef" -f %x -t b \
+> +	$file "/randomnode/blob"
+> +    run_dtget_test "Integer list short" "a0b0c0d deeaadbe ef000000" -f %x \
+> +	-t i $file "/randomnode/blob"
+> +}
+> +
+>  while getopts "vt:m" ARG ; do
+>      case $ARG in
+>  	"v")
+> @@ -403,7 +431,7 @@ while getopts "vt:m" ARG ; do
+>  done
+>  
+>  if [ -z "$TESTSETS" ]; then
+> -    TESTSETS="libfdt dtc dtbs_equal"
+> +    TESTSETS="libfdt dtc dtbs_equal dtget"
+>  fi
+>  
+>  # Make sure we don't have stale blobs lying around
+> @@ -420,6 +448,9 @@ for set in $TESTSETS; do
+>  	"dtbs_equal")
+>  	    dtbs_equal_tests
+>  	    ;;
+> +	"dtget")
+> +	    dtget_tests
+> +	    ;;
+>      esac
+>  done
+>  
+> diff --git a/tests/tests.sh b/tests/tests.sh
+> index 30ffead..cf7f19e 100644
+> --- a/tests/tests.sh
+> +++ b/tests/tests.sh
+> @@ -11,6 +11,7 @@ FAIL () {
+>  }
+>  
+>  DTC=../dtc
+> +DTGET=../dtget
+>  
+>  verbose_run () {
+>      if [ -z "$QUIET_TEST" ]; then
 > -- 
 > 1.7.3.1
 > 
