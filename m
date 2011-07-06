@@ -1,15 +1,14 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Wed, 6 Jul 2011 09:40:34 +0200
-Message-ID: <201107060940.34452.arnd@arndb.de>
-References: <1309231954-23260-1-git-send-email-bs14@csr.com>
-	<20110706062838.GI9978@ponder.secretlab.ca>
-	<CAGsJ_4xUsw21EM2GXMt4i27MGjCP_h46tCzhDqo-MCZkAVsEiw@mail.gmail.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/2] powerpc/5200: mpc5200b.dtsi: add spi node address-
+	and size-cells properties
+Date: Wed, 6 Jul 2011 11:43:19 +0200
+Message-ID: <20110706114319.17af93a3@wker>
+References: <1305561764-5942-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGsJ_4xUsw21EM2GXMt4i27MGjCP_h46tCzhDqo-MCZkAVsEiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1305561764-5942-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,18 +18,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 July 2011 09:03:45 Barry Song wrote:
-> but it seems we will still add "sirf,alsta6-intc" in intc driver if
-> that really happen in the future. in my understanding, drivers should
-> explicitly claim all chips or ip cores they can support.
+Hi Grant,
 
-I don't think there is a need for that. I'd only add the second
-one if there is a need in the driver to tell the difference.
-In that case, you can add a data field to the device_id and use
-that for making decisions in the driver.
+can you please pick these patches for 3.1 ?
 
-	Arnd
+On Mon, 16 May 2011 18:02:43 +0200
+Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
+
+> Both, #address-cells and #size-cells properties are required
+> for spi bus node, so add them.
+> 
+> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+> ---
+>  arch/powerpc/boot/dts/mpc5200b.dtsi |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/powerpc/boot/dts/mpc5200b.dtsi b/arch/powerpc/boot/dts/mpc5200b.dtsi
+> index bc27548..7ab286a 100644
+> --- a/arch/powerpc/boot/dts/mpc5200b.dtsi
+> +++ b/arch/powerpc/boot/dts/mpc5200b.dtsi
+> @@ -147,6 +147,8 @@
+>  		};
+>  
+>  		spi@f00 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+>  			compatible = "fsl,mpc5200b-spi","fsl,mpc5200-spi";
+>  			reg = <0xf00 0x20>;
+>  			interrupts = <2 13 0 2 14 0>;
+
+Thanks,
+Anatolij
