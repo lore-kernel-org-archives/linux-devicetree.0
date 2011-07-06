@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 8/9] Add dtput to .gitignore
-Date: Wed, 6 Jul 2011 12:46:49 -0600
-Message-ID: <20110706184649.GG4871@ponder.secretlab.ca>
+Subject: Re: [PATCH 9/9] dtput: Support adding strings with spaces
+Date: Wed, 6 Jul 2011 12:47:45 -0600
+Message-ID: <20110706184745.GH4871@ponder.secretlab.ca>
 References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-9-git-send-email-sjg@chromium.org>
+	<1309892577-23828-10-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1309892577-23828-9-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1309892577-23828-10-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,25 +23,82 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 12:02:56PM -0700, Simon Glass wrote:
+On Tue, Jul 05, 2011 at 12:02:57PM -0700, Simon Glass wrote:
+> Previously dtput would use sscanf() to read the string from the command line,
+> even if no format string was provided. Thus it would split up words at
+> whitespace boundaries, and put a \0 between each.
+> 
+> This changes that behavior. Previously:
+> 
+> $ ../dtput dtget-test.dtb -ts /compatible this is a test
+> 
+> $ ../dtget dtget-test.dtb /compatible
+> 116 104 105 115 0 105 115 0 97 110 111 116 104 101 114 0 116 101 115 116 0
+> 
+> and you have to use the -ts flag to see this as a list of strings
+> 
+> $ ../dtget dtget-test.dtb -ts /compatible
+> this is a test
+> 
+> Now:
+> 
+> $ ../dtput dtget-test.dtb -ts  /compatible "this is another test"
+> 
+> $ ../dtget dtget-test.dtb /compatible this is another test
+> this is another test
+> 
+> $ ../dtget dtget-test.dtb /compatible -tb
+> 116 104 105 115 32 105 115 32 97 110 111 116 104 101 114 32 116 101 115 116 0
+> 
+> Note that the \0 terminators are gone.
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Make this part of the dtput patch.
+This would be squashed in with the dtput patch too.
+
+g.
 
 > ---
->  .gitignore |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+>  dtput.c            |    7 ++++++-
+>  tests/run_tests.sh |    4 +++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 > 
-> diff --git a/.gitignore b/.gitignore
-> index cde4fa5..a026069 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -11,3 +11,4 @@ lex.yy.c
->  /convert-dtsv0
->  /version_gen.h
->  /dtget
-> +/dtput
+> diff --git a/dtput.c b/dtput.c
+> index 48e3c75..d02e6ab 100644
+> --- a/dtput.c
+> +++ b/dtput.c
+> @@ -55,7 +55,12 @@ static int encode_value(char **arg, int arg_count, const char *format,
+>  	for (; arg_count > 0; arg++, arg_count--, upto += len) {
+>  		/* assume integer unless told otherwise */
+>  		if (type == 's') {
+> -			sscanf(*arg, format ? format : "%s", value);
+> +			if (format)
+> +				sscanf(*arg, format, value);
+> +			else {
+> +				strncpy(value, *arg, MAX_VALUE_SIZE - 1);
+> +				value[MAX_VALUE_SIZE - 1] = '\0';
+> +			}
+>  			len = strlen(value) + 1;
+>  			if (verbose)
+>  				fprintf(stderr, "\tstring: '%s'\n", value);
+> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> index d95d1fe..71cfab3 100755
+> --- a/tests/run_tests.sh
+> +++ b/tests/run_tests.sh
+> @@ -434,10 +434,12 @@ dtput_tests () {
+>      file=dtget-test.dtb
+>      $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
+>  
+> -    # run_dtput_test <test-name> <expected-result> <file> <key> <value>
+> +    # run_dtput_test <test-name> <expected-result> <file> <key> <value> <flags>
+>      run_dtput_test "Simple string" "a_model" $file "/model" "a_model" -ts
+>  
+>      run_dtput_test "Multiple string s" "board1 board2" \
+> +	$file "/compatible" "board1 board2" -ts -f%s
+> +    run_dtput_test "Single string with spaces" "board1 board2" \
+>  	$file "/compatible" "board1 board2" -ts
+>      run_dtput_test "Integer" "32768" $file "/cpus/PowerPC,970@1/d-cache-size" \
+>  	"32768"
 > -- 
 > 1.7.3.1
 > 
