@@ -1,16 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc/5200: mpc5200b.dtsi: add spi node address-
-	and size-cells properties
-Date: Wed, 6 Jul 2011 11:27:45 -0600
-Message-ID: <20110706172745.GJ5805@ponder.secretlab.ca>
-References: <1305561764-5942-1-git-send-email-agust@denx.de>
-	<20110706114319.17af93a3@wker>
+Subject: Re: [PATCH 1/9] Split out is_printable_string() into util.c
+Date: Wed, 6 Jul 2011 12:39:58 -0600
+Message-ID: <20110706183958.GA4871@ponder.secretlab.ca>
+References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
+	<1309892577-23828-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110706114319.17af93a3@wker>
+In-Reply-To: <1309892577-23828-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,44 +19,168 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2011 at 11:43:19AM +0200, Anatolij Gustschin wrote:
-> Hi Grant,
+On Tue, Jul 05, 2011 at 12:02:49PM -0700, Simon Glass wrote:
+> This useful function is split out so it will be available to programs
+> other than ftdump.
 > 
-> can you please pick these patches for 3.1 ?
-> 
-> On Mon, 16 May 2011 18:02:43 +0200
-> Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> 
-> > Both, #address-cells and #size-cells properties are required
-> > for spi bus node, so add them.
-> > 
-> > Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Merged, thanks.
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-g.
-
-> > ---
-> >  arch/powerpc/boot/dts/mpc5200b.dtsi |    2 ++
-> >  1 files changed, 2 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/boot/dts/mpc5200b.dtsi b/arch/powerpc/boot/dts/mpc5200b.dtsi
-> > index bc27548..7ab286a 100644
-> > --- a/arch/powerpc/boot/dts/mpc5200b.dtsi
-> > +++ b/arch/powerpc/boot/dts/mpc5200b.dtsi
-> > @@ -147,6 +147,8 @@
-> >  		};
-> >  
-> >  		spi@f00 {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> >  			compatible = "fsl,mpc5200b-spi","fsl,mpc5200-spi";
-> >  			reg = <0xf00 0x20>;
-> >  			interrupts = <2 13 0 2 14 0>;
+> ---
+>  Makefile.ftdump |    3 ++-
+>  ftdump.c        |   28 +++-------------------------
+>  util.c          |   28 ++++++++++++++++++++++++++++
+>  util.h          |   11 +++++++++++
+>  4 files changed, 44 insertions(+), 26 deletions(-)
 > 
-> Thanks,
-> Anatolij
+> diff --git a/Makefile.ftdump b/Makefile.ftdump
+> index b70905a..2744a18 100644
+> --- a/Makefile.ftdump
+> +++ b/Makefile.ftdump
+> @@ -5,7 +5,8 @@
+>  #
+>  
+>  FTDUMP_SRCS = \
+> -	ftdump.c
+> +	ftdump.c \
+> +	util.c
+>  
+>  FTDUMP_GEN_SRCS =
+>  
+> diff --git a/ftdump.c b/ftdump.c
+> index bce6535..db932e3 100644
+> --- a/ftdump.c
+> +++ b/ftdump.c
+> @@ -11,36 +11,14 @@
+>  #include <fdt.h>
+>  #include <libfdt_env.h>
+>  
+> +#include "util.h"
+> +
+>  #define FTDUMP_BUF_SIZE	65536
+>  
+>  #define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
+>  #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
+>  #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
+>  
+> -static int is_printable_string(const void *data, int len)
+> -{
+> -	const char *s = data;
+> -	const char *ss;
+> -
+> -	/* zero length is not */
+> -	if (len == 0)
+> -		return 0;
+> -
+> -	/* must terminate with zero */
+> -	if (s[len - 1] != '\0')
+> -		return 0;
+> -
+> -	ss = s;
+> -	while (*s && isprint(*s))
+> -		s++;
+> -
+> -	/* not zero, or not done yet */
+> -	if (*s != '\0' || (s + 1 - ss) < len)
+> -		return 0;
+> -
+> -	return 1;
+> -}
+> -
+>  static void print_data(const char *data, int len)
+>  {
+>  	int i;
+> @@ -50,7 +28,7 @@ static void print_data(const char *data, int len)
+>  	if (len == 0)
+>  		return;
+>  
+> -	if (is_printable_string(data, len)) {
+> +	if (util_is_printable_string(data, len)) {
+>  		printf(" = \"%s\"", (const char *)data);
+>  	} else if ((len % 4) == 0) {
+>  		printf(" = <");
+> diff --git a/util.c b/util.c
+> index d7ac27d..994436f 100644
+> --- a/util.c
+> +++ b/util.c
+> @@ -1,6 +1,9 @@
+>  /*
+>   * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
+>   *
+> + * util_is_printable_string contributed by
+> + *	Pantelis Antoniou <pantelis.antoniou AT gmail.com>
+> + *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+>   * published by the Free Software Foundation; either version 2 of the
+> @@ -17,6 +20,7 @@
+>   *                                                                   USA
+>   */
+>  
+> +#include <ctype.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <stdarg.h>
+> @@ -57,3 +61,27 @@ char *join_path(const char *path, const char *name)
+>  	memcpy(str+lenp, name, lenn+1);
+>  	return str;
+>  }
+> +
+> +int util_is_printable_string(const void *data, int len)
+> +{
+> +	const char *s = data;
+> +	const char *ss;
+> +
+> +	/* zero length is not */
+> +	if (len == 0)
+> +		return 0;
+> +
+> +	/* must terminate with zero */
+> +	if (s[len - 1] != '\0')
+> +		return 0;
+> +
+> +	ss = s;
+> +	while (*s && isprint(*s))
+> +		s++;
+> +
+> +	/* not zero, or not done yet */
+> +	if (*s != '\0' || (s + 1 - ss) < len)
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> diff --git a/util.h b/util.h
+> index 9cead84..cc68933 100644
+> --- a/util.h
+> +++ b/util.h
+> @@ -1,6 +1,8 @@
+>  #ifndef _UTIL_H
+>  #define _UTIL_H
+>  
+> +#include <stdarg.h>
+> +
+>  /*
+>   * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
+>   *
+> @@ -53,4 +55,13 @@ static inline void *xrealloc(void *p, size_t len)
+>  extern char *xstrdup(const char *s);
+>  extern char *join_path(const char *path, const char *name);
+>  
+> +/**
+> + * Check a string of a given length to see if it is all printable and
+> + * has a valid terminator.
+> + *
+> + * @param data	The string to check
+> + * @param len	The string length including terminator
+> + * @return 1 if a valid printable string, 0 if not */
+> +int util_is_printable_string(const void *data, int len);
+> +
+>  #endif /* _UTIL_H */
+> -- 
+> 1.7.3.1
+> 
