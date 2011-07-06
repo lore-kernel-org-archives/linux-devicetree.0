@@ -1,51 +1,52 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] i2c: tegra: Use engineering names in DT compatible
- property
-Date: Tue, 5 Jul 2011 23:39:41 -0600
-Message-ID: <20110706053941.GE9978@ponder.secretlab.ca>
-References: <1309897306-22953-1-git-send-email-swarren@nvidia.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v2 1/2] serial/imx: get rid of the uses of cpu_is_mx1()
+Date: Wed, 6 Jul 2011 13:53:32 +0800
+Message-ID: <20110706055331.GD26324@S2100-06.ap.freescale.net>
+References: <1309878338-25697-1-git-send-email-shawn.guo@linaro.org>
+ <1309878338-25697-2-git-send-email-shawn.guo@linaro.org>
+ <CACxGe6v+izZiANbzvhnTvrLU9+XgXD=W8FNGfTLzGXLNuCjZcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1309897306-22953-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <CACxGe6v+izZiANbzvhnTvrLU9+XgXD=W8FNGfTLzGXLNuCjZcg@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 02:21:46PM -0600, Stephen Warren wrote:
-> Engineering names are more stable than marketing names. Hence, use them
-> for Device Tree compatible properties instead.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Grant, this is against devicetree/arm and also makes sense for
-> devicetree/test.
+On Tue, Jul 05, 2011 at 11:27:55AM -0600, Grant Likely wrote:
+> On Tue, Jul 5, 2011 at 9:05 AM, Shawn Guo <shawn.guo@linaro.org> wrot=
+e:
+> > The patch removes all the uses of cpu_is_mx1(). =A0Instead, it uses
+> > the .id_table of platform_driver to distinguish the uart device typ=
+e.
+> >
+> > A couple of !cpu_is_mx1() logic gets turned into IS_IMX_UART, as th=
+e
+> > codes wrapped there are really IMX specific.
+> >
+> > It also removes macro MX1_UCR3_REF25 and MX1_UCR3_REF30 which are
+> > not used anywhere.
+> >
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> > Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>
+>=20
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+>=20
+> Who's tree is this one going to get merged through?
+>=20
+I think it will be easier to go Sascha's tree.  Alan, Sascha, what
+do you think?
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+--=20
+Regards,
+Shawn
 
-Ben is the one to pick up this patch.
-
-g.
-
-> 
->  drivers/i2c/busses/i2c-tegra.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 8914bd1..99b1b6d 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -716,7 +716,7 @@ static int tegra_i2c_resume(struct platform_device *pdev)
->  #if defined(CONFIG_OF)
->  /* Match table for of_platform binding */
->  static const struct of_device_id tegra_i2c_of_match[] __devinitconst = {
-> -	{ .compatible = "nvidia,tegra250-i2c", },
-> +	{ .compatible = "nvidia,tegra20-i2c", },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
-> -- 
-> 1.7.0.4
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
