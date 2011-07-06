@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] Add utilfdt for common functions, adjust dtget
-Date: Wed, 6 Jul 2011 12:43:46 -0600
-Message-ID: <20110706184346.GE4871@ponder.secretlab.ca>
+Subject: Re: [PATCH 6/9] Add new dtput utility to write values to fdt
+Date: Wed, 6 Jul 2011 12:46:26 -0600
+Message-ID: <20110706184626.GF4871@ponder.secretlab.ca>
 References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-6-git-send-email-sjg@chromium.org>
+	<1309892577-23828-7-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1309892577-23828-6-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1309892577-23828-7-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,315 +23,287 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 12:02:53PM -0700, Simon Glass wrote:
-> This adds a new utility library for performing libfdt operations, and
-> modifies dtget to use it.
-
-Perhaps this patch should come before the dtget patch?
-
-Otherwise looks okay.
-
+On Tue, Jul 05, 2011 at 12:02:54PM -0700, Simon Glass wrote:
+> This simple utility allows writing of values into a device tree from the
+> command line.
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
->  Makefile.dtget |    3 +-
->  dtget.c        |   55 +++------------------------
->  utilfdt.c      |  113 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  utilfdt.h      |   58 ++++++++++++++++++++++++++++
->  4 files changed, 180 insertions(+), 49 deletions(-)
->  create mode 100644 utilfdt.c
->  create mode 100644 utilfdt.h
+>  Makefile       |    7 ++
+>  Makefile.dtput |   14 ++++
+>  dtput.c        |  199 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 220 insertions(+), 0 deletions(-)
+>  create mode 100644 Makefile.dtput
+>  create mode 100644 dtput.c
 > 
-> diff --git a/Makefile.dtget b/Makefile.dtget
-> index edda499..fd01055 100644
-> --- a/Makefile.dtget
-> +++ b/Makefile.dtget
-> @@ -6,7 +6,8 @@
+> diff --git a/Makefile b/Makefile
+> index 3401a65..e216006 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -107,11 +107,13 @@ include Makefile.convert-dtsv0
+>  include Makefile.dtc
+>  include Makefile.ftdump
+>  include Makefile.dtget
+> +include Makefile.dtput
 >  
->  DTGET_SRCS = \
->  	dtget.c \
-> -	util.c
+>  BIN += convert-dtsv0
+>  BIN += dtc
+>  BIN += ftdump
+>  BIN += dtget
+> +BIN += dtput
+>  
+>  SCRIPTS = dtdiff
+>  
+> @@ -123,6 +125,7 @@ ifneq ($(DEPTARGETS),)
+>  -include $(CONVERT_OBJS:%.o=%.d)
+>  -include $(FTDUMP_OBJS:%.o=%.d)
+>  -include $(DTGET_OBJS:%.o=%.d)
+> +-include $(DTPUT_OBJS:%.o=%.d)
+>  endif
+>  
+>  
+> @@ -187,6 +190,10 @@ dtget:	$(DTGET_OBJS) $(LIBFDT_archive)
+>  	$(VECHO) LD $@
+>  	$(LINK.c) -o $@ $^
+>  
+> +dtput:	$(DTPUT_OBJS) $(LIBFDT_archive)
+> +	$(VECHO) LD $@
+> +	$(LINK.c) -o $@ $^
+> +
+>  
+>  #
+>  # Testsuite rules
+> diff --git a/Makefile.dtput b/Makefile.dtput
+> new file mode 100644
+> index 0000000..92eb054
+> --- /dev/null
+> +++ b/Makefile.dtput
+> @@ -0,0 +1,14 @@
+> +#
+> +# This is not a complete Makefile.
+> +# Instead, it is designed to be easily embeddable
+> +# into other systems of Makefiles.
+> +#
+> +
+> +DTPUT_SRCS = \
+> +	dtput.c \
 > +	util.c \
 > +	utilfdt.c
->  
->  DTGET_GEN_SRCS =
->  
-> diff --git a/dtget.c b/dtget.c
-> index 0ee577c..cbcd4d2 100644
-> --- a/dtget.c
-> +++ b/dtget.c
-> @@ -15,8 +15,7 @@
->  #include <libfdt.h>
->  
->  #include "util.h"
-> -
-> -#define FTDUMP_BUF_SIZE	65536
-> +#include "utilfdt.h"
->  
->  static void report_error(const char *where, int err)
->  {
-> @@ -62,31 +61,16 @@ static void show_data(const char *format, int type, const char *data, int len)
->  static int show_data_for_key(const void *blob, const char *format, int type,
->  			     char *key)
->  {
-> -	char *ptr, *prop;
-> +	char *prop;
->  	int node, guess_node = 0;
->  	const void *value;
->  	int len;
->  
-> -	/* First extract the property from the end */
-> -	ptr = strrchr(key, '/');
-> -	if (!ptr) {
-> -		fprintf(stderr, "No node found in key '%s'\n", key);
-> -		return 5;
-> -	}
-> -
-> -	if (ptr == key) {
-> -		guess_node = fdt_path_offset(blob, key);
-> -		node = fdt_path_offset(blob, "/");
-> -	} else {
-> -		*ptr = '\0';
-> -		node = fdt_path_offset(blob, key);
-> -		*ptr = '/';
-> -	}
-> +	node = util_decode_key(blob, key, &prop, &guess_node);
->  	if (node < 0) {
->  		report_error(key, node);
->  		return 7;
->  	}
-> -	prop = ptr + 1;
->  	value = fdt_getprop(blob, node, prop, &len);
->  	if (!value) {
->  		report_error(prop, len);
-> @@ -103,40 +87,15 @@ static int show_data_for_key(const void *blob, const char *format, int type,
->  static int do_dtget(const char *filename, const char *format, int type,
->  		    char **key, int key_count)
->  {
-> -	FILE *fp;
-> -	char *buf;
-> -	size_t size;
-> +	char *blob;
->  	int i, ret;
->  
-> -	if (strcmp(filename, "-") == 0) {
-> -		fp = stdin;
-> -	} else {
-> -		fp = fopen(filename, "rb");
-> -		if (fp == NULL) {
-> -			fprintf(stderr, "unable to open %s\n", filename);
-> -			return 10;
-> -		}
-> -	}
-> -
-> -	buf = malloc(FTDUMP_BUF_SIZE);
-> -	if (!buf) {
-> -		fprintf(stderr, "Couldn't allocate %d byte buffer\n",
-> -			FTDUMP_BUF_SIZE);
-> +	blob = util_read_fdt(filename);
-> +	if (!blob)
->  		return 10;
-> -	}
->  
-> -	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
-> -	if (!feof(fp)) {
-> -		fprintf(stderr, "file too large (maximum is %d bytes)\n",
-> -			FTDUMP_BUF_SIZE);
-> -		return 10;
-> -	}
-> -	if (ferror(fp)) {
-> -		fprintf(stderr, "file read error\n");
-> -		return 10;
-> -	}
->  	for (i = 0; i < key_count; i++) {
-> -		ret = show_data_for_key(buf, format, type, key[i]);
-> +		ret = show_data_for_key(blob, format, type, key[i]);
->  		if (ret)
->  			return ret;
->  	}
-> diff --git a/utilfdt.c b/utilfdt.c
+> +
+> +DTPUT_GEN_SRCS =
+> +
+> +DTPUT_OBJS = $(DTPUT_SRCS:%.c=%.o) $(DTPUT_GEN_SRCS:%.c=%.o)
+> diff --git a/dtput.c b/dtput.c
 > new file mode 100644
-> index 0000000..3cbd566
+> index 0000000..48e3c75
 > --- /dev/null
-> +++ b/utilfdt.c
-> @@ -0,0 +1,113 @@
+> +++ b/dtput.c
+> @@ -0,0 +1,199 @@
 > +/*
-> + * Copyright 2001 The Chromium Authors, All Rights Reserved.
+> + * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
+> + * Distributed under the terms of the GNU General Public License v2
 > + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License, or (at your option) any later version.
-> + *
-> + *  This program is distributed in the hope that it will be useful,
-> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + *  General Public License for more details.
-> + *
-> + *  You should have received a copy of the GNU General Public License
-> + *  along with this program; if not, write to the Free Software
-> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-> + *                                                                   USA
+> + * is_printable_string from ftdump.c
+> + * Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
 > + */
 > +
 > +#include <ctype.h>
+> +#include <getopt.h>
 > +#include <stdio.h>
 > +#include <stdlib.h>
-> +#include <stdarg.h>
 > +#include <string.h>
 > +
-> +#include "libfdt.h"
+> +#include <libfdt.h>
+> +
+> +#include "util.h"
 > +#include "utilfdt.h"
 > +
-> +#define FTDUMP_BUF_SIZE	65536
+> +int verbose;		/* verbose output */
 > +
-> +char *util_read_fdt(const char *filename)
+> +enum {
+> +	MAX_VALUE_SIZE = 1024
+> +};
+> +
+> +static void report_error(const char *where, int err)
 > +{
-> +	FILE *fp;
-> +	char *buf;
-> +	int size;
-> +
-> +	if (strcmp(filename, "-") == 0) {
-> +		fp = stdin;
-> +	} else {
-> +		fp = fopen(filename, "rb");
-> +		if (fp == NULL) {
-> +			fprintf(stderr, "unable to open '%s'\n", filename);
-> +			return NULL;
-> +		}
-> +	}
-> +
-> +	buf = malloc(FTDUMP_BUF_SIZE);
-> +	if (!buf) {
-> +		fprintf(stderr, "Couldn't allocate %d byte buffer\n",
-> +			FTDUMP_BUF_SIZE);
-> +		return NULL;
-> +	}
-> +
-> +	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
-> +	if (!feof(fp)) {
-> +		fprintf(stderr, "file too large (maximum is %d bytes)\n",
-> +			FTDUMP_BUF_SIZE);
-> +	} else if (ferror(fp))
-> +		fprintf(stderr, "file read error\n");
-> +	else
-> +		return buf;
-> +	free(buf);
-> +	return NULL;
+> +	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
 > +}
 > +
-> +int util_write_fdt(const char *buf, const char *filename)
+> +/**
+> + * Encode a series of arguments in a property value.
+> + *
+> + * @param arg	List of arguments from command line
+> + * @param arg_count	Number of arguments (may be 0)
+> + * @param format	sscanf() format string to use, NULL for default
+> + * @param type		Value type (s=string, i=int, b=byte)
+> + * @param buf		Buffer to place value into
+> + * @param malen		Maximum length of buffer
+> + * @param *value_len	Returns length of value encoded
+> + */
+> +static int encode_value(char **arg, int arg_count, const char *format,
+> +		int type, char *buf, int maxlen, int *value_len)
 > +{
-> +	FILE *fp;
-> +	size_t size, written;
+> +	char value[MAX_VALUE_SIZE];	/* holding area for values */
+> +	int len;	/* length of this cell/string/byte */
+> +	int *iptr = (int *)value;
+> +	int ival;
+> +	int upto;	/* the number of bytes we have written to buf */
 > +
-> +	if (strcmp(filename, "-") == 0) {
-> +		fp = stdout;
-> +	} else {
-> +		fp = fopen(filename, "wb");
-> +		if (fp == NULL) {
-> +			fprintf(stderr, "unable to open %s\n", filename);
-> +			return -1;
+> +	upto = 0;
+> +
+> +	if (verbose)
+> +		fprintf(stderr, "Decoding value:\n");
+> +	for (; arg_count > 0; arg++, arg_count--, upto += len) {
+> +		/* assume integer unless told otherwise */
+> +		if (type == 's') {
+> +			sscanf(*arg, format ? format : "%s", value);
+> +			len = strlen(value) + 1;
+> +			if (verbose)
+> +				fprintf(stderr, "\tstring: '%s'\n", value);
+> +		} else {
+> +			len = type == 'b' ? 1 : 4;
+> +			sscanf(*arg, format ? format : "%d", &ival);
+> +			if (len == 4)
+> +				*iptr = cpu_to_fdt32(ival);
+> +			else
+> +				*value = (uint8_t)ival;
+> +			if (verbose) {
+> +				fprintf(stderr, "\t%s: %d\n",
+> +					type == 'b' ? "byte" : "int", ival);
+> +			}
 > +		}
+> +		if (upto + len > maxlen)
+> +			return 8;
+> +		memcpy(buf + upto, value, len);
+> +	}
+> +	*value_len = upto;
+> +	if (verbose)
+> +		fprintf(stderr, "Value size %d\n", upto);
+> +	return 0;
+> +}
+> +
+> +static int store_key_value(void *blob, char *key, const char *buf, int len)
+> +{
+> +	char *prop;
+> +	int node, guess_node;
+> +	int err;
+> +
+> +	node = util_decode_key(blob, key, &prop, &guess_node);
+> +	if (node < 0) {
+> +		report_error(key, node);
+> +		return 7;
 > +	}
 > +
-> +	size = fdt_totalsize(buf);
-> +	written = fwrite(buf, 1, size, fp);
-> +	if (size != written) {
-> +		fprintf(stderr, "file write failed\n");
-> +		return -1;
+> +	err = fdt_setprop(blob, node, prop, buf, len);
+> +	if (err) {
+> +		report_error(prop, len);
+> +		if (guess_node)
+> +			fprintf(stderr, "(Node %s exists but you didn't "
+> +				"specify a property to set)\n", key);
+> +		return 8;
 > +	}
 > +	return 0;
 > +}
 > +
-> +int util_decode_key(const char *blob, char *key, char **prop, int *guess_node)
+> +static int do_dtput(const char *filename, const char *format, int type,
+> +		    char **arg, int arg_count)
 > +{
-> +	int node;
-> +	char *ptr;
+> +	char *blob;
+> +	int ret, len;
+> +	char buf[MAX_VALUE_SIZE];
 > +
-> +	/* First extract the property from the end */
-> +	*guess_node = 0;
-> +	ptr = strrchr(key, '/');
-> +	if (!ptr) {
-> +		fprintf(stderr, "No node found in key '%s'\n", key);
-> +		return -FDT_ERR_NOTFOUND;
-> +	}
+> +	blob = util_read_fdt(filename);
+> +	if (!blob)
+> +		return 10;
 > +
-> +	if (ptr == key) {
-> +		*guess_node = fdt_path_offset(blob, key);
-> +		node = fdt_path_offset(blob, "/");
-> +	} else {
-> +		*ptr = '\0';
-> +		node = fdt_path_offset(blob, key);
-> +		*ptr = '/';
+> +	if (arg_count > 0) {
+> +		/* convert the value into binary */
+> +		ret = encode_value(arg + 1, arg_count - 1, format, type, buf,
+> +				MAX_VALUE_SIZE, &len);
+> +		if (ret)
+> +			return 8;
+> +
+> +		ret = store_key_value(blob, *arg, buf, len);
+> +		if (ret)
+> +			return ret;
 > +	}
-> +	*prop = ptr + 1;
-> +	return node;
+> +	return util_write_fdt(blob, filename);
 > +}
-> diff --git a/utilfdt.h b/utilfdt.h
-> new file mode 100644
-> index 0000000..79c218f
-> --- /dev/null
-> +++ b/utilfdt.h
-> @@ -0,0 +1,58 @@
-> +#ifndef _UTILFDT_H
-> +#define _UTILFDT_H
 > +
-> +/*
-> + * Copyright 2001 The Chromium Authors, All Rights Reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License, or (at your option) any later version.
-> + *
-> + *  This program is distributed in the hope that it will be useful,
-> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + *  General Public License for more details.
-> + *
-> + *  You should have received a copy of the GNU General Public License
-> + *  along with this program; if not, write to the Free Software
-> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-> + *                                                                   USA
-> + */
+> +static void usage(const char *msg)
+> +{
+> +	if (msg)
+> +		fprintf(stderr, "Error: %s\n\n", msg);
+> +	fprintf(stderr, "dtput - write a property value to a device tree\n\n");
+> +	fprintf(stderr, "Usage: dtput <options> <dt file> <key> "
+> +		"[<value>...]\n");
+> +	fprintf(stderr, "Options:\n");
+> +	fprintf(stderr, "\t-f, --format <fmt>\tScanf format string to use "
+> +		"for value\n");
+> +	fprintf(stderr, "\t-t, --type <typechar>\tForce type to be string "
+> +		"(s), byte(b) or int(i)\n");
+> +	fprintf(stderr, "\t-h, --help\t\tPrint this help\n\n");
+> +	fprintf(stderr, "\t<key> is <node>/<property>, for example "
+> +		"/lcd/width for the width\n");
+> +	fprintf(stderr, "\tproperty in the LCD node\n");
+
+Can you make this text a single string and only call fprintf once?  It
+will be easier to reqd that way.
+
+It would be useful to have a mode for removing or renaming properties/nodes.
+
+> +	exit(2);
+> +}
 > +
-> +/**
-> + * Read a device tree file into a buffer.
-> + *
-> + * @param filename	The filename to read, or - for stdin
-> + * @return		Poiner to allocated buffer containing fdt, or NULL
-> + *			on error
-> + */
-> +char *util_read_fdt(const char *filename);
+> +int main(int argc, char *argv[])
+> +{
+> +	int c;
+> +	int ret;
+> +	char *format = NULL;
+> +	int type = 0;
+> +	char *filename = NULL;
+> +	static struct option long_options[] = {
+> +		{"format", 1, 0, 'f'},
+> +		{"help", 1, 0, 'h'},
+> +		{"type", 1, 0, 't'},
+> +		{"verbose", 1, 0, 'v'},
+> +		{0, 0, 0, 0}
+> +	};
 > +
-> +/**
-> + * Write a device tree buffer to a file.
-> + *
-> + * @param filename	The filename to write, or - for stdout
-> + * @param buf		Poiner to buffer containing fdt
-> + * @return 0 if ok, -1 on error
-> + */
-> +int util_write_fdt(const char *buf, const char *filename);
+> +	for (;;) {
+> +		c = getopt_long(argc, argv, "f:ht:v", long_options, NULL);
+> +		if (c == -1)
+> +			break;
 > +
-> +/**
-> + * Decode a node and property from a key string.
-> + *
-> + * This converts a key of the form /lcd/width into a node offset (/lcd) and
-> + * a property (width).
-> + *
-> + * @param blob		Device tree blob
-> + * @param key		Key string to decode
-> + * @param prop		Returns pointer to property string within key
-> + * @param guess_node	Normally <= 0, but if not then this is the offset of
-> + *			a node that the caller MAY be referring to. For example
-> + *			if key="/width" and there is a node /width, then
-> + *			guess_node will return the offset of /width. It is used
-> + *			to print a helpful error message.
-> + */
-> +int util_decode_key(const char *blob, char *key, char **prop, int *guess_node);
+> +		switch (c) {
+> +		case 'h':
+> +		case '?':
+> +			usage(NULL);
 > +
-> +#endif /* _UTILFDT_H */
+> +		case 'f':
+> +			format = optarg;
+> +			break;
+> +
+> +		case 't':
+> +			type = *optarg;
+> +			break;
+> +
+> +		case 'v':
+> +			verbose = 1;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (optind < argc)
+> +		filename = argv[optind++];
+> +	if (!filename)
+> +		usage("Missing filename");
+> +	if (optind == argc)
+> +		usage("Missing key(s)");
+> +
+> +	ret = do_dtput(filename, format, type, argv + optind, argc - optind);
+> +	return ret;
+> +}
 > -- 
 > 1.7.3.1
 > 
