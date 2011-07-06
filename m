@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] Add new dtput utility to write values to fdt
-Date: Wed, 6 Jul 2011 12:46:26 -0600
-Message-ID: <20110706184626.GF4871@ponder.secretlab.ca>
+Subject: Re: [PATCH 8/9] Add dtput to .gitignore
+Date: Wed, 6 Jul 2011 12:46:49 -0600
+Message-ID: <20110706184649.GG4871@ponder.secretlab.ca>
 References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-7-git-send-email-sjg@chromium.org>
+	<1309892577-23828-9-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1309892577-23828-7-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1309892577-23828-9-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,287 +23,25 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 12:02:54PM -0700, Simon Glass wrote:
-> This simple utility allows writing of values into a device tree from the
-> command line.
+On Tue, Jul 05, 2011 at 12:02:56PM -0700, Simon Glass wrote:
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Make this part of the dtput patch.
+
 > ---
->  Makefile       |    7 ++
->  Makefile.dtput |   14 ++++
->  dtput.c        |  199 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 220 insertions(+), 0 deletions(-)
->  create mode 100644 Makefile.dtput
->  create mode 100644 dtput.c
+>  .gitignore |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
-> diff --git a/Makefile b/Makefile
-> index 3401a65..e216006 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -107,11 +107,13 @@ include Makefile.convert-dtsv0
->  include Makefile.dtc
->  include Makefile.ftdump
->  include Makefile.dtget
-> +include Makefile.dtput
->  
->  BIN += convert-dtsv0
->  BIN += dtc
->  BIN += ftdump
->  BIN += dtget
-> +BIN += dtput
->  
->  SCRIPTS = dtdiff
->  
-> @@ -123,6 +125,7 @@ ifneq ($(DEPTARGETS),)
->  -include $(CONVERT_OBJS:%.o=%.d)
->  -include $(FTDUMP_OBJS:%.o=%.d)
->  -include $(DTGET_OBJS:%.o=%.d)
-> +-include $(DTPUT_OBJS:%.o=%.d)
->  endif
->  
->  
-> @@ -187,6 +190,10 @@ dtget:	$(DTGET_OBJS) $(LIBFDT_archive)
->  	$(VECHO) LD $@
->  	$(LINK.c) -o $@ $^
->  
-> +dtput:	$(DTPUT_OBJS) $(LIBFDT_archive)
-> +	$(VECHO) LD $@
-> +	$(LINK.c) -o $@ $^
-> +
->  
->  #
->  # Testsuite rules
-> diff --git a/Makefile.dtput b/Makefile.dtput
-> new file mode 100644
-> index 0000000..92eb054
-> --- /dev/null
-> +++ b/Makefile.dtput
-> @@ -0,0 +1,14 @@
-> +#
-> +# This is not a complete Makefile.
-> +# Instead, it is designed to be easily embeddable
-> +# into other systems of Makefiles.
-> +#
-> +
-> +DTPUT_SRCS = \
-> +	dtput.c \
-> +	util.c \
-> +	utilfdt.c
-> +
-> +DTPUT_GEN_SRCS =
-> +
-> +DTPUT_OBJS = $(DTPUT_SRCS:%.c=%.o) $(DTPUT_GEN_SRCS:%.c=%.o)
-> diff --git a/dtput.c b/dtput.c
-> new file mode 100644
-> index 0000000..48e3c75
-> --- /dev/null
-> +++ b/dtput.c
-> @@ -0,0 +1,199 @@
-> +/*
-> + * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
-> + * Distributed under the terms of the GNU General Public License v2
-> + *
-> + * is_printable_string from ftdump.c
-> + * Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
-> + */
-> +
-> +#include <ctype.h>
-> +#include <getopt.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +
-> +#include <libfdt.h>
-> +
-> +#include "util.h"
-> +#include "utilfdt.h"
-> +
-> +int verbose;		/* verbose output */
-> +
-> +enum {
-> +	MAX_VALUE_SIZE = 1024
-> +};
-> +
-> +static void report_error(const char *where, int err)
-> +{
-> +	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
-> +}
-> +
-> +/**
-> + * Encode a series of arguments in a property value.
-> + *
-> + * @param arg	List of arguments from command line
-> + * @param arg_count	Number of arguments (may be 0)
-> + * @param format	sscanf() format string to use, NULL for default
-> + * @param type		Value type (s=string, i=int, b=byte)
-> + * @param buf		Buffer to place value into
-> + * @param malen		Maximum length of buffer
-> + * @param *value_len	Returns length of value encoded
-> + */
-> +static int encode_value(char **arg, int arg_count, const char *format,
-> +		int type, char *buf, int maxlen, int *value_len)
-> +{
-> +	char value[MAX_VALUE_SIZE];	/* holding area for values */
-> +	int len;	/* length of this cell/string/byte */
-> +	int *iptr = (int *)value;
-> +	int ival;
-> +	int upto;	/* the number of bytes we have written to buf */
-> +
-> +	upto = 0;
-> +
-> +	if (verbose)
-> +		fprintf(stderr, "Decoding value:\n");
-> +	for (; arg_count > 0; arg++, arg_count--, upto += len) {
-> +		/* assume integer unless told otherwise */
-> +		if (type == 's') {
-> +			sscanf(*arg, format ? format : "%s", value);
-> +			len = strlen(value) + 1;
-> +			if (verbose)
-> +				fprintf(stderr, "\tstring: '%s'\n", value);
-> +		} else {
-> +			len = type == 'b' ? 1 : 4;
-> +			sscanf(*arg, format ? format : "%d", &ival);
-> +			if (len == 4)
-> +				*iptr = cpu_to_fdt32(ival);
-> +			else
-> +				*value = (uint8_t)ival;
-> +			if (verbose) {
-> +				fprintf(stderr, "\t%s: %d\n",
-> +					type == 'b' ? "byte" : "int", ival);
-> +			}
-> +		}
-> +		if (upto + len > maxlen)
-> +			return 8;
-> +		memcpy(buf + upto, value, len);
-> +	}
-> +	*value_len = upto;
-> +	if (verbose)
-> +		fprintf(stderr, "Value size %d\n", upto);
-> +	return 0;
-> +}
-> +
-> +static int store_key_value(void *blob, char *key, const char *buf, int len)
-> +{
-> +	char *prop;
-> +	int node, guess_node;
-> +	int err;
-> +
-> +	node = util_decode_key(blob, key, &prop, &guess_node);
-> +	if (node < 0) {
-> +		report_error(key, node);
-> +		return 7;
-> +	}
-> +
-> +	err = fdt_setprop(blob, node, prop, buf, len);
-> +	if (err) {
-> +		report_error(prop, len);
-> +		if (guess_node)
-> +			fprintf(stderr, "(Node %s exists but you didn't "
-> +				"specify a property to set)\n", key);
-> +		return 8;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int do_dtput(const char *filename, const char *format, int type,
-> +		    char **arg, int arg_count)
-> +{
-> +	char *blob;
-> +	int ret, len;
-> +	char buf[MAX_VALUE_SIZE];
-> +
-> +	blob = util_read_fdt(filename);
-> +	if (!blob)
-> +		return 10;
-> +
-> +	if (arg_count > 0) {
-> +		/* convert the value into binary */
-> +		ret = encode_value(arg + 1, arg_count - 1, format, type, buf,
-> +				MAX_VALUE_SIZE, &len);
-> +		if (ret)
-> +			return 8;
-> +
-> +		ret = store_key_value(blob, *arg, buf, len);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return util_write_fdt(blob, filename);
-> +}
-> +
-> +static void usage(const char *msg)
-> +{
-> +	if (msg)
-> +		fprintf(stderr, "Error: %s\n\n", msg);
-> +	fprintf(stderr, "dtput - write a property value to a device tree\n\n");
-> +	fprintf(stderr, "Usage: dtput <options> <dt file> <key> "
-> +		"[<value>...]\n");
-> +	fprintf(stderr, "Options:\n");
-> +	fprintf(stderr, "\t-f, --format <fmt>\tScanf format string to use "
-> +		"for value\n");
-> +	fprintf(stderr, "\t-t, --type <typechar>\tForce type to be string "
-> +		"(s), byte(b) or int(i)\n");
-> +	fprintf(stderr, "\t-h, --help\t\tPrint this help\n\n");
-> +	fprintf(stderr, "\t<key> is <node>/<property>, for example "
-> +		"/lcd/width for the width\n");
-> +	fprintf(stderr, "\tproperty in the LCD node\n");
-
-Can you make this text a single string and only call fprintf once?  It
-will be easier to reqd that way.
-
-It would be useful to have a mode for removing or renaming properties/nodes.
-
-> +	exit(2);
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int c;
-> +	int ret;
-> +	char *format = NULL;
-> +	int type = 0;
-> +	char *filename = NULL;
-> +	static struct option long_options[] = {
-> +		{"format", 1, 0, 'f'},
-> +		{"help", 1, 0, 'h'},
-> +		{"type", 1, 0, 't'},
-> +		{"verbose", 1, 0, 'v'},
-> +		{0, 0, 0, 0}
-> +	};
-> +
-> +	for (;;) {
-> +		c = getopt_long(argc, argv, "f:ht:v", long_options, NULL);
-> +		if (c == -1)
-> +			break;
-> +
-> +		switch (c) {
-> +		case 'h':
-> +		case '?':
-> +			usage(NULL);
-> +
-> +		case 'f':
-> +			format = optarg;
-> +			break;
-> +
-> +		case 't':
-> +			type = *optarg;
-> +			break;
-> +
-> +		case 'v':
-> +			verbose = 1;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (optind < argc)
-> +		filename = argv[optind++];
-> +	if (!filename)
-> +		usage("Missing filename");
-> +	if (optind == argc)
-> +		usage("Missing key(s)");
-> +
-> +	ret = do_dtput(filename, format, type, argv + optind, argc - optind);
-> +	return ret;
-> +}
+> diff --git a/.gitignore b/.gitignore
+> index cde4fa5..a026069 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -11,3 +11,4 @@ lex.yy.c
+>  /convert-dtsv0
+>  /version_gen.h
+>  /dtget
+> +/dtput
 > -- 
 > 1.7.3.1
 > 
