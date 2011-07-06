@@ -1,104 +1,48 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] dtput: Support adding strings with spaces
-Date: Wed, 6 Jul 2011 12:47:45 -0600
-Message-ID: <20110706184745.GH4871@ponder.secretlab.ca>
-References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-10-git-send-email-sjg@chromium.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 1/5] OMAP3:I2C: Add device tree nodes for beagle board
+Date: Wed, 6 Jul 2011 12:49:49 -0600
+Message-ID: <20110706184949.GI4871@ponder.secretlab.ca>
+References: <1309426647-31587-1-git-send-email-manjugk@ti.com>
+ <1309426647-31587-2-git-send-email-manjugk@ti.com>
+ <20110630142702.GV23145@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1309892577-23828-10-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110630142702.GV23145@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 12:02:57PM -0700, Simon Glass wrote:
-> Previously dtput would use sscanf() to read the string from the command line,
-> even if no format string was provided. Thus it would split up words at
-> whitespace boundaries, and put a \0 between each.
+On Thu, Jun 30, 2011 at 07:27:02AM -0700, Tony Lindgren wrote:
+> Hi,
 > 
-> This changes that behavior. Previously:
+> Few comments on the .dts data layout below.
 > 
-> $ ../dtput dtget-test.dtb -ts /compatible this is a test
+> * G, Manjunath Kondaiah <manjugk@ti.com> [110630 02:44]:
+> > --- a/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
+> > +++ b/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
+> > @@ -2,11 +2,6 @@
+> >  
+> >  / {
+> >  	i2c@48072000 {
+> > -		compatible = "ti,omap3-i2c";
+> > -		reg = <0x48072000 0x80>;
+> > -		#address-cells = <1>;
+> > -		#size-cells = <0>;
+> > -
+> >  		eeprom@50 {
+> >  			compatible = "at,at24c01";
+> >  			reg = < 0x50 >;
 > 
-> $ ../dtget dtget-test.dtb /compatible
-> 116 104 105 115 0 105 115 0 97 110 111 116 104 101 114 0 116 101 115 116 0
+> The board .dts file should include the omap3 SoC .dts file.
 > 
-> and you have to use the -ts flag to see this as a list of strings
+> The omap3 SoC .dts file should have the devices mapped to L3 and L4
+> busses, and the then i2c@1 would just contain the bus offset.
 > 
-> $ ../dtget dtget-test.dtb -ts /compatible
-> this is a test
-> 
-> Now:
-> 
-> $ ../dtput dtget-test.dtb -ts  /compatible "this is another test"
-> 
-> $ ../dtget dtget-test.dtb /compatible this is another test
-> this is another test
-> 
-> $ ../dtget dtget-test.dtb /compatible -tb
-> 116 104 105 115 32 105 115 32 97 110 111 116 104 101 114 32 116 101 115 116 0
-> 
-> Note that the \0 terminators are gone.
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Then the i2c@1 entry would be repeated in the board specific
+> .dts and tell that the i2c@1 is enabled.
 
-This would be squashed in with the dtput patch too.
+yup.
 
-g.
-
-> ---
->  dtput.c            |    7 ++++++-
->  tests/run_tests.sh |    4 +++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/dtput.c b/dtput.c
-> index 48e3c75..d02e6ab 100644
-> --- a/dtput.c
-> +++ b/dtput.c
-> @@ -55,7 +55,12 @@ static int encode_value(char **arg, int arg_count, const char *format,
->  	for (; arg_count > 0; arg++, arg_count--, upto += len) {
->  		/* assume integer unless told otherwise */
->  		if (type == 's') {
-> -			sscanf(*arg, format ? format : "%s", value);
-> +			if (format)
-> +				sscanf(*arg, format, value);
-> +			else {
-> +				strncpy(value, *arg, MAX_VALUE_SIZE - 1);
-> +				value[MAX_VALUE_SIZE - 1] = '\0';
-> +			}
->  			len = strlen(value) + 1;
->  			if (verbose)
->  				fprintf(stderr, "\tstring: '%s'\n", value);
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index d95d1fe..71cfab3 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -434,10 +434,12 @@ dtput_tests () {
->      file=dtget-test.dtb
->      $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
->  
-> -    # run_dtput_test <test-name> <expected-result> <file> <key> <value>
-> +    # run_dtput_test <test-name> <expected-result> <file> <key> <value> <flags>
->      run_dtput_test "Simple string" "a_model" $file "/model" "a_model" -ts
->  
->      run_dtput_test "Multiple string s" "board1 board2" \
-> +	$file "/compatible" "board1 board2" -ts -f%s
-> +    run_dtput_test "Single string with spaces" "board1 board2" \
->  	$file "/compatible" "board1 board2" -ts
->      run_dtput_test "Integer" "32768" $file "/cpus/PowerPC,970@1/d-cache-size" \
->  	"32768"
-> -- 
-> 1.7.3.1
-> 
