@@ -1,94 +1,223 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 3/3] mmc: sdhci-esdhc-imx: add device tree probe
- support
-Date: Wed, 6 Jul 2011 09:50:30 -0600
-Message-ID: <20110706155030.GA5805@ponder.secretlab.ca>
-References: <1309879568-25837-1-git-send-email-shawn.guo@linaro.org>
- <1309879568-25837-4-git-send-email-shawn.guo@linaro.org>
- <CACxGe6sj4yt7o1yohgdgRxx0aBGrCyYxA3qHmV-npCArjNWWUw@mail.gmail.com>
- <20110706154314.GC4034@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH RESEND v2 3/3] net/fec: add device tree probe support
+Date: Thu, 7 Jul 2011 00:22:33 +0800
+Message-ID: <1309969353-13128-1-git-send-email-shawn.guo@linaro.org>
+References: <1309878839-25743-4-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110706154314.GC4034@S2100-06.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1309878839-25743-4-git-send-email-shawn.guo@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Jason Liu <jason.hui@linaro.org>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2011 at 11:43:15PM +0800, Shawn Guo wrote:
-> On Tue, Jul 05, 2011 at 11:54:34AM -0600, Grant Likely wrote:
-> > On Tue, Jul 5, 2011 at 9:26 AM, Shawn Guo <shawn.guo@linaro.org> wr=
-ote:
-> > > The patch adds device tree probe support for sdhci-esdhc-imx driv=
-er.
-> > >
-> > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > > Cc: Wolfram Sang <w.sang@pengutronix.de>
-> > > Cc: Chris Ball <cjb@laptop.org>
-> > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > ---
-> > > =A0.../devicetree/bindings/mmc/fsl-imx-esdhc.txt =A0 =A0 =A0| =A0=
- 40 ++++++++
-> > > =A0drivers/mmc/host/sdhci-esdhc-imx.c =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0102 +++++++++++++++++++-
-> > > =A02 files changed, 137 insertions(+), 5 deletions(-)
-> > > =A0create mode 100644 Documentation/devicetree/bindings/mmc/fsl-i=
-mx-esdhc.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.=
-txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> > > new file mode 100644
-> > > index 0000000..351d239
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> > > @@ -0,0 +1,40 @@
-> > > +* Freescale Enhanced Secure Digital Host Controller (eSDHC) for =
-i.MX
-> > > +
-> > > +The Enhanced Secure Digital Host Controller on Freescale i.MX fa=
-mily
-> > > +provides an interface for MMC, SD, and SDIO types of memory card=
-s.
-> > > +
-> > > +Required properties:
-> > > +- compatible : Should be "fsl,<chip>-esdhc"
-> > > +- reg : Should contain eSDHC registers location and length
-> > > +- interrupts : Should contain eSDHC interrupt
-> > > +- cd-type : String, card detection (CD) method. =A0Supported val=
-ues are:
-> > > + =A0 =A0"none" : No CD
-> > > + =A0 =A0"controller" : Uses eSDHC controller internal CD signal
-> > > + =A0 =A0"gpio" : Uses GPIO pin for CD
-> > > + =A0 =A0"permanent" : No CD because card is permanently wired to=
- host
-> > > +- wp-type : String, write protection (WP) method. =A0Supported v=
-alues are:
-> > > + =A0 =A0"none" : No WP
-> > > + =A0 =A0"controller" : Uses eSDHC controller internal WP signal
-> > > + =A0 =A0"gpio" : Uses GPIO pin for WP
-> > > +- gpios : Should specify GPIOs in this order: CD GPIO, WP GPIO, =
-if
-> > > + =A0properties cd-type and wp-type are "gpio".
-> >=20
-> > Again, be explicit in your gpios property names.  Create a differen=
-t
-> > property for each gpio: cd-gpios and wp-gpios.
-> >=20
-> > As for wp-type and cd-type, I think you can drop them.  Default to
-> > internal controller CD and WP pins.  Use gpio if cd-gpios or wp-gpi=
-os
-> > is present, and define specific properties for the no-wp, no-cd and
-> > fixed-card cases.  (can you tell that I'm not a fan of the "*-type"
-> > binding for this driver?)  :-)
-> >=20
-> I would let default be no CD/WP, and define properties for
-> controller internal CD/WP and wired case, if you do not see a
-> problem with it.
+It adds device tree probe support for fec driver.
 
-Okay.
+Signed-off-by: Jason Liu <jason.hui@linaro.org>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+---
+Resend with changes:
+ * use of_get_named_gpio for phy-reset-gpios
 
-g.
+ Documentation/devicetree/bindings/net/fsl-fec.txt |   24 +++++
+ drivers/net/fec.c                                 |   98 +++++++++++++++++++-
+ 2 files changed, 117 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/fsl-fec.txt
+
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+new file mode 100644
+index 0000000..de43951
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -0,0 +1,24 @@
++* Freescale Fast Ethernet Controller (FEC)
++
++Required properties:
++- compatible : Should be "fsl,<soc>-fec"
++- reg : Address and length of the register set for the device
++- interrupts : Should contain fec interrupt
++- phy-mode : String, operation mode of the PHY interface.
++  Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
++  "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
++- phy-reset-gpios : Should specify the gpio for phy reset
++
++Optional properties:
++- local-mac-address : 6 bytes, mac address
++
++Example:
++
++fec@83fec000 {
++	compatible = "fsl,imx51-fec", "fsl,imx27-fec";
++	reg = <0x83fec000 0x4000>;
++	interrupts = <87>;
++	phy-mode = "mii";
++	phy-reset-gpios = <&gpio1 14 0>; /* GPIO2_14 */
++	local-mac-address = [00 04 9F 01 1B B9];
++};
+diff --git a/drivers/net/fec.c b/drivers/net/fec.c
+index 7ae3f28..720aa63 100644
+--- a/drivers/net/fec.c
++++ b/drivers/net/fec.c
+@@ -44,6 +44,10 @@
+ #include <linux/platform_device.h>
+ #include <linux/phy.h>
+ #include <linux/fec.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <linux/of_net.h>
+ 
+ #include <asm/cacheflush.h>
+ 
+@@ -78,6 +82,17 @@ static struct platform_device_id fec_devtype[] = {
+ 	{ }
+ };
+ 
++enum fec_type {
++	IMX27_FEC,
++	IMX28_FEC,
++};
++
++static const struct of_device_id fec_dt_ids[] = {
++	{ .compatible = "fsl,imx27-fec", .data = &fec_devtype[IMX27_FEC], },
++	{ .compatible = "fsl,imx28-fec", .data = &fec_devtype[IMX28_FEC], },
++	{ /* sentinel */ }
++};
++
+ static unsigned char macaddr[ETH_ALEN];
+ module_param_array(macaddr, byte, NULL, 0);
+ MODULE_PARM_DESC(macaddr, "FEC Ethernet MAC address");
+@@ -734,8 +749,22 @@ static void __inline__ fec_get_mac(struct net_device *ndev)
+ 	 */
+ 	iap = macaddr;
+ 
++#ifdef CONFIG_OF
++	/*
++	 * 2) from device tree data
++	 */
++	if (!is_valid_ether_addr(iap)) {
++		struct device_node *np = fep->pdev->dev.of_node;
++		if (np) {
++			const char *mac = of_get_mac_address(np);
++			if (mac)
++				iap = (unsigned char *) mac;
++		}
++	}
++#endif
++
+ 	/*
+-	 * 2) from flash or fuse (via platform data)
++	 * 3) from flash or fuse (via platform data)
+ 	 */
+ 	if (!is_valid_ether_addr(iap)) {
+ #ifdef CONFIG_M5272
+@@ -748,7 +777,7 @@ static void __inline__ fec_get_mac(struct net_device *ndev)
+ 	}
+ 
+ 	/*
+-	 * 3) FEC mac registers set by bootloader
++	 * 4) FEC mac registers set by bootloader
+ 	 */
+ 	if (!is_valid_ether_addr(iap)) {
+ 		*((unsigned long *) &tmpaddr[0]) =
+@@ -1358,6 +1387,52 @@ static int fec_enet_init(struct net_device *ndev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static int __devinit fec_get_phy_mode_dt(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++
++	if (np)
++		return of_get_phy_mode(np);
++
++	return -ENODEV;
++}
++
++static int __devinit fec_reset_phy(struct platform_device *pdev)
++{
++	int err, phy_reset;
++	struct device_node *np = pdev->dev.of_node;
++
++	if (!np)
++		return -ENODEV;
++
++	phy_reset = of_get_named_gpio(np, "phy-reset-gpios", 0);
++	err = gpio_request_one(phy_reset, GPIOF_OUT_INIT_LOW, "phy-reset");
++	if (err) {
++		pr_warn("FEC: failed to get gpio phy-reset: %d\n", err);
++		return err;
++	}
++
++	gpio_set_value(phy_reset, 1);
++
++	return 0;
++}
++#else /* CONFIG_OF */
++static inline int fec_get_phy_mode_dt(struct platform_device *pdev)
++{
++	return -ENODEV;
++}
++
++static inline int fec_reset_phy(struct platform_device *pdev)
++{
++	/*
++	 * In case of platform probe, the reset has been done
++	 * by machine code.
++	 */
++	return 0;
++}
++#endif /* CONFIG_OF */
++
+ static int __devinit
+ fec_probe(struct platform_device *pdev)
+ {
+@@ -1366,6 +1441,11 @@ fec_probe(struct platform_device *pdev)
+ 	struct net_device *ndev;
+ 	int i, irq, ret = 0;
+ 	struct resource *r;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_device(fec_dt_ids, &pdev->dev);
++	if (of_id)
++		pdev->id_entry = of_id->data;
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!r)
+@@ -1397,9 +1477,16 @@ fec_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, ndev);
+ 
+-	pdata = pdev->dev.platform_data;
+-	if (pdata)
+-		fep->phy_interface = pdata->phy;
++	fep->phy_interface = fec_get_phy_mode_dt(pdev);
++	if (fep->phy_interface < 0) {
++		pdata = pdev->dev.platform_data;
++		if (pdata)
++			fep->phy_interface = pdata->phy;
++		else
++			fep->phy_interface = PHY_INTERFACE_MODE_MII;
++	}
++
++	fec_reset_phy(pdev);
+ 
+ 	/* This device has up to three irqs on some platforms */
+ 	for (i = 0; i < 3; i++) {
+@@ -1534,6 +1621,7 @@ static struct platform_driver fec_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &fec_pm_ops,
+ #endif
++		.of_match_table = fec_dt_ids,
+ 	},
+ 	.id_table = fec_devtype,
+ 	.probe	= fec_probe,
+-- 
+1.7.4.1
+
 
