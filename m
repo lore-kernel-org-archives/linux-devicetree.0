@@ -1,37 +1,69 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH v2 2/3] mmc: sdhci-pltfm: dt device does not pass parent
- to sdhci_alloc_host
-Date: Thu, 07 Jul 2011 15:33:15 +0400
-Message-ID: <4E15997B.6080804@mvista.com>
-References: <1309879568-25837-1-git-send-email-shawn.guo@linaro.org> <1309879568-25837-3-git-send-email-shawn.guo@linaro.org>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH v4 0/3] ARM: CSR: Adding CSR SiRFprimaII platform
+Date: Thu, 7 Jul 2011 21:22:25 +0800
+Message-ID: <CAGsJ_4yd8i2V1FeKcELFrdRd+UxY9WLVV-dG9XnJmkxrYs8j5A@mail.gmail.com>
+References: <1310020616-27856-1-git-send-email-bs14@csr.com>
+	<201107071311.29643.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1309879568-25837-3-git-send-email-shawn.guo@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201107071311.29643.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux@arm.linux.org.uk, nico@fluxnic.net, devicetree-discuss@lists.ozlabs.org, Barry Song <bs14@csr.com>, workgroup.linux@csr.com, grant.likely@secretlab.ca, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 05-07-2011 19:26, Shawn Guo wrote:
-
-> Neither platform based nor dt based device needs to pass the parent
-> to sdhci_alloc_host.  There is no difference between platform and dt
-> on this point.
-
-> The patch makes the change to pass device itself than its parent to
-
-    Maybe "rather than"?
-
-> sdhci_alloc_host for dt case too.  Otherwise the probe function of
-> sdhci based drivers which is shared between platform and dt will
-> fail on dt case.
-
-> Signed-off-by: Shawn Guo<shawn.guo@linaro.org>
-> Acked-by: Grant Likely<grant.likely@secretlab.ca>
-> Cc: Chris Ball<cjb@laptop.org>
-
-WBR, Sergei
+MjAxMS83LzcgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gVGh1cnNkYXkgMDcg
+SnVseSAyMDExLCBCYXJyeSBTb25nIHdyb3RlOgo+PiBDaGFuZ2Vsb2dzOgo+PiAtdjQ6Cj4+IHYz
+IGdvdCAiUmV2aWV3ZWQtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+Igo+PiBzdG9w
+cGluZyB0aGUgMHhmZmZmZmZmZiBtYWRuZXNzIGZvciBJT19TUEFDRV9MSU1JVAo+PiBmaXggLm1h
+cF9pbyBjb21waWxpbmcgaXNzdWUgaW4gdGhlIDFzdCBwYXRjaAo+PiBmaXggc2V0X25leHRfZXZl
+bnQgaW4gdGltZXIuYwo+PiByZW5hbWUgR1BVLCBVU0IsIG11bHRpbWVkaWEgYW5kIFNBVEEgbm9k
+ZXMgaW4gRFRTCj4+IGRlbGV0ZSByZWR1bmRhbnQgMHggaW4gRFRTCj4KPiBOb3RlIHRoYXQgd2hl
+biB5b3UgZ2V0IGEgJ1Jldmlld2VkLWJ5JywgJ0Fja2VkLWJ5JyBvciAnVGVzdGVkLWJ5Jwo+IHJl
+cGx5IHRvIG9uZSBvZiB5b3VyIG1haWxzLCB5b3Ugc2hvdWxkIGFkZCB0aGF0IGluIHRoZSBwYXRj
+aAo+IGNoYW5nZWxvZyBiZWxvdyB5b3VyIG93biAnU2lnbmVkLW9mZi1ieScgaW4gb3JkZXIgdG8g
+ZG9jdW1lbnQKPiBpdCBmb3IgdGhlIGZ1dHVyZS4gVGhpcyB1c3VzYWxseSBzdGlsbCBob2xkcyB0
+cnVlIHdoZW4geW91IG1ha2UKPiBmdXJ0aGVyIGNoYW5nZXMsIGp1c3Qgbm90IHdoZW4gcmV3cml0
+aW5nIG1ham9yIHBhcnRzIG9mIHRoZSBwYXRjaC4KCmkgYW0gc3VyZSBpIGtub3cgcmV2aWV3ZWQt
+YnkvYWNrZWQtYnkvdGVzdGVkLWJ5IHNob3VsZCBiZSBhZGRlZCB0byB0aGUKZW5kLiB3aGF0IG1h
+a2UgbWUgY29uZnVzZWQgaGVyZSBpcyB5b3UgYXJlIGFsc28gdGhlIG1haW50YWluZXIgd2hvCndp
+bGwgbWVyZ2UgdGhlc2UgY2hhbmdlcyBpbnRvIGFybS1zb2MgYW5kIGZpbmFsbHkgbWFrZSB0aGVt
+IHB1bGxlZCBieQpsaW51cy4gZ2VuZXJpY2FsbHkseW91IHdpbGwgZ2V0IHRoZSBsYXN0IHNpZ25l
+ZC1vZmYtYnkgdG9vLiBpZiBpIGxpc3QKInJldmlld2VkLWJ5IHlvdSIsIHlvdSBtaWdodCBuZWVk
+IHRvIHJlcGxhY2UgaXQgYnkgc2lnbmVkLW9mZi1ieQpmaW5hbGx5Lgphbnl3YXksIGknbSByZWFs
+bHkgbm90IHN1cmUgd2hldGhlciBpIGFtIHVuZGVyc3RhbmRpbmcgcmlnaHQgYWJvdXQgdGhhdCA6
+LSkKCj4KPiBGb3IgdGhlIFNpZ25lZC1vZmYtYnkgbGlzdCwgdGhhdCBzaG91bGQgbm9ybWFsbHkg
+aW5jbHVkZSBvbmx5IHRoZQo+IHBlb3BsZSB0aGF0IGhhdmUgaGFuZGxlZCB0aGUgc3BlY2lmaWMg
+cGF0Y2gsIGl0IGRvZXNuJ3QgaW1wbHkKPiBhdXRob3JzaGlwLiBIYXZpbmcgc2V2ZW4gcGVvcGxl
+IGxpc3RlZCBhcyBTaWduZWQtb2ZmLWJ5IHNlZW1zIGEgYml0Cj4gc3RyYW5nZSBpbiB0aGlzIGNv
+bnRleHQsIGJ1dCB0aGVyZSBpcyBubyBjbGVhciBydWxlIGFnYWluc3QgaXQuCj4gSSB3b3VsZCBw
+cm9iYWJseSB1c2UgJ0Fja2VkLWJ5JyBvciBwbGFpbiAnQ2MnIGluIHRoZSBjaGFuZ2Vsb2cgZm9y
+Cj4gc29tZSBvZiB0aGUgcGVvcGxlLCBkZXBlbmRpbmcgaW4gd2hhdCB3YXkgdGhleSB3ZXJlIGlu
+dm9sdmVkLgoKeWVzLiBpIHVuZGVyc3RhbmQgc2lnbmVkLW9mZi1ieSBzaG91bGQgb25seSBiZSBn
+aXZlbiB0byBwZW9wbGUgd2hvCm1ha2UgdGhlIGVzc2VudGlhbCBjb2RlIGNoYW5nZXMgaW4gdGhl
+IHNwZWNpYWwgcGF0Y2ggYW5kIHBlb3BsZSB3aG8Kc2VuZCBvciBtZXJnZSB0aGUgc3BlY2lhbCBw
+YXRjaCwgYnV0IG5vdCB0aGUgb3JpZ2luYWwgYXV0aG9yIG9mIHRoZQpvcmlnaW5hbCBzb3VyY2Ug
+ZmlsZXMuIGZvciB0aGUgMXN0IHBhdGNoIHdoaWNoIGlzIHRoZSBiYXNpYyBib2FyZApzdXBwb3J0
+LCBpbiB0aGUgbG9uZyBoaXN0b3J5IG9mIGNvZGluZyBzaXJmcHJpbWFpaSwgYWxsIHRoZSBsaXN0
+ZWQKcGVvcGxlIGhhdmUgY29udHJpYnV0ZWQgY29kZXMuIHNvIGkgZ2V0IHRoZSBuYW1lcyBvZiBh
+bGwgb2YgdGhlbQpzaG93bi4gYW55d2F5LCBpdCBpcyByZWFsbHkgdG9vIGxvbmcuLi4uCgo+Cj4g
+QXQgdGhlIGxlYXN0LCB5b3Ugc2hvdWxkIGhhdmUgJ1NpZ25lZC1vZmYtYnknIHRoZSBwZXJzb24g
+dGhhdCB3cm90ZQo+IG1vc3Qgb2YgdGhlIGNvZGUsIGZvbGxvd2VkIGJ5IHRoZSBwZXJzb24gdGhh
+dCBzZW5kcyB0aGUgcGF0Y2ggYXQKPiB0aGUgYm90dG9tIG9mIHRoZSBsaXN0IChhcyB5b3UgZGlk
+IGNvcnJlY3RseSkuCj4KPiDCoCDCoCDCoCDCoEFybmQKPgo+IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKPgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
