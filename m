@@ -1,58 +1,44 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 0/3] Add device tree probe for imx/mxc gpio
-Date: Thu, 7 Jul 2011 13:27:05 -0600
-Message-ID: <20110707192705.GL2824@ponder.secretlab.ca>
-References: <1309970263-13239-1-git-send-email-shawn.guo@linaro.org>
+From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] dt: bindings: move SEC node under new crypto/
+Date: Thu, 7 Jul 2011 14:43:12 -0500
+Message-ID: <20110707144312.8456bf35.kim.phillips@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1309970263-13239-1-git-send-email-shawn.guo@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 07, 2011 at 12:37:40AM +0800, Shawn Guo wrote:
-> The first patch removes the uses of cpu_is_mx(), the second one
-> changes mxc gpio number macro, and the third one adds actual device
-> tree probe support.
-> 
-> Changes since v2:
->  * Keep platform case gpio range code path unchanged, and get range
->    from gpio core only for dt case.
-> 
-> Changes since v1:
->  * Address review comments given by Grant and Sascha
->  * Add patch #1 to get gpio range/base from gpio core
-> 
-> Shawn Guo (3):
->       gpio/mxc: get rid of the uses of cpu_is_mx()
->       ARM: mxc: use ARCH_NR_GPIOS to define gpio number
->       gpio/mxc: add device tree probe support
+Since technically it's not powerpc arch-specific.  Also rename it sec2
+to differentiate it from its incompatible successor, the SEC 4.
 
-Sascha; so are we good?  Should I merge this series?
+Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../{powerpc/fsl/sec.txt => crypto/fsl-sec2.txt}   |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+ rename Documentation/devicetree/bindings/{powerpc/fsl/sec.txt => crypto/fsl-sec2.txt} (98%)
 
-g.
-
-> 
->  .../devicetree/bindings/gpio/fsl-imx-gpio.txt      |   22 +++
->  arch/arm/mach-imx/mm-imx1.c                        |    8 +-
->  arch/arm/mach-imx/mm-imx21.c                       |   12 +-
->  arch/arm/mach-imx/mm-imx25.c                       |    9 +-
->  arch/arm/mach-imx/mm-imx27.c                       |   13 +-
->  arch/arm/mach-imx/mm-imx31.c                       |    6 +-
->  arch/arm/mach-imx/mm-imx35.c                       |    7 +-
->  arch/arm/mach-mx5/mm-mx50.c                        |   13 +-
->  arch/arm/mach-mx5/mm.c                             |   24 ++--
->  arch/arm/plat-mxc/devices/platform-gpio-mxc.c      |    4 +-
->  arch/arm/plat-mxc/include/mach/common.h            |    2 +-
->  arch/arm/plat-mxc/include/mach/irqs.h              |   21 +---
->  drivers/gpio/gpio-mxc.c                            |  157 +++++++++++++++++---
->  13 files changed, 211 insertions(+), 87 deletions(-)
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/sec.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+similarity index 98%
+rename from Documentation/devicetree/bindings/powerpc/fsl/sec.txt
+rename to Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+index 2b6f2d4..38988ef 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/sec.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+@@ -1,4 +1,4 @@
+-Freescale SoC SEC Security Engines
++Freescale SoC SEC Security Engines versions 2.x-3.x
+ 
+ Required properties:
+ 
+-- 
+1.7.6
