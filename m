@@ -1,37 +1,141 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] ARM: CSR: Adding CSR SiRFprimaII platform
-Date: Thu, 7 Jul 2011 15:46:54 +0200
-Message-ID: <201107071546.54847.arnd@arndb.de>
-References: <1310020616-27856-1-git-send-email-bs14@csr.com>
-	<201107071531.18623.arnd@arndb.de>
-	<CAGsJ_4zqny8_AYBTEnjOoERSrYxD_KOeWx1fPgpbP-yaQDbTZQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v3 2/3] ARM: mxc: use ARCH_NR_GPIOS to define gpio number
+Date: Thu, 7 Jul 2011 23:13:32 +0800
+Message-ID: <20110707151331.GB12722@S2100-06.ap.freescale.net>
+References: <1309970263-13239-1-git-send-email-shawn.guo@linaro.org>
+ <1309970263-13239-3-git-send-email-shawn.guo@linaro.org>
+ <20110707074755.GX6069@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGsJ_4zqny8_AYBTEnjOoERSrYxD_KOeWx1fPgpbP-yaQDbTZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110707074755.GX6069@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 07 July 2011, Barry Song wrote:
-> i will add your reviewed-by to change log in the tree which i will use
-> to send pull request to you. we are building the opensource.csr.com
-> website. and i will place CSR's kernel there and build a for-arnd
-> branch. you can easily pull the for-arnd branch.
+On Thu, Jul 07, 2011 at 09:47:55AM +0200, Sascha Hauer wrote:
+> On Thu, Jul 07, 2011 at 12:37:42AM +0800, Shawn Guo wrote:
+> > The patch removes MXC_GPIO_IRQS and instead uses ARCH_NR_GPIOS to
+> > define gpio number.  This change is need when we change mxc gpio
+> > driver to be device tree aware.  When migrating the driver to device
+> > tree, pdev->id becomes unusable.  It requires driver get gpio range
+> > from gpio core, which will dynamically allocates number from
+> > ARCH_NR_GPIOS to 0.
+> > 
+> > As a bonus point, it removes lines of '#if' and make the code a
+> > little bit cleaner.  The side effect is the waste of number.  But
+> > this is not a point when we go single image.
+> 
+> I'm not sure whether we really should depend on an externally defined
+> ARCH_NR_GPIOS. Someone might get the idea to change this to a lower
+> value. Maybe we should define this ourselves instead.
+> 
+Good point.  We should not depend on the externally defined one.  But
+the reason in my mind is different from yours.  Right now, i.mx50 gets
+192 and i.mx6 gets 224 gpios.  I do not see the point to lower the
+value (no lower than 224), since we will go single image soon.  The
+thing concerning me is that someday we may have a soc coming out with
+more than 256 gpios.  Then we have to override ARCH_NR_GPIOS with our
+own definition.
 
-Ok, sounds good.
+Please take a look at the updated patch below.  If it looks fine to
+you, I will resend the patch.
 
-If the web site takes too much time, I can also just take the patches.
-Right now there are only three of them anyway, so that's no problem.
+8<----
+>From b9cc9f9161b6d5ebb57d52200c3673dd78138899 Mon Sep 17 00:00:00 2001
+From: Shawn Guo <shawn.guo@linaro.org>
+Date: Wed, 6 Jul 2011 21:11:01 +0800
+Subject: [PATCH] ARM: mxc: use ARCH_NR_GPIOS to define gpio number
 
-	Arnd
+The patch removes MXC_GPIO_IRQS and instead uses ARCH_NR_GPIOS to
+define gpio number.  This change is need when we change mxc gpio
+driver to be device tree aware.  When migrating the driver to device
+tree, pdev->id becomes unusable.  It requires driver get gpio range
+from gpio core, which will dynamically allocates number from
+ARCH_NR_GPIOS to 0.
+
+As a bonus point, it removes lines of '#if' and make the code a
+little bit cleaner.
+
+It also cleans a couple of unnecessary headers in mach/gpio.h.
+
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+---
+ arch/arm/plat-mxc/include/mach/gpio.h |    9 ++++++---
+ arch/arm/plat-mxc/include/mach/irqs.h |   21 +++------------------
+ 2 files changed, 9 insertions(+), 21 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/include/mach/gpio.h b/arch/arm/plat-mxc/include/mach/gpio.h
+index 31c820c..f3b26f7 100644
+--- a/arch/arm/plat-mxc/include/mach/gpio.h
++++ b/arch/arm/plat-mxc/include/mach/gpio.h
+@@ -19,10 +19,13 @@
+ #ifndef __ASM_ARCH_MXC_GPIO_H__
+ #define __ASM_ARCH_MXC_GPIO_H__
+ 
+-#include <linux/spinlock.h>
+-#include <mach/hardware.h>
+-#include <asm-generic/gpio.h>
++/*
++ * Define our own ARCH_NR_GPIOS here to override the one
++ * externally defined in asm-generic/gpio.h
++ */
++#define ARCH_NR_GPIOS	224
+ 
++#include <asm-generic/gpio.h>
+ 
+ /* There's a off-by-one betweem the gpio bank number and the gpiochip */
+ /* range e.g. GPIO_1_5 is gpio 5 under linux */
+diff --git a/arch/arm/plat-mxc/include/mach/irqs.h b/arch/arm/plat-mxc/include/mach/irqs.h
+index 35c89bc..62228f1 100644
+--- a/arch/arm/plat-mxc/include/mach/irqs.h
++++ b/arch/arm/plat-mxc/include/mach/irqs.h
+@@ -11,6 +11,8 @@
+ #ifndef __ASM_ARCH_MXC_IRQS_H__
+ #define __ASM_ARCH_MXC_IRQS_H__
+ 
++#include <mach/gpio.h>
++
+ /*
+  * SoCs with TZIC interrupt controller have 128 IRQs, those with AVIC have 64
+  */
+@@ -22,30 +24,13 @@
+ 
+ #define MXC_GPIO_IRQ_START	MXC_INTERNAL_IRQS
+ 
+-/* these are ordered by size to support multi-SoC kernels */
+-#if defined CONFIG_SOC_IMX53
+-#define MXC_GPIO_IRQS		(32 * 7)
+-#elif defined CONFIG_ARCH_MX2
+-#define MXC_GPIO_IRQS		(32 * 6)
+-#elif defined CONFIG_SOC_IMX50
+-#define MXC_GPIO_IRQS		(32 * 6)
+-#elif defined CONFIG_ARCH_MX1
+-#define MXC_GPIO_IRQS		(32 * 4)
+-#elif defined CONFIG_ARCH_MX25
+-#define MXC_GPIO_IRQS		(32 * 4)
+-#elif defined CONFIG_SOC_IMX51
+-#define MXC_GPIO_IRQS		(32 * 4)
+-#elif defined CONFIG_ARCH_MX3
+-#define MXC_GPIO_IRQS		(32 * 3)
+-#endif
+-
+ /*
+  * The next 16 interrupts are for board specific purposes.  Since
+  * the kernel can only run on one machine at a time, we can re-use
+  * these.  If you need more, increase MXC_BOARD_IRQS, but keep it
+  * within sensible limits.
+  */
+-#define MXC_BOARD_IRQ_START	(MXC_INTERNAL_IRQS + MXC_GPIO_IRQS)
++#define MXC_BOARD_IRQ_START	(MXC_INTERNAL_IRQS + ARCH_NR_GPIOS)
+ 
+ #ifdef CONFIG_MACH_MX31ADS_WM1133_EV1
+ #define MXC_BOARD_IRQS  80
+
+-- 
+Regards,
+Shawn
