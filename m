@@ -1,16 +1,15 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH v4 0/3] ARM: CSR: Adding CSR SiRFprimaII platform
-Date: Thu, 7 Jul 2011 21:37:29 +0800
-Message-ID: <CAGsJ_4zqny8_AYBTEnjOoERSrYxD_KOeWx1fPgpbP-yaQDbTZQ@mail.gmail.com>
+Date: Thu, 7 Jul 2011 15:46:54 +0200
+Message-ID: <201107071546.54847.arnd@arndb.de>
 References: <1310020616-27856-1-git-send-email-bs14@csr.com>
-	<201107071311.29643.arnd@arndb.de>
-	<CAGsJ_4yd8i2V1FeKcELFrdRd+UxY9WLVV-dG9XnJmkxrYs8j5A@mail.gmail.com>
 	<201107071531.18623.arnd@arndb.de>
+	<CAGsJ_4zqny8_AYBTEnjOoERSrYxD_KOeWx1fPgpbP-yaQDbTZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201107071531.18623.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <CAGsJ_4zqny8_AYBTEnjOoERSrYxD_KOeWx1fPgpbP-yaQDbTZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,57 +19,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS83LzcgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gVGh1cnNkYXkgMDcg
-SnVseSAyMDExLCBCYXJyeSBTb25nIHdyb3RlOgo+PiA+IE5vdGUgdGhhdCB3aGVuIHlvdSBnZXQg
-YSAnUmV2aWV3ZWQtYnknLCAnQWNrZWQtYnknIG9yICdUZXN0ZWQtYnknCj4+ID4gcmVwbHkgdG8g
-b25lIG9mIHlvdXIgbWFpbHMsIHlvdSBzaG91bGQgYWRkIHRoYXQgaW4gdGhlIHBhdGNoCj4+ID4g
-Y2hhbmdlbG9nIGJlbG93IHlvdXIgb3duICdTaWduZWQtb2ZmLWJ5JyBpbiBvcmRlciB0byBkb2N1
-bWVudAo+PiA+IGl0IGZvciB0aGUgZnV0dXJlLiBUaGlzIHVzdXNhbGx5IHN0aWxsIGhvbGRzIHRy
-dWUgd2hlbiB5b3UgbWFrZQo+PiA+IGZ1cnRoZXIgY2hhbmdlcywganVzdCBub3Qgd2hlbiByZXdy
-aXRpbmcgbWFqb3IgcGFydHMgb2YgdGhlIHBhdGNoLgo+Pgo+PiBpIGFtIHN1cmUgaSBrbm93IHJl
-dmlld2VkLWJ5L2Fja2VkLWJ5L3Rlc3RlZC1ieSBzaG91bGQgYmUgYWRkZWQgdG8gdGhlCj4+IGVu
-ZC4gd2hhdCBtYWtlIG1lIGNvbmZ1c2VkIGhlcmUgaXMgeW91IGFyZSBhbHNvIHRoZSBtYWludGFp
-bmVyIHdobwo+PiB3aWxsIG1lcmdlIHRoZXNlIGNoYW5nZXMgaW50byBhcm0tc29jIGFuZCBmaW5h
-bGx5IG1ha2UgdGhlbSBwdWxsZWQgYnkKPj4gbGludXMuIGdlbmVyaWNhbGx5LHlvdSB3aWxsIGdl
-dCB0aGUgbGFzdCBzaWduZWQtb2ZmLWJ5IHRvby4gaWYgaSBsaXN0Cj4+ICJyZXZpZXdlZC1ieSB5
-b3UiLCB5b3UgbWlnaHQgbmVlZCB0byByZXBsYWNlIGl0IGJ5IHNpZ25lZC1vZmYtYnkKPj4gZmlu
-YWxseS4KPj4gYW55d2F5LCBpJ20gcmVhbGx5IG5vdCBzdXJlIHdoZXRoZXIgaSBhbSB1bmRlcnN0
-YW5kaW5nIHJpZ2h0IGFib3V0IHRoYXQgOi0pCj4KPiBUaGUgcG9pbnQgaXMgbW9zdGx5IHRoYXQg
-SSB0ZW5kIHRvIHB1bGwgaW4gcGF0Y2hlcyBmcm9tIGdpdCwgc28gSSBkb24ndAo+IGFkZCBhbiBl
-eHBsaWNpdCBTaWduZWQtb2ZmLWJ5IHRvIGVhY2ggcGF0Y2guIEFsc28sIHRoZSBtZWFuaW5nIG9m
-Cj4gUmV2aWV3ZWQtYnkgaXMgc3Ryb25nZXIgdGhhbiBqdXN0IHB1bGxpbmcgYSBnaXQgdHJlZSwg
-aXQgbWVhbnMgdGhhdAo+IEkgbG9va2VkIGF0IHRoZSBjb2RlIGluIG11Y2ggZGV0YWlsIGFuZCBh
-bSBoYXBweSB3aXRoIHRoZSBlbmQgcmVzdWx0LgoKb2ssIGkgc2VlLCB0aGFuayEKaSB3aWxsIGFk
-ZCB5b3VyIHJldmlld2VkLWJ5IHRvIGNoYW5nZSBsb2cgaW4gdGhlIHRyZWUgd2hpY2ggaSB3aWxs
-IHVzZQp0byBzZW5kIHB1bGwgcmVxdWVzdCB0byB5b3UuIHdlIGFyZSBidWlsZGluZyB0aGUgb3Bl
-bnNvdXJjZS5jc3IuY29tCndlYnNpdGUuIGFuZCBpIHdpbGwgcGxhY2UgQ1NSJ3Mga2VybmVsIHRo
-ZXJlIGFuZCBidWlsZCBhIGZvci1hcm5kCmJyYW5jaC4geW91IGNhbiBlYXNpbHkgcHVsbCB0aGUg
-Zm9yLWFybmQgYnJhbmNoLgoKPgo+IFNpbXBseSBwdWxsaW5nIHRoZSBwYXRjaGVzIGNhbiBtZWFu
-IGVpdGhlciB0aGF0LCBvciB0aGF0IEkgdHJ1c3QgeW91Cj4gZW5vdWdoIHRoYXQgSSBkaWRuJ3Qg
-Ym90aGVyIGxvb2tpbmcgKGFuZC9vciBkb24ndCBjYXJlIGFib3V0IHRoZSBxdWFsaXR5KS4KPgo+
-PiA+IEZvciB0aGUgU2lnbmVkLW9mZi1ieSBsaXN0LCB0aGF0IHNob3VsZCBub3JtYWxseSBpbmNs
-dWRlIG9ubHkgdGhlCj4+ID4gcGVvcGxlIHRoYXQgaGF2ZSBoYW5kbGVkIHRoZSBzcGVjaWZpYyBw
-YXRjaCwgaXQgZG9lc24ndCBpbXBseQo+PiA+IGF1dGhvcnNoaXAuIEhhdmluZyBzZXZlbiBwZW9w
-bGUgbGlzdGVkIGFzIFNpZ25lZC1vZmYtYnkgc2VlbXMgYSBiaXQKPj4gPiBzdHJhbmdlIGluIHRo
-aXMgY29udGV4dCwgYnV0IHRoZXJlIGlzIG5vIGNsZWFyIHJ1bGUgYWdhaW5zdCBpdC4KPj4gPiBJ
-IHdvdWxkIHByb2JhYmx5IHVzZSAnQWNrZWQtYnknIG9yIHBsYWluICdDYycgaW4gdGhlIGNoYW5n
-ZWxvZyBmb3IKPj4gPiBzb21lIG9mIHRoZSBwZW9wbGUsIGRlcGVuZGluZyBpbiB3aGF0IHdheSB0
-aGV5IHdlcmUgaW52b2x2ZWQuCj4+Cj4+IHllcy4gaSB1bmRlcnN0YW5kIHNpZ25lZC1vZmYtYnkg
-c2hvdWxkIG9ubHkgYmUgZ2l2ZW4gdG8gcGVvcGxlIHdobwo+PiBtYWtlIHRoZSBlc3NlbnRpYWwg
-Y29kZSBjaGFuZ2VzIGluIHRoZSBzcGVjaWFsIHBhdGNoIGFuZCBwZW9wbGUgd2hvCj4+IHNlbmQg
-b3IgbWVyZ2UgdGhlIHNwZWNpYWwgcGF0Y2gsIGJ1dCBub3QgdGhlIG9yaWdpbmFsIGF1dGhvciBv
-ZiB0aGUKPj4gb3JpZ2luYWwgc291cmNlIGZpbGVzLiBmb3IgdGhlIDFzdCBwYXRjaCB3aGljaCBp
-cyB0aGUgYmFzaWMgYm9hcmQKPj4gc3VwcG9ydCwgaW4gdGhlIGxvbmcgaGlzdG9yeSBvZiBjb2Rp
-bmcgc2lyZnByaW1haWksIGFsbCB0aGUgbGlzdGVkCj4+IHBlb3BsZSBoYXZlIGNvbnRyaWJ1dGVk
-IGNvZGVzLiBzbyBpIGdldCB0aGUgbmFtZXMgb2YgYWxsIG9mIHRoZW0KPj4gc2hvd24uIGFueXdh
-eSwgaXQgaXMgcmVhbGx5IHRvbyBsb25nLi4uLgo+Pgo+Cj4gTm90IGEgcHJvYmxlbS4gSSBiYXNp
-Y2FsbHkgd2FudGVkIHRvIG1ha2Ugc3VyZSB5b3Uga25vdyB0aGUgcnVsZXMsCj4gYW5kIGl0IHNl
-ZW1lZCBvZGQuIEl0J3MgcHJvYmFibHkgb2sgdG8gbGVhdmUgdGhlIGxpc3QgYXMgaXQgaXMuCj4K
-PiDCoCDCoCDCoCDCoEFybmQKPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlz
-Y3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9k
-ZXZpY2V0cmVlLWRpc2N1c3MK
+On Thursday 07 July 2011, Barry Song wrote:
+> i will add your reviewed-by to change log in the tree which i will use
+> to send pull request to you. we are building the opensource.csr.com
+> website. and i will place CSR's kernel there and build a for-arnd
+> branch. you can easily pull the for-arnd branch.
+
+Ok, sounds good.
+
+If the web site takes too much time, I can also just take the patches.
+Right now there are only three of them anyway, so that's no problem.
+
+	Arnd
