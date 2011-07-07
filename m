@@ -1,51 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 0/3] ARM: CSR: Adding CSR SiRFprimaII platform
-Date: Thu, 7 Jul 2011 13:11:29 +0200
-Message-ID: <201107071311.29643.arnd@arndb.de>
-References: <1310020616-27856-1-git-send-email-bs14@csr.com>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Add device tree probe for imx/mxc gpio
+Date: Thu, 07 Jul 2011 15:30:42 +0400
+Message-ID: <4E1598E2.4080205@mvista.com>
+References: <1309879166-25788-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1310020616-27856-1-git-send-email-bs14@csr.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Barry Song <bs14@csr.com>
-Cc: linux@arm.linux.org.uk, nico@fluxnic.net, devicetree-discuss@lists.ozlabs.org, workgroup.linux@csr.com, grant.likely@secretlab.ca, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1309879166-25788-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 07 July 2011, Barry Song wrote:
-> Changelogs:
-> -v4:
-> v3 got "Reviewed-by: Arnd Bergmann <arnd@arndb.de>"
-> stopping the 0xffffffff madness for IO_SPACE_LIMIT
-> fix .map_io compiling issue in the 1st patch
-> fix set_next_event in timer.c
-> rename GPU, USB, multimedia and SATA nodes in DTS
-> delete redundant 0x in DTS
+Hello.
 
-Note that when you get a 'Reviewed-by', 'Acked-by' or 'Tested-by'
-reply to one of your mails, you should add that in the patch
-changelog below your own 'Signed-off-by' in order to document
-it for the future. This ususally still holds true when you make
-further changes, just not when rewriting major parts of the patch.
+On 05-07-2011 19:19, Shawn Guo wrote:
 
-For the Signed-off-by list, that should normally include only the
-people that have handled the specific patch, it doesn't imply
-authorship. Having seven people listed as Signed-off-by seems a bit
-strange in this context, but there is no clear rule against it.
-I would probably use 'Acked-by' or plain 'Cc' in the changelog for
-some of the people, depending in what way they were involved.
+> The first patch removes the uses of cpu_is_mx(),
 
-At the least, you should have 'Signed-off-by' the person that wrote
-most of the code, followed by the person that sends the patch at
-the bottom of the list (as you did correctly).
+    There are 3 patches total. And this is the second patch...
 
-	Arnd
+> and the second one adds device tree probe support.
+
+    ... and this is the third.
+
+> Changes since v1:
+>   * Address review comments given by Grant and Sascha
+>   * Add patch #1 to get gpio range/base from gpio core
+
+> Shawn Guo (3):
+>        gpio/mxc: get gpio range/base from gpio core
+>        gpio/mxc: get rid of the uses of cpu_is_mx()
+>        gpio/mxc: add device tree probe support
+
+WBR, Sergei
