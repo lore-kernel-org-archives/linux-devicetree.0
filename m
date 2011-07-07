@@ -1,69 +1,68 @@
-From: Barry Song <21cnbao@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH v4 0/3] ARM: CSR: Adding CSR SiRFprimaII platform
-Date: Thu, 7 Jul 2011 21:22:25 +0800
-Message-ID: <CAGsJ_4yd8i2V1FeKcELFrdRd+UxY9WLVV-dG9XnJmkxrYs8j5A@mail.gmail.com>
+Date: Thu, 7 Jul 2011 15:31:18 +0200
+Message-ID: <201107071531.18623.arnd@arndb.de>
 References: <1310020616-27856-1-git-send-email-bs14@csr.com>
 	<201107071311.29643.arnd@arndb.de>
+	<CAGsJ_4yd8i2V1FeKcELFrdRd+UxY9WLVV-dG9XnJmkxrYs8j5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201107071311.29643.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux@arm.linux.org.uk, nico@fluxnic.net, devicetree-discuss@lists.ozlabs.org, Barry Song <bs14@csr.com>, workgroup.linux@csr.com, grant.likely@secretlab.ca, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAGsJ_4yd8i2V1FeKcELFrdRd+UxY9WLVV-dG9XnJmkxrYs8j5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS83LzcgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gVGh1cnNkYXkgMDcg
-SnVseSAyMDExLCBCYXJyeSBTb25nIHdyb3RlOgo+PiBDaGFuZ2Vsb2dzOgo+PiAtdjQ6Cj4+IHYz
-IGdvdCAiUmV2aWV3ZWQtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+Igo+PiBzdG9w
-cGluZyB0aGUgMHhmZmZmZmZmZiBtYWRuZXNzIGZvciBJT19TUEFDRV9MSU1JVAo+PiBmaXggLm1h
-cF9pbyBjb21waWxpbmcgaXNzdWUgaW4gdGhlIDFzdCBwYXRjaAo+PiBmaXggc2V0X25leHRfZXZl
-bnQgaW4gdGltZXIuYwo+PiByZW5hbWUgR1BVLCBVU0IsIG11bHRpbWVkaWEgYW5kIFNBVEEgbm9k
-ZXMgaW4gRFRTCj4+IGRlbGV0ZSByZWR1bmRhbnQgMHggaW4gRFRTCj4KPiBOb3RlIHRoYXQgd2hl
-biB5b3UgZ2V0IGEgJ1Jldmlld2VkLWJ5JywgJ0Fja2VkLWJ5JyBvciAnVGVzdGVkLWJ5Jwo+IHJl
-cGx5IHRvIG9uZSBvZiB5b3VyIG1haWxzLCB5b3Ugc2hvdWxkIGFkZCB0aGF0IGluIHRoZSBwYXRj
-aAo+IGNoYW5nZWxvZyBiZWxvdyB5b3VyIG93biAnU2lnbmVkLW9mZi1ieScgaW4gb3JkZXIgdG8g
-ZG9jdW1lbnQKPiBpdCBmb3IgdGhlIGZ1dHVyZS4gVGhpcyB1c3VzYWxseSBzdGlsbCBob2xkcyB0
-cnVlIHdoZW4geW91IG1ha2UKPiBmdXJ0aGVyIGNoYW5nZXMsIGp1c3Qgbm90IHdoZW4gcmV3cml0
-aW5nIG1ham9yIHBhcnRzIG9mIHRoZSBwYXRjaC4KCmkgYW0gc3VyZSBpIGtub3cgcmV2aWV3ZWQt
-YnkvYWNrZWQtYnkvdGVzdGVkLWJ5IHNob3VsZCBiZSBhZGRlZCB0byB0aGUKZW5kLiB3aGF0IG1h
-a2UgbWUgY29uZnVzZWQgaGVyZSBpcyB5b3UgYXJlIGFsc28gdGhlIG1haW50YWluZXIgd2hvCndp
-bGwgbWVyZ2UgdGhlc2UgY2hhbmdlcyBpbnRvIGFybS1zb2MgYW5kIGZpbmFsbHkgbWFrZSB0aGVt
-IHB1bGxlZCBieQpsaW51cy4gZ2VuZXJpY2FsbHkseW91IHdpbGwgZ2V0IHRoZSBsYXN0IHNpZ25l
-ZC1vZmYtYnkgdG9vLiBpZiBpIGxpc3QKInJldmlld2VkLWJ5IHlvdSIsIHlvdSBtaWdodCBuZWVk
-IHRvIHJlcGxhY2UgaXQgYnkgc2lnbmVkLW9mZi1ieQpmaW5hbGx5Lgphbnl3YXksIGknbSByZWFs
-bHkgbm90IHN1cmUgd2hldGhlciBpIGFtIHVuZGVyc3RhbmRpbmcgcmlnaHQgYWJvdXQgdGhhdCA6
-LSkKCj4KPiBGb3IgdGhlIFNpZ25lZC1vZmYtYnkgbGlzdCwgdGhhdCBzaG91bGQgbm9ybWFsbHkg
-aW5jbHVkZSBvbmx5IHRoZQo+IHBlb3BsZSB0aGF0IGhhdmUgaGFuZGxlZCB0aGUgc3BlY2lmaWMg
-cGF0Y2gsIGl0IGRvZXNuJ3QgaW1wbHkKPiBhdXRob3JzaGlwLiBIYXZpbmcgc2V2ZW4gcGVvcGxl
-IGxpc3RlZCBhcyBTaWduZWQtb2ZmLWJ5IHNlZW1zIGEgYml0Cj4gc3RyYW5nZSBpbiB0aGlzIGNv
-bnRleHQsIGJ1dCB0aGVyZSBpcyBubyBjbGVhciBydWxlIGFnYWluc3QgaXQuCj4gSSB3b3VsZCBw
-cm9iYWJseSB1c2UgJ0Fja2VkLWJ5JyBvciBwbGFpbiAnQ2MnIGluIHRoZSBjaGFuZ2Vsb2cgZm9y
-Cj4gc29tZSBvZiB0aGUgcGVvcGxlLCBkZXBlbmRpbmcgaW4gd2hhdCB3YXkgdGhleSB3ZXJlIGlu
-dm9sdmVkLgoKeWVzLiBpIHVuZGVyc3RhbmQgc2lnbmVkLW9mZi1ieSBzaG91bGQgb25seSBiZSBn
-aXZlbiB0byBwZW9wbGUgd2hvCm1ha2UgdGhlIGVzc2VudGlhbCBjb2RlIGNoYW5nZXMgaW4gdGhl
-IHNwZWNpYWwgcGF0Y2ggYW5kIHBlb3BsZSB3aG8Kc2VuZCBvciBtZXJnZSB0aGUgc3BlY2lhbCBw
-YXRjaCwgYnV0IG5vdCB0aGUgb3JpZ2luYWwgYXV0aG9yIG9mIHRoZQpvcmlnaW5hbCBzb3VyY2Ug
-ZmlsZXMuIGZvciB0aGUgMXN0IHBhdGNoIHdoaWNoIGlzIHRoZSBiYXNpYyBib2FyZApzdXBwb3J0
-LCBpbiB0aGUgbG9uZyBoaXN0b3J5IG9mIGNvZGluZyBzaXJmcHJpbWFpaSwgYWxsIHRoZSBsaXN0
-ZWQKcGVvcGxlIGhhdmUgY29udHJpYnV0ZWQgY29kZXMuIHNvIGkgZ2V0IHRoZSBuYW1lcyBvZiBh
-bGwgb2YgdGhlbQpzaG93bi4gYW55d2F5LCBpdCBpcyByZWFsbHkgdG9vIGxvbmcuLi4uCgo+Cj4g
-QXQgdGhlIGxlYXN0LCB5b3Ugc2hvdWxkIGhhdmUgJ1NpZ25lZC1vZmYtYnknIHRoZSBwZXJzb24g
-dGhhdCB3cm90ZQo+IG1vc3Qgb2YgdGhlIGNvZGUsIGZvbGxvd2VkIGJ5IHRoZSBwZXJzb24gdGhh
-dCBzZW5kcyB0aGUgcGF0Y2ggYXQKPiB0aGUgYm90dG9tIG9mIHRoZSBsaXN0IChhcyB5b3UgZGlk
-IGNvcnJlY3RseSkuCj4KPiDCoCDCoCDCoCDCoEFybmQKPgo+IF9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKPgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thursday 07 July 2011, Barry Song wrote:
+> > Note that when you get a 'Reviewed-by', 'Acked-by' or 'Tested-by'
+> > reply to one of your mails, you should add that in the patch
+> > changelog below your own 'Signed-off-by' in order to document
+> > it for the future. This ususally still holds true when you make
+> > further changes, just not when rewriting major parts of the patch.
+> 
+> i am sure i know reviewed-by/acked-by/tested-by should be added to the
+> end. what make me confused here is you are also the maintainer who
+> will merge these changes into arm-soc and finally make them pulled by
+> linus. generically,you will get the last signed-off-by too. if i list
+> "reviewed-by you", you might need to replace it by signed-off-by
+> finally.
+> anyway, i'm really not sure whether i am understanding right about that :-)
+
+The point is mostly that I tend to pull in patches from git, so I don't
+add an explicit Signed-off-by to each patch. Also, the meaning of
+Reviewed-by is stronger than just pulling a git tree, it means that
+I looked at the code in much detail and am happy with the end result.
+
+Simply pulling the patches can mean either that, or that I trust you
+enough that I didn't bother looking (and/or don't care about the quality).
+
+> > For the Signed-off-by list, that should normally include only the
+> > people that have handled the specific patch, it doesn't imply
+> > authorship. Having seven people listed as Signed-off-by seems a bit
+> > strange in this context, but there is no clear rule against it.
+> > I would probably use 'Acked-by' or plain 'Cc' in the changelog for
+> > some of the people, depending in what way they were involved.
+> 
+> yes. i understand signed-off-by should only be given to people who
+> make the essential code changes in the special patch and people who
+> send or merge the special patch, but not the original author of the
+> original source files. for the 1st patch which is the basic board
+> support, in the long history of coding sirfprimaii, all the listed
+> people have contributed codes. so i get the names of all of them
+> shown. anyway, it is really too long....
+> 
+
+Not a problem. I basically wanted to make sure you know the rules,
+and it seemed odd. It's probably ok to leave the list as it is.
+
+	Arnd
