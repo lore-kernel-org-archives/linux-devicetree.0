@@ -1,147 +1,124 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: CSR: Adding CSR SiRFprimaII board support
-Date: Thu, 7 Jul 2011 10:26:11 +0800
-Message-ID: <CAGsJ_4zeuPJdGX8w3jFW_XRQ7WU_kH9tA=WFh0=LQBeSHcVrdQ@mail.gmail.com>
-References: <1309945678-18813-1-git-send-email-bs14@csr.com>
-	<201107061341.38591.arnd@arndb.de>
-	<CAGsJ_4zzrsKZRR4KCaeFGL9iT5OfMdhKjJE1wG3CGh8M2U4-UQ@mail.gmail.com>
-	<201107061544.20859.arnd@arndb.de>
+From: Barry Song <bs14@csr.com>
+Subject: [PATCH v4 0/3] ARM: CSR: Adding CSR SiRFprimaII platform
+Date: Wed, 6 Jul 2011 23:36:53 -0700
+Message-ID: <1310020616-27856-1-git-send-email-bs14@csr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201107061544.20859.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Bin Shi <Bin.Shi-kQvG35nSl+M@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@arm.linux.org.uk, nico@fluxnic.net, arnd@arndb.de, tglx@linutronix.de
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, workgroup.linux@csr.com, Barry Song <bs14@csr.com>
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS83LzYgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gV2VkbmVzZGF5IDA2
-IEp1bHkgMjAxMSwgQmFycnkgU29uZyB3cm90ZToKPgo+PiA+IEkgd291bGQgbm9ybWFsbHkgcmVj
-b21tZW5kIGRlZmluaW5nIHRoZSByYW5nZXMgc28gdGhhdCBhZGRyZXNzZXMgYXJlIGxvY2FsCj4+
-ID4gdG8gdGhlIHJlc3BlY3RpdmUgYnVzLCBsaWtlCj4+ID4KPj4gPiDCoCDCoCDCoCDCoGF4aSB7
-Cj4+ID4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByYW5nZXMgPSA8MCAweDQwMDAwMDAwIDB4ODAw
-MDAwMDA+Owo+PiA+Cj4+ID4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBzeXMtaW9iZyB7Cj4+ID4g
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByYW5nZXMgPSA8MCAweDQ4MDAwMDAw
-IDB4NDAwMDA+Owo+PiA+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY2xvY2st
-Y29udHJvbGxlckAweDg4MDAwMDAwIHsKPj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCBjb21wYXRpYmxlID0gInNpcmYscHJpbWEyLWNsa2MiOwo+PiA+IMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJlZyA9IDwwIDB4MTAw
-MD47Cj4+ID4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Cj4+ID4KPj4gPiDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHJlc2V0LWNvbnRyb2xsZXJAMHg4ODAx
-MDAwMCB7Cj4+ID4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-Y29tcGF0aWJsZSA9ICJzaXJmLHByaW1hMi1yc3RjIjsKPj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZWcgPSA8MHgxMDAwMCAweDEwMDA+Owo+PiA+IMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTsKPj4gPiDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoH0KPj4gPiDCoCDCoCDCoCDCoH0KPj4KPj4gaSBhbSBub3Qgc3VyZSB3aGV0aGVyIGl0
-IG1ha2UgdXMgYSBsaXR0bGUgbW9yZSBkaWZmaWN1bHQgdG8ga25vdyB0aGUKPj4gcmVhbCBhZGRy
-ZXNzIGF0IGZpcnN0IGdsYW5jZS53ZSB3aWxsIG5lZWQgdG8gY2FsY3VsYXRlLgo+PiBhbGwgYWRk
-cmVzc2VzIGFyZSAxOjEgbWFwcGVkIGluIHRoaXMgY2hpcC4gYnVzIG1hcCBjYW4gd29yayBldmVu
-Cj4+IHRob3VnaCB3ZSBvbmx5IGdpdmUgInJhbmdlczsiIHdpdGhvdXQgcmVhbCAicmFuZ2VzID0g
-PDB4Li4uLj47Ii4KPgo+IFNvIGVhY2ggaW9iZyBzdGlsbCBwYXNzZXMgZG93biB0aGUgZW50aXJl
-IDMyLWJpdCBhZGRyZXNzPwoKeWVzLiBlYWNoIGlvYmcgaXMgYmFzaWNhbGx5IHRyYW5zcGFyZW50
-IGZvciBhZGRyZXNzIHRyYW5zZmVycmluZy4KcmFuZ2VzID0gPDB4NDAwMDAwMDAgMHg0MDAwMDAw
-MCAweDgwMDAwMDAwPjsgc2hvdWxkIGJlIG9rLgoKPgo+IE5vdGUgdGhhdCB5b3UgbmV2ZXIgaGF2
-ZSB0byBkbyB0aGUgY2FsY3VsYXRpb24gaW4gdGhlIGRyaXZlcgo+IHNvdXJjZSwgb2ZfaW9tYXAg
-YW5kIHRoZSByZXNvdXJjZSBsb2dpYyBib3RoIHRha2UgY2FyZSBvZiB0aGlzLgo+Cj4gVGhlcmUg
-YXJlIG11bHRpcGxlIHdheXMgdG8gaGFuZGxlIHRoaXMsIGFuZCBhbiBlbXB0eSByYW5nZXMgcHJv
-cGVydHkKPiB1c3VhbGx5IHdvcmtzIGZpbmUsIGJ1dCBJIGZpbmQgdGhhdCBsZXNzIHJlYWRhYmxl
-Lgo+Cj4gQW5vdGhlciB3YXkgdG8gaGFuZGxlIHRoZXNlIGlzIHRvIGhhdmUgYSBzZXBhcmF0ZSBy
-YW5nZSBmb3IKPiBlYWNoIGNoaWxkIGJ1cywgYXMgaW4gYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2dl
-Zl9wcGM5YS5kdHMKPgo+IFRvIHN0YXkgaW4gdGhlIGV4YW1wbGUsIHRoaXMgd291bGQgbWVhbiBk
-b2luZyBzb21ldGhpbmcgbGlrZQo+Cj4gwqAgwqAgwqAgwqBheGkgewo+IMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgI2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAj
-c2l6ZS1jZWxscyA9IDwxPjsKPgo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcmFuZ2VzID0gPDAg
-MCAweDgwMDAwMDAwIDB4MDgwMDAwMDAgLy8gYXhpIGRldmljZXMKPiDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoDEgMCAweDg4MDAwMDAwIDB4MDgwMDAwMDAgLy8gc3lzLWlv
-YmcKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoDIgMCAweDkwMDAwMDAw
-IDB4MDAwMTAwMDAgLy8gbWVtLWlvYmcKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoDMgMCAweDkwMDEwMDAwIDB4MDdmZTAwMDAgLy8gZGlzcC1pb2JnCj4gwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAuLi4gPjsKPgo+IMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgbDItY2FjaGUtY29udHJvbGxlckA4MDA0MDAwMCB7Cj4gwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqBjb21wYXRpYmxlID0gImFybSxwbDMxMC1jYWNoZSI7Cj4gwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWcgPSA8MCAweDQwMDAwIDB4MTAwMD47Cj4g
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHRzID0gPDU5PjsKPiDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoH07Cj4KPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHN5cy1p
-b2JnIHsKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCNhZGRyZXNzLWNlbGxz
-ID0gPDE+Owo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgI3NpemUtY2VsbHMg
-PSA8MT47Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByYW5nZXMgPSA8MSAw
-IDAgMHg0MDAwMD47Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjbG9jay1j
-b250cm9sbGVyQDg4MDAwMDAwIHsKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCBjb21wYXRpYmxlID0gInNpcmYscHJpbWEyLWNsa2MiOwo+IMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJlZyA9IDwwIDB4MTAwMD47Cj4gwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Cj4KPiDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoHJlc2V0LWNvbnRyb2xsZXJAODgwMTAwMDAgewo+IMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNvbXBhdGlibGUgPSAic2lyZixwcmlt
-YTItcnN0YyI7Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-cmVnID0gPDB4MTAwMDAgMHgxMDAwPjsKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoH07Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Cj4gwqAgwqAgwqAgwqB9Cj4KPgo+Cj4+
-ID4+ICsKPj4gPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBncmFwaGljcy1pb2Jn
-IHsKPj4gPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjb21w
-YXRpYmxlID0gInNpbXBsZS1idXMiOwo+PiA+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiA+PiArIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICNzaXplLWNlbGxzID0gPDE+Owo+PiA+PiAr
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJhbmdlcyA9IDwweDk4
-MDAwMDAwIDB4OTgwMDAwMDAgMHg4MDAwMDAwPjsKPj4gPj4gKwo+PiA+PiArIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGdyYXBoaWNzQDB4OTgwMDAwMDAgewo+PiA+
-PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IGNvbXBhdGlibGUgPSAic2lyZixwcmltYTItZ3JhcGhpY3MiOwo+PiA+PiArIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHJlZyA9IDwweDk4MDAw
-MDAwIDB4ODAwMDAwMD47Cj4+ID4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgaW50ZXJydXB0cyA9IDw2PjsKPj4gPj4gKyDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB9Owo+PiA+PiArIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIH07Cj4+ID4KPj4gPiBBcmUgdGhlIGRpc3BsYXkgYW5kIGdyYXBoaWNz
-IHVuaXRzIENTUiBkZXZlbG9wbWVudHM/IElmIHRoZSBHUFUgaXMKPj4gPiBpbiBmYWN0IGxpY2Vu
-c2VkIGZyb20gc29tZW9uZSBlbHNlIChwb3dlcnZyLCBhcm0sIC4uLiksIHlvdSBzaG91bGQKPj4g
-PiBwcm9iYWJseSBsaXN0IHRoZSBhY3R1YWwgbmFtZSBvZiB0aGUgZGV2aWNlLgo+Pgo+PiBHUFUg
-aXMgcG93ZXJ2ciBzZ3ggNTMxLCBzbyBjb3VsZCB3ZSBkZWZpbmUgY29tcGF0aWJsZSBhcyAicG93
-ZXJ2cixzZ3g1MzEiPwo+Cj4gUHJvYmFibHkgeWVzLiBZb3Ugc2hvdWxkIGhhdmUgYSBsb29rIGlm
-IHRoZXJlIGFyZSBhbHJlYWR5IGJpbmRpbmdzIGZvcgo+IHRoaXMgdGhhdCBkZWZpbmUgb3RoZXIg
-YXR0cmlidXRlcy4gQWxzbywgaWYgdGhlcmUgaXMgYW55IGN1c3RvbWl6YXRpb24KPiBpbnNpZGUg
-b2YgdGhlIGNoaXAsIHlvdSBzaG91bGQgaGF2ZSBhbm90aGVyIG1vcmUgc3BlY2lmaWMgaWRlbnRp
-Zmllcgo+IHRoYXQgbWFrZXMgaXQgcG9zc2libGUgdGhhdCB0aGlzIGlzIHRoZSB2ZXJzaW9uIHRo
-YXQgY3NyIGhhcyBtb2RpZmllZC4KPgo+PiA+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIG11bHRpbWVkaWEtaW9iZyB7Cj4+ID4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKPj4gPj4gKyDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAjYWRkcmVzcy1jZWxscyA9IDwxPjsK
-Pj4gPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAjc2l6ZS1j
-ZWxscyA9IDwxPjsKPj4gPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCByYW5nZXMgPSA8MHhhMDAwMDAwMCAweGEwMDAwMDAwIDB4ODAwMDAwMD47Cj4+ID4+ICsK
-Pj4gPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBtdWx0aW1l
-ZGlhQDB4YTAwMDAwMDAgewo+PiA+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNvbXBhdGlibGUgPSAic2lyZixwcmltYTItbXVsdGltZWRp
-YSI7Cj4+ID4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgcmVnID0gPDB4YTAwMDAwMDAgMHg4MDAwMDAwPjsKPj4gPj4gKyDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpbnRlcnJ1cHRzID0g
-PDU+Owo+PiA+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIH07
-Cj4+ID4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgfTsKPj4gPgo+PiA+ICJtdWx0
-aW1lZGlhIiBzb3VuZHMgbGlrZSBhIHRvbyBnZW5lcmljIHRlcm0uIFdoYXQgZG9lcyB0aGlzIGRv
-Pwo+Pgo+PiDCoHZpZGVvIGRlY29kaW5nLgo+Cj4gc2lyZixwcmltYTItdmlkZW8tY29kZWMgaXMg
-cHJvYmFibHkgYmV0dGVyIHRoYW4sIGJ1dCBpZiBhbnlvbmUgaGFzIG90aGVyCj4gc3VnZ2VzdGlv
-bnMsIHlvdSBjb3VsZCB1c2Ugc29tZXRoaW5nIGVsc2UuCj4KPj4gPiBBcmUgdGhlc2UgcHJvcHJp
-ZXRhcnkgdWFydHMsIG9yIGFyZSB0aGV5IGNvbXBhdGlibGUgdG8gODI1MCBhbmQgdGhlCj4+ID4g
-bGlrZT8gWW91IG1pZ2h0IHdhbnQgdG8gc2V0IGEgY2xvY2stZnJlcXVlbmN5IHByb3BlcnR5IGFz
-IG9mX3NlcmlhbC5jCj4+ID4gdXNlcy4KPj4KPj4gaXQgaXMgbm90IGNvbXBhdGlibGUgd2l0aCA4
-MjUwIC4KPgo+IG9rCj4KPj4gPiBBcmUgdGhlc2UgcnRjIGltcGxlbWVudGF0aW9ucyByZWxhdGVk
-PyBGcm9tIHRoZSByZWdpc3RlciBsYXlvdXQsIEkgd291bGQKPj4gPiBndWVzcyB0aGF0IHRoZXkg
-YXJlIHN1cHBvc2VkIHRvIGJlIHVzZWQgYnkgdGhlIHNhbWUgZHJpdmVyLCBzbyBpdCdzCj4+ID4g
-cHJvYmFibHkgYSBnb29kIGlkZWEgdG8gYWRkIGEgImNvbXBhdGlibGUiIHByb3BlcnR5IHdpdGgg
-YSBjb21tb24gbmFtZQo+PiA+IGZvciBhbGwgdGhyZWUuCj4+Cj4+IGluIGZhY3QsIGJlY2F1c2Ug
-dGhleSBhcmUgc2xvdywgdGhleSBjYW4ndCBiZSBhY2Nlc3NlZCBieSBtYXBwZWQKPj4gYWRkcmVz
-cyBkaXJlY3RseSwgdGhlIG9ubHkgY29tbW9uIHBvaW50IHRoZXkgaGF2ZSBpcyB3ZSBuZWVkIHRv
-IGFjY2Vzcwo+PiB0aGVtIHRocm91Z2ggbWFwcGVkIGFkZHJlc3MgaW4gcnRjLWlvYmcgaW5kaXJl
-Y3RseSBqdXN0IGxpa2Ugd2UgYWNjZXNzCj4+IGkyYy9zcGkvbmFuZCBkZXZpY2VzLgo+Pgo+PiB0
-aGV5IGFyZSB0aHJlZSBkaWZmZXJlbnQgZGV2aWNlcyB3aXRoIGRpZmZlcmVudCBwdXJwb3NlIGFu
-ZCByZWdpc3Rlcgo+PiBsYXlvdXQgaW4gZmFjdC4KPgo+IE9rLgo+Cj4gwqAgwqAgwqAgwqBBcm5k
-Cj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNl
-dHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJz
-Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNz
-Cg==
+Changelogs:
+-v4:
+v3 got "Reviewed-by: Arnd Bergmann <arnd@arndb.de>"
+stopping the 0xffffffff madness for IO_SPACE_LIMIT
+fix .map_io compiling issue in the 1st patch
+fix set_next_event in timer.c
+rename GPU, USB, multimedia and SATA nodes in DTS
+delete redundant 0x in DTS
+
+-v3:
+full DT file
+delete all static mapping table in common.c
+rename common.c to prima2.c
+delete board file board_dt.c
+split DEBUG_LL and L2 cache to seperate patch
+
+-v2:
+ 1. clock: use dev_id instead of con_id
+ 2. Kconfig: delete ISA_DMA
+ 3. irq: implement int controller based on DT
+        move to GENERIC_IRQ_CHIP framework
+ 4. timer: implement timer based on DT
+ 5. entry-macro.S: use get_irqnr_preamble to load the base address only once
+   per IRQ exception.
+ 6. others:
+       use readl_relaxed instead of __raw_readl
+       adjust Kconfig order for PRIMA2
+       use clk_get_sys instead of clk_get for system level clock
+       use BUG_ON(IS_ERR(clk)) instead of BUG_ON(IS_ERR_OR_NULL(clk));
+       fix typo for CLOCK_TICK_RATE
+       ("sirf,xxx", "sirf,prima2-xxx")  instead of ("sirf,xxx") in dts
+
+Note:
+   For L2 cache, if Rob's patch is merged, the whole file can be deleted
+
+Barry Song (1):
+  ARM: CSR: mapping early DEBUG_LL uart
+
+Binghua Duan (1):
+  ARM: CSR: Adding CSR SiRFprimaII board support
+
+Rongjun Ying (1):
+  ARM: CSR: initializing L2 cache
+
+ Documentation/devicetree/bindings/arm/sirf.txt  |    3 +
+ arch/arm/Kconfig                                |   14 +
+ arch/arm/Makefile                               |    1 +
+ arch/arm/boot/dts/prima2-cb.dts                 |  416 ++++++++++++++++++
+ arch/arm/mach-prima2/Makefile                   |    7 +
+ arch/arm/mach-prima2/Makefile.boot              |    3 +
+ arch/arm/mach-prima2/clock.c                    |  509 +++++++++++++++++++++++
+ arch/arm/mach-prima2/common.h                   |   26 ++
+ arch/arm/mach-prima2/include/mach/clkdev.h      |   15 +
+ arch/arm/mach-prima2/include/mach/debug-macro.S |   29 ++
+ arch/arm/mach-prima2/include/mach/entry-macro.S |   29 ++
+ arch/arm/mach-prima2/include/mach/hardware.h    |   15 +
+ arch/arm/mach-prima2/include/mach/io.h          |   16 +
+ arch/arm/mach-prima2/include/mach/irqs.h        |   17 +
+ arch/arm/mach-prima2/include/mach/map.h         |   16 +
+ arch/arm/mach-prima2/include/mach/memory.h      |   21 +
+ arch/arm/mach-prima2/include/mach/system.h      |   29 ++
+ arch/arm/mach-prima2/include/mach/timex.h       |   14 +
+ arch/arm/mach-prima2/include/mach/uart.h        |   23 +
+ arch/arm/mach-prima2/include/mach/uncompress.h  |   40 ++
+ arch/arm/mach-prima2/include/mach/vmalloc.h     |   14 +
+ arch/arm/mach-prima2/irq.c                      |   71 ++++
+ arch/arm/mach-prima2/l2x0.c                     |   59 +++
+ arch/arm/mach-prima2/lluart.c                   |   25 ++
+ arch/arm/mach-prima2/prima2.c                   |   41 ++
+ arch/arm/mach-prima2/rstc.c                     |   69 +++
+ arch/arm/mach-prima2/timer.c                    |  217 ++++++++++
+ arch/arm/mm/Kconfig                             |    2 +-
+ 28 files changed, 1740 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sirf.txt
+ create mode 100644 arch/arm/boot/dts/prima2-cb.dts
+ create mode 100644 arch/arm/mach-prima2/Makefile
+ create mode 100644 arch/arm/mach-prima2/Makefile.boot
+ create mode 100644 arch/arm/mach-prima2/clock.c
+ create mode 100644 arch/arm/mach-prima2/common.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/clkdev.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/debug-macro.S
+ create mode 100644 arch/arm/mach-prima2/include/mach/entry-macro.S
+ create mode 100644 arch/arm/mach-prima2/include/mach/hardware.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/io.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/irqs.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/map.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/memory.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/system.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/timex.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/uart.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/uncompress.h
+ create mode 100644 arch/arm/mach-prima2/include/mach/vmalloc.h
+ create mode 100644 arch/arm/mach-prima2/irq.c
+ create mode 100644 arch/arm/mach-prima2/l2x0.c
+ create mode 100644 arch/arm/mach-prima2/lluart.c
+ create mode 100644 arch/arm/mach-prima2/prima2.c
+ create mode 100644 arch/arm/mach-prima2/rstc.c
+ create mode 100644 arch/arm/mach-prima2/timer.c
+
+
+
+Member of the CSR plc group of companies. CSR plc registered in England and Wales, registered number 4187346, registered office Churchill House, Cambridge Business Park, Cowley Road, Cambridge, CB4 0WZ, United Kingdom
+More information can be found at www.csr.com. Follow CSR on Twitter at http://twitter.com/CSR_PLC and read our blog at www.csr.com/blog
