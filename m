@@ -1,81 +1,64 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 0/3] Add device tree probe for imx/mxc gpio
-Date: Fri, 8 Jul 2011 12:36:22 +0200
-Message-ID: <20110708103622.GF26347@pengutronix.de>
-References: <1309970263-13239-1-git-send-email-shawn.guo@linaro.org>
- <20110707192705.GL2824@ponder.secretlab.ca>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] spi/imx: use soc name in spi device type naming scheme
+Date: Fri, 8 Jul 2011 12:58:51 +0200
+Message-ID: <20110708105851.GF6069@pengutronix.de>
+References: <1310113654-25887-1-git-send-email-shawn.guo@linaro.org>
+	<1310113654-25887-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110707192705.GL2824@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+In-Reply-To: <1310113654-25887-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 07, 2011 at 01:27:05PM -0600, Grant Likely wrote:
-> On Thu, Jul 07, 2011 at 12:37:40AM +0800, Shawn Guo wrote:
-> > The first patch removes the uses of cpu_is_mx(), the second one
-> > changes mxc gpio number macro, and the third one adds actual device
-> > tree probe support.
-> > 
-> > Changes since v2:
-> >  * Keep platform case gpio range code path unchanged, and get range
-> >    from gpio core only for dt case.
-> > 
-> > Changes since v1:
-> >  * Address review comments given by Grant and Sascha
-> >  * Add patch #1 to get gpio range/base from gpio core
-> > 
-> > Shawn Guo (3):
-> >       gpio/mxc: get rid of the uses of cpu_is_mx()
-> >       ARM: mxc: use ARCH_NR_GPIOS to define gpio number
-> >       gpio/mxc: add device tree probe support
-> 
-> Sascha; so are we good?  Should I merge this series?
+On Fri, Jul 08, 2011 at 04:27:30PM +0800, Shawn Guo wrote:
+> Software defined version number is not stable enough to be used
+> in device type naming scheme.  The patch changes it to use implicit
+> soc name for spi device type definition.  In this way, we can easily
+> align the naming scheme with device tree binding, which comes later.
+> =
 
-These patches neither fit onto your gpio tree nor on the i.MX tree. I
-suggest that we give these patches a rest until both trees are merged.
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+>  arch/arm/mach-imx/clock-imx25.c              |    7 +-
+>  arch/arm/mach-mx5/clock-mx51-mx53.c          |   11 +-
+>  arch/arm/plat-mxc/devices/platform-spi_imx.c |   12 +-
+>  drivers/spi/Kconfig                          |   15 -
+>  drivers/spi/spi-imx.c                        |  423 ++++++++++++--------=
+------
+>  5 files changed, 219 insertions(+), 249 deletions(-)
 
-That's the downside of moving core drivers to drivers/ and thus to
-different maintainers, but I think things will become better once
-the actual move is completed.
+Generally this patch is too big for me to get the warm feeling that
+everything will just work. Renaming from spi_ver_xy to imx_xy is fine,
+but should be done in smaller steps and where possible not across
+subsystems.
+
+I increasingly see patches touching arch/ and drivers/ and I think
+there's a high risk of merge conflicts upstream. This will not help
+making Linus happy.
+
+Please try harder to make patches orthogonal and don't try to do too
+much at once.
 
 Sascha
 
-> 
-> g.
-> 
-> > 
-> >  .../devicetree/bindings/gpio/fsl-imx-gpio.txt      |   22 +++
-> >  arch/arm/mach-imx/mm-imx1.c                        |    8 +-
-> >  arch/arm/mach-imx/mm-imx21.c                       |   12 +-
-> >  arch/arm/mach-imx/mm-imx25.c                       |    9 +-
-> >  arch/arm/mach-imx/mm-imx27.c                       |   13 +-
-> >  arch/arm/mach-imx/mm-imx31.c                       |    6 +-
-> >  arch/arm/mach-imx/mm-imx35.c                       |    7 +-
-> >  arch/arm/mach-mx5/mm-mx50.c                        |   13 +-
-> >  arch/arm/mach-mx5/mm.c                             |   24 ++--
-> >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c      |    4 +-
-> >  arch/arm/plat-mxc/include/mach/common.h            |    2 +-
-> >  arch/arm/plat-mxc/include/mach/irqs.h              |   21 +---
-> >  drivers/gpio/gpio-mxc.c                            |  157 +++++++++++++++++---
-> >  13 files changed, 211 insertions(+), 87 deletions(-)
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+-- =
 
--- 
 Pengutronix e.K.                           |                             |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
