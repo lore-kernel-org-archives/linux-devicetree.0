@@ -1,60 +1,57 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: move SEC node under new crypto/
-Date: Thu, 7 Jul 2011 13:51:34 -0600
-Message-ID: <20110707195134.GM2824@ponder.secretlab.ca>
-References: <20110707144312.8456bf35.kim.phillips@freescale.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 1/2] dt: add helper function to read u32 arrays
+Date: Fri, 8 Jul 2011 09:45:13 +0800
+Message-ID: <20110708014512.GD12722@S2100-06.ap.freescale.net>
+References: <1309984979-8847-1-git-send-email-robherring2@gmail.com>
+	<20110706205933.GA5371@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20110707144312.8456bf35.kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20110706205933.GA5371@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 07, 2011 at 02:43:12PM -0500, Kim Phillips wrote:
-> Since technically it's not powerpc arch-specific.  Also rename it sec2
-> to differentiate it from its incompatible successor, the SEC 4.
+On Wed, Jul 06, 2011 at 02:59:33PM -0600, Grant Likely wrote:
+> On Wed, Jul 06, 2011 at 03:42:58PM -0500, Rob Herring wrote:
+> > From: Rob Herring <rob.herring@calxeda.com>
+> > 
+> > Rework of_property_read_u32 to read an array of values. Then
+> > of_property_read_u32 becomes an inline with array size of 1.
+> > 
+> > Also make struct device_node ptr const.
+> > 
+> > Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> > Cc: Thomas Abraham <thomas.abraham@linaro.org>
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > ---
+> > 
+> > Grant, 
+> > 
+> > Perhaps you want to roll this into the original patch?
 > 
-> Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Applied, thanks.  The original is already in devicetree/next, so I've
+> just applied this on top as a separate commit.
+> 
+> > 
+> > It would also be nice if there were empty versions of the helpers
+> > as well.
+> 
+> Go ahead and submit a patch to add them if you need it.
+> 
+I'm adding one into my spi-dt series, as I need it there.
 
-Applied, thanks.
-
-g.
-
-> ---
->  .../{powerpc/fsl/sec.txt => crypto/fsl-sec2.txt}   |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
->  rename Documentation/devicetree/bindings/{powerpc/fsl/sec.txt => crypto/fsl-sec2.txt} (98%)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/sec.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
-> similarity index 98%
-> rename from Documentation/devicetree/bindings/powerpc/fsl/sec.txt
-> rename to Documentation/devicetree/bindings/crypto/fsl-sec2.txt
-> index 2b6f2d4..38988ef 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/sec.txt
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
-> @@ -1,4 +1,4 @@
-> -Freescale SoC SEC Security Engines
-> +Freescale SoC SEC Security Engines versions 2.x-3.x
->  
->  Required properties:
->  
-> -- 
-> 1.7.6
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+-- 
+Regards,
+Shawn
