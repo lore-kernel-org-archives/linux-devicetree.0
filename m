@@ -1,133 +1,92 @@
-From: Liam Girdwood <lrg@kernel.org>
-Subject: Re: [PATCH] of: add devicetree API for regulator
-Date: Fri, 08 Jul 2011 19:32:30 +0100
-Message-ID: <1310149950.3348.8.camel@odin>
-References: <1310120428-22700-1-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-3-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-4-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-5-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-6-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-7-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-8-git-send-email-haojian.zhuang@marvell.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 0/3] Add device tree probe for imx/mxc gpio
+Date: Fri, 8 Jul 2011 12:38:32 -0600
+Message-ID: <20110708183832.GB9070@ponder.secretlab.ca>
+References: <1309970263-13239-1-git-send-email-shawn.guo@linaro.org>
+ <20110707192705.GL2824@ponder.secretlab.ca>
+ <20110708103622.GF26347@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1310120428-22700-8-git-send-email-haojian.zhuang@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@marvell.com>
-Cc: eric.y.miao@gmail.com, nico@fluxnic.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, haojian.zhuang@gmail.com, grant.likely@secretlab.ca, samuel.ortiz@intel.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110708103622.GF26347@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2011-07-08 at 18:20 +0800, Haojian Zhuang wrote:
-> Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
-> ---
->  drivers/of/Kconfig           |    4 +
->  drivers/of/Makefile          |    1 +
->  drivers/of/of_regulator.c    |  166 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_regulator.h |   34 +++++++++
->  4 files changed, 205 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/of/of_regulator.c
->  create mode 100644 include/linux/of_regulator.h
+On Fri, Jul 08, 2011 at 12:36:22PM +0200, Sascha Hauer wrote:
+> On Thu, Jul 07, 2011 at 01:27:05PM -0600, Grant Likely wrote:
+> > On Thu, Jul 07, 2011 at 12:37:40AM +0800, Shawn Guo wrote:
+> > > The first patch removes the uses of cpu_is_mx(), the second one
+> > > changes mxc gpio number macro, and the third one adds actual device
+> > > tree probe support.
+> > > 
+> > > Changes since v2:
+> > >  * Keep platform case gpio range code path unchanged, and get range
+> > >    from gpio core only for dt case.
+> > > 
+> > > Changes since v1:
+> > >  * Address review comments given by Grant and Sascha
+> > >  * Add patch #1 to get gpio range/base from gpio core
+> > > 
+> > > Shawn Guo (3):
+> > >       gpio/mxc: get rid of the uses of cpu_is_mx()
+> > >       ARM: mxc: use ARCH_NR_GPIOS to define gpio number
+> > >       gpio/mxc: add device tree probe support
+> > 
+> > Sascha; so are we good?  Should I merge this series?
 > 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index d06a637..edb6601 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -75,4 +75,8 @@ config OF_PCI
->  	help
->  	  OpenFirmware PCI bus accessors
->  
-> +config OF_REGULATOR
-> +	def_tristate REGULATOR
-> +	depends on REGULATOR
-> +
->  endmenu # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index f7861ed..83ca06f 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_OF_NET)	+= of_net.o
->  obj-$(CONFIG_OF_SPI)	+= of_spi.o
->  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
->  obj-$(CONFIG_OF_PCI)	+= of_pci.o
-> +obj-$(CONFIG_OF_REGULATOR)	+= of_regulator.o
-> diff --git a/drivers/of/of_regulator.c b/drivers/of/of_regulator.c
-> new file mode 100644
-> index 0000000..d523302
-> --- /dev/null
-> +++ b/drivers/of/of_regulator.c
-> @@ -0,0 +1,166 @@
-> +/*
-> + * OF helpers for the Regulator API
-> + *
-> + * Copyright (c) 2011 Haojian Zhuang <haojian.zhuang@marvell.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/machine.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include <linux/suspend.h>
-> +
-> +static int of_regulator_init_constraints(struct device_node *of_dev,
-> +				struct regulation_constraints *constraints)
-> +{
-> +	const __be32 *p;
-> +	const char *cp;
-> +	const char *ops[] = {"voltage", "current", "mode", "status",
-> +				"drms"};
-> +	int i, size, len = 0, tmp = 0;
-> +
-> +	memset(constraints, 0, sizeof(struct regulation_constraints));
-> +
-> +	p = of_get_property(of_dev, "voltages", &size);
-> +	if (p && size / sizeof(int) == 2) {
-> +		constraints->min_uV = be32_to_cpu(*p++);
-> +		constraints->max_uV = be32_to_cpu(*p);
-> +	}
-> +	p = of_get_property(of_dev, "currents", &size);
-> +	if (p && size / sizeof(int) == 2) {
-> +		constraints->min_uA = be32_to_cpu(*p++);
-> +		constraints->max_uA = be32_to_cpu(*p);
-> +	}
-> +	p = of_get_property(of_dev, "modes-mask", NULL);
-> +	if (p)
-> +		constraints->valid_modes_mask = be32_to_cpu(*p);
-> +	cp = of_get_property(of_dev, "ops-mask", &size);
-> +	tmp = 0;
-> +	if (cp && size > 0) {
-> +		i = 0;
-> +		do {
-> +			len = strlen(ops[i]);
-> +			if (!strncmp(cp, ops[i], len)) {
-> +				constraints->valid_ops_mask |= 1 << i;
-> +				/* need to handle '\0' */
-> +				cp += len + 1;
-> +				size = size - len - 1;
-> +				i = 0;
-> +			} else
-> +				i++;
-> +		} while (i < ARRAY_SIZE(ops));
-> +		if (size > 0)
-> +			printk(KERN_WARNING "Invalid string:%s\n", cp);
-> +	}
+> These patches neither fit onto your gpio tree nor on the i.MX tree. I
+> suggest that we give these patches a rest until both trees are merged.
+> 
+> That's the downside of moving core drivers to drivers/ and thus to
+> different maintainers, but I think things will become better once
+> the actual move is completed.
 
-This code could also do with a little more comments describing some of
-the more complex logic (like the above block).
+It's a trivial conflict though.  I've gone ahead and picked up this
+series and pushed it out to gpio/next.  Shawn, please test the
+gpio/next branch and make sure there aren't any regressions.  I've
+only done a bit of build testing.
 
-Liam
+g.
+
+> 
+> Sascha
+> 
+> > 
+> > g.
+> > 
+> > > 
+> > >  .../devicetree/bindings/gpio/fsl-imx-gpio.txt      |   22 +++
+> > >  arch/arm/mach-imx/mm-imx1.c                        |    8 +-
+> > >  arch/arm/mach-imx/mm-imx21.c                       |   12 +-
+> > >  arch/arm/mach-imx/mm-imx25.c                       |    9 +-
+> > >  arch/arm/mach-imx/mm-imx27.c                       |   13 +-
+> > >  arch/arm/mach-imx/mm-imx31.c                       |    6 +-
+> > >  arch/arm/mach-imx/mm-imx35.c                       |    7 +-
+> > >  arch/arm/mach-mx5/mm-mx50.c                        |   13 +-
+> > >  arch/arm/mach-mx5/mm.c                             |   24 ++--
+> > >  arch/arm/plat-mxc/devices/platform-gpio-mxc.c      |    4 +-
+> > >  arch/arm/plat-mxc/include/mach/common.h            |    2 +-
+> > >  arch/arm/plat-mxc/include/mach/irqs.h              |   21 +---
+> > >  drivers/gpio/gpio-mxc.c                            |  157 +++++++++++++++++---
+> > >  13 files changed, 211 insertions(+), 87 deletions(-)
+> > > 
+> > > --
+> > > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> > > the body of a message to majordomo@vger.kernel.org
+> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > Please read the FAQ at  http://www.tux.org/lkml/
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
