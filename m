@@ -1,50 +1,64 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 09/11] arm/dt: Add dt machine definition
-Date: Fri, 08 Jul 2011 09:30:15 -0500
-Message-ID: <4E171477.8060303@gmail.com>
-References: <20110616042653.29371.2052.stgit@ponder> <20110616044248.29371.69457.stgit@ponder>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: mmp: remove SPARSE_IRQ for mmp
+Date: Fri, 8 Jul 2011 08:46:37 -0600
+Message-ID: <CACxGe6sg=RQKQKVXh-XU5V_PkO8ZA7ho5fXx+oRxzEJV10pxVw@mail.gmail.com>
+References: <1310120428-22700-1-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110616044248.29371.69457.stgit@ponder>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1310120428-22700-1-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, samuel.ortiz-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Fri, Jul 8, 2011 at 4:20 AM, Haojian Zhuang
+<haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> Avoid to use SPARSE_IRQ for mmp. There will be irq domain translation bet=
+ween
+> DT irq specifier and the Linux irq number.
+>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-On 06/15/2011 11:42 PM, Grant Likely wrote:
-> This patch adds a DT_MACHINE_START macro to use instead of
-> MACHINE_START when creating a machine_desc that supports using the
-> device tree.
-> 
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+I believe the goal is to use more sparse_irq, not less, and the
+irq_domain code works fine either way.
+
+g.
+
 > ---
->  arch/arm/include/asm/mach/arch.h |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
-> index 946f4d7..858d269 100644
-> --- a/arch/arm/include/asm/mach/arch.h
-> +++ b/arch/arm/include/asm/mach/arch.h
-> @@ -70,4 +70,13 @@ static const struct machine_desc __mach_desc_##_type	\
->  #define MACHINE_END				\
->  };
->  
-> +#define MACH_TYPE_DT	0xffffffff
-> +
-> +#define DT_MACHINE_START(_name, _namestr)		\
-> +static const struct machine_desc __mach_desc_##_name	\
-> + __used							\
-> + __attribute__((__section__(".arch.info.init"))) = {	\
-> +	.nr		= MACH_TYPE_DT,			\
-> +	.name		= _namestr,
-> +
->  #endif
-> 
+> =A0arch/arm/Kconfig | =A0 =A01 -
+> =A01 files changed, 0 insertions(+), 1 deletions(-)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 17507b8..48748fb 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -545,7 +545,6 @@ config ARCH_MMP
+> =A0 =A0 =A0 =A0select HAVE_SCHED_CLOCK
+> =A0 =A0 =A0 =A0select TICK_ONESHOT
+> =A0 =A0 =A0 =A0select PLAT_PXA
+> - =A0 =A0 =A0 select SPARSE_IRQ
+> =A0 =A0 =A0 =A0help
+> =A0 =A0 =A0 =A0 =A0Support for Marvell's PXA168/PXA910(MMP) and MMP2 proc=
+essor line.
+>
+> --
+> 1.5.6.5
+>
+>
 
-Do you plan to submit this for 3.1 as new platforms need this or a mach id?
 
-Rob
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
