@@ -1,68 +1,50 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt: add empty of_property_read_u32[_array] for non-dt
-Date: Fri, 08 Jul 2011 07:33:53 -0500
-Message-ID: <4E16F931.1050109@gmail.com>
-References: <1310113654-25887-1-git-send-email-shawn.guo@linaro.org>
-	<1310113654-25887-6-git-send-email-shawn.guo@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 09/11] arm/dt: Add dt machine definition
+Date: Fri, 08 Jul 2011 09:30:15 -0500
+Message-ID: <4E171477.8060303@gmail.com>
+References: <20110616042653.29371.2052.stgit@ponder> <20110616044248.29371.69457.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1310113654-25887-6-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110616044248.29371.69457.stgit@ponder>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
+Grant,
 
-On 07/08/2011 03:27 AM, Shawn Guo wrote:
-> The patch adds empty functions of_property_read_u32 and
-> of_property_read_u32_array for non-dt build, so that drivers
-> migrating to dt can save some '#ifdef CONFIG_OF'.
+On 06/15/2011 11:42 PM, Grant Likely wrote:
+> This patch adds a DT_MACHINE_START macro to use instead of
+> MACHINE_START when creating a machine_desc that supports using the
+> device tree.
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 > ---
->  include/linux/of.h |   15 +++++++++++++++
->  1 files changed, 15 insertions(+), 0 deletions(-)
+>  arch/arm/include/asm/mach/arch.h |    9 +++++++++
+>  1 files changed, 9 insertions(+), 0 deletions(-)
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4761046..4ef636e 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -255,5 +255,20 @@ static inline bool of_have_populated_dt(void)
->  	return false;
->  }
+> diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
+> index 946f4d7..858d269 100644
+> --- a/arch/arm/include/asm/mach/arch.h
+> +++ b/arch/arm/include/asm/mach/arch.h
+> @@ -70,4 +70,13 @@ static const struct machine_desc __mach_desc_##_type	\
+>  #define MACHINE_END				\
+>  };
 >  
-> +static inline int of_property_read_u32_array(const struct device_node *np,
-> +				      char *propname,
-> +				      u32 *out_values,
-> +				      size_t sz)
-> +{
-> +	return -ENOSYS;
-> +}
+> +#define MACH_TYPE_DT	0xffffffff
 > +
-> +static inline int of_property_read_u32(const struct device_node *np,
-> +				       char *propname,
-> +				       u32 *out_value)
-> +{
-> +	return -ENOSYS;
-> +}
+> +#define DT_MACHINE_START(_name, _namestr)		\
+> +static const struct machine_desc __mach_desc_##_name	\
+> + __used							\
+> + __attribute__((__section__(".arch.info.init"))) = {	\
+> +	.nr		= MACH_TYPE_DT,			\
+> +	.name		= _namestr,
 > +
->  #endif /* CONFIG_OF */
->  #endif /* _LINUX_OF_H */
+>  #endif
+> 
 
-You should include the string read function as well for completeness.
+Do you plan to submit this for 3.1 as new platforms need this or a mach id?
 
 Rob
