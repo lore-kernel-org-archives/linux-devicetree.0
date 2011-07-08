@@ -1,32 +1,107 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 1/5] dt: add of_alias_scan and of_alias_get_id
-Date: Fri, 8 Jul 2011 17:36:06 +0800
-Message-ID: <20110708093605.GE12722@S2100-06.ap.freescale.net>
-References: <1308938676-31121-1-git-send-email-shawn.guo@linaro.org>
- <1308938676-31121-2-git-send-email-shawn.guo@linaro.org>
+From: Barry Song <bs14@csr.com>
+Subject: [PATCH v5 2/3] ARM: CSR: mapping early DEBUG_LL uart
+Date: Fri, 8 Jul 2011 02:40:13 -0700
+Message-ID: <1310118014-24509-3-git-send-email-bs14@csr.com>
+References: <1310118014-24509-1-git-send-email-bs14@csr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1308938676-31121-2-git-send-email-shawn.guo@linaro.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, patches@linaro.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1310118014-24509-1-git-send-email-bs14@csr.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@arm.linux.org.uk, arnd@arndb.de, nico@fluxnic.net, tglx@linutronix.de
+Cc: Barry Song <bs14@csr.com>, devicetree-discuss@lists.ozlabs.org, workgroup.linux@csr.com, grant.likely@secretlab.ca, Barry Song <baohua.song@csr.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Signed-off-by: Barry Song <baohua.song@csr.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-prima2/Makefile |    1 +
+ arch/arm/mach-prima2/common.h |    6 ++++++
+ arch/arm/mach-prima2/lluart.c |   25 +++++++++++++++++++++++++
+ arch/arm/mach-prima2/prima2.c |    1 +
+ 4 files changed, 33 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/mach-prima2/lluart.c
 
-I saw neither your comments nor ack on this patch.  Where does it go?
+diff --git a/arch/arm/mach-prima2/Makefile b/arch/arm/mach-prima2/Makefile
+index d44f7ae..f2fba66 100644
+--- a/arch/arm/mach-prima2/Makefile
++++ b/arch/arm/mach-prima2/Makefile
+@@ -3,3 +3,4 @@ obj-y += irq.o
+ obj-y += clock.o
+ obj-y += rstc.o
+ obj-y += prima2.o
++obj-$(CONFIG_DEBUG_LL) += lluart.o
+diff --git a/arch/arm/mach-prima2/common.h b/arch/arm/mach-prima2/common.h
+index fa4a3b5..83e5d21 100644
+--- a/arch/arm/mach-prima2/common.h
++++ b/arch/arm/mach-prima2/common.h
+@@ -17,4 +17,10 @@ extern struct sys_timer sirfsoc_timer;
+ extern void __init sirfsoc_of_irq_init(void);
+ extern void __init sirfsoc_of_clk_init(void);
+ 
++#ifndef CONFIG_DEBUG_LL
++static inline void sirfsoc_map_lluart(void)  {}
++#else
++extern void __init sirfsoc_map_lluart(void);
++#endif
++
+ #endif
+diff --git a/arch/arm/mach-prima2/lluart.c b/arch/arm/mach-prima2/lluart.c
+new file mode 100644
+index 0000000..a89f9b3
+--- /dev/null
++++ b/arch/arm/mach-prima2/lluart.c
+@@ -0,0 +1,25 @@
++/*
++ * Static memory mapping for DEBUG_LL
++ *
++ * Copyright (c) 2011 Cambridge Silicon Radio Limited, a CSR plc group company.
++ *
++ * Licensed under GPLv2 or later.
++ */
++
++#include <linux/kernel.h>
++#include <asm/page.h>
++#include <asm/mach/map.h>
++#include <mach/map.h>
++#include <mach/uart.h>
++
++void __init sirfsoc_map_lluart(void)
++{
++	struct map_desc sirfsoc_lluart_map = {
++		.virtual        = SIRFSOC_UART1_VA_BASE,
++		.pfn            = __phys_to_pfn(SIRFSOC_UART1_PA_BASE),
++		.length         = SIRFSOC_UART1_SIZE,
++		.type           = MT_DEVICE,
++	};
++
++	iotable_init(&sirfsoc_lluart_map, 1);
++}
+diff --git a/arch/arm/mach-prima2/prima2.c b/arch/arm/mach-prima2/prima2.c
+index c26947d..f57124b 100644
+--- a/arch/arm/mach-prima2/prima2.c
++++ b/arch/arm/mach-prima2/prima2.c
+@@ -33,6 +33,7 @@ MACHINE_START(PRIMA2_EVB, "prima2cb")
+ 	/* Maintainer: Barry Song <baohua.song@csr.com> */
+ 	.boot_params	= 0x00000100,
+ 	.init_early     = sirfsoc_of_clk_init,
++	.map_io         = sirfsoc_map_lluart,
+ 	.init_irq	= sirfsoc_of_irq_init,
+ 	.timer		= &sirfsoc_timer,
+ 	.init_machine	= sirfsoc_mach_init,
+-- 
+1.7.1
 
-Regards,
-Shawn
 
-On Sat, Jun 25, 2011 at 02:04:32AM +0800, Shawn Guo wrote:
-> The patch adds function of_alias_scan to populate a global lookup
-> table with the properties of 'aliases' node and function
-> of_alias_get_id for drivers to find alias id from the lookup table.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> ---
 
+Member of the CSR plc group of companies. CSR plc registered in England and Wales, registered number 4187346, registered office Churchill House, Cambridge Business Park, Cowley Road, Cambridge, CB4 0WZ, United Kingdom
+More information can be found at www.csr.com. Follow CSR on Twitter at http://twitter.com/CSR_PLC and read our blog at www.csr.com/blog
