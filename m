@@ -1,33 +1,44 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH] tty/serial: tegra: Use engineering names in DT
- compatible property
-Date: Fri, 8 Jul 2011 14:36:04 -0700
-Message-ID: <20110708213604.GB31866@kroah.com>
-References: <1309896461-21976-1-git-send-email-swarren@nvidia.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] of: add devicetree API for regulator
+Date: Sat, 9 Jul 2011 10:14:14 +0900
+Message-ID: <20110709011412.GE18860@opensource.wolfsonmicro.com>
+References: <1310120428-22700-1-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-3-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-4-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-5-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-6-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-7-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-8-git-send-email-haojian.zhuang@marvell.com>
+	<CACxGe6teb+-xYGUXAcjwubxNhNQ-9395PjjE=fDnmZQHbgR0tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1309896461-21976-1-git-send-email-swarren@nvidia.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Greg KH <gregkh@suse.de>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <CACxGe6teb+-xYGUXAcjwubxNhNQ-9395PjjE=fDnmZQHbgR0tw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: eric.y.miao@gmail.com, nico@fluxnic.net, devicetree-discuss@lists.ozlabs.org, Haojian Zhuang <haojian.zhuang@marvell.com>, haojian.zhuang@gmail.com, samuel.ortiz@intel.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 02:07:41PM -0600, Stephen Warren wrote:
-> Engineering names are more stable than marketing names. Hence, use them
-> for Device Tree compatible properties instead.
+On Fri, Jul 08, 2011 at 08:51:17AM -0600, Grant Likely wrote:
+> Hi Haojian,
 > 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
-> Greg, This builds on patches Grant has (or has said he will have) in his
-> devicetree/next branch, so I assume this change would be merged through
-> the same route.
+> On Fri, Jul 8, 2011 at 4:20 AM, Haojian Zhuang
+> <haojian.zhuang@marvell.com> wrote:
+> > Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
+> 
+> No commit description?
 
-Sounds reasonable.  Grant, feel free to add:
-	Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-to the patch when you apply it.
-
-thanks,
-
-greg k-h
+Gah, don't bury major API changes like this in the middle of enourmous
+and not perceptibly related machine specific patch serieses if you
+expect people to actually see them.
