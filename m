@@ -1,16 +1,11 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/6] spi/imx: use soc name in spi device type naming scheme
-Date: Sat, 9 Jul 2011 15:00:02 +0800
-Message-ID: <20110709070001.GE13962@S2100-06.ap.freescale.net>
-References: <1310113654-25887-1-git-send-email-shawn.guo@linaro.org>
-	<1310113654-25887-3-git-send-email-shawn.guo@linaro.org>
-	<20110708105851.GF6069@pengutronix.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/7] Add device tree support for imx spi driver
+Date: Sun, 10 Jul 2011 01:16:34 +0800
+Message-ID: <1310231801-18761-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110708105851.GF6069-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,52 +15,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2011 at 12:58:51PM +0200, Sascha Hauer wrote:
-> On Fri, Jul 08, 2011 at 04:27:30PM +0800, Shawn Guo wrote:
-> > Software defined version number is not stable enough to be used
-> > in device type naming scheme.  The patch changes it to use implicit
-> > soc name for spi device type definition.  In this way, we can easily
-> > align the naming scheme with device tree binding, which comes later.
-> > =
+The patch set makes some cleanups on imx spi driver to get it ready
+for adding device tree probe and then add the support.
 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > ---
-> >  arch/arm/mach-imx/clock-imx25.c              |    7 +-
-> >  arch/arm/mach-mx5/clock-mx51-mx53.c          |   11 +-
-> >  arch/arm/plat-mxc/devices/platform-spi_imx.c |   12 +-
-> >  drivers/spi/Kconfig                          |   15 -
-> >  drivers/spi/spi-imx.c                        |  423 ++++++++++++------=
---------
-> >  5 files changed, 219 insertions(+), 249 deletions(-)
-> =
+Changes since v1:
+ * Split the big patch into small ones per Sascha's comment
+ * Drop the patch cleaning mxc/mach/gpio.h from the series.  Will
+   post it separately later.
+ * Drop dt helper patches, as they are on Grant's tree
 
-> Generally this patch is too big for me to get the warm feeling that
-> everything will just work. Renaming from spi_ver_xy to imx_xy is fine,
-> but should be done in smaller steps and where possible not across
-> subsystems.
-> =
+Shawn Guo (7):
+      spi/imx: do not make copy of spi_imx_devtype_data
+      spi/imx: use mx21 to name SPI_IMX_VER_0_0 function and macro
+      spi/imx: do not use spi_imx2_3 to name SPI_IMX_VER_2_3 function and macro
+      spi/imx: merge type SPI_IMX_VER_0_7 into SPI_IMX_VER_0_4
+      spi/imx: use soc name in spi device type naming scheme
+      spi/imx: copy gpio number passed by platform data into driver private data
+      spi/imx: add device tree probe support
 
-Okay, I will split the patch into small pieces to win your warm
-feeling :)
-
-> I increasingly see patches touching arch/ and drivers/ and I think
-> there's a high risk of merge conflicts upstream. This will not help
-> making Linus happy.
-> =
-
-Yes, I increasingly run into the situation touching arch/ and drivers/
-when working on dt migration because of the device renaming.  May I
-have to your suggestion on how to separate drivers/ patch from arch/
-one in orthogonal way, while keeping both trees working/bisectable?
-
--- =
-
-Regards,
-Shawn
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |   22 +
+ arch/arm/mach-imx/clock-imx25.c                    |    7 +-
+ arch/arm/mach-mx5/clock-mx51-mx53.c                |   11 +-
+ arch/arm/plat-mxc/devices/platform-spi_imx.c       |   12 +-
+ drivers/spi/Kconfig                                |   15 -
+ drivers/spi/spi-imx.c                              |  468 ++++++++++----------
+ 6 files changed, 277 insertions(+), 258 deletions(-)
