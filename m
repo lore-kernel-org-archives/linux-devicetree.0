@@ -1,61 +1,84 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v3 0/4] Add device tree probe for sdhci-esdhc-imx
-Date: Sun, 10 Jul 2011 09:37:09 +0800
-Message-ID: <20110710013708.GA14492@S2100-06.ap.freescale.net>
-References: <1309970870-13336-1-git-send-email-shawn.guo@linaro.org>
- <m2pqljje3w.fsf@bob.laptop.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] mtd: dataflash: add device tree probe support
+Date: Sun, 10 Jul 2011 15:35:13 +0800
+Message-ID: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <m2pqljje3w.fsf@bob.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+It adds device tree probe support for mtd_dataflash driver.
 
-On Sat, Jul 09, 2011 at 06:14:43PM -0400, Chris Ball wrote:
-> Hi Shawn,
-> 
-> On Wed, Jul 06 2011, Shawn Guo wrote:
-> > The first patch copies platform data into driver private data, and
-> > do not reference platform data after probe.  The second one removes
-> > the uses of cpu_is_mx().  The third one makes a dt related fix on
-> > sdhci-pltfm.c, and the last one adds actual device tree probe for
-> > sdhci-esdhc-imx driver.
-> >
-> > Changes since v2:
-> >  * Add patch #1
-> >  * Do not use Linux details of cd-type and wp-type for binding
-> >
-> > Changes since v1:
-> >  * Address review comments given by Grant
-> >
-> > Shawn Guo (4):
-> >       mmc: sdhci-esdhc-imx: do not reference platform data after probe
-> >       mmc: sdhci-esdhc-imx: get rid of the uses of cpu_is_mx()
-> >       mmc: sdhci-pltfm: dt device does not pass parent to sdhci_alloc_host
-> >       mmc: sdhci-esdhc-imx: add device tree probe support
-> 
-> These don't apply against mmc-next -- what is your tree based on?
-> 
-It's based on linux-next with following patch applied.
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/devices/mtd_dataflash.c |   12 +++++++++++-
+ 1 files changed, 11 insertions(+), 1 deletions(-)
 
-[PATCH v4 4/4] mmc: sdhci-esdhc-imx: extend card_detect and write_protect support for mx5
-http://permalink.gmane.org/gmane.linux.kernel.mmc/8748
-
-You applied the 3 of 4 patches in that series, and expect Sascha to
-send this one through his tree after you send those 3.
-
-Now, we got another series pending in the line.
-
-I'm wondering if it works that I create a branch off your mmc-next,
-merge Sascha's next, apply my patches on top it, and then send a pull
-request for you (and Sascha) to pull the branch.
-
+diff --git a/drivers/mtd/devices/mtd_dataflash.c b/drivers/mtd/devices/mtd_dataflash.c
+index 8f6b02c..64d7242 100644
+--- a/drivers/mtd/devices/mtd_dataflash.c
++++ b/drivers/mtd/devices/mtd_dataflash.c
+@@ -24,6 +24,8 @@
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/partitions.h>
+ 
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ /*
+  * DataFlash is a kind of SPI flash.  Most AT45 chips have two buffers in
+@@ -98,6 +100,11 @@ struct dataflash {
+ 	struct mtd_info		mtd;
+ };
+ 
++static const struct of_device_id dataflash_dt_ids[] = {
++	{ .compatible = "atmel,dataflash", },
++	{ /* sentinel */ }
++};
++
+ /* ......................................................................... */
+ 
+ /*
+@@ -634,6 +641,7 @@ add_dataflash_otp(struct spi_device *spi, char *name,
+ {
+ 	struct dataflash		*priv;
+ 	struct mtd_info			*device;
++	struct mtd_part_parser_data	ppdata;
+ 	struct flash_platform_data	*pdata = spi->dev.platform_data;
+ 	char				*otp_tag = "";
+ 	int				err = 0;
+@@ -675,7 +683,8 @@ add_dataflash_otp(struct spi_device *spi, char *name,
+ 			pagesize, otp_tag);
+ 	dev_set_drvdata(&spi->dev, priv);
+ 
+-	err = mtd_device_parse_register(device, NULL, 0,
++	ppdata.of_node = spi->dev.of_node;
++	err = mtd_device_parse_register(device, NULL, &ppdata,
+ 			pdata ? pdata->parts : NULL,
+ 			pdata ? pdata->nr_parts : 0);
+ 
+@@ -926,6 +935,7 @@ static struct spi_driver dataflash_driver = {
+ 		.name		= "mtd_dataflash",
+ 		.bus		= &spi_bus_type,
+ 		.owner		= THIS_MODULE,
++		.of_match_table = dataflash_dt_ids,
+ 	},
+ 
+ 	.probe		= dataflash_probe,
 -- 
-Regards,
-Shawn
-
+1.7.4.1
