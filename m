@@ -1,73 +1,353 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] tty/serial: tegra: Use engineering names in DT
- compatible property
-Date: Sun, 10 Jul 2011 06:49:27 +0900
-Message-ID: <20110709214927.GF2805@ponder.secretlab.ca>
-References: <1309896461-21976-1-git-send-email-swarren@nvidia.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: mmp: add DTS file
+Date: Sun, 10 Jul 2011 16:35:10 +0900
+Message-ID: <20110710073510.GG10912@ponder.secretlab.ca>
+References: <1310120428-22700-3-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-4-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-5-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-6-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-7-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-8-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-9-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-10-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-11-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-12-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1309896461-21976-1-git-send-email-swarren@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Greg KH <gregkh@suse.de>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1310120428-22700-12-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, samuel.ortiz-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2011 at 02:07:41PM -0600, Stephen Warren wrote:
-> Engineering names are more stable than marketing names. Hence, use them
-> for Device Tree compatible properties instead.
+On Fri, Jul 08, 2011 at 06:20:28PM +0800, Haojian Zhuang wrote:
+> Add DTS file to support brownstone & ttc-dkb.
 > 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+
+Hi Haojian.
+
+Overall, the patch series is moving in the right direction.  I've made
+a lot of comments, but they shouldn't be difficult to resolve.  I look
+forward to seeing the next version of the series.  Comments below...
+
 > ---
-> Greg, This builds on patches Grant has (or has said he will have) in his
-> devicetree/next branch, so I assume this change would be merged through
-> the same route.
+>  arch/arm/boot/dts/mmp2-brownstone.dts |  319 +++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/ttc-dkb.dts         |  176 ++++++++++++++++++
+>  arch/arm/mach-mmp/brownstone.c        |   66 ++-----
+>  arch/arm/mach-mmp/ttc_dkb.c           |   21 ++-
+>  4 files changed, 530 insertions(+), 52 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/mmp2-brownstone.dts
+>  create mode 100644 arch/arm/boot/dts/ttc-dkb.dts
 > 
-> Grant, this patch is physically against devicetree/arm. The of-serial.txt
-> change should also apply to devicetree/next as is, and you'd previously
-> indicated that you'd queue the addition of the Tegra entry to of_serial.c
-> in your devicetree/next branch, so this should apply on top of that once
-> you have done so. Finally, this should go into devicetree/test too.
+> diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
+> new file mode 100644
+> index 0000000..5fdabc3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mmp2-brownstone.dts
+> @@ -0,0 +1,319 @@
+> +/dts-v1/;
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	model = "Marvell MMP2 Brownstone";
+> +	compatible = "mrvl,mmp2-brownstone", "mrvl,armada610-brownstone";
 
-Hi Stephen.  I've just modified the original patch and put it into
-devicetree/next.  Once I get back on the ground and have some internet
-access, I'll push my tree out (this email will probably get out before
-I get a chance to push out my tree).
+You've already heard me harp on this, but I'll say it one more time
+and then shut up.  Every new compatible property must be documented as
+to what it means.
 
-g.
+> +	interrupt-parent = <&mmp_intc>;
+> +
+> +	memory {
+> +		reg = <0x00000000 0x20000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS2,38400 root=/dev/nfs nfsroot=192.168.1.100:192.168.1.101::255.255.255.0::eth0:on";
+> +		linux,stdout-path = &uart2;
+> +	};
+> +
+> +	soc@d4000000 {
+> +		compatible = "mrvl,mmp2", "mrvl,armada610", "simple-bus";
+> +		device_type = "soc";
 
-> 
->  .../devicetree/bindings/tty/serial/of-serial.txt   |    2 +-
->  drivers/tty/serial/of_serial.c                     |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/tty/serial/of-serial.txt b/Documentation/devicetree/bindings/tty/serial/of-serial.txt
-> index 337a7e5..b8b27b0 100644
-> --- a/Documentation/devicetree/bindings/tty/serial/of-serial.txt
-> +++ b/Documentation/devicetree/bindings/tty/serial/of-serial.txt
-> @@ -8,7 +8,7 @@ Required properties:
->  	- "ns16550"
->  	- "ns16750"
->  	- "ns16850"
-> -	- "nvidia,tegra250-uart"
-> +	- "nvidia,tegra20-uart"
->  	- "ibm,qpace-nwp-serial"
->  	- "serial" if the port type is unknown.
->  - reg : offset and length of the register set for the device.
-> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-> index e65f1e8..e58cece 100644
-> --- a/drivers/tty/serial/of_serial.c
-> +++ b/drivers/tty/serial/of_serial.c
-> @@ -181,7 +181,7 @@ static struct of_device_id __devinitdata of_platform_serial_table[] = {
->  	{ .compatible = "ns16550",  .data = (void *)PORT_16550, },
->  	{ .compatible = "ns16750",  .data = (void *)PORT_16750, },
->  	{ .compatible = "ns16850",  .data = (void *)PORT_16850, },
-> -	{ .compatible = "nvidia,tegra250-uart", .data = (void *)PORT_TEGRA, },
-> +	{ .compatible = "nvidia,tegra20-uart", .data = (void *)PORT_TEGRA, },
->  #ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
->  	{ .compatible = "ibm,qpace-nwp-serial",
->  		.data = (void *)PORT_NWPSERIAL, },
+Drop device_type.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		mmp_intc: interrupt-controller@d4282000 {
+> +			compatible = "mrvl,mmp-intc";
+> +			/*device_type = "intc";*/
+
+Even the commented out device_type should be removed.  :-)
+
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			/*
+> +			 * interrupts: irq index of parent's irq domain
+> +			 */
+> +			interrupts = <0>;
+
+Drop this property.  Linux gets to decide what the first irq should
+be.  It isn't a characteristic of hardware, and 'interrupts' already
+has a strict definition.
+
+> +			interrupt-parent = <&mmp_intc>;
+
+Drop this, it doesn't make sense for an interrupt controller to claim
+itself as its interrupt parent.
+
+> +			sub-interrupts = <64>;
+
+What is this for?
+
+> +
+> +			/* enable bits in conf register */
+> +			enable_mask = <0x20>;
+
+Convention is to not use underscore '_' in property names.  Use a dash '-' instead.
+> +
+> +			/* reg: <offset & size> */
+> +			reg = <0xd4282000 0x400>;
+> +		};
+> +
+> +		mux_intc4: interrupt-controller@d4282150 {
+> +			compatible = "mrvl,mux-intc";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +			interrupts = <4>;
+> +			interrupt-parent = <&mmp_intc>;
+
+This line can be dropped since the root node already has mmp_intc as
+the default interrupt parent.
+
+> +			sub-interrupts = <2>;
+> +			reg = <0xd4282150 0>;
+> +			status-mask = <0x150 0x168>;
+> +			/* mfp register & interrupt index */
+> +			mfp-edge-interrupt = <0xd401e2c4 1>;
+> +		};
+[...]
+> +		gpio: gpio-controller {
+> +			compatible = "pxa,gpio";
+
+mrvl,pxa255-gpio, or similar.
+
+> +			gpio-controller;
+> +			reg = <
+> +				0xd4019000 0xb0
+> +				0xd4019004 0xb0
+> +				0xd4019008 0xb0
+> +				0xd4019100 0xb0
+> +				0xd4019104 0xb0
+> +				0xd4019108 0xb0>;
+
+This looks wrong.  The address ranges overlap.  Why not simply:
+<0xd4019000 0x200>;
+
+> +
+> +			/* gpio-clk-value: <offset & value> */
+> +			gpio-clk-value = <0xd4015038 0x3>;
+> +
+> +			/* gpio-mask: <offset & value> */
+> +			gpio-mask = <
+> +				0xd401909c 0xffffffff
+> +				0xd40190a0 0xffffffff
+> +				0xd40190a4 0xffffffff
+> +				0xd401919c 0xffffffff
+> +				0xd40191a0 0xffffffff
+> +				0xd40191a4 0xffffffff>;
+> +			gpio-pins = <0 192>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +			interrupts = <49>;
+> +			interrupt-parent = <&mmp_intc>;
+> +			sub-interrupts = <192>;
+> +		};
+
+[...]
+
+> diff --git a/arch/arm/mach-mmp/brownstone.c b/arch/arm/mach-mmp/brownstone.c
+> index 7bb78fd..c9848ad 100644
+> --- a/arch/arm/mach-mmp/brownstone.c
+> +++ b/arch/arm/mach-mmp/brownstone.c
+> @@ -12,6 +12,9 @@
+>  
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+>  #include <linux/gpio.h>
+> @@ -105,30 +108,6 @@ static unsigned long brownstone_pin_config[] __initdata = {
+>  	GPIO89_GPIO,
+>  };
+>  
+> -static struct regulator_consumer_supply max8649_supply[] = {
+> -	REGULATOR_SUPPLY("vcc_core", NULL),
+> -};
+> -
+> -static struct regulator_init_data max8649_init_data = {
+> -	.constraints	= {
+> -		.name		= "vcc_core range",
+> -		.min_uV		= 1150000,
+> -		.max_uV		= 1280000,
+> -		.always_on	= 1,
+> -		.boot_on	= 1,
+> -		.valid_ops_mask	= REGULATOR_CHANGE_VOLTAGE,
+> -	},
+> -	.num_consumer_supplies	= 1,
+> -	.consumer_supplies	= &max8649_supply[0],
+> -};
+> -
+> -static struct max8649_platform_data brownstone_max8649_info = {
+> -	.mode		= 2,	/* VID1 = 1, VID0 = 0 */
+> -	.extclk		= 0,
+> -	.ramp_timing	= MAX8649_RAMP_32MV,
+> -	.regulator	= &max8649_init_data,
+> -};
+> -
+>  static struct regulator_consumer_supply brownstone_v_5vp_supplies[] = {
+>  	REGULATOR_SUPPLY("v_5vp", NULL),
+>  };
+> @@ -158,47 +137,38 @@ static struct platform_device brownstone_v_5vp_device = {
+>  	},
+>  };
+>  
+> -static struct max8925_platform_data brownstone_max8925_info = {
+> -	.irq_base		= IRQ_BOARD_START,
+> -};
+> -
+> -static struct i2c_board_info brownstone_twsi1_info[] = {
+> -	[0] = {
+> -		.type		= "max8649",
+> -		.addr		= 0x60,
+> -		.platform_data	= &brownstone_max8649_info,
+> -	},
+> -	[1] = {
+> -		.type		= "max8925",
+> -		.addr		= 0x3c,
+> -		.irq		= IRQ_MMP2_PMIC,
+> -		.platform_data	= &brownstone_max8925_info,
+> -	},
+> -};
+> -
+>  static struct sdhci_pxa_platdata mmp2_sdh_platdata_mmc0 = {
+>  	.max_speed	= 25000000,
+>  };
+>  
+> +static __initdata struct of_device_id of_bus_ids[] = {
+> +	{ .compatible = "simple-bus", },
+> +	{},
+> +};
+> +
+>  static void __init brownstone_init(void)
+>  {
+>  	mfp_config(ARRAY_AND_SIZE(brownstone_pin_config));
+>  
+> -	/* on-chip devices */
+> -	mmp2_add_uart(1);
+> -	mmp2_add_uart(3);
+> -	mmp2_add_twsi(1, NULL, ARRAY_AND_SIZE(brownstone_twsi1_info));
+> +	if (of_platform_bus_probe(NULL, of_bus_ids, NULL) < 0)
+> +		BUG();
+> +
+>  	mmp2_add_sdhost(0, &mmp2_sdh_platdata_mmc0); /* SD/MMC */
+>  
+>  	/* enable 5v regulator */
+>  	platform_device_register(&brownstone_v_5vp_device);
+>  }
+>  
+> +static const char *brownstone_dt_match[] __initdata = {
+> +	"mrvl,mmp2-brownstone",
+> +	NULL,
+> +};
+> +
+>  MACHINE_START(BROWNSTONE, "Brownstone Development Platform")
+>  	/* Maintainer: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> */
+>  	.map_io		= mmp_map_io,
+> -	.nr_irqs	= BROWNSTONE_NR_IRQS,
+> -	.init_irq	= mmp2_init_irq,
+> +	.init_irq	= mmp_init_intc,
+>  	.timer		= &mmp2_timer,
+>  	.init_machine	= brownstone_init,
+> +	.dt_compat	= brownstone_dt_match,
+>  MACHINE_END
+
+I suggest instead of directly modifying the brownstone board file,
+create a new DT board file, make it support the brownstone and other
+boards, than then remove the old board files when the DT
+implementation is equal to the non-dt version.
+
+> diff --git a/arch/arm/mach-mmp/ttc_dkb.c b/arch/arm/mach-mmp/ttc_dkb.c
+> index e411039..c19b4dc 100644
+> --- a/arch/arm/mach-mmp/ttc_dkb.c
+> +++ b/arch/arm/mach-mmp/ttc_dkb.c
+> @@ -10,6 +10,9 @@
+>  
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/partitions.h>
+> @@ -113,21 +116,31 @@ static struct platform_device *ttc_dkb_devices[] = {
+>  	&ttc_dkb_device_onenand,
+>  };
+>  
+> +static __initdata struct of_device_id of_bus_ids[] = {
+> +	{ .compatible = "simple-bus", },
+> +	{},
+> +};
+> +
+>  static void __init ttc_dkb_init(void)
+>  {
+>  	mfp_config(ARRAY_AND_SIZE(ttc_dkb_pin_config));
+>  
+> -	/* on-chip devices */
+> -	pxa910_add_uart(1);
+> +	if (of_platform_bus_probe(NULL, of_bus_ids, NULL) < 0)
+> +		BUG();
+>  
+>  	/* off-chip devices */
+>  	platform_add_devices(ARRAY_AND_SIZE(ttc_dkb_devices));
+>  }
+>  
+> +static const char *ttc_dkb_dt_match[] __initdata = {
+> +	"mrvl,ttc-dkb",
+> +	NULL,
+> +};
+> +
+>  MACHINE_START(TTC_DKB, "PXA910-based TTC_DKB Development Platform")
+>  	.map_io		= mmp_map_io,
+> -	.nr_irqs	= TTCDKB_NR_IRQS,
+> -	.init_irq       = pxa910_init_irq,
+> +	.init_irq       = mmp_init_intc,
+>  	.timer          = &pxa910_timer,
+>  	.init_machine   = ttc_dkb_init,
+> +	.dt_compat	= ttc_dkb_dt_match,
+>  MACHINE_END
 > -- 
-> 1.7.0.4
+> 1.5.6.5
 > 
