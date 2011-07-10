@@ -1,23 +1,20 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] mfd: convert devicetree to platform on 88pm860x
-Date: Sun, 10 Jul 2011 16:21:59 +0900
-Message-ID: <20110710072159.GF10912@ponder.secretlab.ca>
-References: <1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
+Subject: Re: [PATCH] i2c: pxa: create dynamic platform device from device tree
+Date: Sun, 10 Jul 2011 14:26:21 +0900
+Message-ID: <20110710052621.GD10912@ponder.secretlab.ca>
+References: <1310120428-22700-1-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-3-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-4-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-5-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-6-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-7-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-8-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-9-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-10-git-send-email-haojian.zhuang@marvell.com>
-	<1310120428-22700-11-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1310120428-22700-11-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1310120428-22700-7-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -31,237 +28,237 @@ To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, samuel.ortiz-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2011 at 06:20:27PM +0800, Haojian Zhuang wrote:
-> Make 88pm860x to support both platform data and device tree. So a translation
-> between device tree and platform data is added.
+On Fri, Jul 08, 2011 at 06:20:23PM +0800, Haojian Zhuang wrote:
+> Create two probe function to support both current platform device and created
+> dynamic platform device from device tree. After moving to device tree,
+> original implementation of platform device will be removed.
+> 
+> Use property to present polling mode and frequency mode.
 > 
 > Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/mfd/88pm860x-i2c.c |  191 +++++++++++++++++++++++++++++++++++++++++++-
->  1 files changed, 189 insertions(+), 2 deletions(-)
+>  drivers/i2c/busses/i2c-pxa.c |  163 ++++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 163 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/mfd/88pm860x-i2c.c b/drivers/mfd/88pm860x-i2c.c
-> index e017dc8..b017e4a 100644
-> --- a/drivers/mfd/88pm860x-i2c.c
-> +++ b/drivers/mfd/88pm860x-i2c.c
-> @@ -10,6 +10,8 @@
->   */
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_regulator.h>
+> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> index d603646..7a6d774 100644
+> --- a/drivers/i2c/busses/i2c-pxa.c
+> +++ b/drivers/i2c/busses/i2c-pxa.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/i2c-pxa.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_i2c.h>
 >  #include <linux/platform_device.h>
->  #include <linux/i2c.h>
->  #include <linux/mfd/88pm860x.h>
-> @@ -236,6 +238,187 @@ static const struct i2c_device_id pm860x_id_table[] = {
+>  #include <linux/err.h>
+> @@ -1044,6 +1045,162 @@ static const struct i2c_algorithm i2c_pxa_pio_algorithm = {
+>  	.functionality	= i2c_pxa_functionality,
 >  };
->  MODULE_DEVICE_TABLE(i2c, pm860x_id_table);
 >  
+> +static const struct of_device_id pxa_i2c_of_match[] = {
+> +	{ .compatible = "pxa2xx-i2c",	.data = (void *)REGS_PXA2XX, },
+> +	{ .compatible = "pxa3xx-pwri2c", .data = (void *)REGS_PXA3XX, },
+> +	{ .compatible = "ce4100-i2c",	.data = (void *)REGS_CE4100, },
+
+New compatible values need to be written up in
+Documentation/devicetree/bindings, and strings should be in the form
+"<vendor>,<soc>-i2c".  They should also be specific to the soc instead
+of trying to be generic (ie. use "marvell,pxa255-i2c" instead of
+"marvell,pxa2xx-i2c".
+
+> +	{},
+> +};
+> +
 > +#ifdef CONFIG_OF
-> +static int __devinit pm860x_parse_irq(struct i2c_client *i2c,
-> +				      struct pm860x_platform_data *pdata)
+> +static int i2c_pxa_of_probe(struct platform_device *of_dev)
 > +{
-> +	struct device_node *of_node = i2c->dev.of_node;
-> +
-> +	pdata->irq_base = irq_alloc_descs(-1, 0, 24, 0);
-> +	irq_domain_add_simple(of_node, pdata->irq_base);
-> +	return 0;
-> +}
-> +
-> +static void __devinit pm860x_parse_backlight(struct device_node *np,
-> +					struct pm860x_platform_data *pdata)
-> +{
-> +	const __be32 *idx, *iset, *pwm;
-> +	int i;
-> +
-> +	idx = of_get_property(np, "cell-index", NULL);
-> +	if (idx == NULL)
-> +		return;
-> +	iset = of_get_property(np, "iset", NULL);
-> +	if (iset == NULL)
-> +		return;
-> +	pwm = of_get_property(np, "pwm", NULL);
-> +
-> +	i = be32_to_cpu(*idx);
-> +	pdata->backlight[i].iset = be32_to_cpu(*iset);
-> +	pdata->backlight[i].flags = i;
-> +	if (pwm)
-> +		pdata->backlight[i].pwm = be32_to_cpu(*pwm);
-> +	pdata->num_backlights++;
-> +}
-> +
-> +static void __devinit pm860x_parse_led(struct device_node *np,
-> +					struct pm860x_platform_data *pdata)
-> +{
-> +	const __be32 *idx, *iset;
-> +	int i;
-> +
-> +	idx = of_get_property(np, "cell-index", NULL);
-> +	if (idx == NULL)
-> +		return;
-> +	iset = of_get_property(np, "iset", NULL);
-> +	if (iset == NULL)
-> +		return;
-> +
-> +	i = be32_to_cpu(*idx);
-> +	pdata->led[i].iset = be32_to_cpu(*iset);
-> +	pdata->led[i].flags = i;
-> +	pdata->num_leds++;
-> +}
-> +
-> +static void __devinit pm860x_parse_touch(struct device_node *np,
-> +					struct pm860x_platform_data *pdata)
-> +{
-> +	struct pm860x_touch_pdata *touch;
-> +	const __be32 *prebias, *slot, *res, *prechg;
-> +
-> +	prebias = of_get_property(np, "prebias", NULL);
-> +	if (prebias == NULL)
-> +		return;
-> +	slot = of_get_property(np, "slot-cycle", NULL);
-> +	if (slot == NULL)
-> +		return;
-> +	res = of_get_property(np, "resistor-xplate", NULL);
-> +	if (res == NULL)
-> +		return;
-> +	prechg = of_get_property(np, "pen-prechg", NULL);
-> +	if (prechg == NULL)
-> +		return;
-> +	touch = kzalloc(sizeof(struct pm860x_touch_pdata), GFP_KERNEL);
-> +	if (touch == NULL)
-> +		return;
-> +	touch->gpadc_prebias = be32_to_cpu(*prebias++);
-> +	touch->tsi_prebias = be32_to_cpu(*prebias++);
-> +	touch->pen_prebias = be32_to_cpu(*prebias);
-> +	touch->slot_cycle = be32_to_cpu(*slot);
-> +	touch->pen_prechg = be32_to_cpu(*prechg);
-> +	pdata->touch = touch;
-> +}
-> +
-> +static int data[PM8607_ID_RG_MAX];
-> +
-> +static void __devinit pm860x_parse_regulator(struct device_node *np,
-> +					struct pm860x_platform_data *pdata)
-> +{
-> +	const char *name[PM8607_ID_RG_MAX] = {
-> +		"BUCK1", "BUCK2", "BUCK3", "LDO1", "LDO2", "LDO3", "LOD4",
-> +		"LDO5", "LDO6", "LDO7", "LDO8", "LDO9", "LDO10", "LDO11",
-> +		"LDO12", "LDO13", "LDO14", "LDO15"};
-> +	const char *cp;
-> +	int i;
-> +
-> +	cp = of_get_property(np, "compatible", NULL);
-> +	if (cp == NULL)
-> +		return;
-> +	for (i = 0; i < PM8607_ID_RG_MAX; i++) {
-> +		if (strncmp(cp, name[i], strlen(name[i])))
-> +			continue;
-> +		of_regulator_init_data(np, &pdata->regulator[i]);
-> +		data[i] = i;
-> +		pdata->regulator[i].driver_data = &data[i];
-> +		pdata->num_regulators++;
-> +		break;
-> +	}
-> +}
-> +
-> +static struct pm860x_platform_data __devinit
-> +*pm860x_get_alt_pdata(struct i2c_client *i2c)
-> +{
-> +	struct pm860x_platform_data *pdata;
-> +	struct device_node *of_node = i2c->dev.of_node;
-> +	struct device_node *np, *pp = NULL;
-> +	const char *cp;
+
+CONFIG_OF should not be an either/or option.  Turning on CONFIG_OF
+must not disable non-DT users.
+
+> +	struct device_node *np = of_dev->dev.of_node;
+> +	const struct of_device_id *match;
+> +	struct i2c_pxa_platform_data *plat = NULL;
+> +	struct pxa_i2c *i2c;
+> +	struct resource *res;
 > +	const __be32 *p;
-> +	int ret;
+> +	int i2c_type, irq, data, ret;
+> +	int id = 0, poll = 0, fast = 0;
 > +
-> +	pdata = kzalloc(sizeof(struct pm860x_platform_data), GFP_KERNEL);
-> +	if (pdata == NULL)
-> +		return NULL;
-> +	pdata->regulator = kzalloc(sizeof(struct regulator_init_data)
-> +				* PM8607_ID_RG_MAX, GFP_KERNEL);
-> +	if (pdata->regulator == NULL)
-> +		goto out_reg;
-> +	pdata->led = kzalloc(sizeof(struct pm860x_led_pdata) * 3,
-> +				GFP_KERNEL);
-> +	if (pdata->led == NULL)
-> +		goto out_led;
-> +	pdata->backlight = kzalloc(sizeof(struct pm860x_backlight_pdata)
-> +					* 3, GFP_KERNEL);
-> +	if (pdata->backlight == NULL)
-> +		goto out_backlight;
-> +	p = of_get_property(of_node, "i2c-port", NULL);
+> +	match = of_match_device(pxa_i2c_of_match, &of_dev->dev);
+> +	if (match == NULL)
+> +		return -ENODEV;
+> +	i2c_type = (int)match->data;
+> +
+> +	p = of_get_property(np, "cell-index", &data);
 > +	if (p)
-> +		pdata->i2c_port = be32_to_cpu(*p);
-> +	p = of_get_property(of_node, "companion-addr", NULL);
-> +	if (p)
-> +		pdata->companion_addr = be32_to_cpu(*p);
-> +	p = of_get_property(of_node, "irq-mode", NULL);
-> +	if (p)
-> +		pdata->irq_mode = be32_to_cpu(*p);
+> +		id = be32_to_cpu(*p);
 
-As commented earlier, new binding needs to be documented.
+When using the device tree, the bus id should be dynamically
+assigned.  Don't use a cell-index property.
 
 > +
-> +	ret = pm860x_parse_irq(i2c, pdata);
-> +	if (ret < 0)
-> +		goto out;
+> +	p = of_get_property(np, "i2c-polling", &data);
+> +	if (p)
+> +		poll = be32_to_cpu(*p);
 > +
-> +	for (; (np = of_get_next_child(of_node, pp)) != NULL; pp = np) {
-> +		cp = of_get_property(np, "compatible", NULL);
-> +		if (cp == NULL)
-> +			continue;
-> +		if (!strncmp(cp, "backlight", strlen("backlight")))
-> +			pm860x_parse_backlight(np, pdata);
-> +		if (!strncmp(cp, "led", strlen("led")))
-> +			pm860x_parse_led(np, pdata);
-> +		if (!strncmp(cp, "touch", strlen("touch")))
-> +			pm860x_parse_touch(np, pdata);
-> +		cp = of_get_property(np, "device_type", NULL);
-> +		if (cp == NULL)
-> +			continue;
-> +		if (!strncmp(cp, "regulator", strlen("regulator")))
-> +			pm860x_parse_regulator(np, pdata);
+> +	p = of_get_property(np, "i2c-frequency", &data);
+> +	if (p && !strncmp((char *)p, "fast", data))
+> +		fast = 1;
+> +
+> +	res = platform_get_resource(of_dev, IORESOURCE_MEM, 0);
+> +	irq = platform_get_irq(of_dev, 0);
+> +	if (res == NULL || irq < 0)
+> +		return -ENODEV;
+> +
+> +	if (!request_mem_region(res->start, resource_size(res), res->name))
+> +		return -ENOMEM;
+> +
+> +	i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
+
+kzalloc(sizeof(*i2c), GFP_KERNEL)
+
+> +	if (!i2c) {
+> +		ret = -ENOMEM;
+> +		goto emalloc;
 > +	}
-> +	return pdata;
-> +out:
-> +	kfree(pdata->backlight);
-> +out_backlight:
-> +	kfree(pdata->led);
-> +out_led:
-> +	kfree(pdata->regulator);
-> +out_reg:
-> +	kfree(pdata);
-> +	return NULL;
-> +}
-> +#else
-> +static struct pm860x_platform_data __devinit
-> +*pm860x_get_alt_pdata(struct i2c_client *i2c)
-> +{
-> +	return NULL;
-> +}
+> +
+> +	i2c->adap.owner   = THIS_MODULE;
+> +	i2c->adap.retries = 5;
+> +
+> +	spin_lock_init(&i2c->lock);
+> +	init_waitqueue_head(&i2c->wait);
+> +
+> +	/*
+> +	 * adap.nr comes from cell-index in dts file
+> +	 */
+> +	i2c->adap.nr = id;
+> +	snprintf(i2c->adap.name, sizeof(i2c->adap.name), "pxa2xx-i2c.%u",
+> +		 i2c->adap.nr);
+> +
+> +	i2c->clk = clk_get_sys(i2c->adap.name, NULL);
+> +	if (IS_ERR(i2c->clk)) {
+> +		ret = PTR_ERR(i2c->clk);
+> +		goto eclk;
+> +	}
+> +
+> +	i2c->reg_base = ioremap(res->start, resource_size(res));
+> +	if (!i2c->reg_base) {
+> +		ret = -EIO;
+> +		goto eremap;
+> +	}
+> +
+> +	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+> +	i2c->reg_idbr = i2c->reg_base + pxa_reg_layout[i2c_type].idbr;
+> +	i2c->reg_icr = i2c->reg_base + pxa_reg_layout[i2c_type].icr;
+> +	i2c->reg_isr = i2c->reg_base + pxa_reg_layout[i2c_type].isr;
+> +	if (i2c_type != REGS_CE4100)
+> +		i2c->reg_isar = i2c->reg_base + pxa_reg_layout[i2c_type].isar;
+> +
+> +	i2c->iobase = res->start;
+> +	i2c->iosize = resource_size(res);
+> +
+> +	i2c->irq = irq;
+> +	i2c->use_pio = poll;
+> +	i2c->fast_mode = fast;
+> +
+> +	i2c->slave_addr = I2C_PXA_SLAVE_ADDR;
+> +
+> +#ifdef CONFIG_I2C_PXA_SLAVE
+> +	if (plat) {
+> +		i2c->slave_addr = plat->slave_addr;
+> +		i2c->slave = plat->slave;
+> +	}
 > +#endif
 > +
->  static int verify_addr(struct i2c_client *i2c)
+> +	clk_enable(i2c->clk);
+> +
+> +	if (plat)
+> +		i2c->adap.class = plat->class;
+> +
+> +	if (i2c->use_pio) {
+> +		i2c->adap.algo = &i2c_pxa_pio_algorithm;
+> +	} else {
+> +		i2c->adap.algo = &i2c_pxa_algorithm;
+> +		ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
+> +				  i2c->adap.name, i2c);
+> +		if (ret)
+> +			goto ereqirq;
+> +	}
+> +
+> +	i2c_pxa_reset(i2c);
+> +
+> +	i2c->adap.algo_data = i2c;
+> +	i2c->adap.dev.parent = &of_dev->dev;
+> +	i2c->adap.dev.of_node = of_dev->dev.of_node;
+> +
+> +	if (i2c_type == REGS_CE4100)
+> +		ret = i2c_add_adapter(&i2c->adap);
+> +	else
+> +		ret = i2c_add_numbered_adapter(&i2c->adap);
+> +	if (ret < 0) {
+> +		printk(KERN_INFO "I2C: Failed to add bus\n");
+> +		goto eadapt;
+> +	}
+> +	of_i2c_register_devices(&i2c->adap);
+> +
+> +	platform_set_drvdata(of_dev, i2c);
+> +
+> +#ifdef CONFIG_I2C_PXA_SLAVE
+> +	printk(KERN_INFO "I2C: %s: PXA I2C adapter, slave address %d\n",
+> +	       dev_name(&i2c->adap.dev), i2c->slave_addr);
+> +#else
+> +	printk(KERN_INFO "I2C: %s: PXA I2C adapter\n",
+> +	       dev_name(&i2c->adap.dev));
+> +#endif
+> +	return 0;
+> +
+> +eadapt:
+> +	if (!i2c->use_pio)
+> +		free_irq(irq, i2c);
+> +ereqirq:
+> +	clk_disable(i2c->clk);
+> +	iounmap(i2c->reg_base);
+> +eremap:
+> +	clk_put(i2c->clk);
+> +eclk:
+> +	kfree(i2c);
+> +emalloc:
+> +	release_mem_region(res->start, resource_size(res));
+> +	return ret;
+> +}
+> +#else
+> +
+>  static int i2c_pxa_probe(struct platform_device *dev)
 >  {
->  	unsigned short addr_8607[] = {0x30, 0x34};
-> @@ -264,8 +447,12 @@ static int __devinit pm860x_probe(struct i2c_client *client,
->  	struct pm860x_chip *chip;
+>  	struct pxa_i2c *i2c;
+> @@ -1174,6 +1331,7 @@ emalloc:
+>  	release_mem_region(res->start, resource_size(res));
+>  	return ret;
+>  }
+> +#endif
 >  
->  	if (!pdata) {
-> -		pr_info("No platform data in %s!\n", __func__);
-> -		return -EINVAL;
-> +		pdata = pm860x_get_alt_pdata(client);
-> +		if (!pdata) {
-> +			pr_info("No platform data in %s!\n", __func__);
-> +			return -EINVAL;
-> +		}
-> +		client->dev.platform_data = pdata;
-
-Ditto here to comment on last patch.  Don't modify platform_data in a device driver.
-
->  	}
+>  static int __exit i2c_pxa_remove(struct platform_device *dev)
+>  {
+> @@ -1228,12 +1386,17 @@ static const struct dev_pm_ops i2c_pxa_dev_pm_ops = {
+>  #endif
 >  
->  	chip = kzalloc(sizeof(struct pm860x_chip), GFP_KERNEL);
+>  static struct platform_driver i2c_pxa_driver = {
+> +#ifdef CONFIG_OF
+> +	.probe		= i2c_pxa_of_probe,
+> +#else
+>  	.probe		= i2c_pxa_probe,
+> +#endif
+>  	.remove		= __exit_p(i2c_pxa_remove),
+>  	.driver		= {
+>  		.name	= "pxa2xx-i2c",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= I2C_PXA_DEV_PM_OPS,
+> +		.of_match_table	= pxa_i2c_of_match,
+>  	},
+>  	.id_table	= i2c_pxa_id_table,
+>  };
 > -- 
 > 1.5.6.5
 > 
