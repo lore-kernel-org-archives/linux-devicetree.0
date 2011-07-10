@@ -1,61 +1,55 @@
-From: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: dataflash: add device tree probe support
-Date: Sun, 10 Jul 2011 08:14:29 +0000 (UTC)
-Message-ID: <ivbn15$957$1@dough.gmane.org>
-References: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] ARM: mmp: remove builtin gpio driver support
+Date: Sun, 10 Jul 2011 13:02:18 +0900
+Message-ID: <20110710040218.GA10912@ponder.secretlab.ca>
+References: <1310120428-22700-1-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Haojian Zhuang <haojian.zhuang@marvell.com>
+Cc: eric.y.miao@gmail.com, nico@fluxnic.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, haojian.zhuang@gmail.com, samuel.ortiz@intel.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote:
+On Fri, Jul 08, 2011 at 06:20:18PM +0800, Haojian Zhuang wrote:
+> Remove builtin gpio driver support form mmp.
+> 
+> Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
 
-> It adds device tree probe support for mtd_dataflash driver.
->
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/mtd/devices/mtd_dataflash.c |   12 +++++++++++-
->  1 files changed, 11 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/mtd/devices/mtd_dataflash.c b/drivers/mtd/devices/mtd_dataflash.c
-> index 8f6b02c..64d7242 100644
-> --- a/drivers/mtd/devices/mtd_dataflash.c
-> +++ b/drivers/mtd/devices/mtd_dataflash.c
-> @@ -24,6 +24,8 @@
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/partitions.h>
+Hi Haojian.
+
+I'm not clear what this patch is intending to do.  I understand that
+it removes the mmp-specific gpio support, but I looks like don't see the code
+that replaces it, which would mean that applying this patch breaks
+gpio on mmp platforms.
+
+Am I missing something?
+
+> diff --git a/arch/arm/plat-pxa/Makefile b/arch/arm/plat-pxa/Makefile
+> index 3aca5ba..8e432b1 100644
+> --- a/arch/arm/plat-pxa/Makefile
+> +++ b/arch/arm/plat-pxa/Makefile
+> @@ -4,7 +4,9 @@
 >  
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
+>  obj-y	:= dma.o
 >  
->  /*
->   * DataFlash is a kind of SPI flash.  Most AT45 chips have two buffers in
-> @@ -98,6 +100,11 @@ struct dataflash {
->  	struct mtd_info		mtd;
->  };
->  
-> +static const struct of_device_id dataflash_dt_ids[] = {
-> +	{ .compatible = "atmel,dataflash", },
+> +ifeq ($(CONFIG_OF),)
+>  obj-$(CONFIG_GENERIC_GPIO)	+= gpio.o
+> +endif
 
-Please add also smth. like atmel,at45 to be more descriptive (probably
-single at45 entry will be sufficient).
+Be careful about this.  Turning on device tree support must not
+disable booting on non-DT machines.
 
-
--- 
-With best wishes
-Dmitry
+g.
