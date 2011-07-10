@@ -1,16 +1,23 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: mmp: parse irq from DT
-Date: Sun, 10 Jul 2011 13:34:06 +0900
-Message-ID: <20110710043406.GB10912@ponder.secretlab.ca>
+Subject: Re: [PATCH] mfd: convert devicetree to platform data on max8925
+Date: Sun, 10 Jul 2011 16:20:27 +0900
+Message-ID: <20110710072027.GE10912@ponder.secretlab.ca>
 References: <1310120428-22700-1-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-2-git-send-email-haojian.zhuang@marvell.com>
 	<1310120428-22700-3-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-4-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-5-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-6-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-7-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-8-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-9-git-send-email-haojian.zhuang@marvell.com>
+	<1310120428-22700-10-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1310120428-22700-3-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1310120428-22700-10-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,315 +31,241 @@ To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, samuel.ortiz-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2011 at 06:20:19PM +0800, Haojian Zhuang wrote:
-> Parse irq sepcifier from DT and translate it to Linux irq number.
+On Fri, Jul 08, 2011 at 06:20:26PM +0800, Haojian Zhuang wrote:
+> Make max8925 to support both platform data and device tree. So a translation
+> between device tree and platform data is added.
 > 
 > Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
->  arch/arm/mach-mmp/Makefile |    2 +
->  arch/arm/mach-mmp/common.h |    1 +
->  arch/arm/mach-mmp/intc.c   |  245 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 248 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/mach-mmp/intc.c
+>  drivers/mfd/max8925-i2c.c |  159 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 files changed, 157 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
-> index 5c68382..e7862ea 100644
-> --- a/arch/arm/mach-mmp/Makefile
-> +++ b/arch/arm/mach-mmp/Makefile
-> @@ -4,6 +4,8 @@
->  
->  obj-y				+= common.o clock.o devices.o time.o
->  
-> +obj-$(CONFIG_OF_IRQ)		+= intc.o
-> +
->  # SoC support
->  obj-$(CONFIG_CPU_PXA168)	+= pxa168.o irq-pxa168.o
->  obj-$(CONFIG_CPU_PXA910)	+= pxa910.o irq-pxa168.o
-> diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
-> index ec8d65d..1c563c2 100644
-> --- a/arch/arm/mach-mmp/common.h
-> +++ b/arch/arm/mach-mmp/common.h
-> @@ -6,3 +6,4 @@ extern void timer_init(int irq);
->  
->  extern void __init icu_init_irq(void);
->  extern void __init mmp_map_io(void);
-> +extern void __init mmp_init_intc(void);
-> diff --git a/arch/arm/mach-mmp/intc.c b/arch/arm/mach-mmp/intc.c
-> new file mode 100644
-> index 0000000..48ad84b
-> --- /dev/null
-> +++ b/arch/arm/mach-mmp/intc.c
-> @@ -0,0 +1,245 @@
-> +/*
-> + *  linux/arch/arm/mach-mmp/intc.c
-> + *
-> + *  Generic IRQ handling
-> + *
-> + *  Author:	Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> + *  Copyright:	Marvell International Ltd. 2011
-> + *
-> + *  This program is free software; you can redistribute it and/or modify
-> + *  it under the terms of the GNU General Public License version 2 as
-> + *  published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
+> diff --git a/drivers/mfd/max8925-i2c.c b/drivers/mfd/max8925-i2c.c
+> index 0219115..fb74554 100644
+> --- a/drivers/mfd/max8925-i2c.c
+> +++ b/drivers/mfd/max8925-i2c.c
+> @@ -10,6 +10,9 @@
+>   */
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/irq.h>
 > +#include <linux/of_irq.h>
-> +#include <linux/slab.h>
-> +
-> +struct mmp_intc_info {
-> +	unsigned int		mask;
-> +	unsigned int		phy_base;
-> +	void __iomem		*virt_base;
-> +	void __iomem		*mux_status;
-> +	void __iomem		*mux_mask;
-> +	void __iomem		*mfp_edge;
-> +	unsigned int		mfp_edge_index;	/* index in irq domain */
-> +	unsigned int		irq_base;
-> +};
-> +
-> +static void mux_irq_unmask(struct irq_data *d)
+> +#include <linux/of_regulator.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/i2c.h>
+>  #include <linux/mfd/max8925.h>
+> @@ -135,6 +138,154 @@ static const struct i2c_device_id max8925_id_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, max8925_id_table);
+>  
+> +#ifdef CONFIG_OF
+> +static int __devinit max8925_parse_irq(struct i2c_client *i2c,
+> +					struct max8925_platform_data *pdata)
 > +{
-> +	struct mmp_intc_info *info = irq_data_get_irq_chip_data(d);
-> +	unsigned int data, irq_offs;
+> +	struct device_node *of_node = i2c->dev.of_node;
 > +
-> +	irq_offs = d->irq - info->irq_base;
-> +	if (info->mfp_edge && (info->mfp_edge_index == irq_offs)) {
-> +		data = __raw_readl(info->mfp_edge);
-> +		__raw_writel(data | (1 << 6), info->mfp_edge);
-> +		__raw_writel(data, info->mfp_edge);
+> +	pdata->irq_base = irq_alloc_descs(-1, 0, MAX8925_NR_IRQS, 0);
+> +	irq_domain_add_simple(of_node, pdata->irq_base);
+
+of_node is only used once.  This could simply be:
+
+	irq_domain_add_simple(i2c->dev.of_node, pdata->irq_base);
+
+> +	return 0;
+> +}
+> +
+> +static void __devinit max8925_parse_backlight(struct device_node *np,
+> +					struct max8925_platform_data *pdata)
+> +{
+> +	struct max8925_backlight_pdata *bk;
+> +	const __be32 *p;
+> +
+> +	bk = kzalloc(sizeof(struct max8925_backlight_pdata), GFP_KERNEL);
+> +	if (bk == NULL)
+> +		return;
+> +	pdata->backlight = bk;
+> +	p = of_get_property(np, "lxw-scl", NULL);
+> +	if (p)
+> +		bk->lxw_scl = be32_to_cpu(*p);
+> +	p = of_get_property(np, "lxw-freq", NULL);
+> +	if (p)
+> +		bk->lxw_freq = be32_to_cpu(*p);
+> +	p = of_get_property(np, "dual-string", NULL);
+> +	if (p)
+> +		bk->dual_string = be32_to_cpu(*p);
+
+of_property_read_u32() and of_property_read_string() would help you here.
+
+This implements a new binding.  Needs to be documented.
+
+> +}
+> +
+> +static void __devinit max8925_parse_touch(struct device_node *np,
+> +					struct max8925_platform_data *pdata)
+> +{
+> +	struct max8925_touch_pdata *touch;
+> +	const __be32 *p;
+> +
+> +	touch = kzalloc(sizeof(struct max8925_touch_pdata), GFP_KERNEL);
+> +	if (touch == NULL)
+> +		return;
+> +	pdata->touch = touch;
+> +	p = of_get_property(np, "flags", NULL);
+> +	if (p)
+> +		touch->flags = be32_to_cpu(*p);
+> +	p = of_get_property(np, "interrupts", NULL);
+> +	if (p)
+> +		pdata->tsc_irq = irq_of_parse_and_map(np, 0);
+
+irq_of_parse_and_map() can be called directly.  It will return NO_IRQ
+if the irq cannot be parsed.
+
+> +}
+> +
+> +static void __devinit max8925_parse_power(struct device_node *np,
+> +					struct max8925_platform_data *pdata)
+> +{
+> +	struct max8925_power_pdata *power;
+> +	const __be32 *p;
+> +
+> +	power = kzalloc(sizeof(struct max8925_power_pdata), GFP_KERNEL);
+> +	if (power == NULL)
+> +		return;
+> +	pdata->power = power;
+> +	p = of_get_property(np, "battery-detect", NULL);
+> +	if (p)
+> +		power->batt_detect = be32_to_cpu(*p) ? 1 : 0;
+> +	p = of_get_property(np, "topoff-threshold", NULL);
+> +	if (p)
+> +		power->topoff_threshold = be32_to_cpu(*p) & 0x3;
+> +	p = of_get_property(np, "fast-charge", NULL);
+> +	if (p)
+> +		power->fast_charge = be32_to_cpu(*p) & 0x7;
+
+Needs to be documented.
+
+> +}
+> +
+> +static void __devinit max8925_parse_regulator(struct device_node *np,
+> +					struct max8925_platform_data *pdata)
+> +{
+> +	const char *name[MAX8925_MAX_REGULATOR] = {
+> +			"SD1", "SD2", "SD3", "LDO1", "LDO2", "LDO3", "LDO4",
+> +			"LDO5", "LDO6", "LDO7", "LDO8", "LDO9", "LDO10",
+> +			"LDO11", "LDO12", "LDO13", "LDO14", "LDO15", "LDO16",
+> +			"LDO17", "LDO18", "LDO19", "LDO20"};
+> +	const char *cp;
+> +	int i;
+> +
+> +	cp = of_get_property(np, "compatible", NULL);
+> +	if (cp == NULL)
+> +		return;
+> +	for (i = 0; i < MAX8925_MAX_REGULATOR; i++) {
+> +		if (strncmp(cp, name[i], strlen(name[i])))
+> +			continue;
+> +		of_regulator_init_data(np, pdata->regulator[i]);
+> +		break;
+
+You don't need to open-code the parsing of compatible values.  Use
+of_match_node() instead with an of_device_id table.
+
 > +	}
-> +	data = __raw_readl(info->mux_mask) & ~(1 << (d->irq - info->irq_base));
-> +	__raw_writel(data, info->mux_mask);
 > +}
 > +
-> +static void mux_irq_mask(struct irq_data *d)
+> +static struct max8925_platform_data __devinit
+> +*max8925_get_alt_pdata(struct i2c_client *client)
 > +{
-> +	struct mmp_intc_info *info = irq_data_get_irq_chip_data(d);
-> +	unsigned int data;
+> +	struct max8925_platform_data *pdata;
+> +	struct device_node *of_node = client->dev.of_node;
+> +	struct device_node *np, *pp = NULL;
+> +	const char *cp;
+> +	int ret, i;
 > +
-> +	data = __raw_readl(info->mux_mask) | (1 << (d->irq - info->irq_base));
-> +	__raw_writel(data, info->mux_mask);
-> +}
-> +
-> +static struct irq_chip mux_irq_chip = {
-> +	.name		= "mmp mux intc",
-> +	.irq_unmask	= mux_irq_unmask,
-> +	.irq_mask	= mux_irq_mask,
-> +	.irq_ack	= mux_irq_mask,
-> +};
-> +
-> +static void mmp_irq_demux_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct mmp_intc_info *info = irq_get_handler_data(irq);
-> +	unsigned long status, mask, n;
-> +
-> +	mask = __raw_readl(info->mux_mask);
-> +	while (1) {
-> +		status = __raw_readl(info->mux_status) & ~mask;
-> +		if (status == 0)
-> +			break;
-> +		n = find_first_bit(&status, BITS_PER_LONG);
-> +		while (n < BITS_PER_LONG) {
-> +			generic_handle_irq(info->irq_base + n);
-> +			n = find_next_bit(&status, BITS_PER_LONG, n + 1);
-> +		}
+> +	pdata = kzalloc(sizeof(struct max8925_platform_data), GFP_KERNEL);
+
+sizeof(*pdata)
+
+> +	if (pdata == NULL)
+> +		return NULL;
+> +	pdata->regulator[0] = kzalloc(sizeof(struct regulator_init_data)
+> +			* MAX8925_MAX_REGULATOR, GFP_KERNEL);
+
+ditto.
+
+Is it appropriate to allocated the entire table of regulators?  From
+the parse_regulator function above, it looks like only one of the
+regulators will actually get registered (I've not dug deeply into what
+the driver needs here though).
+
+> +	if (pdata->regulator[0] == NULL) {
+> +		kfree(pdata);
+> +		return NULL;
 > +	}
-> +}
+> +	for (i = 1; i < MAX8925_MAX_REGULATOR; i++)
+> +		pdata->regulator[i] = pdata->regulator[i - 1] + 1;
 > +
-> +static void mux_init_intc(struct mmp_intc_info *mmp_info)
-> +{
-> +	struct device_node *np;
-> +	struct mmp_intc_info *mux_info;
-> +	const __be32 *nr, *status, *edge;
-> +	unsigned int addr = 0, offs = 0;
-> +	int cascade, irq_nr, i;
-> +
-> +	if (mmp_info->virt_base == NULL)
+> +	ret = max8925_parse_irq(client, pdata);
+> +	if (ret < 0)
 > +		goto out;
 > +
-> +	for (np = NULL; (np = of_find_all_nodes(np)) != NULL;) {
-> +		if (!of_device_is_compatible(np, "mrvl,mux-intc"))
+> +	for (; (np = of_get_next_child(of_node, pp)) != NULL; pp = np) {
+> +		cp = of_get_property(np, "compatible", NULL);
+> +		if (cp == NULL)
 > +			continue;
-
-for_each_compatible_node()
-
-> +		if (of_get_property(np, "interrupt-controller", NULL) == NULL)
+> +		if (!strncmp(cp, "backlight", strlen("backlight")))
+> +			max8925_parse_backlight(np, pdata);
+> +		if (!strncmp(cp, "power", strlen("power")))
+> +			max8925_parse_power(np, pdata);
+> +		if (!strncmp(cp, "touch", strlen("touch")))
+> +			max8925_parse_touch(np, pdata);
+> +		cp = of_get_property(np, "device_type", NULL);
+> +		if (cp == NULL)
 > +			continue;
-> +		nr = of_get_property(np, "sub-interrupts", NULL);
-> +		if (nr == NULL) {
-> +			printk(KERN_WARNING "sub-interrupts property "
-> +				"is missed\n");
-> +			continue;
-> +		}
-> +		irq_nr = be32_to_cpu(*nr);
-
-There's a new function you can use here that makes reading single property
-values easier.  of_platform_read_u32() is queued up in linux-next.
-
-> +		status = of_get_property(np, "status-mask", NULL);
-> +		if (status == NULL) {
-> +			printk(KERN_WARNING "status-mask property is missed\n");
-> +			continue;
-> +		}
-> +		edge = of_get_property(np, "mfp-edge-interrupt", NULL);
-> +
-> +		mux_info = kzalloc(sizeof(struct mmp_intc_info), GFP_KERNEL);
-
-kzalloc(sizeof(*mux_info), GFP_KERNEL);
-
-> +		if (mux_info == NULL)
-> +			goto out;
-> +		mux_info->virt_base = mmp_info->virt_base;
-> +		mux_info->mux_status = be32_to_cpu(*status++)
-> +					+ mux_info->virt_base;
-> +		mux_info->mux_mask = be32_to_cpu(*status)
-> +					+ mux_info->virt_base;
-> +		if (edge) {
-> +			addr = be32_to_cpu(*edge) & PAGE_MASK;
-> +			offs = be32_to_cpu(*edge) - addr;
-> +			mux_info->mfp_edge = ioremap(addr, PAGE_SIZE) + offs;
-> +			mux_info->mfp_edge_index = be32_to_cpu(*++edge);
-> +		}
-> +
-> +		/* allocate new irq */
-> +		cascade = irq_of_parse_and_map(np, 0);
-> +		mux_info->irq_base = irq_alloc_descs(-1, 0, irq_nr, 0);
-> +		irq_domain_add_simple(np, mux_info->irq_base);
-> +
-> +		i = mux_info->irq_base;
-> +		for (; i < mux_info->irq_base + irq_nr; i++) {
-> +			irq_set_chip_data(i, mux_info);
-> +			mux_irq_mask(irq_get_irq_data(i));
-> +			irq_set_chip_and_handler(i, &mux_irq_chip,
-> +					handle_level_irq);
-> +			set_irq_flags(i, IRQF_VALID);
-> +		}
-> +
-> +		irq_set_handler_data(cascade, mux_info);
-> +		irq_set_chained_handler(cascade, mmp_irq_demux_handler);
+> +		if (!strncmp(cp, "regulator", strlen("regulator")))
+> +			max8925_parse_regulator(np, pdata);
 > +	}
+> +	return pdata;
 > +out:
-> +	return;
+> +	kfree(pdata->regulator[0]);
+> +	kfree(pdata);
+> +	return NULL;
 > +}
-
-It looks like this function is parsing a new device tree binding.  Any
-new bindings needs to be documented in Documentation/devicetree/bindings.
-
-> +
-> +static void mmp_irq_unmask(struct irq_data *d)
+> +#else
+> +static struct max8925_platform_data __devinit
+> +*max8925_get_alt_pdata(struct i2c_client *client)
 > +{
-> +	struct mmp_intc_info *info = irq_data_get_irq_chip_data(d);
-> +
-> +	/* ICU_INT_CONF */
-> +	__raw_writel(info->mask, info->virt_base + (d->irq << 2));
+> +	return NULL;
 > +}
+> +#endif
 > +
-> +static void mmp_irq_mask(struct irq_data *d)
-> +{
-> +	struct mmp_intc_info *info = irq_data_get_irq_chip_data(d);
-> +
-> +	__raw_writel(0, info->virt_base + (d->irq << 2));
-> +}
-> +
-> +static struct irq_chip mmp_irq_chip = {
-> +	.name		= "mmp-intc",
-> +	.irq_unmask	= mmp_irq_unmask,
-> +	.irq_mask	= mmp_irq_mask,
-> +	.irq_ack	= mmp_irq_mask,
-> +};
+>  static int __devinit max8925_probe(struct i2c_client *client,
+>  				   const struct i2c_device_id *id)
+>  {
+> @@ -142,8 +293,12 @@ static int __devinit max8925_probe(struct i2c_client *client,
+>  	static struct max8925_chip *chip;
+>  
+>  	if (!pdata) {
+> -		pr_info("%s: platform data is missing\n", __func__);
+> -		return -EINVAL;
+> +		pdata = max8925_get_alt_pdata(client);
+> +		if (!pdata) {
+> +			pr_info("%s: platform data is missing\n", __func__);
+> +			return -EINVAL;
+> +		}
+> +		client->dev.platform_data = pdata;
 
-Can you use IRQ_GENERIC_CHIP?
-
-> +
-> +void __init mmp_init_intc(void)
-> +{
-> +	struct mmp_intc_info *info;
-> +	struct device_node *np;
-> +	const __be32 *enable_mask, *base, *cell, *nr;
-> +	int i, irq_nr, phy_base;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "mrvl,mmp-intc");
-> +
-> +	BUG_ON(!np);
-> +
-> +	of_node_get(np);
-> +	if (of_get_property(np, "interrupt-controller", NULL) == NULL)
-> +		goto out;
-> +	cell = of_get_property(np, "#interrupt-cells", NULL);
-> +	if (cell == NULL) {
-> +		printk(KERN_ERR "mmp-intc: Device node %s missing "
-> +			"interrupt-cells property\n", np->full_name);
-> +		goto out;
-> +	}
-> +	if (be32_to_cpu(*cell) != 1) {
-> +		printk(KERN_ERR "mmp-intc: interrupt-cells property is "
-> +			"incorrect:%d\n", be32_to_cpu(*cell));
-> +		goto out;
-> +	}
-> +
-> +	nr = of_get_property(np, "sub-interrupts", NULL);
-> +	if (nr == NULL) {
-> +		printk(KERN_ERR "mmp-intc: interrupts property is missed\n");
-> +		goto out;
-> +	}
-> +	irq_nr = be32_to_cpu(*nr);
-> +
-> +	base = of_get_property(np, "reg", NULL);
-> +	if (base == NULL) {
-> +		printk(KERN_ERR "intc: Device node %s missing reg property\n",
-> +			np->full_name);
-> +		goto out;
-> +	}
-> +	phy_base = of_translate_address(np, base);
-
-Use of_address_to_resource().
-
-> +
-> +	info = kzalloc(sizeof(struct mmp_intc_info), GFP_KERNEL);
-> +	if (info == NULL)
-> +		goto out;
-> +
-> +	enable_mask = of_get_property(np, "enable_mask", NULL);
-> +	if (enable_mask == NULL) {
-> +		printk(KERN_ERR "interrupt controller: Device node %s "
-> +			"missing interrupt property\n", np->full_name);
-> +		goto out_mem;
-> +	}
-> +	info->mask = be32_to_cpu(*enable_mask);
-> +
-> +	/* phy_base: 0, phy_size:64 */
-> +	info->phy_base = phy_base;
-> +	info->virt_base = ioremap(info->phy_base, PAGE_SIZE);
-> +
-> +	/* allocate new irq */
-> +	info->irq_base = irq_alloc_descs(-1, 0, irq_nr, 0);
-> +	irq_domain_add_simple(np, 0);
-
-Excellent! Good use of dynamic irqs.
-
-> +
-> +	for (i = info->irq_base; i < info->irq_base + irq_nr; i++) {
-> +		irq_set_chip_data(i, info);
-> +		mmp_irq_mask(irq_get_irq_data(i));
-> +		irq_set_chip_and_handler(i, &mmp_irq_chip, handle_level_irq);
-> +		set_irq_flags(i, IRQF_VALID);
-> +	}
-> +	mux_init_intc(info);
-> +	of_node_put(np);
-> +	return;
-> +out_mem:
-> +	kfree(info);
-> +out:
-> +	of_node_put(np);
-> +	return;
-> +}
-
-There's a lot of duplicate code here between the primary and cascaded
-irq controllers.  It can probably be consolidated.
+Don't write to dev.platform_data.  Device drivers must treat
+platform_data as immutable, and it is illegal to modify it.  If
+platform_data is used outside of the probe function, then the driver
+needs to be refactored to copy the data out of pdata and into the
+driver's private data structure so that the data can be sourced from
+either pdata or DT.
 
 g.
+
+>  	}
+>  
+>  	chip = kzalloc(sizeof(struct max8925_chip), GFP_KERNEL);
+> -- 
+> 1.5.6.5
+> 
