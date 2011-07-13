@@ -1,157 +1,87 @@
-From: "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 4/4] dt: i2c-omap: Convert i2c driver to use device tree
-Date: Thu, 14 Jul 2011 03:06:15 +0500
-Message-ID: <1310592975-25773-5-git-send-email-manjugk@ti.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] i2c: tegra: Fix compile when !CONFIG_OF
+Date: Thu, 14 Jul 2011 07:48:25 +0900
+Message-ID: <CACxGe6sVmpSTAxan3zRz-hQ=uoiVuekm-7r0L9_F5EWPPhS_3A@mail.gmail.com>
+References: <1310589418-15821-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1310589418-15821-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 14, 2011 at 5:36 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> When !CONFIG_OF, <linux/of.h> doesn't prototype of_get_property(), wh=
+ich
+> causes i2c-tegra.c to fail to compile. Make the references to this
+> function conditional to solve this.
+>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Grant, is this the correct way to solve this? Other solutions I can s=
+ee are:
+> a) Make ARM or Tegra select CONFIG_OF, now that ARM is moving to Devi=
+ce Tree.
+> b) Make <linux/of.h> provide dummy inline versions of its functions w=
+hen
+> =A0 !CONFIG_OF.
 
-The i2c-omap driver is converted for supporting both
-dt and non dt builds and driver is modified to use dt
-data partially.
+The solution you chose is sufficient for now, but turning on CONFIG_OF
+unconditionally for Tegra would be fine too since I hope to get the
+tegra board-dt patch merged for 3.1 (I hope to have the patch cleaned
+up and posted in the next 24 hrs).  I've been avoiding creating a
+dummy inline of of_get_property(), but not for any particularly strong
+reason other than to avoid bloating linux/of.h.  I probably would
+accept a patch that added it.
 
-Tested on OMAP3 beagle board.
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Signed-off-by: G, Manjunath Kondaiah <manjugk-l0cyMroinI0@public.gmane.org>
----
- drivers/i2c/busses/i2c-omap.c |   48 ++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 47 insertions(+), 1 deletions(-)
+g.
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index ae1545b..6d11a13 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -38,9 +38,13 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/of_i2c.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
- #include <linux/slab.h>
- #include <linux/i2c-omap.h>
- #include <linux/pm_runtime.h>
-+#include <plat/i2c.h>
- 
- /* I2C controller revisions */
- #define OMAP_I2C_REV_2			0x20
-@@ -972,6 +976,10 @@ static const struct i2c_algorithm omap_i2c_algo = {
- 	.functionality	= omap_i2c_func,
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id omap_i2c_of_match[];
-+#endif
-+
- static int __devinit
- omap_i2c_probe(struct platform_device *pdev)
- {
-@@ -979,10 +987,17 @@ omap_i2c_probe(struct platform_device *pdev)
- 	struct i2c_adapter	*adap;
- 	struct resource		*mem, *irq, *ioarea;
- 	struct omap_i2c_bus_platform_data *pdata = pdev->dev.platform_data;
-+#if defined(CONFIG_OF)
-+	const struct of_device_id *match;
-+#endif
- 	irq_handler_t isr;
- 	int r;
- 	u32 speed = 0;
- 
-+#if defined(CONFIG_OF)
-+	match = of_match_device(omap_i2c_of_match, &pdev->dev);
-+#endif
-+
- 	/* NOTE: driver uses the static register mapping */
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!mem) {
-@@ -1011,11 +1026,25 @@ omap_i2c_probe(struct platform_device *pdev)
- 	if (pdata != NULL) {
- 		speed = pdata->clkrate;
- 		dev->set_mpu_wkup_lat = pdata->set_mpu_wkup_lat;
-+#if defined(CONFIG_OF)
-+	} else if (pdev->dev.of_node) {
-+		u32 prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+									&prop))
-+			speed = prop/100;
-+		else
-+			speed = 100;
-+#else
- 	} else {
- 		speed = 100;	/* Default speed */
--		dev->set_mpu_wkup_lat = NULL;
-+#endif
- 	}
- 
-+#if defined(CONFIG_OF)
-+	/* TODO: remove this after DT depencies with hwmod are resolved */
-+	if (match)
-+		return 0;
-+#endif
- 	dev->speed = speed;
- 	dev->idle = 1;
- 	dev->dev = &pdev->dev;
-@@ -1096,7 +1125,9 @@ omap_i2c_probe(struct platform_device *pdev)
- 	strlcpy(adap->name, "OMAP I2C adapter", sizeof(adap->name));
- 	adap->algo = &omap_i2c_algo;
- 	adap->dev.parent = &pdev->dev;
-+#if defined(CONFIG_OF)
- 	adap->dev.of_node = pdev->dev.of_node;
-+#endif
- 
- 	/* i2c device drivers may be active on return from add_adapter() */
- 	adap->nr = pdev->id;
-@@ -1106,7 +1137,9 @@ omap_i2c_probe(struct platform_device *pdev)
- 		goto err_free_irq;
- 	}
- 
-+#if defined(CONFIG_OF)
- 	of_i2c_register_devices(adap);
-+#endif
- 
- 	return 0;
- 
-@@ -1162,6 +1195,16 @@ static int omap_i2c_resume(struct device *dev)
- 	return 0;
- }
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id omap_i2c_of_match[] = {
-+	{.compatible = "ti,omap3-i2c", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
-+#else
-+#define omap_i2c_of_match NULL
-+#endif
-+
- static struct dev_pm_ops omap_i2c_pm_ops = {
- 	.suspend = omap_i2c_suspend,
- 	.resume = omap_i2c_resume,
-@@ -1178,6 +1221,9 @@ static struct platform_driver omap_i2c_driver = {
- 		.name	= "omap_i2c",
- 		.owner	= THIS_MODULE,
- 		.pm	= OMAP_I2C_PM_OPS,
-+#if defined(CONFIG_OF)
-+		.of_match_table = omap_i2c_of_match,
-+#endif
- 	},
- };
- 
--- 
-1.7.4.1
+>
+> =A0drivers/i2c/busses/i2c-tegra.c | =A0 =A05 ++++-
+> =A01 files changed, 4 insertions(+), 1 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-=
+tegra.c
+> index 2440b74..5a18d6d 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -610,12 +610,15 @@ static int tegra_i2c_probe(struct platform_devi=
+ce *pdev)
+> =A0 =A0 =A0 =A0if (pdata) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0i2c_dev->bus_clk_rate =3D pdata->bus_c=
+lk_rate;
+>
+> - =A0 =A0 =A0 } else if (i2c_dev->dev->of_node) { =A0 =A0/* if there =
+is a device tree node ... */
+> + =A0 =A0 =A0 }
+> +#ifdef CONFIG_OF
+> + =A0 =A0 =A0 else if (i2c_dev->dev->of_node) { =A0 =A0/* if there is=
+ a device tree node ... */
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0prop =3D of_get_property(i2c_dev->dev-=
+>of_node,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0"clock=
+-frequency", NULL);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (prop)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0i2c_dev->bus_clk_rate =
+=3D be32_to_cpup(prop);
+> =A0 =A0 =A0 =A0}
+> +#endif
+>
+> =A0 =A0 =A0 =A0if (pdev->id =3D=3D 3)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0i2c_dev->is_dvc =3D 1;
+> --
+> 1.7.0.4
+>
+>
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
