@@ -1,79 +1,59 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH v3 4/4] mmc: sdhci-esdhc-imx: add device tree probe
- support
-Date: Wed, 13 Jul 2011 21:32:45 +0400
-Message-ID: <20110713173244.GA12004@oksana.dev.rtsoft.ru>
-References: <1309970870-13336-1-git-send-email-shawn.guo@linaro.org>
- <1309970870-13336-5-git-send-email-shawn.guo@linaro.org>
- <20110706210518.GD5371@ponder.secretlab.ca>
- <20110713155212.GB7875@oksana.dev.rtsoft.ru>
- <CACxGe6t27uvsoU6ZXYakh9ncyCeCvnqwKa5d2TQ3WUwG4xW4og@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] i2c: tegra: Use engineering names in DT compatible
+ property
+Date: Wed, 13 Jul 2011 10:59:53 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF049E834757@HQMAIL01.nvidia.com>
+References: <1309897306-22953-1-git-send-email-swarren@nvidia.com>
+ <20110706053941.GE9978@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6t27uvsoU6ZXYakh9ncyCeCvnqwKa5d2TQ3WUwG4xW4og@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Segher Boessenkool <segher@kernel.crashing.org>, patches@linaro.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110706053941.GE9978-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2011 at 01:36:39AM +0900, Grant Likely wrote:
-[...]
-> Only for irqs and regs.  gpios have never been automatically loaded
-> into resources.
+Grant Likely wrote at Tuesday, July 05, 2011 11:40 PM:
+> On Tue, Jul 05, 2011 at 02:21:46PM -0600, Stephen Warren wrote:
+> > Engineering names are more stable than marketing names. Hence, use them
+> > for Device Tree compatible properties instead.
+> >
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Grant, this is against devicetree/arm and also makes sense for
+> > devicetree/test.
+> 
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> Ben is the one to pick up this patch.
 
-Which doesn't mean we wouldn't want it sooner or later.
+I don't believe anyone ever sent a patch to Ben to add tegra_i2c_of_match
+to the driver; the OF support patch didn't include that part of the code.
+As such, Ben can't yet apply this to his tree. (Although I note this patch
+is in Grant's /arm and /test trees, which is probably good enough for now).
 
-> > - Any pros for using named resources in the device tree? I don't
-> > =C2=A0see any.
->=20
-> Human readability.  To know exactly what a gpio is intended to be use=
-d
-> for.  Particularly for the case where a device might not use all the
-> gpios that it could use.  Yes, the gpios property can have 'holes' in
-> it, but the observation was made by several people that it is easy to
-> get wrong.  I for one thing the concern was well justified.
+> >  drivers/i2c/busses/i2c-tegra.c |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> > index 8914bd1..99b1b6d 100644
+> > --- a/drivers/i2c/busses/i2c-tegra.c
+> > +++ b/drivers/i2c/busses/i2c-tegra.c
+> > @@ -716,7 +716,7 @@ static int tegra_i2c_resume(struct platform_device *pdev)
+> >  #if defined(CONFIG_OF)
+> >  /* Match table for of_platform binding */
+> >  static const struct of_device_id tegra_i2c_of_match[] __devinitconst = {
+> > -	{ .compatible = "nvidia,tegra250-i2c", },
+> > +	{ .compatible = "nvidia,tegra20-i2c", },
+> >  	{},
+> >  };
+> >  MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
+> > --
+> > 1.7.0.4
+> >
 
-The GPIO bindings are no harder to deal with than PCI memory bindings,
-not even close to that complexity. So I don't really see why you try
-to simplify GPIOs, but disagree on making the same for memory and
-interrupt resources.
-
-=46or example arch/powerpc/boot/dts/ebony.dts, 'mcmal' node has five
-interrupts (txeob, rxeob, serr, txde, rxde). Or, gianfar nodes have
-either three interrupts (tx, rx, err) or just one.
-
-The average user of 'gpios' has 1-2 entries (the noticeable exception
-is USB FHCI, which has 8 GPIOs).
-
-I.e., I don't see how GPIOs are special. I'm all for consistency,
-that's it. If that doesn't work for IRQs, then I want to understand
-why so. And if you explain why named resources are no good for IRQs,
-maybe I could use the same argument against named GPIOs? :-)
-
-Or it could be otherwise: we agree that named resources are good, and
-we should explicitly write when to use named and when to use anonymous
-resources.
-
-> > So, I suggest to at least discuss this stuff a little bit more
-> > before polluting device trees with dubious ideas.
->=20
-> It was discussed on list quite a while ago.
-
-I probably wasn't Cc'ed, can you point me to that thread?
-
-The last time I was Cc'ed on a such discussion, we (well who cared
-enough to 'vote') agreed* that we should wait with deploying named
-GPIOs scheme, and discuss it later. And here we are.
-
-The patch that added of_get_named_gpio() triggered no discussion
-at all, but I wasn't Cc'ed either.
-
-* http://lists.ozlabs.org/pipermail/linuxppc-dev/2008-October/064701.ht=
-ml
-
---=20
-Anton Vorontsov
-Email: cbouatmailru@gmail.com
+-- 
+nvpublic
