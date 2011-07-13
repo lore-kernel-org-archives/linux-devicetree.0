@@ -1,62 +1,77 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] input: xilinx_ps2: Add missing of_address.h header
-Date: Thu, 14 Jul 2011 00:27:12 +0900
-Message-ID: <CACxGe6vRZ4tCALpzFng2y9W_9zB3qQEntma+z292FXzDuYBRKQ@mail.gmail.com>
-References: <1310564781-5979-1-git-send-email-monstr@monstr.eu>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH v3 4/4] mmc: sdhci-esdhc-imx: add device tree probe
+ support
+Date: Wed, 13 Jul 2011 19:52:12 +0400
+Message-ID: <20110713155212.GB7875@oksana.dev.rtsoft.ru>
+References: <1309970870-13336-1-git-send-email-shawn.guo@linaro.org>
+ <1309970870-13336-5-git-send-email-shawn.guo@linaro.org>
+ <20110706210518.GD5371@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1310564781-5979-1-git-send-email-monstr@monstr.eu>
-Sender: linux-input-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110706210518.GD5371@ponder.secretlab.ca>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Gibson <david@gibson.dropbear.id.au>, Segher Boessenkool <segher@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2011 at 10:46 PM, Michal Simek <monstr@monstr.eu> wrote=
-:
-> Add missing header.
->
-> Error log:
-> CC =A0 =A0 =A0drivers/input/serio/xilinx_ps2.o
-> drivers/input/serio/xilinx_ps2.c: In function 'xps2_of_probe':
-> drivers/input/serio/xilinx_ps2.c:249: error: implicit declaration of =
-function 'of_address_to_resource'
->
-> Signed-off-by: Michal Simek <monstr@monstr.eu>
+Hi,
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+On Wed, Jul 06, 2011 at 03:05:18PM -0600, Grant Likely wrote:
+> On Thu, Jul 07, 2011 at 12:47:50AM +0800, Shawn Guo wrote:
+> > The patch adds device tree probe support for sdhci-esdhc-imx driver.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > Cc: Wolfram Sang <w.sang@pengutronix.de>
+> > Cc: Chris Ball <cjb@laptop.org>
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+[...]
+> > +Optional properties:
+> > +- fsl,card-wired : Indicate the card is wired to host permanently
+> > +- fsl,cd-internal : Indicate to use controller internal card detection
+> > +- fsl,wp-internal : Indicate to use controller internal write protection
+> > +- cd-gpios : Specify GPIOs for card detection
+> > +- wp-gpios : Specify GPIOs for write protection
+[...]
+> > +	cd-gpios = <&gpio0 6 0>; /* GPIO1_6 */
+> > +	wp-gpios = <&gpio0 5 0>; /* GPIO1_5 */
 
-> ---
-> =A0drivers/input/serio/xilinx_ps2.c | =A0 =A02 +-
-> =A01 files changed, 1 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/x=
-ilinx_ps2.c
-> index 80baa53..d64c5a4 100644
-> --- a/drivers/input/serio/xilinx_ps2.c
-> +++ b/drivers/input/serio/xilinx_ps2.c
-> @@ -23,7 +23,7 @@
-> =A0#include <linux/init.h>
-> =A0#include <linux/list.h>
-> =A0#include <linux/io.h>
-> -
-> +#include <linux/of_address.h>
-> =A0#include <linux/of_device.h>
-> =A0#include <linux/of_platform.h>
->
-> --
-> 1.5.5.6
->
->
+Is there any particular reason why we started using named GPIOs
+in the device tree? To me, that's quite drastic change... should
+we start using named regs and interrupts as well? Personally, I
+don't think that the idea is great, as now you don't know where
+to expect memory resources, interrupt resources and, eventually
+GPIO resources.
 
+Just a few disadvantages off the top of my head:
 
+- You can't statically validate your device tree for correctness.
+  Today dtc checks #{address,size}-cells sanity for 'regs' and
+  'ranges';
+- You can't automatically convert named resources into 'struct
+  resource *', as we do for platform devices now;
+- Any pros for using named resources in the device tree? I don't
+  see any.
 
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, I suggest to at least discuss this stuff a little bit more
+before polluting device trees with dubious ideas.
+
+p.s.
+
+As for this particular patch, I really don't see why we should
+use named GPIOs. For consistency, I'd suggest to reuse bindings
+from Documentation/devicetree/bindings/mmc/mmc-spi-slot.txt.
+
+Plus, fsl,cd-internal and fsl,wp-internal is not needed: either
+you specify GPIOs or not. That already signals whether driver
+should use internal detection (i.e. 'present' register) or
+external (i.e. GPIO).
+
+And also, why {cd,wp}-gpioS (plural)?
+
+-- 
+Anton Vorontsov
+Email: cbouatmailru@gmail.com
