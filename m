@@ -1,54 +1,47 @@
-From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-Subject: Re: [PATCH v2] mtd: dataflash: add device tree probe support
-Date: Thu, 14 Jul 2011 21:52:02 +0400
-Message-ID: <20110714175013.GA17845@belfalas.ww600.siemens.net>
-References: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
-	<1310658757-17018-1-git-send-email-shawn.guo@linaro.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] i2c: tegra: Use engineering names in DT compatible
+ property
+Date: Thu, 14 Jul 2011 11:09:47 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF049E834A2E@HQMAIL01.nvidia.com>
+References: <1309897306-22953-1-git-send-email-swarren@nvidia.com>
+ <20110706053941.GE9978@ponder.secretlab.ca>
+ <74CDBE0F657A3D45AFBB94109FB122FF049E834757@HQMAIL01.nvidia.com>
+ <CACxGe6tojgLSmHTxzGn3hZZVqiR_z6xbWrazYekm0TwQoWK5eA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1310658757-17018-1-git-send-email-shawn.guo@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
-	<mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
-	<mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Artem Bityutskiy <Artem.Bityutskiy@nokia.com>, patches@linaro.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6tojgLSmHTxzGn3hZZVqiR_z6xbWrazYekm0TwQoWK5eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2011 at 11:52:37PM +0800, Shawn Guo wrote:
-> It adds device tree probe support for mtd_dataflash driver.
-> =
+Grant Likely wrote at Wednesday, July 13, 2011 5:34 PM:
+> On Thu, Jul 14, 2011 at 2:59 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+...
+> > I don't believe anyone ever sent a patch to Ben to add tegra_i2c_of_match
+> > to the driver; the OF support patch didn't include that part of the code.
+> > As such, Ben can't yet apply this to his tree. (Although I note this patch
+> > is in Grant's /arm and /test trees, which is probably good enough for now).
+> 
+> Hmmm, I thought it had been done.  It certainly is ready to go in.  Do
+> you want to put together a roll-up patch that includes all the
+> required changes and post it again? (although double check linux-next
+> first).
 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Artem Bityutskiy <Artem.Bityutskiy@nokia.com>
-> ---
-> Changes since v1:
->  * Add "atmel,at45xxx" into the match table
->  * Add binding document
+When John Bonesio posted the patch to add DT support to i2c-tegra.c, the first
+version of the patch was missing the match table chunk. A few days later, an
+updated version was posted that added the missing chunk; see:
 
-I=B4m sorry for being unclean on this. Device family is just at45,
-so I=B4d suggest the following compatibility list:
-"atmel,at45d789000", "atmel,at45"
+http://groups.google.com/group/linux.kernel/browse_thread/thread/d2596e8dee819b0f/c8aa04183ea2331e?show_docid=c8aa04183ea2331e
 
-You might want to add "atmel,dataflash" or "mtd,dataflash", but I see
-no point in that.
+It looks like the first version of the patch has actually been applied to Ben's
+next-i2c branch rather than the updated version.
 
--- =
+I guess it's simplest if I just post a patch that adds the missing chunk based
+on the latest next-i2c tree. I'll go do that.
 
-With best wishes
-Dmitry
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+nvpublic
