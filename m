@@ -1,148 +1,113 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] omap2+: Use Kconfig symbol in Makefile instead of obj-y
-Date: Thu, 14 Jul 2011 01:53:29 -0700
-Message-ID: <20110714085328.GN5783@atomide.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
- <1310592975-25773-4-git-send-email-manjugk@ti.com>
- <CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] mtd: dataflash: add device tree probe support
+Date: Thu, 14 Jul 2011 23:52:37 +0800
+Message-ID: <1310658757-17018-1-git-send-email-shawn.guo@linaro.org>
+References: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1310283313-32087-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As noted by Grant Likely <grant.likely@secretlab.ca>, omap2+ Makefile unnecessarily
-repeats entries for common device init code instead of using Kconfig symbol.
+It adds device tree probe support for mtd_dataflash driver.
 
-Remove references to hsmmc.o and board-flash.o. Also omap_phy_internal.o
-references can be removed once it has some Kconfig symbol to use.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 ---
-* Grant Likely <grant.likely@secretlab.ca> [110713 16:10]:
-> 
-> This is an odd construct.  Tony, why does each board add hsmmc to the
-> oby-y variable instead of it having its own kconfig symbol?
+Changes since v1:
+ * Add "atmel,at45xxx" into the match table
+ * Add binding document
 
-Heh that's true. Something that got added for one board got cloned
-all over the Makefile. Here's a patch to simplify that.
+ .../devicetree/bindings/mtd/atmel-dataflash.txt    |   14 ++++++++++++++
+ drivers/mtd/devices/mtd_dataflash.c                |   13 ++++++++++++-
+ 2 files changed, 26 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/atmel-dataflash.txt
 
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index ff1466f..9c49a86 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -175,78 +175,66 @@ endif
- # Specific board support
- obj-$(CONFIG_MACH_OMAP_GENERIC)		+= board-generic.o
- obj-$(CONFIG_MACH_OMAP_H4)		+= board-h4.o
--obj-$(CONFIG_MACH_OMAP_2430SDP)		+= board-2430sdp.o \
--					   hsmmc.o
-+obj-$(CONFIG_MACH_OMAP_2430SDP)		+= board-2430sdp.o
- obj-$(CONFIG_MACH_OMAP_APOLLON)		+= board-apollon.o
--obj-$(CONFIG_MACH_OMAP3_BEAGLE)		+= board-omap3beagle.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_DEVKIT8000)     	+= board-devkit8000.o \
--                                           hsmmc.o
--obj-$(CONFIG_MACH_OMAP_LDP)		+= board-ldp.o \
--					   board-flash.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OMAP3530_LV_SOM)      += board-omap3logic.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OMAP3_TORPEDO)        += board-omap3logic.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OVERO)		+= board-overo.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OMAP3EVM)		+= board-omap3evm.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OMAP3_PANDORA)	+= board-omap3pandora.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OMAP_3430SDP)		+= board-3430sdp.o \
--					   hsmmc.o \
--					   board-flash.o
-+obj-$(CONFIG_MACH_OMAP3_BEAGLE)		+= board-omap3beagle.o
-+obj-$(CONFIG_MACH_DEVKIT8000)     	+= board-devkit8000.o
-+obj-$(CONFIG_MACH_OMAP_LDP)		+= board-ldp.o
-+obj-$(CONFIG_MACH_OMAP3530_LV_SOM)      += board-omap3logic.o
-+obj-$(CONFIG_MACH_OMAP3_TORPEDO)        += board-omap3logic.o
-+obj-$(CONFIG_MACH_ENCORE)		+= board-omap3encore.o
-+obj-$(CONFIG_MACH_OVERO)		+= board-overo.o
-+obj-$(CONFIG_MACH_OMAP3EVM)		+= board-omap3evm.o
-+obj-$(CONFIG_MACH_OMAP3_PANDORA)	+= board-omap3pandora.o
-+obj-$(CONFIG_MACH_OMAP_3430SDP)		+= board-3430sdp.o
- obj-$(CONFIG_MACH_NOKIA_N8X0)		+= board-n8x0.o
- obj-$(CONFIG_MACH_NOKIA_RM680)		+= board-rm680.o \
--					   sdram-nokia.o \
--					   hsmmc.o
-+					   sdram-nokia.o
- obj-$(CONFIG_MACH_NOKIA_RX51)		+= board-rx51.o \
- 					   sdram-nokia.o \
- 					   board-rx51-peripherals.o \
--					   board-rx51-video.o \
--					   hsmmc.o
-+					   board-rx51-video.o
- obj-$(CONFIG_MACH_OMAP_ZOOM2)		+= board-zoom.o \
- 					   board-zoom-peripherals.o \
- 					   board-zoom-display.o \
--					   board-flash.o \
--					   hsmmc.o \
- 					   board-zoom-debugboard.o
- obj-$(CONFIG_MACH_OMAP_ZOOM3)		+= board-zoom.o \
- 					   board-zoom-peripherals.o \
- 					   board-zoom-display.o \
--					   board-flash.o \
--					   hsmmc.o \
- 					   board-zoom-debugboard.o
- obj-$(CONFIG_MACH_OMAP_3630SDP)		+= board-3630sdp.o \
- 					   board-zoom-peripherals.o \
--					   board-zoom-display.o \
--					   board-flash.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_CM_T35)		+= board-cm-t35.o \
--					   hsmmc.o
-+					   board-zoom-display.o
-+obj-$(CONFIG_MACH_CM_T35)		+= board-cm-t35.o
- obj-$(CONFIG_MACH_CM_T3517)		+= board-cm-t3517.o
--obj-$(CONFIG_MACH_IGEP0020)		+= board-igep0020.o \
--					   hsmmc.o
--obj-$(CONFIG_MACH_OMAP3_TOUCHBOOK)	+= board-omap3touchbook.o \
--					   hsmmc.o
-+obj-$(CONFIG_MACH_IGEP0020)		+= board-igep0020.o
-+obj-$(CONFIG_MACH_OMAP3_TOUCHBOOK)	+= board-omap3touchbook.o
- obj-$(CONFIG_MACH_OMAP_4430SDP)		+= board-4430sdp.o \
--					   hsmmc.o \
- 					   omap_phy_internal.o
- obj-$(CONFIG_MACH_OMAP4_PANDA)		+= board-omap4panda.o \
--					   hsmmc.o \
-+					   omap_phy_internal.o
+diff --git a/Documentation/devicetree/bindings/mtd/atmel-dataflash.txt b/Documentation/devicetree/bindings/mtd/atmel-dataflash.txt
+new file mode 100644
+index 0000000..3783962
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/atmel-dataflash.txt
+@@ -0,0 +1,14 @@
++* Atmel Data Flash
 +
-+obj-$(CONFIG_MACH_PCM049)		+= board-omap4pcm049.o \
- 					   omap_phy_internal.o
++Required properties:
++- compatible : "atmel,<model>", "atmel,<series>", "atmel,dataflash".
++
++Example:
++
++flash@1 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "atmel,at45db321d", "atmel,at45xxx", "atmel,dataflash";
++	spi-max-frequency = <25000000>;
++	reg = <1>;
++};
+diff --git a/drivers/mtd/devices/mtd_dataflash.c b/drivers/mtd/devices/mtd_dataflash.c
+index 8f6b02c..8e091b0 100644
+--- a/drivers/mtd/devices/mtd_dataflash.c
++++ b/drivers/mtd/devices/mtd_dataflash.c
+@@ -24,6 +24,8 @@
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/partitions.h>
  
- obj-$(CONFIG_MACH_OMAP3517EVM)		+= board-am3517evm.o \
--					   omap_phy_internal.o \
-+					   omap_phy_internal.o
++#include <linux/of.h>
++#include <linux/of_device.h>
  
- obj-$(CONFIG_MACH_CRANEBOARD)		+= board-am3517crane.o
+ /*
+  * DataFlash is a kind of SPI flash.  Most AT45 chips have two buffers in
+@@ -98,6 +100,12 @@ struct dataflash {
+ 	struct mtd_info		mtd;
+ };
  
--obj-$(CONFIG_MACH_SBC3530)		+= board-omap3stalker.o \
--					   hsmmc.o
-+obj-$(CONFIG_MACH_SBC3530)		+= board-omap3stalker.o
- obj-$(CONFIG_MACH_TI8168EVM)		+= board-ti8168evm.o
++static const struct of_device_id dataflash_dt_ids[] = {
++	{ .compatible = "atmel,at45xxx", },
++	{ .compatible = "atmel,dataflash", },
++	{ /* sentinel */ }
++};
 +
- # Platform specific device init code
-+
-+omap-flash-$(CONFIG_MTD_NAND_OMAP2)	:= board-flash.o
-+omap-flash-$(CONFIG_MTD_ONENAND_OMAP2)	:= board-flash.o
-+obj-y					+= $(omap-flash-y) $(omap-flash-m)
-+
-+omap-hsmmc-$(CONFIG_MMC_OMAP_HS)	:= hsmmc.o
-+obj-y					+= $(omap-hsmmc-m) $(omap-hsmmc-y)
-+
-+
- usbfs-$(CONFIG_ARCH_OMAP_OTG)		:= usb-fs.o
- obj-y					+= $(usbfs-m) $(usbfs-y)
- obj-y					+= usb-musb.o
+ /* ......................................................................... */
+ 
+ /*
+@@ -634,6 +642,7 @@ add_dataflash_otp(struct spi_device *spi, char *name,
+ {
+ 	struct dataflash		*priv;
+ 	struct mtd_info			*device;
++	struct mtd_part_parser_data	ppdata;
+ 	struct flash_platform_data	*pdata = spi->dev.platform_data;
+ 	char				*otp_tag = "";
+ 	int				err = 0;
+@@ -675,7 +684,8 @@ add_dataflash_otp(struct spi_device *spi, char *name,
+ 			pagesize, otp_tag);
+ 	dev_set_drvdata(&spi->dev, priv);
+ 
+-	err = mtd_device_parse_register(device, NULL, 0,
++	ppdata.of_node = spi->dev.of_node;
++	err = mtd_device_parse_register(device, NULL, &ppdata,
+ 			pdata ? pdata->parts : NULL,
+ 			pdata ? pdata->nr_parts : 0);
+ 
+@@ -926,6 +936,7 @@ static struct spi_driver dataflash_driver = {
+ 		.name		= "mtd_dataflash",
+ 		.bus		= &spi_bus_type,
+ 		.owner		= THIS_MODULE,
++		.of_match_table = dataflash_dt_ids,
+ 	},
+ 
+ 	.probe		= dataflash_probe,
+-- 
+1.7.4.1
