@@ -1,128 +1,148 @@
-From: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Subject: Re: [PATCH 1/4] dt: omap3: add SoC file for handling i2c controllers
-Date: Thu, 14 Jul 2011 09:21:15 +0530
-Message-ID: <20110714035115.GB26506@manju-desktop>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] omap2+: Use Kconfig symbol in Makefile instead of obj-y
+Date: Thu, 14 Jul 2011 01:53:29 -0700
+Message-ID: <20110714085328.GN5783@atomide.com>
 References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
- <1310592975-25773-2-git-send-email-manjugk@ti.com>
- <CACxGe6u3D=ZgK2TpLP7waCwH=MA_5UR+YBRSgVE9QBVyvkF32A@mail.gmail.com>
- <CACxGe6vuX4286cN7sNa=3RsWeGzNmNBGVqeqKvcoyiLU9Z9A9A@mail.gmail.com>
+ <1310592975-25773-4-git-send-email-manjugk@ti.com>
+ <CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6vuX4286cN7sNa=3RsWeGzNmNBGVqeqKvcoyiLU9Z9A9A@mail.gmail.com>
+In-Reply-To: <CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, ben-linux@fluff.org
+Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2011 at 07:58:35AM +0900, Grant Likely wrote:
-> On Thu, Jul 14, 2011 at 7:57 AM, Grant Likely <grant.likely@secretlab=
-=2Eca> wrote:
-> > On Thu, Jul 14, 2011 at 7:06 AM, G, Manjunath Kondaiah <manjugk@ti.=
-com> wrote:
-> >>
-> >> Add omap3 SoC file for handling omap3 SoC i2c controllers existing
-> >> on l4-core bus.
-> >>
-> >> Out of three i2c controllers, first i2c controller is interfaced w=
-ith
-> >> PMIC on all the boards of OMAP3. The clock for i2c controllers are
-> >> controlled through omap hwmod framework hence first i2c controller
-> >> device registration through dt is disabled till hwmod dependencies
-> >> are resolved.
-> >>
-> >> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
-> >> ---
-> >> =A0arch/arm/boot/dts/omap3-soc.dtsi | =A0 65 +++++++++++++++++++++=
-+++++++++++++++++
-> >> =A01 files changed, 65 insertions(+), 0 deletions(-)
-> >> =A0create mode 100644 arch/arm/boot/dts/omap3-soc.dtsi
-> >>
-> >> diff --git a/arch/arm/boot/dts/omap3-soc.dtsi b/arch/arm/boot/dts/=
-omap3-soc.dtsi
-> >> new file mode 100644
-> >> index 0000000..f186a32
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/omap3-soc.dtsi
-> >> @@ -0,0 +1,65 @@
-> >> +/*
-> >> + * Device Tree Source for OMAP3 SoC
-> >> + *
-> >> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www=
-=2Eti.com/
-> >> + *
-> >> + * This file is licensed under the terms of the GNU General Publi=
-c License
-> >> + * version 2. =A0This program is licensed "as is" without any war=
-ranty of any
-> >> + * kind, whether express or implied.
-> >> + */
-> >> +
-> >> +/dts-v1/;
-> >> +/include/ "skeleton.dtsi"
-> >> +
-> >> +/ {
-> >> + =A0 =A0 =A0 #address-cells =3D <1>;
-> >> + =A0 =A0 =A0 #size-cells =3D <1>;
-> >> + =A0 =A0 =A0 model =3D "ti,omap3";
-> >
-> > You can drop the model property here since this doesn't define a bo=
-ard.
-> >
-> >> + =A0 =A0 =A0 compatible =3D "ti,omap3";
-> >> +
-> >> + =A0 =A0 =A0 intc: interrupt-controller@0x48200000 {
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap3-intc", "arm=
-,intc";
-> >
-> > Which arm intc controller? =A0For any new 'compatible' value you de=
-fine,
-> > the patch needs to include documentation for it in
-> > Documentation/devicetree/bindings.
-> >
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupt-controller;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #interrupt-cells =3D <1>;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x48200000 0x1000>;
-> >> + =A0 =A0 =A0 };
-> >> +
-> >> + =A0 =A0 =A0 l4-core {
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,l4-core";
-> >
-> > Probably should be "ti,omap3-l4-core"?
-> >
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges =3D <0 0x48000000 0x1000000>;
-> >> +
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c@1 {
->=20
-> This name is wrong.  The address portion of the name must match the
-> address in the first entry of the 'reg' property.  So, that would be:
-> "i2c@70000".
->=20
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <=
-1>;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,o=
-map3-i2c";
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x70000 0x1=
-00>;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D < 88 =
->;
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D "disabled=
-";
-> >
-> > Drop the 'status' properties. =A0I know the current tegra code does
-> > this, but I'd prefer devices to be enabled by default and for board=
-s
-> > to explicitly disable them instead of the other way around.
-ok. I will use the convention.
+As noted by Grant Likely <grant.likely@secretlab.ca>, omap2+ Makefile unnecessarily
+repeats entries for common device init code instead of using Kconfig symbol.
 
--Manjunath
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Remove references to hsmmc.o and board-flash.o. Also omap_phy_internal.o
+references can be removed once it has some Kconfig symbol to use.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com
+---
+* Grant Likely <grant.likely@secretlab.ca> [110713 16:10]:
+> 
+> This is an odd construct.  Tony, why does each board add hsmmc to the
+> oby-y variable instead of it having its own kconfig symbol?
+
+Heh that's true. Something that got added for one board got cloned
+all over the Makefile. Here's a patch to simplify that.
+
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index ff1466f..9c49a86 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -175,78 +175,66 @@ endif
+ # Specific board support
+ obj-$(CONFIG_MACH_OMAP_GENERIC)		+= board-generic.o
+ obj-$(CONFIG_MACH_OMAP_H4)		+= board-h4.o
+-obj-$(CONFIG_MACH_OMAP_2430SDP)		+= board-2430sdp.o \
+-					   hsmmc.o
++obj-$(CONFIG_MACH_OMAP_2430SDP)		+= board-2430sdp.o
+ obj-$(CONFIG_MACH_OMAP_APOLLON)		+= board-apollon.o
+-obj-$(CONFIG_MACH_OMAP3_BEAGLE)		+= board-omap3beagle.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_DEVKIT8000)     	+= board-devkit8000.o \
+-                                           hsmmc.o
+-obj-$(CONFIG_MACH_OMAP_LDP)		+= board-ldp.o \
+-					   board-flash.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OMAP3530_LV_SOM)      += board-omap3logic.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OMAP3_TORPEDO)        += board-omap3logic.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OVERO)		+= board-overo.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OMAP3EVM)		+= board-omap3evm.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OMAP3_PANDORA)	+= board-omap3pandora.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OMAP_3430SDP)		+= board-3430sdp.o \
+-					   hsmmc.o \
+-					   board-flash.o
++obj-$(CONFIG_MACH_OMAP3_BEAGLE)		+= board-omap3beagle.o
++obj-$(CONFIG_MACH_DEVKIT8000)     	+= board-devkit8000.o
++obj-$(CONFIG_MACH_OMAP_LDP)		+= board-ldp.o
++obj-$(CONFIG_MACH_OMAP3530_LV_SOM)      += board-omap3logic.o
++obj-$(CONFIG_MACH_OMAP3_TORPEDO)        += board-omap3logic.o
++obj-$(CONFIG_MACH_ENCORE)		+= board-omap3encore.o
++obj-$(CONFIG_MACH_OVERO)		+= board-overo.o
++obj-$(CONFIG_MACH_OMAP3EVM)		+= board-omap3evm.o
++obj-$(CONFIG_MACH_OMAP3_PANDORA)	+= board-omap3pandora.o
++obj-$(CONFIG_MACH_OMAP_3430SDP)		+= board-3430sdp.o
+ obj-$(CONFIG_MACH_NOKIA_N8X0)		+= board-n8x0.o
+ obj-$(CONFIG_MACH_NOKIA_RM680)		+= board-rm680.o \
+-					   sdram-nokia.o \
+-					   hsmmc.o
++					   sdram-nokia.o
+ obj-$(CONFIG_MACH_NOKIA_RX51)		+= board-rx51.o \
+ 					   sdram-nokia.o \
+ 					   board-rx51-peripherals.o \
+-					   board-rx51-video.o \
+-					   hsmmc.o
++					   board-rx51-video.o
+ obj-$(CONFIG_MACH_OMAP_ZOOM2)		+= board-zoom.o \
+ 					   board-zoom-peripherals.o \
+ 					   board-zoom-display.o \
+-					   board-flash.o \
+-					   hsmmc.o \
+ 					   board-zoom-debugboard.o
+ obj-$(CONFIG_MACH_OMAP_ZOOM3)		+= board-zoom.o \
+ 					   board-zoom-peripherals.o \
+ 					   board-zoom-display.o \
+-					   board-flash.o \
+-					   hsmmc.o \
+ 					   board-zoom-debugboard.o
+ obj-$(CONFIG_MACH_OMAP_3630SDP)		+= board-3630sdp.o \
+ 					   board-zoom-peripherals.o \
+-					   board-zoom-display.o \
+-					   board-flash.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_CM_T35)		+= board-cm-t35.o \
+-					   hsmmc.o
++					   board-zoom-display.o
++obj-$(CONFIG_MACH_CM_T35)		+= board-cm-t35.o
+ obj-$(CONFIG_MACH_CM_T3517)		+= board-cm-t3517.o
+-obj-$(CONFIG_MACH_IGEP0020)		+= board-igep0020.o \
+-					   hsmmc.o
+-obj-$(CONFIG_MACH_OMAP3_TOUCHBOOK)	+= board-omap3touchbook.o \
+-					   hsmmc.o
++obj-$(CONFIG_MACH_IGEP0020)		+= board-igep0020.o
++obj-$(CONFIG_MACH_OMAP3_TOUCHBOOK)	+= board-omap3touchbook.o
+ obj-$(CONFIG_MACH_OMAP_4430SDP)		+= board-4430sdp.o \
+-					   hsmmc.o \
+ 					   omap_phy_internal.o
+ obj-$(CONFIG_MACH_OMAP4_PANDA)		+= board-omap4panda.o \
+-					   hsmmc.o \
++					   omap_phy_internal.o
++
++obj-$(CONFIG_MACH_PCM049)		+= board-omap4pcm049.o \
+ 					   omap_phy_internal.o
+ 
+ obj-$(CONFIG_MACH_OMAP3517EVM)		+= board-am3517evm.o \
+-					   omap_phy_internal.o \
++					   omap_phy_internal.o
+ 
+ obj-$(CONFIG_MACH_CRANEBOARD)		+= board-am3517crane.o
+ 
+-obj-$(CONFIG_MACH_SBC3530)		+= board-omap3stalker.o \
+-					   hsmmc.o
++obj-$(CONFIG_MACH_SBC3530)		+= board-omap3stalker.o
+ obj-$(CONFIG_MACH_TI8168EVM)		+= board-ti8168evm.o
++
+ # Platform specific device init code
++
++omap-flash-$(CONFIG_MTD_NAND_OMAP2)	:= board-flash.o
++omap-flash-$(CONFIG_MTD_ONENAND_OMAP2)	:= board-flash.o
++obj-y					+= $(omap-flash-y) $(omap-flash-m)
++
++omap-hsmmc-$(CONFIG_MMC_OMAP_HS)	:= hsmmc.o
++obj-y					+= $(omap-hsmmc-m) $(omap-hsmmc-y)
++
++
+ usbfs-$(CONFIG_ARCH_OMAP_OTG)		:= usb-fs.o
+ obj-y					+= $(usbfs-m) $(usbfs-y)
+ obj-y					+= usb-musb.o
