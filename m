@@ -1,252 +1,266 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v2] dt: add of_alias_scan and of_alias_get_id
-Date: Fri, 15 Jul 2011 12:37:27 -0600
-Message-ID: <20110715183638.3669.32838.stgit@ponder>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: exynos4: Add a new Exynos4210 device tree
+	enabled machine
+Date: Fri, 15 Jul 2011 12:49:35 -0600
+Message-ID: <20110715184935.GD2833@ponder.secretlab.ca>
+References: <1310730128-4243-1-git-send-email-thomas.abraham@linaro.org>
+	<1310730128-4243-4-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1310730128-4243-4-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shawn Guo <shawn.guo@linaro.org>
+On Fri, Jul 15, 2011 at 05:12:08PM +0530, Thomas Abraham wrote:
+> Basic Exynos4210 machine with device tree support that can boot on a
+> Exynos4210 processor based board and bring up the console.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-The patch adds function of_alias_scan to populate a global lookup
-table with the properties of 'aliases' node and function
-of_alias_get_id for drivers to find alias id from the lookup table.
+Hey Thomas,
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-[grant.likey: add locking and rework parse loop]
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
----
+The patch looks pretty good.  Comments below.
 
-Hi Shawn,
+> ---
+>  Documentation/devicetree/bindings/arm/samsung.txt |   10 +-
+>  arch/arm/mach-exynos4/Kconfig                     |   10 ++
+>  arch/arm/mach-exynos4/Makefile                    |    1 +
+>  arch/arm/mach-exynos4210-dt.c                     |  128 +++++++++++++++++++++
 
-I've reworked as discussed on the ML.  Please test and let me know if
-it still works for you.
+This file is getting put in the wrong place.
 
-g.
+>  4 files changed, 144 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/mach-exynos4210-dt.c
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung.txt b/Documentation/devicetree/bindings/arm/samsung.txt
+> index 594cb97..5b123dc 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung.txt
+> @@ -1,9 +1,9 @@
+> -Samsung Exynos4 S5PV310 SoC based SMDKV310 eval board
+> +Samsung Exynos4210 architecture based SMDKV310 eval board
+>  
+> -    SMDKV310 eval board is based on S5PV310 SoC which belongs to
+> -    Samsung's Exynos4 family of application processors.
+> +    SMDKV310 eval board is based on Samsung's Exynos4 family of
+> +    application processors.
+>  
+>  Required root node properties:
+> -    - compatible = "samsung,smdkv310","samsung,s5pv310"
+> +    - compatible = "samsung,smdkv310", "samsung,exynos4210'.
+>          (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
+> -        (b) "samsung,s5pv310"  - for boards based on S5PV310 SoC.
+> +	(c) "samsung,exynos4210" - for boards based on Exynos4210 processor.
 
- drivers/of/base.c      |  130 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/of/fdt.c       |    4 +
- include/linux/of.h     |    8 +++
- include/linux/of_fdt.h |    1 
- 4 files changed, 141 insertions(+), 2 deletions(-)
+Inconsistent whitespace.  The rest of this comment block is using
+spaces for indentation.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b8b65fd..6d9adc6 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -17,14 +17,39 @@
-  *      as published by the Free Software Foundation; either version
-  *      2 of the License, or (at your option) any later version.
-  */
-+#include <linux/ctype.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
- #include <linux/proc_fs.h>
- 
-+/**
-+ * struct alias_prop - Alias property in 'aliases' node
-+ * @link:	List node to link the structure in aliases_lookup list
-+ * @alias:	Alias property name
-+ * @np:		Pointer to device_node that the alias stands for
-+ * @id:		Index value from end of alias name
-+ * @stem:	Alias string without the index
-+ *
-+ * The structure represents one alias property of 'aliases' node as
-+ * an entry in aliases_lookup list.
-+ */
-+struct alias_prop {
-+	struct list_head link;
-+	const char *alias;
-+	struct device_node *np;
-+	int id;
-+	char stem[0];
-+};
-+
-+static LIST_HEAD(aliases_lookup);
-+
- struct device_node *allnodes;
- struct device_node *of_chosen;
-+struct device_node *of_aliases;
-+
-+static DEFINE_MUTEX(of_aliases_mutex);
- 
- /* use when traversing tree through the allnext, child, sibling,
-  * or parent members of struct device_node.
-@@ -980,3 +1005,108 @@ out_unlock:
- }
- #endif /* defined(CONFIG_OF_DYNAMIC) */
- 
-+static void of_alias_add(struct alias_prop *ap, struct device_node *np,
-+			 int id, const char *stem, int stem_len)
-+{
-+	ap->id = id;
-+	strncpy(ap->stem, stem, stem_len);
-+	ap->stem[stem_len] = 0;
-+	list_add_tail(&ap->link, &aliases_lookup);
-+	pr_debug("adding DT alias:%s: stem=%s id=%i node=%s\n",
-+		 ap->alias, ap->stem, ap->id, np ? np->full_name : NULL);
-+}
-+
-+/**
-+ * of_alias_scan() - Scan all properties of 'aliases' node
-+ *
-+ * The function scans all the properties of 'aliases' node and populate
-+ * the the global lookup table with the properties.  It returns the
-+ * number of alias_prop found, or error code in error case.
-+ */
-+__init void of_alias_scan(void)
-+{
-+	struct property *pp;
-+
-+	if (!of_aliases)
-+		return;
-+
-+	for_each_property(pp, of_aliases->properties) {
-+		const char *start = pp->name;
-+		const char *end = start + strlen(start);
-+		struct device_node *np;
-+		struct alias_prop *ap;
-+		int id, len;
-+
-+		/* Skip those we do not want to proceed */
-+		if (!strcmp(pp->name, "name") ||
-+		    !strcmp(pp->name, "phandle") ||
-+		    !strcmp(pp->name, "linux,phandle"))
-+			continue;
-+
-+		np = of_find_node_by_path(pp->value);
-+		if (!np)
-+			continue;
-+
-+		/* walk the alias backwards to extract the id and work out
-+		 * the 'stem' string */
-+		while (isdigit(*(end-1)) && end > start)
-+			end--;
-+		len = end - start;
-+		id = strlen(end) ? simple_strtoul(end, NULL, 10) : -1;
-+
-+		/* Allocate an alias_prop with enough space for the stem */
-+		ap = early_init_dt_alloc_memory_arch(sizeof(*ap) + len + 1, 4);
-+		if (!ap)
-+			continue;
-+		ap->alias = start;
-+		of_alias_add(ap, np, id, start, len);
-+	}
-+}
-+
-+/**
-+ * of_alias_get_id() - Get alias id for the given device_node
-+ * @np:		Pointer to the given device_node
-+ * @stem:	Alias stem of the given device_node
-+ *
-+ * The function travels the lookup table to get alias id for the given
-+ * device_node and alias stem.  It returns the alias id if find it.
-+ * If not, dynamically creates one in the lookup table and returns it,
-+ * or returns error code if fail to create.
-+ */
-+int of_alias_get_id(struct device_node *np, const char *stem)
-+{
-+	struct alias_prop *app;
-+	int id = 0;
-+	bool found = false;
-+
-+	mutex_lock(&of_aliases_mutex);
-+	list_for_each_entry(app, &aliases_lookup, link) {
-+		if (strcmp(app->stem, stem) != 0)
-+			continue;
-+
-+		if (np == app->np) {
-+			found = true;
-+			id = app->id;
-+			break;
-+		}
-+
-+		if (id <= app->id)
-+			id = app->id + 1;
-+	}
-+
-+	/* If an id is not found, then allocate a new one */
-+	if (!found) {
-+		app = kzalloc(sizeof(*app) + strlen(stem) + 1, 4);
-+		if (!app) {
-+			id = -ENODEV;
-+			goto out;
-+		}
-+		of_alias_add(app, np, id, stem, strlen(stem));
-+	}
-+
-+ out:
-+	mutex_unlock(&of_aliases_mutex);
-+
-+	return id;
-+}
-+EXPORT_SYMBOL_GPL(of_alias_get_id);
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 65200af..13d6d3a 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -707,10 +707,12 @@ void __init unflatten_device_tree(void)
- 	__unflatten_device_tree(initial_boot_params, &allnodes,
- 				early_init_dt_alloc_memory_arch);
- 
--	/* Get pointer to OF "/chosen" node for use everywhere */
-+	/* Get pointer to "/chosen" and "/aliasas" nodes for use everywhere */
- 	of_chosen = of_find_node_by_path("/chosen");
- 	if (of_chosen == NULL)
- 		of_chosen = of_find_node_by_path("/chosen@0");
-+	of_aliases = of_find_node_by_path("/aliases");
-+	of_alias_scan();
- }
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4fc4c1b..e334c11 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -68,6 +68,7 @@ struct device_node {
- /* Pointer for first entry in chain of all nodes. */
- extern struct device_node *allnodes;
- extern struct device_node *of_chosen;
-+extern struct device_node *of_aliases;
- extern rwlock_t devtree_lock;
- 
- static inline bool of_have_populated_dt(void)
-@@ -205,6 +206,9 @@ extern int of_device_is_available(const struct device_node *device);
- extern const void *of_get_property(const struct device_node *node,
- 				const char *name,
- 				int *lenp);
-+#define for_each_property(pp, properties) \
-+	for (pp = properties; pp != NULL; pp = pp->next)
-+
- extern int of_n_addr_cells(struct device_node *np);
- extern int of_n_size_cells(struct device_node *np);
- extern const struct of_device_id *of_match_node(
-@@ -217,6 +221,10 @@ extern int of_parse_phandles_with_args(struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct device_node **out_node, const void **out_args);
- 
-+extern void *early_init_dt_alloc_memory_arch(u64 size, u64 align);
-+extern void of_alias_scan(void);
-+extern int of_alias_get_id(struct device_node *np, const char *stem);
-+
- extern int of_machine_is_compatible(const char *compat);
- 
- extern int prom_add_property(struct device_node* np, struct property* prop);
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index c84d900..b74b74f 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -97,7 +97,6 @@ extern void early_init_dt_check_for_initrd(unsigned long node);
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
--extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
- extern u64 dt_mem_next_cell(int s, __be32 **cellp);
- 
- /*
+> diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
+> index 1435fc3..205664f 100644
+> --- a/arch/arm/mach-exynos4/Kconfig
+> +++ b/arch/arm/mach-exynos4/Kconfig
+> @@ -186,6 +186,16 @@ config MACH_NURI
+>  	help
+>  	  Machine support for Samsung Mobile NURI Board.
+>  
+> +config MACH_EXYNOS4210_DT
+> +	bool "Samsung's Exynos4210 Machine with DT support"
+
+bool "Samsung Exynos4 Machine using device tree"
+
+This file should be suitable for multiple Exynos4 SoCs and boards.
+
+> +	select CPU_EXYNOS4210
+> +	select USE_OF
+> +	select S3C_DEV_HSMMC
+> +	select S3C_DEV_HSMMC2
+> +	select EXYNOS4_SETUP_SDHCI
+> +	help
+> +	  Machine support for Samsung Exynos4210 machine with device tree enabled.
+> +
+>  endmenu
+>  
+>  comment "Configuration for HSMMC bus width"
+> diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
+> index 60fe5ec..2625dc4 100644
+> --- a/arch/arm/mach-exynos4/Makefile
+> +++ b/arch/arm/mach-exynos4/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_MACH_SMDKV310)		+= mach-smdkv310.o
+>  obj-$(CONFIG_MACH_ARMLEX4210)		+= mach-armlex4210.o
+>  obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
+>  obj-$(CONFIG_MACH_NURI)			+= mach-nuri.o
+> +obj-$(CONFIG_MACH_EXYNOS4210_DT)	+= mach-exynos4-dt.o
+>  
+>  # device support
+>  
+> diff --git a/arch/arm/mach-exynos4210-dt.c b/arch/arm/mach-exynos4210-dt.c
+> new file mode 100644
+> index 0000000..33809e4
+> --- /dev/null
+> +++ b/arch/arm/mach-exynos4210-dt.c
+> @@ -0,0 +1,126 @@
+> +/*
+> + * Samsung's Exynos4210 device tree enabled machine.
+> + *
+> + * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + * Copyright (c) 2010-2011 Linaro Ltd.
+> + *		www.linaro.org
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +#include <linux/serial_core.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/irq.h>
+> +
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach-types.h>
+> +
+> +#include <plat/regs-serial.h>
+> +#include <plat/exynos4.h>
+> +#include <plat/cpu.h>
+> +#include <plat/sdhci.h>
+> +
+> +#include <mach/map.h>
+> +
+> +/* Following are default values for UCON, ULCON and UFCON UART registers */
+> +#define SMDKV310_UCON_DEFAULT	(S3C2410_UCON_TXILEVEL |	\
+> +				 S3C2410_UCON_RXILEVEL |	\
+> +				 S3C2410_UCON_TXIRQMODE |	\
+> +				 S3C2410_UCON_RXIRQMODE |	\
+> +				 S3C2410_UCON_RXFIFO_TOI |	\
+> +				 S3C2443_UCON_RXERR_IRQEN)
+> +
+> +#define SMDKV310_UFCON_DEFAULT	(S3C2410_UFCON_FIFOMODE |	\
+> +				 S5PV210_UFCON_TXTRIG4 |	\
+> +				 S5PV210_UFCON_RXTRIG4)
+> +
+> +static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
+> +	[0] = {
+> +		.hwport		= 0,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +	[1] = {
+> +		.hwport		= 1,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +	[2] = {
+> +		.hwport		= 2,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +	[3] = {
+> +		.hwport		= 3,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +};
+
+And you're working on eventually eliminating this, correct?
+
+> +
+> +static struct s3c_sdhci_platdata smdkv310_hsmmc0_pdata __initdata = {
+> +	.cd_type		= S3C_SDHCI_CD_INTERNAL,
+> +	.clk_type		= S3C_SDHCI_CLK_DIV_EXTERNAL,
+> +#ifdef CONFIG_EXYNOS4_SDHCI_CH0_8BIT
+> +	.max_width		= 8,
+> +	.host_caps		= MMC_CAP_8_BIT_DATA,
+> +#endif
+> +};
+> +
+> +static struct s3c_sdhci_platdata smdkv310_hsmmc2_pdata __initdata = {
+> +	.cd_type		= S3C_SDHCI_CD_INTERNAL,
+> +	.clk_type		= S3C_SDHCI_CLK_DIV_EXTERNAL,
+> +#ifdef CONFIG_EXYNOS4_SDHCI_CH2_8BIT
+> +	.max_width		= 8,
+> +	.host_caps		= MMC_CAP_8_BIT_DATA,
+> +#endif
+
+These parameters can definitely be obtained from the device tree right
+now with simple property reads in the device driver.  It is not a hard
+conversion.  I would drop the s3c_hsmmc*_def_platdata tables from this
+file.
+
+Since this is a new board support file, it should be just fine to
+merge this code without the platdata hunks, even if it takes a little
+bit longer to add the decoding to the sdhci driver.
+
+> +};
+> +
+> +static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
+> +	OF_DEV_AUXDATA("samsung,s3c-sdhci", EXYNOS4_PA_HSMMC(2),
+> +				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
+> +	OF_DEV_AUXDATA("samsung,s3c-sdhci", EXYNOS4_PA_HSMMC(0),
+> +				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
+> +	{},
+> +};
+
+It would be helpful to put a comment block on this table describing
+that it is necessary to get things working, but will be eliminated in
+the future.  (I'm assuming that setting the device name to
+"s3c-sdhci.*" is important.  If this table is only for the platdata,
+then it can be removed immediately.
+
+> +
+> +static void __init exynos4_dt_map_io(void)
+> +{
+> +	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
+> +	s3c24xx_init_clocks(24000000);
+> +	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
+> +}
+> +
+> +static const struct of_device_id intc_of_match[] __initconst = {
+> +	{ .compatible = "samsung,exynos4-gic", },
+> +	{}
+> +};
+> +
+> +static void __init exynos4_dt_machine_init(void)
+> +{
+> +	s3c_sdhci0_set_platdata(&smdkv310_hsmmc0_pdata);
+> +	s3c_sdhci2_set_platdata(&smdkv310_hsmmc2_pdata);
+> +
+> +	irq_domain_generate_simple(intc_of_match, EXYNOS4_PA_GIC_DIST, 0);
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +				exynos4_auxdata_lookup, NULL);
+> +}
+> +
+> +static char const *exynos4_dt_compat[] __initdata = {
+> +	"samsung,exynos4210",
+> +	NULL
+> +};
+> +
+> +DT_MACHINE_START(SMDKV310, "Samsung Exynos4 DT")
+> +	/* Maintainer: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
+> +	.boot_params	= S5P_PA_SDRAM + 0x100,
+
+Drop .boot_params.  It isn't used for DT booting.
+
+> +	.init_irq	= exynos4_init_irq,
+> +	.map_io		= exynos4_dt_map_io,
+> +	.init_machine	= exynos4_dt_machine_init,
+> +	.timer		= &exynos4_timer,
+> +	.dt_compat	= exynos4_dt_compat,
+> +MACHINE_END
+> -- 
+> 1.7.1
+> 
