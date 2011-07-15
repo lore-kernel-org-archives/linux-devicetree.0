@@ -1,214 +1,179 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] spi/imx: use mx21 to name SPI_IMX_VER_0_0
-	function and macro
-Date: Thu, 14 Jul 2011 20:53:42 -0600
-Message-ID: <20110715025342.GQ2927@ponder.secretlab.ca>
+Subject: Re: [PATCH v2 7/7] spi/imx: add device tree probe support
+Date: Thu, 14 Jul 2011 20:53:46 -0600
+Message-ID: <20110715025346.GT2927@ponder.secretlab.ca>
 References: <1310231801-18761-1-git-send-email-shawn.guo@linaro.org>
-	<1310231801-18761-3-git-send-email-shawn.guo@linaro.org>
-	<20110711073523.GB13840@pengutronix.de>
+	<1310231801-18761-8-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110711073523.GB13840-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1310231801-18761-8-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2011 at 09:35:23AM +0200, Uwe Kleine-K=F6nig wrote:
-> On Sun, Jul 10, 2011 at 01:16:36AM +0800, Shawn Guo wrote:
-> > SPI_IMX_VER_0_0 covers i.mx21 and i.mx27.  It makes more sense to
-> > use mx21 rather than mx27 to name SPI_IMX_VER_0_0 function and
-> > macro, since i.mx21 comes out ealier than i.mx27.
-> > =
-
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > ---
-> >  drivers/spi/spi-imx.c |   67 +++++++++++++++++++++++++----------------=
---------
-> >  1 files changed, 34 insertions(+), 33 deletions(-)
-> > =
-
-> > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> > index 1c55dc9..ad928b1 100644
-> > --- a/drivers/spi/spi-imx.c
-> > +++ b/drivers/spi/spi-imx.c
-> > @@ -406,70 +406,71 @@ static void __maybe_unused spi_imx0_4_reset(struc=
-t spi_imx_data *spi_imx)
-> >  		readl(spi_imx->base + MXC_CSPIRXDATA);
-> >  }
-> >  =
-
-> > -#define MX27_INTREG_RR		(1 << 4)
-> > -#define MX27_INTREG_TEEN	(1 << 9)
-> > -#define MX27_INTREG_RREN	(1 << 13)
-> > -
-> > -#define MX27_CSPICTRL_POL	(1 << 5)
-> > -#define MX27_CSPICTRL_PHA	(1 << 6)
-> > -#define MX27_CSPICTRL_SSPOL	(1 << 8)
-> > -#define MX27_CSPICTRL_XCH	(1 << 9)
-> > -#define MX27_CSPICTRL_ENABLE	(1 << 10)
-> > -#define MX27_CSPICTRL_MASTER	(1 << 11)
-> > -#define MX27_CSPICTRL_DR_SHIFT	14
-> > -#define MX27_CSPICTRL_CS_SHIFT	19
-> > -
-> > -static void __maybe_unused mx27_intctrl(struct spi_imx_data *spi_imx, =
-int enable)
-> > +#define MX21_INTREG_RR		(1 << 4)
-> > +#define MX21_INTREG_TEEN	(1 << 9)
-> > +#define MX21_INTREG_RREN	(1 << 13)
-> > +
-> > +#define MX21_CSPICTRL_POL	(1 << 5)
-> > +#define MX21_CSPICTRL_PHA	(1 << 6)
-> > +#define MX21_CSPICTRL_SSPOL	(1 << 8)
-> > +#define MX21_CSPICTRL_XCH	(1 << 9)
-> > +#define MX21_CSPICTRL_ENABLE	(1 << 10)
-> > +#define MX21_CSPICTRL_MASTER	(1 << 11)
-> > +#define MX21_CSPICTRL_DR_SHIFT	14
-> > +#define MX21_CSPICTRL_CS_SHIFT	19
-> > +
-> > +static void __maybe_unused
-> > +mx21_intctrl(struct spi_imx_data *spi_imx, int enable)
-> this needs to be intended. I usually use 2 tabs (and I'm quite annoyed
-> that vim doesn't do that for me).
-
-More importantly, the function name should be on the same line as the
-annotations and return value.  When grepping for function names, it is
-more important to see the annotations that the parameters (you can
-tell visually if there are parameters on the next line, but you can't
-tell if there are extra annotations).
-
-I've fixed it up.
+On Sun, Jul 10, 2011 at 01:16:41AM +0800, Shawn Guo wrote:
+> It adds device tree probe support for spi-imx driver.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
 Applied, thanks.
 
 g.
 
-> =
+> ---
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |   22 +++++++++++
+>  drivers/spi/spi-imx.c                              |   38 ++++++++++++++++----
+>  2 files changed, 53 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> new file mode 100644
+> index 0000000..9841057
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> @@ -0,0 +1,22 @@
+> +* Freescale (Enhanced) Configurable Serial Peripheral Interface
+> +  (CSPI/eCSPI) for i.MX
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi"
+> +- reg : Offset and length of the register set for the device
+> +- interrupts : Should contain CSPI/eCSPI interrupt
+> +- fsl,spi-num-chipselects : Contains the number of the chipselect
+> +- cs-gpios : Specifies the gpio pins to be used for chipselects.
+> +
+> +Example:
+> +
+> +ecspi@70010000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "fsl,imx51-ecspi";
+> +	reg = <0x70010000 0x4000>;
+> +	interrupts = <36>;
+> +	fsl,spi-num-chipselects = <2>;
+> +	cs-gpios = <&gpio3 24 0>, /* GPIO4_24 */
+> +		   <&gpio3 25 0>; /* GPIO4_25 */
+> +};
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index ad61828..5456bcc 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -34,6 +34,9 @@
+>  #include <linux/spi/spi.h>
+>  #include <linux/spi/spi_bitbang.h>
+>  #include <linux/types.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  
+>  #include <mach/spi.h>
+>  
+> @@ -606,6 +609,16 @@ static struct platform_device_id spi_imx_devtype[] = {
+>  	}
+>  };
+>  
+> +static const struct of_device_id spi_imx_dt_ids[] = {
+> +	{ .compatible = "fsl,imx1-cspi", .data = &imx1_cspi_devtype_data, },
+> +	{ .compatible = "fsl,imx21-cspi", .data = &imx21_cspi_devtype_data, },
+> +	{ .compatible = "fsl,imx27-cspi", .data = &imx27_cspi_devtype_data, },
+> +	{ .compatible = "fsl,imx31-cspi", .data = &imx31_cspi_devtype_data, },
+> +	{ .compatible = "fsl,imx35-cspi", .data = &imx35_cspi_devtype_data, },
+> +	{ .compatible = "fsl,imx51-ecspi", .data = &imx51_ecspi_devtype_data, },
+> +	{ /* sentinel */ }
+> +};
+> +
+>  static void spi_imx_chipselect(struct spi_device *spi, int is_active)
+>  {
+>  	struct spi_imx_data *spi_imx = spi_master_get_devdata(spi->master);
+> @@ -739,19 +752,25 @@ static void spi_imx_cleanup(struct spi_device *spi)
+>  
+>  static int __devinit spi_imx_probe(struct platform_device *pdev)
+>  {
+> -	struct spi_imx_master *mxc_platform_info;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const struct of_device_id *of_id =
+> +			of_match_device(spi_imx_dt_ids, &pdev->dev);
+> +	struct spi_imx_master *mxc_platform_info =
+> +			dev_get_platdata(&pdev->dev);
+>  	struct spi_master *master;
+>  	struct spi_imx_data *spi_imx;
+>  	struct resource *res;
+>  	int i, ret, num_cs;
+>  
+> -	mxc_platform_info = dev_get_platdata(&pdev->dev);
+> -	if (!mxc_platform_info) {
+> +	if (!np && !mxc_platform_info) {
+>  		dev_err(&pdev->dev, "can't get the platform data\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	num_cs = mxc_platform_info->num_chipselect;
+> +	ret = of_property_read_u32(np, "fsl,spi-num-chipselects", &num_cs);
+> +	if (ret < 0)
+> +		num_cs = mxc_platform_info->num_chipselect;
+> +
+>  	master = spi_alloc_master(&pdev->dev,
+>  			sizeof(struct spi_imx_data) + sizeof(int) * num_cs);
+>  	if (!master)
+> @@ -766,9 +785,12 @@ static int __devinit spi_imx_probe(struct platform_device *pdev)
+>  	spi_imx->bitbang.master = spi_master_get(master);
+>  
+>  	for (i = 0; i < master->num_chipselect; i++) {
+> -		spi_imx->chipselect[i] = mxc_platform_info->chipselect[i];
+> -		if (spi_imx->chipselect[i] < 0)
+> +		int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+> +		if (cs_gpio < 0)
+> +			cs_gpio = mxc_platform_info->chipselect[i];
+> +		if (cs_gpio < 0)
+>  			continue;
+> +		spi_imx->chipselect[i] = cs_gpio;
+>  		ret = gpio_request(spi_imx->chipselect[i], DRIVER_NAME);
+>  		if (ret) {
+>  			while (i > 0) {
+> @@ -790,7 +812,7 @@ static int __devinit spi_imx_probe(struct platform_device *pdev)
+>  
+>  	init_completion(&spi_imx->xfer_done);
+>  
+> -	spi_imx->devtype_data =
+> +	spi_imx->devtype_data = of_id ? of_id->data :
+>  		(struct spi_imx_devtype_data *) pdev->id_entry->driver_data;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -838,6 +860,7 @@ static int __devinit spi_imx_probe(struct platform_device *pdev)
+>  
+>  	spi_imx->devtype_data->intctrl(spi_imx, 0);
+>  
+> +	master->dev.of_node = pdev->dev.of_node;
+>  	ret = spi_bitbang_start(&spi_imx->bitbang);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "bitbang start failed with %d\n", ret);
+> @@ -900,6 +923,7 @@ static struct platform_driver spi_imx_driver = {
+>  	.driver = {
+>  		   .name = DRIVER_NAME,
+>  		   .owner = THIS_MODULE,
+> +		   .of_match_table = spi_imx_dt_ids,
+>  		   },
+>  	.id_table = spi_imx_devtype,
+>  	.probe = spi_imx_probe,
+> -- 
+> 1.7.4.1
+> 
 
-> >  {
-> >  	unsigned int val =3D 0;
-> >  =
-
-> >  	if (enable & MXC_INT_TE)
-> > -		val |=3D MX27_INTREG_TEEN;
-> > +		val |=3D MX21_INTREG_TEEN;
-> >  	if (enable & MXC_INT_RR)
-> > -		val |=3D MX27_INTREG_RREN;
-> > +		val |=3D MX21_INTREG_RREN;
-> >  =
-
-> >  	writel(val, spi_imx->base + MXC_CSPIINT);
-> >  }
-> >  =
-
-> > -static void __maybe_unused mx27_trigger(struct spi_imx_data *spi_imx)
-> > +static void __maybe_unused mx21_trigger(struct spi_imx_data *spi_imx)
-> >  {
-> >  	unsigned int reg;
-> >  =
-
-> >  	reg =3D readl(spi_imx->base + MXC_CSPICTRL);
-> > -	reg |=3D MX27_CSPICTRL_XCH;
-> > +	reg |=3D MX21_CSPICTRL_XCH;
-> >  	writel(reg, spi_imx->base + MXC_CSPICTRL);
-> >  }
-> >  =
-
-> > -static int __maybe_unused mx27_config(struct spi_imx_data *spi_imx,
-> > +static int __maybe_unused mx21_config(struct spi_imx_data *spi_imx,
-> >  		struct spi_imx_config *config)
-> >  {
-> > -	unsigned int reg =3D MX27_CSPICTRL_ENABLE | MX27_CSPICTRL_MASTER;
-> > +	unsigned int reg =3D MX21_CSPICTRL_ENABLE | MX21_CSPICTRL_MASTER;
-> >  	int cs =3D spi_imx->chipselect[config->cs];
-> >  =
-
-> >  	reg |=3D spi_imx_clkdiv_1(spi_imx->spi_clk, config->speed_hz) <<
-> > -		MX27_CSPICTRL_DR_SHIFT;
-> > +		MX21_CSPICTRL_DR_SHIFT;
-> >  	reg |=3D config->bpw - 1;
-> >  =
-
-> >  	if (config->mode & SPI_CPHA)
-> > -		reg |=3D MX27_CSPICTRL_PHA;
-> > +		reg |=3D MX21_CSPICTRL_PHA;
-> >  	if (config->mode & SPI_CPOL)
-> > -		reg |=3D MX27_CSPICTRL_POL;
-> > +		reg |=3D MX21_CSPICTRL_POL;
-> >  	if (config->mode & SPI_CS_HIGH)
-> > -		reg |=3D MX27_CSPICTRL_SSPOL;
-> > +		reg |=3D MX21_CSPICTRL_SSPOL;
-> >  	if (cs < 0)
-> > -		reg |=3D (cs + 32) << MX27_CSPICTRL_CS_SHIFT;
-> > +		reg |=3D (cs + 32) << MX21_CSPICTRL_CS_SHIFT;
-> >  =
-
-> >  	writel(reg, spi_imx->base + MXC_CSPICTRL);
-> >  =
-
-> >  	return 0;
-> >  }
-> >  =
-
-> > -static int __maybe_unused mx27_rx_available(struct spi_imx_data *spi_i=
-mx)
-> > +static int __maybe_unused mx21_rx_available(struct spi_imx_data *spi_i=
-mx)
-> >  {
-> > -	return readl(spi_imx->base + MXC_CSPIINT) & MX27_INTREG_RR;
-> > +	return readl(spi_imx->base + MXC_CSPIINT) & MX21_INTREG_RR;
-> >  }
-> >  =
-
-> > -static void __maybe_unused spi_imx0_0_reset(struct spi_imx_data *spi_i=
-mx)
-> > +static void __maybe_unused mx21_reset(struct spi_imx_data *spi_imx)
-> >  {
-> >  	writel(1, spi_imx->base + MXC_RESET);
-> >  }
-> > @@ -552,11 +553,11 @@ static struct spi_imx_devtype_data spi_imx_devtyp=
-e_data[] =3D {
-> >  #endif
-> >  #ifdef CONFIG_SPI_IMX_VER_0_0
-> >  	[SPI_IMX_VER_0_0] =3D {
-> > -		.intctrl =3D mx27_intctrl,
-> > -		.config =3D mx27_config,
-> > -		.trigger =3D mx27_trigger,
-> > -		.rx_available =3D mx27_rx_available,
-> > -		.reset =3D spi_imx0_0_reset,
-> > +		.intctrl =3D mx21_intctrl,
-> > +		.config =3D mx21_config,
-> > +		.trigger =3D mx21_trigger,
-> > +		.rx_available =3D mx21_rx_available,
-> > +		.reset =3D mx21_reset,
-> >  		.fifosize =3D 8,
-> >  	},
-> >  #endif
-> > -- =
-
-> > 1.7.4.1
-> > =
-
-> > =
-
-> =
-
-> -- =
-
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
-  |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+------------------------------------------------------------------------------
+AppSumo Presents a FREE Video for the SourceForge Community by Eric 
+Ries, the creator of the Lean Startup Methodology on "Lean Startup 
+Secrets Revealed." This video shows you how to validate your ideas, 
+optimize your ideas and identify your business strategy.
+http://p.sf.net/sfu/appsumosfdev2dev
