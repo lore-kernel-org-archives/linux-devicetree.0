@@ -1,35 +1,126 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH] gpio/tegra: dt: add binding for gpio polarity
-Date: Thu, 14 Jul 2011 22:17:13 -0700
-Message-ID: <20110715051713.GA28865@quad.lixom.net>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] dmaengine: imx-sdma: add device tree probe support
+Date: Fri, 15 Jul 2011 09:32:50 +0200
+Message-ID: <20110715073250.GH6069@pengutronix.de>
+References: <1310660057-17953-1-git-send-email-shawn.guo@linaro.org>
+	<1310660057-17953-3-git-send-email-shawn.guo@linaro.org>
+	<20110715025413.GJ2927@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20110715025413.GJ2927-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allocate one bit in the available extra cell to indicate if the gpio
-should be considered logically inverted.
+On Thu, Jul 14, 2011 at 08:54:13PM -0600, Grant Likely wrote:
+> On Fri, Jul 15, 2011 at 12:14:17AM +0800, Shawn Guo wrote:
+> > It adds device tree probe support for imx-sdma driver.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   55 ++++++++++++++++++++
+> >  drivers/dma/imx-sdma.c                             |   29 +++++++++-
+> >  2 files changed, 81 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > new file mode 100644
+> > index 0000000..71f4525
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > @@ -0,0 +1,55 @@
+> > +* Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
+> > +
+> > +Required properties:
+> > +- compatible : Should be "fsl,<chip>-sdma"
+> > +- reg : Should contain SDMA registers location and length
+> > +- interrupts : Should contain SDMA interrupt
+> > +- fsl,sdma-script-name : Should contain the full path of SDMA RAM scripts
+> > +  firmware
+> > +- fsl,sdma-script-address : Should be an array giving entry address for each
+> > +  script.  The address should be 0 in case that the specified script is not
+> > +  included in the firmware.  See example below for the array details.
+> > +
+> > +Examples:
+> > +
+> > +sdma@83fb0000 {
+> > +	compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
+> > +	reg = <0x83fb0000 0x4000>;
+> > +	interrupts = <6>;
+> > +	fsl,sdma-script-name = "sdma-imx51.bin";
+> > +	fsl,sdma-script-address = <642>,	/* ap_2_ap */
+> > +				  <0>,		/* ap_2_bp */
+> > +				  <0>,		/* ap_2_ap_fixed */
+> > +				  <0>,		/* bp_2_ap */
+> > +				  <0>,		/* loopback_on_dsp_side */
+> > +				  <0>,		/* mcu_interrupt_only */
+> > +				  <0>,		/* firi_2_per */
+> > +				  <0>,		/* firi_2_mcu */
+> > +				  <0>,		/* per_2_firi */
+> > +				  <0>,		/* mcu_2_firi */
+> > +				  <0>,		/* uart_2_per */
+> > +				  <817>,	/* uart_2_mcu */
+> > +				  <0>,		/* per_2_app */
+> > +				  <747>,	/* mcu_2_app */
+> > +				  <0>,		/* per_2_per */
+> > +				  <0>,		/* uartsh_2_per */
+> > +				  <0>,		/* uartsh_2_mcu */
+> > +				  <0>,		/* per_2_shp */
+> > +				  <961>,	/* mcu_2_shp */
+> > +				  <1473>,	/* ata_2_mcu */
+> > +				  <1392>,	/* mcu_2_ata */
+> > +				  <1033>,	/* app_2_per */
+> > +				  <683>,	/* app_2_mcu */
+> > +				  <1251>,	/* shp_2_per */
+> > +				  <892>,	/* shp_2_mcu */
+> > +				  <0>,		/* mshc_2_mcu */
+> > +				  <0>,		/* mcu_2_mshc */
+> > +				  <0>,		/* spdif_2_mcu */
+> > +				  <0>,		/* mcu_2_spdif */
+> > +				  <0>,		/* asrc_2_mcu */
+> > +				  <0>,		/* ext_mem_2_ipu */
+> > +				  <0>,		/* descrambler */
+> > +				  <0>,		/* dptc_dvfs */
+> > +				  <0>,		/* utra_addr */
+> > +				  <0>;		/* ram_code_start */
+> 
+> This looks icky.  Where do these numbers come from?  How are the
+> offsets loaded into ram?  Are they properties of the firmware blob?
+> If so, then maybe they should be embedded in the firmware blob instead
+> of encoded in a DT that may become out of sync.
 
-Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio_nvidia.txt       |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
+They are embedded in the firmware blob already and the current dma
+driver uses these values to initialize the script addresses.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-index 64aac39..adcf55c 100644
---- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-@@ -3,5 +3,6 @@ NVIDIA Tegra 2 GPIO controller
- Required properties:
- - compatible : "nvidia,tegra20-gpio"
- - #gpio-cells : Should be two. The first cell is the pin number and the
--  second cell is used to specify optional parameters (currently unused).
-+  second cell is used to specify optional parameters:
-+  - bit 0 specifies polarity (0 for normal, 1 for inverted)
- - gpio-controller : Marks the device node as a GPIO controller.
+The SDMA firmware is split into two parts, one in an internal ROM
+and one in RAM. So it's possible to run the SDMA engine (with limited
+functionality) without an external firmware blob. The ROM addresses are currently contained
+in platform_data. Don't know if it makes sense to move them to the
+device tree though.
+
+(That said, the current implementation of the SDMA driver does not
+work without external firmware, but this is a software issue only)
+
+Sascha
+
+
 -- 
-1.7.4.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
