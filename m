@@ -1,14 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] dt: Add id to AUXDATA structure
-Date: Thu, 14 Jul 2011 20:53:49 -0600
-Message-ID: <20110715025349.GV2927@ponder.secretlab.ca>
-References: <20110714025312.32655.28495.stgit@riker>
+Subject: Re: [PATCH v2] mtd: dataflash: add device tree probe support
+Date: Thu, 14 Jul 2011 20:54:05 -0600
+Message-ID: <20110715025405.GE2927@ponder.secretlab.ca>
+References: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
+	<1310658757-17018-1-git-send-email-shawn.guo@linaro.org>
+	<20110714175013.GA17845@belfalas.ww600.siemens.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110714025312.32655.28495.stgit@riker>
+In-Reply-To: <20110714175013.GA17845-2tgbwyfBQGI/tGVuVBtu9lOnKfhBOm/VrE5yTffgRl4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,79 +20,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2011 at 07:53:24PM -0700, John Bonesio wrote:
-> This patch adds the ability to set the device id in the AUXDATA structure for
-> those few device drivers that just have to have a statically defined device id.
-> ---
-> 
->  drivers/of/platform.c       |    7 +++++++
->  include/linux/of_platform.h |    7 ++++++-
->  2 files changed, 13 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index c177345..ebbbf42 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -565,6 +565,7 @@ static int of_platform_bus_create(struct device_node *bus,
->  	struct platform_device *dev;
->  	const char *bus_id = NULL;
->  	void *platform_data = NULL;
-> +	int id = -1;
->  	int rc = 0;
->  
->  	/* Make sure it has a compatible property */
-> @@ -585,6 +586,7 @@ static int of_platform_bus_create(struct device_node *bus,
->  	auxdata = of_dev_lookup(lookup, bus);
->  	if (auxdata) {
->  		bus_id = auxdata->name;
-> +		id = auxdata->id;
->  		platform_data = auxdata->platform_data;
->  	}
->  
-> @@ -594,6 +596,11 @@ static int of_platform_bus_create(struct device_node *bus,
->  	}
->  
->  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
-> +
-> +	/* override the id if auxdata gives an id */
-> +	if (id != -1)
-> +		dev->id = id;
-> +
+On Thu, Jul 14, 2011 at 09:52:02PM +0400, Dmitry Eremin-Solenikov wrote:
+> On Thu, Jul 14, 2011 at 11:52:37PM +0800, Shawn Guo wrote:
+> > It adds device tree probe support for mtd_dataflash driver.
+> > =
 
-This won't actually work because of_platform_device_create_pdata
-registers the device, and the id must be set before it device is
-registered.  You'll need to pass in the is as a parameter to
-of_platform_device_create_pdata.
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> > Cc: Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> > ---
+> > Changes since v1:
+> >  * Add "atmel,at45xxx" into the match table
+> >  * Add binding document
+> =
 
->  	if (!dev || !of_match_node(matches, bus))
->  		return 0;
->  
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 40ce814..252246c 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -45,13 +45,18 @@ struct of_dev_auxdata {
->  	char *compatible;
->  	resource_size_t phys_addr;
->  	char *name;
-> +	int id;
->  	void *platform_data;
->  };
->  
->  /* Macro to simplify populating a lookup table */
->  #define OF_DEV_AUXDATA(_compat,_phys,_name,_pdata) \
->  	{ .compatible = _compat, .phys_addr = _phys, .name = _name, \
-> -	  .platform_data = _pdata }
-> +	  .id = -1, .platform_data = _pdata }
-> +
-> +#define OF_DEV_AUXDATA_ID(_compat,_phys,_name,_id,_pdata) \
-> +	{ .compatible = _compat, .phys_addr = _phys, .name = _name, \
-> +	  .id = _id, .platform_data = _pdata }
->  
->  /**
->   * of_platform_driver - Legacy of-aware driver for platform devices.
-> 
+> I=B4m sorry for being unclean on this. Device family is just at45,
+> so I=B4d suggest the following compatibility list:
+> "atmel,at45d789000", "atmel,at45"
+> =
+
+> You might want to add "atmel,dataflash" or "mtd,dataflash", but I see
+> no point in that.
+
+Dmitry is right.  at45xxx is not a good compatible value.
+
+> =
+
+> -- =
+
+> With best wishes
+> Dmitry
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
