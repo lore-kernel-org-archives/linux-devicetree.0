@@ -1,156 +1,72 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 3/3] dmaengine: imx-sdma: add device tree probe support
-Date: Fri, 15 Jul 2011 17:44:26 +0800
-Message-ID: <1310723066-567-4-git-send-email-shawn.guo@linaro.org>
-References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1310723066-567-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 1/3] mmc: sdhci-s3c: Add support for device tree based probe
+Date: Fri, 15 Jul 2011 17:12:06 +0530
+Message-ID: <1310730128-4243-2-git-send-email-thomas.abraham@linaro.org>
+References: <1310730128-4243-1-git-send-email-thomas.abraham@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1310730128-4243-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree probe support for imx-sdma driver.
+Add of_match_table to enable sdhci-s3c driver to be probed when a compatible
+sdhci device node is found in device tree.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+CC: linux-mmc@vger.kernel.org
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 ---
- .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   17 ++++++++
- drivers/dma/imx-sdma.c                             |   41 ++++++++++++++++++-
- 2 files changed, 55 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+ .../devicetree/bindings/mmc/samsung-s3c-sdhci.txt  |   10 ++++++++++
+ drivers/mmc/host/sdhci-s3c.c                       |   11 +++++++++++
+ 2 files changed, 21 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+diff --git a/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt b/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
 new file mode 100644
-index 0000000..d1e3f44
+index 0000000..c2298f8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -0,0 +1,17 @@
-+* Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
++++ b/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
+@@ -0,0 +1,10 @@
++* Samsung's SDHCI controller
++
++The Samsung's SDHCI controller is used for interfacing with SD/MMC cards.
 +
 +Required properties:
-+- compatible : Should be "fsl,<chip>-sdma"
-+- reg : Should contain SDMA registers location and length
-+- interrupts : Should contain SDMA interrupt
-+- fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
-+  scripts firmware
++- compatible : should be "samsung,s3c-sdhci"
++- reg : base physical address of the controller and length of memory mapped
++	region.
++- interrupts : interrupt number to the cpu.
 +
-+Examples:
-+
-+sdma@83fb0000 {
-+	compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
-+	reg = <0x83fb0000 0x4000>;
-+	interrupts = <6>;
-+	fsl,sdma-ram-script-name = "sdma-imx51.bin";
-+};
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 6b839a2..20504f0 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -32,6 +32,8 @@
- #include <linux/slab.h>
- #include <linux/platform_device.h>
- #include <linux/dmaengine.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
+index 69e3ee3..5ccbee0 100644
+--- a/drivers/mmc/host/sdhci-s3c.c
++++ b/drivers/mmc/host/sdhci-s3c.c
+@@ -629,6 +629,16 @@ static int sdhci_s3c_resume(struct platform_device *dev)
+ #define sdhci_s3c_resume NULL
+ #endif
  
- #include <asm/irq.h>
- #include <mach/sdma.h>
-@@ -331,6 +333,12 @@ static struct platform_device_id sdma_devtypes[] = {
- 	}
++#ifdef CONFIG_OF
++static const struct of_device_id s3c_sdhci_match[] = {
++	{ .compatible = "samsung,s3c-sdhci" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, s3c_sdhci_match);
++#else
++#define s3c_sdhci_match NULL
++#endif
++
+ static struct platform_driver sdhci_s3c_driver = {
+ 	.probe		= sdhci_s3c_probe,
+ 	.remove		= __devexit_p(sdhci_s3c_remove),
+@@ -637,6 +647,7 @@ static struct platform_driver sdhci_s3c_driver = {
+ 	.driver		= {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "s3c-sdhci",
++		.of_match_table	= s3c_sdhci_match,
+ 	},
  };
  
-+static const struct of_device_id sdma_dt_ids[] = {
-+	{ .compatible = "fsl,imx31-sdma", .data = &sdma_devtypes[IMX31_SDMA], },
-+	{ .compatible = "fsl,imx35-sdma", .data = &sdma_devtypes[IMX35_SDMA], },
-+	{ /* sentinel */ }
-+};
-+
- #define SDMA_H_CONFIG_DSPDMA	(1 << 12) /* indicates if the DSPDMA is used */
- #define SDMA_H_CONFIG_RTD_PINS	(1 << 11) /* indicates if Real-Time Debug pins are enabled */
- #define SDMA_H_CONFIG_ACR	(1 << 4)  /* indicates if AHB freq /core freq = 2 or 1 */
-@@ -1249,6 +1257,10 @@ err_dma_alloc:
- 
- static int __init sdma_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id =
-+			of_match_device(sdma_dt_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
-+	const char *fw_name;
- 	int ret;
- 	int irq;
- 	struct resource *iores;
-@@ -1264,7 +1276,7 @@ static int __init sdma_probe(struct platform_device *pdev)
- 
- 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	irq = platform_get_irq(pdev, 0);
--	if (!iores || irq < 0 || !pdata) {
-+	if (!iores || irq < 0) {
- 		ret = -EINVAL;
- 		goto err_irq;
- 	}
-@@ -1294,6 +1306,8 @@ static int __init sdma_probe(struct platform_device *pdev)
- 	if (!sdma->script_addrs)
- 		goto err_alloc;
- 
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
- 	sdma->devtype = pdev->id_entry->driver_data;
- 
- 	dma_cap_set(DMA_SLAVE, sdma->dma_device.cap_mask);
-@@ -1324,10 +1338,30 @@ static int __init sdma_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_init;
- 
--	if (pdata->script_addrs)
-+	if (pdata && pdata->script_addrs)
- 		sdma_add_scripts(sdma, pdata->script_addrs);
- 
--	sdma_get_firmware(sdma, pdata->fw_name);
-+	if (pdata) {
-+		sdma_get_firmware(sdma, pdata->fw_name);
-+	} else {
-+		/*
-+		 * Because that device tree does not encode ROM script address,
-+		 * the RAM script in firmware is mandatory for device tree
-+		 * probe, otherwise it fails.
-+		 */
-+		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-+					      &fw_name);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to get firmware name\n");
-+			goto err_init;
-+		}
-+
-+		ret = sdma_get_firmware(sdma, fw_name);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to get firmware\n");
-+			goto err_init;
-+		}
-+	}
- 
- 	sdma->dma_device.dev = &pdev->dev;
- 
-@@ -1375,6 +1409,7 @@ static int __exit sdma_remove(struct platform_device *pdev)
- static struct platform_driver sdma_driver = {
- 	.driver		= {
- 		.name	= "imx-sdma",
-+		.of_match_table = sdma_dt_ids,
- 	},
- 	.id_table	= sdma_devtypes,
- 	.remove		= __exit_p(sdma_remove),
 -- 
-1.7.4.1
+1.7.1
+
