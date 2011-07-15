@@ -1,333 +1,217 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 1/5] dt: add of_alias_scan and of_alias_get_id
-Date: Thu, 14 Jul 2011 20:53:20 -0600
-Message-ID: <20110715025320.GE2927@ponder.secretlab.ca>
-References: <1308938676-31121-1-git-send-email-shawn.guo@linaro.org>
- <1308938676-31121-2-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device tree FSL description for Microblaze
+Date: Thu, 14 Jul 2011 20:53:23 -0600
+Message-ID: <20110715025323.GF2927@ponder.secretlab.ca>
+References: <4DDCE793.9080709@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1308938676-31121-2-git-send-email-shawn.guo@linaro.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org
+In-Reply-To: <4DDCE793.9080709-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 25, 2011 at 02:04:32AM +0800, Shawn Guo wrote:
-> The patch adds function of_alias_scan to populate a global lookup
-> table with the properties of 'aliases' node and function
-> of_alias_get_id for drivers to find alias id from the lookup table.
+On Wed, May 25, 2011 at 01:27:15PM +0200, Michal Simek wrote:
+> Hi,
 > 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-
-Hey Shawn,
-
-Comments below, but I've gone ahead and fixed them because I'm keen to
-get this patch merged.  I just wanted to let you know what I changed.
-I'll post the modified version so you can test it.
-
-> ---
->  drivers/of/base.c  |  181 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/fdt.c   |    6 ++
->  include/linux/of.h |    7 ++
->  3 files changed, 194 insertions(+), 0 deletions(-)
+> I would like to check with you proper device tree FSL description
+> for Microblaze (PPC can use FSL through IP connected to the bus).
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 632ebae..89efd10 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -17,14 +17,38 @@
->   *      as published by the Free Software Foundation; either version
->   *      2 of the License, or (at your option) any later version.
->   */
-> +#include <linux/bootmem.h>
-> +#include <linux/ctype.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
->  #include <linux/proc_fs.h>
->  
-> +/**
-> + * struct alias_prop - Alias property in 'aliases' node
-> + * @link:	List node to link the structure in aliases_lookup list
-> + * @alias:	Alias property name
-> + * @np:		Pointer to device_node that the alias stands for
-> + * @alias_id:	Alias id decoded from alias
-> + * @alias_stem:	Alias stem name decoded from alias
-> + *
-> + * The structure represents one alias property of 'aliases' node as
-> + * an entry in aliases_lookup list.
-> + */
-> +struct alias_prop {
-> +	struct list_head link;
-> +	const char *alias;
-> +	struct device_node *np;
-> +	int alias_id;
-> +	char alias_stem[0];
-> +};
-> +
-> +static LIST_HEAD(aliases_lookup);
-> +
->  struct device_node *allnodes;
->  struct device_node *of_chosen;
-> +struct device_node *of_aliases;
->  
->  /* use when traversing tree through the allnext, child, sibling,
->   * or parent members of struct device_node.
-> @@ -922,3 +946,160 @@ out_unlock:
->  }
->  #endif /* defined(CONFIG_OF_DYNAMIC) */
->  
-> +/*
-> + * of_alias_find_available_id - Find an available id for the given device_node
+> Microblaze supports FSL buses to connect coprocessors or hw
+> accelerators directly to the cpu. Cpu has up to 16 fsl bus
+> connections - master and slave side. (BTW: in the latest Microblaze
+> with AXI is possible to use AXI stream instead of FSL but
+> description should be the same),
+> FSL bus has one master and in most cases one slave (more
+> point-to-point connection than bus) but I think there could be an
+> option to have multiple slaves for cases where the same input data
+> goes to n-slaves.
+> There is also an option to generate interrupt if there is any data on the bus.
+> 
+> FSL devices can have multiple FSL inputs and outputs and they also
+> can generate interrupts.
+> 
+> There is also one option to have only loopback which means connect
+> CPU FSL master to CPU FSL slave with optional interrupt enabling.
+> 
+> I am also aware of one more option which is possibility to use a
+> bridge instead of CPU (this option is not shown below).
+> 
+> Currently I have changed our generator to have the first description
+> which I would like to use for our discussion.
+> 
+> Below is the important part which I would like to discuss - it is
+> fake hw design but illustrate some important cases.
+> 
+> Here are some my notes:
+> 1. I can't add FSL device directly to the CPU node because
+> connection could be from axi IP. And I need to separate interrupt
+> generation if there is any activity on a bus. That's why I separate
+> fsl bus and devices out of CPU.
+> 2. I think that shouldn't be a problem to have fsl buses in the root node
+> 3. I think fsl devices should be moved out of root node but the point is where.
+> It is not bus sub/node because device can be connected to several
+> buses. There could be a lot of connections. Any suggestions?
 
-Nit: kerneldoc format is "/**" to start the comment, and function
-names should have '()' on it.
+As mentioned below, you can create a node to collect them into.  It
+doesn't have to be a memory mapped device node.
 
-> + * @np:		Pointer to the given device_node
-> + * @stem:	Alias stem of the given device_node
-> + *
-> + * The function travels the lookup table to find an available id for the
-> + * given device_node with given alias stem.  It returns the id found.
-> + */
-> +static int of_alias_find_available_id(struct device_node *np, const char *stem)
-> +{
-> +	struct alias_prop *app;
-> +	int id = 0;
-> +
-> +	while (1) {
-> +		bool used = false;
-> +		list_for_each_entry(app, &aliases_lookup, link) {
-> +			if (!strcmp(app->alias_stem, stem) &&
-> +			    app->alias_id == id) {
-> +				used = true;
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (used)
-> +			id++;
-> +		else
-> +			return id;
-> +	}
-> +}
+> 4. Please let me know if there should be any cells properties or similar.
 
-I've simplified this somewhat to do the list_for_each_entry() only
-once, and to bump up the id to +1 the largest entry:
+That's up to you.  I don't really understand the architecture being
+described, so I'm not a good person to say.  :-)
 
-	list_for_each_entry(app, &aliases_lookup, link)
-		if ((strcmp(app->stem, stem) == 0) && id <= app->id)
-			id = app->id + 1;
+> 5. There is not any address on the bus. FSL devices has some registers.
+> 6. Should I use different address than 0 for connection from cpu?
+> mfsl@5 instead of mfsl5@0?
+> 
+> Thanks,
+> Michal
+> 
+> 
+> 
+> /dts-v1/;
+> / {
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	compatible = "xlnx,microblaze";
+> 	model = "axi-loopback";
+> 
+> /* cpu node */
+> 	cpus {
+> 		#address-cells = <1>;
+> 		#cpus = <0x1>;
+> 		#size-cells = <0>;
+> 		microblaze_0: cpu@0 {
+> ... /* some cpu parameters */
+> 			xlnx,use-stack-protection = <0x0>;
+> 
+> 		/* fsl_m -> master side, fsl_s -> slave side */
+> 			fsl_m_0: mfsl0@0 {
+> 				link = <&fsl_v20_2>; /* bus connection */
+> 			} ;
+> ...
+> 			fsl_m_5: mfsl5@0 {
+> 				link = <&fsl_v20_9>;
+> 			} ;
+> 			fsl_s_0: sfsl0@0 {
+> 				link = <&fsl_v20_1>;
+> 			} ;
+> ...
+> 			fsl_s_5: sfsl5@0 {
+> 				link = <&fsl_v20_10>;
+> 			} ;
+> 		} ;
+> 	} ;
+> 
+> /* FSL buses - all look the same that's why I keep here only two - I
+> expect you will beat me for simple-bus compatible property.  */
+> /* The first where all interrupts are connected */
+> 	fsl_v20_0: fsl-v20-0@0 {
+> 		compatible = "xlnx,fsl-v1.00.a", "simple-bus";
 
-.... actually, after looking further, I've rolled this code into the
-of_alias_get_id() function.
+Heh, yeah you're right.  simple-bus doesn't make sense when this isn't
+a memory mapped bus, and there are no child nodes :-)
 
-> +
-> +/**
-> + * of_alias_lookup_add - Add alias into lookup table
-> + * @alias:	Alias name
-> + * @id:		Alias id
-> + * @stem:	Alias stem name
-> + * @np:		Pointer to device_node
-> + *
-> + * The function adds one alias into the lookup table and populate it
-> + * with the info passed in.  It returns 0 in sucess, or error code.
-> + */
-> +static int of_alias_lookup_add(char *alias, int id, const char *stem,
-> +			       struct device_node *np)
-> +{
-> +	struct alias_prop *app;
-> +	size_t sz = sizeof(*app) + strlen(stem) + 1;
-> +
-> +	app = kzalloc(sz, GFP_KERNEL);
-> +	if (!app) {
-> +		/*
-> +		 * It may fail due to being called by boot code,
-> +		 * so try alloc_bootmem before return error.
-> +		 */
-> +		app = alloc_bootmem(sz);
-> +		if (!app)
-> +			return -ENOMEM;
-> +	}
+I think that if you don't want these nodes under the cpu (which is
+probably the right decision), then it would be best to collect these
+nodes in a container node of some kind.
 
-I'm not too fond of this since we *know* when this is going to be
-called from early boot.  So, instead, I've changed the code to use the
-already existing dt_alloc functions as an argument to of_alias_lookup_add().
+> 		interrupt-parent = <&microblaze_0_intc>;
+> 		interrupts = < 11 2 4 2 10 2 >;
+> 		xlnx,async-clks = <0x0>;
+> 		xlnx,ext-reset-high = <0x1>;
+> 		xlnx,fsl-depth = <0x10>;
+> 		xlnx,fsl-dwidth = <0x20>;
+> 		xlnx,impl-style = <0x0>;
+> 		xlnx,read-clock-period = <0x0>;
+> 		xlnx,use-control = <0x1>;
+> 	} ;
+> /* bus without interrupts */
+> 	fsl_v20_10: fsl-v20-10@0 {
+> 		compatible = "xlnx,fsl-v1.00.a", "simple-bus";
+> 		xlnx,async-clks = <0x0>;
+> 		xlnx,ext-reset-high = <0x1>;
+> 		xlnx,fsl-depth = <0x10>;
+> 		xlnx,fsl-dwidth = <0x20>;
+> 		xlnx,impl-style = <0x0>;
+> 		xlnx,read-clock-period = <0x0>;
+> 		xlnx,use-control = <0x1>;
+> 	} ;
+> 
+> ....
+> 
+> /* simple ip - one input and one output + parameters and interrupt */
+> 	axi_stream_test_0: axi-stream-test-0@0 {
+> 		MFSL = <&fsl_v20_3>;
+> 		SFSL = <&fsl_v20_2>;
+> 		interrupt-parent = <&microblaze_0_intc>;
+> 		interrupts = < 3 2 >;
+> 		xlnx,use-rexa = <0x0>;
+> 		xlnx,use-rexam = <0x2>;
+> 		xlnx,use-rexample = <0x4>;
+> 	} ;
 
-Also, alloc_bootmem() doesn't work on all platforms.
-early_init_dt_alloc_memory_arch() needs to be used instead.
+Yeah, I'm really lost since I don't understand the hardware.  It would
+be helpful to have a binding document describing the properties being
+used.
 
-
-> +
-> +	app->np = np;
-> +	app->alias = alias;
-> +	app->alias_id = id;
-> +	strcpy(app->alias_stem, stem);
-> +	list_add_tail(&app->link, &aliases_lookup);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * of_alias_decode - Decode alias stem and id from alias name
-> + * @alias:	Alias name to be decoded
-> + * @stem:	Pointer used to return stem name
-> + *
-> + * The function decodes alias stem name and alias id from the given
-> + * alias name.  It returns stem name via parameter 'stem', and stem id
-> + * via the return value.  If no id is found in alias name, it returns 0
-> + * as the default.
-> + */
-> +static int of_alias_decode(char *alias, char *stem)
-> +{
-> +	int len = strlen(alias);
-> +	char *end = alias + len;
-> +
-> +	while (isdigit(*--end))
-> +		len--;
-
-Need to protect against len < 0
-
-> +
-> +	strncpy(stem, alias, len);
-> +	stem[len] = '\0';
-> +
-> +	return strlen(++end) ? simple_strtoul(end, NULL, 10) : 0;
-> +}
-> +
-> +/**
-> + * of_alias_scan - Scan all properties of 'aliases' node
-> + *
-> + * The function scans all the properties of 'aliases' node and populate
-> + * the the global lookup table with the properties.  It returns the
-> + * number of alias_prop found, or error code in error case.
-> + */
-> +int of_alias_scan(void)
-
-Changed to '__init void of_aliases_scan(void)'.  There is no point in
-returning an error code since it is never checked, and there is no
-point in bailing on an error just in case it is a problem with only
-one alias.
-
-> +{
-> +	struct property *pp;
-> +	int ret, num = 0;
-> +
-> +	if (!of_aliases)
-> +		return -ENODEV;
-> +
-> +	for_each_property(pp, of_aliases->properties) {
-> +		char stem[32];
-> +		int id = of_alias_decode(pp->name, stem);
-> +
-> +		/* Skip those we do not want to proceed */
-> +		if (!strcmp(pp->name, "name") ||
-> +		    !strcmp(pp->name, "phandle") ||
-> +		    !strcmp(pp->name, "linux,phandle"))
-> +			continue;
-> +
-> +		ret = of_alias_lookup_add(pp->name, id, stem,
-> +					  of_find_node_by_path(pp->value));
-> +		if (ret < 0)
-> +			return ret;
-> +		else
-> +			num++;
-> +	}
-> +
-> +	return num;
-> +}
-> +
-> +/**
-> + * of_alias_get_id - Get alias id for the given device_node
-> + * @np:		Pointer to the given device_node
-> + * @stem:	Alias stem of the given device_node
-> + *
-> + * The function travels the lookup table to get alias id for the given
-> + * device_node and alias stem.  It returns the alias id if find it.
-> + * If not, dynamically creates one in the lookup table and returns it,
-> + * or returns error code if fail to create.
-> + */
-> +int of_alias_get_id(struct device_node *np, const char *stem)
-> +{
-> +	struct alias_prop *app;
-> +	int id = -1;
-> +
-> +	list_for_each_entry(app, &aliases_lookup, link) {
-> +		if (np == app->np) {
-> +			id = app->alias_id;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (id == -1) {
-> +		id = of_alias_find_available_id(np, stem);
-> +		if (of_alias_lookup_add(NULL, id, stem, np) < 0)
-> +			return -ENODEV;
-> +	}
-> +
-> +	return id;
-> +}
-
-This whole function needs to be protected by a mutex.
-
-> +EXPORT_SYMBOL_GPL(of_alias_get_id);
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 65200af..998dc63 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -711,6 +711,12 @@ void __init unflatten_device_tree(void)
->  	of_chosen = of_find_node_by_path("/chosen");
->  	if (of_chosen == NULL)
->  		of_chosen = of_find_node_by_path("/chosen@0");
-> +
-> +	of_aliases = of_find_node_by_path("/aliases");
-> +	if (of_aliases == NULL)
-> +		of_aliases = of_find_node_by_path("/aliases@0");
-
-I don't think the /aliases@0 variant is necessary.  I've dropped it.
-
-g.
-
-> +
-> +	of_alias_scan();
->  }
->  
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index bfc0ed1..c35cc47 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -68,6 +68,7 @@ struct device_node {
->  /* Pointer for first entry in chain of all nodes. */
->  extern struct device_node *allnodes;
->  extern struct device_node *of_chosen;
-> +extern struct device_node *of_aliases;
->  extern rwlock_t devtree_lock;
->  
->  static inline bool of_have_populated_dt(void)
-> @@ -201,6 +202,9 @@ extern int of_device_is_available(const struct device_node *device);
->  extern const void *of_get_property(const struct device_node *node,
->  				const char *name,
->  				int *lenp);
-> +#define for_each_property(pp, properties) \
-> +	for (pp = properties; pp != NULL; pp = pp->next)
-> +
->  extern int of_n_addr_cells(struct device_node *np);
->  extern int of_n_size_cells(struct device_node *np);
->  extern const struct of_device_id *of_match_node(
-> @@ -213,6 +217,9 @@ extern int of_parse_phandles_with_args(struct device_node *np,
->  	const char *list_name, const char *cells_name, int index,
->  	struct device_node **out_node, const void **out_args);
->  
-> +extern int of_alias_scan(void);
-> +extern int of_alias_get_id(struct device_node *np, const char *stem);
-> +
->  extern int of_machine_is_compatible(const char *compat);
->  
->  extern int prom_add_property(struct device_node* np, struct property* prop);
+> ...
+> /* IP with two inputs and one output */
+> 	multiinput_dev_0: multiinput-dev-0@0 {
+> 		MFSL0 = <&fsl_v20_11>;
+> 		SFSL0 = <&fsl_v20_12>;
+> 		SFSL1 = <&fsl_v20_13>;
+> 		xlnx,use-exa = <0x0>;
+> 		xlnx,use-exam = <0x2>;
+> 		xlnx,use-example = <0x4>;
+> 	} ;
+> 
+> /* IP with two inputs and two outputs */
+> 	multiport_fsl_0: multiport-fsl-0@0 {
+> 		MFSL0 = <&fsl_v20_8>;
+> 		MFSL1 = <&fsl_v20_5>;
+> 		SFSL0 = <&fsl_v20_7>;
+> 		SFSL1 = <&fsl_v20_6>;
+> 		xlnx,use-test = <0x3>;
+> 	} ;
+> 
+> 
+> /* the rest of IP connected to axi */
+> 	axi4lite_0: axi@0 {
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		compatible = "xlnx,axi-interconnect-1.03.a", "simple-bus";
+> 		ranges ;
+> ...
+> 		microblaze_0_intc: interrupt-controller@41200000 {
+> 			#interrupt-cells = <0x2>;
+> 			compatible = "xlnx,axi-intc-1.01.a";
+> 			interrupt-controller ;
+> 			reg = < 0x41200000 0x10000 >;
+> 			xlnx,kind-of-intr = <0x144>;
+> 			xlnx,num-intr-inputs = <0xc>;
+> 		} ;
+> 	} ;
+> } ;
+> 
+> 
+> 
+> 
+> 
 > -- 
-> 1.7.4.1
-> 
+> Michal Simek, Ing. (M.Eng)
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+> Microblaze U-BOOT custodian
