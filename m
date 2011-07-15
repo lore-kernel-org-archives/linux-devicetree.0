@@ -1,46 +1,43 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] gpio/tegra: dt: add binding for gpio polarity
-Date: Fri, 15 Jul 2011 09:29:08 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF049E834C19@HQMAIL01.nvidia.com>
-References: <20110715051713.GA28865@quad.lixom.net>
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: Is there a binding for IORESOURCE_DMA population?
+Date: Fri, 15 Jul 2011 16:45:38 +0000
+Message-ID: <CAOZdJXVeM4Axf=TC4qKNHyqb=iDoDceGr-xjLNpD20WfL2h46Q@mail.gmail.com>
+References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110715051713.GA28865-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110715163254.GG1840-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-ID: <B546B0C96BC44A49B9DE3957120BF57C-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Thursday, July 14, 2011 11:17 PM:
-> Allocate one bit in the available extra cell to indicate if the gpio
-> should be considered logically inverted.
-> 
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+On Fri, Jul 15, 2011 at 11:32 AM, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> First of all, using powerpc dma-channel binding on such dma event
+> seems not reflecting the hardware facts. =A0Secondly, the binding in
+> this case (below) looks silly. =A0Thirdly, device driver need to make
+> code change for simply getting a dma event number.
 
-> ---
->  .../devicetree/bindings/gpio/gpio_nvidia.txt       |    3 ++-
->  1 files changed, 2 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> index 64aac39..adcf55c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> @@ -3,5 +3,6 @@ NVIDIA Tegra 2 GPIO controller
->  Required properties:
->  - compatible : "nvidia,tegra20-gpio"
->  - #gpio-cells : Should be two. The first cell is the pin number and the
-> -  second cell is used to specify optional parameters (currently unused).
-> +  second cell is used to specify optional parameters:
-> +  - bit 0 specifies polarity (0 for normal, 1 for inverted)
->  - gpio-controller : Marks the device node as a GPIO controller.
-> --
-> 1.7.4.1
+Take a look at p1022ds.dts or mpc8610hpcd.dts.  We create separate DMA
+channel nodes on Freescale PowerPC parts because the channels really
+are independent.  On these two boards, some of the DMA channels are
+used by the async DMA driver, and two of the channels are used by the
+audio driver.  The compatible property is used to differentiate among
+them.
 
--- 
-nvpublic
+-- =
+
+Timur Tabi
+Linux kernel developer at Freescale
