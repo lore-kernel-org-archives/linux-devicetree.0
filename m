@@ -1,14 +1,16 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] dt: add of_alias_scan and of_alias_get_id
-Date: Sat, 16 Jul 2011 14:39:32 +0800
-Message-ID: <20110716063931.GH1840@S2100-06.ap.freescale.net>
-References: <20110715183638.3669.32838.stgit@ponder>
+Subject: Re: Is there a binding for IORESOURCE_DMA population?
+Date: Sat, 16 Jul 2011 15:57:49 +0800
+Message-ID: <20110716075748.GI1840@S2100-06.ap.freescale.net>
+References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
+	<CAOZdJXVeM4Axf=TC4qKNHyqb=iDoDceGr-xjLNpD20WfL2h46Q@mail.gmail.com>
+	<201107152011.41546.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110715183638.3669.32838.stgit@ponder>
+In-Reply-To: <201107152011.41546.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,274 +20,92 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2011 at 12:37:27PM -0600, Grant Likely wrote:
-> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Fri, Jul 15, 2011 at 08:11:41PM +0200, Arnd Bergmann wrote:
+> On Friday 15 July 2011 18:45:38 Tabi Timur-B04825 wrote:
+> > 
+> > On Fri, Jul 15, 2011 at 11:32 AM, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > 
+> > > First of all, using powerpc dma-channel binding on such dma event
+> > > seems not reflecting the hardware facts.  Secondly, the binding in
+> > > this case (below) looks silly.  Thirdly, device driver need to make
+> > > code change for simply getting a dma event number.
+> > 
+> > Take a look at p1022ds.dts or mpc8610hpcd.dts.  We create separate DMA
+> > channel nodes on Freescale PowerPC parts because the channels really
+> > are independent.  On these two boards, some of the DMA channels are
+> > used by the async DMA driver, and two of the channels are used by the
+> > audio driver.
 > 
-> The patch adds function of_alias_scan to populate a global lookup
-> table with the properties of 'aliases' node and function
-> of_alias_get_id for drivers to find alias id from the lookup table.
+> I think this is much better than using IORESOURCE_DMA fields, which
+> basically are only well-defined for PC-style i8237 DMA controllers
+> used in stuff like floppy drives and ISA sound cards.
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> [grant.likey: add locking and rework parse loop]
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
+> However, we should find a way to standardize finding the dma_chan
+> for an platform_device based on a phandle. Maybe a little helper
+> that will scan a well-known property (dma-channels?) for phandles
+> to a device_node that is backing a struct dma_chan.
 > 
-> Hi Shawn,
-> 
-> I've reworked as discussed on the ML.  Please test and let me know if
-> it still works for you.
-> 
-Grant, please see comments below.
+If I understand this correctly, this is something I demonstrated in
+the initial message.  I do not think we always have individual
+device_node for each channel (struct dma_chan).  The most common
+situation is all channels are backed by one device_node (dmaengine).
 
-> g.
-> 
->  drivers/of/base.c      |  130 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/fdt.c       |    4 +
->  include/linux/of.h     |    8 +++
->  include/linux/of_fdt.h |    1 
->  4 files changed, 141 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b8b65fd..6d9adc6 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -17,14 +17,39 @@
->   *      as published by the Free Software Foundation; either version
->   *      2 of the License, or (at your option) any later version.
->   */
-> +#include <linux/ctype.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
->  #include <linux/proc_fs.h>
->  
-> +/**
-> + * struct alias_prop - Alias property in 'aliases' node
-> + * @link:	List node to link the structure in aliases_lookup list
-> + * @alias:	Alias property name
-> + * @np:		Pointer to device_node that the alias stands for
-> + * @id:		Index value from end of alias name
-> + * @stem:	Alias string without the index
-> + *
-> + * The structure represents one alias property of 'aliases' node as
-> + * an entry in aliases_lookup list.
-> + */
-> +struct alias_prop {
-> +	struct list_head link;
-> +	const char *alias;
-> +	struct device_node *np;
-> +	int id;
-> +	char stem[0];
-> +};
-> +
-> +static LIST_HEAD(aliases_lookup);
-> +
->  struct device_node *allnodes;
->  struct device_node *of_chosen;
-> +struct device_node *of_aliases;
-> +
-> +static DEFINE_MUTEX(of_aliases_mutex);
->  
->  /* use when traversing tree through the allnext, child, sibling,
->   * or parent members of struct device_node.
-> @@ -980,3 +1005,108 @@ out_unlock:
->  }
->  #endif /* defined(CONFIG_OF_DYNAMIC) */
->  
-> +static void of_alias_add(struct alias_prop *ap, struct device_node *np,
-> +			 int id, const char *stem, int stem_len)
-> +{
-> +	ap->id = id;
-> +	strncpy(ap->stem, stem, stem_len);
-> +	ap->stem[stem_len] = 0;
-> +	list_add_tail(&ap->link, &aliases_lookup);
-> +	pr_debug("adding DT alias:%s: stem=%s id=%i node=%s\n",
-> +		 ap->alias, ap->stem, ap->id, np ? np->full_name : NULL);
-> +}
+As I stated in the initial message, (for i.mx sdma example) the
+problem is 'struct dma_chan' stands for a physical dma channel, while
+all platform_device has is a virtual channel number (known as sdma
+event) assigned by hardware.  This virtual channel can only be
+dynamically mapped to a physical one by sdma driver.  That said there
+is no way for us to specify a physical channel in device tree.  We can
+only specify the virtual one there.  (I think this is kinda common,
+and sdma is just one example.)
 
-We need to do "ap->np = np;" in this function, otherwise the match of
-(np == app->np) in function of_alias_get_id() will always fail.
+i.mx sdma has 32 physically channels and 48 virtual ones (events).
+If we go the way you are suggesting, we will have to have 48 nodes
+under sdma node just for giving event number, and then have
+dma-channels property of device specifying the phanldles to these
+event nodes belonging to it.
 
-Nit: I initially name pointer (struct alias_prop *) as 'app', while
-the codes you add name it as 'ap'.  You may want to get them consistent.
+So we get something like below, which looks silly to me.
 
-> +
-> +/**
-> + * of_alias_scan() - Scan all properties of 'aliases' node
-> + *
-> + * The function scans all the properties of 'aliases' node and populate
-> + * the the global lookup table with the properties.  It returns the
+sdma@83fb0000 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
+        reg = <0x83fb0000 0x4000>;
+        interrupts = <6>;
+        fsl,sdma-ram-script-name = "sdma-imx51.bin";
 
-There is an extra "the".  I did this :)
+        dma00: dma-channel@0 {
+                compatible = "fsl,sdma-channel";
+                reg = <0>;
+        };
 
-> + * number of alias_prop found, or error code in error case.
-> + */
-> +__init void of_alias_scan(void)
-> +{
-> +	struct property *pp;
-> +
-> +	if (!of_aliases)
-> +		return;
-> +
-> +	for_each_property(pp, of_aliases->properties) {
-> +		const char *start = pp->name;
-> +		const char *end = start + strlen(start);
-> +		struct device_node *np;
-> +		struct alias_prop *ap;
-> +		int id, len;
-> +
-> +		/* Skip those we do not want to proceed */
-> +		if (!strcmp(pp->name, "name") ||
-> +		    !strcmp(pp->name, "phandle") ||
-> +		    !strcmp(pp->name, "linux,phandle"))
-> +			continue;
-> +
-> +		np = of_find_node_by_path(pp->value);
-> +		if (!np)
-> +			continue;
-> +
-> +		/* walk the alias backwards to extract the id and work out
-> +		 * the 'stem' string */
+        dma01: dma-channel@1 {
+                compatible = "fsl,sdma-channel";
+                reg = <1>;
+        };
 
-/*
- * bla
- */
+        ......
 
-> +		while (isdigit(*(end-1)) && end > start)
-> +			end--;
-> +		len = end - start;
-> +		id = strlen(end) ? simple_strtoul(end, NULL, 10) : -1;
-> +
-> +		/* Allocate an alias_prop with enough space for the stem */
-> +		ap = early_init_dt_alloc_memory_arch(sizeof(*ap) + len + 1, 4);
-> +		if (!ap)
-> +			continue;
-> +		ap->alias = start;
-> +		of_alias_add(ap, np, id, start, len);
-> +	}
-> +}
-> +
-> +/**
-> + * of_alias_get_id() - Get alias id for the given device_node
-> + * @np:		Pointer to the given device_node
-> + * @stem:	Alias stem of the given device_node
-> + *
-> + * The function travels the lookup table to get alias id for the given
-> + * device_node and alias stem.  It returns the alias id if find it.
-> + * If not, dynamically creates one in the lookup table and returns it,
-> + * or returns error code if fail to create.
-> + */
-> +int of_alias_get_id(struct device_node *np, const char *stem)
-> +{
-> +	struct alias_prop *app;
-> +	int id = 0;
-> +	bool found = false;
-> +
-> +	mutex_lock(&of_aliases_mutex);
-> +	list_for_each_entry(app, &aliases_lookup, link) {
-> +		if (strcmp(app->stem, stem) != 0)
-> +			continue;
-> +
-> +		if (np == app->np) {
-> +			found = true;
-> +			id = app->id;
-> +			break;
-> +		}
-> +
-> +		if (id <= app->id)
-> +			id = app->id + 1;
-> +	}
-> +
-> +	/* If an id is not found, then allocate a new one */
-> +	if (!found) {
-> +		app = kzalloc(sizeof(*app) + strlen(stem) + 1, 4);
-> +		if (!app) {
-> +			id = -ENODEV;
-> +			goto out;
-> +		}
-> +		of_alias_add(app, np, id, stem, strlen(stem));
-> +	}
-> +
-> + out:
-> +	mutex_unlock(&of_aliases_mutex);
-> +
-> +	return id;
-> +}
-> +EXPORT_SYMBOL_GPL(of_alias_get_id);
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 65200af..13d6d3a 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -707,10 +707,12 @@ void __init unflatten_device_tree(void)
->  	__unflatten_device_tree(initial_boot_params, &allnodes,
->  				early_init_dt_alloc_memory_arch);
->  
-> -	/* Get pointer to OF "/chosen" node for use everywhere */
-> +	/* Get pointer to "/chosen" and "/aliasas" nodes for use everywhere */
->  	of_chosen = of_find_node_by_path("/chosen");
->  	if (of_chosen == NULL)
->  		of_chosen = of_find_node_by_path("/chosen@0");
-> +	of_aliases = of_find_node_by_path("/aliases");
-> +	of_alias_scan();
->  }
->  
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4fc4c1b..e334c11 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -68,6 +68,7 @@ struct device_node {
->  /* Pointer for first entry in chain of all nodes. */
->  extern struct device_node *allnodes;
->  extern struct device_node *of_chosen;
-> +extern struct device_node *of_aliases;
->  extern rwlock_t devtree_lock;
->  
->  static inline bool of_have_populated_dt(void)
-> @@ -205,6 +206,9 @@ extern int of_device_is_available(const struct device_node *device);
->  extern const void *of_get_property(const struct device_node *node,
->  				const char *name,
->  				int *lenp);
-> +#define for_each_property(pp, properties) \
-> +	for (pp = properties; pp != NULL; pp = pp->next)
-> +
->  extern int of_n_addr_cells(struct device_node *np);
->  extern int of_n_size_cells(struct device_node *np);
->  extern const struct of_device_id *of_match_node(
-> @@ -217,6 +221,10 @@ extern int of_parse_phandles_with_args(struct device_node *np,
->  	const char *list_name, const char *cells_name, int index,
->  	struct device_node **out_node, const void **out_args);
->  
-> +extern void *early_init_dt_alloc_memory_arch(u64 size, u64 align);
-> +extern void of_alias_scan(void);
-> +extern int of_alias_get_id(struct device_node *np, const char *stem);
-> +
->  extern int of_machine_is_compatible(const char *compat);
->  
->  extern int prom_add_property(struct device_node* np, struct property* prop);
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index c84d900..b74b74f 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -97,7 +97,6 @@ extern void early_init_dt_check_for_initrd(unsigned long node);
->  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
->  				     int depth, void *data);
->  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-> -extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
->  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
->  
->  /*
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+        dma47: dma-channel@47 {
+                compatible = "fsl,sdma-channel";
+                reg = <47>;
+        };
+};
+
+ssi@83fcc000 { /* SSI1 */
+        compatible = "fsl,imx51-ssi", "fsl,imx1-ssi";
+        reg = <0x83fcc000 0x4000>;
+        interrupts = <29>;
+        fsl,ssi-uses-dma;
+        dma-channels = <&dma00, &dma01>;
+};
+
+Did I state the problem clear?  Or am I missing anything?
 
 -- 
 Regards,
