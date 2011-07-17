@@ -1,109 +1,131 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 1/3] mmc: sdhci-s3c: Add support for device tree based probe
-Date: Sun, 17 Jul 2011 09:24:59 +0530
-Message-ID: <CAJuYYwR8KSFPbn1SzGKekprHB1AGOPFezpkqw4qyw34U29A5vg@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm: dts: Add nodes in smdkv310 device tree source
+	file
+Date: Sun, 17 Jul 2011 09:26:41 +0530
+Message-ID: <CAJuYYwSzLzEJ2YuFbmLpJUzg8oQq04GWcXMuSXYdv0Lh=LaUkw@mail.gmail.com>
 References: <1310730128-4243-1-git-send-email-thomas.abraham@linaro.org>
-	<1310730128-4243-2-git-send-email-thomas.abraham@linaro.org>
-	<20110715185145.GE2833@ponder.secretlab.ca>
+	<1310730128-4243-3-git-send-email-thomas.abraham@linaro.org>
+	<20110715185744.GF2833@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20110715185145.GE2833@ponder.secretlab.ca>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110715185744.GF2833-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Grant,
 
-Thanks for reviewing the patches. I have done all the changes as you
-have suggested and I will submit the v2 patches next.
-
-On 16 July 2011 00:21, Grant Likely <grant.likely@secretlab.ca> wrote:
-> On Fri, Jul 15, 2011 at 05:12:06PM +0530, Thomas Abraham wrote:
->> Add of_match_table to enable sdhci-s3c driver to be probed when a co=
-mpatible
->> sdhci device node is found in device tree.
+On 16 July 2011 00:27, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Fri, Jul 15, 2011 at 05:12:07PM +0530, Thomas Abraham wrote:
+>> From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->> CC: linux-mmc@vger.kernel.org
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> Include device tree nodes for watchdog timer and sdhci instance 0 and 1.
+>>
+>> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >> ---
->> =A0.../devicetree/bindings/mmc/samsung-s3c-sdhci.txt =A0| =A0 10 +++=
-+++++++
->> =A0drivers/mmc/host/sdhci-s3c.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 | =A0 11 +++++++++++
->> =A02 files changed, 21 insertions(+), 0 deletions(-)
->> =A0create mode 100644 Documentation/devicetree/bindings/mmc/samsung-=
-s3c-sdhci.txt
+>> =A0arch/arm/boot/dts/exynos4-smdkv310.dts | =A0 55 +++++++++++++++++++++=
++++++++++-
+>> =A01 files changed, 53 insertions(+), 2 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci=
-=2Etxt b/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
->> new file mode 100644
->> index 0000000..c2298f8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
->> @@ -0,0 +1,10 @@
->> +* Samsung's SDHCI controller
+>> diff --git a/arch/arm/boot/dts/exynos4-smdkv310.dts b/arch/arm/boot/dts/=
+exynos4-smdkv310.dts
+>> index dd6c80a..7f27d95 100644
+>> --- a/arch/arm/boot/dts/exynos4-smdkv310.dts
+>> +++ b/arch/arm/boot/dts/exynos4-smdkv310.dts
+>> @@ -1,11 +1,62 @@
+>> +/*
+>> + * Samsung's Exynos4210 based smdkv310 board device tree source.
+>> + *
+>> + * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+>> + * =A0 =A0 =A0 =A0 =A0 http://www.samsung.com
+>> + * Copyright (c) 2010-2011 Linaro Ltd.
+>> + * =A0 =A0 =A0 =A0 =A0 www.linaro.org
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> +*/
 >> +
->> +The Samsung's SDHCI controller is used for interfacing with SD/MMC =
-cards.
->> +
->> +Required properties:
->> +- compatible : should be "samsung,s3c-sdhci"
->> +- reg : base physical address of the controller and length of memor=
-y mapped
->> + =A0 =A0 region.
->> +- interrupts : interrupt number to the cpu.
->> +
->> diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s=
-3c.c
->> index 69e3ee3..5ccbee0 100644
->> --- a/drivers/mmc/host/sdhci-s3c.c
->> +++ b/drivers/mmc/host/sdhci-s3c.c
->> @@ -629,6 +629,16 @@ static int sdhci_s3c_resume(struct platform_dev=
-ice *dev)
->> =A0#define sdhci_s3c_resume NULL
->> =A0#endif
+>> =A0/dts-v1/;
+>> =A0/include/ "skeleton.dtsi"
 >>
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id s3c_sdhci_match[] =3D {
->> + =A0 =A0 { .compatible =3D "samsung,s3c-sdhci" },
+>> =A0/ {
+>> =A0 =A0 =A0 model =3D "Samsung Exynos4 SMDKV310 eval board";
+>> - =A0 =A0 compatible =3D "samsung,smdkv310", "samsung,s5pv310";
+>> + =A0 =A0 compatible =3D "samsung,smdkv310", "samsung,exynos4210";
+>>
+>> =A0 =A0 =A0 memory {
+>> - =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x40000000 0x08000000>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x40000000 0x80000000>;
+>> + =A0 =A0 };
+>> +
+>> + =A0 =A0 chosen {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 bootargs =3D "root=3D/dev/mmcblk0p1 rootfstype=
+=3Dext3 rootwait console=3DttySAC1,115200";
+>> + =A0 =A0 };
+>> +
+>> + =A0 =A0 soc {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 interrupt-parent =3D <&intc>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "simple-bus";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ranges;
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 intc:interrupt-controller@10501000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos=
+4-gic","arm,cortex-a9-gic";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #interrupt-cells =3D <1>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupt-controller;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x10501000 0x1000>, <=
+0x10500100 0x100>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 irq-start =3D <61>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 watchdog@10060000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,s3c241=
+0-wdt";
 >
-> Be specific. =A0samsung,exynos4210-sdhci. =A0Newer chips can claim
-> compatibility with the older one.
+> Need documentation.
 
-This is changed to "samsung,s3c6410-sdhci" since that is the base
-version of all sdhci controllers in Samsung SoC's.
+The watchdog bindings and driver dt support have been submitted in a
+seperate patch. So the documentation for watchdog bindings is not
+included in this patch.
 
 Thanks,
-Thomas.
+Thomas
+
 
 >
-> Otherwise,
->
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->
->> + =A0 =A0 {},
->> +};
->> +MODULE_DEVICE_TABLE(of, s3c_sdhci_match);
->> +#else
->> +#define s3c_sdhci_match NULL
->> +#endif
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x10060000 0x400>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <552>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
 >> +
->> =A0static struct platform_driver sdhci_s3c_driver =3D {
->> =A0 =A0 =A0 .probe =A0 =A0 =A0 =A0 =A0=3D sdhci_s3c_probe,
->> =A0 =A0 =A0 .remove =A0 =A0 =A0 =A0 =3D __devexit_p(sdhci_s3c_remove=
-),
->> @@ -637,6 +647,7 @@ static struct platform_driver sdhci_s3c_driver =3D=
- {
->> =A0 =A0 =A0 .driver =A0 =A0 =A0 =A0 =3D {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .owner =A0=3D THIS_MODULE,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =3D "s3c-sdhci",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D s3c_sdhci_match,
->> =A0 =A0 =A0 },
+>> + =A0 =A0 =A0 =A0 =A0 =A0 sdhci@12530000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,s3c-sd=
+hci";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x12530000 0x1000>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <362>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 sdhci@12510000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,s3c-sd=
+hci";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x12510000 0x1000>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <360>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
+>> =A0 =A0 =A0 };
 >> =A0};
->>
 >> --
 >> 1.7.1
 >>
