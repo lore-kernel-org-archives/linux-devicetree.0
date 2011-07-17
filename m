@@ -1,19 +1,17 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: Is there a binding for IORESOURCE_DMA population?
-Date: Sun, 17 Jul 2011 15:30:52 +0800
-Message-ID: <20110717073051.GD2374@S2100-06.ap.freescale.net>
+Date: Sun, 17 Jul 2011 15:38:45 +0800
+Message-ID: <20110717073844.GE2374@S2100-06.ap.freescale.net>
 References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
-	<201107152011.41546.arnd@arndb.de>
-	<20110716075748.GI1840@S2100-06.ap.freescale.net>
-	<201107161409.46719.arnd@arndb.de> <4E218A4C.8000603@freescale.com>
 	<20110716144026.GB2374@S2100-06.ap.freescale.net>
-	<4E21E398.4060808@gmail.com>
+	<4E21F22C.3020804@freescale.com> <201107162244.47740.arnd@arndb.de>
+	<4E21FA7C.2000602@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4E21E398.4060808-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4E21FA7C.2000602-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,43 +21,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 16, 2011 at 02:16:40PM -0500, Rob Herring wrote:
-> On 07/16/2011 09:40 AM, Shawn Guo wrote:
-> > On Sat, Jul 16, 2011 at 08:55:41PM +0800, Tabi Timur-B04825 wrote:
-> >> Arnd Bergmann wrote:
-> >>> Right, this is what I had in mind. I think this is reasonable.
-> >>> If you need so many channels, the device tree will be huge already,
-> >>> so this doesn't add that much bloat either.
-> >>
-> >> I'm not sure I agree.  It seems that specifying nodes for each DMA channel 
-> >> (virtual or physical) is meaningless because the only property in the node 
-> >> is the "reg", which is really just a cell-index in disguise.
-> >>
-> > Yes, that's exactly why I do not appreciate the solution.
-> > 
-> >> My vote is to have a node only for the DMA engine, and let the DMA handle 
-> >> the virtual and physical channels internally.
-> >>
-> > It's not about virtual or physical channel.  I'm asking suggestion on
-> > how we bind the channel number for each dma client device in device
-> > tree and how they will get the number from device tree when they get
-> > probed.
-> > 
+On Sun, Jul 17, 2011 at 04:54:21AM +0800, Tabi Timur-B04825 wrote:
+> Arnd Bergmann wrote:
+> > But that would mean that the code interpreting that property has to
+> > know about the specific dmaengine implementation, and needs to be
+> > changed every time we add a new one.
 > 
-> In this case, it is the event (or request line) that is important not
-> the channel assignment.
-
-Exactly.
-
-> This is how the hardware is wired up and the
-> main variation between chips with SDMA. Since DT describes the h/w, this
-> needs to be described.
+> And like I said, the SSI driver will already need to know the specifics of 
+> the DMA controller.  The PowerPC device tree node for the SSI already 
+> works this way:
 > 
-We absolutely need to describe the events.  The topic here is how.
+>              ssi@15000 {
+>                      compatible = "fsl,mpc8610-ssi";
+>                      cell-index = <0>;
+>                      reg = <0x15000 0x100>;
+>                      interrupts = <75 2 0 0>;
+>                      fsl,mode = "i2s-slave";
+>                      codec-handle = <&wm8776>;
+>                      fsl,playback-dma = <&dma00>;
+>                      fsl,capture-dma = <&dma01>;
+>                      fsl,fifo-depth = <15>;
+>                      fsl,ssi-asynchronous;
+>               };
+> 
+> On PowerPC, the SSI driver knows that "fsl,playback-dma" points to a 
+> Freescale e500 DMA controller channel node.  The driver currently does not 
+> work with any other DMA controller.  This is what needs to be fixed.
+> 
+> > Alternatively, you'd end up with the device drivers having to
+> > read the properties themselves to get to the number and pass
+> > that to the common dmaengine code.
+> 
+> The SSI won't be able to use any common DMA engine code, because DMA needs 
+> to be set up in a very specific way for audio.
+> 
+i.mx sdma was implemented as a generic dmaengine driver, and i.mx ssi
+driver is working with the generic dmaengine api.
 
 -- 
 Regards,
