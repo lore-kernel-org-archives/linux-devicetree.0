@@ -1,17 +1,19 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: Is there a binding for IORESOURCE_DMA population?
-Date: Sun, 17 Jul 2011 15:38:45 +0800
-Message-ID: <20110717073844.GE2374@S2100-06.ap.freescale.net>
+Date: Sun, 17 Jul 2011 15:41:59 +0800
+Message-ID: <20110717074159.GF2374@S2100-06.ap.freescale.net>
 References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
-	<20110716144026.GB2374@S2100-06.ap.freescale.net>
-	<4E21F22C.3020804@freescale.com> <201107162244.47740.arnd@arndb.de>
-	<4E21FA7C.2000602@freescale.com>
+	<201107152011.41546.arnd@arndb.de>
+	<20110716075748.GI1840@S2100-06.ap.freescale.net>
+	<201107161409.46719.arnd@arndb.de>
+	<20110716143456.GA2374@S2100-06.ap.freescale.net>
+	<4E21A392.3010608@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4E21FA7C.2000602-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <4E21A392.3010608-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,15 +27,17 @@ To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 17, 2011 at 04:54:21AM +0800, Tabi Timur-B04825 wrote:
-> Arnd Bergmann wrote:
-> > But that would mean that the code interpreting that property has to
-> > know about the specific dmaengine implementation, and needs to be
-> > changed every time we add a new one.
+On Sat, Jul 16, 2011 at 10:43:31PM +0800, Tabi Timur-B04825 wrote:
+> Shawn Guo wrote:
+> > ssi@83fcc000 { /* SSI1 */
+> > 	compatible = "fsl,imx51-ssi", "fsl,imx1-ssi";
+> > 	reg =<0x83fcc000 0x4000>;
+> > 	interrupts =<29>;
+> > 	fsl,dma-events =<29 28 27 26>; /* TX0 RX0 TX1 RX1 */
+> > 	fsl,ssi-uses-dma;
+> > };
 > 
-> And like I said, the SSI driver will already need to know the specifics of 
-> the DMA controller.  The PowerPC device tree node for the SSI already 
-> works this way:
+> This is similar to what we do on PowerPC:
 > 
 >              ssi@15000 {
 >                      compatible = "fsl,mpc8610-ssi";
@@ -48,19 +52,13 @@ On Sun, Jul 17, 2011 at 04:54:21AM +0800, Tabi Timur-B04825 wrote:
 >                      fsl,ssi-asynchronous;
 >               };
 > 
-> On PowerPC, the SSI driver knows that "fsl,playback-dma" points to a 
-> Freescale e500 DMA controller channel node.  The driver currently does not 
-> work with any other DMA controller.  This is what needs to be fixed.
+> Keep in mind that there already is a device-tree enabled SSI driver, so 
+> you need to find a way to use that driver, instead of adding device-tree 
+> support to the non-DT driver that's already there.
 > 
-> > Alternatively, you'd end up with the device drivers having to
-> > read the properties themselves to get to the number and pass
-> > that to the common dmaengine code.
-> 
-> The SSI won't be able to use any common DMA engine code, because DMA needs 
-> to be set up in a very specific way for audio.
-> 
-i.mx sdma was implemented as a generic dmaengine driver, and i.mx ssi
-driver is working with the generic dmaengine api.
+Between a) making DT enabled SSI driver (mpc version) work for i.mx
+and b) adding DT probe support for imx-ssi driver, I would absolutely
+go for b).  Apparently it's much easier.
 
 -- 
 Regards,
