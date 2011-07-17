@@ -1,63 +1,110 @@
-From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: Is there a binding for IORESOURCE_DMA population?
-Date: Sat, 16 Jul 2011 20:54:21 +0000
-Message-ID: <4E21FA7C.2000602@freescale.com>
-References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
-	<20110716144026.GB2374@S2100-06.ap.freescale.net>
-	<4E21F22C.3020804@freescale.com> <201107162244.47740.arnd@arndb.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 1/3] mmc: sdhci-s3c: Add support for device tree based probe
+Date: Sun, 17 Jul 2011 09:24:59 +0530
+Message-ID: <CAJuYYwR8KSFPbn1SzGKekprHB1AGOPFezpkqw4qyw34U29A5vg@mail.gmail.com>
+References: <1310730128-4243-1-git-send-email-thomas.abraham@linaro.org>
+	<1310730128-4243-2-git-send-email-thomas.abraham@linaro.org>
+	<20110715185145.GE2833@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201107162244.47740.arnd-r2nGTMty4D4@public.gmane.org>
-Content-Language: en-US
-Content-ID: <D37E1C4844AC1E44BAD3606845B03F7F-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20110715185145.GE2833@ponder.secretlab.ca>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> But that would mean that the code interpreting that property has to
-> know about the specific dmaengine implementation, and needs to be
-> changed every time we add a new one.
+Hi Grant,
 
-And like I said, the SSI driver will already need to know the specifics of 
-the DMA controller.  The PowerPC device tree node for the SSI already 
-works this way:
+Thanks for reviewing the patches. I have done all the changes as you
+have suggested and I will submit the v2 patches next.
 
-             ssi@15000 {
-                     compatible = "fsl,mpc8610-ssi";
-                     cell-index = <0>;
-                     reg = <0x15000 0x100>;
-                     interrupts = <75 2 0 0>;
-                     fsl,mode = "i2s-slave";
-                     codec-handle = <&wm8776>;
-                     fsl,playback-dma = <&dma00>;
-                     fsl,capture-dma = <&dma01>;
-                     fsl,fifo-depth = <15>;
-                     fsl,ssi-asynchronous;
-              };
+On 16 July 2011 00:21, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Fri, Jul 15, 2011 at 05:12:06PM +0530, Thomas Abraham wrote:
+>> Add of_match_table to enable sdhci-s3c driver to be probed when a co=
+mpatible
+>> sdhci device node is found in device tree.
+>>
+>> CC: linux-mmc@vger.kernel.org
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> =A0.../devicetree/bindings/mmc/samsung-s3c-sdhci.txt =A0| =A0 10 +++=
++++++++
+>> =A0drivers/mmc/host/sdhci-s3c.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 | =A0 11 +++++++++++
+>> =A02 files changed, 21 insertions(+), 0 deletions(-)
+>> =A0create mode 100644 Documentation/devicetree/bindings/mmc/samsung-=
+s3c-sdhci.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci=
+=2Etxt b/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
+>> new file mode 100644
+>> index 0000000..c2298f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/samsung-s3c-sdhci.txt
+>> @@ -0,0 +1,10 @@
+>> +* Samsung's SDHCI controller
+>> +
+>> +The Samsung's SDHCI controller is used for interfacing with SD/MMC =
+cards.
+>> +
+>> +Required properties:
+>> +- compatible : should be "samsung,s3c-sdhci"
+>> +- reg : base physical address of the controller and length of memor=
+y mapped
+>> + =A0 =A0 region.
+>> +- interrupts : interrupt number to the cpu.
+>> +
+>> diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s=
+3c.c
+>> index 69e3ee3..5ccbee0 100644
+>> --- a/drivers/mmc/host/sdhci-s3c.c
+>> +++ b/drivers/mmc/host/sdhci-s3c.c
+>> @@ -629,6 +629,16 @@ static int sdhci_s3c_resume(struct platform_dev=
+ice *dev)
+>> =A0#define sdhci_s3c_resume NULL
+>> =A0#endif
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id s3c_sdhci_match[] =3D {
+>> + =A0 =A0 { .compatible =3D "samsung,s3c-sdhci" },
+>
+> Be specific. =A0samsung,exynos4210-sdhci. =A0Newer chips can claim
+> compatibility with the older one.
 
-On PowerPC, the SSI driver knows that "fsl,playback-dma" points to a 
-Freescale e500 DMA controller channel node.  The driver currently does not 
-work with any other DMA controller.  This is what needs to be fixed.
+This is changed to "samsung,s3c6410-sdhci" since that is the base
+version of all sdhci controllers in Samsung SoC's.
 
-> Alternatively, you'd end up with the device drivers having to
-> read the properties themselves to get to the number and pass
-> that to the common dmaengine code.
+Thanks,
+Thomas.
 
-The SSI won't be able to use any common DMA engine code, because DMA needs 
-to be set up in a very specific way for audio.
-
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+>
+> Otherwise,
+>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+>
+>> + =A0 =A0 {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, s3c_sdhci_match);
+>> +#else
+>> +#define s3c_sdhci_match NULL
+>> +#endif
+>> +
+>> =A0static struct platform_driver sdhci_s3c_driver =3D {
+>> =A0 =A0 =A0 .probe =A0 =A0 =A0 =A0 =A0=3D sdhci_s3c_probe,
+>> =A0 =A0 =A0 .remove =A0 =A0 =A0 =A0 =3D __devexit_p(sdhci_s3c_remove=
+),
+>> @@ -637,6 +647,7 @@ static struct platform_driver sdhci_s3c_driver =3D=
+ {
+>> =A0 =A0 =A0 .driver =A0 =A0 =A0 =A0 =3D {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .owner =A0=3D THIS_MODULE,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =3D "s3c-sdhci",
+>> + =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D s3c_sdhci_match,
+>> =A0 =A0 =A0 },
+>> =A0};
+>>
+>> --
+>> 1.7.1
+>>
+>
