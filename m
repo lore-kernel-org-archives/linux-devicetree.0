@@ -1,128 +1,125 @@
-From: Ben Dooks <ben-i2c@fluff.org>
-Subject: Re: [PATCH 2/2] arm: dt: Add device tree support for i2c instance
-	1 on exynos4 dt machine
-Date: Mon, 18 Jul 2011 10:45:34 +0100
-Message-ID: <20110718094534.GN15795@trinity.fluff.org>
-References: <1310950241-13602-1-git-send-email-thomas.abraham@linaro.org> <1310950241-13602-3-git-send-email-thomas.abraham@linaro.org> <20110718043059.GB15023@ponder.secretlab.ca>
+From: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Subject: Re: [PATCH 3/4] dt: omap3: add generic board file for dt support
+Date: Mon, 18 Jul 2011 15:45:57 +0530
+Message-ID: <CAP6yH7eSmdU16r5iC2MwvU3RwOBXaJNygMUXG=HSMiWUKnor-w@mail.gmail.com>
+References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
+	<1310592975-25773-4-git-send-email-manjugk@ti.com>
+	<CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
+	<CAC63_iSqN=rX6MbzFWM6z+zf1Eybg3MOD=qQVdeNg5cyENhPjw@mail.gmail.com>
+	<CAC63_iTf696D6Q_EzFeUUp5R38pYNEJBkmKviEu6-yuF0y=bNA@mail.gmail.com>
+	<CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110718043059.GB15023@ponder.secretlab.ca>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
+Cc: Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 17, 2011 at 10:30:59PM -0600, Grant Likely wrote:
-> On Mon, Jul 18, 2011 at 06:20:41AM +0530, Thomas Abraham wrote:
-> > Add device node for i2c instance 1 and list all its connected slave
-> > devices.
-> > 
-> > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/exynos4-smdkv310.dts  |   19 ++++++++++++++++++-
-> >  arch/arm/mach-exynos4/Kconfig           |    1 +
-> >  arch/arm/mach-exynos4/mach-exynos4-dt.c |    9 +++++++++
-> >  3 files changed, 28 insertions(+), 1 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4-smdkv310.dts b/arch/arm/boot/dts/exynos4-smdkv310.dts
-> > index d65c18c..29c40ed 100644
-> > --- a/arch/arm/boot/dts/exynos4-smdkv310.dts
-> > +++ b/arch/arm/boot/dts/exynos4-smdkv310.dts
-> > @@ -23,7 +23,7 @@
-> >  	};
-> >  
-> >  	chosen {
-> > -		bootargs = "root=/dev/mmcblk0p1 rootfstype=ext3 rootwait console=ttySAC1,115200";
-> > +		bootargs = "root=/dev/mmcblk0p1 rootfstype=ext3 rootwait console=ttySAC1,115200 init=/linuxrc";
-> >  	};
-> >  
-> >  	soc {
-> > @@ -64,5 +64,22 @@
-> >  			samsung,sdhci-cd-type = <0>;
-> >  			samsung,sdhci-clkdiv-external;
-> >  		};
-> > +
-> > +		i2c@13870000 {
-> > +			compatible = "samsung,s3c2440-i2c";
-> > +			reg = <0x13870000 0x100>;
-> > +			interrupts = <345>;
-> > +			samsung,i2c-bus-number = <1>;
-> > +			samsung,i2c-slave-addr = <16>;
-> > +			samsung,i2c-sda-delay = <100>;
-> > +			samsung,i2c-max-bus-freq = <100000>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			wm8994@1a {
-> > +				compatible = "wlf,wm8994";
-> > +				reg = <0x1a>;
-> > +			};
-> > +		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-> > index bb97b7e..c7fce3e 100644
-> > --- a/arch/arm/mach-exynos4/Kconfig
-> > +++ b/arch/arm/mach-exynos4/Kconfig
-> > @@ -193,6 +193,7 @@ config MACH_EXYNOS4_DT
-> >  	select S3C_DEV_HSMMC
-> >  	select S3C_DEV_HSMMC2
-> >  	select EXYNOS4_SETUP_SDHCI
-> > +	select EXYNOS4_SETUP_I2C1
-> >  	help
-> >  	  Machine support for Samsung Exynos4 machine with device tree enabled.
-> >  
-> > diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> > index 120665a..ef6b4cb 100644
-> > --- a/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> > +++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> > @@ -23,7 +23,10 @@
-> >  #include <plat/regs-serial.h>
-> >  #include <plat/exynos4.h>
-> >  #include <plat/cpu.h>
-> > +#include <plat/devs.h>
-> >  #include <plat/sdhci.h>
-> > +#include <plat/iic.h>
-> > +#include <plat/iic-core.h>
-> >  
-> >  #include <mach/map.h>
-> >  
-> > @@ -62,6 +65,10 @@ static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
-> >  	},
-> >  };
-> >  
-> > +static struct s3c2410_platform_i2c exynos4_dt_i2c_data1 __initdata = {
-> > +	.cfg_gpio	= s3c_i2c1_cfg_gpio,
-> > +};
-> > +
-> >  /*
-> >   * The following lookup table is used to override device names when devices
-> >   * are registered from device tree. Optionally, the platform data can also
-> > @@ -75,6 +82,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
-> >  				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
-> >  	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(0),
-> >  				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
-> > +	OF_DEV_AUXDATA("samsung,s3c2440-i2c", EXYNOS4_PA_IIC(1),
-> > +				"s3c2440-i2c.1", &exynos4_dt_i2c_data1),
-> 
-> Should not need the platform_data here.  Add DT support to the GPIO
-> driver and decode the data from there (which should be easy).
+Hi Grant,
 
-Hmm, do we have any sane way of passing which configuration settings
-should be applied to the gpio pins (given that there can be up to 13
-non-IO settings for some of these pins).
+On 17 July 2011 10:43, Grant Likely <grant.likely@secretlab.ca> wrote:
+> Hi Manjunath,
+>
+> Comments below. =A0I left in a lot of context for the new folks that
+> I've cc'd (Tony and Kevin).
+>
+> On Sat, Jul 16, 2011 at 2:07 PM, G, Manjunath Kondaiah <manjugk@ti.co=
+m> wrote:
+>> On Thu, Jul 14, 2011 at 4:45 AM, Grant Likely <grant.likely@secretla=
+b.ca> wrote:
+>>>> > +static void __init omap3_init(void)
+>>>> > +{
+>>>> > + =A0 =A0 =A0 struct device_node *node;
+>>>> > +
+[...]
+>> +static struct omap_device *of_omap_i2c_device_create(struct device_=
+node *node,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0const char *bus_id,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0void *platform_data,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device *parent)
+>> +{
+>> + =A0 =A0 =A0 struct platform_device *pdev;
+>> + =A0 =A0 =A0 struct i2c_board_info *i2c_board_info;
+>> + =A0 =A0 =A0 u8 id;
+>> +
+>> + =A0 =A0 =A0 printk("Creating omap i2c device %s\n", node->full_nam=
+e);
+>> +
+>> + =A0 =A0 =A0 if (!of_device_is_available(node))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+>> +
+>> + =A0 =A0 =A0 id =3D simple_strtol(bus_id, NULL, 0);
+>> + =A0 =A0 =A0 pdev =3D kzalloc(sizeof(*pdev), GFP_KERNEL);
+>> + =A0 =A0 =A0 pdev->dev.of_node =3D of_node_get(node);
+>> + =A0 =A0 =A0 if (!pdev->dev.of_node) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D 100;
+>> + =A0 =A0 =A0 } else {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 prop;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of=
+_node, "clock-frequency",
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ &prop))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D prop/100;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 else
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D 100;
+>> + =A0 =A0 =A0 }
+>> + =A0 =A0 =A0 printk("%s : speed->%d\n",__func__, speed);
+>> +
+>> + =A0 =A0 =A0 for_each_child_of_node(bus, child) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 prop;
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(" =A0 create child: %s\n", chil=
+d->full_name);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info =3D kzalloc(sizeof(*i2c=
+_board_info), GFP_KERNEL);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of=
+_node, "reg",
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &prop))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info->addr =3D prop;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of=
+_node, "interrupts",
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &prop))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info->irq =3D prop;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info->platform_data =3D plat=
+form_data;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 strncpy(i2c_board_info->type, child->n=
+ame,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 sizeof(i2c_board_info->type));
+>> + =A0 =A0 =A0 }
+>> + =A0 =A0 =A0 omap_register_i2c_bus(id, speed, i2c_board_info, 1);
+>
+> While this does in a sense work, and creates an omap_device for the
+> i2c bus that does get probed, it ends up encoding an awful lot of
+> device specific details into the generic devicetree support code. =A0=
+The
+> i2c bus driver itself must be responsible for decoding the speed and
+> child nodes, and in fact it can easily be modified to do so (I've
 
-Also, since this data is really part of the SoC, I don't really want
-to see n different .dts files hanging around with the same information
-in it.
+Decoding speed in i2c driver seems to be fine. But the i2c child nodes =
+are
+board specific. We might bring board specific handling code into i2c dr=
+iver
+with this approach.
 
-Maybe it is time for a standardised callback to allow devices to connect
-themselves to the pins they need, and have dt capability of over-riding
-the information if it needs it.
+BTW, I have observed that, if we create i2c device node in omapx-soc.dt=
+si
+file and the define i2c bus clock-frequency in beagle.dts, the clock-fr=
+equency
+is not available in driver probe. Is this expected behavior?
 
--- 
-Ben Dooks, ben@fluff.org, http://www.fluff.org/ben/
-
-Large Hadron Colada: A large Pina Colada that makes the universe disappear.
+-M
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
