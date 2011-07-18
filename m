@@ -1,125 +1,44 @@
-From: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Subject: Re: [PATCH 3/4] dt: omap3: add generic board file for dt support
-Date: Mon, 18 Jul 2011 15:45:57 +0530
-Message-ID: <CAP6yH7eSmdU16r5iC2MwvU3RwOBXaJNygMUXG=HSMiWUKnor-w@mail.gmail.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
-	<1310592975-25773-4-git-send-email-manjugk@ti.com>
-	<CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
-	<CAC63_iSqN=rX6MbzFWM6z+zf1Eybg3MOD=qQVdeNg5cyENhPjw@mail.gmail.com>
-	<CAC63_iTf696D6Q_EzFeUUp5R38pYNEJBkmKviEu6-yuF0y=bNA@mail.gmail.com>
-	<CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: Is there a binding for IORESOURCE_DMA population?
+Date: Mon, 18 Jul 2011 11:19:52 +0000
+Message-ID: <4E2416D7.30106@freescale.com>
+References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
+	<201107152011.41546.arnd@arndb.de>
+	<20110716075748.GI1840@S2100-06.ap.freescale.net>
+	<201107161409.46719.arnd@arndb.de>
+	<20110716143456.GA2374@S2100-06.ap.freescale.net>
+	<4E21A392.3010608@freescale.com>
+	<20110717074159.GF2374@S2100-06.ap.freescale.net>
+	<4E22E66D.5010809@freescale.com>
+	<20110718043940.GD15023@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110718043940.GD15023-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
+Content-ID: <BBA587D266F36449AF199E0A166D3449-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Grant Likely wrote:
+> That said, since the fsl-ssi.c driver already implements a DT binding,
+> the imx driver definitely should implement the same binding unless
+> there is a really strong technical reason not to.
 
-On 17 July 2011 10:43, Grant Likely <grant.likely@secretlab.ca> wrote:
-> Hi Manjunath,
->
-> Comments below. =A0I left in a lot of context for the new folks that
-> I've cc'd (Tony and Kevin).
->
-> On Sat, Jul 16, 2011 at 2:07 PM, G, Manjunath Kondaiah <manjugk@ti.co=
-m> wrote:
->> On Thu, Jul 14, 2011 at 4:45 AM, Grant Likely <grant.likely@secretla=
-b.ca> wrote:
->>>> > +static void __init omap3_init(void)
->>>> > +{
->>>> > + =A0 =A0 =A0 struct device_node *node;
->>>> > +
-[...]
->> +static struct omap_device *of_omap_i2c_device_create(struct device_=
-node *node,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0const char *bus_id,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0void *platform_data,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0struct device *parent)
->> +{
->> + =A0 =A0 =A0 struct platform_device *pdev;
->> + =A0 =A0 =A0 struct i2c_board_info *i2c_board_info;
->> + =A0 =A0 =A0 u8 id;
->> +
->> + =A0 =A0 =A0 printk("Creating omap i2c device %s\n", node->full_nam=
-e);
->> +
->> + =A0 =A0 =A0 if (!of_device_is_available(node))
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->> +
->> + =A0 =A0 =A0 id =3D simple_strtol(bus_id, NULL, 0);
->> + =A0 =A0 =A0 pdev =3D kzalloc(sizeof(*pdev), GFP_KERNEL);
->> + =A0 =A0 =A0 pdev->dev.of_node =3D of_node_get(node);
->> + =A0 =A0 =A0 if (!pdev->dev.of_node) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D 100;
->> + =A0 =A0 =A0 } else {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 prop;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of=
-_node, "clock-frequency",
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- &prop))
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D prop/100;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 else
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D 100;
->> + =A0 =A0 =A0 }
->> + =A0 =A0 =A0 printk("%s : speed->%d\n",__func__, speed);
->> +
->> + =A0 =A0 =A0 for_each_child_of_node(bus, child) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 prop;
->> +
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(" =A0 create child: %s\n", chil=
-d->full_name);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info =3D kzalloc(sizeof(*i2c=
-_board_info), GFP_KERNEL);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of=
-_node, "reg",
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &prop))
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info->addr =3D prop;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of=
-_node, "interrupts",
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &prop))
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info->irq =3D prop;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c_board_info->platform_data =3D plat=
-form_data;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 strncpy(i2c_board_info->type, child->n=
-ame,
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 sizeof(i2c_board_info->type));
->> + =A0 =A0 =A0 }
->> + =A0 =A0 =A0 omap_register_i2c_bus(id, speed, i2c_board_info, 1);
->
-> While this does in a sense work, and creates an omap_device for the
-> i2c bus that does get probed, it ends up encoding an awful lot of
-> device specific details into the generic devicetree support code. =A0=
-The
-> i2c bus driver itself must be responsible for decoding the speed and
-> child nodes, and in fact it can easily be modified to do so (I've
+What's the point of having two drivers for the same device that implement 
+the same DT binding?
 
-Decoding speed in i2c driver seems to be fine. But the i2c child nodes =
-are
-board specific. We might bring board specific handling code into i2c dr=
-iver
-with this approach.
-
-BTW, I have observed that, if we create i2c device node in omapx-soc.dt=
-si
-file and the define i2c bus clock-frequency in beagle.dts, the clock-fr=
-equency
-is not available in driver probe. Is this expected behavior?
-
--M
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
