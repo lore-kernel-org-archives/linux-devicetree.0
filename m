@@ -1,109 +1,45 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] arm: dt: Add device tree support for i2c instance 1 on
- exynos4 dt machine
-Date: Mon, 18 Jul 2011 06:20:41 +0530
-Message-ID: <1310950241-13602-3-git-send-email-thomas.abraham@linaro.org>
-References: <1310950241-13602-1-git-send-email-thomas.abraham@linaro.org>
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1310950241-13602-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: l2x0: Add OF based initialization
+Date: Sun, 17 Jul 2011 21:01:36 -0500
+Message-ID: <4E239400.30308@gmail.com>
+References: <1309984979-8847-1-git-send-email-robherring2@gmail.com> <1309984979-8847-2-git-send-email-robherring2@gmail.com> <20110706210237.GB5371@ponder.secretlab.ca> <201107062326.53737.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201107062326.53737.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@arm.linux.org.uk
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Barry Song <21cnbao@gmail.com>, workgroup.linux@csr.com, Olof Johansson <olof@lixom.net>, tglx@linutronix.de, weizeng.he@csr.com
 List-Id: devicetree@vger.kernel.org
 
-Add device node for i2c instance 1 and list all its connected slave
-devices.
+Russell,
 
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/exynos4-smdkv310.dts  |   19 ++++++++++++++++++-
- arch/arm/mach-exynos4/Kconfig           |    1 +
- arch/arm/mach-exynos4/mach-exynos4-dt.c |    9 +++++++++
- 3 files changed, 28 insertions(+), 1 deletions(-)
+On 07/06/2011 04:26 PM, Arnd Bergmann wrote:
+> On Wednesday 06 July 2011 23:02:37 Grant Likely wrote:
+>>
+>> On Wed, Jul 06, 2011 at 03:42:59PM -0500, Rob Herring wrote:
+>>> From: Rob Herring <rob.herring@calxeda.com>
+>>>
+>>> This adds probing for ARM L2x0 cache controllers via device tree. Support
+>>> includes the L210, L220, and PL310 controllers. The binding allows setting
+>>> up cache RAM latencies and filter addresses (PL310 only).
+>>>
+>>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+>>
+>> By rights, this should go via the arm tree, but it depends on patches
+>> that are already in devicetree/next.  Arnd, how do you want to handle
+>> this?  I want to avoid rebasing devicetree/next.
+> 
+> It's outside of the scope of the arm-soc tree really, the l2x0 code
+> is clearly core arm stuff, so it belongs into Russell's tree.
+> 
+> I think it's best if Russell can provide an Ack for this and you
+> put it in the tree that already has the dependencies.
+> 
 
-diff --git a/arch/arm/boot/dts/exynos4-smdkv310.dts b/arch/arm/boot/dts/exynos4-smdkv310.dts
-index d65c18c..29c40ed 100644
---- a/arch/arm/boot/dts/exynos4-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4-smdkv310.dts
-@@ -23,7 +23,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "root=/dev/mmcblk0p1 rootfstype=ext3 rootwait console=ttySAC1,115200";
-+		bootargs = "root=/dev/mmcblk0p1 rootfstype=ext3 rootwait console=ttySAC1,115200 init=/linuxrc";
- 	};
- 
- 	soc {
-@@ -64,5 +64,22 @@
- 			samsung,sdhci-cd-type = <0>;
- 			samsung,sdhci-clkdiv-external;
- 		};
-+
-+		i2c@13870000 {
-+			compatible = "samsung,s3c2440-i2c";
-+			reg = <0x13870000 0x100>;
-+			interrupts = <345>;
-+			samsung,i2c-bus-number = <1>;
-+			samsung,i2c-slave-addr = <16>;
-+			samsung,i2c-sda-delay = <100>;
-+			samsung,i2c-max-bus-freq = <100000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			wm8994@1a {
-+				compatible = "wlf,wm8994";
-+				reg = <0x1a>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-index bb97b7e..c7fce3e 100644
---- a/arch/arm/mach-exynos4/Kconfig
-+++ b/arch/arm/mach-exynos4/Kconfig
-@@ -193,6 +193,7 @@ config MACH_EXYNOS4_DT
- 	select S3C_DEV_HSMMC
- 	select S3C_DEV_HSMMC2
- 	select EXYNOS4_SETUP_SDHCI
-+	select EXYNOS4_SETUP_I2C1
- 	help
- 	  Machine support for Samsung Exynos4 machine with device tree enabled.
- 
-diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-index 120665a..ef6b4cb 100644
---- a/arch/arm/mach-exynos4/mach-exynos4-dt.c
-+++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-@@ -23,7 +23,10 @@
- #include <plat/regs-serial.h>
- #include <plat/exynos4.h>
- #include <plat/cpu.h>
-+#include <plat/devs.h>
- #include <plat/sdhci.h>
-+#include <plat/iic.h>
-+#include <plat/iic-core.h>
- 
- #include <mach/map.h>
- 
-@@ -62,6 +65,10 @@ static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
- 	},
- };
- 
-+static struct s3c2410_platform_i2c exynos4_dt_i2c_data1 __initdata = {
-+	.cfg_gpio	= s3c_i2c1_cfg_gpio,
-+};
-+
- /*
-  * The following lookup table is used to override device names when devices
-  * are registered from device tree. Optionally, the platform data can also
-@@ -75,6 +82,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
- 				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
- 	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(0),
- 				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
-+	OF_DEV_AUXDATA("samsung,s3c2440-i2c", EXYNOS4_PA_IIC(1),
-+				"s3c2440-i2c.1", &exynos4_dt_i2c_data1),
- 	{},
- };
- 
--- 
-1.7.1
+Do you have any objection to this patch or Grant taking it in his tree?
+
+Rob
