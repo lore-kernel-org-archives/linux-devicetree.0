@@ -1,13 +1,11 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH v2 2/2] dt/irq: add irq_domain_generate_simple() helper
-Date: Mon, 18 Jul 2011 16:31:45 -0600
-Message-ID: <20110718223145.1911.65317.stgit@ponder>
-References: <20110718222610.1911.5673.stgit@ponder>
+Subject: [PATCH] of/address: Add of_find_matching_node_by_address helper
+Date: Mon, 18 Jul 2011 16:33:14 -0600
+Message-ID: <20110718223314.2110.85513.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110718222610.1911.5673.stgit@ponder>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,112 +15,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-irq_domain_generate_simple() is an easy way to generate an irq translation
-domain for simple irq controllers.  It assumes a flat 1:1 mapping from
-hardware irq number to an offset of the first linux irq number assigned
-to the controller
+of_find_matching_node_by_address() can be used to find a device tree
+node for a device at a specific address.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- include/linux/irq.h    |   11 ++++++++++
- kernel/irq/irqdomain.c |   55 +++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 65 insertions(+), 1 deletions(-)
+ drivers/of/address.c       |   18 ++++++++++++++++++
+ include/linux/of_address.h |    4 ++++
+ 2 files changed, 22 insertions(+), 0 deletions(-)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index a103c01..3e5c35f 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -797,6 +797,17 @@ extern unsigned int irq_domain_map(struct irq_domain *domain,
- 				   irq_hw_number_t hwirq);
- extern void irq_domain_unmap(struct irq_domain *domain, irq_hw_number_t hw);
- 
-+struct of_device_id;
-+#ifdef CONFIG_OF
-+extern void irq_domain_add_simple(struct device_node *controller, int irq_base);
-+extern void irq_domain_generate_simple(const struct of_device_id *match,
-+					u64 phys_base, unsigned int irq_start);
-+#else
-+static inline void irq_domain_generate_simple(const struct of_device_id *match,
-+					u64 phys_base, unsigned int irq_start) { }
-+#endif
-+
-+
- #endif /* !CONFIG_S390 */
- 
- #endif /* _LINUX_IRQ_H */
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index a7cc910..7e251cd 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1,8 +1,9 @@
--
- #include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
- 
- static LIST_HEAD(irq_domain_list);
- static DEFINE_MUTEX(irq_domain_mutex);
-@@ -159,4 +160,56 @@ void irq_dispose_mapping(unsigned int irq)
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index b4559c5..da1f4b9 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -577,6 +577,24 @@ int of_address_to_resource(struct device_node *dev, int index,
  }
- EXPORT_SYMBOL_GPL(irq_dispose_mapping);
+ EXPORT_SYMBOL_GPL(of_address_to_resource);
  
-+int irq_domain_simple_dt_translate(struct irq_domain *d,
-+			    struct device_node *controller,
-+			    const u32 *intspec, unsigned int intsize,
-+			    irq_hw_number_t *out_hwirq, unsigned int *out_type)
++struct device_node *of_find_matching_node_by_address(struct device_node *from,
++					const struct of_device_id *matches,
++					u64 base_address)
 +{
-+	if (d->of_node != controller)
-+		return -EINVAL;
-+	if (intsize != 1)
-+		return -EINVAL;
++	struct device_node *dn = of_find_matching_node(from, matches);
++	struct resource res;
 +
-+	*out_hwirq = intspec[0];
-+	*out_type = IRQ_TYPE_NONE;
-+	return 0;
-+}
-+
-+struct irq_domain_ops irq_domain_simple_ops = {
-+	.dt_translate = irq_domain_simple_dt_translate,
-+};
-+
-+/**
-+ * irq_domain_create_simple() - Set up a 'simple' translation range
-+ */
-+void irq_domain_add_simple(struct device_node *controller, int irq_base)
-+{
-+	struct irq_domain *domain;
-+
-+	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
-+	if (!domain) {
-+		WARN_ON(1);
-+		return;
++	while (dn) {
++		if (of_address_to_resource(dn, 0, &res))
++			continue;
++		if (res.start == base_address)
++			return dn;
++		dn = of_find_matching_node(dn, matches);
 +	}
 +
-+	domain->irq_base = irq_base;
-+	domain->of_node = of_node_get(controller);
-+	domain->ops = &irq_domain_simple_ops;
-+	irq_domain_add(domain);
++	return NULL;
 +}
-+EXPORT_SYMBOL_GPL(irq_domain_add_simple);
 +
-+void irq_domain_generate_simple(const struct of_device_id *match,
-+				u64 phys_base, unsigned int irq_start)
-+{
-+	struct device_node *node;
-+	pr_info("looking for phys_base=%llx, irq_start=%i\n",
-+		(unsigned long long) phys_base, (int) irq_start);
-+	node = of_find_matching_node_by_address(NULL, match, phys_base);
-+	if (node)
-+		irq_domain_add_simple(node, irq_start);
-+	else
-+		pr_info("no node found\n");
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_generate_simple);
- #endif
+ 
+ /**
+  * of_iomap - Maps the memory mapped IO for a given device_node
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 2feda6e..bdfc20d 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -6,6 +6,10 @@
+ extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
++extern struct device_node *of_find_matching_node_by_address(
++					struct device_node *from,
++					const struct of_device_id *matches,
++					u64 base_address);
+ extern void __iomem *of_iomap(struct device_node *device, int index);
+ 
+ /* Extract an address from a device, returns the region size and
