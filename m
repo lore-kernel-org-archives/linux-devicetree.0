@@ -1,113 +1,115 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] arm: dt: Add device tree support for i2c instance 1
- on exynos4 dt machine
-Date: Sun, 17 Jul 2011 22:30:59 -0600
-Message-ID: <20110718043059.GB15023@ponder.secretlab.ca>
-References: <1310950241-13602-1-git-send-email-thomas.abraham@linaro.org>
- <1310950241-13602-3-git-send-email-thomas.abraham@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Is there a binding for IORESOURCE_DMA population?
+Date: Sun, 17 Jul 2011 22:34:22 -0600
+Message-ID: <20110718043422.GC15023@ponder.secretlab.ca>
+References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
+	<201107152011.41546.arnd@arndb.de>
+	<20110716075748.GI1840@S2100-06.ap.freescale.net>
+	<201107161409.46719.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1310950241-13602-3-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
+In-Reply-To: <201107161409.46719.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2011 at 06:20:41AM +0530, Thomas Abraham wrote:
-> Add device node for i2c instance 1 and list all its connected slave
-> devices.
+On Sat, Jul 16, 2011 at 02:09:46PM +0200, Arnd Bergmann wrote:
+> On Saturday 16 July 2011 09:57:49 Shawn Guo wrote:
+> > If I understand this correctly, this is something I demonstrated in
+> > the initial message.  I do not think we always have individual
+> > device_node for each channel (struct dma_chan).  The most common
+> > situation is all channels are backed by one device_node (dmaengine).
+> > 
+> > As I stated in the initial message, (for i.mx sdma example) the
+> > problem is 'struct dma_chan' stands for a physical dma channel, while
+> > all platform_device has is a virtual channel number (known as sdma
+> > event) assigned by hardware.  This virtual channel can only be
+> > dynamically mapped to a physical one by sdma driver.  That said there
+> > is no way for us to specify a physical channel in device tree.  We can
+> > only specify the virtual one there.  (I think this is kinda common,
+> > and sdma is just one example.)
 > 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos4-smdkv310.dts  |   19 ++++++++++++++++++-
->  arch/arm/mach-exynos4/Kconfig           |    1 +
->  arch/arm/mach-exynos4/mach-exynos4-dt.c |    9 +++++++++
->  3 files changed, 28 insertions(+), 1 deletions(-)
+> My assumption was that you would create a device_node for each channel
+> in the device tree source, but not necessarily have a platform_device
+> for each of them.
 > 
-> diff --git a/arch/arm/boot/dts/exynos4-smdkv310.dts b/arch/arm/boot/dts/exynos4-smdkv310.dts
-> index d65c18c..29c40ed 100644
-> --- a/arch/arm/boot/dts/exynos4-smdkv310.dts
-> +++ b/arch/arm/boot/dts/exynos4-smdkv310.dts
-> @@ -23,7 +23,7 @@
->  	};
->  
->  	chosen {
-> -		bootargs = "root=/dev/mmcblk0p1 rootfstype=ext3 rootwait console=ttySAC1,115200";
-> +		bootargs = "root=/dev/mmcblk0p1 rootfstype=ext3 rootwait console=ttySAC1,115200 init=/linuxrc";
->  	};
->  
->  	soc {
-> @@ -64,5 +64,22 @@
->  			samsung,sdhci-cd-type = <0>;
->  			samsung,sdhci-clkdiv-external;
->  		};
-> +
-> +		i2c@13870000 {
-> +			compatible = "samsung,s3c2440-i2c";
-> +			reg = <0x13870000 0x100>;
-> +			interrupts = <345>;
-> +			samsung,i2c-bus-number = <1>;
-> +			samsung,i2c-slave-addr = <16>;
-> +			samsung,i2c-sda-delay = <100>;
-> +			samsung,i2c-max-bus-freq = <100000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			wm8994@1a {
-> +				compatible = "wlf,wm8994";
-> +				reg = <0x1a>;
-> +			};
-> +		};
->  	};
->  };
-> diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-> index bb97b7e..c7fce3e 100644
-> --- a/arch/arm/mach-exynos4/Kconfig
-> +++ b/arch/arm/mach-exynos4/Kconfig
-> @@ -193,6 +193,7 @@ config MACH_EXYNOS4_DT
->  	select S3C_DEV_HSMMC
->  	select S3C_DEV_HSMMC2
->  	select EXYNOS4_SETUP_SDHCI
-> +	select EXYNOS4_SETUP_I2C1
->  	help
->  	  Machine support for Samsung Exynos4 machine with device tree enabled.
->  
-> diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> index 120665a..ef6b4cb 100644
-> --- a/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> +++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> @@ -23,7 +23,10 @@
->  #include <plat/regs-serial.h>
->  #include <plat/exynos4.h>
->  #include <plat/cpu.h>
-> +#include <plat/devs.h>
->  #include <plat/sdhci.h>
-> +#include <plat/iic.h>
-> +#include <plat/iic-core.h>
->  
->  #include <mach/map.h>
->  
-> @@ -62,6 +65,10 @@ static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
->  	},
->  };
->  
-> +static struct s3c2410_platform_i2c exynos4_dt_i2c_data1 __initdata = {
-> +	.cfg_gpio	= s3c_i2c1_cfg_gpio,
-> +};
-> +
->  /*
->   * The following lookup table is used to override device names when devices
->   * are registered from device tree. Optionally, the platform data can also
-> @@ -75,6 +82,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
->  				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
->  	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(0),
->  				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
-> +	OF_DEV_AUXDATA("samsung,s3c2440-i2c", EXYNOS4_PA_IIC(1),
-> +				"s3c2440-i2c.1", &exynos4_dt_i2c_data1),
+> > i.mx sdma has 32 physically channels and 48 virtual ones (events).
+> > If we go the way you are suggesting, we will have to have 48 nodes
+> > under sdma node just for giving event number, and then have
+> > dma-channels property of device specifying the phanldles to these
+> > event nodes belonging to it.
+> > 
+> > So we get something like below, which looks silly to me.
+> > 
+> > sdma@83fb0000 {
+> >         #address-cells = <1>;
+> >         #size-cells = <0>;
+> >         compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
+> >         reg = <0x83fb0000 0x4000>;
+> >         interrupts = <6>;
+> >         fsl,sdma-ram-script-name = "sdma-imx51.bin";
+> > 
+> >         dma00: dma-channel@0 {
+> >                 compatible = "fsl,sdma-channel";
+> >                 reg = <0>;
+> >         };
+> > 
+> >         dma01: dma-channel@1 {
+> >                 compatible = "fsl,sdma-channel";
+> >                 reg = <1>;
+> >         };
+> > 
+> >         ......
+> > 
+> >         dma47: dma-channel@47 {
+> >                 compatible = "fsl,sdma-channel";
+> >                 reg = <47>;
+> >         };
+> > };
+> > 
+> > ssi@83fcc000 { /* SSI1 */
+> >         compatible = "fsl,imx51-ssi", "fsl,imx1-ssi";
+> >         reg = <0x83fcc000 0x4000>;
+> >         interrupts = <29>;
+> >         fsl,ssi-uses-dma;
+> >         dma-channels = <&dma00, &dma01>;
+> > };
+> > 
+> > Did I state the problem clear?  Or am I missing anything?
+> 
+> Right, this is what I had in mind. I think this is reasonable.
+> If you need so many channels, the device tree will be huge already,
+> so this doesn't add that much bloat either.
+> 
+> Another option would be to add a 'dma-parent' property akin to the
+> interrupt-parent property and then just refer to the channel
+> numbers within the parent dma controller.
+> I guess you would prefer something like that in order to keep the
+> device tree source more compact, right?
 
-Should not need the platform_data here.  Add DT support to the GPIO
-driver and decode the data from there (which should be easy).
+Rather than a dma-parent property, I'd recommend following approach
+that the gpio binding uses and have:
+
+	#dma-channel-cells = <n>
+
+...in the dma controller, and...
+
+	dma-channels = <&dma-controller (dma-specifier)>;
+
+...in the dma user.  Then the dma controller binding can specify
+how much data is required for a dma-specifier (number of cells), and
+what each cell means.
 
 g.
