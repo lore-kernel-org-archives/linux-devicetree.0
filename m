@@ -1,47 +1,25 @@
-From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: Is there a binding for IORESOURCE_DMA population?
-Date: Sun, 17 Jul 2011 16:04:18 +0000
-Message-ID: <4E230802.9030805@freescale.com>
-References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
-	<201107152011.41546.arnd@arndb.de>
-	<20110716075748.GI1840@S2100-06.ap.freescale.net>
-	<201107161409.46719.arnd@arndb.de>
-	<20110716143456.GA2374@S2100-06.ap.freescale.net>
-	<4E21A392.3010608@freescale.com>
-	<20110717074159.GF2374@S2100-06.ap.freescale.net>
-	<4E22E66D.5010809@freescale.com>
-	<20110717142838.GI2374@S2100-06.ap.freescale.net>
-	<4E22F867.5090707@freescale.com>
-	<20110717154730.GK2374@S2100-06.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110717154730.GK2374-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
-Content-ID: <5955913BFCD26A47B6FBBB6B6BD410EE-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 0/2] Add device tree support for Samsung's I2C driver.
+Date: Mon, 18 Jul 2011 06:20:39 +0530
+Message-ID: <1310950241-13602-1-git-send-email-thomas.abraham@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-i2c@vger.kernel.org, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote:
-> Ok, I will take this as a serious warning, and start evaluating the
-> driver consolidation.  I will absolutely need you help along the way.
-> At least, when we get there, I need your favor to test mpc platform,
-> as I do not have the access at all.
+This patchset adds device tree support for Samsung's I2C driver. The Exynos4 DT
+enabled machine is updated to support device tree based probe for I2C instance 1.
 
-Absolutely.  I've been waiting a long time for someone to come along and 
-help me unify the drivers.  As you know, there's very little collaboration 
-between the ARM and PowerPC groups inside Freescale.
+Thomas Abraham (2):
+  i2c: s3c24xx: Add device tree support
+  arm: dt: Add device tree support for i2c instance 1 on exynos4 dt machine
 
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+ .../devicetree/bindings/i2c/samsung-i2c.txt        |   43 ++++++++++
+ arch/arm/boot/dts/exynos4-smdkv310.dts             |   19 ++++-
+ arch/arm/mach-exynos4/Kconfig                      |    1 +
+ arch/arm/mach-exynos4/mach-exynos4-dt.c            |    9 ++
+ drivers/i2c/busses/i2c-s3c2410.c                   |   87 ++++++++++++++++----
+ 5 files changed, 143 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/samsung-i2c.txt
