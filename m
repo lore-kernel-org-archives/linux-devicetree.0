@@ -1,45 +1,78 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4 2/2] ARM: l2x0: Add OF based initialization
-Date: Sun, 17 Jul 2011 21:01:36 -0500
-Message-ID: <4E239400.30308@gmail.com>
-References: <1309984979-8847-1-git-send-email-robherring2@gmail.com> <1309984979-8847-2-git-send-email-robherring2@gmail.com> <20110706210237.GB5371@ponder.secretlab.ca> <201107062326.53737.arnd@arndb.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] watchdog: imx2_wdt: add device tree probe support
+Date: Mon, 18 Jul 2011 11:15:21 +0800
+Message-ID: <1310958921-18083-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201107062326.53737.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@arm.linux.org.uk
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Barry Song <21cnbao@gmail.com>, workgroup.linux@csr.com, Olof Johansson <olof@lixom.net>, tglx@linutronix.de, weizeng.he@csr.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Russell,
+It adds device tree probe support for imx2_wdt driver.
 
-On 07/06/2011 04:26 PM, Arnd Bergmann wrote:
-> On Wednesday 06 July 2011 23:02:37 Grant Likely wrote:
->>
->> On Wed, Jul 06, 2011 at 03:42:59PM -0500, Rob Herring wrote:
->>> From: Rob Herring <rob.herring@calxeda.com>
->>>
->>> This adds probing for ARM L2x0 cache controllers via device tree. Support
->>> includes the L210, L220, and PL310 controllers. The binding allows setting
->>> up cache RAM latencies and filter addresses (PL310 only).
->>>
->>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
->>
->> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->>
->> By rights, this should go via the arm tree, but it depends on patches
->> that are already in devicetree/next.  Arnd, how do you want to handle
->> this?  I want to avoid rebasing devicetree/next.
-> 
-> It's outside of the scope of the arm-soc tree really, the l2x0 code
-> is clearly core arm stuff, so it belongs into Russell's tree.
-> 
-> I think it's best if Russell can provide an Ack for this and you
-> put it in the tree that already has the dependencies.
-> 
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.txt   |   14 ++++++++++++++
+ drivers/watchdog/imx2_wdt.c                        |    6 ++++++
+ 2 files changed, 20 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
 
-Do you have any objection to this patch or Grant taking it in his tree?
-
-Rob
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+new file mode 100644
+index 0000000..2144af1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+@@ -0,0 +1,14 @@
++* Freescale i.MX Watchdog Timer (WDT) Controller
++
++Required properties:
++- compatible : Should be "fsl,<soc>-wdt"
++- reg : Should contain WDT registers location and length
++- interrupts : Should contain WDT interrupt
++
++Examples:
++
++wdt@73f98000 {
++	compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
++	reg = <0x73f98000 0x4000>;
++	interrupts = <58>;
++};
+diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+index 86f7cac..b8ef2c6 100644
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -329,12 +329,18 @@ static void imx2_wdt_shutdown(struct platform_device *pdev)
+ 	}
+ }
+ 
++static const struct of_device_id imx2_wdt_dt_ids[] = {
++	{ .compatible = "fsl,imx21-wdt", },
++	{ /* sentinel */ }
++};
++
+ static struct platform_driver imx2_wdt_driver = {
+ 	.remove		= __exit_p(imx2_wdt_remove),
+ 	.shutdown	= imx2_wdt_shutdown,
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = imx2_wdt_dt_ids,
+ 	},
+ };
+ 
+-- 
+1.7.4.1
