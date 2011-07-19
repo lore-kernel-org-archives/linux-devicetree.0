@@ -1,55 +1,62 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: gpio-keys: do not reference platform_data
-	after .probe exits
-Date: Tue, 19 Jul 2011 08:48:41 +0100
-Message-ID: <20110719074841.GB26574@n2100.arm.linux.org.uk>
-References: <1311007508-8096-1-git-send-email-shawn.guo@linaro.org>
-	<1311007508-8096-2-git-send-email-shawn.guo@linaro.org>
-	<201107181002.45170.dmitry.torokhov@gmail.com>
-	<20110719011725.GB3838@S2100-06.ap.freescale.net>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v3 0/4] Add device tree probe for sdhci-esdhc-imx
+Date: Tue, 19 Jul 2011 10:10:27 +0200
+Message-ID: <20110719081027.GM20587@pengutronix.de>
+References: <1309970870-13336-1-git-send-email-shawn.guo@linaro.org>
+ <m2pqljje3w.fsf@bob.laptop.org>
+ <20110710013708.GA14492@S2100-06.ap.freescale.net>
+ <m262mzavhb.fsf@bob.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110719011725.GB3838-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Phil Blundell <pb-CN5wO63fgwogsBAKwltoeQ@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <m262mzavhb.fsf@bob.laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Shawn Guo <shawn.guo@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2011 at 09:17:26AM +0800, Shawn Guo wrote:
-> On Mon, Jul 18, 2011 at 10:02:44AM -0700, Dmitry Torokhov wrote:
-> > On Monday, July 18, 2011 09:45:07 AM Shawn Guo wrote:
-> > > The patch makes a copy of platform data into driver data, so that any
-> > > reference to platform_data after .probe exits can be avoided.
-> > 
-> > And why is this beneficial? I am of the opinion that platform data should
-> > stay on (and be accessed through a const pointer to ensure that the driver
-> > will not alter it).
-> > 
-> To me, it's a common sense that platform data should not be referenced
-> after .probe exits, so that any platform code providing the data can
-> claim the data as __initconst.
+On Mon, Jul 18, 2011 at 09:51:28PM -0400, Chris Ball wrote:
+> Hi Shawn, Sascha,
+> 
+> On Sat, Jul 09 2011, Shawn Guo wrote:
+> >> > Shawn Guo (4):
+> >> >       mmc: sdhci-esdhc-imx: do not reference platform data after probe
+> >> >       mmc: sdhci-esdhc-imx: get rid of the uses of cpu_is_mx()
+> >> >       mmc: sdhci-pltfm: dt device does not pass parent to sdhci_alloc_host
+> >> >       mmc: sdhci-esdhc-imx: add device tree probe support
+> >> 
+> >> These don't apply against mmc-next -- what is your tree based on?
+> >> 
+> > It's based on linux-next with following patch applied.
+> >
+> > [PATCH v4 4/4] mmc: sdhci-esdhc-imx: extend card_detect and
+> > write_protect support for mx5
+> > http://permalink.gmane.org/gmane.linux.kernel.mmc/8748
+> >
+> > You applied the 3 of 4 patches in that series, and expect Sascha to
+> > send this one through his tree after you send those 3.
 
-That's totally buggered, and that's putting it kindly.
+Shawn, please ping me once all dependencies have been merged. I have no
+influence when my patches get merged since my patches go via Arnd.
 
-Consider a driver built as a module, vs built-in.  If you build it as a
-module, your driver data is stale by the time you insert the module.
-It's not much better with it built-in - if you have hotplug enabled, you
-can unbind and rebind the driver, which means that the .probe function
-can be called long after the .init sections have been discarded.
+> 
+> I see.  In that case, either Sascha can send this new series with my:
+> 
+> Acked-by: Chris Ball <cjb@laptop.org>
+> 
+> or I'll send it as a second pull request after Sascha sends [4/4].
+> 
+> Thanks,
+> 
+> - Chris.
+> -- 
+> Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+> One Laptop Per Child
+> 
 
-So no, this is no justification for the patch.
-
-Don't *ever* make any platform devices or any data pointed to by a
-platform device discardable after init time.  It's an oops waiting to
-happen.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
