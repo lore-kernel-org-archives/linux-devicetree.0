@@ -1,73 +1,38 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH] of/address: Add of_find_matching_node_by_address helper
-Date: Mon, 18 Jul 2011 16:33:14 -0600
-Message-ID: <20110718223314.2110.85513.stgit@ponder>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 1/2] Input: gpio-keys: do not reference platform_data
+ after .probe exits
+Date: Tue, 19 Jul 2011 09:17:26 +0800
+Message-ID: <20110719011725.GB3838@S2100-06.ap.freescale.net>
+References: <1311007508-8096-1-git-send-email-shawn.guo@linaro.org>
+ <1311007508-8096-2-git-send-email-shawn.guo@linaro.org>
+ <201107181002.45170.dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201107181002.45170.dmitry.torokhov@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, Phil Blundell <pb@handhelds.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-of_find_matching_node_by_address() can be used to find a device tree
-node for a device at a specific address.
+On Mon, Jul 18, 2011 at 10:02:44AM -0700, Dmitry Torokhov wrote:
+> On Monday, July 18, 2011 09:45:07 AM Shawn Guo wrote:
+> > The patch makes a copy of platform data into driver data, so that any
+> > reference to platform_data after .probe exits can be avoided.
+> 
+> And why is this beneficial? I am of the opinion that platform data should
+> stay on (and be accessed through a const pointer to ensure that the driver
+> will not alter it).
+> 
+To me, it's a common sense that platform data should not be referenced
+after .probe exits, so that any platform code providing the data can
+claim the data as __initconst.  When we build multiple platforms which
+all have their own platform data for gpio_keys in the kernel, there is
+only one of them will be used by gpio_keys driver, others should be
+freed after init, no?
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
- drivers/of/address.c       |   18 ++++++++++++++++++
- include/linux/of_address.h |    4 ++++
- 2 files changed, 22 insertions(+), 0 deletions(-)
+-- 
+Regards,
+Shawn
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index b4559c5..da1f4b9 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -577,6 +577,24 @@ int of_address_to_resource(struct device_node *dev, int index,
- }
- EXPORT_SYMBOL_GPL(of_address_to_resource);
- 
-+struct device_node *of_find_matching_node_by_address(struct device_node *from,
-+					const struct of_device_id *matches,
-+					u64 base_address)
-+{
-+	struct device_node *dn = of_find_matching_node(from, matches);
-+	struct resource res;
-+
-+	while (dn) {
-+		if (of_address_to_resource(dn, 0, &res))
-+			continue;
-+		if (res.start == base_address)
-+			return dn;
-+		dn = of_find_matching_node(dn, matches);
-+	}
-+
-+	return NULL;
-+}
-+
- 
- /**
-  * of_iomap - Maps the memory mapped IO for a given device_node
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 2feda6e..bdfc20d 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -6,6 +6,10 @@
- extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
-+extern struct device_node *of_find_matching_node_by_address(
-+					struct device_node *from,
-+					const struct of_device_id *matches,
-+					u64 base_address);
- extern void __iomem *of_iomap(struct device_node *device, int index);
- 
- /* Extract an address from a device, returns the region size and
