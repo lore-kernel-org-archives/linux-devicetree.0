@@ -1,56 +1,108 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Is there a binding for IORESOURCE_DMA population?
-Date: Tue, 19 Jul 2011 17:16:56 +0200
-Message-ID: <201107191716.56203.arnd@arndb.de>
-References: <20110715163254.GG1840@S2100-06.ap.freescale.net>
-	<20110717154730.GK2374@S2100-06.ap.freescale.net>
-	<4E230802.9030805@freescale.com>
+From: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Subject: Re: [PATCH 2/2] arm: dt: Add device tree support for i2c instance 1
+ on exynos4 dt machine
+Date: Tue, 19 Jul 2011 22:35:01 +0530
+Message-ID: <CAC63_iQcia64iBq653S+3_Yj8mgfbGSfHdGXevFe8urj9RpF-w@mail.gmail.com>
+References: <1310950241-13602-1-git-send-email-thomas.abraham@linaro.org>
+	<1310950241-13602-3-git-send-email-thomas.abraham@linaro.org>
+	<CAP6yH7dUnqhvSA8AYx2R9ZZ1mBL=YMz6oMiJVpphA1FhgLHOvw@mail.gmail.com>
+	<CACxGe6v+-H+W4H-5-gvEP+8j91NsGpVZkS595zSt8Lju74taWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E230802.9030805-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6v+-H+W4H-5-gvEP+8j91NsGpVZkS595zSt8Lju74taWw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "G, Manjunath Kondaiah" <manjugk@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 17 July 2011, Tabi Timur-B04825 wrote:
-> Shawn Guo wrote:
-> > Ok, I will take this as a serious warning, and start evaluating the
-> > driver consolidation.  I will absolutely need you help along the way.
-> > At least, when we get there, I need your favor to test mpc platform,
-> > as I do not have the access at all.
-> 
-> Absolutely.  I've been waiting a long time for someone to come along and 
-> help me unify the drivers.  As you know, there's very little collaboration 
-> between the ARM and PowerPC groups inside Freescale.
+On Tue, Jul 19, 2011 at 2:00 AM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+> On Mon, Jul 18, 2011 at 5:53 AM, G, Manjunath Kondaiah
+> <manjugk@linaro.org> wrote:
+>> Abraham,
+>> Few comments on i2c child devices handling:
+>>
+>> On 18 July 2011 06:20, Thomas Abraham <thomas.abraham@linaro.org> wr=
+ote:
+>>> Add device node for i2c instance 1 and list all its connected slave
+>>> devices.
+>>>
+>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>>> ---
+>>> =A0arch/arm/boot/dts/exynos4-smdkv310.dts =A0| =A0 19 +++++++++++++=
++++++-
+>>> =A0arch/arm/mach-exynos4/Kconfig =A0 =A0 =A0 =A0 =A0 | =A0 =A01 +
+>>> =A0arch/arm/mach-exynos4/mach-exynos4-dt.c | =A0 =A09 +++++++++
+>>> =A03 files changed, 28 insertions(+), 1 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos4-smdkv310.dts b/arch/arm/boot=
+/dts/exynos4-smdkv310.dts
+>>> index d65c18c..29c40ed 100644
+>>> --- a/arch/arm/boot/dts/exynos4-smdkv310.dts
+>>> +++ b/arch/arm/boot/dts/exynos4-smdkv310.dts
+>>> @@ -23,7 +23,7 @@
+>>> =A0 =A0 =A0 =A0};
+>>>
+>>> =A0 =A0 =A0 =A0chosen {
+>>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 bootargs =3D "root=3D/dev/mmcblk0p1 r=
+ootfstype=3Dext3 rootwait console=3DttySAC1,115200";
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 bootargs =3D "root=3D/dev/mmcblk0p1 r=
+ootfstype=3Dext3 rootwait console=3DttySAC1,115200 init=3D/linuxrc";
+>>> =A0 =A0 =A0 =A0};
+>>>
+>>> =A0 =A0 =A0 =A0soc {
+>>> @@ -64,5 +64,22 @@
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0samsung,sdhci-cd-typ=
+e =3D <0>;
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0samsung,sdhci-clkdiv=
+-external;
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+>>> +
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c@13870000 {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsu=
+ng,s3c2440-i2c";
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x13870000 0=
+x100>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <345>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,i2c-bus-numbe=
+r =3D <1>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,i2c-slave-add=
+r =3D <16>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,i2c-sda-delay=
+ =3D <100>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,i2c-max-bus-f=
+req =3D <100000>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1=
+>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
+>>> +
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 wm8994@1a {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compa=
+tible =3D "wlf,wm8994";
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D=
+ <0x1a>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>>
+>> The i2c child devices are board specific.
+>> For ex: few boards such as smdkxxx based on exynos4 has wm8994 with
+>> i2c1 controller
+>> where as other boards based on exynos4 does not have any i2c1 device=
+s.
+>> Hence these child entries should go to board specific .dts file righ=
+t?
+>
+> No, the i2c bus node should still appear in the SoC .dtsi file. =A0If=
+ a
+> board doesn't use a particular i2c bus, then the board.dts file can
+> add a status =3D "disabled"; property to the i2c bus node to disable =
+it.
 
-I've looked a bit at the two drivers, and it seems to me that both
-would benefit from taking aspects from the other one.
+that's right. I am referring to I2C slave devices. For a given SoC,
+two different
+boards can have different i2c slave devices with different slave
+address. In that case,
+it is better to have i2c child/slave nodes in board .dts file.
 
-Shawn, when you start the consolidation, I think it would be good
-to first eliminate all the minor differences like variable names
-and header file contents, always using the cleaner or more generic
-version for each aspect. I've had some good success using 'vimdiff'
-for similar work, which gives you a side-by-side representation of
-the two files. There are evidently some more fundamental differences
-like the DMA usage, but I think it's easier to leave them for
-a later stage.
-
-In some cases, you will have to abstract the differences between
-the hardware like the mmio accessors that are not common between
-powerpc and arm yet.
-
-I also think that it would be useful to add the same device tree based
-probing to the imx driver that is in the fsl one.
-
-	Arnd
+-M
