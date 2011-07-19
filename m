@@ -1,49 +1,43 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 2/2] Input: gpio-keys: add device tree probe support
-Date: Tue, 19 Jul 2011 11:55:56 +0800
-Message-ID: <20110719035555.GE3838@S2100-06.ap.freescale.net>
-References: <1311007508-8096-1-git-send-email-shawn.guo@linaro.org>
- <1311007508-8096-3-git-send-email-shawn.guo@linaro.org>
- <201107181005.52725.dmitry.torokhov@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 3/9] Add basic tests for dtget
+Date: Tue, 19 Jul 2011 15:40:04 +1000
+Message-ID: <20110719054004.GE6399@yookeroo.fritz.box>
+References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
+	<1309892577-23828-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201107181005.52725.dmitry.torokhov@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Phil Blundell <pb@handhelds.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1309892577-23828-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2011 at 10:05:52AM -0700, Dmitry Torokhov wrote:
-> Hi Shawn,
-> 
-> On Monday, July 18, 2011 09:45:08 AM Shawn Guo wrote:
-> > It adds device tree probe support for gpio-keys driver.
-> 
-> There is already a patch by David Jander adding device tree support to
-> the driver; I intend to apply it.
-> 
-I just fetched it from linux-next.  Though it seems working for me,
-I'm wondering why there are no bindings for following configurations.
+On Tue, Jul 05, 2011 at 12:02:51PM -0700, Simon Glass wrote:
 
-struct gpio_keys_button {
-	...
-        int active_low;
-	...
-        bool can_disable;
-        int value;              /* axis value for EV_ABS */
-};
+Tests should not be an add-on.  Fold this into the patch which added
+dtget itself.
 
-I'm seeing some platforms using them in their gpio_keys platform data.
-Does that mean the dt version of the driver will be broken on these
-platforms?
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  tests/dtget-runtest.sh |   30 ++++++++++++++++++++++
+>  tests/dtget-test.dts   |   63 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-BTW, if I have fetched linux-next a little earlier or David Cc list
-devicetree-discuss when he posted his patch, I do not have to waste
-one day effort :)
+As Grant says, I think this should use existing dts examples in
+preference to creating new ones.
 
 -- 
-Regards,
-Shawn
-
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
