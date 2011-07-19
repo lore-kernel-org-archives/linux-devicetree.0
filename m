@@ -1,50 +1,122 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v3 0/4] Add device tree probe for sdhci-esdhc-imx
-Date: Tue, 19 Jul 2011 16:59:45 +0800
-Message-ID: <20110719085944.GJ3838@S2100-06.ap.freescale.net>
-References: <1309970870-13336-1-git-send-email-shawn.guo@linaro.org>
- <m2pqljje3w.fsf@bob.laptop.org>
- <20110710013708.GA14492@S2100-06.ap.freescale.net>
- <m262mzavhb.fsf@bob.laptop.org>
- <20110719081027.GM20587@pengutronix.de>
+From: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 7/7] i2c: pxa: support to parse property
+Date: Tue, 19 Jul 2011 18:17:21 +0800
+Message-ID: <CAMPhdO-qjR0LSjvMm7hbdqZyrFxa5S8JVa1FO8sDsxOdyUV9Ng@mail.gmail.com>
+References: <1311042290-20253-1-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-2-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-3-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-4-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-5-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-6-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-7-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-8-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110719081027.GM20587@pengutronix.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Chris Ball <cjb@laptop.org>, Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1311042290-20253-8-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2011 at 10:10:27AM +0200, Sascha Hauer wrote:
-> On Mon, Jul 18, 2011 at 09:51:28PM -0400, Chris Ball wrote:
-> > Hi Shawn, Sascha,
-> > 
-> > On Sat, Jul 09 2011, Shawn Guo wrote:
-> > >> > Shawn Guo (4):
-> > >> >       mmc: sdhci-esdhc-imx: do not reference platform data after probe
-> > >> >       mmc: sdhci-esdhc-imx: get rid of the uses of cpu_is_mx()
-> > >> >       mmc: sdhci-pltfm: dt device does not pass parent to sdhci_alloc_host
-> > >> >       mmc: sdhci-esdhc-imx: add device tree probe support
-> > >> 
-> > >> These don't apply against mmc-next -- what is your tree based on?
-> > >> 
-> > > It's based on linux-next with following patch applied.
-> > >
-> > > [PATCH v4 4/4] mmc: sdhci-esdhc-imx: extend card_detect and
-> > > write_protect support for mx5
-> > > http://permalink.gmane.org/gmane.linux.kernel.mmc/8748
-> > >
-> > > You applied the 3 of 4 patches in that series, and expect Sascha to
-> > > send this one through his tree after you send those 3.
-> 
-> Shawn, please ping me once all dependencies have been merged. I have no
-> influence when my patches get merged since my patches go via Arnd.
-> 
-Ok, will do.
-
--- 
-Regards,
-Shawn
-
+T24gVHVlLCBKdWwgMTksIDIwMTEgYXQgMTA6MjQgQU0sIEhhb2ppYW4gWmh1YW5nCjxoYW9qaWFu
+LnpodWFuZ0BtYXJ2ZWxsLmNvbT4gd3JvdGU6Cj4gU3VwcG9ydCB0byBwYXJzZSBzb21lIG9wdGlv
+bmFsIHByb3BlcnRpZXMuIFRoZXNlIHRocmVlIHByb3BlcnRpZXMgYXJlCj4gaTJjLXBvbGxpbmcs
+IGkyYy1mcmVxdWVuY3ksIGkyYy1jbGFzcy4KPgo+IEFmdGVyIHN1cHBvcnRpbmcgdGhlc2UgcHJv
+cGVydHksIGkyYy1weGEgZHJpdmVyIGNhbiBhdm9pZCB0byB1c2UgcGxhdGZvcm0KPiBkYXRhIGV4
+Y2VwdCBmb3Igc2xhdmUgbW9kZS4KPgo+IFNpZ25lZC1vZmYtYnk6IEhhb2ppYW4gWmh1YW5nIDxo
+YW9qaWFuLnpodWFuZ0BtYXJ2ZWxsLmNvbT4KPiAtLS0KPiDCoC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2kyYy9weGEyNTUtaTJjLnR4dCDCoCDCoCDCoCDCoCB8IMKgIDM2ICsrKysrKysrKysrKysr
+KysrKysrCj4gwqBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXB4YS5jIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIHwgwqAgMjIgKysrKysrKystLS0tCj4gwqAyIGZpbGVzIGNoYW5nZWQs
+IDUxIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9weGEyNTUtaTJjLnR4dAo+Cj4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvcHhhMjU1
+LWkyYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL3B4YTI1NS1p
+MmMudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5iZjM0MjM2Cj4g
+LS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
+MmMvcHhhMjU1LWkyYy50eHQKPiBAQCAtMCwwICsxLDM2IEBACj4gK1BYQTI1NSBJMkMKPiArCj4g
+K1RoZSBJMkMtQ29udHJvbGxlciBpcyBmaXJzdCB1c2VkIGluIFBYQTI1NS4gSXQncyB3aWRlbHkg
+dXNlZCBpbiBJbnRlbC9NYXJ2ZWxsCj4gK3NpbGljb25zLgo+ICsKPiArT3B0aW9uYWwgUHJvcGVy
+dHk6Cj4gKyDCoCDCoCDCoCAtIGkyYy1wb2xsaW5nOiBTcGVjaWZpZXMgd2hldGhlciBJMkMtQ29u
+dHJvbGxlciBpcyB1c2VkIGluIHBvbGxpbmcKPiArIMKgIMKgIMKgIMKgIG1vZGUgb3IgaW50ZXJy
+dXB0IG1vZGUuIFRoZSB0eXBlIG9mIHByb3BlcnR5IHNob3VsZCBiZSA8dTMyPi4KPiArCj4gKyDC
+oCDCoCDCoCAtIGkyYy1mcmVxdWVuY3k6IFNwZWNpZmllcyB0aGUgZnJlcXVlbmN5IHRoYXQgdGhl
+IEkyQy1Db250cm9sbGVyCj4gKyDCoCDCoCDCoCDCoCBpcyB3b3JraW5nLiBUaGUgdHlwZSBvZiBw
+cm9wZXJ0eSBzaG91bGQgYmUgPHN0cmluZz4uCj4gKwo+ICsgwqAgwqAgwqAgLSBpMmMtY2xhc3M6
+IFNwZWNpZmllcyB0aGUgY2xhc3Mgb2YgSTJDLUNvbnRyb2xsZXIuIFRoZSB0eXBlIG9mCj4gKyDC
+oCDCoCDCoCDCoCBwcm9wZXJ0eSBzaG91bGQgYmUgPHUzMj4uCj4gKwo+ICtFeGFtcGxlOgo+ICsg
+wqAgwqAgwqAgaTJjMDogaTJjQGQ0MDExMDAwIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNv
+bXBhdGlibGUgPSAicHhhMnh4LWkyYyI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCAjYWRkcmVz
+cy1jZWxscyA9IDwxPjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgICNzaXplLWNlbGxzID0gPDA+
+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcmVnID0gPDB4ZDQwMTEwMDAgMHg2MD47Cj4gKyDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCAvKiBJMkMtQ29udHJvbGxlciB3b3JrcyBpbiBpbnRlcnJ1cHQg
+bW9kZS4gKi8KPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGkyYy1wb2xsaW5nID0gPDA+Owo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgLyogSTJDLUNvbnRyb2xsZXIncyBmcmVxdWVuY3kgaXMgRkFT
+VC4gKi8KPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGkyYy1mcmVxdWVuY3kgPSAiZmFzdCI7Cj4g
+KyDCoCDCoCDCoCDCoCDCoCDCoCDCoCAvKiBpbnRlcnJ1cHQgb2YgSTJDLUNvbnRyb2xsZXIgKi8K
+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGludGVycnVwdHMgPSA8Nz47Cj4gKyDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCBpbnRlcnJ1cHQtcGFyZW50ID0gPCZtbXBfaW50Yz47Cj4gKwo+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgcG04NjB4OiBwbWljQDM0IHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIGludGVycnVwdC1jb250cm9sbGVyOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgLyogaW50ZXJydXB0IG9mIHBtODYweCAqLwo+ICsgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgaW50ZXJydXB0cyA9IDw0PjsKPiArIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIGludGVycnVwdC1wYXJlbnQgPSA8Jm1tcF9pbnRjPjsKPiArIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIH07Cj4gKyDCoCDCoCDCoCB9Owo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2kyYy9idXNzZXMvaTJjLXB4YS5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1weGEuYwo+
+IGluZGV4IGFkYWM3NGEuLjRiOWZhNzEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2Vz
+L2kyYy1weGEuYwo+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcHhhLmMKPiBAQCAtMTA2
+MCw3ICsxMDYwLDggQEAgc3RhdGljIGludCBpMmNfcHhhX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKmRldikKPiDCoCDCoCDCoCDCoGNvbnN0IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2VfaWQg
+KmlkID0gcGxhdGZvcm1fZ2V0X2RldmljZV9pZChkZXYpOwo+IMKgIMKgIMKgIMKgZW51bSBweGFf
+aTJjX3R5cGVzIGkyY190eXBlOwo+IMKgIMKgIMKgIMKgc3RydWN0IHJlc291cmNlICpyZXM7Cj4g
+LSDCoCDCoCDCoCBpbnQgaXJxLCByZXQ7Cj4gKyDCoCDCoCDCoCBpbnQgaXJxLCByZXQsIHBvbGw7
+Cj4gKyDCoCDCoCDCoCBjaGFyICpwID0gTlVMTDsKPiDCoCDCoCDCoCDCoHN0YXRpYyBpbnQgaWR4
+ID0gMDsKPgo+IMKgIMKgIMKgIMKgaWYgKG5wKSB7Cj4gQEAgLTEwOTMsMTEgKzEwOTQsMjQgQEAg
+c3RhdGljIGludCBpMmNfcHhhX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikKPgo+
+Cj4gwqAgwqAgwqAgwqBpZiAobnApIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIG9mX3Byb3Bl
+cnR5X3JlYWRfdTMyKG5wLCAiaTJjLXBvbGxpbmciLCAmcG9sbCk7Cj4gKyDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCBpMmMtPnVzZV9waW8gPSAocG9sbCkgPyAxIDogMDsKPiArIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAiaTJjLWZyZXF1ZW5jeSIsICZwKTsK
+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGlmIChwICYmICFzdHJuY21wKHAsICJmYXN0IiwgNCkp
+Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpMmMtPmZhc3RfbW9kZSA9IDE7
+Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImkyYy1j
+bGFzcyIsICZpMmMtPmFkYXAuY2xhc3MpOwo+ICsKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGky
+Yy0+YWRhcC5uciA9IGlkeCsrOwo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgc25wcmludGYoaTJj
+LT5hZGFwLm5hbWUsIHNpemVvZihpMmMtPmFkYXAubmFtZSksCj4gwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAicHhhMnh4LWkyYy4ldSIsIGkyYy0+YWRhcC5ucik7Cj4gwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqBpMmMtPmNsayA9IGNsa19nZXRfc3lzKGkyYy0+YWRhcC5uYW1lLCBO
+VUxMKTsKPiDCoCDCoCDCoCDCoH0gZWxzZSB7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpZiAo
+cGxhdCkgewo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgaTJjLT5hZGFwLmNs
+YXNzID0gcGxhdC0+Y2xhc3M7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBp
+MmMtPnVzZV9waW8gPSBwbGF0LT51c2VfcGlvOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgaTJjLT5mYXN0X21vZGUgPSBwbGF0LT5mYXN0X21vZGU7Cj4gKyDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCB9Cj4gKwoKT25lIGNvbmNlcm4gb2YgRFQncyBpbXBhY3QgdG8gZXhpc3Rpbmcg
+ZHJpdmVycyBpcyBfZXZlcnlfIGRyaXZlciBoYXMgdG8gYmUKbW9kaWZpZWQuIFdoaWxlIEknbSBu
+b3Qgc3VyZSBpZiBpdCdzIGEgcmlnaHQgd2F5IHRvIGdvIGluIGEgbG9uZyBydW4uIE9yIGNhbgp3
+ZSBoYXZlIGEgZ2VuZXJpYyB3YXkgdG8gYXV0b21hdGljYWxseSBtYXAgdGhlIERUIHByb3BlcnRp
+ZXMgdG8gdGhlCnNwZWNpZmljIHBsYXRmb3JtIGRhdGEgc3RydWN0dXJlPwoKR3JhbnQsIGFueSBp
+ZGVhIG9uIHRoaXM/Cgo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgLyoKPiDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCAqIElmICJkZXYtPmlkIiBpcyBuZWdhdGl2ZSB3ZSBjb25zaWRlciBpdCBhcyB6
+ZXJvLgo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICogVGhlIHJlYXNvbiB0byBkbyBzbyBpcyB0
+byBhdm9pZCBzeXNmcyBuYW1lcyB0aGF0IG9ubHkgbWFrZQo+IEBAIC0xMTQyLDEyICsxMTU2LDYg
+QEAgc3RhdGljIGludCBpMmNfcHhhX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikK
+Pgo+IMKgIMKgIMKgIMKgY2xrX2VuYWJsZShpMmMtPmNsayk7Cj4KPiAtIMKgIMKgIMKgIGlmIChw
+bGF0KSB7Cj4gLSDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpMmMtPmFkYXAuY2xhc3MgPSBwbGF0LT5j
+bGFzczsKPiAtIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGkyYy0+dXNlX3BpbyA9IHBsYXQtPnVzZV9w
+aW87Cj4gLSDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpMmMtPmZhc3RfbW9kZSA9IHBsYXQtPmZhc3Rf
+bW9kZTsKPiAtIMKgIMKgIMKgIH0KPiAtCj4gwqAgwqAgwqAgwqBpZiAoaTJjLT51c2VfcGlvKSB7
+Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpMmMtPmFkYXAuYWxnbyA9ICZpMmNfcHhhX3Bpb19h
+bGdvcml0aG07Cj4gwqAgwqAgwqAgwqB9IGVsc2Ugewo+IC0tCj4gMS41LjYuNQo+Cj4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNj
+dXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRw
+czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
