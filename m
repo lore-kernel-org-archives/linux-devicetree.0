@@ -1,16 +1,15 @@
 From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/2] Character literal parsing
-Date: Wed, 20 Jul 2011 09:23:36 -0700
-Message-ID: <CAF6FioVMOxF7Vc74F6-yPGkwx7xS_xEa03Q2BpQewGaG=ZvkYQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Add character literal parsing in bytestrings
+Date: Wed, 20 Jul 2011 09:50:43 -0700
+Message-ID: <CAF6FioX-yYwd3FN106yCwJQD7N27J9XSiUseFHuhTWJGeq3pvw@mail.gmail.com>
 References: <1308871239-32683-1-git-send-email-robotboy@chromium.org>
-	<8yawrgb3smr.fsf@huya.qualcomm.com>
-	<BANLkTi=iUqMwag-A6t1ubDgSAN9xqWuTMwLG32EKKWuwVbigyg@mail.gmail.com>
-	<20110720134238.GK6399@yookeroo.fritz.box>
+	<1308871239-32683-2-git-send-email-robotboy@chromium.org>
+	<20110720134006.GJ6399@yookeroo.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110720134238.GK6399-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <20110720134006.GJ6399-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,53 +23,64 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2011 at 6:42 AM, David Gibson
+On Wed, Jul 20, 2011 at 6:40 AM, David Gibson
 <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Jun 24, 2011 at 01:22:13PM -0700, Anton Staaf wrote:
->> On Fri, Jun 24, 2011 at 1:02 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wro=
-te:
+> On Thu, Jun 23, 2011 at 04:20:38PM -0700, Anton Staaf wrote:
+>> This adds support for parsing simple (non-escaped) 'x' character
+>> literal syntax in bytestrings. =A0For example:
 >>
->> >
->> > Does this mean that the dtc inside the kernel is going to be the
->> > required tool to use to build device trees? =A0This change doesn't cha=
-nge
->> > the DTB format, so it's as much of a concern, but was wondering if we'=
-re
->> > intending to keep things compatible.
->> >
+>> =A0 =A0 property =3D ['a' 2b 'c'];
 >>
->> To be honest, I don't know enough to say either way. =A0I am using the
->> character literals in a device tree that is used to configure a
->> single firmware image for multiple boards. =A0That device tree is not
->> currently passed on to the kernel.
+>> is equivalent to:
 >>
->> Your question makes me think that there are two device tree compilers th=
-at I
->> should be paying attention to, is that the case? =A0Or was it a more gen=
-eral
->> comment about diverging from a historic syntax for device tree
->> source files?
+>> =A0 =A0 property =3D [61 2b 62];
 >
-> Oh, yes, forgot to mention that.
+> Hrm. =A0I like the idea of being able to encode character literals.
+> However I'm dubious as to whether the bytestring syntax is the right
+> place to encode them.
 >
-> If you want to make extensions to dtc, you should do it to the
-> upstream dtc at git://git.jdl.com/software/dtc.git. =A0The in-kernel
-> version is just a irregularly updated snapshot of that one.
+> Bytestrings are quite lexically strange, they are quite different from
+> the < ... > cell syntax: the things inside default to hex, and spacing
+> is irrelevant ([abcd] is equivalent to [ab cd], [a bc] is a syntax
+> error and *not* equivalent to [0a bc]). =A0This makes me worry about
+> possible ambiguities or other parsing problems if we put something
+> other than exactly 2 digit hex bytes in there - not that I can see any
+> definite ambiguities in this proposal.
 
-Yup, that's the repository I formed my patches against.  My
-understanding was that this was the correct mailing list to send such
-patches to.  But if there is another way to submit patches to the
-upstream dtc repository please let me know.
+As you point out below, the < ... > syntax doesn't permit byte values
+(a cell is 32 bits).  So using the cell list syntax would create a lot
+of wasted space.  Especially in my use where I need to create four 128
+byte tables for keyboard scan code mapping.  It would end up wasting
+>1KB.  Adding cell size control syntax would certainly solve that
+problem.  Is this something your interested in pursuing at this time,
+I'd be happy to help with that instead of continuing to push this.
+
+Alternatively, I think it is clear that there are no problems parsing
+out the character literals.  Mainly because the ' character is unique
+and will never otherwise occur as a character in a byte literal
+declaration.  The occurrence or lack there of of white space should
+also not be a problem, since the character literal parsing is of a
+fixed length, thus there is no possibility for an ambiguous use such
+as ' ab '.  Also, the invalid use [a bc] is still invalid with
+character literals added, for example [a 'b'] or [a'b'] are both
+invalid because the existing bytestring regex only matches two hex
+characters in a row, and the new character literal regex only matches
+a single character bounded by single quotes.  So neither regex will
+match the lone a character and parsing will fail there.
+
+> I have for some time been intending to introduce some variant of the
+> < > syntax which allows for different sized entries (1, 2 or 8 bytes
+> instead of the default 4). =A0I just haven't thought of a nice syntax
+> for it yet. =A0Character literals would fit just fine into that scheme.
+>
+> The other possibility would be to allow something like 'abcd' without
+> any special context to be a non-NULL-terminated "string". =A0I'm also a
+> bit dubious about that on the "be like C" principle, which has served
+> us pretty well in the past.
+
+Yes, I would also shy away from such a construct.  I think it violates
+the principal of least surprise.  Though admittedly, the byte string
+syntax does that already...
 
 Thanks,
     Anton
-
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
