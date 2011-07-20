@@ -1,59 +1,37 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] OMAP3:I2C: Add device tree nodes for beagle board
-Date: Thu, 21 Jul 2011 06:33:49 +0800
-Message-ID: <20110720223348.GH6999@S2100-06.ap.freescale.net>
-References: <1309426647-31587-1-git-send-email-manjugk@ti.com>
- <1309426647-31587-2-git-send-email-manjugk@ti.com>
- <20110706185546.GJ4871@ponder.secretlab.ca>
- <74CDBE0F657A3D45AFBB94109FB122FF049E21C203@HQMAIL01.nvidia.com>
- <CACxGe6u8qq7FA7kFXbU5uCk6m_GA8GWLqsdjFCXN+NMJfFKxmA@mail.gmail.com>
- <20110720110419.GA6999@S2100-06.ap.freescale.net>
- <20110720185513.GI4642@ponder.secretlab.ca>
+From: Andrew Chew <AChew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 1/3 v2] usb: tegra20-ehci: Add devicetree support.
+Date: Wed, 20 Jul 2011 15:52:55 -0700
+Message-ID: <643E69AA4436674C8F39DCC2C05F76383CF0DD227C@HQMAIL03.nvidia.com>
+References: <1311190690-18334-1-git-send-email-achew@nvidia.com>
+	<CACxGe6uDVdemjbjY_i-_M_-VT8HuLdtXP-R9V8kB+pSSin4dEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110720185513.GI4642-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6uDVdemjbjY_i-_M_-VT8HuLdtXP-R9V8kB+pSSin4dEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: 'Grant Likely' <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Dan Willemsen <dwillemsen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Venkat Moganty <vmoganty-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2011 at 12:55:13PM -0600, Grant Likely wrote:
-> On Wed, Jul 20, 2011 at 07:04:20PM +0800, Shawn Guo wrote:
-> > > Mostly consistency.  Most of the experience we have with the flattened
-> > > device tree up to this point hasn't bothered with the 'status'
-> > > property.  It is only when AMP and hypervisors cam online that it
-> > > became important to use a status property, and that only when the
-> > > kernel needs to be told that the device does indeed exist, but it must
-> > > not be touched.  I'd like to continue that pattern for new DT users
-> > > with the default assumption that a device is enabled unless the board
-> > > .dts explicitly disables it.
-> [...]
-> > Besides the bothering that we have to list so many unused controllers
-> > in individual board dts file, it's also hard to tell which controllers
-> > are actually available on the board.  People have to look at imx53.dts
-> > to get a full list and then exclude the ones in imx53-<board>.dts as
-> > "disabled".
-> > 
-> > And if we go the way opposite, adding "disabled" status for everyone
-> > in imx53.dts, we will only need to specify the peripherals that are
-> > actually available on board with "okay" status in imx53-<board>.dts.
-> > And it's much more clear for people to see what peripherals are
-> > available on individual board.
-> > 
-> > So I'm going the way than you suggested.  Please let me know if you
-> > strongly dislikes it.
-> 
-> Yes, I strongly dislike it.  I understand the concern, but at this
-> early stage with converting to device tree I think consistency between
-> platforms is more important.  We can talk about the issue at Linaro
-> Connect in 2 weeks, but in the mean time please use the
-> enabled-by-default/explicitly-disabled pattern.
-> 
-Okay, hope you will not ask me to use the opposite pattern when you
-actually see the patch :)
+> > + =A0 =A0 =A0 retval =3D of_property_read_u32(dn, "hssync_start_delay",
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 (u32 =
 
--- 
-Regards,
-Shawn
+> *)&phy_config->hssync_start_delay);
+> =
+
+> Gah!  Don't cast pointers that way.  It will break badly if the sizes
+> don't match.  The variable *must* be a u32.
+
+Can we have u16 and u8 versions of of_property_read, then?  It'll simplify =
+code.  I'll be happy to submit a patch for that if that's what we want.
