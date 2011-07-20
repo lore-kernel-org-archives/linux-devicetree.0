@@ -1,131 +1,62 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] OMAP3:I2C: Add device tree nodes for beagle board
-Date: Wed, 20 Jul 2011 19:04:20 +0800
-Message-ID: <20110720110419.GA6999@S2100-06.ap.freescale.net>
-References: <1309426647-31587-1-git-send-email-manjugk@ti.com>
- <1309426647-31587-2-git-send-email-manjugk@ti.com>
- <20110706185546.GJ4871@ponder.secretlab.ca>
- <74CDBE0F657A3D45AFBB94109FB122FF049E21C203@HQMAIL01.nvidia.com>
- <CACxGe6u8qq7FA7kFXbU5uCk6m_GA8GWLqsdjFCXN+NMJfFKxmA@mail.gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/2] Add character literal parsing in bytestrings
+Date: Wed, 20 Jul 2011 23:40:06 +1000
+Message-ID: <20110720134006.GJ6399@yookeroo.fritz.box>
+References: <1308871239-32683-1-git-send-email-robotboy@chromium.org>
+	<1308871239-32683-2-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6u8qq7FA7kFXbU5uCk6m_GA8GWLqsdjFCXN+NMJfFKxmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1308871239-32683-2-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2011 at 06:12:49PM -0600, Grant Likely wrote:
-> On Wed, Jul 6, 2011 at 5:26 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
-rote:
-> > Grant Likely wrote at Wednesday, July 06, 2011 12:56 PM:
-> >> On Thu, Jun 30, 2011 at 03:07:23PM +0500, G, Manjunath Kondaiah wr=
-ote:
-> >> > Add I2C and it's child device nodes for beagle board.
-> >> > The I2C1 controller child devices are not populated and it
-> >> > should be handled along with OMAP clock changes.
-> > ...
-> >> > diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/=
-dts/omap3-beagle.dts
-> > ...
-> >> > + =A0 i2c@48070000 {
-> > ...
-> >> > + =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <2600>;
-> >> > + =A0 =A0 =A0 =A0 =A0 status =3D "disabled";
-> >>
-> >> Drop 'status' when you move this node definition to
-> >> arch/arm/boot/dts/omap3.dtsi. =A0Board overlay files that include =
-the
-> >> omap3.dtsi should explicitly disable any devices that it does not =
-use
-> >> (which is opposite to what tegra currently does, but I'm going to
-> >> change that).
-> >
-> > Purely out of idle curiosity: What's the benefit of one way over th=
-e other?
->=20
-> Mostly consistency.  Most of the experience we have with the flattene=
-d
-> device tree up to this point hasn't bothered with the 'status'
-> property.  It is only when AMP and hypervisors cam online that it
-> became important to use a status property, and that only when the
-> kernel needs to be told that the device does indeed exist, but it mus=
-t
-> not be touched.  I'd like to continue that pattern for new DT users
-> with the default assumption that a device is enabled unless the board
-> .dts explicitly disables it.
->=20
-When going this way with my i.mx53 related dts files, I feel I like the
-opposite way.
+On Thu, Jun 23, 2011 at 04:20:38PM -0700, Anton Staaf wrote:
+> This adds support for parsing simple (non-escaped) 'x' character
+> literal syntax in bytestrings.  For example:
+> 
+>     property = ['a' 2b 'c'];
+> 
+> is equivalent to:
+> 
+>     property = [61 2b 62];
 
-i.mx53 has many number of peripherals inside, while individual board
-might only use small portion there.  For example, i.mx53 has 5 uart
-controller instances inside, while quick start (aka loco) board only
-uses one.  With the way you suggest here, we will have the following
-in imx53.dtsi.
+Hrm.  I like the idea of being able to encode character literals.
+However I'm dubious as to whether the bytestring syntax is the right
+place to encode them.
 
-uart0: uart@... {
-	...
-};
+Bytestrings are quite lexically strange, they are quite different from
+the < ... > cell syntax: the things inside default to hex, and spacing
+is irrelevant ([abcd] is equivalent to [ab cd], [a bc] is a syntax
+error and *not* equivalent to [0a bc]).  This makes me worry about
+possible ambiguities or other parsing problems if we put something
+other than exactly 2 digit hex bytes in there - not that I can see any
+definite ambiguities in this proposal.
 
-uart1: uart@... {
-	...
-};
+I have for some time been intending to introduce some variant of the
+< > syntax which allows for different sized entries (1, 2 or 8 bytes
+instead of the default 4).  I just haven't thought of a nice syntax
+for it yet.  Character literals would fit just fine into that scheme.
 
-uart2: uart@... {
-	...
-};
+The other possibility would be to allow something like 'abcd' without
+any special context to be a non-NULL-terminated "string".  I'm also a
+bit dubious about that on the "be like C" principle, which has served
+us pretty well in the past.
 
-uart3: uart@... {
-	...
-};
-
-uart4: uart@... {
-	...
-};
-
-And we will have to tell the 4 we do not use on quick start board in
-imx53-qs.dtsi
-
-
-uart1: uart@... {
-	...
-	status =3D "disabled";
-};
-
-uart2: uart@... {
-	...
-	status =3D "disabled";
-};
-
-uart3: uart@... {
-	...
-	status =3D "disabled";
-};
-
-uart4: uart@... {
-	...
-	status =3D "disabled";
-};
-
-Besides the bothering that we have to list so many unused controllers
-in individual board dts file, it's also hard to tell which controllers
-are actually available on the board.  People have to look at imx53.dts
-to get a full list and then exclude the ones in imx53-<board>.dts as
-"disabled".
-
-And if we go the way opposite, adding "disabled" status for everyone
-in imx53.dts, we will only need to specify the peripherals that are
-actually available on board with "okay" status in imx53-<board>.dts.
-And it's much more clear for people to see what peripherals are
-available on individual board.
-
-So I'm going the way than you suggested.  Please let me know if you
-strongly dislikes it.
-
---=20
-Regards,
-Shawn
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
