@@ -1,15 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/2] Add character literal parsing in bytestrings
-Date: Wed, 20 Jul 2011 23:40:06 +1000
-Message-ID: <20110720134006.GJ6399@yookeroo.fritz.box>
+Subject: Re: [PATCH 0/2] Character literal parsing
+Date: Wed, 20 Jul 2011 23:42:38 +1000
+Message-ID: <20110720134238.GK6399@yookeroo.fritz.box>
 References: <1308871239-32683-1-git-send-email-robotboy@chromium.org>
-	<1308871239-32683-2-git-send-email-robotboy@chromium.org>
+	<8yawrgb3smr.fsf@huya.qualcomm.com>
+	<BANLkTi=iUqMwag-A6t1ubDgSAN9xqWuTMwLG32EKKWuwVbigyg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1308871239-32683-2-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <BANLkTi=iUqMwag-A6t1ubDgSAN9xqWuTMwLG32EKKWuwVbigyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,41 +20,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2011 at 04:20:38PM -0700, Anton Staaf wrote:
-> This adds support for parsing simple (non-escaped) 'x' character
-> literal syntax in bytestrings.  For example:
+On Fri, Jun 24, 2011 at 01:22:13PM -0700, Anton Staaf wrote:
+> On Fri, Jun 24, 2011 at 1:02 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 > 
->     property = ['a' 2b 'c'];
+> >
+> > Does this mean that the dtc inside the kernel is going to be the
+> > required tool to use to build device trees?  This change doesn't change
+> > the DTB format, so it's as much of a concern, but was wondering if we're
+> > intending to keep things compatible.
+> >
 > 
-> is equivalent to:
+> To be honest, I don't know enough to say either way.  I am using the
+> character literals in a device tree that is used to configure a
+> single firmware image for multiple boards.  That device tree is not
+> currently passed on to the kernel.
 > 
->     property = [61 2b 62];
+> Your question makes me think that there are two device tree compilers that I
+> should be paying attention to, is that the case?  Or was it a more general
+> comment about diverging from a historic syntax for device tree
+> source files?
 
-Hrm.  I like the idea of being able to encode character literals.
-However I'm dubious as to whether the bytestring syntax is the right
-place to encode them.
+Oh, yes, forgot to mention that.
 
-Bytestrings are quite lexically strange, they are quite different from
-the < ... > cell syntax: the things inside default to hex, and spacing
-is irrelevant ([abcd] is equivalent to [ab cd], [a bc] is a syntax
-error and *not* equivalent to [0a bc]).  This makes me worry about
-possible ambiguities or other parsing problems if we put something
-other than exactly 2 digit hex bytes in there - not that I can see any
-definite ambiguities in this proposal.
-
-I have for some time been intending to introduce some variant of the
-< > syntax which allows for different sized entries (1, 2 or 8 bytes
-instead of the default 4).  I just haven't thought of a nice syntax
-for it yet.  Character literals would fit just fine into that scheme.
-
-The other possibility would be to allow something like 'abcd' without
-any special context to be a non-NULL-terminated "string".  I'm also a
-bit dubious about that on the "be like C" principle, which has served
-us pretty well in the past.
+If you want to make extensions to dtc, you should do it to the
+upstream dtc at git://git.jdl.com/software/dtc.git.  The in-kernel
+version is just a irregularly updated snapshot of that one.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
