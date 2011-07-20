@@ -1,7 +1,7 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v2] mtd: dataflash: add device tree probe support
-Date: Wed, 20 Jul 2011 08:32:45 +0300
-Message-ID: <1311139971.20738.154.camel@sauron>
+Date: Wed, 20 Jul 2011 01:38:07 -0400
+Message-ID: <CAMjpGUdW=uW4aDQ0BD1VW-7Vc9KXuOXR50+Nbrd3VUyy_P64TQ@mail.gmail.com>
 References: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
 	<1310658757-17018-1-git-send-email-shawn.guo@linaro.org>
 	<20110715025407.GF2927@ponder.secretlab.ca>
@@ -10,12 +10,12 @@ References: <1310283313-32087-1-git-send-email-shawn.guo@linaro.org>
 	<20110720045547.GA5766@S2100-06.ap.freescale.net>
 	<1311139071.20738.147.camel@sauron>
 	<20110720052824.GB5766@S2100-06.ap.freescale.net>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+	<1311139971.20738.154.camel@sauron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110720052824.GB5766-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1311139971.20738.154.camel@sauron>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,44 +25,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2011-07-20 at 13:28 +0800, Shawn Guo wrote:
-> On Wed, Jul 20, 2011 at 08:17:45AM +0300, Artem Bityutskiy wrote:
-> > On Wed, 2011-07-20 at 12:55 +0800, Shawn Guo wrote:
-> > > On Wed, Jul 20, 2011 at 07:40:38AM +0300, Artem Bityutskiy wrote:
-> > > > On Fri, 2011-07-15 at 12:49 +0800, Shawn Guo wrote:
-> > > > > > > +static const struct of_device_id dataflash_dt_ids[] = {
-> > > > > > > +	{ .compatible = "atmel,at45xxx", },
-> > > > > > > +	{ .compatible = "atmel,dataflash", },
-> > > > > > > +	{ /* sentinel */ }
-> > > > > > > +};
-> > > > > > > +
-> > > > > > 
-> > > > > > This should be protected with a #ifdef CONFIG_OF/#else/#endif, and
-> > > > > > there should be a MODULE_DEVICE_TABLE().
-> > > > > > 
-> > > > > I personally hate #ifdef stuff.  But okay, I can do it since there
-> > > > > are people being concerned by this little waste of space.
-> > > > 
-> > > > I guess the question is - will it compile and work if CONFIG_OF is
-> > > > unset?
-> > > > 
-> > > Yes, it will compile, as 'struct of_device_id' is defined in
-> > > include/linux/mod_devicetable.h unconditionally.
-> > 
-> > And it will work correctly even though dataflash_dt_ids is not NULL, it
-> > will not confuse MTD layer?
-> > 
-> I think for non-dt case, dataflash_dt_ids is not used anyway.  So yes,
-> it will not confuse MTD layer, at least from my testing.
-
-And it is not error-prone? I mean, it is not very likely that someone
-changing MTD could make wrong assumptions and break dataflash driver? If
-so, then we probably do not need ifdefs indeed.
-
--- 
-Best Regards,
-Artem Bityutskiy
+T24gV2VkLCBKdWwgMjAsIDIwMTEgYXQgMDE6MzIsIEFydGVtIEJpdHl1dHNraXkgd3JvdGU6Cj4g
+T24gV2VkLCAyMDExLTA3LTIwIGF0IDEzOjI4ICswODAwLCBTaGF3biBHdW8gd3JvdGU6Cj4+IE9u
+IFdlZCwgSnVsIDIwLCAyMDExIGF0IDA4OjE3OjQ1QU0gKzAzMDAsIEFydGVtIEJpdHl1dHNraXkg
+d3JvdGU6Cj4+ID4gT24gV2VkLCAyMDExLTA3LTIwIGF0IDEyOjU1ICswODAwLCBTaGF3biBHdW8g
+d3JvdGU6Cj4+ID4gPiBPbiBXZWQsIEp1bCAyMCwgMjAxMSBhdCAwNzo0MDozOEFNICswMzAwLCBB
+cnRlbSBCaXR5dXRza2l5IHdyb3RlOgo+PiA+ID4gPiBPbiBGcmksIDIwMTEtMDctMTUgYXQgMTI6
+NDkgKzA4MDAsIFNoYXduIEd1byB3cm90ZToKPj4gPiA+ID4gPiA+ID4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGRhdGFmbGFzaF9kdF9pZHNbXSA9IHsKPj4gPiA+ID4gPiA+ID4g
+KyB7IC5jb21wYXRpYmxlID0gImF0bWVsLGF0NDV4eHgiLCB9LAo+PiA+ID4gPiA+ID4gPiArIHsg
+LmNvbXBhdGlibGUgPSAiYXRtZWwsZGF0YWZsYXNoIiwgfSwKPj4gPiA+ID4gPiA+ID4gKyB7IC8q
+IHNlbnRpbmVsICovIH0KPj4gPiA+ID4gPiA+ID4gK307Cj4+ID4gPiA+ID4gPiA+ICsKPj4gPiA+
+ID4gPiA+Cj4+ID4gPiA+ID4gPiBUaGlzIHNob3VsZCBiZSBwcm90ZWN0ZWQgd2l0aCBhICNpZmRl
+ZiBDT05GSUdfT0YvI2Vsc2UvI2VuZGlmLCBhbmQKPj4gPiA+ID4gPiA+IHRoZXJlIHNob3VsZCBi
+ZSBhIE1PRFVMRV9ERVZJQ0VfVEFCTEUoKS4KPj4gPiA+ID4gPiA+Cj4+ID4gPiA+ID4gSSBwZXJz
+b25hbGx5IGhhdGUgI2lmZGVmIHN0dWZmLiDCoEJ1dCBva2F5LCBJIGNhbiBkbyBpdCBzaW5jZSB0
+aGVyZQo+PiA+ID4gPiA+IGFyZSBwZW9wbGUgYmVpbmcgY29uY2VybmVkIGJ5IHRoaXMgbGl0dGxl
+IHdhc3RlIG9mIHNwYWNlLgo+PiA+ID4gPgo+PiA+ID4gPiBJIGd1ZXNzIHRoZSBxdWVzdGlvbiBp
+cyAtIHdpbGwgaXQgY29tcGlsZSBhbmQgd29yayBpZiBDT05GSUdfT0YgaXMKPj4gPiA+ID4gdW5z
+ZXQ/Cj4+ID4gPiA+Cj4+ID4gPiBZZXMsIGl0IHdpbGwgY29tcGlsZSwgYXMgJ3N0cnVjdCBvZl9k
+ZXZpY2VfaWQnIGlzIGRlZmluZWQgaW4KPj4gPiA+IGluY2x1ZGUvbGludXgvbW9kX2RldmljZXRh
+YmxlLmggdW5jb25kaXRpb25hbGx5Lgo+PiA+Cj4+ID4gQW5kIGl0IHdpbGwgd29yayBjb3JyZWN0
+bHkgZXZlbiB0aG91Z2ggZGF0YWZsYXNoX2R0X2lkcyBpcyBub3QgTlVMTCwgaXQKPj4gPiB3aWxs
+IG5vdCBjb25mdXNlIE1URCBsYXllcj8KPj4gPgo+PiBJIHRoaW5rIGZvciBub24tZHQgY2FzZSwg
+ZGF0YWZsYXNoX2R0X2lkcyBpcyBub3QgdXNlZCBhbnl3YXkuIMKgU28geWVzLAo+PiBpdCB3aWxs
+IG5vdCBjb25mdXNlIE1URCBsYXllciwgYXQgbGVhc3QgZnJvbSBteSB0ZXN0aW5nLgo+Cj4gQW5k
+IGl0IGlzIG5vdCBlcnJvci1wcm9uZT8gSSBtZWFuLCBpdCBpcyBub3QgdmVyeSBsaWtlbHkgdGhh
+dCBzb21lb25lCj4gY2hhbmdpbmcgTVREIGNvdWxkIG1ha2Ugd3JvbmcgYXNzdW1wdGlvbnMgYW5k
+IGJyZWFrIGRhdGFmbGFzaCBkcml2ZXI/IElmCj4gc28sIHRoZW4gd2UgcHJvYmFibHkgZG8gbm90
+IG5lZWQgaWZkZWZzIGluZGVlZC4KCmV4Y2VwdCBmb3IgdGhlIHBhcnQgd2hlcmUgZGV2aWNlIHRy
+ZWUgY29kZSBzaG91bGRudCBiZSB3YXN0aW5nIHNwYWNlCm9uIG5vbi1kZXZpY2UgdHJlZSBzeXN0
+ZW1zCi1taWtlCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3Rz
+Lm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUt
+ZGlzY3Vzcwo=
