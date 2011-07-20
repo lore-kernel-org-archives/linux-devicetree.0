@@ -1,48 +1,130 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt: tegra20: Add ehci nodes to Seaboard.
-Date: Tue, 19 Jul 2011 17:14:04 -0700
-Message-ID: <CAOesGMiOkMCzOxvK8jdYLPLbnH=7Wcf5E6qJ2tDDO+dRXeg9QQ@mail.gmail.com>
-References: <1311115617-9697-1-git-send-email-achew@nvidia.com>
-	<1311115617-9697-3-git-send-email-achew@nvidia.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF049EBDED2A@HQMAIL01.nvidia.com>
-	<643E69AA4436674C8F39DCC2C05F76383CF0DD2271@HQMAIL03.nvidia.com>
-	<CAOesGMj247ekXj1FPmb-ZXqxTV4PsmAiCme005TGKm7cnBdOPQ@mail.gmail.com>
-	<643E69AA4436674C8F39DCC2C05F76383CF0DD2272@HQMAIL03.nvidia.com>
+From: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 7/7] i2c: pxa: support to parse property
+Date: Wed, 20 Jul 2011 09:22:33 +0800
+Message-ID: <CAMPhdO9oHNVX66QLAAnLYhm3cGR4Roms6cYFXAbkZ=LxtO+aTQ@mail.gmail.com>
+References: <1311042290-20253-1-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-2-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-3-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-4-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-5-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-6-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-7-git-send-email-haojian.zhuang@marvell.com>
+	<1311042290-20253-8-git-send-email-haojian.zhuang@marvell.com>
+	<20110719194550.GK6848@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <643E69AA4436674C8F39DCC2C05F76383CF0DD2272-lR+7xdUAJVNDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Chew <AChew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Dan Willemsen <dwillemsen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Venkat Moganty <vmoganty-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110719194550.GK6848-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2011 at 5:07 PM, Andrew Chew <AChew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> > And since there are defaults specified in tegra20.dtsi,
->> does it really make sense to also have default values
->> assigned in ehci-tegra.c (for when a property is not
->> present)? =A0I worry that the information is now duplicated.
->> If those properties aren't present, then someone's mucked
->> with the tegra20.dtsi ehci properties.
->>
->> Once all platforms are cut over to devicetree-only, that can be the
->> case. Until that happens, there will be need for settings in the C
->> code too. Is Nvidia switching to device trees for android/fastboot?
->
-> I'm not talking about the defaults in arch/arm/mach-tegra/usb_phy.c. =
-=A0I understand that once we cut over to devicetree-only, the defaults =
-there can go away.
->
-> The question is, if a property is not present, what should we do? =A0=
-The default value for that property SHOULD be present somewhere in the =
-dts chain. =A0But if it's not, should we error out, spit out a warning,=
- or spit out a warning and assign a default? =A0If it's the latter case=
-, then we now have a set of defaults in dts, as well as C code, regardl=
-ess of whether we've switched over to devicetree-only or not.
-
-If there are no safe/sane defaults, then there isn't much to be done
-there. I'd say fail probe (i.e. error out) to avoid surprises.
-
-
--Olof
+T24gV2VkLCBKdWwgMjAsIDIwMTEgYXQgMzo0NSBBTSwgR3JhbnQgTGlrZWx5IDxncmFudC5saWtl
+bHlAc2VjcmV0bGFiLmNhPiB3cm90ZToKPiBPbiBUdWUsIEp1bCAxOSwgMjAxMSBhdCAxMDoyNDo1
+MEFNICswODAwLCBIYW9qaWFuIFpodWFuZyB3cm90ZToKPj4gU3VwcG9ydCB0byBwYXJzZSBzb21l
+IG9wdGlvbmFsIHByb3BlcnRpZXMuIFRoZXNlIHRocmVlIHByb3BlcnRpZXMgYXJlCj4+IGkyYy1w
+b2xsaW5nLCBpMmMtZnJlcXVlbmN5LCBpMmMtY2xhc3MuCj4+Cj4+IEFmdGVyIHN1cHBvcnRpbmcg
+dGhlc2UgcHJvcGVydHksIGkyYy1weGEgZHJpdmVyIGNhbiBhdm9pZCB0byB1c2UgcGxhdGZvcm0K
+Pj4gZGF0YSBleGNlcHQgZm9yIHNsYXZlIG1vZGUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEhhb2pp
+YW4gWmh1YW5nIDxoYW9qaWFuLnpodWFuZ0BtYXJ2ZWxsLmNvbT4KPj4gLS0tCj4+IMKgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaTJjL3B4YTI1NS1pMmMudHh0IMKgIMKgIMKgIMKgIHwgwqAgMzYg
+KysrKysrKysrKysrKysrKysrKysKPj4gwqBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXB4YS5jIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHwgwqAgMjIgKysrKysrKystLS0tCj4+IMKg
+MiBmaWxlcyBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+PiDCoGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL3B4
+YTI1NS1pMmMudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvaTJjL3B4YTI1NS1pMmMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2kyYy9weGEyNTUtaTJjLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRl
+eCAwMDAwMDAwLi5iZjM0MjM2Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9weGEyNTUtaTJjLnR4dAo+PiBAQCAtMCwwICsxLDM2
+IEBACj4+ICtQWEEyNTUgSTJDCj4+ICsKPj4gK1RoZSBJMkMtQ29udHJvbGxlciBpcyBmaXJzdCB1
+c2VkIGluIFBYQTI1NS4gSXQncyB3aWRlbHkgdXNlZCBpbiBJbnRlbC9NYXJ2ZWxsCj4+ICtzaWxp
+Y29ucy4KPj4gKwo+PiArT3B0aW9uYWwgUHJvcGVydHk6Cj4+ICsgwqAgwqAgLSBpMmMtcG9sbGlu
+ZzogU3BlY2lmaWVzIHdoZXRoZXIgSTJDLUNvbnRyb2xsZXIgaXMgdXNlZCBpbiBwb2xsaW5nCj4+
+ICsgwqAgwqAgwqAgbW9kZSBvciBpbnRlcnJ1cHQgbW9kZS4gVGhlIHR5cGUgb2YgcHJvcGVydHkg
+c2hvdWxkIGJlIDx1MzI+Lgo+Cj4gbXJ2bCxpMmMtcG9sbGluZwo+Cj4gTWFrZSB0aGlzIGFuIGVt
+cHR5IHByb3BlcnR5IGluc3RlYWQgb2YgcmVhZGluZyBhIHZhbHVlIG91dCBvZiBpdC4gwqBJZgo+
+IHRoZSBwcm9wZXJ0eSBpcyBwcmVzZW50LCB0aGVuIGl0IG1lYW5zIHBvbGxpbmcgbW9kZSBpcyBy
+ZXF1ZXN0ZWQuCj4gQmVzaWRlcywgd291bGRuJ3QganVzdCB0aGUgYWJzZW5jZSBvZiBhbiAiaW50
+ZXJydXB0cyIgcHJvcGVydHkgbWVhbiB0aGF0Cj4gdGhlIGkyYyBjb250cm9sbGVyIHNob3VsZCBi
+ZSBydW4gaW4gcG9sbGVkIG1vZGU/CgpBbmQgY2hhbmdlIGl0IHRvICd1c2UtcG9sbGluZycgbWln
+aHQgYmUgY2xlYXJlciBoZXJlLiBUaGUgYWJzZW5jZSBvZiBhbgonaW50ZXJydXB0JyBwcm9wZXJ0
+eSBnaXZlcyBhbiBpbGx1c2lvbiBvZiB0aGlzIGNvbnRyb2xsZXIgbm90IGNvbm5lY3RlZCB0bwph
+bnkgSVJRIGxpbmUsIHdoaWxlIHRoaXMgaXMgbm90IHRydWUsIGl0J3MganVzdCBub3QgdXNlZCBp
+biBwb2xsaW5nIG1vZGUuCgpQUzogcG9sbGluZyBtb2RlIHVzZWQgaW4gaW50ZXJydXB0IGRpc2Fi
+bGVkIHNpdHVhdGlvbnMsIGUuZy4gbGF0ZSBpbgpzdXNwZW5kIG9yIGVhcmx5IGluIHJlc3VtZS4K
+Cj4KPj4gKwo+PiArIMKgIMKgIC0gaTJjLWZyZXF1ZW5jeTogU3BlY2lmaWVzIHRoZSBmcmVxdWVu
+Y3kgdGhhdCB0aGUgSTJDLUNvbnRyb2xsZXIKPj4gKyDCoCDCoCDCoCBpcyB3b3JraW5nLiBUaGUg
+dHlwZSBvZiBwcm9wZXJ0eSBzaG91bGQgYmUgPHN0cmluZz4uCj4+ICsKPj4gKyDCoCDCoCAtIGky
+Yy1jbGFzczogU3BlY2lmaWVzIHRoZSBjbGFzcyBvZiBJMkMtQ29udHJvbGxlci4gVGhlIHR5cGUg
+b2YKPj4gKyDCoCDCoCDCoCBwcm9wZXJ0eSBzaG91bGQgYmUgPHUzMj4uCj4KPiA/Pz8gwqBXaGF0
+IGlzIHRoaXMgZm9yPyDCoFRoZSBkZXNjcmlwdGlvbiBpbiBpbnN1ZmZpY2llbnQuCj4KPj4gKwo+
+PiArRXhhbXBsZToKPj4gKyDCoCDCoCBpMmMwOiBpMmNAZDQwMTEwMDAgewo+PiArIMKgIMKgIMKg
+IMKgIMKgIMKgIGNvbXBhdGlibGUgPSAicHhhMnh4LWkyYyI7Cj4+ICsgwqAgwqAgwqAgwqAgwqAg
+wqAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgI3NpemUtY2Vs
+bHMgPSA8MD47Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgcmVnID0gPDB4ZDQwMTEwMDAgMHg2MD47
+Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgLyogSTJDLUNvbnRyb2xsZXIgd29ya3MgaW4gaW50ZXJy
+dXB0IG1vZGUuICovCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgaTJjLXBvbGxpbmcgPSA8MD47Cj4+
+ICsgwqAgwqAgwqAgwqAgwqAgwqAgLyogSTJDLUNvbnRyb2xsZXIncyBmcmVxdWVuY3kgaXMgRkFT
+VC4gKi8KPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBpMmMtZnJlcXVlbmN5ID0gImZhc3QiOwo+PiAr
+IMKgIMKgIMKgIMKgIMKgIMKgIC8qIGludGVycnVwdCBvZiBJMkMtQ29udHJvbGxlciAqLwo+PiAr
+IMKgIMKgIMKgIMKgIMKgIMKgIGludGVycnVwdHMgPSA8Nz47Cj4+ICsgwqAgwqAgwqAgwqAgwqAg
+wqAgaW50ZXJydXB0LXBhcmVudCA9IDwmbW1wX2ludGM+Owo+PiArCj4+ICsgwqAgwqAgwqAgwqAg
+wqAgwqAgcG04NjB4OiBwbWljQDM0IHsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCBpbnRlcnJ1cHQtY29udHJvbGxlcjsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCAvKiBpbnRlcnJ1cHQgb2YgcG04NjB4ICovCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgaW50ZXJydXB0cyA9IDw0PjsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCBpbnRlcnJ1cHQtcGFyZW50ID0gPCZtbXBfaW50Yz47Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
+fTsKPj4gKyDCoCDCoCB9Owo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1w
+eGEuYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcHhhLmMKPj4gaW5kZXggYWRhYzc0YS4uNGI5
+ZmE3MSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1weGEuYwo+PiArKysg
+Yi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLXB4YS5jCj4+IEBAIC0xMDYwLDcgKzEwNjAsOCBAQCBz
+dGF0aWMgaW50IGkyY19weGFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2KQo+PiDC
+oCDCoCDCoCBjb25zdCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlX2lkICppZCA9IHBsYXRmb3JtX2dl
+dF9kZXZpY2VfaWQoZGV2KTsKPj4gwqAgwqAgwqAgZW51bSBweGFfaTJjX3R5cGVzIGkyY190eXBl
+Owo+PiDCoCDCoCDCoCBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPj4gLSDCoCDCoCBpbnQgaXJxLCBy
+ZXQ7Cj4+ICsgwqAgwqAgaW50IGlycSwgcmV0LCBwb2xsOwo+PiArIMKgIMKgIGNoYXIgKnAgPSBO
+VUxMOwo+PiDCoCDCoCDCoCBzdGF0aWMgaW50IGlkeCA9IDA7Cj4+Cj4+IMKgIMKgIMKgIGlmIChu
+cCkgewo+PiBAQCAtMTA5MywxMSArMTA5NCwyNCBAQCBzdGF0aWMgaW50IGkyY19weGFfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2KQo+Pgo+Pgo+PiDCoCDCoCDCoCBpZiAobnApIHsK
+Pj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImkyYy1wb2xs
+aW5nIiwgJnBvbGwpOwo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIGkyYy0+dXNlX3BpbyA9IChwb2xs
+KSA/IDEgOiAwOwo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5n
+KG5wLCAiaTJjLWZyZXF1ZW5jeSIsICZwKTsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBpZiAocCAm
+JiAhc3RybmNtcChwLCAiZmFzdCIsIDQpKQo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIGkyYy0+ZmFzdF9tb2RlID0gMTsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBvZl9wcm9wZXJ0
+eV9yZWFkX3UzMihucCwgImkyYy1jbGFzcyIsICZpMmMtPmFkYXAuY2xhc3MpOwo+PiArCj4+IMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIGkyYy0+YWRhcC5uciA9IGlkeCsrOwo+PiDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCBzbnByaW50ZihpMmMtPmFkYXAubmFtZSwgc2l6ZW9mKGkyYy0+YWRhcC5uYW1lKSwK
+Pj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgInB4YTJ4eC1pMmMuJXUiLCBpMmMt
+PmFkYXAubnIpOwo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpMmMtPmNsayA9IGNsa19nZXRfc3lz
+KGkyYy0+YWRhcC5uYW1lLCBOVUxMKTsKPj4gwqAgwqAgwqAgfSBlbHNlIHsKPj4gKyDCoCDCoCDC
+oCDCoCDCoCDCoCBpZiAocGxhdCkgewo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IGkyYy0+YWRhcC5jbGFzcyA9IHBsYXQtPmNsYXNzOwo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIGkyYy0+dXNlX3BpbyA9IHBsYXQtPnVzZV9waW87Cj4+ICsgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgaTJjLT5mYXN0X21vZGUgPSBwbGF0LT5mYXN0X21vZGU7Cj4+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgfQo+PiArCj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIC8qCj4+IMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgKiBJZiAiZGV2LT5pZCIgaXMgbmVnYXRpdmUgd2UgY29uc2lk
+ZXIgaXQgYXMgemVyby4KPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAqIFRoZSByZWFzb24gdG8g
+ZG8gc28gaXMgdG8gYXZvaWQgc3lzZnMgbmFtZXMgdGhhdCBvbmx5IG1ha2UKPj4gQEAgLTExNDIs
+MTIgKzExNTYsNiBAQCBzdGF0aWMgaW50IGkyY19weGFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqZGV2KQo+Pgo+PiDCoCDCoCDCoCBjbGtfZW5hYmxlKGkyYy0+Y2xrKTsKPj4KPj4gLSDC
+oCDCoCBpZiAocGxhdCkgewo+PiAtIMKgIMKgIMKgIMKgIMKgIMKgIGkyYy0+YWRhcC5jbGFzcyA9
+IHBsYXQtPmNsYXNzOwo+PiAtIMKgIMKgIMKgIMKgIMKgIMKgIGkyYy0+dXNlX3BpbyA9IHBsYXQt
+PnVzZV9waW87Cj4+IC0gwqAgwqAgwqAgwqAgwqAgwqAgaTJjLT5mYXN0X21vZGUgPSBwbGF0LT5m
+YXN0X21vZGU7Cj4+IC0gwqAgwqAgfQo+PiAtCj4+IMKgIMKgIMKgIGlmIChpMmMtPnVzZV9waW8p
+IHsKPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgaTJjLT5hZGFwLmFsZ28gPSAmaTJjX3B4YV9waW9f
+YWxnb3JpdGhtOwo+PiDCoCDCoCDCoCB9IGVsc2Ugewo+PiAtLQo+PiAxLjUuNi41Cj4+Cj4KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1k
+aXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpo
+dHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
