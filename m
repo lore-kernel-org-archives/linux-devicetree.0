@@ -1,104 +1,83 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 3/4] dt: omap3: add generic board file for dt support
-Date: Thu, 21 Jul 2011 14:25:03 +0530
-Message-ID: <4E27E967.7090501@ti.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com>	<1310592975-25773-4-git-send-email-manjugk@ti.com>	<CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>	<CAC63_iSqN=rX6MbzFWM6z+zf1Eybg3MOD=qQVdeNg5cyENhPjw@mail.gmail.com>	<CAC63_iTf696D6Q_EzFeUUp5R38pYNEJBkmKviEu6-yuF0y=bNA@mail.gmail.com>	<CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>	<20110718090710.GZ5783@atomide.com>
-	<20110719213458.GO6848@ponder.secretlab.ca>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] Input: mma8450: add device tree probe support
+Date: Fri, 22 Jul 2011 00:25:51 +0800
+Message-ID: <1311265551-23233-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110719213458.GO6848@ponder.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "Cousson,
-	Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, "G,
-	Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, ben-linux@fluff.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eric Miao <eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sammy He <r62914-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/20/2011 3:04 AM, Grant Likely wrote:
-> On Mon, Jul 18, 2011 at 02:07:10AM -0700, Tony Lindgren wrote:
->> * Grant Likely<grant.likely@secretlab.ca>  [110716 22:08]:
->>>
->>> The way I see it, you've got two options:
->>>
->>> 1) modify the of_platform_bus_create() to call some kind of
->>> of_platform_bus_create_omap() for devices that match "ti,omap3-device"
->>> or something.
->>>
->>> 2) Leave of_platform_bus_create(), and instead us a notifier to attach
->>> hwmod data to normal platform devices.  omap_device_build() is
->>> actually pretty simple.  It allocated a device, it attaches
->>> platform_data and hwmod pointers to the device and registers it.
->>> omap_device_register() is just a wrapper around
->>> platform_device_register().
->>>
->>> My preference is definitely #2, but there is a wrinkle in this
->>> approach.  Unfortunately omap_devices are not simply plain
->>> platform_devices with extra data attached, an omap_device actually
->>> embeds the platform_device inside it, which cannot be attached after
->>> the fact.  I think I had talked with Kevin (cc'd) about eliminating
->>> the embedding, but I cannot remember clearly on this point.  As long
->>> as platform_device remains embedded inside struct omap_device, #2
->>> won't work.
->>>
->>> In either case, looking up the correct hwmod data should be easy for
->>> any device provided the omap code maintains a lookup table of
->>> compatible strings and base addresses of devices (much like auxdata).
->>> In fact, I'd be okay with extending auxdata to include OMAP fields if
->>> that would be easiest since the whole point of auxdata is to ease the
->>> transition to DT support.  When a matching device is created, the
->>> hwmod pointer can easily be attached.  This should work transparently
->>> for all omap devices, not just the i2c bus.
->>
->> Well we should be able to automgagically build the omap_device for
->> each device tree entry.
->>
->> And then the device driver probe and runtime PM should be able to take
->> care of the rest for the driver. And then there's no more driver
->> specific platform init code needed ;)
->
-> Right!  That's the solution I'd like to see.
->
->> How about if we just have the hwmod code call omap_device_build for
->> each device tree entry?
->
-> I think that is pretty much equivalent to suggestion #1 above, only
-> I'm suggesting to take advantage of the infrastructure already
-> available in driver/of/platform.c in the form of
-> of_platform_populate().  The "of_platform_bus_create_omap()" function
-> suggested above I assumed would directly call omap_device_build().
+It adds device tree probe support for mma8450 driver.
 
-In fact a lot of what omap_device_build() does today might not even be
-needed anymore. A lot of what it does is populate the platform_device
-structure by looking up the hwmod structs.
-Most of that information would now come from DT and hence all of that
-can be taken off from the hwmod structs. What will still be needed in
-hwmod is other data needed to runtime enable/idle the devices. That
-data however still needs to be linked with the platform_device's that
-DT would create which is what I guess could be done in something
-like a of_platform_bus_create_omap().
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sammy He <r62914-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Eric Miao <eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>
+---
+ .../devicetree/bindings/input/fsl-mma8450.txt      |   11 +++++++++++
+ drivers/input/misc/mma8450.c                       |    8 ++++++++
+ 2 files changed, 19 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/fsl-mma8450.txt
 
-Paul/Benoit, do you guys agree we can get rid of some of the data
-from hwmod, whatever would now get passed in from DT, and keep
-only the PRCM/OCP related stuff for runtime handling?
-
->
-> There are already hooks in the _populate call path to handle the
-> creation of amba_devices.  I have no problem doing the same thing for
-> omap devices.
->
-> g.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/Documentation/devicetree/bindings/input/fsl-mma8450.txt b/Documentation/devicetree/bindings/input/fsl-mma8450.txt
+new file mode 100644
+index 0000000..a00c94c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/fsl-mma8450.txt
+@@ -0,0 +1,11 @@
++* Freescale MMA8450 3-Axis Accelerometer
++
++Required properties:
++- compatible : "fsl,mma8450".
++
++Example:
++
++accelerometer: mma8450@1c {
++	compatible = "fsl,mma8450";
++	reg = <0x1c>;
++};
+diff --git a/drivers/input/misc/mma8450.c b/drivers/input/misc/mma8450.c
+index 20f8f92..6c76cf7 100644
+--- a/drivers/input/misc/mma8450.c
++++ b/drivers/input/misc/mma8450.c
+@@ -24,6 +24,7 @@
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/input-polldev.h>
++#include <linux/of_device.h>
+ 
+ #define MMA8450_DRV_NAME	"mma8450"
+ 
+@@ -229,10 +230,17 @@ static const struct i2c_device_id mma8450_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, mma8450_id);
+ 
++static const struct of_device_id mma8450_dt_ids[] = {
++	{ .compatible = "fsl,mma8450", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(i2c, mma8450_dt_ids);
++
+ static struct i2c_driver mma8450_driver = {
+ 	.driver = {
+ 		.name	= MMA8450_DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = mma8450_dt_ids,
+ 	},
+ 	.probe		= mma8450_probe,
+ 	.remove		= __devexit_p(mma8450_remove),
+-- 
+1.7.4.1
