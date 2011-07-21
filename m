@@ -1,7 +1,7 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] gpio-vx855: add device tree binding
-Date: Thu, 21 Jul 2011 15:25:44 +0100 (BST)
-Message-ID: <20110721142544.33FE59D401C@zog.reactivated.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ASoC: sgtl5000: add device tree probe support
+Date: Fri, 22 Jul 2011 00:28:51 +0800
+Message-ID: <1311265731-23318-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,59 +15,69 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Zeng Zhaoming <zhaoming.zeng-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is needed to enable the HDD LED on the OLPC XO-1.5 laptop,
-enabled through devicetree and the gpio-leds driver.
+It adds device tree probe support for sgtl5000 driver.
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Zeng Zhaoming <zhaoming.zeng-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 ---
- .../devicetree/bindings/gpio/gpio_vx855.txt        |    8 ++++++++
- drivers/gpio/gpio-vx855.c                          |    5 +++++
- 2 files changed, 13 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_vx855.txt
+ .../bindings/sound/soc/codecs/fsl-sgtl5000.txt     |   11 +++++++++++
+ sound/soc/codecs/sgtl5000.c                        |    8 ++++++++
+ 2 files changed, 19 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
 
-Grant, please review the chosen scheme (based on gpio_nvidia).
-Is the "via,vx855-gpio" compatible tag OK? I made it up.
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_vx855.txt b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
+diff --git a/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt b/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
 new file mode 100644
-index 0000000..93c0747
+index 0000000..2c3cd41
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-@@ -0,0 +1,8 @@
-+VIA VX855 GPIO controller
++++ b/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
+@@ -0,0 +1,11 @@
++* Freescale SGTL5000 Stereo Codec
 +
 +Required properties:
-+- compatible : "via,vx855-gpio"
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters:
-+  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-+- gpio-controller : Marks the device node as a GPIO controller.
-diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
-index ef5aabd..5b7e9ba 100644
---- a/drivers/gpio/gpio-vx855.c
-+++ b/drivers/gpio/gpio-vx855.c
-@@ -31,6 +31,7 @@
- #include <linux/platform_device.h>
- #include <linux/pci.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- 
- #define MODULE_NAME "vx855_gpio"
- 
-@@ -216,6 +217,10 @@ static void vx855gpio_gpio_setup(struct vx855_gpio *vg)
- 	c->ngpio = NR_VX855_GP;
- 	c->can_sleep = 0;
- 	c->names = vx855gpio_names;
++- compatible : "fsl,sgtl5000".
 +
-+#ifdef CONFIG_OF_GPIO
-+	c->of_node = of_find_compatible_node(NULL, NULL, "via,vx855-gpio");
-+#endif
- }
++Example:
++
++codec: sgtl5000@0a {
++	compatible = "fsl,sgtl5000";
++	reg = <0x0a>;
++};
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 76258f2..cf6eea8 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -20,6 +20,7 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/of_device.h>
+ #include <sound/core.h>
+ #include <sound/tlv.h>
+ #include <sound/pcm.h>
+@@ -1494,10 +1495,17 @@ static const struct i2c_device_id sgtl5000_id[] = {
  
- /* This platform device is ordinarily registered by the vx855 mfd driver */
+ MODULE_DEVICE_TABLE(i2c, sgtl5000_id);
+ 
++static const struct of_device_id sgtl5000_dt_ids[] = {
++	{ .compatible = "fsl,sgtl5000", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(i2c, sgtl5000_dt_ids);
++
+ static struct i2c_driver sgtl5000_i2c_driver = {
+ 	.driver = {
+ 		   .name = "sgtl5000",
+ 		   .owner = THIS_MODULE,
++		   .of_match_table = sgtl5000_dt_ids,
+ 		   },
+ 	.probe = sgtl5000_i2c_probe,
+ 	.remove = __devexit_p(sgtl5000_i2c_remove),
 -- 
-1.7.6
+1.7.4.1
