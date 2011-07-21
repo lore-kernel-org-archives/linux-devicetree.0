@@ -1,95 +1,119 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] dt: omap3: add generic board file for dt support
-Date: Thu, 21 Jul 2011 00:18:36 -0700
-Message-ID: <20110721071835.GB5783@atomide.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
-	<1310592975-25773-4-git-send-email-manjugk@ti.com>
-	<CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
-	<CAC63_iSqN=rX6MbzFWM6z+zf1Eybg3MOD=qQVdeNg5cyENhPjw@mail.gmail.com>
-	<CAC63_iTf696D6Q_EzFeUUp5R38pYNEJBkmKviEu6-yuF0y=bNA@mail.gmail.com>
-	<CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
-	<20110718090710.GZ5783@atomide.com>
-	<20110719213458.GO6848@ponder.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20110719213458.GO6848@ponder.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Kevin Hilman <khilman@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, ben-linux@fluff.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [RFC][PATCH] gpio: Add device tree support for exynos4
+Date: Thu, 21 Jul 2011 22:40:50 +0530
+Message-ID: <1311268250-3100-1-git-send-email-thomas.abraham@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely <grant.likely@secretlab.ca> [110719 14:29]:
-> On Mon, Jul 18, 2011 at 02:07:10AM -0700, Tony Lindgren wrote:
-> > * Grant Likely <grant.likely@secretlab.ca> [110716 22:08]:
-> > > 
-> > > The way I see it, you've got two options:
-> > > 
-> > > 1) modify the of_platform_bus_create() to call some kind of
-> > > of_platform_bus_create_omap() for devices that match "ti,omap3-device"
-> > > or something.
-> > > 
-> > > 2) Leave of_platform_bus_create(), and instead us a notifier to attach
-> > > hwmod data to normal platform devices.  omap_device_build() is
-> > > actually pretty simple.  It allocated a device, it attaches
-> > > platform_data and hwmod pointers to the device and registers it.
-> > > omap_device_register() is just a wrapper around
-> > > platform_device_register().
-> > > 
-> > > My preference is definitely #2, but there is a wrinkle in this
-> > > approach.  Unfortunately omap_devices are not simply plain
-> > > platform_devices with extra data attached, an omap_device actually
-> > > embeds the platform_device inside it, which cannot be attached after
-> > > the fact.  I think I had talked with Kevin (cc'd) about eliminating
-> > > the embedding, but I cannot remember clearly on this point.  As long
-> > > as platform_device remains embedded inside struct omap_device, #2
-> > > won't work.
-> > > 
-> > > In either case, looking up the correct hwmod data should be easy for
-> > > any device provided the omap code maintains a lookup table of
-> > > compatible strings and base addresses of devices (much like auxdata).
-> > > In fact, I'd be okay with extending auxdata to include OMAP fields if
-> > > that would be easiest since the whole point of auxdata is to ease the
-> > > transition to DT support.  When a matching device is created, the
-> > > hwmod pointer can easily be attached.  This should work transparently
-> > > for all omap devices, not just the i2c bus.
-> > 
-> > Well we should be able to automgagically build the omap_device for
-> > each device tree entry.
-> > 
-> > And then the device driver probe and runtime PM should be able to take
-> > care of the rest for the driver. And then there's no more driver
-> > specific platform init code needed ;)
-> 
-> Right!  That's the solution I'd like to see.
-> 
-> > How about if we just have the hwmod code call omap_device_build for
-> > each device tree entry?
-> 
-> I think that is pretty much equivalent to suggestion #1 above, only
-> I'm suggesting to take advantage of the infrastructure already
-> available in driver/of/platform.c in the form of
-> of_platform_populate().  The "of_platform_bus_create_omap()" function
-> suggested above I assumed would directly call omap_device_build().
+Exynos4 GPIO helper functions registers each bank of GPIO as a gpio chip.
+For each gpio chip being registered, this patch finds a matching node
+in device tree and attaches the node pointer to the gpio chip. The match
+is based on the compatible property of the node.
 
-OK
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+---
+
+Each gpio controller is listed as below in the dts file.
+
+	gpa0: gpio-controller@11400000 {
+		compatible = "samsung,exynos4-gpio-gpa0","samsung,exynos4-gpio";
+		#gpio-cells = <2>;
+		gpio-controller;
+	};
+
+	gpa1: gpio-controller@11400020 {
+		compatible = "samsung,exynos4-gpio-gpa1","samsung,exynos4-gpio";
+		#gpio-cells = <2>;
+		gpio-controller;
+	};
+		
+	gpb: gpio-controller@11400040 {
+		compatible = "samsung,exynos4-gpio-gpb","samsung,exynos4-gpio";
+		#gpio-cells = <2>;
+		gpio-controller;
+	};
+
+	and many more (gpc, gpd, ...., gpx)
+
+For each linux domain gpio chip registered by the exynos4 gpio helpers,
+a matching device node is found from the device tree by matching the
+compatible property.
+
+ drivers/gpio/gpio-exynos4.c |   30 ++++++++++++++++++++++++++++++
+ 1 files changed, 30 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/gpio/gpio-exynos4.c b/drivers/gpio/gpio-exynos4.c
+index 9029835..c727bf1 100644
+--- a/drivers/gpio/gpio-exynos4.c
++++ b/drivers/gpio/gpio-exynos4.c
+@@ -14,6 +14,10 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/gpio.h>
++#ifdef CONFIG_OF
++#include <linux/of.h>
++#include <linux/slab.h>
++#endif
  
-> There are already hooks in the _populate call path to handle the
-> creation of amba_devices.  I have no problem doing the same thing for
-> omap devices.
-
-OK 
-
-Regards,
-
-Tony
+ #include <mach/map.h>
+ 
+@@ -321,6 +325,29 @@ static struct s3c_gpio_chip exynos4_gpio_part3_4bit[] = {
+ 	},
+ };
+ 
++#ifdef CONFIG_OF
++static __init void exynos4_gpiolib_attach_ofnode(struct gpio_chip *gc)
++{
++	const char exynos4_gpio_compat_base[] = "samsung,exynos4-gpio-";
++	char *exynos4_gpio_compat;
++
++	exynos4_gpio_compat = kzalloc(strlen(exynos4_gpio_compat_base) +
++				strlen(gc->label), GFP_KERNEL);
++	if (!exynos4_gpio_compat)
++		return;
++
++	strcpy(exynos4_gpio_compat, exynos4_gpio_compat_base);
++	strcat(exynos4_gpio_compat, gc->label);
++	gc->of_node = of_find_compatible_node(NULL, NULL, exynos4_gpio_compat);
++	kfree(exynos4_gpio_compat);
++}
++#else
++static __init void exynos4_gpiolib_attach_ofnode(struct gpio_chip *chip)
++{
++	return;
++}
++#endif
++
+ static __init int exynos4_gpiolib_init(void)
+ {
+ 	struct s3c_gpio_chip *chip;
+@@ -341,6 +368,7 @@ static __init int exynos4_gpiolib_init(void)
+ 		}
+ 		if (chip->base == NULL)
+ 			chip->base = S5P_VA_GPIO1 + (i) * 0x20;
++		exynos4_gpiolib_attach_ofnode(&chip->chip);
+ 	}
+ 
+ 	samsung_gpiolib_add_4bit_chips(exynos4_gpio_part1_4bit, nr_chips);
+@@ -358,6 +386,7 @@ static __init int exynos4_gpiolib_init(void)
+ 		}
+ 		if (chip->base == NULL)
+ 			chip->base = S5P_VA_GPIO2 + (i) * 0x20;
++		exynos4_gpiolib_attach_ofnode(&chip->chip);
+ 	}
+ 
+ 	samsung_gpiolib_add_4bit_chips(exynos4_gpio_part2_4bit, nr_chips);
+@@ -375,6 +404,7 @@ static __init int exynos4_gpiolib_init(void)
+ 		}
+ 		if (chip->base == NULL)
+ 			chip->base = S5P_VA_GPIO3 + (i) * 0x20;
++		exynos4_gpiolib_attach_ofnode(&chip->chip);
+ 	}
+ 
+ 	samsung_gpiolib_add_4bit_chips(exynos4_gpio_part3_4bit, nr_chips);
+-- 
+1.6.6.rc2
