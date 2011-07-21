@@ -1,47 +1,52 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH 1/2] Add character literal parsing in bytestrings
-Date: Thu, 21 Jul 2011 07:41:57 -0500
-Message-ID: <E1QjsZh-00024e-HY@jdl.com>
-References: <1308871239-32683-1-git-send-email-robotboy@chromium.org>
-	<1308871239-32683-2-git-send-email-robotboy@chromium.org>
-	<20110720134006.GJ6399@yookeroo.fritz.box>
-	<CAF6FioX-yYwd3FN106yCwJQD7N27J9XSiUseFHuhTWJGeq3pvw@mail.gmail.com>
-	<20110721051903.GO6399@yookeroo.fritz.box>
+From: <achew@nvidia.com>
+Subject: [PATCH 3/3 v3] dt: tegra20: Add ehci overrides to Seaboard.
+Date: Wed, 20 Jul 2011 20:23:39 -0700
+Message-ID: <1311218619-11174-3-git-send-email-achew@nvidia.com>
+References: <1311218619-11174-1-git-send-email-achew@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20110721051903.GO6399-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1311218619-11174-1-git-send-email-achew@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, olof@lixom.net, swarren@nvidia.com, dwillemsen@nvidia.com, rklein@nvidia.com, mogantyv@nvidia.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Chew <achew@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> Well, to be honest I'd love to have this syntax several years ago :).
->
-> [...]
->
-> Ok, here's what I suggest.  For now, can you create a patch which
-> recognizes the character construct syntax in the lexer (including
-> escapes), and allows its use in cell context.  That won't actually do
-> what you want, but it gets a fair chunk of the code in a testable,
-> upstreamable form without making syntax changes I'm uncomfortable
-> with.
-> 
-> While we're getting that merged we can debate which/how to proceed
-> with either variable size cell syntax or allowing the character
-> literals in bytestring context.
+From: Andrew Chew <achew@nvidia.com>
 
-Is it worth investigating any of the work I did down this line
-several years ago?  It's all still in the "test" branch if so.
+Seaboard has different values for some of the utmi properties.
 
-jdl
+Signed-off-by: Andrew Chew <achew@nvidia.com>
+Acked-by: Stephen Warren <swarren@nvidia.com>
+---
+ arch/arm/boot/dts/tegra-seaboard.dts |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index 5a99b4c..adc000a 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -31,4 +31,21 @@
+ 	sdhci@c8000600 {
+ 		status = "ok";
+ 	};
++
++	ehci@c5000000 {
++		power-down-on-bus-suspend;
++		nvidia,hssync-start-delay = < 0 >;
++		nvidia,xcvr-setup = < 15 >;
++	};
++
++	ehci@c5004000 {
++		power-down-on-bus-suspend;
++		phy-type = "ulpi";
++	};
++
++	ehci@c5008000 {
++		power-down-on-bus-suspend;
++		nvidia,hssync-start-delay = < 0 >;
++		nvidia,xcvr-setup = < 8 >;
++	};
+ };
+-- 
+1.7.6
