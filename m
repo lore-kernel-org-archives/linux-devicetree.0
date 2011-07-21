@@ -1,11 +1,17 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ASoC: sgtl5000: add device tree probe support
-Date: Fri, 22 Jul 2011 00:28:51 +0800
-Message-ID: <1311265731-23318-1-git-send-email-shawn.guo@linaro.org>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH 1/2] Add character literal parsing in bytestrings
+Date: Thu, 21 Jul 2011 07:41:57 -0500
+Message-ID: <E1QjsZh-00024e-HY@jdl.com>
+References: <1308871239-32683-1-git-send-email-robotboy@chromium.org>
+	<1308871239-32683-2-git-send-email-robotboy@chromium.org>
+	<20110720134006.GJ6399@yookeroo.fritz.box>
+	<CAF6FioX-yYwd3FN106yCwJQD7N27J9XSiUseFHuhTWJGeq3pvw@mail.gmail.com>
+	<20110721051903.GO6399@yookeroo.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20110721051903.GO6399-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org> 
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,69 +21,27 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Zeng Zhaoming <zhaoming.zeng-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree probe support for sgtl5000 driver.
+> 
+> Well, to be honest I'd love to have this syntax several years ago :).
+>
+> [...]
+>
+> Ok, here's what I suggest.  For now, can you create a patch which
+> recognizes the character construct syntax in the lexer (including
+> escapes), and allows its use in cell context.  That won't actually do
+> what you want, but it gets a fair chunk of the code in a testable,
+> upstreamable form without making syntax changes I'm uncomfortable
+> with.
+> 
+> While we're getting that merged we can debate which/how to proceed
+> with either variable size cell syntax or allowing the character
+> literals in bytestring context.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Zeng Zhaoming <zhaoming.zeng-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
-Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- .../bindings/sound/soc/codecs/fsl-sgtl5000.txt     |   11 +++++++++++
- sound/soc/codecs/sgtl5000.c                        |    8 ++++++++
- 2 files changed, 19 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
+Is it worth investigating any of the work I did down this line
+several years ago?  It's all still in the "test" branch if so.
 
-diff --git a/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt b/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
-new file mode 100644
-index 0000000..2c3cd41
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
-@@ -0,0 +1,11 @@
-+* Freescale SGTL5000 Stereo Codec
-+
-+Required properties:
-+- compatible : "fsl,sgtl5000".
-+
-+Example:
-+
-+codec: sgtl5000@0a {
-+	compatible = "fsl,sgtl5000";
-+	reg = <0x0a>;
-+};
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 76258f2..cf6eea8 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -20,6 +20,7 @@
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/of_device.h>
- #include <sound/core.h>
- #include <sound/tlv.h>
- #include <sound/pcm.h>
-@@ -1494,10 +1495,17 @@ static const struct i2c_device_id sgtl5000_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, sgtl5000_id);
- 
-+static const struct of_device_id sgtl5000_dt_ids[] = {
-+	{ .compatible = "fsl,sgtl5000", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, sgtl5000_dt_ids);
-+
- static struct i2c_driver sgtl5000_i2c_driver = {
- 	.driver = {
- 		   .name = "sgtl5000",
- 		   .owner = THIS_MODULE,
-+		   .of_match_table = sgtl5000_dt_ids,
- 		   },
- 	.probe = sgtl5000_i2c_probe,
- 	.remove = __devexit_p(sgtl5000_i2c_remove),
--- 
-1.7.4.1
+jdl
