@@ -1,54 +1,57 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Fri, 22 Jul 2011 08:57:11 +0200
-Message-ID: <20110722065711.GD16561@pengutronix.de>
-References: <alpine.LFD.2.02.1107211932440.2702@ionos>
- <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1311313414.2940.8.camel@box>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/2] arm: dt: Add device tree support for i2c instance
+ 1 on exynos4 dt machine
+Date: Fri, 22 Jul 2011 00:12:49 -0700
+Message-ID: <20110722071249.GK5783@atomide.com>
+References: <1310950241-13602-1-git-send-email-thomas.abraham@linaro.org>
+ <1310950241-13602-3-git-send-email-thomas.abraham@linaro.org>
+ <CAP6yH7dUnqhvSA8AYx2R9ZZ1mBL=YMz6oMiJVpphA1FhgLHOvw@mail.gmail.com>
+ <CACxGe6v+-H+W4H-5-gvEP+8j91NsGpVZkS595zSt8Lju74taWw@mail.gmail.com>
+ <CAC63_iQcia64iBq653S+3_Yj8mgfbGSfHdGXevFe8urj9RpF-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-rt-users-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1311313414.2940.8.camel@box>
-Sender: linux-rt-users-owner@vger.kernel.org
-To: hermann <brummer-@web.de>
-Cc: linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rusty Russell <rusty@rustcorp.com.au>, lguest@lists.ozlabs.org
+In-Reply-To: <CAC63_iQcia64iBq653S+3_Yj8mgfbGSfHdGXevFe8urj9RpF-w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "G, Manjunath Kondaiah" <manjugk@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-(These two issues occured on 3.0-rc7-rt0, I think they apply to
-mainline, too.)
-
-On Fri, Jul 22, 2011 at 07:43:34AM +0200, hermann wrote:
-> well, I run into 2 ops, witch, I guess not related to the rt patch.
+* G, Manjunath Kondaiah <manjugk@ti.com> [110719 09:59]:
+> On Tue, Jul 19, 2011 at 2:00 AM, Grant Likely <grant.likely@secretlab=
+=2Eca> wrote:
+> >
+> > No, the i2c bus node should still appear in the SoC .dtsi file. =C2=
+=A0If a
+> > board doesn't use a particular i2c bus, then the board.dts file can
+> > add a status =3D "disabled"; property to the i2c bus node to disabl=
+e it.
 >=20
-> first one was with CONFIG_SENSORS_LTC4245, module build stage 2 faile=
-d
-> with undefined reference to of_find_property
-of_find_property isn't exported to modules. Maybe of_get_property shoul=
-d
-be used? Should of_find_property be static then? Alternatively export
-of_find_property, too. Grant?
+> that's right. I am referring to I2C slave devices. For a given SoC,
+> two different
+> boards can have different i2c slave devices with different slave
+> address. In that case,
+> it is better to have i2c child/slave nodes in board .dts file.
 
-> second was with CONFIG_LGUEST_GUEST enabled, module build stage 2 fai=
-led
-> with Documentation/lguest not found
-Hmm, there is Documentation/virtual/lguest. Didn't find where
-Documentation/lguest is used from a quick look. Rusty?
+This is OK for now, but from bus/hwmod point of view we need to reset a=
+ll
+the unused devices as otherwise PM will never work properly.
 
-Best regards
-Uwe
+Disabling each device in the board .dts file will never be done correct=
+ly
+for most boards.. And on each board, probably 2/3 of the devices are un=
+used
+because of the pin limitations :)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
-s" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So the disabling of unused devices should be done with a late_initcall =
+and
+controlled by kernel cmdline. We were thinking hwmod.disable=3D[0|1].
+
+The late_initcall to disable unused device tree devices could also be
+added later on to device tree core code.
+
+Regards,
+
+Tony
