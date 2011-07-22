@@ -1,41 +1,61 @@
-From: hermann <brummer-@web.de>
-Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Fri, 22 Jul 2011 09:40:50 +0200
-Message-ID: <1311320450.2940.11.camel@box>
-References: <alpine.LFD.2.02.1107211932440.2702@ionos>
-	 <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
-	 <1311313414.2940.8.camel@box>  <20110722065711.GD16561@pengutronix.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] OMAP: omap_device: replace _find_by_pdev() with
+ to_omap_device()
+Date: Fri, 22 Jul 2011 11:53:57 +0300
+Message-ID: <20110722085356.GH32058@legolas.emea.dhcp.ti.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+ <1311292338-11830-2-git-send-email-khilman@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-In-Reply-To: <20110722065711.GD16561@pengutronix.de>
-Sender: linux-rt-users-owner@vger.kernel.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rusty Russell <rusty@rustcorp.com.au>, lguest@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xHbokkKX1kTiQeDC"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1311292338-11830-2-git-send-email-khilman@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@ti.com>
+Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "G. Manjunath Kondaiah" <manjugk@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 22.07.2011, 08:57 +0200 schrieb Uwe Kleine-K=C3=B6nig:
-> > second was with CONFIG_LGUEST_GUEST enabled, module build stage 2
-> failed
-> > with Documentation/lguest not found
-> Hmm, there is Documentation/virtual/lguest. Didn't find where
-> Documentation/lguest is used from a quick look. Rusty?
+
+--xHbokkKX1kTiQeDC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 21, 2011 at 04:52:11PM -0700, Kevin Hilman wrote:
+> The omap_device layer currently has two ways of getting an omap_device
+> pointer from a platform_device pointer.
 >=20
-> Best regards
-> Uwe=20
+> Replace current usage of _find_by_pdev() with to_omap_device() since
+> to_omap_device() is more familiar to the existing to_platform_device()
+> used when getting a platform_device pointer from a struct device pointer.
+>=20
 
-Sorry, I'm far from being a expert, all I can say is that disable=20
-CONFIG_LGUEST and
-CONFIG_LGUEST_GUEST also (auto)disable
-CONFIG_PARAVIRT_SPINLOCKS
-and then it works, at least here.
+FWIW:
 
-regards
-hermann
+you can use either Reported-by: Felipe Balbi <balbi@ti.com> or
+Reviewed-by: Felipe Balbi <balbi@ti.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
-s" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks for posting the patch Kevin.
+
+--=20
+balbi
+
+--xHbokkKX1kTiQeDC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQEcBAEBAgAGBQJOKTqkAAoJEAv8Txj19kN1y2EH/2xO9QaL6ZruEIifAHOQJrQv
+VI3vUbaUfDgoyXK960gins6XGcMul43UXL08n5fskUx9vr4aJBLcyaNHVprTh2iV
+xJcJ+mRGxfLY1vuNwQ12GNVE+ChQUze2xWwPQ7Rxy2w0GYhZsq0ZmVH6YPOdWC9O
+ymlMd+GQbVyIpgA35lhkMGfvS359R/gZ/BmOnx3JYjwH5rw+zZ9oDIfWn8MvL0HY
+8ZLTLVluO8jNOLZQlXFe8PsYUokngDHElrQqQR5PUPIRXUlzIzumZfQrb+pqY8/Z
+MGQkZZ57BFIWunhpPx/kK5qxC8IkhJ2Qwx1lN3yTkBi3/jf0a98k3nyRTvMdwHM=
+=XB2d
+-----END PGP SIGNATURE-----
+
+--xHbokkKX1kTiQeDC--
