@@ -1,54 +1,59 @@
-From: Kevin Hilman <khilman@ti.com>
-Subject: Re: [PATCH 3/4] dt: omap3: add generic board file for dt support
-Date: Thu, 21 Jul 2011 16:53:04 -0700
-Message-ID: <87r55j5gyn.fsf@ti.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com>
-	<1310592975-25773-4-git-send-email-manjugk@ti.com>
-	<CACxGe6sELS=C==16TZ2pfrxJDDyqjS_qOwJUfwzwMO8hqo8Xag@mail.gmail.com>
-	<CAC63_iSqN=rX6MbzFWM6z+zf1Eybg3MOD=qQVdeNg5cyENhPjw@mail.gmail.com>
-	<CAC63_iTf696D6Q_EzFeUUp5R38pYNEJBkmKviEu6-yuF0y=bNA@mail.gmail.com>
-	<CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH RESEND v3 0/2] Add device tree probe support for
+ tty/serial/imx
+Date: Fri, 22 Jul 2011 09:53:36 +0800
+Message-ID: <20110722015335.GD26837@S2100-06.ap.freescale.net>
+References: <1309972820-18547-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6uzyxf35WDg6COnPVt3dhQv1H80L1svALxp4naySx2BcA@mail.gmail.com>
-	(Grant Likely's message of "Sat, 16 Jul 2011 23:13:17 -0600")
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1309972820-18547-1-git-send-email-shawn.guo@linaro.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: Alan Cox <alan@linux.intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely <grant.likely@secretlab.ca> writes:
+On Thu, Jul 07, 2011 at 01:20:18AM +0800, Shawn Guo wrote:
+> The first patch removes the use of cpu_is_mx1().  The second patch
+> adds device tree probe with a dependency on the following patch.
+> 
+>   http://article.gmane.org/gmane.linux.drivers.devicetree/6128
+> 
+> Changes with resend:
+>  * Fix typo
+>  * Change a few macros to inline functions
+> 
+> Changes since v2:
+>  * Not use generic naming imx-uart, instead use specific soc name
+>    to show uart type compatibility (Sascha's suggestion)
+> 
+> Changes since v1:
+>  * Address review comments given by Grant and Uwe
+> 
+> Shawn Guo (2):
+>       serial/imx: get rid of the uses of cpu_is_mx1()
+>       serial/imx: add device tree probe support
+> 
+>  .../bindings/tty/serial/fsl-imx-uart.txt           |   19 +++
+>  arch/arm/mach-imx/clock-imx1.c                     |    6 +-
+>  arch/arm/mach-imx/clock-imx21.c                    |    8 +-
+>  arch/arm/mach-imx/clock-imx25.c                    |   11 +-
+>  arch/arm/mach-imx/clock-imx27.c                    |   13 +-
+>  arch/arm/mach-imx/clock-imx31.c                    |   11 +-
+>  arch/arm/mach-imx/clock-imx35.c                    |    7 +-
+>  arch/arm/mach-mx5/clock-mx51-mx53.c                |   18 ++-
+>  arch/arm/plat-mxc/devices/platform-imx-uart.c      |    7 +-
+>  drivers/tty/serial/imx.c                           |  167 +++++++++++++++++---
+>  10 files changed, 205 insertions(+), 62 deletions(-)
+> 
+To avoid conflict, will repost the series when Grant's devicetree/next
+and i.mx tree get merged on mainline in the coming merge window.
 
-[...]
+Alan, hopefully, you can give your ack then, so that Sascha can pick
+it up.
 
-> The way I see it, you've got two options:
->
-> 1) modify the of_platform_bus_create() to call some kind of
-> of_platform_bus_create_omap() for devices that match "ti,omap3-device"
-> or something.
->
-> 2) Leave of_platform_bus_create(), and instead us a notifier to attach
-> hwmod data to normal platform devices.  omap_device_build() is
-> actually pretty simple.  It allocated a device, it attaches
-> platform_data and hwmod pointers to the device and registers it.
-> omap_device_register() is just a wrapper around
-> platform_device_register().
->
-> My preference is definitely #2, but there is a wrinkle in this
-> approach.  Unfortunately omap_devices are not simply plain
-> platform_devices with extra data attached, an omap_device actually
-> embeds the platform_device inside it, which cannot be attached after
-> the fact.  I think I had talked with Kevin (cc'd) about eliminating
-> the embedding, but I cannot remember clearly on this point.  As long
-> as platform_device remains embedded inside struct omap_device, #2
-> won't work.
-
-I agree with #2, and I think we need to go down this de-coupling route
-also.
-
-I just sent an RFC series that starts down this path to at least
-demonstrate that it's possible.
-
-Kevin
+-- 
+Regards,
+Shawn
 
