@@ -1,44 +1,70 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH 1/2] of: address: use resource_size helper
-Date: Fri, 22 Jul 2011 22:47:21 +0300
-Message-ID: <1311364042-8325-1-git-send-email-balbi@ti.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [RFC/PATCH 3/7] OMAP: McBSP: use existing macros for converting between devices
+Date: Fri, 22 Jul 2011 13:19:21 -0700
+Message-ID: <87y5zqysom.fsf@ti.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+	<1311292338-11830-5-git-send-email-khilman@ti.com>
+	<4E296DFB.3010205@ru.mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4E296DFB.3010205@ru.mvista.com> (Sergei Shtylyov's message of
+	"Fri, 22 Jul 2011 16:32:59 +0400")
+Sender: linux-omap-owner@vger.kernel.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-that should be the approved way of calculating
-the size of resources. No functional changes.
+Hi Sergei,
 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Signed-off-by: Felipe Balbi <balbi@ti.com>
+Sergei Shtylyov <sshtylyov@mvista.com> writes:
+
+> On 22-07-2011 3:52, Kevin Hilman wrote:
+>
+>> For converting from struct device to platform_device, and from
+>> platform_device to struct device,
+>
+>    You mean from platform_device to omap_device?
+>
+
+Yes indeed, thanks.  Updated patch below (only changelog changed)
+
+Kevin
+
+
+>From e3996fdb48e6850bc3f2a383e86fe67be5796d40 Mon Sep 17 00:00:00 2001
+From: Kevin Hilman <khilman@ti.com>
+Date: Thu, 21 Jul 2011 14:03:51 -0700
+Subject: [RFC/PATCH 3/7] OMAP: McBSP: use existing macros for converting
+ between devices
+
+For converting from struct device to platform_device, and from
+platform_device to struct omap_device, there are existing macros.  Use
+them instead of manual use of container_of().
+
+Signed-off-by: Kevin Hilman <khilman@ti.com>
 ---
- drivers/of/address.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ arch/arm/plat-omap/mcbsp.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index deefc0c..6e7b2cf 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -624,6 +624,6 @@ void __iomem *of_iomap(struct device_node *np, int index)
- 	if (of_address_to_resource(np, index, &res))
- 		return NULL;
- 
--	return ioremap(res.start, 1 + res.end - res.start);
-+	return ioremap(res.start, resource_size(&res));
+diff --git a/arch/arm/plat-omap/mcbsp.c b/arch/arm/plat-omap/mcbsp.c
+index 6c62af1..02199e8 100644
+--- a/arch/arm/plat-omap/mcbsp.c
++++ b/arch/arm/plat-omap/mcbsp.c
+@@ -260,9 +260,9 @@ EXPORT_SYMBOL(omap_mcbsp_dma_reg_params);
+ #ifdef CONFIG_ARCH_OMAP3
+ static struct omap_device *find_omap_device_by_dev(struct device *dev)
+ {
+-	struct platform_device *pdev = container_of(dev,
+-					struct platform_device, dev);
+-	return container_of(pdev, struct omap_device, pdev);
++	struct platform_device *pdev = to_platform_device(dev);
++
++	return to_omap_device(pdev);
  }
- EXPORT_SYMBOL(of_iomap);
+ 
+ static void omap_st_on(struct omap_mcbsp *mcbsp)
 -- 
 1.7.6
+
+
