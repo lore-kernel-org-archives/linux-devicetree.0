@@ -1,52 +1,86 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [RFC/PATCH 3/7] OMAP: McBSP: use existing macros for converting
- between devices
-Date: Fri, 22 Jul 2011 16:32:59 +0400
-Message-ID: <4E296DFB.3010205@ru.mvista.com>
-References: <1311292338-11830-1-git-send-email-khilman@ti.com> <1311292338-11830-5-git-send-email-khilman@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Same parts of DT being probed twice
+Date: Fri, 22 Jul 2011 11:35:22 -0600
+Message-ID: <20110722173522.GA5974@ponder.secretlab.ca>
+References: <CAGq3pz5V0psn1QgUV7VGKCusc4kO+128OQAzUfmqSec4i2R8vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1311292338-11830-5-git-send-email-khilman@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@ti.com>
-Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGq3pz5V0psn1QgUV7VGKCusc4kO+128OQAzUfmqSec4i2R8vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Jul 21, 2011 at 03:46:02PM +0100, Daniel Drake wrote:
+> Hi,
+> 
+> We're working on enabling the HDD LED on the XO-1.5 laptop using
+> gpio-leds and its automatic interaction with the device tree. I have
+> it working locally, but there is something not quite right.
+> 
+> We have modified the device tree to add /pci/isa/gpios
+> 
+> gpios then has a child "gpio-leds" which has a child "hdd" as
+> described in Documentation/devicetree/bindings/gpio/gpio-leds.txt
+> 
+> This means that we must extend the "matches" list passed to
+> of_platform_bus_probe() in arch/x86/platform/olpc/olpc_dt.c so that
+> the search goes deep enough into the tree to find the gpio-leds
+> element and create a device for it. Specifically we must add:
+> 
+> 	{ .compatible = "pci" },
+> 	{ .compatible = "isa" },
+> 	{ .compatible = "via,vx855-gpio" },
+> 	{ .compatible = "gpio-leds" },
+> 
+> This works, but it causes huge duplication of the whole pci and isa
+> trees in /sys/devices. These devices were already created because
+> arch/x86/kernel/devicetree.c unconditionally calls
+> of_platform_bus_probe() for pci and isa devices (see add_bus_probe()
+> and ce4100_ids), but not for vx855-gpio and gpio-leds.
 
-On 22-07-2011 3:52, Kevin Hilman wrote:
+of_platform_bus_probe() from the root of the tree is the wrong
+approach for registering 'deep' devices.  of_platform_bus_probe() only
+knows how to deal with platform_devices.  The moment something
+non-trivial appears in between, it no longer works.  What you really
+want from the description you've given is the following struct device
+hierarchy:
 
-> For converting from struct device to platform_device, and from
-> platform_device to struct device,
+platform_device(representing the pci bus)
+   --->pci_dev(representing the isa bridge)
+      --->isa_device(representing the "via,vx855-gpio")
 
-    You mean from platform_device to omap_device?
+To make this work, of_platform_bus_probe() creates the pci bus
+instance.  The pci bus /driver/ is responsible for creating the isa
+bridge, and similarly the isa driver must be responsible for creating
+the gpio controller instance.  Most of the pci support code that you
+need should already be there, but I haven't looked at what ISA is
+doing.
 
-> there are existing macros.  Use
-> them instead of manual use of container_of().
+The gpio-leds node should be at the root of the tree, and everything
+gets a lot easier if you switch to using the new of_platform_populate()
+instead of of_platform_bus_probe().
 
-> Signed-off-by: Kevin Hilman<khilman@ti.com>
-> ---
->   arch/arm/plat-omap/mcbsp.c |    6 +++---
->   1 files changed, 3 insertions(+), 3 deletions(-)
+g.
 
-> diff --git a/arch/arm/plat-omap/mcbsp.c b/arch/arm/plat-omap/mcbsp.c
-> index 6c62af1..02199e8 100644
-> --- a/arch/arm/plat-omap/mcbsp.c
-> +++ b/arch/arm/plat-omap/mcbsp.c
-> @@ -260,9 +260,9 @@ EXPORT_SYMBOL(omap_mcbsp_dma_reg_params);
->   #ifdef CONFIG_ARCH_OMAP3
->   static struct omap_device *find_omap_device_by_dev(struct device *dev)
->   {
-> -	struct platform_device *pdev = container_of(dev,
-> -					struct platform_device, dev);
-> -	return container_of(pdev, struct omap_device, pdev);
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +
-> +	return to_omap_device(pdev);
->   }
->
->   static void omap_st_on(struct omap_mcbsp *mcbsp)
 
-WBR, Sergei
+> 
+> Whats the best way to solve this?
+> 
+> Thanks,
+> Daniel
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
