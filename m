@@ -1,51 +1,52 @@
-From: Rusty Russell <rusty@rustcorp.com.au>
-Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Fri, 22 Jul 2011 20:34:59 +0930
-Message-ID: <87y5zqzick.fsf@rustcorp.com.au>
-References: <alpine.LFD.2.02.1107211932440.2702@ionos> <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de> <1311313414.2940.8.camel@box> <20110722065711.GD16561@pengutronix.de>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [RFC/PATCH 3/7] OMAP: McBSP: use existing macros for converting
+ between devices
+Date: Fri, 22 Jul 2011 16:32:59 +0400
+Message-ID: <4E296DFB.3010205@ru.mvista.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com> <1311292338-11830-5-git-send-email-khilman@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-In-Reply-To: <20110722065711.GD16561@pengutronix.de>
-Sender: linux-rt-users-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, hermann <brummer-@web.de>
-Cc: linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, lguest@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1311292338-11830-5-git-send-email-khilman@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@ti.com>
+Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Jul 2011 08:57:11 +0200, Uwe Kleine-K=C3=B6nig <u.kleine-koe=
-nig@pengutronix.de> wrote:
-> Hello,
->=20
-> (These two issues occured on 3.0-rc7-rt0, I think they apply to
-> mainline, too.)
->=20
-> On Fri, Jul 22, 2011 at 07:43:34AM +0200, hermann wrote:
-> > well, I run into 2 ops, witch, I guess not related to the rt patch.
-> >=20
-> > first one was with CONFIG_SENSORS_LTC4245, module build stage 2 fai=
-led
-> > with undefined reference to of_find_property
-> of_find_property isn't exported to modules. Maybe of_get_property sho=
-uld
-> be used? Should of_find_property be static then? Alternatively export
-> of_find_property, too. Grant?
->=20
-> > second was with CONFIG_LGUEST_GUEST enabled, module build stage 2 f=
-ailed
-> > with Documentation/lguest not found
-> Hmm, there is Documentation/virtual/lguest. Didn't find where
-> Documentation/lguest is used from a quick look. Rusty?
+Hello.
 
-No, it's not compiled from the kernel build, at least in mainline...
+On 22-07-2011 3:52, Kevin Hilman wrote:
 
-If it is in the -r tree, you need to
-s,Documentation/lguest,Documentation/virtual/lguest, as it has moved.
+> For converting from struct device to platform_device, and from
+> platform_device to struct device,
 
-Cheers,
-Rusty.
---
-To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
-s" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    You mean from platform_device to omap_device?
+
+> there are existing macros.  Use
+> them instead of manual use of container_of().
+
+> Signed-off-by: Kevin Hilman<khilman@ti.com>
+> ---
+>   arch/arm/plat-omap/mcbsp.c |    6 +++---
+>   1 files changed, 3 insertions(+), 3 deletions(-)
+
+> diff --git a/arch/arm/plat-omap/mcbsp.c b/arch/arm/plat-omap/mcbsp.c
+> index 6c62af1..02199e8 100644
+> --- a/arch/arm/plat-omap/mcbsp.c
+> +++ b/arch/arm/plat-omap/mcbsp.c
+> @@ -260,9 +260,9 @@ EXPORT_SYMBOL(omap_mcbsp_dma_reg_params);
+>   #ifdef CONFIG_ARCH_OMAP3
+>   static struct omap_device *find_omap_device_by_dev(struct device *dev)
+>   {
+> -	struct platform_device *pdev = container_of(dev,
+> -					struct platform_device, dev);
+> -	return container_of(pdev, struct omap_device, pdev);
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +
+> +	return to_omap_device(pdev);
+>   }
+>
+>   static void omap_st_on(struct omap_mcbsp *mcbsp)
+
+WBR, Sergei
