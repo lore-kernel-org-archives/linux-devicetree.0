@@ -1,70 +1,28 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 0/3] Add device tree probe for imx-sdma driver
-Date: Fri, 22 Jul 2011 11:54:50 +0800
-Message-ID: <20110722035450.GH26837@S2100-06.ap.freescale.net>
-References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC/PATCH 6/7] OMAP: omap_device: device register functions now
+ take platform_device pointer
+Date: Fri, 22 Jul 2011 00:16:06 -0600
+Message-ID: <20110722061606.GA18383@ponder.secretlab.ca>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+ <1311292338-11830-8-git-send-email-khilman@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+In-Reply-To: <1311292338-11830-8-git-send-email-khilman@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@ti.com>
+Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Thu, Jul 21, 2011 at 04:52:17PM -0700, Kevin Hilman wrote:
+> The internal device register functions do not need or use any omap_device
+> internals, so pass in a platform_device pointer instead of an omap_device
+> pointer.
+> 
+> Signed-off-by: Kevin Hilman <khilman@ti.com>
 
-Can I have your ack on this series, please?  I attempt to get it
-merged through Sascha's tree after his tree and devicetree/next get
-merged in the coming window.
+FWIW, all 6 of these cleanups look sane.
 
-Regards,
-Shawn
+Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
 
-On Fri, Jul 15, 2011 at 05:44:23PM +0800, Shawn Guo wrote:
-> The first patch remove the use of software defined sdma version, and
-> instead uses platform_device_id to handle the sdma differences from
-> one soc to another.  The second one makes a small cleanup on function
-> sdma_get_firmware(), and the third patch adds the actual device tree
-> probe support.
-> 
-> Changes since v1:
->  * Do not encode ROM script address in device tree
->  * Add one more small cleanup on function sdma_get_firmware()
-> 
-> ShawnsGuo (3):
->       dmaengine: imx-sdma: use platform_device_id to identify sdma version
->       dmaengine: imx-sdma: sdma_get_firmware does not need to copy fw_name
->       dmaengine: imx-sdma: add device tree probe support
-> 
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   17 ++++
->  arch/arm/mach-imx/clock-imx25.c                    |    3 +-
->  arch/arm/mach-imx/clock-imx31.c                    |    2 +-
->  arch/arm/mach-imx/clock-imx35.c                    |    2 +-
->  arch/arm/mach-imx/mm-imx25.c                       |    4 +-
->  arch/arm/mach-imx/mm-imx31.c                       |    3 +-
->  arch/arm/mach-imx/mm-imx35.c                       |    3 +-
->  arch/arm/mach-mx5/clock-mx51-mx53.c                |    6 +-
->  arch/arm/mach-mx5/mm.c                             |    8 +-
->  arch/arm/plat-mxc/devices/platform-imx-dma.c       |    4 +-
->  arch/arm/plat-mxc/include/mach/devices-common.h    |    2 +-
->  arch/arm/plat-mxc/include/mach/dma.h               |    3 +-
->  arch/arm/plat-mxc/include/mach/sdma.h              |    2 -
->  drivers/dma/imx-sdma.c                             |   92 +++++++++++++++-----
->  14 files changed, 107 insertions(+), 44 deletions(-)
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
