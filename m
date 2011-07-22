@@ -1,18 +1,14 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Fri, 22 Jul 2011 21:20:51 +0200
-Message-ID: <20110722192051.GH16561__49969.5851038725$1311362477$gmane$org@pengutronix.de>
-References: <alpine.LFD.2.02.1107211932440.2702@ionos>
-	<1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
-	<1311313414.2940.8.camel@box>
-	<20110722065711.GD16561@pengutronix.de>
-	<87y5zqzick.fsf@rustcorp.com.au>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Re: Same parts of DT being probed twice
+Date: Fri, 22 Jul 2011 20:22:17 +0100
+Message-ID: <CAGq3pz4xYhA751FJ9P4_Fg9EuzWFTiYaqCG_rG3nLBhb8rzpQA@mail.gmail.com>
+References: <CAGq3pz5V0psn1QgUV7VGKCusc4kO+128OQAzUfmqSec4i2R8vw@mail.gmail.com>
+	<20110722173522.GA5974@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87y5zqzick.fsf-8n+1lVoiYb80n/F98K4Iww@public.gmane.org>
+In-Reply-To: <20110722173522.GA5974-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,36 +18,49 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rusty Russell <rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org>, linux-rt-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlaKREJ1Ck/qmQ@public.gmane.org
-Cc: hermann <brummer--S0/GAf8tV78@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 22 July 2011 18:35, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> of_platform_bus_probe() from the root of the tree is the wrong
+> approach for registering 'deep' devices. =A0of_platform_bus_probe() only
+> knows how to deal with platform_devices. =A0The moment something
+> non-trivial appears in between, it no longer works. =A0What you really
+> want from the description you've given is the following struct device
+> hierarchy:
+>
+> platform_device(representing the pci bus)
+> =A0 --->pci_dev(representing the isa bridge)
+> =A0 =A0 =A0--->isa_device(representing the "via,vx855-gpio")
+>
+> To make this work, of_platform_bus_probe() creates the pci bus
+> instance. =A0The pci bus /driver/ is responsible for creating the isa
+> bridge, and similarly the isa driver must be responsible for creating
+> the gpio controller instance. =A0Most of the pci support code that you
+> need should already be there, but I haven't looked at what ISA is
+> doing.
 
-On Fri, Jul 22, 2011 at 08:34:59PM +0930, Rusty Russell wrote:
-> On Fri, 22 Jul 2011 08:57:11 +0200, Uwe Kleine-K=F6nig <u.kleine-koenig@p=
-engutronix.de> wrote:
-> > > second was with CONFIG_LGUEST_GUEST enabled, module build stage 2 fai=
-led
-> > > with Documentation/lguest not found
-> > Hmm, there is Documentation/virtual/lguest. Didn't find where
-> > Documentation/lguest is used from a quick look. Rusty?
-> =
+OK, thanks for the explanation.
 
-> No, it's not compiled from the kernel build, at least in mainline...
-> =
+In this case we don't need to create a platform_device for the vx855
+gpio device - it is already handled through probing of the PCI bus
+which is discovered through other means. I only added it in the list
+as an item inbetween the root and gpio-leds.
 
-> If it is in the -r tree, you need to
-> s,Documentation/lguest,Documentation/virtual/lguest, as it has moved.
-I don't understand that and didn't try to reproduce. =
+> The gpio-leds node should be at the root of the tree, and everything
+> gets a lot easier if you switch to using the new of_platform_populate()
+> instead of of_platform_bus_probe().
 
-hermann, maybe you can follow up with your failing .config and try to
-reproduce on v3.0 (without rt)?
+That sounds more sensible. I'll check with our firmware guy when he
+gets back from his break and continue from there.
 
-Best regards
-Uwe
+However, even after fixing that, we will still be left with the
+generic x86 code probing pci and isa. This creates a huge array of
+platform devices (which are useless, or are devices that we already
+have other device instances for), and seems to take quite a while
+during boot. Is commit 9079b35364e75 wrong in some way? It has your
+acked-by, but seems to go against what you wrote above.
 
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks,
+Daniel
