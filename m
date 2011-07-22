@@ -1,185 +1,51 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v2 2/3] i2c: s3c2410: Add device tree support
-Date: Fri, 22 Jul 2011 15:48:37 +0530
-Message-ID: <1311329918-8105-3-git-send-email-thomas.abraham@linaro.org>
-References: <1311329918-8105-1-git-send-email-thomas.abraham@linaro.org>
- <1311329918-8105-2-git-send-email-thomas.abraham@linaro.org>
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1311329918-8105-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-i2c@vger.kernel.org, grant.likely@secretlab.ca, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org
+From: Rusty Russell <rusty@rustcorp.com.au>
+Subject: Re: [PATCH] Various fixups from first bug reports
+Date: Fri, 22 Jul 2011 20:34:59 +0930
+Message-ID: <87y5zqzick.fsf@rustcorp.com.au>
+References: <alpine.LFD.2.02.1107211932440.2702@ionos> <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de> <1311313414.2940.8.camel@box> <20110722065711.GD16561@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-rt-users-owner@vger.kernel.org>
+In-Reply-To: <20110722065711.GD16561@pengutronix.de>
+Sender: linux-rt-users-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, hermann <brummer-@web.de>
+Cc: linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, lguest@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree probe support for Samsung's s3c2410 i2c driver.
+On Fri, 22 Jul 2011 08:57:11 +0200, Uwe Kleine-K=C3=B6nig <u.kleine-koe=
+nig@pengutronix.de> wrote:
+> Hello,
+>=20
+> (These two issues occured on 3.0-rc7-rt0, I think they apply to
+> mainline, too.)
+>=20
+> On Fri, Jul 22, 2011 at 07:43:34AM +0200, hermann wrote:
+> > well, I run into 2 ops, witch, I guess not related to the rt patch.
+> >=20
+> > first one was with CONFIG_SENSORS_LTC4245, module build stage 2 fai=
+led
+> > with undefined reference to of_find_property
+> of_find_property isn't exported to modules. Maybe of_get_property sho=
+uld
+> be used? Should of_find_property be static then? Alternatively export
+> of_find_property, too. Grant?
+>=20
+> > second was with CONFIG_LGUEST_GUEST enabled, module build stage 2 f=
+ailed
+> > with Documentation/lguest not found
+> Hmm, there is Documentation/virtual/lguest. Didn't find where
+> Documentation/lguest is used from a quick look. Rusty?
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- .../devicetree/bindings/i2c/samsung-i2c.txt        |   44 +++++++++++++++++
- drivers/i2c/busses/i2c-s3c2410.c                   |   51 +++++++++++++++++++-
- 2 files changed, 94 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/samsung-i2c.txt
+No, it's not compiled from the kernel build, at least in mainline...
 
-diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-new file mode 100644
-index 0000000..4e1a2ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-@@ -0,0 +1,44 @@
-+* Samsung's I2C controller
-+
-+The Samsung's I2C controller is used to interface with I2C devices.
-+
-+Required properties:
-+  - compatible: value should be either of the following.
-+      (a) "samsung, s3c2410-i2c", for i2c compatible with s3c2410 i2c.
-+      (b) "samsung, s3c2440-i2c", for i2c compatible with s3c2440 i2c.
-+
-+  - reg: physical base address of the controller and length of memory mapped
-+    region.
-+
-+  - interrupts: interrupt number to the cpu.
-+
-+  - samsung,i2c-sda-delay: Delay (in ns) applied to data line (SDA) edges.
-+
-+  - gpios: The order of the gpios should be in the following order.
-+       <SDA, SCL>
-+
-+Optional properties:
-+  - samsung,i2c-slave-addr: Slave address in multi-master enviroment. If not
-+    specified, default value is 0.
-+
-+  - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
-+    specified, the default value in Hz is 100000.
-+
-+Example:
-+
-+	i2c@13870000 {
-+		compatible = "samsung,s3c2440-i2c";
-+		reg = <0x13870000 0x100>;
-+		interrupts = <345>;
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <100000>;
-+		gpios = <&gpd1 2 0 /* SDA */
-+			 &gpd1 3 0 /* SCL */>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		wm8994@1a {
-+			compatible = "wlf,wm8994";
-+			reg = <0x1a>;
-+		};
-+	};
-diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-index e132168..40264b0 100644
---- a/drivers/i2c/busses/i2c-s3c2410.c
-+++ b/drivers/i2c/busses/i2c-s3c2410.c
-@@ -35,6 +35,7 @@
- #include <linux/cpufreq.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/of_i2c.h>
- 
- #include <asm/irq.h>
- 
-@@ -96,6 +97,10 @@ static inline int s3c24xx_i2c_is2440(struct s3c24xx_i2c *i2c)
- 	struct platform_device *pdev = to_platform_device(i2c->dev);
- 	enum s3c24xx_i2c_type type;
- 
-+	if (i2c->dev->of_node)
-+		return of_device_is_compatible(i2c->dev->of_node,
-+						"samsung,s3c2440-i2c");
-+
- 	type = platform_get_device_id(pdev)->driver_data;
- 	return type == TYPE_S3C2440;
- }
-@@ -787,6 +792,34 @@ static int s3c24xx_i2c_init(struct s3c24xx_i2c *i2c)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+
-+/* s3c24xx_i2c_parse_dt
-+ *
-+ * Parse the device tree node and retreive the platform data.
-+*/
-+
-+static void
-+s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
-+{
-+	struct s3c2410_platform_i2c *pdata = &i2c->pdata;
-+
-+	if (!np)
-+		return;
-+
-+	of_property_read_u32(np, "samsung,i2c-sda-delay", &pdata->sda_delay);
-+	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
-+	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
-+				(u32 *)&pdata->frequency);
-+}
-+#else
-+static void
-+s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
-+{
-+	return;
-+}
-+#endif
-+
- /* s3c24xx_i2c_probe
-  *
-  * called by the bus driver when a suitable device is found
-@@ -812,6 +845,7 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
- 	}
- 
- 	memcpy(&i2c->pdata, pdata, sizeof(*pdata));
-+	s3c24xx_i2c_parse_dt(pdev->dev.of_node, i2c);
- 
- 	strlcpy(i2c->adap.name, "s3c2410-i2c", sizeof(i2c->adap.name));
- 	i2c->adap.owner   = THIS_MODULE;
-@@ -908,13 +942,16 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
- 	 */
- 
- 	i2c->adap.nr = pdata->bus_num;
-+	i2c->adap.dev.of_node = pdev->dev.of_node;
- 
--	ret = i2c_add_numbered_adapter(&i2c->adap);
-+	ret = (pdev->dev.of_node) ? i2c_add_adapter(&i2c->adap) :
-+					i2c_add_numbered_adapter(&i2c->adap);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to add bus to i2c core\n");
- 		goto err_cpufreq;
- 	}
- 
-+	of_i2c_register_devices(&i2c->adap);
- 	platform_set_drvdata(pdev, i2c);
- 
- 	dev_info(&pdev->dev, "%s: S3C I2C adapter\n", dev_name(&i2c->adap.dev));
-@@ -1016,6 +1053,17 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
- };
- MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id s3c24xx_i2c_match[] = {
-+	{ .compatible = "samsung,s3c2410-i2c" },
-+	{ .compatible = "samsung,s3c2440-i2c" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
-+#else
-+#define s3c24xx_i2c_match NULL
-+#endif
-+
- static struct platform_driver s3c24xx_i2c_driver = {
- 	.probe		= s3c24xx_i2c_probe,
- 	.remove		= s3c24xx_i2c_remove,
-@@ -1024,6 +1072,7 @@ static struct platform_driver s3c24xx_i2c_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "s3c-i2c",
- 		.pm	= S3C24XX_DEV_PM_OPS,
-+		.of_match_table	= s3c24xx_i2c_match,
- 	},
- };
- 
--- 
-1.6.6.rc2
+If it is in the -r tree, you need to
+s,Documentation/lguest,Documentation/virtual/lguest, as it has moved.
+
+Cheers,
+Rusty.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
+s" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
