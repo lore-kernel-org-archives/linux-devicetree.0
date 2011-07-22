@@ -1,231 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] DT: Use helper function to read u32 values
-Date: Mon, 18 Jul 2011 07:22:57 -0500
-Message-ID: <4E2425A1.2050603@gmail.com>
-References: <CAP6yH7cpP7C_h2mJNBqy-UW9_Sg4734j+2dYsK9bdF+99yY3=w@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] Various fixups from first bug reports
+Date: Fri, 22 Jul 2011 08:57:11 +0200
+Message-ID: <20110722065711.GD16561@pengutronix.de>
+References: <alpine.LFD.2.02.1107211932440.2702@ionos>
+ <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1311313414.2940.8.camel@box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAP6yH7cpP7C_h2mJNBqy-UW9_Sg4734j+2dYsK9bdF+99yY3=w@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Manjunatha GK <manjugk-l0cyMroinI0@public.gmane.org>
-Cc: " <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>,  linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,  Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>"@ozlabs.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-rt-users-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1311313414.2940.8.camel@box>
+Sender: linux-rt-users-owner@vger.kernel.org
+To: hermann <brummer-@web.de>
+Cc: linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rusty Russell <rusty@rustcorp.com.au>, lguest@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Manjunatha,
+Hello,
 
-On 07/04/2011 09:12 AM, Manjunatha GK wrote:
-> Use helper function of_property_read_u32() in place of
-> of_get_property and be32_to_cpup() api's for code optimization.
-> 
-> Compile tested the changes.
-> 
-> Signed-off-by: G, Manjunath Kondaiah <manjugk-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/of/irq.c     |   39 +++++++++++++++++++--------------------
->  drivers/of/of_i2c.c  |    8 +++-----
->  drivers/of/of_mdio.c |    8 +++-----
->  3 files changed, 25 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 9f689f1..30cd3b7 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -59,20 +59,19 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
->  struct device_node *of_irq_find_parent(struct device_node *child)
->  {
->  	struct device_node *p;
-> -	const __be32 *parp;
-> +	u32 parp;
-> 
->  	if (!of_node_get(child))
->  		return NULL;
-> 
->  	do {
-> -		parp = of_get_property(child, "interrupt-parent", NULL);
-> -		if (parp == NULL)
-> +		if (of_property_read_u32(child, "interrupt-parent", &parp))
->  			p = of_get_parent(child);
->  		else {
->  			if (of_irq_workarounds & OF_IMAP_NO_PHANDLE)
->  				p = of_node_get(of_irq_dflt_pic);
->  			else
-> -				p = of_find_node_by_phandle(be32_to_cpup(parp));
-> +				p = of_find_node_by_phandle(parp);
->  		}
->  		of_node_put(child);
->  		child = p;
-> @@ -100,7 +99,8 @@ int of_irq_map_raw(struct device_node *parent,
-> const __be32 *intspec,
->  		   u32 ointsize, const __be32 *addr, struct of_irq *out_irq)
->  {
->  	struct device_node *ipar, *tnode, *old = NULL, *newpar = NULL;
-> -	const __be32 *tmp, *imap, *imask;
-> +	const __be32 *imap, *imask;
-> +	u32 tmp;
->  	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
->  	int imaplen, match, i;
-> 
-> @@ -115,9 +115,8 @@ int of_irq_map_raw(struct device_node *parent,
-> const __be32 *intspec,
->  	 * is none, we are nice and just walk up the tree
->  	 */
->  	do {
-> -		tmp = of_get_property(ipar, "#interrupt-cells", NULL);
-> -		if (tmp != NULL) {
-> -			intsize = be32_to_cpu(*tmp);
-> +		if (!of_property_read_u32(ipar, "#interrupt-cells", &tmp)) {
-> +			intsize = tmp;
+(These two issues occured on 3.0-rc7-rt0, I think they apply to
+mainline, too.)
 
-Just pass intsize directly and remove tmp.
+On Fri, Jul 22, 2011 at 07:43:34AM +0200, hermann wrote:
+> well, I run into 2 ops, witch, I guess not related to the rt patch.
+>=20
+> first one was with CONFIG_SENSORS_LTC4245, module build stage 2 faile=
+d
+> with undefined reference to of_find_property
+of_find_property isn't exported to modules. Maybe of_get_property shoul=
+d
+be used? Should of_find_property be static then? Alternatively export
+of_find_property, too. Grant?
 
->  			break;
->  		}
->  		tnode = ipar;
-> @@ -139,14 +138,14 @@ int of_irq_map_raw(struct device_node *parent,
-> const __be32 *intspec,
->  	 */
->  	old = of_node_get(ipar);
->  	do {
-> -		tmp = of_get_property(old, "#address-cells", NULL);
-> +		i = of_property_read_u32(old, "#address-cells", &tmp);
->  		tnode = of_get_parent(old);
->  		of_node_put(old);
->  		old = tnode;
-> -	} while (old && tmp == NULL);
-> +	} while (old && i < 0);
->  	of_node_put(old);
->  	old = NULL;
-> -	addrsize = (tmp == NULL) ? 2 : be32_to_cpu(*tmp);
-> +	addrsize = (i < 0) ? 2 : tmp;
-> 
->  	pr_debug(" -> addrsize=%d\n", addrsize);
-> 
-> @@ -225,14 +224,14 @@ int of_irq_map_raw(struct device_node *parent,
-> const __be32 *intspec,
->  			/* Get #interrupt-cells and #address-cells of new
->  			 * parent
->  			 */
-> -			tmp = of_get_property(newpar, "#interrupt-cells", NULL);
-> -			if (tmp == NULL) {
-> +			if (of_property_read_u32(newpar, "#interrupt-cells",
-> +									&tmp)) {
->  				pr_debug(" -> parent lacks #interrupt-cells!\n");
->  				goto fail;
->  			}
-> -			newintsize = be32_to_cpu(*tmp);
-> -			tmp = of_get_property(newpar, "#address-cells", NULL);
-> -			newaddrsize = (tmp == NULL) ? 0 : be32_to_cpu(*tmp);
-> +			newintsize = tmp;
+> second was with CONFIG_LGUEST_GUEST enabled, module build stage 2 fai=
+led
+> with Documentation/lguest not found
+Hmm, there is Documentation/virtual/lguest. Didn't find where
+Documentation/lguest is used from a quick look. Rusty?
 
-Ditto
+Best regards
+Uwe
 
-> +			i = of_property_read_u32(newpar, "#address-cells", &tmp);
-> +			newaddrsize = (i < 0) ? 0 : tmp;
-> 
->  			pr_debug(" -> newintsize=%d, newaddrsize=%d\n",
->  			    newintsize, newaddrsize);
-> @@ -284,7 +283,8 @@ EXPORT_SYMBOL_GPL(of_irq_map_raw);
->  int of_irq_map_one(struct device_node *device, int index, struct
-> of_irq *out_irq)
->  {
->  	struct device_node *p;
-> -	const __be32 *intspec, *tmp, *addr;
-> +	const __be32 *intspec, *addr;
-> +	u32 tmp;
->  	u32 intsize, intlen;
->  	int res = -EINVAL;
-> 
-> @@ -311,10 +311,9 @@ int of_irq_map_one(struct device_node *device,
-> int index, struct of_irq *out_irq
->  		return -EINVAL;
-> 
->  	/* Get size of interrupt specifier */
-> -	tmp = of_get_property(p, "#interrupt-cells", NULL);
-> -	if (tmp == NULL)
-> +	if (of_property_read_u32(p, "#interrupt-cells", &tmp))
->  		goto out;
-> -	intsize = be32_to_cpu(*tmp);
-> +	intsize = tmp;
-
-Ditto
-
-> 
->  	pr_debug(" intsize=%d intlen=%d\n", intsize, intlen);
-> 
-> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> index f37fbeb..371b591 100644
-> --- a/drivers/of/of_i2c.c
-> +++ b/drivers/of/of_i2c.c
-> @@ -32,8 +32,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  	for_each_child_of_node(adap->dev.of_node, node) {
->  		struct i2c_board_info info = {};
->  		struct dev_archdata dev_ad = {};
-> -		const __be32 *addr;
-> -		int len;
-> +		u32 addr;
-> 
->  		dev_dbg(&adap->dev, "of_i2c: register %s\n", node->full_name);
-> 
-> @@ -43,14 +42,13 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  			continue;
->  		}
-> 
-> -		addr = of_get_property(node, "reg", &len);
-> -		if (!addr || (len < sizeof(int))) {
-> +		if (of_property_read_u32(node, "reg", &addr)) {
-
-Ditto
-
->  			dev_err(&adap->dev, "of_i2c: invalid reg on %s\n",
->  				node->full_name);
->  			continue;
->  		}
-> 
-> -		info.addr = be32_to_cpup(addr);
-> +		info.addr = addr;
->  		if (info.addr > (1 << 10) - 1) {
->  			dev_err(&adap->dev, "of_i2c: invalid addr=%x on %s\n",
->  				info.addr, node->full_name);
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d35e300..9064b76 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -52,19 +52,17 @@ int of_mdiobus_register(struct mii_bus *mdio,
-> struct device_node *np)
-> 
->  	/* Loop over the child nodes and register a phy_device for each one */
->  	for_each_child_of_node(np, child) {
-> -		const __be32 *paddr;
-> +		u32 paddr;
->  		u32 addr;
-
-Ditto.
-
-Rob
-
-> -		int len;
-> 
->  		/* A PHY must have a reg property in the range [0-31] */
-> -		paddr = of_get_property(child, "reg", &len);
-> -		if (!paddr || len < sizeof(*paddr)) {
-> +		if (of_property_read_u32(child, "reg", &paddr)) {
->  			dev_err(&mdio->dev, "%s has invalid PHY address\n",
->  				child->full_name);
->  			continue;
->  		}
-> 
-> -		addr = be32_to_cpup(paddr);
-> +		addr = paddr;
->  		if (addr >= 32) {
->  			dev_err(&mdio->dev, "%s PHY address %i is too large\n",
->  				child->full_name, addr);
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
+s" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
