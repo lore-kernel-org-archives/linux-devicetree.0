@@ -1,52 +1,60 @@
-From: Robin Gareus <robin@gareus.org>
+From: hermann <brummer--S0/GAf8tV78@public.gmane.org>
 Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Sat, 23 Jul 2011 11:57:44 +0200
-Message-ID: <4E2A9B18.6030000@gareus.org>
-References: <alpine.LFD.2.02.1107211932440.2702@ionos>	 <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>	 <1311313414.2940.8.camel@box> <20110722065711.GD16561@pengutronix.de>	 <87y5zqzick.fsf@rustcorp.com.au>  <20110722192051.GH16561@pengutronix.de> <1311391059.2343.8.camel@box>
+Date: Sat, 23 Jul 2011 16:19:13 +0200
+Message-ID: <1311430753.2223.5.camel@box>
+References: <alpine.LFD.2.02.1107211932440.2702@ionos>
+	<1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1311313414.2940.8.camel@box> <20110722065711.GD16561@pengutronix.de>
+	<87y5zqzick.fsf@rustcorp.com.au>
+	<20110722192051.GH16561@pengutronix.de>
+	<1311391059.2343.8.camel@box>  <4E2A9B18.6030000@gareus.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-In-Reply-To: <1311391059.2343.8.camel@box>
-Sender: linux-rt-users-owner@vger.kernel.org
-To: hermann <brummer-@web.de>
-Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Rusty Russell <rusty@rustcorp.com.au>, linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, lguest@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <lguest-bounces+glkvl-lguest=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4E2A9B18.6030000-+VlDMftONaMdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/lguest>,
+	<mailto:lguest-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/lguest>
+List-Post: <mailto:lguest-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:lguest-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/lguest>,
+	<mailto:lguest-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: lguest-bounces+glkvl-lguest=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: lguest-bounces+glkvl-lguest=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Robin Gareus <robin-+VlDMftONaMdnm+yROfE0A@public.gmane.org>
+Cc: lguest-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rt-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2011 05:17 AM, hermann wrote:
-> Am Freitag, den 22.07.2011, 21:20 +0200 schrieb Uwe Kleine-K=C3=B6nig=
-:
->> I don't understand that and didn't try to reproduce.=20
->> hermann, maybe you can follow up with your failing .config and try t=
-o
->> reproduce on v3.0 (without rt)?
->>
->> Best regards
->> Uwe=20
->=20
-> well, it also didn't build from the 3.0 mainline with that config. Af=
-ter
-> modules build stage 2, it comes to :
-> . . . . .
-> IHEX    firmware/yam/9600.bin
-> make[1]: Leaving directory `/home/brummer/Projekte/Kernel/linux-3.0'
-> /usr/bin/make    ARCH=3Di386 \
-> 			     -C Documentation/lguest
-> make: *** Documentation/lguest: Datei oder Verzeichnis nicht gefunden=
-=2E
-> Schluss.
-> make: *** [debian/stamp/build/kernel] Fehler 2
->=20
-Hello Herman,
+Am Samstag, den 23.07.2011, 11:57 +0200 schrieb Robin Gareus:
+> Hello Herman,
+> 
+> Are you using make-kpkg?  You need to change the path to lguest
+> in /usr/share/kernel-package/ruleset/targets/doc.mk and two or three
+> other files there as Rusty outlined.
+> 
+> HTH,
+> robin 
 
-Are you using make-kpkg?  You need to change the path to lguest
-in /usr/share/kernel-package/ruleset/targets/doc.mk and two or three
-other files there as Rusty outlined.
+Hi Robin
 
-HTH,
-robin
---
-To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
-s" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, using make-kpkg. I changed line 61 from 
+
+rm -f $(DOCDIR)/Documentation/lguest/lguest
+$(DOCDIR)/Documentation/lguest/lguest.lds
+
+to 
+
+rm -f $(DOCDIR)/Documentation/virtual/lguest/lguest
+$(DOCDIR)/Documentation/virtual/lguest/lguest.lds
+
+but it didn't help, the result is still the same.
+/usr/bin/make    ARCH=i386 \
+			     -C Documentation/lguest
+make: *** Documentation/lguest: Datei oder Verzeichnis nicht gefunden.
+Schluss.
+
+Could you wrote a bit more precise what needs to do, please ?
+
+regards
+hermann
