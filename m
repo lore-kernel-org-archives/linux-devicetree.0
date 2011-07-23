@@ -1,73 +1,50 @@
-From: hermann <brummer-@web.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
 Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Sat, 23 Jul 2011 17:21:23 +0200
-Message-ID: <1311434484.2223.12.camel@box>
+Date: Sat, 23 Jul 2011 20:53:04 +0200
+Message-ID: <20110723185304.GJ16561@pengutronix.de>
 References: <alpine.LFD.2.02.1107211932440.2702@ionos>
-	 <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
-	 <1311313414.2940.8.camel@box> <20110722065711.GD16561@pengutronix.de>
-	 <87y5zqzick.fsf@rustcorp.com.au>  <20110722192051.GH16561@pengutronix.de>
-	 <1311391059.2343.8.camel@box>  <4E2A9B18.6030000@gareus.org>
-	 <1311430753.2223.5.camel@box>  <4E2ADBB6.20604@gareus.org>
+ <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1311313414.2940.8.camel@box>
+ <20110722065711.GD16561@pengutronix.de>
+ <87y5zqzick.fsf@rustcorp.com.au>
+ <20110722192051.GH16561@pengutronix.de>
+ <1311391059.2343.8.camel@box>
+ <4E2A9B18.6030000@gareus.org>
+ <1311430753.2223.5.camel@box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-rt-users-owner@vger.kernel.org>
-In-Reply-To: <4E2ADBB6.20604@gareus.org>
+Content-Disposition: inline
+In-Reply-To: <1311430753.2223.5.camel@box>
 Sender: linux-rt-users-owner@vger.kernel.org
-To: Robin Gareus <robin@gareus.org>
-Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Rusty Russell <rusty@rustcorp.com.au>, linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, lguest@lists.ozlabs.org
+To: hermann <brummer-@web.de>
+Cc: Robin Gareus <robin@gareus.org>, Rusty Russell <rusty@rustcorp.com.au>, linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, lguest@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, den 23.07.2011, 16:33 +0200 schrieb Robin Gareus:
-> On 07/23/2011 04:19 PM, hermann wrote:
-> > Am Samstag, den 23.07.2011, 11:57 +0200 schrieb Robin Gareus:
-> >> Hello Herman,
-> >>
-> >> Are you using make-kpkg?  You need to change the path to lguest
-> >> in /usr/share/kernel-package/ruleset/targets/doc.mk and two or three
-> >> other files there as Rusty outlined.
-> >>
-> >> HTH,
-> >> robin 
-> > 
-> > Hi Robin
-> > 
-> > Yes, using make-kpkg. I changed line 61 from 
-> > [..]
-> > but it didn't help, the result is still the same.
-> > /usr/bin/make    ARCH=i386 \
-> > 			     -C Documentation/lguest
-> 
-> That's the one in /usr/share/kernel-package/ruleset/targets/image.mk
-> 
-> I don't remember all locations, there were around a dozen, also
-> including some $CONFIG_* checks. It was pretty straight forward and -
-> alas - I did not keep a diff.
-> 
-> `grep -rli lguest /usr/share/kernel-package/` should get you going.
-> 
-> If you're really stuck I can `apt-get --reinstall` and create a diff.
-> Let me know. If it is Debian, be aware that there are also various other
-> scripts in need of patching (e.g. /etc/init.d/udev supported_kernel()
-> does not match the 3.X series, yet),..
-> 
-> 
-> > Schluss.
-> ende, aus :)
-> 
-> robin
+Hello,
 
-Thanks robin, get it working now. Have changed the locations in 
-/usr/share/kernel-package/ruleset/targets/common.mk
-/usr/share/kernel-package/ruleset/targets/doc.mk
-/usr/share/kernel-package/ruleset/targets/image.mk
+On Sat, Jul 23, 2011 at 04:19:13PM +0200, hermann wrote:
+> Am Samstag, den 23.07.2011, 11:57 +0200 schrieb Robin Gareus:
+> Yes, using make-kpkg. I changed line 61 from=20
+there is an alternative,
 
-It would be cool if you could remember witch other scripts need to be
-patched to support the 3.X series.
+	make deb-pkg
 
-I mean I run already the Kernel 3.0.0-rc7-rt0 i686 here on debian/sid
-without hazel, but be interested to set up all in a matching manner.  
+in the vanilla kernel. Depending on why you use make-kpkg it might be
+worth a try.
 
-regards
-hermann
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
+s" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
