@@ -1,50 +1,39 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] Various fixups from first bug reports
-Date: Sat, 23 Jul 2011 20:53:04 +0200
-Message-ID: <20110723185304.GJ16561@pengutronix.de>
-References: <alpine.LFD.2.02.1107211932440.2702@ionos>
- <1311278277-8222-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1311313414.2940.8.camel@box>
- <20110722065711.GD16561@pengutronix.de>
- <87y5zqzick.fsf@rustcorp.com.au>
- <20110722192051.GH16561@pengutronix.de>
- <1311391059.2343.8.camel@box>
- <4E2A9B18.6030000@gareus.org>
- <1311430753.2223.5.camel@box>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH] of: fix missing include from of_pci.c
+Date: Sun, 24 Jul 2011 00:07:53 -0600
+Message-ID: <1311487673-3599-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1311430753.2223.5.camel@box>
-Sender: linux-rt-users-owner@vger.kernel.org
-To: hermann <brummer-@web.de>
-Cc: Robin Gareus <robin@gareus.org>, Rusty Russell <rusty@rustcorp.com.au>, linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, lguest@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+of_pci.c references symbols from linux/of.h.
 
-On Sat, Jul 23, 2011 at 04:19:13PM +0200, hermann wrote:
-> Am Samstag, den 23.07.2011, 11:57 +0200 schrieb Robin Gareus:
-> Yes, using make-kpkg. I changed line 61 from=20
-there is an alternative,
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ drivers/of/of_pci.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-	make deb-pkg
-
-in the vanilla kernel. Depending on why you use make-kpkg it might be
-worth a try.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe linux-rt-user=
-s" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index ec7b060..3701b62 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -1,4 +1,5 @@
+ #include <linux/kernel.h>
++#include <linux/of.h>
+ #include <linux/of_pci.h>
+ #include <asm/prom.h>
+ 
+-- 
+1.7.4.1
