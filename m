@@ -1,40 +1,67 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [GIT PULL] device tree build fix
-Date: Sun, 24 Jul 2011 00:09:43 -0600
-Message-ID: <CACxGe6urOHDTO5R515RK8+Rtg4C_v=XtXA=+xkzFqE5M4M3_TA@mail.gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] input: xilinx_ps2: Add missing of_address.h header
+Date: Sun, 24 Jul 2011 15:51:30 +0200
+Message-ID: <4E2C2362.1080204@monstr.eu>
+References: <1310564781-5979-1-git-send-email-monstr@monstr.eu> <CACxGe6vRZ4tCALpzFng2y9W_9zB3qQEntma+z292FXzDuYBRKQ@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Benjamin
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vRZ4tCALpzFng2y9W_9zB3qQEntma+z292FXzDuYBRKQ@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The following changes since commit 6d6be43d4dfdb167ef72f4aa665c1607db799be4:
+Hi Grant,
 
-  Merge branch 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/vapier/blackfin
-(2011-07-23 14:05:44 -0700)
+can you propose this patch to mainline through your devicetree tree?
 
-are available in the git repository at:
+Thanks,
+Michal
 
-  git://git.secretlab.ca/git/linux-2.6 devicetree/next
-
-Grant Likely (1):
-      of: fix missing include from of_pci.c
-
- drivers/of/of_pci.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+Grant Likely wrote:
+> On Wed, Jul 13, 2011 at 10:46 PM, Michal Simek <monstr@monstr.eu> wrote:
+>> Add missing header.
+>>
+>> Error log:
+>> CC      drivers/input/serio/xilinx_ps2.o
+>> drivers/input/serio/xilinx_ps2.c: In function 'xps2_of_probe':
+>> drivers/input/serio/xilinx_ps2.c:249: error: implicit declaration of function 'of_address_to_resource'
+>>
+>> Signed-off-by: Michal Simek <monstr@monstr.eu>
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> 
+>> ---
+>>  drivers/input/serio/xilinx_ps2.c |    2 +-
+>>  1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/xilinx_ps2.c
+>> index 80baa53..d64c5a4 100644
+>> --- a/drivers/input/serio/xilinx_ps2.c
+>> +++ b/drivers/input/serio/xilinx_ps2.c
+>> @@ -23,7 +23,7 @@
+>>  #include <linux/init.h>
+>>  #include <linux/list.h>
+>>  #include <linux/io.h>
+>> -
+>> +#include <linux/of_address.h>
+>>  #include <linux/of_device.h>
+>>  #include <linux/of_platform.h>
+>>
+>> --
+>> 1.5.5.6
+>>
+>>
+> 
+> 
+> 
 
 
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
