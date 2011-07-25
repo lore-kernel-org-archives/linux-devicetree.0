@@ -1,16 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Mon, 25 Jul 2011 14:46:30 -0600
-Message-ID: <20110725204630.GD26735@ponder.secretlab.ca>
+Subject: Re: [PATCH 2/2] arm/mx5: add device tree support for imx53 boards
+Date: Mon, 25 Jul 2011 14:57:24 -0600
+Message-ID: <20110725205724.GE26735@ponder.secretlab.ca>
 References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1311606467-28985-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1311606467-28985-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,138 +23,91 @@ To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 25, 2011 at 11:07:46PM +0800, Shawn Guo wrote:
-> It adds function mxc_iomuxc_dt_init() to parse iomuxc pad configuration
-> from device tree.
+On Mon, Jul 25, 2011 at 11:07:47PM +0800, Shawn Guo wrote:
+> It adds device tree support for imx53 boards.
 > 
 > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/fsl/iomuxc.txt         |   47 +++++++++++++
->  arch/arm/mach-mx5/Makefile                         |    2 +
->  arch/arm/mach-mx5/iomuxc-dt.c                      |   72 ++++++++++++++++++++
->  arch/arm/plat-mxc/include/mach/common.h            |    3 +
->  4 files changed, 124 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
->  create mode 100644 arch/arm/mach-mx5/iomuxc-dt.c
+>  .../devicetree/bindings/arm/fsl/boards.txt         |   15 +
+>  arch/arm/boot/dts/imx53-ard.dts                    |  365 +++++++
+>  arch/arm/boot/dts/imx53-evk.dts                    |  354 +++++++
+>  arch/arm/boot/dts/imx53-qsb.dts                    |  358 +++++++
+>  arch/arm/boot/dts/imx53-smd.dts                    |  444 +++++++++
+>  arch/arm/boot/dts/imx53.dtsi                       | 1044 ++++++++++++++++++++
+>  arch/arm/mach-mx5/Kconfig                          |    8 +
+>  arch/arm/mach-mx5/Makefile                         |    1 +
+>  arch/arm/mach-mx5/imx53-dt.c                       |  128 +++
+>  9 files changed, 2717 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/fsl/boards.txt
+>  create mode 100644 arch/arm/boot/dts/imx53-ard.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-evk.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-qsb.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-smd.dts
+>  create mode 100644 arch/arm/boot/dts/imx53.dtsi
+>  create mode 100644 arch/arm/mach-mx5/imx53-dt.c
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl/iomuxc.txt b/Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
+> diff --git a/Documentation/devicetree/bindings/arm/fsl/boards.txt b/Documentation/devicetree/bindings/arm/fsl/boards.txt
 > new file mode 100644
-> index 0000000..ae9292b
+> index 0000000..7603905
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
-> @@ -0,0 +1,47 @@
-> +* Freescale i.MX IOMUX Controller (IOMUXC)
+> +++ b/Documentation/devicetree/bindings/arm/fsl/boards.txt
+> @@ -0,0 +1,15 @@
+> +i.MX53 Automotive Reference Design Board
+> +Required root node properties:
+> +    - compatible = "fsl,mx53-ard", "fsl,mx53";
 > +
-> +Required properties:
-> +- compatible : "fsl,<soc>-iomuxc";
+> +i.MX53 Evaluation Kit
+> +Required root node properties:
+> +    - compatible = "fsl,mx53-evk", "fsl,mx53";
 > +
-> +Sub-nodes present individual PAD configuration, and node name is the
-> +PAD name given by hardware document.
+> +i.MX53 Quick Start Board
+> +Required root node properties:
+> +    - compatible = "fsl,mx53-qsb", "fsl,mx53";
 > +
-> +Required properties:
-> +- reg : Should contain the offset of registers
-> +  IOMUXC_SW_MUX_CTL_PAD_<pad-name> and IOMUXC_SW_PAD_CTL_PAD_<pad-name>.
-> +- fsl,iomuxc-mux-mode : Should specify the MUX_MODE setting of register
-> +  IOMUXC_SW_MUX_CTL_PAD_<pad-name>.
+> +i.MX53 Smart Mobile Reference Design Board
+> +Required root node properties:
+> +    - compatible = "fsl,mx53-smd", "fsl,mx53";
+
+w00t!  Documentation!  :-)
+
+[...]
+
+> diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
+> index 53422d2..9f60dc1 100644
+> --- a/arch/arm/mach-mx5/Kconfig
+> +++ b/arch/arm/mach-mx5/Kconfig
+> @@ -173,6 +173,14 @@ endif # ARCH_MX51
+>  if ARCH_MX53_SUPPORTED
+>  comment "i.MX53 machines:"
+>  
+> +config MACH_IMX53_DT
+> +	bool "Support i.MX53 platforms from device tree"
+> +	select SOC_IMX53
+> +	select USE_OF
+> +	help
+> +	  Include support for Freescale i.MX53 based platforms
+> +	  using the device tree for discovery
 > +
-> +Optional properties:
-> +- fsl,iomuxc-sion : Indicates that bit SION of register
-> +  IOMUXC_SW_MUX_CTL_PAD_<pad-name> needs to be set for given MUX_MODE
-> +  setting of the PAD.
-> +- fsl,iomuxc-select-input : Specify the offset of register
-> +  IOMUXC_<...>_SELECT_INPUT and the value of bit-field DAISY for given
-> +  MUX_MODE setting of the PAD.
-
-This could get really verbose in a really big hurry.  Fortunately the
-dtb format is sophisticated enough to only store each unique property
-name once, so the data shouldn't be huge, but it is still going to
-make for huge source files.  Can you think of a more concise
-representation?
-
-The current linux code has each pin config simply a u64.  Now, an
-engineer certainly wouldn't be asked to write raw u64 values, but we
-could add some form of #define or macro syntax to dtc so that the
-symbolic names currently used in the board.c file would continue to
-work.  Alternately, we could just make each pin configuration a string
-that can be parsed by the kernel at runtime.  A string would certainly
-be the most extensible, at the cost of some more init code in the
-kernel.
-
-Something along the lines of:
-	iomuxc@53fa8000 {
-		compatible = "fsl,imx53-iomuxc"
-		fsl,iomux-pads = "csi0-dat10,uart1-txd",
-				"csi0-dat11,uart1-rxd",
-				...;
-	};
-
-Or if you prefer doing the parsing in dtc:
-	iomuxc@53fa8000 {
-		compatible = "fsl,imx53-iomuxc"
-		fsl,iomux-pads = <MX53_PAD_CSI0_DAT10__UART1_TXD_MUX
-				  MX53_PAD_CSI0_DAT11__UART2_RXD_MUX
-				  ...
-				  >;
-	};
-
-And we'd need a syntax for the macros.  However, right now
-iomux-mx53.h is *huge*, which I'm not hugely keen on also bringing
-into DTC...  but there might just not be any good way around that
-because pinmux configuration is by definition complexe.  It would
-certainly be better to be pre-processing that large data block in dtc
-rather than trying to encode the whole thing into kernel setup code.
-
-A third option would be to create the pinmux table in C code with gcc and
-objdump, and include it into the dtb with a /bin-inc/ statement.  That
-option would work right now without having to change the format of the
-iomux #defines.
-
-g.
-
-> +
-> +Examples:
-> +
-> +iomuxc@53fa8000 {
-> +	#address-cells = <2>;
-> +	#size-cells = <0>;
-> +	compatible = "fsl,imx53-iomuxc";
-> +	reg = <0x53fa8000 0x4000>;
-> +
-> +	/*
-> +	 * I2C2
-> +	 */
-> +	key-col3 { /* I2C2_SCL */
-> +		reg = <0x3c 0x364>;
-> +		fsl,iomuxc-mux-mode = <4>;
-> +		fsl,iomuxc-sion;
-> +		fsl,iomuxc-select-input = <0x81c 0x0>;
-> +	};
-> +
-> +	key-row3 { /* I2C2_SDA */
-> +		reg = <0x40 0x368>;
-> +		fsl,iomuxc-mux-mode = <4>;
-> +		fsl,iomuxc-sion;
-> +		fsl,iomuxc-select-input = <0x820 0x0>;
-> +	};
-> +};
+>  config MACH_MX53_EVK
+>  	bool "Support MX53 EVK platforms"
+>  	select SOC_IMX53
 > diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-> index 383e7cd..71379f6 100644
+> index 71379f6..a1fd712 100644
 > --- a/arch/arm/mach-mx5/Makefile
 > +++ b/arch/arm/mach-mx5/Makefile
-> @@ -22,3 +22,5 @@ obj-$(CONFIG_MX51_EFIKA_COMMON) += mx51_efika.o
->  obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
->  obj-$(CONFIG_MACH_MX51_EFIKASB) += board-mx51_efikasb.o
+> @@ -24,3 +24,4 @@ obj-$(CONFIG_MACH_MX51_EFIKASB) += board-mx51_efikasb.o
 >  obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
-> +
-> +obj-$(CONFIG_OF) += iomuxc-dt.o
-> diff --git a/arch/arm/mach-mx5/iomuxc-dt.c b/arch/arm/mach-mx5/iomuxc-dt.c
+>  
+>  obj-$(CONFIG_OF) += iomuxc-dt.o
+> +obj-$(CONFIG_MACH_IMX53_DT) += imx53-dt.o
+> diff --git a/arch/arm/mach-mx5/imx53-dt.c b/arch/arm/mach-mx5/imx53-dt.c
 > new file mode 100644
-> index 0000000..2cfe6e7
+> index 0000000..ac06f04
 > --- /dev/null
-> +++ b/arch/arm/mach-mx5/iomuxc-dt.c
-> @@ -0,0 +1,72 @@
+> +++ b/arch/arm/mach-mx5/imx53-dt.c
+> @@ -0,0 +1,128 @@
 > +/*
 > + * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
 > + * Copyright 2011 Linaro Ltd.
@@ -168,86 +120,134 @@ g.
 > + * http://www.gnu.org/copyleft/gpl.html
 > + */
 > +
-> +#include <linux/of.h>
-> +#include <asm/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/of_platform.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/time.h>
+> +#include <mach/common.h>
+> +#include <mach/hardware.h>
+> +#include <mach/mx53.h>
 > +
-> +#define IOMUXC_CONFIG_SION	(1 << 4)
+> +/*
+> + * Lookup table for attaching a specific name and platform_data pointer to
+> + * devices as they get created by of_platform_populate().  Ideally this table
+> + * would not exist, but the current clock implementation depends on some devices
+> + * having a specific name.
+> + */
+> +static const struct of_dev_auxdata imx53_auxdata_lookup[] __initconst = {
+> +	OF_DEV_AUXDATA("fsl,imx53-uart", MX53_UART1_BASE_ADDR, "imx21-uart.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-uart", MX53_UART2_BASE_ADDR, "imx21-uart.1", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-uart", MX53_UART3_BASE_ADDR, "imx21-uart.2", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-uart", MX53_UART4_BASE_ADDR, "imx21-uart.3", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-uart", MX53_UART5_BASE_ADDR, "imx21-uart.4", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-fec", MX53_FEC_BASE_ADDR, "imx25-fec.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-esdhc", MX53_ESDHC1_BASE_ADDR, "sdhci-esdhc-imx53.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-esdhc", MX53_ESDHC2_BASE_ADDR, "sdhci-esdhc-imx53.1", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-esdhc", MX53_ESDHC3_BASE_ADDR, "sdhci-esdhc-imx53.2", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-esdhc", MX53_ESDHC4_BASE_ADDR, "sdhci-esdhc-imx53.3", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-ecspi", MX53_ECSPI1_BASE_ADDR, "imx51-ecspi.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-ecspi", MX53_ECSPI2_BASE_ADDR, "imx51-ecspi.1", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-cspi", MX53_CSPI_BASE_ADDR, "imx35-cspi.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-i2c", MX53_I2C1_BASE_ADDR, "imx-i2c.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-i2c", MX53_I2C2_BASE_ADDR, "imx-i2c.1", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-i2c", MX53_I2C3_BASE_ADDR, "imx-i2c.2", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-sdma", MX53_SDMA_BASE_ADDR, "imx35-sdma", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx53-wdt", MX53_WDOG1_BASE_ADDR, "imx2-wdt.0", NULL),
+> +	{ /* sentinel */ }
+> +};
 > +
-> +void mxc_iomuxc_dt_init(const struct of_device_id *match)
+> +static const struct of_device_id imx53_tzic_of_match[] __initconst = {
+> +	{ .compatible = "fsl,imx53-tzic", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static const struct of_device_id imx53_iomuxc_of_match[] __initconst = {
+> +	{ .compatible = "fsl,imx53-iomuxc", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +/* Configure EIM for SMSC LAN9220 */
+> +static void __init imx53_ard_eim_config(void)
 > +{
-> +	struct device_node *node = of_find_matching_node(NULL, match);
-> +	struct device_node *child;
-> +	void __iomem *base;
-> +	u32 reg[2], select_input[2];
-> +	u32 mux_mode, pad_ctl;
+> +	u32 val;
+> +	void __iomem *eim_base, *iomuxc_base;
 > +
-> +	if (!node) {
-> +		pr_warn("%s: no iomuxc node found\n", __func__);
+> +	eim_base = ioremap(MX53_WEIM_BASE_ADDR, SZ_4K);
+> +	iomuxc_base = ioremap(MX53_IOMUXC_BASE_ADDR, SZ_4K);
+> +	if (!eim_base || !iomuxc_base) {
+> +		pr_warn("%s: ioremap failed\n", __func__);
 > +		return;
 > +	}
 > +
-> +	if (of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg))) {
-> +		pr_warn("%s: property 'reg' not found\n", __func__);
-> +		goto out;
-> +	}
+> +	/* CS1 timings for LAN9220 */
+> +	writel(0x20001, (eim_base + 0x18));
+> +	writel(0x0, (eim_base + 0x1c));
+> +	writel(0x16000202, (eim_base + 0x20));
+> +	writel(0x00000002, (eim_base + 0x24));
+> +	writel(0x16002082, (eim_base + 0x28));
+> +	writel(0x00000000, (eim_base + 0x2c));
+> +	writel(0x00000000, (eim_base + 0x90));
 > +
-> +	base = ioremap(reg[0], reg[1]);
-> +	if (!base) {
-> +		pr_warn("%s: ioremap failed\n", __func__);
-> +		goto out;
-> +	}
+> +	/* specify 64 MB on CS1 and CS0 on GPR1 */
+> +	val = readl(iomuxc_base + 0x4);
+> +	val &= ~0x3f;
+> +	val |= 0x1b;
+> +	writel(val, (iomuxc_base + 0x4));
 > +
-> +	for_each_child_of_node(node, child) {
-> +		/* get regsister offset of mux_ctl and pad_ctl */
-> +		if (of_property_read_u32_array(child, "reg", reg,
-> +					       ARRAY_SIZE(reg)))
-> +			continue;
-> +
-> +		/* set register mux_ctl */
-> +		if (of_property_read_u32(child, "fsl,iomuxc-mux-mode",
-> +					 &mux_mode))
-> +			continue;
-> +		if (of_get_property(child, "fsl,iomuxc-sion", NULL))
-> +			mux_mode |= IOMUXC_CONFIG_SION;
-> +		writel(mux_mode, base + reg[0]);
-> +
-> +		/* set register pad_ctl */
-> +		if (!of_property_read_u32(child, "fsl,iomuxc-pad-ctl",
-> +					  &pad_ctl))
-> +			writel(pad_ctl, base + reg[1]);
-> +
-> +		/* get offset/value pair and set select_input register */
-> +		if (!of_property_read_u32_array(child,
-> +				"fsl,iomuxc-select-input", select_input,
-> +				ARRAY_SIZE(select_input)))
-> +			writel(select_input[1], base + select_input[0]);
-> +	}
-> +
-> +	iounmap(base);
-> +
-> +out:
-> +	of_node_put(node);
+> +	iounmap(eim_base);
+> +	iounmap(iomuxc_base);
 > +}
-> diff --git a/arch/arm/plat-mxc/include/mach/common.h b/arch/arm/plat-mxc/include/mach/common.h
-> index 4e3d978..12b7499 100644
-> --- a/arch/arm/plat-mxc/include/mach/common.h
-> +++ b/arch/arm/plat-mxc/include/mach/common.h
-> @@ -13,6 +13,7 @@
->  
->  struct platform_device;
->  struct clk;
-> +struct of_device_id;
->  
->  extern void mx1_map_io(void);
->  extern void mx21_map_io(void);
-> @@ -72,4 +73,6 @@ extern void mxc_arch_reset_init(void __iomem *);
->  extern void mx51_efikamx_reset(void);
->  extern int mx53_revision(void);
->  extern int mx53_display_revision(void);
 > +
-> +extern void mxc_iomuxc_dt_init(const struct of_device_id *match);
->  #endif
-> -- 
-> 1.7.4.1
-> 
-> 
+> +static void __init imx53_dt_init(void)
+> +{
+> +	if (of_machine_is_compatible("fsl,imx53-ard"))
+> +		imx53_ard_eim_config();
+
+Create a separate DT_MACHINE_START section for the fsl,imx53-ard, and
+create it's own init function that does the eim config before calling
+imx53_dt_init().  In the long run it is cleaner to use a separate
+DT_MACHINE_START for the special cases; at least until they can be
+generalized away.  Multiple DT_MACHINE_START sections can exist in
+this file.
+
+> +
+> +	mxc_iomuxc_dt_init(imx53_iomuxc_of_match);
+> +
+> +	irq_domain_generate_simple(imx53_tzic_of_match, MX53_TZIC_BASE_ADDR, 0);
+> +
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +			     imx53_auxdata_lookup, NULL);
+> +}
+> +
+> +static void __init imx53_timer_init(void)
+> +{
+> +	mx53_clocks_init(32768, 24000000, 22579200, 0);
+> +}
+> +
+> +static struct sys_timer imx53_timer = {
+> +	.init = imx53_timer_init,
+> +};
+> +
+> +static const char *imx53_dt_board_compat[] __initdata = {
+> +	"fsl,imx53-ard",
+> +	"fsl,imx53-evk",
+> +	"fsl,imx53-qsb",
+> +	"fsl,imx53-smd",
+> +	NULL
+> +};
+> +
+> +DT_MACHINE_START(IMX53_DT, "Freescale i.MX53 (Device Tree Support)")
+> +	.map_io		= mx53_map_io,
+> +	.init_early	= imx53_init_early,
+> +	.init_irq	= mx53_init_irq,
+> +	.timer		= &imx53_timer,
+> +	.init_machine	= imx53_dt_init,
+> +	.dt_compat	= imx53_dt_board_compat,
+> +MACHINE_END
+
+Overall, looks pretty good.  Feel free to add my Acked-by tag
+(contingent on taking another look at the pinmux api, but my only
+objection there is that I think the proposed binding will be unwieldy
+to use).
+
+g.
