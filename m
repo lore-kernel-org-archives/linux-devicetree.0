@@ -1,7 +1,7 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] mtd/m25p80: add device tree probe support
-Date: Mon, 25 Jul 2011 21:37:43 +0800
-Message-ID: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 0/2] Add device tree support for i.mx53 boards
+Date: Mon, 25 Jul 2011 23:07:45 +0800
+Message-ID: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,77 +15,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree probe support for m25p80 driver.
+With all device drivers that the current i.mx53 board files are users
+of converted to be device tree aware, it may be the time to convert
+all the i.mx53 board support to device tree.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/st-m25p.txt |   14 ++++++++++++++
- drivers/mtd/devices/m25p80.c                      |   12 ++++++++++++
- 2 files changed, 26 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/st-m25p.txt
+The device tree based i.mx53 ARD, EVK, QSB (aka loco) and SMD now can
+work equivalently as the non-dt ones.
 
-diff --git a/Documentation/devicetree/bindings/mtd/st-m25p.txt b/Documentation/devicetree/bindings/mtd/st-m25p.txt
-new file mode 100644
-index 0000000..a8c0485
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/st-m25p.txt
-@@ -0,0 +1,14 @@
-+* STMicroelectronics SPI Flash
-+
-+Required properties:
-+- compatible : "st,<model>", "st,m25p".
-+
-+Examples:
-+
-+flash: m25p32@1 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "st,m25p32", "st,m25p";
-+	spi-max-frequency = <20000000>;
-+	reg = <1>;
-+};
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-index e6ba034..d9d4101 100644
---- a/drivers/mtd/devices/m25p80.c
-+++ b/drivers/mtd/devices/m25p80.c
-@@ -26,6 +26,7 @@
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
- 
- #include <linux/mtd/cfi.h>
- #include <linux/mtd/mtd.h>
-@@ -767,6 +768,16 @@ static const struct spi_device_id m25p_ids[] = {
- };
- MODULE_DEVICE_TABLE(spi, m25p_ids);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id m25p_dt_ids[] = {
-+	{ .compatible = "st,m25p", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, m25p_dt_ids);
-+#else
-+#define m25p_dt_ids NULL
-+#endif
-+
- static const struct spi_device_id *__devinit jedec_probe(struct spi_device *spi)
- {
- 	int			tmp;
-@@ -986,6 +997,7 @@ static struct spi_driver m25p80_driver = {
- 		.name	= "m25p80",
- 		.bus	= &spi_bus_type,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = m25p_dt_ids,
- 	},
- 	.id_table	= m25p_ids,
- 	.probe	= m25p_probe,
--- 
-1.7.4.1
+Shawn Guo (2):
+      arm/mx5: parse iomuxc pad configuratoin from device tree
+      arm/mx5: add device tree support for imx53 boards
+
+ .../devicetree/bindings/arm/fsl/boards.txt         |   15 +
+ .../devicetree/bindings/arm/fsl/iomuxc.txt         |   47 +
+ arch/arm/boot/dts/imx53-ard.dts                    |  365 +++++++
+ arch/arm/boot/dts/imx53-evk.dts                    |  354 +++++++
+ arch/arm/boot/dts/imx53-qsb.dts                    |  358 +++++++
+ arch/arm/boot/dts/imx53-smd.dts                    |  444 +++++++++
+ arch/arm/boot/dts/imx53.dtsi                       | 1044 ++++++++++++++++++++
+ arch/arm/mach-mx5/Kconfig                          |    8 +
+ arch/arm/mach-mx5/Makefile                         |    3 +
+ arch/arm/mach-mx5/imx53-dt.c                       |  128 +++
+ arch/arm/mach-mx5/iomuxc-dt.c                      |   72 ++
+ arch/arm/plat-mxc/include/mach/common.h            |    3 +
+ 12 files changed, 2841 insertions(+), 0 deletions(-)
