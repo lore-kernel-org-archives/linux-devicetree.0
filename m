@@ -1,15 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] vic: add device tree bindings
-Date: Mon, 25 Jul 2011 14:04:34 -0600
-Message-ID: <20110725200434.GB26735@ponder.secretlab.ca>
-References: <1311610200-12408-1-git-send-email-jamie@jamieiles.com>
-	<1311610200-12408-2-git-send-email-jamie@jamieiles.com>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Mon, 25 Jul 2011 14:46:30 -0600
+Message-ID: <20110725204630.GD26735@ponder.secretlab.ca>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1311610200-12408-2-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+In-Reply-To: <1311606467-28985-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,159 +20,234 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 25, 2011 at 05:09:58PM +0100, Jamie Iles wrote:
-> Allow the VIC to be used from device tree.  This adds vic_of_init() that
-> finds all compatible controllers in the device tree creating irq domains
-> and initialising the VIC.
+On Mon, Jul 25, 2011 at 11:07:46PM +0800, Shawn Guo wrote:
+> It adds function mxc_iomuxc_dt_init() to parse iomuxc pad configuration
+> from device tree.
 > 
-> We use of_iomap() for the IO mapping, but allow the entry functions in
-> arch/arm/include/asm/entry-macro-vic2.S to be used, this requires that a
-> static mapping is configured on the platform.
-> 
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/vic.txt |   21 +++++++++++++++
-
-Yay!  Thanks for documenting!
-
->  arch/arm/common/vic.c                         |   35 +++++++++++++++++++++++++
->  arch/arm/include/asm/hardware/vic.h           |    5 +++
->  3 files changed, 61 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
+>  .../devicetree/bindings/arm/fsl/iomuxc.txt         |   47 +++++++++++++
+>  arch/arm/mach-mx5/Makefile                         |    2 +
+>  arch/arm/mach-mx5/iomuxc-dt.c                      |   72 ++++++++++++++++++++
+>  arch/arm/plat-mxc/include/mach/common.h            |    3 +
+>  4 files changed, 124 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
+>  create mode 100644 arch/arm/mach-mx5/iomuxc-dt.c
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/arm/vic.txt
+> diff --git a/Documentation/devicetree/bindings/arm/fsl/iomuxc.txt b/Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
 > new file mode 100644
-> index 0000000..be5abc9
+> index 0000000..ae9292b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/vic.txt
-> @@ -0,0 +1,21 @@
-> +ARM Vectored Interrupt Controller
-> +
-> +Some ARM cores may contain a vectored interrupt controller (VIC).  This
-> +controller is represented in the device tree with:
+> +++ b/Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
+> @@ -0,0 +1,47 @@
+> +* Freescale i.MX IOMUX Controller (IOMUXC)
 > +
 > +Required properties:
-> +  - #interrupt-cells : <1> (32 interrupt sources supported)
+> +- compatible : "fsl,<soc>-iomuxc";
+> +
+> +Sub-nodes present individual PAD configuration, and node name is the
+> +PAD name given by hardware document.
+> +
+> +Required properties:
+> +- reg : Should contain the offset of registers
+> +  IOMUXC_SW_MUX_CTL_PAD_<pad-name> and IOMUXC_SW_PAD_CTL_PAD_<pad-name>.
+> +- fsl,iomuxc-mux-mode : Should specify the MUX_MODE setting of register
+> +  IOMUXC_SW_MUX_CTL_PAD_<pad-name>.
+> +
+> +Optional properties:
+> +- fsl,iomuxc-sion : Indicates that bit SION of register
+> +  IOMUXC_SW_MUX_CTL_PAD_<pad-name> needs to be set for given MUX_MODE
+> +  setting of the PAD.
+> +- fsl,iomuxc-select-input : Specify the offset of register
+> +  IOMUXC_<...>_SELECT_INPUT and the value of bit-field DAISY for given
+> +  MUX_MODE setting of the PAD.
 
-Does the vic have any configuration for level/edge or polarity?
+This could get really verbose in a really big hurry.  Fortunately the
+dtb format is sophisticated enough to only store each unique property
+name once, so the data shouldn't be huge, but it is still going to
+make for huge source files.  Can you think of a more concise
+representation?
 
-> +  - compatible : "arm,pl190-vic", "arm,pl192-vic", "arm-vic"
+The current linux code has each pin config simply a u64.  Now, an
+engineer certainly wouldn't be asked to write raw u64 values, but we
+could add some form of #define or macro syntax to dtc so that the
+symbolic names currently used in the board.c file would continue to
+work.  Alternately, we could just make each pin configuration a string
+that can be parsed by the kernel at runtime.  A string would certainly
+be the most extensible, at the cost of some more init code in the
+kernel.
 
-drop "arm-vic".  Compatible values should always be specific to an
-implementation, preferably to a specific version of hardware, although
-I'm also okay with an IP core name if the version if the core is
-provided.
+Something along the lines of:
+	iomuxc@53fa8000 {
+		compatible = "fsl,imx53-iomuxc"
+		fsl,iomux-pads = "csi0-dat10,uart1-txd",
+				"csi0-dat11,uart1-rxd",
+				...;
+	};
 
-> +  - reg : Offset and length of the register set for this device
-> +  - interrupt-controller
-> +  - irq-start : The first interrupt number that the VIC services
+Or if you prefer doing the parsing in dtc:
+	iomuxc@53fa8000 {
+		compatible = "fsl,imx53-iomuxc"
+		fsl,iomux-pads = <MX53_PAD_CSI0_DAT10__UART1_TXD_MUX
+				  MX53_PAD_CSI0_DAT11__UART2_RXD_MUX
+				  ...
+				  >;
+	};
 
-Drop irq-start, it should not be needed.  The interrupt controller
-should allocate its own range of irq numbers when it is set up.
+And we'd need a syntax for the macros.  However, right now
+iomux-mx53.h is *huge*, which I'm not hugely keen on also bringing
+into DTC...  but there might just not be any good way around that
+because pinmux configuration is by definition complexe.  It would
+certainly be better to be pre-processing that large data block in dtc
+rather than trying to encode the whole thing into kernel setup code.
+
+A third option would be to create the pinmux table in C code with gcc and
+objdump, and include it into the dtb with a /bin-inc/ statement.  That
+option would work right now without having to change the format of the
+iomux #defines.
+
+g.
 
 > +
-> +Example ARM VIC node:
+> +Examples:
 > +
-> +vic0@60000 {
-> +	compatible = "arm,pl192-vic";
-> +	interrupt-controller;
-> +	reg = <0x60000 0x1000>;
-> +	irq-start = <32>;
-> +	#interrupt-cells = <1>;
+> +iomuxc@53fa8000 {
+> +	#address-cells = <2>;
+> +	#size-cells = <0>;
+> +	compatible = "fsl,imx53-iomuxc";
+> +	reg = <0x53fa8000 0x4000>;
+> +
+> +	/*
+> +	 * I2C2
+> +	 */
+> +	key-col3 { /* I2C2_SCL */
+> +		reg = <0x3c 0x364>;
+> +		fsl,iomuxc-mux-mode = <4>;
+> +		fsl,iomuxc-sion;
+> +		fsl,iomuxc-select-input = <0x81c 0x0>;
+> +	};
+> +
+> +	key-row3 { /* I2C2_SDA */
+> +		reg = <0x40 0x368>;
+> +		fsl,iomuxc-mux-mode = <4>;
+> +		fsl,iomuxc-sion;
+> +		fsl,iomuxc-select-input = <0x820 0x0>;
+> +	};
 > +};
-> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-> index 7aa4262..5838b9f 100644
-> --- a/arch/arm/common/vic.c
-> +++ b/arch/arm/common/vic.c
-> @@ -25,6 +25,9 @@
->  #include <linux/syscore_ops.h>
->  #include <linux/device.h>
->  #include <linux/amba/bus.h>
+> diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
+> index 383e7cd..71379f6 100644
+> --- a/arch/arm/mach-mx5/Makefile
+> +++ b/arch/arm/mach-mx5/Makefile
+> @@ -22,3 +22,5 @@ obj-$(CONFIG_MX51_EFIKA_COMMON) += mx51_efika.o
+>  obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
+>  obj-$(CONFIG_MACH_MX51_EFIKASB) += board-mx51_efikasb.o
+>  obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
+> +
+> +obj-$(CONFIG_OF) += iomuxc-dt.o
+> diff --git a/arch/arm/mach-mx5/iomuxc-dt.c b/arch/arm/mach-mx5/iomuxc-dt.c
+> new file mode 100644
+> index 0000000..2cfe6e7
+> --- /dev/null
+> +++ b/arch/arm/mach-mx5/iomuxc-dt.c
+> @@ -0,0 +1,72 @@
+> +/*
+> + * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
+> + * Copyright 2011 Linaro Ltd.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
 > +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  
->  #include <asm/mach/irq.h>
->  #include <asm/hardware/vic.h>
-> @@ -377,3 +380,35 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
->  
->  	vic_pm_register(base, irq_start, resume_sources);
->  }
+> +#include <asm/io.h>
 > +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id arm_vic_ids[] __initconst = {
-> +	{ .compatible = "arm,pl190-vic" },
-> +	{ .compatible = "arm,pl192-vic" },
-> +	{ .compatible = "arm,vic" },
-> +	{},
-> +};
+> +#define IOMUXC_CONFIG_SION	(1 << 4)
 > +
-> +void __init vic_of_init(void)
+> +void mxc_iomuxc_dt_init(const struct of_device_id *match)
 > +{
-> +	struct device_node *np;
+> +	struct device_node *node = of_find_matching_node(NULL, match);
+> +	struct device_node *child;
+> +	void __iomem *base;
+> +	u32 reg[2], select_input[2];
+> +	u32 mux_mode, pad_ctl;
 > +
-> +	for_each_matching_node(np, arm_vic_ids) {
-> +		void __iomem *iobase;
-> +		u32 base_irq;
-> +
-> +		iobase = of_iomap(np, 0);
-> +
-> +		if (!iobase)
-> +			panic("Unable to map VIC");
-
-If you WARN here instead, then there is a much greater chance of
-actually getting output to the user.
-
-> +
-> +		if (of_property_read_u32(np, "irq-start", &base_irq))
-> +			panic("No irq-start property defined");
-> +
-> +		of_node_put(np);
-> +
-> +		vic_init(iobase, base_irq, ~0, 0);
-> +		irq_domain_add_simple(np, base_irq);
-
-irq_domain_add_simple() is a stop-gap shortcut for interrupt
-controllers that don't use irq_domain directly.  I'm okay with doing
-this in the short term, but I imagine it will want to change in the
-near future to take advantage of hw->linux irq translation provided by
-irq_domain when it matures.
-
+> +	if (!node) {
+> +		pr_warn("%s: no iomuxc node found\n", __func__);
+> +		return;
 > +	}
-
-I think that rather than writing a interrupt-controller-specific
-parse route like this one, it would be much better to have a generic
-helper that finds and sorts all the interrupt controllers before
-calling a setup callback for each one.
-
+> +
+> +	if (of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg))) {
+> +		pr_warn("%s: property 'reg' not found\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	base = ioremap(reg[0], reg[1]);
+> +	if (!base) {
+> +		pr_warn("%s: ioremap failed\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	for_each_child_of_node(node, child) {
+> +		/* get regsister offset of mux_ctl and pad_ctl */
+> +		if (of_property_read_u32_array(child, "reg", reg,
+> +					       ARRAY_SIZE(reg)))
+> +			continue;
+> +
+> +		/* set register mux_ctl */
+> +		if (of_property_read_u32(child, "fsl,iomuxc-mux-mode",
+> +					 &mux_mode))
+> +			continue;
+> +		if (of_get_property(child, "fsl,iomuxc-sion", NULL))
+> +			mux_mode |= IOMUXC_CONFIG_SION;
+> +		writel(mux_mode, base + reg[0]);
+> +
+> +		/* set register pad_ctl */
+> +		if (!of_property_read_u32(child, "fsl,iomuxc-pad-ctl",
+> +					  &pad_ctl))
+> +			writel(pad_ctl, base + reg[1]);
+> +
+> +		/* get offset/value pair and set select_input register */
+> +		if (!of_property_read_u32_array(child,
+> +				"fsl,iomuxc-select-input", select_input,
+> +				ARRAY_SIZE(select_input)))
+> +			writel(select_input[1], base + select_input[0]);
+> +	}
+> +
+> +	iounmap(base);
+> +
+> +out:
+> +	of_node_put(node);
 > +}
-> +#endif /* CONFIG_OF */
-> diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
-> index 5d72550..dbda2d1 100644
-> --- a/arch/arm/include/asm/hardware/vic.h
-> +++ b/arch/arm/include/asm/hardware/vic.h
-> @@ -42,6 +42,11 @@
+> diff --git a/arch/arm/plat-mxc/include/mach/common.h b/arch/arm/plat-mxc/include/mach/common.h
+> index 4e3d978..12b7499 100644
+> --- a/arch/arm/plat-mxc/include/mach/common.h
+> +++ b/arch/arm/plat-mxc/include/mach/common.h
+> @@ -13,6 +13,7 @@
 >  
->  #ifndef __ASSEMBLY__
->  void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
-> +#ifdef CONFIG_OF
-> +void vic_of_init(void);
-> +#else /* CONFIG_OF */
-> +static inline void vic_of_init(void) {}
-> +#endif /* CONFIG_OF */
->  #endif
+>  struct platform_device;
+>  struct clk;
+> +struct of_device_id;
 >  
+>  extern void mx1_map_io(void);
+>  extern void mx21_map_io(void);
+> @@ -72,4 +73,6 @@ extern void mxc_arch_reset_init(void __iomem *);
+>  extern void mx51_efikamx_reset(void);
+>  extern int mx53_revision(void);
+>  extern int mx53_display_revision(void);
+> +
+> +extern void mxc_iomuxc_dt_init(const struct of_device_id *match);
 >  #endif
 > -- 
 > 1.7.4.1
 > 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
