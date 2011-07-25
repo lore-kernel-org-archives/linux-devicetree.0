@@ -1,258 +1,78 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH] net/smsc911x: add device tree probe support
-Date: Mon, 25 Jul 2011 17:44:00 +0800
-Message-ID: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
+From: Vinod Koul <vkoul@infradead.org>
+Subject: Re: [PATCH v2 0/3] Add device tree probe for imx-sdma driver
+Date: Mon, 25 Jul 2011 17:11:55 +0530
+Message-ID: <1311594115.29703.23.camel@vkoul-mobl4>
+References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
+	<20110722035450.GH26837@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Steve Glendinning <steve.glendinning@smsc.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110722035450.GH26837@S2100-06.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree probe support for smsc911x driver.
+On Fri, 2011-07-22 at 11:54 +0800, Shawn Guo wrote:
+> Hi Vinod,
+> 
+> Can I have your ack on this series, please?  I attempt to get it
+> merged through Sascha's tree after his tree and devicetree/next get
+> merged in the coming window.
+> 
+> Regards,
+> Shawn
+> 
+> On Fri, Jul 15, 2011 at 05:44:23PM +0800, Shawn Guo wrote:
+> > The first patch remove the use of software defined sdma version, and
+> > instead uses platform_device_id to handle the sdma differences from
+> > one soc to another.  The second one makes a small cleanup on function
+> > sdma_get_firmware(), and the third patch adds the actual device tree
+> > probe support.
+> > 
+> > Changes since v1:
+> >  * Do not encode ROM script address in device tree
+> >  * Add one more small cleanup on function sdma_get_firmware()
+> > 
+> > ShawnsGuo (3):
+> >       dmaengine: imx-sdma: use platform_device_id to identify sdma version
+> >       dmaengine: imx-sdma: sdma_get_firmware does not need to copy fw_name
+> >       dmaengine: imx-sdma: add device tree probe support
+> > 
+> >  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   17 ++++
+> >  arch/arm/mach-imx/clock-imx25.c                    |    3 +-
+> >  arch/arm/mach-imx/clock-imx31.c                    |    2 +-
+> >  arch/arm/mach-imx/clock-imx35.c                    |    2 +-
+> >  arch/arm/mach-imx/mm-imx25.c                       |    4 +-
+> >  arch/arm/mach-imx/mm-imx31.c                       |    3 +-
+> >  arch/arm/mach-imx/mm-imx35.c                       |    3 +-
+> >  arch/arm/mach-mx5/clock-mx51-mx53.c                |    6 +-
+> >  arch/arm/mach-mx5/mm.c                             |    8 +-
+> >  arch/arm/plat-mxc/devices/platform-imx-dma.c       |    4 +-
+> >  arch/arm/plat-mxc/include/mach/devices-common.h    |    2 +-
+> >  arch/arm/plat-mxc/include/mach/dma.h               |    3 +-
+> >  arch/arm/plat-mxc/include/mach/sdma.h              |    2 -
+> >  drivers/dma/imx-sdma.c                             |   92 +++++++++++++++-----
+> >  14 files changed, 107 insertions(+), 44 deletions(-)
+Acked-by: Vinod Koul <vinod.koul@intel.com>
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Steve Glendinning <steve.glendinning@smsc.com>
-Cc: David S. Miller <davem@davemloft.net>
----
- Documentation/devicetree/bindings/net/smsc.txt |   34 +++++++
- drivers/net/smsc911x.c                         |  123 +++++++++++++++++++-----
- 2 files changed, 132 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/smsc.txt
+I had queued this up for my tree, i am okay if it gets merged thru
+Sascha
 
-diff --git a/Documentation/devicetree/bindings/net/smsc.txt b/Documentation/devicetree/bindings/net/smsc.txt
-new file mode 100644
-index 0000000..1920695
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/smsc.txt
-@@ -0,0 +1,34 @@
-+* Smart Mixed-Signal Connectivity (SMSC) LAN Controller
-+
-+Required properties:
-+- compatible : Should be "smsc,lan<model>""smsc,lan"
-+- reg : Address and length of the io space for SMSC LAN
-+- smsc-int-gpios : Should specify the GPIO for SMSC LAN interrupt line
-+- phy-mode : String, operation mode of the PHY interface.
-+  Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
-+  "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
-+
-+Optional properties:
-+- smsc,irq-active-high : Indicates the IRQ polarity is active-low
-+- smsc,irq-push-pull : Indicates the IRQ type is push-pull
-+- smsc,register-needs-shift : Indicates the register access needs shift
-+- smsc,access-in-32bit : Indicates the access to controller is in 32-bit
-+  mode
-+- smsc,force-internal-phy : Forces SMSC LAN controller to use
-+  internal PHY
-+- smsc,force-external-phy : Forces SMSC LAN controller to use
-+  external PHY
-+- smsc,save-mac-address : Indicates that mac address needs to be saved
-+  before resetting the controller
-+- local-mac-address : 6 bytes, mac address
-+
-+Examples:
-+
-+lan9220@f4000000 {
-+	compatible = "smsc,lan9220", "smsc,lan";
-+	reg = <0xf4000000 0x2000000>;
-+	phy-mode = "mii";
-+	smsc-int-gpios = <&gpio1 31 0>; /* GPIO2_31 */
-+	smsc,irq-push-pull;
-+	smsc,access-in-32bit;
-+};
-diff --git a/drivers/net/smsc911x.c b/drivers/net/smsc911x.c
-index b9016a3..0097048 100644
---- a/drivers/net/smsc911x.c
-+++ b/drivers/net/smsc911x.c
-@@ -53,6 +53,10 @@
- #include <linux/phy.h>
- #include <linux/smsc911x.h>
- #include <linux/device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_net.h>
- #include "smsc911x.h"
- 
- #define SMSC_CHIPNAME		"smsc911x"
-@@ -2095,25 +2099,67 @@ static const struct smsc911x_ops shifted_smsc911x_ops = {
- 	.tx_writefifo = smsc911x_tx_writefifo_shift,
- };
- 
-+#ifdef CONFIG_OF
-+static int __devinit smsc911x_probe_config_dt(
-+				struct smsc911x_platform_config *config,
-+				struct device_node *np)
-+{
-+	const char *mac;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	config->phy_interface = of_get_phy_mode(np);
-+
-+	mac = of_get_mac_address(np);
-+	if (mac)
-+		memcpy(config->mac, mac, ETH_ALEN);
-+
-+	if (of_get_property(np, "smsc,irq-active-high", NULL))
-+		config->irq_polarity = SMSC911X_IRQ_POLARITY_ACTIVE_HIGH;
-+
-+	if (of_get_property(np, "smsc,irq-push-pull", NULL))
-+		config->irq_type = SMSC911X_IRQ_TYPE_PUSH_PULL;
-+
-+	if (of_get_property(np, "smsc,register-needs-shift", NULL))
-+		config->shift = 1;
-+
-+	if (of_get_property(np, "smsc,access-in-32bit", NULL))
-+		config->flags |= SMSC911X_USE_32BIT;
-+
-+	if (of_get_property(np, "smsc,force-internal-phy", NULL))
-+		config->flags |= SMSC911X_FORCE_INTERNAL_PHY;
-+
-+	if (of_get_property(np, "smsc,force-external-phy", NULL))
-+		config->flags |= SMSC911X_FORCE_EXTERNAL_PHY;
-+
-+	if (of_get_property(np, "smsc,save-mac-address", NULL))
-+		config->flags |= SMSC911X_SAVE_MAC_ADDRESS;
-+
-+	return 0;
-+}
-+#else
-+static inline int smsc911x_probe_config_dt(
-+				struct smsc911x_platform_config *config,
-+				struct device_node *np)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_OF */
-+
- static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct net_device *dev;
- 	struct smsc911x_data *pdata;
- 	struct smsc911x_platform_config *config = pdev->dev.platform_data;
- 	struct resource *res, *irq_res;
- 	unsigned int intcfg = 0;
--	int res_size, irq_flags;
--	int retval;
-+	int irq_gpio, res_size, irq_flags = 0;
-+	int retval = 0;
- 
- 	pr_info("Driver version %s\n", SMSC_DRV_VERSION);
- 
--	/* platform data specifies irq & dynamic bus configuration */
--	if (!pdev->dev.platform_data) {
--		pr_warn("platform_data not provided\n");
--		retval = -ENODEV;
--		goto out_0;
--	}
--
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 					   "smsc911x-memory");
- 	if (!res)
-@@ -2125,13 +2171,6 @@ static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
- 	}
- 	res_size = resource_size(res);
- 
--	irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (!irq_res) {
--		pr_warn("Could not allocate irq resource\n");
--		retval = -ENODEV;
--		goto out_0;
--	}
--
- 	if (!request_mem_region(res->start, res_size, SMSC_CHIPNAME)) {
- 		retval = -EBUSY;
- 		goto out_0;
-@@ -2148,26 +2187,53 @@ static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
- 
- 	pdata = netdev_priv(dev);
- 
--	dev->irq = irq_res->start;
--	irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
--	pdata->ioaddr = ioremap_nocache(res->start, res_size);
--
--	/* copy config parameters across to pdata */
--	memcpy(&pdata->config, config, sizeof(pdata->config));
-+	if (np) {
-+		irq_gpio = of_get_named_gpio(np, "smsc-int-gpios", 0);
-+		retval = gpio_request_one(irq_gpio, GPIOF_IN, "smsc-int-gpio");
-+		if (!retval)
-+			dev->irq = gpio_to_irq(irq_gpio);
-+	} else {
-+		irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+		if (irq_res) {
-+			dev->irq = irq_res->start;
-+			irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
-+		} else {
-+			retval = -ENODEV;
-+		}
-+	}
- 
--	pdata->dev = dev;
--	pdata->msg_enable = ((1 << debug) - 1);
-+	if (retval) {
-+		SMSC_WARN(pdata, probe, "Error smsc911x irq not found");
-+		retval = -EINVAL;
-+		goto out_free_netdev_2;
-+	}
- 
-+	pdata->ioaddr = ioremap_nocache(res->start, res_size);
- 	if (pdata->ioaddr == NULL) {
- 		SMSC_WARN(pdata, probe, "Error smsc911x base address invalid");
- 		retval = -ENOMEM;
- 		goto out_free_netdev_2;
- 	}
- 
-+	pdata->dev = dev;
-+	pdata->msg_enable = ((1 << debug) - 1);
-+
-+	retval = smsc911x_probe_config_dt(&pdata->config, np);
-+	if (retval && config) {
-+		/* copy config parameters across to pdata */
-+		memcpy(&pdata->config, config, sizeof(pdata->config));
-+		retval = 0;
-+	}
-+
-+	if (retval) {
-+		SMSC_WARN(pdata, probe, "Error smsc911x config not found");
-+		goto out_unmap_io_3;
-+	}
-+
- 	/* assume standard, non-shifted, access to HW registers */
- 	pdata->ops = &standard_smsc911x_ops;
- 	/* apply the right access if shifting is needed */
--	if (config->shift)
-+	if (pdata->config.shift)
- 		pdata->ops = &shifted_smsc911x_ops;
- 
- 	retval = smsc911x_init(dev);
-@@ -2314,6 +2380,12 @@ static const struct dev_pm_ops smsc911x_pm_ops = {
- #define SMSC911X_PM_OPS NULL
- #endif
- 
-+static const struct of_device_id smsc_dt_ids[] = {
-+	{ .compatible = "smsc,lan", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, smsc_dt_ids);
-+
- static struct platform_driver smsc911x_driver = {
- 	.probe = smsc911x_drv_probe,
- 	.remove = __devexit_p(smsc911x_drv_remove),
-@@ -2321,6 +2393,7 @@ static struct platform_driver smsc911x_driver = {
- 		.name	= SMSC_CHIPNAME,
- 		.owner	= THIS_MODULE,
- 		.pm	= SMSC911X_PM_OPS,
-+		.of_match_table = smsc_dt_ids,
- 	},
- };
- 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 -- 
-1.7.4.1
-
-
+~Vinod Koul
+Intel Corp.
