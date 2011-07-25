@@ -1,44 +1,47 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: [PATCH 0/3] Add device tree based initialisation for VIC
-Date: Mon, 25 Jul 2011 17:09:57 +0100
-Message-ID: <1311610200-12408-1-git-send-email-jamie@jamieiles.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCH 2/3] versatile dt: set the irq-start property for the vic
+Date: Mon, 25 Jul 2011 17:09:59 +0100
+Message-ID: <1311610200-12408-3-git-send-email-jamie@jamieiles.com>
+References: <1311610200-12408-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Jamie Iles <jamie@jamieiles.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1311610200-12408-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series aims to allow VIC devices to be probed from the device tree.
-Currently the only in-tree device tree enabled user of the VIC is versatile,
-but I'll shortly submit patches for picoxcell on device tree that uses 2
-VIC's.
+Set an irq-start property for the vic in versatile's dt so that we can
+convert the versatile platform to use common vic probing.
 
-I've split this into 3 patches for bisectability, but this could be fairly
-squashed into 2.
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/versatile-ab.dts |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Jamie Iles (3):
-  vic: add device tree bindings
-  versatile dt: set the irq-start property for the vic
-  versatile: convert to common VIC DT probing
-
- Documentation/devicetree/bindings/arm/vic.txt |   21 +++++++++++++++
- arch/arm/boot/dts/versatile-ab.dts            |    1 +
- arch/arm/common/vic.c                         |   35 +++++++++++++++++++++++++
- arch/arm/include/asm/hardware/vic.h           |    5 +++
- arch/arm/mach-versatile/core.c                |    9 +-----
- 5 files changed, 63 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
-
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 2723804..1c6a1e3 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -79,6 +79,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
+ 			reg = <0x10140000 0x1000>;
++			irq-start = <0>;
+ 		};
+ 
+ 		sic: intc@10003000 {
 -- 
 1.7.4.1
