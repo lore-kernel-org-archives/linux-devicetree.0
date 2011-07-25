@@ -1,78 +1,91 @@
-From: Vinod Koul <vkoul@infradead.org>
-Subject: Re: [PATCH v2 0/3] Add device tree probe for imx-sdma driver
-Date: Mon, 25 Jul 2011 17:11:55 +0530
-Message-ID: <1311594115.29703.23.camel@vkoul-mobl4>
-References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
-	<20110722035450.GH26837@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] mtd/m25p80: add device tree probe support
+Date: Mon, 25 Jul 2011 21:37:43 +0800
+Message-ID: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110722035450.GH26837@S2100-06.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2011-07-22 at 11:54 +0800, Shawn Guo wrote:
-> Hi Vinod,
-> 
-> Can I have your ack on this series, please?  I attempt to get it
-> merged through Sascha's tree after his tree and devicetree/next get
-> merged in the coming window.
-> 
-> Regards,
-> Shawn
-> 
-> On Fri, Jul 15, 2011 at 05:44:23PM +0800, Shawn Guo wrote:
-> > The first patch remove the use of software defined sdma version, and
-> > instead uses platform_device_id to handle the sdma differences from
-> > one soc to another.  The second one makes a small cleanup on function
-> > sdma_get_firmware(), and the third patch adds the actual device tree
-> > probe support.
-> > 
-> > Changes since v1:
-> >  * Do not encode ROM script address in device tree
-> >  * Add one more small cleanup on function sdma_get_firmware()
-> > 
-> > ShawnsGuo (3):
-> >       dmaengine: imx-sdma: use platform_device_id to identify sdma version
-> >       dmaengine: imx-sdma: sdma_get_firmware does not need to copy fw_name
-> >       dmaengine: imx-sdma: add device tree probe support
-> > 
-> >  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   17 ++++
-> >  arch/arm/mach-imx/clock-imx25.c                    |    3 +-
-> >  arch/arm/mach-imx/clock-imx31.c                    |    2 +-
-> >  arch/arm/mach-imx/clock-imx35.c                    |    2 +-
-> >  arch/arm/mach-imx/mm-imx25.c                       |    4 +-
-> >  arch/arm/mach-imx/mm-imx31.c                       |    3 +-
-> >  arch/arm/mach-imx/mm-imx35.c                       |    3 +-
-> >  arch/arm/mach-mx5/clock-mx51-mx53.c                |    6 +-
-> >  arch/arm/mach-mx5/mm.c                             |    8 +-
-> >  arch/arm/plat-mxc/devices/platform-imx-dma.c       |    4 +-
-> >  arch/arm/plat-mxc/include/mach/devices-common.h    |    2 +-
-> >  arch/arm/plat-mxc/include/mach/dma.h               |    3 +-
-> >  arch/arm/plat-mxc/include/mach/sdma.h              |    2 -
-> >  drivers/dma/imx-sdma.c                             |   92 +++++++++++++++-----
-> >  14 files changed, 107 insertions(+), 44 deletions(-)
-Acked-by: Vinod Koul <vinod.koul@intel.com>
+It adds device tree probe support for m25p80 driver.
 
-I had queued this up for my tree, i am okay if it gets merged thru
-Sascha
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mtd/st-m25p.txt |   14 ++++++++++++++
+ drivers/mtd/devices/m25p80.c                      |   12 ++++++++++++
+ 2 files changed, 26 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/st-m25p.txt
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+diff --git a/Documentation/devicetree/bindings/mtd/st-m25p.txt b/Documentation/devicetree/bindings/mtd/st-m25p.txt
+new file mode 100644
+index 0000000..a8c0485
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/st-m25p.txt
+@@ -0,0 +1,14 @@
++* STMicroelectronics SPI Flash
++
++Required properties:
++- compatible : "st,<model>", "st,m25p".
++
++Examples:
++
++flash: m25p32@1 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "st,m25p32", "st,m25p";
++	spi-max-frequency = <20000000>;
++	reg = <1>;
++};
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index e6ba034..d9d4101 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -26,6 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of_device.h>
+ 
+ #include <linux/mtd/cfi.h>
+ #include <linux/mtd/mtd.h>
+@@ -767,6 +768,16 @@ static const struct spi_device_id m25p_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, m25p_ids);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id m25p_dt_ids[] = {
++	{ .compatible = "st,m25p", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, m25p_dt_ids);
++#else
++#define m25p_dt_ids NULL
++#endif
++
+ static const struct spi_device_id *__devinit jedec_probe(struct spi_device *spi)
+ {
+ 	int			tmp;
+@@ -986,6 +997,7 @@ static struct spi_driver m25p80_driver = {
+ 		.name	= "m25p80",
+ 		.bus	= &spi_bus_type,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = m25p_dt_ids,
+ 	},
+ 	.id_table	= m25p_ids,
+ 	.probe	= m25p_probe,
 -- 
-~Vinod Koul
-Intel Corp.
+1.7.4.1
