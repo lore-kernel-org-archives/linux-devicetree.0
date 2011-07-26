@@ -1,79 +1,51 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Wed, 27 Jul 2011 00:41:38 +0800
-Message-ID: <20110726164137.GD19600@S2100-06.ap.freescale.net>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110726063914.GB20587@pengutronix.de>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH] ASoC: sgtl5000: add device tree probe support
+Date: Tue, 26 Jul 2011 20:55:11 +0100
+Message-ID: <20110726195511.GA9956@opensource.wolfsonmicro.com>
+References: <1311265731-23318-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110726063914.GB20587@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+In-Reply-To: <1311265731-23318-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zeng Zhaoming <zhaoming.zeng-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 26, 2011 at 08:39:14AM +0200, Sascha Hauer wrote:
-> On Mon, Jul 25, 2011 at 11:07:46PM +0800, Shawn Guo wrote:
-> > It adds function mxc_iomuxc_dt_init() to parse iomuxc pad configuration
-> > from device tree.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/arm/fsl/iomuxc.txt         |   47 +++++++++++++
-> >  arch/arm/mach-mx5/Makefile                         |    2 +
-> >  arch/arm/mach-mx5/iomuxc-dt.c                      |   72 ++++++++++++++++++++
-> >  arch/arm/plat-mxc/include/mach/common.h            |    3 +
-> >  4 files changed, 124 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/fsl/iomuxc.txt
-> >  create mode 100644 arch/arm/mach-mx5/iomuxc-dt.c
-> > 
-> > + */
-> > +
-> > +#include <linux/of.h>
-> > +#include <asm/io.h>
-> 
-> linux/io.h
-> 
-Ok.
+On Fri, Jul 22, 2011 at 12:28:51AM +0800, Shawn Guo wrote:
 
-> > +
-> > +#define IOMUXC_CONFIG_SION	(1 << 4)
-> > +
-> > +void mxc_iomuxc_dt_init(const struct of_device_id *match)
-> > +{
-> > +	struct device_node *node = of_find_matching_node(NULL, match);
-> > +	struct device_node *child;
-> > +	void __iomem *base;
-> > +	u32 reg[2], select_input[2];
-> > +	u32 mux_mode, pad_ctl;
-> > +
-> > +	if (!node) {
-> > +		pr_warn("%s: no iomuxc node found\n", __func__);
-> > +		return;
-> > +	}
-> 
-> Please remove this warning. Some boards may intentionally do the iomux
-> setup in the bootloader and skip the iomux setup nodes in the device
-> tree.
-Ok.
+> It adds device tree probe support for sgtl5000 driver.
 
-Thanks for review, Sascha.
+Kind of waiting for the device tree people to comment on this...
 
--- 
-Regards,
-Shawn
+>  .../bindings/sound/soc/codecs/fsl-sgtl5000.txt     |   11 +++++++++++
+
+I'd expect this can just be put directly under the sound directory.
+
+> +++ b/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
+> @@ -0,0 +1,11 @@
+> +* Freescale SGTL5000 Stereo Codec
+> +
+> +Required properties:
+> +- compatible : "fsl,sgtl5000".
+> +
+> +Example:
+> +
+> +codec: sgtl5000@0a {
+> +	compatible = "fsl,sgtl5000";
+> +	reg = <0x0a>;
+> +};
+
+This might get a tiny bit verbose...  I wonder if it makes sense to have
+some central file for devices with trivial bindings?  But possibly more
+trouble than it's worth.
