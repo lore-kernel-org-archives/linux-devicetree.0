@@ -1,57 +1,50 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH v2 2/4] powerpc, mpc52xx: add a4m072 board support
-Date: Tue, 26 Jul 2011 06:52:37 +0200
-Message-ID: <4E2E4815.5050504@denx.de>
-References: <1308729311-15375-3-git-send-email-hs@denx.de>
-	<1308739150-31527-1-git-send-email-hs@denx.de>
-Reply-To: hs@denx.de
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Tue, 26 Jul 2011 08:29:32 +0200
+Message-ID: <20110726062931.GZ20587@pengutronix.de>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<20110725204630.GD26735@ponder.secretlab.ca>
+	<20110726024354.GI21641@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-reply-to: <1308739150-31527-1-git-send-email-hs@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@ozlabs.org, Wolfgang Denk <wd@denx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110726024354.GI21641-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, Jul 26, 2011 at 10:43:55AM +0800, Shawn Guo wrote:
+> On Mon, Jul 25, 2011 at 02:46:30PM -0600, Grant Likely wrote:
+> > On Mon, Jul 25, 2011 at 11:07:46PM +0800, Shawn Guo wrote:
+> > > It adds function mxc_iomuxc_dt_init() to parse iomuxc pad configuration
+> > 
+> Specifying string in dts, and then parsing the string, mapping it to
+> one of the huge MX53_PAD_ definition in kernel init code?
+> 
+> One thing I'm trying to do is to replace those huge iomux-mx*.h headers
+> with dts binding, and then get rid of those headers from Linux tree.
 
-Heiko Schocher wrote:
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> cc: Grant Likely <grant.likely@secretlab.ca>
-> cc: devicetree-discuss@ozlabs.org
-> cc: Wolfgang Denk <wd@denx.de>
-> cc: Wolfram Sang <w.sang@pengutronix.de>
-> ---
-> For this patchseries following patch is needed:
-> 
-> http://patchwork.ozlabs.org/patch/91919/
-> 
-> Grant? Do you have some comments on that patch?
-> 
-> changes for v2:
->   add comment from Wolfram Sang:
->   use mpc5200.dtsi
-> 
->  arch/powerpc/boot/dts/a4m072.dts             |  172 ++++++++++++++++++++++++++
->  arch/powerpc/platforms/52xx/mpc5200_simple.c |    1 +
->  2 files changed, 173 insertions(+), 0 deletions(-)
->  create mode 100644 arch/powerpc/boot/dts/a4m072.dts
+I don't like these files either, so getting rid of them looks promising.
+OTOH don't forget that we need some of the pins during runtime for
+gpio/function switching.
 
-Are there some more comments or is this ready for going
-to mainline?
+Sascha
 
-bye,
-Heiko
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
