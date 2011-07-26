@@ -1,493 +1,210 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 1/2] irq: add irq_domain translation infrastructure
-Date: Tue, 26 Jul 2011 03:40:01 -0600
-Message-ID: <CACxGe6vSfhWF_nRU0r=UG52W7UNwgXyWrJtiZ0JRwWy4f7FE0g@mail.gmail.com>
-References: <20110726093141.12508.48108.stgit@ponder>
-	<20110726093641.12508.82413.stgit@ponder>
+From: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Tue, 26 Jul 2011 19:19:57 +0800
+Message-ID: <CAMPhdO8s6+T+VzTcAYKGT5K3dMWWx+Q4YQ2xqiMHBZu2S7km-g@mail.gmail.com>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<20110725204630.GD26735@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110726093641.12508.82413.stgit@ponder>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, tglx@linutronix.de, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110725204630.GD26735-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 26, 2011 at 3:36 AM, Grant Likely <grant.likely@secretlab.ca> w=
-rote:
-> This patch adds irq_domain infrastructure for translating from
-> hardware irq numbers to linux irqs. =A0This is particularly important
-> for architectures adding device tree support because the current
-> implementation (excluding PowerPC and SPARC) cannot handle
-> translation for more than a single interrupt controller. =A0irq_domain
-> supports device tree translation for any number of interrupt
-> controllers.
->
-> This patch converts x86, Microblaze, ARM and MIPS to use irq_domain
-> for device tree irq translation. =A0x86 is untested beyond compiling it,
-> irq_domain is enabled for MIPS and Microblaze, but the old behaviour is
-> preserved until the core code is modified to actually register an
-> irq_domain yet. =A0On ARM it works and is required for much of the new
-> ARM device tree board support.
-
-Oops, I obviously forgot to update the commit text.  This patch only
-affects ARM, I've split the MIPS, Microblaze and x86 bits out into a
-separate patch.  I'll craft new commit text before reposting.
-
-g.
-
->
-> PowerPC has /not/ been converted to use this new infrastructure. =A0It
-> is still missing some features before it can replace the virq
-> infrastructure already in powerpc (see documentation on
-> irq_domain_map/unmap for details). =A0Followup patches will add the
-> missing pieces and migrate PowerPC to use irq_domain.
->
-> SPARC has its own method of managing interrupts from the device tree
-> and is unaffected by this change.
->
-> Acked-by: Ralf Baechle <ralf@linux-mips.org>
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> ---
-> =A0arch/arm/Kconfig =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A01
-> =A0arch/arm/include/asm/prom.h | =A0 =A05 --
-> =A0arch/arm/kernel/devtree.c =A0 | =A0 14 -----
-> =A0include/linux/irq.h =A0 =A0 =A0 =A0 | =A0 =A06 ++
-> =A0include/linux/irqdomain.h =A0 | =A0 81 ++++++++++++++++++++++++++++
-> =A0include/linux/of_irq.h =A0 =A0 =A0| =A0 =A04 +
-> =A0kernel/irq/Kconfig =A0 =A0 =A0 =A0 =A0| =A0 =A04 +
-> =A0kernel/irq/Makefile =A0 =A0 =A0 =A0 | =A0 =A01
-> =A0kernel/irq/irqdomain.c =A0 =A0 =A0| =A0123 +++++++++++++++++++++++++++=
-++++++++++++++++
-> =A09 files changed, 220 insertions(+), 19 deletions(-)
-> =A0create mode 100644 include/linux/irqdomain.h
-> =A0create mode 100644 kernel/irq/irqdomain.c
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 9cb1f4b..b2695aa 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1680,6 +1680,7 @@ config USE_OF
-> =A0 =A0 =A0 =A0bool "Flattened Device Tree support"
-> =A0 =A0 =A0 =A0select OF
-> =A0 =A0 =A0 =A0select OF_EARLY_FLATTREE
-> + =A0 =A0 =A0 select IRQ_DOMAIN
-> =A0 =A0 =A0 =A0help
-> =A0 =A0 =A0 =A0 =A0Include support for flattened device tree machine desc=
-riptions.
->
-> diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
-> index 11b8708..6f65ca8 100644
-> --- a/arch/arm/include/asm/prom.h
-> +++ b/arch/arm/include/asm/prom.h
-> @@ -16,11 +16,6 @@
-> =A0#include <asm/setup.h>
-> =A0#include <asm/irq.h>
->
-> -static inline void irq_dispose_mapping(unsigned int virq)
-> -{
-> - =A0 =A0 =A0 return;
-> -}
-> -
-> =A0extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
-> =A0extern void arm_dt_memblock_reserve(void);
->
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index 0cdd7b4..1a33e9d 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -132,17 +132,3 @@ struct machine_desc * __init setup_machine_fdt(unsig=
-ned int dt_phys)
->
-> =A0 =A0 =A0 =A0return mdesc_best;
-> =A0}
-> -
-> -/**
-> - * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux=
- irq#
-> - *
-> - * Currently the mapping mechanism is trivial; simple flat hwirq numbers=
- are
-> - * mapped 1:1 onto Linux irq numbers. =A0Cascaded irq controllers are not
-> - * supported.
-> - */
-> -unsigned int irq_create_of_mapping(struct device_node *controller,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0cons=
-t u32 *intspec, unsigned int intsize)
-> -{
-> - =A0 =A0 =A0 return intspec[0];
-> -}
-> -EXPORT_SYMBOL_GPL(irq_create_of_mapping);
-> diff --git a/include/linux/irq.h b/include/linux/irq.h
-> index 5f69504..87a06f3 100644
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -108,14 +108,18 @@ enum {
-> =A0};
->
-> =A0struct msi_desc;
-> +struct irq_domain;
->
-> =A0/**
-> =A0* struct irq_data - per irq and irq chip data passed down to chip func=
-tions
-> =A0* @irq: =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupt number
-> + * @hwirq: =A0 =A0 =A0 =A0 =A0 =A0 hardware interrupt number, local to t=
-he interrupt domain
-> =A0* @node: =A0 =A0 =A0 =A0 =A0 =A0 =A0node index useful for balancing
-> =A0* @state_use_accessors: status information for irq chip functions.
-> =A0* =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Use accessor functions to de=
-al with it
-> =A0* @chip: =A0 =A0 =A0 =A0 =A0 =A0 =A0low level interrupt hardware access
-> + * @domain: =A0 =A0 =A0 =A0 =A0 =A0Interrupt translation domain; respons=
-ible for mapping
-> + * =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 between hwirq number and linu=
-x irq number.
-> =A0* @handler_data: =A0 =A0 =A0per-IRQ data for the irq_chip methods
-> =A0* @chip_data: =A0 =A0 =A0 =A0 platform-specific per-chip private data =
-for the chip
-> =A0* =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 methods, to allow shared chi=
-p implementations
-> @@ -128,9 +132,11 @@ struct msi_desc;
-> =A0*/
-> =A0struct irq_data {
-> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0irq;
-> + =A0 =A0 =A0 unsigned long =A0 =A0 =A0 =A0 =A0 hwirq;
-> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0node;
-> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0state_use_accessors;
-> =A0 =A0 =A0 =A0struct irq_chip =A0 =A0 =A0 =A0 *chip;
-> + =A0 =A0 =A0 struct irq_domain =A0 =A0 =A0 *domain;
-> =A0 =A0 =A0 =A0void =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*handler_data;
-> =A0 =A0 =A0 =A0void =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*chip_data;
-> =A0 =A0 =A0 =A0struct msi_desc =A0 =A0 =A0 =A0 *msi_desc;
-> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> new file mode 100644
-> index 0000000..8f2c10a
-> --- /dev/null
-> +++ b/include/linux/irqdomain.h
-> @@ -0,0 +1,81 @@
-> +/*
-> + * irq_domain - IRQ translation domains
-> + *
-> + * Translation infrastructure between hw and linux irq numbers. =A0This =
-is
-> + * helpful for interrupt controllers to implement mapping between hardwa=
-re
-> + * irq numbers and the Linux irq number space.
-> + *
-> + * irq_domains also have a hook for translating device tree interrupt
-> + * representation into a hardware irq number that can be mapped back to a
-> + * Linux irq number without any extra platform support code.
-> + *
-> + * irq_domain is expected to be embedded in an interrupt controller's pr=
-ivate
-> + * data structure.
-> + */
-> +#ifndef _LINUX_IRQDOMAIN_H
-> +#define _LINUX_IRQDOMAIN_H
-> +
-> +#include <linux/irq.h>
-> +
-> +#ifdef CONFIG_IRQ_DOMAIN
-> +struct device_node;
-> +struct irq_domain;
-> +
-> +/**
-> + * struct irq_domain_ops - Methods for irq_domain objects
-> + * @to_irq: (optional) given a local hardware irq number, return the lin=
-ux
-> + * =A0 =A0 =A0 =A0 =A0irq number. =A0If to_irq is not implemented, then =
-the irq_domain
-> + * =A0 =A0 =A0 =A0 =A0will use this translation: irq =3D (domain->irq_ba=
-se + hwirq)
-> + * @dt_translate: Given a device tree node and interrupt specifier, deco=
-de
-> + * =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0the hardware irq number and linux irq =
-type value.
-> + */
-> +struct irq_domain_ops {
-> + =A0 =A0 =A0 unsigned int (*to_irq)(struct irq_domain *d, unsigned long =
-hwirq);
-> +
-> +#ifdef CONFIG_OF
-> + =A0 =A0 =A0 int (*dt_translate)(struct irq_domain *d, struct device_nod=
-e *node,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 const u32 *intspec,=
- unsigned int intsize,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 unsigned long *out_=
-hwirq, unsigned int *out_type);
-> +#endif /* CONFIG_OF */
-> +};
-> +
-> +/**
-> + * struct irq_domain - Hardware interrupt number translation object
-> + * @list: Element in global irq_domain list.
-> + * @irq_base: Start of irq_desc range assigned to the irq_domain. =A0The=
- creator
-> + * =A0 =A0 =A0 =A0 =A0 =A0of the irq_domain is responsible for allocatin=
-g the array of
-> + * =A0 =A0 =A0 =A0 =A0 =A0irq_desc structures.
-> + * @nr_irq: Number of irqs managed by the irq domain
-> + * @ops: pointer to irq_domain methods
-> + * @priv: private data pointer for use by owner. =A0Not touched by irq_d=
-omain
-> + * =A0 =A0 =A0 =A0core code.
-> + * @of_node: (optional) Pointer to device tree nodes associated with the
-> + * =A0 =A0 =A0 =A0 =A0 irq_domain. =A0Used when decoding device tree int=
-errupt specifiers.
-> + */
-> +struct irq_domain {
-> + =A0 =A0 =A0 struct list_head list;
-> + =A0 =A0 =A0 unsigned int irq_base;
-> + =A0 =A0 =A0 unsigned int nr_irq;
-> + =A0 =A0 =A0 const struct irq_domain_ops *ops;
-> + =A0 =A0 =A0 void *priv;
-> + =A0 =A0 =A0 struct device_node *of_node;
-> +};
-> +
-> +/**
-> + * irq_domain_to_irq() - Translate from a hardware irq to a linux irq nu=
-mber
-> + *
-> + * Returns the linux irq number associated with a hardware irq. =A0By de=
-fault,
-> + * the mapping is irq =3D=3D domain->irq_base + hwirq, but this mapping =
-can
-> + * be overridden if the irq_domain implements a .to_irq() hook.
-> + */
-> +static inline unsigned int irq_domain_to_irq(struct irq_domain *d,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0unsigned long hwirq)
-> +{
-> + =A0 =A0 =A0 return d->ops->to_irq ? d->ops->to_irq(d, hwirq) : d->irq_b=
-ase + hwirq;
-> +}
-> +
-> +extern void irq_domain_add(struct irq_domain *domain);
-> +extern void irq_domain_del(struct irq_domain *domain);
-> +#endif /* CONFIG_IRQ_DOMAIN */
-> +
-> +#endif /* _LINUX_IRQDOMAIN_H */
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index e6955f5..cd2e61c 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -63,6 +63,9 @@ extern int of_irq_map_one(struct device_node *device, i=
-nt index,
-> =A0extern unsigned int irq_create_of_mapping(struct device_node *controll=
-er,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0const u32 *intspec,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0unsigned int intsize);
-> +#ifdef CONFIG_IRQ_DOMAIN
-> +extern void irq_dispose_mapping(unsigned int irq);
-> +#endif
-> =A0extern int of_irq_to_resource(struct device_node *dev, int index,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct resourc=
-e *r);
-> =A0extern int of_irq_count(struct device_node *dev);
-> @@ -70,6 +73,7 @@ extern int of_irq_to_resource_table(struct device_node =
-*dev,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct resource *res, int nr_irqs);
-> =A0extern struct device_node *of_irq_find_parent(struct device_node *chil=
-d);
->
-> +
-> =A0#endif /* CONFIG_OF_IRQ */
-> =A0#endif /* CONFIG_OF */
-> =A0#endif /* __OF_IRQ_H */
-> diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-> index d1d051b3..5a38bf4 100644
-> --- a/kernel/irq/Kconfig
-> +++ b/kernel/irq/Kconfig
-> @@ -52,6 +52,10 @@ config IRQ_EDGE_EOI_HANDLER
-> =A0config GENERIC_IRQ_CHIP
-> =A0 =A0 =A0 =A0bool
->
-> +# Generic irq_domain hw <--> linux irq number translation
-> +config IRQ_DOMAIN
-> + =A0 =A0 =A0 bool
-> +
-> =A0# Support forced irq threading
-> =A0config IRQ_FORCED_THREADING
-> =A0 =A0 =A0 =A0bool
-> diff --git a/kernel/irq/Makefile b/kernel/irq/Makefile
-> index 7329005..fff1738 100644
-> --- a/kernel/irq/Makefile
-> +++ b/kernel/irq/Makefile
-> @@ -2,6 +2,7 @@
-> =A0obj-y :=3D irqdesc.o handle.o manage.o spurious.o resend.o chip.o dumm=
-ychip.o devres.o
-> =A0obj-$(CONFIG_GENERIC_IRQ_CHIP) +=3D generic-chip.o
-> =A0obj-$(CONFIG_GENERIC_IRQ_PROBE) +=3D autoprobe.o
-> +obj-$(CONFIG_IRQ_DOMAIN) +=3D irqdomain.o
-> =A0obj-$(CONFIG_PROC_FS) +=3D proc.o
-> =A0obj-$(CONFIG_GENERIC_PENDING_IRQ) +=3D migration.o
-> =A0obj-$(CONFIG_PM_SLEEP) +=3D pm.o
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> new file mode 100644
-> index 0000000..171b754
-> --- /dev/null
-> +++ b/kernel/irq/irqdomain.c
-> @@ -0,0 +1,123 @@
-> +
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +
-> +static LIST_HEAD(irq_domain_list);
-> +static DEFINE_MUTEX(irq_domain_mutex);
-> +
-> +/**
-> + * irq_domain_add() - Register an irq_domain
-> + * @domain: ptr to initialized irq_domain structure
-> + *
-> + * Registers an irq_domain structure. =A0The irq_domain must at a minimu=
-m be
-> + * initialized with an ops structure pointer, and either a ->to_irq hook=
- or
-> + * a valid irq_base value. =A0Everything else is optional.
-> + */
-> +void irq_domain_add(struct irq_domain *domain)
-> +{
-> + =A0 =A0 =A0 struct irq_data *d;
-> + =A0 =A0 =A0 int hwirq;
-> +
-> + =A0 =A0 =A0 /*
-> + =A0 =A0 =A0 =A0* This assumes that the irq_domain owner has already all=
-ocated
-> + =A0 =A0 =A0 =A0* the irq_descs. =A0This block will be removed when supp=
-ort for dynamic
-> + =A0 =A0 =A0 =A0* allocation of irq_descs is added to irq_domain.
-> + =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 for (hwirq =3D 0; hwirq < domain->nr_irq; hwirq++) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d =3D irq_get_irq_data(irq_domain_to_irq(do=
-main, hwirq));
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (d || d->domain) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* things are broken; just =
-report, don't clean up */
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 WARN(1, "error: irq_desc al=
-ready assigned to a domain");
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->domain =3D domain;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq;
-> + =A0 =A0 =A0 }
-> +
-> + =A0 =A0 =A0 mutex_lock(&irq_domain_mutex);
-> + =A0 =A0 =A0 list_add(&domain->list, &irq_domain_list);
-> + =A0 =A0 =A0 mutex_unlock(&irq_domain_mutex);
-> +}
-> +
-> +/**
-> + * irq_domain_del() - Unregister an irq_domain
-> + * @domain: ptr to registered irq_domain.
-> + */
-> +void irq_domain_del(struct irq_domain *domain)
-> +{
-> + =A0 =A0 =A0 struct irq_data *d;
-> + =A0 =A0 =A0 int hwirq;
-> +
-> + =A0 =A0 =A0 mutex_lock(&irq_domain_mutex);
-> + =A0 =A0 =A0 list_del(&domain->list);
-> + =A0 =A0 =A0 mutex_unlock(&irq_domain_mutex);
-> +
-> + =A0 =A0 =A0 /* Clear the irq_domain assignments */
-> + =A0 =A0 =A0 for (hwirq =3D 0; hwirq < domain->nr_irq; hwirq++) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d =3D irq_get_irq_data(irq_domain_to_irq(do=
-main, hwirq));
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->domain =3D NULL;
-> + =A0 =A0 =A0 }
-> +}
-> +
-> +#if defined(CONFIG_OF_IRQ)
-> +/**
-> + * irq_create_of_mapping() - Map a linux irq number from a DT interrupt =
-spec
-> + *
-> + * Used by the device tree interrupt mapping code to translate a device =
-tree
-> + * interrupt specifier to a valid linux irq number. =A0Returns either a =
-valid
-> + * linux IRQ number or 0.
-> + *
-> + * When the caller no longer need the irq number returned by this functi=
-on it
-> + * should arrange to call irq_dispose_mapping().
-> + */
-> +unsigned int irq_create_of_mapping(struct device_node *controller,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0cons=
-t u32 *intspec, unsigned int intsize)
-> +{
-> + =A0 =A0 =A0 struct irq_domain *domain;
-> + =A0 =A0 =A0 unsigned long hwirq;
-> + =A0 =A0 =A0 unsigned int irq, type;
-> + =A0 =A0 =A0 int rc =3D -EINVAL;
-> +
-> + =A0 =A0 =A0 /* Find a domain which can translate the irq spec */
-> + =A0 =A0 =A0 mutex_lock(&irq_domain_mutex);
-> + =A0 =A0 =A0 list_for_each_entry(domain, &irq_domain_list, list) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!domain->ops->dt_translate)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 rc =3D domain->ops->dt_translate(domain, co=
-ntroller,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 intspec, intsize, &hwirq, &type);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (rc =3D=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> + =A0 =A0 =A0 }
-> + =A0 =A0 =A0 mutex_unlock(&irq_domain_mutex);
-> +
-> + =A0 =A0 =A0 if (rc !=3D 0)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> +
-> + =A0 =A0 =A0 irq =3D irq_domain_to_irq(domain, hwirq);
-> + =A0 =A0 =A0 if (type !=3D IRQ_TYPE_NONE)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 irq_set_irq_type(irq, type);
-> + =A0 =A0 =A0 pr_debug("%s: mapped hwirq=3D%i to irq=3D%i, flags=3D%x\n",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0controller->full_name, (int)hwirq, irq, =
-type);
-> + =A0 =A0 =A0 return irq;
-> +}
-> +EXPORT_SYMBOL_GPL(irq_create_of_mapping);
-> +
-> +/**
-> + * irq_dispose_mapping() - Discard a mapping created by irq_create_of_ma=
-pping()
-> + * @irq: linux irq number to be discarded
-> + *
-> + * Calling this function indicates the caller no longer needs a referenc=
-e to
-> + * the linux irq number returned by a prior call to irq_create_of_mappin=
-g().
-> + */
-> +void irq_dispose_mapping(unsigned int irq)
-> +{
-> + =A0 =A0 =A0 /*
-> + =A0 =A0 =A0 =A0* nothing yet; will be filled when support for dynamic a=
-llocation of
-> + =A0 =A0 =A0 =A0* irq_descs is added to irq_domain
-> + =A0 =A0 =A0 =A0*/
-> +}
-> +EXPORT_SYMBOL_GPL(irq_dispose_mapping);
-> +#endif /* CONFIG_OF_IRQ */
->
->
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+T24gVHVlLCBKdWwgMjYsIDIwMTEgYXQgNDo0NiBBTSwgR3JhbnQgTGlrZWx5IDxncmFudC5saWtl
+bHlAc2VjcmV0bGFiLmNhPiB3cm90ZToKPiBPbiBNb24sIEp1bCAyNSwgMjAxMSBhdCAxMTowNzo0
+NlBNICswODAwLCBTaGF3biBHdW8gd3JvdGU6Cj4+IEl0IGFkZHMgZnVuY3Rpb24gbXhjX2lvbXV4
+Y19kdF9pbml0KCkgdG8gcGFyc2UgaW9tdXhjIHBhZCBjb25maWd1cmF0aW9uCj4+IGZyb20gZGV2
+aWNlIHRyZWUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd24uZ3VvQGxpbmFy
+by5vcmc+Cj4+IENjOiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+Cj4+
+IENjOiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+Cj4+IC0tLQo+PiDCoC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wvaW9tdXhjLnR4dCDCoCDCoCDCoCDCoCB8IMKg
+IDQ3ICsrKysrKysrKysrKysKPj4gwqBhcmNoL2FybS9tYWNoLW14NS9NYWtlZmlsZSDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB8IMKgIMKgMiArCj4+IMKgYXJjaC9hcm0vbWFj
+aC1teDUvaW9tdXhjLWR0LmMgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB8IMKgIDcy
+ICsrKysrKysrKysrKysrKysrKysrCj4+IMKgYXJjaC9hcm0vcGxhdC1teGMvaW5jbHVkZS9tYWNo
+L2NvbW1vbi5oIMKgIMKgIMKgIMKgIMKgIMKgfCDCoCDCoDMgKwo+PiDCoDQgZmlsZXMgY2hhbmdl
+ZCwgMTI0IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4+IMKgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsL2lvbXV4Yy50eHQK
+Pj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vbWFjaC1teDUvaW9tdXhjLWR0LmMKPj4K
+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNs
+L2lvbXV4Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC9p
+b211eGMudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmFlOTI5
+MmIKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL2ZzbC9pb211eGMudHh0Cj4+IEBAIC0wLDAgKzEsNDcgQEAKPj4gKyogRnJlZXNj
+YWxlIGkuTVggSU9NVVggQ29udHJvbGxlciAoSU9NVVhDKQo+PiArCj4+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlIDogImZzbCw8c29jPi1pb211eGMiOwo+PiArCj4+ICtT
+dWItbm9kZXMgcHJlc2VudCBpbmRpdmlkdWFsIFBBRCBjb25maWd1cmF0aW9uLCBhbmQgbm9kZSBu
+YW1lIGlzIHRoZQo+PiArUEFEIG5hbWUgZ2l2ZW4gYnkgaGFyZHdhcmUgZG9jdW1lbnQuCj4+ICsK
+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIHJlZyA6IFNob3VsZCBjb250YWluIHRoZSBv
+ZmZzZXQgb2YgcmVnaXN0ZXJzCj4+ICsgwqBJT01VWENfU1dfTVVYX0NUTF9QQURfPHBhZC1uYW1l
+PiBhbmQgSU9NVVhDX1NXX1BBRF9DVExfUEFEXzxwYWQtbmFtZT4uCj4+ICstIGZzbCxpb211eGMt
+bXV4LW1vZGUgOiBTaG91bGQgc3BlY2lmeSB0aGUgTVVYX01PREUgc2V0dGluZyBvZiByZWdpc3Rl
+cgo+PiArIMKgSU9NVVhDX1NXX01VWF9DVExfUEFEXzxwYWQtbmFtZT4uCj4+ICsKPj4gK09wdGlv
+bmFsIHByb3BlcnRpZXM6Cj4+ICstIGZzbCxpb211eGMtc2lvbiA6IEluZGljYXRlcyB0aGF0IGJp
+dCBTSU9OIG9mIHJlZ2lzdGVyCj4+ICsgwqBJT01VWENfU1dfTVVYX0NUTF9QQURfPHBhZC1uYW1l
+PiBuZWVkcyB0byBiZSBzZXQgZm9yIGdpdmVuIE1VWF9NT0RFCj4+ICsgwqBzZXR0aW5nIG9mIHRo
+ZSBQQUQuCj4+ICstIGZzbCxpb211eGMtc2VsZWN0LWlucHV0IDogU3BlY2lmeSB0aGUgb2Zmc2V0
+IG9mIHJlZ2lzdGVyCj4+ICsgwqBJT01VWENfPC4uLj5fU0VMRUNUX0lOUFVUIGFuZCB0aGUgdmFs
+dWUgb2YgYml0LWZpZWxkIERBSVNZIGZvciBnaXZlbgo+PiArIMKgTVVYX01PREUgc2V0dGluZyBv
+ZiB0aGUgUEFELgo+Cj4gVGhpcyBjb3VsZCBnZXQgcmVhbGx5IHZlcmJvc2UgaW4gYSByZWFsbHkg
+YmlnIGh1cnJ5LiDCoEZvcnR1bmF0ZWx5IHRoZQo+IGR0YiBmb3JtYXQgaXMgc29waGlzdGljYXRl
+ZCBlbm91Z2ggdG8gb25seSBzdG9yZSBlYWNoIHVuaXF1ZSBwcm9wZXJ0eQo+IG5hbWUgb25jZSwg
+c28gdGhlIGRhdGEgc2hvdWxkbid0IGJlIGh1Z2UsIGJ1dCBpdCBpcyBzdGlsbCBnb2luZyB0bwo+
+IG1ha2UgZm9yIGh1Z2Ugc291cmNlIGZpbGVzLiDCoENhbiB5b3UgdGhpbmsgb2YgYSBtb3JlIGNv
+bmNpc2UKPiByZXByZXNlbnRhdGlvbj8KPgo+IFRoZSBjdXJyZW50IGxpbnV4IGNvZGUgaGFzIGVh
+Y2ggcGluIGNvbmZpZyBzaW1wbHkgYSB1NjQuIMKgTm93LCBhbgo+IGVuZ2luZWVyIGNlcnRhaW5s
+eSB3b3VsZG4ndCBiZSBhc2tlZCB0byB3cml0ZSByYXcgdTY0IHZhbHVlcywgYnV0IHdlCj4gY291
+bGQgYWRkIHNvbWUgZm9ybSBvZiAjZGVmaW5lIG9yIG1hY3JvIHN5bnRheCB0byBkdGMgc28gdGhh
+dCB0aGUKPiBzeW1ib2xpYyBuYW1lcyBjdXJyZW50bHkgdXNlZCBpbiB0aGUgYm9hcmQuYyBmaWxl
+IHdvdWxkIGNvbnRpbnVlIHRvCj4gd29yay4gwqBBbHRlcm5hdGVseSwgd2UgY291bGQganVzdCBt
+YWtlIGVhY2ggcGluIGNvbmZpZ3VyYXRpb24gYSBzdHJpbmcKPiB0aGF0IGNhbiBiZSBwYXJzZWQg
+YnkgdGhlIGtlcm5lbCBhdCBydW50aW1lLiDCoEEgc3RyaW5nIHdvdWxkIGNlcnRhaW5seQo+IGJl
+IHRoZSBtb3N0IGV4dGVuc2libGUsIGF0IHRoZSBjb3N0IG9mIHNvbWUgbW9yZSBpbml0IGNvZGUg
+aW4gdGhlCj4ga2VybmVsLgo+Cj4gU29tZXRoaW5nIGFsb25nIHRoZSBsaW5lcyBvZjoKPiDCoCDC
+oCDCoCDCoGlvbXV4Y0A1M2ZhODAwMCB7Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb21wYXRp
+YmxlID0gImZzbCxpbXg1My1pb211eGMiCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBmc2wsaW9t
+dXgtcGFkcyA9ICJjc2kwLWRhdDEwLHVhcnQxLXR4ZCIsCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAiY3NpMC1kYXQxMSx1YXJ0MS1yeGQiLAo+IMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgLi4uOwo+IMKgIMKgIMKg
+IMKgfTsKClRoaXMgZm9ybWF0IGxvb2tzIHZlcnkgcHJvbWlzaW5nIChhbmQgYXBwYXJlbnRseSBi
+ZXR0ZXIgdGhhbiB0aGUgb25lCmJlbG93IGluIG15IGh1bWJsZSBQT1YpLiBIb3dldmVyLCBJIHN0
+aWxsIGhhdmUgc29tZSBjb25jZXJuczoKCjEuIHRoZXJlIGhhcyB0byBiZSBhIHRhYmxlIHRvIGlu
+dGVycHJldCB0aGUgcGluIG5hbWUsIGUuZy4gImNzaTAtZGF0MTAiCnRvIHRoZSByZWdpc3Rlciwg
+YW5kIHRoZSBmdW5jdGlvbiBuYW1lICJ1YXJ0MS10eGQiIHRvIHJlZ2lzdGVyIGJpdHMuIFlldAp0
+aGUgdGhpcyBtYXBwaW5nIGl0c2VsZiBpcyBraW5kIG9mIGRlc2NyaXB0aW9uIGFuZCBpcyBzdXBw
+b3NlZCB0byBiZQplbmNvZGVkIGJ5IHRoZSBEVCBkYXRhIGl0c2VsZgoKMi4gaG93IHdlIGdvbm5h
+IGltcGxlbWVudCBkeW5hbWljIElPTVVYIGNoYW5nZSwgdGhlcmUgYXJlIGNhbGxiYWNrcwpkdXJp
+bmcgcnVuLXRpbWUgd2hlcmUgcGluIElPTVVYIHByb3BlcnRpZXMgYXJlIGNoYW5nZWQuIGUuZy4g
+d2hlbiBTRApjYXJkIHNsb3QgaXMgZW1wdHksIHRoZSBDYXJkIERldGVjdCBwaW4gY291bGQgYmUg
+Y29uZmlndXJlZCB0byBub3JtYWwKR1BJTyBhbmQgdHJpZ2dlcnMgYW4gaW50ZXJydXB0IHdoZW4g
+YSBjYXJkIHByZXNlbmNlIGlzIGRldGVjdGVkLiBBbmQKb25lIG90aGVyIGV4YW1wbGUgaXMgc29t
+ZSBwaW5zIGFyZSBtdWx0aXBsZXhlZCBieSB0d28gY29tcG9uZW50cwphbmQgdGhleSBjb3VsZCBi
+ZSBwcm9wZXJseSBtYW5hZ2VkIHRvIG1ha2UgYm90aCBjb21wb25lbnRzIHVzYWJsZQphdCBydW4t
+dGltZS4KCj4KPiBPciBpZiB5b3UgcHJlZmVyIGRvaW5nIHRoZSBwYXJzaW5nIGluIGR0YzoKPiDC
+oCDCoCDCoCDCoGlvbXV4Y0A1M2ZhODAwMCB7Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb21w
+YXRpYmxlID0gImZzbCxpbXg1My1pb211eGMiCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBmc2ws
+aW9tdXgtcGFkcyA9IDxNWDUzX1BBRF9DU0kwX0RBVDEwX19VQVJUMV9UWERfTVVYCj4gwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBNWDUzX1BBRF9DU0kw
+X0RBVDExX19VQVJUMl9SWERfTVVYCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAuLi4KPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoD47Cj4gwqAgwqAgwqAgwqB9Owo+Cj4gQW5kIHdlJ2QgbmVlZCBhIHN5
+bnRheCBmb3IgdGhlIG1hY3Jvcy4gwqBIb3dldmVyLCByaWdodCBub3cKPiBpb211eC1teDUzLmgg
+aXMgKmh1Z2UqLCB3aGljaCBJJ20gbm90IGh1Z2VseSBrZWVuIG9uIGFsc28gYnJpbmdpbmcKPiBp
+bnRvIERUQy4uLiDCoGJ1dCB0aGVyZSBtaWdodCBqdXN0IG5vdCBiZSBhbnkgZ29vZCB3YXkgYXJv
+dW5kIHRoYXQKPiBiZWNhdXNlIHBpbm11eCBjb25maWd1cmF0aW9uIGlzIGJ5IGRlZmluaXRpb24g
+Y29tcGxleGUuIMKgSXQgd291bGQKPiBjZXJ0YWlubHkgYmUgYmV0dGVyIHRvIGJlIHByZS1wcm9j
+ZXNzaW5nIHRoYXQgbGFyZ2UgZGF0YSBibG9jayBpbiBkdGMKPiByYXRoZXIgdGhhbiB0cnlpbmcg
+dG8gZW5jb2RlIHRoZSB3aG9sZSB0aGluZyBpbnRvIGtlcm5lbCBzZXR1cCBjb2RlLgo+Cj4gQSB0
+aGlyZCBvcHRpb24gd291bGQgYmUgdG8gY3JlYXRlIHRoZSBwaW5tdXggdGFibGUgaW4gQyBjb2Rl
+IHdpdGggZ2NjIGFuZAo+IG9iamR1bXAsIGFuZCBpbmNsdWRlIGl0IGludG8gdGhlIGR0YiB3aXRo
+IGEgL2Jpbi1pbmMvIHN0YXRlbWVudC4gwqBUaGF0Cj4gb3B0aW9uIHdvdWxkIHdvcmsgcmlnaHQg
+bm93IHdpdGhvdXQgaGF2aW5nIHRvIGNoYW5nZSB0aGUgZm9ybWF0IG9mIHRoZQo+IGlvbXV4ICNk
+ZWZpbmVzLgo+Cj4gZy4KPgo+PiArCj4+ICtFeGFtcGxlczoKPj4gKwo+PiAraW9tdXhjQDUzZmE4
+MDAwIHsKPj4gKyDCoCDCoCAjYWRkcmVzcy1jZWxscyA9IDwyPjsKPj4gKyDCoCDCoCAjc2l6ZS1j
+ZWxscyA9IDwwPjsKPj4gKyDCoCDCoCBjb21wYXRpYmxlID0gImZzbCxpbXg1My1pb211eGMiOwo+
+PiArIMKgIMKgIHJlZyA9IDwweDUzZmE4MDAwIDB4NDAwMD47Cj4+ICsKPj4gKyDCoCDCoCAvKgo+
+PiArIMKgIMKgIMKgKiBJMkMyCj4+ICsgwqAgwqAgwqAqLwo+PiArIMKgIMKgIGtleS1jb2wzIHsg
+LyogSTJDMl9TQ0wgKi8KPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCByZWcgPSA8MHgzYyAweDM2ND47
+Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgZnNsLGlvbXV4Yy1tdXgtbW9kZSA9IDw0PjsKPj4gKyDC
+oCDCoCDCoCDCoCDCoCDCoCBmc2wsaW9tdXhjLXNpb247Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
+ZnNsLGlvbXV4Yy1zZWxlY3QtaW5wdXQgPSA8MHg4MWMgMHgwPjsKPj4gKyDCoCDCoCB9Owo+PiAr
+Cj4+ICsgwqAgwqAga2V5LXJvdzMgeyAvKiBJMkMyX1NEQSAqLwo+PiArIMKgIMKgIMKgIMKgIMKg
+IMKgIHJlZyA9IDwweDQwIDB4MzY4PjsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBmc2wsaW9tdXhj
+LW11eC1tb2RlID0gPDQ+Owo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIGZzbCxpb211eGMtc2lvbjsK
+Pj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBmc2wsaW9tdXhjLXNlbGVjdC1pbnB1dCA9IDwweDgyMCAw
+eDA+Owo+PiArIMKgIMKgIH07Cj4+ICt9Owo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1t
+eDUvTWFrZWZpbGUgYi9hcmNoL2FybS9tYWNoLW14NS9NYWtlZmlsZQo+PiBpbmRleCAzODNlN2Nk
+Li43MTM3OWY2IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9tYWNoLW14NS9NYWtlZmlsZQo+PiAr
+KysgYi9hcmNoL2FybS9tYWNoLW14NS9NYWtlZmlsZQo+PiBAQCAtMjIsMyArMjIsNSBAQCBvYmot
+JChDT05GSUdfTVg1MV9FRklLQV9DT01NT04pICs9IG14NTFfZWZpa2Eubwo+PiDCoG9iai0kKENP
+TkZJR19NQUNIX01YNTFfRUZJS0FNWCkgKz0gYm9hcmQtbXg1MV9lZmlrYW14Lm8KPj4gwqBvYmot
+JChDT05GSUdfTUFDSF9NWDUxX0VGSUtBU0IpICs9IGJvYXJkLW14NTFfZWZpa2FzYi5vCj4+IMKg
+b2JqLSQoQ09ORklHX01BQ0hfTVg1MF9SRFApICs9IGJvYXJkLW14NTBfcmRwLm8KPj4gKwo+PiAr
+b2JqLSQoQ09ORklHX09GKSArPSBpb211eGMtZHQubwo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+bWFjaC1teDUvaW9tdXhjLWR0LmMgYi9hcmNoL2FybS9tYWNoLW14NS9pb211eGMtZHQuYwo+PiBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi4yY2ZlNmU3Cj4+IC0tLSAvZGV2
+L251bGwKPj4gKysrIGIvYXJjaC9hcm0vbWFjaC1teDUvaW9tdXhjLWR0LmMKPj4gQEAgLTAsMCAr
+MSw3MiBAQAo+PiArLyoKPj4gKyAqIENvcHlyaWdodCAyMDExIEZyZWVzY2FsZSBTZW1pY29uZHVj
+dG9yLCBJbmMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQuCj4+ICsgKiBDb3B5cmlnaHQgMjAxMSBMaW5h
+cm8gTHRkLgo+PiArICoKPj4gKyAqIFRoZSBjb2RlIGNvbnRhaW5lZCBoZXJlaW4gaXMgbGljZW5z
+ZWQgdW5kZXIgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYwo+PiArICogTGljZW5zZS4gWW91IG1heSBv
+YnRhaW4gYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZQo+PiArICogVmVy
+c2lvbiAyIG9yIGxhdGVyIGF0IHRoZSBmb2xsb3dpbmcgbG9jYXRpb25zOgo+PiArICoKPj4gKyAq
+IGh0dHA6Ly93d3cub3BlbnNvdXJjZS5vcmcvbGljZW5zZXMvZ3BsLWxpY2Vuc2UuaHRtbAo+PiAr
+ICogaHR0cDovL3d3dy5nbnUub3JnL2NvcHlsZWZ0L2dwbC5odG1sCj4+ICsgKi8KPj4gKwo+PiAr
+I2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4+ICsjaW5jbHVkZSA8YXNtL2lvLmg+Cj4+ICsKPj4gKyNk
+ZWZpbmUgSU9NVVhDX0NPTkZJR19TSU9OIMKgICgxIDw8IDQpCj4+ICsKPj4gK3ZvaWQgbXhjX2lv
+bXV4Y19kdF9pbml0KGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm1hdGNoKQo+PiArewo+PiAr
+IMKgIMKgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IG9mX2ZpbmRfbWF0Y2hpbmdfbm9kZShO
+VUxMLCBtYXRjaCk7Cj4+ICsgwqAgwqAgc3RydWN0IGRldmljZV9ub2RlICpjaGlsZDsKPj4gKyDC
+oCDCoCB2b2lkIF9faW9tZW0gKmJhc2U7Cj4+ICsgwqAgwqAgdTMyIHJlZ1syXSwgc2VsZWN0X2lu
+cHV0WzJdOwo+PiArIMKgIMKgIHUzMiBtdXhfbW9kZSwgcGFkX2N0bDsKPj4gKwo+PiArIMKgIMKg
+IGlmICghbm9kZSkgewo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIHByX3dhcm4oIiVzOiBubyBpb211
+eGMgbm9kZSBmb3VuZFxuIiwgX19mdW5jX18pOwo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIHJldHVy
+bjsKPj4gKyDCoCDCoCB9Cj4+ICsKPj4gKyDCoCDCoCBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzJf
+YXJyYXkobm9kZSwgInJlZyIsIHJlZywgQVJSQVlfU0laRShyZWcpKSkgewo+PiArIMKgIMKgIMKg
+IMKgIMKgIMKgIHByX3dhcm4oIiVzOiBwcm9wZXJ0eSAncmVnJyBub3QgZm91bmRcbiIsIF9fZnVu
+Y19fKTsKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBnb3RvIG91dDsKPj4gKyDCoCDCoCB9Cj4+ICsK
+Pj4gKyDCoCDCoCBiYXNlID0gaW9yZW1hcChyZWdbMF0sIHJlZ1sxXSk7Cj4+ICsgwqAgwqAgaWYg
+KCFiYXNlKSB7Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgcHJfd2FybigiJXM6IGlvcmVtYXAgZmFp
+bGVkXG4iLCBfX2Z1bmNfXyk7Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgZ290byBvdXQ7Cj4+ICsg
+wqAgwqAgfQo+PiArCj4+ICsgwqAgwqAgZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShub2RlLCBjaGls
+ZCkgewo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIC8qIGdldCByZWdzaXN0ZXIgb2Zmc2V0IG9mIG11
+eF9jdGwgYW5kIHBhZF9jdGwgKi8KPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCBpZiAob2ZfcHJvcGVy
+dHlfcmVhZF91MzJfYXJyYXkoY2hpbGQsICJyZWciLCByZWcsCj4+ICsgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBBUlJBWV9T
+SVpFKHJlZykpKQo+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNvbnRpbnVlOwo+
+PiArCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgLyogc2V0IHJlZ2lzdGVyIG11eF9jdGwgKi8KPj4g
+KyDCoCDCoCDCoCDCoCDCoCDCoCBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIoY2hpbGQsICJmc2ws
+aW9tdXhjLW11eC1tb2RlIiwKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCZtdXhfbW9kZSkpCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgY29udGludWU7Cj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgaWYgKG9mX2dldF9w
+cm9wZXJ0eShjaGlsZCwgImZzbCxpb211eGMtc2lvbiIsIE5VTEwpKQo+PiArIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIG11eF9tb2RlIHw9IElPTVVYQ19DT05GSUdfU0lPTjsKPj4gKyDC
+oCDCoCDCoCDCoCDCoCDCoCB3cml0ZWwobXV4X21vZGUsIGJhc2UgKyByZWdbMF0pOwo+PiArCj4+
+ICsgwqAgwqAgwqAgwqAgwqAgwqAgLyogc2V0IHJlZ2lzdGVyIHBhZF9jdGwgKi8KPj4gKyDCoCDC
+oCDCoCDCoCDCoCDCoCBpZiAoIW9mX3Byb3BlcnR5X3JlYWRfdTMyKGNoaWxkLCAiZnNsLGlvbXV4
+Yy1wYWQtY3RsIiwKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCAmcGFkX2N0bCkpCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgd3JpdGVsKHBhZF9jdGwsIGJhc2UgKyByZWdbMV0pOwo+PiArCj4+ICsgwqAgwqAgwqAg
+wqAgwqAgwqAgLyogZ2V0IG9mZnNldC92YWx1ZSBwYWlyIGFuZCBzZXQgc2VsZWN0X2lucHV0IHJl
+Z2lzdGVyICovCj4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3Uz
+Ml9hcnJheShjaGlsZCwKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCAiZnNsLGlvbXV4Yy1zZWxlY3QtaW5wdXQiLCBzZWxlY3RfaW5wdXQsCj4+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgQVJSQVlfU0laRShzZWxlY3RfaW5w
+dXQpKSkKPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB3cml0ZWwoc2VsZWN0X2lu
+cHV0WzFdLCBiYXNlICsgc2VsZWN0X2lucHV0WzBdKTsKPj4gKyDCoCDCoCB9Cj4+ICsKPj4gKyDC
+oCDCoCBpb3VubWFwKGJhc2UpOwo+PiArCj4+ICtvdXQ6Cj4+ICsgwqAgwqAgb2Zfbm9kZV9wdXQo
+bm9kZSk7Cj4+ICt9Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9wbGF0LW14Yy9pbmNsdWRlL21h
+Y2gvY29tbW9uLmggYi9hcmNoL2FybS9wbGF0LW14Yy9pbmNsdWRlL21hY2gvY29tbW9uLmgKPj4g
+aW5kZXggNGUzZDk3OC4uMTJiNzQ5OSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vcGxhdC1teGMv
+aW5jbHVkZS9tYWNoL2NvbW1vbi5oCj4+ICsrKyBiL2FyY2gvYXJtL3BsYXQtbXhjL2luY2x1ZGUv
+bWFjaC9jb21tb24uaAo+PiBAQCAtMTMsNiArMTMsNyBAQAo+Pgo+PiDCoHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2U7Cj4+IMKgc3RydWN0IGNsazsKPj4gK3N0cnVjdCBvZl9kZXZpY2VfaWQ7Cj4+Cj4+
+IMKgZXh0ZXJuIHZvaWQgbXgxX21hcF9pbyh2b2lkKTsKPj4gwqBleHRlcm4gdm9pZCBteDIxX21h
+cF9pbyh2b2lkKTsKPj4gQEAgLTcyLDQgKzczLDYgQEAgZXh0ZXJuIHZvaWQgbXhjX2FyY2hfcmVz
+ZXRfaW5pdCh2b2lkIF9faW9tZW0gKik7Cj4+IMKgZXh0ZXJuIHZvaWQgbXg1MV9lZmlrYW14X3Jl
+c2V0KHZvaWQpOwo+PiDCoGV4dGVybiBpbnQgbXg1M19yZXZpc2lvbih2b2lkKTsKPj4gwqBleHRl
+cm4gaW50IG14NTNfZGlzcGxheV9yZXZpc2lvbih2b2lkKTsKPj4gKwo+PiArZXh0ZXJuIHZvaWQg
+bXhjX2lvbXV4Y19kdF9pbml0KGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm1hdGNoKTsKPj4g
+wqAjZW5kaWYKPj4gLS0KPj4gMS43LjQuMQo+Pgo+Pgo+Cj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo+Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3Vz
+cyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6
+Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
