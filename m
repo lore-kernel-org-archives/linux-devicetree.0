@@ -1,15 +1,13 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpio-nand: add device tree bindings
-Date: Wed, 27 Jul 2011 20:55:12 +0100
-Message-ID: <20110727195512.GC3001@gallagher>
-References: <1311775410-5158-1-git-send-email-jamie@jamieiles.com>
-	<20110727144501.7e0420cd@schlenkerla.am.freescale.net>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC PATCH] basic-mmio-gpio: add support for device tree
+Date: Wed, 27 Jul 2011 15:05:02 -0500
+Message-ID: <20110727150502.2dca210f@schlenkerla.am.freescale.net>
+References: <1311776656-6755-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110727144501.7e0420cd-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
+In-Reply-To: <1311776656-6755-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,78 +17,65 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hmm, get_maintainer.pl got Artem's address wrong (old Nokia address) for 
-gpio-nand.c so correct one on CC now!
+On Wed, 27 Jul 2011 15:24:16 +0100
+Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
 
-On Wed, Jul 27, 2011 at 02:45:01PM -0500, Scott Wood wrote:
-> On Wed, 27 Jul 2011 15:03:30 +0100
-> Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+> This patch adds support for basic-mmio-gpio controllers to be
+> instantiated from the device tree.  It's RFC at the moment because I'm
+> really not happy with the way that the registers are described (zero
+> size meaning the register is not present).  In a previous discussion
+> (https://lkml.org/lkml/2011/5/4/117) Grant suggested using a reg
+> property to describe the whole controller then arrays of reg-offset
+> values for multiple banks e.g:
 > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-nand.txt
-> > new file mode 100644
-> > index 0000000..98cb152
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/gpio-nand.txt
-> > @@ -0,0 +1,43 @@
-> > +GPIO assisted NAND flash
-> > +
-> > +Required properties:
-> > +- compatible : "gpio-nand"
-> > +- reg : should specify localbus chip select and size used for the chip.  For
-> > +  ARM platforms where a dummy read is needed to provide synchronisation with
-> > +  regards to bus reordering, an optional second resource describes the
-> > +  location to read from.
+> 	gpio@fedc0000 {
+> 		compatible = "acme,super-soc-gpio", "mmio-gpio";
+> 		reg = <0xfedc0000 0x100>;
+> 		gpio-controller;
+> 		#gpio-cells = <1>;
 > 
-> I don't see how a pure "gpio nand" device would have any memory mapped
-> I/O.  I think you need a more specific compatible for this.
-
-OK, fair point.  I'm not sure what a better name would be though, maybe 
-gpio-assisted-nand?
-
-> > +Optional properties:
-> > +- bank-width : Width (in bytes) of the bank.  Equal to the device width times
-> > +  the number of interleaved chips.
+> 		mmgpio-regoffset-data = <0x00 0x04 0x08 0x0c>;
+> 		mmgpio-regoffset-dir  = <0x20 0x24 0x28 0x2c>;
+> 		mmgpio-regoffset-set  = <0x10 0x14 0x18 0x1c>;
+> 		mmgpio-regoffset-clr  = <0x30 0x34 0x38 0x3c>;
+> 	};
 > 
-> Interleaved NAND chips?  Is that actually done?
+> but this loses the hierarchy as Anton pointed out, so I've tried this
+> approach instead.
 
-Doh, that shouldn't read like that.  It's really just the bank width.
+How does it lose hierarchy versus an unnamed, ordered list?
 
-> > +Examples:
-> > +
-> > +gpio-nand@1,0 {
-> > +	compatible = "gpio-nand";
-> > +	reg = <1 0x0000 0x1000>;
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	gpios = <&banka 1 0	/* rdy */
-> > +		 &banka 2 0 	/* nce */
-> > +		 &banka 3 0 	/* ale */
-> > +		 &banka 4 0 	/* cle */
-> > +		 0		/* nwp */>;
-> > +
-> > +	flash {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		compatible = "...";
-> > +
-> > +		partition@0 {
-> > +			...
-> > +		};
-> > +	};
-> > +};
-> 
-> Here you have a separate flash node underneath the gpio-nand node, but
-> earlier in the patch comment you show the partitions being directly under
-> gpio-nand, and from a quick glance it appears the latter is what the code
-> supports.
+Consider the likelihood of new types of reg being added to try to jam new
+controllers into this "generic" model.
 
-Yes, that's definitely wrong!  The partitions should be directly under the 
-nand controller node.
+> +Required properties:
+> +- compatible : "basic-mmio-gpio"
+> +- #gpio-cells : Should be two. The first cell is the pin number and the
+> +  second cell is used to specify optional parameters (currently unused).
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- regs : The register addresses for the registers in the controller.  The
+> +  registers should be listed in the following order:
+> +	- dat
+> +	- set
+> +	- clr
+> +	- dirout
+> +	- dirin
+> +  registers that are not present in the controller should have a zero size.
 
-Thanks for the review!
+If you're defining something so generic, you should provide as much detail
+as a hardware manual would -- ordering of GPIO bits within a word,
+polarity, word size (can there be multiple words for each reg type?), what
+does it mean when certain registers are present/absent, etc.  Don't make
+people refer to the Linux driver source.
 
-Jamie
+> +Optional properties:
+> +- basic-mmio-gpio,big-endian : big-endian register accesses should be used.
+> +- basic-mmio-gpio,nr-gpio : the number of GPIO pins in the controller.
+
+What is the driver supposed to do with a node that doesn't have nr-gpio?
+
+-Scott
