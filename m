@@ -1,67 +1,55 @@
-From: "Hilman, Kevin" <khilman@ti.com>
-Subject: Re: [RFC/PATCH 0/7] decouple platform_device from omap_device
-Date: Wed, 27 Jul 2011 14:45:33 -0700
-Message-ID: <CALyTGODe8r9zr4fA+AX=-XhpLjNXKtfHzxFUWMNSehDawEDMBA@mail.gmail.com>
-References: <1311292338-11830-1-git-send-email-khilman@ti.com>
-	<20110727140457.GA8558@manju-desktop>
+From: Ben Dooks <ben-i2c@fluff.org>
+Subject: Re: [PATCH v2 0/3] Add device tree support for Samsung's I2C driver
+Date: Wed, 27 Jul 2011 23:06:22 +0100
+Message-ID: <20110727220622.GO15795@trinity.fluff.org>
+References: <1311329918-8105-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110727140457.GA8558@manju-desktop>
-Sender: linux-omap-owner@vger.kernel.org
-To: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1311329918-8105-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-i2c@vger.kernel.org, grant.likely@secretlab.ca, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Manjunath,
+On Fri, Jul 22, 2011 at 03:48:35PM +0530, Thomas Abraham wrote:
+> This patchset adds device tree support for Samsung's I2C driver. The
+> Exynos4 DT enabled machine is updated to support device tree based probe
+> for I2C instance 0 and 1.
 
-On Wed, Jul 27, 2011 at 7:04 AM, G, Manjunath Kondaiah <manjugk@ti.com>=
- wrote:
-> Kevin,
->
-> On Thu, Jul 21, 2011 at 04:52:10PM -0700, Kevin Hilman wrote:
->> Here's a first whack, proof-of-concept on how we could start to
->> decouple the platform_device from an omap_device.
->>
->> The main RFC is in the last patch, and everything leading up to it a=
-re
->> misc. omap_device cleanups that make the last patch cleaner and
->> clearer. =A0It's really the last patch that does the decoupling.
->>
->> This will be necessary if we're going to decouple the platform_devic=
-e
->> creation from the omap_device/omap_hwmod creation etc. =A0This patch
->> leaves them both done in omap_device_build(), but shows that they ca=
-n
->> be decoupled.
-> Can you pls mention baseline used for these patches? I tried applying=
- on
-> latest mainline, v3.0 and =A0git://git.pwsan.com/linux-2.6 prcm-devel=
--3.1
+I'll look at taking the i2c specific changes for either this or the next
+release depending on how I feel.
+ 
+> Changes since v1:
+> 
+> - Addressed all comments from Grant Likely
+>     - s3c24xx_i2c_is2440 function is simpler now.
+>     - Consolidated all the scatterd dt support code into a single function.
+>     - but the dependency on i2c pinmux handler function passed from the
+>       platform data is retained. It would be removed eventually when the
+>       new pinmux api is finalized and the i2c driver is modified to
+>       support the pinmux settings using the pinmux api.
+> 
+> Thomas Abraham (3):
+>   i2c: s3c2410: Keep a copy of platform data and use it.
+>   i2c: s3c2410: Add device tree support
+>   arm: dt: Add device tree support for i2c instance 0 and 1 on exynos4 dt machine
+> 
+>  .../devicetree/bindings/i2c/samsung-i2c.txt        |   44 +++++++++++++++
+>  arch/arm/boot/dts/exynos4-smdkv310.dts             |   45 +++++++++++++++
+>  arch/arm/mach-exynos4/Kconfig                      |    2 +
+>  arch/arm/mach-exynos4/mach-exynos4-dt.c            |   23 ++++++++
+>  drivers/i2c/busses/i2c-s3c2410.c                   |   58 +++++++++++++++++++-
+>  5 files changed, 169 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/samsung-i2c.txt
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Oops, sorry.  I forgot to mention it.
+-- 
+Ben Dooks, ben@fluff.org, http://www.fluff.org/ben/
 
-Due to some misc. dependencies (mainly on Beagle board file), I've
-temporarily based it on the for-next branch of the arm-soc tree[1]
-since that has everything already queued for the next merge window. I
-also based it on the omap_device patch I posted which changes the pr_*
-prints to dev_*.
-
-=46or convenience, I've pushed this series to the 'wip/od-devres' branc=
-h
-of my tree[2].
-
-Sorry for the confusion,
-
-Kevin
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/arm/linux-arm-soc.git
-
-[2] git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap-pm=
-=2Egit
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Large Hadron Colada: A large Pina Colada that makes the universe disappear.
