@@ -1,7 +1,8 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [RFC PATCH] basic-mmio-gpio: add support for device tree
-Date: Wed, 27 Jul 2011 15:24:16 +0100
-Message-ID: <1311776656-6755-1-git-send-email-jamie@jamieiles.com>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm: exynos4: Add support for dt irq specifier to linux virq
+	conversion
+Date: Wed, 27 Jul 2011 23:54:28 +0530
+Message-ID: <1311791068-29933-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,315 +17,290 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chaos.youn-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for basic-mmio-gpio controllers to be
-instantiated from the device tree.  It's RFC at the moment because I'm
-really not happy with the way that the registers are described (zero
-size meaning the register is not present).  In a previous discussion
-(https://lkml.org/lkml/2011/5/4/117) Grant suggested using a reg
-property to describe the whole controller then arrays of reg-offset
-values for multiple banks e.g:
+Exynos4 includes two interrupt controllers - External GIC and External
+Interrupt Combiner. External GIC can handle 16 software generated
+interrupts (SGI), 16 Private Peripheral Interrupts (PPI) and 128
+Shared Peripheral Interrupts (SPI). External Interrupt Combiner manages
+32 groups of 8 interrupts each and feeds 32 interrupts as SPI interrupts
+to the External GIC controller.
 
-	gpio@fedc0000 {
-		compatible = "acme,super-soc-gpio", "mmio-gpio";
-		reg = <0xfedc0000 0x100>;
-		gpio-controller;
-		#gpio-cells = <1>;
+This patch supports conversion of device tree interrupt specifier to
+linux virq domain for both the interrupt controllers. The concept of
+this patch is derived from Grant's 'simple' irq converter.
 
-		mmgpio-regoffset-data = <0x00 0x04 0x08 0x0c>;
-		mmgpio-regoffset-dir  = <0x20 0x24 0x28 0x2c>;
-		mmgpio-regoffset-set  = <0x10 0x14 0x18 0x1c>;
-		mmgpio-regoffset-clr  = <0x30 0x34 0x38 0x3c>;
-	};
+This patch is based on Grant's following patchset
+[PATCH v3 0/2] Simple irq_domain implementation
 
-but this loses the hierarchy as Anton pointed out, so I've tried this
-approach instead.  This probably needs to be able to support a
-"basic-mmio-gpio" gpio device with "basic-mmio-gpio-bank" sub-nodes but
-I haven't done this yet.
-
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Not-yet-signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/gpio/basic-mmio-gpio.txt   |   34 ++++++
- drivers/gpio/basic_mmio_gpio.c                     |  122 +++++++++++++++-----
- include/linux/basic_mmio_gpio.h                    |   20 +++
- 3 files changed, 149 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/basic-mmio-gpio.txt
+ Documentation/devicetree/bindings/arm/samsung.txt |   72 +++++++++++++
+ arch/arm/mach-exynos4/Makefile                    |    1 +
+ arch/arm/mach-exynos4/include/mach/irqs.h         |    3 +
+ arch/arm/mach-exynos4/irqdomain.c                 |  117 +++++++++++++++++++++
+ arch/arm/mach-exynos4/mach-exynos4-dt.c           |    8 +-
+ 5 files changed, 196 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/mach-exynos4/irqdomain.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/basic-mmio-gpio.txt b/Documentation/devicetree/bindings/gpio/basic-mmio-gpio.txt
+diff --git a/Documentation/devicetree/bindings/arm/samsung.txt b/Documentation/devicetree/bindings/arm/samsung.txt
+index 5676bca..878aa01 100644
+--- a/Documentation/devicetree/bindings/arm/samsung.txt
++++ b/Documentation/devicetree/bindings/arm/samsung.txt
+@@ -6,3 +6,75 @@ Required root node properties:
+   - compatible = "samsung,smdkv310", "samsung,exynos4210'.
+       (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
+       (b) "samsung,exynos4210" - for boards based on Exynos4210 processor.
++
++
++Exynos4 Interrupt Controllers
++-----------------------------
++
++Samsung's Exynos4 architecture includes two interrupt controllers.
++  - External GIC
++  - External Interrupt Combiner.
++
++The external GIC can manage
++  - 16 Software Generated Interrupts (SGI).
++  - 16 Private Peripheral Interrupts (PPI).
++  - 128 Shared Peripheral Interrupts (SPI).
++
++Out of the 128 Shared Peripheral Interrupts (SPI's), 32 interrupts
++are sourced from a interrupt combiner. The interrupt combiner provides
++32 groups of interrupts with a maximum of 8 interrupts combined per
++group.
++
++External GIC properties:
++  - compatible: should be "samsung,exynos4-ext-gic".
++  - interrupt-cells: should be <2>. The meaning of the cells are
++      * First Cell: Interrupt Number.
++      * Second Cell: Type of Interrupt (0-SPI, 1-SGI, 2-PPI).
++  - reg: The GIC includes a Distributor Interface and CPU Interface and
++    hence requires two base addresses. The property format is
++    <Distributor-Base Distributor-Size>, <CPU-Base CPU Size>
++
++  Example:
++
++	EXT_GIC:interrupt-controller@10490000 {
++		compatible = "samsung,exynos4-ext-gic";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0x10490000 0x1000>, <0x10480000 0x100>;
++	};
++
++  Devices using External GIC as the interrupt parent should specify two
++  cells for the interrupts property as shown below.
++
++	watchdog@10060000 {
++		compatible = "samsung,s3c2410-wdt";
++		reg = <0x10060000 0x400>;
++		interrupt-parent = <&EXT_GIC>;
++		interrupts = <43 0>;
++	};
++
++External Interrupt Combiner properties:
++  - compatible: should be "samsung,exynos4-ext-combiner".
++  - interrupt-cells: should be <2>. The meaning of the cells are
++      * First Cell: Combiner Group Number.
++      * Second Cell: Interrupt within the group.
++  - reg: Base address and size of interrupt combiner registers.
++
++  Example:
++
++	EXT_COMBINER:interrupt-controller@10440000 {
++		compatible = "samsung,exynos4-ext-combiner";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0x10440000 0x200>;
++	};
++
++  Devices using External Interrupt Combiner as the interrupt parent should
++  specify two cells for the interrupts property as shown below.
++
++	watchdog@10060000 {
++		compatible = "samsung,s3c2410-wdt";
++		reg = <0x10060000 0x400>;
++		interrupt-parent = <&EXT_COMBINER>;
++		interrupts = <4 2>;
++	};
+diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
+index ac91f4f..fd532c7 100644
+--- a/arch/arm/mach-exynos4/Makefile
++++ b/arch/arm/mach-exynos4/Makefile
+@@ -32,6 +32,7 @@ obj-$(CONFIG_MACH_ARMLEX4210)		+= mach-armlex4210.o
+ obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
+ obj-$(CONFIG_MACH_NURI)			+= mach-nuri.o
+ obj-$(CONFIG_MACH_EXYNOS4_DT)		+= mach-exynos4-dt.o
++obj-$(CONFIG_OF_IRQ)			+= irqdomain.o
+ 
+ # device support
+ 
+diff --git a/arch/arm/mach-exynos4/include/mach/irqs.h b/arch/arm/mach-exynos4/include/mach/irqs.h
+index 934d2a4..c120aad 100644
+--- a/arch/arm/mach-exynos4/include/mach/irqs.h
++++ b/arch/arm/mach-exynos4/include/mach/irqs.h
+@@ -15,6 +15,9 @@
+ 
+ #include <plat/irqs.h>
+ 
++/* SGI: Software Generated Interrupt */
++#define IRQ_SGI(x)		S5P_IRQ(x)
++
+ /* PPI: Private Peripheral Interrupt */
+ 
+ #define IRQ_PPI(x)		S5P_IRQ(x+16)
+diff --git a/arch/arm/mach-exynos4/irqdomain.c b/arch/arm/mach-exynos4/irqdomain.c
 new file mode 100644
-index 0000000..5582dfa
+index 0000000..f50fa20
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/basic-mmio-gpio.txt
-@@ -0,0 +1,34 @@
-+Basic MMIO GPIO controller
++++ b/arch/arm/mach-exynos4/irqdomain.c
+@@ -0,0 +1,117 @@
++/*
++ * Exynos4 irq domain conversion from dt irq specifier to linux virq domain
++ *
++ * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * Exynos4 includes two interrupt controllers - External GIC and External
++ * Interrupt Combiner. This file provides support for converting interrupt
++ * specified in device tree to linux virq domain for both the controllers.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
 +
-+Required properties:
-+- compatible : "basic-mmio-gpio"
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters (currently unused).
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- regs : The register addresses for the registers in the controller.  The
-+  registers should be listed in the following order:
-+	- dat
-+	- set
-+	- clr
-+	- dirout
-+	- dirin
-+  registers that are not present in the controller should have a zero size.
-+
-+Optional properties:
-+- basic-mmio-gpio,big-endian : big-endian register accesses should be used.
-+- basic-mmio-gpio,nr-gpio : the number of GPIO pins in the controller.
-+
-+Examples:
-+
-+banka: gpio@20000 {
-+	compatible = "picochip,picoxcell-gpio", "basic-mmio-gpio";
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	basic-mmio-gpio,nr-gpio = <8>;
-+
-+	reg = <0x20050 0x4 /* dat */
-+	       0x20000 0x4 /* set */
-+	       0x20000 0x0 /* no clr register */
-+	       0x20004 0x4 /* dirout */
-+	       0x20000 0x0 /* no dirin register */>;
-+};
-diff --git a/drivers/gpio/basic_mmio_gpio.c b/drivers/gpio/basic_mmio_gpio.c
-index 8152e9f..da85352 100644
---- a/drivers/gpio/basic_mmio_gpio.c
-+++ b/drivers/gpio/basic_mmio_gpio.c
-@@ -61,6 +61,9 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/basic_mmio_gpio.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- 
- static void bgpio_write8(void __iomem *reg, unsigned long data)
- {
-@@ -353,8 +356,14 @@ static int bgpio_setup_direction(struct bgpio_chip *bgc,
- 
- int __devexit bgpio_remove(struct bgpio_chip *bgc)
- {
--	int err = gpiochip_remove(&bgc->gc);
-+	int err;
++#include <linux/slab.h>
 +
-+#ifdef CONFIG_OF
-+	if (bgc->gc.of_node)
-+		of_node_put(bgc->gc.of_node);
-+#endif /* CONFIG_OF */
- 
-+	err = gpiochip_remove(&bgc->gc);
- 	kfree(bgc);
- 
- 	return err;
-@@ -385,6 +394,9 @@ int __devinit bgpio_init(struct bgpio_chip *bgc,
- 	bgc->gc.label = dev_name(dev);
- 	bgc->gc.base = -1;
- 	bgc->gc.ngpio = bgc->bits;
-+	bgc->gc.of_node = dev->of_node;
-+	bgc->gc.of_gpio_n_cells = 2;
-+	bgc->gc.of_xlate = of_gpio_simple_xlate;
- 
- 	ret = bgpio_setup_io(bgc, dat, set, clr);
- 	if (ret)
-@@ -400,6 +412,11 @@ int __devinit bgpio_init(struct bgpio_chip *bgc,
- 
- 	bgc->data = bgc->read_reg(bgc->reg_dat);
- 
-+#ifdef CONFIG_OF
-+	if (bgc->gc.of_node)
-+		of_node_get(bgc->gc.of_node);
-+#endif /* CONFIG_OF */
++#include <mach/irqs.h>
 +
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(bgpio_init);
-@@ -444,63 +461,107 @@ static void __iomem *bgpio_map(struct platform_device *pdev,
- 	return ret;
- }
- 
--static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
-+static int bgpio_platform_probe(struct platform_device *pdev,
-+				struct bgpio_info *info)
- {
--	struct device *dev = &pdev->dev;
- 	struct resource *r;
--	void __iomem *dat;
--	void __iomem *set;
--	void __iomem *clr;
--	void __iomem *dirout;
--	void __iomem *dirin;
--	unsigned long sz;
--	bool be;
- 	int err;
--	struct bgpio_chip *bgc;
--	struct bgpio_pdata *pdata = dev_get_platdata(dev);
-+	struct bgpio_pdata *pdata = dev_get_platdata(&pdev->dev);
- 
- 	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
- 	if (!r)
- 		return -EINVAL;
- 
--	sz = resource_size(r);
-+	info->sz = resource_size(r);
-+	info->ngpio = info->sz * 8;
-+	info->base = -1;
- 
--	dat = bgpio_map(pdev, "dat", sz, &err);
--	if (!dat)
-+	info->dat = bgpio_map(pdev, "dat", info->sz, &err);
-+	if (!info->dat)
- 		return err ? err : -EINVAL;
- 
--	set = bgpio_map(pdev, "set", sz, &err);
-+	info->set = bgpio_map(pdev, "set", info->sz, &err);
- 	if (err)
- 		return err;
- 
--	clr = bgpio_map(pdev, "clr", sz, &err);
-+	info->clr = bgpio_map(pdev, "clr", info->sz, &err);
- 	if (err)
- 		return err;
- 
--	dirout = bgpio_map(pdev, "dirout", sz, &err);
-+	info->dirout = bgpio_map(pdev, "dirout", info->sz, &err);
- 	if (err)
- 		return err;
- 
--	dirin = bgpio_map(pdev, "dirin", sz, &err);
-+	info->dirin = bgpio_map(pdev, "dirin", info->sz, &err);
- 	if (err)
- 		return err;
- 
--	be = !strcmp(platform_get_device_id(pdev)->name, "basic-mmio-gpio-be");
-+	info->be = !strcmp(platform_get_device_id(pdev)->name,
-+			   "basic-mmio-gpio-be");
++/*
++ * The interrupt specifier for External GIC controller uses to two cells in
++ * the device tree source file. The second cell denotes the type of the
++ * interrupt (SPI/SGI/PPI). The following macros are used to represent
++ * these different types of interrupt.
++ */
++#define	EXT_GIC_SPI	0
++#define	EXT_GIC_SGI	1
++#define	EXT_GIC_PPI	2
 +
-+	if (pdata) {
-+		info->base = pdata->base;
-+		if (pdata->ngpio > 0)
-+			info->ngpio = pdata->ngpio;
++/* Translate dt irq specifier to linux virq for external GIC controller */
++static int exynos4_irq_domain_ext_gic_dt_translate(struct irq_domain *d,
++			    struct device_node *controller,
++			    const u32 *intspec, unsigned int intsize,
++			    unsigned long *out_hwirq, unsigned int *out_type)
++{
++	if (d->of_node != controller)
++		return -EINVAL;
++	if (intsize < 2)
++		return -EINVAL;
++
++	switch (intspec[1]) {
++	case EXT_GIC_SPI:
++		*out_hwirq = IRQ_SPI(intspec[0]);
++		break;
++	case EXT_GIC_SGI:
++		*out_hwirq = IRQ_SGI(intspec[0]);
++		break;
++	case EXT_GIC_PPI:
++		*out_hwirq = IRQ_PPI(intspec[0]);
++		break;
++	default:
++		pr_info("irq_domain register: invalid ext gic intr type\n");
++		return -EINVAL;
 +	}
 +
-+	return err;
-+}
-+
-+static int bgpio_of_probe(struct platform_device *pdev,
-+			  struct bgpio_info *info)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct resource r;
-+	int err;
-+	u32 ngpio;
-+
-+	err = of_address_to_resource(np, 0, &r);
-+	if (err)
-+		return err;
-+
-+	info->dat = of_iomap(np, 0);
-+	info->set = of_iomap(np, 1);
-+	info->clr = of_iomap(np, 2);
-+	info->dirout = of_iomap(np, 3);
-+	info->dirin = of_iomap(np, 4);
-+	info->sz = resource_size(&r);
-+	info->ngpio = info->sz * 8;
-+	info->base = -1;
-+
-+	info->be = of_get_property(np, "basic-mmio-gpio,big-endian", NULL) ?
-+		true : false;
-+
-+	if (of_property_read_u32(np, "basic-mmio-gpio,nr-gpio", &ngpio))
-+		return -EINVAL;
-+	info->ngpio = ngpio;
-+
++	*out_type = IRQ_TYPE_NONE;
 +	return 0;
 +}
 +
-+static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
++/* Translate dt irq specifier to linux virq for external combiner controller */
++static int exynos4_irq_domain_ext_combiner_dt_translate(struct irq_domain *d,
++			    struct device_node *controller,
++			    const u32 *intspec, unsigned int intsize,
++			    unsigned long *out_hwirq, unsigned int *out_type)
 +{
-+	struct device *dev = &pdev->dev;
-+	int err;
-+	struct bgpio_chip *bgc;
-+	struct bgpio_info info = {};
++	if (d->of_node != controller)
++		return -EINVAL;
++	if (intsize < 2)
++		return -EINVAL;
 +
-+	if (platform_get_device_id(pdev))
-+		err = bgpio_platform_probe(pdev, &info);
-+	else
-+		err = bgpio_of_probe(pdev, &info);
-+
-+	if (err)
-+		return err;
- 
- 	bgc = devm_kzalloc(&pdev->dev, sizeof(*bgc), GFP_KERNEL);
- 	if (!bgc)
- 		return -ENOMEM;
- 
--	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin, be);
-+	err = bgpio_init_info(bgc, dev, &info);
- 	if (err)
- 		return err;
- 
--	if (pdata) {
--		bgc->gc.base = pdata->base;
--		if (pdata->ngpio > 0)
--			bgc->gc.ngpio = pdata->ngpio;
--	}
--
- 	platform_set_drvdata(pdev, bgc);
- 
- 	return gpiochip_add(&bgc->gc);
-@@ -520,9 +581,16 @@ static const struct platform_device_id bgpio_id_table[] = {
- };
- MODULE_DEVICE_TABLE(platform, bgpio_id_table);
- 
-+static const struct of_device_id bgpio_of_id_table[] = {
-+	{ .compatible = "basic-mmio-gpio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, bgpio_of_id_table);
-+
- static struct platform_driver bgpio_driver = {
- 	.driver = {
- 		.name = "basic-mmio-gpio",
-+		.of_match_table = bgpio_of_id_table,
- 	},
- 	.id_table = bgpio_id_table,
- 	.probe = bgpio_pdev_probe,
-diff --git a/include/linux/basic_mmio_gpio.h b/include/linux/basic_mmio_gpio.h
-index 98999cf..edaa807 100644
---- a/include/linux/basic_mmio_gpio.h
-+++ b/include/linux/basic_mmio_gpio.h
-@@ -74,4 +74,24 @@ int __devinit bgpio_init(struct bgpio_chip *bgc,
- 			 void __iomem *dirin,
- 			 bool big_endian);
- 
-+struct bgpio_info {
-+	void __iomem *dat;
-+	void __iomem *set;
-+	void __iomem *clr;
-+	void __iomem *dirout;
-+	void __iomem *dirin;
-+	unsigned long sz;
-+	bool be;
-+	int ngpio;
-+	int base;
-+};
-+
-+static inline int bgpio_init_info(struct bgpio_chip *bgc,
-+				  struct device *dev,
-+				  const struct bgpio_info *info)
-+{
-+	return bgpio_init(bgc, dev, info->sz, info->dat, info->set, info->clr,
-+			  info->dirout, info->dirin, info->be);
++	*out_hwirq = COMBINER_IRQ(intspec[0], intspec[1]);
++	*out_type = IRQ_TYPE_NONE;
++	return 0;
 +}
 +
- #endif /* __BASIC_MMIO_GPIO_H */
++static struct irq_domain_ops exynos4_irq_domain_ext_gic_ops = {
++	.dt_translate = exynos4_irq_domain_ext_gic_dt_translate,
++};
++
++static struct irq_domain_ops exynos4_irq_domain_ext_combiner_ops = {
++	.dt_translate = exynos4_irq_domain_ext_combiner_dt_translate,
++};
++
++static struct of_device_id exynos4_irq_ctrl_of_match[] = {
++	{ .compatible = "samsung,exynos4-ext-gic",
++		.data = &exynos4_irq_domain_ext_gic_ops, },
++	{ .compatible = "samsung,exynos4-ext-combiner",
++		.data = &exynos4_irq_domain_ext_combiner_ops, },
++	{},
++};
++
++void exynos4_register_irq_domain_dt(void)
++{
++	struct device_node *controller;
++	struct irq_domain *domain;
++	const struct of_device_id *match;
++
++	for_each_matching_node(controller, exynos4_irq_ctrl_of_match) {
++		domain = kzalloc(sizeof(*domain), GFP_KERNEL);
++		if (!domain) {
++			WARN_ON(1);
++			return;
++		}
++
++		match = of_match_node(exynos4_irq_ctrl_of_match, controller);
++		domain->of_node = of_node_get(controller);
++		domain->ops = match->data;
++		irq_domain_add(domain);
++	}
++}
++EXPORT_SYMBOL_GPL(exynos4_register_irq_domain_dt);
+diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
+index 120665a..450a9ed 100644
+--- a/arch/arm/mach-exynos4/mach-exynos4-dt.c
++++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
+@@ -16,6 +16,7 @@
+ #include <linux/io.h>
+ #include <linux/of_platform.h>
+ #include <linux/irq.h>
++#include <linux/irqdomain.h>
+ 
+ #include <asm/mach/arch.h>
+ #include <asm/mach-types.h>
+@@ -85,14 +86,11 @@ static void __init exynos4_dt_map_io(void)
+ 	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
+ }
+ 
+-static const struct of_device_id intc_of_match[] __initconst = {
+-	{ .compatible = "samsung,exynos4-gic", },
+-	{}
+-};
++extern void exynos4_register_irq_domain_dt(void);
+ 
+ static void __init exynos4_dt_machine_init(void)
+ {
+-	irq_domain_generate_simple(intc_of_match, EXYNOS4_PA_GIC_DIST, 0);
++	exynos4_register_irq_domain_dt();
+ 	of_platform_populate(NULL, of_default_bus_match_table,
+ 				exynos4_auxdata_lookup, NULL);
+ }
 -- 
-1.7.4.1
+1.6.6.rc2
