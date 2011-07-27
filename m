@@ -1,60 +1,67 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpio-nand: add device tree bindings
-Date: Wed, 27 Jul 2011 16:01:37 -0500
-Message-ID: <20110727160137.4cb98970@schlenkerla.am.freescale.net>
-References: <1311775410-5158-1-git-send-email-jamie@jamieiles.com>
-	<20110727144501.7e0420cd@schlenkerla.am.freescale.net>
-	<20110727195512.GC3001@gallagher>
+From: "Hilman, Kevin" <khilman@ti.com>
+Subject: Re: [RFC/PATCH 0/7] decouple platform_device from omap_device
+Date: Wed, 27 Jul 2011 14:45:33 -0700
+Message-ID: <CALyTGODe8r9zr4fA+AX=-XhpLjNXKtfHzxFUWMNSehDawEDMBA@mail.gmail.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+	<20110727140457.GA8558@manju-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110727195512.GC3001@gallagher>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110727140457.GA8558@manju-desktop>
+Sender: linux-omap-owner@vger.kernel.org
+To: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jul 2011 20:55:12 +0100
-Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+Hi Manjunath,
 
-> Hmm, get_maintainer.pl got Artem's address wrong (old Nokia address) for 
-> gpio-nand.c so correct one on CC now!
-> 
-> On Wed, Jul 27, 2011 at 02:45:01PM -0500, Scott Wood wrote:
-> > On Wed, 27 Jul 2011 15:03:30 +0100
-> > Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-> > 
-> > > diff --git a/Documentation/devicetree/bindings/mtd/gpio-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-nand.txt
-> > > new file mode 100644
-> > > index 0000000..98cb152
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mtd/gpio-nand.txt
-> > > @@ -0,0 +1,43 @@
-> > > +GPIO assisted NAND flash
-> > > +
-> > > +Required properties:
-> > > +- compatible : "gpio-nand"
-> > > +- reg : should specify localbus chip select and size used for the chip.  For
-> > > +  ARM platforms where a dummy read is needed to provide synchronisation with
-> > > +  regards to bus reordering, an optional second resource describes the
-> > > +  location to read from.
-> > 
-> > I don't see how a pure "gpio nand" device would have any memory mapped
-> > I/O.  I think you need a more specific compatible for this.
-> 
-> OK, fair point.  I'm not sure what a better name would be though, maybe 
-> gpio-assisted-nand?
+On Wed, Jul 27, 2011 at 7:04 AM, G, Manjunath Kondaiah <manjugk@ti.com>=
+ wrote:
+> Kevin,
+>
+> On Thu, Jul 21, 2011 at 04:52:10PM -0700, Kevin Hilman wrote:
+>> Here's a first whack, proof-of-concept on how we could start to
+>> decouple the platform_device from an omap_device.
+>>
+>> The main RFC is in the last patch, and everything leading up to it a=
+re
+>> misc. omap_device cleanups that make the last patch cleaner and
+>> clearer. =A0It's really the last patch that does the decoupling.
+>>
+>> This will be necessary if we're going to decouple the platform_devic=
+e
+>> creation from the omap_device/omap_hwmod creation etc. =A0This patch
+>> leaves them both done in omap_device_build(), but shows that they ca=
+n
+>> be decoupled.
+> Can you pls mention baseline used for these patches? I tried applying=
+ on
+> latest mainline, v3.0 and =A0git://git.pwsan.com/linux-2.6 prcm-devel=
+-3.1
 
-Not sure, but if the name is generic at all the binding should thorougly
-describe what is expected of the hardware.
+Oops, sorry.  I forgot to mention it.
 
--Scott
+Due to some misc. dependencies (mainly on Beagle board file), I've
+temporarily based it on the for-next branch of the arm-soc tree[1]
+since that has everything already queued for the next merge window. I
+also based it on the omap_device patch I posted which changes the pr_*
+prints to dev_*.
+
+=46or convenience, I've pushed this series to the 'wip/od-devres' branc=
+h
+of my tree[2].
+
+Sorry for the confusion,
+
+Kevin
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/arm/linux-arm-soc.git
+
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap-pm=
+=2Egit
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
