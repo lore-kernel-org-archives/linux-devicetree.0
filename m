@@ -1,33 +1,86 @@
-From: Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpio-nand: add device tree bindings
-Date: Wed, 27 Jul 2011 17:07:05 -0700
-Message-ID: <CAMjpGUdPaAi=8ktisse0W_qWWPvaPXyCf9RgKAV02YzD7cn1aA@mail.gmail.com>
-References: <1311775410-5158-1-git-send-email-jamie@jamieiles.com>
+From: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Subject: Re: [RFC/PATCH 0/7] decouple platform_device from omap_device
+Date: Thu, 28 Jul 2011 10:20:57 +0530
+Message-ID: <20110728045057.GA31297@manju-desktop>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+ <20110727140457.GA8558@manju-desktop>
+ <CALyTGODe8r9zr4fA+AX=-XhpLjNXKtfHzxFUWMNSehDawEDMBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1311775410-5158-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <Artem.Bityutskiy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALyTGODe8r9zr4fA+AX=-XhpLjNXKtfHzxFUWMNSehDawEDMBA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hilman, Kevin" <khilman@ti.com>
+Cc: linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdWwgMjcsIDIwMTEgYXQgMDc6MDMsIEphbWllIElsZXMgd3JvdGU6Cj4gLS0tIGEv
-ZHJpdmVycy9tdGQvbmFuZC9ncGlvLmMKPiArKysgYi9kcml2ZXJzL210ZC9uYW5kL2dwaW8uYwo+
-Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGdwaW9fbmFuZF9pZF90YWJsZVtd
-ID0gewo+ICsgwqAgwqAgwqAgeyAuY29tcGF0aWJsZSA9ICJncGlvLW5hbmQiIH0sCj4gKyDCoCDC
-oCDCoCB7fQo+ICt9Owo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBncGlvX25hbmRfaWRfdGFi
-bGUpOwoKYWxsIHRoaXMgbmV3IGxvZ2ljIGlzIG1pc3NpbmcgQ09ORklHX09GIGlmZGVmIHByb3Rl
-Y3Rpb24gZm9yIGFsbCB0aGUKcG9ydHMgbm90IHVzaW5nIGRldmljZSB0cmVlcwotbWlrZQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Wed, Jul 27, 2011 at 02:45:33PM -0700, Hilman, Kevin wrote:
+> Hi Manjunath,
+>=20
+> On Wed, Jul 27, 2011 at 7:04 AM, G, Manjunath Kondaiah <manjugk@ti.co=
+m> wrote:
+> > Kevin,
+> >
+> > On Thu, Jul 21, 2011 at 04:52:10PM -0700, Kevin Hilman wrote:
+> >> Here's a first whack, proof-of-concept on how we could start to
+> >> decouple the platform_device from an omap_device.
+> >>
+> >> The main RFC is in the last patch, and everything leading up to it=
+ are
+> >> misc. omap_device cleanups that make the last patch cleaner and
+> >> clearer. =A0It's really the last patch that does the decoupling.
+> >>
+> >> This will be necessary if we're going to decouple the platform_dev=
+ice
+> >> creation from the omap_device/omap_hwmod creation etc. =A0This pat=
+ch
+> >> leaves them both done in omap_device_build(), but shows that they =
+can
+> >> be decoupled.
+> > Can you pls mention baseline used for these patches? I tried applyi=
+ng on
+> > latest mainline, v3.0 and =A0git://git.pwsan.com/linux-2.6 prcm-dev=
+el-3.1
+>=20
+> Oops, sorry.  I forgot to mention it.
+>=20
+> Due to some misc. dependencies (mainly on Beagle board file), I've
+> temporarily based it on the for-next branch of the arm-soc tree[1]
+> since that has everything already queued for the next merge window. I
+> also based it on the omap_device patch I posted which changes the pr_=
+*
+> prints to dev_*.
+>=20
+> For convenience, I've pushed this series to the 'wip/od-devres' branc=
+h
+> of my tree[2].
+>=20
+> Sorry for the confusion,
+>=20
+> Kevin
+>=20
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/arm/linux-arm-soc.g=
+it
+>=20
+> [2] git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap-=
+pm.git
+
+This series results in boot crash. However, it boots fine without this =
+series.=20
+I have not tried to debug but it looks like from boot log, the res stru=
+cture has
+invalid entries in mmc probe. As mentioned by Grant in 7/7, the scope o=
+f devres=20
+is not lifetime hence it needs to be fixed.
+
+The bootlog @ http://paste.ubuntu.com/653527/
+
+-M
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
