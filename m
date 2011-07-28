@@ -1,138 +1,80 @@
-From: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 7/7] i2c: pxa: support to parse property
-Date: Thu, 28 Jul 2011 14:41:33 +0800
-Message-ID: <1311835293-18125-8-git-send-email-haojian.zhuang@marvell.com>
-References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-4-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-5-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-6-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-7-git-send-email-haojian.zhuang@marvell.com>
+From: Jean Pihet <jean.pihet@newoldbits.com>
+Subject: Re: [RFC/PATCH 2/7] OMAP3: beagle: don't touch omap_device internals
+Date: Thu, 28 Jul 2011 10:36:14 +0200
+Message-ID: <CAORVsuUX4uvJW4MaHNZmF=u_Jn7sNjEYGwxpRmcd-b0DPpChPg@mail.gmail.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+	<1311292338-11830-4-git-send-email-khilman@ti.com>
+	<20110722085716.GI32058@legolas.emea.dhcp.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1311835293-18125-7-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss@list
-Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110722085716.GI32058@legolas.emea.dhcp.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Kevin Hilman <khilman@ti.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "G. Manjunath Kondaiah" <manjugk@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Support to parse some optional properties. These three properties are
-mrvl,use-polling, mrvl,i2c-frequency, mrvl,i2c-class.
+Hi,
 
-After supporting these property, i2c-pxa driver can avoid to use platform
-data except for slave mode.
+On Fri, Jul 22, 2011 at 10:57 AM, Felipe Balbi <balbi@ti.com> wrote:
+> Hi,
+>
+> On Thu, Jul 21, 2011 at 04:52:13PM -0700, Kevin Hilman wrote:
+>> Board code should not touch omap_device internals. =A0To get the MPU=
+/IVA devices,
+>> use existing APIs: omap2_get_mpu_device(), omap2_get_iva_device().
+>>
+>> Signed-off-by: Kevin Hilman <khilman@ti.com>
+>> ---
+>> =A0arch/arm/mach-omap2/board-omap3beagle.c | =A0 23 ++++++++++------=
+-------
+>> =A01 files changed, 10 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-omap2/board-omap3beagle.c b/arch/arm/mach=
+-omap2/board-omap3beagle.c
+>> index 32f5f89..3ae16b4 100644
+>> --- a/arch/arm/mach-omap2/board-omap3beagle.c
+>> +++ b/arch/arm/mach-omap2/board-omap3beagle.c
+>> @@ -491,23 +491,22 @@ static void __init beagle_opp_init(void)
+>>
+>> =A0 =A0 =A0 /* Custom OPP enabled for all xM versions */
+>> =A0 =A0 =A0 if (cpu_is_omap3630()) {
+>> - =A0 =A0 =A0 =A0 =A0 =A0 struct omap_hwmod *mh =3D omap_hwmod_looku=
+p("mpu");
+>> - =A0 =A0 =A0 =A0 =A0 =A0 struct omap_hwmod *dh =3D omap_hwmod_looku=
+p("iva");
+>> - =A0 =A0 =A0 =A0 =A0 =A0 struct device *dev;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 struct device *mpu_dev, *iva_dev;
+>>
+>> - =A0 =A0 =A0 =A0 =A0 =A0 if (!mh || !dh) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 mpu_dev =3D omap2_get_mpuss_device();
+>> + =A0 =A0 =A0 =A0 =A0 =A0 iva_dev =3D omap2_get_iva_device();
+>
+> out of curiosity again, nothing to do with this patch.
+>
+> Maybe it would be nicer to have an api such as:
+>
+> omap2_get_device(name);
+>
+> there are already four devices to be gotten, if that number grows any
+> bigger, so will the number of helper functions.
 
-Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/i2c/pxa255-i2c.txt         |   38 ++++++++++++++++++++
- drivers/i2c/busses/i2c-pxa.c                       |   20 +++++++---
- 2 files changed, 52 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/pxa255-i2c.txt
+I agree with this.
+The API is also helpful for the PM QoS devices constraints API, which
+requires the pointers to devices structs. At the present time only a
+few devices can be used and it would be good to have a generic
+implementation.
 
-diff --git a/Documentation/devicetree/bindings/i2c/pxa255-i2c.txt b/Documentation/devicetree/bindings/i2c/pxa255-i2c.txt
-new file mode 100644
-index 0000000..4b5afae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/pxa255-i2c.txt
-@@ -0,0 +1,38 @@
-+PXA255 I2C
-+
-+The I2C-Controller is first used in PXA255. It's widely used in Intel/Marvell
-+silicons.
-+
-+Optional Property:
-+	- mrvl,use-polling: Specifies whether I2C-Controller is used in polling
-+	  mode or interrupt mode. The type of property should be <empty>.
-+
-+	- mrvl,i2c-frequency: Specifies the frequency that the I2C-Controller
-+	  is working. It indicates I2C-Controller running in standard(100Kb/s)
-+	  or fast(400Kb/s) speed.
-+	  The type of property should be <string>. The value should be "fast".
-+
-+	- mrvl,i2c-class: Specifies the adaptor class of I2C-Controller, such as
-+	  hwmon or ddc bus. The type of property should be <u32>.
-+
-+Example:
-+	i2c0: i2c@d4011000 {
-+		compatible = "pxa2xx-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xd4011000 0x60>;
-+		/* I2C-Controller works in polling mode. */
-+		mrvl,use-polling;
-+		/* I2C-Controller's frequency is FAST. */
-+		mrvl,i2c-frequency = "fast";
-+		/* interrupt of I2C-Controller */
-+		interrupts = <7>;
-+		interrupt-parent = <&mmp_intc>;
-+
-+		pm860x: pmic@34 {
-+			interrupt-controller;
-+			/* interrupt of pm860x */
-+			interrupts = <4>;
-+			interrupt-parent = <&mmp_intc>;
-+		};
-+	};
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 8c27733..cebcd26 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -1061,6 +1061,7 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 	enum pxa_i2c_types i2c_type;
- 	struct resource *res;
- 	int irq, ret;
-+	char *p = NULL;
- 	static int idx = 0;
- 
- 	if (np) {
-@@ -1093,11 +1094,24 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 
- 
- 	if (np) {
-+		if (of_get_property(np, "mrvl,use-polling", NULL))
-+			i2c->use_pio = 1;
-+		of_property_read_string(np, "mrvl,i2c-frequency", &p);
-+		if (p && !strncmp(p, "fast", 4))
-+			i2c->fast_mode = 1;
-+		of_property_read_u32(np, "mrvl,i2c-class", &i2c->adap.class);
-+
- 		i2c->adap.nr = idx++;
- 		snprintf(i2c->adap.name, sizeof(i2c->adap.name),
- 			"pxa2xx-i2c.%u", i2c->adap.nr);
- 		i2c->clk = clk_get_sys(i2c->adap.name, NULL);
- 	} else {
-+		if (plat) {
-+			i2c->adap.class = plat->class;
-+			i2c->use_pio = plat->use_pio;
-+			i2c->fast_mode = plat->fast_mode;
-+		}
-+
- 		/*
- 		 * If "dev->id" is negative we consider it as zero.
- 		 * The reason to do so is to avoid sysfs names that only make
-@@ -1142,12 +1156,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 
- 	clk_enable(i2c->clk);
- 
--	if (plat) {
--		i2c->adap.class = plat->class;
--		i2c->use_pio = plat->use_pio;
--		i2c->fast_mode = plat->fast_mode;
--	}
--
- 	if (i2c->use_pio) {
- 		i2c->adap.algo = &i2c_pxa_pio_algorithm;
- 	} else {
--- 
-1.5.6.5
+Regards,
+Jean
+
+>
+> --
+> balbi
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
