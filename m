@@ -1,80 +1,34 @@
-From: Jean Pihet <jean.pihet@newoldbits.com>
-Subject: Re: [RFC/PATCH 2/7] OMAP3: beagle: don't touch omap_device internals
-Date: Thu, 28 Jul 2011 10:40:48 +0200
-Message-ID: <CAORVsuXsZXU+rH7ujYJuYDvYjWkCVnZrvkkinFPd9DEBYtdduQ@mail.gmail.com>
-References: <1311292338-11830-1-git-send-email-khilman@ti.com>
-	<1311292338-11830-4-git-send-email-khilman@ti.com>
-	<20110722085716.GI32058@legolas.emea.dhcp.ti.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 0/2] Simple irq_domain implementation
+Date: Thu, 28 Jul 2011 11:31:03 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1107281127040.2660@ionos>
+References: <20110726093141.12508.48108.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110722085716.GI32058@legolas.emea.dhcp.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Kevin Hilman <khilman@ti.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "G. Manjunath Kondaiah" <manjugk@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110726093141.12508.48108.stgit@ponder>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Sebastian Sewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 26 Jul 2011, Grant Likely wrote:
 
-On Fri, Jul 22, 2011 at 10:57 AM, Felipe Balbi <balbi@ti.com> wrote:
-> Hi,
->
-> On Thu, Jul 21, 2011 at 04:52:13PM -0700, Kevin Hilman wrote:
->> Board code should not touch omap_device internals. =A0To get the MPU=
-/IVA devices,
->> use existing APIs: omap2_get_mpu_device(), omap2_get_iva_device().
->>
->> Signed-off-by: Kevin Hilman <khilman@ti.com>
->> ---
->> =A0arch/arm/mach-omap2/board-omap3beagle.c | =A0 23 ++++++++++------=
--------
->> =A01 files changed, 10 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/arm/mach-omap2/board-omap3beagle.c b/arch/arm/mach=
--omap2/board-omap3beagle.c
->> index 32f5f89..3ae16b4 100644
->> --- a/arch/arm/mach-omap2/board-omap3beagle.c
->> +++ b/arch/arm/mach-omap2/board-omap3beagle.c
->> @@ -491,23 +491,22 @@ static void __init beagle_opp_init(void)
->>
->> =A0 =A0 =A0 /* Custom OPP enabled for all xM versions */
->> =A0 =A0 =A0 if (cpu_is_omap3630()) {
->> - =A0 =A0 =A0 =A0 =A0 =A0 struct omap_hwmod *mh =3D omap_hwmod_looku=
-p("mpu");
->> - =A0 =A0 =A0 =A0 =A0 =A0 struct omap_hwmod *dh =3D omap_hwmod_looku=
-p("iva");
->> - =A0 =A0 =A0 =A0 =A0 =A0 struct device *dev;
->> + =A0 =A0 =A0 =A0 =A0 =A0 struct device *mpu_dev, *iva_dev;
->>
->> - =A0 =A0 =A0 =A0 =A0 =A0 if (!mh || !dh) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 mpu_dev =3D omap2_get_mpuss_device();
->> + =A0 =A0 =A0 =A0 =A0 =A0 iva_dev =3D omap2_get_iva_device();
->
-> out of curiosity again, nothing to do with this patch.
->
-> Maybe it would be nicer to have an api such as:
->
-> omap2_get_device(name);
->
-> there are already four devices to be gotten, if that number grows any
-> bigger, so will the number of helper functions.
+> In the interest of getting this infrastructure merged, I've reworked the
+> basic irq_domain patch to implement only what is required for ARM device
+> tree board support.  That means it doesn't affect any architectures other
+> than ARM, and I'll send follow-on patches targeted at v3.2 to migrate
+> MIPS, Microblaze, x86 embedded and PowerPC over to it.
 
-I agree with this.
-The API is also helpful for the PM QoS devices constraints API, which
-requires the pointers to devices structs. At the present time only a
-few devices can be used and it would be good to have a generic
-implementation.
+There is also this GPIO driver pending for quite some time ...
+ 
+> Thomas, can you please take a look?  I've got devicetree board support
+> queued up and ready to be merged but for this infrastructure.
 
-Regards,
-Jean
+Looks reasonable, please merge them through your tree.
 
->
-> --
-> balbi
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
+Thanks,
+
+	tglx
