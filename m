@@ -1,14 +1,16 @@
 From: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/7] ARM: mmp: parse timer configuration from DT
-Date: Thu, 28 Jul 2011 14:41:28 +0800
-Message-ID: <1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
+Subject: [PATCH v2 4/7] tty: serial: support device tree in pxa
+Date: Thu, 28 Jul 2011 14:41:30 +0800
+Message-ID: <1311835293-18125-5-git-send-email-haojian.zhuang@marvell.com>
 References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
 	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-4-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1311835293-18125-2-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1311835293-18125-4-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,132 +24,138 @@ To: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric.y.miao-Re5JQEeQ
 Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Parse timer configuration from DT. Now we can merge pxa910_timer and
-mmp2_timer into mmp_timer. Since most configuration between these two
-timers are same. The difference is recorded in DT.
+Support both normal platform driver and device tree driver in serial pxa.
 
 Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/arm/marvell/timer.txt      |   24 +++++++++
- arch/arm/mach-mmp/common.h                         |    2 +
- arch/arm/mach-mmp/time.c                           |   50 +++++++++++++++++++-
- 3 files changed, 75 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/timer.txt
+ drivers/tty/serial/pxa.c |   51 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 files changed, 45 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/timer.txt b/Documentation/devicetree/bindings/arm/marvell/timer.txt
-new file mode 100644
-index 0000000..24a6f97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/marvell/timer.txt
-@@ -0,0 +1,24 @@
-+* Timer Controller Binding for ARCH-MMP
-+
-+This binding specifies what properties must be available in device tree
-+representation of an ARCH-MMP compliant timer controller.
-+
-+Required properties:
-+
-+	- compatible: Specifies the compatibility list of the timer controller.
-+	  The type shall be <string> and the value shall be
-+	  "mrvl,pxa168-timer".
-+
-+	- mrvl,clk-conf: Specifies the address and value of timer 
-+	  configuration register.
-+	  The type shall be <prop-encoded-array>. The first value indicates
-+	  the physical address of timer configuration register. The second
-+	  value indicates data should be written to timer configuration
-+	  register.
-+
-+* Example
-+
-+	mmp_timer: {
-+		compatible = "mrvl,pxa168-timer";
-+		mrvl,clk-conf = <0xd4000034 0x33>;
-+	};
-diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
-index 1c563c2..890c664 100644
---- a/arch/arm/mach-mmp/common.h
-+++ b/arch/arm/mach-mmp/common.h
-@@ -2,6 +2,8 @@
- 
- struct sys_timer;
- 
-+extern struct sys_timer mmp_timer;
-+
- extern void timer_init(int irq);
- 
- extern void __init icu_init_irq(void);
-diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
-index 99833b9..5a90b27 100644
---- a/arch/arm/mach-mmp/time.c
-+++ b/arch/arm/mach-mmp/time.c
-@@ -25,6 +25,8 @@
- 
- #include <linux/io.h>
- #include <linux/irq.h>
+diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+index 4302e6e..dadd201 100644
+--- a/drivers/tty/serial/pxa.c
++++ b/drivers/tty/serial/pxa.c
+@@ -36,6 +36,7 @@
+ #include <linux/circ_buf.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
 +#include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/sched.h>
+ #include <linux/platform_device.h>
+ #include <linux/tty.h>
+ #include <linux/tty_flip.h>
+@@ -54,6 +55,8 @@ struct uart_pxa_port {
+ 	char			*name;
+ };
  
- #include <asm/sched_clock.h>
-@@ -150,7 +152,7 @@ static void __init timer_config(void)
- 
- 	__raw_writel(cer & ~0x1, TIMERS_VIRT_BASE + TMR_CER); /* disable */
- 
--	ccr &= (cpu_is_mmp2()) ? TMR_CCR_CS_0(0) : TMR_CCR_CS_0(3);
-+	ccr &= TMR_CCR_CS_0(0);
- 	__raw_writel(ccr, TIMERS_VIRT_BASE + TMR_CCR);
- 
- 	/* free-running mode */
-@@ -187,3 +189,49 @@ void __init timer_init(int irq)
- 	clocksource_register_hz(&cksrc, CLOCK_TICK_RATE);
- 	clockevents_register_device(&ckevt);
++#define PXA_SERIAL_NR		4
++
+ static inline unsigned int serial_in(struct uart_pxa_port *up, int offset)
+ {
+ 	offset <<= 2;
+@@ -593,7 +596,7 @@ serial_pxa_type(struct uart_port *port)
+ 	return up->name;
  }
-+
+ 
+-static struct uart_pxa_port *serial_pxa_ports[4];
++static struct uart_pxa_port *serial_pxa_ports[PXA_SERIAL_NR];
+ static struct uart_driver serial_pxa_reg;
+ 
+ #ifdef CONFIG_SERIAL_PXA_CONSOLE
+@@ -765,7 +768,10 @@ static int serial_pxa_probe(struct platform_device *dev)
+ {
+ 	struct uart_pxa_port *sport;
+ 	struct resource *mmres, *irqres;
+-	int ret;
++	struct device_node *np = dev->dev.of_node;
++	char name[32];
++	unsigned int clk = 0, spd = 0;
++	int ret, i;
+ 
+ 	mmres = platform_get_resource(dev, IORESOURCE_MEM, 0);
+ 	irqres = platform_get_resource(dev, IORESOURCE_IRQ, 0);
+@@ -776,11 +782,39 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 	if (!sport)
+ 		return -ENOMEM;
+ 
 +#ifdef CONFIG_OF
-+static void __init mmp_timer_init(void)
-+{
-+	struct device_node *np;
-+	const __be32 *clk_offs;
-+	void __iomem *conf;
-+	unsigned int addr = 0, offs = 0;
-+	int size, irq;
-+
-+	np = of_find_compatible_node(NULL, NULL, "mrvl,pxa168-timer");
-+
-+	BUG_ON(!np);
-+
-+	of_node_get(np);
-+	irq = irq_of_parse_and_map(np, 0);
-+
-+	clk_offs = of_get_property(np, "mrvl,clk-conf", &size);
-+	if ((clk_offs == NULL) || (size != sizeof(int) * 2)) {
-+		pr_warn("mmp-timer: mrvl,clk-conf property is wrong\n");
-+		goto out;
++	for (i = 0; i < PXA_SERIAL_NR; i++) {
++		if (serial_pxa_ports[i] == NULL)
++			break;
 +	}
-+	addr = be32_to_cpu(*clk_offs) & PAGE_MASK;
-+	offs = be32_to_cpu(*clk_offs) - addr;
-+	conf = ioremap(addr, PAGE_SIZE);
-+	if (conf == NULL) {
-+		pr_warn("mmp-timer: failed on mapping 0x%x\n", (uint32_t)conf);
-+		goto out;
++	if (i >= PXA_SERIAL_NR) {
++		pr_warn("can't find pxa serial port\n");
++		return -ENODEV;
 +	}
-+	/* reset and configure */
-+	__raw_writel(APBC_APBCLK | APBC_RST, conf + offs);
-+	__raw_writel(be32_to_cpu(*++clk_offs), conf + offs);
-+	__raw_readl(conf + offs);
-+	iounmap(conf);
 +
-+	timer_init(irq);
-+	return;
-+out:
-+	of_node_put(np);
-+	return;
-+}
++	if (of_property_read_u32(np, "clock-frequency", &clk)) {
++		pr_warn("no clock-frequency property set\n");
++		return -ENODEV;
++	}
++	if (of_property_read_u32(np, "current-speed", &spd) == 0)
++		sport->port.custom_divisor = clk / (16 * spd);
 +
-+struct sys_timer mmp_timer = {
-+	.init	= mmp_timer_init,
-+};
++	sprintf(name, "pxa2xx-uart.%d", i);
++	sport->clk = clk_get_sys(name, NULL);
++	if (IS_ERR(sport->clk)) {
++		ret = PTR_ERR(sport->clk);
++		goto err_free;
++	}
++	sport->port.uartclk = clk;
++#else
++	i = dev->id;
+ 	sport->clk = clk_get(&dev->dev, NULL);
+ 	if (IS_ERR(sport->clk)) {
+ 		ret = PTR_ERR(sport->clk);
+ 		goto err_free;
+ 	}
++	sport->port.uartclk = clk_get_rate(sport->clk);
 +#endif
+ 
+ 	sport->port.type = PORT_PXA;
+ 	sport->port.iotype = UPIO_MEM;
+@@ -788,12 +822,11 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 	sport->port.irq = irqres->start;
+ 	sport->port.fifosize = 64;
+ 	sport->port.ops = &serial_pxa_pops;
+-	sport->port.line = dev->id;
++	sport->port.line = i;
+ 	sport->port.dev = &dev->dev;
+ 	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+-	sport->port.uartclk = clk_get_rate(sport->clk);
+ 
+-	switch (dev->id) {
++	switch (i) {
+ 	case 0: sport->name = "FFUART"; break;
+ 	case 1: sport->name = "BTUART"; break;
+ 	case 2: sport->name = "STUART"; break;
+@@ -809,7 +842,7 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 		goto err_clk;
+ 	}
+ 
+-	serial_pxa_ports[dev->id] = sport;
++	serial_pxa_ports[i] = sport;
+ 
+ 	uart_add_one_port(&serial_pxa_reg, &sport->port);
+ 	platform_set_drvdata(dev, sport);
+@@ -836,6 +869,11 @@ static int serial_pxa_remove(struct platform_device *dev)
+ 	return 0;
+ }
+ 
++static struct of_device_id __devinitdata of_serial_pxa_table[] = {
++	{ .compatible = "mrvl,pxa270-serial", .data = (void *)PORT_PXA, },
++	{},
++};
++
+ static struct platform_driver serial_pxa_driver = {
+         .probe          = serial_pxa_probe,
+         .remove         = serial_pxa_remove,
+@@ -843,6 +881,7 @@ static struct platform_driver serial_pxa_driver = {
+ 	.driver		= {
+ 	        .name	= "pxa2xx-uart",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_serial_pxa_table,
+ #ifdef CONFIG_PM
+ 		.pm	= &serial_pxa_pm_ops,
+ #endif
 -- 
 1.5.6.5
