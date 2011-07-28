@@ -1,15 +1,15 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH] basic-mmio-gpio: add support for device tree
-Date: Wed, 27 Jul 2011 17:09:42 -0500
-Message-ID: <20110727170942.787405a1@schlenkerla.am.freescale.net>
-References: <1311776656-6755-1-git-send-email-jamie@jamieiles.com>
-	<20110727150502.2dca210f@schlenkerla.am.freescale.net>
-	<20110727201654.GD3001@gallagher>
+From: Mike Frysinger <vapier.adi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpio-nand: add device tree bindings
+Date: Wed, 27 Jul 2011 17:06:08 -0700
+Message-ID: <CAMjpGUcftT47FTVv15LDvswiXJdnorDiotEWkNDPkw5ABiQDQg@mail.gmail.com>
+References: <1311775410-5158-1-git-send-email-jamie@jamieiles.com>
+	<20110727144501.7e0420cd@schlenkerla.am.freescale.net>
+	<20110727195512.GC3001@gallagher>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110727201654.GD3001@gallagher>
+In-Reply-To: <20110727195512.GC3001@gallagher>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,73 +20,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jul 2011 21:16:54 +0100
-Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-
-> On Wed, Jul 27, 2011 at 03:05:02PM -0500, Scott Wood wrote:
-> > On Wed, 27 Jul 2011 15:24:16 +0100
-> > Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-> > 
-> > > This patch adds support for basic-mmio-gpio controllers to be
-> > > instantiated from the device tree.  It's RFC at the moment because I'm
-> > > really not happy with the way that the registers are described (zero
-> > > size meaning the register is not present).  In a previous discussion
-> > > (https://lkml.org/lkml/2011/5/4/117) Grant suggested using a reg
-> > > property to describe the whole controller then arrays of reg-offset
-> > > values for multiple banks e.g:
-> > > 
-> > > 	gpio@fedc0000 {
-> > > 		compatible = "acme,super-soc-gpio", "mmio-gpio";
-> > > 		reg = <0xfedc0000 0x100>;
-> > > 		gpio-controller;
-> > > 		#gpio-cells = <1>;
-> > > 
-> > > 		mmgpio-regoffset-data = <0x00 0x04 0x08 0x0c>;
-> > > 		mmgpio-regoffset-dir  = <0x20 0x24 0x28 0x2c>;
-> > > 		mmgpio-regoffset-set  = <0x10 0x14 0x18 0x1c>;
-> > > 		mmgpio-regoffset-clr  = <0x30 0x34 0x38 0x3c>;
-> > > 	};
-> > > 
-> > > but this loses the hierarchy as Anton pointed out, so I've tried this
-> > > approach instead.
-> > 
-> > How does it lose hierarchy versus an unnamed, ordered list?
-> 
-> This doesn't allow you to represent the banks as child nodes.
-
-Ah, I missed the multiple-bank aspect -- was thinking more of named versus
-unnamed.
-
-> > Consider the likelihood of new types of reg being added to try to jam new
-> > controllers into this "generic" model.
-> 
-> Yes, that's what I don't like about the way I've done it.  We could have 
-> something like:
-> 
-> 	gpio@1000 {
-> 		compatible = "acme,super-soc-gpio", "mmio-gpio";
-> 		reg = <0x1000 0x0100>;
-> 
-> 		banka: gpio@1000 {
-> 			compatible = "mmio-gpio-bank";
-> 			regoffset-data = <0x00>;
-> 			regoffset-dir = <0x04>;
-> 			...
-> 		};
-> 
-> 		bankb: gpio@1020 {
-> 			compatible = "mmio-gpio-bank";
-> 			regoffset-data = <0x20>;
-> 			regoffset-dir = <0x24>;
-> 			...
-> 		};
-> 	};
-> 
-> instead perhaps?
-
-Looks reasonable.
-
--Scott
+T24gV2VkLCBKdWwgMjcsIDIwMTEgYXQgMTI6NTUsIEphbWllIElsZXMgd3JvdGU6Cj4gT24gV2Vk
+LCBKdWwgMjcsIDIwMTEgYXQgMDI6NDU6MDFQTSAtMDUwMCwgU2NvdHQgV29vZCB3cm90ZToKPj4g
+T24gV2VkLCAyNyBKdWwgMjAxMSAxNTowMzozMCArMDEwMAo+PiBKYW1pZSBJbGVzIDxqYW1pZUBq
+YW1pZWlsZXMuY29tPiB3cm90ZToKPj4KPj4gPiAtLS0gL2Rldi9udWxsCj4+ID4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9ncGlvLW5hbmQudHh0Cj4+ID4gQEAg
+LTAsMCArMSw0MyBAQAo+PiA+ICtHUElPIGFzc2lzdGVkIE5BTkQgZmxhc2gKPj4gPiArCj4+ID4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ID4gKy0gY29tcGF0aWJsZSA6ICJncGlvLW5hbmQiCj4+
+ID4gKy0gcmVnIDogc2hvdWxkIHNwZWNpZnkgbG9jYWxidXMgY2hpcCBzZWxlY3QgYW5kIHNpemUg
+dXNlZCBmb3IgdGhlIGNoaXAuIMKgRm9yCj4+ID4gKyDCoEFSTSBwbGF0Zm9ybXMgd2hlcmUgYSBk
+dW1teSByZWFkIGlzIG5lZWRlZCB0byBwcm92aWRlIHN5bmNocm9uaXNhdGlvbiB3aXRoCj4+ID4g
+KyDCoHJlZ2FyZHMgdG8gYnVzIHJlb3JkZXJpbmcsIGFuIG9wdGlvbmFsIHNlY29uZCByZXNvdXJj
+ZSBkZXNjcmliZXMgdGhlCj4+ID4gKyDCoGxvY2F0aW9uIHRvIHJlYWQgZnJvbS4KPj4KPj4gSSBk
+b24ndCBzZWUgaG93IGEgcHVyZSAiZ3BpbyBuYW5kIiBkZXZpY2Ugd291bGQgaGF2ZSBhbnkgbWVt
+b3J5IG1hcHBlZAo+PiBJL08uIMKgSSB0aGluayB5b3UgbmVlZCBhIG1vcmUgc3BlY2lmaWMgY29t
+cGF0aWJsZSBmb3IgdGhpcy4KPgo+IE9LLCBmYWlyIHBvaW50LiDCoEknbSBub3Qgc3VyZSB3aGF0
+IGEgYmV0dGVyIG5hbWUgd291bGQgYmUgdGhvdWdoLCBtYXliZQo+IGdwaW8tYXNzaXN0ZWQtbmFu
+ZD8KCmZ3aXcsIGkgbmFtZWQgdGhlIHBhcmFsbGVsIGZsYXNoIG1hcHBpbmcgZHJpdmVyICJncGlv
+LWFkZHItZmxhc2giCih3aGVyZSBzb21lIG9mIHRoZSBhZGRyZXNzIGxpbmVzIGFyZSBkb25lIHdp
+dGggR1BJT3MpCi1taWtlCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
+QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
+ZXRyZWUtZGlzY3Vzcwo=
