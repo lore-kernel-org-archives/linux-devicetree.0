@@ -1,7 +1,7 @@
 From: Jean Pihet <jean.pihet@newoldbits.com>
 Subject: Re: [RFC/PATCH 2/7] OMAP3: beagle: don't touch omap_device internals
-Date: Thu, 28 Jul 2011 10:36:14 +0200
-Message-ID: <CAORVsuUX4uvJW4MaHNZmF=u_Jn7sNjEYGwxpRmcd-b0DPpChPg@mail.gmail.com>
+Date: Thu, 28 Jul 2011 10:40:48 +0200
+Message-ID: <CAORVsuXsZXU+rH7ujYJuYDvYjWkCVnZrvkkinFPd9DEBYtdduQ@mail.gmail.com>
 References: <1311292338-11830-1-git-send-email-khilman@ti.com>
 	<1311292338-11830-4-git-send-email-khilman@ti.com>
 	<20110722085716.GI32058@legolas.emea.dhcp.ti.com>
