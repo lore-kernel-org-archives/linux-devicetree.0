@@ -1,34 +1,46 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 0/2] Simple irq_domain implementation
-Date: Thu, 28 Jul 2011 11:31:03 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1107281127040.2660@ionos>
-References: <20110726093141.12508.48108.stgit@ponder>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC/PATCH 2/7] OMAP3: beagle: don't touch omap_device
+	internals
+Date: Thu, 28 Jul 2011 11:10:12 +0100
+Message-ID: <20110728101012.GA8446@n2100.arm.linux.org.uk>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com> <1311292338-11830-4-git-send-email-khilman@ti.com> <20110722085716.GI32058@legolas.emea.dhcp.ti.com> <20110728055346.GA11921@foobar>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110726093141.12508.48108.stgit@ponder>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Sebastian Sewior <bigeasy@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110728055346.GA11921@foobar>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Felipe Balbi <balbi@ti.com>, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Jul 2011, Grant Likely wrote:
+On Thu, Jul 28, 2011 at 12:53:47AM -0500, Nishanth Menon wrote:
+> +struct device *omap_hwmod_to_device(const char *oh_name)
+> +{
+> +	struct omap_hwmod *oh;
+> +
+> +	if (!oh_name) {
+> +		WARN(1, "%s: no hwmod name!\n", __func__);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	oh = _lookup(oh_name);
+> +	if (IS_ERR_OR_NULL(oh)) {
+> +		WARN(1, "%s: no hwmod for %s\n", __func__,
+> +			oh_name);
+> +		return ERR_PTR(-ENODEV);
 
-> In the interest of getting this infrastructure merged, I've reworked the
-> basic irq_domain patch to implement only what is required for ARM device
-> tree board support.  That means it doesn't affect any architectures other
-> than ARM, and I'll send follow-on patches targeted at v3.2 to migrate
-> MIPS, Microblaze, x86 embedded and PowerPC over to it.
+It is good practice to always propagate back the error codes from functions
+which failed.  So you may need something like:
 
-There is also this GPIO driver pending for quite some time ...
- 
-> Thomas, can you please take a look?  I've got devicetree board support
-> queued up and ready to be merged but for this infrastructure.
+		return ERR_PTR(oh ? PTR_ERR(oh) : -ENODEV);
 
-Looks reasonable, please merge them through your tree.
+here.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> +	}
+> +	if (IS_ERR_OR_NULL(oh->od)) {
+> +		WARN(1, "%s: no omap_device for %s\n", __func__,
+> +			oh_name);
+> +		return ERR_PTR(-ENODEV);
 
-Thanks,
-
-	tglx
+Same here.
