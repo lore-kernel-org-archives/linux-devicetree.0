@@ -1,90 +1,65 @@
 From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH] Input: mma8450: add device tree probe support
-Date: Fri, 29 Jul 2011 10:38:56 +0800
-Message-ID: <20110729023855.GC1946@S2100-06.ap.freescale.net>
-References: <1311265551-23233-1-git-send-email-shawn.guo@linaro.org>
+Subject: Re: [PATCH] ASoC: sgtl5000: add device tree probe
+	support
+Date: Fri, 29 Jul 2011 10:40:51 +0800
+Message-ID: <20110729024050.GD1946@S2100-06.ap.freescale.net>
+References: <1311265731-23318-1-git-send-email-shawn.guo@linaro.org>
+	<20110726195511.GA9956@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1311265551-23233-1-git-send-email-shawn.guo@linaro.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-input@vger.kernel.org, patches@linaro.org, Dmitry Torokhov <dtor@mail.ru>, devicetree-discuss@lists.ozlabs.org, Eric Miao <eric.miao@linaro.org>, Sammy He <r62914@freescale.com>
+In-Reply-To: <20110726195511.GA9956@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Zeng Zhaoming <zhaoming.zeng@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Any comments?
+On Tue, Jul 26, 2011 at 08:55:11PM +0100, Mark Brown wrote:
+> On Fri, Jul 22, 2011 at 12:28:51AM +0800, Shawn Guo wrote:
+> 
+> > It adds device tree probe support for sgtl5000 driver.
+> 
+> Kind of waiting for the device tree people to comment on this...
+> 
+
+Grant, please?
 
 Regards,
 Shawn
 
-On Fri, Jul 22, 2011 at 12:25:51AM +0800, Shawn Guo wrote:
-> It adds device tree probe support for mma8450 driver.
+> >  .../bindings/sound/soc/codecs/fsl-sgtl5000.txt     |   11 +++++++++++
 > 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Sammy He <r62914@freescale.com>
-> Cc: Eric Miao <eric.miao@linaro.org>
-> Cc: Dmitry Torokhov <dtor@mail.ru>
-> ---
->  .../devicetree/bindings/input/fsl-mma8450.txt      |   11 +++++++++++
->  drivers/input/misc/mma8450.c                       |    8 ++++++++
->  2 files changed, 19 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/fsl-mma8450.txt
+> I'd expect this can just be put directly under the sound directory.
 > 
-> diff --git a/Documentation/devicetree/bindings/input/fsl-mma8450.txt b/Documentation/devicetree/bindings/input/fsl-mma8450.txt
-> new file mode 100644
-> index 0000000..a00c94c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/fsl-mma8450.txt
-> @@ -0,0 +1,11 @@
-> +* Freescale MMA8450 3-Axis Accelerometer
-> +
-> +Required properties:
-> +- compatible : "fsl,mma8450".
-> +
-> +Example:
-> +
-> +accelerometer: mma8450@1c {
-> +	compatible = "fsl,mma8450";
-> +	reg = <0x1c>;
-> +};
-> diff --git a/drivers/input/misc/mma8450.c b/drivers/input/misc/mma8450.c
-> index 20f8f92..6c76cf7 100644
-> --- a/drivers/input/misc/mma8450.c
-> +++ b/drivers/input/misc/mma8450.c
-> @@ -24,6 +24,7 @@
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
->  #include <linux/input-polldev.h>
-> +#include <linux/of_device.h>
->  
->  #define MMA8450_DRV_NAME	"mma8450"
->  
-> @@ -229,10 +230,17 @@ static const struct i2c_device_id mma8450_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, mma8450_id);
->  
-> +static const struct of_device_id mma8450_dt_ids[] = {
-> +	{ .compatible = "fsl,mma8450", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, mma8450_dt_ids);
-> +
->  static struct i2c_driver mma8450_driver = {
->  	.driver = {
->  		.name	= MMA8450_DRV_NAME,
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = mma8450_dt_ids,
->  	},
->  	.probe		= mma8450_probe,
->  	.remove		= __devexit_p(mma8450_remove),
-> -- 
-> 1.7.4.1
+> > +++ b/Documentation/devicetree/bindings/sound/soc/codecs/fsl-sgtl5000.txt
+> > @@ -0,0 +1,11 @@
+> > +* Freescale SGTL5000 Stereo Codec
+> > +
+> > +Required properties:
+> > +- compatible : "fsl,sgtl5000".
+> > +
+> > +Example:
+> > +
+> > +codec: sgtl5000@0a {
+> > +	compatible = "fsl,sgtl5000";
+> > +	reg = <0x0a>;
+> > +};
 > 
+> This might get a tiny bit verbose...  I wonder if it makes sense to have
+> some central file for devices with trivial bindings?  But possibly more
+> trouble than it's worth.
 > _______________________________________________
 > devicetree-discuss mailing list
 > devicetree-discuss@lists.ozlabs.org
 > https://lists.ozlabs.org/listinfo/devicetree-discuss
 > 
-
