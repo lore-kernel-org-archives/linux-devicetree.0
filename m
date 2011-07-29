@@ -1,57 +1,47 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] i2c: pxa: support i2c controller from DT
-Date: Fri, 29 Jul 2011 17:55:47 +0100
-Message-ID: <20110729165547.GB30298@n2100.arm.linux.org.uk>
-References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-4-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-5-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-6-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-7-git-send-email-haojian.zhuang@marvell.com>
-	<20110729165222.GN11164@ponder.secretlab.ca>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH] net/smsc911x: add device tree probe support
+Date: Sat, 30 Jul 2011 01:13:15 +0800
+Message-ID: <20110729171314.GC2241@S2100-06.ap.freescale.net>
+References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
+ <20110725213723.GI26735@ponder.secretlab.ca>
+ <20110726010154.GG21641@S2100-06.ap.freescale.net>
+ <alpine.LFD.2.00.1107252105561.12766@xanadu.home>
+ <20110726013026.GH21641@S2100-06.ap.freescale.net>
+ <alpine.LFD.2.00.1107252222540.12766@xanadu.home>
+ <20110729023626.GB1946@S2100-06.ap.freescale.net>
+ <20110729154723.GC11164@ponder.secretlab.ca>
+ <20110729160343.GA2241@S2100-06.ap.freescale.net>
+ <20110729162629.GI11164@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110729165222.GN11164-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+In-Reply-To: <20110729162629.GI11164@ponder.secretlab.ca>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, patches@linaro.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Steve Glendinning <steve.glendinning@smsc.com>, Shawn Guo <shawn.guo@linaro.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2011 at 10:52:22AM -0600, Grant Likely wrote:
-> On Thu, Jul 28, 2011 at 02:41:32PM +0800, Haojian Zhuang wrote:
-> > -	/*
-> > -	 * If "dev->id" is negative we consider it as zero.
-> > -	 * The reason to do so is to avoid sysfs names that only make
-> > -	 * sense when there are multiple adapters.
-> > -	 */
-> > -	i2c->adap.nr = dev->id;
-> > -	snprintf(i2c->adap.name, sizeof(i2c->adap.name), "pxa_i2c-i2c.%u",
-> > -		 i2c->adap.nr);
-> >  
-> > -	i2c->clk = clk_get(&dev->dev, NULL);
-> > +	if (np) {
-> > +		i2c->adap.nr = idx++;
+On Fri, Jul 29, 2011 at 10:26:29AM -0600, Grant Likely wrote:
+> On Sat, Jul 30, 2011 at 12:03:44AM +0800, Shawn Guo wrote:
+> > On Fri, Jul 29, 2011 at 09:47:23AM -0600, Grant Likely wrote:
+> > > On Fri, Jul 29, 2011 at 10:36:26AM +0800, Shawn Guo wrote:
+> > > > Since I do not get any suggestion here, I'm going to follow the driver
+> > > > name to use '911' as the model number.  Please tell me if there is any
+> > > > better one.
+> > > 
+> > > What is the manufacturer part name?  lan9111 or lan91c11?  The
+> > > manufacturer's documented part number is almost always preferred.
+> > > 
+> > I just posted the v2 of the patch, and chose to use 'smsc,lan9115'
+> > which is the first model supported in the driver.  This is the same
+> > approach I used with i.mx device bindings.
 > 
-> Use this so that a bus number gets dynamically assigned:
-> 		i2c->adap.nr = -1;
+> You haven't answered the question.
 > 
-> > +		snprintf(i2c->adap.name, sizeof(i2c->adap.name),
-> > +			"pxa2xx-i2c.%u", i2c->adap.nr);
-> > +		i2c->clk = clk_get_sys(i2c->adap.name, NULL);
-> 
-> Missing i2c->adap.dev.of_node = dev->dev.of_node;
+For 9115 example, the part number in data sheet is "LAN9115".
 
-And here we go again.  Is it really the case that this DT stuff doesn't
-have stable device names?
+-- 
+Regards,
+Shawn
+
