@@ -1,15 +1,20 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv3] gpio-generic: add support for device tree probing
-Date: Fri, 29 Jul 2011 17:49:40 +0100
-Message-ID: <20110729164940.GB5585@pulham.picochip.com>
-References: <1311936301-19942-1-git-send-email-jamie@jamieiles.com>
-	<20110729162453.GH11164@ponder.secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] i2c: pxa: support i2c controller from DT
+Date: Fri, 29 Jul 2011 10:52:22 -0600
+Message-ID: <20110729165222.GN11164@ponder.secretlab.ca>
+References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-4-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-5-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-6-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-7-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110729162453.GH11164-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1311835293-18125-7-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,429 +24,118 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2011 at 10:24:53AM -0600, Grant Likely wrote:
-> On Fri, Jul 29, 2011 at 11:45:01AM +0100, Jamie Iles wrote:
-> > This patch adds support for gpio-generic controllers to be
-> > instantiated from the device tree.  The binding supports devices with
-> > multiple banks.
-> > 
-> > v3:
-> > 	- Remove extraneous of_node_{get,put}().
-> > 	- Rename basic-mmio-gpio,reg-io-width to reg-io-width.
-> > 	- Use vendor specific compatible values for now.
-> > 	- Only add child banks, and allocate banks as an array.
-> > 	- Remove bgpio_init_info() and populate bgpio_chip directly.
-> > 	- Rename properties to gpio-generic,* to match the driver name.
-> > v2:
-> > 	- Added more detail to the binding.
-> > 	- Added CONFIG_OF guards.
-> > 	- Use regoffset-* properties for each register in each bank.
-> > 	  relative to the registers of the controller.
-> > 
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+On Thu, Jul 28, 2011 at 02:41:32PM +0800, Haojian Zhuang wrote:
+> support i2c-pxa controller from DT.
 > 
-> Hi Jamie,
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/i2c/busses/i2c-pxa.c |   51 +++++++++++++++++++++++++++++++----------
+>  1 files changed, 38 insertions(+), 13 deletions(-)
 > 
-> Overall, I'm pretty happy with the direction this is going.  Comments
-> below...
+> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> index d603646..8c27733 100644
+> --- a/drivers/i2c/busses/i2c-pxa.c
+> +++ b/drivers/i2c/busses/i2c-pxa.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/i2c-pxa.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_i2c.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/err.h>
+> @@ -1044,15 +1045,31 @@ static const struct i2c_algorithm i2c_pxa_pio_algorithm = {
+>  	.functionality	= i2c_pxa_functionality,
+>  };
+>  
+> +static const struct of_device_id pxa_i2c_of_match[] = {
+> +	{ .compatible = "mrvl,pxa255-i2c",    .data = (void *)REGS_PXA2XX, },
+> +	{ .compatible = "mrvl,pxa300-pwri2c", .data = (void *)REGS_PXA3XX, },
+> +	{},
+> +};
+> +
+>  static int i2c_pxa_probe(struct platform_device *dev)
+>  {
+> +	struct device_node *np = dev->dev.of_node;
+> +	const struct of_device_id *match;
+>  	struct pxa_i2c *i2c;
+> -	struct resource *res;
+>  	struct i2c_pxa_platform_data *plat = dev->dev.platform_data;
+>  	const struct platform_device_id *id = platform_get_device_id(dev);
+> -	enum pxa_i2c_types i2c_type = id->driver_data;
+> -	int ret;
+> -	int irq;
+> +	enum pxa_i2c_types i2c_type;
+> +	struct resource *res;
+> +	int irq, ret;
+> +	static int idx = 0;
+> +
+> +	if (np) {
+> +		match = of_match_device(pxa_i2c_of_match, &dev->dev);
+> +		if (match == NULL)
+> +			return -ENODEV;
+> +		i2c_type = (int)match->data;
+> +	} else
+> +		i2c_type = id->driver_data;
+>  
+>  	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>  	irq = platform_get_irq(dev, 0);
+> @@ -1074,16 +1091,23 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>  	spin_lock_init(&i2c->lock);
+>  	init_waitqueue_head(&i2c->wait);
+>  
+> -	/*
+> -	 * If "dev->id" is negative we consider it as zero.
+> -	 * The reason to do so is to avoid sysfs names that only make
+> -	 * sense when there are multiple adapters.
+> -	 */
+> -	i2c->adap.nr = dev->id;
+> -	snprintf(i2c->adap.name, sizeof(i2c->adap.name), "pxa_i2c-i2c.%u",
+> -		 i2c->adap.nr);
+>  
+> -	i2c->clk = clk_get(&dev->dev, NULL);
+> +	if (np) {
+> +		i2c->adap.nr = idx++;
 
-Thanks for reviewing it Grant.  A few inliners.
+Use this so that a bus number gets dynamically assigned:
+		i2c->adap.nr = -1;
 
-Jamie
+> +		snprintf(i2c->adap.name, sizeof(i2c->adap.name),
+> +			"pxa2xx-i2c.%u", i2c->adap.nr);
+> +		i2c->clk = clk_get_sys(i2c->adap.name, NULL);
 
+Missing i2c->adap.dev.of_node = dev->dev.of_node;
+
+and after the bus is registered:
+
+of_i2c_register_devices(&i2c->adap);
+
+> +	} else {
+> +		/*
+> +		 * If "dev->id" is negative we consider it as zero.
+> +		 * The reason to do so is to avoid sysfs names that only make
+> +		 * sense when there are multiple adapters.
+> +		 */
+> +		i2c->adap.nr = dev->id;
+> +		snprintf(i2c->adap.name, sizeof(i2c->adap.name),
+> +			"pxa_i2c-i2c.%u", i2c->adap.nr);
+> +		i2c->clk = clk_get(&dev->dev, NULL);
+> +	}
+>  	if (IS_ERR(i2c->clk)) {
+>  		ret = PTR_ERR(i2c->clk);
+>  		goto eclk;
+> @@ -1234,6 +1258,7 @@ static struct platform_driver i2c_pxa_driver = {
+>  		.name	= "pxa2xx-i2c",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= I2C_PXA_DEV_PM_OPS,
+> +		.of_match_table	= pxa_i2c_of_match,
+>  	},
+>  	.id_table	= i2c_pxa_id_table,
+>  };
+> -- 
+> 1.5.6.5
 > 
-> > ---
-> >  .../devicetree/bindings/gpio/gpio-generic.txt      |   85 ++++++++++
-> >  drivers/gpio/gpio-generic.c                        |  174 ++++++++++++++++++--
-> >  2 files changed, 245 insertions(+), 14 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-generic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
-> > new file mode 100644
-> > index 0000000..91c9441
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
-> > @@ -0,0 +1,85 @@
-> > +Generic MMIO GPIO controller
-> > +
-> > +This binding allows lots of common GPIO controllers to use a generic GPIO
-> > +driver.  The top level GPIO node describes the registers for the controller
-> > +and high level properties such as endianness and register width.  Each bank in
-> > +the controller is represented as a child node.
-> > +
-> > +Required properties:
-> > +- compatible : Must be one of:
-> > +  - "snps,dw-apb-gpio" : Synopsys DesignWare APB GPIO controller
-> > +- reg : The register window for the GPIO device.  If the device has multiple
-> > +  banks then this window should cover all of the banks.
-> > +- gpio-generic,reg-io-width : The width of the registers in the controller
-> > +  (in bytes).
-> > +- #address-cells : should be set to 1.
-> > +- #size-cells : should be set to 0.  The addresses of the child nodes are the
-> > +  bank numbers and the child nodes themselves represent the banks in the
-> > +  controller.
-> 
-> There is no 'reg' or 'ranges' property documented for the child nodes.
-> #address-cells and #size-cells are only meaningful when needed to
-> interpret a reg or ranges prop.
-
-OK.
-
-> > +
-> > +Optional properties:
-> > +- gpio-generic,big-endian : the registers are in big-endian byte ordering.
-> > +  If present then the first gpio in the controller occupies the MSB for
-> > +  each register.
-> > +
-> > +Generic MMIO GPIO controller bank
-> > +
-> > +Required properties:
-> > +- compatible : Must be one of:
-> > +  - "snps,dw-apb-gpio-bank" : Synopsys DesignWare APB GPIO controller bank
-> 
-> I really do think that the compatible property can be dropped from the
-> child nodes... although thinking further.  It doesn't have much value
-> for specifying the exact controller, but maybe it should be used to
-> specify the specific type of bank.  Right now the generic code uses a
-> heuristic to figure out which set of accessor ops to use which strikes
-> me as rather fragile.  I think it would be better to identify the
-> major types of gpio controllers and name them.
-
-I did think of doing this originally but I felt it could get a bit too 
-unwieldy to describe all of the combinations (both in the compatible 
-string and parsing code).  I guess in the driver we could have a list of 
-templates that have a mask of the required registers for a given 
-compatible string.
-
-> > +- gpio-controller : Marks the node as a GPIO controller.
-> > +- #gpio-cells : Should be two.  The first cell is the pin number and the
-> > +  second cell encodes optional flags (currently unused).
-> 
-> I'm not /opposed/ to this binding, but there is an issue that I think
-> is worth raising.  From an engineer's perspective, multi-bank gpio
-> controllers are often documented as a single range of N gpios, even if
-> it is composed of M banks of x gpios (where N = M * x).  This means
-> that the documentation will specify an 'N' value for a gpio pin, but
-> the device tree will be a set of 'x' values against sub nodes.  I
-> think this will cause a lot of confusion.
-
-and for controllers such as the Synopsys one, each bank may have a 
-different number of GPIO pins!
-
-> Perhaps the gpio-controller property and #gpio-cells should be part of
-> the parent node.  The current Linux implementation doesn't easily
-> support doing it that way, but we can change the driver if it means a
-> better binding.
-> 
-> I'm not sure though.  Thoughts?
-
-Personally I prefer it on a per-bank basis and that's how some of the 
-powerpc bindings do it so there's a precedent for doing it this way.  
-For controllers like the Synopsys one where banks can be different sizes 
-it makes it more explicit.  Otherwise one could make a sane (but 
-invalid) assumption that all banks are the width of the registers up to 
-the number of GPIO's.
-
-> > +- gpio-generic,nr-gpio : The number of GPIO pins in the bank.
-> > +- regoffset-dat : The offset from the beginning of the controller for the
-> > +  "dat" register for this bank.  This register is read to get the value of the
-> > +  GPIO pins, and if there is no regoffset-set property then it is also used to
-> > +  set the value of the pins.
-> > +
-> > +Optional properties:
-> > +- regoffset-set : The offset from the beginning of the controller for the
-> > +  "set" register for this bank.  If present then the GPIO values are set
-> > +  through this register (writing a 1 bit sets the GPIO high).  If there is no
-> > +  regoffset-clr property then writing a 0 bit to this register will set the
-> > +  pin to a low value.
-> > +- regoffset-clr : The offset from the beginning of the controller for the
-> > +  "clr" register for this bank.  Writing a 1 bit to this register will set the
-> > +  GPIO to a low output value.
-> > +- regoffset-dirout : The offset from the beginning of the controller for the
-> > +  "dirout" register for this bank.  Writing a 1 bit to this register sets the
-> > +  pin to be an output pin, writing a zero sets the pin to be an input.
-> > +- regoffset-dirin : The offset from the beginning of the controller for the
-> > +  "dirin" register for this bank.  Writing a 1 bit to this register sets the
-> > +  pin to be an input pin, writing a zero sets the pin to be an output.
-> > +
-> > +Examples:
-> > +
-> > +gpio: gpio@20000 {
-> > +	compatible = "snps,dw-apb-gpio";
-> > +	reg = <0x20000 0x1000>;
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	gpio-generic,reg-io-width = <4>;
-> > +
-> > +	banka: gpio-controller@0 {
-> > +		compatible = "snps,dw-apb-gpio";
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		gpio-generic,nr-gpio = <8>;
-> > +
-> > +		regoffset-dat = <0x50>;
-> > +		regoffset-set = <0x00>;
-> > +		regoffset-dirout = <0x04>;
-> > +	};
-> > +
-> > +	bankb: gpio-controller@1 {
-> > +		compatible = "snps,dw-apb-gpio";
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		gpio-generic,nr-gpio = <16>;
-> > +
-> > +		regoffset-dat = <0x54>;
-> > +		regoffset-set = <0x0c>;
-> > +		regoffset-dirout = <0x10>;
-> > +	};
-> > +};
-> > diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
-> > index 231714d..92ae38d 100644
-> > --- a/drivers/gpio/gpio-generic.c
-> > +++ b/drivers/gpio/gpio-generic.c
-> > @@ -61,6 +61,9 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
-> >  #include <linux/platform_device.h>
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/basic_mmio_gpio.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_gpio.h>
-> >  
-> >  static void bgpio_write8(void __iomem *reg, unsigned long data)
-> >  {
-> > @@ -444,7 +447,29 @@ static void __iomem *bgpio_map(struct platform_device *pdev,
-> >  	return ret;
-> >  }
-> >  
-> > -static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
-> > +struct bgpio_drvdata {
-> > +	struct bgpio_chip	*banks;
-> > +	unsigned int		nr_banks;
-> > +};
-> > +
-> > +static struct bgpio_drvdata *bgpio_alloc_banks(struct device *dev,
-> > +					       unsigned int nr_banks)
-> > +{
-> > +	struct bgpio_drvdata *banks;
-> > +
-> > +	banks = devm_kzalloc(dev, sizeof(*banks), GFP_KERNEL);
-> > +	if (!banks)
-> > +		return NULL;
-> > +
-> > +	banks->banks = devm_kzalloc(dev, sizeof(*banks->banks) * nr_banks,
-> > +				    GFP_KERNEL);
-> > +	if (!banks->banks)
-> > +		return NULL;
-> > +
-> > +	return banks;
-> > +}
-> > +
-> > +static int bgpio_platform_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> >  	struct resource *r;
-> > @@ -456,8 +481,12 @@ static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
-> >  	unsigned long sz;
-> >  	bool be;
-> >  	int err;
-> > -	struct bgpio_chip *bgc;
-> > -	struct bgpio_pdata *pdata = dev_get_platdata(dev);
-> > +	struct bgpio_pdata *pdata = dev_get_platdata(&pdev->dev);
-> > +	struct bgpio_drvdata *banks = bgpio_alloc_banks(&pdev->dev, 1);
-> > +
-> > +	if (!banks)
-> > +		return -ENOMEM;
-> > +	platform_set_drvdata(pdev, banks);
-> >  
-> >  	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
-> >  	if (!r)
-> > @@ -485,32 +514,148 @@ static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
-> >  	if (err)
-> >  		return err;
-> >  
-> > -	be = !strcmp(platform_get_device_id(pdev)->name, "basic-mmio-gpio-be");
-> > -
-> > -	bgc = devm_kzalloc(&pdev->dev, sizeof(*bgc), GFP_KERNEL);
-> > -	if (!bgc)
-> > -		return -ENOMEM;
-> > +	be = !strcmp(platform_get_device_id(pdev)->name,
-> > +		     "basic-mmio-gpio-be");
-> 
-> Unrelated whitespace change. Causes a non-change to get mixed in with
-> real functional changes.
-
-OK, I'll fix this up.
-
-> 
-> >  
-> > -	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin, be);
-> > +	banks->nr_banks = 1;
-> > +	err = bgpio_init(&banks->banks[0], dev, sz, dat, set, clr, dirout,
-> > +			 dirin, be);
-> >  	if (err)
-> >  		return err;
-> >  
-> >  	if (pdata) {
-> > -		bgc->gc.base = pdata->base;
-> > +		banks->banks[0].gc.base = pdata->base;
-> >  		if (pdata->ngpio > 0)
-> > -			bgc->gc.ngpio = pdata->ngpio;
-> > +			banks->banks[0].gc.ngpio = pdata->ngpio;
-> >  	}
-> >  
-> > -	platform_set_drvdata(pdev, bgc);
-> > +	return gpiochip_add(&banks->banks[0].gc);
-> > +}
-> > +
-> > +static void bgpio_remove_all_banks(struct platform_device *pdev)
-> > +{
-> > +	struct bgpio_drvdata *banks = platform_get_drvdata(pdev);
-> > +	unsigned int m;
-> > +
-> > +	for (m = 0; m < banks->nr_banks; ++m)
-> > +		bgpio_remove(&banks->banks[m]);
-> > +}
-> > +
-> > +#ifdef CONFIG_OF
-> > +static int bgpio_of_add_one_bank(struct platform_device *pdev,
-> > +				 struct bgpio_chip *bgc,
-> > +				 struct device_node *np, void __iomem *iobase,
-> > +				 size_t reg_width_bytes, bool be)
-> > +{
-> > +	void __iomem *dat = NULL;
-> > +	void __iomem *set = NULL;
-> > +	void __iomem *clr = NULL;
-> > +	void __iomem *dirout = NULL;
-> > +	void __iomem *dirin = NULL;
-> > +	u32 val;
-> > +	int err;
-> > +
-> > +	if (of_property_read_u32(np, "regoffset-dat", &val))
-> > +		return -EINVAL;
-> > +	dat = iobase + val;
-> > +
-> > +	if (!of_property_read_u32(np, "regoffset-set", &val))
-> > +		set = iobase + val;
-> > +	if (!of_property_read_u32(np, "regoffset-clr", &val))
-> > +		clr = iobase + val;
-> > +	if (!of_property_read_u32(np, "regoffset-dirout", &val))
-> > +		dirout = iobase + val;
-> > +	if (!of_property_read_u32(np, "regoffset-dirin", &val))
-> > +		dirin = iobase + val;
-> > +
-> > +	err = bgpio_init(bgc, &pdev->dev, reg_width_bytes, dat, set, clr,
-> > +			 dirout, dirin, be);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	if (of_property_read_u32(np, "gpio-generic,nr-gpio", &val))
-> > +		return -EINVAL;
-> 
-> Nit: Try to group all of the checking together.  If this test fails,
-> then there is no need to do all the bgpio_init work.
-
-OK, fair point.
-
-> > +
-> > +	bgc->gc.ngpio = val;
-> > +	bgc->gc.of_node = np;
-> >  
-> >  	return gpiochip_add(&bgc->gc);
-> >  }
-> >  
-> > +static int bgpio_of_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	void __iomem *iobase = of_iomap(np, 0);
-> > +	int err = 0;
-> > +	u32 val;
-> > +	size_t reg_width_bytes;
-> > +	bool be;
-> > +	int nr_banks = 0;
-> > +	struct bgpio_drvdata *banks;
-> > +
-> > +	if (!iobase)
-> > +		return -EIO;
-> > +
-> > +	if (of_property_read_u32(np, "reg-io-width", &val))
-> > +		return -EINVAL;
-> > +	reg_width_bytes = val;
-> > +
-> > +	be = of_get_property(np, "gpio-generic,big-endian", NULL) ?
-> > +		true : false;
-> > +
-> > +	for_each_child_of_node(pdev->dev.of_node, np)
-> > +		++nr_banks;
-> > +
-> > +	banks = bgpio_alloc_banks(&pdev->dev, nr_banks);
-> > +	if (!banks)
-> > +		return -ENOMEM;
-> > +	platform_set_drvdata(pdev, banks);
-> > +	banks->nr_banks = 0;
-> > +
-> > +	for_each_child_of_node(pdev->dev.of_node, np) {
-> > +		err = bgpio_of_add_one_bank(pdev,
-> > +					    &banks->banks[banks->nr_banks],
-> > +					    np, iobase, reg_width_bytes, be);
-> > +		if (err)
-> > +			goto out_remove;
-> > +		++banks->nr_banks;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +out_remove:
-> > +	bgpio_remove_all_banks(pdev);
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +static const struct of_device_id bgpio_of_id_table[] = {
-> > +	{ .compatible = "snps,dw-apb-gpio", },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, bgpio_of_id_table);
-> > +#else /* CONFIG_OF */
-> > +static inline int bgpio_of_probe(struct platform_device *pdev)
-> > +{
-> > +	return -ENODEV;
-> > +}
-> > +
-> > +#define bgpio_of_id_table NULL
-> > +#endif /* CONFIG_OF */
-> > +
-> > +static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
-> > +{
-> > +	if (platform_get_device_id(pdev))
-> > +		return bgpio_platform_probe(pdev);
-> > +	else
-> > +		return bgpio_of_probe(pdev);
-> > +}
-> > +
-> >  static int __devexit bgpio_pdev_remove(struct platform_device *pdev)
-> >  {
-> > -	struct bgpio_chip *bgc = platform_get_drvdata(pdev);
-> > +	bgpio_remove_all_banks(pdev);
-> >  
-> > -	return bgpio_remove(bgc);
-> > +	return 0;
-> >  }
-> >  
-> >  static const struct platform_device_id bgpio_id_table[] = {
-> > @@ -523,6 +668,7 @@ MODULE_DEVICE_TABLE(platform, bgpio_id_table);
-> >  static struct platform_driver bgpio_driver = {
-> >  	.driver = {
-> >  		.name = "basic-mmio-gpio",
-> > +		.of_match_table = bgpio_of_id_table,
-> >  	},
-> >  	.id_table = bgpio_id_table,
-> >  	.probe = bgpio_pdev_probe,
-> > -- 
-> > 1.7.4.1
-> > 
