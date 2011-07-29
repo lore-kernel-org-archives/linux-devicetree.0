@@ -1,13 +1,11 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] net/smsc911x: add device tree probe support
-Date: Fri, 29 Jul 2011 16:43:16 +0800
-Message-ID: <1311928996-10729-1-git-send-email-shawn.guo@linaro.org>
-References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCHv3] gpio-generic: add support for device tree probing
+Date: Fri, 29 Jul 2011 11:45:01 +0100
+Message-ID: <1311936301-19942-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1311587040-8988-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,216 +15,354 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steve Glendinning <steve.glendinning-sdUf+H5yV5I@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree probe support for smsc911x driver.
+This patch adds support for gpio-generic controllers to be
+instantiated from the device tree.  The binding supports devices with
+multiple banks.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+v3:
+	- Remove extraneous of_node_{get,put}().
+	- Rename basic-mmio-gpio,reg-io-width to reg-io-width.
+	- Use vendor specific compatible values for now.
+	- Only add child banks, and allocate banks as an array.
+	- Remove bgpio_init_info() and populate bgpio_chip directly.
+	- Rename properties to gpio-generic,* to match the driver name.
+v2:
+	- Added more detail to the binding.
+	- Added CONFIG_OF guards.
+	- Use regoffset-* properties for each register in each bank.
+	  relative to the registers of the controller.
+
 Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Steve Glendinning <steve.glendinning-sdUf+H5yV5I@public.gmane.org>
-Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
-Changes since v1:
- * Instead of getting irq line from gpio number, it use irq domain
-   to keep platform_get_resource(IORESOURCE_IRQ) works for dt too.
- * Use 'lan9115' the first model that smsc911x supports in the match
-   table
- * Use reg-shift and reg-io-width which already used in of_serial for
-   shift and access size binding
+ .../devicetree/bindings/gpio/gpio-generic.txt      |   85 ++++++++++
+ drivers/gpio/gpio-generic.c                        |  174 ++++++++++++++++++--
+ 2 files changed, 245 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-generic.txt
 
- Documentation/devicetree/bindings/net/smsc911x.txt |   38 +++++++++
- drivers/net/smsc911x.c                             |   85 +++++++++++++++++---
- 2 files changed, 112 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/smsc911x.txt
-
-diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
 new file mode 100644
-index 0000000..271c454
+index 0000000..91c9441
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/smsc911x.txt
-@@ -0,0 +1,38 @@
-+* Smart Mixed-Signal Connectivity (SMSC) LAN911x/912x Controller
++++ b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
+@@ -0,0 +1,85 @@
++Generic MMIO GPIO controller
++
++This binding allows lots of common GPIO controllers to use a generic GPIO
++driver.  The top level GPIO node describes the registers for the controller
++and high level properties such as endianness and register width.  Each bank in
++the controller is represented as a child node.
 +
 +Required properties:
-+- compatible : Should be "smsc,lan<model>", "smsc,lan9115"
-+- reg : Address and length of the io space for SMSC LAN
-+- interrupts : Should contain SMSC LAN interrupt line
-+- interrupt-parent : Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- phy-mode : String, operation mode of the PHY interface.
-+  Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
-+  "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
++- compatible : Must be one of:
++  - "snps,dw-apb-gpio" : Synopsys DesignWare APB GPIO controller
++- reg : The register window for the GPIO device.  If the device has multiple
++  banks then this window should cover all of the banks.
++- gpio-generic,reg-io-width : The width of the registers in the controller
++  (in bytes).
++- #address-cells : should be set to 1.
++- #size-cells : should be set to 0.  The addresses of the child nodes are the
++  bank numbers and the child nodes themselves represent the banks in the
++  controller.
 +
 +Optional properties:
-+- reg-shift : Specify the quantity to shift the register offsets by
-+- reg-io-width : Specify the size (in bytes) of the IO accesses that
-+  should be performed on the device.  Valid value for SMSC LAN is
-+  2 or 4.  If it's omitted or invalid, the size would be 2.
-+- smsc,irq-active-high : Indicates the IRQ polarity is active-low
-+- smsc,irq-push-pull : Indicates the IRQ type is push-pull
-+- smsc,force-internal-phy : Forces SMSC LAN controller to use
-+  internal PHY
-+- smsc,force-external-phy : Forces SMSC LAN controller to use
-+  external PHY
-+- smsc,save-mac-address : Indicates that mac address needs to be saved
-+  before resetting the controller
-+- local-mac-address : 6 bytes, mac address
++- gpio-generic,big-endian : the registers are in big-endian byte ordering.
++  If present then the first gpio in the controller occupies the MSB for
++  each register.
++
++Generic MMIO GPIO controller bank
++
++Required properties:
++- compatible : Must be one of:
++  - "snps,dw-apb-gpio-bank" : Synopsys DesignWare APB GPIO controller bank
++- gpio-controller : Marks the node as a GPIO controller.
++- #gpio-cells : Should be two.  The first cell is the pin number and the
++  second cell encodes optional flags (currently unused).
++- gpio-generic,nr-gpio : The number of GPIO pins in the bank.
++- regoffset-dat : The offset from the beginning of the controller for the
++  "dat" register for this bank.  This register is read to get the value of the
++  GPIO pins, and if there is no regoffset-set property then it is also used to
++  set the value of the pins.
++
++Optional properties:
++- regoffset-set : The offset from the beginning of the controller for the
++  "set" register for this bank.  If present then the GPIO values are set
++  through this register (writing a 1 bit sets the GPIO high).  If there is no
++  regoffset-clr property then writing a 0 bit to this register will set the
++  pin to a low value.
++- regoffset-clr : The offset from the beginning of the controller for the
++  "clr" register for this bank.  Writing a 1 bit to this register will set the
++  GPIO to a low output value.
++- regoffset-dirout : The offset from the beginning of the controller for the
++  "dirout" register for this bank.  Writing a 1 bit to this register sets the
++  pin to be an output pin, writing a zero sets the pin to be an input.
++- regoffset-dirin : The offset from the beginning of the controller for the
++  "dirin" register for this bank.  Writing a 1 bit to this register sets the
++  pin to be an input pin, writing a zero sets the pin to be an output.
 +
 +Examples:
 +
-+lan9220@f4000000 {
-+	compatible = "smsc,lan9220", "smsc,lan9115";
-+	reg = <0xf4000000 0x2000000>;
-+	phy-mode = "mii";
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <31>;
-+	reg-io-width = <4>;
-+	smsc,irq-push-pull;
++gpio: gpio@20000 {
++	compatible = "snps,dw-apb-gpio";
++	reg = <0x20000 0x1000>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	gpio-generic,reg-io-width = <4>;
++
++	banka: gpio-controller@0 {
++		compatible = "snps,dw-apb-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-generic,nr-gpio = <8>;
++
++		regoffset-dat = <0x50>;
++		regoffset-set = <0x00>;
++		regoffset-dirout = <0x04>;
++	};
++
++	bankb: gpio-controller@1 {
++		compatible = "snps,dw-apb-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-generic,nr-gpio = <16>;
++
++		regoffset-dat = <0x54>;
++		regoffset-set = <0x0c>;
++		regoffset-dirout = <0x10>;
++	};
 +};
-diff --git a/drivers/net/smsc911x.c b/drivers/net/smsc911x.c
-index b9016a3..75c08a5 100644
---- a/drivers/net/smsc911x.c
-+++ b/drivers/net/smsc911x.c
-@@ -53,6 +53,10 @@
- #include <linux/phy.h>
- #include <linux/smsc911x.h>
- #include <linux/device.h>
+diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
+index 231714d..92ae38d 100644
+--- a/drivers/gpio/gpio-generic.c
++++ b/drivers/gpio/gpio-generic.c
+@@ -61,6 +61,9 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/basic_mmio_gpio.h>
 +#include <linux/of.h>
-+#include <linux/of_device.h>
++#include <linux/of_address.h>
 +#include <linux/of_gpio.h>
-+#include <linux/of_net.h>
- #include "smsc911x.h"
  
- #define SMSC_CHIPNAME		"smsc911x"
-@@ -2095,8 +2099,58 @@ static const struct smsc911x_ops shifted_smsc911x_ops = {
- 	.tx_writefifo = smsc911x_tx_writefifo_shift,
- };
+ static void bgpio_write8(void __iomem *reg, unsigned long data)
+ {
+@@ -444,7 +447,29 @@ static void __iomem *bgpio_map(struct platform_device *pdev,
+ 	return ret;
+ }
  
-+#ifdef CONFIG_OF
-+static int __devinit smsc911x_probe_config_dt(
-+				struct smsc911x_platform_config *config,
-+				struct device_node *np)
+-static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
++struct bgpio_drvdata {
++	struct bgpio_chip	*banks;
++	unsigned int		nr_banks;
++};
++
++static struct bgpio_drvdata *bgpio_alloc_banks(struct device *dev,
++					       unsigned int nr_banks)
 +{
-+	const char *mac;
-+	u32 width = 0;
++	struct bgpio_drvdata *banks;
 +
-+	if (!np)
-+		return -ENODEV;
++	banks = devm_kzalloc(dev, sizeof(*banks), GFP_KERNEL);
++	if (!banks)
++		return NULL;
 +
-+	config->phy_interface = of_get_phy_mode(np);
++	banks->banks = devm_kzalloc(dev, sizeof(*banks->banks) * nr_banks,
++				    GFP_KERNEL);
++	if (!banks->banks)
++		return NULL;
 +
-+	mac = of_get_mac_address(np);
-+	if (mac)
-+		memcpy(config->mac, mac, ETH_ALEN);
++	return banks;
++}
 +
-+	of_property_read_u32(np, "reg-shift", &config->shift);
++static int bgpio_platform_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *r;
+@@ -456,8 +481,12 @@ static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
+ 	unsigned long sz;
+ 	bool be;
+ 	int err;
+-	struct bgpio_chip *bgc;
+-	struct bgpio_pdata *pdata = dev_get_platdata(dev);
++	struct bgpio_pdata *pdata = dev_get_platdata(&pdev->dev);
++	struct bgpio_drvdata *banks = bgpio_alloc_banks(&pdev->dev, 1);
 +
-+	of_property_read_u32(np, "reg-io-width", &width);
-+	if (width == 4)
-+		config->flags |= SMSC911X_USE_32BIT;
++	if (!banks)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, banks);
+ 
+ 	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
+ 	if (!r)
+@@ -485,32 +514,148 @@ static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
+ 
+-	be = !strcmp(platform_get_device_id(pdev)->name, "basic-mmio-gpio-be");
+-
+-	bgc = devm_kzalloc(&pdev->dev, sizeof(*bgc), GFP_KERNEL);
+-	if (!bgc)
+-		return -ENOMEM;
++	be = !strcmp(platform_get_device_id(pdev)->name,
++		     "basic-mmio-gpio-be");
+ 
+-	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin, be);
++	banks->nr_banks = 1;
++	err = bgpio_init(&banks->banks[0], dev, sz, dat, set, clr, dirout,
++			 dirin, be);
+ 	if (err)
+ 		return err;
+ 
+ 	if (pdata) {
+-		bgc->gc.base = pdata->base;
++		banks->banks[0].gc.base = pdata->base;
+ 		if (pdata->ngpio > 0)
+-			bgc->gc.ngpio = pdata->ngpio;
++			banks->banks[0].gc.ngpio = pdata->ngpio;
+ 	}
+ 
+-	platform_set_drvdata(pdev, bgc);
++	return gpiochip_add(&banks->banks[0].gc);
++}
 +
-+	if (of_get_property(np, "smsc,irq-active-high", NULL))
-+		config->irq_polarity = SMSC911X_IRQ_POLARITY_ACTIVE_HIGH;
++static void bgpio_remove_all_banks(struct platform_device *pdev)
++{
++	struct bgpio_drvdata *banks = platform_get_drvdata(pdev);
++	unsigned int m;
 +
-+	if (of_get_property(np, "smsc,irq-push-pull", NULL))
-+		config->irq_type = SMSC911X_IRQ_TYPE_PUSH_PULL;
++	for (m = 0; m < banks->nr_banks; ++m)
++		bgpio_remove(&banks->banks[m]);
++}
 +
-+	if (of_get_property(np, "smsc,force-internal-phy", NULL))
-+		config->flags |= SMSC911X_FORCE_INTERNAL_PHY;
++#ifdef CONFIG_OF
++static int bgpio_of_add_one_bank(struct platform_device *pdev,
++				 struct bgpio_chip *bgc,
++				 struct device_node *np, void __iomem *iobase,
++				 size_t reg_width_bytes, bool be)
++{
++	void __iomem *dat = NULL;
++	void __iomem *set = NULL;
++	void __iomem *clr = NULL;
++	void __iomem *dirout = NULL;
++	void __iomem *dirin = NULL;
++	u32 val;
++	int err;
 +
-+	if (of_get_property(np, "smsc,force-external-phy", NULL))
-+		config->flags |= SMSC911X_FORCE_EXTERNAL_PHY;
++	if (of_property_read_u32(np, "regoffset-dat", &val))
++		return -EINVAL;
++	dat = iobase + val;
 +
-+	if (of_get_property(np, "smsc,save-mac-address", NULL))
-+		config->flags |= SMSC911X_SAVE_MAC_ADDRESS;
++	if (!of_property_read_u32(np, "regoffset-set", &val))
++		set = iobase + val;
++	if (!of_property_read_u32(np, "regoffset-clr", &val))
++		clr = iobase + val;
++	if (!of_property_read_u32(np, "regoffset-dirout", &val))
++		dirout = iobase + val;
++	if (!of_property_read_u32(np, "regoffset-dirin", &val))
++		dirin = iobase + val;
++
++	err = bgpio_init(bgc, &pdev->dev, reg_width_bytes, dat, set, clr,
++			 dirout, dirin, be);
++	if (err)
++		return err;
++
++	if (of_property_read_u32(np, "gpio-generic,nr-gpio", &val))
++		return -EINVAL;
++
++	bgc->gc.ngpio = val;
++	bgc->gc.of_node = np;
+ 
+ 	return gpiochip_add(&bgc->gc);
+ }
+ 
++static int bgpio_of_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	void __iomem *iobase = of_iomap(np, 0);
++	int err = 0;
++	u32 val;
++	size_t reg_width_bytes;
++	bool be;
++	int nr_banks = 0;
++	struct bgpio_drvdata *banks;
++
++	if (!iobase)
++		return -EIO;
++
++	if (of_property_read_u32(np, "reg-io-width", &val))
++		return -EINVAL;
++	reg_width_bytes = val;
++
++	be = of_get_property(np, "gpio-generic,big-endian", NULL) ?
++		true : false;
++
++	for_each_child_of_node(pdev->dev.of_node, np)
++		++nr_banks;
++
++	banks = bgpio_alloc_banks(&pdev->dev, nr_banks);
++	if (!banks)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, banks);
++	banks->nr_banks = 0;
++
++	for_each_child_of_node(pdev->dev.of_node, np) {
++		err = bgpio_of_add_one_bank(pdev,
++					    &banks->banks[banks->nr_banks],
++					    np, iobase, reg_width_bytes, be);
++		if (err)
++			goto out_remove;
++		++banks->nr_banks;
++	}
 +
 +	return 0;
++
++out_remove:
++	bgpio_remove_all_banks(pdev);
++
++	return err;
 +}
-+#else
-+static inline int smsc911x_probe_config_dt(
-+				struct smsc911x_platform_config *config,
-+				struct device_node *np)
++
++static const struct of_device_id bgpio_of_id_table[] = {
++	{ .compatible = "snps,dw-apb-gpio", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, bgpio_of_id_table);
++#else /* CONFIG_OF */
++static inline int bgpio_of_probe(struct platform_device *pdev)
 +{
 +	return -ENODEV;
 +}
++
++#define bgpio_of_id_table NULL
 +#endif /* CONFIG_OF */
 +
- static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
++static int __devinit bgpio_pdev_probe(struct platform_device *pdev)
++{
++	if (platform_get_device_id(pdev))
++		return bgpio_platform_probe(pdev);
++	else
++		return bgpio_of_probe(pdev);
++}
++
+ static int __devexit bgpio_pdev_remove(struct platform_device *pdev)
  {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct net_device *dev;
- 	struct smsc911x_data *pdata;
- 	struct smsc911x_platform_config *config = pdev->dev.platform_data;
-@@ -2107,13 +2161,6 @@ static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
+-	struct bgpio_chip *bgc = platform_get_drvdata(pdev);
++	bgpio_remove_all_banks(pdev);
  
- 	pr_info("Driver version %s\n", SMSC_DRV_VERSION);
+-	return bgpio_remove(bgc);
++	return 0;
+ }
  
--	/* platform data specifies irq & dynamic bus configuration */
--	if (!pdev->dev.platform_data) {
--		pr_warn("platform_data not provided\n");
--		retval = -ENODEV;
--		goto out_0;
--	}
--
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 					   "smsc911x-memory");
- 	if (!res)
-@@ -2152,9 +2199,6 @@ static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
- 	irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
- 	pdata->ioaddr = ioremap_nocache(res->start, res_size);
- 
--	/* copy config parameters across to pdata */
--	memcpy(&pdata->config, config, sizeof(pdata->config));
--
- 	pdata->dev = dev;
- 	pdata->msg_enable = ((1 << debug) - 1);
- 
-@@ -2164,10 +2208,22 @@ static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
- 		goto out_free_netdev_2;
- 	}
- 
-+	retval = smsc911x_probe_config_dt(&pdata->config, np);
-+	if (retval && config) {
-+		/* copy config parameters across to pdata */
-+		memcpy(&pdata->config, config, sizeof(pdata->config));
-+		retval = 0;
-+	}
-+
-+	if (retval) {
-+		SMSC_WARN(pdata, probe, "Error smsc911x config not found");
-+		goto out_unmap_io_3;
-+	}
-+
- 	/* assume standard, non-shifted, access to HW registers */
- 	pdata->ops = &standard_smsc911x_ops;
- 	/* apply the right access if shifting is needed */
--	if (config->shift)
-+	if (pdata->config.shift)
- 		pdata->ops = &shifted_smsc911x_ops;
- 
- 	retval = smsc911x_init(dev);
-@@ -2314,6 +2370,12 @@ static const struct dev_pm_ops smsc911x_pm_ops = {
- #define SMSC911X_PM_OPS NULL
- #endif
- 
-+static const struct of_device_id smsc911x_dt_ids[] = {
-+	{ .compatible = "smsc,lan9115", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, smsc911x_dt_ids);
-+
- static struct platform_driver smsc911x_driver = {
- 	.probe = smsc911x_drv_probe,
- 	.remove = __devexit_p(smsc911x_drv_remove),
-@@ -2321,6 +2383,7 @@ static struct platform_driver smsc911x_driver = {
- 		.name	= SMSC_CHIPNAME,
- 		.owner	= THIS_MODULE,
- 		.pm	= SMSC911X_PM_OPS,
-+		.of_match_table = smsc911x_dt_ids,
+ static const struct platform_device_id bgpio_id_table[] = {
+@@ -523,6 +668,7 @@ MODULE_DEVICE_TABLE(platform, bgpio_id_table);
+ static struct platform_driver bgpio_driver = {
+ 	.driver = {
+ 		.name = "basic-mmio-gpio",
++		.of_match_table = bgpio_of_id_table,
  	},
- };
- 
+ 	.id_table = bgpio_id_table,
+ 	.probe = bgpio_pdev_probe,
 -- 
 1.7.4.1
