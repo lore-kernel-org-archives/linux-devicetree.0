@@ -1,108 +1,62 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 2/4] powerpc, mpc52xx: add a4m072 board support
-Date: Sat, 30 Jul 2011 22:08:19 -0600
-Message-ID: <20110731040819.GM24334@ponder.secretlab.ca>
-References: <1308729311-15375-3-git-send-email-hs@denx.de>
-	<1308739150-31527-1-git-send-email-hs@denx.de>
+Subject: Re: [PATCH 1/3] vic: add device tree bindings
+Date: Sat, 30 Jul 2011 22:11:07 -0600
+Message-ID: <20110731041107.GN24334@ponder.secretlab.ca>
+References: <1311610200-12408-1-git-send-email-jamie@jamieiles.com>
+	<1311610200-12408-2-git-send-email-jamie@jamieiles.com>
+	<20110725200434.GB26735@ponder.secretlab.ca>
+	<20110725223151.GB3001@gallagher>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1308739150-31527-1-git-send-email-hs@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Heiko Schocher <hs@denx.de>
-Cc: devicetree-discuss@ozlabs.org, linuxppc-dev@lists.ozlabs.org, Wolfgang Denk <wd@denx.de>
+In-Reply-To: <20110725223151.GB3001@gallagher>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2011 at 12:39:10PM +0200, Heiko Schocher wrote:
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> cc: Grant Likely <grant.likely@secretlab.ca>
-> cc: devicetree-discuss@ozlabs.org
-> cc: Wolfgang Denk <wd@denx.de>
-> cc: Wolfram Sang <w.sang@pengutronix.de>
-> ---
-> For this patchseries following patch is needed:
+On Mon, Jul 25, 2011 at 11:31:51PM +0100, Jamie Iles wrote:
+> Hi Grant,
 > 
-> http://patchwork.ozlabs.org/patch/91919/
+> On Mon, Jul 25, 2011 at 02:04:34PM -0600, Grant Likely wrote:
+> > irq_domain_add_simple() is a stop-gap shortcut for interrupt
+> > controllers that don't use irq_domain directly.  I'm okay with doing
+> > this in the short term, but I imagine it will want to change in the
+> > near future to take advantage of hw->linux irq translation provided by
+> > irq_domain when it matures.
 > 
-> Grant? Do you have some comments on that patch?
+> I have to admit to taking this from other controllers without fully 
+> understanding it.  Is there any documentation on how this should be done 
+> correctly in the longer term?
+
+Documentation?  Ummmm... no, not yet.  :-/  There will be though.
+
 > 
-> changes for v2:
->   add comment from Wolfram Sang:
->   use mpc5200.dtsi
+> > > +	}
+> > 
+> > I think that rather than writing a interrupt-controller-specific
+> > parse route like this one, it would be much better to have a generic
+> > helper that finds and sorts all the interrupt controllers before
+> > calling a setup callback for each one.
 > 
->  arch/powerpc/boot/dts/a4m072.dts             |  172 ++++++++++++++++++++++++++
->  arch/powerpc/platforms/52xx/mpc5200_simple.c |    1 +
->  2 files changed, 173 insertions(+), 0 deletions(-)
->  create mode 100644 arch/powerpc/boot/dts/a4m072.dts
-> 
-> diff --git a/arch/powerpc/boot/dts/a4m072.dts b/arch/powerpc/boot/dts/a4m072.dts
-> new file mode 100644
-> index 0000000..adb6746
-> --- /dev/null
-> +++ b/arch/powerpc/boot/dts/a4m072.dts
-> @@ -0,0 +1,172 @@
-> +/*
-> + * a4m072 board Device Tree Source
-> + *
-> + * Copyright (C) 2011 DENX Software Engineering GmbH
-> + * Heiko Schocher <hs@denx.de>
-> + *
-> + * Copyright (C) 2007 Semihalf
-> + * Marian Balakowicz <m8@semihalf.com>
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + */
-> +
-> +/include/ "mpc5200b.dtsi"
+> Hmm, not sure I follow this.  I can see that many controllers would have 
+> some common properties so there will be some common code - are you 
+> suggesting having something do all the parsing then callbacks for each 
+> controller type that takes some kind of template or am I way off the 
+> mark?
 
-Ah, I missed this follow up patch.  Yes, this is better.
-
-> +
-> +/ {
-> +	model = "anonymous,a4m072";
-> +	compatible = "anonymous,a4m072";
-> +
-> +	soc5200@f0000000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "fsl,mpc5200b-immr";
-> +		ranges = <0 0xf0000000 0x0000c000>;
-> +		reg = <0xf0000000 0x00000100>;
-> +		bus-frequency = <0>; /* From boot loader */
-> +		system-frequency = <0>; /* From boot loader */
-> +
-> +		cdm@200 {
-> +			fsl,ext_48mhz_en = <0x0>;
-> +			fsl,fd_enable = <0x01>;
-> +			fsl,fd_counters = <0xbbbb>;
-
-Are these new properties documented?  They need to be.  Also,
-convention is to use '-' instead of '_' in property names.
-
-> +		};
-> +
-> +		timer@600 {
-> +			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
-> +			reg = <0x600 0x80>;
-> +			interrupts = <1 9 0>;
-> +			fsl,has-wdt;
-> +		};
-
-Isn't this node already in the mpc5200b.dtsi file?
-
-Otherwise, this patch looks pretty good.
+No, I'm more talking about having a routine that finds all the
+interrupt controllers and figures out the cascading order, and then
+calls each irq controller setup routine in order.
 
 g.
