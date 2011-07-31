@@ -1,82 +1,76 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCHv3] gpio-generic: add support for device tree probing
-Date: Sat, 30 Jul 2011 21:06:11 -0600
-Message-ID: <20110731030611.GC24334@ponder.secretlab.ca>
-References: <1311936301-19942-1-git-send-email-jamie@jamieiles.com>
-	<20110729162453.GH11164@ponder.secretlab.ca>
-	<20110729164940.GB5585@pulham.picochip.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] input: xilinx_ps2: Add missing of_address.h header
+Date: Sat, 30 Jul 2011 22:12:30 -0600
+Message-ID: <20110731041230.GO24334@ponder.secretlab.ca>
+References: <1310564781-5979-1-git-send-email-monstr@monstr.eu>
+ <CACxGe6vRZ4tCALpzFng2y9W_9zB3qQEntma+z292FXzDuYBRKQ@mail.gmail.com>
+ <4E2C2362.1080204@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110729164940.GB5585-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4E2C2362.1080204@monstr.eu>
+Sender: linux-input-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2011 at 05:49:40PM +0100, Jamie Iles wrote:
-> On Fri, Jul 29, 2011 at 10:24:53AM -0600, Grant Likely wrote:
-> > I really do think that the compatible property can be dropped from the
-> > child nodes... although thinking further.  It doesn't have much value
-> > for specifying the exact controller, but maybe it should be used to
-> > specify the specific type of bank.  Right now the generic code uses a
-> > heuristic to figure out which set of accessor ops to use which strikes
-> > me as rather fragile.  I think it would be better to identify the
-> > major types of gpio controllers and name them.
+On Sun, Jul 24, 2011 at 03:51:30PM +0200, Michal Simek wrote:
+> Hi Grant,
 > 
-> I did think of doing this originally but I felt it could get a bit too 
-> unwieldy to describe all of the combinations (both in the compatible 
-> string and parsing code).  I guess in the driver we could have a list of 
-> templates that have a mask of the required registers for a given 
-> compatible string.
+> can you propose this patch to mainline through your devicetree tree?
 
-Yes, I was thinking along those lines.  The devil is in the
-implementation details of course.
-
-> 
-> > > +- gpio-controller : Marks the node as a GPIO controller.
-> > > +- #gpio-cells : Should be two.  The first cell is the pin number and the
-> > > +  second cell encodes optional flags (currently unused).
-> > 
-> > I'm not /opposed/ to this binding, but there is an issue that I think
-> > is worth raising.  From an engineer's perspective, multi-bank gpio
-> > controllers are often documented as a single range of N gpios, even if
-> > it is composed of M banks of x gpios (where N = M * x).  This means
-> > that the documentation will specify an 'N' value for a gpio pin, but
-> > the device tree will be a set of 'x' values against sub nodes.  I
-> > think this will cause a lot of confusion.
-> 
-> and for controllers such as the Synopsys one, each bank may have a 
-> different number of GPIO pins!
-
-Heh.
-
-> > Perhaps the gpio-controller property and #gpio-cells should be part of
-> > the parent node.  The current Linux implementation doesn't easily
-> > support doing it that way, but we can change the driver if it means a
-> > better binding.
-> > 
-> > I'm not sure though.  Thoughts?
-> 
-> Personally I prefer it on a per-bank basis and that's how some of the 
-> powerpc bindings do it so there's a precedent for doing it this way.  
-> For controllers like the Synopsys one where banks can be different sizes 
-> it makes it more explicit.  Otherwise one could make a sane (but 
-> invalid) assumption that all banks are the width of the registers up to 
-> the number of GPIO's.
-
-True. If it is kept to be per-bank, then it also means that for each
-controller, it will need to be well documented (ie. easy to find) how
-gpio bindings line up with SoC documentation.
+I've got it in a "input/next" branch.  Since the input maintainer
+doesn't seem to be active on driver patches, I'll send a pull req to
+Linus.
 
 g.
+
+> 
+> Thanks,
+> Michal
+> 
+> Grant Likely wrote:
+> >On Wed, Jul 13, 2011 at 10:46 PM, Michal Simek <monstr@monstr.eu> wrote:
+> >>Add missing header.
+> >>
+> >>Error log:
+> >>CC      drivers/input/serio/xilinx_ps2.o
+> >>drivers/input/serio/xilinx_ps2.c: In function 'xps2_of_probe':
+> >>drivers/input/serio/xilinx_ps2.c:249: error: implicit declaration of function 'of_address_to_resource'
+> >>
+> >>Signed-off-by: Michal Simek <monstr@monstr.eu>
+> >
+> >Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> >
+> >>---
+> >> drivers/input/serio/xilinx_ps2.c |    2 +-
+> >> 1 files changed, 1 insertions(+), 1 deletions(-)
+> >>
+> >>diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/xilinx_ps2.c
+> >>index 80baa53..d64c5a4 100644
+> >>--- a/drivers/input/serio/xilinx_ps2.c
+> >>+++ b/drivers/input/serio/xilinx_ps2.c
+> >>@@ -23,7 +23,7 @@
+> >> #include <linux/init.h>
+> >> #include <linux/list.h>
+> >> #include <linux/io.h>
+> >>-
+> >>+#include <linux/of_address.h>
+> >> #include <linux/of_device.h>
+> >> #include <linux/of_platform.h>
+> >>
+> >>--
+> >>1.5.5.6
+> >>
+> >>
+> >
+> >
+> >
+> 
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng)
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+> Microblaze U-BOOT custodian
