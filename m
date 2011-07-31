@@ -1,81 +1,67 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 1/3] i2c: s3c2410: Keep a copy of platform data and
- use it.
-Date: Sat, 30 Jul 2011 21:51:05 -0600
-Message-ID: <20110731035105.GG24334@ponder.secretlab.ca>
-References: <1311329918-8105-1-git-send-email-thomas.abraham@linaro.org>
- <1311329918-8105-2-git-send-email-thomas.abraham@linaro.org>
+Subject: Re: [RFC/PATCH 7/7] WIP: HACK/RFC: omap_device: begin to decouple
+ platform_device from omap_device
+Date: Sat, 30 Jul 2011 20:58:07 -0600
+Message-ID: <20110731025807.GA24334@ponder.secretlab.ca>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+ <1311292338-11830-9-git-send-email-khilman@ti.com>
+ <20110730120332.GA15539@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1311329918-8105-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20110730120332.GA15539@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Kevin Hilman <khilman@ti.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 22, 2011 at 03:48:36PM +0530, Thomas Abraham wrote:
-> The platform data is copied into driver's private data and the copy is
-> used for all access to the platform data. This simpifies the addition
-> of device tree support for the i2c-s3c2410 driver.
+On Sat, Jul 30, 2011 at 01:03:32PM +0100, Russell King - ARM Linux wrote:
+> On Thu, Jul 21, 2011 at 04:52:18PM -0700, Kevin Hilman wrote:
+> > Rather than embedding a struct platform_device inside a struct
+> > omap_device, decouple them, leaving only a pointer to the
+> > platform_device inside the omap_device.
+> > 
+> > This patch uses devres to allocate and attach the omap_device to the
+> > struct device, so finding an omap_device from a struct device means
+> > using devres_find(), and the to_omap_device() helper function was
+> > modified accordingly.
+> > 
+> > RFC/Hack alert:
+> > 
+> > Currently the driver core (drivers/base/dd.c) doesn't expect any
+> > devres resources to exist before the driver's ->probe() is called.  In
+> > this patch, I just comment out the warning, but we'll need to
+> > understand why that limitation exists, and if it's a real limitation.
+> > A first glance suggests that it's not really needed.  If this is a
+> > true limitation, we'll need to find some way other than devres to
+> > attach an omap_device to a struct device.
+> > 
+> > On OMAP, we will need an omap_device attached to a struct device
+> > before probe because device HW may be disabled in probe and drivers
+> > are expected to use runtime PM in ->probe() to activate the hardware
+> > before access.  Because the runtime PM API calls use omap_device (via
+> > our PM domain layer), we need omap_device attached to a
+> > platform_device before probe.
 > 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  drivers/i2c/busses/i2c-s3c2410.c |    7 +++++--
->  1 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-> index 6c00c10..e132168 100644
-> --- a/drivers/i2c/busses/i2c-s3c2410.c
-> +++ b/drivers/i2c/busses/i2c-s3c2410.c
-> @@ -78,6 +78,7 @@ struct s3c24xx_i2c {
->  	struct resource		*ioarea;
->  	struct i2c_adapter	adap;
->  
-> +	struct s3c2410_platform_i2c	pdata;
+> This feels really wrong to overload devres with this.  devres purpose is
+> to provide the device's _drivers_ with a way to allocate and free resources
+> in such a way to avoid leaks on .remove or probe failure.  So I think that
+> overloading it with something that has a different lifetime is completely
+> wrong.
 
-After looking at a bunch of patches, there is another way do do this
-I think.  Instead of copying pdata into the private data structure, it
-can remain as a pointer if the DT code uses devm_kzmalloc to allocate
-a s3c2410_platform_i2c structure when needed.
+I disagree; extending devres to also handle device lifetime scoped
+resources makes perfect sense. It is a clean extension, and struct device
+is really getting rather huge.  I certainly prefer re-scoping devres
+to adding more elements to struct device.
 
-I leave it up to you (and Ben) though as to which you prefer.  I'm
-okay either way, and you can add:
+> We could add a new member to struct dev_archdata or pdev_archdata to carry
+> a pointer to this data, which I think would be a far cleaner (and saner)
+> way to deal with this.  In much the same way as we already have an of_node
+> member in struct device.
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Since this is just for omap_device, which by definition is arm-only, I
+don't have any strong objection to using pdev_archdata. If it was
+cross-architecture, then I'd argue strongly for the devres approach.
 
-
->  #ifdef CONFIG_CPU_FREQ
->  	struct notifier_block	freq_transition;
->  #endif
-> @@ -626,7 +627,7 @@ static int s3c24xx_i2c_calcdivisor(unsigned long clkin, unsigned int wanted,
->  
->  static int s3c24xx_i2c_clockrate(struct s3c24xx_i2c *i2c, unsigned int *got)
->  {
-> -	struct s3c2410_platform_i2c *pdata = i2c->dev->platform_data;
-> +	struct s3c2410_platform_i2c *pdata = &i2c->pdata;
->  	unsigned long clkin = clk_get_rate(i2c->clk);
->  	unsigned int divs, div1;
->  	unsigned long target_frequency;
-> @@ -755,7 +756,7 @@ static int s3c24xx_i2c_init(struct s3c24xx_i2c *i2c)
->  
->  	/* get the plafrom data */
->  
-> -	pdata = i2c->dev->platform_data;
-> +	pdata = &i2c->pdata;
->  
->  	/* inititalise the gpio */
->  
-> @@ -810,6 +811,8 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> +	memcpy(&i2c->pdata, pdata, sizeof(*pdata));
-> +
->  	strlcpy(i2c->adap.name, "s3c2410-i2c", sizeof(i2c->adap.name));
->  	i2c->adap.owner   = THIS_MODULE;
->  	i2c->adap.algo    = &s3c24xx_i2c_algorithm;
-> -- 
-> 1.6.6.rc2
-> 
+g.
