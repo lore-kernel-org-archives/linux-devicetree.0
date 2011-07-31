@@ -1,57 +1,82 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] vic: add device tree bindings
-Date: Sun, 31 Jul 2011 16:27:14 +0100
-Message-ID: <20110731152714.GB7094@pulham.picochip.com>
-References: <1311610200-12408-1-git-send-email-jamie@jamieiles.com>
-	<1311610200-12408-2-git-send-email-jamie@jamieiles.com>
-	<20110725200434.GB26735@ponder.secretlab.ca>
-	<20110725223151.GB3001@gallagher>
-	<20110731041107.GN24334@ponder.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] Input: mma8450: add device tree probe support
+Date: Sat, 30 Jul 2011 21:07:25 -0600
+Message-ID: <20110731030725.GD24334@ponder.secretlab.ca>
+References: <1311265551-23233-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110731041107.GN24334-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1311265551-23233-1-git-send-email-shawn.guo@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, Sammy He <r62914@freescale.com>, Eric Miao <eric.miao@linaro.org>, Dmitry Torokhov <dtor@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 30, 2011 at 10:11:07PM -0600, Grant Likely wrote:
-> On Mon, Jul 25, 2011 at 11:31:51PM +0100, Jamie Iles wrote:
-> > 
-> > > > +	}
-> > > 
-> > > I think that rather than writing a interrupt-controller-specific
-> > > parse route like this one, it would be much better to have a generic
-> > > helper that finds and sorts all the interrupt controllers before
-> > > calling a setup callback for each one.
-> > 
-> > Hmm, not sure I follow this.  I can see that many controllers would have 
-> > some common properties so there will be some common code - are you 
-> > suggesting having something do all the parsing then callbacks for each 
-> > controller type that takes some kind of template or am I way off the 
-> > mark?
+On Fri, Jul 22, 2011 at 12:25:51AM +0800, Shawn Guo wrote:
+> It adds device tree probe support for mma8450 driver.
 > 
-> No, I'm more talking about having a routine that finds all the
-> interrupt controllers and figures out the cascading order, and then
-> calls each irq controller setup routine in order.
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Sammy He <r62914@freescale.com>
+> Cc: Eric Miao <eric.miao@linaro.org>
+> Cc: Dmitry Torokhov <dtor@mail.ru>
 
-OK, that makes sense.  I'm not sure how best to implement that but I'll 
-give it some thought.
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-Regarding the irq-start property - on picoxcell we have 2 VIC's and they 
-aren't cascaded - the outputs are just OR'd together so I can't work out 
-how to fit in the IRQ decoding with get_irqnr_and_base without having 
-this property.  Is there another way that I could implement that?
-
-Jamie
+> ---
+>  .../devicetree/bindings/input/fsl-mma8450.txt      |   11 +++++++++++
+>  drivers/input/misc/mma8450.c                       |    8 ++++++++
+>  2 files changed, 19 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/fsl-mma8450.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/fsl-mma8450.txt b/Documentation/devicetree/bindings/input/fsl-mma8450.txt
+> new file mode 100644
+> index 0000000..a00c94c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/fsl-mma8450.txt
+> @@ -0,0 +1,11 @@
+> +* Freescale MMA8450 3-Axis Accelerometer
+> +
+> +Required properties:
+> +- compatible : "fsl,mma8450".
+> +
+> +Example:
+> +
+> +accelerometer: mma8450@1c {
+> +	compatible = "fsl,mma8450";
+> +	reg = <0x1c>;
+> +};
+> diff --git a/drivers/input/misc/mma8450.c b/drivers/input/misc/mma8450.c
+> index 20f8f92..6c76cf7 100644
+> --- a/drivers/input/misc/mma8450.c
+> +++ b/drivers/input/misc/mma8450.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+>  #include <linux/input-polldev.h>
+> +#include <linux/of_device.h>
+>  
+>  #define MMA8450_DRV_NAME	"mma8450"
+>  
+> @@ -229,10 +230,17 @@ static const struct i2c_device_id mma8450_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mma8450_id);
+>  
+> +static const struct of_device_id mma8450_dt_ids[] = {
+> +	{ .compatible = "fsl,mma8450", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, mma8450_dt_ids);
+> +
+>  static struct i2c_driver mma8450_driver = {
+>  	.driver = {
+>  		.name	= MMA8450_DRV_NAME,
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = mma8450_dt_ids,
+>  	},
+>  	.probe		= mma8450_probe,
+>  	.remove		= __devexit_p(mma8450_remove),
+> -- 
+> 1.7.4.1
+> 
