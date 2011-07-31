@@ -1,200 +1,108 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 2/3] i2c: s3c2410: Add device tree support
-Date: Sat, 30 Jul 2011 21:53:36 -0600
-Message-ID: <20110731035336.GH24334@ponder.secretlab.ca>
-References: <1311329918-8105-1-git-send-email-thomas.abraham@linaro.org>
- <1311329918-8105-2-git-send-email-thomas.abraham@linaro.org>
- <1311329918-8105-3-git-send-email-thomas.abraham@linaro.org>
+Subject: Re: [PATCH v2 2/4] powerpc, mpc52xx: add a4m072 board support
+Date: Sat, 30 Jul 2011 22:08:19 -0600
+Message-ID: <20110731040819.GM24334@ponder.secretlab.ca>
+References: <1308729311-15375-3-git-send-email-hs@denx.de>
+	<1308739150-31527-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <1311329918-8105-3-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <1308739150-31527-1-git-send-email-hs@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Heiko Schocher <hs@denx.de>
+Cc: devicetree-discuss@ozlabs.org, linuxppc-dev@lists.ozlabs.org, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 22, 2011 at 03:48:37PM +0530, Thomas Abraham wrote:
-> Add device tree probe support for Samsung's s3c2410 i2c driver.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+On Wed, Jun 22, 2011 at 12:39:10PM +0200, Heiko Schocher wrote:
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> cc: Grant Likely <grant.likely@secretlab.ca>
+> cc: devicetree-discuss@ozlabs.org
+> cc: Wolfgang Denk <wd@denx.de>
+> cc: Wolfram Sang <w.sang@pengutronix.de>
 > ---
->  .../devicetree/bindings/i2c/samsung-i2c.txt        |   44 +++++++++++++++++
->  drivers/i2c/busses/i2c-s3c2410.c                   |   51 +++++++++++++++++++-
->  2 files changed, 94 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/samsung-i2c.txt
+> For this patchseries following patch is needed:
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
+> http://patchwork.ozlabs.org/patch/91919/
+> 
+> Grant? Do you have some comments on that patch?
+> 
+> changes for v2:
+>   add comment from Wolfram Sang:
+>   use mpc5200.dtsi
+> 
+>  arch/powerpc/boot/dts/a4m072.dts             |  172 ++++++++++++++++++++++++++
+>  arch/powerpc/platforms/52xx/mpc5200_simple.c |    1 +
+>  2 files changed, 173 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/powerpc/boot/dts/a4m072.dts
+> 
+> diff --git a/arch/powerpc/boot/dts/a4m072.dts b/arch/powerpc/boot/dts/a4m072.dts
 > new file mode 100644
-> index 0000000..4e1a2ef
+> index 0000000..adb6746
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> @@ -0,0 +1,44 @@
-> +* Samsung's I2C controller
-> +
-> +The Samsung's I2C controller is used to interface with I2C devices.
-> +
-> +Required properties:
-> +  - compatible: value should be either of the following.
-> +      (a) "samsung, s3c2410-i2c", for i2c compatible with s3c2410 i2c.
-> +      (b) "samsung, s3c2440-i2c", for i2c compatible with s3c2440 i2c.
-> +
-> +  - reg: physical base address of the controller and length of memory mapped
-> +    region.
-> +
-> +  - interrupts: interrupt number to the cpu.
-> +
-> +  - samsung,i2c-sda-delay: Delay (in ns) applied to data line (SDA) edges.
-> +
-> +  - gpios: The order of the gpios should be in the following order.
-> +       <SDA, SCL>
-> +
-> +Optional properties:
-> +  - samsung,i2c-slave-addr: Slave address in multi-master enviroment. If not
-> +    specified, default value is 0.
-> +
-> +  - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
-> +    specified, the default value in Hz is 100000.
-> +
-> +Example:
-> +
-> +	i2c@13870000 {
-> +		compatible = "samsung,s3c2440-i2c";
-> +		reg = <0x13870000 0x100>;
-> +		interrupts = <345>;
-> +		samsung,i2c-sda-delay = <100>;
-> +		samsung,i2c-max-bus-freq = <100000>;
-> +		gpios = <&gpd1 2 0 /* SDA */
-> +			 &gpd1 3 0 /* SCL */>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		wm8994@1a {
-> +			compatible = "wlf,wm8994";
-> +			reg = <0x1a>;
-> +		};
-> +	};
-> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-> index e132168..40264b0 100644
-> --- a/drivers/i2c/busses/i2c-s3c2410.c
-> +++ b/drivers/i2c/busses/i2c-s3c2410.c
-> @@ -35,6 +35,7 @@
->  #include <linux/cpufreq.h>
->  #include <linux/slab.h>
->  #include <linux/io.h>
-> +#include <linux/of_i2c.h>
->  
->  #include <asm/irq.h>
->  
-> @@ -96,6 +97,10 @@ static inline int s3c24xx_i2c_is2440(struct s3c24xx_i2c *i2c)
->  	struct platform_device *pdev = to_platform_device(i2c->dev);
->  	enum s3c24xx_i2c_type type;
->  
-> +	if (i2c->dev->of_node)
-> +		return of_device_is_compatible(i2c->dev->of_node,
-> +						"samsung,s3c2440-i2c");
-> +
->  	type = platform_get_device_id(pdev)->driver_data;
->  	return type == TYPE_S3C2440;
->  }
-> @@ -787,6 +792,34 @@ static int s3c24xx_i2c_init(struct s3c24xx_i2c *i2c)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF
-> +
-> +/* s3c24xx_i2c_parse_dt
+> +++ b/arch/powerpc/boot/dts/a4m072.dts
+> @@ -0,0 +1,172 @@
+> +/*
+> + * a4m072 board Device Tree Source
 > + *
-> + * Parse the device tree node and retreive the platform data.
-> +*/
+> + * Copyright (C) 2011 DENX Software Engineering GmbH
+> + * Heiko Schocher <hs@denx.de>
+> + *
+> + * Copyright (C) 2007 Semihalf
+> + * Marian Balakowicz <m8@semihalf.com>
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
 > +
-> +static void
-> +s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
-> +{
-> +	struct s3c2410_platform_i2c *pdata = &i2c->pdata;
+> +/include/ "mpc5200b.dtsi"
+
+Ah, I missed this follow up patch.  Yes, this is better.
+
 > +
-> +	if (!np)
-> +		return;
+> +/ {
+> +	model = "anonymous,a4m072";
+> +	compatible = "anonymous,a4m072";
 > +
-> +	of_property_read_u32(np, "samsung,i2c-sda-delay", &pdata->sda_delay);
-> +	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
-> +	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
-> +				(u32 *)&pdata->frequency);
-> +}
-> +#else
-> +static void
-> +s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
-> +{
-> +	return;
-> +}
-> +#endif
+> +	soc5200@f0000000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "fsl,mpc5200b-immr";
+> +		ranges = <0 0xf0000000 0x0000c000>;
+> +		reg = <0xf0000000 0x00000100>;
+> +		bus-frequency = <0>; /* From boot loader */
+> +		system-frequency = <0>; /* From boot loader */
 > +
->  /* s3c24xx_i2c_probe
->   *
->   * called by the bus driver when a suitable device is found
-> @@ -812,6 +845,7 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
->  	}
->  
->  	memcpy(&i2c->pdata, pdata, sizeof(*pdata));
-> +	s3c24xx_i2c_parse_dt(pdev->dev.of_node, i2c);
->  
->  	strlcpy(i2c->adap.name, "s3c2410-i2c", sizeof(i2c->adap.name));
->  	i2c->adap.owner   = THIS_MODULE;
-> @@ -908,13 +942,16 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
->  	 */
->  
->  	i2c->adap.nr = pdata->bus_num;
-> +	i2c->adap.dev.of_node = pdev->dev.of_node;
->  
-> -	ret = i2c_add_numbered_adapter(&i2c->adap);
-> +	ret = (pdev->dev.of_node) ? i2c_add_adapter(&i2c->adap) :
-> +					i2c_add_numbered_adapter(&i2c->adap);
+> +		cdm@200 {
+> +			fsl,ext_48mhz_en = <0x0>;
+> +			fsl,fd_enable = <0x01>;
+> +			fsl,fd_counters = <0xbbbb>;
 
-i2c_add_numbered_adapter will do the right thing now if i2c->adap.nr
-is set to -1 when a bus number needs to be dynamically allocated.  You can simplify this.
+Are these new properties documented?  They need to be.  Also,
+convention is to use '-' instead of '_' in property names.
 
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "failed to add bus to i2c core\n");
->  		goto err_cpufreq;
->  	}
->  
-> +	of_i2c_register_devices(&i2c->adap);
->  	platform_set_drvdata(pdev, i2c);
->  
->  	dev_info(&pdev->dev, "%s: S3C I2C adapter\n", dev_name(&i2c->adap.dev));
-> @@ -1016,6 +1053,17 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id s3c24xx_i2c_match[] = {
-> +	{ .compatible = "samsung,s3c2410-i2c" },
-> +	{ .compatible = "samsung,s3c2440-i2c" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
-> +#else
-> +#define s3c24xx_i2c_match NULL
-> +#endif
+> +		};
 > +
->  static struct platform_driver s3c24xx_i2c_driver = {
->  	.probe		= s3c24xx_i2c_probe,
->  	.remove		= s3c24xx_i2c_remove,
-> @@ -1024,6 +1072,7 @@ static struct platform_driver s3c24xx_i2c_driver = {
->  		.owner	= THIS_MODULE,
->  		.name	= "s3c-i2c",
->  		.pm	= S3C24XX_DEV_PM_OPS,
-> +		.of_match_table	= s3c24xx_i2c_match,
->  	},
+> +		timer@600 {
+> +			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
+> +			reg = <0x600 0x80>;
+> +			interrupts = <1 9 0>;
+> +			fsl,has-wdt;
+> +		};
 
-Looks pretty good.  After fixing the above comment, feel free to add
-my:
+Isn't this node already in the mpc5200b.dtsi file?
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Otherwise, this patch looks pretty good.
 
->  };
->  
-> -- 
-> 1.6.6.rc2
-> 
+g.
