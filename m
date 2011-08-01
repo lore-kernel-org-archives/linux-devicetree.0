@@ -1,41 +1,46 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 1/7] ARM: mmp: parse irq from DT
-Date: Mon, 1 Aug 2011 09:26:50 +0100
-Message-ID: <20110801082649.GA15578@n2100.arm.linux.org.uk>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] tty: serial: support device tree in pxa
+Date: Mon, 1 Aug 2011 09:27:48 +0100
+Message-ID: <20110801082748.GB15578@n2100.arm.linux.org.uk>
 References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
 	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-4-git-send-email-haojian.zhuang@marvell.com>
+	<1311835293-18125-5-git-send-email-haojian.zhuang@marvell.com>
+	<20110729164539.GM11164@ponder.secretlab.ca>
+	<20110729164922.GA30298@n2100.arm.linux.org.uk>
+	<CAN1soZwYjQp5c=4f=CbqjrXFxzSURSv6i9QHMyjyPszs=kzh9w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@marvell.com>
-Cc: eric.y.miao@gmail.com, devicetree-discuss@lists.ozlabs.org, haojian.zhuang@gmail.com, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
+In-Reply-To: <CAN1soZwYjQp5c=4f=CbqjrXFxzSURSv6i9QHMyjyPszs=kzh9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 28, 2011 at 02:41:27PM +0800, Haojian Zhuang wrote:
-> +	unsigned int status, mask, irq_base, nr, data;
-> +	int cascade;
-> +
-...
-> +		mux_info = kzalloc(sizeof(*mux_info), GFP_KERNEL);
-> +		if (mux_info == NULL)
-> +			goto out;
-> +		status += (unsigned int)mmp_info->virt_base;
-> +		mux_info->status = (void __iomem *)status;
+On Mon, Aug 01, 2011 at 10:50:47AM +0800, Haojian Zhuang wrote:
+> On Sat, Jul 30, 2011 at 12:49 AM, Russell King - ARM Linux
+> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> > Oh ffs, why is this DT stuff causing all the clk stuff to have to change.
+> > And specifically why is stuff converting to use clk_get_sys().
+> >
+> > clk_get_sys() is there to allow system devices to get their clocks.
+> > It's not for general drivers to use.
+> >
+> > Please, stop this madness.
+> >
+> 
+> So how could I get these clocks?
 
-This is silly.  Why not just do:
-
-		mux_info->status = mmp_info->virt_base + status;
-
-and avoid those horrible casts?
+Add the new _stable_ DT device name to the clkdev list.
