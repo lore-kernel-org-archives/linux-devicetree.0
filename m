@@ -1,98 +1,115 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 1/7] ARM: mmp: parse irq from DT
-Date: Mon, 1 Aug 2011 15:43:40 +0100
-Message-ID: <CACxGe6tmUq3Awujdbhawr_xMi+cGhHNhOaPWiuu_XtrNXHP7FQ@mail.gmail.com>
-References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
-	<20110729163616.GJ11164@ponder.secretlab.ca>
-	<CAN1soZxX6EBRPvzV_00njioBn1NfiAbLBoD7EYc-wV-uQM_VoQ@mail.gmail.com>
-	<20110801141036.GA21627@ponder.secretlab.ca>
-	<CAN1soZwSiEojxC6uBAGYdUxJKPA2X+360ZsLEMyeUcBKdBn_SA@mail.gmail.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [RFC/PATCH 7/7] WIP: HACK/RFC: omap_device: begin to decouple platform_device from omap_device
+Date: Mon, 01 Aug 2011 08:42:14 -0700
+Message-ID: <871ux5nnop.fsf@ti.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+	<1311292338-11830-9-git-send-email-khilman@ti.com>
+	<20110730120332.GA15539@n2100.arm.linux.org.uk>
+	<20110731025807.GA24334@ponder.secretlab.ca>
+	<20110731150540.GA3019@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAN1soZwSiEojxC6uBAGYdUxJKPA2X+360ZsLEMyeUcBKdBn_SA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, Haojian Zhuang <haojian.zhuang@marvell.com>, eric.y.miao@gmail.com, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110731150540.GA3019@n2100.arm.linux.org.uk> (Russell King's
+	message of "Sun, 31 Jul 2011 16:05:40 +0100")
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 1, 2011 at 3:42 PM, Haojian Zhuang <haojian.zhuang@gmail.com> w=
-rote:
-> On Mon, Aug 1, 2011 at 10:10 PM, Grant Likely <grant.likely@secretlab.ca>=
- wrote:
->> On Mon, Aug 01, 2011 at 10:47:06AM +0800, Haojian Zhuang wrote:
->>> On Sat, Jul 30, 2011 at 12:36 AM, Grant Likely
->>> <grant.likely@secretlab.ca> wrote:
->>> >> diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
->>> >> index ec8d65d..1c563c2 100644
->>> >> --- a/arch/arm/mach-mmp/common.h
->>> >> +++ b/arch/arm/mach-mmp/common.h
->>> >> @@ -6,3 +6,4 @@ extern void timer_init(int irq);
->>> >>
->>> >> =A0extern void __init icu_init_irq(void);
->>> >> =A0extern void __init mmp_map_io(void);
->>> >> +extern void __init mmp_init_intc(void);
->>> >> diff --git a/arch/arm/mach-mmp/include/mach/irqs.h b/arch/arm/mach-m=
-mp/include/mach/irqs.h
->>> >> index a09d328..65ec176 100644
->>> >> --- a/arch/arm/mach-mmp/include/mach/irqs.h
->>> >> +++ b/arch/arm/mach-mmp/include/mach/irqs.h
->>> >> @@ -224,6 +224,6 @@
->>> >>
->>> >> =A0#define IRQ_BOARD_START =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0(IRQ_GPIO_START + IRQ_GPIO_NUM)
->>> >>
->>> >> -#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0(IRQ_BOARD_START)
->>> >> +#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A00
->>> >
->>> > Why is NR_IRQs getting changed? =A0I think this will break
->>> > !CONFIG_SPARSE_IRQS, and it shouldn't be necessary for this
->>> > conversion.
->>> >
->>> If CONFIG_SPARSE_IRQ is enabled, arch_probe_nr_irqs() returns NR_IRQS i=
-n arm.
->>> It results registering NR_IRQS in early_irq_init(). If NR_IRQS is 200,
->>> 200 irqs are
->>> registered in early_irq_init(). It's not my requirement. What I need
->>> is registering irq
->>> from DT.
->>>
->>> So I have to define NR_IRQS to 0. And CONFIG_SPARSE_IRQS is always enab=
-led
->>> in ARCH_MMP. So it's selected in Kconfig by default.
->>
->> My point is, that applying this patch will break anyone depending on
->> non-DT mach-mmp support. =A0I'm completely fine with you doing so, but
->> you need to be extra careful that it is done in a bisectable way. =A0At
->> no point in the commit series should the kernel be unable to build a
->> working mmp image.
->>
->> g.
->>
->>
->
-> Since .nr_irqs property is assigned in machine descriptor of brownstone.c=
- or
-> ttc_dkb.c, nr_irqs equals to machine_desc->nr_irqs (arch/arm/kernel/irq.c=
-).
->
-> Even NR_IRQS is defined as 0, machine_desc->nr_irqs can help us to
-> pre-allocate irq numbers while CONFIG_OF isn't defined.
->
-> So it's not an issue in ARCH_MMP. And I tested it that everything is well.
+Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
 
-Okay, that answers my question.  Thanks.
+> On Sat, Jul 30, 2011 at 08:58:07PM -0600, Grant Likely wrote:
+>> On Sat, Jul 30, 2011 at 01:03:32PM +0100, Russell King - ARM Linux wrote:
+>> > On Thu, Jul 21, 2011 at 04:52:18PM -0700, Kevin Hilman wrote:
+>> > > Rather than embedding a struct platform_device inside a struct
+>> > > omap_device, decouple them, leaving only a pointer to the
+>> > > platform_device inside the omap_device.
+>> > > 
+>> > > This patch uses devres to allocate and attach the omap_device to the
+>> > > struct device, so finding an omap_device from a struct device means
+>> > > using devres_find(), and the to_omap_device() helper function was
+>> > > modified accordingly.
+>> > > 
+>> > > RFC/Hack alert:
+>> > > 
+>> > > Currently the driver core (drivers/base/dd.c) doesn't expect any
+>> > > devres resources to exist before the driver's ->probe() is called.  In
+>> > > this patch, I just comment out the warning, but we'll need to
+>> > > understand why that limitation exists, and if it's a real limitation.
+>> > > A first glance suggests that it's not really needed.  If this is a
+>> > > true limitation, we'll need to find some way other than devres to
+>> > > attach an omap_device to a struct device.
+>> > > 
+>> > > On OMAP, we will need an omap_device attached to a struct device
+>> > > before probe because device HW may be disabled in probe and drivers
+>> > > are expected to use runtime PM in ->probe() to activate the hardware
+>> > > before access.  Because the runtime PM API calls use omap_device (via
+>> > > our PM domain layer), we need omap_device attached to a
+>> > > platform_device before probe.
+>> > 
+>> > This feels really wrong to overload devres with this.  devres purpose is
+>> > to provide the device's _drivers_ with a way to allocate and free resources
+>> > in such a way to avoid leaks on .remove or probe failure.  So I think that
+>> > overloading it with something that has a different lifetime is completely
+>> > wrong.
+>> 
+>> I disagree; extending devres to also handle device lifetime scoped
+>> resources makes perfect sense. It is a clean extension, and struct device
+>> is really getting rather huge.  I certainly prefer re-scoping devres
+>> to adding more elements to struct device.
+>
+> The point is you're asking something which is designed to have a well
+> defined lifetime of driver-bind...driver-unbind to do a lot more than
+> that - extending its lifetime conditional on some flag to the entire
+> device lifetime instead.
+>
+> Such extensions tend to be a disaster - and a recipe for confusion as
+> people will no longer have a clear idea of the lifetime issues.  We
+> already know that people absolutely struggle to understand lifed
+> objects - we see it time and time again where people directly kfree
+> stuff like platform devices without thinking about whether they're
+> still in use.
+>
+> So no, extending devres is a _big_ mistake and is far from clean.
+>
+> Not only that, but if most of the platform devices are omap devices,
+> (as it would be on OMAP), you'll consume more memory through having to
+> have the additional management structs for the omap_device stuff than
+> a simple pointer.
+>
+> As for struct device getting rather huge, last time I looked it contained
+> a load of stuff which was there whether or not a platform used it.  Eg,
+> you get 4 bytes wasted for an of_node whether you have DT support or not.
+> If sizeof(struct device) really is a problem, then it needs the unused
+> stuff ifdef'd away.  So I don't buy the "its getting rather huge" argument.
+>
+>> > We could add a new member to struct dev_archdata or pdev_archdata to carry
+>> > a pointer to this data, which I think would be a far cleaner (and saner)
+>> > way to deal with this.  In much the same way as we already have an of_node
+>> > member in struct device.
+>> 
+>> Since this is just for omap_device, which by definition is arm-only, I
+>> don't have any strong objection to using pdev_archdata. If it was
+>> cross-architecture, then I'd argue strongly for the devres approach.
+>
+> Indeed, which is why I think putting it in the platform device archdata
+> makes total sense, more sense than buggering up the clean devres lifetime
+> rules that we have today.
 
-g.
+OK, so I'll continue this approach using pdev_archdata, which would work
+fine for me.  It's currently empty, so I'll just add a 'void *' if it's
+OK with you Russell:
+
+diff --git a/arch/arm/include/asm/device.h b/arch/arm/include/asm/device.h
+index 9f390ce..bb777cd 100644
+--- a/arch/arm/include/asm/device.h
++++ b/arch/arm/include/asm/device.h
+@@ -13,6 +13,7 @@ struct dev_archdata {
+ };
+ 
+ struct pdev_archdata {
++	void *p;
+ };
+ 
+ #endif
