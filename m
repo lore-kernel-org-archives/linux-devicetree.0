@@ -1,46 +1,72 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] tty: serial: support device tree in pxa
-Date: Mon, 1 Aug 2011 09:27:48 +0100
-Message-ID: <20110801082748.GB15578@n2100.arm.linux.org.uk>
-References: <1311835293-18125-1-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-2-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-3-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-4-git-send-email-haojian.zhuang@marvell.com>
-	<1311835293-18125-5-git-send-email-haojian.zhuang@marvell.com>
-	<20110729164539.GM11164@ponder.secretlab.ca>
-	<20110729164922.GA30298@n2100.arm.linux.org.uk>
-	<CAN1soZwYjQp5c=4f=CbqjrXFxzSURSv6i9QHMyjyPszs=kzh9w@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RFC/PATCH 2/7] OMAP3: beagle: don't touch omap_device internals
+Date: Mon, 1 Aug 2011 11:52:52 +0300
+Message-ID: <20110801085251.GF31013@legolas.emea.dhcp.ti.com>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com>
+ <1311292338-11830-4-git-send-email-khilman@ti.com>
+ <20110722085716.GI32058@legolas.emea.dhcp.ti.com>
+ <20110728055346.GA11921@foobar>
+ <4E315C9F.1030801@ti.com>
+ <CAOMWX4fYGD4aRomoHZjvy_F9CRb_U9UV4OOa0BgrzZhx81iQtQ@mail.gmail.com>
+ <20110729134932.GA2258@foobar>
+ <20110729140515.GV31013@legolas.emea.dhcp.ti.com>
+ <CAOMWX4e0CODd8YT4LC2zHdGhzzZpOqRc0CU8roV-Pw1VTx5XCw@mail.gmail.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZsxMXj7gRnSZQ7B8"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAN1soZwYjQp5c=4f=CbqjrXFxzSURSv6i9QHMyjyPszs=kzh9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+In-Reply-To: <CAOMWX4e0CODd8YT4LC2zHdGhzzZpOqRc0CU8roV-Pw1VTx5XCw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Menon, Nishanth" <nm@ti.com>
+Cc: balbi@ti.com, "Cousson, Benoit" <b-cousson@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 01, 2011 at 10:50:47AM +0800, Haojian Zhuang wrote:
-> On Sat, Jul 30, 2011 at 12:49 AM, Russell King - ARM Linux
-> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > Oh ffs, why is this DT stuff causing all the clk stuff to have to change.
-> > And specifically why is stuff converting to use clk_get_sys().
-> >
-> > clk_get_sys() is there to allow system devices to get their clocks.
-> > It's not for general drivers to use.
-> >
-> > Please, stop this madness.
-> >
-> 
-> So how could I get these clocks?
 
-Add the new _stable_ DT device name to the clkdev list.
+--ZsxMXj7gRnSZQ7B8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Jul 29, 2011 at 06:07:17PM -0500, Menon, Nishanth wrote:
+> On Fri, Jul 29, 2011 at 09:05, Felipe Balbi <balbi@ti.com> wrote:
+> >
+> >> +}
+> >> +EXPORT_SYMBOL(omap_hwmod_name_get_odev);
+> >
+> > maybe EXPORT_SYMBOL_GPL() ?? Not sure we want non-GPL code to access
+> > this ;-)
+>=20
+> Sure.. but is this the way we want to go? if yes, I can post the
+> series in a formal way to the list.
+
+I would expect so, but if there are concerns of other non-GPL drivers
+needing this, you can at least use:
+
+EXPORT_SYMBOL_GPL_FUTURE();
+
+this would allow you to catch non-GPL drivers accessing this symbol.
+
+--=20
+balbi
+
+--ZsxMXj7gRnSZQ7B8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQEcBAEBAgAGBQJONmljAAoJEAv8Txj19kN1njgIAJOGgevV0HNBkUar++7amyGI
++XcNfWCf8SOqGjLOfPXB6i7OO7QrHUHE1aLGGpuTT9+p0X/H29RP6vU+XXYWFPwL
+2mmlPR4uKUz1CTYoF2taKH4iX37+j1X1QdzVDbe24Bfo8jXC+fNfOfHWTPYvbuaq
+LVR5LDiW4rqEOUBXgyf9ix5VS95AAzMCTYzhhoU/0kK2hkDVy9x71p4RZMpoXFyj
+EWFb0p76euLuVpXTF3Cpl77dka04TdQ9H8JZlixA0q8aAu7D2se5S2a/+IPeJya9
+OIfunzb70pKeKS9E2843YbsXo48/AWajgor7lzCEoSsCfbmrfldcfhYEvolmgTw=
+=y+gM
+-----END PGP SIGNATURE-----
+
+--ZsxMXj7gRnSZQ7B8--
