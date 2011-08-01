@@ -1,105 +1,61 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv3] mtd: gpio-nand: add device tree bindings
-Date: Mon, 1 Aug 2011 20:33:16 +0100
-Message-ID: <20110801193316.GA2648@pulham.picochip.com>
-References: <1312207374-14760-1-git-send-email-jamie@jamieiles.com>
-	<20110801133825.0b4fff24@schlenkerla.am.freescale.net>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC/PATCH 7/7] WIP: HACK/RFC: omap_device: begin to decouple
+	platform_device from omap_device
+Date: Mon, 1 Aug 2011 21:07:43 +0100
+Message-ID: <20110801200743.GA21535@n2100.arm.linux.org.uk>
+References: <1311292338-11830-1-git-send-email-khilman@ti.com> <1311292338-11830-9-git-send-email-khilman@ti.com> <20110730120332.GA15539@n2100.arm.linux.org.uk> <20110731025807.GA24334@ponder.secretlab.ca> <20110731150540.GA3019@n2100.arm.linux.org.uk> <871ux5nnop.fsf@ti.com> <CACxGe6t4tNeD-Pn6WFt1XOMC=_Q0cf4uD3kRkOckKH+S1JUJDA@mail.gmail.com> <20110801185009.GA5217@legolas.emea.dhcp.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110801133825.0b4fff24-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20110801185009.GA5217@legolas.emea.dhcp.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
+On Mon, Aug 01, 2011 at 09:50:09PM +0300, Felipe Balbi wrote:
+> Hi,
+>=20
+> On Mon, Aug 01, 2011 at 04:44:20PM +0100, Grant Likely wrote:
+> > On Mon, Aug 1, 2011 at 4:42 PM, Kevin Hilman <khilman@ti.com> wrote=
+:
+> > > diff --git a/arch/arm/include/asm/device.h b/arch/arm/include/asm=
+/device.h
+> > > index 9f390ce..bb777cd 100644
+> > > --- a/arch/arm/include/asm/device.h
+> > > +++ b/arch/arm/include/asm/device.h
+> > > @@ -13,6 +13,7 @@ struct dev_archdata {
+> > > =A0};
+> > >
+> > > =A0struct pdev_archdata {
+> > > + =A0 =A0 =A0 void *p;
+> > > =A0};
+> >=20
+> > struct omap_device *p;
+> >=20
+> > Otherwise it is just asking for type safety problems.
+>=20
+> considering that struct omap_device isn't ARM-wide, is it really wise=
+ to
+> to do that ? I guess a void * will do better here.
 
-On Mon, Aug 01, 2011 at 01:38:25PM -0500, Scott Wood wrote:
-> On Mon, 1 Aug 2011 15:02:54 +0100
-> Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-> 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > new file mode 100644
-> > index 0000000..2dc52de
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > @@ -0,0 +1,40 @@
-> > +GPIO assisted NAND flash
-> > +
-> > +The GPIO assisted NAND flash uses a memory mapped interface to
-> > +read/write the NAND commands and data and GPIO pins for the control
-> > +signals.
-> > +
-> > +Required properties:
-> > +- compatible : "gpio-control-nand"
-> > +- reg : should specify localbus chip select and size used for the chip.  For
-> > +  ARM platforms where a dummy read is needed to provide synchronisation with
-> > +  regards to bus reordering, an optional second resource describes the
-> > +  location to read from.
-> 
-> Specify how the reg regions behave, such as "The first reg resource is a
-> byte or word that represents the NAND chip's data lines.  The io-sync
-> resource should be read when...".  What about endianness?
+Help the typechecker do its job.  As we have only one (at the moment...=
+)
+And make it:
 
-OK, fair points.  I'm not sure what to say about endianness though.  
-Host byte order accesses are used in the driver so can I just specify 
-this?  We could add a property later to support endianess swapping, but 
-I don't want to add too much that I can't test.
++struct omap_device;
 
-> What if some other binding wants to add additional reg resources, while
-> still being backwards compatible with this binding?  Might be better to
-> move the sync into its own property -- something like "gpio-nand-io-sync =
-> <1>" indicating that it's in reg resource #1.  And maybe it should require
-> some PXA-specific compatible if io-sync is needed.  Even if another chip
-> requires some sort of sync hack, would it necessarily work the same?
+ struct pdev_archdata {
++#ifdef CONFIG_ARCH_OMAP
++	struct omap_device *omap;
++#endif
+ };
 
-Hmm, I'm not convinced there - the sync is to protect against bus 
-ordering, and a read from the right region does that.  I'm working on 
-another ARM platform (not PXA) that needs this sync so sure it's not PXA 
-specific.
-
-The alternative is to not have this specified in the binding and have 
-the platform attach the resource.  On my platform for example I need to 
-read from the GPIO controller registers and I can't find a way to 
-express this when using ranges...
-
-> > +- #address-cells, #size-cells : Must be present if the device has sub-nodes
-> > +  representing partitions.  In this case, both #address-cells and #size-cells
-> > +  must be equal to 1.
-> 
-> No support for NAND chips >= 4GiB?
-
-OK, I guess this can be relaxed to any value.
-
-> > +Optional properties:
-> > +- bank-width : Width (in bytes) of the device.
-> > +- chip-delay : chip dependent delay for transferring data from array to
-> > +  read registers (tR).
-> 
-> Why optional?  If there's a default assumption, document it.
-
-OK.
-
-> > +Examples:
-> > +
-> > +gpio-nand@1,0 {
-> > +	compatible = "gpio-control-nand";
-> > +	reg = <1 0x0000 0x1000>;
-> 
-> 4K seems a bit large for what I'm assuming this region is for.
-
-OK, not the best example, it just needs to be at least 2 bytes.  I'll 
-update it with a better one.
-
-Jamie
+for bonus points, so we only get the additional pointer for OMAP.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
