@@ -1,61 +1,91 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC/PATCH 7/7] WIP: HACK/RFC: omap_device: begin to decouple
-	platform_device from omap_device
-Date: Mon, 1 Aug 2011 21:07:43 +0100
-Message-ID: <20110801200743.GA21535@n2100.arm.linux.org.uk>
-References: <1311292338-11830-1-git-send-email-khilman@ti.com> <1311292338-11830-9-git-send-email-khilman@ti.com> <20110730120332.GA15539@n2100.arm.linux.org.uk> <20110731025807.GA24334@ponder.secretlab.ca> <20110731150540.GA3019@n2100.arm.linux.org.uk> <871ux5nnop.fsf@ti.com> <CACxGe6t4tNeD-Pn6WFt1XOMC=_Q0cf4uD3kRkOckKH+S1JUJDA@mail.gmail.com> <20110801185009.GA5217@legolas.emea.dhcp.ti.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCHv3] mtd: gpio-nand: add device tree bindings
+Date: Mon, 1 Aug 2011 15:12:09 -0500
+Message-ID: <20110801151209.7b904320@schlenkerla.am.freescale.net>
+References: <1312207374-14760-1-git-send-email-jamie@jamieiles.com>
+	<20110801133825.0b4fff24@schlenkerla.am.freescale.net>
+	<20110801193316.GA2648@pulham.picochip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110801185009.GA5217@legolas.emea.dhcp.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20110801193316.GA2648@pulham.picochip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+	<mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+	<mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org, linux-mtd@lists.infradead.org, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 01, 2011 at 09:50:09PM +0300, Felipe Balbi wrote:
-> Hi,
->=20
-> On Mon, Aug 01, 2011 at 04:44:20PM +0100, Grant Likely wrote:
-> > On Mon, Aug 1, 2011 at 4:42 PM, Kevin Hilman <khilman@ti.com> wrote=
-:
-> > > diff --git a/arch/arm/include/asm/device.h b/arch/arm/include/asm=
-/device.h
-> > > index 9f390ce..bb777cd 100644
-> > > --- a/arch/arm/include/asm/device.h
-> > > +++ b/arch/arm/include/asm/device.h
-> > > @@ -13,6 +13,7 @@ struct dev_archdata {
-> > > =A0};
-> > >
-> > > =A0struct pdev_archdata {
-> > > + =A0 =A0 =A0 void *p;
-> > > =A0};
-> >=20
-> > struct omap_device *p;
-> >=20
-> > Otherwise it is just asking for type safety problems.
->=20
-> considering that struct omap_device isn't ARM-wide, is it really wise=
- to
-> to do that ? I guess a void * will do better here.
+On Mon, 1 Aug 2011 20:33:16 +0100
+Jamie Iles <jamie@jamieiles.com> wrote:
 
-Help the typechecker do its job.  As we have only one (at the moment...=
-)
-And make it:
+> OK, fair points.  I'm not sure what to say about endianness though.  
+> Host byte order accesses are used in the driver so can I just specify 
+> this?  We could add a property later to support endianess swapping, but 
+> I don't want to add too much that I can't test.
 
-+struct omap_device;
+If the assumption is host endian, that's fine, just document it.
 
- struct pdev_archdata {
-+#ifdef CONFIG_ARCH_OMAP
-+	struct omap_device *omap;
-+#endif
- };
+It looks like the code uses a little-endian accessor (readw) in a couple
+places.  The instance in gpio_nand_readbuf16() should never be reached
+since the NAND layer should never do an unaligned buffer read, but the one
+in gpio_nand_verifybuf16() could cause problems.
 
-for bonus points, so we only get the additional pointer for OMAP.
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The implementation in nand_base.c uses readw(), but at least it uses it
+consistently between read_buf16(), write_buf16(), and verify_buf16().
+readsw()/writesw() do not appear to do byte swapping, at least on powerpc,
+while readw() does.
+
+Even so, the generic implementation could read data that is byte-reversed
+from what another implementation wrote, or vice versa.  I wonder if there
+are any big-endian platforms with 16-bit NAND that use the generic buffer
+functions -- doesn't look like it from a quick glance.
+
+> > What if some other binding wants to add additional reg resources, while
+> > still being backwards compatible with this binding?  Might be better to
+> > move the sync into its own property -- something like "gpio-nand-io-sync =
+> > <1>" indicating that it's in reg resource #1.  And maybe it should require
+> > some PXA-specific compatible if io-sync is needed.  Even if another chip
+> > requires some sort of sync hack, would it necessarily work the same?
+> 
+> Hmm, I'm not convinced there - the sync is to protect against bus 
+> ordering, and a read from the right region does that.  I'm working on 
+> another ARM platform (not PXA) that needs this sync so sure it's not PXA 
+> specific.
+
+OK, though if you think this will be common enough to include in the
+generic binding, is it only going to appear on ARM chips?
+
+What about using a "gpio-nand-io-sync" property instead of assuming that if
+there's a second reg resource, it must be this?
+
+> The alternative is to not have this specified in the binding and have 
+> the platform attach the resource.
+
+That doesn't sound ideal.
+
+> On my platform for example I need to 
+> read from the GPIO controller registers and I can't find a way to 
+> express this when using ranges...
+
+I think on that platform you should not specify gpio-control-nand in the
+compatible.  Have the driver or platform code match on a specific
+compatible, and then do whatever is appropriate internally to Linux to make
+it work.
+
+Or perhaps the io sync address should just be a physical address, not a reg
+that gets translated.
+
+-Scott
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
