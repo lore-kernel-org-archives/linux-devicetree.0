@@ -1,13 +1,15 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 2/2] arm/mx5: add device tree support for imx51 babbage
-Date: Tue, 2 Aug 2011 03:17:32 +0800
-Message-ID: <1312226252-8566-3-git-send-email-shawn.guo@linaro.org>
-References: <1312226252-8566-1-git-send-email-shawn.guo@linaro.org>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCHv3] mtd: gpio-nand: add device tree bindings
+Date: Mon, 1 Aug 2011 20:33:16 +0100
+Message-ID: <20110801193316.GA2648@pulham.picochip.com>
+References: <1312207374-14760-1-git-send-email-jamie@jamieiles.com>
+	<20110801133825.0b4fff24@schlenkerla.am.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1312226252-8566-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110801133825.0b4fff24-1MYqz8GpK7RekFaExTCHk1jVikpgYyvb5NbjCUgZEJk@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,573 +19,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree support for imx51 babbage board.
+Hi Scott,
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- .../devicetree/bindings/arm/fsl/boards.txt         |    4 +
- arch/arm/boot/dts/imx51-babbage.dts                |  141 ++++++++++++++
- arch/arm/boot/dts/imx51.dtsi                       |  203 ++++++++++++++++++++
- arch/arm/mach-mx5/Kconfig                          |    9 +
- arch/arm/mach-mx5/Makefile                         |    1 +
- arch/arm/mach-mx5/board-mx51_babbage.c             |    5 +
- arch/arm/mach-mx5/imx51-dt.c                       |  112 +++++++++++
- arch/arm/plat-mxc/include/mach/iomux-mx51.h        |    2 +
- 8 files changed, 477 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx51-babbage.dts
- create mode 100644 arch/arm/boot/dts/imx51.dtsi
- create mode 100644 arch/arm/mach-mx5/imx51-dt.c
+On Mon, Aug 01, 2011 at 01:38:25PM -0500, Scott Wood wrote:
+> On Mon, 1 Aug 2011 15:02:54 +0100
+> Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+> 
+> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> > new file mode 100644
+> > index 0000000..2dc52de
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> > @@ -0,0 +1,40 @@
+> > +GPIO assisted NAND flash
+> > +
+> > +The GPIO assisted NAND flash uses a memory mapped interface to
+> > +read/write the NAND commands and data and GPIO pins for the control
+> > +signals.
+> > +
+> > +Required properties:
+> > +- compatible : "gpio-control-nand"
+> > +- reg : should specify localbus chip select and size used for the chip.  For
+> > +  ARM platforms where a dummy read is needed to provide synchronisation with
+> > +  regards to bus reordering, an optional second resource describes the
+> > +  location to read from.
+> 
+> Specify how the reg regions behave, such as "The first reg resource is a
+> byte or word that represents the NAND chip's data lines.  The io-sync
+> resource should be read when...".  What about endianness?
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl/boards.txt b/Documentation/devicetree/bindings/arm/fsl/boards.txt
-index d1e8d6f..e2401cd 100644
---- a/Documentation/devicetree/bindings/arm/fsl/boards.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl/boards.txt
-@@ -1,3 +1,7 @@
-+i.MX51 Babbage Board
-+Required root node properties:
-+    - compatible = "fsl,imx51-babbage", "fsl,imx51";
-+
- i.MX53 Automotive Reference Design Board
- Required root node properties:
-     - compatible = "fsl,imx53-ard", "fsl,imx53";
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-new file mode 100644
-index 0000000..67fc0bf
---- /dev/null
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -0,0 +1,141 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "imx51.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX51 Babbage Board";
-+	compatible = "fsl,imx51-babbage", "fsl,imx51";
-+
-+	chosen {
-+		bootargs = "console=ttymxc0,115200 root=/dev/mmcblk0p3 rootwait";
-+	};
-+
-+	memory {
-+		reg = <0x90000000 0x20000000>;
-+	};
-+
-+	aips@70000000 { /* aips-1 */
-+		spba@70000000 {
-+			esdhc@70004000 { /* ESDHC1 */
-+				fsl,cd-internal;
-+				fsl,wp-internal;
-+			};
-+
-+			esdhc@70008000 { /* ESDHC2 */
-+				cd-gpios = <&gpio0 6 0>; /* GPIO1_6 */
-+				wp-gpios = <&gpio0 5 0>; /* GPIO1_5 */
-+			};
-+
-+			uart2: uart@7000c000 { /* UART3 */
-+				fsl,uart-has-rtscts;
-+			};
-+
-+			ecspi@70010000 { /* ECSPI1 */
-+				fsl,spi-num-chipselects = <2>;
-+				cs-gpios = <&gpio3 24 0>, /* GPIO4_24 */
-+					   <&gpio3 25 0>; /* GPIO4_25 */
-+
-+				pmic: mc13892@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					compatible = "fsl,mc13892";
-+					spi-max-frequency = <6000000>;
-+					reg = <0>;
-+					mc13xxx-irq-gpios = <&gpio0 8 0>; /* GPIO1_8 */
-+					fsl,mc13xxx-uses-regulator;
-+				};
-+
-+				flash: at45db321d@1 {
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					compatible = "atmel,at45db321d", "atmel,at45", "atmel,dataflash";
-+					spi-max-frequency = <25000000>;
-+					reg = <1>;
-+
-+					partition@0 {
-+						label = "U-Boot";
-+						reg = <0x0 0x40000>;
-+						read-only;
-+					};
-+
-+					partition@40000 {
-+						label = "Kernel";
-+						reg = <0x40000 0x3c0000>;
-+					};
-+				};
-+			};
-+
-+			esdhc@70020000 { /* ESDHC3 */
-+				status = "disabled";
-+			};
-+
-+			esdhc@70024000 { /* ESDHC4 */
-+				status = "disabled";
-+			};
-+
-+			i2c@70038000 { /* HS-I2C */
-+				status = "disabled";
-+			};
-+		};
-+
-+		iomuxc@73fa8000 {
-+			compatible = "fsl,imx51-iomuxc-babbage";
-+			reg = <0x73fa8000 0x4000>;
-+		};
-+
-+		uart0: uart@73fbc000 {
-+			fsl,uart-has-rtscts;
-+		};
-+	};
-+
-+	aips@80000000 {	/* aips-2 */
-+		ecspi@83fac000 { /* ECSPI2 */
-+			status = "disabled";
-+		};
-+
-+		sdma@83fb0000 {
-+			fsl,sdma-ram-script-name = "imx/sdma/sdma-imx51.bin";
-+		};
-+
-+		cspi@83fc0000 {
-+			status = "disabled";
-+		};
-+
-+		i2c@83fc4000 { /* I2C2 */
-+			codec: sgtl5000@0a {
-+				compatible = "fsl,sgtl5000";
-+				reg = <0x0a>;
-+			};
-+		};
-+
-+		i2c@83fc8000 { /* I2C1 */
-+			status = "disabled";
-+		};
-+
-+		fec@83fec000 {
-+			phy-mode = "mii";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		power {
-+			label = "Power Button";
-+			gpios = <&gpio1 21 0>;
-+			linux,code = <116>; /* KEY_POWER */
-+			gpio-key,wakeup;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-new file mode 100644
-index 0000000..f456ebd
---- /dev/null
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -0,0 +1,203 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	interrupt-parent = <&tzic>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+
-+	tzic: tz-interrupt-controller@e0000000 {
-+		compatible = "fsl,imx51-tzic", "fsl,tzic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0xe0000000 0x4000>;
-+	};
-+
-+	aips@70000000 { /* AIPS1 */
-+		compatible = "fsl,aips-bus", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x70000000 0x10000000>;
-+		ranges;
-+
-+		spba@70000000 {
-+			compatible = "fsl,spba-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x70000000 0x40000>;
-+			ranges;
-+
-+			esdhc@70004000 { /* ESDHC1 */
-+				compatible = "fsl,imx51-esdhc";
-+				reg = <0x70004000 0x4000>;
-+				interrupts = <1>;
-+			};
-+
-+			esdhc@70008000 { /* ESDHC2 */
-+				compatible = "fsl,imx51-esdhc";
-+				reg = <0x70008000 0x4000>;
-+				interrupts = <2>;
-+			};
-+
-+			uart2: uart@7000c000 { /* UART3 */
-+				compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+				reg = <0x7000c000 0x4000>;
-+				interrupts = <33>;
-+			};
-+
-+			ecspi@70010000 { /* ECSPI1 */
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx51-ecspi";
-+				reg = <0x70010000 0x4000>;
-+				interrupts = <36>;
-+			};
-+
-+			esdhc@70020000 { /* ESDHC3 */
-+				compatible = "fsl,imx51-esdhc";
-+				reg = <0x70020000 0x4000>;
-+				interrupts = <3>;
-+			};
-+
-+			esdhc@70024000 { /* ESDHC4 */
-+				compatible = "fsl,imx51-esdhc";
-+				reg = <0x70024000 0x4000>;
-+				interrupts = <4>;
-+			};
-+
-+			i2c@70038000 { /* HS-I2C */
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx51-i2c", "fsl,imx1-i2c";
-+				reg = <0x70038000 0x4000>;
-+				interrupts = <64>;
-+				clock-frequency = <400000>;
-+			};
-+		};
-+
-+		gpio0: gpio@73f84000 { /* GPIO1 */
-+			compatible = "fsl,imx51-gpio", "fsl,imx31-gpio";
-+			reg = <0x73f84000 0x4000>;
-+			interrupts = <50 51>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		gpio1: gpio@73f88000 { /* GPIO2 */
-+			compatible = "fsl,imx51-gpio", "fsl,imx31-gpio";
-+			reg = <0x73f88000 0x4000>;
-+			interrupts = <52 53>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		gpio2: gpio@73f8c000 { /* GPIO3 */
-+			compatible = "fsl,imx51-gpio", "fsl,imx31-gpio";
-+			reg = <0x73f8c000 0x4000>;
-+			interrupts = <54 55>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		gpio3: gpio@73f90000 { /* GPIO4 */
-+			compatible = "fsl,imx51-gpio", "fsl,imx31-gpio";
-+			reg = <0x73f90000 0x4000>;
-+			interrupts = <56 57>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		wdt@73f98000 { /* WDOG1 */
-+			compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
-+			reg = <0x73f98000 0x4000>;
-+			interrupts = <58>;
-+		};
-+
-+		uart0: uart@73fbc000 {
-+			compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+			reg = <0x73fbc000 0x4000>;
-+			interrupts = <31>;
-+		};
-+
-+		uart1: uart@73fc0000 {
-+			compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+			reg = <0x73fc0000 0x4000>;
-+			interrupts = <32>;
-+		};
-+	};
-+
-+	aips@80000000 {	/* AIPS2 */
-+		compatible = "fsl,aips-bus", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x80000000 0x10000000>;
-+		ranges;
-+
-+		ecspi@83fac000 { /* ECSPI2 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "fsl,imx51-ecspi";
-+			reg = <0x83fac000 0x4000>;
-+			interrupts = <37>;
-+		};
-+
-+		sdma@83fb0000 {
-+			compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
-+			reg = <0x83fb0000 0x4000>;
-+			interrupts = <6>;
-+		};
-+
-+		cspi@83fc0000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "fsl,imx51-cspi", "fsl,imx35-cspi";
-+			reg = <0x83fc0000 0x4000>;
-+			interrupts = <38>;
-+		};
-+
-+		i2c@83fc4000 { /* I2C2 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "fsl,imx51-i2c", "fsl,imx1-i2c";
-+			reg = <0x83fc4000 0x4000>;
-+			interrupts = <63>;
-+		};
-+
-+		i2c@83fc8000 { /* I2C1 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "fsl,imx51-i2c", "fsl,imx1-i2c";
-+			reg = <0x83fc8000 0x4000>;
-+			interrupts = <62>;
-+		};
-+
-+		fec@83fec000 {
-+			compatible = "fsl,imx51-fec", "fsl,imx27-fec";
-+			reg = <0x83fec000 0x4000>;
-+			interrupts = <87>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-mx5/Kconfig b/arch/arm/mach-mx5/Kconfig
-index 0ac676c..bda12e8 100644
---- a/arch/arm/mach-mx5/Kconfig
-+++ b/arch/arm/mach-mx5/Kconfig
-@@ -62,6 +62,15 @@ endif # ARCH_MX50_SUPPORTED
- if ARCH_MX51
- comment "i.MX51 machines:"
- 
-+config MACH_IMX51_DT
-+	bool "Support i.MX51 platforms from device tree"
-+	select SOC_IMX51
-+	select USE_OF
-+	select MACH_MX51_BABBAGE
-+	help
-+	  Include support for Freescale i.MX51 based platforms
-+	  using the device tree for discovery
-+
- config MACH_MX51_BABBAGE
- 	bool "Support MX51 BABBAGE platforms"
- 	select SOC_IMX51
-diff --git a/arch/arm/mach-mx5/Makefile b/arch/arm/mach-mx5/Makefile
-index 3dbe5e2..a3c75f3 100644
---- a/arch/arm/mach-mx5/Makefile
-+++ b/arch/arm/mach-mx5/Makefile
-@@ -23,4 +23,5 @@ obj-$(CONFIG_MACH_MX51_EFIKAMX) += board-mx51_efikamx.o
- obj-$(CONFIG_MACH_MX51_EFIKASB) += board-mx51_efikasb.o
- obj-$(CONFIG_MACH_MX50_RDP) += board-mx50_rdp.o
- 
-+obj-$(CONFIG_MACH_IMX51_DT) += imx51-dt.o
- obj-$(CONFIG_MACH_IMX53_DT) += imx53-dt.o
-diff --git a/arch/arm/mach-mx5/board-mx51_babbage.c b/arch/arm/mach-mx5/board-mx51_babbage.c
-index e400b09..e0cdeae 100644
---- a/arch/arm/mach-mx5/board-mx51_babbage.c
-+++ b/arch/arm/mach-mx5/board-mx51_babbage.c
-@@ -167,6 +167,11 @@ static iomux_v3_cfg_t mx51babbage_pads[] = {
- 	MX51_PAD_CSPI1_SS1__GPIO4_25,
- };
- 
-+struct iomux_v3_pad_data imx51_babbage_pad_data = {
-+	.pads = mx51babbage_pads,
-+	.num = ARRAY_SIZE(mx51babbage_pads),
-+};
-+
- /* Serial ports */
- static const struct imxuart_platform_data uart_pdata __initconst = {
- 	.flags = IMXUART_HAVE_RTSCTS,
-diff --git a/arch/arm/mach-mx5/imx51-dt.c b/arch/arm/mach-mx5/imx51-dt.c
-new file mode 100644
-index 0000000..b28ebeb
---- /dev/null
-+++ b/arch/arm/mach-mx5/imx51-dt.c
-@@ -0,0 +1,112 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc. All Rights Reserved.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_platform.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach/time.h>
-+#include <mach/common.h>
-+#include <mach/mx51.h>
-+#include <mach/iomux-mx51.h>
-+
-+/*
-+ * Lookup table for attaching a specific name and platform_data pointer to
-+ * devices as they get created by of_platform_populate().  Ideally this table
-+ * would not exist, but the current clock implementation depends on some devices
-+ * having a specific name.
-+ */
-+static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART1_BASE_ADDR, "imx21-uart.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART2_BASE_ADDR, "imx21-uart.1", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART3_BASE_ADDR, "imx21-uart.2", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-fec", MX51_FEC_BASE_ADDR, "imx27-fec.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-esdhc", MX51_ESDHC1_BASE_ADDR, "sdhci-esdhc-imx51.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-esdhc", MX51_ESDHC2_BASE_ADDR, "sdhci-esdhc-imx51.1", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-esdhc", MX51_ESDHC3_BASE_ADDR, "sdhci-esdhc-imx51.2", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-esdhc", MX51_ESDHC4_BASE_ADDR, "sdhci-esdhc-imx51.3", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-ecspi", MX51_ECSPI1_BASE_ADDR, "imx51-ecspi.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-ecspi", MX51_ECSPI2_BASE_ADDR, "imx51-ecspi.1", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-cspi", MX51_CSPI_BASE_ADDR, "imx35-cspi.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-i2c", MX51_I2C1_BASE_ADDR, "imx-i2c.0", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-i2c", MX51_I2C2_BASE_ADDR, "imx-i2c.1", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-sdma", MX51_SDMA_BASE_ADDR, "imx35-sdma", NULL),
-+	OF_DEV_AUXDATA("fsl,imx51-wdt", MX51_WDOG1_BASE_ADDR, "imx2-wdt.0", NULL),
-+	{ /* sentinel */ }
-+};
-+
-+static const struct of_device_id imx51_tzic_of_match[] __initconst = {
-+	{ .compatible = "fsl,imx51-tzic", },
-+	{ /* sentinel */ }
-+};
-+
-+static const struct of_device_id imx51_gpio_of_match[] __initconst = {
-+	{ .compatible = "fsl,imx51-gpio", },
-+	{ /* sentinel */ }
-+};
-+
-+static const struct of_device_id imx51_iomuxc_of_match[] __initconst = {
-+	{ .compatible = "fsl,imx51-iomuxc-babbage", .data = &imx51_babbage_pad_data, },
-+	{ /* sentinel */ }
-+};
-+
-+static void __init imx51_dt_init(void)
-+{
-+	int gpio_irq = MXC_INTERNAL_IRQS + ARCH_NR_GPIOS;
-+	struct device_node *node;
-+	const struct of_device_id *of_id;
-+	struct iomux_v3_pad_data *pad_data;
-+
-+	node = of_find_matching_node(NULL, imx51_iomuxc_of_match);
-+	if (node) {
-+		of_id = of_match_node(imx51_iomuxc_of_match, node);
-+		pad_data = (struct iomux_v3_pad_data *) of_id->data;
-+		mxc_iomux_v3_setup_multiple_pads(pad_data->pads, pad_data->num);
-+		of_node_put(node);
-+	}
-+
-+	irq_domain_generate_simple(imx51_tzic_of_match, MX51_TZIC_BASE_ADDR, 0);
-+	gpio_irq -= 32;
-+	irq_domain_generate_simple(imx51_gpio_of_match, MX51_GPIO1_BASE_ADDR, gpio_irq);
-+	gpio_irq -= 32;
-+	irq_domain_generate_simple(imx51_gpio_of_match, MX51_GPIO2_BASE_ADDR, gpio_irq);
-+	gpio_irq -= 32;
-+	irq_domain_generate_simple(imx51_gpio_of_match, MX51_GPIO3_BASE_ADDR, gpio_irq);
-+	gpio_irq -= 32;
-+	irq_domain_generate_simple(imx51_gpio_of_match, MX51_GPIO4_BASE_ADDR, gpio_irq);
-+
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+			     imx51_auxdata_lookup, NULL);
-+}
-+
-+static void __init imx51_timer_init(void)
-+{
-+	mx51_clocks_init(32768, 24000000, 22579200, 0);
-+}
-+
-+static struct sys_timer imx51_timer = {
-+	.init = imx51_timer_init,
-+};
-+
-+static const char *imx51_dt_board_compat[] __initdata = {
-+	"fsl,imx51-babbage",
-+	NULL
-+};
-+
-+DT_MACHINE_START(IMX51_DT, "Freescale i.MX51 (Device Tree Support)")
-+	.map_io		= mx51_map_io,
-+	.init_early	= imx51_init_early,
-+	.init_irq	= mx51_init_irq,
-+	.timer		= &imx51_timer,
-+	.init_machine	= imx51_dt_init,
-+	.dt_compat	= imx51_dt_board_compat,
-+MACHINE_END
-diff --git a/arch/arm/plat-mxc/include/mach/iomux-mx51.h b/arch/arm/plat-mxc/include/mach/iomux-mx51.h
-index df6acc0..1a6748b 100644
---- a/arch/arm/plat-mxc/include/mach/iomux-mx51.h
-+++ b/arch/arm/plat-mxc/include/mach/iomux-mx51.h
-@@ -15,6 +15,8 @@
- 
- #include <mach/iomux-v3.h>
- 
-+extern struct iomux_v3_pad_data imx51_babbage_pad_data;
-+
- /* Pad control groupings */
- #define MX51_UART_PAD_CTRL	(PAD_CTL_PKE | PAD_CTL_PUE | PAD_CTL_DSE_HIGH | \
- 				PAD_CTL_HYS | PAD_CTL_SRE_FAST)
--- 
-1.7.4.1
+OK, fair points.  I'm not sure what to say about endianness though.  
+Host byte order accesses are used in the driver so can I just specify 
+this?  We could add a property later to support endianess swapping, but 
+I don't want to add too much that I can't test.
+
+> What if some other binding wants to add additional reg resources, while
+> still being backwards compatible with this binding?  Might be better to
+> move the sync into its own property -- something like "gpio-nand-io-sync =
+> <1>" indicating that it's in reg resource #1.  And maybe it should require
+> some PXA-specific compatible if io-sync is needed.  Even if another chip
+> requires some sort of sync hack, would it necessarily work the same?
+
+Hmm, I'm not convinced there - the sync is to protect against bus 
+ordering, and a read from the right region does that.  I'm working on 
+another ARM platform (not PXA) that needs this sync so sure it's not PXA 
+specific.
+
+The alternative is to not have this specified in the binding and have 
+the platform attach the resource.  On my platform for example I need to 
+read from the GPIO controller registers and I can't find a way to 
+express this when using ranges...
+
+> > +- #address-cells, #size-cells : Must be present if the device has sub-nodes
+> > +  representing partitions.  In this case, both #address-cells and #size-cells
+> > +  must be equal to 1.
+> 
+> No support for NAND chips >= 4GiB?
+
+OK, I guess this can be relaxed to any value.
+
+> > +Optional properties:
+> > +- bank-width : Width (in bytes) of the device.
+> > +- chip-delay : chip dependent delay for transferring data from array to
+> > +  read registers (tR).
+> 
+> Why optional?  If there's a default assumption, document it.
+
+OK.
+
+> > +Examples:
+> > +
+> > +gpio-nand@1,0 {
+> > +	compatible = "gpio-control-nand";
+> > +	reg = <1 0x0000 0x1000>;
+> 
+> 4K seems a bit large for what I'm assuming this region is for.
+
+OK, not the best example, it just needs to be at least 2 bytes.  I'll 
+update it with a better one.
+
+Jamie
