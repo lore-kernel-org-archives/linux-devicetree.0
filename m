@@ -1,139 +1,161 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] arm/mx5: add device tree support for imx53 boards
-Date: Mon, 1 Aug 2011 23:01:39 +0100
-Message-ID: <CACxGe6vvL=xGCGMR0yhyJ8r2zLvBgYhYS1b9_VF3dg5hRNhNzQ@mail.gmail.com>
-References: <1312226252-8566-1-git-send-email-shawn.guo@linaro.org>
-	<1312226252-8566-2-git-send-email-shawn.guo@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] DT: OMAP: Convert I2C driver to use device tree
+Date: Mon, 1 Aug 2011 23:04:49 +0100
+Message-ID: <CACxGe6ugCVJJb32uie=Kh7sKrKREH8h0euuZVUrGeLab4zSgVw@mail.gmail.com>
+References: <1312235294-4397-1-git-send-email-manjugk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1312226252-8566-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1312235294-4397-1-git-send-email-manjugk@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 1, 2011 at 8:17 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Mon, Aug 1, 2011 at 10:48 PM, G, Manjunath Kondaiah <manjugk@ti.com>=
+ wrote:
+> The i2c-omap driver is modified to support both DT and non DT builds
+> and driver is updated to use dt data partially.
 >
-> It adds device tree support for imx53 boards.
+> Tested on OMAP3 beagle board for dt and non dt builds.
 >
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-It's *really* close, but I see a problem...
-
-> +static const char *imx53_dt_board_compat[] __initdata =3D {
-> + =A0 =A0 =A0 "fsl,imx53-ard",
-> + =A0 =A0 =A0 "fsl,imx53-evk",
-> + =A0 =A0 =A0 "fsl,imx53-qsb",
-> + =A0 =A0 =A0 "fsl,imx53-smd",
-> + =A0 =A0 =A0 NULL
-> +};
+> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
+> ---
+> =A0drivers/i2c/busses/i2c-omap.c | =A0 33 +++++++++++++++++++++++++++=
++++---
+> =A01 files changed, 30 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-o=
+map.c
+> index 1a766cf..cf82f89 100644
+> --- a/drivers/i2c/busses/i2c-omap.c
+> +++ b/drivers/i2c/busses/i2c-omap.c
+> @@ -37,6 +37,8 @@
+> =A0#include <linux/platform_device.h>
+> =A0#include <linux/clk.h>
+> =A0#include <linux/io.h>
+> +#include <linux/of_i2c.h>
+> +#include <linux/of_device.h>
+> =A0#include <linux/slab.h>
+> =A0#include <linux/i2c-omap.h>
+> =A0#include <linux/pm_runtime.h>
+> @@ -971,6 +973,16 @@ static const struct i2c_algorithm omap_i2c_algo =
+=3D {
+> =A0 =A0 =A0 =A0.functionality =A0=3D omap_i2c_func,
+> =A0};
+>
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id omap_i2c_of_match[] =3D {
+> + =A0 =A0 =A0 {.compatible =3D "ti,omap3-i2c", },
+> + =A0 =A0 =A0 {},
+> +}
+> +MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
+> +#else
+> +#define omap_i2c_of_match NULL
+> +#endif
 > +
-> +DT_MACHINE_START(IMX53_DT, "Freescale i.MX53 (Device Tree Support)")
-> + =A0 =A0 =A0 .map_io =A0 =A0 =A0 =A0 =3D mx53_map_io,
-> + =A0 =A0 =A0 .init_early =A0 =A0 =3D imx53_init_early,
-> + =A0 =A0 =A0 .init_irq =A0 =A0 =A0 =3D mx53_init_irq,
-> + =A0 =A0 =A0 .timer =A0 =A0 =A0 =A0 =A0=3D &imx53_timer,
-> + =A0 =A0 =A0 .init_machine =A0 =3D imx53_dt_init,
-> + =A0 =A0 =A0 .dt_compat =A0 =A0 =A0=3D imx53_dt_board_compat,
-> +MACHINE_END
-> +
-> +DT_MACHINE_START(IMX53_DT_ARD, "Freescale i.MX53 ARD (Device Tree Suppor=
-t)")
-> + =A0 =A0 =A0 .map_io =A0 =A0 =A0 =A0 =3D mx53_map_io,
-> + =A0 =A0 =A0 .init_early =A0 =A0 =3D imx53_init_early,
-> + =A0 =A0 =A0 .init_irq =A0 =A0 =A0 =3D mx53_init_irq,
-> + =A0 =A0 =A0 .timer =A0 =A0 =A0 =A0 =A0=3D &imx53_timer,
-> + =A0 =A0 =A0 .init_machine =A0 =3D imx53_ard_init,
-> + =A0 =A0 =A0 .dt_compat =A0 =A0 =A0=3D imx53_dt_board_compat,
-> +MACHINE_END
-
-These two machine_descs will match on exactly the same boards because
-they use the same dt_compat table.  So the ard variant will probably
-never get matched since it will be picked up by the IMX53_DT variant
-first.  Each machine_desc must have a different match table.
-
-However, today when we were talking you asked if it would be better to
-use a callback into board-specific code instead of the iomux table
-that is implemented in this patch.  I was fine either way, but my
-opinion was that the table would probably result in less code.  Well,
-combined with the above problem, I think I was wrong.  Since the only
-difference in the ard variant is the call to
-imx53_ard_weim_cs_config(), both the cs config and the iomux setup
-will be simpler if both are handled in a callback.  You're original
-instinct was correct.
-
-g.
-
-> diff --git a/arch/arm/plat-mxc/include/mach/common.h b/arch/arm/plat-mxc/=
-include/mach/common.h
-> index 4e3d978..32c24a4 100644
-> --- a/arch/arm/plat-mxc/include/mach/common.h
-> +++ b/arch/arm/plat-mxc/include/mach/common.h
-> @@ -72,4 +72,6 @@ extern void mxc_arch_reset_init(void __iomem *);
-> =A0extern void mx51_efikamx_reset(void);
-> =A0extern int mx53_revision(void);
-> =A0extern int mx53_display_revision(void);
-> +extern int imx53_ard_weim_cs_config(void);
-> +
-> =A0#endif
-> diff --git a/arch/arm/plat-mxc/include/mach/iomux-mx53.h b/arch/arm/plat-=
-mxc/include/mach/iomux-mx53.h
-> index 9440b9e..adcf2c0 100644
-> --- a/arch/arm/plat-mxc/include/mach/iomux-mx53.h
-> +++ b/arch/arm/plat-mxc/include/mach/iomux-mx53.h
-> @@ -21,6 +21,11 @@
+> =A0static int __devinit
+> =A0omap_i2c_probe(struct platform_device *pdev)
+> =A0{
+> @@ -978,10 +990,13 @@ omap_i2c_probe(struct platform_device *pdev)
+> =A0 =A0 =A0 =A0struct i2c_adapter =A0 =A0 =A0*adap;
+> =A0 =A0 =A0 =A0struct resource =A0 =A0 =A0 =A0 *mem, *irq, *ioarea;
+> =A0 =A0 =A0 =A0struct omap_i2c_bus_platform_data *pdata =3D pdev->dev=
+=2Eplatform_data;
+> + =A0 =A0 =A0 const struct of_device_id *match;
+> =A0 =A0 =A0 =A0irq_handler_t isr;
+> =A0 =A0 =A0 =A0int r;
+> =A0 =A0 =A0 =A0u32 speed =3D 0;
 >
-> =A0#include <mach/iomux-v3.h>
->
-> +extern struct iomux_v3_pad_data imx53_ard_pad_data;
-> +extern struct iomux_v3_pad_data imx53_evk_pad_data;
-> +extern struct iomux_v3_pad_data imx53_loco_pad_data;
-> +extern struct iomux_v3_pad_data imx53_smd_pad_data;
+> + =A0 =A0 =A0 match =3D of_match_device(omap_i2c_of_match, &pdev->dev=
+);
 > +
-> =A0/* These 2 defines are for pins that may not have a mux register, but =
-could
-> =A0* have a pad setting register, and vice-versa. */
-> =A0#define NON_PAD_I =A0 =A0 =A00x00
-> diff --git a/arch/arm/plat-mxc/include/mach/iomux-v3.h b/arch/arm/plat-mx=
-c/include/mach/iomux-v3.h
-> index ebbce33..5689965 100644
-> --- a/arch/arm/plat-mxc/include/mach/iomux-v3.h
-> +++ b/arch/arm/plat-mxc/include/mach/iomux-v3.h
-> @@ -55,6 +55,11 @@
+> =A0 =A0 =A0 =A0/* NOTE: driver uses the static register mapping */
+> =A0 =A0 =A0 =A0mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0)=
+;
+> =A0 =A0 =A0 =A0if (!mem) {
+> @@ -1007,14 +1022,23 @@ omap_i2c_probe(struct platform_device *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto err_release_region;
+> =A0 =A0 =A0 =A0}
 >
-> =A0typedef u64 iomux_v3_cfg_t;
+> + =A0 =A0 =A0 speed =3D 100; =A0 =A0/* Default speed */
+> =A0 =A0 =A0 =A0if (pdata !=3D NULL) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0speed =3D pdata->clkrate;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev->set_mpu_wkup_lat =3D pdata->set_m=
+pu_wkup_lat;
+> - =A0 =A0 =A0 } else {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D 100; =A0 =A0/* Default speed =
+*/
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev->set_mpu_wkup_lat =3D NULL;
+> +#if defined(CONFIG_OF)
+> + =A0 =A0 =A0 } else if (pdev->dev.of_node) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 prop;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_property_read_u32(pdev->dev.of_=
+node, "clock-frequency",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ &prop))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 speed =3D prop/100;
+> +#endif
+> =A0 =A0 =A0 =A0}
 >
-> +struct iomux_v3_pad_data {
-> + =A0 =A0 =A0 iomux_v3_cfg_t *pads;
-> + =A0 =A0 =A0 int num;
-> +};
+> + =A0 =A0 =A0 /* TODO: remove this after DT depencies with hwmod are =
+resolved */
+> + =A0 =A0 =A0 if (match)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
 > +
-> =A0#define MUX_CTRL_OFS_SHIFT =A0 =A0 0
-> =A0#define MUX_CTRL_OFS_MASK =A0 =A0 =A0((iomux_v3_cfg_t)0xfff << MUX_CTR=
-L_OFS_SHIFT)
-> =A0#define MUX_PAD_CTRL_OFS_SHIFT 12
+
+Drop this hunk for the patch you're submitting to mainline.  It's okay
+to have it in while you're testing, but the code that is actually
+merged shouldn't have it.  We'll have a workaround for the hwmod issue
+sorted out this week.  After doing this you can add:
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
+> =A0 =A0 =A0 =A0dev->speed =3D speed;
+> =A0 =A0 =A0 =A0dev->idle =3D 1;
+> =A0 =A0 =A0 =A0dev->dev =3D &pdev->dev;
+> @@ -1095,6 +1119,7 @@ omap_i2c_probe(struct platform_device *pdev)
+> =A0 =A0 =A0 =A0strlcpy(adap->name, "OMAP I2C adapter", sizeof(adap->n=
+ame));
+> =A0 =A0 =A0 =A0adap->algo =3D &omap_i2c_algo;
+> =A0 =A0 =A0 =A0adap->dev.parent =3D &pdev->dev;
+> + =A0 =A0 =A0 adap->dev.of_node =3D pdev->dev.of_node;
+>
+> =A0 =A0 =A0 =A0/* i2c device drivers may be active on return from add=
+_adapter() */
+> =A0 =A0 =A0 =A0adap->nr =3D pdev->id;
+> @@ -1103,6 +1128,7 @@ omap_i2c_probe(struct platform_device *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev->dev, "failure adding adap=
+ter\n");
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto err_free_irq;
+> =A0 =A0 =A0 =A0}
+> + =A0 =A0 =A0 of_i2c_register_devices(adap);
+>
+> =A0 =A0 =A0 =A0return 0;
+>
+> @@ -1174,6 +1200,7 @@ static struct platform_driver omap_i2c_driver =3D=
+ {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =A0 =3D "omap_i2c",
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =A0=3D THIS_MODULE,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.pm =A0 =A0 =3D OMAP_I2C_PM_OPS,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D omap_i2c_of_match,
+> =A0 =A0 =A0 =A0},
+> =A0};
+>
 > --
-> 1.7.4.1
+> 1.7.1
 >
 >
->
 
 
 
--- =
-
+--=20
 Grant Likely, B.Sc., P.Eng.
 Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
