@@ -1,199 +1,78 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] arm: exynos4: Add a new Exynos4 device tree enabled
- machine
-Date: Mon, 1 Aug 2011 17:54:56 +0100
-Message-ID: <20110801165456.GB5306@ponder.secretlab.ca>
-References: <1312215637-716-1-git-send-email-thomas.abraham@linaro.org>
- <1312215637-716-2-git-send-email-thomas.abraham@linaro.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCHv3] mtd: gpio-nand: add device tree bindings
+Date: Mon, 1 Aug 2011 13:38:25 -0500
+Message-ID: <20110801133825.0b4fff24@schlenkerla.am.freescale.net>
+References: <1312207374-14760-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1312215637-716-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1312207374-14760-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 01, 2011 at 05:20:36PM +0100, Thomas Abraham wrote:
-> Add a new basic Exynos4 machine with device tree support that can boot
-> on a Exynos4 processor based board and bring up the console. This acts
-> as a stating point to add device tree support for Exynos4 architecture.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+On Mon, 1 Aug 2011 15:02:54 +0100
+Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
 
-Hi Thomas,
-
-As discussed f2f at Linaro Connect, we'll defer this board support
-patch to v3.2, and use this week to eliminate the 'special' uart
-handling code.
-
-g.
-
-> ---
->  arch/arm/mach-exynos4/Kconfig           |   10 +++
->  arch/arm/mach-exynos4/Makefile          |    1 +
->  arch/arm/mach-exynos4/mach-exynos4-dt.c |  118 +++++++++++++++++++++++++++++++
->  3 files changed, 129 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/mach-exynos4/mach-exynos4-dt.c
-> 
-> diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-> index 0c77ab9..c29de4e 100644
-> --- a/arch/arm/mach-exynos4/Kconfig
-> +++ b/arch/arm/mach-exynos4/Kconfig
-> @@ -218,6 +218,16 @@ config MACH_NURI
->  	help
->  	  Machine support for Samsung Mobile NURI Board.
->  
-> +config MACH_EXYNOS4_DT
-> +	bool "Samsung Exynos4 Machine using device tree"
-> +	select CPU_EXYNOS4210
-> +	select USE_OF
-> +	select S3C_DEV_HSMMC
-> +	select S3C_DEV_HSMMC2
-> +	select EXYNOS4_SETUP_SDHCI
-> +	help
-> +	  Machine support for Samsung Exynos4 machine with device tree enabled.
-> +
->  endmenu
->  
->  comment "Configuration for HSMMC bus width"
-> diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
-> index b7fe1d7..d2bf5bf 100644
-> --- a/arch/arm/mach-exynos4/Makefile
-> +++ b/arch/arm/mach-exynos4/Makefile
-> @@ -30,6 +30,7 @@ obj-$(CONFIG_MACH_SMDKV310)		+= mach-smdkv310.o
->  obj-$(CONFIG_MACH_ARMLEX4210)		+= mach-armlex4210.o
->  obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
->  obj-$(CONFIG_MACH_NURI)			+= mach-nuri.o
-> +obj-$(CONFIG_MACH_EXYNOS4_DT)		+= mach-exynos4-dt.o
->  
->  # device support
->  
-> diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
 > new file mode 100644
-> index 0000000..8e9d2d7
+> index 0000000..2dc52de
 > --- /dev/null
-> +++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
-> @@ -0,0 +1,118 @@
-> +/*
-> + * Samsung's Exynos4 device tree enabled machine.
-> + *
-> + * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + * Copyright (c) 2010-2011 Linaro Ltd.
-> + *		www.linaro.org
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
+> +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> @@ -0,0 +1,40 @@
+> +GPIO assisted NAND flash
 > +
-> +#include <linux/serial_core.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
+> +The GPIO assisted NAND flash uses a memory mapped interface to
+> +read/write the NAND commands and data and GPIO pins for the control
+> +signals.
 > +
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach-types.h>
+> +Required properties:
+> +- compatible : "gpio-control-nand"
+> +- reg : should specify localbus chip select and size used for the chip.  For
+> +  ARM platforms where a dummy read is needed to provide synchronisation with
+> +  regards to bus reordering, an optional second resource describes the
+> +  location to read from.
+
+Specify how the reg regions behave, such as "The first reg resource is a
+byte or word that represents the NAND chip's data lines.  The io-sync
+resource should be read when...".  What about endianness?
+
+What if some other binding wants to add additional reg resources, while
+still being backwards compatible with this binding?  Might be better to
+move the sync into its own property -- something like "gpio-nand-io-sync =
+<1>" indicating that it's in reg resource #1.  And maybe it should require
+some PXA-specific compatible if io-sync is needed.  Even if another chip
+requires some sort of sync hack, would it necessarily work the same?
+
+> +- #address-cells, #size-cells : Must be present if the device has sub-nodes
+> +  representing partitions.  In this case, both #address-cells and #size-cells
+> +  must be equal to 1.
+
+No support for NAND chips >= 4GiB?
+
+> +Optional properties:
+> +- bank-width : Width (in bytes) of the device.
+> +- chip-delay : chip dependent delay for transferring data from array to
+> +  read registers (tR).
+
+Why optional?  If there's a default assumption, document it.
+
+> +Examples:
 > +
-> +#include <plat/regs-serial.h>
-> +#include <plat/exynos4.h>
-> +#include <plat/cpu.h>
-> +#include <plat/sdhci.h>
-> +
-> +#include <mach/map.h>
-> +
-> +/* Following are default values for UCON, ULCON and UFCON UART registers */
-> +#define SMDKV310_UCON_DEFAULT	(S3C2410_UCON_TXILEVEL |	\
-> +				 S3C2410_UCON_RXILEVEL |	\
-> +				 S3C2410_UCON_TXIRQMODE |	\
-> +				 S3C2410_UCON_RXIRQMODE |	\
-> +				 S3C2410_UCON_RXFIFO_TOI |	\
-> +				 S3C2443_UCON_RXERR_IRQEN)
-> +
-> +#define SMDKV310_UFCON_DEFAULT	(S3C2410_UFCON_FIFOMODE |	\
-> +				 S5PV210_UFCON_TXTRIG4 |	\
-> +				 S5PV210_UFCON_RXTRIG4)
-> +
-> +static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
-> +	[0] = {
-> +		.hwport		= 0,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +	[1] = {
-> +		.hwport		= 1,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +	[2] = {
-> +		.hwport		= 2,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +	[3] = {
-> +		.hwport		= 3,
-> +		.ucon		= SMDKV310_UCON_DEFAULT,
-> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
-> +	},
-> +};
-> +
-> +/*
-> + * The following lookup table is used to override device names when devices
-> + * are registered from device tree. This is temporarily added to enable
-> + * device tree support addition for the Exynos4 architecture.
-> + *
-> + * For drivers that require platform data to be provided from the machine
-> + * file, a platform data pointer can also be supplied along with the
-> + * devices names. Usually, the platform data elements that cannot be parsed
-> + * from the device tree by the drivers (example: function pointers) are
-> + * supplied. But it should be noted that this is a temporary mechanism and
-> + * at some point, the drivers should be capable of parsing all the platform
-> + * data from the device tree.
-> + */
-> +static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
-> +	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(2),
-> +				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
-> +	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(0),
-> +				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
-> +	{},
-> +};
-> +
-> +static void __init exynos4_dt_map_io(void)
-> +{
-> +	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
-> +	s3c24xx_init_clocks(24000000);
-> +	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
-> +}
-> +
-> +static const struct of_device_id intc_of_match[] __initconst = {
-> +	{ .compatible = "samsung,exynos4-gic", },
-> +	{},
-> +};
-> +
-> +static void __init exynos4_dt_machine_init(void)
-> +{
-> +	irq_domain_generate_simple(intc_of_match, EXYNOS4_PA_GIC_DIST, 0);
-> +	of_platform_populate(NULL, of_default_bus_match_table,
-> +				exynos4_auxdata_lookup, NULL);
-> +}
-> +
-> +static char const *exynos4_dt_compat[] __initdata = {
-> +	"samsung,exynos4",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(SMDKV310, "Samsung Exynos4 DT")
-> +	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
-> +	.init_irq	= exynos4_init_irq,
-> +	.map_io		= exynos4_dt_map_io,
-> +	.init_machine	= exynos4_dt_machine_init,
-> +	.timer		= &exynos4_timer,
-> +	.dt_compat	= exynos4_dt_compat,
-> +MACHINE_END
-> -- 
-> 1.7.4.1
-> 
+> +gpio-nand@1,0 {
+> +	compatible = "gpio-control-nand";
+> +	reg = <1 0x0000 0x1000>;
+
+4K seems a bit large for what I'm assuming this region is for.
+
+-Scott
