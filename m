@@ -1,130 +1,199 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: [PATCH 3/3] crypto: picoxcell - support for device tree matching
-Date: Mon,  1 Aug 2011 17:25:19 +0100
-Message-ID: <1312215919-24419-3-git-send-email-jamie@jamieiles.com>
-References: <1312215919-24419-1-git-send-email-jamie@jamieiles.com>
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1312215919-24419-1-git-send-email-jamie@jamieiles.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: linux-crypto@vger.kernel.org
-Cc: Jamie Iles <jamie@jamieiles.com>, devicetree-discuss@lists.ozlabs.org, Herbert Xu <herbert@gondor.apana.org.au>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/2] arm: exynos4: Add a new Exynos4 device tree enabled
+ machine
+Date: Mon, 1 Aug 2011 17:54:56 +0100
+Message-ID: <20110801165456.GB5306@ponder.secretlab.ca>
+References: <1312215637-716-1-git-send-email-thomas.abraham@linaro.org>
+ <1312215637-716-2-git-send-email-thomas.abraham@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1312215637-716-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Allow the crypto engines to be matched from device tree bindings.
+On Mon, Aug 01, 2011 at 05:20:36PM +0100, Thomas Abraham wrote:
+> Add a new basic Exynos4 machine with device tree support that can boot
+> on a Exynos4 processor based board and bring up the console. This acts
+> as a stating point to add device tree support for Exynos4 architecture.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Jamie Iles <jamie@jamieiles.com>
----
- .../devicetree/bindings/crypto/picochip-spacc.txt  |   23 ++++++++++++
- drivers/crypto/picoxcell_crypto.c                  |   36 ++++++++++++++++---
- 2 files changed, 53 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/crypto/picochip-spacc.txt
+Hi Thomas,
 
-diff --git a/Documentation/devicetree/bindings/crypto/picochip-spacc.txt b/Documentation/devicetree/bindings/crypto/picochip-spacc.txt
-new file mode 100644
-index 0000000..d8609ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/picochip-spacc.txt
-@@ -0,0 +1,23 @@
-+Picochip picoXcell SPAcc (Security Protocol Accelerator) bindings
-+
-+Picochip picoXcell devices contain crypto offload engines that may be used for
-+IPSEC and femtocell layer 2 ciphering.
-+
-+Required properties:
-+  - compatible : "picochip,spacc-ipsec" for the IPSEC offload engine
-+    "picochip,spacc-l2" for the femtocell layer 2 ciphering engine.
-+  - reg : Offset and length of the register set for this device
-+  - interrupt-parent : The interrupt controller that controls the SPAcc
-+    interrupt.
-+  - interrupts : The interrupt line from the SPAcc.
-+  - ref-clock : The input clock that drives the SPAcc.
-+
-+Example SPAcc node:
-+
-+spacc@10000 {
-+	compatible = "picochip,spacc-ipsec";
-+	reg = <0x100000 0x10000>;
-+	interrupt-parent = <&vic0>;
-+	interrupts = <24>;
-+	ref-clock = <&ipsec_clk>, "ref";
-+};
-diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
-index d119e0e..017340c 100644
---- a/drivers/crypto/picoxcell_crypto.c
-+++ b/drivers/crypto/picoxcell_crypto.c
-@@ -34,6 +34,7 @@
- #include <linux/io.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/rtnetlink.h>
-@@ -1657,27 +1658,49 @@ static struct spacc_alg l2_engine_algs[] = {
- 	},
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id spacc_of_id_table[] = {
-+	{ .compatible = "picochip,spacc-ipsec" },
-+	{ .compatible = "picochip,spacc-l2" },
-+	{}
-+};
-+#else /* CONFIG_OF */
-+#define spacc_of_id_table NULL
-+#endif /* CONFIG_OF */
-+
-+static bool spacc_is_compatible(struct platform_device *pdev,
-+				const char *spacc_type)
-+{
-+	const struct platform_device_id *platid = platform_get_device_id(pdev);
-+
-+	if (platid && !strcmp(platid->name, spacc_type))
-+		return true;
-+
-+#ifdef CONFIG_OF
-+	if (of_device_is_compatible(pdev->dev.of_node, spacc_type))
-+		return true;
-+#endif /* CONFIG_OF */
-+
-+	return false;
-+}
-+
- static int __devinit spacc_probe(struct platform_device *pdev)
- {
- 	int i, err, ret = -EINVAL;
- 	struct resource *mem, *irq;
--	const struct platform_device_id *platid = platform_get_device_id(pdev);
- 	struct spacc_engine *engine = devm_kzalloc(&pdev->dev, sizeof(*engine),
- 						   GFP_KERNEL);
- 	if (!engine)
- 		return -ENOMEM;
- 
--	if (!platid)
--		return -EINVAL;
--
--	if (!strcmp(platid->name, "picoxcell-ipsec")) {
-+	if (spacc_is_compatible(pdev, "picochip,spacc-ipsec")) {
- 		engine->max_ctxs	= SPACC_CRYPTO_IPSEC_MAX_CTXS;
- 		engine->cipher_pg_sz	= SPACC_CRYPTO_IPSEC_CIPHER_PG_SZ;
- 		engine->hash_pg_sz	= SPACC_CRYPTO_IPSEC_HASH_PG_SZ;
- 		engine->fifo_sz		= SPACC_CRYPTO_IPSEC_FIFO_SZ;
- 		engine->algs		= ipsec_engine_algs;
- 		engine->num_algs	= ARRAY_SIZE(ipsec_engine_algs);
--	} else if (!strcmp(platid->name, "picoxcell-l2")) {
-+	} else if (spacc_is_compatible(pdev, "picochip,spacc-l2")) {
- 		engine->max_ctxs	= SPACC_CRYPTO_L2_MAX_CTXS;
- 		engine->cipher_pg_sz	= SPACC_CRYPTO_L2_CIPHER_PG_SZ;
- 		engine->hash_pg_sz	= SPACC_CRYPTO_L2_HASH_PG_SZ;
-@@ -1826,6 +1849,7 @@ static struct platform_driver spacc_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &spacc_pm_ops,
- #endif /* CONFIG_PM */
-+		.of_match_table	= spacc_of_id_table,
- 	},
- 	.id_table	= spacc_id_table,
- };
--- 
-1.7.4.1
+As discussed f2f at Linaro Connect, we'll defer this board support
+patch to v3.2, and use this week to eliminate the 'special' uart
+handling code.
+
+g.
+
+> ---
+>  arch/arm/mach-exynos4/Kconfig           |   10 +++
+>  arch/arm/mach-exynos4/Makefile          |    1 +
+>  arch/arm/mach-exynos4/mach-exynos4-dt.c |  118 +++++++++++++++++++++++++++++++
+>  3 files changed, 129 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/mach-exynos4/mach-exynos4-dt.c
+> 
+> diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
+> index 0c77ab9..c29de4e 100644
+> --- a/arch/arm/mach-exynos4/Kconfig
+> +++ b/arch/arm/mach-exynos4/Kconfig
+> @@ -218,6 +218,16 @@ config MACH_NURI
+>  	help
+>  	  Machine support for Samsung Mobile NURI Board.
+>  
+> +config MACH_EXYNOS4_DT
+> +	bool "Samsung Exynos4 Machine using device tree"
+> +	select CPU_EXYNOS4210
+> +	select USE_OF
+> +	select S3C_DEV_HSMMC
+> +	select S3C_DEV_HSMMC2
+> +	select EXYNOS4_SETUP_SDHCI
+> +	help
+> +	  Machine support for Samsung Exynos4 machine with device tree enabled.
+> +
+>  endmenu
+>  
+>  comment "Configuration for HSMMC bus width"
+> diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
+> index b7fe1d7..d2bf5bf 100644
+> --- a/arch/arm/mach-exynos4/Makefile
+> +++ b/arch/arm/mach-exynos4/Makefile
+> @@ -30,6 +30,7 @@ obj-$(CONFIG_MACH_SMDKV310)		+= mach-smdkv310.o
+>  obj-$(CONFIG_MACH_ARMLEX4210)		+= mach-armlex4210.o
+>  obj-$(CONFIG_MACH_UNIVERSAL_C210)	+= mach-universal_c210.o
+>  obj-$(CONFIG_MACH_NURI)			+= mach-nuri.o
+> +obj-$(CONFIG_MACH_EXYNOS4_DT)		+= mach-exynos4-dt.o
+>  
+>  # device support
+>  
+> diff --git a/arch/arm/mach-exynos4/mach-exynos4-dt.c b/arch/arm/mach-exynos4/mach-exynos4-dt.c
+> new file mode 100644
+> index 0000000..8e9d2d7
+> --- /dev/null
+> +++ b/arch/arm/mach-exynos4/mach-exynos4-dt.c
+> @@ -0,0 +1,118 @@
+> +/*
+> + * Samsung's Exynos4 device tree enabled machine.
+> + *
+> + * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + * Copyright (c) 2010-2011 Linaro Ltd.
+> + *		www.linaro.org
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +#include <linux/serial_core.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach-types.h>
+> +
+> +#include <plat/regs-serial.h>
+> +#include <plat/exynos4.h>
+> +#include <plat/cpu.h>
+> +#include <plat/sdhci.h>
+> +
+> +#include <mach/map.h>
+> +
+> +/* Following are default values for UCON, ULCON and UFCON UART registers */
+> +#define SMDKV310_UCON_DEFAULT	(S3C2410_UCON_TXILEVEL |	\
+> +				 S3C2410_UCON_RXILEVEL |	\
+> +				 S3C2410_UCON_TXIRQMODE |	\
+> +				 S3C2410_UCON_RXIRQMODE |	\
+> +				 S3C2410_UCON_RXFIFO_TOI |	\
+> +				 S3C2443_UCON_RXERR_IRQEN)
+> +
+> +#define SMDKV310_UFCON_DEFAULT	(S3C2410_UFCON_FIFOMODE |	\
+> +				 S5PV210_UFCON_TXTRIG4 |	\
+> +				 S5PV210_UFCON_RXTRIG4)
+> +
+> +static struct s3c2410_uartcfg smdkv310_uartcfgs[] __initdata = {
+> +	[0] = {
+> +		.hwport		= 0,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +	[1] = {
+> +		.hwport		= 1,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +	[2] = {
+> +		.hwport		= 2,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +	[3] = {
+> +		.hwport		= 3,
+> +		.ucon		= SMDKV310_UCON_DEFAULT,
+> +		.ufcon		= SMDKV310_UFCON_DEFAULT,
+> +	},
+> +};
+> +
+> +/*
+> + * The following lookup table is used to override device names when devices
+> + * are registered from device tree. This is temporarily added to enable
+> + * device tree support addition for the Exynos4 architecture.
+> + *
+> + * For drivers that require platform data to be provided from the machine
+> + * file, a platform data pointer can also be supplied along with the
+> + * devices names. Usually, the platform data elements that cannot be parsed
+> + * from the device tree by the drivers (example: function pointers) are
+> + * supplied. But it should be noted that this is a temporary mechanism and
+> + * at some point, the drivers should be capable of parsing all the platform
+> + * data from the device tree.
+> + */
+> +static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
+> +	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(2),
+> +				"s3c-sdhci.2", &s3c_hsmmc2_def_platdata),
+> +	OF_DEV_AUXDATA("samsung,s3c6410-sdhci", EXYNOS4_PA_HSMMC(0),
+> +				"s3c-sdhci.0", &s3c_hsmmc0_def_platdata),
+> +	{},
+> +};
+> +
+> +static void __init exynos4_dt_map_io(void)
+> +{
+> +	s5p_init_io(NULL, 0, S5P_VA_CHIPID);
+> +	s3c24xx_init_clocks(24000000);
+> +	s3c24xx_init_uarts(smdkv310_uartcfgs, ARRAY_SIZE(smdkv310_uartcfgs));
+> +}
+> +
+> +static const struct of_device_id intc_of_match[] __initconst = {
+> +	{ .compatible = "samsung,exynos4-gic", },
+> +	{},
+> +};
+> +
+> +static void __init exynos4_dt_machine_init(void)
+> +{
+> +	irq_domain_generate_simple(intc_of_match, EXYNOS4_PA_GIC_DIST, 0);
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +				exynos4_auxdata_lookup, NULL);
+> +}
+> +
+> +static char const *exynos4_dt_compat[] __initdata = {
+> +	"samsung,exynos4",
+> +	NULL
+> +};
+> +
+> +DT_MACHINE_START(SMDKV310, "Samsung Exynos4 DT")
+> +	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
+> +	.init_irq	= exynos4_init_irq,
+> +	.map_io		= exynos4_dt_map_io,
+> +	.init_machine	= exynos4_dt_machine_init,
+> +	.timer		= &exynos4_timer,
+> +	.dt_compat	= exynos4_dt_compat,
+> +MACHINE_END
+> -- 
+> 1.7.4.1
+> 
