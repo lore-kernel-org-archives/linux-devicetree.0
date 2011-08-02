@@ -1,58 +1,36 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC/PATCH 7/7] WIP: HACK/RFC: omap_device: begin to decouple
- platform_device from omap_device
-Date: Tue, 2 Aug 2011 01:00:19 +0100
-Message-ID: <20110802000019.GA8719@ponder.secretlab.ca>
-References: <20110730120332.GA15539@n2100.arm.linux.org.uk>
- <20110731025807.GA24334@ponder.secretlab.ca>
- <20110731150540.GA3019@n2100.arm.linux.org.uk>
- <871ux5nnop.fsf@ti.com>
- <CACxGe6t4tNeD-Pn6WFt1XOMC=_Q0cf4uD3kRkOckKH+S1JUJDA@mail.gmail.com>
- <20110801185009.GA5217@legolas.emea.dhcp.ti.com>
- <20110801200743.GA21535@n2100.arm.linux.org.uk>
- <87pqkon5n6.fsf@ti.com>
- <20110801225554.GC6244@legolas.emea.dhcp.ti.com>
- <20110801230945.GB21535@n2100.arm.linux.org.uk>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3] net/smsc911x: add device tree probe support
+Date: Mon, 01 Aug 2011 18:01:46 -0700 (PDT)
+Message-ID: <20110801.180146.1671950827798171194.davem@davemloft.net>
+References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
+	<1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110801230945.GB21535@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Felipe Balbi <balbi@ti.com>, Kevin Hilman <khilman@ti.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "G. Manjunath Kondaiah" <manjugk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org
+Cc: patches@linaro.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, steve.glendinning@smsc.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2011 at 12:09:45AM +0100, Russell King - ARM Linux wrote:
-> On Tue, Aug 02, 2011 at 01:55:55AM +0300, Felipe Balbi wrote:
-> > Hi,
-> > 
-> > On Mon, Aug 01, 2011 at 03:11:57PM -0700, Kevin Hilman wrote:
-> > > Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
-> > > 
-> > > > Help the typechecker do its job.  As we have only one (at the moment...)
-> > > > And make it:
-> > > >
-> > > > +struct omap_device;
-> > > >
-> > > >  struct pdev_archdata {
-> > > > +#ifdef CONFIG_ARCH_OMAP
-> > > > +	struct omap_device *omap;
-> > > > +#endif
-> > > >  };
-> > > >
-> > > > for bonus points, so we only get the additional pointer for OMAP.
-> > > 
-> > > OK, will do it this way.
-> > 
-> > this has the tendency to grow larger, no ? What if all other ARMs decide
-> > to add their own pointers there too ?
+From: Shawn Guo <shawn.guo@linaro.org>
+Date: Sun, 31 Jul 2011 02:26:00 +0800
+
+> It adds device tree probe support for smsc911x driver.
 > 
-> Their pointers for what?  It's only OMAP which has this special omap_device
-> thing.  Should that spread, instead of adding more pointers here, the work
-> should be to consolidate between those various implementations.
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Steve Glendinning <steve.glendinning@smsc.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
 
-+1
-
-g.
-
+Queued up for net-next, thanks.
