@@ -1,15 +1,16 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] arm/mx5: add device tree support for imx53 boards
-Date: Tue, 2 Aug 2011 08:58:14 +0200
-Message-ID: <20110802065814.GM31404@pengutronix.de>
-References: <1312226252-8566-1-git-send-email-shawn.guo@linaro.org>
-	<1312226252-8566-2-git-send-email-shawn.guo@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH] MAINTAINERS: Add keyword match for of_match_table to
+	device tree section
+Date: Tue, 2 Aug 2011 16:07:15 +0900
+Message-ID: <20110802070713.GA8259@opensource.wolfsonmicro.com>
+References: <1312262006-7731-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+	<CACxGe6tc5PGXxRCMQDYM-1dLgKHiNEAikuCrCcPRUhNeJpy9fw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1312226252-8566-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CACxGe6tc5PGXxRCMQDYM-1dLgKHiNEAikuCrCcPRUhNeJpy9fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,105 +20,22 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2011 at 03:17:31AM +0800, Shawn Guo wrote:
-> From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> It adds device tree support for imx53 boards.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/fsl/boards.txt         |   15 ++
->  arch/arm/boot/dts/imx53-ard.dts                    |  158 +++++++++++++
->  arch/arm/boot/dts/imx53-evk.dts                    |  144 ++++++++++++
->  arch/arm/boot/dts/imx53-qsb.dts                    |  148 ++++++++++++
->  arch/arm/boot/dts/imx53-smd.dts                    |  169 ++++++++++++++
->  arch/arm/boot/dts/imx53.dtsi                       |  244 ++++++++++++++++++++
->  arch/arm/mach-mx5/Kconfig                          |   12 +
->  arch/arm/mach-mx5/Makefile                         |    2 +
->  arch/arm/mach-mx5/board-mx53_ard.c                 |    9 +-
->  arch/arm/mach-mx5/board-mx53_evk.c                 |    5 +
->  arch/arm/mach-mx5/board-mx53_loco.c                |    5 +
->  arch/arm/mach-mx5/board-mx53_smd.c                 |    5 +
->  arch/arm/mach-mx5/imx53-dt.c                       |  143 ++++++++++++
->  arch/arm/plat-mxc/include/mach/common.h            |    2 +
->  arch/arm/plat-mxc/include/mach/iomux-mx53.h        |    5 +
->  arch/arm/plat-mxc/include/mach/iomux-v3.h          |    5 +
->  16 files changed, 1069 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/fsl/boards.txt
->  create mode 100644 arch/arm/boot/dts/imx53-ard.dts
->  create mode 100644 arch/arm/boot/dts/imx53-evk.dts
->  create mode 100644 arch/arm/boot/dts/imx53-qsb.dts
->  create mode 100644 arch/arm/boot/dts/imx53-smd.dts
->  create mode 100644 arch/arm/boot/dts/imx53.dtsi
->  create mode 100644 arch/arm/mach-mx5/imx53-dt.c
+On Tue, Aug 02, 2011 at 07:51:35AM +0100, Grant Likely wrote:
+> On Tue, Aug 2, 2011 at 6:13 AM, Mark Brown
+> <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> > If a patch is working with an of_match_table it's probably adding an OF
+> > binding to a driver in which case the binding ought to be reviewed by the
+> > device tree folks to make sure that things like the device matches are set
+> > up correctly.
 
-I noticed that the iomux setup is gone for now which makes me very
-happy :) I didn't have a good feeling about this.
+> > Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 
-> 
-> diff --git a/arch/arm/boot/dts/imx53-ard.dts b/arch/arm/boot/dts/imx53-ard.dts
-> new file mode 100644
-> index 0000000..fd0cf2c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx53-ard.dts
-> @@ -0,0 +1,158 @@
-> +/*
-> + * Copyright 2011 Freescale Semiconductor, Inc.
-> + * Copyright 2011 Linaro Ltd.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "imx53.dtsi"
-> +
-> +/ {
-> +	model = "Freescale i.MX53 Automotive Reference Design Board";
-> +	compatible = "fsl,imx53-ard", "fsl,imx53";
-> +
-> +	chosen {
-> +		bootargs = "console=ttymxc0,115200 root=/dev/mmcblk0p3 rootwait";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x70000000 0x40000000>;
-> +	};
-> +
-> +	aips@50000000 { /* AIPS1 */
-> +		spba@50000000 {
-> +			esdhc@50004000 { /* ESDHC1 */
-> +				cd-gpios = <&gpio0 1 0>; /* GPIO1_1 */
-> +				wp-gpios = <&gpio0 9 0>; /* GPIO1_9 */
-> +			};
-> +
-> +			esdhc@50008000 { /* ESDHC2 */
-> +				status = "disabled";
-> +			};
+> Good idea.
 
-I know the decision is that all devices are enabled by default and must
-be explicitely disabled like this. I really hope we can change this in
-the future for the following reasons:
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-- The imx53 device tree is not complete, several devices like nand, ipu
-  and rtc are missing. Now when imx53.dtsi gets the nand device, all
-  board devicetrees have to be changed to keep the old behaviour.
-- Most enabled device entries like the esdhc1 above have additional
-  nodes like cd-gpios anyway, so they must appear in the board tree
-  whereas the disabled devices just add additional churn.
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I was kind of expecting you to merge this via the DT tree?
