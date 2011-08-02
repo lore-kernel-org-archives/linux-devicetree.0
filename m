@@ -1,97 +1,57 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] dt: add helper to read 64-bit integers
-Date: Tue,  2 Aug 2011 12:06:59 +0100
-Message-ID: <1312283219-27045-1-git-send-email-jamie@jamieiles.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 1/2] arm/mx5: add device tree support for imx53 boards
+Date: Tue, 2 Aug 2011 12:43:40 +0100
+Message-ID: <20110802114340.GA17952@ponder.secretlab.ca>
+References: <1312226252-8566-1-git-send-email-shawn.guo@linaro.org>
+	<1312226252-8566-2-git-send-email-shawn.guo@linaro.org>
+	<20110802065814.GM31404@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20110802065814.GM31404@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@freescale.com>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add a helper similar to of_property_read_u32() that handles 64-bit
-integers.
+On Tue, Aug 02, 2011 at 08:58:14AM +0200, Sascha Hauer wrote:
+> On Tue, Aug 02, 2011 at 03:17:31AM +0800, Shawn Guo wrote:
+> > +
+> > +	aips@50000000 { /* AIPS1 */
+> > +		spba@50000000 {
+> > +			esdhc@50004000 { /* ESDHC1 */
+> > +				cd-gpios = <&gpio0 1 0>; /* GPIO1_1 */
+> > +				wp-gpios = <&gpio0 9 0>; /* GPIO1_9 */
+> > +			};
+> > +
+> > +			esdhc@50008000 { /* ESDHC2 */
+> > +				status = "disabled";
+> > +			};
+> 
+> I know the decision is that all devices are enabled by default and must
+> be explicitely disabled like this. I really hope we can change this in
+> the future for the following reasons:
+> 
+> - The imx53 device tree is not complete, several devices like nand, ipu
+>   and rtc are missing. Now when imx53.dtsi gets the nand device, all
+>   board devicetrees have to be changed to keep the old behaviour.
+> - Most enabled device entries like the esdhc1 above have additional
+>   nodes like cd-gpios anyway, so they must appear in the board tree
+>   whereas the disabled devices just add additional churn.
 
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- drivers/of/base.c  |   28 ++++++++++++++++++++++++++++
- include/linux/of.h |    8 ++++++++
- 2 files changed, 36 insertions(+), 0 deletions(-)
+I'll add this topic to the whiteboard for the kernel WG to discuss
+this week.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 02ed367..bae5161 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -631,6 +631,34 @@ int of_property_read_u32_array(const struct device_node *np, char *propname,
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
- 
- /**
-+ * of_property_read_u64 - Find and read a 64 bit integer from a property
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_value:	pointer to return value, modified only if return value is 0.
-+ *
-+ * Search for a property in a device node and read a 64-bit value from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u64 value can be decoded.
-+ */
-+int of_property_read_u64(struct device_node *np, char *propname, u64 *out_value)
-+{
-+	struct property *prop = of_find_property(np, propname, NULL);
-+
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+	if (sizeof(*out_value) > prop->length)
-+		return -EOVERFLOW;
-+	*out_value = of_read_number(prop->value, 2);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u64);
-+
-+/**
-  * of_property_read_string - Find and read a string from a property
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-diff --git a/include/linux/of.h b/include/linux/of.h
-index bd716f8..9fde908 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
- 				      char *propname,
- 				      u32 *out_values,
- 				      size_t sz);
-+extern int of_property_read_u64(struct device_node *np, char *propname,
-+				u64 *out_value);
- 
- extern int of_property_read_string(struct device_node *np, char *propname,
- 					const char **out_string);
-@@ -253,6 +255,12 @@ static inline int of_property_read_string(struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_property_read_u64(struct device_node *np, char *propname,
-+				       u64 *out_value)
-+{
-+	return -ENOSYS;
-+}
-+
- #endif /* CONFIG_OF */
- 
- static inline int of_property_read_u32(const struct device_node *np,
--- 
-1.7.4.1
+http://pad.ubuntu.com/device-tree-workshop
+
+g.
