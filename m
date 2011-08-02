@@ -1,106 +1,47 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt: add helper to read 64-bit integers
-Date: Tue, 02 Aug 2011 14:16:37 -0500
-Message-ID: <4E384D15.4020303@gmail.com>
-References: <1312283219-27045-1-git-send-email-jamie@jamieiles.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1312283219-27045-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 0/4] Add device tree enabled Exynos4 machine
+Date: Wed,  3 Aug 2011 00:08:25 +0100
+Message-ID: <1312326509-2723-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Jamie,
+This patchset adds a basic device tree enabled machine for Samsung's Exynos4
+processor. This enables further development of device tree coverge for
+Exynos4. A basic device tree source file for Exynos4 processor and the
+smdkv310 board is also included.
 
-On 08/02/2011 06:06 AM, Jamie Iles wrote:
-> Add a helper similar to of_property_read_u32() that handles 64-bit
-> integers.
-> 
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> ---
->  drivers/of/base.c  |   28 ++++++++++++++++++++++++++++
->  include/linux/of.h |    8 ++++++++
->  2 files changed, 36 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 02ed367..bae5161 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -631,6 +631,34 @@ int of_property_read_u32_array(const struct device_node *np, char *propname,
->  EXPORT_SYMBOL_GPL(of_property_read_u32_array);
->  
->  /**
-> + * of_property_read_u64 - Find and read a 64 bit integer from a property
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_value:	pointer to return value, modified only if return value is 0.
-> + *
-> + * Search for a property in a device node and read a 64-bit value from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_value is modified only if a valid u64 value can be decoded.
-> + */
-> +int of_property_read_u64(struct device_node *np, char *propname, u64 *out_value)
+The device tree enabled machine has been boot tested till serial console.
+The watchdog driver is probed with information from dtb.
 
-First 2 params should have a const.
+Notes:
+- The interrupt controller device tree bindings are not documented yet. That
+  is because, it will be replaced with a new irq_domain support soon.
 
-Rob
 
-> +{
-> +	struct property *prop = of_find_property(np, propname, NULL);
-> +
-> +	if (!prop)
-> +		return -EINVAL;
-> +	if (!prop->value)
-> +		return -ENODATA;
-> +	if (sizeof(*out_value) > prop->length)
-> +		return -EOVERFLOW;
-> +	*out_value = of_read_number(prop->value, 2);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_u64);
-> +
-> +/**
->   * of_property_read_string - Find and read a string from a property
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index bd716f8..9fde908 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
->  				      char *propname,
->  				      u32 *out_values,
->  				      size_t sz);
-> +extern int of_property_read_u64(struct device_node *np, char *propname,
-> +				u64 *out_value);
->  
->  extern int of_property_read_string(struct device_node *np, char *propname,
->  					const char **out_string);
-> @@ -253,6 +255,12 @@ static inline int of_property_read_string(struct device_node *np,
->  	return -ENOSYS;
->  }
->  
-> +static inline int of_property_read_u64(struct device_node *np, char *propname,
-> +				       u64 *out_value)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  #endif /* CONFIG_OF */
->  
->  static inline int of_property_read_u32(const struct device_node *np,
+Thomas Abraham (4):
+  serial: samsung: Keep a copy of the location of platform data in driver's private data
+  serial: s5pv210: Add device tree support
+  arm: exynos4: Add a new Exynos4 device tree enabled machine
+  arm: dts: Add device tree source file for Exynos4 platforms
+
+ Documentation/devicetree/bindings/arm/samsung.txt  |    8 ++
+ .../devicetree/bindings/serial/samsung_uart.txt    |   16 ++++
+ arch/arm/boot/dts/exynos4-smdkv310.dts             |   31 +++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |   72 +++++++++++++++++
+ arch/arm/mach-exynos4/Kconfig                      |   10 +++
+ arch/arm/mach-exynos4/Makefile                     |    1 +
+ arch/arm/mach-exynos4/mach-exynos4-dt.c            |   84 ++++++++++++++++++++
+ drivers/tty/serial/s5pv210.c                       |   55 ++++++++++++-
+ drivers/tty/serial/samsung.c                       |   19 ++++-
+ drivers/tty/serial/samsung.h                       |    4 +-
+ 10 files changed, 292 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
+ create mode 100644 arch/arm/boot/dts/exynos4-smdkv310.dts
+ create mode 100644 arch/arm/boot/dts/exynos4.dtsi
+ create mode 100644 arch/arm/mach-exynos4/mach-exynos4-dt.c
+
+
