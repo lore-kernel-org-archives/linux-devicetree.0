@@ -1,14 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] Add device tree support for i.mx51/53 boards
-Date: Tue, 2 Aug 2011 15:06:10 +0100
-Message-ID: <20110802140610.GC20071@ponder.secretlab.ca>
-References: <1312267943-25551-1-git-send-email-shawn.guo@linaro.org>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] of: constify property name parameters for helper functions
+Date: Tue,  2 Aug 2011 15:45:07 +0100
+Message-ID: <1312296307-32527-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1312267943-25551-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,58 +15,91 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2011 at 02:52:21PM +0800, Shawn Guo wrote:
-> Changes since v3:
->  * Fix machine_desc table for ARD matching
->  * Turn the board setup that dt needs into callback
-> 
-> Changes since v2:
->  * Drop iomuxc device tree support patch
-> 
-> Changes since v1:
->  * Address comments on v1 given by Grant and Sascha
->  * Add i.mx51 Babbage support
-> 
-> Shawn Guo (2):
->       arm/mx5: add device tree support for imx53 boards
->       arm/mx5: add device tree support for imx51 babbage
+The helper functions for reading u32 integers, u32 arrays and strings
+should have the property name as a const pointer.
 
-Looks good.
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+---
+ drivers/of/base.c  |    7 ++++---
+ include/linux/of.h |   15 +++++++++------
+ 2 files changed, 13 insertions(+), 9 deletions(-)
 
-Sascha, assuming you're okay with it, I'd *really* like to ask Arnd to
-send this out to Linus immediately.  It may not be perfect, and we may
-change the device disable/enable policy, but it is useful enough that
-having it in mainline will help developers who want to start hacking
-on DT support.
-
-g.
-
-> 
->  .../devicetree/bindings/arm/fsl/boards.txt         |   19 ++
->  arch/arm/boot/dts/imx51-babbage.dts                |  141 +++++++++++
->  arch/arm/boot/dts/imx51.dtsi                       |  203 ++++++++++++++++
->  arch/arm/boot/dts/imx53-ard.dts                    |  158 +++++++++++++
->  arch/arm/boot/dts/imx53-evk.dts                    |  144 ++++++++++++
->  arch/arm/boot/dts/imx53-qsb.dts                    |  148 ++++++++++++
->  arch/arm/boot/dts/imx53-smd.dts                    |  169 ++++++++++++++
->  arch/arm/boot/dts/imx53.dtsi                       |  244 ++++++++++++++++++++
->  arch/arm/mach-mx5/Kconfig                          |   21 ++
->  arch/arm/mach-mx5/Makefile                         |    3 +
->  arch/arm/mach-mx5/board-mx51_babbage.c             |    9 +-
->  arch/arm/mach-mx5/board-mx53_ard.c                 |   12 +-
->  arch/arm/mach-mx5/board-mx53_evk.c                 |    9 +-
->  arch/arm/mach-mx5/board-mx53_loco.c                |    9 +-
->  arch/arm/mach-mx5/board-mx53_smd.c                 |    9 +-
->  arch/arm/mach-mx5/imx51-dt.c                       |  111 +++++++++
->  arch/arm/mach-mx5/imx53-dt.c                       |  127 ++++++++++
->  arch/arm/plat-mxc/include/mach/common.h            |    6 +
->  18 files changed, 1530 insertions(+), 12 deletions(-)
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 02ed367..3ff22e3 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -610,8 +610,9 @@ EXPORT_SYMBOL(of_find_node_by_phandle);
+  *
+  * The out_value is modified only if a valid u32 value can be decoded.
+  */
+-int of_property_read_u32_array(const struct device_node *np, char *propname,
+-			       u32 *out_values, size_t sz)
++int of_property_read_u32_array(const struct device_node *np,
++			       const char *propname, u32 *out_values,
++			       size_t sz)
+ {
+ 	struct property *prop = of_find_property(np, propname, NULL);
+ 	const __be32 *val;
+@@ -645,7 +646,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+  *
+  * The out_string pointer is modified only if a valid string can be decoded.
+  */
+-int of_property_read_string(struct device_node *np, char *propname,
++int of_property_read_string(struct device_node *np, const char *propname,
+ 				const char **out_string)
+ {
+ 	struct property *prop = of_find_property(np, propname, NULL);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index bd716f8..0085bb0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -196,12 +196,13 @@ extern struct property *of_find_property(const struct device_node *np,
+ 					 const char *name,
+ 					 int *lenp);
+ extern int of_property_read_u32_array(const struct device_node *np,
+-				      char *propname,
++				      const char *propname,
+ 				      u32 *out_values,
+ 				      size_t sz);
+ 
+-extern int of_property_read_string(struct device_node *np, char *propname,
+-					const char **out_string);
++extern int of_property_read_string(struct device_node *np,
++				   const char *propname,
++				   const char **out_string);
+ extern int of_device_is_compatible(const struct device_node *device,
+ 				   const char *);
+ extern int of_device_is_available(const struct device_node *device);
+@@ -242,13 +243,15 @@ static inline bool of_have_populated_dt(void)
+ }
+ 
+ static inline int of_property_read_u32_array(const struct device_node *np,
+-				char *propname, u32 *out_values, size_t sz)
++					     const char *propname,
++					     u32 *out_values, size_t sz)
+ {
+ 	return -ENOSYS;
+ }
+ 
+ static inline int of_property_read_string(struct device_node *np,
+-				char *propname, const char **out_string)
++					  const char *propname,
++					  const char **out_string)
+ {
+ 	return -ENOSYS;
+ }
+@@ -256,7 +259,7 @@ static inline int of_property_read_string(struct device_node *np,
+ #endif /* CONFIG_OF */
+ 
+ static inline int of_property_read_u32(const struct device_node *np,
+-				       char *propname,
++				       const char *propname,
+ 				       u32 *out_value)
+ {
+ 	return of_property_read_u32_array(np, propname, out_value, 1);
+-- 
+1.7.4.1
