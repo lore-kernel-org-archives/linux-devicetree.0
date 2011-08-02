@@ -1,16 +1,13 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] arm/mx5: add device tree support for imx53 boards
-Date: Tue, 2 Aug 2011 15:53:51 +0800
-Message-ID: <20110802075351.GB17297@freescale.com>
-References: <1312226252-8566-1-git-send-email-shawn.guo@linaro.org>
-	<1312226252-8566-2-git-send-email-shawn.guo@linaro.org>
-	<20110802065814.GM31404@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: add helper to read 64-bit integers
+Date: Tue, 02 Aug 2011 14:16:37 -0500
+Message-ID: <4E384D15.4020303@gmail.com>
+References: <1312283219-27045-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110802065814.GM31404-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1312283219-27045-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,111 +17,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2011 at 08:58:14AM +0200, Sascha Hauer wrote:
-> On Tue, Aug 02, 2011 at 03:17:31AM +0800, Shawn Guo wrote:
-> > From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > 
-> > It adds device tree support for imx53 boards.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/arm/fsl/boards.txt         |   15 ++
-> >  arch/arm/boot/dts/imx53-ard.dts                    |  158 +++++++++++++
-> >  arch/arm/boot/dts/imx53-evk.dts                    |  144 ++++++++++++
-> >  arch/arm/boot/dts/imx53-qsb.dts                    |  148 ++++++++++++
-> >  arch/arm/boot/dts/imx53-smd.dts                    |  169 ++++++++++++++
-> >  arch/arm/boot/dts/imx53.dtsi                       |  244 ++++++++++++++++++++
-> >  arch/arm/mach-mx5/Kconfig                          |   12 +
-> >  arch/arm/mach-mx5/Makefile                         |    2 +
-> >  arch/arm/mach-mx5/board-mx53_ard.c                 |    9 +-
-> >  arch/arm/mach-mx5/board-mx53_evk.c                 |    5 +
-> >  arch/arm/mach-mx5/board-mx53_loco.c                |    5 +
-> >  arch/arm/mach-mx5/board-mx53_smd.c                 |    5 +
-> >  arch/arm/mach-mx5/imx53-dt.c                       |  143 ++++++++++++
-> >  arch/arm/plat-mxc/include/mach/common.h            |    2 +
-> >  arch/arm/plat-mxc/include/mach/iomux-mx53.h        |    5 +
-> >  arch/arm/plat-mxc/include/mach/iomux-v3.h          |    5 +
-> >  16 files changed, 1069 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/fsl/boards.txt
-> >  create mode 100644 arch/arm/boot/dts/imx53-ard.dts
-> >  create mode 100644 arch/arm/boot/dts/imx53-evk.dts
-> >  create mode 100644 arch/arm/boot/dts/imx53-qsb.dts
-> >  create mode 100644 arch/arm/boot/dts/imx53-smd.dts
-> >  create mode 100644 arch/arm/boot/dts/imx53.dtsi
-> >  create mode 100644 arch/arm/mach-mx5/imx53-dt.c
-> 
-> I noticed that the iomux setup is gone for now which makes me very
-> happy :) I didn't have a good feeling about this.
-> 
+Jamie,
 
-But it's just for now :)  We anyway need to set it up from device tree
-sooner or later.
+On 08/02/2011 06:06 AM, Jamie Iles wrote:
+> Add a helper similar to of_property_read_u32() that handles 64-bit
+> integers.
+> 
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> ---
+>  drivers/of/base.c  |   28 ++++++++++++++++++++++++++++
+>  include/linux/of.h |    8 ++++++++
+>  2 files changed, 36 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 02ed367..bae5161 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -631,6 +631,34 @@ int of_property_read_u32_array(const struct device_node *np, char *propname,
+>  EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+>  
+>  /**
+> + * of_property_read_u64 - Find and read a 64 bit integer from a property
+> + * @np:		device node from which the property value is to be read.
+> + * @propname:	name of the property to be searched.
+> + * @out_value:	pointer to return value, modified only if return value is 0.
+> + *
+> + * Search for a property in a device node and read a 64-bit value from
+> + * it. Returns 0 on success, -EINVAL if the property does not exist,
+> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
+> + * property data isn't large enough.
+> + *
+> + * The out_value is modified only if a valid u64 value can be decoded.
+> + */
+> +int of_property_read_u64(struct device_node *np, char *propname, u64 *out_value)
 
-> > 
-> > diff --git a/arch/arm/boot/dts/imx53-ard.dts b/arch/arm/boot/dts/imx53-ard.dts
-> > new file mode 100644
-> > index 0000000..fd0cf2c
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx53-ard.dts
-> > @@ -0,0 +1,158 @@
-> > +/*
-> > + * Copyright 2011 Freescale Semiconductor, Inc.
-> > + * Copyright 2011 Linaro Ltd.
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +/dts-v1/;
-> > +/include/ "imx53.dtsi"
-> > +
-> > +/ {
-> > +	model = "Freescale i.MX53 Automotive Reference Design Board";
-> > +	compatible = "fsl,imx53-ard", "fsl,imx53";
-> > +
-> > +	chosen {
-> > +		bootargs = "console=ttymxc0,115200 root=/dev/mmcblk0p3 rootwait";
-> > +	};
-> > +
-> > +	memory {
-> > +		reg = <0x70000000 0x40000000>;
-> > +	};
-> > +
-> > +	aips@50000000 { /* AIPS1 */
-> > +		spba@50000000 {
-> > +			esdhc@50004000 { /* ESDHC1 */
-> > +				cd-gpios = <&gpio0 1 0>; /* GPIO1_1 */
-> > +				wp-gpios = <&gpio0 9 0>; /* GPIO1_9 */
-> > +			};
-> > +
-> > +			esdhc@50008000 { /* ESDHC2 */
-> > +				status = "disabled";
-> > +			};
-> 
-> I know the decision is that all devices are enabled by default and must
-> be explicitely disabled like this. I really hope we can change this in
-> the future for the following reasons:
-> 
-> - The imx53 device tree is not complete, several devices like nand, ipu
->   and rtc are missing. Now when imx53.dtsi gets the nand device, all
->   board devicetrees have to be changed to keep the old behaviour.
-> - Most enabled device entries like the esdhc1 above have additional
->   nodes like cd-gpios anyway, so they must appear in the board tree
->   whereas the disabled devices just add additional churn.
-> 
-I have your back on this point.  Let's give one more try to change
-Grant's mind.
+First 2 params should have a const.
 
--- 
-Regards,
-Shawn
+Rob
+
+> +{
+> +	struct property *prop = of_find_property(np, propname, NULL);
+> +
+> +	if (!prop)
+> +		return -EINVAL;
+> +	if (!prop->value)
+> +		return -ENODATA;
+> +	if (sizeof(*out_value) > prop->length)
+> +		return -EOVERFLOW;
+> +	*out_value = of_read_number(prop->value, 2);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_property_read_u64);
+> +
+> +/**
+>   * of_property_read_string - Find and read a string from a property
+>   * @np:		device node from which the property value is to be read.
+>   * @propname:	name of the property to be searched.
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index bd716f8..9fde908 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
+>  				      char *propname,
+>  				      u32 *out_values,
+>  				      size_t sz);
+> +extern int of_property_read_u64(struct device_node *np, char *propname,
+> +				u64 *out_value);
+>  
+>  extern int of_property_read_string(struct device_node *np, char *propname,
+>  					const char **out_string);
+> @@ -253,6 +255,12 @@ static inline int of_property_read_string(struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int of_property_read_u64(struct device_node *np, char *propname,
+> +				       u64 *out_value)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  #endif /* CONFIG_OF */
+>  
+>  static inline int of_property_read_u32(const struct device_node *np,
