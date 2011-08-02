@@ -1,16 +1,17 @@
 From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH v3 1/2] arm/mx5: add device tree support for imx53 boards
-Date: Tue, 2 Aug 2011 12:43:40 +0100
-Message-ID: <20110802114340.GA17952@ponder.secretlab.ca>
+Date: Tue, 2 Aug 2011 14:40:30 +0100
+Message-ID: <20110802134030.GA20071@ponder.secretlab.ca>
 References: <1312226252-8566-1-git-send-email-shawn.guo@linaro.org>
 	<1312226252-8566-2-git-send-email-shawn.guo@linaro.org>
-	<20110802065814.GM31404@pengutronix.de>
+	<CACxGe6vvL=xGCGMR0yhyJ8r2zLvBgYhYS1b9_VF3dg5hRNhNzQ@mail.gmail.com>
+	<20110802060936.GA9972@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20110802065814.GM31404@pengutronix.de>
+In-Reply-To: <20110802060936.GA9972@freescale.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,38 +21,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@freescale.com>, patches@linaro.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2011 at 08:58:14AM +0200, Sascha Hauer wrote:
-> On Tue, Aug 02, 2011 at 03:17:31AM +0800, Shawn Guo wrote:
-> > +
-> > +	aips@50000000 { /* AIPS1 */
-> > +		spba@50000000 {
-> > +			esdhc@50004000 { /* ESDHC1 */
-> > +				cd-gpios = <&gpio0 1 0>; /* GPIO1_1 */
-> > +				wp-gpios = <&gpio0 9 0>; /* GPIO1_9 */
-> > +			};
-> > +
-> > +			esdhc@50008000 { /* ESDHC2 */
-> > +				status = "disabled";
-> > +			};
+On Tue, Aug 02, 2011 at 02:09:37PM +0800, Shawn Guo wrote:
+> On Mon, Aug 01, 2011 at 11:01:39PM +0100, Grant Likely wrote:
+> > On Mon, Aug 1, 2011 at 8:17 PM, Shawn Guo <shawn.guo@linaro.org> wrote:
+> > However, today when we were talking you asked if it would be better to
+> > use a callback into board-specific code instead of the iomux table
+> > that is implemented in this patch.  I was fine either way, but my
+> > opinion was that the table would probably result in less code.  Well,
+> > combined with the above problem, I think I was wrong.  Since the only
+> > difference in the ard variant is the call to
+> > imx53_ard_weim_cs_config(), both the cs config and the iomux setup
+> > will be simpler if both are handled in a callback.  You're original
+> > instinct was correct.
+> > 
 > 
-> I know the decision is that all devices are enabled by default and must
-> be explicitely disabled like this. I really hope we can change this in
-> the future for the following reasons:
-> 
-> - The imx53 device tree is not complete, several devices like nand, ipu
->   and rtc are missing. Now when imx53.dtsi gets the nand device, all
->   board devicetrees have to be changed to keep the old behaviour.
-> - Most enabled device entries like the esdhc1 above have additional
->   nodes like cd-gpios anyway, so they must appear in the board tree
->   whereas the disabled devices just add additional churn.
+> Ok, here you go.
 
-I'll add this topic to the whiteboard for the kernel WG to discuss
-this week.
+Yes, I think this is the right approach.  Go ahead and spin it into a
+real patch series and repost.
 
-http://pad.ubuntu.com/device-tree-workshop
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
 g.
