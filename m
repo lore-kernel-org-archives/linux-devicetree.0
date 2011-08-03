@@ -1,7 +1,7 @@
 From: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 2/2] tty: use of_match_ptr() for of_match_table entry
-Date: Wed,  3 Aug 2011 10:11:43 +0100
-Message-ID: <1312362703-10189-3-git-send-email-ben-linux@fluff.org>
+Subject: [PATCH 1/2] OF: Add of_match_ptr() macro
+Date: Wed,  3 Aug 2011 10:11:42 +0100
+Message-ID: <1312362703-10189-2-git-send-email-ben-linux@fluff.org>
 References: <1312362703-10189-1-git-send-email-ben-linux@fluff.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,81 +21,34 @@ To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR
 Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_match_ptr() macro for the of_match_table
-pointer entry to avoid having to #dfine match NULL
+Add a macro of_match_ptr() that allows the .of_match_table
+entry in the driver structures to be assigned without having
+an #ifdef xxx NULL for the case that OF is not enabled
 
 Signed-off-by: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 ---
- drivers/tty/serial/altera_jtaguart.c |    4 +---
- drivers/tty/serial/altera_uart.c     |    4 +---
- drivers/tty/serial/uartlite.c        |    4 +---
- 3 files changed, 3 insertions(+), 9 deletions(-)
+ include/linux/of.h |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
-index 60e049b..2075200 100644
---- a/drivers/tty/serial/altera_jtaguart.c
-+++ b/drivers/tty/serial/altera_jtaguart.c
-@@ -472,8 +472,6 @@ static struct of_device_id altera_jtaguart_match[] = {
- 	{},
- };
- MODULE_DEVICE_TABLE(of, altera_jtaguart_match);
--#else
--#define altera_jtaguart_match NULL
+diff --git a/include/linux/of.h b/include/linux/of.h
+index bd716f8..951e87b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -234,6 +234,7 @@ extern void of_attach_node(struct device_node *);
+ extern void of_detach_node(struct device_node *);
+ #endif
+ 
++#define of_match_ptr(_ptr)	(_ptr)
+ #else /* CONFIG_OF */
+ 
+ static inline bool of_have_populated_dt(void)
+@@ -253,6 +254,7 @@ static inline int of_property_read_string(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++#define of_match_ptr(_ptr)	NULL
  #endif /* CONFIG_OF */
  
- static struct platform_driver altera_jtaguart_platform_driver = {
-@@ -482,7 +480,7 @@ static struct platform_driver altera_jtaguart_platform_driver = {
- 	.driver	= {
- 		.name		= DRV_NAME,
- 		.owner		= THIS_MODULE,
--		.of_match_table	= altera_jtaguart_match,
-+		.of_match_table	= of_match_ptr(altera_jtaguart_match),
- 	},
- };
- 
-diff --git a/drivers/tty/serial/altera_uart.c b/drivers/tty/serial/altera_uart.c
-index 50bc5a5..0abd31d 100644
---- a/drivers/tty/serial/altera_uart.c
-+++ b/drivers/tty/serial/altera_uart.c
-@@ -616,8 +616,6 @@ static struct of_device_id altera_uart_match[] = {
- 	{},
- };
- MODULE_DEVICE_TABLE(of, altera_uart_match);
--#else
--#define altera_uart_match NULL
- #endif /* CONFIG_OF */
- 
- static struct platform_driver altera_uart_platform_driver = {
-@@ -626,7 +624,7 @@ static struct platform_driver altera_uart_platform_driver = {
- 	.driver	= {
- 		.name		= DRV_NAME,
- 		.owner		= THIS_MODULE,
--		.of_match_table	= altera_uart_match,
-+		.of_match_table	= of_match_ptr(altera_uart_match),
- 	},
- };
- 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index 8af1ed8..0aed022 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -568,8 +568,6 @@ static struct of_device_id ulite_of_match[] __devinitdata = {
- 	{}
- };
- MODULE_DEVICE_TABLE(of, ulite_of_match);
--#else /* CONFIG_OF */
--#define ulite_of_match NULL
- #endif /* CONFIG_OF */
- 
- static int __devinit ulite_probe(struct platform_device *pdev)
-@@ -609,7 +607,7 @@ static struct platform_driver ulite_platform_driver = {
- 	.driver = {
- 		.owner = THIS_MODULE,
- 		.name  = "uartlite",
--		.of_match_table = ulite_of_match,
-+		.of_match_table = of_match_ptr(ulite_of_match),
- 	},
- };
- 
+ static inline int of_property_read_u32(const struct device_node *np,
 -- 
 1.7.1
