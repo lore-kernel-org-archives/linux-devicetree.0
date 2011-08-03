@@ -1,55 +1,108 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ARM: l2x0: Add OF based initialization
-Date: Wed, 03 Aug 2011 13:41:35 -0500
-Message-ID: <4E39965F.703@gmail.com>
-References: <1309984979-8847-1-git-send-email-robherring2@gmail.com>
-	<1309984979-8847-2-git-send-email-robherring2@gmail.com>
-	<20110706210237.GB5371@ponder.secretlab.ca>
-	<201107062326.53737.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201107062326.53737.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, workgroup.linux-kQvG35nSl+M@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, weizeng.he-kQvG35nSl+M@public.gmane.org
+Subject: [PATCH] i2c-designware: add OF binding support
+Date: Wed,  3 Aug 2011 15:04:23 -0500
+Message-ID: <1312401863-25822-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2011 04:26 PM, Arnd Bergmann wrote:
-> On Wednesday 06 July 2011 23:02:37 Grant Likely wrote:
->>
->> On Wed, Jul 06, 2011 at 03:42:59PM -0500, Rob Herring wrote:
->>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>
->>> This adds probing for ARM L2x0 cache controllers via device tree. Support
->>> includes the L210, L220, and PL310 controllers. The binding allows setting
->>> up cache RAM latencies and filter addresses (PL310 only).
->>>
->>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>
->> By rights, this should go via the arm tree, but it depends on patches
->> that are already in devicetree/next.  Arnd, how do you want to handle
->> this?  I want to avoid rebasing devicetree/next.
-> 
-> It's outside of the scope of the arm-soc tree really, the l2x0 code
-> is clearly core arm stuff, so it belongs into Russell's tree.
-> 
-> I think it's best if Russell can provide an Ack for this and you
-> put it in the tree that already has the dependencies.
-> 
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-As the dependency is in Linus' tree now, I submitted this to Russell's
-patch system.
+Add of_match_table and DT style i2c registration to designware i2c
+driver.
 
-Rob
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/i2c/dw-i2c.txt |   23 ++++++++++++++++++++++
+ drivers/i2c/busses/i2c-designware.c              |   13 ++++++++++++
+ 2 files changed, 36 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/dw-i2c.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/dw-i2c.txt b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
+new file mode 100644
+index 0000000..cbcb404
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
+@@ -0,0 +1,23 @@
++* Synopsys DesignWare I2C
++
++Required properties :
++
++ - compatible : should be "snps,designware-i2c"
++ - reg : Offset and length of the register set for the device
++ - interrupts : <IRQ> where IRQ is the interrupt number.
++
++Recommended properties :
++
++ - clock-frequency : desired I2C bus clock frequency in Hz.
++
++Example :
++
++	i2c@f0000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,designware-i2c";
++		reg = <0xf0000 0x1000>;
++		interrupts = <11>;
++		clock-frequency = <400000>;
++	};
++
+diff --git a/drivers/i2c/busses/i2c-designware.c b/drivers/i2c/busses/i2c-designware.c
+index b7a51c4..2911a49 100644
+--- a/drivers/i2c/busses/i2c-designware.c
++++ b/drivers/i2c/busses/i2c-designware.c
+@@ -37,6 +37,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
++#include <linux/of_i2c.h>
+ 
+ /*
+  * Registers offset
+@@ -770,12 +771,17 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
+ 	adap->algo = &i2c_dw_algo;
+ 	adap->dev.parent = &pdev->dev;
+ 
++#ifdef CONFIG_OF
++	r = i2c_add_adapter(adap);
++#else
+ 	adap->nr = pdev->id;
+ 	r = i2c_add_numbered_adapter(adap);
++#endif
+ 	if (r) {
+ 		dev_err(&pdev->dev, "failure adding adapter\n");
+ 		goto err_free_irq;
+ 	}
++	of_i2c_register_devices(adap);
+ 
+ 	return 0;
+ 
+@@ -819,6 +825,12 @@ static int __devexit dw_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dw_i2c_of_match[] = {
++	{ .compatible = "snps,designware-i2c", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
++
+ /* work with hotplug and coldplug */
+ MODULE_ALIAS("platform:i2c_designware");
+ 
+@@ -827,6 +839,7 @@ static struct platform_driver dw_i2c_driver = {
+ 	.driver		= {
+ 		.name	= "i2c_designware",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = dw_i2c_of_match,
+ 	},
+ };
+ 
+-- 
+1.7.4.1
