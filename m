@@ -1,13 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt: add helper to read 64-bit integers
-Date: Wed, 03 Aug 2011 11:17:14 -0500
-Message-ID: <4E39748A.3030002@gmail.com>
-References: <1312379073-13502-1-git-send-email-jamie@jamieiles.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: Shouldn't DT preserve pdev name and id to allow platform_match
+	to work?
+Date: Wed, 3 Aug 2011 18:27:04 +0200
+Message-ID: <4E3976D8.20602@ti.com>
+References: <4E396361.3060307@ti.com>
+	<CAC63_iRa1qc7pO9Eub1A+cC+R=tSkwzigVPDHqcbvOngACYWqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1312379073-13502-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+In-Reply-To: <CAC63_iRa1qc7pO9Eub1A+cC+R=tSkwzigVPDHqcbvOngACYWqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,88 +19,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>
+Cc: "Hilman, Kevin" <khilman-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nayak, Rajendra" <rnayak-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2011 08:44 AM, Jamie Iles wrote:
-> Add a helper similar to of_property_read_u32() that handles 64-bit
-> integers.
-> 
-> v2: constify device node and property name parameters.
-> 
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> ---
->  drivers/of/base.c  |   28 ++++++++++++++++++++++++++++
->  include/linux/of.h |    8 ++++++++
->  2 files changed, 36 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 3ff22e3..3808e70 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -632,6 +632,34 @@ int of_property_read_u32_array(const struct device_node *np,
->  EXPORT_SYMBOL_GPL(of_property_read_u32_array);
->  
->  /**
-> + * of_property_read_u64 - Find and read a 64 bit integer from a property
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_value:	pointer to return value, modified only if return value is 0.
-> + *
-> + * Search for a property in a device node and read a 64-bit value from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_value is modified only if a valid u64 value can be decoded.
-> + */
-> +int of_property_read_u64(struct device_node *np, char *propname, u64 *out_value)
+Hi Manju,
 
-Missed a const here...
+On 8/3/2011 6:17 PM, G, Manjunath Kondaiah wrote:
+> Hi Benoit,
+>
+> On Wed, Aug 3, 2011 at 8:34 PM, Cousson, Benoit<b-cousson-l0cyMroinI0@public.gmane.org>  wrote:
+>> Hi Grant,
+>>
+>> Going further with the usage of OF_DEV_AUXDATA_ID, I realized that this is is not doing what I was expecting. My expectation might be silly, but in order to make platform_match to work without DT matching mechanism, you need to have the driver name in the pdev->name field:
+>>
+>>         /* fall-back to driver name match */
+>>         return (strcmp(pdev->name, drv->name) == 0);
+>>
+>> Except that the of_device_add function is doing that:
+>>         pdev->name = dev_name(&ofdev->dev);
+>>         pdev->id = -1;
+>
+> This is taken here:
+> http://git.secretlab.ca/?p=linux-2.6.git;a=commitdiff;h=04f51955dc690666467252015a931d71d5c56696
+>
+> and it is pending for upstream.
+>
+> With the above patch, both pdev->name and pdev->id can be set as per
+> hwmod requirement through aux_data lookup table.
 
-> +{
-> +	struct property *prop = of_find_property(np, propname, NULL);
-> +
-> +	if (!prop)
-> +		return -EINVAL;
-> +	if (!prop->value)
-> +		return -ENODATA;
-> +	if (sizeof(*out_value) > prop->length)
-> +		return -EOVERFLOW;
-> +	*out_value = of_read_number(prop->value, 2);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_u64);
-> +
-> +/**
->   * of_property_read_string - Find and read a string from a property
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 0085bb0..d1b98c0 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
->  				      const char *propname,
->  				      u32 *out_values,
->  				      size_t sz);
-> +extern int of_property_read_u64(const struct device_node *np,
-> +				const char *propname, u64 *out_value);
->  
->  extern int of_property_read_string(struct device_node *np,
->  				   const char *propname,
-> @@ -256,6 +258,12 @@ static inline int of_property_read_string(struct device_node *np,
->  	return -ENOSYS;
->  }
->  
-> +static inline int of_property_read_u64(const struct device_node *np,
-> +				       const char *propname, u64 *out_value)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  #endif /* CONFIG_OF */
->  
->  static inline int of_property_read_u32(const struct device_node *np,
+Mmm, but I'm already using that patch, and it is only taking care of the 
+pdev->id, hence my email. Did I miss something?
+
+> we might have to append pdev->id to pdev->name so that
+> it can used for device look up in the hwmod
+> device list.
+
+I'm not sure to get your point here.
+
+Benoit
