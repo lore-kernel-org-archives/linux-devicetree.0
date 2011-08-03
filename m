@@ -1,133 +1,99 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 4/4] dt: i2c-omap: Convert i2c driver to use device tree
-Date: Wed, 3 Aug 2011 14:56:53 +0200
-Message-ID: <4E394595.7020804@ti.com>
-References: <1310592975-25773-1-git-send-email-manjugk@ti.com> <1310592975-25773-5-git-send-email-manjugk@ti.com> <CACxGe6vG9BKUDvthOKFtx3u=Vq0EfBaZakxVqx8AYfRe_ruNdg@mail.gmail.com> <4E319DA7.5050608@ti.com> <CACxGe6speWWuhSL1m3ysc6zrTvxYRyNf8Qj3Rt0jjdUGYi_v8g@mail.gmail.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] dt: add helper to read 64-bit integers
+Date: Wed,  3 Aug 2011 14:44:33 +0100
+Message-ID: <1312379073-13502-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6speWWuhSL1m3ysc6zrTvxYRyNf8Qj3Rt0jjdUGYi_v8g@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/28/2011 11:32 PM, Grant Likely wrote:
-> On Thu, Jul 28, 2011 at 11:34 AM, Cousson, Benoit<b-cousson@ti.com>  wrote:
+Add a helper similar to of_property_read_u32() that handles 64-bit
+integers.
 
-[...]
+v2: constify device node and property name parameters.
 
->> Do we have to modify every drivers in order to take advantage of the DT bus?
->> Cannot we init the already existing pdata during device creation and let the
->> driver untouched?
->>
->> I think it is a pity to add all that #ifdefry in the driver to be able to
->> support two kinds of bus.
-> 
-> It's not supporting 2 different kinds of bus.  There is no such think
-> as a dt bus type (anymore. there used to be and of_platform_bus_type,
-> but that was a mistake).  DT is only a different configuration
-> representation.
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+---
+ drivers/of/base.c  |   28 ++++++++++++++++++++++++++++
+ include/linux/of.h |    8 ++++++++
+ 2 files changed, 36 insertions(+), 0 deletions(-)
 
-That's the point, sorry for my confusing sentence. We are creating almost the exact same platform_device in both cases, but we still have to modify the platform_driver due to a change in the device creation method.
-
-No doubt that DT will clean up the messy devices creation from board file we have today in OMAP.
-But, for a smooth migration to DT, I would have defined a legacy mode that will avoid hacking every drivers just because we are using a different "bus enumeration" method.
-
-And then later we will be able to use DT for the configuration if needed.
-
->> Cannot we have an intermediate phase that will deal only with the device
->> creation with DT?
->>
->> That will allow us to clean the omap_device creation from hwmod we have
->> today spread everywhere in plat-omap and mach-omap2.
-> 
-> Consider what you're suggesting...  Pretty much every driver that
-> needs platform data has as a unique platform_data structure.  That
-> means that for every driver there needs to be a separate block of code
-> to translate from DT data into struct<driver>_platform_data.  There
-> is no way to make that generic.  That translation code needs to live
-> somewhere, and something needs to be responsible for executing it when
-> relevant devices appear.  It can either be built into the driver, or
-> it can be done sometime before the driver is probed.
-> 
-> Option 1: If it is part of the driver, the sequence looks like this:
-> ...early boot:
-> 1) allocate and register platform_devices for DT nodes (generic code,
-> attach device_node)
-> ... boot progresses to initcalls...
-> 2) probe platform_driver (DT translation code to obtain
-> <device>_platform_data from device_node)
-> 
-> Option 2: If it is part of platform_device registration, the sequence
-> looks something like:
-> ...early boot:
-> 1) allocate and register platform_devices for DT nodes (call device
-> specific translation code for each device to create
-> <device>_platform_data)
-> ...boot progresses to initcalls
-> 2) probe platform_driver (use platform_data, nothing changes here)
-> 
-> Option 3: decoupled from device registration and the device driver:
-> ...early boot:
-> 1) allocate and register platform_devices for DT nodes (generic code,
-> attach device_node)
-> ...boot progresses to initcalls
-> 2) hook into device model *before* drivers get probed to call device
-> specific translation code.
-> 3) probe platform_driver (use platform_data, nothing changes here)
-> 
-> I understand the desire to not change the drivers, but going with
-> either option 2 or 3 causes a giant mess in figuring out how to make
-> sure the correct translation code gets called.  Option 2 is a disaster
-> because the translation code for any device that may possibly be
-> attached to the kernel must be statically linked in.  It cannot be in
-> modules because it must be available during early init.  Option 2 is
-> similarly a no-go because it requires a new hunk of infrastructure to
-> take care of finding and executing translation code before the device
-> can get probed by the device driver.
-
-Mmm, cannot we have an option #4?
-
-It seems to me that you already have in place some hooks to provide pdata thanks to OF_DEV_AUXDATA. Adding a callback will potentially allow a custom board code to translate configuration from DT into legacy pdata.
-
-
-static struct omap_pdata i2c_pdata = {
-	.clkrate= 400000,
-};
-
-void init_i2c_pdata(...) {
-	of_property_read_u32(pdev->dev.of_node, pdata->clkrate);
-}
-
-static struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
-	OF_DEV_AUXDATA_CB("ti,omap-i2c", XXX, "i2c.1", &i2c_pdata, init_i2c_pdata),
-	{}
-};
-
-In legacy mode you get the pdata from the static board.
-If CONFIG_OF is set you can override the value from the callback.
-The driver remains the same.
-That being said, does it worth the effort? I'm not sure, but the idea was to allow focusing on the device creation first without hacking every drivers.
-
-Using a regular OF_DEV_AUXDATA with pdata, seems a good tradeoff already.
-
-> Besides, no matter how you look at it, the DT translation code is
-> always device-driver-specific.  It isn't something that can be handled
-> by generic code for all devices, and the *whole point* of the DT
-> transition is to get away from board specific code during early init.
-
-Well, AFAIK, the main motivation, at least for OMAP, was to get rid of static data in the arm directory. Getting rid of board code is, I agree, quite interesting as well.
-
-> Why wouldn't DT translation code live inside the one device driver
-> that it supports?
-
-Because, it is still optional and force us to maintain two different methods in the driver code when pdata is needed.
-Ideally "of_property_xxx" will be a platform_property_xxx call always available, and DT will be one of the potential source of configuration.
-Drivers will then be able to use one and only one standard Linux API, and various implementation will allow the board static stuff for non-DT case or DT blob when available.
-
-That is just my .2 euros.
-
-Regards,
-Benoit
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 3ff22e3..3808e70 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -632,6 +632,34 @@ int of_property_read_u32_array(const struct device_node *np,
+ EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+ 
+ /**
++ * of_property_read_u64 - Find and read a 64 bit integer from a property
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_value:	pointer to return value, modified only if return value is 0.
++ *
++ * Search for a property in a device node and read a 64-bit value from
++ * it. Returns 0 on success, -EINVAL if the property does not exist,
++ * -ENODATA if property does not have a value, and -EOVERFLOW if the
++ * property data isn't large enough.
++ *
++ * The out_value is modified only if a valid u64 value can be decoded.
++ */
++int of_property_read_u64(struct device_node *np, char *propname, u64 *out_value)
++{
++	struct property *prop = of_find_property(np, propname, NULL);
++
++	if (!prop)
++		return -EINVAL;
++	if (!prop->value)
++		return -ENODATA;
++	if (sizeof(*out_value) > prop->length)
++		return -EOVERFLOW;
++	*out_value = of_read_number(prop->value, 2);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_property_read_u64);
++
++/**
+  * of_property_read_string - Find and read a string from a property
+  * @np:		device node from which the property value is to be read.
+  * @propname:	name of the property to be searched.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 0085bb0..d1b98c0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
+ 				      const char *propname,
+ 				      u32 *out_values,
+ 				      size_t sz);
++extern int of_property_read_u64(const struct device_node *np,
++				const char *propname, u64 *out_value);
+ 
+ extern int of_property_read_string(struct device_node *np,
+ 				   const char *propname,
+@@ -256,6 +258,12 @@ static inline int of_property_read_string(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++static inline int of_property_read_u64(const struct device_node *np,
++				       const char *propname, u64 *out_value)
++{
++	return -ENOSYS;
++}
++
+ #endif /* CONFIG_OF */
+ 
+ static inline int of_property_read_u32(const struct device_node *np,
+-- 
+1.7.4.1
