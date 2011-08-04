@@ -1,79 +1,178 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] dt: remove of_alias_get_id() reference
-Date: Fri, 5 Aug 2011 01:13:02 +0800
-Message-ID: <20110804170932.GA10897@freescale.com>
-References: <20110804102950.10845.67898.stgit@ponder>
-	<20110804103336.GE17540@legolas.emea.dhcp.ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c-designware: add OF binding support
+Date: Thu, 04 Aug 2011 16:52:49 -0500
+Message-ID: <4E3B14B1.4090604@gmail.com>
+References: <1312401863-25822-1-git-send-email-robherring2@gmail.com> <20110804091223.GA19115@trinity.fluff.org> <4E3ABE96.9020402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110804103336.GE17540-UiBtZHVXSwEVvW8u9ZQWYwjfymiNCTlR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4E3ABE96.9020402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2011 at 01:33:37PM +0300, Felipe Balbi wrote:
-> On Thu, Aug 04, 2011 at 11:30:27AM +0100, Grant Likely wrote:
-> > of_alias_get_id() is broken and being reverted.  Remove the reference
-> > to it and replace with a single incrementing id number.
-> > 
-> > There is no risk of regression here on the imx driver since the imx
-> > change to use of_alias_get_id() is commit 22698aa2, "serial/imx: add
-> > device tree probe support" which is new for v3.1, and it won't get
-> > used unless CONFIG_OF is enabled and the board is booted using a
-> > device tree.  A single incrementing integer is sufficient for now.
-> > 
-> > Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > 
-> > I'm about to ask Linus to pull this patch through the devicetree/merge
-> > branch along with the of_alias revert.
-> > 
-> >  drivers/tty/serial/imx.c |   13 ++++---------
-> >  1 files changed, 4 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> > index 827db76..7e91b3d 100644
-> > --- a/drivers/tty/serial/imx.c
-> > +++ b/drivers/tty/serial/imx.c
-> > @@ -1286,22 +1286,17 @@ static int serial_imx_resume(struct platform_device *dev)
-> >  static int serial_imx_probe_dt(struct imx_port *sport,
-> >  		struct platform_device *pdev)
-> >  {
-> > +	static int portnum = 0;
+On 08/04/2011 10:45 AM, Rob Herring wrote:
+> Ben,
 > 
-> would it be better to use an IDR here ?
+> On 08/04/2011 04:12 AM, Ben Dooks wrote:
+>> On Wed, Aug 03, 2011 at 03:04:23PM -0500, Rob Herring wrote:
+>>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> Add of_match_table and DT style i2c registration to designware i2c
+>>> driver.
+>>>
+>>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+>>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>  Documentation/devicetree/bindings/i2c/dw-i2c.txt |   23 ++++++++++++++++++++++
+>>>  drivers/i2c/busses/i2c-designware.c              |   13 ++++++++++++
+>>>  2 files changed, 36 insertions(+), 0 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/i2c/dw-i2c.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/dw-i2c.txt b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
+>>> new file mode 100644
+>>> index 0000000..cbcb404
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
+>>> @@ -0,0 +1,23 @@
+>>> +* Synopsys DesignWare I2C
+>>> +
+>>> +Required properties :
+>>> +
+>>> + - compatible : should be "snps,designware-i2c"
+>>> + - reg : Offset and length of the register set for the device
+>>> + - interrupts : <IRQ> where IRQ is the interrupt number.
+>>> +
+>>> +Recommended properties :
+>>> +
+>>> + - clock-frequency : desired I2C bus clock frequency in Hz.
+>>> +
+>>> +Example :
+>>> +
+>>> +	i2c@f0000 {
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		compatible = "snps,designware-i2c";
+>>> +		reg = <0xf0000 0x1000>;
+>>> +		interrupts = <11>;
+>>> +		clock-frequency = <400000>;
+>>> +	};
+>>> +
+>>
+>> looks good to me.
+>>
+>>> diff --git a/drivers/i2c/busses/i2c-designware.c b/drivers/i2c/busses/i2c-designware.c
+>>> index b7a51c4..2911a49 100644
+>>> --- a/drivers/i2c/busses/i2c-designware.c
+>>> +++ b/drivers/i2c/busses/i2c-designware.c
+>>> @@ -37,6 +37,7 @@
+>>>  #include <linux/platform_device.h>
+>>>  #include <linux/io.h>
+>>>  #include <linux/slab.h>
+>>> +#include <linux/of_i2c.h>
+>>>  
+>>>  /*
+>>>   * Registers offset
+>>> @@ -770,12 +771,17 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
+>>>  	adap->algo = &i2c_dw_algo;
+>>>  	adap->dev.parent = &pdev->dev;
+>>>  
+>>> +#ifdef CONFIG_OF
+>>> +	r = i2c_add_adapter(adap);
+>>> +#else
+>>>  	adap->nr = pdev->id;
+>>>  	r = i2c_add_numbered_adapter(adap);
+>>> +#endif
+>>
+>> I would say that doing the #ifdef CONFIG_OF is dangerous here when we
+>> are in a mixed OF/platform enviromnent as we're depending on compile
+>> time selection.
+>>
+>> I'm also wondering whether we have an of helper macro which takes
+>> a pdev and gives you an adapter number either given on pdev->id or
+>> -1 for the case when we're using the OF bindings.
+>>
+>> It might be worth talking to Grant about setting pdev->id to -1 if we
+>> are using an OF device.
+>>
+> 
+> As Grant said, that's already done and this hunk is not needed.
+> 
+>>>  	if (r) {
+>>>  		dev_err(&pdev->dev, "failure adding adapter\n");
+>>>  		goto err_free_irq;
+>>>  	}
+>>> +	of_i2c_register_devices(adap);
+>>
+>> If we did that, we could add a of_i2c_register_adapter() call which
+>> would take the platform device and then do the of_i2c_register_devices()
+>> and do these steps.
+>>
+> 
+> Better yet, how about putting of_i2c_register_devices into
+> i2c_register_adapter? Everywhere that calls of_i2c_register_devices is
+> preceded by a call to i2c_add_numbered_adapter or i2c_add_adapter. It
+> seems logical to put it with i2c_scan_static_board_info. I'll prepare a
+> patch to add that and remove all the other callers unless you think
+> that's a bad idea.
 > 
 
-This patch is a step back to avoid using of_alias_* api since it's
-been reverted.  But we need to fix the api to make it right later.
-That said the serial will still go after the of_alias_get_id.
+Nevermind. That would be undoing this commit:
 
-What we want is a fixed device id for specified serial instance,
-which is defined by device tree (in turn by hardware), instead of
-a random id.  I'm not sure that I completely understand what IDR is
-exactly for.  But from the documentation in lib/idr.c, I feel it's
-not what we need here.  Or can you please elaborate why it fits here?
+    of/i2c: Fix module load order issue caused by of_i2c.c
 
-/*
- * You call it to allocate an id (an int) an associate with that id a
- * pointer or what ever, we treat it as a (void *).  You can pass this
- * id to a user for him to pass back at a later time.  You then pass
- * that id to this code and it returns your pointer.
- */
+    Commit 959e85f7, "i2c: add OF-style registration and binding" caused a
+    module dependency loop where of_i2c.c calls functions in i2c-core, and
+    i2c-core calls of_i2c_register_devices() in of_i2c.  This means that
+    when i2c support is built as a module when CONFIG_OF is set, then
+    neither i2c_core nor of_i2c are able to be loaded.
 
--- 
-Regards,
-Shawn
+    This patch fixes the problem by moving the of_i2c_register_devices()
+    calls back into the device drivers.  Device drivers already
+    specifically request the core code to parse the device tree for
+    devices anyway by setting the of_node pointer, so it isn't a big
+    deal to also call the registration function.  The drivers just become
+    slightly more verbose.
+
+    Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+    Signed-off-by: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+
+Rob
+
+>>>  	return 0;
+>>>  
+>>> @@ -819,6 +825,12 @@ static int __devexit dw_i2c_remove(struct platform_device *pdev)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static const struct of_device_id dw_i2c_of_match[] = {
+>>> +	{ .compatible = "snps,designware-i2c", },
+>>> +	{},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
+>>> +
+>>>  /* work with hotplug and coldplug */
+>>>  MODULE_ALIAS("platform:i2c_designware");
+>>>  
+>>> @@ -827,6 +839,7 @@ static struct platform_driver dw_i2c_driver = {
+>>>  	.driver		= {
+>>>  		.name	= "i2c_designware",
+>>>  		.owner	= THIS_MODULE,
+>>> +		.of_match_table = dw_i2c_of_match,
+>>
+>> If my patch for of_match_ptr() is accepted, it will be needed here
+>> otherwise you will need to do something about remvoing the of table
+>> above if not config of.
+> 
+> There's really not much harm with having the table. If you match the
+> device in the non-DT way, the table is not used. Drivers should never
+> directly access the table either, but use the helpers to get their data.
+> 
+> Rob
+> 
+> 
