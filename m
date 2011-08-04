@@ -1,84 +1,63 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: Virtual devices (cpufreq etc) and DT
-Date: Thu, 4 Aug 2011 11:23:21 +0100
-Message-ID: <20110804102321.GC2899@pulham.picochip.com>
-References: <20110803095019.GB2607@pulham.picochip.com>
-	<4E39775C.4090305@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] dt: remove of_alias_get_id() reference
+Date: Thu, 04 Aug 2011 11:30:27 +0100
+Message-ID: <20110804102950.10845.67898.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E39775C.4090305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+of_alias_get_id() is broken and being reverted.  Remove the reference
+to it and replace with a single incrementing id number.
 
-On Wed, Aug 03, 2011 at 11:29:16AM -0500, Rob Herring wrote:
-[...]
-> Making of_clk_get take a struct device_node ptr instead of struct 
-> device fixes the problem. Here's a patch that does that.
-> 
-> Rob
-> 
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Subject: [PATCH] of/clk: use struct device_node for of_clk_get
-> 
-> In order to allow clock retrieval without having a struct device,
-> use the OF node pointer instead for of_clk_get.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/clk/clkdev.c   |    3 ++-
->  drivers/of/clock.c     |   12 +++++-------
->  include/linux/of_clk.h |    4 ++--
->  3 files changed, 9 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-> index 9252b4f..a8f1d29 100644
-> --- a/drivers/clk/clkdev.c
-> +++ b/drivers/clk/clkdev.c
-> @@ -89,7 +89,8 @@ struct clk *clk_get(struct device *dev, const char
-> *con_id)
->  	const char *dev_id = dev ? dev_name(dev) : NULL;
->  	struct clk *clk;
-> 
-> -	clk = of_clk_get(dev, con_id);
-> +	if (dev)
-> +		clk = of_clk_get(dev->of_node, con_id);
->  	if (clk && __clk_get(clk))
->  		return clk;
+There is no risk of regression here on the imx driver since the imx
+change to use of_alias_get_id() is commit 22698aa2, "serial/imx: add
+device tree probe support" which is new for v3.1, and it won't get
+used unless CONFIG_OF is enabled and the board is booted using a
+device tree.  A single incrementing integer is sufficient for now.
 
-I've just tried this patch and it works a treat, but I had to change 
-this hunk to the one below to stop the compiler warning about a possible 
-uninitialized use of clk.
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
+---
 
-Jamie
+I'm about to ask Linus to pull this patch through the devicetree/merge
+branch along with the of_alias revert.
 
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index f2b1224..bc5ae55 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -80,9 +80,10 @@ EXPORT_SYMBOL(clk_get_sys);
- struct clk *clk_get(struct device *dev, const char *con_id)
+ drivers/tty/serial/imx.c |   13 ++++---------
+ 1 files changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 827db76..7e91b3d 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1286,22 +1286,17 @@ static int serial_imx_resume(struct platform_device *dev)
+ static int serial_imx_probe_dt(struct imx_port *sport,
+ 		struct platform_device *pdev)
  {
- 	const char *dev_id = dev ? dev_name(dev) : NULL;
--	struct clk *clk;
-+	struct clk *clk = NULL;
++	static int portnum = 0;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct of_device_id *of_id =
+ 			of_match_device(imx_uart_dt_ids, &pdev->dev);
+-	int ret;
  
--	clk = of_clk_get(dev, con_id);
-+	if (dev->of_node)
-+		clk = of_clk_get(dev->of_node, con_id);
- 	if (clk && __clk_get(clk))
-		return clk;
+ 	if (!np)
+ 		return -ENODEV;
+ 
+-	ret = of_alias_get_id(np, "serial");
+-	if (ret < 0) {
+-		pr_err("%s: failed to get alias id, errno %d\n",
+-			__func__, ret);
+-		return -ENODEV;
+-	} else {
+-		sport->port.line = ret;
+-	}
++	sport->port.line = portnum++;
++	if (sport->port.line >= UART_NR)
++		return -EINVAL;
+ 
+ 	if (of_get_property(np, "fsl,uart-has-rtscts", NULL))
+ 		sport->have_rtscts = 1;
