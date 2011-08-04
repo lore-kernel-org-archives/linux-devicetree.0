@@ -1,17 +1,14 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: Virtual devices (cpufreq etc) and DT
-Date: Thu, 4 Aug 2011 11:44:43 +0100
-Message-ID: <20110804104442.GE2899@pulham.picochip.com>
-References: <20110803095019.GB2607@pulham.picochip.com>
-	<4E39775C.4090305@gmail.com>
-	<20110804102321.GC2899@pulham.picochip.com>
-	<CACxGe6tq_fpcwVZPYvPTkoLkkU0c3KeuCR+-UQSCcZcAo9vOUA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] dt: remove of_alias_get_id() reference
+Date: Thu, 4 Aug 2011 12:42:41 +0100
+Message-ID: <CACxGe6vnspztEnUH5odGnK4x_K9Ej3Nt7BxikVQwOr9Uh_ED7g@mail.gmail.com>
+References: <20110804102950.10845.67898.stgit@ponder>
+	<20110804103336.GE17540@legolas.emea.dhcp.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6tq_fpcwVZPYvPTkoLkkU0c3KeuCR+-UQSCcZcAo9vOUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110804103336.GE17540-UiBtZHVXSwEVvW8u9ZQWYwjfymiNCTlR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,57 +18,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2011 at 11:33:37AM +0100, Grant Likely wrote:
-> On Thu, Aug 4, 2011 at 11:23 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-> > Hi Rob,
-> >
-> > On Wed, Aug 03, 2011 at 11:29:16AM -0500, Rob Herring wrote:
-> > [...]
-> >> Making of_clk_get take a struct device_node ptr instead of struct
-> >> device fixes the problem. Here's a patch that does that.
-> >>
-> >> Rob
-> >>
-> >> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >> Subject: [PATCH] of/clk: use struct device_node for of_clk_get
-> >>
-> >> In order to allow clock retrieval without having a struct device,
-> >> use the OF node pointer instead for of_clk_get.
-> >>
-> >> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >> =A0drivers/clk/clkdev.c =A0 | =A0 =A03 ++-
-> >> =A0drivers/of/clock.c =A0 =A0 | =A0 12 +++++-------
-> >> =A0include/linux/of_clk.h | =A0 =A04 ++--
-> >> =A03 files changed, 9 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-> >> index 9252b4f..a8f1d29 100644
-> >> --- a/drivers/clk/clkdev.c
-> >> +++ b/drivers/clk/clkdev.c
-> >> @@ -89,7 +89,8 @@ struct clk *clk_get(struct device *dev, const char
-> >> *con_id)
-> >> =A0 =A0 =A0 const char *dev_id =3D dev ? dev_name(dev) : NULL;
-> >> =A0 =A0 =A0 struct clk *clk;
-> >>
-> >> - =A0 =A0 clk =3D of_clk_get(dev, con_id);
-> >> + =A0 =A0 if (dev)
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 clk =3D of_clk_get(dev->of_node, con_id);
-> >> =A0 =A0 =A0 if (clk && __clk_get(clk))
-> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return clk;
-> >
-> > I've just tried this patch and it works a treat, but I had to change
-> > this hunk to the one below to stop the compiler warning about a possible
-> > uninitialized use of clk.
-> =
+On Thu, Aug 4, 2011 at 11:33 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> On Thu, Aug 04, 2011 at 11:30:27AM +0100, Grant Likely wrote:
+>> of_alias_get_id() is broken and being reverted. =A0Remove the reference
+>> to it and replace with a single incrementing id number.
+>>
+>> There is no risk of regression here on the imx driver since the imx
+>> change to use of_alias_get_id() is commit 22698aa2, "serial/imx: add
+>> device tree probe support" which is new for v3.1, and it won't get
+>> used unless CONFIG_OF is enabled and the board is booted using a
+>> device tree. =A0A single incrementing integer is sufficient for now.
+>>
+>> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>
+>> I'm about to ask Linus to pull this patch through the devicetree/merge
+>> branch along with the of_alias revert.
+>>
+>> =A0drivers/tty/serial/imx.c | =A0 13 ++++---------
+>> =A01 files changed, 4 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+>> index 827db76..7e91b3d 100644
+>> --- a/drivers/tty/serial/imx.c
+>> +++ b/drivers/tty/serial/imx.c
+>> @@ -1286,22 +1286,17 @@ static int serial_imx_resume(struct platform_dev=
+ice *dev)
+>> =A0static int serial_imx_probe_dt(struct imx_port *sport,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct platform_device *pdev)
+>> =A0{
+>> + =A0 =A0 static int portnum =3D 0;
+>
+> would it be better to use an IDR here ?
 
-> You could also change of_clk_get() to simply return null if it is
-> passed a null of_node.  That would allow drivers to be a tad simpler.
+Hmmm, I've not looked at idr before.  Yes, it would probably be the
+right thing to do.  This patch is needed to fix a build failure, but
+when it is reworked for v3.2 I think idr should be considered.
+Thanks!
 
-Yes, that would be a lot neater.
-
-Jamie
+g.
