@@ -1,71 +1,77 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Virtual devices (cpufreq etc) and DT
-Date: Thu, 4 Aug 2011 11:33:37 +0100
-Message-ID: <CACxGe6tq_fpcwVZPYvPTkoLkkU0c3KeuCR+-UQSCcZcAo9vOUA@mail.gmail.com>
-References: <20110803095019.GB2607@pulham.picochip.com>
-	<4E39775C.4090305@gmail.com>
-	<20110804102321.GC2899@pulham.picochip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110804102321.GC2899-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: David Brown <davidb@codeaurora.org>
+Subject: [PATCH v2] of/address: Add of_iomap_nocache
+Date: Thu,  4 Aug 2011 03:36:36 -0700
+Message-ID: <1312454196-31028-1-git-send-email-davidb@codeaurora.org>
+References: <1312451629-28036-1-git-send-email-davidb@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1312451629-28036-1-git-send-email-davidb@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: David Brown <davidb@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 4, 2011 at 11:23 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Wed, Aug 03, 2011 at 11:29:16AM -0500, Rob Herring wrote:
-> [...]
->> Making of_clk_get take a struct device_node ptr instead of struct
->> device fixes the problem. Here's a patch that does that.
->>
->> Rob
->>
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Subject: [PATCH] of/clk: use struct device_node for of_clk_get
->>
->> In order to allow clock retrieval without having a struct device,
->> use the OF node pointer instead for of_clk_get.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> ---
->> =A0drivers/clk/clkdev.c =A0 | =A0 =A03 ++-
->> =A0drivers/of/clock.c =A0 =A0 | =A0 12 +++++-------
->> =A0include/linux/of_clk.h | =A0 =A04 ++--
->> =A03 files changed, 9 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
->> index 9252b4f..a8f1d29 100644
->> --- a/drivers/clk/clkdev.c
->> +++ b/drivers/clk/clkdev.c
->> @@ -89,7 +89,8 @@ struct clk *clk_get(struct device *dev, const char
->> *con_id)
->> =A0 =A0 =A0 const char *dev_id =3D dev ? dev_name(dev) : NULL;
->> =A0 =A0 =A0 struct clk *clk;
->>
->> - =A0 =A0 clk =3D of_clk_get(dev, con_id);
->> + =A0 =A0 if (dev)
->> + =A0 =A0 =A0 =A0 =A0 =A0 clk =3D of_clk_get(dev->of_node, con_id);
->> =A0 =A0 =A0 if (clk && __clk_get(clk))
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return clk;
->
-> I've just tried this patch and it works a treat, but I had to change
-> this hunk to the one below to stop the compiler warning about a possible
-> uninitialized use of clk.
+Add uncached mappings from devicetree nodes similar to regular io
+mappings.
 
-You could also change of_clk_get() to simply return null if it is
-passed a null of_node.  That would allow drivers to be a tad simpler.
+SPARC is coherent, so there this call is the same as regular of_iomap.
 
-g.
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: David Brown <davidb@codeaurora.org>
+---
+v2 - Add implementation for SPARC
+
+ drivers/of/address.c       |   19 +++++++++++++++++++
+ include/linux/of_address.h |   10 ++++++++++
+ 2 files changed, 29 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 72c33fb..9bee7f8 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -613,3 +613,22 @@ void __iomem *of_iomap(struct device_node *np, int index)
+ 	return ioremap(res.start, resource_size(&res));
+ }
+ EXPORT_SYMBOL(of_iomap);
++
++/**
++ * of_iomap_nocache - Maps the memory mapped IO for a given
++ *                    device_node, using ioremap_nocache.
++ * @device:	the device whose io range will be mapped
++ * @index:	index of the io range
++ *
++ * Returns a pointer to the mapped memory
++ */
++void __iomem *of_iomap_nocache(struct device_node *np, int index)
++{
++	struct resource res;
++
++	if (of_address_to_resource(np, index, &res))
++		return NULL;
++
++	return ioremap_nocache(res.start, 1 + res.end - res.start);
++}
++EXPORT_SYMBOL(of_iomap_nocache);
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 3118623..0e4734b 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -13,6 +13,16 @@ extern struct device_node *of_find_matching_node_by_address(
+ 					u64 base_address);
+ extern void __iomem *of_iomap(struct device_node *device, int index);
+ 
++#ifndef SPARC
++extern void __iomem *of_iomap_nocache(struct device_node *device, int index);
++#else
++static inline void __iomem *of_iomap_nocache(struct device_node *device,
++		int index)
++{
++	return of_iomap(device, index);
++}
++#endif
++
+ /* Extract an address from a device, returns the region size and
+  * the address space flags too. The PCI version uses a BAR number
+  * instead of an absolute index
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
