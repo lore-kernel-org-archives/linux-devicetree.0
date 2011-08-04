@@ -1,103 +1,160 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] i2c-designware: add OF binding support
-Date: Wed, 3 Aug 2011 23:16:15 +0100
-Message-ID: <CACxGe6vuTjb=a=m9Tvr8hRV7r+xKU=DGqVhewcMz3Wt8AOx-YQ@mail.gmail.com>
-References: <1312401863-25822-1-git-send-email-robherring2@gmail.com>
+From: "Koul, Vinod" <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 3/3] dmaengine: imx-sdma: add device tree probe support
+Date: Thu, 04 Aug 2011 09:27:14 +0530
+Message-ID: <1312430234.1536.552.camel@vkoul-udesk3>
+References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
+	<1310723066-567-4-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1312401863-25822-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1310723066-567-4-git-send-email-shawn.guo@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 3, 2011 at 9:04 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
-> Add of_match_table and DT style i2c registration to designware i2c
-> driver.
->
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On Fri, 2011-07-15 at 17:44 +0800, Shawn Guo wrote:
+> It adds device tree probe support for imx-sdma driver.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+I need an ack from Grant before I can apply this series
+
+-- 
+~Vinod
 > ---
-> =A0Documentation/devicetree/bindings/i2c/dw-i2c.txt | =A0 23 ++++++++=
-++++++++++++++
-> =A0drivers/i2c/busses/i2c-designware.c =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- 13 ++++++++++++
-> =A02 files changed, 36 insertions(+), 0 deletions(-)
-> =A0create mode 100644 Documentation/devicetree/bindings/i2c/dw-i2c.tx=
-t
->
-> diff --git a/Documentation/devicetree/bindings/i2c/dw-i2c.txt b/Docum=
-entation/devicetree/bindings/i2c/dw-i2c.txt
+>  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   17 ++++++++
+>  drivers/dma/imx-sdma.c                             |   41 ++++++++++++++++++-
+>  2 files changed, 55 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
 > new file mode 100644
-> index 0000000..cbcb404
+> index 0000000..d1e3f44
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
-> @@ -0,0 +1,23 @@
-> +* Synopsys DesignWare I2C
+> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> @@ -0,0 +1,17 @@
+> +* Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
 > +
-> +Required properties :
+> +Required properties:
+> +- compatible : Should be "fsl,<chip>-sdma"
+> +- reg : Should contain SDMA registers location and length
+> +- interrupts : Should contain SDMA interrupt
+> +- fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
+> +  scripts firmware
 > +
-> + - compatible : should be "snps,designware-i2c"
-> + - reg : Offset and length of the register set for the device
-> + - interrupts : <IRQ> where IRQ is the interrupt number.
+> +Examples:
 > +
-> +Recommended properties :
+> +sdma@83fb0000 {
+> +	compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
+> +	reg = <0x83fb0000 0x4000>;
+> +	interrupts = <6>;
+> +	fsl,sdma-ram-script-name = "sdma-imx51.bin";
+> +};
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 6b839a2..20504f0 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -32,6 +32,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/dmaengine.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <asm/irq.h>
+>  #include <mach/sdma.h>
+> @@ -331,6 +333,12 @@ static struct platform_device_id sdma_devtypes[] = {
+>  	}
+>  };
+>  
+> +static const struct of_device_id sdma_dt_ids[] = {
+> +	{ .compatible = "fsl,imx31-sdma", .data = &sdma_devtypes[IMX31_SDMA], },
+> +	{ .compatible = "fsl,imx35-sdma", .data = &sdma_devtypes[IMX35_SDMA], },
+> +	{ /* sentinel */ }
+> +};
 > +
-> + - clock-frequency : desired I2C bus clock frequency in Hz.
+>  #define SDMA_H_CONFIG_DSPDMA	(1 << 12) /* indicates if the DSPDMA is used */
+>  #define SDMA_H_CONFIG_RTD_PINS	(1 << 11) /* indicates if Real-Time Debug pins are enabled */
+>  #define SDMA_H_CONFIG_ACR	(1 << 4)  /* indicates if AHB freq /core freq = 2 or 1 */
+> @@ -1249,6 +1257,10 @@ err_dma_alloc:
+>  
+>  static int __init sdma_probe(struct platform_device *pdev)
+>  {
+> +	const struct of_device_id *of_id =
+> +			of_match_device(sdma_dt_ids, &pdev->dev);
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const char *fw_name;
+>  	int ret;
+>  	int irq;
+>  	struct resource *iores;
+> @@ -1264,7 +1276,7 @@ static int __init sdma_probe(struct platform_device *pdev)
+>  
+>  	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (!iores || irq < 0 || !pdata) {
+> +	if (!iores || irq < 0) {
+>  		ret = -EINVAL;
+>  		goto err_irq;
+>  	}
+> @@ -1294,6 +1306,8 @@ static int __init sdma_probe(struct platform_device *pdev)
+>  	if (!sdma->script_addrs)
+>  		goto err_alloc;
+>  
+> +	if (of_id)
+> +		pdev->id_entry = of_id->data;
+>  	sdma->devtype = pdev->id_entry->driver_data;
+>  
+>  	dma_cap_set(DMA_SLAVE, sdma->dma_device.cap_mask);
+> @@ -1324,10 +1338,30 @@ static int __init sdma_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_init;
+>  
+> -	if (pdata->script_addrs)
+> +	if (pdata && pdata->script_addrs)
+>  		sdma_add_scripts(sdma, pdata->script_addrs);
+>  
+> -	sdma_get_firmware(sdma, pdata->fw_name);
+> +	if (pdata) {
+> +		sdma_get_firmware(sdma, pdata->fw_name);
+> +	} else {
+> +		/*
+> +		 * Because that device tree does not encode ROM script address,
+> +		 * the RAM script in firmware is mandatory for device tree
+> +		 * probe, otherwise it fails.
+> +		 */
+> +		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
+> +					      &fw_name);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to get firmware name\n");
+> +			goto err_init;
+> +		}
 > +
-> +Example :
-> +
-> + =A0 =A0 =A0 i2c@f0000 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "snps,designware-i2c";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0xf0000 0x1000>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <11>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <400000>;
-> + =A0 =A0 =A0 };
-> +
-> diff --git a/drivers/i2c/busses/i2c-designware.c b/drivers/i2c/busses=
-/i2c-designware.c
-> index b7a51c4..2911a49 100644
-> --- a/drivers/i2c/busses/i2c-designware.c
-> +++ b/drivers/i2c/busses/i2c-designware.c
-> @@ -37,6 +37,7 @@
-> =A0#include <linux/platform_device.h>
-> =A0#include <linux/io.h>
-> =A0#include <linux/slab.h>
-> +#include <linux/of_i2c.h>
->
-> =A0/*
-> =A0* Registers offset
-> @@ -770,12 +771,17 @@ static int __devinit dw_i2c_probe(struct platfo=
-rm_device *pdev)
-> =A0 =A0 =A0 =A0adap->algo =3D &i2c_dw_algo;
-> =A0 =A0 =A0 =A0adap->dev.parent =3D &pdev->dev;
->
-> +#ifdef CONFIG_OF
-> + =A0 =A0 =A0 r =3D i2c_add_adapter(adap);
-> +#else
-> =A0 =A0 =A0 =A0adap->nr =3D pdev->id;
-> =A0 =A0 =A0 =A0r =3D i2c_add_numbered_adapter(adap);
-> +#endif
-
-Unnecessary.  i2c_add_numbered_adapter will dynamically assign a bus
-number now if nr is -1.
-
-Otherwise, the patch looks good.  You can add the following after
-removing the above hunk.  Besides, the way this is changed with an
-#ifdef will break non-dt users in the same kernel.  You know better
-than to do that!  :-)
-
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> (after fixing above =
-problem)
-
-g.
+> +		ret = sdma_get_firmware(sdma, fw_name);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to get firmware\n");
+> +			goto err_init;
+> +		}
+> +	}
+>  
+>  	sdma->dma_device.dev = &pdev->dev;
+>  
+> @@ -1375,6 +1409,7 @@ static int __exit sdma_remove(struct platform_device *pdev)
+>  static struct platform_driver sdma_driver = {
+>  	.driver		= {
+>  		.name	= "imx-sdma",
+> +		.of_match_table = sdma_dt_ids,
+>  	},
+>  	.id_table	= sdma_devtypes,
+>  	.remove		= __exit_p(sdma_remove),
