@@ -1,150 +1,85 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] i2c-designware: add OF binding support
-Date: Thu, 4 Aug 2011 23:12:18 +0100
-Message-ID: <CACxGe6um0SOvhoFcTeNFCBzYd9M5SBhSPZOAy_rqhHK3PCcsGw@mail.gmail.com>
-References: <1312401863-25822-1-git-send-email-robherring2@gmail.com>
-	<20110804091223.GA19115@trinity.fluff.org> <4E3ABE96.9020402@gmail.com>
-	<4E3B14B1.4090604@gmail.com>
+From: Matt Sealey <matt@genesi-usa.com>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Thu, 4 Aug 2011 18:07:15 -0500
+Message-ID: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<20110725204630.GD26735@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E3B14B1.4090604-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110725204630.GD26735@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 4, 2011 at 10:52 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 08/04/2011 10:45 AM, Rob Herring wrote:
->> Ben,
->>
->> On 08/04/2011 04:12 AM, Ben Dooks wrote:
->>> On Wed, Aug 03, 2011 at 03:04:23PM -0500, Rob Herring wrote:
->>>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> Add of_match_table and DT style i2c registration to designware i2c
->>>> driver.
->>>>
->>>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>>> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
->>>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> ---
->>>> =A0Documentation/devicetree/bindings/i2c/dw-i2c.txt | =A0 23 +++++++++=
-+++++++++++++
->>>> =A0drivers/i2c/busses/i2c-designware.c =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 13 ++++++++++++
->>>> =A02 files changed, 36 insertions(+), 0 deletions(-)
->>>> =A0create mode 100644 Documentation/devicetree/bindings/i2c/dw-i2c.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/dw-i2c.txt b/Docume=
-ntation/devicetree/bindings/i2c/dw-i2c.txt
->>>> new file mode 100644
->>>> index 0000000..cbcb404
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
->>>> @@ -0,0 +1,23 @@
->>>> +* Synopsys DesignWare I2C
->>>> +
->>>> +Required properties :
->>>> +
->>>> + - compatible : should be "snps,designware-i2c"
->>>> + - reg : Offset and length of the register set for the device
->>>> + - interrupts : <IRQ> where IRQ is the interrupt number.
->>>> +
->>>> +Recommended properties :
->>>> +
->>>> + - clock-frequency : desired I2C bus clock frequency in Hz.
->>>> +
->>>> +Example :
->>>> +
->>>> + =A0 i2c@f0000 {
->>>> + =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
->>>> + =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
->>>> + =A0 =A0 =A0 =A0 =A0 compatible =3D "snps,designware-i2c";
->>>> + =A0 =A0 =A0 =A0 =A0 reg =3D <0xf0000 0x1000>;
->>>> + =A0 =A0 =A0 =A0 =A0 interrupts =3D <11>;
->>>> + =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <400000>;
->>>> + =A0 };
->>>> +
->>>
->>> looks good to me.
->>>
->>>> diff --git a/drivers/i2c/busses/i2c-designware.c b/drivers/i2c/busses/=
-i2c-designware.c
->>>> index b7a51c4..2911a49 100644
->>>> --- a/drivers/i2c/busses/i2c-designware.c
->>>> +++ b/drivers/i2c/busses/i2c-designware.c
->>>> @@ -37,6 +37,7 @@
->>>> =A0#include <linux/platform_device.h>
->>>> =A0#include <linux/io.h>
->>>> =A0#include <linux/slab.h>
->>>> +#include <linux/of_i2c.h>
->>>>
->>>> =A0/*
->>>> =A0 * Registers offset
->>>> @@ -770,12 +771,17 @@ static int __devinit dw_i2c_probe(struct platfor=
-m_device *pdev)
->>>> =A0 =A0 adap->algo =3D &i2c_dw_algo;
->>>> =A0 =A0 adap->dev.parent =3D &pdev->dev;
->>>>
->>>> +#ifdef CONFIG_OF
->>>> + =A0 r =3D i2c_add_adapter(adap);
->>>> +#else
->>>> =A0 =A0 adap->nr =3D pdev->id;
->>>> =A0 =A0 r =3D i2c_add_numbered_adapter(adap);
->>>> +#endif
->>>
->>> I would say that doing the #ifdef CONFIG_OF is dangerous here when we
->>> are in a mixed OF/platform enviromnent as we're depending on compile
->>> time selection.
->>>
->>> I'm also wondering whether we have an of helper macro which takes
->>> a pdev and gives you an adapter number either given on pdev->id or
->>> -1 for the case when we're using the OF bindings.
->>>
->>> It might be worth talking to Grant about setting pdev->id to -1 if we
->>> are using an OF device.
->>>
->>
->> As Grant said, that's already done and this hunk is not needed.
->>
->>>> =A0 =A0 if (r) {
->>>> =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "failure adding adapter\n"=
-);
->>>> =A0 =A0 =A0 =A0 =A0 =A0 goto err_free_irq;
->>>> =A0 =A0 }
->>>> + =A0 of_i2c_register_devices(adap);
->>>
->>> If we did that, we could add a of_i2c_register_adapter() call which
->>> would take the platform device and then do the of_i2c_register_devices()
->>> and do these steps.
->>>
->>
->> Better yet, how about putting of_i2c_register_devices into
->> i2c_register_adapter? Everywhere that calls of_i2c_register_devices is
->> preceded by a call to i2c_add_numbered_adapter or i2c_add_adapter. It
->> seems logical to put it with i2c_scan_static_board_info. I'll prepare a
->> patch to add that and remove all the other callers unless you think
->> that's a bad idea.
->>
->
-> Nevermind. That would be undoing this commit:
->
-> =A0 =A0of/i2c: Fix module load order issue caused by of_i2c.c
-
-The other alternative would be to move the i2c dt parsing code into
-drivers/i2c.  I'm already planning to do that for spi and gpio dt
-parsing code.
-
-g.
+SGkgR3JhbnQsIFNoYXduLAoKCgpPbiBNb24sIEp1bCAyNSwgMjAxMSBhdCAzOjQ2IFBNLCBHcmFu
+dCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgo+IFRoaXMgY291bGQg
+Z2V0IHJlYWxseSB2ZXJib3NlIGluIGEgcmVhbGx5IGJpZyBodXJyeS4gwqBGb3J0dW5hdGVseSB0
+aGUKPiBkdGIgZm9ybWF0IGlzIHNvcGhpc3RpY2F0ZWQgZW5vdWdoIHRvIG9ubHkgc3RvcmUgZWFj
+aCB1bmlxdWUgcHJvcGVydHkKPiBuYW1lIG9uY2UsIHNvIHRoZSBkYXRhIHNob3VsZG4ndCBiZSBo
+dWdlLCBidXQgaXQgaXMgc3RpbGwgZ29pbmcgdG8KPiBtYWtlIGZvciBodWdlIHNvdXJjZSBmaWxl
+cy4gwqBDYW4geW91IHRoaW5rIG9mIGEgbW9yZSBjb25jaXNlCj4gcmVwcmVzZW50YXRpb24/CgpZ
+ZXM6IG5vIHJlcHJlc2VudGF0aW9uIGF0IGFsbC4gVGhlIGNvcnJlY3QgcGxhY2UgZm9yIElPTVVY
+IHNldHVwIGJlaW5nCmRvbmUgaXMgKmluc2lkZSB0aGUgYm9vdCBmaXJtd2FyZSBhcyBzb29uIGFz
+IHBoeXNpY2FsbHkgcG9zc2libGUqIGFuZApub3Qgc2Vjb25kcyBpbnRvIGJvb3QgYWZ0ZXIgVS1C
+b290IGhhcyBtYWRlIGEgY29uc29sZSwgZG9uZSBhIGJvb3QKdGltZW91dCwgbG9hZGVkIHNjcmlw
+dHMsIGtlcm5lbHMgYW5kIHJhbWRpc2tzIGZyb20gbWVkaWEgYW5kIHRoZW4KdW5jb21wcmVzc2Vk
+IGFuZCBlbnRlcmVkIGEgTGludXgga2VybmVsLgoKVGhlIG9ubHkgYmVuZWZpY2lhbCBwbGFjZSBm
+b3Igc2V0dGluZyB1cCBJT01VWCBpbnNpZGUgTGludXggaXMgd2hlbgp5b3UgcmVhbGx5IG5lZWQg
+dG8gbW9kaWZ5IHRoZSBiZWhhdmlvciBvZiBhbiBTb0MgdW5pdCB0aGF0IGlzIGFjdGluZwp3ZWly
+ZCwgdGhlIG9ubHkgcmVhbCBleGFtcGxlIEkgY2FuIHRoaW5rIG9mIGJlaW5nIHRoZSBzaXR1YXRp
+b24gd2l0aAplQ1NQSSBlcnJhdGEgb24gdGhlIE1YNTEgKEVOR2NtMDkzOTcgd2hlcmVieSBzbGF2
+ZSBzZWxlY3Qgc3RheXMKYXNzZXJ0ZWQgYXQgIHRoZSBlbmQgb2YgYSB0cmFuc2ZlciB3aGVuIFNT
+Ql9QT0wgPSAxKS4gVGhhdCBpbiBpdHNlbGYKd2FzIG9ubHkgbmVlZGVkIGZvciBGcmVlc2NhbGUn
+cyBzb2x1dGlvbiAod2hpY2ggd2FzIGtpbmQgb2YgZnVua3kgYW5kCmhvcGVkIHRoZSBjaGlwIHdv
+dWxkIGRvIHRoZSByaWdodCB0aGluZyBhdCB0aGUgc3RhcnQgYW5kIGdpdmUgY29udHJvbApiYWNr
+IGF0IHRoZSBlbmQpLiBUaGUgY3VycmVudCBtYWlubGluZSBzb2x1dGlvbiBpcyB0byBoYW5kbGUg
+c2xhdmUKc2VsZWN0IGFzIEdQSU8gYW5kIHR3aWRkbGUgaXQgYXMgbmVlZGVkIGZvciBjb3JyZWN0
+IG9wZXJhdGlvbi4gSSBjYW4ndAp0aGluayBvZiAtIG9yIGZpbmQgLSBhIHNpbmdsZSBleGFtcGxl
+IGFmdGVyIHRoYXQgd2hlcmUgSU9NVVggc2V0dGluZ3MKYXJlIGNvbmZpZ3VyZWQgYXQgcnVudGlt
+ZSwgYW5kIHRoZSBtZXRob2QgY3VycmVudGx5IHVzZWQgaW4KRnJlZXNjYWxlJ3MgQlNQIGFuZCBp
+biBtYWlubGluZSBpcyBqdXN0IGZ1bmRhbWVudGFsbHkgd3JvbmcuCgpJZiB5b3UgdGhpbmsgdGhl
+IHNvbHV0aW9uIGlzIG5vdCBzbyBncmVhdCBkdWUgdG8gdGhlIGNvbXBsZXhpdHkgb2YKZGVzY3Jp
+YmluZyB0aGUgSU9NVVggc2V0dGluZ3MsIGluY2x1ZGluZyB0aGUgcGFkIGRlZmluaXRpb25zIGFz
+IGJpbmFyeQpibG9icyBvciBzbyBzdWNoIHRoYXQgTGludXggY2FuIHJlYWQgdGhlbSBvdXQsIHBs
+ZWFzZSBmZWVsIGZyZWUgdG8KdGFrZSB0aGUgaGludCBhbmQgZ28gbmFnIHRoZSBVLUJvb3QgZGV2
+ZWxvcGVycyBhdCBMaW5hcm8gdG8gZ28gcHV0CnRoaXMgaW4gdGhlIHJpZ2h0IHBsYWNlIC0gaW4g
+VS1Cb290LiBUaGUgZGV2aWNlIHRyZWUgaXMgYWJzb2x1dGVseSBub3QKdGhlIHBsYWNlIHRvIGRl
+ZmluZSBwaW4gbXVsdGlwbGV4aW5nIHNldHRpbmdzIGZvciBsYXRlciBwYXJzaW5nIGFuZApjb25m
+aWd1cmF0aW9uIGJ5IHRoZSBLZXJuZWwuIFRoZXkgc2hvdWxkIGhhdmUgYmVlbiBzZXQgdXAgY29y
+cmVjdGx5CmFscmVhZHksIGFuZCB0aGV5IHNob3VsZCBub3QgYmUgYmVpbmcgKmNoYW5nZWQqIGJh
+c2VkIG9uIGFuIGFyYml0cmFyeQpjb25maWd1cmF0aW9uIGZpbGUuIENvbnNpZGVyIHRoYXQgdGhl
+IGkyYyBwaW4gZGVmaW5pdGlvbnMgeW91IHVzZWQgaW4KeW91ciBleGFtcGxlICphYnNvbHV0ZWx5
+IHdpbGwgbm90IGNoYW5nZSogZm9yIHRoZSBsaWZldGltZSBvZiB0aGUKYm9hcmQsIGFuZCBpbiBt
+b3N0IGNhc2VzLCB3aWxsIGhhdmUgYmVlbiBzZXQgdXAgYnkgVS1Cb290IGFueXdheS4KVGhlcmUg
+aXMgbm8gcG9pbnQgdGVsbGluZyBMaW51eCB0byBjb3B5IGluIGlkZW50aWNhbCBzZXR0aW5ncyBh
+Z2Fpbi4KV2hhdCdzIG1pc3NpbmcgZnJvbSBVLUJvb3QgYW5kIHNldCB1cCBieSBMaW51eCwgc2hv
+dWxkIGJlIG1vdmVkIG91dCBvZgpMaW51eCBiYWNrIGludG8gVS1Cb290LgoKVGhhdCBzYWlkLCBh
+cyBhIHJlZmVyZW5jZSB0byBiZSBhYmxlIHRvIHZpZXcgdGhlIHNldHRpbmdzIG9mIHRoZSBJT01V
+WApwYWRzLCBpdCBpcyB1c2VmdWwuIEluIHRoZW9yeSwgb25jZSB5b3Ugc2V0IHVwIHlvdXIgY29u
+dHJvbGxlciBpbgpVLUJvb3QsIHlvdSBtYXkgd2FudCB0byB1c2Ugc3lzZnMgb3Igc28gdG8gcmVh
+ZCBvdXQgdGhlIGNvbmZpZ3VyYXRpb24Kb2YgdGhhdCBwaW4gaW4gdXNlcnNwYWNlIHRvIGNvbmZp
+cm0gdGhlIGJvYXJkIHNldHRpbmdzLCBvciBvdGhlciBkZWJ1Zwpwcm9jZXNzZXMuIEJ5IG5hbWlu
+ZyBpdCBhbmQgcHJvdmlkaW5nIHRoZSBvZmZzZXRzIGFuZCBtb2RlIGRlZmluaXRpb25zCnNvbWV3
+aGVyZSBvdGhlciB0aGFuIGEgcmVmZXJlbmNlIG1hbnVhbCB5b3UgYXJlIGVuYWJsaW5nIHRoaXMg
+dG8gZ2V0CmRvbmUuLiBidXQgcGxlYXNlLCBwbGVhc2UsIHBsZWFzZSBkb24ndCBtYWtlIHRoZSBt
+aXN0YWtlIG9mCmNvbnNpZGVyaW5nIHRoYXQganVzdCBiZWNhdXNlIGV2ZXJ5IGJvYXJkIHJpZ2h0
+IG5vdyBkb2VzIHRoaXMgYXQgTGludXgKaW5pdCwgdGhhdCBpdCB0aGVyZWZvcmUgaXQgbXVzdCBi
+ZSB0aGUgY29ycmVjdCBzb2x1dGlvbiBhbmQgbWFpbnRhaW5lZAo6KAoKLS0gCk1hdHQgU2VhbGV5
+IDxtYXR0QGdlbmVzaS11c2EuY29tPgpQcm9kdWN0IERldmVsb3BtZW50IEFuYWx5c3QsIEdlbmVz
+aSBVU0EsIEluYy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
