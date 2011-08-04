@@ -1,85 +1,36 @@
-From: Matt Sealey <matt@genesi-usa.com>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Thu, 4 Aug 2011 18:07:15 -0500
-Message-ID: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] of/address: Add of_iomap_nocache
+Date: Thu, 04 Aug 2011 16:08:01 -0700 (PDT)
+Message-ID: <20110804.160801.410790028578990791.davem@davemloft.net>
+References: <1312451629-28036-1-git-send-email-davidb@codeaurora.org>
+	<20110804.031254.836213129500890372.davem@davemloft.net>
+	<4E3AC05A.1070208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110725204630.GD26735@ponder.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <4E3AC05A.1070208@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: robherring2@gmail.com
+Cc: davidb@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3JhbnQsIFNoYXduLAoKCgpPbiBNb24sIEp1bCAyNSwgMjAxMSBhdCAzOjQ2IFBNLCBHcmFu
-dCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+IHdyb3RlOgo+IFRoaXMgY291bGQg
-Z2V0IHJlYWxseSB2ZXJib3NlIGluIGEgcmVhbGx5IGJpZyBodXJyeS4gwqBGb3J0dW5hdGVseSB0
-aGUKPiBkdGIgZm9ybWF0IGlzIHNvcGhpc3RpY2F0ZWQgZW5vdWdoIHRvIG9ubHkgc3RvcmUgZWFj
-aCB1bmlxdWUgcHJvcGVydHkKPiBuYW1lIG9uY2UsIHNvIHRoZSBkYXRhIHNob3VsZG4ndCBiZSBo
-dWdlLCBidXQgaXQgaXMgc3RpbGwgZ29pbmcgdG8KPiBtYWtlIGZvciBodWdlIHNvdXJjZSBmaWxl
-cy4gwqBDYW4geW91IHRoaW5rIG9mIGEgbW9yZSBjb25jaXNlCj4gcmVwcmVzZW50YXRpb24/CgpZ
-ZXM6IG5vIHJlcHJlc2VudGF0aW9uIGF0IGFsbC4gVGhlIGNvcnJlY3QgcGxhY2UgZm9yIElPTVVY
-IHNldHVwIGJlaW5nCmRvbmUgaXMgKmluc2lkZSB0aGUgYm9vdCBmaXJtd2FyZSBhcyBzb29uIGFz
-IHBoeXNpY2FsbHkgcG9zc2libGUqIGFuZApub3Qgc2Vjb25kcyBpbnRvIGJvb3QgYWZ0ZXIgVS1C
-b290IGhhcyBtYWRlIGEgY29uc29sZSwgZG9uZSBhIGJvb3QKdGltZW91dCwgbG9hZGVkIHNjcmlw
-dHMsIGtlcm5lbHMgYW5kIHJhbWRpc2tzIGZyb20gbWVkaWEgYW5kIHRoZW4KdW5jb21wcmVzc2Vk
-IGFuZCBlbnRlcmVkIGEgTGludXgga2VybmVsLgoKVGhlIG9ubHkgYmVuZWZpY2lhbCBwbGFjZSBm
-b3Igc2V0dGluZyB1cCBJT01VWCBpbnNpZGUgTGludXggaXMgd2hlbgp5b3UgcmVhbGx5IG5lZWQg
-dG8gbW9kaWZ5IHRoZSBiZWhhdmlvciBvZiBhbiBTb0MgdW5pdCB0aGF0IGlzIGFjdGluZwp3ZWly
-ZCwgdGhlIG9ubHkgcmVhbCBleGFtcGxlIEkgY2FuIHRoaW5rIG9mIGJlaW5nIHRoZSBzaXR1YXRp
-b24gd2l0aAplQ1NQSSBlcnJhdGEgb24gdGhlIE1YNTEgKEVOR2NtMDkzOTcgd2hlcmVieSBzbGF2
-ZSBzZWxlY3Qgc3RheXMKYXNzZXJ0ZWQgYXQgIHRoZSBlbmQgb2YgYSB0cmFuc2ZlciB3aGVuIFNT
-Ql9QT0wgPSAxKS4gVGhhdCBpbiBpdHNlbGYKd2FzIG9ubHkgbmVlZGVkIGZvciBGcmVlc2NhbGUn
-cyBzb2x1dGlvbiAod2hpY2ggd2FzIGtpbmQgb2YgZnVua3kgYW5kCmhvcGVkIHRoZSBjaGlwIHdv
-dWxkIGRvIHRoZSByaWdodCB0aGluZyBhdCB0aGUgc3RhcnQgYW5kIGdpdmUgY29udHJvbApiYWNr
-IGF0IHRoZSBlbmQpLiBUaGUgY3VycmVudCBtYWlubGluZSBzb2x1dGlvbiBpcyB0byBoYW5kbGUg
-c2xhdmUKc2VsZWN0IGFzIEdQSU8gYW5kIHR3aWRkbGUgaXQgYXMgbmVlZGVkIGZvciBjb3JyZWN0
-IG9wZXJhdGlvbi4gSSBjYW4ndAp0aGluayBvZiAtIG9yIGZpbmQgLSBhIHNpbmdsZSBleGFtcGxl
-IGFmdGVyIHRoYXQgd2hlcmUgSU9NVVggc2V0dGluZ3MKYXJlIGNvbmZpZ3VyZWQgYXQgcnVudGlt
-ZSwgYW5kIHRoZSBtZXRob2QgY3VycmVudGx5IHVzZWQgaW4KRnJlZXNjYWxlJ3MgQlNQIGFuZCBp
-biBtYWlubGluZSBpcyBqdXN0IGZ1bmRhbWVudGFsbHkgd3JvbmcuCgpJZiB5b3UgdGhpbmsgdGhl
-IHNvbHV0aW9uIGlzIG5vdCBzbyBncmVhdCBkdWUgdG8gdGhlIGNvbXBsZXhpdHkgb2YKZGVzY3Jp
-YmluZyB0aGUgSU9NVVggc2V0dGluZ3MsIGluY2x1ZGluZyB0aGUgcGFkIGRlZmluaXRpb25zIGFz
-IGJpbmFyeQpibG9icyBvciBzbyBzdWNoIHRoYXQgTGludXggY2FuIHJlYWQgdGhlbSBvdXQsIHBs
-ZWFzZSBmZWVsIGZyZWUgdG8KdGFrZSB0aGUgaGludCBhbmQgZ28gbmFnIHRoZSBVLUJvb3QgZGV2
-ZWxvcGVycyBhdCBMaW5hcm8gdG8gZ28gcHV0CnRoaXMgaW4gdGhlIHJpZ2h0IHBsYWNlIC0gaW4g
-VS1Cb290LiBUaGUgZGV2aWNlIHRyZWUgaXMgYWJzb2x1dGVseSBub3QKdGhlIHBsYWNlIHRvIGRl
-ZmluZSBwaW4gbXVsdGlwbGV4aW5nIHNldHRpbmdzIGZvciBsYXRlciBwYXJzaW5nIGFuZApjb25m
-aWd1cmF0aW9uIGJ5IHRoZSBLZXJuZWwuIFRoZXkgc2hvdWxkIGhhdmUgYmVlbiBzZXQgdXAgY29y
-cmVjdGx5CmFscmVhZHksIGFuZCB0aGV5IHNob3VsZCBub3QgYmUgYmVpbmcgKmNoYW5nZWQqIGJh
-c2VkIG9uIGFuIGFyYml0cmFyeQpjb25maWd1cmF0aW9uIGZpbGUuIENvbnNpZGVyIHRoYXQgdGhl
-IGkyYyBwaW4gZGVmaW5pdGlvbnMgeW91IHVzZWQgaW4KeW91ciBleGFtcGxlICphYnNvbHV0ZWx5
-IHdpbGwgbm90IGNoYW5nZSogZm9yIHRoZSBsaWZldGltZSBvZiB0aGUKYm9hcmQsIGFuZCBpbiBt
-b3N0IGNhc2VzLCB3aWxsIGhhdmUgYmVlbiBzZXQgdXAgYnkgVS1Cb290IGFueXdheS4KVGhlcmUg
-aXMgbm8gcG9pbnQgdGVsbGluZyBMaW51eCB0byBjb3B5IGluIGlkZW50aWNhbCBzZXR0aW5ncyBh
-Z2Fpbi4KV2hhdCdzIG1pc3NpbmcgZnJvbSBVLUJvb3QgYW5kIHNldCB1cCBieSBMaW51eCwgc2hv
-dWxkIGJlIG1vdmVkIG91dCBvZgpMaW51eCBiYWNrIGludG8gVS1Cb290LgoKVGhhdCBzYWlkLCBh
-cyBhIHJlZmVyZW5jZSB0byBiZSBhYmxlIHRvIHZpZXcgdGhlIHNldHRpbmdzIG9mIHRoZSBJT01V
-WApwYWRzLCBpdCBpcyB1c2VmdWwuIEluIHRoZW9yeSwgb25jZSB5b3Ugc2V0IHVwIHlvdXIgY29u
-dHJvbGxlciBpbgpVLUJvb3QsIHlvdSBtYXkgd2FudCB0byB1c2Ugc3lzZnMgb3Igc28gdG8gcmVh
-ZCBvdXQgdGhlIGNvbmZpZ3VyYXRpb24Kb2YgdGhhdCBwaW4gaW4gdXNlcnNwYWNlIHRvIGNvbmZp
-cm0gdGhlIGJvYXJkIHNldHRpbmdzLCBvciBvdGhlciBkZWJ1Zwpwcm9jZXNzZXMuIEJ5IG5hbWlu
-ZyBpdCBhbmQgcHJvdmlkaW5nIHRoZSBvZmZzZXRzIGFuZCBtb2RlIGRlZmluaXRpb25zCnNvbWV3
-aGVyZSBvdGhlciB0aGFuIGEgcmVmZXJlbmNlIG1hbnVhbCB5b3UgYXJlIGVuYWJsaW5nIHRoaXMg
-dG8gZ2V0CmRvbmUuLiBidXQgcGxlYXNlLCBwbGVhc2UsIHBsZWFzZSBkb24ndCBtYWtlIHRoZSBt
-aXN0YWtlIG9mCmNvbnNpZGVyaW5nIHRoYXQganVzdCBiZWNhdXNlIGV2ZXJ5IGJvYXJkIHJpZ2h0
-IG5vdyBkb2VzIHRoaXMgYXQgTGludXgKaW5pdCwgdGhhdCBpdCB0aGVyZWZvcmUgaXQgbXVzdCBi
-ZSB0aGUgY29ycmVjdCBzb2x1dGlvbiBhbmQgbWFpbnRhaW5lZAo6KAoKLS0gCk1hdHQgU2VhbGV5
-IDxtYXR0QGdlbmVzaS11c2EuY29tPgpQcm9kdWN0IERldmVsb3BtZW50IEFuYWx5c3QsIEdlbmVz
-aSBVU0EsIEluYy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+From: Rob Herring <robherring2@gmail.com>
+Date: Thu, 04 Aug 2011 10:52:58 -0500
+
+> On 08/04/2011 05:12 AM, David Miller wrote:
+>> From: David Brown <davidb@codeaurora.org>
+>> Date: Thu,  4 Aug 2011 02:53:49 -0700
+>> 
+>>> Add uncached mappings from devicetree nodes similar to regular io
+>>> mappings.
+>>>
+>>> Signed-off-by: David Brown <davidb@codeaurora.org>
+>> 
+>> You'll need to add a sparc implementation.
+> 
+> Sparc just defines ioremap_nocache to ioremap, so is that really needed?
+
+Yes because if someone uses this of_iomap_nocache() in a driver the
+sparc build is going to fail, we need as least the define to make
+it equal to of_iomap() as David did in his follow-on patch.
