@@ -1,24 +1,84 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] of/address: Add of_iomap_nocache
-Date: Thu, 04 Aug 2011 03:12:54 -0700 (PDT)
-Message-ID: <20110804.031254.836213129500890372.davem@davemloft.net>
-References: <1312451629-28036-1-git-send-email-davidb@codeaurora.org>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: Virtual devices (cpufreq etc) and DT
+Date: Thu, 4 Aug 2011 11:23:21 +0100
+Message-ID: <20110804102321.GC2899@pulham.picochip.com>
+References: <20110803095019.GB2607@pulham.picochip.com>
+	<4E39775C.4090305@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1312451629-28036-1-git-send-email-davidb@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: davidb@codeaurora.org
-Cc: grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4E39775C.4090305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Brown <davidb@codeaurora.org>
-Date: Thu,  4 Aug 2011 02:53:49 -0700
+Hi Rob,
 
-> Add uncached mappings from devicetree nodes similar to regular io
-> mappings.
+On Wed, Aug 03, 2011 at 11:29:16AM -0500, Rob Herring wrote:
+[...]
+> Making of_clk_get take a struct device_node ptr instead of struct 
+> device fixes the problem. Here's a patch that does that.
 > 
-> Signed-off-by: David Brown <davidb@codeaurora.org>
+> Rob
+> 
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Subject: [PATCH] of/clk: use struct device_node for of_clk_get
+> 
+> In order to allow clock retrieval without having a struct device,
+> use the OF node pointer instead for of_clk_get.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/clk/clkdev.c   |    3 ++-
+>  drivers/of/clock.c     |   12 +++++-------
+>  include/linux/of_clk.h |    4 ++--
+>  3 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+> index 9252b4f..a8f1d29 100644
+> --- a/drivers/clk/clkdev.c
+> +++ b/drivers/clk/clkdev.c
+> @@ -89,7 +89,8 @@ struct clk *clk_get(struct device *dev, const char
+> *con_id)
+>  	const char *dev_id = dev ? dev_name(dev) : NULL;
+>  	struct clk *clk;
+> 
+> -	clk = of_clk_get(dev, con_id);
+> +	if (dev)
+> +		clk = of_clk_get(dev->of_node, con_id);
+>  	if (clk && __clk_get(clk))
+>  		return clk;
 
-You'll need to add a sparc implementation.
+I've just tried this patch and it works a treat, but I had to change 
+this hunk to the one below to stop the compiler warning about a possible 
+uninitialized use of clk.
+
+Jamie
+
+diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+index f2b1224..bc5ae55 100644
+--- a/drivers/clk/clkdev.c
++++ b/drivers/clk/clkdev.c
+@@ -80,9 +80,10 @@ EXPORT_SYMBOL(clk_get_sys);
+ struct clk *clk_get(struct device *dev, const char *con_id)
+ {
+ 	const char *dev_id = dev ? dev_name(dev) : NULL;
+-	struct clk *clk;
++	struct clk *clk = NULL;
+ 
+-	clk = of_clk_get(dev, con_id);
++	if (dev->of_node)
++		clk = of_clk_get(dev->of_node, con_id);
+ 	if (clk && __clk_get(clk))
+		return clk;
