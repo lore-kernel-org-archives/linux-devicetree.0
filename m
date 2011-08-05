@@ -1,39 +1,77 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: GIC: Add device tree interrupt specifier
-	translation support
-Date: Fri, 5 Aug 2011 11:08:59 +0100
-Message-ID: <20110805100859.GE20575@n2100.arm.linux.org.uk>
-References: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: Shouldn't DT preserve pdev name and id to allow platform_match
+ to work?
+Date: Fri, 5 Aug 2011 14:19:11 +0200
+Message-ID: <4E3BDFBF.10903@ti.com>
+References: <4E396361.3060307@ti.com> <CACxGe6vg5NTyiDZqqztjtFEfb7si+-=Y7nEy1Y+YMgA5PVXScw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1312532353-8772-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vg5NTyiDZqqztjtFEfb7si+-=Y7nEy1Y+YMgA5PVXScw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "G, Manjunath Kondaiah" <manjugk@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2011 at 09:19:13AM +0100, Thomas Abraham wrote:
-> Add support for translation of hardware interrupt numbers specified in device
-> tree nodes to linux irq number.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Notes:
-> 1. The translation of SGI/PPI interrupts is supported only for CPU0.
-> 2. The documentation is derived from the following patch submitted
->    earlier by Rob Herring.
->    [PATCH 2/3] ARM: gic: add OF based initialization
+On 8/3/2011 6:43 PM, Grant Likely wrote:
+> On Wed, Aug 3, 2011 at 4:04 PM, Cousson, Benoit<b-cousson@ti.com>  wrote:
+>> Hi Grant,
+>>
+>> Going further with the usage of OF_DEV_AUXDATA_ID, I realized that this is is not doing what I was expecting. My expectation might be silly, but in order to make platform_match to work without DT matching mechanism, you need to have the driver name in the pdev->name field:
+>>
+>>         /* fall-back to driver name match */
+>>         return (strcmp(pdev->name, drv->name) == 0);
+>>
+>> Except that the of_device_add function is doing that:
+>>         pdev->name = dev_name(&ofdev->dev);
+>>         pdev->id = -1;
+>
+> Yes, I know.  It is written that way on purpose so that it doesn't get
+> used to avoid adding a match table to the device driver because
+> auxdata is a stop-gap solution.  It is *not* intended to be used long
+> term (with one exception for passing platform callbacks when there is
+> no other solution).
 
-Ignore SGIs for the purposes of DT.  SGIs aren't part of the hardware
-setup of a SoC or device, and are specific to the internals of SMP.
+Outch... You guys are doing your best to make our life harder :-)
+
+> auxdata passes platform_data and overrides the device name when there
+> is no way easy way to make the driver work without it.  It handles the
+> the current implementation of clocks and regulators which aren't yet
+> populated from the device tree.  It will go away when clock&
+> regulator bindings are implemented.
+>
+> By implementing it the way it is, it ensures that no drivers
+> inadvertently depends on auxdata, and will thus break when the auxdata
+> entries are removed.  Manjunath mentioned that there is a patch that
+> allows the id to be set, but it still doesn't set the driver name in a
+> way that will allow existing drivers to bind using the old method, and
+> that is by design.
+>
+> I understand what you are asking for, but the DT matching mechanism is
+> absolutely required.  Adding it to drivers is certainly not any more
+> onerous that maintaining a bunch of auxdata tables for boards.
+
+Fair enough.
+Bottom line is that DT is a all inclusive pack, you cannot skip one part 
+even if it is not necessarily needed right now :-(
+
+I understand very well the final goal, I was just trying to spread the 
+huge effort that DT migration will require to focus first on the stuff 
+located in mach-omap, meaning all the board and devices init part.
+
+I was hoping to let the drivers for the moment until the first phase is 
+done. Since auxdata was already there to help the migration, I was just 
+expecting it to be even more helpful.
+
+> Besides, part of the point of the move to DT is to eliminate device
+> and device data tables at the board file level, which is another
+> reason why auxdata is a temporary solution.
+
+Again, I got that point, it was not our intent to use that as a final 
+solution.
+
+Let's start hacking the OMAP drivers then...
+
+Regards,
+Benoit
