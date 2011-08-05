@@ -1,56 +1,140 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Fri, 5 Aug 2011 00:07:29 -0700
-Message-ID: <20110805070729.GA26563@huya.qualcomm.com>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
-	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH] ARM: GIC: Add device tree interrupt specifier translation support
+Date: Fri,  5 Aug 2011 09:19:13 +0100
+Message-ID: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
-> Hi Grant, Shawn,
-> =
+Add support for translation of hardware interrupt numbers specified in device
+tree nodes to linux irq number.
 
-> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
- wrote:
-> > This could get really verbose in a really big hurry. =A0Fortunately the
-> > dtb format is sophisticated enough to only store each unique property
-> > name once, so the data shouldn't be huge, but it is still going to
-> > make for huge source files. =A0Can you think of a more concise
-> > representation?
-> =
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+---
+Notes:
+1. The translation of SGI/PPI interrupts is supported only for CPU0.
+2. The documentation is derived from the following patch submitted
+   earlier by Rob Herring.
+   [PATCH 2/3] ARM: gic: add OF based initialization
 
-> Yes: no representation at all. The correct place for IOMUX setup being
-> done is *inside the boot firmware as soon as physically possible* and
-> not seconds into boot after U-Boot has made a console, done a boot
-> timeout, loaded scripts, kernels and ramdisks from media and then
-> uncompressed and entered a Linux kernel.
+ Documentation/devicetree/bindings/arm/gic.txt |   21 +++++++
+ arch/arm/common/gic.c                         |   70 +++++++++++++++++++++++++
+ 2 files changed, 91 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
 
-This is true in situations where we have control over the bootloader,
-but that isn't always the case.
-
-David
-
--- =
-
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+new file mode 100644
+index 0000000..3204ac5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -0,0 +1,21 @@
++* ARM Generic Interrupt Controller
++
++Some ARM cores have an interrupt controller called GIC. The ARM GIC
++representation in the device tree should be done as under:
++
++Required properties:
++- compatible: should be "arm,cortex-a9-gic".
++- reg: Specifies base physical address(s) and size of the GIC registers. The
++  first two values are the GIC distributor register base and size. The second
++  two values are the GIC cpu interface register base and size.
++- interrupt-controller: Identifies the node as an interrupt controller
++- #interrupt-cells: Specifies the number of cells needed to encode a
++  interrupt source and the value shall be 1.
++
++Example:
++	GIC:interrupt-controller@10490000 {
++		compatible = "arm,cortex-a9-gic";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0x10490000 0x1000>, <0x10480000 0x100>;
++	};
+diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+index 3227ca9..c11d3a5 100644
+--- a/arch/arm/common/gic.c
++++ b/arch/arm/common/gic.c
+@@ -28,6 +28,11 @@
+ #include <linux/smp.h>
+ #include <linux/cpumask.h>
+ #include <linux/io.h>
++#ifdef CONFIG_OF_IRQ
++#include <linux/irqdomain.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++#endif
+ 
+ #include <asm/irq.h>
+ #include <asm/mach/irq.h>
+@@ -394,3 +399,68 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
+ 	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
+ }
+ #endif
++
++#ifdef CONFIG_OF_IRQ
++
++/* GIC interrupt types corresponding to the device tree interrupt specifier */
++enum gic_int_type {
++	GIC_INT_TYPE_SPI = 0,
++	GIC_INT_TYPE_SGI = 1,
++	GIC_INT_TYPE_PPI = 2,
++};
++
++/* Translate dt irq specifier to linux irq number */
++static int gic_irq_domain_translate_dt(struct irq_domain *d,
++			    struct device_node *controller,
++			    const u32 *intspec, unsigned int intsize,
++			    unsigned long *out_hwirq, unsigned int *out_type)
++{
++	if (d->of_node != controller)
++		return -EINVAL;
++	if (intsize < 2)
++		return -EINVAL;
++
++	switch (intspec[0]) {
++	case GIC_INT_TYPE_SPI:
++		*out_hwirq = intspec[1] + 32; /* +32, for start of SPI */
++		break;
++	case GIC_INT_TYPE_SGI:
++		*out_hwirq = intspec[1];
++		break;
++	case GIC_INT_TYPE_PPI:
++		*out_hwirq = intspec[1] + 16; /* +16, for start of PPI */
++		break;
++	default:
++		pr_info("gic_irq_domain_translate_dt: invalid gic intr type\n");
++		return -EINVAL;
++	}
++
++	*out_hwirq += d->irq_base;
++	*out_type = IRQ_TYPE_NONE;
++	return 0;
++}
++
++static struct irq_domain_ops gic_irq_domain_dt_ops = {
++	.dt_translate = gic_irq_domain_translate_dt,
++};
++
++int gic_add_irq_domain_dt(unsigned int irq_base)
++{
++	struct device_node *np;
++	struct irq_domain *domain;
++
++	np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-gic");
++	if (!np)
++		return -ENODEV;
++
++	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
++	if (!domain)
++		return -ENOMEM;
++
++	domain->irq_base = irq_base;
++	domain->of_node = np;
++	domain->ops = &gic_irq_domain_dt_ops;
++	irq_domain_add(domain);
++	return 0;
++}
++#endif
+-- 
+1.7.4.1
