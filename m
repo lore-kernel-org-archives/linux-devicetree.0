@@ -1,53 +1,35 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] ARM: GIC: Add device tree interrupt specifier
-	translation support
-Date: Fri, 5 Aug 2011 10:53:18 +0100
-Message-ID: <20110805105318.5550e4b5@taxman.wild-wind.fr.eu.org>
-References: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: Shouldn't DT preserve pdev name and id to allow platform_match to work?
+Date: Fri, 5 Aug 2011 18:02:30 +0800
+Message-ID: <CAGsJ_4x7LWRGWXsWzMG1FxZPaFYiKSUpSac2PdwH=d6vqFWRfw@mail.gmail.com>
+References: <4E396361.3060307@ti.com> <CACxGe6vg5NTyiDZqqztjtFEfb7si+-=Y7nEy1Y+YMgA5PVXScw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vg5NTyiDZqqztjtFEfb7si+-=Y7nEy1Y+YMgA5PVXScw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  5 Aug 2011 09:19:13 +0100
-Thomas Abraham <thomas.abraham@linaro.org> wrote:
+> auxdata passes platform_data and overrides the device name when there
+> is no way easy way to make the driver work without it. =C2=A0It handl=
+es the
+> the current implementation of clocks and regulators which aren't yet
+> populated from the device tree. =C2=A0It will go away when clock &
+> regulator bindings are implemented.
+Yes. As OF_DEV_AUXDATA_ID still requires hardware information like
+0x48000100 as below, it seems it is not
+consistent with the origin purpose of ARM DT.
+OF_DEV_AUXDATA_ID("ti,omap-i2c", 0x48000100, "omap-i2c.1", 1, &i2c_pdat=
+a)
+And the information 0x48000100 is something that doesn't want to be in
+kernel codes.it should be only in dts.
 
-> Add support for translation of hardware interrupt numbers specified in device
-> tree nodes to linux irq number.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> Notes:
-> 1. The translation of SGI/PPI interrupts is supported only for CPU0.
-
-This is a major problem. PPIs could be used differently on different
-CPUs, as each CPU basically has its own PPI controller. I don't know if
-this "feature" is used in the wild, but there is reason why it couldn't
-be used one of these days.
-
-I did have a go at this problem a while ago, as part of a much complex
-patch set:
-
-https://patchwork.kernel.org/patch/916362/
-
-Also note that at the moment, PPIs are not really usable as standard
-interrupts (because of the whole banking scheme).
-
-Cheers,
-
-	M.
--- 
-I'm the slime oozin' out from your TV set...
+-barry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
