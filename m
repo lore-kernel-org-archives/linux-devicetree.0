@@ -1,35 +1,39 @@
-From: Barry Song <21cnbao@gmail.com>
-Subject: Re: Shouldn't DT preserve pdev name and id to allow platform_match to work?
-Date: Fri, 5 Aug 2011 18:02:30 +0800
-Message-ID: <CAGsJ_4x7LWRGWXsWzMG1FxZPaFYiKSUpSac2PdwH=d6vqFWRfw@mail.gmail.com>
-References: <4E396361.3060307@ti.com> <CACxGe6vg5NTyiDZqqztjtFEfb7si+-=Y7nEy1Y+YMgA5PVXScw@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: GIC: Add device tree interrupt specifier
+	translation support
+Date: Fri, 5 Aug 2011 11:08:59 +0100
+Message-ID: <20110805100859.GE20575@n2100.arm.linux.org.uk>
+References: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vg5NTyiDZqqztjtFEfb7si+-=Y7nEy1Y+YMgA5PVXScw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1312532353-8772-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> auxdata passes platform_data and overrides the device name when there
-> is no way easy way to make the driver work without it. =C2=A0It handl=
-es the
-> the current implementation of clocks and regulators which aren't yet
-> populated from the device tree. =C2=A0It will go away when clock &
-> regulator bindings are implemented.
-Yes. As OF_DEV_AUXDATA_ID still requires hardware information like
-0x48000100 as below, it seems it is not
-consistent with the origin purpose of ARM DT.
-OF_DEV_AUXDATA_ID("ti,omap-i2c", 0x48000100, "omap-i2c.1", 1, &i2c_pdat=
-a)
-And the information 0x48000100 is something that doesn't want to be in
-kernel codes.it should be only in dts.
+On Fri, Aug 05, 2011 at 09:19:13AM +0100, Thomas Abraham wrote:
+> Add support for translation of hardware interrupt numbers specified in device
+> tree nodes to linux irq number.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Notes:
+> 1. The translation of SGI/PPI interrupts is supported only for CPU0.
+> 2. The documentation is derived from the following patch submitted
+>    earlier by Rob Herring.
+>    [PATCH 2/3] ARM: gic: add OF based initialization
 
--barry
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ignore SGIs for the purposes of DT.  SGIs aren't part of the hardware
+setup of a SoC or device, and are specific to the internals of SMP.
