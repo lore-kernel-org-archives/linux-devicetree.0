@@ -1,55 +1,69 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
 	tree
-Date: Fri, 5 Aug 2011 23:58:45 +0100
-Message-ID: <20110805225845.GC6404@ponder.secretlab.ca>
+Date: Fri, 05 Aug 2011 13:31:10 -1000
+Message-ID: <4E3C7D3E.7040502@firmworks.com>
 References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
 	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
 	<20110725204630.GD26735@ponder.secretlab.ca>
 	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
+	<20110805225845.GC6404@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Sealey <matt@genesi-usa.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110805225845.GC6404-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
-> Hi Grant, Shawn,
-> =
+On 8/5/2011 12:58 PM, Grant Likely wrote:
+> On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
+>> Hi Grant, Shawn,
+>>
+>>
+>>
+>> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>  wrote:
+>>> This could get really verbose in a really big hurry.  Fortunately the
+>>> dtb format is sophisticated enough to only store each unique property
+>>> name once, so the data shouldn't be huge, but it is still going to
+>>> make for huge source files.  Can you think of a more concise
+>>> representation?
+>>
+>> Yes: no representation at all. The correct place for IOMUX setup being
+>> done is *inside the boot firmware as soon as physically possible* and
+>> not seconds into boot after U-Boot has made a console, done a boot
+>> timeout, loaded scripts, kernels and ramdisks from media and then
+>> uncompressed and entered a Linux kernel.
+>
+> We've had this argument before.  There are many use cases where the
+> firmware simply cannot be relied upon to do the right thing.
 
-> =
+I am a firmware engineer who tries very hard to deliver quality firmware 
+that does the right thing.  It often seems to me that the Linux kernel 
+community's general distrust of firmware is a self-fulfilling prophecy. 
+  People often "live down to expectations"; if Linux expects the 
+firmware to be worthless, worthless is often what you get.
 
-> =
+In the PC BIOS world, the quality of BIOSes went up dramatically when 
+Microsoft began insisting that the BIOS must meet stringent standards, 
+enforced via an exhaustive suite of compatibility tests.
 
-> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely@secretlab.ca>=
- wrote:
-> > This could get really verbose in a really big hurry. =A0Fortunately the
-> > dtb format is sophisticated enough to only store each unique property
-> > name once, so the data shouldn't be huge, but it is still going to
-> > make for huge source files. =A0Can you think of a more concise
-> > representation?
-> =
-
-> Yes: no representation at all. The correct place for IOMUX setup being
-> done is *inside the boot firmware as soon as physically possible* and
-> not seconds into boot after U-Boot has made a console, done a boot
-> timeout, loaded scripts, kernels and ramdisks from media and then
-> uncompressed and entered a Linux kernel.
-
-We've had this argument before.  There are many use cases where the
-firmware simply cannot be relied upon to do the right thing.
-
-g.
+>
+> g.
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+>
