@@ -1,105 +1,71 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+From: Scott Wood <scottwood@freescale.com>
 Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
 	tree
-Date: Fri, 5 Aug 2011 13:36:56 -0500
-Message-ID: <CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A@mail.gmail.com>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
-	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-	<20110805070729.GA26563@huya.qualcomm.com>
+Date: Fri, 5 Aug 2011 15:26:29 -0500
+Message-ID: <4E3C51F5.50707@freescale.com>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>	<20110725204630.GD26735@ponder.secretlab.ca>	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>	<20110805070729
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110805070729.GA26563-AOX6H5vLt3Uj8izMo0bVsAC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: David Brown <davidb@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBdWcgNSwgMjAxMSBhdCAyOjA3IEFNLCBEYXZpZCBCcm93biA8ZGF2aWRiQGNvZGVh
-dXJvcmEub3JnPiB3cm90ZToKPiBPbiBUaHUsIEF1ZyAwNCwgMjAxMSBhdCAwNjowNzoxNVBNIC0w
-NTAwLCBNYXR0IFNlYWxleSB3cm90ZToKPj4gSGkgR3JhbnQsIFNoYXduLAo+Pgo+PiBPbiBNb24s
-IEp1bCAyNSwgMjAxMSBhdCAzOjQ2IFBNLCBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNy
-ZXRsYWIuY2E+IHdyb3RlOgo+PiA+IFRoaXMgY291bGQgZ2V0IHJlYWxseSB2ZXJib3NlIGluIGEg
-cmVhbGx5IGJpZyBodXJyeS4gwqBGb3J0dW5hdGVseSB0aGUKPj4gPiBkdGIgZm9ybWF0IGlzIHNv
-cGhpc3RpY2F0ZWQgZW5vdWdoIHRvIG9ubHkgc3RvcmUgZWFjaCB1bmlxdWUgcHJvcGVydHkKPj4g
-PiBuYW1lIG9uY2UsIHNvIHRoZSBkYXRhIHNob3VsZG4ndCBiZSBodWdlLCBidXQgaXQgaXMgc3Rp
-bGwgZ29pbmcgdG8KPj4gPiBtYWtlIGZvciBodWdlIHNvdXJjZSBmaWxlcy4gwqBDYW4geW91IHRo
-aW5rIG9mIGEgbW9yZSBjb25jaXNlCj4+ID4gcmVwcmVzZW50YXRpb24/Cj4+Cj4+IFllczogbm8g
-cmVwcmVzZW50YXRpb24gYXQgYWxsLiBUaGUgY29ycmVjdCBwbGFjZSBmb3IgSU9NVVggc2V0dXAg
-YmVpbmcKPj4gZG9uZSBpcyAqaW5zaWRlIHRoZSBib290IGZpcm13YXJlIGFzIHNvb24gYXMgcGh5
-c2ljYWxseSBwb3NzaWJsZSogYW5kCj4+IG5vdCBzZWNvbmRzIGludG8gYm9vdCBhZnRlciBVLUJv
-b3QgaGFzIG1hZGUgYSBjb25zb2xlLCBkb25lIGEgYm9vdAo+PiB0aW1lb3V0LCBsb2FkZWQgc2Ny
-aXB0cywga2VybmVscyBhbmQgcmFtZGlza3MgZnJvbSBtZWRpYSBhbmQgdGhlbgo+PiB1bmNvbXBy
-ZXNzZWQgYW5kIGVudGVyZWQgYSBMaW51eCBrZXJuZWwuCj4KPiBUaGlzIGlzIHRydWUgaW4gc2l0
-dWF0aW9ucyB3aGVyZSB3ZSBoYXZlIGNvbnRyb2wgb3ZlciB0aGUgYm9vdGxvYWRlciwKPiBidXQg
-dGhhdCBpc24ndCBhbHdheXMgdGhlIGNhc2UuCgpJbmRlZWQgaXQgaXMgbm90LCBidXQgdGhlbiBp
-dCBpcyAidGhlaXIiIGZhdWx0IHRoZSBib2FyZCB3b24ndCBib290CkxpbnV4LCBhbmQgbm90IHlv
-dXJzLCByaWdodD8gOikKCkkgdGhpbmsgaXQgaXMgYSBnaXZlbiB0aGF0IHdoZW4gZGVzaWduaW5n
-IGhhcmR3YXJlIChhbmQgd2UgZG8gdGhhdCkKYW5kIHByb3ByaWV0YXJ5IGZpcm13YXJlIHRoYXQg
-dGhlIExpbnV4IGtlcm5lbCBndXlzIGNhbid0ICJjb250cm9sIiwKeW91IGhhdmUgdG8ga2VlcCB1
-cCB3aXRoIHRoZSBjaGFuZ2VzIHdoZW4gcmVhc29uYWJsZS4gV2hpbGUgc29tZXRpbWVzCnRoYXQg
-aXMgdmVyeSBkaWZmaWN1bHQsIHRoaXMgaXMgbm90IG9uZSBvZiB0aG9zZSAic29tZXRpbWVzIiAt
-CnByb3ZpZGluZyBhIHNldHVwIHRoYXQgY2FuIGJvb3QgTGludXggaW1wbGllcyB0aGF0IHlvdSBj
-b25maWd1cmVkIHRoZQpjaGlwIGNvcnJlY3RseSBzdWNoIHRoYXQgTGludXggaXMgc3VwcGxlbWVu
-dGluZyB0aGF0IGNvbmZpZ3VyYXRpb24sCm5vdCByZWltcGxlbWVudGluZyBpdCBmcm9tIHNjcmF0
-Y2guCgpCYWNrIGluIHRoZSBkYXlzIHdoZW4gZGV2aWNlIHRyZWVzIHdlcmUgZHluYW1pY2FsbHkg
-Z2VuZXJhdGVkIGZvcgpoYXJkd2FyZSBiYXNlZCBvbiB0aGVpciBpbi1maXJtd2FyZSBzdGF0ZSBh
-bmQgdGhlbiBwYXNzZWQgdG8gTGludXgsCmFuZCBub3QganVzdCBib2x0ZWQgaW50byB0aGUga2Vy
-bmVsIGJpbmFyeSwgaWYgeW91IGxlZnQgYSBkZXZpY2UgaW4KdGhlIHRyZWUgdGhhdCBkaWRuJ3Qg
-aGF2ZSBpdCdzIHBpbnMgbXV4ZWQsIHlvdSBjb3VsZCBjb25zaWRlciB0aGF0IGEKZmF0YWwgZmly
-bXdhcmUgZmxhdywgYW5kIHRoZSByZXNwb25zZSB3ZSB1c3VhbGx5IGdvdCBmcm9tIExpbnV4CmRl
-dmVsb3BlcnMgd2FzICJ3ZWxsLCBmaXggeW91ciBmaXJtd2FyZSIuIEl0IGlzIGZhciBtb3JlIHBy
-dWRlbnQgdG8KdHJlYXQgZGV2aWNlIHRyZWVzIGFzIGEgc3RhdGUgZGVzY3JpcHRpb24gb2YgdGhl
-IGhhcmR3YXJlIExpbnV4IHdhcwpib290ZWQgb24sIGFuZCBub3QgYSBjb25maWd1cmF0aW9uIGZp
-bGUgZm9yIGRyaXZlcnMuLiB3ZSd2ZSBhbHJlYWR5CmJlZW4gdGhyb3VnaCB0aGlzIGEgdGhvdXNh
-bmQgdGltZXMgb24gUG93ZXJQQy4KCkkga25vdyB0aGF0IEZEVCBkb2Vzbid0IGhhdmUgdGhlIGNh
-cGFiaWxpdHkgb2YgYSByZWFsIE9wZW5GaXJtd2FyZSBvcgpldmVuIGFuIEFDUEkgZGV2aWNlIHRy
-ZWUsIGJ1dCB0aGUgY29yZSBjb25jZXB0IHRoYXQgd2FzIG1vc3QgYmVhdXRpZnVsCmFuZCB0aGUg
-bW9zdCBlbmdhZ2luZyB0aGF0IG1hZGUgdXMgYWxsIHdhbnQgdG8gaGF2ZSBkZXZpY2UgdHJlZXMg
-YW5kCnJlYWwgZHluYW1pYyBmaXJtd2FyZSB3YXMgdGhlIGZhY3QgdGhhdCB5b3UgY291bGQsIGlm
-IGRlc2NyaWJlZCBpbiB0aGUKdHJlZSwgYmluZCBhIGRyaXZlciB0byBpdC4gVGhpcyBpbXBsaWVz
-IGdpdmluZyBpdCB0aGUgYWRkcmVzcyBvZiB0aGUKZGV2aWNlIGluIHRoZSBtZW1vcnkgbWFwLCBp
-bmZvcm1hdGlvbiB0aGF0IGRlc2NyaWJlcyBpdCdzIGJlaGF2aW9yLiBBdAp0aGUgbG93ZXN0IGxl
-dmVsIGl0IG1hcHMgYWxtb3N0IDE6MSB3aXRoIHRoZSBMaW51eCAicmVzb3VyY2UiIGNvbmNlcHQK
-KGkuZS4gbWVtb3J5LCBkbWEgY2hhbm5lbHMsIGJ1c2VzLCBpbnRlcnJ1cHRzKSBhbmQgYWxsb3dz
-IHByb2JpbmcKYmFzZWQgb24gaHVtYW4tcmVhZGFibGUgc3RyaW5ncyBhbmQgaWRlbnRpZmllcnMs
-IHNvIHRoYXQgZGlmZmVyZW5jZXMKaW4gUENCIGRlc2lnbiBhbmQgcGluIHJvdXRpbmcgb2YgZGlm
-ZmVyZW50IHByb2R1Y3RzIGNhbiBiZSByZXBvcnRlZCB0bwpMaW51eC4gQW5kIHRoYXQncyB0aGUg
-dGhpbmcgaGVyZTsgcmVwb3J0ZWQgdG8gTGludXgsIG5vdCAiSSBsZWZ0IGl0CmNvbXBsZXRlbHkg
-dW5jb25maWd1cmVkLCBidXQgaGVyZSBhcmUgdGhlIGluc3RydWN0aW9ucyBvbiBob3cgdG8gbWFr
-ZQppdCB3b3JrIi4gQXQgdGhlIHBvaW50IHlvdSBlbmQgdXAgcmV3cml0aW5nIGEgZGV2aWNlIHRy
-ZWUgdG8gdGVsbApMaW51eCB0byBjb25maWd1cmUgdGhpcywgYW5kIG1hbmFnZWQgdG8gbWFrZSB5
-b3VyIGZpcm13YXJlIGxvYWQgaXQsCnlvdSBtYXkgYXMgd2VsbCBoYXZlIG1vZGlmaWVkIHRoZSBm
-aXJtd2FyZSB0byBkbyB0aGUgd29yayBhbmQgZ2l2ZQpMaW51eCBhbiBlYXN5IHJpZGUuCgpZZXMs
-IGl0IHB1dHMgdGhlIG9udXMgb2YgdGhlIHdvcmsgb24gdGhlIGZpcm13YXJlIGd1eXMsIGJ1dCB0
-aGV5J3JlCnRoZSBvbmVzIHdyaXRpbmcgdGhlIGRldmljZSB0cmVlcyBmb3IgdGhlaXIgaGFyZHdh
-cmUgYW55d2F5LgoKSSB1bmRlcnN0YW5kIHRoYXQgaWYgRGV2aWNlIFZlbmRvciBBIGRlY2lkZXMg
-dGhleSB3YW50IHRvIHN1cHBvcnQKV2luZG93cyA4IGFuZCBsZWF2ZSB0aGUgc3lzdGVtIGNvbmZp
-Z3VyZWQgaW4gYSBzdGF0ZSBzdWNoIHRoYXQKYmFzaWNhbGx5IG9ubHkgV2luZG93cyA4IHdvcmtz
-IG9uIGl0IGJlY2F1c2UgdGhlIFJpZ2h0IFRoaW5nIFRvIERvIEZvcgpMaW51eCh0bSkgaXMgbm90
-IHRoZSBzYW1lIGFzIHdoYXQgaXQgYWN0dWFsbHkgZG9lcyB0byBnZXQgdXAgdG8gdGhlCnBvaW50
-IGl0IGJyaW5ncyB1cCBXaW5kb3dzIDgsIExpbnV4IGlzIG5vdCBnb2luZyB0byB3b3JrIHVubGVz
-cyBzb21lCmVmZm9ydCBpcyBleHBlbmRlZCB0byBiYXNpY2FsbHkgZ2V0IHRoZSAicmlnaHQgdGhp
-bmciIGRvbmUuIFRoaXMgaXMKbm90IG5lY2Vzc2FyaWx5IGEgZ29vZCBmaXQgZm9yIGEgZGV2aWNl
-IHRyZWUuLiB0aGlzIGlzIHByb2JhYmx5IHdoZXJlCmVmZm9ydCBuZWVkcyB0byBiZSBleHBlbmRl
-ZCBpbiBwdXR0aW5nIGEgY3VzdG9tIFUtQm9vdCBvbiBpdCBzbyB5b3UKY2FuIGRvIHRoZSByaWdo
-dCB0aGluZy4gT3Igd3JpdGluZyBhIHNlY29uZC1zdGFnZSBib290bG9hZGVyIChsaWtlCkx1aWdp
-IGZvciB0aGUgQ3ItNDgpIHdoaWNoIGRvZXMgdGhlIHJpZ2h0IHRoaW5nLi4gYW5kIHRoZW4gcHJv
-dmlkaW5nCnRoZSBkZXZpY2UgdHJlZSwgd2hpY2ggaXMgdGhlIGRlZmFjdG8gc3RhbmRhcmQgaGVy
-ZSwgYmFzZWQgb24gdGhlCnJpZ2h0IHRoaW5ncyBpdCBkaWQuCgotLSAKTWF0dCBTZWFsZXkgPG1h
-dHRAZ2VuZXNpLXVzYS5jb20+ClByb2R1Y3QgRGV2ZWxvcG1lbnQgQW5hbHlzdCwgR2VuZXNpIFVT
-QSwgSW5jLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-ZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5v
-emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRp
-c2N1c3MK
+On 08/05/2011 01:36 PM, Matt Sealey wrote:
+> On Fri, Aug 5, 2011 at 2:07 AM, David Brown <davidb@codeaurora.org> wrote:
+>> On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
+>>> Hi Grant, Shawn,
+>>>
+>>> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>>>> This could get really verbose in a really big hurry.  Fortunately the
+>>>> dtb format is sophisticated enough to only store each unique property
+>>>> name once, so the data shouldn't be huge, but it is still going to
+>>>> make for huge source files.  Can you think of a more concise
+>>>> representation?
+>>>
+>>> Yes: no representation at all. The correct place for IOMUX setup being
+>>> done is *inside the boot firmware as soon as physically possible* and
+>>> not seconds into boot after U-Boot has made a console, done a boot
+>>> timeout, loaded scripts, kernels and ramdisks from media and then
+>>> uncompressed and entered a Linux kernel.
+>>
+>> This is true in situations where we have control over the bootloader,
+>> but that isn't always the case.
+> 
+> Indeed it is not, but then it is "their" fault the board won't boot
+> Linux, and not yours, right? :)
+> 
+> I think it is a given that when designing hardware (and we do that)
+> and proprietary firmware that the Linux kernel guys can't "control",
+> you have to keep up with the changes when reasonable. While sometimes
+> that is very difficult, this is not one of those "sometimes" -
+> providing a setup that can boot Linux implies that you configured the
+> chip correctly such that Linux is supplementing that configuration,
+> not reimplementing it from scratch.
+
+In the absence of a time machine, situations where one might not want to
+upgrade firmware are not limited to proprietary firmware.  The means to
+recover from a bricked board are not always available and convenient.
+
+This is why we did pin setup in Linux for 8xx/82xx, and why we did cuImage.
+
+If you haven't yet shipped the boards with bad firmware to an extent
+that requires compatibility, that's a different situation of course.
+
+> Yes, it puts the onus of the work on the firmware guys, but they're
+> the ones writing the device trees for their hardware anyway.
+
+Sometimes.
+
+-Scott
