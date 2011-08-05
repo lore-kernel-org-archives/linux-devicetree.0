@@ -1,140 +1,54 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH] ARM: GIC: Add device tree interrupt specifier translation support
-Date: Fri,  5 Aug 2011 09:19:13 +0100
-Message-ID: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
+From: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC][PATCH] of: add a dummy implementation of of_get_property()
+ in of.h
+Date: Fri, 05 Aug 2011 16:56:14 +0800
+Message-ID: <1312534574.18064.2.camel@phoenix>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Jean Delvare (PC drivers, core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Sam Ravnborg sam"@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for translation of hardware interrupt numbers specified in device
-tree nodes to linux irq number.
+Then we can avoid having #ifdef CONFIG_OF splattered around the place
+calling of_get_property(), it leads to errors.
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Signed-off-by: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Notes:
-1. The translation of SGI/PPI interrupts is supported only for CPU0.
-2. The documentation is derived from the following patch submitted
-   earlier by Rob Herring.
-   [PATCH 2/3] ARM: gic: add OF based initialization
+This patch fixes below build error with "make tegra_defconfig;make".
 
- Documentation/devicetree/bindings/arm/gic.txt |   21 +++++++
- arch/arm/common/gic.c                         |   70 +++++++++++++++++++++++++
- 2 files changed, 91 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+  CC      drivers/i2c/busses/i2c-tegra.o
+drivers/i2c/busses/i2c-tegra.c: In function 'tegra_i2c_probe':
+drivers/i2c/busses/i2c-tegra.c:615: error: implicit declaration of function 'of_get_property'
+drivers/i2c/busses/i2c-tegra.c:616: warning: assignment makes pointer from integer without a cast
+make[3]: *** [drivers/i2c/busses/i2c-tegra.o] Error 1
+make[2]: *** [drivers/i2c/busses] Error 2
+make[1]: *** [drivers/i2c] Error 2
+make: *** [drivers] Error 2
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-new file mode 100644
-index 0000000..3204ac5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -0,0 +1,21 @@
-+* ARM Generic Interrupt Controller
-+
-+Some ARM cores have an interrupt controller called GIC. The ARM GIC
-+representation in the device tree should be done as under:
-+
-+Required properties:
-+- compatible: should be "arm,cortex-a9-gic".
-+- reg: Specifies base physical address(s) and size of the GIC registers. The
-+  first two values are the GIC distributor register base and size. The second
-+  two values are the GIC cpu interface register base and size.
-+- interrupt-controller: Identifies the node as an interrupt controller
-+- #interrupt-cells: Specifies the number of cells needed to encode a
-+  interrupt source and the value shall be 1.
-+
-+Example:
-+	GIC:interrupt-controller@10490000 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0x10490000 0x1000>, <0x10480000 0x100>;
-+	};
-diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-index 3227ca9..c11d3a5 100644
---- a/arch/arm/common/gic.c
-+++ b/arch/arm/common/gic.c
-@@ -28,6 +28,11 @@
- #include <linux/smp.h>
- #include <linux/cpumask.h>
- #include <linux/io.h>
-+#ifdef CONFIG_OF_IRQ
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+#endif
- 
- #include <asm/irq.h>
- #include <asm/mach/irq.h>
-@@ -394,3 +399,68 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
+Regards,
+Axel
+ include/linux/of.h |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 0085bb0..320cbad 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -256,6 +256,12 @@ static inline int of_property_read_string(struct device_node *np,
+ 	return -ENOSYS;
  }
- #endif
-+
-+#ifdef CONFIG_OF_IRQ
-+
-+/* GIC interrupt types corresponding to the device tree interrupt specifier */
-+enum gic_int_type {
-+	GIC_INT_TYPE_SPI = 0,
-+	GIC_INT_TYPE_SGI = 1,
-+	GIC_INT_TYPE_PPI = 2,
-+};
-+
-+/* Translate dt irq specifier to linux irq number */
-+static int gic_irq_domain_translate_dt(struct irq_domain *d,
-+			    struct device_node *controller,
-+			    const u32 *intspec, unsigned int intsize,
-+			    unsigned long *out_hwirq, unsigned int *out_type)
+ 
++static inline const void *of_get_property(const struct device_node *np,
++					  const char *name, int *lenp)
 +{
-+	if (d->of_node != controller)
-+		return -EINVAL;
-+	if (intsize < 2)
-+		return -EINVAL;
-+
-+	switch (intspec[0]) {
-+	case GIC_INT_TYPE_SPI:
-+		*out_hwirq = intspec[1] + 32; /* +32, for start of SPI */
-+		break;
-+	case GIC_INT_TYPE_SGI:
-+		*out_hwirq = intspec[1];
-+		break;
-+	case GIC_INT_TYPE_PPI:
-+		*out_hwirq = intspec[1] + 16; /* +16, for start of PPI */
-+		break;
-+	default:
-+		pr_info("gic_irq_domain_translate_dt: invalid gic intr type\n");
-+		return -EINVAL;
-+	}
-+
-+	*out_hwirq += d->irq_base;
-+	*out_type = IRQ_TYPE_NONE;
-+	return 0;
++	return NULL;
 +}
 +
-+static struct irq_domain_ops gic_irq_domain_dt_ops = {
-+	.dt_translate = gic_irq_domain_translate_dt,
-+};
-+
-+int gic_add_irq_domain_dt(unsigned int irq_base)
-+{
-+	struct device_node *np;
-+	struct irq_domain *domain;
-+
-+	np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-gic");
-+	if (!np)
-+		return -ENODEV;
-+
-+	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
-+	if (!domain)
-+		return -ENOMEM;
-+
-+	domain->irq_base = irq_base;
-+	domain->of_node = np;
-+	domain->ops = &gic_irq_domain_dt_ops;
-+	irq_domain_add(domain);
-+	return 0;
-+}
-+#endif
+ #endif /* CONFIG_OF */
+ 
+ static inline int of_property_read_u32(const struct device_node *np,
 -- 
 1.7.4.1
