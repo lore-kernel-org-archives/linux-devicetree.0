@@ -1,27 +1,53 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [RFC][PATCH] of: add a dummy implementation of
-	of_get_property() in of.h
-Date: Fri, 5 Aug 2011 11:05:14 +0200
-Message-ID: <20110805090514.GA17391@distanz.ch>
-References: <1312534574.18064.2.camel@phoenix>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] ARM: GIC: Add device tree interrupt specifier
+	translation support
+Date: Fri, 5 Aug 2011 10:53:18 +0100
+Message-ID: <20110805105318.5550e4b5@taxman.wild-wind.fr.eu.org>
+References: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1312534574.18064.2.camel@phoenix>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Jean Delvare (PC drivers, core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Sam Ravnborg sam"@ravnborg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1312532353-8772-1-git-send-email-thomas.abraham@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 2011-08-05 at 10:56:14 +0200, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Then we can avoid having #ifdef CONFIG_OF splattered around the place
-> calling of_get_property(), it leads to errors.
+On Fri,  5 Aug 2011 09:19:13 +0100
+Thomas Abraham <thomas.abraham@linaro.org> wrote:
 
-You shouldn't redefine of_get_property in the driver. Rather add a
-wrapper function to the driver which will extract the device tree
-information in CONFIG_OF is enabled and which will just return -ENODEV
-if CONFIG_OF is not set.
+> Add support for translation of hardware interrupt numbers specified in device
+> tree nodes to linux irq number.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+> Notes:
+> 1. The translation of SGI/PPI interrupts is supported only for CPU0.
 
-Cheers
-Tobias
+This is a major problem. PPIs could be used differently on different
+CPUs, as each CPU basically has its own PPI controller. I don't know if
+this "feature" is used in the wild, but there is reason why it couldn't
+be used one of these days.
+
+I did have a go at this problem a while ago, as part of a much complex
+patch set:
+
+https://patchwork.kernel.org/patch/916362/
+
+Also note that at the moment, PPIs are not really usable as standard
+interrupts (because of the whole banking scheme).
+
+Cheers,
+
+	M.
+-- 
+I'm the slime oozin' out from your TV set...
