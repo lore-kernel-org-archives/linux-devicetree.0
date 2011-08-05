@@ -1,14 +1,18 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH 1/2] AT91: dt: at91sam9g45 family and board device tree
-	files
-Date: Fri,  5 Aug 2011 17:24:52 +0100
-Message-ID: <56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
-References: <1312561493-7849-1-git-send-email-nicolas.ferre@atmel.com>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Fri, 5 Aug 2011 13:36:56 -0500
+Message-ID: <CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A@mail.gmail.com>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<20110725204630.GD26735@ponder.secretlab.ca>
+	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
+	<20110805070729.GA26563@huya.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1312561493-7849-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20110805070729.GA26563-AOX6H5vLt3Uj8izMo0bVsAC/G2K4zDHf@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,76 +22,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create a new device tree source file for Atmel at91sam9g45 SoC family.
-The Evaluation Kit at91sam9m10g45ek includes it.
-This first basic support will be populated as drivers and boards will be
-converted to device tree.
-
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9g45.dtsi     |   27 +++++++++++++++++++++++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts |   15 +++++++++++++++
- 2 files changed, 42 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91sam9g45.dtsi
- create mode 100644 arch/arm/boot/dts/at91sam9m10g45ek.dts
-
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-new file mode 100644
-index 0000000..3d85f96
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -0,0 +1,27 @@
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Atmel AT91SAM9G45 family SoC";
-+	compatible = "atmel,at91sam9g45", "atmel,at91sam9m10", "atmel,at91sam9g46", "atmel,at91sam9m11";
-+	interrupt-parent = <&aic>;
-+
-+	memory {
-+		reg = <0x70000000 0x10000000>;
-+	};
-+
-+	aic: interrupt-controller@fffff000 {
-+		#interrupt-cells = <1>;
-+		compatible = "atmel,aic";
-+		interrupt-controller;
-+		reg = <0xfffff000 0x200>;
-+	};
-+
-+	dma@ffffec00 {
-+		compatible = "atmel,at91sam9g45-hdmac";
-+		reg = <0xffffec00 0x200>;
-+		interrupts = <21>;
-+		atmel,hdmac-nr-channels = <8>;
-+		atmel,hdmac-cap-memcpy;
-+		atmel,hdmac-cap-slave;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-new file mode 100644
-index 0000000..48252c9
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -0,0 +1,15 @@
-+/dts-v1/;
-+/include/ "at91sam9g45.dtsi"
-+
-+/ {
-+	model = "Atmel AT91SAM9M10G45-EK";
-+	compatible = "atmel,at91sam9m10g45ek", "atmel,at91sam9g45ekes", "atmel,at91sam9m10ekes", "atmel,at91sam9g45", "atmel,at91sam9m10", "atmel,at91sam9g46", "atmel,at91sam9m11", "atmel,at91";
-+
-+	chosen {
-+		bootargs = "mem=64M console=ttyS0,115200 mtdparts=atmel_nand:4M(bootstrap/uboot/kernel)ro,60M(rootfs),-(data) root=/dev/mtdblock1 rw rootfstype=jffs2";
-+	};
-+
-+	memory {
-+		reg = <0x70000000 0x4000000>;
-+	};
-+};
--- 
-1.7.4.1
+T24gRnJpLCBBdWcgNSwgMjAxMSBhdCAyOjA3IEFNLCBEYXZpZCBCcm93biA8ZGF2aWRiQGNvZGVh
+dXJvcmEub3JnPiB3cm90ZToKPiBPbiBUaHUsIEF1ZyAwNCwgMjAxMSBhdCAwNjowNzoxNVBNIC0w
+NTAwLCBNYXR0IFNlYWxleSB3cm90ZToKPj4gSGkgR3JhbnQsIFNoYXduLAo+Pgo+PiBPbiBNb24s
+IEp1bCAyNSwgMjAxMSBhdCAzOjQ2IFBNLCBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNy
+ZXRsYWIuY2E+IHdyb3RlOgo+PiA+IFRoaXMgY291bGQgZ2V0IHJlYWxseSB2ZXJib3NlIGluIGEg
+cmVhbGx5IGJpZyBodXJyeS4gwqBGb3J0dW5hdGVseSB0aGUKPj4gPiBkdGIgZm9ybWF0IGlzIHNv
+cGhpc3RpY2F0ZWQgZW5vdWdoIHRvIG9ubHkgc3RvcmUgZWFjaCB1bmlxdWUgcHJvcGVydHkKPj4g
+PiBuYW1lIG9uY2UsIHNvIHRoZSBkYXRhIHNob3VsZG4ndCBiZSBodWdlLCBidXQgaXQgaXMgc3Rp
+bGwgZ29pbmcgdG8KPj4gPiBtYWtlIGZvciBodWdlIHNvdXJjZSBmaWxlcy4gwqBDYW4geW91IHRo
+aW5rIG9mIGEgbW9yZSBjb25jaXNlCj4+ID4gcmVwcmVzZW50YXRpb24/Cj4+Cj4+IFllczogbm8g
+cmVwcmVzZW50YXRpb24gYXQgYWxsLiBUaGUgY29ycmVjdCBwbGFjZSBmb3IgSU9NVVggc2V0dXAg
+YmVpbmcKPj4gZG9uZSBpcyAqaW5zaWRlIHRoZSBib290IGZpcm13YXJlIGFzIHNvb24gYXMgcGh5
+c2ljYWxseSBwb3NzaWJsZSogYW5kCj4+IG5vdCBzZWNvbmRzIGludG8gYm9vdCBhZnRlciBVLUJv
+b3QgaGFzIG1hZGUgYSBjb25zb2xlLCBkb25lIGEgYm9vdAo+PiB0aW1lb3V0LCBsb2FkZWQgc2Ny
+aXB0cywga2VybmVscyBhbmQgcmFtZGlza3MgZnJvbSBtZWRpYSBhbmQgdGhlbgo+PiB1bmNvbXBy
+ZXNzZWQgYW5kIGVudGVyZWQgYSBMaW51eCBrZXJuZWwuCj4KPiBUaGlzIGlzIHRydWUgaW4gc2l0
+dWF0aW9ucyB3aGVyZSB3ZSBoYXZlIGNvbnRyb2wgb3ZlciB0aGUgYm9vdGxvYWRlciwKPiBidXQg
+dGhhdCBpc24ndCBhbHdheXMgdGhlIGNhc2UuCgpJbmRlZWQgaXQgaXMgbm90LCBidXQgdGhlbiBp
+dCBpcyAidGhlaXIiIGZhdWx0IHRoZSBib2FyZCB3b24ndCBib290CkxpbnV4LCBhbmQgbm90IHlv
+dXJzLCByaWdodD8gOikKCkkgdGhpbmsgaXQgaXMgYSBnaXZlbiB0aGF0IHdoZW4gZGVzaWduaW5n
+IGhhcmR3YXJlIChhbmQgd2UgZG8gdGhhdCkKYW5kIHByb3ByaWV0YXJ5IGZpcm13YXJlIHRoYXQg
+dGhlIExpbnV4IGtlcm5lbCBndXlzIGNhbid0ICJjb250cm9sIiwKeW91IGhhdmUgdG8ga2VlcCB1
+cCB3aXRoIHRoZSBjaGFuZ2VzIHdoZW4gcmVhc29uYWJsZS4gV2hpbGUgc29tZXRpbWVzCnRoYXQg
+aXMgdmVyeSBkaWZmaWN1bHQsIHRoaXMgaXMgbm90IG9uZSBvZiB0aG9zZSAic29tZXRpbWVzIiAt
+CnByb3ZpZGluZyBhIHNldHVwIHRoYXQgY2FuIGJvb3QgTGludXggaW1wbGllcyB0aGF0IHlvdSBj
+b25maWd1cmVkIHRoZQpjaGlwIGNvcnJlY3RseSBzdWNoIHRoYXQgTGludXggaXMgc3VwcGxlbWVu
+dGluZyB0aGF0IGNvbmZpZ3VyYXRpb24sCm5vdCByZWltcGxlbWVudGluZyBpdCBmcm9tIHNjcmF0
+Y2guCgpCYWNrIGluIHRoZSBkYXlzIHdoZW4gZGV2aWNlIHRyZWVzIHdlcmUgZHluYW1pY2FsbHkg
+Z2VuZXJhdGVkIGZvcgpoYXJkd2FyZSBiYXNlZCBvbiB0aGVpciBpbi1maXJtd2FyZSBzdGF0ZSBh
+bmQgdGhlbiBwYXNzZWQgdG8gTGludXgsCmFuZCBub3QganVzdCBib2x0ZWQgaW50byB0aGUga2Vy
+bmVsIGJpbmFyeSwgaWYgeW91IGxlZnQgYSBkZXZpY2UgaW4KdGhlIHRyZWUgdGhhdCBkaWRuJ3Qg
+aGF2ZSBpdCdzIHBpbnMgbXV4ZWQsIHlvdSBjb3VsZCBjb25zaWRlciB0aGF0IGEKZmF0YWwgZmly
+bXdhcmUgZmxhdywgYW5kIHRoZSByZXNwb25zZSB3ZSB1c3VhbGx5IGdvdCBmcm9tIExpbnV4CmRl
+dmVsb3BlcnMgd2FzICJ3ZWxsLCBmaXggeW91ciBmaXJtd2FyZSIuIEl0IGlzIGZhciBtb3JlIHBy
+dWRlbnQgdG8KdHJlYXQgZGV2aWNlIHRyZWVzIGFzIGEgc3RhdGUgZGVzY3JpcHRpb24gb2YgdGhl
+IGhhcmR3YXJlIExpbnV4IHdhcwpib290ZWQgb24sIGFuZCBub3QgYSBjb25maWd1cmF0aW9uIGZp
+bGUgZm9yIGRyaXZlcnMuLiB3ZSd2ZSBhbHJlYWR5CmJlZW4gdGhyb3VnaCB0aGlzIGEgdGhvdXNh
+bmQgdGltZXMgb24gUG93ZXJQQy4KCkkga25vdyB0aGF0IEZEVCBkb2Vzbid0IGhhdmUgdGhlIGNh
+cGFiaWxpdHkgb2YgYSByZWFsIE9wZW5GaXJtd2FyZSBvcgpldmVuIGFuIEFDUEkgZGV2aWNlIHRy
+ZWUsIGJ1dCB0aGUgY29yZSBjb25jZXB0IHRoYXQgd2FzIG1vc3QgYmVhdXRpZnVsCmFuZCB0aGUg
+bW9zdCBlbmdhZ2luZyB0aGF0IG1hZGUgdXMgYWxsIHdhbnQgdG8gaGF2ZSBkZXZpY2UgdHJlZXMg
+YW5kCnJlYWwgZHluYW1pYyBmaXJtd2FyZSB3YXMgdGhlIGZhY3QgdGhhdCB5b3UgY291bGQsIGlm
+IGRlc2NyaWJlZCBpbiB0aGUKdHJlZSwgYmluZCBhIGRyaXZlciB0byBpdC4gVGhpcyBpbXBsaWVz
+IGdpdmluZyBpdCB0aGUgYWRkcmVzcyBvZiB0aGUKZGV2aWNlIGluIHRoZSBtZW1vcnkgbWFwLCBp
+bmZvcm1hdGlvbiB0aGF0IGRlc2NyaWJlcyBpdCdzIGJlaGF2aW9yLiBBdAp0aGUgbG93ZXN0IGxl
+dmVsIGl0IG1hcHMgYWxtb3N0IDE6MSB3aXRoIHRoZSBMaW51eCAicmVzb3VyY2UiIGNvbmNlcHQK
+KGkuZS4gbWVtb3J5LCBkbWEgY2hhbm5lbHMsIGJ1c2VzLCBpbnRlcnJ1cHRzKSBhbmQgYWxsb3dz
+IHByb2JpbmcKYmFzZWQgb24gaHVtYW4tcmVhZGFibGUgc3RyaW5ncyBhbmQgaWRlbnRpZmllcnMs
+IHNvIHRoYXQgZGlmZmVyZW5jZXMKaW4gUENCIGRlc2lnbiBhbmQgcGluIHJvdXRpbmcgb2YgZGlm
+ZmVyZW50IHByb2R1Y3RzIGNhbiBiZSByZXBvcnRlZCB0bwpMaW51eC4gQW5kIHRoYXQncyB0aGUg
+dGhpbmcgaGVyZTsgcmVwb3J0ZWQgdG8gTGludXgsIG5vdCAiSSBsZWZ0IGl0CmNvbXBsZXRlbHkg
+dW5jb25maWd1cmVkLCBidXQgaGVyZSBhcmUgdGhlIGluc3RydWN0aW9ucyBvbiBob3cgdG8gbWFr
+ZQppdCB3b3JrIi4gQXQgdGhlIHBvaW50IHlvdSBlbmQgdXAgcmV3cml0aW5nIGEgZGV2aWNlIHRy
+ZWUgdG8gdGVsbApMaW51eCB0byBjb25maWd1cmUgdGhpcywgYW5kIG1hbmFnZWQgdG8gbWFrZSB5
+b3VyIGZpcm13YXJlIGxvYWQgaXQsCnlvdSBtYXkgYXMgd2VsbCBoYXZlIG1vZGlmaWVkIHRoZSBm
+aXJtd2FyZSB0byBkbyB0aGUgd29yayBhbmQgZ2l2ZQpMaW51eCBhbiBlYXN5IHJpZGUuCgpZZXMs
+IGl0IHB1dHMgdGhlIG9udXMgb2YgdGhlIHdvcmsgb24gdGhlIGZpcm13YXJlIGd1eXMsIGJ1dCB0
+aGV5J3JlCnRoZSBvbmVzIHdyaXRpbmcgdGhlIGRldmljZSB0cmVlcyBmb3IgdGhlaXIgaGFyZHdh
+cmUgYW55d2F5LgoKSSB1bmRlcnN0YW5kIHRoYXQgaWYgRGV2aWNlIFZlbmRvciBBIGRlY2lkZXMg
+dGhleSB3YW50IHRvIHN1cHBvcnQKV2luZG93cyA4IGFuZCBsZWF2ZSB0aGUgc3lzdGVtIGNvbmZp
+Z3VyZWQgaW4gYSBzdGF0ZSBzdWNoIHRoYXQKYmFzaWNhbGx5IG9ubHkgV2luZG93cyA4IHdvcmtz
+IG9uIGl0IGJlY2F1c2UgdGhlIFJpZ2h0IFRoaW5nIFRvIERvIEZvcgpMaW51eCh0bSkgaXMgbm90
+IHRoZSBzYW1lIGFzIHdoYXQgaXQgYWN0dWFsbHkgZG9lcyB0byBnZXQgdXAgdG8gdGhlCnBvaW50
+IGl0IGJyaW5ncyB1cCBXaW5kb3dzIDgsIExpbnV4IGlzIG5vdCBnb2luZyB0byB3b3JrIHVubGVz
+cyBzb21lCmVmZm9ydCBpcyBleHBlbmRlZCB0byBiYXNpY2FsbHkgZ2V0IHRoZSAicmlnaHQgdGhp
+bmciIGRvbmUuIFRoaXMgaXMKbm90IG5lY2Vzc2FyaWx5IGEgZ29vZCBmaXQgZm9yIGEgZGV2aWNl
+IHRyZWUuLiB0aGlzIGlzIHByb2JhYmx5IHdoZXJlCmVmZm9ydCBuZWVkcyB0byBiZSBleHBlbmRl
+ZCBpbiBwdXR0aW5nIGEgY3VzdG9tIFUtQm9vdCBvbiBpdCBzbyB5b3UKY2FuIGRvIHRoZSByaWdo
+dCB0aGluZy4gT3Igd3JpdGluZyBhIHNlY29uZC1zdGFnZSBib290bG9hZGVyIChsaWtlCkx1aWdp
+IGZvciB0aGUgQ3ItNDgpIHdoaWNoIGRvZXMgdGhlIHJpZ2h0IHRoaW5nLi4gYW5kIHRoZW4gcHJv
+dmlkaW5nCnRoZSBkZXZpY2UgdHJlZSwgd2hpY2ggaXMgdGhlIGRlZmFjdG8gc3RhbmRhcmQgaGVy
+ZSwgYmFzZWQgb24gdGhlCnJpZ2h0IHRoaW5ncyBpdCBkaWQuCgotLSAKTWF0dCBTZWFsZXkgPG1h
+dHRAZ2VuZXNpLXVzYS5jb20+ClByb2R1Y3QgRGV2ZWxvcG1lbnQgQW5hbHlzdCwgR2VuZXNpIFVT
+QSwgSW5jLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+ZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRp
+c2N1c3MK
