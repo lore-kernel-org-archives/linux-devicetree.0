@@ -1,78 +1,40 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Fri, 5 Aug 2011 16:48:39 -0500
-Message-ID: <4E3C6537.2080602@freescale.com>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
-	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-	<4E3C51F5.50707@freescale.com>
-	<20110805203629.GB6991@huya.qualcomm.com>
-	<CAKGA1b=CFVwjHT7eobd1-UMrSBNsQ2N+96OuCu1QbjGgo9RScQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAKGA1b=CFVwjHT7eobd1-UMrSBNsQ2N+96OuCu1QbjGgo9RScQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Sealey <matt@genesi-usa.com>
-Cc: David Brown <davidb@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] dt: add empty of_get_property for non-dt
+Date: Fri,  5 Aug 2011 16:50:30 -0600
+Message-ID: <1312584630-23371-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/05/2011 04:29 PM, Matt Sealey wrote:
-> On Fri, Aug 5, 2011 at 3:36 PM, David Brown <davidb@codeaurora.org> wrote:
->> On Fri, Aug 05, 2011 at 03:26:29PM -0500, Scott Wood wrote:
->>
->>>> Yes, it puts the onus of the work on the firmware guys, but they're
->>>> the ones writing the device trees for their hardware anyway.
->>>
->>> Sometimes.
->>
->> I'm not even sure that is going to be common.  At least our setup is
->> going to have the device tree living in flash somewhere.  The
->> bootloader only knows enough about the FDT to insert arguments and
->> memory information into it.  They certainly aren't the appropriate
->> team to be defining the device tree.
->>
->> David
-> 
-> In any company through some kind of collaborative process of firmware
-> and Linux development, someone sits down and defines this device tree.
-> They will have an intimate knowledge of the hardware.. 
+The patch adds empty function of_get_property for non-dt build, so that
+drivers migrating to dt can save some '#ifdef CONFIG_OF'.
 
-That doesn't mean they have intimate knowledge of what will be accepted
-upstream, or that they involve upstream early enough.  Even within the
-company, those who work with upstream may have little influence over
-what gets flashed on the boards during manufacturing, or when hardware
-details can be disclosed in the form of submitting patches.  Or they
-might have just been rushed by schedule to get some firmware done that
-can load a kernel so boards can be shipped, and enabling certain
-peripherals gets dealt with later.
+This also fixes the current Tegra compile problem in linux-next.
 
-> if you have to
-> flash the device tree to NOR or NAND or EEPROM or something anyway,
-> then flashing a new firmware binary at the same time is not really any
-> more complex.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ include/linux/of.h |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-If the firmware doesn't depend on the device tree to boot, you don't
-need to worry about bricking the board by reflashing the device tree.
-
-> So why not take the complexity and choice out of it, and do it in the
-> firmware,, one list, all configured at boot time, before Linux is even
-> in the picture, and make sure this is a requirement for booting Linux
-> that these pins are set up already?
-
-I fully agree that that's the nicer approach -- if you're not yet in a
-position where you need to support existing firmware.  Is that the case
-here?
-
--Scott
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 0085bb0..9180dc5 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -256,6 +256,13 @@ static inline int of_property_read_string(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++static inline const void *of_get_property(const struct device_node *node,
++				const char *name,
++				int *lenp)
++{
++	return NULL;
++}
++
+ #endif /* CONFIG_OF */
+ 
+ static inline int of_property_read_u32(const struct device_node *np,
+-- 
+1.7.0.4
