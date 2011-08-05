@@ -1,40 +1,55 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dt: add empty of_get_property for non-dt
-Date: Fri,  5 Aug 2011 16:50:30 -0600
-Message-ID: <1312584630-23371-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Fri, 5 Aug 2011 23:58:45 +0100
+Message-ID: <20110805225845.GC6404@ponder.secretlab.ca>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<20110725204630.GD26735@ponder.secretlab.ca>
+	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The patch adds empty function of_get_property for non-dt build, so that
-drivers migrating to dt can save some '#ifdef CONFIG_OF'.
+On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
+> Hi Grant, Shawn,
+> =
 
-This also fixes the current Tegra compile problem in linux-next.
+> =
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- include/linux/of.h |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
+> =
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 0085bb0..9180dc5 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -256,6 +256,13 @@ static inline int of_property_read_string(struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline const void *of_get_property(const struct device_node *node,
-+				const char *name,
-+				int *lenp)
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_OF */
- 
- static inline int of_property_read_u32(const struct device_node *np,
--- 
-1.7.0.4
+> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely@secretlab.ca>=
+ wrote:
+> > This could get really verbose in a really big hurry. =A0Fortunately the
+> > dtb format is sophisticated enough to only store each unique property
+> > name once, so the data shouldn't be huge, but it is still going to
+> > make for huge source files. =A0Can you think of a more concise
+> > representation?
+> =
+
+> Yes: no representation at all. The correct place for IOMUX setup being
+> done is *inside the boot firmware as soon as physically possible* and
+> not seconds into boot after U-Boot has made a console, done a boot
+> timeout, loaded scripts, kernels and ramdisks from media and then
+> uncompressed and entered a Linux kernel.
+
+We've had this argument before.  There are many use cases where the
+firmware simply cannot be relied upon to do the right thing.
+
+g.
