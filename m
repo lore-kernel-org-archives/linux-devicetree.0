@@ -1,36 +1,56 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] of/address: Add of_iomap_nocache
-Date: Thu, 04 Aug 2011 16:08:01 -0700 (PDT)
-Message-ID: <20110804.160801.410790028578990791.davem@davemloft.net>
-References: <1312451629-28036-1-git-send-email-davidb@codeaurora.org>
-	<20110804.031254.836213129500890372.davem@davemloft.net>
-	<4E3AC05A.1070208@gmail.com>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
+	tree
+Date: Fri, 5 Aug 2011 00:07:29 -0700
+Message-ID: <20110805070729.GA26563@huya.qualcomm.com>
+References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
+	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
+	<20110725204630.GD26735@ponder.secretlab.ca>
+	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <4E3AC05A.1070208@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: robherring2@gmail.com
-Cc: davidb@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robherring2@gmail.com>
-Date: Thu, 04 Aug 2011 10:52:58 -0500
+On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
+> Hi Grant, Shawn,
+> =
 
-> On 08/04/2011 05:12 AM, David Miller wrote:
->> From: David Brown <davidb@codeaurora.org>
->> Date: Thu,  4 Aug 2011 02:53:49 -0700
->> 
->>> Add uncached mappings from devicetree nodes similar to regular io
->>> mappings.
->>>
->>> Signed-off-by: David Brown <davidb@codeaurora.org>
->> 
->> You'll need to add a sparc implementation.
-> 
-> Sparc just defines ioremap_nocache to ioremap, so is that really needed?
+> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
+> > This could get really verbose in a really big hurry. =A0Fortunately the
+> > dtb format is sophisticated enough to only store each unique property
+> > name once, so the data shouldn't be huge, but it is still going to
+> > make for huge source files. =A0Can you think of a more concise
+> > representation?
+> =
 
-Yes because if someone uses this of_iomap_nocache() in a driver the
-sparc build is going to fail, we need as least the define to make
-it equal to of_iomap() as David did in his follow-on patch.
+> Yes: no representation at all. The correct place for IOMUX setup being
+> done is *inside the boot firmware as soon as physically possible* and
+> not seconds into boot after U-Boot has made a console, done a boot
+> timeout, loaded scripts, kernels and ramdisks from media and then
+> uncompressed and entered a Linux kernel.
+
+This is true in situations where we have control over the bootloader,
+but that isn't always the case.
+
+David
+
+-- =
+
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
