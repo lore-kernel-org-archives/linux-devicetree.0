@@ -1,116 +1,193 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 1/2] AT91: dt: at91sam9g45 family and board device
-	tree files
-Date: Sat, 6 Aug 2011 21:44:33 -0600
-Message-ID: <20110807034433.GB7667@ponder.secretlab.ca>
-References: <1312561493-7849-1-git-send-email-nicolas.ferre@atmel.com>
-	<56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: at_hdmac: add device tree probe
+Date: Sat, 6 Aug 2011 22:09:33 -0600
+Message-ID: <20110807040932.GF7667@ponder.secretlab.ca>
+References: <1312549120-22266-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1312549120-22266-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2011 at 05:24:52PM +0100, Nicolas Ferre wrote:
-> Create a new device tree source file for Atmel at91sam9g45 SoC family.
-> The Evaluation Kit at91sam9m10g45ek includes it.
-> This first basic support will be populated as drivers and boards will be
-> converted to device tree.
+On Fri, Aug 05, 2011 at 01:58:40PM +0100, Nicolas Ferre wrote:
+> Add device tree probe support for atmel at_hdmac DMA driver.
+> Bindings are added to specify the number of channels that the implementation of
+> the controller actually has. They also allow to tell if the peripherals/DMA
+> transfer is supported by the IP.
 > 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/at91sam9g45.dtsi     |   27 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/at91sam9m10g45ek.dts |   15 +++++++++++++++
->  2 files changed, 42 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/at91sam9g45.dtsi
->  create mode 100644 arch/arm/boot/dts/at91sam9m10g45ek.dts
+>  .../devicetree/bindings/dma/atmel-hdmac.txt        |   23 +++++++++
+>  drivers/dma/at_hdmac.c                             |   51 ++++++++++++++++----
+>  2 files changed, 65 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-hdmac.txt
 > 
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> diff --git a/Documentation/devicetree/bindings/dma/atmel-hdmac.txt b/Documentation/devicetree/bindings/dma/atmel-hdmac.txt
 > new file mode 100644
-> index 0000000..3d85f96
+> index 0000000..0e48553
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -0,0 +1,27 @@
-> +/include/ "skeleton.dtsi"
+> +++ b/Documentation/devicetree/bindings/dma/atmel-hdmac.txt
+> @@ -0,0 +1,23 @@
+> +* Atmel Direct Memory Access Controller
 > +
-> +/ {
-> +	model = "Atmel AT91SAM9G45 family SoC";
-> +	compatible = "atmel,at91sam9g45", "atmel,at91sam9m10", "atmel,at91sam9g46", "atmel,at91sam9m11";
-
-You'll need documentation for these new compatible values in
-Documentation/devicetree/bindings.
-
-> +	interrupt-parent = <&aic>;
+> +Required properties:
+> +- compatible: Should be "atmel,<chip>-hdmac"
+> +- reg: Should contain DMA registers location and length
+> +- interrupts: Should contain DMA interrupt
+> +- atmel,hdmac-nr-channels: Should contain number of channels
+> +  available in the controller
 > +
-> +	memory {
-> +		reg = <0x70000000 0x10000000>;
-> +	};
+> +Optional properties:
+> +- atmel,hdmac-cap-memcpy: Chip can do memory to memory transfers
+> +- atmel,hdmac-cap-slave: Chip can do peripherals/memory transfers
+
+Heh, ignore my comments on the other patch about missing documentation
+for the dma engine.  :-)
+
+Otherwise the patch looks pretty good.  I suspect there is a thing or
+two that won't compile correctly when !CONFIG_OF, but I haven't
+checked closely.  Just make sure !CONFIG_OF is tested.  :-)
+
+g.
+
+
 > +
-> +	aic: interrupt-controller@fffff000 {
-> +		#interrupt-cells = <1>;
-> +		compatible = "atmel,aic";
-
-'atmel,aic' is pretty generic and it assumes that the interrupt
-controller doesn't change between SoC versions.  Either specify the
-SoC name in the compatible property, or if it is well documented, the
-name + version of the IP block.
-
-> +		interrupt-controller;
-> +		reg = <0xfffff000 0x200>;
-> +	};
+> +Examples:
 > +
-> +	dma@ffffec00 {
-> +		compatible = "atmel,at91sam9g45-hdmac";
-> +		reg = <0xffffec00 0x200>;
-> +		interrupts = <21>;
-> +		atmel,hdmac-nr-channels = <8>;
-> +		atmel,hdmac-cap-memcpy;
-> +		atmel,hdmac-cap-slave;
-
-You can probably drop the "hdmac-" bit here, but that's just
-nitpicking.  Regardless, make sure you document the properties.
-
-> +	};
+> +dma@ffffec00 {
+> +	compatible = "atmel,at91sam9g45-hdmac";
+> +	reg = <0xffffec00 0x200>;
+> +	interrupts = <21>;
+> +	atmel,hdmac-nr-channels = <8>;
+> +	atmel,hdmac-cap-memcpy;
+> +	atmel,hdmac-cap-slave;
 > +};
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> new file mode 100644
-> index 0000000..48252c9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -0,0 +1,15 @@
-> +/dts-v1/;
-> +/include/ "at91sam9g45.dtsi"
-> +
-> +/ {
-> +	model = "Atmel AT91SAM9M10G45-EK";
-> +	compatible = "atmel,at91sam9m10g45ek", "atmel,at91sam9g45ekes", "atmel,at91sam9m10ekes", "atmel,at91sam9g45", "atmel,at91sam9m10", "atmel,at91sam9g46", "atmel,at91sam9m11", "atmel,at91";
-
-This list has gotten rather long.  What do all these values mean?
-Also, "atmel,at91" looks rather too generic and is probably not the
-right thing to do.
-
-> +
-> +	chosen {
-> +		bootargs = "mem=64M console=ttyS0,115200 mtdparts=atmel_nand:4M(bootstrap/uboot/kernel)ro,60M(rootfs),-(data) root=/dev/mtdblock1 rw rootfstype=jffs2";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x70000000 0x4000000>;
-> +	};
+> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> index 8f1d2ee..4a0cefe 100644
+> --- a/drivers/dma/at_hdmac.c
+> +++ b/drivers/dma/at_hdmac.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include "at_hdmac_regs.h"
+>  
+> @@ -1167,6 +1169,18 @@ static void atc_free_chan_resources(struct dma_chan *chan)
+>  
+>  /*--  Module Management  -----------------------------------------------*/
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id atmel_dma_dt_ids[] = {
+> +	{ .compatible = "atmel,at91sam9rl-hdmac" },
+> +	{ .compatible = "atmel,at91sam9g45-hdmac" },
+> +	{ /* sentinel */ }
 > +};
+> +
+> +MODULE_DEVICE_TABLE(of, atmel_dma_dt_ids);
+> +#else
+> +#define atmel_dma_dt_ids NULL
+> +#endif
+> +
+>  /**
+>   * at_dma_off - disable DMA controller
+>   * @atdma: the Atmel HDAMC device
+> @@ -1185,17 +1199,36 @@ static void at_dma_off(struct at_dma *atdma)
+>  
+>  static int __init at_dma_probe(struct platform_device *pdev)
+>  {
+> -	struct at_dma_platform_data *pdata;
+> +	const struct of_device_id *of_id =
+> +			of_match_device(atmel_dma_dt_ids, &pdev->dev);
+> +	struct device_node	*np = pdev->dev.of_node;
+> +	struct at_dma_platform_data *pdata = pdev->dev.platform_data;
+>  	struct resource		*io;
+>  	struct at_dma		*atdma;
+>  	size_t			size;
+>  	int			irq;
+>  	int			err;
+>  	int			i;
+> +	u32			nr_channels;
+> +	dma_cap_mask_t		cap_mask = {};
+> +
+> +	/* get DMA Controller parameters */
+> +	if (of_id) {
+> +		if (of_property_read_u32(np, "atmel,hdmac-nr-channels",
+> +					&nr_channels))
+> +			return -EINVAL;
+> +		if (of_find_property(np, "atmel,hdmac-cap-memcpy", NULL))
+> +			dma_cap_set(DMA_MEMCPY, cap_mask);
+> +		if (of_find_property(np, "atmel,hdmac-cap-slave", NULL))
+> +			dma_cap_set(DMA_SLAVE, cap_mask);
+> +	} else if (pdata) {
+> +		nr_channels = pdata->nr_channels;
+> +		cap_mask = pdata->cap_mask;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+>  
+> -	/* get DMA Controller parameters from platform */
+> -	pdata = pdev->dev.platform_data;
+> -	if (!pdata || pdata->nr_channels > AT_DMA_MAX_NR_CHANNELS)
+> +	if (!nr_channels || nr_channels > AT_DMA_MAX_NR_CHANNELS)
+>  		return -EINVAL;
+>  
+>  	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -1207,14 +1240,13 @@ static int __init at_dma_probe(struct platform_device *pdev)
+>  		return irq;
+>  
+>  	size = sizeof(struct at_dma);
+> -	size += pdata->nr_channels * sizeof(struct at_dma_chan);
+> +	size += nr_channels * sizeof(struct at_dma_chan);
+>  	atdma = kzalloc(size, GFP_KERNEL);
+>  	if (!atdma)
+>  		return -ENOMEM;
+>  
+> -	/* discover transaction capabilites from the platform data */
+> -	atdma->dma_common.cap_mask = pdata->cap_mask;
+> -	atdma->all_chan_mask = (1 << pdata->nr_channels) - 1;
+> +	atdma->dma_common.cap_mask = cap_mask;
+> +	atdma->all_chan_mask = (1 << nr_channels) - 1;
+>  
+>  	size = io->end - io->start + 1;
+>  	if (!request_mem_region(io->start, size, pdev->dev.driver->name)) {
+> @@ -1260,7 +1292,7 @@ static int __init at_dma_probe(struct platform_device *pdev)
+>  
+>  	/* initialize channels related values */
+>  	INIT_LIST_HEAD(&atdma->dma_common.channels);
+> -	for (i = 0; i < pdata->nr_channels; i++, atdma->dma_common.chancnt++) {
+> +	for (i = 0; i < nr_channels; i++, atdma->dma_common.chancnt++) {
+>  		struct at_dma_chan	*atchan = &atdma->chan[i];
+>  
+>  		atchan->chan_common.device = &atdma->dma_common;
+> @@ -1406,6 +1438,7 @@ static struct platform_driver at_dma_driver = {
+>  	.driver = {
+>  		.name	= "at_hdmac",
+>  		.pm	= &at_dma_dev_pm_ops,
+> +		.of_match_table	= atmel_dma_dt_ids,
+>  	},
+>  };
+>  
 > -- 
 > 1.7.4.1
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
