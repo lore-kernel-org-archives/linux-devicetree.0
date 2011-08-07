@@ -1,20 +1,16 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Sat, 6 Aug 2011 18:41:48 +0100
-Message-ID: <20110806174148.GA31966@ponder.secretlab.ca>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
-	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-	<20110805070729.GA26563@huya.qualcomm.com>
-	<CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] AT91: dt: at91sam9g45 family and board device
+	tree files
+Date: Sat, 6 Aug 2011 21:44:33 -0600
+Message-ID: <20110807034433.GB7667@ponder.secretlab.ca>
+References: <1312561493-7849-1-git-send-email-nicolas.ferre@atmel.com>
+	<56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A@mail.gmail.com>
+In-Reply-To: <56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,56 +20,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Sealey <matt@genesi-usa.com>
-Cc: David Brown <davidb@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2011 at 01:36:56PM -0500, Matt Sealey wrote:
-> On Fri, Aug 5, 2011 at 2:07 AM, David Brown <davidb@codeaurora.org> wrote:
-> > On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
-> >> Hi Grant, Shawn,
-> >>
-> >> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely@secretlab.=
-ca> wrote:
-> >> > This could get really verbose in a really big hurry. =A0Fortunately =
-the
-> >> > dtb format is sophisticated enough to only store each unique property
-> >> > name once, so the data shouldn't be huge, but it is still going to
-> >> > make for huge source files. =A0Can you think of a more concise
-> >> > representation?
-> >>
-> >> Yes: no representation at all. The correct place for IOMUX setup being
-> >> done is *inside the boot firmware as soon as physically possible* and
-> >> not seconds into boot after U-Boot has made a console, done a boot
-> >> timeout, loaded scripts, kernels and ramdisks from media and then
-> >> uncompressed and entered a Linux kernel.
-> >
-> > This is true in situations where we have control over the bootloader,
-> > but that isn't always the case.
-> =
+On Fri, Aug 05, 2011 at 05:24:52PM +0100, Nicolas Ferre wrote:
+> Create a new device tree source file for Atmel at91sam9g45 SoC family.
+> The Evaluation Kit at91sam9m10g45ek includes it.
+> This first basic support will be populated as drivers and boards will be
+> converted to device tree.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+>  arch/arm/boot/dts/at91sam9g45.dtsi     |   27 +++++++++++++++++++++++++++
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts |   15 +++++++++++++++
+>  2 files changed, 42 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/at91sam9g45.dtsi
+>  create mode 100644 arch/arm/boot/dts/at91sam9m10g45ek.dts
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> new file mode 100644
+> index 0000000..3d85f96
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -0,0 +1,27 @@
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	model = "Atmel AT91SAM9G45 family SoC";
+> +	compatible = "atmel,at91sam9g45", "atmel,at91sam9m10", "atmel,at91sam9g46", "atmel,at91sam9m11";
 
-> Indeed it is not, but then it is "their" fault the board won't boot
-> Linux, and not yours, right? :)
-> =
+You'll need documentation for these new compatible values in
+Documentation/devicetree/bindings.
 
-> I think it is a given that when designing hardware (and we do that)
-> and proprietary firmware that the Linux kernel guys can't "control",
-> you have to keep up with the changes when reasonable. While sometimes
-> that is very difficult, this is not one of those "sometimes" -
-> providing a setup that can boot Linux implies that you configured the
-> chip correctly such that Linux is supplementing that configuration,
-> not reimplementing it from scratch.
+> +	interrupt-parent = <&aic>;
+> +
+> +	memory {
+> +		reg = <0x70000000 0x10000000>;
+> +	};
+> +
+> +	aic: interrupt-controller@fffff000 {
+> +		#interrupt-cells = <1>;
+> +		compatible = "atmel,aic";
 
-This whole argument is ridiculous.  Assume for a moment that I agree
-and that the firmware (in the embedded context) can be relied upon to
-leave the hardware in a sane state.  Even then, an initialization
-sequence binding is completely appropriate.  Hardware not required to
-boot doesn't need to be initialized, and there are some real reasons
-(power consumption for instance) for leaving some pin io left
-unconfigured.
+'atmel,aic' is pretty generic and it assumes that the interrupt
+controller doesn't change between SoC versions.  Either specify the
+SoC name in the compatible property, or if it is well documented, the
+name + version of the IP block.
 
-Besides, trusting a pin mux init sequence passed in the device tree
-inherently means you're trusting firmware has passed accurate data
-*and* that the initial state is also sane.
+> +		interrupt-controller;
+> +		reg = <0xfffff000 0x200>;
+> +	};
+> +
+> +	dma@ffffec00 {
+> +		compatible = "atmel,at91sam9g45-hdmac";
+> +		reg = <0xffffec00 0x200>;
+> +		interrupts = <21>;
+> +		atmel,hdmac-nr-channels = <8>;
+> +		atmel,hdmac-cap-memcpy;
+> +		atmel,hdmac-cap-slave;
 
-g.
+You can probably drop the "hdmac-" bit here, but that's just
+nitpicking.  Regardless, make sure you document the properties.
+
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> new file mode 100644
+> index 0000000..48252c9
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> @@ -0,0 +1,15 @@
+> +/dts-v1/;
+> +/include/ "at91sam9g45.dtsi"
+> +
+> +/ {
+> +	model = "Atmel AT91SAM9M10G45-EK";
+> +	compatible = "atmel,at91sam9m10g45ek", "atmel,at91sam9g45ekes", "atmel,at91sam9m10ekes", "atmel,at91sam9g45", "atmel,at91sam9m10", "atmel,at91sam9g46", "atmel,at91sam9m11", "atmel,at91";
+
+This list has gotten rather long.  What do all these values mean?
+Also, "atmel,at91" looks rather too generic and is probably not the
+right thing to do.
+
+> +
+> +	chosen {
+> +		bootargs = "mem=64M console=ttyS0,115200 mtdparts=atmel_nand:4M(bootstrap/uboot/kernel)ro,60M(rootfs),-(data) root=/dev/mtdblock1 rw rootfstype=jffs2";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x70000000 0x4000000>;
+> +	};
+> +};
+> -- 
+> 1.7.4.1
+> 
