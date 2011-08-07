@@ -1,59 +1,57 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from device
-	tree
-Date: Sun, 7 Aug 2011 13:15:33 +0200
-Message-ID: <20110807111533.GK31404@pengutronix.de>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
-	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: add empty of_get_property for non-dt
+Date: Sun, 07 Aug 2011 09:37:52 -0500
+Message-ID: <4E3EA340.2010100@gmail.com>
+References: <1312584630-23371-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Sealey <matt@genesi-usa.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1312584630-23371-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
+On 08/05/2011 05:50 PM, Stephen Warren wrote:
+> The patch adds empty function of_get_property for non-dt build, so that
+> drivers migrating to dt can save some '#ifdef CONFIG_OF'.
 > 
-> If you think the solution is not so great due to the complexity of
-> describing the IOMUX settings, including the pad definitions as binary
-> blobs or so such that Linux can read them out, please feel free to
-> take the hint and go nag the U-Boot developers at Linaro to go put
-> this in the right place - in U-Boot. The device tree is absolutely not
-> the place to define pin multiplexing settings for later parsing and
-> configuration by the Kernel. They should have been set up correctly
-> already, and they should not be being *changed* based on an arbitrary
-> configuration file. Consider that the i2c pin definitions you used in
-> your example *absolutely will not change* for the lifetime of the
-> board, and in most cases, will have been set up by U-Boot anyway.
-> There is no point telling Linux to copy in identical settings again.
-> What's missing from U-Boot and set up by Linux, should be moved out of
-> Linux back into U-Boot.
+> This also fixes the current Tegra compile problem in linux-next.
+> 
+You could just use of_property_read_u32 in the driver. It already has
+empty version and will simplify the driver code some.
 
-System on module vendors have quite a different point of view here.
-On these systems the functionality of a pin differs depending on the
-baseboard they are attached to. Still you want to be able to use the
-same bootloader for all usecases. Putting the pinmux into the bootloader
-would mean that each user of these systems has to flash and maintain
-a custom bootloader.
+Rob
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  include/linux/of.h |    7 +++++++
+>  1 files changed, 7 insertions(+), 0 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 0085bb0..9180dc5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -256,6 +256,13 @@ static inline int of_property_read_string(struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline const void *of_get_property(const struct device_node *node,
+> +				const char *name,
+> +				int *lenp)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #endif /* CONFIG_OF */
+>  
+>  static inline int of_property_read_u32(const struct device_node *np,
