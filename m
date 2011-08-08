@@ -1,217 +1,124 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: [PATCH v2] USB: isp1362: Add devicetree support
-Date: Mon,  8 Aug 2011 10:34:09 +0200
-Message-ID: <1312792449-8491-1-git-send-email-tklauser@distanz.ch>
-References: <1312292961-18309-1-git-send-email-tklauser@distanz.ch>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1312292961-18309-1-git-send-email-tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: Add device tree binding for WM8753
+Date: Mon, 8 Aug 2011 16:38:41 +0800
+Message-ID: <CAGsJ_4y2tDb3ZBPo8bCtrjFt0OWzR8WeG+kL_RKJPRP7-pZopw@mail.gmail.com>
+References: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, dmitry.torokhov@gmail.com
+Cc: Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Acked-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
----
+2011/8/8 Mark Brown <broonie@opensource.wolfsonmicro.com>:
+> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 
-Changes in v2:
- - Use sizeof(*pdata) to determine kzalloc size in isp1362_probe as Mike
-   suggested.
+Without this patch, DT can still connect driver with device by the
+heuristic way(of_modalias_node).
 
- .../devicetree/bindings/usb/isp1362-hcd.txt        |   23 +++++
- drivers/usb/host/isp1362-hcd.c                     |   93 +++++++++++++++++++-
- 2 files changed, 113 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/isp1362-hcd.txt
+i have a patch just like yours in input subsystem "[PATCH v2] input:
+touchscreen: add OF match table for ads7846" with "Acked-by: Grant
+Likely", but Dmitry seems to just ignore it.
 
-diff --git a/Documentation/devicetree/bindings/usb/isp1362-hcd.txt b/Documentation/devicetree/bindings/usb/isp1362-hcd.txt
-new file mode 100644
-index 0000000..9641a82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/isp1362-hcd.txt
-@@ -0,0 +1,23 @@
-+NXP ISP1362 USB host controller
-+
-+Required properties :
-+ - compatible : should be "nxp,usb-isp1362"
-+ - reg : offset and length of the register set for the device
-+ - interrupts : interrupt number
-+
-+Optional properties :
-+ - nxp,sel15Kres: boolean; Enable internal pulldown resistors on downstream
-+   ports.
-+ - nxp,clknotstop: boolean; Clock cannot be stopped
-+ - nxp,oc_enable: boolean; Enable on-chip overcurrent protection
-+ - nxp,int_act_high: boolean; INT output polarity high
-+ - nxp,int_edge_triggered: boolean; INT edge triggered
-+ - nxp,dreq_act_high: boolean; DREQ output polarity high
-+ - nxp,dack_act_high: boolean; DACK input polarity high
-+ - nxp,remote_wakeup_connected: boolean; chip can be resumed via H_WAKEUP pin
-+ - nxp,no_power_switching: boolean; Switch or not to switch (keep always
-+   powered)
-+ - nxp,power_switching_mode: boolean; Ganged port power switching (0) or
-+   individual port power switching (1)
-+ - nxp,potpg: Power on to power good time (duration the host controller has to
-+   wait before accessing a power-on-port of the root hub) in units of 2 msecs.
-diff --git a/drivers/usb/host/isp1362-hcd.c b/drivers/usb/host/isp1362-hcd.c
-index 9c37dad..055e0a3 100644
---- a/drivers/usb/host/isp1362-hcd.c
-+++ b/drivers/usb/host/isp1362-hcd.c
-@@ -78,6 +78,7 @@
- #include <linux/usb/isp1362.h>
- #include <linux/usb/hcd.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/io.h>
- #include <linux/bitmap.h>
-@@ -2678,13 +2679,62 @@ static int __devexit isp1362_remove(struct platform_device *pdev)
- 	usb_put_hcd(hcd);
- 	DBG(0, "%s: Done\n", __func__);
- 
-+	/*
-+	 * If we had no platform_data, we allocated the board struct
-+	 * dynamically and filled it from device tree.
-+	 */
-+	if (!pdev->dev.platform_data)
-+		kfree(isp1362_hcd->board);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+
-+/*
-+ * Translate device tree nodes to platform data.
-+ */
-+static int isp1362_get_devtree_pdata(struct platform_device *pdev,
-+				     struct isp1362_platform_data *pdata)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	const __be32 *reg;
-+	int len;
-+
-+	if (!node)
-+		return -ENODEV;
-+
-+	pdata->sel15Kres = !!of_get_property(node, "nxp,sel15Kres", NULL);
-+	pdata->clknotstop = !!of_get_property(node, "nxp,clknotstop", NULL);
-+	pdata->oc_enable = !!of_get_property(node, "nxp,oc_enable", NULL);
-+	pdata->int_act_high = !!of_get_property(node, "nxp,int_act_high", NULL);
-+	pdata->int_edge_triggered =
-+		!!of_get_property(node, "nxp,int_edge_triggered", NULL);
-+	pdata->remote_wakeup_connected =
-+		!!of_get_property(node, "nxp,remote_wakeup_connected", NULL);
-+	pdata->no_power_switching =
-+		!!of_get_property(node, "nxp,no_power_switching", NULL);
-+	pdata->power_switching_mode =
-+		!!of_get_property(node, "nxp,power_switching_mode", NULL);
-+	reg = of_get_property(node, "nxp,potpg", &len);
-+	if (reg && len == sizeof(__be32))
-+		pdata->potpg = be32_to_cpup(reg);
-+
- 	return 0;
- }
-+#else
-+static int isp1362_get_devtree_pdata(struct platform_device *pdev,
-+				     struct isp1362_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_OF */
- 
- static int __devinit isp1362_probe(struct platform_device *pdev)
- {
- 	struct usb_hcd *hcd;
- 	struct isp1362_hcd *isp1362_hcd;
-+	struct isp1362_platform_data *pdata;
- 	struct resource *addr, *data;
- 	void __iomem *addr_reg;
- 	void __iomem *data_reg;
-@@ -2755,12 +2805,31 @@ static int __devinit isp1362_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&isp1362_hcd->periodic);
- 	INIT_LIST_HEAD(&isp1362_hcd->isoc);
- 	INIT_LIST_HEAD(&isp1362_hcd->remove_list);
--	isp1362_hcd->board = pdev->dev.platform_data;
-+
-+	pdata = pdev->dev.platform_data;
-+
-+	/* If no platform data is available, try to get it from device tree */
-+	if (!pdata) {
-+		pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			retval = -ENOMEM;
-+			goto err6;
-+		}
-+
-+		retval = isp1362_get_devtree_pdata(pdev, pdata);
-+		if (retval) {
-+			kfree(pdata);
-+			goto err6;
-+		}
-+	}
-+
-+	isp1362_hcd->board = pdata;
-+
- #if USE_PLATFORM_DELAY
- 	if (!isp1362_hcd->board->delay) {
- 		dev_err(hcd->self.controller, "No platform delay function given\n");
- 		retval = -ENODEV;
--		goto err6;
-+		goto err7;
- 	}
- #endif
- 
-@@ -2775,13 +2844,20 @@ static int __devinit isp1362_probe(struct platform_device *pdev)
- 
- 	retval = usb_add_hcd(hcd, irq, irq_flags | IRQF_DISABLED | IRQF_SHARED);
- 	if (retval != 0)
--		goto err6;
-+		goto err7;
- 	pr_info("%s, irq %d\n", hcd->product_desc, irq);
- 
- 	create_debug_file(isp1362_hcd);
- 
- 	return 0;
- 
-+err7:
-+	/*
-+	 * If we have no platform_data, we allocated the board struct
-+	 * dynamically.
-+	 */
-+	if (!pdev->dev.platform_data)
-+		kfree(isp1362_hcd->board);
-  err6:
- 	DBG(0, "%s: Freeing dev %p\n", __func__, isp1362_hcd);
- 	usb_put_hcd(hcd);
-@@ -2852,6 +2928,16 @@ static int isp1362_resume(struct platform_device *pdev)
- #define	isp1362_resume	NULL
- #endif
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id isp1362_match[] = {
-+	{ .compatible = "nxp,usb-isp1362", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, isp1362_match);
-+#else
-+#define isp1362_match NULL
-+#endif /* CONFIG_OF */
-+
- static struct platform_driver isp1362_driver = {
- 	.probe = isp1362_probe,
- 	.remove = __devexit_p(isp1362_remove),
-@@ -2861,6 +2947,7 @@ static struct platform_driver isp1362_driver = {
- 	.driver = {
- 		.name = (char *)hcd_name,
- 		.owner = THIS_MODULE,
-+		.of_match_table = isp1362_match,
- 	},
- };
- 
--- 
-1.7.5.4
+so not sure whether this kind of new added match tables are totally
+liked by people or not.
 
+> ---
+> =C2=A0Documentation/devicetree/bindings/sound/wm8753.txt | =C2=A0 18 =
+++++++++++++++++++
+> =C2=A0sound/soc/codecs/wm8753.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| =C2=A0 =C2=A09 ++=
++++++++
+> =C2=A02 files changed, 27 insertions(+), 0 deletions(-)
+> =C2=A0create mode 100644 Documentation/devicetree/bindings/sound/wm87=
+53.txt
+>
+> diff --git a/Documentation/devicetree/bindings/sound/wm8753.txt b/Doc=
+umentation/devicetree/bindings/sound/wm8753.txt
+> new file mode 100644
+> index 0000000..e65277a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/wm8753.txt
+> @@ -0,0 +1,18 @@
+> +WM8753 audio CODEC
+> +
+> +This device supports both I2C and SPI (configured with pin strapping
+> +on the board).
+> +
+> +Required properties:
+> +
+> + =C2=A0- compatible : "wlf,wm8753"
+> +
+> + =C2=A0- reg : the I2C address of the device for I2C, the chip selec=
+t
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0number for SPI.
+> +
+> +Example:
+> +
+> +codec: wm8737@1a {
+> + =C2=A0 =C2=A0 =C2=A0 compatible =3D "wlf,wm8753";
+> + =C2=A0 =C2=A0 =C2=A0 reg =3D <0x1a>;
+> +};
+> diff --git a/sound/soc/codecs/wm8753.c b/sound/soc/codecs/wm8753.c
+> index a702550..fe04a10 100644
+> --- a/sound/soc/codecs/wm8753.c
+> +++ b/sound/soc/codecs/wm8753.c
+> @@ -38,6 +38,7 @@
+> =C2=A0#include <linux/delay.h>
+> =C2=A0#include <linux/pm.h>
+> =C2=A0#include <linux/i2c.h>
+> +#include <linux/of_device.h>
+> =C2=A0#include <linux/platform_device.h>
+> =C2=A0#include <linux/spi/spi.h>
+> =C2=A0#include <linux/slab.h>
+> @@ -1490,6 +1491,12 @@ static struct snd_soc_codec_driver soc_codec_d=
+ev_wm8753 =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.reg_cache_default =3D wm8753_reg,
+> =C2=A0};
+>
+> +static const struct of_device_id wm8753_of_match[] =3D {
+> + =C2=A0 =C2=A0 =C2=A0 { .compatible =3D "wlf,wm8753", },
+> + =C2=A0 =C2=A0 =C2=A0 { }
+> +};
+> +MODULE_DEVICE_TABLE(of, wm8753_of_match);
+> +
+> =C2=A0#if defined(CONFIG_SPI_MASTER)
+> =C2=A0static int __devinit wm8753_spi_probe(struct spi_device *spi)
+> =C2=A0{
+> @@ -1521,6 +1528,7 @@ static struct spi_driver wm8753_spi_driver =3D =
+{
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.driver =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name =C2=A0 =3D=
+ "wm8753",
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.owner =C2=A0=3D=
+ THIS_MODULE,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .of_match_table =3D=
+ wm8753_of_match,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0},
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.probe =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=
+ wm8753_spi_probe,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.remove =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D __=
+devexit_p(wm8753_spi_remove),
+> @@ -1565,6 +1573,7 @@ static struct i2c_driver wm8753_i2c_driver =3D =
+{
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.driver =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name =3D "wm8=
+753",
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.owner =3D THI=
+S_MODULE,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .of_match_table =3D=
+ wm8753_of_match,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0},
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.probe =3D =C2=A0 =C2=A0wm8753_i2c_probe,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.remove =3D =C2=A0 __devexit_p(wm8753_i2c_=
+remove),
+> --
+> 1.7.5.4
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
