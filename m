@@ -1,33 +1,76 @@
-From: Liam Girdwood <lrg@ti.com>
-Subject: Re: [PATCH] ASoC: Add device tree binding for WM8753
-Date: Mon, 8 Aug 2011 16:46:09 +0100
-Message-ID: <1312818369.3314.3.camel@CNA0741383>
-References: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+From: Nishanth Aravamudan <nacc@us.ibm.com>
+Subject: Re: [PATCH 6/9] arch/powerpc/platforms/pseries/iommu.c: add missing
+	kfree
+Date: Mon, 8 Aug 2011 10:47:10 -0700
+Message-ID: <20110808174710.GA3681@us.ibm.com>
+References: <1312802283-9107-6-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <1312802283-9107-6-git-send-email-julia@diku.dk>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Julia Lawall <julia@diku.dk>
+Cc: devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Paul Mackerras <paulus@samba.org>, Will Schmidt <will_schmidt@vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-08-08 at 06:37 +0200, Mark Brown wrote:
-> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/sound/wm8753.txt |   18 ++++++++++++++++++
->  sound/soc/codecs/wm8753.c                          |    9 +++++++++
->  2 files changed, 27 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/wm8753.txt
+On 08.08.2011 [13:18:00 +0200], Julia Lawall wrote:
+> From: Julia Lawall <julia@diku.dk>
 > 
+> At this point, window has not been stored anywhere, so it has to be freed
+> before leaving the function.
+> 
+> A simplified version of the semantic match that finds this problem is as
+> follows: (http://coccinelle.lip6.fr/)
+> 
+> // <smpl>
+> @exists@
+> local idexpression x;
+> statement S,S1;
+> expression E;
+> identifier fl;
+> expression *ptr != NULL;
+> @@
+> 
+> x = \(kmalloc\|kzalloc\|kcalloc\)(...);
+> ...
+> if (x == NULL) S
+> <... when != x
+>      when != if (...) { <+...kfree(x)...+> }
+>      when any
+>      when != true x == NULL
+> x->fl
+> ...>
+> (
+> if (x == NULL) S1
+> |
+> if (...) { ... when != x
+>                when forall
+> (
+>  return \(0\|<+...x...+>\|ptr\);
+> |
+> * return ...;
+> )
+> }
+> )
+> // </smpl>
+> 
+> Signed-off-by: Julia Lawall <julia@diku.dk>
 
-Acked-by: Liam Girdwood <lrg@ti.com>
+Acked-by: Nishanth Aravamudan <nacc@us.ibm.com>
+
+Thanks,
+Nish
+
+-- 
+Nishanth Aravamudan <nacc@us.ibm.com>
+IBM Linux Technology Center
