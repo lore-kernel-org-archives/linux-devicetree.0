@@ -1,58 +1,58 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [RFC PATCH 2/2] AT91: dt: simple device tree support for
-	at91sam9g45 family
-Date: Mon, 08 Aug 2011 20:59:27 +0100
-Message-ID: <4E40401F.4030309@atmel.com>
-References: <56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
-	<bdd7c02a561bc0655e9dfd4586f42774f2347ca1.1312560476.git.nicolas.ferre@atmel.com>
-	<20110807035751.GC7667@ponder.secretlab.ca>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Tegra pinmux Device Tree support
+Date: Mon, 8 Aug 2011 14:42:56 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF049F17229E@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110807035751.GC7667@ponder.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Linus Walleij (linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org)" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/07/2011 04:57 AM, Grant Likely wrote:
-> On Fri, Aug 05, 2011 at 05:24:53PM +0100, Nicolas Ferre wrote:
->> Add basic device tree support for at91sam9g45 SoC family and the
->> at91sam9m10g45ek board.
->> DT is been used to describe the at91sam9g45 SoC memory and AIC. It also
->> adds the dmaengine driver.
->>
->> Signed-off-by: Nicolas Ferre<nicolas.ferre@atmel.com>
->
-> Hi Nicolas,
->
-> Looks like a great start.  I was glad we could work on this last week.
+Grant, Linus, & all,
 
-Yes, that was enriching.
+I was thinking of adding some Device Tree support to Tegra's existing
+pinmux driver. This would remove the dependence of mach-tegra/board-dt.c
+on board-{harmony,seaboard}-pinmux.c, and make the DT board stand on its
+own.
 
-> Some comments below.
+My thoughts were:
 
-I will have to rework this series for sure but I have limited access to 
-my git tree/emails this week... I plan to come back to this next week.
+a) Every Tegra board currently has a board-$name-pinmux.c which contains
+a table like:
 
->> ---
->>   arch/arm/mach-at91/Kconfig               |    8 ++++++
->>   arch/arm/mach-at91/Makefile.boot         |    2 +
->>   arch/arm/mach-at91/at91sam9g45_devices.c |    3 +-
->>   arch/arm/mach-at91/board-sam9m10g45ek.c  |   36 ++++++++++++++++++++++++++++++
->>   4 files changed, 48 insertions(+), 1 deletions(-)
+static struct tegra_pingroup_config harmony_pinmux[] = {
+	{TEGRA_PINGROUP_ATA,   TEGRA_MUX_IDE,           TEGRA_PUPD_NORMAL,    TEGRA_TRI_NORMAL},
 
-[..]
+I'd just move that table into the Device Tree, keeping logically the same
+structure, but just changing the syntax as appropriate for DT.
 
-Best regards,
+(I'm slightly worried that DT wants me to encode all that using an
+unformatted table consistent of integers without any pre-processor macros
+or named constants though...)
+
+b) I'd probably need to modify the pinmux driver to be a platform device
+in order to simplify integration with DT parsing etc.
+
+c) I think the DT binding would not be affected by Linus W's work on a
+pinctrl API; I see this table as platform data that sets up the initial
+state of the SoC at boot-time, whereas the pinmux driver is more about
+drivers dynamically altering the pinmux at run-time. Is this a reasonable
+assertion? The alternative would be that once the new pinctrl API is
+available, it would have an associated DT binding that represented this
+data in a completely cross-SoC manner. Hence, any work on Tegra's pinmux
+right now would be throwaway. I'm interested in people's thoughts here.
+
+Finally, I was thinking that a similar thing could be done for the Tegra
+GPIO driver, to replace gpio_table[] also in board-*-pinmux.c.
+
+If this isn't useful right now, is there anything else that would help
+out on Tegra?
+
+Thanks.
+
 -- 
-Nicolas Ferre
+nvpublic
