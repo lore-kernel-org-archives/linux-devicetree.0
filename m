@@ -1,69 +1,95 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm/mx5: parse iomuxc pad configuratoin from
-	device tree
-Date: Sun, 7 Aug 2011 17:23:49 +0100
-Message-ID: <20110807162348.GA2101@n2100.arm.linux.org.uk>
-References: <1311606467-28985-1-git-send-email-shawn.guo@linaro.org>
-	<1311606467-28985-2-git-send-email-shawn.guo@linaro.org>
-	<20110725204630.GD26735@ponder.secretlab.ca>
-	<CAKGA1bmbWUeyhUtDwHZjB8V4e2wJ0NHX2qWhqaqx6HoBm7uMnQ@mail.gmail.com>
-	<20110805070729.GA26563@huya.qualcomm.com>
-	<CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A@mail.gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: [PATCH] ASoC: Add device tree binding for WM8753
+Date: Mon,  8 Aug 2011 13:37:35 +0900
+Message-ID: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKGA1bkM6X533w20hDV7GCPwzzj2nrjGdN6zkXsS+hCvUD_s2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: alsa-devel@alsa-project.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2011 at 01:36:56PM -0500, Matt Sealey wrote:
-> On Fri, Aug 5, 2011 at 2:07 AM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> > On Thu, Aug 04, 2011 at 06:07:15PM -0500, Matt Sealey wrote:
-> >> Hi Grant, Shawn,
-> >>
-> >> On Mon, Jul 25, 2011 at 3:46 PM, Grant Likely <grant.likely@secretlab.=
-ca> wrote:
-> >> > This could get really verbose in a really big hurry. =A0Fortunately =
-the
-> >> > dtb format is sophisticated enough to only store each unique property
-> >> > name once, so the data shouldn't be huge, but it is still going to
-> >> > make for huge source files. =A0Can you think of a more concise
-> >> > representation?
-> >>
-> >> Yes: no representation at all. The correct place for IOMUX setup being
-> >> done is *inside the boot firmware as soon as physically possible* and
-> >> not seconds into boot after U-Boot has made a console, done a boot
-> >> timeout, loaded scripts, kernels and ramdisks from media and then
-> >> uncompressed and entered a Linux kernel.
-> >
-> > This is true in situations where we have control over the bootloader,
-> > but that isn't always the case.
-> =
+Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+---
+ Documentation/devicetree/bindings/sound/wm8753.txt |   18 ++++++++++++++++++
+ sound/soc/codecs/wm8753.c                          |    9 +++++++++
+ 2 files changed, 27 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/wm8753.txt
 
-> Indeed it is not, but then it is "their" fault the board won't boot
-> Linux, and not yours, right? :)
-
-Not normally.  What happens is that you're provided with the boot loader.
-You're told to get Linux working on the board.  Anything which the boot
-loader doesn't do ends up being hacked around in the kernel.
-
-Don't say that isn't what happens, because that comment is made with a
-substantial body experience in dealing with patches from multiple
-different sources containing crap to work around boot loader bugs.  Most
-boot loader bugs go _unfixed_ on hardware even after being reported.
-
-So please, don't tell us that boot loaders should do things right.  We
-know, and we know (again from a vast body of experience) that relying on
-boot loaders is plain idiotic and totally unworkable.
+diff --git a/Documentation/devicetree/bindings/sound/wm8753.txt b/Documentation/devicetree/bindings/sound/wm8753.txt
+new file mode 100644
+index 0000000..e65277a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/wm8753.txt
+@@ -0,0 +1,18 @@
++WM8753 audio CODEC
++
++This device supports both I2C and SPI (configured with pin strapping
++on the board).
++
++Required properties:
++
++  - compatible : "wlf,wm8753"
++
++  - reg : the I2C address of the device for I2C, the chip select
++          number for SPI.
++
++Example:
++
++codec: wm8737@1a {
++	compatible = "wlf,wm8753";
++	reg = <0x1a>;
++};
+diff --git a/sound/soc/codecs/wm8753.c b/sound/soc/codecs/wm8753.c
+index a702550..fe04a10 100644
+--- a/sound/soc/codecs/wm8753.c
++++ b/sound/soc/codecs/wm8753.c
+@@ -38,6 +38,7 @@
+ #include <linux/delay.h>
+ #include <linux/pm.h>
+ #include <linux/i2c.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
+ #include <linux/slab.h>
+@@ -1490,6 +1491,12 @@ static struct snd_soc_codec_driver soc_codec_dev_wm8753 = {
+ 	.reg_cache_default = wm8753_reg,
+ };
+ 
++static const struct of_device_id wm8753_of_match[] = {
++	{ .compatible = "wlf,wm8753", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wm8753_of_match);
++
+ #if defined(CONFIG_SPI_MASTER)
+ static int __devinit wm8753_spi_probe(struct spi_device *spi)
+ {
+@@ -1521,6 +1528,7 @@ static struct spi_driver wm8753_spi_driver = {
+ 	.driver = {
+ 		.name	= "wm8753",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = wm8753_of_match,
+ 	},
+ 	.probe		= wm8753_spi_probe,
+ 	.remove		= __devexit_p(wm8753_spi_remove),
+@@ -1565,6 +1573,7 @@ static struct i2c_driver wm8753_i2c_driver = {
+ 	.driver = {
+ 		.name = "wm8753",
+ 		.owner = THIS_MODULE,
++		.of_match_table = wm8753_of_match,
+ 	},
+ 	.probe =    wm8753_i2c_probe,
+ 	.remove =   __devexit_p(wm8753_i2c_remove),
+-- 
+1.7.5.4
