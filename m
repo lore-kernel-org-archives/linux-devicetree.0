@@ -1,45 +1,58 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] dt: add empty of_get_property for non-dt
-Date: Mon, 8 Aug 2011 12:26:04 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF049F172239@HQMAIL01.nvidia.com>
-References: <1312584630-23371-1-git-send-email-swarren@nvidia.com>
- <4E3EA340.2010100@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [RFC PATCH 2/2] AT91: dt: simple device tree support for
+	at91sam9g45 family
+Date: Mon, 08 Aug 2011 20:59:27 +0100
+Message-ID: <4E40401F.4030309@atmel.com>
+References: <56092075210001f40db485e0b126fe7c0c7b75ac.1312560476.git.nicolas.ferre@atmel.com>
+	<bdd7c02a561bc0655e9dfd4586f42774f2347ca1.1312560476.git.nicolas.ferre@atmel.com>
+	<20110807035751.GC7667@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4E3EA340.2010100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110807035751.GC7667@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote at Sunday, August 07, 2011 8:38 AM:
-> On 08/05/2011 05:50 PM, Stephen Warren wrote:
-> > The patch adds empty function of_get_property for non-dt build, so that
-> > drivers migrating to dt can save some '#ifdef CONFIG_OF'.
-> >
-> > This also fixes the current Tegra compile problem in linux-next.
+On 08/07/2011 04:57 AM, Grant Likely wrote:
+> On Fri, Aug 05, 2011 at 05:24:53PM +0100, Nicolas Ferre wrote:
+>> Add basic device tree support for at91sam9g45 SoC family and the
+>> at91sam9m10g45ek board.
+>> DT is been used to describe the at91sam9g45 SoC memory and AIC. It also
+>> adds the dmaengine driver.
+>>
+>> Signed-off-by: Nicolas Ferre<nicolas.ferre@atmel.com>
 >
-> You could just use of_property_read_u32 in the driver. It already has
-> empty version and will simplify the driver code some.
+> Hi Nicolas,
+>
+> Looks like a great start.  I was glad we could work on this last week.
 
-Yes, that would also work.
+Yes, that was enriching.
 
-Grant, Ben, do you have a preference for which option to choose?
+> Some comments below.
 
-Thanks.
+I will have to rework this series for sure but I have limited access to 
+my git tree/emails this week... I plan to come back to this next week.
 
-> > diff --git a/include/linux/of.h b/include/linux/of.h
-...
-> > +static inline const void *of_get_property(const struct device_node *node,
-> > +				const char *name,
-> > +				int *lenp)
-> > +{
-> > +	return NULL;
-> > +}
-> > +
+>> ---
+>>   arch/arm/mach-at91/Kconfig               |    8 ++++++
+>>   arch/arm/mach-at91/Makefile.boot         |    2 +
+>>   arch/arm/mach-at91/at91sam9g45_devices.c |    3 +-
+>>   arch/arm/mach-at91/board-sam9m10g45ek.c  |   36 ++++++++++++++++++++++++++++++
+>>   4 files changed, 48 insertions(+), 1 deletions(-)
 
+[..]
+
+Best regards,
 -- 
-nvpublic
+Nicolas Ferre
