@@ -1,126 +1,64 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH 5/5] [powerpc] Fix up fsl-flexcan device tree binding.
-Date: Tue, 09 Aug 2011 21:49:01 +0200
-Message-ID: <4E418F2D.4060504@grandegger.com>
-References: <1312901031-29887-1-git-send-email-holt@sgi.com>
-	<1312901031-29887-6-git-send-email-holt@sgi.com>
-	<4E4179CB.6030101@freescale.com> <20110809184524.GB4926@sgi.com>
-	<4E4186BD.5000602@freescale.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: How to handle named resources with DT?
+Date: Tue, 9 Aug 2011 20:51:14 +0100
+Message-ID: <20110809195114.GB14281@n2100.arm.linux.org.uk>
+References: <4E40FC88.5090403@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-In-Reply-To: <4E4186BD.5000602-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
-List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
-Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4E40FC88.5090403@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2011 09:13 PM, Scott Wood wrote:
-> On 08/09/2011 01:45 PM, Robin Holt wrote:
->> On Tue, Aug 09, 2011 at 01:17:47PM -0500, Scott Wood wrote:
->>> On 08/09/2011 09:43 AM, Robin Holt wrote:
->>>> In working with the socketcan developers, we have come to the conclusion
->>>> the fsl-flexcan device tree bindings need to be cleaned up. 
->>>> The driver does not depend upon any properties other than the required properties
->>>> so we are removing the file.
->>>
->>> That is not the criterion for whether something should be expresed in
->>> the device tree.  It's a description of the hardware, not a Linux driver
->>> configuration file.  If there are integration parameters that can not be
->>> inferred from "this is FSL flexcan v1.0", they should be expressed in
->>> the node.
->>
->> There are no properties other than the required properties.  The others
->> were wrongly introduced and are not needed by the driver.
-> 
-> Not needed by this driver, or will never be needed by any reasonable
-> driver (or is not a good description of the hardware)?
-> 
-> The device tree is not an internal Linux implementation detail.  It is
-> shared by other OSes, firmwares, hypervisors, etc.  Bindings should be
-> created with care, and kept stable unless there's a good reason to break
-> compatibility.
-> 
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org should be CCed on device tree
-> discussions.
+On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
+> Hi Grant,
+>
+> Trying to bind hwmod informations with DT, I'm facing a little limitation.
+> A bunch of drivers are using the platform_get_resource_byname, so the  
+> name for the resource is needed.
+>
+> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and  
+> IORESOURCE_DMA types of resources.
+>
+> Do you have any plan to add that, or do you have any clean way to avoid  
+> that without having to use the resource index?
 
-Yes. The doc for the bindings we speak about
+Named resources are evil.  You only have to look at /proc/iomem to see
+why that's the case.  Here's an example:
 
-http://lxr.linux.no/#linux+v3.0.1/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+b7a01000-b7a01003 : set
+  b7a01000-b7a01003 : set
+b7a01004-b7a01007 : dat
+  b7a01004-b7a01007 : dat
+b7a01008-b7a0100b : dirout
+  b7a01008-b7a0100b : dirout
+b7a01020-b7a01023 : set
+  b7a01020-b7a01023 : set
+b7a01024-b7a01027 : dat
+  b7a01024-b7a01027 : dat
+b7a01028-b7a0102b : dirout
+  b7a01028-b7a0102b : dirout
+b7a01040-b7a01043 : set
+  b7a01040-b7a01043 : set
+b7a01044-b7a01047 : dat
+  b7a01044-b7a01047 : dat
+b7a01048-b7a0104b : dirout
+  b7a01048-b7a0104b : dirout
+b7a01060-b7a01063 : set
+  b7a01060-b7a01063 : set
+b7a01064-b7a01067 : dat
+  b7a01064-b7a01067 : dat
+b7a01068-b7a0106b : dirout
+  b7a01068-b7a0106b : dirout
+b7a01080-b7a01083 : set
+  b7a01080-b7a01083 : set
+b7a01084-b7a01087 : dat
+  b7a01084-b7a01087 : dat
+b7a01088-b7a0108b : dirout
+  b7a01088-b7a0108b : dirout
 
-sneaked into the kernel without been presented on any mailing list and
-without the corresponding driver patch.
-
->> When we
->> removed the other properties and the wrong documentation of the mscan
->> oscillator source in the fsl-flexcan.txt file, we were left with an
->> Example: section and a one-line statement "The only properties supported
->> are the required properties."  That seemed like the fsl-flexcan.txt
->> file was then pointless.
-> 
-> There is the compatible string, and you could mention that there is a
-> single reg resource and a single interrupt.
-> 
->>> Removing the binding altogether seems extreme as well -- we should have
->>> bindings for all devices, even if there are no special properties.
->>
->> Ok.  I can do that too.  Who is the definitive source for that answer?
-> 
-> For policy questions on device tree bindings?  Grant Likely is the
-> maintainer for device tree stuff.
-> 
-> A lot of the simpler bindings have been left undocumented so far, IMHO
-> it should be a goal to document them all.  There are some existing ones
-> that are documented despite not having special properties, e.g.
-> Documentation/devicetree/bindings/serio/altera_ps2.txt,
-> Documentation/devicetree/bindings/arm/sirf.txt,
-> Documentation/devicetree/bindings/powerpc/nintendo/wii.txt, etc.
-> 
->> I assume we are talking about the fsl-flexcan.txt file when we say
->> binding.  Is that correct?
-> 
-> Yes, although devicetree.org is another possibility.
-> 
->>>> Additionally, the p1010*dts files are not
->>>> following the standard for node naming in that they have a trailing -v1.0.
->>>
->>> What "standard for node naming"?  There's nothing wrong with putting a
->>
->> For the answer to that, you will need to ask Wolfgang Grandegger.  I was
->> working from his feedback.  Looking at the plethora of other node names,
->> the vast majority do not have any -v#.#, and the ones that do also tend
->> to have multiple versions. Based upon that, I suspect he is correct,
->> but I do not know where the documentation is or if it even exists.
-> 
-> There's a lot of crap in old bindings, plus it's not appropriate for all
-> circumstances (specifying bindings should be done a little more
-> carefully than "what do most other bindings do?").  It's something we've
-> been doing lately for blocks that have a version number, but it's not
-> dynamically readable.
-> 
-> Looking in the FlexCAN chapter of the p1010 manual, I don't see any
-> reference to a block version, and I do see references to "previous
-> FlexCAN versions".  So I suggest "fsl,p1010-flexcan".
-
-OK, just
-
-  "fsl,p1010-flexcan"
-
-or
-
-  "fsl,p1010-flexcan", "fsl,flexcan"
-
-
-Note that the Flexcan is used on Freescale ARM cores as well (and device
-tree for ARM will show up soon).
-
-Wolfgang.
+How very informative.  Not.  So what device owns those?  Who knows,
+that's lost by the crappy named resource stuff.
