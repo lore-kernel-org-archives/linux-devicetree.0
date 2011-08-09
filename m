@@ -1,60 +1,68 @@
-From: Robin Holt <holt@sgi.com>
-Subject: Re: [PATCH 5/5] [powerpc] Fix up fsl-flexcan device tree binding.
-Date: Tue, 9 Aug 2011 15:59:00 -0500
-Message-ID: <20110809205900.GC4926@sgi.com>
-References: <1312901031-29887-1-git-send-email-holt@sgi.com>
- <1312901031-29887-6-git-send-email-holt@sgi.com>
- <4E4179CB.6030101@freescale.com>
- <20110809184524.GB4926@sgi.com>
- <4E4186BD.5000602@freescale.com>
- <4E418F2D.4060504@grandegger.com>
- <4E419180.3090507@freescale.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: How to handle named resources with DT?
+Date: Tue, 9 Aug 2011 22:59:07 +0200
+Message-ID: <4E419F9B.4030804@ti.com>
+References: <4E40FC88.5090403@ti.com> <20110809195114.GB14281@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E419180.3090507@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Robin Holt <holt@sgi.com>, Marc Kleine-Budde <mkl@pengutronix.de>, U Bhaskar-B22300 <B22300@freescale.com>, netdev@vger.kernel.org, socketcan-core@lists.berlios.de, PPC list <linuxppc-dev@lists.ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110809195114.GB14281@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-I guess my poor wording may have gotten me in trouble.  I am getting
-ready to repost this patch, but I want to ensure I am getting it as
-right as possible.
+On 8/9/2011 9:51 PM, Russell King - ARM Linux wrote:
+> On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
+>> Hi Grant,
+>>
+>> Trying to bind hwmod informations with DT, I'm facing a little limitation.
+>> A bunch of drivers are using the platform_get_resource_byname, so the
+>> name for the resource is needed.
+>>
+>> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
+>> IORESOURCE_DMA types of resources.
+>>
+>> Do you have any plan to add that, or do you have any clean way to avoid
+>> that without having to use the resource index?
+>
+> Named resources are evil.  You only have to look at /proc/iomem to see
+> why that's the case.  Here's an example:
+>
+> b7a01000-b7a01003 : set
+>    b7a01000-b7a01003 : set
 
-I think I should reword the commit message to indicate we are removing
-the Documentation/.../fsl-flexcan.txt file which has essentially become
-empty and change the p1010si.dtsi file's can nodes to "fsl,p1010-flexcan",
-"fsl,flexcan".  Is that correct?
+So what? That just shows that /proc/iomem outputs sucks, but that does 
+not prove that named resources are evil.
 
-Thanks,
-Robin
+[...]
 
-On Tue, Aug 09, 2011 at 02:58:56PM -0500, Scott Wood wrote:
-> On 08/09/2011 02:49 PM, Wolfgang Grandegger wrote:
-> > Yes. The doc for the bindings we speak about
-> > 
-> > http://lxr.linux.no/#linux+v3.0.1/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> > 
-> > sneaked into the kernel without been presented on any mailing list and
-> > without the corresponding driver patch.
-> 
-> It was posted on linuxppc-dev:
-> http://patchwork.ozlabs.org/patch/91980/
-> 
-> Though I agree it should have been posted more widely.
-> 
-> > OK, just
-> > 
-> >   "fsl,p1010-flexcan"
-> > 
-> > or
-> > 
-> >   "fsl,p1010-flexcan", "fsl,flexcan"
-> 
-> I'm ok with the latter, if there's enough in common that it's
-> conceivable that a driver wouldn't care.  The more specific compatible
-> will be there if the driver wants to make use of it later.
-> 
-> -Scot
+> How very informative.  Not.  So what device owns those?  Who knows,
+> that's lost by the crappy named resource stuff.
+
+Maybe, but this is not lost by the platform_device, and this is what 
+really matters in this case.
+We need to get the resource local to a device, we do not care about the 
+global view. This is exactly what the platform_get_resource_byname is doing.
+For my point of view, the need for that is similar to the clkdev / 
+clk_get(dev, name) you did. For sure, in that case, the real global 
+clock name is still relevant, but the important point for the driver is 
+the local device name.
+
+Not providing the name of the resource will give you the device name, 
+but how informative is that for the driver? What entry is the good one 
+in the middle of that list?
+
+b7a01040-b7a01043 : omap_foo
+b7a01044-b7a01047 : omap_foo
+b7a01048-b7a0104b : omap_foo
+b7a01060-b7a01063 : omap_foo
+
+Bottom-line, in both cases, /proc/iomem sucks... But who cares about the 
+internal representation? A platform_driver can still take advantage of 
+that, and this is exactly what we are looking for.
+
+Benoit
+
+
