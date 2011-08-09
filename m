@@ -1,41 +1,41 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] mmc: sdhci-tegra: get_ro(): Retrieve pdata correctly
-Date: Tue,  9 Aug 2011 12:16:38 -0600
-Message-ID: <1312913798-32564-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: How to handle named resources with DT?
+Date: Tue, 9 Aug 2011 13:26:29 -0500
+Message-ID: <4E417BD5.8080409@freescale.com>
+References: <4E40FC88.5090403@ti.com>	<20110809162907.GA630@manju-WNB7PBC4801-0006>	<4E4166F0.9050401@ti.com>	<CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com> <4E4172A8.3030101@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4E4172A8.3030101@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The active platform data pointer is stored as pltfm_host->priv, and not
-always in the platform device itself. In particular, the platform data in
-the platform device is NULL when the platform data comes from Device Tree.
+On 08/09/2011 12:47 PM, Cousson, Benoit wrote:
+> On 8/9/2011 7:23 PM, Grant Likely wrote:
+>> There is no analogous mechanism for _byname in the device tree.  The
+>> DT binding for a device must explicitly state what order the register
+>> ranges are in.  The driver will need to be adapted.
+> 
+> That seems to be a small regression for my point of view. Relying on the
+> order is not super safe. This is not very readable either. That's for
+> that exact reason that we changed our drivers to use
+> platform_get_resource_byname. That's probably the reason why that API is
+> there as well.
+> For the same IP, the number of entries can vary depending of the SoC
+> revision.
+> By using the _byname, we can check if the resource is there or not
+> without having to care about the position.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Grant, this patch is for branch devicetree/next; the Tegra DT support
-doesn't appear to be in other branches yet.
+You could have a named u32 property that contains the reg index, e.g.:
 
- drivers/mmc/host/sdhci-tegra.c |    6 ++----
- 1 files changed, 2 insertions(+), 4 deletions(-)
+dev {
+	reg = <0x20000 0x200 0x24000 0x200>;
+	foo-reg = <0>;
+	bar-reg = <1>;
+};
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 9329465..406d360 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -74,10 +74,8 @@ static void tegra_sdhci_writel(struct sdhci_host *host, u32 val, int reg)
- 
- static unsigned int tegra_sdhci_get_ro(struct sdhci_host *sdhci)
- {
--	struct platform_device *pdev = to_platform_device(mmc_dev(sdhci->mmc));
--	struct tegra_sdhci_platform_data *plat;
--
--	plat = pdev->dev.platform_data;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(sdhci);
-+	struct tegra_sdhci_platform_data *plat = pltfm_host->priv;
- 
- 	if (!gpio_is_valid(plat->wp_gpio))
- 		return -1;
--- 
-1.7.0.4
+-Scott
+
