@@ -1,50 +1,60 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: How to handle named resources with DT?
-Date: Tue, 9 Aug 2011 14:57:23 -0600
-Message-ID: <20110809205723.GE11568@ponder.secretlab.ca>
-References: <4E40FC88.5090403@ti.com>
- <20110809162907.GA630@manju-WNB7PBC4801-0006>
- <4E4166F0.9050401@ti.com>
- <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
- <4E4172A8.3030101@ti.com>
- <4E417BD5.8080409@freescale.com>
+From: Robin Holt <holt@sgi.com>
+Subject: Re: [PATCH 5/5] [powerpc] Fix up fsl-flexcan device tree binding.
+Date: Tue, 9 Aug 2011 15:59:00 -0500
+Message-ID: <20110809205900.GC4926@sgi.com>
+References: <1312901031-29887-1-git-send-email-holt@sgi.com>
+ <1312901031-29887-6-git-send-email-holt@sgi.com>
+ <4E4179CB.6030101@freescale.com>
+ <20110809184524.GB4926@sgi.com>
+ <4E4186BD.5000602@freescale.com>
+ <4E418F2D.4060504@grandegger.com>
+ <4E419180.3090507@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4E417BD5.8080409@freescale.com>
-Sender: linux-omap-owner@vger.kernel.org
+In-Reply-To: <4E419180.3090507@freescale.com>
+Sender: netdev-owner@vger.kernel.org
 To: Scott Wood <scottwood@freescale.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Robin Holt <holt@sgi.com>, Marc Kleine-Budde <mkl@pengutronix.de>, U Bhaskar-B22300 <B22300@freescale.com>, netdev@vger.kernel.org, socketcan-core@lists.berlios.de, PPC list <linuxppc-dev@lists.ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2011 at 01:26:29PM -0500, Scott Wood wrote:
-> On 08/09/2011 12:47 PM, Cousson, Benoit wrote:
-> > On 8/9/2011 7:23 PM, Grant Likely wrote:
-> >> There is no analogous mechanism for _byname in the device tree.  The
-> >> DT binding for a device must explicitly state what order the register
-> >> ranges are in.  The driver will need to be adapted.
+I guess my poor wording may have gotten me in trouble.  I am getting
+ready to repost this patch, but I want to ensure I am getting it as
+right as possible.
+
+I think I should reword the commit message to indicate we are removing
+the Documentation/.../fsl-flexcan.txt file which has essentially become
+empty and change the p1010si.dtsi file's can nodes to "fsl,p1010-flexcan",
+"fsl,flexcan".  Is that correct?
+
+Thanks,
+Robin
+
+On Tue, Aug 09, 2011 at 02:58:56PM -0500, Scott Wood wrote:
+> On 08/09/2011 02:49 PM, Wolfgang Grandegger wrote:
+> > Yes. The doc for the bindings we speak about
 > > 
-> > That seems to be a small regression for my point of view. Relying on the
-> > order is not super safe. This is not very readable either. That's for
-> > that exact reason that we changed our drivers to use
-> > platform_get_resource_byname. That's probably the reason why that API is
-> > there as well.
-> > For the same IP, the number of entries can vary depending of the SoC
-> > revision.
-> > By using the _byname, we can check if the resource is there or not
-> > without having to care about the position.
+> > http://lxr.linux.no/#linux+v3.0.1/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> > 
+> > sneaked into the kernel without been presented on any mailing list and
+> > without the corresponding driver patch.
 > 
-> You could have a named u32 property that contains the reg index, e.g.:
+> It was posted on linuxppc-dev:
+> http://patchwork.ozlabs.org/patch/91980/
 > 
-> dev {
-> 	reg = <0x20000 0x200 0x24000 0x200>;
-> 	foo-reg = <0>;
-> 	bar-reg = <1>;
-> };
-
-That's a little nasty.  A reg-names = "foo", "bar"; would probably be
-better.
-
-g.
-
+> Though I agree it should have been posted more widely.
+> 
+> > OK, just
+> > 
+> >   "fsl,p1010-flexcan"
+> > 
+> > or
+> > 
+> >   "fsl,p1010-flexcan", "fsl,flexcan"
+> 
+> I'm ok with the latter, if there's enough in common that it's
+> conceivable that a driver wouldn't care.  The more specific compatible
+> will be there if the driver wants to make use of it later.
+> 
+> -Scot
