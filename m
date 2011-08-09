@@ -1,70 +1,105 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: How to handle named resources with DT?
-Date: Tue, 9 Aug 2011 18:57:20 +0200
-Message-ID: <4E4166F0.9050401@ti.com>
-References: <4E40FC88.5090403@ti.com>
-	<20110809162907.GA630@manju-WNB7PBC4801-0006>
+Date: Tue, 9 Aug 2011 11:23:45 -0600
+Message-ID: <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
+References: <4E40FC88.5090403@ti.com> <20110809162907.GA630@manju-WNB7PBC4801-0006>
+ <4E4166F0.9050401@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110809162907.GA630@manju-WNB7PBC4801-0006>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Cc: "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, Grant Likely <grant.likely@secretlab.ca>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4E4166F0.9050401@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manju,
-
-On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
-> Hi Benoit,
+On Tue, Aug 9, 2011 at 10:57 AM, Cousson, Benoit <b-cousson@ti.com> wro=
+te:
+> Hi Manju,
 >
-> On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
->> Hi Grant,
+> On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
 >>
->> Trying to bind hwmod informations with DT, I'm facing a little limitation.
->> A bunch of drivers are using the platform_get_resource_byname, so
->> the name for the resource is needed.
+>> Hi Benoit,
 >>
->> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
->> IORESOURCE_DMA types of resources.
+>> On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
+>>>
+>>> Hi Grant,
+>>>
+>>> Trying to bind hwmod informations with DT, I'm facing a little
+>>> limitation.
+>>> A bunch of drivers are using the platform_get_resource_byname, so
+>>> the name for the resource is needed.
+>>>
+>>> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
+>>> IORESOURCE_DMA types of resources.
+>>
+>> IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
+>> it will be part of pdev.
 >
-> IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
-> it will be part of pdev.
+> Yes, but without the proper name in the resource structure. It will b=
+e then
+> impossible to use the platform_get_resource_byname function that is
+> currently used by a bunch of drivers.
 
-Yes, but without the proper name in the resource structure. It will be 
-then impossible to use the platform_get_resource_byname function that is 
-currently used by a bunch of drivers.
+There is no analogous mechanism for _byname in the device tree.  The
+DT binding for a device must explicitly state what order the register
+ranges are in.  The driver will need to be adapted.
 
-> For IORESOURCE_DMA, you can have property
-> "dma-channel" in dtsi file and fetch dma-channel in driver probe
-> through "of_property_read_u32()" api.
+>
+>> For IORESOURCE_DMA, you can have property
+>> "dma-channel" in dtsi file and fetch dma-channel in driver probe
+>> through "of_property_read_u32()" api.
+>
+> That will not be enough to get the name. So maybe something like:
+> =A0 =A0 =A0 =A0dmas =3D <12>, "rx_req", <13>, "tx_req";
+> will be doable.
+> The issue is that the name is optional so managing the multiple entri=
+es
+> might be tricky.
 
-That will not be enough to get the name. So maybe something like:
-	dmas = <12>, "rx_req", <13>, "tx_req";
-will be doable.
-The issue is that the name is optional so managing the multiple entries 
-might be tricky.
+DMA channels will never show up in the resource structure anyway.  The
+common code only takes care of translating IRQ and register ranges.
+=46or DMA you'll need a binding for the dma channels.  You can either
+make them explicitly ordered, or use different property names for each
+of the dma channels.
 
-BTW, it's strange that a default support does not exist for dma request 
-(and not channel).
-The mechanism is similar to irq line, and quite standard to many SoC 
-AFAIK. Or maybe I missed it.
+>
+> BTW, it's strange that a default support does not exist for dma reque=
+st (and
+> not channel).
+> The mechanism is similar to irq line, and quite standard to many SoC =
+AFAIK.
+> Or maybe I missed it.
 
-> BTW, this is not required for omap since dt-hwmod binding will fetch
-> pdev pointer from hwmod database and it will be used "as is" without
-> any modification which inturn does not break any existing pm
-> functionality.
+DMA channels haven't historically had the same global scope that irq
+numbers have.  There hasn't been a pressing need up to now to have
+common infrastructure, though it is probably a good idea to define a
+common binding.
 
-Well for the moment... but I have some long term plan as well:-)
+>> BTW, this is not required for omap since dt-hwmod binding will fetch
+>> pdev pointer from hwmod database and it will be used "as is" without
+>> any modification which inturn does not break any existing pm
+>> functionality.
+>
+> Well for the moment... but I have some long term plan as well:-)
+>
+> Thanks,
+> Benoit
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 
-Thanks,
-Benoit
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
