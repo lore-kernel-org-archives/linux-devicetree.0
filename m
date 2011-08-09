@@ -1,233 +1,36 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [RFC 5/5] [powerpc] Implement a p1010rdb clock source.
-Date: Tue, 09 Aug 2011 16:14:55 +0200
-Message-ID: <4E4140DF.6000004@grandegger.com>
-References: <9C64B7751C3BCA41B64A68E23005A7BE1B9D6C@039-SN1MPN1-002.039d.mgd.msft.net>
-	<4E40F09F.60305@grandegger.com>
-	<9C64B7751C3BCA41B64A68E23005A7BE1BDF8C@039-SN1MPN1-004.039d.mgd.msft.net>
-	<4E41108F.1090104@grandegger.com>
-	<9C64B7751C3BCA41B64A68E23005A7BE1C3552@039-SN1MPN1-002.039d.mgd.msft.net>
-	<20110809124919.GS4926@sgi.com> <4E413036.5080207@grandegger.com>
-	<20110809133531.GV4926@sgi.com>
-	<9C64B7751C3BCA41B64A68E23005A7BE1C4746@039-SN1MPN1-002.039d.mgd.msft.net>
-	<4E413E3A.7050502@grandegger.com> <20110809140901.GX4926@sgi.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] ASoC: Add device tree binding for WM8753
+Date: Tue, 9 Aug 2011 23:28:52 +0900
+Message-ID: <20110809142851.GA15861@opensource.wolfsonmicro.com>
+References: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+	<CAGsJ_4y2tDb3ZBPo8bCtrjFt0OWzR8WeG+kL_RKJPRP7-pZopw@mail.gmail.com>
+	<20110809065100.GB8017@core.coreip.homeip.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-In-Reply-To: <20110809140901.GX4926-sJ/iWh9BUns@public.gmane.org>
-List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
-List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
-Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
-Cc: "socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org" <socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20110809065100.GB8017@core.coreip.homeip.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Barry Song <21cnbao@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, linux-input@vger.kernel.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2011 04:09 PM, Robin Holt wrote:
-> On Tue, Aug 09, 2011 at 04:03:38PM +0200, Wolfgang Grandegger wrote:
->> On 08/09/2011 03:44 PM, U Bhaskar-B22300 wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: Robin Holt [mailto:holt-sJ/iWh9BUns@public.gmane.org]
->>>> Sent: Tuesday, August 09, 2011 7:06 PM
->>>> To: Wolfgang Grandegger
->>>> Cc: Robin Holt; U Bhaskar-B22300; socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org;
->>>> netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Marc Kleine-
->>>> Budde
->>>> Subject: Re: [RFC 5/5] [powerpc] Implement a p1010rdb clock source.
->>>>
->>>> On Tue, Aug 09, 2011 at 03:03:50PM +0200, Wolfgang Grandegger wrote:
->>>>> On 08/09/2011 02:49 PM, Robin Holt wrote:
->>>>>> On Tue, Aug 09, 2011 at 12:41:39PM +0000, U Bhaskar-B22300 wrote:
->>>>>>>
->>>>>>>
->>>>>>>> -----Original Message-----
->>>>>>>> From: Wolfgang Grandegger [mailto:wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org]
->>>>>>>> Sent: Tuesday, August 09, 2011 4:19 PM
->>>>>>>> To: U Bhaskar-B22300
->>>>>>>> Cc: Marc Kleine-Budde; socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org;
->>>>>>>> netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>>>>>>> Subject: Re: [RFC 5/5] [powerpc] Implement a p1010rdb clock source.
->>>>>>>>
->>>>>>>> On 08/09/2011 11:27 AM, U Bhaskar-B22300 wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>> -----Original Message-----
->>>>>>>>>> From: Wolfgang Grandegger [mailto:wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org]
->>>>>>>>>> Sent: Tuesday, August 09, 2011 2:03 PM
->>>>>>>>>> To: U Bhaskar-B22300
->>>>>>>>>> Cc: Marc Kleine-Budde; socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org;
->>>>>>>>>> netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>>>>>>>>> Subject: Re: [RFC 5/5] [powerpc] Implement a p1010rdb clock
->>>> source.
->>>>>>>>>>
->>>>>>>>>> Hi Bhaskar,
->>>>>>>>>>
->>>>>>>>>> On 08/09/2011 09:57 AM, U Bhaskar-B22300 wrote:
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>> -----Original Message-----
->>>>>>>>>>>> From: Marc Kleine-Budde [mailto:mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
->>>>>>>>>>>> Sent: Tuesday, August 09, 2011 12:23 AM
->>>>>>>>>>>> To: Wolfgang Grandegger
->>>>>>>>>>>> Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; U
->>>>>>>>>>>> Bhaskar- B22300
->>>>>>>>>>>> Subject: Re: [RFC 5/5] [powerpc] Implement a p1010rdb clock
->>>> source.
->>>>>>>>>>>>
->>>>>>>>>>>> On 08/08/2011 05:33 PM, Wolfgang Grandegger wrote:
->>>>>>>>>>>>>> ACK - The device tree bindings as in mainline's
->>>>>>>>>>>>>> Documentation is a
->>>>>>>>>>>> mess.
->>>>>>>>>>>>>> If the powerpc guys are happy with a clock interfaces based
->>>>>>>>>>>>>> approach somewhere in arch/ppc, I'm more than happy to
->>>> remove:
->>>>>>>>>>>>>> - fsl,flexcan-clock-source (not implemented, even in the fsl
->>>>>>>>>>>>>> driver)
->>>>>>>>>>> [Bhaskar]I have pushed the FlexCAN series of patches, It
->>>>>>>>>>> contains the usage of all the fields posted in the FlexCAN
->>>>>>>>>>> bindings at
->>>>>>>>>>> http://git.kernel.org/?p=linux/kernel/git/stable/linux-3.0.y.gi
->>>>>>>>>>> t;a=b
->>>>>>>>>>> lo
->>>>>>>>>>> b;f=Documentation/devicetree/bindings/net/can/fsl-flexcan.txt;h
->>>>>>>>>>> =1a72
->>>>>>>>>>> 9f
->>>>>>>>>>> 089866259ef82d0db5893ff7a8c54d5ccf;hb=94ed5b4788a7cdbe68bc7cb85
->>>>>>>>>>> 16972
->>>>>>>>>>> cb
->>>>>>>>>>> ebdc8274
->>>>>>>>>>
->>>>>>>>>> As Marc already pointed out, Robin already has a much more
->>>>>>>>>> advanced patch stack in preparation. Especially your patches do
->>>>>>>>>> not care about the already existing Flexcan core on the
->>>> Freescale's ARM socks.
->>>>>>>>> [Bhaskar] No, the patches are taking care of the existing ARM
->>>>>>>> functionality.
->>>>>>>>> 	I have not tested on the ARM based board, but the patches are
->>>>>>>>> made
->>>>>>>> in a
->>>>>>>>>       Manner that it should not break the ARM based functionality.
->>>>>>>>>>
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> - fsl,flexcan-clock-divider \__ replace with code in
->>>> arch/ppc, or
->>>>>>>>>>>>>> - clock-frequency           /   a single clock-frequency
->>>> attribute
->>>>>>>>>>>>>
->>>>>>>>>>>>> In the "net-next-2.6" tree there is also:
->>>>>>>>>>>>>
->>>>>>>>>>>>>  $ grep flexcan arch/powerpc/boots/dts/*.dts
->>>>>>>>>>>>>   p1010rdb.dts:			fsl,flexcan-clock-source =
->>>>>>>>>> "platform";
->>>>>>>>>>>>>   p1010rdb.dts:			fsl,flexcan-clock-source =
->>>>>>>>>> "platform";
->>>>>>>>>>>>>   p1010si.dtsi:			compatible = "fsl,flexcan-
->>>> v1.0";
->>>>>>>>>>>>>   p1010si.dtsi:			fsl,flexcan-clock-divider =
->>>> <2>;
->>>>>>>>>>>>>   p1010si.dtsi:			compatible = "fsl,flexcan-
->>>> v1.0";
->>>>>>>>>>>>>   p1010si.dtsi:			fsl,flexcan-clock-divider =
->>>> <2>;
->>>>>>>>>>>>>
->>>>>>>>>>>>> Especially the fsl,flexcan-clock-divider = <2>; might make
->>>>>>>>>>>>> people think, that they could set something else.
->>>>>>>>>>>>
->>>>>>>>>>> [Bhaskar] As it is mentioned in the Flexcan bindings, the need
->>>>>>>>>>> of
->>>>>>>>>> fsl,flexcan-clock-divider = <2>;
->>>>>>>>>>> 	    But I kept it as "2" because FlexCan clock source is the
->>>>>>>>>> platform clock and it is CCB/2
->>>>>>>>>>> 	    If the "2" is misleading, the bindings can be changed or
->>>>>>>>>>> some
->>>>>>>>>> text can be written to make the meaning of "2"
->>>>>>>>>>>           Understandable , Please suggest ..
->>>>>>>>>>
->>>>>>>>>> The clock source and frequency is fixed. Why do we need an extra
->>>>>>>>>> properties for that. We have panned to remove these bogus
->>>>>>>>>> bindings from the Linux kernel, which sneaked in *without* any
->>>>>>>>>> review on the relevant mailing lists (at least I have not
->>>>>>>>>> realized any posting). We do not think they are really needed.
->>>>>>>>>> They just confuse the user. We also prefer to use the
->>>>>>>>>> compatibility string "fsl,flexcan" instead "fsl,flexcan-v1.0".
->>>>>>>>>> It's unusual to add a version number, which is for the Flexcan
->>>>>>>>>> on the PowerPC cores only, I assume, but there will be device
->>>>>>>>>> tree for ARM soon. A proper compatibility string would be
->>>> "fsl,p1010-flexcan" if we really need to distinguish.
->>>>>>>>>>
->>>>>>>>> [Bhaskar] About clock source.. There can be two sources of clock
->>>>>>>>> for
->>>>>>>> the CAN.
->>>>>>>>> 	Oscillator or the platform clock, but at present only
->>>> platform
->>>>>>>> clock is supported
->>>>>>>>> 	in P1010.If we remove the fsl,flexcan-clock-source property,
->>>> we
->>>>>>>> will lost the flexibility
->>>>>>>>> 	of changing the clock source ..
->>>>>>>>>
->>>>>>>>>           About clock-frequency... it is also not fixed. It
->>>>>>>>> depends on
->>>>>>>> the platform clock which in turns
->>>>>>>>>           Depends on the CCB clock. So it will be better to keep
->>>>>>>>> clock-
->>>>>>>> frequency property which is getting fixed via u-boot.
->>>>>>>>
->>>>>>>> The frequency is fixed to CCB-frequency / 2. Will that ever
->>>>>>>> change? What can we expect from future Flexcan hardware? Will it
->>>>>>>> support further clock sources?
->>>>>>> [Bhaskar] Yes the frequency will always be CCB-frequency/2.Even if
->>>> the CCB gets changed that will be taken care by the u-boot fixup code for
->>>>>>> 	clock-frequency. clock-frequency is not filled by somebody in the
->>>> dts file. It will be done by u-boot.
->>>>>>> 	For clock source,I can't say right now, that's why I have kept a
->>>> property for this in the can node. So that in future, we need to fill it
->>>>>>> 	appropriately
->>>>>>
->>>>>> Speaking of the dts file, I have left the p1010si.dtsi file with the
->>>>>> fsl,flexcan-v1.0 .compatible definition.  The flexcan folks (IIRC
->>>>>> Wolfgang) objected to that as it does not follow the standard which
->>>>>> should be just fsl,flexcan.
->>>>>>
->>>>>> How would you like to change that?  Should I add it as part of this
->>>>>> patch, add another patch to the series, or let you take care of it?
->>>>>>
->>>>>> Also, I assume the uboot project will need to be changed as well to
->>>>>> reflect the corrected name.
->>>>>
->>>>> I think you should provide patches within this series to cleanup the
->>>>> obsolete stuff, dts and binding doc.
->>>>
->>>> It reads to me that the binding doc now reduces just the required
->>>> properties.  Should I remove the file entirely?
->>> [Bhaskar] I think the binding doc should atleast be present with the required properties to give the clarity
->>>  	    about the CAN functionality
->>> 		can0@1c000 {
->>>                  compatible = "fsl,flexcan";
->>>                  reg = <0x1c000 0x1000>;
->>>                  interrupts = <48 0x2>;
->>>                  interrupt-parent = <&mpic>;
->>>                  clock-frequency = <fixed by u-boot>;
->>>          	}; 
->>
->> Yes, I also find the introduction is quite useful, with some related
->> correction.
-> 
-> I am not sure what is useful.  The clock source bits are all wrong.
-> When that is removed, you end up with a discussion about the prescaler
-> which is actually related to the flexcan.c file and has nothing
-> to do with the device node.  Maybe I am just going back into my
-> not-communicating-well mode.  Could you follow up with what you think
-> belongs in the introduction of the binding file?
+On Mon, Aug 08, 2011 at 11:51:00PM -0700, Dmitry Torokhov wrote:
 
-Yep, you are right. Keep it simple...
+> The issue I have with the ads7846 driver is that it still needs platform
+> code to supply the needed platform data structure to make the
+> driver/device usable. So I am not sure what the benefit DT matching code
+> brings to that driver.
 
-Wolfgang,
+Oh, if that's the case the driver ought to have device tree bindings
+which replicate the platform data.  Unless the platform data is
+sufficiently obscure for hardly anyone to want to use it I guess.
