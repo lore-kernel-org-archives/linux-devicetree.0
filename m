@@ -1,41 +1,61 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 5/5] [powerpc] Fix up fsl-flexcan device tree binding.
-Date: Tue, 9 Aug 2011 15:11:25 -0500
-Message-ID: <4E41946D.4030003@freescale.com>
-References: <1312901031-29887-1-git-send-email-holt@sgi.com>	<1312901031-29887-6-git-send-email-holt@sgi.com>	<4E4179CB.6030101@freescale.com> <4E418B39.6040408@grandegger.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH 0/3] Yet another GIC OF binding series
+Date: Tue,  9 Aug 2011 15:16:57 -0500
+Message-ID: <1312921020-6820-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4E418B39.6040408@grandegger.com>
-Sender: netdev-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>
-Cc: netdev@vger.kernel.org, "Devicetree-discuss@lists.ozlabs.org" <Devicetree-discuss@lists.ozlabs.org>, U Bhaskar-B22300 <B22300@freescale.com>, socketcan-core@lists.berlios.de, Robin Holt <holt@sgi.com>, PPC list <linuxppc-dev@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2011 02:32 PM, Wolfgang Grandegger wrote:
-> On 08/09/2011 08:17 PM, Scott Wood wrote:
->> On 08/09/2011 09:43 AM, Robin Holt wrote:
->>> In working with the socketcan developers, we have come to the conclusion
->>> the fsl-flexcan device tree bindings need to be cleaned up. 
->>> The driver does not depend upon any properties other than the required properties
->>> so we are removing the file.
->>
->> That is not the criterion for whether something should be expresed in
->> the device tree.  It's a description of the hardware, not a Linux driver
->> configuration file.  If there are integration parameters that can not be
->> inferred from "this is FSL flexcan v1.0", they should be expressed in
->> the node.
->>
->> Removing the binding altogether seems extreme as well -- we should have
->> bindings for all devices, even if there are no special properties.
-> 
-> Yes, of course. The commit message misleading. We do not intend to
-> remove the binding but just a few unused and confusing properties.
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Is it a matter of the current driver not caring, or the properties just
-not making sense for any reasonable driver (ambiguous, inferrable from
-the flexcan version, software configuration, etc)?
+Grant,
 
--Scott
+Here's yet another patch series for GIC binding and init. 
 
+You keep saying we should have a common DT function scanning for interrupt
+controller nodes and calling their initialization functions. But that will
+not work until we have dynamic assignment of linux irq numbers. So either
+everyone should just stop trying to do DT bindings for GIC/VIC until that
+is in place, or we need an interim solution. This is another attempt at
+the latter. I reworked gic_of_init intending for it to be the interrupt
+controller specific initialization function that DT interrupt controller
+scanning code would call. For now, it is just called by the platform code.
+The platform initialization looks something like this:
+
+struct of_intc_desc desc;
+memset(&desc, 0, sizeof(desc));
+desc.controller = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-gic");
+gic_of_init(&desc);
+
+I've addressed your previous comments and in particular initializing more
+than 1 GIC is supported now.
+
+Rob
+
+Rob Herring (3):
+  dt: irq: add interrupt controller descriptor struct
+  ARM: gic: allow irq_start to be 0
+  ARM: gic: add OF based initialization
+
+ Documentation/devicetree/bindings/arm/gic.txt |   28 +++++++++++++++++++
+ arch/arm/common/gic.c                         |   36 ++++++++++++++++++++++++-
+ arch/arm/include/asm/hardware/gic.h           |    2 +
+ include/linux/of_irq.h                        |    6 ++++
+ 4 files changed, 71 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+
+-- 
+1.7.4.1
