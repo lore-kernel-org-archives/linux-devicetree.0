@@ -1,105 +1,52 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: How to handle named resources with DT?
-Date: Tue, 9 Aug 2011 11:23:45 -0600
-Message-ID: <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
-References: <4E40FC88.5090403@ti.com> <20110809162907.GA630@manju-WNB7PBC4801-0006>
- <4E4166F0.9050401@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] dt: add empty of_get_property for non-dt
+Date: Tue, 9 Aug 2011 11:27:48 -0600
+Message-ID: <20110809172748.GA32195@ponder.secretlab.ca>
+References: <1312584630-23371-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4E4166F0.9050401@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1312584630-23371-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 9, 2011 at 10:57 AM, Cousson, Benoit <b-cousson@ti.com> wro=
-te:
-> Hi Manju,
->
-> On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
->>
->> Hi Benoit,
->>
->> On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
->>>
->>> Hi Grant,
->>>
->>> Trying to bind hwmod informations with DT, I'm facing a little
->>> limitation.
->>> A bunch of drivers are using the platform_get_resource_byname, so
->>> the name for the resource is needed.
->>>
->>> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
->>> IORESOURCE_DMA types of resources.
->>
->> IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
->> it will be part of pdev.
->
-> Yes, but without the proper name in the resource structure. It will b=
-e then
-> impossible to use the platform_get_resource_byname function that is
-> currently used by a bunch of drivers.
+On Fri, Aug 05, 2011 at 04:50:30PM -0600, Stephen Warren wrote:
+> The patch adds empty function of_get_property for non-dt build, so that
+> drivers migrating to dt can save some '#ifdef CONFIG_OF'.
+> 
+> This also fixes the current Tegra compile problem in linux-next.
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  include/linux/of.h |    7 +++++++
+>  1 files changed, 7 insertions(+), 0 deletions(-)
 
-There is no analogous mechanism for _byname in the device tree.  The
-DT binding for a device must explicitly state what order the register
-ranges are in.  The driver will need to be adapted.
+Merged, thanks.
 
->
->> For IORESOURCE_DMA, you can have property
->> "dma-channel" in dtsi file and fetch dma-channel in driver probe
->> through "of_property_read_u32()" api.
->
-> That will not be enough to get the name. So maybe something like:
-> =A0 =A0 =A0 =A0dmas =3D <12>, "rx_req", <13>, "tx_req";
-> will be doable.
-> The issue is that the name is optional so managing the multiple entri=
-es
-> might be tricky.
+g.
 
-DMA channels will never show up in the resource structure anyway.  The
-common code only takes care of translating IRQ and register ranges.
-=46or DMA you'll need a binding for the dma channels.  You can either
-make them explicitly ordered, or use different property names for each
-of the dma channels.
-
->
-> BTW, it's strange that a default support does not exist for dma reque=
-st (and
-> not channel).
-> The mechanism is similar to irq line, and quite standard to many SoC =
-AFAIK.
-> Or maybe I missed it.
-
-DMA channels haven't historically had the same global scope that irq
-numbers have.  There hasn't been a pressing need up to now to have
-common infrastructure, though it is probably a good idea to define a
-common binding.
-
->> BTW, this is not required for omap since dt-hwmod binding will fetch
->> pdev pointer from hwmod database and it will be used "as is" without
->> any modification which inturn does not break any existing pm
->> functionality.
->
-> Well for the moment... but I have some long term plan as well:-)
->
-> Thanks,
-> Benoit
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
-
-
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 0085bb0..9180dc5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -256,6 +256,13 @@ static inline int of_property_read_string(struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline const void *of_get_property(const struct device_node *node,
+> +				const char *name,
+> +				int *lenp)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #endif /* CONFIG_OF */
+>  
+>  static inline int of_property_read_u32(const struct device_node *np,
+> -- 
+> 1.7.0.4
+> 
