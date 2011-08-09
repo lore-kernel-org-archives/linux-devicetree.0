@@ -1,245 +1,90 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH] net: dm9000: add support for device tree probing
-Date: Tue, 9 Aug 2011 14:51:55 -0600
-Message-ID: <20110809205155.GC11568@ponder.secretlab.ca>
-References: <1312919849-4979-1-git-send-email-daniel.morsing@gmail.com>
-	<1312919849-4979-2-git-send-email-daniel.morsing@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: How to handle named resources with DT?
+Date: Tue, 9 Aug 2011 14:55:42 -0600
+Message-ID: <20110809205542.GD11568@ponder.secretlab.ca>
+References: <4E40FC88.5090403@ti.com>
+ <20110809162907.GA630@manju-WNB7PBC4801-0006>
+ <4E4166F0.9050401@ti.com>
+ <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
+ <4E4172A8.3030101@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1312919849-4979-2-git-send-email-daniel.morsing-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Daniel Morsing <daniel.morsing-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <4E4172A8.3030101@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2011 at 09:57:29PM +0200, Daniel Morsing wrote:
-> This patch adds support for probing the dm9000 driver through device
-> trees.
+On Tue, Aug 09, 2011 at 07:47:20PM +0200, Cousson, Benoit wrote:
+> On 8/9/2011 7:23 PM, Grant Likely wrote:
+> >On Tue, Aug 9, 2011 at 10:57 AM, Cousson, Benoit<b-cousson@ti.com>  wrote:
+> >>Hi Manju,
+> >>
+> >>On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
+> >>>
+> >>>Hi Benoit,
+> >>>
+> >>>On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
+> >>>>
+> >>>>Hi Grant,
+> >>>>
+> >>>>Trying to bind hwmod informations with DT, I'm facing a little
+> >>>>limitation.
+> >>>>A bunch of drivers are using the platform_get_resource_byname, so
+> >>>>the name for the resource is needed.
+> >>>>
+> >>>>The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
+> >>>>IORESOURCE_DMA types of resources.
+> >>>
+> >>>IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
+> >>>it will be part of pdev.
+> >>
+> >>Yes, but without the proper name in the resource structure. It will be then
+> >>impossible to use the platform_get_resource_byname function that is
+> >>currently used by a bunch of drivers.
+> >
+> >There is no analogous mechanism for _byname in the device tree.  The
+> >DT binding for a device must explicitly state what order the register
+> >ranges are in.  The driver will need to be adapted.
 > 
-> The patch works by supplying its own platform_data struct when probed
-> via device tree. This allows us to rely on the existing options parsing
-> in the driver and avoid ifdeffery in the probe function.
+> That seems to be a small regression for my point of view. Relying on
+> the order is not super safe. This is not very readable either.
+> That's for that exact reason that we changed our drivers to use
+> platform_get_resource_byname. That's probably the reason why that
+> API is there as well.
+> For the same IP, the number of entries can vary depending of the SoC
+> revision.
+> By using the _byname, we can check if the resource is there or not
+> without having to care about the position.
+
+We've done it that way for a very long time with the device tree.  If
+you want to do something by name, then propose a binding that will
+make it work alongside the existing scheme.
+
 > 
-> Signed-off-by: Daniel Morsing <daniel.morsing-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/dm9000.txt |   46 ++++++++++++
->  drivers/net/dm9000.c                             |   85 ++++++++++++++++++++++
->  2 files changed, 131 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dm9000.txt
+> >>>For IORESOURCE_DMA, you can have property
+> >>>"dma-channel" in dtsi file and fetch dma-channel in driver probe
+> >>>through "of_property_read_u32()" api.
+> >>
+> >>That will not be enough to get the name. So maybe something like:
+> >>        dmas =<12>, "rx_req",<13>, "tx_req";
+> >>will be doable.
+> >>The issue is that the name is optional so managing the multiple entries
+> >>might be tricky.
+> >
+> >DMA channels will never show up in the resource structure anyway.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dm9000.txt b/Documentation/devicetree/bindings/net/dm9000.txt
-> new file mode 100644
-> index 0000000..f13ce20
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dm9000.txt
-> @@ -0,0 +1,46 @@
-> +Davicom DM9000 ethernet controller
-> +
-> +Required properties:
-> +
-> + - compatible : Should be "davicom,dm9000"
-> +
-> + - interrupts : Interrupt controller specific encoding, which specifies 1
-> +   or 2 interrupts. The first interrupt is for rx/tx received and is required
-> +   by the driver to function. The second interrupt is for wake on lan support
-> +   and is optional.
-> +
-> + - interrupt-flags : A one cell value which specifies the flag values for
-> +   the first interrupt, corresponding to the IORESOURCE_IRQ_* flags. An
-> +   example is using the value <8> for specifying the IORESOURCE_IRQ_LOWLEVEL
-> +   flag
+> Can you elaborate on that point? AFAIK, IORESOURCE_DMA is already
+> used today.
 
-Don't do this.  First of all, the interrupt specifier should be
-sufficient for specifying properties of the irq.  Second, this is
-encoding Linux internal implementation details into the device tree.
-It is fine for a property to correspond with the numbers used by
-Linux, but they must be explicitly specified.  Don't simply say "the
-same numbers as used by Linux".
-
-> +
-> + - reg : 2 Physical address specifiers, where the first specifies the address
-> +   register of device, and the second specifies the data register of the device
-> +
-> +Optional properties:
-> +
-> + - local-mac-address : Binary data specifying a mac address override
-> +
-> + - The following properties are all empty properties and specify one of the
-> +   flags that can be passed with the platform data to the driver. For specifics
-> +   about what the flags mean, see Documentation/networking/dm9000.txt
-
-Ditto here on Linux values.
-
-> +
-> +   8bitonly:	DM9000_PLATF_8BITONLY
-> +   16bitonly:	DM9000_PLATF_16BITONLY
-> +   32bitonly:	DM9000_PLATF_32BITONLY
-
-You should probably use the reg-io-width property similar to the ns16550
-driver.
-
-> +   ext-phy:	DM9000_PLATF_EXT_PHY
-> +   no-eeprom:	DM9000_PLATF_NO_EEPROM
-> +   simple-phy:	DM9000_PLATF_SIMPLE_PHY
-
-Can you use the phy-device binding used by other ethernet controllers
-to specify an external phy?
-
-> +
-> +Example:
-> +
-> +ethernet0@2c000000 {
-
-ethernet@2c000000 (drop the '0').  If you want to enumerate it, use a
-property in the /aliases node.
-
-> +	compatible = "davicom,dm9000";
-> +	reg = <0x2c000000 0x04>,
-> +	      <0x2c000400 0x04>;
-> +	interrupts = <185>;
-> +	interrupt-flags = <8>; /* IORESOURCE_IRQ_LOWLEVEL */
-> +	local-mac-address = [02 65 16 01 c0 09];
-> +	16bitonly;
-> +	no-eeprom;
-> +};
-> diff --git a/drivers/net/dm9000.c b/drivers/net/dm9000.c
-> index 8ef31dc..4ad5043 100644
-> --- a/drivers/net/dm9000.c
-> +++ b/drivers/net/dm9000.c
-> @@ -35,6 +35,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/irq.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #include <asm/delay.h>
->  #include <asm/irq.h>
-> @@ -1350,6 +1351,77 @@ static const struct net_device_ops dm9000_netdev_ops = {
->  #endif
->  };
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id dm9000_of_match[] = {
-> +	{ .compatible = "davicom,dm9000" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, dm9000_of_match);
-> +
-> +static const struct {
-> +	const char *property;
-> +	unsigned int flag;
-> +} property_lookup[] __devinitconst = {
-> +	{ "8bitonly", DM9000_PLATF_8BITONLY},
-> +	{ "16bitonly", DM9000_PLATF_16BITONLY},
-> +	{ "32bitonly", DM9000_PLATF_32BITONLY},
-> +	{ "ext-phy", DM9000_PLATF_EXT_PHY},
-> +	{ "no-eeprom", DM9000_PLATF_NO_EEPROM},
-> +	{ "simple-phy", DM9000_PLATF_SIMPLE_PHY},
-> +	{},
-> +};
-> +
-> +static int __devinit
-> +dm9000_dt_fill_platdata(struct platform_device *pdev,
-> +			struct dm9000_plat_data *pdata)
-> +{
-> +	struct resource *irq_res;
-> +	struct device_node *of_node = pdev->dev.of_node;
-> +	const u8 *mac_addr;
-> +
-> +	u32 intflags;
-> +	int i;
-> +
-> +	if (of_property_read_u32(of_node, "interrupt-flags", &intflags)) {
-> +		dev_err(&pdev->dev,
-> +			"interrupt-flags property not found in device tree\n");
-> +		return -EINVAL;
-> +	}
-
-Is this really a fatal error?
-
-> +
-> +	irq_res  = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +	if (!irq_res) {
-> +		dev_err(&pdev->dev, "No irq found in device tree\n");
-> +		return -EINVAL;
-> +	}
-> +	irq_res->flags |= intflags;
-> +
-> +	for (i = 0; property_lookup[i].property; i++) {
-> +		struct property *prop;
-> +		prop = of_find_property(of_node, property_lookup[i].property,
-> +					NULL);
-> +		if (prop) {
-> +			pdata->flags |= property_lookup[i].flag;
-> +			dev_dbg(&pdev->dev, "%s property found in device tree\n",
-> +					property_lookup[i].property);
-> +		}
-> +	}
-> +
-> +	mac_addr = of_get_property(of_node, "local-mac-address", NULL);
-> +	if (mac_addr)
-> +		memcpy(pdata->dev_addr, mac_addr, 6);
-> +
-> +	return 0;
-> +}
-> +
-> +#else
-> +#define dm9000_of_match NULL
-> +static inline int dm9000_dt_fill_platdata(struct platform_device *pdev,
-> +					   struct dm9000_plat_data *pdata)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_OF */
-> +
->  /*
->   * Search DM9000 board, allocate space and register it
->   */
-> @@ -1359,12 +1431,24 @@ dm9000_probe(struct platform_device *pdev)
->  	struct dm9000_plat_data *pdata = pdev->dev.platform_data;
->  	struct board_info *db;	/* Point a board information structure */
->  	struct net_device *ndev;
-> +	struct dm9000_plat_data pdata_of;
->  	const unsigned char *mac_src;
->  	int ret = 0;
->  	int iosize;
->  	int i;
->  	u32 id_val;
->  
-> +	if (pdev->dev.of_node) {
-> +		if (!pdata) {
-> +			memset(&pdata_of, 0, sizeof(pdata_of));
-> +			pdata = &pdata_of;
-> +		}
-> +
-> +		ret = dm9000_dt_fill_platdata(pdev, pdata);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	/* Init network device */
->  	ndev = alloc_etherdev(sizeof(struct board_info));
->  	if (!ndev) {
-> @@ -1677,6 +1761,7 @@ static struct platform_driver dm9000_driver = {
->  		.name    = "dm9000",
->  		.owner	 = THIS_MODULE,
->  		.pm	 = &dm9000_drv_pm_ops,
-> +		.of_match_table = dm9000_of_match,
->  	},
->  	.probe   = dm9000_probe,
->  	.remove  = __devexit_p(dm9000_drv_remove),
-
-Otherwise, looks pretty good.
+IORESOURCE_DMA is a Linux construct, as is IORESOURCE_IRQ and
+IORESOURCE_MEM.  However, IRQ and MEM can be directly mapped from the
+common 'reg' and 'interrupts' bindings used by pretty much all device
+tree nodes.  Therefore common code can be written to translate MEM and
+IRQ that will always work.  There is no such common binding in place
+for DMA regions, so common setup code cannot do it transparently for
+the device driver.
 
 g.
