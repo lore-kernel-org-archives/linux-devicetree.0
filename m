@@ -1,19 +1,13 @@
 From: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
-Subject: Re: [PATCH 5/5] [powerpc] Fix up fsl-flexcan device tree binding.
-Date: Wed, 10 Aug 2011 11:16:15 -0500
-Message-ID: <20110810161615.GU4926@sgi.com>
-References: <1312901031-29887-1-git-send-email-holt@sgi.com>
-	<1312901031-29887-6-git-send-email-holt@sgi.com>
-	<4E4179CB.6030101@freescale.com> <20110809184524.GB4926@sgi.com>
-	<4E4186BD.5000602@freescale.com> <4E418F2D.4060504@grandegger.com>
-	<4E419180.3090507@freescale.com> <20110809205900.GC4926@sgi.com>
-	<97251371-2772-42A5-A959-D9F7A8D0A65B@kernel.crashing.org>
+Subject: [PATCH v11 3/5] flexcan: Add of_match to platform_device definition.
+Date: Wed, 10 Aug 2011 11:27:48 -0500
+Message-ID: <1312993670-23999-4-git-send-email-holt@sgi.com>
+References: <1312993670-23999-1-git-send-email-holt@sgi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <97251371-2772-42A5-A959-D9F7A8D0A65B-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1312993670-23999-1-git-send-email-holt-sJ/iWh9BUns@public.gmane.org>
 List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
 	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
 List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
@@ -23,41 +17,51 @@ List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
 	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
 Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
 Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 09:52:07AM -0500, Kumar Gala wrote:
-> 
-> On Aug 9, 2011, at 3:59 PM, Robin Holt wrote:
-> 
-> > I guess my poor wording may have gotten me in trouble.  I am getting
-> > ready to repost this patch, but I want to ensure I am getting it as
-> > right as possible.
-> > 
-> > I think I should reword the commit message to indicate we are removing
-> > the Documentation/.../fsl-flexcan.txt file which has essentially become
-> > empty and change the p1010si.dtsi file's can nodes to "fsl,p1010-flexcan",
-> > "fsl,flexcan".  Is that correct?
-> > 
-> > Thanks,
-> > Robin
-> 
-> This is wrong.  Again, what binding covers "fsl,flexcan" if you remove fsl-flexcan.txt:
-> 
-> [galak@right powerpc]$ git grep flexcan Documentation/devicetree/bindings
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:fsl,flexcan-v1.0 nodes
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:- fsl,flexcan-clock-source : CAN Engine Clock Source.This property selects
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:- fsl,flexcan-clock-divider : for the reference and system clock, an additional
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:      - v1.0 of flexcan-v1.0 represent the IP block version for P1010 SOC.
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:              compatible = "fsl,flexcan-v1.0";
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:              fsl,flexcan-clock-source = "platform";
-> Documentation/devicetree/bindings/net/can/fsl-flexcan.txt:              fsl,flexcan-clock-divider = <2>;
-> 
-> Not seeing anything that covers it.
-> 
-> I think the issue should be resolved by patching fsl-flexcan.txt to remove wording or update it.
+On powerpc, the OpenFirmware devices are not matched without specifying
+an of_match array.  Introduce that array as that is used for matching
+on the Freescale P1010 processor.
 
-Done.
+Signed-off-by: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Acked-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Cc: U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ drivers/net/can/flexcan.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
 
-Robin
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 68cbe52..662f832 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -1027,8 +1027,19 @@ static int __devexit flexcan_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct of_device_id flexcan_of_match[] = {
++	{
++		.compatible = "fsl,flexcan",
++	},
++	{},
++};
++
+ static struct platform_driver flexcan_driver = {
+-	.driver.name = DRV_NAME,
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table = flexcan_of_match,
++	},
+ 	.probe = flexcan_probe,
+ 	.remove = __devexit_p(flexcan_remove),
+ };
+-- 
+1.7.2.1
