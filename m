@@ -1,45 +1,26 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
-Date: Wed, 10 Aug 2011 10:13:27 -0500
-Message-ID: <4E42A017.7040608@freescale.com>
-References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: How to handle named resources with DT?
+Date: Wed, 10 Aug 2011 10:18:35 -0500
+Message-ID: <4E42A14B.9050308@freescale.com>
+References: <4E4166F0.9050401@ti.com> <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com> <4E4172A8.3030101@ti.com> <4E417BD5.8080409@freescale.com> <20110809205723.GE11568@ponder.secretlab.ca> <4E41A1B9.1060400@ti.com> <20110809211747.GJ11568@ponder.secretlab.ca> <4E41AA43.1000506@ti.com> <20110809214905.GK11568@ponder.secretlab.ca> <4E41AC5C.20301@ti.com> <20110810015214.GD23511@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1312902747-21372-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110810015214.GD23511@yookeroo.fritz.box>
+Sender: linux-omap-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2011 10:12 AM, Jamie Iles wrote:
-> +Optional properties:
-> +- bank-width : Width (in bytes) of the device.  If not present, the width
-> +  defaults to 8 bits.
+On 08/09/2011 08:52 PM, David Gibson wrote:
+> Of course, the problem with reg-names is that it will be ignored by
+> older OSes, and so 'reg' must still be in the correct order.  In which
+> case you could argue it's more sensible to just have a static place to
+> name mapping in the Linux driver.
 
-"in bytes" versus "defaults to 8 bits"...
-
-> +- chip-delay : chip dependent delay for transferring data from array to
-> +  read registers (tR).  If not present then a default of 0 is used.
-
-nand_set_defaults() will set this to 20 us if you pass in zero.
-
-> +- gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
-> +  location used to guard against bus reordering with regards to accesses to
-> +  the GPIO's and the NAND flash data bus.  If present, then after changing
-> +  GPIO state, this register will be read to ensure that the accesses have
-> +  completed.
-
-The driver does it before and after all cmd_ctrl byte writes, in
-addition to after changing the GPIO state.
+I think the intent was just to use this for some new bindings -- not to
+change existing ones.
 
 -Scott
+
