@@ -1,59 +1,88 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] ARM: gic: add OF based initialization
-Date: Wed, 10 Aug 2011 13:30:00 -0500
-Message-ID: <4E42CE28.3050501@gmail.com>
-References: <1312921020-6820-1-git-send-email-robherring2@gmail.com>
-	<1312921020-6820-4-git-send-email-robherring2@gmail.com>
-	<4E423C98.3040305@arm.com>
+From: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Subject: Re: [PATCH v11 5/5] powerpc: Fix up fsl-flexcan device tree binding.
+Date: Wed, 10 Aug 2011 13:30:16 -0500
+Message-ID: <20110810183016.GY4926@sgi.com>
+References: <1312993670-23999-1-git-send-email-holt@sgi.com>
+	<1312993670-23999-6-git-send-email-holt@sgi.com>
+	<4E42B83C.2040705@freescale.com> <20110810171933.GW4926@sgi.com>
+	<4E42C196.7030708@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E423C98.3040305-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4E42C196.7030708-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2011 03:08 AM, Marc Zyngier wrote:
-> On 09/08/11 21:17, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> This adds gic initialization using device tree data. An example device tree
->> binding looks like this:
->>
->> intc: interrupt-controller@fff11000 {
->>         compatible = "arm,cortex-a9-gic";
->>         #interrupt-cells = <1>;
->>         interrupt-controller;
->>         reg = <0xfff11000 0x1000>,
->>               <0xfff10100 0x100>;
->> };
+On Wed, Aug 10, 2011 at 12:36:22PM -0500, Scott Wood wrote:
+> On 08/10/2011 12:19 PM, Robin Holt wrote:
+> > On Wed, Aug 10, 2011 at 11:56:28AM -0500, Scott Wood wrote:
+> >> On 08/10/2011 11:27 AM, Robin Holt wrote:
+> >>> -CPI Clock- Can Protocol Interface Clock
+> >>> -	This CLK_SRC bit of CTRL(control register) selects the clock source to
+> >>> -	the CAN Protocol Interface(CPI) to be either the peripheral clock
+> >>> -	(driven by the PLL) or the crystal oscillator clock. The selected clock
+> >>> -	is the one fed to the prescaler to generate the Serial Clock (Sclock).
+> >>> -	The PRESDIV field of CTRL(control register) controls a prescaler that
+> >>> -	generates the Serial Clock (Sclock), whose period defines the
+> >>> -	time quantum used to compose the CAN waveform.
+> >>> +- compatible : Should be "fsl,flexcan" and optionally
+> >>> +               "fsl,flexcan-<processor>"
+> >>
+> >> fsl,<processor>-flexcan, and it should not be optional, and should come
+> >> before "fsl,flexcan".
+> >>
+> >> Also may want to list fsl,p1010-rdb as a "canonical compatible" for
+> >> anything which is backwards compatible with p1010's implementation.
+> > 
+> > How do I specify 'canonical compatible'?
 > 
-> I'm afraid I still object to this. PPIs are an important part of the
-> GIC, and this binding totally ignores the per-cpu aspect.
-
-BTW, we've already got 2 flavors of gic bindings in the dts files.
-
-> How do you represent the connection between a CPU local timer and the
-> GIC? Even worse, how to represent a device connected to only *one* of
-> the CPUs? PPIs are difficult to represent on the Linux side. But we
-> shouldn't ignore them in the DT binding.
+> Something like:
 > 
+>   compatible: Should be "fsl,<processor>-flexcan" and "fsl,flexcan".
+> 
+>   An implementation should also claim any of the following compatibles
+>   that it is fully backwards compatible with:
+> 
+>   - fsl,p1010-rdb
 
-Do you have an updated gic binding patchset based on your latest PPI
-patch series?
+I am so confused.  fsl,p1010-flexcan refers, in my mind at least, to
+a particular chiplet on the p1010 freescale processor.  fsl,p1010-rdb
+would mean nothing to me as that is a p1010 processor with two flexcan
+chiplets wired to a pair of DB-9 jacks.  For the driver, what additional
+information is being conveyed?
 
-This problem also extends to the TWD itself. How do we represent that?
-Is it 1 node per core or 1 node total. Then is timer and watchdog in 1
-node, or is it split to separate nodes?
+Let's cut to the chase.  Here is what I have after incorporating your
+earlier comment about the compatible line.  Please mark this up to
+exactly what you are asking for.
 
-Rob
+Thanks,
+Robin
+------------------------------------------------------------------------
+Flexcan CAN contoller on Freescale's ARM and PowerPC processors
+
+Required properties:
+
+- compatible : Should be "fsl,<processor>-flexcan" and "fsl,flexcan"
+- reg : Offset and length of the register set for this device
+- interrupts : Interrupt tuple for this device
+
+Example:
+
+  can@1c000 {
+          compatible = "fsl,p1010-flexcan", "fsl,flexcan";
+          reg = <0x1c000 0x1000>;
+          interrupts = <48 0x2>;
+          interrupt-parent = <&mpic>;
+  };
