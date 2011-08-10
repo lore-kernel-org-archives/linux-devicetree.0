@@ -1,57 +1,62 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Tegra pinmux Device Tree support
-Date: Wed, 10 Aug 2011 11:23:49 +1000
-Message-ID: <20110810012349.GA23511@yookeroo.fritz.box>
-References: <74CDBE0F657A3D45AFBB94109FB122FF049F17229E@HQMAIL01.nvidia.com>
- <20110809173428.GB32195@ponder.secretlab.ca>
- <CAOesGMjH8hZSAXvDZ6ADO-dtFNecRYC5GsfRiAeV8KMRG=JTkQ@mail.gmail.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: How to handle named resources with DT?
+Date: Wed, 10 Aug 2011 11:29:58 +1000
+Message-ID: <20110810012958.GB23511@yookeroo.fritz.box>
+References: <4E40FC88.5090403@ti.com>
+ <20110809162907.GA630@manju-WNB7PBC4801-0006>
+ <4E4166F0.9050401@ti.com>
+ <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMjH8hZSAXvDZ6ADO-dtFNecRYC5GsfRiAeV8KMRG=JTkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Linus Walleij (linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org)" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2011 at 10:44:29AM -0700, Olof Johansson wrote:
-> On Tue, Aug 9, 2011 at 10:34 AM, Grant Likely <grant.likely@secretlab=
-=2Eca> wrote:
->=20
-> > We talked about this a bit at Linaro connect. =A0Outside of the mor=
-e
-> > complex runtime-reconfiguration of pin mux, there is a general need
-> > for arbitrary initialization sequences to registers. =A0Also, prett=
-y
-> > much exactly what you need for tegra is needed for imx, omap and ma=
-ny
-> > others. =A0The though was, rather than trying to come up with some =
-kind
-> > of pinmux-specific binding for pin states, which could end up being
-> > very verbose if everything was split out into properties, we could
-> > instead have a binding for register initialization sequences.
-> > Something like this:
+On Tue, Aug 09, 2011 at 11:23:45AM -0600, Grant Likely wrote:
+> On Tue, Aug 9, 2011 at 10:57 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> > Hi Manju,
 > >
-> > =A0 =A0 =A0 =A0pinmux-initseq =3D <reg1 value1> <reg1 value2> ...;
+> > On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
+> >>
+> >> Hi Benoit,
+> >>
+> >> On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
+> >>>
+> >>> Hi Grant,
+> >>>
+> >>> Trying to bind hwmod informations with DT, I'm facing a little
+> >>> limitation.
+> >>> A bunch of drivers are using the platform_get_resource_byname, so
+> >>> the name for the resource is needed.
+> >>>
+> >>> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
+> >>> IORESOURCE_DMA types of resources.
+> >>
+> >> IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
+> >> it will be part of pdev.
 > >
-> > And then add some macros for DTC to make it easier to define things
-> > like pinmux setup tables. =A0Although the binding above is probably=
- too
-> > simple and naive.
->=20
-> This seems to break the philosophy of what the device tree should do
-> -- it should describe the hardware so that the driver will know how t=
-o
-> program it, not include the code itself?
+> > Yes, but without the proper name in the resource structure. It will be then
+> > impossible to use the platform_get_resource_byname function that is
+> > currently used by a bunch of drivers.
+> 
+> There is no analogous mechanism for _byname in the device tree.  The
+> DT binding for a device must explicitly state what order the register
+> ranges are in.  The driver will need to be adapted.
 
-Arguably, yes, although it's a barrier that's been frequently broken
-by Apple already.
+Well, the driver proper shouldn't need changing.  It should be
+possible to assign the correct names in the glue which translates the
+DT reg entries into the Linux resource structures.
 
---=20
+The difficulty with adding th enames to the DT itself is that it
+exposes the essentially Linux-specific names in what's supposed to be
+an OS neutral data structure.
+
+-- 
 David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _oth=
-er_
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
