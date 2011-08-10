@@ -1,78 +1,35 @@
-From: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Subject: Re: [RFC/PATCH 12/14] dt: omap3: beagle board: set clock freq for
- i2c devices
-Date: Wed, 10 Aug 2011 22:15:09 +0530
-Message-ID: <20110810164509.GA2705@manju-desktop>
-References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
- <1312897232-4792-13-git-send-email-manjugk@ti.com>
- <4E427CD0.7060206@ti.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v11 5/5] powerpc: Fix up fsl-flexcan device tree binding.
+Date: Wed, 10 Aug 2011 11:56:28 -0500
+Message-ID: <4E42B83C.2040705@freescale.com>
+References: <1312993670-23999-1-git-send-email-holt@sgi.com> <1312993670-23999-6-git-send-email-holt@sgi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E427CD0.7060206@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1312993670-23999-6-git-send-email-holt@sgi.com>
+Sender: netdev-owner@vger.kernel.org
+To: Robin Holt <holt@sgi.com>
+Cc: Kumar Gala <galak@kernel.crashing.org>, Wolfgang Grandegger <wg@grandegger.com>, U Bhaskar-B22300 <B22300@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Marc Kleine-Budde <mkl@pengutronix.de>, socketcan-core@lists.berlios.de, netdev@vger.kernel.org, PPC list <linuxppc-dev@lists.ozlabs.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 02:42:56PM +0200, Cousson, Benoit wrote:
-> On 8/9/2011 4:10 PM, G, Manjunath Kondaiah wrote:
-> >
-> >Update omap3 beagle dts file with required clock frequencies for the i2c
-> >client devices existing on beagle board.
-> >
-> >Beagle custom board dts file is cleaned up so that it can coexist with omap3
-> >soc dts file.
-> >
-> >Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
-> >---
-> >  arch/arm/boot/dts/omap3-beagle-nunchuck.dts |   11 +----------
-> >  arch/arm/boot/dts/omap3-beagle.dts          |   18 +++++++++++++++---
-> >  2 files changed, 16 insertions(+), 13 deletions(-)
-> >
-> >diff --git a/arch/arm/boot/dts/omap3-beagle-nunchuck.dts b/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
-> >index 2607be5..324ff86 100644
-> >--- a/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
-> >+++ b/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
-> >@@ -1,16 +1,7 @@
-> >  /include/ "omap3-beagle.dts"
-> >
-> >  / {
-> >-	i2c@48072000 {
-> >-		compatible = "ti,omap3-i2c";
-> >-		reg =<0x48072000 0x80>;
-> >-		#address-cells =<1>;
-> >-		#size-cells =<0>;
-> >-
-> >-		eeprom@50 {
-> >-			compatible = "at,at24c01";
-> >-			reg =<  0x50>;
-> >-		};
-> 
-> This change should probably not be there.
-> 
-> >+	i2c@2 {
-> >  		joystick@52 {
-> >  			compatible = "sparkfun,wiichuck";
-> 
-> It looks like someone is having fun with a beagle connected to a Wii
-> nunchuck:-)
-It's custom beagle belong to grant :)
+On 08/10/2011 11:27 AM, Robin Holt wrote:
+> -CPI Clock- Can Protocol Interface Clock
+> -	This CLK_SRC bit of CTRL(control register) selects the clock source to
+> -	the CAN Protocol Interface(CPI) to be either the peripheral clock
+> -	(driven by the PLL) or the crystal oscillator clock. The selected clock
+> -	is the one fed to the prescaler to generate the Serial Clock (Sclock).
+> -	The PRESDIV field of CTRL(control register) controls a prescaler that
+> -	generates the Serial Clock (Sclock), whose period defines the
+> -	time quantum used to compose the CAN waveform.
+> +- compatible : Should be "fsl,flexcan" and optionally
+> +               "fsl,flexcan-<processor>"
 
-> 
-> >  			reg =<  0x52>;
-> >diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> >index 4439466..49a5ac7 100644
-> >--- a/arch/arm/boot/dts/omap3-beagle.dts
-> >+++ b/arch/arm/boot/dts/omap3-beagle.dts
-> >@@ -1,7 +1,19 @@
-> >-/dts-v1/;
-> >-/include/ "skeleton.dtsi"
-> >+/include/ "omap3-soc.dtsi"
-> 
-> There is no need for the "-soc" postfix, otherwise all the other
-> SoCs inside DTS directory should have it.
-ok.
+fsl,<processor>-flexcan, and it should not be optional, and should come
+before "fsl,flexcan".
 
--M
+Also may want to list fsl,p1010-rdb as a "canonical compatible" for
+anything which is backwards compatible with p1010's implementation.
+
+-Scott
+
