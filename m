@@ -1,112 +1,57 @@
-From: Barry Song <21cnbao@gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: Add device tree binding for WM8753
-Date: Wed, 10 Aug 2011 09:21:16 +0800
-Message-ID: <CAGsJ_4w-YhWQTFovkynKVVr6JkwcHJQn-EmfxUxOSd=C2BwhiA@mail.gmail.com>
-References: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
- <CAGsJ_4y2tDb3ZBPo8bCtrjFt0OWzR8WeG+kL_RKJPRP7-pZopw@mail.gmail.com>
- <20110809065100.GB8017@core.coreip.homeip.net> <20110809142851.GA15861@opensource.wolfsonmicro.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Tegra pinmux Device Tree support
+Date: Wed, 10 Aug 2011 11:23:49 +1000
+Message-ID: <20110810012349.GA23511@yookeroo.fritz.box>
+References: <74CDBE0F657A3D45AFBB94109FB122FF049F17229E@HQMAIL01.nvidia.com>
+ <20110809173428.GB32195@ponder.secretlab.ca>
+ <CAOesGMjH8hZSAXvDZ6ADO-dtFNecRYC5GsfRiAeV8KMRG=JTkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20110809142851.GA15861@opensource.wolfsonmicro.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMjH8hZSAXvDZ6ADO-dtFNecRYC5GsfRiAeV8KMRG=JTkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Linus Walleij (linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org)" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2011/8/9 Mark Brown <broonie@opensource.wolfsonmicro.com>:
-> On Mon, Aug 08, 2011 at 11:51:00PM -0700, Dmitry Torokhov wrote:
->
->> The issue I have with the ads7846 driver is that it still needs plat=
-form
->> code to supply the needed platform data structure to make the
->> driver/device usable. So I am not sure what the benefit DT matching =
-code
->> brings to that driver.
->
-> Oh, if that's the case the driver ought to have device tree bindings
-> which replicate the platform data. =C2=A0Unless the platform data is
-> sufficiently obscure for hardly anyone to want to use it I guess.
->
-With the device tree binding in ads7846, we don't need spi_board_info
-any more since we have
-ts@0 {
-       compatible =3D "ti,ads7845";
-       reg =3D <0x0>;
-       spi-max-frequency =3D <31250>;
-       interrupts =3D <90>;
-};
-in dts.
+On Tue, Aug 09, 2011 at 10:44:29AM -0700, Olof Johansson wrote:
+> On Tue, Aug 9, 2011 at 10:34 AM, Grant Likely <grant.likely@secretlab=
+=2Eca> wrote:
+>=20
+> > We talked about this a bit at Linaro connect. =A0Outside of the mor=
+e
+> > complex runtime-reconfiguration of pin mux, there is a general need
+> > for arbitrary initialization sequences to registers. =A0Also, prett=
+y
+> > much exactly what you need for tegra is needed for imx, omap and ma=
+ny
+> > others. =A0The though was, rather than trying to come up with some =
+kind
+> > of pinmux-specific binding for pin states, which could end up being
+> > very verbose if everything was split out into properties, we could
+> > instead have a binding for register initialization sequences.
+> > Something like this:
+> >
+> > =A0 =A0 =A0 =A0pinmux-initseq =3D <reg1 value1> <reg1 value2> ...;
+> >
+> > And then add some macros for DTC to make it easier to define things
+> > like pinmux setup tables. =A0Although the binding above is probably=
+ too
+> > simple and naive.
+>=20
+> This seems to break the philosophy of what the device tree should do
+> -- it should describe the hardware so that the driver will know how t=
+o
+> program it, not include the code itself?
 
-I guess what Dmitry said is the big ads7846_platform_data structure.
+Arguably, yes, although it's a barrier that's been frequently broken
+by Apple already.
 
- struct ads7846_platform_data {
-        u16     model;                  /* 7843, 7845, 7846, 7873. */
-        u16     vref_delay_usecs;       /* 0 for external vref; etc */
-        u16     vref_mv;                /* external vref value, milliVo=
-lts
-                                         * ads7846: if 0, use internal =
-vref */
-        bool    keep_vref_on;           /* set to keep vref on for diff=
-erential
-                                         * measurements as well */
-        bool    swap_xy;                /* swap x and y axes */
-
-        /* Settling time of the analog signals; a function of Vcc and t=
-he
-         * capacitance on the X/Y drivers.  If set to non-zero, two sam=
-ples
-         * are taken with settle_delay us apart, and the second one is =
-used.
-         * ~150 uSec with 0.01uF caps.
-         */
-        u16     settle_delay_usecs;
-
-        /* If set to non-zero, after samples are taken this delay is ap=
-plied
-         * and penirq is rechecked, to help avoid false events.  This v=
-alue
-         * is affected by the material used to build the touch layer.
-         */
-        u16     penirq_recheck_delay_usecs;
-
-        u16     x_plate_ohms;
-        u16     y_plate_ohms;
-
-        u16     x_min, x_max;
-        u16     y_min, y_max;
-        u16     pressure_min, pressure_max;
-
-        u16     debounce_max;           /* max number of additional rea=
-dings
-                                         * per sample */
-        u16     debounce_tol;           /* tolerance used for filtering=
- */
-        u16     debounce_rep;           /* additional consecutive good =
-readings
-                                         * required after the first two=
- */
-        int     gpio_pendown;           /* the GPIO used to decide the =
-pendown
-                                         * state if get_pendown_state =3D=
-=3D NULL
-                                         */
-        int     (*get_pendown_state)(void);
-        int     (*filter_init)  (const struct ads7846_platform_data *pd=
-ata,
-                                 void **filter_data);
-        int     (*filter)       (void *filter_data, int data_idx, int *=
-val);
-        void    (*filter_cleanup)(void *filter_data);
-        void    (*wait_for_sync)(void);
-        bool    wakeup;
-        unsigned long irq_flags;
-};
-
-The structure even has some callbacks which can't be possible in dts.
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _oth=
+er_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
