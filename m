@@ -1,277 +1,261 @@
-From: Daniel Morsing <daniel.morsing-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] net: dm9000: add support for device tree probing
-Date: Wed, 10 Aug 2011 13:30:06 +0200
-Message-ID: <1312975806.9870.37.camel@morsingpad>
-References: <1312919849-4979-1-git-send-email-daniel.morsing@gmail.com>
-	<1312919849-4979-2-git-send-email-daniel.morsing@gmail.com>
-	<20110809205155.GC11568@ponder.secretlab.ca>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [RFC/PATCH 09/14] dt: omap: prepare hwmod to support dt
+Date: Wed, 10 Aug 2011 13:51:47 +0200
+Message-ID: <4E4270D3.8070807@ti.com>
+References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
+	<1312897232-4792-10-git-send-email-manjugk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110809205155.GC11568-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1312897232-4792-10-git-send-email-manjugk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2011-08-09 at 14:51 -0600, Grant Likely wrote:
-> On Tue, Aug 09, 2011 at 09:57:29PM +0200, Daniel Morsing wrote:
-> > This patch adds support for probing the dm9000 driver through device
-> > trees.
-> > 
-> > The patch works by supplying its own platform_data struct when probed
-> > via device tree. This allows us to rely on the existing options parsing
-> > in the driver and avoid ifdeffery in the probe function.
-> > 
-> > Signed-off-by: Daniel Morsing <daniel.morsing-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/net/dm9000.txt |   46 ++++++++++++
-> >  drivers/net/dm9000.c                             |   85 ++++++++++++++++++++++
-> >  2 files changed, 131 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/dm9000.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/dm9000.txt b/Documentation/devicetree/bindings/net/dm9000.txt
-> > new file mode 100644
-> > index 0000000..f13ce20
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/dm9000.txt
-> > @@ -0,0 +1,46 @@
-> > +Davicom DM9000 ethernet controller
-> > +
-> > +Required properties:
-> > +
-> > + - compatible : Should be "davicom,dm9000"
-> > +
-> > + - interrupts : Interrupt controller specific encoding, which specifies 1
-> > +   or 2 interrupts. The first interrupt is for rx/tx received and is required
-> > +   by the driver to function. The second interrupt is for wake on lan support
-> > +   and is optional.
-> > +
-> > + - interrupt-flags : A one cell value which specifies the flag values for
-> > +   the first interrupt, corresponding to the IORESOURCE_IRQ_* flags. An
-> > +   example is using the value <8> for specifying the IORESOURCE_IRQ_LOWLEVEL
-> > +   flag
-> 
-> Don't do this.  First of all, the interrupt specifier should be
-> sufficient for specifying properties of the irq.  Second, this is
-> encoding Linux internal implementation details into the device tree.
-> It is fine for a property to correspond with the numbers used by
-> Linux, but they must be explicitly specified.  Don't simply say "the
-> same numbers as used by Linux".
+Hi Manju,
 
-I originally based this patch on 3.0 and through code inspection, I saw
-no way to set sense information on the arm architecture. I must have
-assumed that it was general for device tree and added this property.
+On 8/9/2011 4:10 PM, G, Manjunath Kondaiah wrote:
+>
+> The omap dt requires new omap hwmod api to be added for in order
+> to support omap dt.
 
-The property has been removed in the new version.
+Both the subject and the changelog are misleading. You are not doing any 
+hwmod stuff in it.
+You are just passing an "of_node" pointer during omap_device_build_ss.
 
-As an aside, looking through the code, a couple of architectures still
-implement a create_of_irq_mapping function that just returns the first
-index of the original array. Is this valid behavior?
-> 
-> > +
-> > + - reg : 2 Physical address specifiers, where the first specifies the address
-> > +   register of device, and the second specifies the data register of the device
-> > +
-> > +Optional properties:
-> > +
-> > + - local-mac-address : Binary data specifying a mac address override
-> > +
-> > + - The following properties are all empty properties and specify one of the
-> > +   flags that can be passed with the platform data to the driver. For specifics
-> > +   about what the flags mean, see Documentation/networking/dm9000.txt
-> 
-> Ditto here on Linux values.
-> 
-> > +
-> > +   8bitonly:	DM9000_PLATF_8BITONLY
-> > +   16bitonly:	DM9000_PLATF_16BITONLY
-> > +   32bitonly:	DM9000_PLATF_32BITONLY
-> 
-> You should probably use the reg-io-width property similar to the ns16550
-> driver.
-> 
-> > +   ext-phy:	DM9000_PLATF_EXT_PHY
-> > +   no-eeprom:	DM9000_PLATF_NO_EEPROM
-> > +   simple-phy:	DM9000_PLATF_SIMPLE_PHY
-> 
-> Can you use the phy-device binding used by other ethernet controllers
-> to specify an external phy?
+The subject should start with OMAP: omap_device: because it does not 
+belong to the DT subsystem.
+The same comment apply to most patches in that series.
 
-The only option for external phy is if it exists or not. Is it valid to
-just find out if there is a valid phy-handle phandle in the DT, then set
-the flag and throw away the resulting node?
+> The new api is added and new parameter "np" is added for existing
+> api.
 
-simple-phy is not an option for the external phy. It specifies a mode
-where the link change status for the internal phy is read through a
-simple register read instead of using expensive MDIO accesses. That
-property will stay, but more thoroughly documented :).
+I don't think np is not a super meaningful name. Some more explanation 
+are needed as well.
 
-> 
-> > +
-> > +Example:
-> > +
-> > +ethernet0@2c000000 {
-> 
-> ethernet@2c000000 (drop the '0').  If you want to enumerate it, use a
-> property in the /aliases node.
-> 
-> > +	compatible = "davicom,dm9000";
-> > +	reg = <0x2c000000 0x04>,
-> > +	      <0x2c000400 0x04>;
-> > +	interrupts = <185>;
-> > +	interrupt-flags = <8>; /* IORESOURCE_IRQ_LOWLEVEL */
-> > +	local-mac-address = [02 65 16 01 c0 09];
-> > +	16bitonly;
-> > +	no-eeprom;
-> > +};
-> > diff --git a/drivers/net/dm9000.c b/drivers/net/dm9000.c
-> > index 8ef31dc..4ad5043 100644
-> > --- a/drivers/net/dm9000.c
-> > +++ b/drivers/net/dm9000.c
-> > @@ -35,6 +35,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/irq.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/of.h>
-> >  
-> >  #include <asm/delay.h>
-> >  #include <asm/irq.h>
-> > @@ -1350,6 +1351,77 @@ static const struct net_device_ops dm9000_netdev_ops = {
-> >  #endif
-> >  };
-> >  
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id dm9000_of_match[] = {
-> > +	{ .compatible = "davicom,dm9000" },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, dm9000_of_match);
-> > +
-> > +static const struct {
-> > +	const char *property;
-> > +	unsigned int flag;
-> > +} property_lookup[] __devinitconst = {
-> > +	{ "8bitonly", DM9000_PLATF_8BITONLY},
-> > +	{ "16bitonly", DM9000_PLATF_16BITONLY},
-> > +	{ "32bitonly", DM9000_PLATF_32BITONLY},
-> > +	{ "ext-phy", DM9000_PLATF_EXT_PHY},
-> > +	{ "no-eeprom", DM9000_PLATF_NO_EEPROM},
-> > +	{ "simple-phy", DM9000_PLATF_SIMPLE_PHY},
-> > +	{},
-> > +};
-> > +
-> > +static int __devinit
-> > +dm9000_dt_fill_platdata(struct platform_device *pdev,
-> > +			struct dm9000_plat_data *pdata)
-> > +{
-> > +	struct resource *irq_res;
-> > +	struct device_node *of_node = pdev->dev.of_node;
-> > +	const u8 *mac_addr;
-> > +
-> > +	u32 intflags;
-> > +	int i;
-> > +
-> > +	if (of_property_read_u32(of_node, "interrupt-flags", &intflags)) {
-> > +		dev_err(&pdev->dev,
-> > +			"interrupt-flags property not found in device tree\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Is this really a fatal error?
+> The users of hwmod api is changed accrodingly.
 
-The driver complains if passed an IRQ resource without sense flags. This
-makes sense in the original usage of the driver where the interrupt
-probably hadn't been set up to a particular irq_type before requesting
-it.
+omap_device API + typo.
 
-With the removal of interrupt-flags, there's no fatal error here
-anymore, but the driver will start complaining (though not failing)
-about no sense flags.
+> Build and boot tested on omap3 beagle for both dt and not dt build.
+>
+> Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
+> ---
+>   arch/arm/mach-omap2/devices.c                 |    2 +-
+>   arch/arm/mach-omap2/mcbsp.c                   |    2 +-
+>   arch/arm/plat-omap/include/plat/omap_device.h |   11 +++++-
+>   arch/arm/plat-omap/omap_device.c              |   53 ++++++++++++++++++++++---
+>   4 files changed, 59 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
+> index 458f7be..d7ff1ae 100644
+> --- a/arch/arm/mach-omap2/devices.c
+> +++ b/arch/arm/mach-omap2/devices.c
+> @@ -92,7 +92,7 @@ static int __init omap4_l3_init(void)
+>   			pr_err("could not look up %s\n", oh_name);
+>   	}
+>
+> -	pdev = omap_device_build_ss("omap_l3_noc", 0, oh, 3, NULL,
+> +	pdev = omap_device_build_ss(NULL, "omap_l3_noc", 0, oh, 3, NULL,
+>   						     0, NULL, 0, 0);
 
-> 
-> > +
-> > +	irq_res  = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> > +	if (!irq_res) {
-> > +		dev_err(&pdev->dev, "No irq found in device tree\n");
-> > +		return -EINVAL;
-> > +	}
-> > +	irq_res->flags |= intflags;
-> > +
-> > +	for (i = 0; property_lookup[i].property; i++) {
-> > +		struct property *prop;
-> > +		prop = of_find_property(of_node, property_lookup[i].property,
-> > +					NULL);
-> > +		if (prop) {
-> > +			pdata->flags |= property_lookup[i].flag;
-> > +			dev_dbg(&pdev->dev, "%s property found in device tree\n",
-> > +					property_lookup[i].property);
-> > +		}
-> > +	}
-> > +
-> > +	mac_addr = of_get_property(of_node, "local-mac-address", NULL);
-> > +	if (mac_addr)
-> > +		memcpy(pdata->dev_addr, mac_addr, 6);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +#else
-> > +#define dm9000_of_match NULL
-> > +static inline int dm9000_dt_fill_platdata(struct platform_device *pdev,
-> > +					   struct dm9000_plat_data *pdata)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif /* CONFIG_OF */
-> > +
-> >  /*
-> >   * Search DM9000 board, allocate space and register it
-> >   */
-> > @@ -1359,12 +1431,24 @@ dm9000_probe(struct platform_device *pdev)
-> >  	struct dm9000_plat_data *pdata = pdev->dev.platform_data;
-> >  	struct board_info *db;	/* Point a board information structure */
-> >  	struct net_device *ndev;
-> > +	struct dm9000_plat_data pdata_of;
-> >  	const unsigned char *mac_src;
-> >  	int ret = 0;
-> >  	int iosize;
-> >  	int i;
-> >  	u32 id_val;
-> >  
-> > +	if (pdev->dev.of_node) {
-> > +		if (!pdata) {
-> > +			memset(&pdata_of, 0, sizeof(pdata_of));
-> > +			pdata = &pdata_of;
-> > +		}
-> > +
-> > +		ret = dm9000_dt_fill_platdata(pdev, pdata);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >  	/* Init network device */
-> >  	ndev = alloc_etherdev(sizeof(struct board_info));
-> >  	if (!ndev) {
-> > @@ -1677,6 +1761,7 @@ static struct platform_driver dm9000_driver = {
-> >  		.name    = "dm9000",
-> >  		.owner	 = THIS_MODULE,
-> >  		.pm	 = &dm9000_drv_pm_ops,
-> > +		.of_match_table = dm9000_of_match,
-> >  	},
-> >  	.probe   = dm9000_probe,
-> >  	.remove  = __devexit_p(dm9000_drv_remove),
-> 
-> Otherwise, looks pretty good.
-> 
-> g.
-> 
+OK, maybe that is just me, but in order to extend an API, I'd rather add 
+the new parameter at the end.
+
+>   	WARN(IS_ERR(pdev), "could not build omap_device for %s\n", oh_name);
+> diff --git a/arch/arm/mach-omap2/mcbsp.c b/arch/arm/mach-omap2/mcbsp.c
+> index 7a42f32..98eb95d 100644
+> --- a/arch/arm/mach-omap2/mcbsp.c
+> +++ b/arch/arm/mach-omap2/mcbsp.c
+> @@ -144,7 +144,7 @@ static int omap_init_mcbsp(struct omap_hwmod *oh, void *unused)
+>   		(struct omap_mcbsp_dev_attr *)(oh->dev_attr))->sidetone);
+>   		count++;
+>   	}
+> -	pdev = omap_device_build_ss(name, id, oh_device, count, pdata,
+> +	pdev = omap_device_build_ss(NULL, name, id, oh_device, count, pdata,
+>   				sizeof(*pdata), omap2_mcbsp_latency,
+>   				ARRAY_SIZE(omap2_mcbsp_latency), false);
+>   	kfree(pdata);
+> diff --git a/arch/arm/plat-omap/include/plat/omap_device.h b/arch/arm/plat-omap/include/plat/omap_device.h
+> index 7a3ec4f..5e2424b 100644
+> --- a/arch/arm/plat-omap/include/plat/omap_device.h
+> +++ b/arch/arm/plat-omap/include/plat/omap_device.h
+> @@ -33,6 +33,7 @@
+>
+>   #include<linux/kernel.h>
+>   #include<linux/platform_device.h>
+> +#include<linux/of.h>
+>
+>   #include<plat/omap_hwmod.h>
+>
+> @@ -89,12 +90,20 @@ struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+>   				      struct omap_device_pm_latency *pm_lats,
+>   				      int pm_lats_cnt, int is_early_device);
+>
+> -struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+> +struct platform_device *omap_device_build_ss(struct device_node *np,
+> +					 const char *pdev_name, int pdev_id,
+>   					 struct omap_hwmod **oh, int oh_cnt,
+>   					 void *pdata, int pdata_len,
+>   					 struct omap_device_pm_latency *pm_lats,
+>   					 int pm_lats_cnt, int is_early_device);
+>
+> +struct platform_device *omap_device_build_dt(struct device_node *np,
+> +				      const char *pdev_name, int pdev_id,
+> +				      struct omap_hwmod *oh, void *pdata,
+> +				      int pdata_len,
+> +				      struct omap_device_pm_latency *pm_lats,
+> +				      int pm_lats_cnt, int is_early_device);
+> +
+>   void __iomem *omap_device_get_rt_va(struct omap_device *od);
+>
+>   /* OMAP PM interface */
+> diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/omap_device.c
+> index 7d5e76b..fa49168 100644
+> --- a/arch/arm/plat-omap/omap_device.c
+> +++ b/arch/arm/plat-omap/omap_device.c
+> @@ -85,6 +85,7 @@
+>   #include<linux/clk.h>
+>   #include<linux/clkdev.h>
+>   #include<linux/pm_runtime.h>
+> +#include<linux/of_device.h>
+>
+>   #include<plat/omap_device.h>
+>   #include<plat/omap_hwmod.h>
+> @@ -377,6 +378,7 @@ static int omap_device_fill_resources(struct omap_device *od,
+>   /**
+>    * omap_device_build - build and register an omap_device with one omap_hwmod
+
+Need to update the kerneldoc.
+
+>    * @pdev_name: name of the platform_device driver to use
+> + * @np: device node pointer for attaching it to of_node pointer
+>    * @pdev_id: this platform_device's connection ID
+>    * @oh: ptr to the single omap_hwmod that backs this omap_device
+>    * @pdata: platform_data ptr to associate with the platform_device
+> @@ -391,7 +393,8 @@ static int omap_device_fill_resources(struct omap_device *od,
+>    * information.  Returns ERR_PTR(-EINVAL) if @oh is NULL; otherwise,
+>    * passes along the return value of omap_device_build_ss().
+>    */
+> -struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+> +struct platform_device *omap_device_build_dt(struct device_node *np,
+> +				      const char *pdev_name, int pdev_id,
+>   				      struct omap_hwmod *oh, void *pdata,
+>   				      int pdata_len,
+>   				      struct omap_device_pm_latency *pm_lats,
+
+That function should not be needed. You have to export 
+omap_device_build_ss, otherwise you will not build any device with 
+multiple hwmods.
+
+> @@ -402,12 +405,44 @@ struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+>   	if (!oh)
+>   		return ERR_PTR(-EINVAL);
+>
+> -	return omap_device_build_ss(pdev_name, pdev_id, ohs, 1, pdata,
+> +	return omap_device_build_ss(np, pdev_name, pdev_id, ohs, 1, pdata,
+>   				    pdata_len, pm_lats, pm_lats_cnt,
+>   				    is_early_device);
+>   }
+>
+>   /**
+> + * omap_device_build - build and register an omap_device with one omap_hwmod
+> + * @pdev_name: name of the platform_device driver to use
+> + * @pdev_id: this platform_device's connection ID
+> + * @oh: ptr to the single omap_hwmod that backs this omap_device
+> + * @pdata: platform_data ptr to associate with the platform_device
+> + * @pdata_len: amount of memory pointed to by @pdata
+> + * @pm_lats: pointer to a omap_device_pm_latency array for this device
+> + * @pm_lats_cnt: ARRAY_SIZE() of @pm_lats
+> + * @is_early_device: should the device be registered as an early device or not
+> + *
+> + * Convenience function for building and registering a single
+> + * omap_device record, which in turn builds and registers a
+> + * platform_device record.  See omap_device_build_ss() for more
+> + * information.  Returns ERR_PTR(-EINVAL) if @oh is NULL; otherwise,
+> + * passes along the return value of omap_device_build_ss().
+> + */
+> +struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+> +				      struct omap_hwmod *oh, void *pdata,
+> +				      int pdata_len,
+> +				      struct omap_device_pm_latency *pm_lats,
+> +				      int pm_lats_cnt, int is_early_device)
+> +{
+> +	struct omap_hwmod *ohs[] = { oh };
+> +
+> +	if (!oh)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return omap_device_build_ss(NULL, pdev_name, pdev_id, ohs, 1, pdata,
+> +			pdata_len, pm_lats, pm_lats_cnt, is_early_device);
+> +}
+> +
+> +/**
+>    * omap_device_build_ss - build and register an omap_device with multiple hwmods
+>    * @pdev_name: name of the platform_device driver to use
+>    * @pdev_id: this platform_device's connection ID
+> @@ -424,7 +459,8 @@ struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+>    * platform_device record.  Returns an ERR_PTR() on error, or passes
+>    * along the return value of omap_device_register().
+>    */
+> -struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+> +struct platform_device *omap_device_build_ss(struct device_node *np,
+> +					 const char *pdev_name, int pdev_id,
+>   					 struct omap_hwmod **ohs, int oh_cnt,
+>   					 void *pdata, int pdata_len,
+>   					 struct omap_device_pm_latency *pm_lats,
+> @@ -436,6 +472,7 @@ struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+>   	struct resource *res = NULL;
+>   	int i, res_count;
+>   	struct omap_hwmod **hwmods;
+> +	struct platform_device *pdev;
+>
+>   	if (!ohs || oh_cnt == 0 || !pdev_name)
+>   		return ERR_PTR(-EINVAL);
+> @@ -450,6 +487,7 @@ struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+>   	if (!od)
+>   		return ERR_PTR(-ENOMEM);
+>
+> +	pdev =&od->pdev;
+
+Why do you need that? You are just adding one more user of the pdev.
+
+>   	od->hwmods_cnt = oh_cnt;
+>
+>   	hwmods = kzalloc(sizeof(struct omap_hwmod *) * oh_cnt,
+> @@ -465,8 +503,11 @@ struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+>   		goto odbs_exit2;
+>   	strcpy(pdev_name2, pdev_name);
+>
+> -	od->pdev.name = pdev_name2;
+> -	od->pdev.id = pdev_id;
+> +#ifdef CONFIG_OF_DEVICE
+> +	pdev->dev.of_node = of_node_get(np);
+> +#endif
+> +	pdev->name = pdev_name2;
+> +	pdev->id = pdev_id;
+>
+>   	res_count = omap_device_count_resources(od);
+>   	if (res_count>  0) {
+> @@ -499,7 +540,7 @@ struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+>   	if (ret)
+>   		goto odbs_exit4;
+>
+> -	return&od->pdev;
+> +	return pdev;
+>
+>   odbs_exit4:
+>   	kfree(res);
+
+Regards,
+Benoit
