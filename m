@@ -1,72 +1,48 @@
-From: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Subject: Re: [RFC/PATCH 00/14] dt: omap hwmod-dt binding and omap3 i2c1 dt support
-Date: Wed, 10 Aug 2011 11:58:56 +0530
-Message-ID: <CAC63_iQ=Sv3hJ4PMsFaYDDD9sqbiLshODwGr-ST6GyKUdAyJnw@mail.gmail.com>
-References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
-	<4E421687.1060409@ti.com>
-	<CAC63_iTaeZ4Gh2V4t=fJB5BUzyfybeuaDXisgApagW0T5r2v0A@mail.gmail.com>
-	<4E42198C.8030202@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: Add device tree binding for WM8753
+Date: Wed, 10 Aug 2011 07:30:25 +0100
+Message-ID: <20110810063025.GA31765@opensource.wolfsonmicro.com>
+References: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com> <CAGsJ_4y2tDb3ZBPo8bCtrjFt0OWzR8WeG+kL_RKJPRP7-pZopw@mail.gmail.com> <20110809065100.GB8017@core.coreip.homeip.net> <20110809142851.GA15861@opensource.wolfsonmicro.com> <CAGsJ_4w-YhWQTFovkynKVVr6JkwcHJQn-EmfxUxOSd=C2BwhiA@mail.gmail.com> <20110810045113.GA23625@opensource.wolfsonmicro.com> <CAGsJ_4ykb65aD_a-04NuE-DRoERmB+WKLvaS8+5VYpE6pgOh5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4E42198C.8030202@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGsJ_4ykb65aD_a-04NuE-DRoERmB+WKLvaS8+5VYpE6pgOh5w@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Barry Song <21cnbao@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 11:09 AM, Rajendra Nayak <rnayak@ti.com> wrote:
-> On 8/10/2011 11:00 AM, G, Manjunath Kondaiah wrote:
->>
->> On Wed, Aug 10, 2011 at 10:56 AM, Rajendra Nayak<rnayak@ti.com> =A0w=
-rote:
->>>
->>> On 8/9/2011 7:40 PM, G, Manjunath Kondaiah wrote:
->>>>
->>>> This is in continuation of patch series posted at:
->>>> http://lwn.net/Articles/451917/
->>>>
->>>> Patches from Kevin Hilman and others are consolidated along with t=
-his
->>>> series since it will be part of ongoing work of decoupling pdev fr=
-om
->>>> omap_device.
->>>> [There is latest version posted which will be rebased later]
->>>>
->>>> Apart from the above, the major feature included in this series is
->>>> dt-hwmod binding and preparing omap hwmod framework for adapting o=
-map
->>>> drivers to support omap dt after aligning with Grant Likely
->>>> <grant.likely@secretlab.ca>
->>>>
->>>> However, current hwmod-dt binding will be replaced with notifiers =
-in
->>>> generic board file and hwmod device pointer will be scanned and at=
-tached
->>>> in notifier call.
->>>>
->>>> Used 3.0 stable kernel version for this patch series since latest
->>>> mainline
->>>> was broken for beagle boot last week.
->>>>
->>>> git://git.secretlab.ca/git/linux-2.6.git
->>>> Branch: devicetree/test-3.0
->>>
->>> Is there a reason why these are based on devicetree/test-3.0 and
->>> not devicetree/test?
->>
->> devicetree/test was broken last week since grant has pulled latest
->> mainline changes hence selected stable version.
->
-> Ok, atleast mainline is fixed now.
+On Wed, Aug 10, 2011 at 01:57:11PM +0800, Barry Song wrote:
+> 2011/8/10 Mark Brown <broonie@opensource.wolfsonmicro.com>:
 
-These changes are for v3.2 merge window and it will be rebased later
-after the review.
+> >> =A0struct ads7846_platform_data {
+> >> =A0 =A0 =A0 =A0 u16 =A0 =A0 model; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0/* 7843, 7845, 7846, 7873. */
+> >> =A0 =A0 =A0 =A0 u16 =A0 =A0 vref_mv; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+/* external vref value, milliVolts
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0* ads7846: if 0, use internal vref */
 
--M
+> > There's some callbacks but the bulk of the structure (including the=
+ bits
+> > I quoted above for example) looks like it's pure data and could sen=
+sibly
+> > be represented in the device tree.
+
+> there have been many discussions about what should be in dts.
+> basically, hardware information should be in dts, but data required b=
+y
+> driver implementation should be not in dts.
+> There are a lot of fields in the structure, not all can be a property
+> as hardware information in dts. That means the driver need a lot of
+> changes then.
+
+Things like the fields quoted above seem like they're fixed hardware
+properties that oguht to be in the device tree, though.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
 the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
