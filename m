@@ -1,54 +1,144 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v11 5/5] powerpc: Fix up fsl-flexcan device tree binding.
-Date: Wed, 10 Aug 2011 12:36:22 -0500
-Message-ID: <4E42C196.7030708@freescale.com>
-References: <1312993670-23999-1-git-send-email-holt@sgi.com> <1312993670-23999-6-git-send-email-holt@sgi.com> <4E42B83C.2040705@freescale.com> <20110810171933.GW4926@sgi.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 2/4] serial: s5pv210: Add device tree support
+Date: Wed, 10 Aug 2011 23:11:01 +0530
+Message-ID: <CAJuYYwS8Wr38WPQsu7-EHEK5YFn0823eKjj-yTxyp7=c23KnPQ@mail.gmail.com>
+References: <1312326509-2723-1-git-send-email-thomas.abraham@linaro.org>
+	<1312326509-2723-3-git-send-email-thomas.abraham@linaro.org>
+	<20110803091249.GB28651@trinity.fluff.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20110810171933.GW4926@sgi.com>
-Sender: netdev-owner@vger.kernel.org
-To: Robin Holt <holt@sgi.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>, Wolfgang Grandegger <wg@grandegger.com>, U Bhaskar-B22300 <B22300@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Marc Kleine-Budde <mkl@pengutronix.de>, socketcan-core@lists.berlios.de, netdev@vger.kernel.org, PPC list <linuxppc-dev@lists.ozlabs.org>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20110803091249.GB28651@trinity.fluff.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ben Dooks <ben-linux@fluff.org>
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2011 12:19 PM, Robin Holt wrote:
-> On Wed, Aug 10, 2011 at 11:56:28AM -0500, Scott Wood wrote:
->> On 08/10/2011 11:27 AM, Robin Holt wrote:
->>> -CPI Clock- Can Protocol Interface Clock
->>> -	This CLK_SRC bit of CTRL(control register) selects the clock source to
->>> -	the CAN Protocol Interface(CPI) to be either the peripheral clock
->>> -	(driven by the PLL) or the crystal oscillator clock. The selected clock
->>> -	is the one fed to the prescaler to generate the Serial Clock (Sclock).
->>> -	The PRESDIV field of CTRL(control register) controls a prescaler that
->>> -	generates the Serial Clock (Sclock), whose period defines the
->>> -	time quantum used to compose the CAN waveform.
->>> +- compatible : Should be "fsl,flexcan" and optionally
->>> +               "fsl,flexcan-<processor>"
+Hi Ben,
+
+On 3 August 2011 14:42, Ben Dooks <ben-linux@fluff.org> wrote:
+> On Wed, Aug 03, 2011 at 12:08:27AM +0100, Thomas Abraham wrote:
+>> For device tree based probe, the dependecy on pdev->id to attach a
+>> corresponding default port info to the driver's private data is
+>> removed. The fifosize parameter is obtained from the device tree
+>> node and the next available instance of port info is updated
+>> with the fifosize value and attached to the driver's private data.
+>> The default platform data is selected based on the compatible proper=
+ty.
 >>
->> fsl,<processor>-flexcan, and it should not be optional, and should come
->> before "fsl,flexcan".
+>> CC: Ben Dooks <ben-linux@fluff.org>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> =A0.../devicetree/bindings/serial/samsung_uart.txt =A0 =A0| =A0 16 +=
+++++++
+>> =A0drivers/tty/serial/s5pv210.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 | =A0 43 +++++++++++++++++++-
+>> =A0drivers/tty/serial/samsung.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 | =A0 =A05 ++-
+>> =A03 files changed, 62 insertions(+), 2 deletions(-)
+>> =A0create mode 100644 Documentation/devicetree/bindings/serial/samsu=
+ng_uart.txt
 >>
->> Also may want to list fsl,p1010-rdb as a "canonical compatible" for
->> anything which is backwards compatible with p1010's implementation.
-> 
-> How do I specify 'canonical compatible'?
 
-Something like:
+[...]
 
-  compatible: Should be "fsl,<processor>-flexcan" and "fsl,flexcan".
+>> =A0/* device management */
+>> =A0static int s5p_serial_probe(struct platform_device *pdev)
+>> =A0{
+>> - =A0 =A0 return s3c24xx_serial_probe(pdev, s5p_uart_inf[pdev->id]);
+>> + =A0 =A0 static unsigned int probe_index;
+>> + =A0 =A0 unsigned int port =3D pdev->id;
+>> + =A0 =A0 const struct of_device_id *match;
+>> + =A0 =A0 struct s3c2410_uartcfg *cfg;
+>> +
+>> + =A0 =A0 if (pdev->dev.of_node) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 if (of_property_read_u32(pdev->dev.of_node=
+,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "samsung,u=
+art-fifosize",
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &s5p_uart_=
+inf[probe_index]->fifosize))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+>
+> I'd rather see the fifo size either being a property of the soc itsel=
+f
+> or being inferred by the compatible field.
 
-  An implementation should also claim any of the following compatibles
-  that it is fully backwards compatible with:
+When using the compatible field to infer the fifosize of the
+controller, the code looks as listed below.
 
-  - fsl,p1010-rdb
+struct s3c24xx_uart_dt_compat_data {
+        unsigned int fifosize;
+        struct s3c2410_uartcfg *uartcfg;
+};
 
-> What would be the use of it in that implementation?
+static struct s3c2410_uartcfg s5pv310_uart_defcfg =3D {
+        .ucon   =3D 0x3c5,
+        .ufcon  =3D 0x111,
+        .flags  =3D NO_NEED_CHECK_CLKSRC,
+        .has_fracval =3D 1,
+};
 
-It limits the number of compatibles a driver has to care about, so you
-don't need a huge ID table just to be able to figure out whether this is
-a p1010-style flexcan or ARM-style.
+static struct s3c24xx_uart_dt_compat_data s5pv210_compat_fs256 =3D {
+        .fifosize =3D 256;
+        .uartcfg =3D &s5pv310_uart_defcfg;
+};
 
--Scott
+static struct s3c24xx_uart_dt_compat_data s5pv210_compat_fs64 =3D {
+        .fifosize =3D 64;
+        .uartcfg =3D &s5pv310_uart_defcfg;
+};
 
+static struct s3c24xx_uart_dt_compat_data s5pv210_compat_fs16 =3D {
+        .fifosize =3D 16;
+        .uartcfg =3D &s5pv310_uart_defcfg;
+};
+
+static const struct of_device_id s5pv210_uart_dt_match[] =3D {
+        { .compatible =3D "samsung,s5pv310-uart-fs256", .data =3D
+&s5pv210_compat_fs256 },
+        { .compatible =3D "samsung,s5pv310-uart-fs64", .data =3D
+s5pv210_compat_fs64 },
+        { .compatible =3D "samsung,s5pv310-uart-fs16", .data =3D
+s5pv210_compat_fs16 },
+        {},
+};
+MODULE_DEVICE_TABLE(of, s5pv210_uart_match);
+
+
+This requires a new structure definition and additional data in the
+driver. So I still prefer to use a property in the uart device node to
+define the fifosize of the controller.
+
+What would you be your preference? Or is there a better way to obtain
+the fifosize?
+
+Thanks,
+Thomas.
+
+>
+>> =A0 =A0 =A0 .driver =A0 =A0 =A0 =A0 =3D {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =3D "s5pv210-uart",
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .owner =A0=3D THIS_MODULE,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D s5pv210_uart_dt_match,
+>
+> I think maybe doing something like
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.of_match_table =3D of_match_ptr(5pv21=
+0_uart_dt_match),
+>
+> so we can avoid having the #else and #define 5pv210_uart_dt_match NUL=
+L
+> in a number of places.
+>
+>> =A0 =A0 =A0 },
+>> =A0};
+>
+> --
+> Ben Dooks, ben@fluff.org, http://www.fluff.org/ben/
+>
+> Large Hadron Colada: A large Pina Colada that makes the universe disa=
+ppear.
+>
+>
