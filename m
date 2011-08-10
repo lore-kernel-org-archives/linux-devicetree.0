@@ -1,15 +1,12 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [RFC/PATCH 12/14] dt: omap3: beagle board: set clock freq for
-	i2c devices
-Date: Wed, 10 Aug 2011 14:42:56 +0200
-Message-ID: <4E427CD0.7060206@ti.com>
-References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
-	<1312897232-4792-13-git-send-email-manjugk@ti.com>
+From: "Mark Rutland" <mark.rutland@arm.com>
+Subject: Subject: L2x0 OF properties do not include interrupt #
+Date: Wed, 10 Aug 2011 13:48:05 +0100
+Message-ID: <34528.5811498345$1312980546@news.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1312897232-4792-13-git-send-email-manjugk@ti.com>
+Content-Language: en-gb
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,63 +16,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux@arm.linux.org.uk, 'Arnd Bergmann' <arnd@arndb.de>, Will Deacon <Will.Deacon@arm.com>, devicetree-discuss@lists.ozlabs.org, 'Barry Song' <21cnbao@gmail.com>, linux-kernel@vger.kernel.org, workgroup.linux@csr.com, 'Grant Likely' <grant.likely@secretlab.ca>, weizeng.he@csr.com, 'Olof Johansson' <olof@lixom.net>, tglx@linutronix.de, 'Rob Herring' <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/9/2011 4:10 PM, G, Manjunath Kondaiah wrote:
->
-> Update omap3 beagle dts file with required clock frequencies for the i2c
-> client devices existing on beagle board.
->
-> Beagle custom board dts file is cleaned up so that it can coexist with omap3
-> soc dts file.
->
-> Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
-> ---
->   arch/arm/boot/dts/omap3-beagle-nunchuck.dts |   11 +----------
->   arch/arm/boot/dts/omap3-beagle.dts          |   18 +++++++++++++++---
->   2 files changed, 16 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3-beagle-nunchuck.dts b/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
-> index 2607be5..324ff86 100644
-> --- a/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle-nunchuck.dts
-> @@ -1,16 +1,7 @@
->   /include/ "omap3-beagle.dts"
->
->   / {
-> -	i2c@48072000 {
-> -		compatible = "ti,omap3-i2c";
-> -		reg =<0x48072000 0x80>;
-> -		#address-cells =<1>;
-> -		#size-cells =<0>;
-> -
-> -		eeprom@50 {
-> -			compatible = "at,at24c01";
-> -			reg =<  0x50>;
-> -		};
+Hi all,
 
-This change should probably not be there.
+I'm working on a driver for the PMU found in L220/PL310 L2 Cache Controllers
+(as an extension to the existing L2x0 code).
 
-> +	i2c@2 {
->   		joystick@52 {
->   			compatible = "sparkfun,wiichuck";
+I've taken a look into what BSP support would be required and mocked up some
+platform_device support, though I notice that Rob Herring has provided
+devicetree bindings for the L2x0 ("l2x0: Add OF based initialization") which
+should probably be used to initialize the PMU (if present) from devicetree.
 
-It looks like someone is having fun with a beagle connected to a Wii 
-nunchuck:-)
+The L2x0 hardware supports a combined interrupt line, which is present on the
+Vexpress A9x4, EB11MPcore, PB1176, etc. This can be used to signal errors on
+read/write, parity checks, etc. The PMU also fires an interrupt on this line
+when any of its counters saturate.
 
->   			reg =<  0x52>;
-> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> index 4439466..49a5ac7 100644
-> --- a/arch/arm/boot/dts/omap3-beagle.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle.dts
-> @@ -1,7 +1,19 @@
-> -/dts-v1/;
-> -/include/ "skeleton.dtsi"
-> +/include/ "omap3-soc.dtsi"
+Unfortunately the L2x0 OF bindings introduced by the patch don't include an
+(optional) interrupt property, which means the PMU driver won't be able to be
+initialised via devicetree. As we want to get as much as possible dynamically
+configured via devicetree, this is problematic.
 
-There is no need for the "-soc" postfix, otherwise all the other SoCs 
-inside DTS directory should have it.
+I realise I'm a bit late to the party here, but I'd like to propose adding an
+optional interrupt parameter to the binding. I'm not aware of any
+implementations which use separate interrupts, but given the binding
+seems to be generic across L2CC implementations (and is not limited simply to
+the L2x0), having a list rather than a single interrupt may be appropriate for
+someone.
 
-Benoit
+This would boil down to (for the moment) a Documentation change along the lines of:
+
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index f50e021..d4b387b 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -28,6 +28,7 @@ Optional properties:
+>  - arm,filter-ranges : <start length> Starting address and length of window to
+>    filter. Addresses in the filter window are directed to the M1 port. Other
+>    addresses will go to the M0 port.
+> +- interrupt : A combined interrupt.
+>  
+>  Example:
+>  
+> @@ -39,4 +40,5 @@ L2: cache-controller {
+>          arm,filter-latency = <0x80000000 0x8000000>;
+>          cache-unified;
+>          cache-level = <2>;
+> +        interrupt = <45>;
+>  };
+
+Any thoughts?
+
+Thanks,
+Mark
