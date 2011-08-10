@@ -1,64 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Will Deacon <will.deacon@arm.com>
 Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Wed, 10 Aug 2011 16:09:56 +0200
-Message-ID: <201108101609.56995.arnd@arndb.de>
+Date: Wed, 10 Aug 2011 15:10:49 +0100
+Message-ID: <20110810141048.GK10121@e102144-lin.cambridge.arm.com>
 References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
+ <4E428EB0.1080204@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux@arm.linux.org.uk, Will Deacon <Will.Deacon@arm.com>, devicetree-discuss@lists.ozlabs.org, 'Barry Song' <21cnbao@gmail.com>, linux-kernel@vger.kernel.org, workgroup.linux@csr.com, 'Grant Likely' <grant.likely@secretlab.ca>, weizeng.he@csr.com, 'Olof Johansson' <olof@lixom.net>, tglx@linutronix.de, 'Rob Herring' <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4E428EB0.1080204@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tglx@linutronix.de" <tglx@linutronix.de>, "weizeng.he@csr.com" <weizeng.he@csr.com>, "workgroup.linux@csr.com" <workgroup.linux@csr.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Barry Song' <21cnbao@gmail.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Olof Johansson' <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 August 2011, Mark Rutland wrote:
+Hi Rob,
 
-> I realise I'm a bit late to the party here, but I'd like to propose adding an
-> optional interrupt parameter to the binding. I'm not aware of any
-> implementations which use separate interrupts, but given the binding
-> seems to be generic across L2CC implementations (and is not limited simply to
-> the L2x0), having a list rather than a single interrupt may be appropriate for
-> someone.
+On Wed, Aug 10, 2011 at 02:59:12PM +0100, Rob Herring wrote:
+> I think you should allow for either the single irq or individual irqs.
+> You can specify that the event counter interrupt must be first, then the
+> pmu driver could work either way ignoring the rest. The driver probably
+> needs to mark the handler as shared if there is only the combined
+> interrupt unless you expect all interrupts to be handled by 1 driver.
 
-Sounds good, thanks for pointing this out.
+I much prefer having seperate, individual IRQs with no requirement on
+ordering.
 
-How many possible interrupt sources are there? If there is only a small number
-of those (e.g. at most 4), we might just list all of them and register
-them from the driver even if they are all the same.
+Now, the L2 binding also doesn't fit too well for the L2CC on Cortex-A15,
+which is an inner cache like the one on Cortex-A8. Because of this, it
+doesn't have a base address but it *does* have an IRQ which is how external
+aborts are raised.
 
-> This would boil down to (for the moment) a Documentation change along the lines of:
-> 
-> > diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> > index f50e021..d4b387b 100644
-> > --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> > +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> > @@ -28,6 +28,7 @@ Optional properties:
-> >  - arm,filter-ranges : <start length> Starting address and length of window to
-> >    filter. Addresses in the filter window are directed to the M1 port. Other
-> >    addresses will go to the M0 port.
-> > +- interrupt : A combined interrupt.
-> >  
-> >  Example:
-> >  
-> > @@ -39,4 +40,5 @@ L2: cache-controller {
-> >          arm,filter-latency = <0x80000000 0x8000000>;
-> >          cache-unified;
-> >          cache-level = <2>;
-> > +        interrupt = <45>;
-> >  };
-> 
-> Any thoughts?
-
-Do we also need to document an interrupt-parent property, or is that implied?
-
-	Arnd
+Will
