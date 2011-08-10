@@ -1,15 +1,13 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Wed, 10 Aug 2011 16:12:56 +0100
-Message-ID: <20110810151256.GN10121@e102144-lin.cambridge.arm.com>
-References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<201108101609.56995.arnd@arndb.de> <4E42965A.9010500@calxeda.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
+Date: Wed, 10 Aug 2011 10:13:27 -0500
+Message-ID: <4E42A017.7040608@freescale.com>
+References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E42965A.9010500-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1312902747-21372-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,32 +17,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "workgroup.linux-kQvG35nSl+M@public.gmane.org" <workgroup.linux-kQvG35nSl+M@public.gmane.org>, "weizeng.he-kQvG35nSl+M@public.gmane.org" <weizeng.he-kQvG35nSl+M@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 03:31:54PM +0100, Rob Herring wrote:
-> Here's all the interrupts on the PL310:
-> 
-> DECERRINTR Decode error received on master ports from L3
-> SLVERRINTR Slave error received on master ports from L3
-> ERRRDINTR Error on L2 data RAM read
-> ERRRTINTR Error on L2 tag RAM read
-> ERRWDINTR Error on L2 data RAM write
-> ERRWTINTR Error on L2 tag RAM write
-> PARRDINTR Parity error on L2 data RAM read
-> PARRTINTR Parity error on L2 tag RAM read
-> ECNTRINTR Event Counter Overflow/Increment
-> L2CCINTR L2CC Combined Interrupt Output
-> 
-> It's likely that you would want to split these to different drivers.
-> EDAC for parity/bus errors and hw-events for event counters, for example.
+On 08/09/2011 10:12 AM, Jamie Iles wrote:
+> +Optional properties:
+> +- bank-width : Width (in bytes) of the device.  If not present, the width
+> +  defaults to 8 bits.
 
-I completely agree with you here. In reality, I expect we'll be lucky if
-even the combined interrupt is wired up so maybe the individual property
-names should only be added on an as-needed basis? For the time being we can
-happily get by with something like combined-interrupt = <...>.
+"in bytes" versus "defaults to 8 bits"...
 
-Or would you rather specify everything up front?
+> +- chip-delay : chip dependent delay for transferring data from array to
+> +  read registers (tR).  If not present then a default of 0 is used.
 
-Will
+nand_set_defaults() will set this to 20 us if you pass in zero.
+
+> +- gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
+> +  location used to guard against bus reordering with regards to accesses to
+> +  the GPIO's and the NAND flash data bus.  If present, then after changing
+> +  GPIO state, this register will be read to ensure that the accesses have
+> +  completed.
+
+The driver does it before and after all cmd_ctrl byte writes, in
+addition to after changing the GPIO state.
+
+-Scott
