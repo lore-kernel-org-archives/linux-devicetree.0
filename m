@@ -1,14 +1,15 @@
-From: Rob Herring <rob.herring@calxeda.com>
+From: Rob Herring <robherring2@gmail.com>
 Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Wed, 10 Aug 2011 09:31:54 -0500
-Message-ID: <4E42965A.9010500@calxeda.com>
+Date: Wed, 10 Aug 2011 09:37:26 -0500
+Message-ID: <4E4297A6.6050101@gmail.com>
 References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<201108101609.56995.arnd@arndb.de>
+	<4E428EB0.1080204@gmail.com>
+	<20110810141048.GK10121@e102144-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201108101609.56995.arnd@arndb.de>
+In-Reply-To: <20110810141048.GK10121@e102144-lin.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,70 +19,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux@arm.linux.org.uk, Will Deacon <Will.Deacon@arm.com>, devicetree-discuss@lists.ozlabs.org, 'Barry Song' <21cnbao@gmail.com>, linux-kernel@vger.kernel.org, workgroup.linux@csr.com, 'Grant Likely' <grant.likely@secretlab.ca>, weizeng.he@csr.com, 'Olof Johansson' <olof@lixom.net>, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, 'Arnd Bergmann' <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, 'Barry Song' <21cnbao@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "workgroup.linux@csr.com" <workgroup.linux@csr.com>, 'Grant Likely' <grant.likely@secretlab.ca>, "weizeng.he@csr.com" <weizeng.he@csr.com>, 'Olof Johansson' <olof@lixom.net>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
-
-On 08/10/2011 09:09 AM, Arnd Bergmann wrote:
-> On Wednesday 10 August 2011, Mark Rutland wrote:
+On 08/10/2011 09:10 AM, Will Deacon wrote:
+> Hi Rob,
 > 
->> I realise I'm a bit late to the party here, but I'd like to propose adding an
->> optional interrupt parameter to the binding. I'm not aware of any
->> implementations which use separate interrupts, but given the binding
->> seems to be generic across L2CC implementations (and is not limited simply to
->> the L2x0), having a list rather than a single interrupt may be appropriate for
->> someone.
+> On Wed, Aug 10, 2011 at 02:59:12PM +0100, Rob Herring wrote:
+>> I think you should allow for either the single irq or individual irqs.
+>> You can specify that the event counter interrupt must be first, then the
+>> pmu driver could work either way ignoring the rest. The driver probably
+>> needs to mark the handler as shared if there is only the combined
+>> interrupt unless you expect all interrupts to be handled by 1 driver.
 > 
-> Sounds good, thanks for pointing this out.
+> I much prefer having seperate, individual IRQs with no requirement on
+> ordering.
 > 
-> How many possible interrupt sources are there? If there is only a small number
-> of those (e.g. at most 4), we might just list all of them and register
-> them from the driver even if they are all the same.
-> 
+> Now, the L2 binding also doesn't fit too well for the L2CC on Cortex-A15,
+> which is an inner cache like the one on Cortex-A8. Because of this, it
+> doesn't have a base address but it *does* have an IRQ which is how external
+> aborts are raised.
 
-Here's all the interrupts on the PL310:
-
-DECERRINTR Decode error received on master ports from L3
-SLVERRINTR Slave error received on master ports from L3
-ERRRDINTR Error on L2 data RAM read
-ERRRTINTR Error on L2 tag RAM read
-ERRWDINTR Error on L2 data RAM write
-ERRWTINTR Error on L2 tag RAM write
-PARRDINTR Parity error on L2 data RAM read
-PARRTINTR Parity error on L2 tag RAM read
-ECNTRINTR Event Counter Overflow/Increment
-L2CCINTR L2CC Combined Interrupt Output
-
-It's likely that you would want to split these to different drivers.
-EDAC for parity/bus errors and hw-events for event counters, for example.
+This is not a general L2 binding, but an L2x0/PL310 binding. A8/A15 L2
+is a completely different binding and driver though. You would do
+something like the current cpu pmu binding that is just interrupts.
 
 Rob
-
->> This would boil down to (for the moment) a Documentation change along the lines of:
->>
->>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
->>> index f50e021..d4b387b 100644
->>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
->>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
->>> @@ -28,6 +28,7 @@ Optional properties:
->>>  - arm,filter-ranges : <start length> Starting address and length of window to
->>>    filter. Addresses in the filter window are directed to the M1 port. Other
->>>    addresses will go to the M0 port.
->>> +- interrupt : A combined interrupt.
->>>  
->>>  Example:
->>>  
->>> @@ -39,4 +40,5 @@ L2: cache-controller {
->>>          arm,filter-latency = <0x80000000 0x8000000>;
->>>          cache-unified;
->>>          cache-level = <2>;
->>> +        interrupt = <45>;
->>>  };
->>
->> Any thoughts?
-> 
-> Do we also need to document an interrupt-parent property, or is that implied?
-> 
-> 	Arnd
