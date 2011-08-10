@@ -1,35 +1,100 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v11 5/5] powerpc: Fix up fsl-flexcan device tree binding.
-Date: Wed, 10 Aug 2011 11:56:28 -0500
-Message-ID: <4E42B83C.2040705@freescale.com>
-References: <1312993670-23999-1-git-send-email-holt@sgi.com> <1312993670-23999-6-git-send-email-holt@sgi.com>
+From: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Subject: Re: [RFC/PATCH 11/14] dt: omap3: add soc file for handling i2c
+ controllers
+Date: Wed, 10 Aug 2011 22:27:45 +0530
+Message-ID: <20110810165745.GB2705@manju-desktop>
+References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
+ <1312897232-4792-12-git-send-email-manjugk@ti.com>
+ <4E427B62.1000907@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1312993670-23999-6-git-send-email-holt@sgi.com>
-Sender: netdev-owner@vger.kernel.org
-To: Robin Holt <holt@sgi.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>, Wolfgang Grandegger <wg@grandegger.com>, U Bhaskar-B22300 <B22300@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Marc Kleine-Budde <mkl@pengutronix.de>, socketcan-core@lists.berlios.de, netdev@vger.kernel.org, PPC list <linuxppc-dev@lists.ozlabs.org>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4E427B62.1000907@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2011 11:27 AM, Robin Holt wrote:
-> -CPI Clock- Can Protocol Interface Clock
-> -	This CLK_SRC bit of CTRL(control register) selects the clock source to
-> -	the CAN Protocol Interface(CPI) to be either the peripheral clock
-> -	(driven by the PLL) or the crystal oscillator clock. The selected clock
-> -	is the one fed to the prescaler to generate the Serial Clock (Sclock).
-> -	The PRESDIV field of CTRL(control register) controls a prescaler that
-> -	generates the Serial Clock (Sclock), whose period defines the
-> -	time quantum used to compose the CAN waveform.
-> +- compatible : Should be "fsl,flexcan" and optionally
-> +               "fsl,flexcan-<processor>"
+On Wed, Aug 10, 2011 at 02:36:50PM +0200, Cousson, Benoit wrote:
+> On 8/9/2011 4:10 PM, G, Manjunath Kondaiah wrote:
+> >
+> >Add omap3 soc file for handling omap3 soc i2c controllers existing
+> >on l4-core bus.
+> >
+> >Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
+> >---
+> >  arch/arm/boot/dts/omap3-soc.dtsi |   62 ++++++++++++++++++++++++++++++++++++++
+> >  1 files changed, 62 insertions(+), 0 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/omap3-soc.dtsi
+> >
+> >diff --git a/arch/arm/boot/dts/omap3-soc.dtsi b/arch/arm/boot/dts/omap3-soc.dtsi
+> >new file mode 100644
+> >index 0000000..85de92f
+> >--- /dev/null
+> >+++ b/arch/arm/boot/dts/omap3-soc.dtsi
+> >@@ -0,0 +1,62 @@
+> >+/*
+> >+ * Device Tree Source for OMAP3 SoC
+> >+ *
+> >+ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> >+ *
+> >+ * This file is licensed under the terms of the GNU General Public License
+> >+ * version 2.  This program is licensed "as is" without any warranty of any
+> >+ * kind, whether express or implied.
+> >+ */
+> >+
+> >+/dts-v1/;
+> >+/include/ "skeleton.dtsi"
+> >+
+> >+/ {
+> >+	#address-cells =<1>;
+> >+	#size-cells =<1>;
+> >+	model = "ti,omap3";
+> >+
+> >+	aliases {
+> >+		i2c1 =&i2c1;
+> >+		i2c2 =&i2c2;
+> >+		i2c3 =&i2c3;
+> >+	};
+> >+
+> >+	l4-core {
+> 
+> That comment is probably subject to discussion, but even if this
+> interconnect is there physically, I'm not sure of the added value to
+> add it.
+> It will add an extra level of indentation and that all. Moreover, it
+> will mess up the physical address that are expressed using absolute
+> value in the TRM with a less readable offset value.
+> In fact, most DTS files in the ARM directory are using a purely flat
+> representation of the interconnect.
+This is as per alignment with Tony and Grant:
+http://permalink.gmane.org/gmane.linux.ports.arm.omap/60391
 
-fsl,<processor>-flexcan, and it should not be optional, and should come
-before "fsl,flexcan".
+> 
+> >+		compatible = "ti,omap3-l4-core";
+> 
+> Assuming we will keep that, you should probably add a more generic
+> compatible name after that one. Like "ti,s3220" or even
+> "sonics,s3220", assuming that this IP is generic enough for other
+> SoC.
+will check this. I don't remember any generic names.
+> 
+> >+		#address-cells =<1>;
+> >+		#size-cells =<1>;
+> >+		ranges =<0 0x48000000 0x1000000>;
+> >+
+> >+		i2c1: i2c@70000 {
+> >+			#address-cells =<1>;
+> >+			#size-cells =<0>;
+> >+			compatible = "ti,omap3-i2c";
+> 
+> The I2C IP and thus the driver is generic across OMAP generations
+> and is even potentially used by other non-OMAP TI chips like DSP or
+> Davinci. So having an extra compatible entry with "ti,i2c" or "ti,
+> omap-i2c" seems mandatory.
+This can be updated as and when new soc/board adaptations are done. 
+As of now, it is omap3 and when we have omap4 it will be appended with
+"ti,omap4-i2c" etc
 
-Also may want to list fsl,p1010-rdb as a "canonical compatible" for
-anything which is backwards compatible with p1010's implementation.
-
--Scott
-
+-M
