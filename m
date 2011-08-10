@@ -1,56 +1,152 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: How to handle named resources with DT?
-Date: Wed, 10 Aug 2011 14:12:06 -0600
-Message-ID: <CACxGe6sX9n5YBXsWyK=prCCssw169Tga3D+9hwc+qa1zFr3CMQ@mail.gmail.com>
-References: <4E4172A8.3030101@ti.com> <4E417BD5.8080409@freescale.com>
- <20110809205723.GE11568@ponder.secretlab.ca> <4E41A1B9.1060400@ti.com>
- <20110809211747.GJ11568@ponder.secretlab.ca> <4E41AA43.1000506@ti.com>
- <20110809214905.GK11568@ponder.secretlab.ca> <4E41AC5C.20301@ti.com>
- <20110810015214.GD23511@yookeroo.fritz.box> <CACxGe6tr5OUxpiVah4s6rRG0cTOWsnohhEkZoSZgCj0xSZkmMA@mail.gmail.com>
- <20110810195753.GA29134@huya.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110810195753.GA29134@huya.qualcomm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Brown <davidb@codeaurora.org>
-Cc: David Gibson <david@gibson.dropbear.id.au>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "Cousson, Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Daniel Drake <dsd@laptop.org>
+Subject: [PATCH RESEND 1/2] olpc_battery: bind to device tree
+Date: Wed, 10 Aug 2011 21:45:36 +0100 (BST)
+Message-ID: <20110810204536.C6FCA9D401C@zog.reactivated.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cbou@mail.ru, dwmw2@infradead.org
+Cc: dilinger@queued.net, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 1:57 PM, David Brown <davidb@codeaurora.org> wr=
-ote:
-> On Wed, Aug 10, 2011 at 01:22:16PM -0600, Grant Likely wrote:
->
->> Please, stick with the established convention and explicitly order
->> 'reg' and 'interrupts' properties. =A0If there is a specific use cas=
-e
->> where this doesn't work, then bring it up, but I haven't seen any ye=
-t.
->> =A0The current users of _byname that I've looked seem to only use it=
- for
->> convenience, not because a register range may be optional. =A0ie. th=
-ey
->> all fail out if a reg resource isn't present.
->
-> The msm_serial driver uses the presence of one of it's _byname reg
-> regions to distinguish between two different types of the controller.
-> Fortunately, it is the last register range that has this.
->
-> It's probably best to make the DT code depend on compatible (or some
-> attribute) to determine if this functionality is available, or in thi=
-s
-> case, even make it a separate memory region. =A0I'm not sure what the
-> cleanest way is to implement this, and still have the driver work wit=
-h
-> non-DT systems.
+This is cleaner, and allows suspend/resume (wakeup) handlers to be
+added in an upcoming patch.
 
-You can use the .data field in the match table to add in
-compatible-specific configuration data.
+Signed-off-by: Daniel Drake <dsd@laptop.org>
+Acked-by: Andres Salomon <dilinger@queued.net>
+---
+ .../bindings/power_supply/olpc_battery.txt         |    5 ++
+ drivers/power/olpc_battery.c                       |   55 ++++++++++++--------
+ 2 files changed, 39 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/olpc_battery.txt
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/power_supply/olpc_battery.txt b/Documentation/devicetree/bindings/power_supply/olpc_battery.txt
+new file mode 100644
+index 0000000..c8901b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power_supply/olpc_battery.txt
+@@ -0,0 +1,5 @@
++OLPC battery
++~~~~~~~~~~~~
++
++Required properties:
++  - compatible : "olpc,xo1-battery"
+diff --git a/drivers/power/olpc_battery.c b/drivers/power/olpc_battery.c
+index 0b0ff3a..9972268 100644
+--- a/drivers/power/olpc_battery.c
++++ b/drivers/power/olpc_battery.c
+@@ -519,9 +519,8 @@ static struct device_attribute olpc_bat_error = {
+  *		Initialisation
+  *********************************************************************/
+ 
+-static struct platform_device *bat_pdev;
+-
+ static struct power_supply olpc_bat = {
++	.name = "olpc-battery",
+ 	.get_property = olpc_bat_get_property,
+ 	.use_for_apm = 1,
+ };
+@@ -534,14 +533,11 @@ void olpc_battery_trigger_uevent(unsigned long cause)
+ 		kobject_uevent(&olpc_bat.dev->kobj, KOBJ_CHANGE);
+ }
+ 
+-static int __init olpc_bat_init(void)
++static int __devinit olpc_battery_probe(struct platform_device *pdev)
+ {
+-	int ret = 0;
++	int ret;
+ 	uint8_t status;
+ 
+-	if (!olpc_platform_info.ecver)
+-		return -ENXIO;
+-
+ 	/*
+ 	 * We've seen a number of EC protocol changes; this driver requires
+ 	 * the latest EC protocol, supported by 0x44 and above.
+@@ -558,15 +554,10 @@ static int __init olpc_bat_init(void)
+ 
+ 	/* Ignore the status. It doesn't actually matter */
+ 
+-	bat_pdev = platform_device_register_simple("olpc-battery", 0, NULL, 0);
+-	if (IS_ERR(bat_pdev))
+-		return PTR_ERR(bat_pdev);
+-
+-	ret = power_supply_register(&bat_pdev->dev, &olpc_ac);
++	ret = power_supply_register(&pdev->dev, &olpc_ac);
+ 	if (ret)
+-		goto ac_failed;
++		return ret;
+ 
+-	olpc_bat.name = bat_pdev->name;
+ 	if (olpc_board_at_least(olpc_board_pre(0xd0))) { /* XO-1.5 */
+ 		olpc_bat.properties = olpc_xo15_bat_props;
+ 		olpc_bat.num_properties = ARRAY_SIZE(olpc_xo15_bat_props);
+@@ -575,7 +566,7 @@ static int __init olpc_bat_init(void)
+ 		olpc_bat.num_properties = ARRAY_SIZE(olpc_xo1_bat_props);
+ 	}
+ 
+-	ret = power_supply_register(&bat_pdev->dev, &olpc_bat);
++	ret = power_supply_register(&pdev->dev, &olpc_bat);
+ 	if (ret)
+ 		goto battery_failed;
+ 
+@@ -587,7 +578,7 @@ static int __init olpc_bat_init(void)
+ 	if (ret)
+ 		goto error_failed;
+ 
+-	goto success;
++	return 0;
+ 
+ error_failed:
+ 	device_remove_bin_file(olpc_bat.dev, &olpc_bat_eeprom);
+@@ -595,22 +586,44 @@ eeprom_failed:
+ 	power_supply_unregister(&olpc_bat);
+ battery_failed:
+ 	power_supply_unregister(&olpc_ac);
+-ac_failed:
+-	platform_device_unregister(bat_pdev);
+-success:
+ 	return ret;
+ }
+ 
+-static void __exit olpc_bat_exit(void)
++static int __devexit olpc_battery_remove(struct platform_device *pdev)
+ {
+ 	device_remove_file(olpc_bat.dev, &olpc_bat_error);
+ 	device_remove_bin_file(olpc_bat.dev, &olpc_bat_eeprom);
+ 	power_supply_unregister(&olpc_bat);
+ 	power_supply_unregister(&olpc_ac);
+-	platform_device_unregister(bat_pdev);
++	return 0;
+ }
+ 
++static const struct of_device_id olpc_battery_ids[] __devinitconst = {
++	{ .compatible = "olpc,xo1-battery" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, olpc_battery_ids);
++
++static struct platform_driver olpc_battery_drv = {
++	.driver = {
++		.name = "olpc-battery",
++		.owner = THIS_MODULE,
++		.of_match_table = olpc_battery_ids,
++	},
++	.probe = olpc_battery_probe,
++	.remove = __devexit_p(olpc_battery_remove),
++};
++
++static int __init olpc_bat_init(void)
++{
++	return platform_driver_register(&olpc_battery_drv);
++}
+ module_init(olpc_bat_init);
++
++static void __exit olpc_bat_exit(void)
++{
++	platform_driver_unregister(&olpc_battery_drv);
++}
+ module_exit(olpc_bat_exit);
+ 
+ MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
+-- 
+1.7.6
