@@ -1,29 +1,51 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: How to handle named resources with DT?
-Date: Wed, 10 Aug 2011 01:11:58 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1108100104150.12674@utopia.booyaka.com>
-References: <4E4166F0.9050401@ti.com> <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com> <4E4172A8.3030101@ti.com> <4E417BD5.8080409@freescale.com> <20110809205723.GE11568@ponder.secretlab.ca> <4E41A1B9.1060400@ti.com>
- <20110809211747.GJ11568@ponder.secretlab.ca> <4E41AA43.1000506@ti.com> <20110809214905.GK11568@ponder.secretlab.ca> <4E41AC5C.20301@ti.com> <20110810015214.GD23511@yookeroo.fritz.box>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH 3/3] ARM: gic: add OF based initialization
+Date: Wed, 10 Aug 2011 09:08:56 +0100
+Message-ID: <4E423C98.3040305@arm.com>
+References: <1312921020-6820-1-git-send-email-robherring2@gmail.com>
+	<1312921020-6820-4-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110810015214.GD23511@yookeroo.fritz.box>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1312921020-6820-4-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "jamie@jamieiles.com" <jamie@jamieiles.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Aug 2011, David Gibson wrote:
+On 09/08/11 21:17, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> This adds gic initialization using device tree data. An example device tree
+> binding looks like this:
+> 
+> intc: interrupt-controller@fff11000 {
+>         compatible = "arm,cortex-a9-gic";
+>         #interrupt-cells = <1>;
+>         interrupt-controller;
+>         reg = <0xfff11000 0x1000>,
+>               <0xfff10100 0x100>;
+> };
 
-> Of course, the problem with reg-names is that it will be ignored by
-> older OSes, and so 'reg' must still be in the correct order.
+I'm afraid I still object to this. PPIs are an important part of the
+GIC, and this binding totally ignores the per-cpu aspect.
 
-Most ARM SoC Linux ports aren't using DT now, so there isn't really an 
-older OS case here.  Might as well try to get something implemented in a 
-clean way while there's still some chance for it.
+How do you represent the connection between a CPU local timer and the
+GIC? Even worse, how to represent a device connected to only *one* of
+the CPUs? PPIs are difficult to represent on the Linux side. But we
+shouldn't ignore them in the DT binding.
 
-A more persuasive case could probably be made about DT bootloader-related 
-issues.  Those would have to be converted to use reg-names, also.
+Cheers,
 
-
-- Paul
+	M.
+-- 
+Jazz is not dead. It just smells funny...
