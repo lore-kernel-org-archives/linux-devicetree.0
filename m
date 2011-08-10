@@ -1,53 +1,87 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+From: Rob Herring <rob.herring@calxeda.com>
 Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Wed, 10 Aug 2011 15:28:08 +0100
-Message-ID: <20110810142808.GL10121@e102144-lin.cambridge.arm.com>
+Date: Wed, 10 Aug 2011 09:31:54 -0500
+Message-ID: <4E42965A.9010500@calxeda.com>
 References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<4E428EB0.1080204@gmail.com>
-	<20110810141048.GK10121@e102144-lin.cambridge.arm.com>
-	<201108101624.27881.arnd@arndb.de>
+	<201108101609.56995.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201108101624.27881.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "workgroup.linux-kQvG35nSl+M@public.gmane.org" <workgroup.linux-kQvG35nSl+M@public.gmane.org>, "weizeng.he-kQvG35nSl+M@public.gmane.org" <weizeng.he-kQvG35nSl+M@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201108101609.56995.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux@arm.linux.org.uk, Will Deacon <Will.Deacon@arm.com>, devicetree-discuss@lists.ozlabs.org, 'Barry Song' <21cnbao@gmail.com>, linux-kernel@vger.kernel.org, workgroup.linux@csr.com, 'Grant Likely' <grant.likely@secretlab.ca>, weizeng.he@csr.com, 'Olof Johansson' <olof@lixom.net>, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 03:24:27PM +0100, Arnd Bergmann wrote:
-> On Wednesday 10 August 2011, Will Deacon wrote:
-> > On Wed, Aug 10, 2011 at 02:59:12PM +0100, Rob Herring wrote:
-> > > I think you should allow for either the single irq or individual irqs.
-> > > You can specify that the event counter interrupt must be first, then the
-> > > pmu driver could work either way ignoring the rest. The driver probably
-> > > needs to mark the handler as shared if there is only the combined
-> > > interrupt unless you expect all interrupts to be handled by 1 driver.
-> > 
-> > I much prefer having seperate, individual IRQs with no requirement on
-> > ordering.
-> > 
+Arnd,
+
+On 08/10/2011 09:09 AM, Arnd Bergmann wrote:
+> On Wednesday 10 August 2011, Mark Rutland wrote:
 > 
-> What do you mean with 'no requirement on ordering'? If we have multiple
-> interrupt sources, we definitely want to identify which one calls which
-> handler, and the only information we have is the position in the array
-> of interrupt numbers.
+>> I realise I'm a bit late to the party here, but I'd like to propose adding an
+>> optional interrupt parameter to the binding. I'm not aware of any
+>> implementations which use separate interrupts, but given the binding
+>> seems to be generic across L2CC implementations (and is not limited simply to
+>> the L2x0), having a list rather than a single interrupt may be appropriate for
+>> someone.
+> 
+> Sounds good, thanks for pointing this out.
+> 
+> How many possible interrupt sources are there? If there is only a small number
+> of those (e.g. at most 4), we might just list all of them and register
+> them from the driver even if they are all the same.
+> 
 
-I was hoping that it was possible to have separate properties which describe
-the interrupt. So you could have something like pmu-interrupt <75> and
-abort-interrupt <76> rather than interrupts <75, 76>.
+Here's all the interrupts on the PL310:
 
-I've not played with DT bindings before though, so if it's usually done with
-an ordered list then so be it!
+DECERRINTR Decode error received on master ports from L3
+SLVERRINTR Slave error received on master ports from L3
+ERRRDINTR Error on L2 data RAM read
+ERRRTINTR Error on L2 tag RAM read
+ERRWDINTR Error on L2 data RAM write
+ERRWTINTR Error on L2 tag RAM write
+PARRDINTR Parity error on L2 data RAM read
+PARRTINTR Parity error on L2 tag RAM read
+ECNTRINTR Event Counter Overflow/Increment
+L2CCINTR L2CC Combined Interrupt Output
 
-Will
+It's likely that you would want to split these to different drivers.
+EDAC for parity/bus errors and hw-events for event counters, for example.
+
+Rob
+
+>> This would boil down to (for the moment) a Documentation change along the lines of:
+>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> index f50e021..d4b387b 100644
+>>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> @@ -28,6 +28,7 @@ Optional properties:
+>>>  - arm,filter-ranges : <start length> Starting address and length of window to
+>>>    filter. Addresses in the filter window are directed to the M1 port. Other
+>>>    addresses will go to the M0 port.
+>>> +- interrupt : A combined interrupt.
+>>>  
+>>>  Example:
+>>>  
+>>> @@ -39,4 +40,5 @@ L2: cache-controller {
+>>>          arm,filter-latency = <0x80000000 0x8000000>;
+>>>          cache-unified;
+>>>          cache-level = <2>;
+>>> +        interrupt = <45>;
+>>>  };
+>>
+>> Any thoughts?
+> 
+> Do we also need to document an interrupt-parent property, or is that implied?
+> 
+> 	Arnd
